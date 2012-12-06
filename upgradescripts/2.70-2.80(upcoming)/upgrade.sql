@@ -41,6 +41,12 @@ set @resources='
   <LocaleResource Name="Account.Fields.AcceptPrivacyPolicy.Required">
     <Value>Please accept privacy policy</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.Fields.CustomValue">
+    <Value>Custom value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.Fields.CustomValue.Hint">
+    <Value>Enter custom value or leave empty. If entered, it''ll be used instead of the selected attribute option. Important note: ensure that ''Allow filtering'' is not enabled if custom value is entered.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -741,5 +747,14 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'customersettings.acceptp
 BEGIN
 	INSERT [Setting] ([Name], [Value])
 	VALUES (N'customersettings.acceptprivacypolicyenabled', N'false')
+END
+GO
+
+
+--custom specification values
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Product_SpecificationAttribute_Mapping]') and NAME='CustomValue')
+BEGIN
+	ALTER TABLE [Product_SpecificationAttribute_Mapping]
+	ADD [CustomValue] nvarchar(4000) NULL
 END
 GO

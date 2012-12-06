@@ -453,7 +453,7 @@ namespace Nop.Web.Controllers
                        {
                            SpecificationAttributeId = psa.SpecificationAttributeOption.SpecificationAttributeId,
                            SpecificationAttributeName = psa.SpecificationAttributeOption.SpecificationAttribute.GetLocalized(x => x.Name),
-                           SpecificationAttributeOption = psa.SpecificationAttributeOption.GetLocalized(x => x.Name)
+                           SpecificationAttributeOption = !String.IsNullOrEmpty(psa.CustomValue) ? psa.CustomValue : psa.SpecificationAttributeOption.GetLocalized(x => x.Name),
                        };
                    }).ToList();
                 return model;

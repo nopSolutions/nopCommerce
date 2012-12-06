@@ -633,6 +633,7 @@
                     {
                         columns.Bound(x => x.SpecificationAttributeName).Width(200).ReadOnly();
                         columns.Bound(x => x.SpecificationAttributeOptionName).Width(200).ReadOnly();
+                        columns.Bound(x => x.CustomValue).Width(200);
                         columns.Bound(x => x.AllowFiltering).Width(100);
                         columns.Bound(x => x.ShowOnProductPage).Width(100);
                         columns.Bound(x => x.DisplayOrder).Width(100);
@@ -684,16 +685,20 @@
         $(document).ready(function () {
             $('#addProductSpec').click(function () {
                 var specificationAttributeOptionId = $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeOptionId)").val();
-             var allowFiltering = $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.AllowFiltering)").is(':checked');
-             var showOnProductPage = $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.ShowOnProductPage)").is(':checked');
-             var displayOrder = $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.DisplayOrder)").val();
-                
-             $('#addProductSpec').attr('disabled', true);
-             $.ajax({
-                 cache:false,
-                 type: "POST",
-                 url: "@(Url.Action("ProductSpecificationAttributeAdd", "Product"))",
-                    data: { "specificationAttributeOptionId": specificationAttributeOptionId, "allowFiltering": allowFiltering, "showOnProductPage": showOnProductPage, "displayOrder": displayOrder, "productId": @Model.Id },
+                var customValue = $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.CustomValue)").val();
+                var allowFiltering = $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.AllowFiltering)").is(':checked');
+                var showOnProductPage = $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.ShowOnProductPage)").is(':checked');
+                var displayOrder = $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.DisplayOrder)").val();
+
+                if (specificationAttributeOptionId === null) {
+                    alert('Select attribute option');
+                } else {
+                    $('#addProductSpec').attr('disabled', true);
+                    $.ajax({
+                        cache:false,
+                        type: "POST",
+                        url: "@(Url.Action("ProductSpecificationAttributeAdd", "Product"))",
+                     data: { "specificationAttributeOptionId": specificationAttributeOptionId, "customValue": customValue, "allowFiltering": allowFiltering, "showOnProductPage": showOnProductPage, "displayOrder": displayOrder, "productId": @(Model.Id) },
                     success: function (data) {
                         var specificationAttributesGrid = $("#specificationattributes-grid");
                         specificationAttributesGrid.data('tGrid').ajaxRequest();
@@ -704,8 +709,9 @@
                         $('#addProductSpec').attr('disabled', false);
                     }  
                 });
-         });
-     });
+                }
+            });
+        });
     </script>
     <table class="adminContent">
         <tr>
@@ -724,6 +730,15 @@
             <td class="adminData">
                 @Html.DropDownListFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeOptionId, Model.AddSpecificationAttributeModel.AvailableOptions)
                 @Html.ValidationMessageFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeOptionId)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AddSpecificationAttributeModel.CustomValue):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AddSpecificationAttributeModel.CustomValue)
+                @Html.ValidationMessageFor(model => model.AddSpecificationAttributeModel.CustomValue)
             </td>
         </tr>
         <tr>

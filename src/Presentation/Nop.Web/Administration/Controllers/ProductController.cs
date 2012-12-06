@@ -1427,8 +1427,10 @@ namespace Nop.Admin.Controllers
 
         #region Product specification attributes
 
-        public ActionResult ProductSpecificationAttributeAdd(int specificationAttributeOptionId, 
-            bool allowFiltering, bool showOnProductPage, int displayOrder, int productId)
+        [ValidateInput(false)]
+        public ActionResult ProductSpecificationAttributeAdd(int specificationAttributeOptionId,
+            string customValue, bool allowFiltering, bool showOnProductPage, 
+            int displayOrder, int productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
@@ -1437,6 +1439,7 @@ namespace Nop.Admin.Controllers
             {
                 SpecificationAttributeOptionId = specificationAttributeOptionId,
                 ProductId = productId,
+                CustomValue = customValue,
                 AllowFiltering = allowFiltering,
                 ShowOnProductPage = showOnProductPage,
                 DisplayOrder = displayOrder,
@@ -1462,6 +1465,7 @@ namespace Nop.Admin.Controllers
                         Id = x.Id,
                         SpecificationAttributeName = x.SpecificationAttributeOption.SpecificationAttribute.Name,
                         SpecificationAttributeOptionName = x.SpecificationAttributeOption.Name,
+                        CustomValue = x.CustomValue,
                         AllowFiltering = x.AllowFiltering,
                         ShowOnProductPage = x.ShowOnProductPage,
                         DisplayOrder = x.DisplayOrder
@@ -1490,6 +1494,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var psa = _specificationAttributeService.GetProductSpecificationAttributeById(psaId);
+            psa.CustomValue = model.CustomValue;
             psa.AllowFiltering = model.AllowFiltering;
             psa.ShowOnProductPage = model.ShowOnProductPage;
             psa.DisplayOrder = model.DisplayOrder;

@@ -10,6 +10,8 @@ namespace Nop.Data.Mapping.Catalog
             this.ToTable("Product_SpecificationAttribute_Mapping");
             this.HasKey(psa => psa.Id);
 
+            this.Property(psa => psa.CustomValue).HasMaxLength(4000);
+
             this.HasRequired(psa => psa.SpecificationAttributeOption)
                 .WithMany(sao => sao.ProductSpecificationAttributes)
                 .HasForeignKey(psa => psa.SpecificationAttributeOptionId);

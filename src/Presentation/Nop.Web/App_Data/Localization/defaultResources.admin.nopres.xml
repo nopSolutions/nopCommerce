@@ -1559,6 +1559,14 @@
                                                     </LocaleResource>
                                                 </Children>
                                             </LocaleResource>
+                                            <LocaleResource Name="CustomValue">
+                                                <Value>Custom value</Value>
+                                                <Children>
+                                                    <LocaleResource Name="Hint">
+                                                        <Value>Enter custom value or leave empty. If entered, it'll be used instead of the selected attribute option. Important note: ensure that 'Allow filtering' is not enabled if custom value is entered.</Value>
+                                                    </LocaleResource>
+                                                </Children>
+                                            </LocaleResource>
                                             <LocaleResource Name="AllowFiltering">
                                                 <Value>Allow filtering</Value>
                                                 <Children>

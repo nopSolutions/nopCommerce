@@ -14,6 +14,10 @@ namespace Nop.Admin.Models.Catalog
         [AllowHtml]
         public string SpecificationAttributeOptionName { get; set; }
 
+        [NopResourceDisplayName("Admin.Catalog.Products.SpecificationAttributes.Fields.CustomValue")]
+        [AllowHtml]
+        public string CustomValue { get; set; }
+
         [NopResourceDisplayName("Admin.Catalog.Products.SpecificationAttributes.Fields.AllowFiltering")]
         public bool AllowFiltering { get; set; }
 

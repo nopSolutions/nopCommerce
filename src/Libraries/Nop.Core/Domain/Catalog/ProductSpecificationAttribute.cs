@@ -16,6 +16,11 @@ namespace Nop.Core.Domain.Catalog
         public virtual int SpecificationAttributeOptionId { get; set; }
 
         /// <summary>
+        /// Gets or sets the custom value
+        /// </summary>
+        public virtual string CustomValue { get; set; }
+
+        /// <summary>
         /// Gets or sets whether the attribute can be filtered by
         /// </summary>
         public virtual bool AllowFiltering { get; set; }

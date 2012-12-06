@@ -137,6 +137,9 @@ namespace Nop.Admin.Models.Catalog
             [NopResourceDisplayName("Admin.Catalog.Products.SpecificationAttributes.Fields.SpecificationAttributeOption")]
             public int SpecificationAttributeOptionId { get; set; }
 
+            [NopResourceDisplayName("Admin.Catalog.Products.SpecificationAttributes.Fields.CustomValue")]
+            public string CustomValue { get; set; }
+
             [NopResourceDisplayName("Admin.Catalog.Products.SpecificationAttributes.Fields.AllowFiltering")]
             public bool AllowFiltering { get; set; }
 

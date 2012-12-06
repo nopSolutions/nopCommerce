@@ -422,6 +422,7 @@ namespace Nop.Services.ExportImport
                     xmlWriter.WriteStartElement("ProductSpecificationAttribute");
                     xmlWriter.WriteElementString("ProductSpecificationAttributeId", null, productSpecificationAttribute.Id.ToString());
                     xmlWriter.WriteElementString("SpecificationAttributeOptionId", null, productSpecificationAttribute.SpecificationAttributeOptionId.ToString());
+                    xmlWriter.WriteElementString("CustomValue", null, productSpecificationAttribute.CustomValue);
                     xmlWriter.WriteElementString("AllowFiltering", null, productSpecificationAttribute.AllowFiltering.ToString());
                     xmlWriter.WriteElementString("ShowOnProductPage", null, productSpecificationAttribute.ShowOnProductPage.ToString());
                     xmlWriter.WriteElementString("DisplayOrder", null, productSpecificationAttribute.DisplayOrder.ToString());
