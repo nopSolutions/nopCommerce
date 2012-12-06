@@ -2,7 +2,6 @@
 @using Nop.Web.Models.Catalog;
 @helper RenderCategoryLine(CategoryNavigationModel.CategoryModel category)
 {
-    var categoryPadding = 15;
     <li class="@(category.Id == Model.CurrentCategoryId ? "active" : "inactive")">
         <a href="@Url.RouteUrl("Category", new { SeName = category.SeName })">@category.Name
             @if (category.NumberOfProducts.HasValue)
