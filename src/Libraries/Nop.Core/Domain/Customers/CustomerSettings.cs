@@ -205,6 +205,11 @@ namespace Nop.Core.Domain.Customers
         /// </summary>
         public bool FaxRequired { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether privacy policy should accepted during registration
+        /// </summary>
+        public bool AcceptPrivacyPolicyEnabled { get; set; }
+
         #endregion
     }
 }

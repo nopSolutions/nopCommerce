@@ -280,6 +280,17 @@
             </LocaleResource>
             <LocaleResource Name="Fields">
                 <Children>
+                    <LocaleResource Name="AcceptPrivacyPolicy">
+                      <Value>I accept privacy policy</Value>
+                      <Children>
+                        <LocaleResource Name="Read">
+                          <Value>(read)</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="Required">
+                          <Value>Please accept privacy policy</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
                     <LocaleResource Name="City">
                         <Value>City</Value>
                         <Children>

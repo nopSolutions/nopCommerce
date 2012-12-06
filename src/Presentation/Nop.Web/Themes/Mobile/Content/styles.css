@@ -194,6 +194,8 @@
 .registration-page{}
 .registration-page .page-body{}
 .registration-page .section-body{text-align:left;padding:10px;border:1px solid #d7d7d7;height:auto;}
+.registration-page .accept-privacy-policy{}
+.registration-page .accept-privacy-policy .read{text-decoration:underline;}
 .registration-page .buttons{}
 .registration-result-page{}
 .registration-result-page .page-body{}

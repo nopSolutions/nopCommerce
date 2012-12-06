@@ -120,6 +120,9 @@ namespace Nop.Admin.Models.Settings
             public bool FaxEnabled { get; set; }
             [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.FaxRequired")]
             public bool FaxRequired { get; set; }
+
+            [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.AcceptPrivacyPolicyEnabled")]
+            public bool AcceptPrivacyPolicyEnabled { get; set; }
         }
 
         public partial class AddressSettingsModel : BaseNopModel

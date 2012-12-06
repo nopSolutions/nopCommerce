@@ -26,6 +26,21 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Order.OrderIdent.Hint">
     <Value>Set the order ID counter. This is useful if you want your orders to start at a certain number. This only affects orders created going forward. The value must be greater than the current maximum order ID.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AcceptPrivacyPolicyEnabled">
+    <Value>''Accept privacy policy'' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AcceptPrivacyPolicyEnabled.Hint">
+    <Value>Ask customers to accept privacy policy during registration.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Fields.AcceptPrivacyPolicy">
+    <Value>I accept privacy policy</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Fields.AcceptPrivacyPolicy.Read">
+    <Value>(read)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Fields.AcceptPrivacyPolicy.Required">
+    <Value>Please accept privacy policy</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -718,4 +733,13 @@ WHERE [SubjectToAcl] IS NULL
 GO
 
 ALTER TABLE [Manufacturer] ALTER COLUMN [SubjectToAcl] bit NOT NULL
+GO
+
+
+--privacy policy checkbox
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'customersettings.acceptprivacypolicyenabled')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'customersettings.acceptprivacypolicyenabled', N'false')
+END
 GO

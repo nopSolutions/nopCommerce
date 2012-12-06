@@ -272,8 +272,30 @@
                     </div>
                 }
             </div>
+            @if (Model.AcceptPrivacyPolicyEnabled)
+            {
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $('#register-button').click(function () {
+                            if ($('#accept-privacy-policy').is(':checked')) {
+                                //do some stuff
+                                return true;
+                            }
+                            else {
+                                //just show validation errors, dont post
+                                alert('@T("Account.Fields.AcceptPrivacyPolicy.Required")');
+                                return false;
+                            }
+                        });
+                    });
+                </script>
+                <div class="accept-privacy-policy">
+                    <input id="accept-privacy-policy" type="checkbox" name="accept-privacy-policy" />
+                    <label for="accept-privacy-policy">@T("Account.Fields.AcceptPrivacyPolicy")</label>
+                </div>
+            }
             <div class="buttons">
-                <input type="submit" value="@T("Account.Register.Button")" name="register-button" />
+                <input type="submit" id="register-button" value="@T("Account.Register.Button")" name="register-button" />
             </div>
         </div>
     </div>

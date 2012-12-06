@@ -4581,6 +4581,7 @@ namespace Nop.Services.Installation
                     StateProvinceEnabled = false,
                     PhoneEnabled = false,
                     FaxEnabled = false,
+                    AcceptPrivacyPolicyEnabled = false,
                     NewsletterEnabled = true,
                     HideNewsletterBlock = false,
                     OnlineCustomerMinutes = 20,

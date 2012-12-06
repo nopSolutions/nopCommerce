@@ -455,6 +455,15 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CustomerSettings.AcceptPrivacyPolicyEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.CustomerSettings.AcceptPrivacyPolicyEnabled)
+                @Html.ValidationMessageFor(model => model.CustomerSettings.AcceptPrivacyPolicyEnabled)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.NopLabelFor(model => model.CustomerSettings.NewsletterEnabled):
             </td>
             <td class="adminData">

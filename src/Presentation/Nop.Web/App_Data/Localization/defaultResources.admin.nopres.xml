@@ -4279,6 +4279,14 @@
                                             </LocaleResource>
                                         </Children>
                                     </LocaleResource>
+                                    <LocaleResource Name="AcceptPrivacyPolicyEnabled">
+                                      <Value>'Accept privacy policy' enabled</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Ask customers to accept privacy policy during registration.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
                                     <LocaleResource Name="NewsletterEnabled">
                                         <Value>'Newsletter' enabled</Value>
                                         <Children>
