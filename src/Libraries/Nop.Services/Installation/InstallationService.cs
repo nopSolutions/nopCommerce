@@ -9183,6 +9183,17 @@ namespace Nop.Services.Installation
                                 };
             news.ForEach(n => _newsItemRepository.Insert(n));
 
+            //search engine names
+            foreach (var newsItem in news)
+            {
+                _urlRecordRepository.Insert(new UrlRecord()
+                {
+                    EntityId = newsItem.Id,
+                    EntityName = "NewsItem",
+                    LanguageId = newsItem.LanguageId,
+                    Slug = newsItem.ValidateSeName("", newsItem.Title, true)
+                });
+            }
         }
 
         protected virtual void InstallPolls()

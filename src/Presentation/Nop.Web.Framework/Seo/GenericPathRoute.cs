@@ -115,6 +115,14 @@ namespace Nop.Web.Framework.Seo
                             data.Values["SeName"] = urlRecord.Slug;
                         }
                         break;
+                    case "newsitem":
+                        {
+                            data.Values["controller"] = "News";
+                            data.Values["action"] = "NewsItem";
+                            data.Values["newsItemId"] = urlRecord.EntityId;
+                            data.Values["SeName"] = urlRecord.Slug;
+                        }
+                        break;
                     default:
                         {
                             //no record found

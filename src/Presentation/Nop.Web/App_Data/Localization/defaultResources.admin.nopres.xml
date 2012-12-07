@@ -6224,6 +6224,14 @@
                                                     </LocaleResource>
                                                 </Children>
                                             </LocaleResource>
+                                            <LocaleResource Name="SeName">
+                                                <Value>Search engine friendly page name</Value>
+                                                <Children>
+                                                    <LocaleResource Name="Hint">
+                                                        <Value>Set a search engine friendly page name e.g. 'the-best-news' to make your page URL 'http://www.yourStore.com/the-best-news'. Leave empty to generate it automatically based on the title of the news.</Value>
+                                                    </LocaleResource>
+                                                </Children>
+                                            </LocaleResource>
                                             <LocaleResource Name="Short">
                                                 <Value>Short description</Value>
                                                 <Children>

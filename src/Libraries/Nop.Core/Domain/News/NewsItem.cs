@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Seo;
 
 namespace Nop.Core.Domain.News
 {
     /// <summary>
     /// Represents a news item
     /// </summary>
-    public partial class NewsItem : BaseEntity
+    public partial class NewsItem : BaseEntity, ISlugSupported
     {
         private ICollection<NewsComment> _newsComments;
 

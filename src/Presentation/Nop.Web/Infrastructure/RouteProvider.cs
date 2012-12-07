@@ -556,11 +556,6 @@ namespace Nop.Web.Infrastructure
                             new { controller = "News", action = "ListRss" },
                             new { languageId = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
-            routes.MapLocalizedRoute("NewsItem",
-                            "news/{newsItemId}/{SeName}",
-                            new { controller = "News", action = "NewsItem", SeName = UrlParameter.Optional },
-                            new { newsItemId = @"\d+" },
-                            new[] { "Nop.Web.Controllers" });
 
             //topics
             routes.MapLocalizedRoute("Topic",

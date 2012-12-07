@@ -196,8 +196,8 @@ namespace Nop.Web.MVC.Tests.Public.Infrastructure
         {
             "~/news".ShouldMapTo<NewsController>(c => c.List(null));
             "~/news/rss/1".ShouldMapTo<NewsController>(c => c.ListRss(1));
-            "~/news/2/".ShouldMapTo<NewsController>(c => c.NewsItem(2));
-            "~/news/2/se-name".ShouldMapTo<NewsController>(c => c.NewsItem(2));
+            //"~/news/2/".ShouldMapTo<NewsController>(c => c.NewsItem(2));
+            //"~/news/2/se-name".ShouldMapTo<NewsController>(c => c.NewsItem(2));
         }
 
         [Test]

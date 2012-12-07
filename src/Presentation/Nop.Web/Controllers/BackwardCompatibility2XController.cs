@@ -1,14 +1,7 @@
-﻿using System;
-using System.Text.RegularExpressions;
-using System.Web.Mvc;
-using Nop.Services.Blogs;
+﻿using System.Web.Mvc;
 using Nop.Services.Catalog;
-using Nop.Services.Customers;
-using Nop.Services.Forums;
-using Nop.Services.Localization;
 using Nop.Services.News;
 using Nop.Services.Seo;
-using Nop.Services.Topics;
 
 namespace Nop.Web.Controllers
 {
@@ -19,16 +12,19 @@ namespace Nop.Web.Controllers
         private readonly IProductService _productService;
         private readonly ICategoryService _categoryService;
         private readonly IManufacturerService _manufacturerService;
+        private readonly INewsService _newsService;
         #endregion
 
 		#region Constructors
 
         public BackwardCompatibility2XController(IProductService productService,
-            ICategoryService categoryService, IManufacturerService manufacturerService)
+            ICategoryService categoryService, IManufacturerService manufacturerService,
+            INewsService newsService)
         {
             this._productService = productService;
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
+            this._newsService = newsService;
         }
 
 		#endregion
@@ -65,7 +61,7 @@ namespace Nop.Web.Controllers
 
             return RedirectToRoutePermanent("Category", new { SeName = category.GetSeName() });
         }
-        //in versions 2.00-2.65 we had ID in product URLs
+        //in versions 2.00-2.65 we had ID in manufacturer URLs
         public ActionResult RedirectManufacturerById(int manufacturerId)
         {
             var manufacturer = _manufacturerService.GetManufacturerById(manufacturerId);
@@ -73,6 +69,15 @@ namespace Nop.Web.Controllers
                 return RedirectToRoutePermanent("HomePage");
 
             return RedirectToRoutePermanent("Manufacturer", new { SeName = manufacturer.GetSeName() });
+        }
+        //in versions 2.00-2.70 we had ID in news URLs
+        public ActionResult RedirectNewsItemById(int newsItemId)
+        {
+            var newsItem = _newsService.GetNewsById(newsItemId);
+            if (newsItem == null)
+                return RedirectToRoutePermanent("HomePage");
+
+            return RedirectToRoutePermanent("NewsItem", new { SeName = newsItem.GetSeName(newsItem.LanguageId, ensureTwoPublishedLanguages: false) });
         }
 
         #endregion

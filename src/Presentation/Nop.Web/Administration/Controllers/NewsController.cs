@@ -10,6 +10,7 @@ using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.News;
 using Nop.Services.Security;
+using Nop.Services.Seo;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
@@ -27,6 +28,7 @@ namespace Nop.Admin.Controllers
         private readonly ICustomerContentService _customerContentService;
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
+        private readonly IUrlRecordService _urlRecordService;
         private readonly AdminAreaSettings _adminAreaSettings;
         
 		#endregion
@@ -36,7 +38,7 @@ namespace Nop.Admin.Controllers
         public NewsController(INewsService newsService, ILanguageService languageService,
             IDateTimeHelper dateTimeHelper, ICustomerContentService customerContentService,
             ILocalizationService localizationService, IPermissionService permissionService,
-            AdminAreaSettings adminAreaSettings)
+            IUrlRecordService urlRecordService, AdminAreaSettings adminAreaSettings)
         {
             this._newsService = newsService;
             this._languageService = languageService;
@@ -44,6 +46,7 @@ namespace Nop.Admin.Controllers
             this._customerContentService = customerContentService;
             this._localizationService = localizationService;
             this._permissionService = permissionService;
+            this._urlRecordService = urlRecordService;
             this._adminAreaSettings = adminAreaSettings;
 		}
 
@@ -136,6 +139,10 @@ namespace Nop.Admin.Controllers
                 newsItem.EndDateUtc = model.EndDate;
                 newsItem.CreatedOnUtc = DateTime.UtcNow;
                 _newsService.InsertNews(newsItem);
+                
+                //search engine name
+                var seName = newsItem.ValidateSeName(model.SeName, model.Title, true);
+                _urlRecordService.SaveSlug(newsItem, seName, newsItem.LanguageId);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.News.NewsItems.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = newsItem.Id }) : RedirectToAction("List");
@@ -180,6 +187,10 @@ namespace Nop.Admin.Controllers
                 newsItem.StartDateUtc = model.StartDate;
                 newsItem.EndDateUtc = model.EndDate;
                 _newsService.UpdateNews(newsItem);
+
+                //search engine name
+                var seName = newsItem.ValidateSeName(model.SeName, model.Title, true);
+                _urlRecordService.SaveSlug(newsItem, seName, newsItem.LanguageId);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.News.NewsItems.Updated"));
                 return continueEditing ? RedirectToAction("Edit", new { id = newsItem.Id }) : RedirectToAction("List");

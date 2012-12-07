@@ -22,6 +22,10 @@ namespace Nop.Admin.Models.News
         [AllowHtml]
         public string Title { get; set; }
 
+        [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.SeName")]
+        [AllowHtml]
+        public string SeName { get; set; }
+
         [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.Short")]
         [AllowHtml]
         public string Short { get; set; }
@@ -49,6 +53,5 @@ namespace Nop.Admin.Models.News
 
         [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.CreatedOn")]
         public DateTime CreatedOn { get; set; }
-
     }
 }

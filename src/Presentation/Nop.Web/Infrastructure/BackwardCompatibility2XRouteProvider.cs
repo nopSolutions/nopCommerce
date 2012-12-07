@@ -27,6 +27,12 @@ namespace Nop.Web.Infrastructure
                 new { controller = "BackwardCompatibility2X", action = "RedirectManufacturerById", SeName = UrlParameter.Optional },
                 new { manufacturerId = @"\d+" },
                 new[] { "Nop.Web.Controllers" });
+
+            //news
+            routes.MapLocalizedRoute("", "news/{newsItemId}/{SeName}",
+                new { controller = "BackwardCompatibility2X", action = "RedirectNewsItemById", SeName = UrlParameter.Optional },
+                new { newsItemId = @"\d+" },
+                new[] { "Nop.Web.Controllers" });
         }
 
         public int Priority

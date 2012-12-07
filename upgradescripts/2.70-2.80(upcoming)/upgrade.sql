@@ -47,6 +47,12 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.Fields.CustomValue.Hint">
     <Value>Enter custom value or leave empty. If entered, it''ll be used instead of the selected attribute option. Important note: ensure that ''Allow filtering'' is not enabled if custom value is entered.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Fields.SeName">
+    <Value>Search engine friendly page name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Fields.SeName.Hint">
+    <Value>Set a search engine friendly page name e.g. ''the-best-news'' to make your page URL ''http://www.yourStore.com/the-best-news''. Leave empty to generate it automatically based on the title of the news.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -757,4 +763,138 @@ BEGIN
 	ALTER TABLE [Product_SpecificationAttribute_Mapping]
 	ADD [CustomValue] nvarchar(4000) NULL
 END
+GO
+
+
+
+IF EXISTS (
+		SELECT *
+		FROM sysobjects
+		WHERE id = OBJECT_ID(N'[temp_generate_sename]') AND OBJECTPROPERTY(id,N'IsProcedure') = 1)
+DROP PROCEDURE [dbo].[temp_generate_sename]
+GO
+CREATE PROCEDURE [dbo].[temp_generate_sename]
+(
+    @current_sename nvarchar(1000),
+    @entity_id int,
+    @result nvarchar(1000) OUTPUT
+)
+AS
+BEGIN
+	--get current name
+	DECLARE @sql nvarchar(4000)
+	    
+    --generate se name    
+	DECLARE @new_sename nvarchar(1000)
+    SET @new_sename = ''
+    --ensure only allowed chars
+    DECLARE @allowed_se_chars varchar(4000)
+    --Note for store owners: add more chars below if want them to be supported when migrating your data
+    SET @allowed_se_chars = N'abcdefghijklmnopqrstuvwxyz1234567890 _-'
+    DECLARE @l int
+    SET @l = len(@current_sename)
+    DECLARE @p int
+    SET @p = 1
+    WHILE @p <= @l
+    BEGIN
+		DECLARE @c nvarchar(1)
+        SET @c = substring(@current_sename, @p, 1)
+        IF CHARINDEX(@c,@allowed_se_chars) > 0
+        BEGIN
+			SET @new_sename = @new_sename + @c
+		END
+		SET @p = @p + 1
+	END
+	--replace spaces with '-'
+	SELECT @new_sename = REPLACE(@new_sename,' ','-');
+    WHILE CHARINDEX('--',@new_sename) > 0
+		SELECT @new_sename = REPLACE(@new_sename,'--','-');
+    WHILE CHARINDEX('__',@new_sename) > 0
+		SELECT @new_sename = REPLACE(@new_sename,'__','_');
+    --ensure not empty
+    IF (@new_sename is null or @new_sename = '')
+		SELECT @new_sename = ISNULL(CAST(@entity_id AS nvarchar(max)), '0');
+    --lowercase
+	SELECT @new_sename = LOWER(@new_sename)
+	--ensure this sename is not reserved
+	WHILE (1=1)
+	BEGIN
+		DECLARE @sename_is_already_reserved bit
+		SET @sename_is_already_reserved = 0
+		SET @sql = 'IF EXISTS (SELECT 1 FROM [UrlRecord] WHERE [Slug] = @sename AND [EntityId] <> ' + ISNULL(CAST(@entity_id AS nvarchar(max)), '0') + ')
+					BEGIN
+						SELECT @sename_is_already_reserved = 1
+					END'
+		EXEC sp_executesql @sql,N'@sename nvarchar(1000), @sename_is_already_reserved nvarchar(4000) OUTPUT',@new_sename,@sename_is_already_reserved OUTPUT
+		
+		IF (@sename_is_already_reserved > 0)
+		BEGIN
+			--add some digit to the end in this case
+			SET @new_sename = @new_sename + '-1'
+		END
+		ELSE
+		BEGIN
+			BREAK
+		END
+	END
+	
+	--return
+    SET @result = @new_sename
+END
+GO
+
+--sename for news
+DECLARE @sename_existing_news_id int
+DECLARE cur_sename_existing_news CURSOR FOR
+SELECT [Id]
+FROM [News]
+OPEN cur_sename_existing_news
+FETCH NEXT FROM cur_sename_existing_news INTO @sename_existing_news_id
+WHILE @@FETCH_STATUS = 0
+BEGIN		
+	DECLARE @original_newsitem_title nvarchar(1000)
+	SELECT @original_newsitem_title = [Title] FROM [News] WHERE [Id] = @sename_existing_news_id
+	DECLARE @language_id int
+	SELECT @language_id = [LanguageId] FROM [News] WHERE [Id] = @sename_existing_news_id
+	
+	DECLARE @sename nvarchar(1000)	
+	SET @sename = null -- clear cache (variable scope)
+	
+	EXEC	[dbo].[temp_generate_sename]
+			@current_sename = @original_newsitem_title,
+			@entity_id = @sename_existing_news_id,
+			@result = @sename OUTPUT
+	
+	DECLARE @sql nvarchar(4000)
+	--insert
+	SET @sql = 'IF EXISTS (SELECT 1 FROM [UrlRecord] WHERE [EntityName]=''NewsItem'' AND [LanguageId] = ' + ISNULL(CAST(@language_id AS nvarchar(max)), '0') + ' AND [EntityId] = ' + ISNULL(CAST(@sename_existing_news_id AS nvarchar(max)), '0') + ')
+	BEGIN
+		--update
+		UPDATE [UrlRecord]
+		SET [Slug] = @sename
+		WHERE [EntityName]=''NewsItem'' AND [LanguageId] = ' + ISNULL(CAST(@language_id AS nvarchar(max)), '0') + ' AND [EntityId] = ' + ISNULL(CAST(@sename_existing_news_id AS nvarchar(max)), '0') + '
+	END
+	ELSE
+	BEGIN
+		--insert
+		INSERT INTO [UrlRecord] ([EntityId], [EntityName], [IsActive],[Slug], [LanguageId])
+		VALUES (' + ISNULL(CAST(@sename_existing_news_id AS nvarchar(max)), '0') +',''NewsItem'',1, @sename, ' + ISNULL(CAST(@language_id AS nvarchar(max)), '0')+ ')
+	END
+	'				
+	EXEC sp_executesql @sql,N'@sename nvarchar(1000) OUTPUT',@sename OUTPUT
+	
+	--fetch next identifier
+	FETCH NEXT FROM cur_sename_existing_news INTO @sename_existing_news_id
+END
+CLOSE cur_sename_existing_news
+DEALLOCATE cur_sename_existing_news	
+GO
+
+
+--drop temporary procedures & functions
+IF EXISTS (
+		SELECT *
+		FROM sysobjects
+		WHERE id = OBJECT_ID(N'[temp_generate_sename]') AND OBJECTPROPERTY(id,N'IsProcedure') = 1)
+DROP PROCEDURE [temp_generate_sename]
 GO

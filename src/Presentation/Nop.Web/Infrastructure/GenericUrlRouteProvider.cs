@@ -29,6 +29,10 @@ namespace Nop.Web.Infrastructure
                             "{SeName}",
                             new { controller = "Catalog", action = "Manufacturer" },
                             new[] { "Nop.Web.Controllers" });
+            routes.MapLocalizedRoute("NewsItem",
+                            "{SeName}",
+                            new { controller = "News", action = "NewsItem" },
+                            new[] { "Nop.Web.Controllers" });
         }
 
         public int Priority
