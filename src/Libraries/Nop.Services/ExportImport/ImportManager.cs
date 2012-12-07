@@ -342,7 +342,7 @@ namespace Nop.Services.ExportImport
                         //search engine name
                         _urlRecordService.SaveSlug(product, product.ValidateSeName(seName, product.Name, true), 0);
 
-                        //vairant
+                        //variant
                         productVariant = new ProductVariant()
                         {
                             ProductId = product.Id,

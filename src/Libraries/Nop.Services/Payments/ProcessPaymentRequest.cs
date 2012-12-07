@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Services.Payments
@@ -9,6 +10,11 @@ namespace Nop.Services.Payments
     [Serializable]
     public partial class ProcessPaymentRequest
     {
+        public ProcessPaymentRequest()
+        {
+            this.CustomValues = new Dictionary<string, object>();
+        }
+
         /// <summary>
         /// Gets or sets a customer
         /// </summary>
@@ -113,5 +119,10 @@ namespace Nop.Services.Payments
         public int RecurringTotalCycles { get; set; }
 
         #endregion
+
+        /// <summary>
+        /// You can store any custom value in this property
+        /// </summary>
+        public Dictionary<string, object> CustomValues { get; set; }
     }
 }
