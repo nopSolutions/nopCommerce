@@ -5334,6 +5334,7 @@ namespace Nop.Services.Installation
                     EntityId = category.Id,
                     EntityName = "Category",
                     LanguageId = 0,
+                    IsActive = true,
                     Slug = category.ValidateSeName("", category.Name, true)
                 });
             }
@@ -5385,6 +5386,7 @@ namespace Nop.Services.Installation
                     EntityId = manufacturer.Id,
                     EntityName = "Manufacturer",
                     LanguageId = 0,
+                    IsActive = true,
                     Slug = manufacturer.ValidateSeName("", manufacturer.Name, true)
                 });
             }
@@ -8670,6 +8672,7 @@ namespace Nop.Services.Installation
                     EntityId = product.Id,
                     EntityName = "Product",
                     LanguageId = 0,
+                    IsActive = true,
                     Slug = product.ValidateSeName("", product.Name, true)
                 });
             }
@@ -9161,6 +9164,7 @@ namespace Nop.Services.Installation
                     EntityId = blogPost.Id,
                     EntityName = "BlogPost",
                     LanguageId = blogPost.LanguageId,
+                    IsActive = true,
                     Slug = blogPost.ValidateSeName("", blogPost.Title, true)
                 });
             }
@@ -9202,6 +9206,7 @@ namespace Nop.Services.Installation
                     EntityId = newsItem.Id,
                     EntityName = "NewsItem",
                     LanguageId = newsItem.LanguageId,
+                    IsActive = true,
                     Slug = newsItem.ValidateSeName("", newsItem.Title, true)
                 });
             }
