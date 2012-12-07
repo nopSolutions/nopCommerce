@@ -53,6 +53,12 @@ set @resources='
   <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Fields.SeName.Hint">
     <Value>Set a search engine friendly page name e.g. ''the-best-news'' to make your page URL ''http://www.yourStore.com/the-best-news''. Leave empty to generate it automatically based on the title of the news.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.SeName">
+    <Value>Search engine friendly page name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.SeName.Hint">
+    <Value>Set a search engine friendly page name e.g. ''the-best-blog-post'' to make your page URL ''http://www.yourStore.com/the-best-blog-post''. Leave empty to generate it automatically based on the title of the blog post.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -888,6 +894,53 @@ BEGIN
 END
 CLOSE cur_sename_existing_news
 DEALLOCATE cur_sename_existing_news	
+GO
+
+--sename for blog posts
+DECLARE @sename_existing_blogpost_id int
+DECLARE cur_sename_existing_blogpost CURSOR FOR
+SELECT [Id]
+FROM [BlogPost]
+OPEN cur_sename_existing_blogpost
+FETCH NEXT FROM cur_sename_existing_blogpost INTO @sename_existing_blogpost_id
+WHILE @@FETCH_STATUS = 0
+BEGIN		
+	DECLARE @original_blogpost_title nvarchar(1000)
+	SELECT @original_blogpost_title = [Title] FROM [BlogPost] WHERE [Id] = @sename_existing_blogpost_id
+	DECLARE @language_id int
+	SELECT @language_id = [LanguageId] FROM [BlogPost] WHERE [Id] = @sename_existing_blogpost_id
+	
+	DECLARE @sename nvarchar(1000)	
+	SET @sename = null -- clear cache (variable scope)
+	
+	EXEC	[dbo].[temp_generate_sename]
+			@current_sename = @original_blogpost_title,
+			@entity_id = @sename_existing_blogpost_id,
+			@result = @sename OUTPUT
+	
+	DECLARE @sql nvarchar(4000)
+	--insert
+	SET @sql = 'IF EXISTS (SELECT 1 FROM [UrlRecord] WHERE [EntityName]=''BlogPost'' AND [LanguageId] = ' + ISNULL(CAST(@language_id AS nvarchar(max)), '0') + ' AND [EntityId] = ' + ISNULL(CAST(@sename_existing_blogpost_id AS nvarchar(max)), '0') + ')
+	BEGIN
+		--update
+		UPDATE [UrlRecord]
+		SET [Slug] = @sename
+		WHERE [EntityName]=''BlogPost'' AND [LanguageId] = ' + ISNULL(CAST(@language_id AS nvarchar(max)), '0') + ' AND [EntityId] = ' + ISNULL(CAST(@sename_existing_blogpost_id AS nvarchar(max)), '0') + '
+	END
+	ELSE
+	BEGIN
+		--insert
+		INSERT INTO [UrlRecord] ([EntityId], [EntityName], [IsActive],[Slug], [LanguageId])
+		VALUES (' + ISNULL(CAST(@sename_existing_blogpost_id AS nvarchar(max)), '0') +',''BlogPost'',1, @sename, ' + ISNULL(CAST(@language_id AS nvarchar(max)), '0')+ ')
+	END
+	'				
+	EXEC sp_executesql @sql,N'@sename nvarchar(1000) OUTPUT',@sename OUTPUT
+	
+	--fetch next identifier
+	FETCH NEXT FROM cur_sename_existing_blogpost INTO @sename_existing_blogpost_id
+END
+CLOSE cur_sename_existing_blogpost
+DEALLOCATE cur_sename_existing_blogpost	
 GO
 
 

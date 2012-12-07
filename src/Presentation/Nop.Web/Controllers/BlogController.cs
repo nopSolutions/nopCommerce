@@ -97,7 +97,7 @@ namespace Nop.Web.Controllers
                 throw new ArgumentNullException("model");
 
             model.Id = blogPost.Id;
-            model.SeName = blogPost.GetSeName();
+            model.SeName = blogPost.GetSeName(blogPost.LanguageId, ensureTwoPublishedLanguages: false);
             model.Title = blogPost.Title;
             model.Body = blogPost.Body;
             model.AllowComments = blogPost.AllowComments;
@@ -220,7 +220,7 @@ namespace Nop.Web.Controllers
                 null, null, 0, int.MaxValue);
             foreach (var blogPost in blogPosts)
             {
-                string blogPostUrl = Url.RouteUrl("BlogPost", new { blogPostId = blogPost.Id, SeName = blogPost.GetSeName() }, "http");
+                string blogPostUrl = Url.RouteUrl("BlogPost", new { SeName = blogPost.GetSeName(blogPost.LanguageId, ensureTwoPublishedLanguages: false) }, "http");
                 items.Add(new SyndicationItem(blogPost.Title, blogPost.Body, new Uri(blogPostUrl), String.Format("Blog:{0}", blogPost.Id), blogPost.CreatedOnUtc));
             }
             feed.Items = items;
@@ -294,7 +294,7 @@ namespace Nop.Web.Controllers
                 //The text boxes should be cleared after a comment has been posted
                 //That' why we reload the page
                 TempData["nop.blog.addcomment.result"] = _localizationService.GetResource("Blog.Comments.SuccessfullyAdded");
-                return RedirectToRoute("BlogPost", new { blogPostId = blogPost.Id, SeName = blogPost.GetSeName() });
+                return RedirectToRoute("BlogPost", new { SeName = blogPost.GetSeName(blogPost.LanguageId, ensureTwoPublishedLanguages: false) });
             }
 
             //If we got this far, something failed, redisplay form

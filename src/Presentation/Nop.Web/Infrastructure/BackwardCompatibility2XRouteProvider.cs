@@ -33,6 +33,12 @@ namespace Nop.Web.Infrastructure
                 new { controller = "BackwardCompatibility2X", action = "RedirectNewsItemById", SeName = UrlParameter.Optional },
                 new { newsItemId = @"\d+" },
                 new[] { "Nop.Web.Controllers" });
+
+            //blog
+            routes.MapLocalizedRoute("", "blog/{blogPostId}/{SeName}",
+                new { controller = "BackwardCompatibility2X", action = "RedirectBlogPostById", SeName = UrlParameter.Optional },
+                new { blogPostId = @"\d+" },
+                new[] { "Nop.Web.Controllers" });
         }
 
         public int Priority

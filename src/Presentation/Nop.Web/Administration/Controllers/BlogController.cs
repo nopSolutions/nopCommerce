@@ -10,6 +10,7 @@ using Nop.Services.Customers;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Security;
+using Nop.Services.Seo;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
@@ -27,6 +28,7 @@ namespace Nop.Admin.Controllers
         private readonly ICustomerContentService _customerContentService;
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
+        private readonly IUrlRecordService _urlRecordService;
         private readonly AdminAreaSettings _adminAreaSettings;
 
         #endregion
@@ -36,7 +38,7 @@ namespace Nop.Admin.Controllers
         public BlogController(IBlogService blogService, ILanguageService languageService,
             IDateTimeHelper dateTimeHelper, ICustomerContentService customerContentService,
             ILocalizationService localizationService, IPermissionService permissionService,
-            AdminAreaSettings adminAreaSettings)
+            IUrlRecordService urlRecordService, AdminAreaSettings adminAreaSettings)
         {
             this._blogService = blogService;
             this._languageService = languageService;
@@ -44,6 +46,7 @@ namespace Nop.Admin.Controllers
             this._customerContentService = customerContentService;
             this._localizationService = localizationService;
             this._permissionService = permissionService;
+            this._urlRecordService = urlRecordService;
             this._adminAreaSettings = adminAreaSettings;
 		}
 
@@ -135,6 +138,10 @@ namespace Nop.Admin.Controllers
                 blogPost.EndDateUtc = model.EndDate;
                 blogPost.CreatedOnUtc = DateTime.UtcNow;
                 _blogService.InsertBlogPost(blogPost);
+                
+                //search engine name
+                var seName = blogPost.ValidateSeName(model.SeName, model.Title, true);
+                _urlRecordService.SaveSlug(blogPost, seName, blogPost.LanguageId);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = blogPost.Id }) : RedirectToAction("List");
@@ -179,6 +186,10 @@ namespace Nop.Admin.Controllers
                 blogPost.StartDateUtc = model.StartDate;
                 blogPost.EndDateUtc = model.EndDate;
                 _blogService.UpdateBlogPost(blogPost);
+
+                //search engine name
+                var seName = blogPost.ValidateSeName(model.SeName, model.Title, true);
+                _urlRecordService.SaveSlug(blogPost, seName, blogPost.LanguageId);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Updated"));
                 return continueEditing ? RedirectToAction("Edit", new { id = blogPost.Id }) : RedirectToAction("List");

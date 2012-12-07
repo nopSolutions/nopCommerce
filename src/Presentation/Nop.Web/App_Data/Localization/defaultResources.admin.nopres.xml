@@ -5860,6 +5860,14 @@
                                                     </LocaleResource>
                                                 </Children>
                                             </LocaleResource>
+                                            <LocaleResource Name="SeName">
+                                                <Value>Search engine friendly page name</Value>
+                                                <Children>
+                                                    <LocaleResource Name="Hint">
+                                                        <Value>Set a search engine friendly page name e.g. 'the-best-blog-post' to make your page URL 'http://www.yourStore.com/the-best-blog-post'. Leave empty to generate it automatically based on the title of the blog post.</Value>
+                                                    </LocaleResource>
+                                                </Children>
+                                            </LocaleResource>
                                             <LocaleResource Name="Body">
                                                 <Value>Body</Value>
                                                 <Children>

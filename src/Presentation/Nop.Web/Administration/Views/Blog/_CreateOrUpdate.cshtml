@@ -66,4 +66,13 @@
             @Html.ValidationMessageFor(model => model.EndDate)
         </td>
     </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.SeName):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.SeName)
+            @Html.ValidationMessageFor(model => model.SeName)
+        </td>
+    </tr>
 </table>

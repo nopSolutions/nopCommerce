@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Seo;
 
 namespace Nop.Core.Domain.Blogs
 {
     /// <summary>
     /// Represents a blog post
     /// </summary>
-    public partial class BlogPost : BaseEntity
+    public partial class BlogPost : BaseEntity, ISlugSupported
     {
         private ICollection<BlogComment> _blogComments;
 

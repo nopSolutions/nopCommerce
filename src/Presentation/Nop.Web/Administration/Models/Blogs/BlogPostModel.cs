@@ -22,6 +22,10 @@ namespace Nop.Admin.Models.Blogs
         [AllowHtml]
         public string Title { get; set; }
 
+        [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.SeName")]
+        [AllowHtml]
+        public string SeName { get; set; }
+
         [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.Body")]
         [AllowHtml]
         public string Body { get; set; }

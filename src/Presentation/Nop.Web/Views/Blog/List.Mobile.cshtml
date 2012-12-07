@@ -34,7 +34,7 @@
             @foreach (var item in Model.BlogPosts)
             {
                 <div class="post">
-                    <a class="blog-title" href="@Url.RouteUrl("BlogPost", new { blogPostId = item.Id, SeName = item.SeName })">
+                    <a class="blog-title" href="@Url.RouteUrl("BlogPost", new { SeName = item.SeName })">
                         @item.Title</a><span class="blog-date">-
                             @item.CreatedOn.ToString("D")
                         </span>
@@ -59,7 +59,7 @@
                     </div>
                     @if (item.AllowComments)
                     {
-                        <a href="@Url.RouteUrl("BlogPost", new { blogPostId = item.Id, SeName = item.SeName })" class="blog-details">
+                        <a href="@Url.RouteUrl("BlogPost", new { SeName = item.SeName })" class="blog-details">
                             @string.Format(T("Blog.CommentsLink").Text, item.NumberOfComments)
                         </a>
                     }

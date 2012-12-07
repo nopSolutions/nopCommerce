@@ -202,7 +202,7 @@ namespace Nop.Web.Controllers
             if (newsItem == null)
                 return RedirectToRoutePermanent("HomePage");
 
-            return RedirectToRoutePermanent("NewsItem", new { newsItemId = newsItem.Id, SeName = newsItem.GetSeName() });
+            return RedirectToRoutePermanent("NewsItem", new { newsItemId = newsItem.Id, SeName = newsItem.GetSeName(newsItem.LanguageId, ensureTwoPublishedLanguages: false) });
         }
 
         public ActionResult RedirectBlogPost(string id, bool idIncludesSename = true)
@@ -213,7 +213,7 @@ namespace Nop.Web.Controllers
             if (blogPost == null)
                 return RedirectToRoutePermanent("HomePage");
 
-            return RedirectToRoutePermanent("BlogPost", new { blogPostId = blogPost.Id, SeName = blogPost.GetSeName() });
+            return RedirectToRoutePermanent("BlogPost", new { blogPostId = blogPost.Id, SeName = blogPost.GetSeName(blogPost.LanguageId, ensureTwoPublishedLanguages: false) });
         }
 
         public ActionResult RedirectTopic(string id, bool idIncludesSename = true)

@@ -9153,6 +9153,17 @@ namespace Nop.Services.Installation
                                 };
             blogPosts.ForEach(bp => _blogPostRepository.Insert(bp));
 
+            //search engine names
+            foreach (var blogPost in blogPosts)
+            {
+                _urlRecordRepository.Insert(new UrlRecord()
+                {
+                    EntityId = blogPost.Id,
+                    EntityName = "BlogPost",
+                    LanguageId = blogPost.LanguageId,
+                    Slug = blogPost.ValidateSeName("", blogPost.Title, true)
+                });
+            }
         }
 
         protected virtual void InstallNews()

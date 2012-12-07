@@ -21,17 +21,25 @@ namespace Nop.Web.Infrastructure
                                      "{SeName}",
                                      new {controller = "Catalog", action = "Product"},
                                      new[] {"Nop.Web.Controllers"});
+
             routes.MapLocalizedRoute("Category",
                             "{SeName}",
                             new { controller = "Catalog", action = "Category" },
                             new[] { "Nop.Web.Controllers" });
+
             routes.MapLocalizedRoute("Manufacturer",
                             "{SeName}",
                             new { controller = "Catalog", action = "Manufacturer" },
                             new[] { "Nop.Web.Controllers" });
+
             routes.MapLocalizedRoute("NewsItem",
                             "{SeName}",
                             new { controller = "News", action = "NewsItem" },
+                            new[] { "Nop.Web.Controllers" });
+
+            routes.MapLocalizedRoute("BlogPost",
+                            "{SeName}",
+                            new { controller = "Blog", action = "BlogPost" },
                             new[] { "Nop.Web.Controllers" });
         }
 

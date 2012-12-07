@@ -1,4 +1,5 @@
 ﻿using System.Web.Mvc;
+using Nop.Services.Blogs;
 using Nop.Services.Catalog;
 using Nop.Services.News;
 using Nop.Services.Seo;
@@ -13,18 +14,20 @@ namespace Nop.Web.Controllers
         private readonly ICategoryService _categoryService;
         private readonly IManufacturerService _manufacturerService;
         private readonly INewsService _newsService;
+        private readonly IBlogService _blogService;
         #endregion
 
 		#region Constructors
 
         public BackwardCompatibility2XController(IProductService productService,
             ICategoryService categoryService, IManufacturerService manufacturerService,
-            INewsService newsService)
+            INewsService newsService, IBlogService blogService)
         {
             this._productService = productService;
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
             this._newsService = newsService;
+            this._blogService = blogService;
         }
 
 		#endregion
@@ -78,6 +81,15 @@ namespace Nop.Web.Controllers
                 return RedirectToRoutePermanent("HomePage");
 
             return RedirectToRoutePermanent("NewsItem", new { SeName = newsItem.GetSeName(newsItem.LanguageId, ensureTwoPublishedLanguages: false) });
+        }
+        //in versions 2.00-2.70 we had ID in blog URLs
+        public ActionResult RedirectBlogPostById(int blogPostId)
+        {
+            var blogPost = _blogService.GetBlogPostById(blogPostId);
+            if (blogPost == null)
+                return RedirectToRoutePermanent("HomePage");
+
+            return RedirectToRoutePermanent("BlogPost", new { SeName = blogPost.GetSeName(blogPost.LanguageId, ensureTwoPublishedLanguages: false) });
         }
 
         #endregion

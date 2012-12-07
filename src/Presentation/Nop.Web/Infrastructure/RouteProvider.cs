@@ -395,11 +395,6 @@ namespace Nop.Web.Infrastructure
                             new { controller = "Blog", action = "ListRss" },
                             new { languageId = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
-            routes.MapLocalizedRoute("BlogPost",
-                            "blog/{blogPostId}/{SeName}",
-                            new { controller = "Blog", action = "BlogPost", SeName = UrlParameter.Optional },
-                            new { blogPostId = @"\d+" },
-                            new[] { "Nop.Web.Controllers" });
 
             //forum
             routes.MapLocalizedRoute("Boards",
