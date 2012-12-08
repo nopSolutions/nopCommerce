@@ -294,6 +294,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
             }
 
             builder.AppendFormat("&custom={0}", postProcessPaymentRequest.Order.OrderGuid);
+            builder.AppendFormat("&charset={0}", "utf-8");
             builder.Append(string.Format("&no_note=1&currency_code={0}", HttpUtility.UrlEncode(_currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode)));
             builder.AppendFormat("&invoice={0}", postProcessPaymentRequest.Order.Id);
             builder.AppendFormat("&rm=2", new object[0]);
