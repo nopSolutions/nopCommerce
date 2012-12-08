@@ -55,11 +55,12 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Core
         {
             if (oAuthResult.IsSuccess)
             {
+                var accessToken = GetAccessToken(oAuthResult.Code);
                 var parameters = new OAuthAuthenticationParameters(Provider.SystemName)
                 {
-                    ExternalIdentifier = GetAccessToken(oAuthResult.Code),
+                    ExternalIdentifier = accessToken,
                     OAuthToken = oAuthResult.Code,
-                    OAuthAccessToken = GetAccessToken(oAuthResult.Code)
+                    OAuthAccessToken = accessToken
                 };
 
                 if (_externalAuthenticationSettings.AutoRegisterEnabled)
