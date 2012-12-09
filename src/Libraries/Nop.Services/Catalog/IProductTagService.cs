@@ -17,8 +17,9 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Gets all product tags
         /// </summary>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product tags</returns>
-        IList<ProductTag> GetAllProductTags();
+        IList<ProductTag> GetAllProductTags(bool showHidden = false);
 
         /// <summary>
         /// Gets product tag

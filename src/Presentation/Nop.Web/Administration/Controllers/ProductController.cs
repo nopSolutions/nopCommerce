@@ -441,7 +441,7 @@ namespace Nop.Admin.Controllers
 
             //product tags
             var existingProductTags = product.ProductTags.OrderByDescending(pt => pt.ProductCount).ToList();
-            var productTagsToDelete = new List<ProductTag>();
+            var productTagsToRemove = new List<ProductTag>();
             foreach (var existingProductTag in existingProductTags)
             {
                 bool found = false;
@@ -455,10 +455,10 @@ namespace Nop.Admin.Controllers
                 }
                 if (!found)
                 {
-                    productTagsToDelete.Add(existingProductTag);
+                    productTagsToRemove.Add(existingProductTag);
                 }
             }
-            foreach (var productTag in productTagsToDelete)
+            foreach (var productTag in productTagsToRemove)
             {
                 product.ProductTags.Remove(productTag);
                 //ensure product is saved before updating totals
@@ -626,8 +626,6 @@ namespace Nop.Admin.Controllers
                 _urlRecordService.SaveSlug(product, model.SeName, 0);
                 //locales
                 UpdateLocales(product, model);
-                //tags
-                SaveProductTags(product, ParseProductTags(model.ProductTags));
                 //ACL (customer roles)
                 SaveProductAcl(product, model);
 
@@ -640,6 +638,9 @@ namespace Nop.Admin.Controllers
                 variant.UpdatedOnUtc = DateTime.UtcNow;
                 _productService.InsertProductVariant(variant);
                 FirstVariant_UpdateLocales(variant, model.FirstProductVariantModel);
+
+                //tags (after variant because it can effect product count)
+                SaveProductTags(product, ParseProductTags(model.ProductTags));
 
                 //activity log
                 _customerActivityService.InsertActivity("AddNewProduct", _localizationService.GetResource("ActivityLog.AddNewProduct"), product.Name);
@@ -1537,7 +1538,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
 
-            var tags = _productTagService.GetAllProductTags()
+            var tags = _productTagService.GetAllProductTags(true)
                 .Select(x =>
                 {
                     return new ProductTagModel()

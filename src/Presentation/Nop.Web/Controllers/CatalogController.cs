@@ -2350,8 +2350,6 @@ namespace Nop.Web.Controllers
                 //get all tags
                 var allTags = _productTagService.GetAllProductTags();
                 var tags = allTags
-                    .OrderByDescending(x => x.ProductCount)
-                    .Where(x => x.ProductCount > 0)
                     .Take(_catalogSettings.NumberOfProductTags)
                     .ToList();
                 //sorting
@@ -2516,8 +2514,6 @@ namespace Nop.Web.Controllers
         {
             var model = new PopularProductTagsModel();
             model.Tags = _productTagService.GetAllProductTags()
-                .OrderByDescending(x => x.ProductCount)
-                .Where(x => x.ProductCount > 0)
                 //sort by name
                 .OrderBy(x => x.GetLocalized(y => y.Name))
                 .Select(x =>

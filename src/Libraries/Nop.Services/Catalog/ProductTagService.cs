@@ -55,12 +55,14 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Gets all product tags
         /// </summary>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product tags</returns>
-        public virtual IList<ProductTag> GetAllProductTags()
+        public virtual IList<ProductTag> GetAllProductTags(bool showHidden = false)
         {
-            var query = from pt in _productTagRepository.Table
-                        orderby pt.ProductCount descending
-                        select pt;
+            var query = _productTagRepository.Table;
+            if (!showHidden)
+                query = query.Where(pt => pt.ProductCount > 0);
+            query = query.OrderByDescending(pt => pt.ProductCount);
             var productTags = query.ToList();
             return productTags;
         }
@@ -136,15 +138,11 @@ namespace Nop.Services.Catalog
             int newTotal = productTag.Products
                 .Where(p => !p.Deleted && p.Published && p.ProductVariants.Where(pv => !pv.Deleted && pv.Published).Count() > 0)
                 .Count();
-            if (newTotal > 0)
-            {
-                productTag.ProductCount = newTotal;
-                UpdateProductTag(productTag);
-            }
-            else
-            {
-                DeleteProductTag(productTag);
-            }
+
+            //we do not delete product tasg with 0 product count
+            productTag.ProductCount = newTotal;
+            UpdateProductTag(productTag);
+            
         }
         
         #endregion
