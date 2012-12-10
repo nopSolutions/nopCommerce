@@ -36,8 +36,8 @@
         $(document).ready(function () {
             $('#vote-poll-@(Model.Id)').click(function () {
                 var pollAnswerId = $("input:radio[name=pollanswers-@(Model.Id)]:checked").val();
-                if(typeof(pollAnswerId) == 'undefined'){
-                    alert('@T("Polls.SelectAnswer")');
+                if (typeof (pollAnswerId) == 'undefined') {
+                    alert('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Polls.SelectAnswer").Text))');
                 }
                 else {
                     var voteProgress = $("#poll-voting-progress-@(Model.Id)");

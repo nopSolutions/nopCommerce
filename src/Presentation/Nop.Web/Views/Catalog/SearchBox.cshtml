@@ -17,7 +17,7 @@
             function check_small_search_form() {
                 var search_terms = $("#small-searchterms");
                 if (search_terms.val() == "") {
-                    alert('@T("Search.EnterSearchTerms")');
+                    alert('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Search.EnterSearchTerms").Text))');
                     search_terms.focus();
                     return false;
                 }

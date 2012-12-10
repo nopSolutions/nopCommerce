@@ -38,7 +38,7 @@
                 });
             }
             function EuDialogCancelClick() {
-                alert('@T("EUCookieLaw.CannotBrowse")');
+                alert('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("EUCookieLaw.CannotBrowse").Text))');
             }
 
             function toggleEuCookiePrivacyInfo() {

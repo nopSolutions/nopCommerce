@@ -24,7 +24,7 @@
                          }
                     },
                     error:function (xhr, ajaxOptions, thrownError){
-                        alert('@T("Admin.Promotions.Discounts.Requirements.FailedToSave")');
+                        alert('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Admin.Promotions.Discounts.Requirements.FailedToSave").Text))');
                     }  
                 });
             });

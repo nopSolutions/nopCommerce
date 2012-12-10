@@ -335,7 +335,7 @@
                             }
                             else {
                                 //just show validation errors, dont post
-                                alert('@HttpUtility.JavaScriptStringEncode(T("Account.Fields.AcceptPrivacyPolicy.Required").Text)');
+                                alert('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Account.Fields.AcceptPrivacyPolicy.Required").Text))');
                                 return false;
                             }
                         });

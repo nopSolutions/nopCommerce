@@ -172,7 +172,7 @@
                                         {
                                                 <text>
                                         if (!$('#termsofservice').is(':checked')) {
-                                            alert('@T("Checkout.TermsOfService.PleaseAccept")');
+                                            alert('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Checkout.TermsOfService.PleaseAccept").Text))');
                                             termOfServiceOk = false;
                                         }
                                         else {
