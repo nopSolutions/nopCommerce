@@ -19,6 +19,15 @@ namespace Nop.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.ProductVariantAttributes.AttributeCombinations.Fields.AllowOutOfStockOrders")]
         public bool AllowOutOfStockOrders { get; set; }
 
+        [NopResourceDisplayName("Admin.Catalog.Products.Variants.ProductVariantAttributes.AttributeCombinations.Fields.Sku")]
+        public virtual string Sku { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Products.Variants.ProductVariantAttributes.AttributeCombinations.Fields.ManufacturerPartNumber")]
+        public virtual string ManufacturerPartNumber { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Products.Variants.ProductVariantAttributes.AttributeCombinations.Fields.Gtin")]
+        public virtual string Gtin { get; set; }
+
         public IList<ProductVariantAttributeModel> ProductVariantAttributes { get; set; }
 
         public IList<string> Warnings { get; set; }

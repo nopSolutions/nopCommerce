@@ -1030,6 +1030,9 @@ namespace Nop.Admin.Controllers
                             x.AttributesXml, _workContext.CurrentCustomer, "<br />", true, true, true, false),
                         StockQuantity1 = x.StockQuantity,
                         AllowOutOfStockOrders1 = x.AllowOutOfStockOrders,
+                        Sku1 = x.Sku,
+                        ManufacturerPartNumber1 = x.ManufacturerPartNumber,
+                        Gtin1 = x.Gtin
                     };
                     //warnings
                     var warnings = _shoppingCartService.GetShoppingCartItemAttributeWarnings(ShoppingCartType.ShoppingCart,
@@ -1069,6 +1072,9 @@ namespace Nop.Admin.Controllers
 
             pvac.StockQuantity = model.StockQuantity1;
             pvac.AllowOutOfStockOrders = model.AllowOutOfStockOrders1;
+            pvac.Sku = model.Sku1;
+            pvac.ManufacturerPartNumber = model.ManufacturerPartNumber1;
+            pvac.Gtin = model.Gtin1;
             _productAttributeService.UpdateProductVariantAttributeCombination(pvac);
 
             return ProductVariantAttributeCombinationList(command, pvac.ProductVariantId);
@@ -1126,9 +1132,6 @@ namespace Nop.Admin.Controllers
 
             ViewBag.btnId = btnId;
             ViewBag.formId = formId;
-
-            int stockQuantity = model.StockQuantity;
-            bool allowOutOfStockOrders = model.AllowOutOfStockOrders;
 
             //attributes
             string attributes = "";
@@ -1270,8 +1273,11 @@ namespace Nop.Admin.Controllers
                 {
                     ProductVariantId = variant.Id,
                     AttributesXml = attributes,
-                    StockQuantity = stockQuantity,
-                    AllowOutOfStockOrders = allowOutOfStockOrders
+                    StockQuantity = model.StockQuantity,
+                    AllowOutOfStockOrders = model.AllowOutOfStockOrders,
+                    Sku = model.Sku,
+                    ManufacturerPartNumber = model.ManufacturerPartNumber,
+                    Gtin = model.Gtin,
                 };
                 _productAttributeService.InsertProductVariantAttributeCombination(combination);
 

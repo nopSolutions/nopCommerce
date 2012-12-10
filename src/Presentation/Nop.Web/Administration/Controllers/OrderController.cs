@@ -387,7 +387,7 @@ namespace Nop.Admin.Controllers
                 {
                     Id = opv.Id,
                     ProductVariantId = opv.ProductVariantId,
-                    Sku = opv.ProductVariant.Sku,
+                    Sku = opv.ProductVariant.FormatSku(opv.AttributesXml, _productAttributeParser),
                     Quantity = opv.Quantity,
                     IsDownload = opv.ProductVariant.IsDownload,
                     DownloadCount = opv.DownloadCount,
@@ -534,7 +534,7 @@ namespace Nop.Admin.Controllers
                         Id = sopv.Id,
                         OrderProductVariantId = opv.Id,
                         ProductVariantId = opv.ProductVariantId,
-                        Sku = opv.ProductVariant.Sku,
+                        Sku = opv.ProductVariant.FormatSku(opv.AttributesXml, _productAttributeParser),
                         AttributeInfo = opv.AttributeDescription,
                         ItemWeight = opv.ItemWeight.HasValue ? string.Format("{0:F2} [{1}]", opv.ItemWeight, baseWeightIn) : "",
                         ItemDimensions = string.Format("{0:F2} x {1:F2} x {2:F2} [{3}]", opv.ProductVariant.Length, opv.ProductVariant.Width, opv.ProductVariant.Height, baseDimensionIn),
@@ -1957,7 +1957,7 @@ namespace Nop.Admin.Controllers
                 {
                     OrderProductVariantId = opv.Id,
                     ProductVariantId = opv.ProductVariantId,
-                    Sku = opv.ProductVariant.Sku,
+                    Sku = opv.ProductVariant.FormatSku(opv.AttributesXml, _productAttributeParser),
                     AttributeInfo = opv.AttributeDescription,
                     ItemWeight = opv.ItemWeight.HasValue ? string.Format("{0:F2} [{1}]", opv.ItemWeight, baseWeightIn) : "",
                     ItemDimensions = string.Format("{0:F2} x {1:F2} x {2:F2} [{3}]", opv.ProductVariant.Length, opv.ProductVariant.Width, opv.ProductVariant.Height, baseDimensionIn),

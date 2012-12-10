@@ -397,7 +397,7 @@ namespace Nop.Web.Controllers
                 var cartItemModel = new ShoppingCartModel.ShoppingCartItemModel()
                 {
                     Id = sci.Id,
-                    Sku = sci.ProductVariant.Sku,
+                    Sku = sci.ProductVariant.FormatSku(sci.AttributesXml, _productAttributeParser),
                     ProductId = sci.ProductVariant.ProductId,
                     ProductSeName = sci.ProductVariant.Product.GetSeName(),
                     Quantity = sci.Quantity,
@@ -579,7 +579,7 @@ namespace Nop.Web.Controllers
                 var cartItemModel = new WishlistModel.ShoppingCartItemModel()
                 {
                     Id = sci.Id,
-                    Sku = sci.ProductVariant.Sku,
+                    Sku = sci.ProductVariant.FormatSku(sci.AttributesXml, _productAttributeParser),
                     ProductId = sci.ProductVariant.ProductId,
                     ProductSeName = sci.ProductVariant.Product.GetSeName(),
                     Quantity = sci.Quantity,

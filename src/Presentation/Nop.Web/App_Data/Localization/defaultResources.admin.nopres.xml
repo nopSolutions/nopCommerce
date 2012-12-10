@@ -1737,6 +1737,30 @@
                                                                     </LocaleResource>
                                                                 </Children>
                                                             </LocaleResource>
+                                                            <LocaleResource Name="Sku">
+                                                                <Value>Sku</Value>
+                                                                <Children>
+                                                                    <LocaleResource Name="Hint">
+                                                                        <Value>Product stock keeping unit (SKU). Your internal unique identifier that can be used to track this attribute combination.</Value>
+                                                                    </LocaleResource>
+                                                                </Children>
+                                                            </LocaleResource>
+                                                            <LocaleResource Name="ManufacturerPartNumber">
+                                                                <Value>Manufacturer part number</Value>
+                                                                <Children>
+                                                                    <LocaleResource Name="Hint">
+                                                                        <Value>The manufacturer's part number for this attribute combination.</Value>
+                                                                    </LocaleResource>
+                                                                </Children>
+                                                            </LocaleResource>
+                                                            <LocaleResource Name="GTIN">
+                                                                <Value>GTIN</Value>
+                                                                <Children>
+                                                                    <LocaleResource Name="Hint">
+                                                                        <Value>Enter global trade item number (GTIN). These identifiers include UPC (in North America), EAN (in Europe), JAN (in Japan), and ISBN (for books).</Value>
+                                                                    </LocaleResource>
+                                                                </Children>
+                                                            </LocaleResource>
                                                         </Children>
                                                     </LocaleResource>
                                                 </Children>

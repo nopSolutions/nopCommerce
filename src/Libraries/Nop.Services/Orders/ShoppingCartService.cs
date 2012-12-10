@@ -354,24 +354,18 @@ namespace Nop.Services.Orders
                         break;
                     case ManageInventoryMethod.ManageStockByAttributes:
                         {
-                            var combinations = productVariant.ProductVariantAttributeCombinations;
-                            ProductVariantAttributeCombination combination = null;
-                            foreach (var comb1 in combinations)
-                                if (_productAttributeParser.AreProductAttributesEqual(comb1.AttributesXml, selectedAttributes))
-                                    combination = comb1;
-                            if (combination != null)
+                            var combination = productVariant
+                                .ProductVariantAttributeCombinations
+                                .FirstOrDefault(x => _productAttributeParser.AreProductAttributesEqual(x.AttributesXml, selectedAttributes));
+                            if (combination != null &&
+                                !combination.AllowOutOfStockOrders &&
+                                combination.StockQuantity < quantity)
                             {
-                                if (!combination.AllowOutOfStockOrders)
-                                {
-                                    if (combination.StockQuantity < quantity)
-                                    {
-                                        int maximumQuantityCanBeAdded = combination.StockQuantity;
-                                        if (maximumQuantityCanBeAdded <= 0)
-                                            warnings.Add(_localizationService.GetResource("ShoppingCart.OutOfStock"));
-                                        else
-                                            warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.QuantityExceedsStock"), maximumQuantityCanBeAdded));
-                                    }
-                                }
+                                int maximumQuantityCanBeAdded = combination.StockQuantity;
+                                if (maximumQuantityCanBeAdded <= 0)
+                                    warnings.Add(_localizationService.GetResource("ShoppingCart.OutOfStock"));
+                                else
+                                    warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.QuantityExceedsStock"), maximumQuantityCanBeAdded));
                             }
                         }
                         break;

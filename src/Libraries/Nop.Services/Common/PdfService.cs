@@ -41,6 +41,7 @@ namespace Nop.Services.Common
         private readonly IMeasureService _measureService;
         private readonly IPictureService _pictureService;
         private readonly IProductService _productService;
+        private readonly IProductAttributeParser _productAttributeParser;
         private readonly IWebHelper _webHelper;
 
         private readonly CatalogSettings _catalogSettings;
@@ -60,7 +61,7 @@ namespace Nop.Services.Common
             IDateTimeHelper dateTimeHelper, IPriceFormatter priceFormatter,
             ICurrencyService currencyService, IMeasureService measureService,
             IPictureService pictureService, IProductService productService, 
-            IWebHelper webHelper, 
+            IProductAttributeParser productAttributeParser, IWebHelper webHelper, 
             CatalogSettings catalogSettings, CurrencySettings currencySettings,
             MeasureSettings measureSettings, PdfSettings pdfSettings, TaxSettings taxSettings,
             StoreInformationSettings storeInformationSettings, AddressSettings addressSettings)
@@ -74,6 +75,7 @@ namespace Nop.Services.Common
             this._measureService = measureService;
             this._pictureService = pictureService;
             this._productService = productService;
+            this._productAttributeParser = productAttributeParser;
             this._webHelper = webHelper;
             this._currencySettings = currencySettings;
             this._catalogSettings = catalogSettings;
@@ -339,7 +341,8 @@ namespace Nop.Services.Common
                     //SKU
                     if (_catalogSettings.ShowProductSku)
                     {
-                        cell = new PdfPCell(new Phrase(pv.Sku ?? String.Empty, font));
+                        var sku = pv.FormatSku(orderProductVariant.AttributesXml, _productAttributeParser);
+                        cell = new PdfPCell(new Phrase(sku ?? String.Empty, font));
                         cell.HorizontalAlignment = Element.ALIGN_CENTER;
                         productsTable.AddCell(cell);
                     }
@@ -777,7 +780,8 @@ namespace Nop.Services.Common
                         productsTable.AddCell(cell);
 
                         //SKU
-                        cell = new PdfPCell(new Phrase(pv.Sku ?? String.Empty, font));
+                        var sku = pv.FormatSku(opv.AttributesXml, _productAttributeParser);
+                        cell = new PdfPCell(new Phrase(sku ?? String.Empty, font));
                         cell.HorizontalAlignment = Element.ALIGN_CENTER;
                         productsTable.AddCell(cell);
 

@@ -360,6 +360,24 @@ namespace Nop.Admin.Models.Catalog
             //"if we have one more editor with the same name on a page, it doesn't allow editing"
             //in our case it's productVariant.AllowOutOfStockOrders1
             public bool AllowOutOfStockOrders1 { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.Variants.ProductVariantAttributes.AttributeCombinations.Fields.Sku")]
+            //we don't name it StockQuantity because Telerik has a small bug 
+            //"if we have one more editor with the same name on a page, it doesn't allow editing"
+            //in our case it's productVariant.Sku1
+            public string Sku1 { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.Variants.ProductVariantAttributes.AttributeCombinations.Fields.ManufacturerPartNumber")]
+            //we don't name it StockQuantity because Telerik has a small bug 
+            //"if we have one more editor with the same name on a page, it doesn't allow editing"
+            //in our case it's productVariant.ManufacturerPartNumber1
+            public string ManufacturerPartNumber1 { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.Variants.ProductVariantAttributes.AttributeCombinations.Fields.Gtin")]
+            //we don't name it StockQuantity because Telerik has a small bug 
+            //"if we have one more editor with the same name on a page, it doesn't allow editing"
+            //in our case it's productVariant.Gtin1
+            public string Gtin1 { get; set; }
         }
 
         #endregion

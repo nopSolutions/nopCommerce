@@ -203,6 +203,118 @@ namespace Nop.Services.Catalog
 
             return result.ToArray();
         }
-        
+
+
+
+        /// <summary>
+        /// Gets SKU, Manufacturer part number and GTIN
+        /// </summary>
+        /// <param name="productVariant">Product variant</param>
+        /// <param name="selectedAttributes">Selected attributes (XML format)</param>
+        /// <param name="productAttributeParser">Product attribute service (used when attributes are specified)</param>
+        /// <param name="sku">SKU</param>
+        /// <param name="manufacturerPartNumber">Manufacturer part number</param>
+        /// <param name="gtin">GTIN</param>
+        private static void GetSkuMpnGtin(this ProductVariant productVariant, string selectedAttributes, IProductAttributeParser productAttributeParser,
+            out string sku, out string manufacturerPartNumber, out string gtin)
+        {
+            if (productVariant == null)
+                throw new ArgumentNullException("productVariant");
+
+            sku = null;
+            manufacturerPartNumber = null;
+            gtin = null;
+
+            if (productVariant.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes)
+            {
+                //manage stock by attribute combinations
+                if (productAttributeParser == null)
+                    throw new ArgumentNullException("productAttributeParser");
+
+                //let's find appropriate record
+                var combination = productVariant
+                    .ProductVariantAttributeCombinations
+                    .FirstOrDefault(x => productAttributeParser.AreProductAttributesEqual(x.AttributesXml, selectedAttributes));
+                if (combination != null)
+                {
+                    sku = combination.Sku;
+                    manufacturerPartNumber = combination.ManufacturerPartNumber;
+                    gtin = combination.Gtin;
+                }
+            }
+
+            if (String.IsNullOrEmpty(sku))
+                sku = productVariant.Sku;
+            if (String.IsNullOrEmpty(manufacturerPartNumber))
+                manufacturerPartNumber = productVariant.ManufacturerPartNumber;
+            if (String.IsNullOrEmpty(gtin))
+                gtin = productVariant.Gtin;
+        }
+
+        /// <summary>
+        /// Formats SKU
+        /// </summary>
+        /// <param name="productVariant">Product variant</param>
+        /// <param name="selectedAttributes">Selected attributes (XML format)</param>
+        /// <param name="productAttributeParser">Product attribute service (used when attributes are specified)</param>
+        /// <returns>SKU</returns>
+        public static string FormatSku(this ProductVariant productVariant, string selectedAttributes = null, IProductAttributeParser productAttributeParser = null)
+        {
+            if (productVariant == null)
+                throw new ArgumentNullException("productVariant");
+
+            string sku = null;
+            string manufacturerPartNumber = null;
+            string gtin = null;
+
+            productVariant.GetSkuMpnGtin(selectedAttributes, productAttributeParser,
+                out sku, out manufacturerPartNumber, out gtin);
+
+            return sku;
+        }
+
+        /// <summary>
+        /// Formats manufacturer part number
+        /// </summary>
+        /// <param name="productVariant">Product variant</param>
+        /// <param name="selectedAttributes">Selected attributes (XML format)</param>
+        /// <param name="productAttributeParser">Product attribute service (used when attributes are specified)</param>
+        /// <returns>Manufacturer part number</returns>
+        public static string FormatMpn(this ProductVariant productVariant, string selectedAttributes = null, IProductAttributeParser productAttributeParser = null)
+        {
+            if (productVariant == null)
+                throw new ArgumentNullException("productVariant");
+
+            string sku = null;
+            string manufacturerPartNumber = null;
+            string gtin = null;
+
+            productVariant.GetSkuMpnGtin(selectedAttributes, productAttributeParser,
+                out sku, out manufacturerPartNumber, out gtin);
+
+            return manufacturerPartNumber;
+        }
+
+        /// <summary>
+        /// Formats GTIN
+        /// </summary>
+        /// <param name="productVariant">Product variant</param>
+        /// <param name="selectedAttributes">Selected attributes (XML format)</param>
+        /// <param name="productAttributeParser">Product attribute service (used when attributes are specified)</param>
+        /// <returns>GTIN</returns>
+        public static string FormatGtin(this ProductVariant productVariant, string selectedAttributes = null, IProductAttributeParser productAttributeParser = null)
+        {
+            if (productVariant == null)
+                throw new ArgumentNullException("productVariant");
+
+            string sku = null;
+            string manufacturerPartNumber = null;
+            string gtin = null;
+
+            productVariant.GetSkuMpnGtin(selectedAttributes, productAttributeParser,
+                out sku, out manufacturerPartNumber, out gtin);
+
+            return gtin;
+        }
     }
 }

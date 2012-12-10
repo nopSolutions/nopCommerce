@@ -41,6 +41,7 @@ namespace Nop.Web.Controllers
         private readonly IPdfService _pdfService;
         private readonly IShippingService _shippingService;
         private readonly ICountryService _countryService;
+        private readonly IProductAttributeParser _productAttributeParser;
         private readonly IWebHelper _webHelper;
 
         private readonly OrderSettings _orderSettings;
@@ -60,7 +61,8 @@ namespace Nop.Web.Controllers
             IOrderProcessingService orderProcessingService, IDateTimeHelper dateTimeHelper,
             IPaymentService paymentService, ILocalizationService localizationService,
             IPdfService pdfService, IShippingService shippingService,
-            ICountryService countryService, IWebHelper webHelper, 
+            ICountryService countryService, IProductAttributeParser productAttributeParser,
+            IWebHelper webHelper, 
             CatalogSettings catalogSettings, OrderSettings orderSettings,
             TaxSettings taxSettings, PdfSettings pdfSettings,
             ShippingSettings shippingSettings, AddressSettings addressSettings)
@@ -77,6 +79,7 @@ namespace Nop.Web.Controllers
             this._pdfService = pdfService;
             this._shippingService = shippingService;
             this._countryService = countryService;
+            this._productAttributeParser = productAttributeParser;
             this._webHelper = webHelper;
 
             this._catalogSettings = catalogSettings;
@@ -283,7 +286,7 @@ namespace Nop.Web.Controllers
                 var opvModel = new OrderDetailsModel.OrderProductVariantModel()
                 {
                     Id = opv.Id,
-                    Sku = opv.ProductVariant.Sku,
+                    Sku = opv.ProductVariant.FormatSku(opv.AttributesXml, _productAttributeParser),
                     ProductId = opv.ProductVariant.ProductId,
                     ProductSeName = opv.ProductVariant.Product.GetSeName(),
                     Quantity = opv.Quantity,
@@ -383,7 +386,7 @@ namespace Nop.Web.Controllers
                 var sopvModel = new ShipmentDetailsModel.ShipmentOrderProductVariantModel()
                 {
                     Id = sopv.Id,
-                    Sku = opv.ProductVariant.Sku,
+                    Sku = opv.ProductVariant.FormatSku(opv.AttributesXml, _productAttributeParser),
                     ProductId = opv.ProductVariant.ProductId,
                     ProductSeName = opv.ProductVariant.Product.GetSeName(),
                     AttributeInfo = opv.AttributeDescription,

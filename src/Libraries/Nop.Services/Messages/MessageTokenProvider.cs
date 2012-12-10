@@ -46,6 +46,7 @@ namespace Nop.Services.Messages
         private readonly IDownloadService _downloadService;
         private readonly IOrderService _orderService;
         private readonly IPaymentService _paymentService;
+        private readonly IProductAttributeParser _productAttributeParser;
 
         private readonly StoreInformationSettings _storeSettings;
         private readonly MessageTemplatesSettings _templatesSettings;
@@ -65,10 +66,10 @@ namespace Nop.Services.Messages
             IPriceFormatter priceFormatter, ICurrencyService currencyService,IWebHelper webHelper,
             IWorkContext workContext, IDownloadService downloadService,
             IOrderService orderService, IPaymentService paymentService,
+            IProductAttributeParser productAttributeParser,
             StoreInformationSettings storeSettings, MessageTemplatesSettings templatesSettings,
             EmailAccountSettings emailAccountSettings, CatalogSettings catalogSettings,
-            TaxSettings taxSettings,
-            IEventPublisher eventPublisher)
+            TaxSettings taxSettings, IEventPublisher eventPublisher)
         {
             this._languageService = languageService;
             this._localizationService = localizationService;
@@ -81,6 +82,7 @@ namespace Nop.Services.Messages
             this._downloadService = downloadService;
             this._orderService = orderService;
             this._paymentService = paymentService;
+            this._productAttributeParser = productAttributeParser;
 
             this._storeSettings = storeSettings;
             this._templatesSettings = templatesSettings;
@@ -154,11 +156,11 @@ namespace Nop.Services.Messages
                 //sku
                 if (_catalogSettings.ShowProductSku)
                 {
-                    if (!String.IsNullOrEmpty(opv.ProductVariant.Sku))
+                    var sku = opv.ProductVariant.FormatSku(opv.AttributesXml, _productAttributeParser);
+                    if (!String.IsNullOrEmpty(sku))
                     {
                         sb.AppendLine("<br />");
-                        string sku = string.Format(_localizationService.GetResource("Messages.Order.Product(s).SKU", languageId), HttpUtility.HtmlEncode(opv.ProductVariant.Sku));
-                        sb.AppendLine(sku);
+                        sb.AppendLine(string.Format(_localizationService.GetResource("Messages.Order.Product(s).SKU", languageId), HttpUtility.HtmlEncode(sku)));
                     }
                 }
                 sb.AppendLine("</td>");
@@ -448,11 +450,11 @@ namespace Nop.Services.Messages
                 //sku
                 if (_catalogSettings.ShowProductSku)
                 {
-                    if (!String.IsNullOrEmpty(opv.ProductVariant.Sku))
+                    var sku = opv.ProductVariant.FormatSku(opv.AttributesXml, _productAttributeParser);
+                    if (!String.IsNullOrEmpty(sku))
                     {
                         sb.AppendLine("<br />");
-                        string sku = string.Format(_localizationService.GetResource("Messages.Order.Product(s).SKU", languageId), HttpUtility.HtmlEncode(opv.ProductVariant.Sku));
-                        sb.AppendLine(sku);
+                        sb.AppendLine(string.Format(_localizationService.GetResource("Messages.Order.Product(s).SKU", languageId), HttpUtility.HtmlEncode(sku)));
                     }
                 }
                 sb.AppendLine("</td>");

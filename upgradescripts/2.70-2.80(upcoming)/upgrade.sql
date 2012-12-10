@@ -59,6 +59,24 @@ set @resources='
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.SeName.Hint">
     <Value>Set a search engine friendly page name e.g. ''the-best-blog-post'' to make your page URL ''http://www.yourStore.com/the-best-blog-post''. Leave empty to generate it automatically based on the title of the blog post.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Variants.ProductVariantAttributes.AttributeCombinations.Fields.Sku">
+    <Value>Sku</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Variants.ProductVariantAttributes.AttributeCombinations.Fields.Sku.Hint">
+    <Value>Product stock keeping unit (SKU). Your internal unique identifier that can be used to track this attribute combination.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Variants.ProductVariantAttributes.AttributeCombinations.Fields.ManufacturerPartNumber">
+    <Value>Manufacturer part number</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Variants.ProductVariantAttributes.AttributeCombinations.Fields.ManufacturerPartNumber.Hint">
+    <Value>The manufacturer''s part number for this attribute combination.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Variants.ProductVariantAttributes.AttributeCombinations.Fields.Gtin">
+    <Value>GTIN</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Variants.ProductVariantAttributes.AttributeCombinations.Fields.Gtin.Hint">
+    <Value>Enter global trade item number (GTIN). These identifiers include UPC (in North America), EAN (in Europe), JAN (in Japan), and ISBN (for books).</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -950,4 +968,26 @@ IF EXISTS (
 		FROM sysobjects
 		WHERE id = OBJECT_ID(N'[temp_generate_sename]') AND OBJECTPROPERTY(id,N'IsProcedure') = 1)
 DROP PROCEDURE [temp_generate_sename]
+GO
+
+--new attribute combination properties
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[ProductVariantAttributeCombination]') and NAME='Sku')
+BEGIN
+	ALTER TABLE [ProductVariantAttributeCombination]
+	ADD [Sku] nvarchar(400) NULL
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[ProductVariantAttributeCombination]') and NAME='ManufacturerPartNumber')
+BEGIN
+	ALTER TABLE [ProductVariantAttributeCombination]
+	ADD [ManufacturerPartNumber] nvarchar(400) NULL
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[ProductVariantAttributeCombination]') and NAME='Gtin')
+BEGIN
+	ALTER TABLE [ProductVariantAttributeCombination]
+	ADD [Gtin] nvarchar(400) NULL
+END
 GO

@@ -11,6 +11,10 @@ namespace Nop.Data.Mapping.Catalog
             this.HasKey(pvac => pvac.Id);
             this.Property(pvac => pvac.AttributesXml);
 
+            this.Property(pv => pv.Sku).HasMaxLength(400);
+            this.Property(pv => pv.ManufacturerPartNumber).HasMaxLength(400);
+            this.Property(pv => pv.Gtin).HasMaxLength(400);
+
             this.HasRequired(pvac => pvac.ProductVariant)
                 .WithMany(pv => pv.ProductVariantAttributeCombinations)
                 .HasForeignKey(pvac => pvac.ProductVariantId);

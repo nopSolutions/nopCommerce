@@ -216,6 +216,12 @@
                             )
                             .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= AllowOutOfStockOrders1 #>.gif' />")
                             .Centered();
+                    columns.Bound(x => x.Sku1)
+                        .Centered();
+                    columns.Bound(x => x.ManufacturerPartNumber1)
+                        .Centered();
+                    columns.Bound(x => x.Gtin1)
+                        .Centered();
                     columns.Command(commands =>
                     {
                         commands.Edit().Text(T("Admin.Common.Edit").Text);

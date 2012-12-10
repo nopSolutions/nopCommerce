@@ -22,12 +22,13 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
         private readonly IOrderService _orderService;
         private readonly ILogger _logger;
         private readonly ICategoryService _categoryService;
+        private readonly IProductAttributeParser _productAttributeParser;
         private readonly GoogleAnalyticsSettings _googleAnalyticsSettings;
         private readonly StoreInformationSettings _storeInformationSettings;
 
         public WidgetsGoogleAnalyticsController(IWorkContext workContext, ISettingService settingService,
             IOrderService orderService, ILogger logger, 
-            ICategoryService categoryService, 
+            ICategoryService categoryService, IProductAttributeParser productAttributeParser,
             GoogleAnalyticsSettings trackingScriptsSettings, StoreInformationSettings storeInformationSettings)
         {
             this._workContext = workContext;
@@ -35,6 +36,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
             this._orderService = orderService;
             this._logger = logger;
             this._categoryService = categoryService;
+            this._productAttributeParser = productAttributeParser;
             this._googleAnalyticsSettings = trackingScriptsSettings;
             this._storeInformationSettings = storeInformationSettings;
         }
@@ -202,7 +204,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
                         categ = defaultProductCategory.Category.Name;
                     analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{ORDERID}", item.OrderId.ToString());
                     //The SKU code is a required parameter for every item that is added to the transaction
-                    analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{PRODUCTSKU}", FixIllegalJavaScriptChars(item.ProductVariant.Sku));
+                    analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{PRODUCTSKU}", FixIllegalJavaScriptChars(item.ProductVariant.FormatSku(item.AttributesXml, _productAttributeParser)));
                     analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{PRODUCTNAME}", FixIllegalJavaScriptChars(item.ProductVariant.FullProductName));
                     analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{CATEGORYNAME}", FixIllegalJavaScriptChars(categ));
                     analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{UNITPRICE}", item.UnitPriceInclTax.ToString("0.00", usCulture));
