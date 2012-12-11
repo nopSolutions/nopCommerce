@@ -991,3 +991,12 @@ BEGIN
 	ADD [Gtin] nvarchar(400) NULL
 END
 GO
+
+
+--display currency label?
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'currencysettings.displaycurrencylabel')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'currencysettings.displaycurrencylabel', N'false')
+END
+GO

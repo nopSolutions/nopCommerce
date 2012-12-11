@@ -18,16 +18,19 @@ namespace Nop.Services.Catalog
         private readonly ICurrencyService _currencyService;
         private readonly ILocalizationService _localizationService;
         private readonly TaxSettings _taxSettings;
+        private readonly CurrencySettings _currencySettings;
 
         public PriceFormatter(IWorkContext workContext,
             ICurrencyService currencyService,
             ILocalizationService localizationService,
-            TaxSettings taxSettings)
+            TaxSettings taxSettings,
+            CurrencySettings currencySettings)
         {
             this._workContext = workContext;
             this._currencyService = currencyService;
             this._localizationService = localizationService;
             this._taxSettings = taxSettings;
+            this._currencySettings = currencySettings;
         }
 
         #region Utilities
@@ -54,7 +57,7 @@ namespace Nop.Services.Catalog
         protected string GetCurrencyString(decimal amount,
             bool showCurrency, Currency targetCurrency)
         {
-            string result = string.Empty;
+            string result = "";
             if (!String.IsNullOrEmpty(targetCurrency.CustomFormatting))
             {
                 result = amount.ToString(targetCurrency.CustomFormatting);
@@ -72,7 +75,7 @@ namespace Nop.Services.Catalog
                 }
             }
 
-            if (showCurrency && _currencyService.GetAllCurrencies().Count > 1)
+            if (showCurrency && _currencySettings.DisplayCurrencyLabel)
                 result = String.Format("{0} ({1})", result, targetCurrency.CurrencyCode);
             return result;
         }

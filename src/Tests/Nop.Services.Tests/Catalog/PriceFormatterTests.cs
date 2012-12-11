@@ -9,7 +9,6 @@ using Nop.Core.Data;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Tax;
-using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
@@ -73,14 +72,15 @@ namespace Nop.Services.Tests.Catalog
             var pluginFinder = new PluginFinder();
             _currencyService = new CurrencyService(cacheManager, _currencyRepo,
                 _customerService, _currencySettings, pluginFinder, null);
-            
+
             _taxSettings = new TaxSettings();
 
             _localizationService = MockRepository.GenerateMock<ILocalizationService>();
             _localizationService.Expect(x => x.GetResource("Products.InclTaxSuffix", 1, false)).Return("{0} incl tax");
             _localizationService.Expect(x => x.GetResource("Products.ExclTaxSuffix", 1, false)).Return("{0} excl tax");
             
-            _priceFormatter = new PriceFormatter(_workContext, _currencyService,_localizationService, _taxSettings);
+            _priceFormatter = new PriceFormatter(_workContext, _currencyService,_localizationService, 
+                _taxSettings, _currencySettings);
         }
 
         [Test]
@@ -169,8 +169,11 @@ namespace Nop.Services.Tests.Catalog
                 Name = "English",
                 LanguageCulture = "en-US"
             };
+            _currencySettings.DisplayCurrencyLabel = true;
             _priceFormatter.FormatPrice(1234.5M, true, currency, language, false, false).ShouldEqual("$1,234.50 (USD)");
-
+            
+            _currencySettings.DisplayCurrencyLabel = false;
+            _priceFormatter.FormatPrice(1234.5M, true, currency, language, false, false).ShouldEqual("$1,234.50");
         }
     }
 }

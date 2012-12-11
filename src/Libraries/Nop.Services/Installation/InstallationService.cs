@@ -4656,6 +4656,7 @@ namespace Nop.Services.Installation
             EngineContext.Current.Resolve<IConfigurationProvider<CurrencySettings>>()
                 .SaveSettings(new CurrencySettings()
                 {
+                    DisplayCurrencyLabel = false,
                     PrimaryStoreCurrencyId = _currencyRepository.Table.Where(c => c.CurrencyCode == "USD").Single().Id,
                     PrimaryExchangeRateCurrencyId = _currencyRepository.Table.Where(c => c.CurrencyCode == "USD").Single().Id,
                     ActiveExchangeRateProviderSystemName = "CurrencyExchange.MoneyConverter",
