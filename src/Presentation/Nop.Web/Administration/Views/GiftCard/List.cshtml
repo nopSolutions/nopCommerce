@@ -88,6 +88,13 @@
             });
         });
 
+        $("#@Html.FieldIdFor(model => model.CouponCode)").keydown(function (event) {
+            if (event.keyCode == 13) {
+                $("#btnSearch").click();
+                return false;
+            }
+        });
+        
         function onDataBinding(e) {
             var searchModel = {
                 ActivatedId: $('#@Html.FieldIdFor(model => model.ActivatedId)').val(),

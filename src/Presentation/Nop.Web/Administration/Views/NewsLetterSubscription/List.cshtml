@@ -27,7 +27,7 @@
     </tr>
     <tr>
         <td colspan="2">
-            <input type="button" id="search-newsLetterSubscriptions" class="t-button" value="@T("Admin.Common.Search")" />
+            <input type="button" id="btnSearch" class="t-button" value="@T("Admin.Common.Search")" />
         </td>
     </tr>
 </table>
@@ -76,11 +76,18 @@
 </table>
 <script type="text/javascript">
     $(document).ready(function () {
-        $('#search-newsLetterSubscriptions').click(function () {
+        $('#btnSearch').click(function () {
             var grid = $('#newsLetterSubscriptions-grid').data('tGrid');
             grid.currentPage = 1; //new search. Set page size to 1
             grid.ajaxRequest();
             return false;
+        });
+
+        $("#@Html.FieldIdFor(model => model.SearchEmail)").keydown(function (event) {
+            if (event.keyCode == 13) {
+                $("#btnSearch").click();
+                return false;
+            }
         });
     });
 

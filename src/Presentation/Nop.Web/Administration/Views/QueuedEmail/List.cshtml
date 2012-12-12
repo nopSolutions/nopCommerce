@@ -135,6 +135,20 @@
                 selectedIds = [];
                 return false;
             });
+
+            $("#@Html.FieldIdFor(model => model.SearchFromEmail)").keydown(function (event) {
+                if (event.keyCode == 13) {
+                    $("#btnSearch").click();
+                    return false;
+                }
+            });
+
+            $("#@Html.FieldIdFor(model => model.SearchToEmail)").keydown(function (event) {
+                if (event.keyCode == 13) {
+                    $("#btnSearch").click();
+                    return false;
+                }
+            });
             
             //"delete selected" button
             $('#delete-selected').click(function (e) {
