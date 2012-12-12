@@ -9,6 +9,31 @@ namespace Nop.Services.Seo
     public partial interface  IUrlRecordService
     {
         /// <summary>
+        /// Deletes an URL record
+        /// </summary>
+        /// <param name="urlRecord">URL record</param>
+        void DeleteUrlRecord(UrlRecord urlRecord);
+
+        /// <summary>
+        /// Gets an URL record
+        /// </summary>
+        /// <param name="urlRecordId">URL record identifier</param>
+        /// <returns>URL record</returns>
+        UrlRecord GetUrlRecordById(int urlRecordId);
+
+        /// <summary>
+        /// Inserts an URL record
+        /// </summary>
+        /// <param name="urlRecord">URL record</param>
+        void InsertUrlRecord(UrlRecord urlRecord);
+
+        /// <summary>
+        /// Updates the URL record
+        /// </summary>
+        /// <param name="urlRecord">URL record</param>
+        void UpdateUrlRecord(UrlRecord urlRecord);
+
+        /// <summary>
         /// Find URL record
         /// </summary>
         /// <param name="slug">Slug</param>

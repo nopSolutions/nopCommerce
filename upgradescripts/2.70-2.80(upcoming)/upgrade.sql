@@ -77,6 +77,33 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Variants.ProductVariantAttributes.AttributeCombinations.Fields.Gtin.Hint">
     <Value>Enter global trade item number (GTIN). These identifiers include UPC (in North America), EAN (in Europe), JAN (in Japan), and ISBN (for books).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.SeNames">
+    <Value>Search engine friendly page names</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SeNames.DeleteSelected">
+    <Value>Delete selected</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SeNames.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SeNames.Name.Hint">
+    <Value>A name to find.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SeNames.EntityId">
+    <Value>Entity ID</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SeNames.EntityName">
+    <Value>Entity name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SeNames.IsActive">
+    <Value>Is active</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SeNames.Language">
+    <Value>Language</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SeNames.Language.Standard">
+    <Value>Standard</Value>
+  </LocaleResource>
 </Language>
 '
 

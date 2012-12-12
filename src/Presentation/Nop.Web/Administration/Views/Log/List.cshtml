@@ -83,7 +83,7 @@
                                 .Title(T("Admin.Common.View").Text);
                         })
                         .Pageable(settings => settings.PageSize(gridPageSize).Position(GridPagerPosition.Both))
-                        .DataBinding(dataBinding => dataBinding.Ajax().Select("LogList", "Log", Model))
+                        .DataBinding(dataBinding => dataBinding.Ajax().Select("LogList", "Log"))
                         .EnableCustomBinding(true))
             </td>
         </tr>
@@ -105,6 +105,13 @@
                 $('.checkboxGroups').attr('checked', false).change();
                 selectedIds = [];
                 return false;
+            });
+
+            $("#@Html.FieldIdFor(model => model.Message)").keydown(function (event) {
+                if (event.keyCode == 13) {
+                    $("#btnSearch").click();
+                    return false;
+                }
             });
 
             //"delete selected" button

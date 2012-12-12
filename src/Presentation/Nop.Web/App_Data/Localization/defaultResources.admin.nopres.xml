@@ -9815,6 +9815,39 @@
                             </LocaleResource>
                         </Children>
                     </LocaleResource>
+                    <LocaleResource Name="SeNames">
+                      <Value>Search engine friendly page names</Value>
+                      <Children>
+                        <LocaleResource Name="Name">
+                          <Value>Name</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>A name to find.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="EntityId">
+                          <Value>Entity ID</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="EntityName">
+                          <Value>Entity name</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="IsActive">
+                          <Value>Is active</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="Language">
+                          <Value>Language</Value>
+                          <Children>
+                            <LocaleResource Name="Standard">
+                              <Value>Standard</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="DeleteSelected">
+                          <Value>Delete selected</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
                     <LocaleResource Name="ScheduleTasks">
                         <Value>Schedule tasks</Value>
                         <Children>

@@ -140,7 +140,7 @@
                                 .Title(T("Admin.Common.View").Text);
                         })
                         .Pageable(settings => settings.PageSize(gridPageSize).Position(GridPagerPosition.Both))
-                        .DataBinding(dataBinding => dataBinding.Ajax().Select("OrderList", "Order", Model))
+                        .DataBinding(dataBinding => dataBinding.Ajax().Select("OrderList", "Order"))
                         .EnableCustomBinding(true))
             </td>
         </tr>

@@ -10,6 +10,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Seo;
 using Nop.Core.Plugins;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
@@ -18,9 +19,11 @@ using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Security;
+using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Security;
+using Telerik.Web.Mvc;
 
 namespace Nop.Admin.Controllers
 {
@@ -35,6 +38,7 @@ namespace Nop.Admin.Controllers
         private readonly ICurrencyService _currencyService;
         private readonly IMeasureService _measureService;
         private readonly ICustomerService _customerService;
+        private readonly IUrlRecordService _urlRecordService;
         private readonly IWebHelper _webHelper;
         private readonly StoreInformationSettings _storeInformationSettings;
         private readonly CurrencySettings _currencySettings;
@@ -52,7 +56,7 @@ namespace Nop.Admin.Controllers
         public CommonController(IPaymentService paymentService, IShippingService shippingService,
             IShoppingCartService shoppingCartService, 
             ICurrencyService currencyService, IMeasureService measureService,
-            ICustomerService customerService, IWebHelper webHelper,
+            ICustomerService customerService, IUrlRecordService urlRecordService, IWebHelper webHelper,
             StoreInformationSettings storeInformationSettings, CurrencySettings currencySettings,
             MeasureSettings measureSettings, IDateTimeHelper dateTimeHelper,
             ILanguageService languageService, IWorkContext workContext,
@@ -64,6 +68,7 @@ namespace Nop.Admin.Controllers
             this._currencyService = currencyService;
             this._measureService = measureService;
             this._customerService = customerService;
+            this._urlRecordService = urlRecordService;
             this._webHelper = webHelper;
             this._storeInformationSettings = storeInformationSettings;
             this._currencySettings = currencySettings;
@@ -444,6 +449,80 @@ namespace Nop.Admin.Controllers
             _webHelper.RestartAppDomain();
             return RedirectToAction("Index", "Home");
         }
+
+        #region Searh engine friendly names
+        public ActionResult SeNames()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
+                return AccessDeniedView();
+
+            var model = new UrlRecordListModel();
+            return View(model);
+        }
+
+        [HttpPost, GridAction(EnableCustomBinding = true)]
+        public ActionResult SeNames(GridCommand command, UrlRecordListModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
+                return AccessDeniedView();
+
+            var urlRecords = _urlRecordService.GetAllUrlRecords(model.SeName, command.Page - 1, command.PageSize);
+            var gridModel = new GridModel<UrlRecordModel>
+            {
+                Data = urlRecords.Select(x =>
+                {
+                    string languageName;
+                    if (x.LanguageId == 0)
+                    {
+                        languageName = _localizationService.GetResource("Admin.System.SeNames.Language.Standard");
+                    }
+                    else
+                    {
+                        var language = _languageService.GetLanguageById(x.LanguageId);
+                        languageName = language != null ? language.Name : "Unknown";
+                    }
+                    return new UrlRecordModel()
+                    {
+                        Id = x.Id,
+                        Name = x.Slug,
+                        EntityId = x.EntityId,
+                        EntityName = x.EntityName,
+                        IsActive = x.IsActive,
+                        Language = languageName,
+                    };
+                }),
+                Total = urlRecords.TotalCount
+            };
+            return new JsonResult
+            {
+                Data = gridModel
+            };
+        }
+
+        [HttpPost]
+        public ActionResult DeleteSelectedSeNames(ICollection<int> selectedIds)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
+                return AccessDeniedView();
+
+            if (selectedIds != null)
+            {
+                var urlRecords = new List<UrlRecord>();
+                foreach (var id in selectedIds)
+                {
+                    var urlRecord = _urlRecordService.GetUrlRecordById(id);
+                    if (urlRecord != null)
+                        urlRecords.Add(urlRecord);
+                }
+                foreach (var urlRecord in urlRecords)
+                    _urlRecordService.DeleteUrlRecord(urlRecord);
+            }
+
+            return Json(new { Result = true });
+        }
+
+        #endregion
+
         #endregion
     }
 }

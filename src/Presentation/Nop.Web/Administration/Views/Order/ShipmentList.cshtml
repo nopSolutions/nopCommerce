@@ -80,7 +80,7 @@
                                 .HeaderTemplate(T("Admin.Common.View").Text);
                         })
                         .Pageable(settings => settings.PageSize(gridPageSize).Position(GridPagerPosition.Both))
-                        .DataBinding(dataBinding => dataBinding.Ajax().Select("ShipmentListSelect", "Order", Model))
+                        .DataBinding(dataBinding => dataBinding.Ajax().Select("ShipmentListSelect", "Order"))
                         .EnableCustomBinding(true))
             </td>
         </tr>

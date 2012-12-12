@@ -48,7 +48,7 @@ namespace Nop.Services.Seo
         /// Deletes an URL record
         /// </summary>
         /// <param name="urlRecord">URL record</param>
-        protected virtual void DeleteUrlRecord(UrlRecord urlRecord)
+        public virtual void DeleteUrlRecord(UrlRecord urlRecord)
         {
             if (urlRecord == null)
                 throw new ArgumentNullException("urlRecord");
@@ -64,7 +64,7 @@ namespace Nop.Services.Seo
         /// </summary>
         /// <param name="urlRecordId">URL record identifier</param>
         /// <returns>URL record</returns>
-        protected virtual UrlRecord GetUrlRecordById(int urlRecordId)
+        public virtual UrlRecord GetUrlRecordById(int urlRecordId)
         {
             if (urlRecordId == 0)
                 return null;
@@ -77,7 +77,7 @@ namespace Nop.Services.Seo
         /// Inserts an URL record
         /// </summary>
         /// <param name="urlRecord">URL record</param>
-        protected virtual void InsertUrlRecord(UrlRecord urlRecord)
+        public virtual void InsertUrlRecord(UrlRecord urlRecord)
         {
             if (urlRecord == null)
                 throw new ArgumentNullException("urlRecord");
@@ -92,7 +92,7 @@ namespace Nop.Services.Seo
         /// Updates the URL record
         /// </summary>
         /// <param name="urlRecord">URL record</param>
-        protected virtual void UpdateUrlRecord(UrlRecord urlRecord)
+        public virtual void UpdateUrlRecord(UrlRecord urlRecord)
         {
             if (urlRecord == null)
                 throw new ArgumentNullException("urlRecord");

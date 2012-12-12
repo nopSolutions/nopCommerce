@@ -113,7 +113,7 @@
                                 .Filterable(false);
                         })
                         .Pageable(settings => settings.PageSize(gridPageSize).Position(GridPagerPosition.Both))
-                        .DataBinding(dataBinding => dataBinding.Ajax().Select("QueuedEmailList", "QueuedEmail", Model))
+                        .DataBinding(dataBinding => dataBinding.Ajax().Select("QueuedEmailList", "QueuedEmail"))
                         .EnableCustomBinding(true))
             </td>
         </tr>
