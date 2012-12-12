@@ -1,5 +1,6 @@
 ﻿using System.Web;
 using System.Web.Routing;
+using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Infrastructure;
 using Nop.Services.Seo;
@@ -62,7 +63,7 @@ namespace Nop.Web.Framework.Seo
         }
 
         #endregion
-
+        
         #region Methods
 
         /// <summary>
@@ -82,10 +83,44 @@ namespace Nop.Web.Framework.Seo
                 var urlRecord = urlRecordService.GetBySlug(slug);
                 if (urlRecord == null)
                 {
-                    //no record found
-                    data.Values["controller"] = "Home";
-                    data.Values["action"] = "Index";
-                    return data;
+                    //no URL record found
+
+                    //uncomment below to render home page without any redirection
+                    //data.Values["controller"] = "Home";
+                    //data.Values["action"] = "Index";
+                    //return data;
+
+                    var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+                    var response = httpContext.Response;
+                    response.Status = "302 Found";
+                    response.RedirectLocation = webHelper.GetStoreLocation(false);
+                    response.End();
+                    return null;
+                }
+                if (!urlRecord.IsActive)
+                {
+                    //URL record is not active. let's find the latest one
+                    var activeSlug = urlRecordService.GetActiveSlug(urlRecord.EntityId, urlRecord.EntityName, urlRecord.LanguageId);
+                    if (!string.IsNullOrWhiteSpace(activeSlug))
+                    {
+                        //the active one is found
+                        var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+                        var response = httpContext.Response;
+                        response.Status = "301 Moved Permanently";
+                        response.RedirectLocation = string.Format("{0}{1}", webHelper.GetStoreLocation(false), activeSlug);
+                        response.End();
+                        return null;
+                    }
+                    else
+                    {
+                        //no active slug found
+                        var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+                        var response = httpContext.Response;
+                        response.Status = "302 Found";
+                        response.RedirectLocation = webHelper.GetStoreLocation(false);
+                        response.End();
+                        return null;
+                    }
                 }
 
                 //process URL
@@ -134,9 +169,7 @@ namespace Nop.Web.Framework.Seo
                     default:
                         {
                             //no record found
-                            data.Values["controller"] = "Home";
-                            data.Values["action"] = "Index";
-                            return data;
+                            throw new NopException(string.Format("Not supported EntityName for UrlRecord: {0}", urlRecord.EntityName));
                         }
                 }
             }
