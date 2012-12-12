@@ -18,6 +18,7 @@ namespace Nop.Admin.Models.Catalog
         {
             Locales = new List<ProductVariantLocalizedModel>();
             AvailableTaxCategories = new List<SelectListItem>();
+            CopyProductVariantModel = new CopyProductVariantModel();
         }
 
         #region Standard properties
@@ -403,6 +404,9 @@ namespace Nop.Admin.Models.Catalog
         public bool HideNameAndDescriptionProperties { get; set; }
         public bool HidePublishedProperty { get; set; }
         public bool HideDisplayOrderProperty { get; set; }
+
+        //copy product
+        public CopyProductVariantModel CopyProductVariantModel { get; set; }
     }
 
     public partial class ProductVariantLocalizedModel : ILocalizedModelLocal

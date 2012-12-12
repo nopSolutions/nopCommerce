@@ -827,8 +827,10 @@ namespace Nop.Admin.Controllers
             var copyModel = model.CopyProductModel;
             try
             {
-                var newProduct = _copyProductService.CopyProduct(copyModel.Id, copyModel.Name, copyModel.Published, copyModel.CopyImages);
-                SuccessNotification("The product is copied");
+                var originalProduct = _productService.GetProductById(copyModel.Id);
+                var newProduct = _copyProductService.CopyProduct(originalProduct, 
+                    copyModel.Name, copyModel.Published, copyModel.CopyImages);
+                SuccessNotification("The product has been copied successfully");
                 return RedirectToAction("Edit", new { id = newProduct.Id });
             }
             catch (Exception exc)

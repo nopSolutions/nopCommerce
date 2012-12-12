@@ -32,6 +32,7 @@ namespace Nop.Admin.Controllers
         #region Fields
 
         private readonly IProductService _productService;
+        private readonly ICopyProductService _copyProductService;
         private readonly IProductTagService _productTagService;
         private readonly IPictureService _pictureService;
         private readonly ILanguageService _languageService;
@@ -63,6 +64,7 @@ namespace Nop.Admin.Controllers
         #region Constructors
 
         public ProductVariantController(IProductService productService,
+            ICopyProductService copyProductService,
             IProductTagService productTagService, IPictureService pictureService,
             ILanguageService languageService, ILocalizedEntityService localizedEntityService,
             IDiscountService discountService, ICustomerService customerService,
@@ -83,6 +85,7 @@ namespace Nop.Admin.Controllers
             this._productTagService = productTagService;
             this._languageService = languageService;
             this._productService = productService;
+            this._copyProductService = copyProductService;
             this._discountService = discountService;
             this._customerService = customerService;
             this._localizationService = localizationService;
@@ -268,6 +271,20 @@ namespace Nop.Admin.Controllers
                 _productTagService.UpdateProductTagTotals(productTag);
         }
 
+        [NonAction]
+        private void PrepareCopyProductVariantModel(ProductVariantModel model, ProductVariant productVariant)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            if (productVariant != null)
+            {
+                model.CopyProductVariantModel.Id = productVariant.Id;
+                if (!String.IsNullOrEmpty(productVariant.Name))
+                    model.CopyProductVariantModel.Name = "Copy of " + productVariant.Name;
+                model.CopyProductVariantModel.Published = true;
+            }
+        }
         #endregion
 
         #region List / Create / Edit / Delete
@@ -374,6 +391,8 @@ namespace Nop.Admin.Controllers
             PrepareProductAttributesMapping(model, variant);
             //discounts
             PrepareDiscountModel(model, variant, false);
+            //copy variant model
+            PrepareCopyProductVariantModel(model, variant);
             return View(model);
         }
 
@@ -455,6 +474,8 @@ namespace Nop.Admin.Controllers
             PrepareProductAttributesMapping(model, variant);
             //discounts
             PrepareDiscountModel(model, variant, true);
+            //copy variant model
+            PrepareCopyProductVariantModel(model, variant);
             return View(model);
         }
         
@@ -525,6 +546,27 @@ namespace Nop.Admin.Controllers
             };
         }
 
+        [HttpPost]
+        public ActionResult CopyProductVariant(ProductVariantModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
+            var copyModel = model.CopyProductVariantModel;
+            try
+            {
+                var originalProductVariant = _productService.GetProductVariantById(copyModel.Id);
+                var newProductVariant = _copyProductService.CopyProductVariant(originalProductVariant,
+                    originalProductVariant.Product.Id, copyModel.Name, copyModel.Published, true);
+                SuccessNotification("The product variant has been copied successfully");
+                return RedirectToAction("Edit", new { id = newProductVariant.Id });
+            }
+            catch (Exception exc)
+            {
+                ErrorNotification(exc.Message);
+                return RedirectToAction("Edit", new { id = copyModel.Id });
+            }
+        }
         #endregion
 
         #region Bulk editing

@@ -104,6 +104,21 @@ set @resources='
   <LocaleResource Name="Admin.System.SeNames.Language.Standard">
     <Value>Standard</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Variants.Copy">
+    <Value>Copy product variant</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Variants.Copy.Name">
+    <Value>New product variant name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Variants.Copy.Name.Hint">
+    <Value>The name of the new product variant.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Variants.Copy.Published">
+    <Value>Published</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Variants.Copy.Published.Hint">
+    <Value>Check to mark a product variant as published.</Value>
+  </LocaleResource>
 </Language>
 '
 

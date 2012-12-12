@@ -1610,6 +1610,27 @@
                                     <LocaleResource Name="AddNewForProduct">
                                         <Value>Add a new variant for product: {0}</Value>
                                     </LocaleResource>
+                                    <LocaleResource Name="Copy">
+                                        <Value>Copy product variant</Value>
+                                        <Children>
+                                            <LocaleResource Name="Name">
+                                                <Value>New product variant name</Value>
+                                                <Children>
+                                                    <LocaleResource Name="Hint">
+                                                        <Value>The name of the new product variant.</Value>
+                                                    </LocaleResource>
+                                                </Children>
+                                            </LocaleResource>
+                                            <LocaleResource Name="Published">
+                                                <Value>Published</Value>
+                                                <Children>
+                                                    <LocaleResource Name="Hint">
+                                                        <Value>Check to mark a product variant as published.</Value>
+                                                    </LocaleResource>
+                                                </Children>
+                                            </LocaleResource>
+                                        </Children>
+                                    </LocaleResource>
                                     <LocaleResource Name="ProductVariantAttributes">
                                         <Value>Product variant attributes</Value>
                                         <Children>
