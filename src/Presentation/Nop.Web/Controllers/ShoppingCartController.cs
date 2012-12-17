@@ -271,6 +271,7 @@ namespace Nop.Web.Controllers
                         {
                             Id = caValue.Id,
                             Name = caValue.GetLocalized(x => x.Name),
+                            ColorSquaresRgb = caValue.ColorSquaresRgb,
                             IsPreSelected = caValue.IsPreSelected
                         };
                         caModel.Values.Add(pvaValueModel);

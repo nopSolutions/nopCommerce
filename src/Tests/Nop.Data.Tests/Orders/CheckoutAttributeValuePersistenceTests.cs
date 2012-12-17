@@ -14,6 +14,7 @@ namespace Nop.Data.Tests.Orders
             var cav = new CheckoutAttributeValue()
                     {
                         Name = "Name 2",
+                        ColorSquaresRgb = "#112233",
                         PriceAdjustment = 1.1M,
                         WeightAdjustment = 2.1M,
                         IsPreSelected = true,
@@ -34,6 +35,7 @@ namespace Nop.Data.Tests.Orders
             var fromDb = SaveAndLoadEntity(cav);
             fromDb.ShouldNotBeNull();
             fromDb.Name.ShouldEqual("Name 2");
+            fromDb.ColorSquaresRgb.ShouldEqual("#112233");
             fromDb.PriceAdjustment.ShouldEqual(1.1M);
             fromDb.WeightAdjustment.ShouldEqual(2.1M);
             fromDb.IsPreSelected.ShouldEqual(true);

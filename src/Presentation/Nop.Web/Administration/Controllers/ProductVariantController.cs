@@ -898,8 +898,6 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var values = _productAttributeService.GetProductVariantAttributeValues(productVariantAttributeId);
-
-
             var gridModel = new GridModel<ProductVariantModel.ProductVariantAttributeValueModel>
             {
                 Data = values.Select(x =>
@@ -923,24 +921,7 @@ namespace Nop.Admin.Controllers
                 Data = gridModel
             };
         }
-
-        //delete
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult ProductAttributeValueDelete(int pvavId, int productVariantAttributeId, GridCommand command)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
-                return AccessDeniedView();
-
-            var pvav = _productAttributeService.GetProductVariantAttributeValueById(pvavId);
-            if (pvav == null)
-                throw new ArgumentException("No product variant attribute value found with the specified id");
-
-            _productAttributeService.DeleteProductVariantAttributeValue(pvav);
-
-            return ProductAttributeValueList(productVariantAttributeId, command);
-        }
-
-
+        
         //create
         public ActionResult ProductAttributeValueCreatePopup(int productAttributeAttributeId)
         {
@@ -1089,6 +1070,22 @@ namespace Nop.Admin.Controllers
 
             //If we got this far, something failed, redisplay form
             return View(model);
+        }
+        
+        //delete
+        [GridAction(EnableCustomBinding = true)]
+        public ActionResult ProductAttributeValueDelete(int pvavId, int productVariantAttributeId, GridCommand command)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
+            var pvav = _productAttributeService.GetProductVariantAttributeValueById(pvavId);
+            if (pvav == null)
+                throw new ArgumentException("No product variant attribute value found with the specified id");
+
+            _productAttributeService.DeleteProductVariantAttributeValue(pvav);
+
+            return ProductAttributeValueList(productVariantAttributeId, command);
         }
 
         #endregion

@@ -36,6 +36,7 @@
                             }
                             break;
                         case AttributeControlType.RadioList:
+                        case AttributeControlType.ColorSquares:
                             {
                         <ul class="option-list">
                             @foreach (var caValue in attribute.Values)
@@ -79,33 +80,6 @@
                         case AttributeControlType.FileUpload:
                             {
                         <input type="file" id="@(controlId)" name="@(controlId)"></input>
-                            }
-                            break;
-                        case AttributeControlType.ColorSquares:
-                            {
-                                <ul class="option-list color-squares" id="color-squares-@(attribute.Id)">
-                                    @foreach (var caValue in attribute.Values)
-                                    {
-                                        <li @(caValue.IsPreSelected ? @Html.Raw(" class=\"selected-value\"") : null)>
-                                            <label for="@(controlId)_@(caValue.Id)">
-                                                <span class="color-container" title="@caValue.Name @(!String.IsNullOrEmpty(caValue.PriceAdjustment) ? " [" + caValue.PriceAdjustment + "]" : null)">
-                                                    <span class="color" style="background-color:@(caValue.ColorSquaresRgb);">&nbsp;</span>
-                                                </span>
-                                                <input id="@(controlId)_@(caValue.Id)" type="radio" name="@(controlId)" value="@caValue.Id" checked="@caValue.IsPreSelected" />
-                                                @*uncomment below to display attribute value name*@
-                                                @*<span class="name">@caValue.Name @(!String.IsNullOrEmpty(caValue.PriceAdjustment) ? " [" + caValue.PriceAdjustment + "]" : null)</span>*@
-                                            </label>
-                                        </li>
-                                    }
-                                </ul>
-                                <script type="text/javascript">
-                                    $(document).ready(function() {
-                                        $('.checkout-attributes #color-squares-@(attribute.Id)').delegate('input', 'click', function (event) {
-                                            $('.checkout-attributes #color-squares-@(attribute.Id)').find('li').removeClass('selected-value');
-                                            $(this).closest('li').addClass('selected-value');
-                                        });
-                                   });
-                                </script>
                             }
                             break;
                     }

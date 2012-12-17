@@ -3,6 +3,7 @@ using System.Linq;
 using System.Web.Mvc;
 using Nop.Admin.Models.Orders;
 using Nop.Core;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Directory;
@@ -279,16 +280,20 @@ namespace Nop.Admin.Controllers
             var values = _checkoutAttributeService.GetCheckoutAttributeValues(checkoutAttributeId);
             var gridModel = new GridModel<CheckoutAttributeValueModel>
             {
-                Data = values.Select(x => 
+                Data = values.Select(x =>
+                {
+                    return new CheckoutAttributeValueModel()
                     {
-                        var model = x.ToModel();
-                        //locales
-                        //AddLocales(_languageService, model.Locales, (locale, languageId) =>
-                        //{
-                        //    locale.Name = x.GetLocalized(y => y.Name, languageId, false, false);
-                        //});
-                        return model;
-                    }),
+                        Id = x.Id,
+                        CheckoutAttributeId = x.CheckoutAttributeId,
+                        Name = x.CheckoutAttribute.AttributeControlType != AttributeControlType.ColorSquares ? x.Name : string.Format("{0} - {1}", x.Name, x.ColorSquaresRgb),
+                        ColorSquaresRgb = x.ColorSquaresRgb,
+                        PriceAdjustment = x.PriceAdjustment,
+                        WeightAdjustment = x.WeightAdjustment,
+                        IsPreSelected = x.IsPreSelected,
+                        DisplayOrder = x.DisplayOrder,
+                    };
+                }),
                 Total = values.Count()
             };
             return new JsonResult
@@ -303,10 +308,15 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
 
+            var checkoutAttribute = _checkoutAttributeService.GetCheckoutAttributeById(checkoutAttributeId);
             var model = new CheckoutAttributeValueModel();
             model.CheckoutAttributeId = checkoutAttributeId;
             model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
             model.BaseWeightIn = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name;
+
+            //color squares
+            model.DisplayColorSquaresRgb = checkoutAttribute.AttributeControlType == AttributeControlType.ColorSquares;
+            model.ColorSquaresRgb = "#000000";
 
             //locales
             AddLocales(_languageService, model.Locales);
@@ -327,12 +337,36 @@ namespace Nop.Admin.Controllers
             model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
             model.BaseWeightIn = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name;
 
+            if (checkoutAttribute.AttributeControlType == AttributeControlType.ColorSquares)
+            {
+                //ensure valid color is chosen/entered
+                if (String.IsNullOrEmpty(model.ColorSquaresRgb))
+                    ModelState.AddModelError("", "Color is required");
+                try
+                {
+                    var color = System.Drawing.ColorTranslator.FromHtml(model.ColorSquaresRgb);
+                }
+                catch (Exception exc)
+                {
+                    ModelState.AddModelError("", exc.Message);
+                }
+            }
+
             if (ModelState.IsValid)
             {
-                var sao = model.ToEntity();
+                var cav = new CheckoutAttributeValue()
+                {
+                    CheckoutAttributeId = model.CheckoutAttributeId,
+                    Name = model.Name,
+                    ColorSquaresRgb = model.ColorSquaresRgb,
+                    PriceAdjustment = model.PriceAdjustment,
+                    WeightAdjustment = model.WeightAdjustment,
+                    IsPreSelected = model.IsPreSelected,
+                    DisplayOrder = model.DisplayOrder
+                };
 
-                _checkoutAttributeService.InsertCheckoutAttributeValue(sao);
-                UpdateValueLocales(sao, model);
+                _checkoutAttributeService.InsertCheckoutAttributeValue(cav);
+                UpdateValueLocales(cav, model);
 
                 ViewBag.RefreshPage = true;
                 ViewBag.btnId = btnId;
@@ -355,9 +389,19 @@ namespace Nop.Admin.Controllers
                 //No checkout attribute value found with the specified id
                 return RedirectToAction("List");
 
-            var model = cav.ToModel();
-            model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
-            model.BaseWeightIn = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name;
+            var model = new CheckoutAttributeValueModel()
+            {
+                CheckoutAttributeId = cav.CheckoutAttributeId,
+                Name = cav.Name,
+                ColorSquaresRgb = cav.ColorSquaresRgb,
+                DisplayColorSquaresRgb = cav.CheckoutAttribute.AttributeControlType == AttributeControlType.ColorSquares,
+                PriceAdjustment = cav.PriceAdjustment,
+                WeightAdjustment = cav.WeightAdjustment,
+                IsPreSelected = cav.IsPreSelected,
+                DisplayOrder = cav.DisplayOrder,
+                PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode,
+                BaseWeightIn = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name
+            };
 
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
@@ -382,9 +426,29 @@ namespace Nop.Admin.Controllers
             model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
             model.BaseWeightIn = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name;
 
+            if (cav.CheckoutAttribute.AttributeControlType == AttributeControlType.ColorSquares)
+            {
+                //ensure valid color is chosen/entered
+                if (String.IsNullOrEmpty(model.ColorSquaresRgb))
+                    ModelState.AddModelError("", "Color is required");
+                try
+                {
+                    var color = System.Drawing.ColorTranslator.FromHtml(model.ColorSquaresRgb);
+                }
+                catch (Exception exc)
+                {
+                    ModelState.AddModelError("", exc.Message);
+                }
+            }
+
             if (ModelState.IsValid)
             {
-                cav = model.ToEntity(cav);
+                cav.Name = model.Name;
+                cav.ColorSquaresRgb = model.ColorSquaresRgb;
+                cav.PriceAdjustment = model.PriceAdjustment;
+                cav.WeightAdjustment = model.WeightAdjustment;
+                cav.IsPreSelected = model.IsPreSelected;
+                cav.DisplayOrder = model.DisplayOrder;
                 _checkoutAttributeService.UpdateCheckoutAttributeValue(cav);
 
                 UpdateValueLocales(cav, model);

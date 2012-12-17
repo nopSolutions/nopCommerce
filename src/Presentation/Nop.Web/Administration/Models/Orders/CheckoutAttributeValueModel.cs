@@ -22,6 +22,11 @@ namespace Nop.Admin.Models.Orders
         [AllowHtml]
         public string Name { get; set; }
 
+        [NopResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.ColorSquaresRgb")]
+        [AllowHtml]
+        public string ColorSquaresRgb { get; set; }
+        public bool DisplayColorSquaresRgb { get; set; }
+
         [NopResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.PriceAdjustment")]
         public decimal PriceAdjustment { get; set; }
         public string PrimaryStoreCurrencyCode { get; set; }

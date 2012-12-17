@@ -128,6 +128,12 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes.Values.Fields.ColorSquaresRgb.Hint">
     <Value>Choose color to be used with the color squares attribute control.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.ColorSquaresRgb">
+    <Value>RGB color</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.ColorSquaresRgb.Hint">
+    <Value>Choose color to be used with the color squares attribute control.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1057,6 +1063,13 @@ GO
 IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[ProductVariantAttributeValue]') and NAME='ColorSquaresRgb')
 BEGIN
 	ALTER TABLE [ProductVariantAttributeValue]
+	ADD [ColorSquaresRgb] nvarchar(100) NULL
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[CheckoutAttributeValue]') and NAME='ColorSquaresRgb')
+BEGIN
+	ALTER TABLE [CheckoutAttributeValue]
 	ADD [ColorSquaresRgb] nvarchar(100) NULL
 END
 GO

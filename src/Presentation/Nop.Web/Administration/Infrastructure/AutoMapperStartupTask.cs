@@ -456,13 +456,6 @@ namespace Nop.Admin.Infrastructure
             Mapper.CreateMap<CheckoutAttributeModel, CheckoutAttribute>()
                 .ForMember(dest => dest.AttributeControlType, mo => mo.Ignore())
                 .ForMember(dest => dest.CheckoutAttributeValues, mo => mo.Ignore());
-            Mapper.CreateMap<CheckoutAttributeValue, CheckoutAttributeValueModel>()
-                .ForMember(dest => dest.PrimaryStoreCurrencyCode, mo => mo.Ignore())
-                .ForMember(dest => dest.BaseWeightIn, mo => mo.Ignore())
-                .ForMember(dest => dest.Locales, mo => mo.Ignore())
-                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
-            Mapper.CreateMap<CheckoutAttributeValueModel, CheckoutAttributeValue>()
-                .ForMember(dest => dest.CheckoutAttribute, mo => mo.Ignore());
             //discounts
             Mapper.CreateMap<Discount, DiscountModel>()
                 .ForMember(dest => dest.PrimaryStoreCurrencyCode, mo => mo.Ignore())

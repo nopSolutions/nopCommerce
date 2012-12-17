@@ -119,6 +119,8 @@ namespace Nop.Web.Models.ShoppingCart
         {
             public string Name { get; set; }
 
+            public string ColorSquaresRgb { get; set; }
+
             public string PriceAdjustment { get; set; }
 
             public bool IsPreSelected { get; set; }

@@ -197,21 +197,6 @@ namespace Nop.Admin
             return Mapper.Map(model, destination);
         }
 
-        //checkout attribute values
-        public static CheckoutAttributeValueModel ToModel(this CheckoutAttributeValue entity)
-        {
-            return Mapper.Map<CheckoutAttributeValue, CheckoutAttributeValueModel>(entity);
-        }
-
-        public static CheckoutAttributeValue ToEntity(this CheckoutAttributeValueModel model)
-        {
-            return Mapper.Map<CheckoutAttributeValueModel, CheckoutAttributeValue>(model);
-        }
-
-        public static CheckoutAttributeValue ToEntity(this CheckoutAttributeValueModel model, CheckoutAttributeValue destination)
-        {
-            return Mapper.Map(model, destination);
-        }
         #endregion
 
         #region Languages

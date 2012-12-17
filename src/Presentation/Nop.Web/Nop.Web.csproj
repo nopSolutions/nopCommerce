@@ -1761,6 +1761,7 @@
     <Content Include="Views\ShoppingCart\_OrderReviewData.Mobile.cshtml" />
     <Content Include="Views\Common\StoreClosed.cshtml" />
     <Content Include="Views\Common\StoreClosed.Mobile.cshtml" />
+    <Content Include="Views\ShoppingCart\_CheckoutAttributes.Mobile.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
