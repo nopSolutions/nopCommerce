@@ -1060,3 +1060,6 @@ BEGIN
 	ADD [ColorSquaresRgb] nvarchar(100) NULL
 END
 GO
+
+ALTER TABLE [ProductVariantAttributeValue] ALTER COLUMN [Name] nvarchar(400) NOT NULL
+GO
