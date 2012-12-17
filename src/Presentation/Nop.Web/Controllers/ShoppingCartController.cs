@@ -297,6 +297,7 @@ namespace Nop.Web.Controllers
                     case AttributeControlType.DropdownList:
                     case AttributeControlType.RadioList:
                     case AttributeControlType.Checkboxes:
+                    case AttributeControlType.ColorSquares:
                         {
                             if (!String.IsNullOrEmpty(selectedCheckoutAttributes))
                             {
