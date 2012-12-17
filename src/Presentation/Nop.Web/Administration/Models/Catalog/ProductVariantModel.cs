@@ -315,6 +315,11 @@ namespace Nop.Admin.Models.Catalog
             [AllowHtml]
             public string Name { get; set; }
 
+            [NopResourceDisplayName("Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes.Values.Fields.ColorSquaresRgb")]
+            [AllowHtml]
+            public string ColorSquaresRgb { get; set; }
+            public bool DisplayColorSquaresRgb { get; set; }
+
             [NopResourceDisplayName("Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes.Values.Fields.PriceAdjustment")]
             public decimal PriceAdjustment { get; set; }
 

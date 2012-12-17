@@ -743,7 +743,8 @@ namespace Nop.Web.Controllers
                         var pvaValueModel = new ProductDetailsModel.ProductVariantModel.ProductVariantAttributeValueModel()
                         {
                             Id = pvaValue.Id,
-                            Name = pvaValue.GetLocalized(x=>x.Name),
+                            Name = pvaValue.GetLocalized(x => x.Name),
+                            ColorSquaresRgb = pvaValue.ColorSquaresRgb, //used with "Color squares" attribute type
                             IsPreSelected = pvaValue.IsPreSelected,
                         };
                         pvaModel.Values.Add(pvaValueModel);
@@ -1485,23 +1486,13 @@ namespace Nop.Web.Controllers
                 switch (attribute.AttributeControlType)
                 {
                     case AttributeControlType.DropdownList:
-                        {
-                            var ddlAttributes = form[controlId];
-                            if (!String.IsNullOrEmpty(ddlAttributes))
-                            {
-                                int selectedAttributeId = int.Parse(ddlAttributes);
-                                if (selectedAttributeId > 0)
-                                    selectedAttributes = _productAttributeParser.AddProductAttribute(selectedAttributes,
-                                        attribute, selectedAttributeId.ToString());
-                            }
-                        }
-                        break;
                     case AttributeControlType.RadioList:
+                    case AttributeControlType.ColorSquares:
                         {
-                            var rblAttributes = form[controlId];
-                            if (!String.IsNullOrEmpty(rblAttributes))
+                            var ctrlAttributes = form[controlId];
+                            if (!String.IsNullOrEmpty(ctrlAttributes))
                             {
-                                int selectedAttributeId = int.Parse(rblAttributes);
+                                int selectedAttributeId = int.Parse(ctrlAttributes);
                                 if (selectedAttributeId > 0)
                                     selectedAttributes = _productAttributeParser.AddProductAttribute(selectedAttributes,
                                         attribute, selectedAttributeId.ToString());
@@ -1510,10 +1501,10 @@ namespace Nop.Web.Controllers
                         break;
                     case AttributeControlType.Checkboxes:
                         {
-                            var cblAttributes = form[controlId];
-                            if (!String.IsNullOrEmpty(cblAttributes))
+                            var ctrlAttributes = form[controlId];
+                            if (!String.IsNullOrEmpty(ctrlAttributes))
                             {
-                                foreach (var item in cblAttributes.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                                foreach (var item in ctrlAttributes.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                                 {
                                     int selectedAttributeId =  int.Parse(item);
                                     if (selectedAttributeId > 0)
@@ -1524,22 +1515,12 @@ namespace Nop.Web.Controllers
                         }
                         break;
                     case AttributeControlType.TextBox:
-                        {
-                            var txtAttribute = form[controlId];
-                            if (!String.IsNullOrEmpty(txtAttribute))
-                            {
-                                string enteredText = txtAttribute.Trim();
-                                selectedAttributes = _productAttributeParser.AddProductAttribute(selectedAttributes,
-                                    attribute, enteredText);
-                            }
-                        }
-                        break;
                     case AttributeControlType.MultilineTextbox:
                         {
-                            var txtAttribute = form[controlId];
-                            if (!String.IsNullOrEmpty(txtAttribute))
+                            var ctrlAttributes = form[controlId];
+                            if (!String.IsNullOrEmpty(ctrlAttributes))
                             {
-                                string enteredText = txtAttribute.Trim();
+                                string enteredText = ctrlAttributes.Trim();
                                 selectedAttributes = _productAttributeParser.AddProductAttribute(selectedAttributes,
                                     attribute, enteredText);
                             }
@@ -1736,6 +1717,7 @@ namespace Nop.Web.Controllers
                                 }
                                 break;
                             case AttributeControlType.RadioList:
+                            case AttributeControlType.ColorSquares:
                                 {
                                     var rblAttributes = form[controlId];
                                     if (!String.IsNullOrEmpty(rblAttributes))

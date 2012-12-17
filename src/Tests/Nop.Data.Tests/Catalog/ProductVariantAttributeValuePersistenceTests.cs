@@ -14,6 +14,7 @@ namespace Nop.Data.Tests.Catalog
             var pvav = new ProductVariantAttributeValue
             {
                 Name = "Name 1",
+                ColorSquaresRgb = "12FF33",
                 PriceAdjustment = 1.1M,
                 WeightAdjustment = 2.1M,
                 IsPreSelected = true,
@@ -49,6 +50,7 @@ namespace Nop.Data.Tests.Catalog
             var fromDb = SaveAndLoadEntity(pvav);
             fromDb.ShouldNotBeNull();
             fromDb.Name.ShouldEqual("Name 1");
+            fromDb.ColorSquaresRgb.ShouldEqual("12FF33");
             fromDb.PriceAdjustment.ShouldEqual(1.1M);
             fromDb.WeightAdjustment.ShouldEqual(2.1M);
             fromDb.IsPreSelected.ShouldEqual(true);

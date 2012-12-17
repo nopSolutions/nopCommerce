@@ -119,6 +119,15 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Variants.Copy.Published.Hint">
     <Value>Check to mark a product variant as published.</Value>
   </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.AttributeControlType.ColorSquares">
+    <Value>Color squares</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes.Values.Fields.ColorSquaresRgb">
+    <Value>RGB color</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes.Values.Fields.ColorSquaresRgb.Hint">
+    <Value>Choose color to be used with the color squares attribute control.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1040,5 +1049,14 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'currencysettings.display
 BEGIN
 	INSERT [Setting] ([Name], [Value])
 	VALUES (N'currencysettings.displaycurrencylabel', N'false')
+END
+GO
+
+
+--color squares attribute type
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[ProductVariantAttributeValue]') and NAME='ColorSquaresRgb')
+BEGIN
+	ALTER TABLE [ProductVariantAttributeValue]
+	ADD [ColorSquaresRgb] nvarchar(100) NULL
 END
 GO

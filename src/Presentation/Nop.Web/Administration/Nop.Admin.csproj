@@ -334,6 +334,11 @@
     <Compile Include="Validators\Catalog\ProductValidator.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\farbtastic\farbtastic.css" />
+    <Content Include="Scripts\farbtastic.js" />
+    <Content Include="Content\farbtastic\marker.png" />
+    <Content Include="Content\farbtastic\mask.png" />
+    <Content Include="Content\farbtastic\wheel.png" />
     <Content Include="Content\fileuploader.css" />
     <Content Include="Content\images\1pix.gif" />
     <Content Include="Content\images\admin-gvw-bg.gif" />

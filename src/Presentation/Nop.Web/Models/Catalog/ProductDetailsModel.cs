@@ -221,6 +221,8 @@ namespace Nop.Web.Models.Catalog
             {
                 public string Name { get; set; }
 
+                public string ColorSquaresRgb { get; set; }
+
                 public string PriceAdjustment { get; set; }
 
                 public decimal PriceAdjustmentValue { get; set; }

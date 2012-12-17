@@ -1475,6 +1475,9 @@
                     <LocaleResource Name="FileUpload">
                         <Value>File upload</Value>
                     </LocaleResource>
+                    <LocaleResource Name="ColorSquares">
+                        <Value>Color squares</Value>
+                    </LocaleResource>
                 </Children>
             </LocaleResource>
             <LocaleResource Name="Nop.Core.Domain.Catalog.BackorderMode">

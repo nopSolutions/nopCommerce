@@ -19,6 +19,11 @@ namespace Nop.Core.Domain.Catalog
         public virtual string Name { get; set; }
 
         /// <summary>
+        /// Gets or sets the color RGB value (used with "Color squares" attribute type)
+        /// </summary>
+        public virtual string ColorSquaresRgb { get; set; }
+
+        /// <summary>
         /// Gets or sets the price adjustment
         /// </summary>
         public virtual decimal PriceAdjustment { get; set; }

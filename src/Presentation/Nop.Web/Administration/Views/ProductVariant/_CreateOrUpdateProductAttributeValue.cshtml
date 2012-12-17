@@ -1,11 +1,11 @@
 ﻿@model ProductVariantModel.ProductVariantAttributeValueModel
-
-@using Telerik.Web.Mvc.UI;
-
+@{
+    Html.AddScriptParts("~/Administration/Scripts/farbtastic.js");
+    Html.AddCssFileParts("~/Administration/Content/farbtastic/farbtastic.css");
+}
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
 @Html.HiddenFor(model => model.ProductVariantAttributeId)
-
 
 @if (ViewBag.RefreshPage == true)
 {
@@ -46,7 +46,37 @@
     </tr>
 </table>
 ))
+@Html.HiddenFor(model => model.DisplayColorSquaresRgb)
 <table class="adminContent">
+    @if (Model.DisplayColorSquaresRgb)
+    {
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.ColorSquaresRgb):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.ColorSquaresRgb)
+            <div id="color-picker"></div>
+            <script  type="text/javascript">
+                $(document).ready(function(){
+                    $('#color-picker').farbtastic('#@Html.FieldIdFor(model => model.ColorSquaresRgb)');
+                });
+            </script>
+            @*<script  type="text/javascript">
+                $(document).ready(function(){
+                    $('#@Html.FieldIdFor(model => model.ColorSquaresRgb)').simpleColor({
+                        cellWidth: 9,
+                        cellHeight: 9,
+                        border: '1px solid #333333',
+                        buttonClass: 'choose-color-button',
+                        displayColorCode: true
+                    });
+                });
+            </script>*@
+            @Html.ValidationMessageFor(model => model.ColorSquaresRgb)
+        </td>
+    </tr>
+    }
     <tr>
         <td class="adminTitle">
             @Html.NopLabelFor(model => model.PriceAdjustment):

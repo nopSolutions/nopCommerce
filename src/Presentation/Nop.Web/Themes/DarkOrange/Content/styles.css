@@ -768,6 +768,13 @@ a.eu-cookie-privacyinfo-tag{color:#F93 !important;text-decoration:underline;}
 .product-details-page .attributes ul.option-list li{list-style:none;}
 .product-details-page .attributes .textbox{width:300px;}
 .product-details-page .attributes textarea{width:300px;height:150px;}
+/* color squares attribute type */
+.product-details-page .attributes ul.color-squares li{display:inline;}
+.product-details-page .attributes ul.color-squares .color-container{position: relative;display:inline-block;border:solid 1px #999;padding:1px;margin-bottom:5px;}
+.product-details-page .attributes ul.color-squares .selected-value .color-container{border-color:#075899;border-width:2px;padding:0;}
+.product-details-page .attributes ul.color-squares .color{display:inline-block;width:18px;height:18px;}
+.product-details-page .attributes ul.color-squares label{cursor:pointer;position:relative;}
+.product-details-page .attributes ul.color-squares input{height:0;overflow:hidden;z-index:-10000;position:absolute;float:none;}
 .product-details-page .giftcard{}
 .product-details-page .giftcard dt{clear:left;float:left;width:150px;}
 .product-details-page .giftcard .recipient-name{}

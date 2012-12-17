@@ -908,7 +908,8 @@ namespace Nop.Admin.Controllers
                     {
                         Id = x.Id,
                         ProductVariantAttributeId = x.ProductVariantAttributeId,
-                        Name = x.Name,
+                        Name = x.ProductVariantAttribute.AttributeControlType != AttributeControlType.ColorSquares ? x.Name : string.Format("{0} - {1}", x.Name, x.ColorSquaresRgb),
+                        ColorSquaresRgb = x.ColorSquaresRgb,
                         PriceAdjustment = x.PriceAdjustment,
                         WeightAdjustment = x.WeightAdjustment,
                         IsPreSelected = x.IsPreSelected,
@@ -946,8 +947,14 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
 
+            var pva = _productAttributeService.GetProductVariantAttributeById(productAttributeAttributeId);
             var model = new ProductVariantModel.ProductVariantAttributeValueModel();
             model.ProductVariantAttributeId = productAttributeAttributeId;
+
+            //color squares
+            model.DisplayColorSquaresRgb = pva.AttributeControlType == AttributeControlType.ColorSquares;
+            model.ColorSquaresRgb = "#000000";
+
             //locales
             AddLocales(_languageService, model.Locales);
             return View(model);
@@ -964,12 +971,28 @@ namespace Nop.Admin.Controllers
                 //No product variant attribute found with the specified id
                 return RedirectToAction("List", "Product");
 
+            if (pva.AttributeControlType == AttributeControlType.ColorSquares)
+            {
+                //ensure valid color is chosen/entered
+                if (String.IsNullOrEmpty(model.ColorSquaresRgb))
+                    ModelState.AddModelError("", "Color is required");
+                try
+                {
+                    var color = System.Drawing.ColorTranslator.FromHtml(model.ColorSquaresRgb);
+                }
+                catch (Exception exc)
+                {
+                    ModelState.AddModelError("", exc.Message);
+                }
+            }
+
             if (ModelState.IsValid)
             {
                 var pvav = new ProductVariantAttributeValue()
                 {
                     ProductVariantAttributeId = model.ProductVariantAttributeId,
                     Name = model.Name,
+                    ColorSquaresRgb = model.ColorSquaresRgb,
                     PriceAdjustment = model.PriceAdjustment,
                     WeightAdjustment = model.WeightAdjustment,
                     IsPreSelected = model.IsPreSelected,
@@ -1003,7 +1026,9 @@ namespace Nop.Admin.Controllers
             var model = new ProductVariantModel.ProductVariantAttributeValueModel()
             {
                 ProductVariantAttributeId = pvav.ProductVariantAttributeId,
-                Name= pvav.Name,
+                Name = pvav.Name,
+                ColorSquaresRgb = pvav.ColorSquaresRgb,
+                DisplayColorSquaresRgb = pvav.ProductVariantAttribute.AttributeControlType == AttributeControlType.ColorSquares,
                 PriceAdjustment = pvav.PriceAdjustment,
                 WeightAdjustment = pvav.WeightAdjustment,
                 IsPreSelected = pvav.IsPreSelected,
@@ -1029,9 +1054,25 @@ namespace Nop.Admin.Controllers
                 //No attribute value found with the specified id
                 return RedirectToAction("List", "Product");
 
+            if (pvav.ProductVariantAttribute.AttributeControlType == AttributeControlType.ColorSquares)
+            {
+                //ensure valid color is chosen/entered
+                if (String.IsNullOrEmpty(model.ColorSquaresRgb))
+                    ModelState.AddModelError("", "Color is required");
+                try
+                {
+                    var color = System.Drawing.ColorTranslator.FromHtml(model.ColorSquaresRgb);
+                }
+                catch (Exception exc)
+                {
+                    ModelState.AddModelError("", exc.Message);
+                }
+            }
+
             if (ModelState.IsValid)
             {
                 pvav.Name = model.Name;
+                pvav.ColorSquaresRgb = model.ColorSquaresRgb;
                 pvav.PriceAdjustment = model.PriceAdjustment;
                 pvav.WeightAdjustment = model.WeightAdjustment;
                 pvav.IsPreSelected = model.IsPreSelected;
@@ -1188,23 +1229,13 @@ namespace Nop.Admin.Controllers
                 switch (attribute.AttributeControlType)
                 {
                     case AttributeControlType.DropdownList:
-                        {
-                            var ddlAttributes = form[controlId];
-                            if (!String.IsNullOrEmpty(ddlAttributes))
-                            {
-                                int selectedAttributeId = int.Parse(ddlAttributes);
-                                if (selectedAttributeId > 0)
-                                    selectedAttributes = _productAttributeParser.AddProductAttribute(selectedAttributes,
-                                        attribute, selectedAttributeId.ToString());
-                            }
-                        }
-                        break;
                     case AttributeControlType.RadioList:
+                    case AttributeControlType.ColorSquares:
                         {
-                            var rblAttributes = form[controlId];
-                            if (!String.IsNullOrEmpty(rblAttributes))
+                            var ctrlAttributes = form[controlId];
+                            if (!String.IsNullOrEmpty(ctrlAttributes))
                             {
-                                int selectedAttributeId = int.Parse(rblAttributes);
+                                int selectedAttributeId = int.Parse(ctrlAttributes);
                                 if (selectedAttributeId > 0)
                                     selectedAttributes = _productAttributeParser.AddProductAttribute(selectedAttributes,
                                         attribute, selectedAttributeId.ToString());
@@ -1227,22 +1258,12 @@ namespace Nop.Admin.Controllers
                         }
                         break;
                     case AttributeControlType.TextBox:
-                        {
-                            var txtAttribute = form[controlId];
-                            if (!String.IsNullOrEmpty(txtAttribute))
-                            {
-                                string enteredText = txtAttribute.Trim();
-                                selectedAttributes = _productAttributeParser.AddProductAttribute(selectedAttributes,
-                                    attribute, enteredText);
-                            }
-                        }
-                        break;
                     case AttributeControlType.MultilineTextbox:
                         {
-                            var txtAttribute = form[controlId];
-                            if (!String.IsNullOrEmpty(txtAttribute))
+                            var ctrlAttributes = form[controlId];
+                            if (!String.IsNullOrEmpty(ctrlAttributes))
                             {
-                                string enteredText = txtAttribute.Trim();
+                                string enteredText = ctrlAttributes.Trim();
                                 selectedAttributes = _productAttributeParser.AddProductAttribute(selectedAttributes,
                                     attribute, enteredText);
                             }

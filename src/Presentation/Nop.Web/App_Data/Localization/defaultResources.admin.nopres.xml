@@ -374,6 +374,14 @@
                                                             </LocaleResource>
                                                         </Children>
                                                     </LocaleResource>
+                                                    <LocaleResource Name="ColorSquaresRgb">
+                                                      <Value>RGB color</Value>
+                                                      <Children>
+                                                        <LocaleResource Name="Hint">
+                                                          <Value>Choose color to be used with the color squares attribute control.</Value>
+                                                        </LocaleResource>
+                                                      </Children>
+                                                    </LocaleResource>
                                                     <LocaleResource Name="PriceAdjustment">
                                                         <Value>Price adjustment</Value>
                                                         <Children>
@@ -1680,6 +1688,14 @@
                                                                                 <Value>Please provide a name.</Value>
                                                                             </LocaleResource>
                                                                         </Children>
+                                                                    </LocaleResource>
+                                                                    <LocaleResource Name="ColorSquaresRgb">
+                                                                      <Value>RGB color</Value>
+                                                                      <Children>
+                                                                        <LocaleResource Name="Hint">
+                                                                          <Value>Choose color to be used with the color squares attribute control.</Value>
+                                                                        </LocaleResource>
+                                                                      </Children>
                                                                     </LocaleResource>
                                                                     <LocaleResource Name="PriceAdjustment">
                                                                         <Value>Price adjustment</Value>

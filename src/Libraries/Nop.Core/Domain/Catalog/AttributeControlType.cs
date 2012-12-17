@@ -33,5 +33,9 @@ namespace Nop.Core.Domain.Catalog
         /// File upload control
         /// </summary>
         FileUpload = 30,
+        /// <summary>
+        /// Color squares
+        /// </summary>
+        ColorSquares = 40,
     }
 }
