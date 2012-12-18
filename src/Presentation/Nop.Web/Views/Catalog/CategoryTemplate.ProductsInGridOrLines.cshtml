@@ -12,11 +12,8 @@
         Html.AddCanonicalUrlParts(categoryUrl);
     }
 }
-@using Nop.Core;
-@using Nop.Core.Domain.Common;
 @using Nop.Core.Domain.Seo;
 @using Nop.Core.Infrastructure;
-@using Nop.Web;
 @using Nop.Web.Models.Catalog;
 @using Nop.Web.Extensions;
 @*category breadcrumb*@
@@ -73,21 +70,22 @@
         @if (Model.SubCategories.Count > 0)
         {
             <div class="sub-category-grid">
-                @(Html.DataList<CategoryModel.SubCategoryModel>(Model.SubCategories, 3,
-                @<div class="item-box">
-                    <div class="sub-category-item">
-                        <h2 class="category-title">
-                            <a href="@Url.RouteUrl("Category", new { SeName = item.SeName })" title="@item.PictureModel.Title">
-                                @item.Name</a>
-                        </h2>
-                        <div class="picture">
-                            <a href="@Url.RouteUrl("Category", new { SeName = item.SeName })" title="@item.PictureModel.Title">
-                                <img alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl"
-                                    title="@item.PictureModel.Title" /></a>
+                @foreach (var item in Model.SubCategories)
+                {
+                    <div class="item-box">
+                        <div class="sub-category-item">
+                            <h2 class="category-title">
+                                <a href="@Url.RouteUrl("Category", new {SeName = item.SeName})" title="@item.PictureModel.Title">
+                                    @item.Name</a>
+                            </h2>
+                            <div class="picture">
+                                <a href="@Url.RouteUrl("Category", new {SeName = item.SeName})" title="@item.PictureModel.Title">
+                                    <img alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl"
+                                         title="@item.PictureModel.Title" /></a>
+                            </div>
                         </div>
                     </div>
-                </div>
-            ))
+                }
             </div>
             <div class="clear">
             </div>
@@ -101,11 +99,12 @@
                     @T("Products.FeaturedProducts")
                 </div>
                 <div>
-                    @(Html.DataList<ProductOverviewModel>(Model.FeaturedProducts, 2,
-                    @<div class="item-box">
-                        @Html.Partial("_ProductBox", item)
-                    </div>
-                ))
+                    @foreach (var item in Model.FeaturedProducts)
+                    {
+                        <div class="item-box">
+                            @Html.Partial("_ProductBox", item)
+                        </div>
+                    }
                 </div>
             </div>
             <div class="clear">
@@ -183,11 +182,12 @@
             {
             @*grid mode*@
             <div class="product-grid">
-                @(Html.DataList<ProductOverviewModel>(Model.Products, 2,
-                        @<div class="item-box">
-                            @Html.Partial("_ProductBox", item)
-                        </div>
-                    ))
+               @foreach (var product in Model.Products)
+               {
+                   <div class="item-box">
+                       @Html.Partial("_ProductBox", product)
+                   </div>
+               }
             </div>
             }
         }

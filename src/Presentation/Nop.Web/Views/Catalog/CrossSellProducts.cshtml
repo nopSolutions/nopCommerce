@@ -7,10 +7,11 @@
             @T("ShoppingCart.CrossSells"): </span>
         <div class="clear">
         </div>
-        @(Html.DataList<ProductOverviewModel>(Model, 2,
-                    @<div class="item-box">
-                        @Html.Partial("_ProductBox", item)
-                    </div>
-                ))
+        @foreach (var product in Model)
+        {
+            <div class="item-box">
+                @Html.Partial("_ProductBox", product)
+            </div>
+        }
     </div>
 }

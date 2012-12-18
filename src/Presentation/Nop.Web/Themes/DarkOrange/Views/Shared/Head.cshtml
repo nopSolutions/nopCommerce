@@ -1,14 +1,31 @@
 ﻿@using Nop.Core;
 @using Nop.Core.Infrastructure;
 @{
-    var supportRtl = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Rtl;
-}
-@if (supportRtl)
-{
-    //this theme supports RTL
-    Html.AppendCssFileParts("~/Themes/DarkOrange/Content/styles.rtl.css");
-}
-else
-{
+    //add IE6 and IE7 styles (if required)
+    var browser = Request.Browser;
+    if (browser.Browser == "IE" && browser.MajorVersion == 6)
+    {
+        Html.AppendCssFileParts("~/Themes/DarkOrange/Content/ie6.css");
+    }
+    else if (browser.Browser == "IE" && browser.MajorVersion == 7)
+    {
+        Html.AppendCssFileParts("~/Themes/DarkOrange/Content/ie7.css");
+    }
+    
+    Html.AppendCssFileParts("~/Themes/DarkOrange/Content/custom.css");
     Html.AppendCssFileParts("~/Themes/DarkOrange/Content/styles.css");
 }
+@*@{
+    var supportRtl = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Rtl;
+    if (supportRtl)
+    {
+        //this theme supports RTL
+        Html.AppendCssFileParts("~/Themes/DarkOrange/Content/custom.css");
+        Html.AppendCssFileParts("~/Themes/DarkOrange/Content/styles.rtl.css");
+    }
+    else
+    {
+        Html.AppendCssFileParts("~/Themes/DarkOrange/Content/custom.css");
+        Html.AppendCssFileParts("~/Themes/DarkOrange/Content/styles.css");
+    }
+}*@

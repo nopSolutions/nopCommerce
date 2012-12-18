@@ -1,0 +1,24 @@
+.bestsellers{text-align: left}
+.product-list .item-box .product-item .product-title {padding-left: 155px;font-size: 14px;}
+.slider-wrapper.theme-default {position: static;}
+input[type="submit"], *:first-child + html input[type="button"], *:first-child + html button {filter: chroma(color=#000000);}
+.headermenu li.dropdown {padding-bottom: 14px;}
+.mini-shopping-cart, .ie7 .mini-shopping-cart a {color: #3a4045;}
+.button-1, .button-2 {position: static;}
+.product-item .add-info {position: static;}
+.search-box {width:390px;}
+.news-items .read-more, .ie7 .block-blog-archive .year,.ie7 .breadcrumb a:hover {color: #5C5B5B;}
+li.dropdown{padding: 8px !important;}
+.topmenu li{padding: 7px 8px 8px !important;}
+textarea {overflow: auto}
+.master-wrapper-side-product{margin-top: 42px}
+.tab-parent{}
+label{vertical-align: bottom}
+.product-list .add-info{float: left;margin-left: 10px;position: absolute;left:140px}
+.product-list h2 a{text-align: right}
+/*hover issue*/
+.top-menu {position: relative;z-index:3}
+.header-links-wrapper{z-index: 4}
+/*hover issue*/
+a:focus{outline:0;}
+.add-to-cart label{vertical-align: top}

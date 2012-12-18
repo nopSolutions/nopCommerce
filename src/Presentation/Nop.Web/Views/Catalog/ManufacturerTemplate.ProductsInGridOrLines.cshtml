@@ -12,11 +12,8 @@
         Html.AddCanonicalUrlParts(manufacturerUrl);
     }
 }
-@using Nop.Core;
-@using Nop.Core.Domain.Common;
 @using Nop.Core.Domain.Seo;
 @using Nop.Core.Infrastructure;
-@using Nop.Web;
 @using Nop.Web.Models.Catalog;
 @using Nop.Web.Extensions;
 <div class="page manufacturer-page">
@@ -45,10 +42,12 @@
                     @T("Products.FeaturedProducts")
                 </div>
                 <div>
-                    @(Html.DataList<ProductOverviewModel>(Model.FeaturedProducts, 2,
-                    @<div class="item-box">
-                        @Html.Partial("_ProductBox", item)
-                    </div>
+                    @foreach (var product in Model.Products)
+                    {
+                        <div class="item-box">
+                            @Html.Partial("_ProductBox", product)
+                        </div>
+                    }
                 ))
                 </div>
             </div>
@@ -118,11 +117,12 @@
             {
             @*grid mode*@
             <div class="product-grid">
-                @(Html.DataList<ProductOverviewModel>(Model.Products, 2,
-                        @<div class="item-box">
-                            @Html.Partial("_ProductBox", item)
-                        </div>
-                    ))
+                @foreach (var product in Model.Products)
+                {
+                    <div class="item-box">
+                         @Html.Partial("_ProductBox", product)
+                     </div>
+                }
             </div>
             }
         }

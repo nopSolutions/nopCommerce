@@ -5,10 +5,6 @@
     //title
     Html.AddTitleParts(string.Format(T("PageTitle.ProductsByTag").Text, Model.TagName));
 }
-@using Nop.Core;
-@using Nop.Core.Infrastructure;
-@using Nop.Web.Models.Catalog;
-@using Nop.Web;
 @using Nop.Web.Models.Catalog;
 @using Nop.Web.Extensions;
 <div class="page product-tag-page">
@@ -66,11 +62,12 @@
             {
             @*grid mode*@
             <div class="product-grid">
-                @(Html.DataList<ProductOverviewModel>(Model.Products, 2,
-                    @<div class="item-box">
-                        @Html.Partial("_ProductBox", item)
+                @foreach (var product in Model.Products)
+                {
+                    <div class="item-box">
+                        @Html.Partial("_ProductBox", product)
                     </div>
-                ))
+                }
             </div>
             }
         }

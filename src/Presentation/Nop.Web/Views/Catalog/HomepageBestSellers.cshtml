@@ -11,19 +11,21 @@
         </div>
         @if (Model.UseSmallProductBox)
         {
-            @(Html.DataList<ProductOverviewModel>(Model.Products, 3,
-            @<div class="item-box">
-                @Html.Partial("_ProductSmallBox", item)
-            </div>
-                ))
+            foreach (var item in Model.Products)
+            {
+                <div class="item-box">
+                    @Html.Partial("_ProductSmallBox", item)
+                </div>
+            }
         }
         else
         {
-        @(Html.DataList<ProductOverviewModel>(Model.Products, 2,
-            @<div class="item-box">
-                @Html.Partial("_ProductBox", item)
-            </div>
-                ))
+            foreach (var item in Model.Products)
+            {
+                <div class="item-box">
+                    @Html.Partial("_ProductBox", item)
+                </div>
+            }
         }
     </div>
 }

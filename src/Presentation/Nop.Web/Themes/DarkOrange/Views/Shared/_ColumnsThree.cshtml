@@ -28,63 +28,6 @@
         currentProductId = Convert.ToInt32(Url.RequestContext.RouteData.Values["productId"].ToString());
     }
 }
-@*UNDONE support 3-columns templates
-
-<div class="master-wrapper-leftside-3">
-    @if (IsSectionDefined("left"))
-    {
-        @RenderSection("left")
-    }
-    else
-    {
-        @Html.Widget("left_side_column_before")
-        <div class="clear">
-        </div>
-        @Html.Action("CategoryNavigation", "Catalog", new { currentCategoryId = currentCategoryId, currentProductId = currentProductId })
-        <div class="clear">
-        </div>
-        @Html.Action("ManufacturerNavigation", "Catalog", new { currentManufacturerId = currentManufacturerId })
-        <div class="clear">
-        </div>
-        @Html.Action("PopularProductTags", "Catalog")
-        <div class="clear">
-        </div>
-        @Html.Action("InfoBlock", "Common")
-        <div class="clear">
-        </div>
-        @Html.Action("PollBlock", "Poll", new { systemKeyword = "LeftColumnPoll" })
-        <div class="clear">
-        </div>
-        @Html.Widget("left_side_column_after")
-    }
-</div>
-<div class="master-wrapper-center-3">
-    @Html.Widget("main_column_before")
-    @RenderBody()
-    @Html.Widget("main_column_after")
-</div>
-<div class="master-wrapper-rightside-3">
-    @if (IsSectionDefined("right"))
-    {
-        @RenderSection("right")
-    }
-    else
-    {
-        @Html.Widget("right_side_column_before")
-        <div class="clear">
-        </div>
-        @Html.Action("NewsletterBox", "Newsletter")
-        <div class="clear">
-        </div>
-        @Html.Action("RecentlyViewedProductsBlock", "Catalog")        
-        <div class="clear">
-        </div>        
-        @Html.Action("PollBlock", "Poll", new { systemKeyword = "RightColumnPoll" })
-        <div class="clear">
-        </div>
-        @Html.Widget("right_side_column_after")
-    }
-</div>*@
 <div class="master-wrapper-side-2">
     @if (IsSectionDefined("left"))
     {

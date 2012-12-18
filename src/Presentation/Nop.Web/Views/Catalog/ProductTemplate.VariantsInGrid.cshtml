@@ -1,12 +1,9 @@
 ﻿@model ProductDetailsModel
-@using Nop.Core;
-@using Nop.Core.Domain.Common;
 @using Nop.Core.Domain.Seo;
 @using Nop.Core.Infrastructure;
-@using Nop.Web;
 @using Nop.Web.Models.Catalog;
 @{
-    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+    Layout = "~/Views/Shared/_ColumnsProduct.cshtml";
 
     //title, meta
     Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Name);

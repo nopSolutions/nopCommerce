@@ -13,17 +13,23 @@
     }    
 }
 <div class="product-item" data-productid="@Model.Id">
-    <h2 class="product-title">
-        <a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })">@Model.Name</a>
-    </h2>
     <div class="picture">
         <a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })" title="@Model.DefaultPictureModel.Title">
             <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" />
         </a>
     </div>
-    <div class="description">
-        @Html.Raw(Model.ShortDescription)
-    </div>
+    <h2 class="product-title">
+        <a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })">@Model.Name</a>
+    </h2>
+    @if(Request.QueryString["viewmode"] !=null)
+    {
+        if(Request.QueryString["viewmode"].Contains("list"))
+        {
+            <div class="description">
+                @Html.Raw(Model.ShortDescription)
+            </div>
+        }
+    }
     <div class="add-info">
         <div class="prices">
             @if (!String.IsNullOrEmpty(Model.ProductPrice.OldPrice))
@@ -37,10 +43,10 @@
             </div>
         </div>
         <div class="buttons">
-            <input type="button" value="@T("Products.Details")" class="button-1 product-box-detail-button" onclick="setLocation('@Url.RouteUrl("Product", new { SeName = Model.SeName })')" />
+            @*<input type="button" value="@T("Products.Details")" class="button-1 product-box-detail-button" onclick="setLocation('@Url.RouteUrl("Product", new { SeName = Model.SeName })')" />*@
             @if (!Model.ProductPrice.DisableBuyButton)
             {
-                <br />
+                @*<br />*@
                 <input type="button" value="@(Model.ProductPrice.AvailableForPreOrder ? T("ShoppingCart.PreOrder") : T("ShoppingCart.AddToCart"))" class="button-2 product-box-add-to-cart-button" onclick="AjaxCart.addproducttocart('@addtocartlink');return false;" />
             }
         </div>

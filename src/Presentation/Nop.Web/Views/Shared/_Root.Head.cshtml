@@ -5,7 +5,6 @@
     //resources
     Html.AppendCssFileParts("~/Content/smoothness/jquery-ui-1.8.17.custom.css");
     
-    
     Html.AppendScriptParts("~/Scripts/public.ajaxcart.js");
     Html.AppendScriptParts("~/Scripts/public.common.js");
     Html.AppendScriptParts("~/Scripts/jquery-ui.min.js");
@@ -18,6 +17,8 @@
 <html @Html.Partial("LanguageAttributes")>
 <head>
     <title>@Html.NopTitle(true)</title>
+    @*Always force latest IE rendering engine (even in intranet) & Chrome Frame*@
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
     <meta name="description" content="@(Html.NopMetaDescription())" />
     <meta name="keywords" content="@(Html.NopMetaKeywords())" />

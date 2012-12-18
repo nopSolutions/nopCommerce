@@ -1149,6 +1149,10 @@
     <Content Include="Content\Images\flags\zm.png" />
     <Content Include="Content\Images\flags\zw.png" />
     <Content Include="Content\Images\ico-close-notification-bar.png" />
+    <Content Include="Themes\DarkOrange\Content\custom.css" />
+    <Content Include="Themes\DarkOrange\Content\ie6.css" />
+    <Content Include="Themes\DarkOrange\Content\ie7.css" />
+    <Content Include="Themes\DarkOrange\Content\images\bullet.gif" />
     <Content Include="Themes\DarkOrange\Content\images\ico-rss.gif" />
     <Content Include="Content\Images\default-image.gif" />
     <Content Include="Content\install\images\install-synchronizing.gif" />
@@ -1312,11 +1316,14 @@
     <Content Include="Scripts\slimbox2.js" />
     <Content Include="Themes\DarkOrange\Content\images\ajax_loader_large.gif" />
     <Content Include="Themes\DarkOrange\Content\images\ajax_loader_small.gif" />
+    <Content Include="Themes\DarkOrange\Content\images\rss.png" />
     <Content Include="Themes\DarkOrange\Content\styles.rtl.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Themes\DarkOrange\Content\images\bbeditor-button-bg.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\bg-body.gif" />
+    <Content Include="Themes\DarkOrange\Content\images\bg-body.gif">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Themes\DarkOrange\Content\images\bg-container.gif" />
     <Content Include="Themes\DarkOrange\Content\images\download-sample-bg.gif" />
     <Content Include="Themes\DarkOrange\Content\images\cart-footer-bg.gif" />
@@ -1579,7 +1586,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Themes\DarkOrange\theme.config" />
-    <Content Include="Themes\DarkOrange\Views\Shared\Head.cshtml" />
     <Content Include="Themes\DarkOrange\Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -1762,6 +1768,8 @@
     <Content Include="Views\Common\StoreClosed.cshtml" />
     <Content Include="Views\Common\StoreClosed.Mobile.cshtml" />
     <Content Include="Views\ShoppingCart\_CheckoutAttributes.Mobile.cshtml" />
+    <Content Include="Views\Shared\_ColumnsProduct.cshtml" />
+    <Content Include="Themes\DarkOrange\Shared\Head.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

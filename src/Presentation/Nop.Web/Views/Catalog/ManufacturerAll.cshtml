@@ -5,8 +5,6 @@
     //title
     Html.AddTitleParts(T("PageTitle.Manufacturers").Text);
 }
-@using Nop.Core;
-@using Nop.Core.Infrastructure;
 @using Nop.Web.Models.Catalog;
 <div class="page manufacturer-list-page">
     <div class="page-title">
@@ -18,7 +16,7 @@
         <div class="manufacturer-grid">
             @if (Model.Count > 0)
             {
-                @(Html.DataList<ManufacturerModel>(Model, 3,
+                @(Html.DataList(Model, 4,
                     @<div class="manufacturer-item">
                         <h2 class="man-title">
                             <a href="@Url.RouteUrl("Manufacturer", new { SeName = item.SeName })" title="@item.PictureModel.Title">
