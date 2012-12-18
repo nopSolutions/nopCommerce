@@ -5,8 +5,8 @@ input {
 label{vertical-align: bottom}
 .headermenu a:hover{color: #fff;text-decoration: none}
 .bestsellers{text-align: left}
-.news-items .read-more, .ie6 .block-blog-archive .year,.ie6 .old-product-price .price,.ie6 .breadcrumb a:hover {color: #5C5B5B !important;}
-.news-items .read-more:hover, .ie6 .block-blog-archive .year:hover{font-weight: 700;}
+.news-items .read-more, .block-blog-archive .year,.old-product-price .price,.breadcrumb a:hover {color: #5C5B5B !important;}
+.news-items .read-more:hover, .block-blog-archive .year:hover{font-weight: 700;}
 .master-wrapper-content{margin-left: 8px}
 .master-wrapper-center-2{width: 680px}
 .master-wrapper-side-product{margin-top: 42px;width: 195px}
@@ -16,4 +16,4 @@ label{vertical-align: bottom}
 #wrapper{display: none;}
 .master-wrapper-cph-2{width: 650px}
 .search-box-button{background-color:#f6f6f6;border: 1px solid #dcdcdc;filter: none;color: #6e6e6e;height: 30px}
-.email-a-friend,.ie6 .compare-products{margin: 0;}
+.email-a-friend,.compare-products{margin: 0;}
