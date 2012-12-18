@@ -1076,3 +1076,8 @@ GO
 
 ALTER TABLE [ProductVariantAttributeValue] ALTER COLUMN [Name] nvarchar(400) NOT NULL
 GO
+
+--delete obosolete settings
+DELETE FROM [Setting]
+WHERE [Name] = N'customersettings.acceptprivacypolicyenabled'
+GO

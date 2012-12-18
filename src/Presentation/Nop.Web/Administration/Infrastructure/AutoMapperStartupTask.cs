@@ -533,7 +533,6 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.PageShareCode, mo => mo.Ignore())
                 .ForMember(dest => dest.DefaultProductRatingValue, mo => mo.Ignore())
                 .ForMember(dest => dest.ProductSearchTermMinimumLength, mo => mo.Ignore())
-                .ForMember(dest => dest.UseSmallProductBoxOnHomePage, mo => mo.Ignore())
                 .ForMember(dest => dest.IncludeFeaturedProductsInNormalLists, mo => mo.Ignore())
                 .ForMember(dest => dest.DefaultCategoryPageSizeOptions, mo => mo.Ignore())
                 .ForMember(dest => dest.DefaultManufacturerPageSizeOptions, mo => mo.Ignore())

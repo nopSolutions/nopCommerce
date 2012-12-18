@@ -240,8 +240,6 @@
     <Compile Include="Models\Catalog\CompareProductsModel.cs" />
     <Compile Include="Models\Catalog\ProductOverviewModel.cs" />
     <Compile Include="Models\Catalog\SearchBoxModel.cs" />
-    <Compile Include="Models\Catalog\HomePageBestsellersModel.cs" />
-    <Compile Include="Models\Catalog\HomePageProductsModel.cs" />
     <Compile Include="Models\Catalog\SearchModel.cs" />
     <Compile Include="Models\Catalog\SearchPagingFilteringModel.cs" />
     <Compile Include="Models\Catalog\ProductsByTagModel.cs" />
@@ -1427,7 +1425,6 @@
     <Content Include="browserCaps.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Views\Catalog\_ProductSmallBox.cshtml" />
     <Content Include="Views\Checkout\OnePageCheckout.cshtml" />
     <Content Include="Views\Checkout\OpcShippingMethods.cshtml" />
     <Content Include="Views\Checkout\OpcShippingAddress.cshtml" />

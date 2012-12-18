@@ -422,9 +422,7 @@ a.eu-cookie-privacyinfo-tag{color:#F93 !important;text-decoration:underline;}
 .product-grid .product-item .add-info .prices .product-price .price{color:green;}
 .product-grid .product-item .add-info .prices .old-product-price .price{color:Red;text-decoration:line-through;}
 .product-grid .item-box{padding-bottom:10px;text-align:center;vertical-align:text-top;}
-.product-grid .small-product-item{text-align:center;margin:10px;width:150px;height:150px;}
-.product-grid .small-product-item .product-title{margin-bottom:5px;margin-top:5px;text-align:center;font-weight:700;font-size:12px;}
-.product-grid .small-product-item .picture{text-align:center;}
+
 
 /* PRODUCTS IN LINES - TEMPLATE */
 .product-list{width:520px;margin:0 auto;padding:0;list-style-type:none;}
