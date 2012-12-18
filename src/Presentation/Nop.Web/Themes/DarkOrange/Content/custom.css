@@ -167,7 +167,7 @@ label, #newsletter-subscribe-block {
     color: #5C5B5B;
 }
 
-input[type="text"] {
+input[type="text"],input[type="password"] {
     border: 1px solid #eee;
 }
 .single-line.text-box {
