@@ -82,16 +82,26 @@ namespace Nop.Core
         /// </summary>
         /// <param name="str">Input string</param>
         /// <param name="maxLength">Maximum length</param>
+        /// <param name="postfix">A string to add to the end if the original string was shorten</param>
         /// <returns>Input string if its lengh is OK; otherwise, truncated input string</returns>
-        public static string EnsureMaximumLength(string str, int maxLength)
+        public static string EnsureMaximumLength(string str, int maxLength, string postfix = null)
         {
             if (String.IsNullOrEmpty(str))
                 return str;
 
             if (str.Length > maxLength)
-                return str.Substring(0, maxLength);
+            {
+                var result = str.Substring(0, maxLength);
+                if (!String.IsNullOrEmpty(postfix))
+                {
+                    result += postfix;
+                }
+                return result;
+            }
             else
+            {
                 return str;
+            }
         }
 
         /// <summary>

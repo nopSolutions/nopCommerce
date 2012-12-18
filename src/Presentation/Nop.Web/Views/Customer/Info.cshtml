@@ -1,5 +1,6 @@
 ﻿@model CustomerInfoModel
 @using Nop.Web.Models.Customer;
+@using Nop.Core;
 @{
     Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
 
@@ -171,7 +172,7 @@
                                             @item.Email
                                         </td>
                                         <td class="a-left">
-                                            @item.ExternalIdentifier
+                                            @CommonHelper.EnsureMaximumLength(item.ExternalIdentifier, 40, "...")
                                         </td>
                                     </tr>
                                 }
