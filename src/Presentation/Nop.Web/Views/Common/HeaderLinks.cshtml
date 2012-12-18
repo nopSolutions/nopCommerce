@@ -3,17 +3,6 @@
 <div class="header-links">
     <ul>
         @Html.Widget("header_links_before")
-        @if (Model.IsCustomerImpersonated)
-        {
-            <li><span class="impersonate">(@string.Format(T("Account.ImpersonatedAs").Text, Model.CustomerEmailUsername))
-                - <a href="@Url.RouteUrl("Logout")" class="finish-impersonation" title="@T("Account.ImpersonatedAs.Finish.Hint")">@T("Account.ImpersonatedAs.Finish")</a>
-                ) </span></li>
-        }
-        @if (Model.DisplayAdminLink)
-        {
-            <li><a href="@Url.Content("~/admin")" class="ico-admin">@T("Account.Administration")</a>
-            </li>
-        }
         @if (Model.IsAuthenticated)
         {
             <li><a href="@Url.RouteUrl("CustomerInfo")" class="account">@Model.CustomerEmailUsername</a></li>
@@ -21,15 +10,15 @@
             
             if (Model.AllowPrivateMessages)
             {
-            <li><a href="@Url.RouteUrl("PrivateMessages", new { tab = "" })" class="ico-inbox">@T("PrivateMessages.Inbox")</a>
-                @Model.UnreadPrivateMessages</li>
+                <li><a href="@Url.RouteUrl("PrivateMessages", new { tab = "" })" class="ico-inbox">@T("PrivateMessages.Inbox")</a>
+                    @Model.UnreadPrivateMessages</li>
                 if (!string.IsNullOrEmpty(Model.AlertMessage))
                 {
-            <script type="text/javascript">
-                $(document).ready(function () {
-                    displayPopupNotification('@(Model.AlertMessage)', 'success', false);
-                });
-            </script>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            displayPopupNotification('@(Model.AlertMessage)', 'success', false);
+                        });
+                    </script>
                 }
             }
         }
@@ -47,7 +36,7 @@
         @if (Model.WishlistEnabled)
         {
             <li><a href="@Url.RouteUrl("Wishlist")" class="ico-wishlist">@T("Wishlist")</a> <a href="@Url.RouteUrl("Wishlist")" class="wishlist-qty">
-                (@Model.WishlistItems)</a> </li>
+                                                                                                (@Model.WishlistItems)</a> </li>
         }
         @Html.Widget("header_links_after")
     </ul>

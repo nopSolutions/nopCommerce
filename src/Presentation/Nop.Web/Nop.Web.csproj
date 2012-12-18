@@ -267,6 +267,7 @@
     <Compile Include="Models\Checkout\OnePageCheckoutModel.cs" />
     <Compile Include="Models\Checkout\UpdateSectionJsonModel.cs" />
     <Compile Include="Models\Common\AddressModel.cs" />
+    <Compile Include="Models\Common\AdminHeaderLinksModel.cs" />
     <Compile Include="Models\Common\FooterModel.cs" />
     <Compile Include="Models\Common\FaviconModel.cs" />
     <Compile Include="Models\Common\PagerModel.cs" />
@@ -1339,7 +1340,6 @@
     <Content Include="Themes\DarkOrange\Content\images\category-bg.gif" />
     <Content Include="Themes\DarkOrange\Content\images\category-title.gif" />
     <Content Include="Themes\DarkOrange\Content\images\ico-account.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\ico-admin.gif" />
     <Content Include="Themes\DarkOrange\Content\images\ico-arrow-r.gif" />
     <Content Include="Themes\DarkOrange\Content\images\ico-cart.gif" />
     <Content Include="Themes\DarkOrange\Content\images\ico-delete.gif" />
@@ -1770,6 +1770,7 @@
     <Content Include="Views\ShoppingCart\_CheckoutAttributes.Mobile.cshtml" />
     <Content Include="Views\Shared\_ColumnsProduct.cshtml" />
     <Content Include="Themes\DarkOrange\Shared\Head.cshtml" />
+    <Content Include="Views\Common\AdminHeaderLinks.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -352,8 +352,6 @@ namespace Nop.Web.Controllers
             {
                 IsAuthenticated = customer.IsRegistered(),
                 CustomerEmailUsername = customer.IsRegistered() ? (_customerSettings.UsernamesEnabled ? customer.Username : customer.Email) : "",
-                IsCustomerImpersonated = _workContext.OriginalCustomerIfImpersonated != null,
-                DisplayAdminLink = _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel),
                 ShoppingCartEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart),
                 ShoppingCartItems = customer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList().GetTotalProducts(),
                 WishlistEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableWishlist),
@@ -361,6 +359,20 @@ namespace Nop.Web.Controllers
                 AllowPrivateMessages = _forumSettings.AllowPrivateMessages,
                 UnreadPrivateMessages = unreadMessage,
                 AlertMessage = alertMessage,
+            };
+
+            return PartialView(model);
+        }
+        [ChildActionOnly]
+        public ActionResult AdminHeaderLinks()
+        {
+            var customer = _workContext.CurrentCustomer;
+
+            var model = new AdminHeaderLinksModel()
+            {
+                ImpersonatedCustomerEmailUsername = customer.IsRegistered() ? (_customerSettings.UsernamesEnabled ? customer.Username : customer.Email) : "",
+                IsCustomerImpersonated = _workContext.OriginalCustomerIfImpersonated != null,
+                DisplayAdminLink = _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel),
             };
 
             return PartialView(model);

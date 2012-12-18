@@ -1,8 +1,5 @@
 ﻿.foo{}
 
-
-
-
 /* HTML GENERAL */
 body,h1,h2,h3,h4,h5,h6,address,blockquote,dd,dl,hr,form,input{margin:0;padding:0;}
 body{font-family:arial, verdana, helvetica, sans-serif;font-size:12px;background:#444 url(images/bg-body.gif) repeat-x;color:#f93;}
@@ -39,7 +36,6 @@ legend{font-weight:bold;line-height:20px;font-size:16px;}
 .header .ico-inbox{background:url(images/ico-inbox.gif) no-repeat;padding-left:20px;}
 .header .ico-cart{background:url(images/ico-cart.gif) no-repeat;padding-left:20px;}
 .header .ico-wishlist{background:url(images/ico-wishlist.gif) no-repeat;padding-left:20px;}
-.header .ico-admin{background:url(images/ico-admin.gif) no-repeat;padding-left:20px;}
 .header-logo{margin-top:5px;float:left;text-align:left;}
 a.logo{background:url(images/logo.gif);display:block;width:225px;height:60px;text-decoration:none;}
 .header-selectors-wrapper{text-align:right;float:right;width:500px;}
@@ -57,8 +53,13 @@ ul.language-list li:hover{cursor:pointer;}
 .header-links a{color:#FFF;text-decoration:none;}
 .header-links a:hover{color:#f93;}
 .header-links a.account{color:#f93;}
-.header-links span.impersonate{color:#58DE81;font-weight:700;}
-.header-links span.impersonate .finish-impersonation{color:#E44097;}
+
+.admin-header-links{padding:5px;margin-bottom:5px;display:inline-table;}
+.admin-header-links ul{padding:0;margin:0;}
+.admin-header-links ul li{list-style:none;display:inline;padding-right:2px;}
+.admin-header-links .administration{font-weight:bold;}
+.admin-header-links span.impersonate{color:#58DE81;font-weight:700;}
+.admin-header-links span.impersonate .finish-impersonation{color:#E44097;}
 /*.header-menu{color:#FFF;background:#3a3a3a;padding:8px 5px 9px;text-align:center;height:100%;vertical-align:middle;letter-spacing:1px;margin-bottom:10px;}
 .header-menu ul{padding:0;margin:0;}
 .header-menu li{list-style:none;display:inline;white-space:nowrap;}
