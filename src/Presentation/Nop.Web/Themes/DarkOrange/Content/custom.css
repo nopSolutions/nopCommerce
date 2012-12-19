@@ -1,89 +1,3 @@
-
-a:hover, .block a:hover, .blogpost-page .post-body a:hover, .blogpost-page .tags a:hover {
-    color: #B80709;
-    text-decoration: underline;
-    font-weight: normal;
-}
-.blog-page .blogposts .post a.blog-title,.blog-page .blogposts .tags,.blog-page .blogposts .blog-details,.blogpost-page .post-date,
-.blogpost-page .tags {
-    padding: 0 10px;
-}
-.blog-page .blogposts .post:last-child {border:none}
-.sitemap-page h1 {
-padding:10px 0;
-}
-.header-selectors-wrapper {
-    text-align: right;
-    float: right;
-    width: 500px;
-margin-top:10px;
-}
-
-.header-currencyselector {
-    float: right;
-}
-
-.header-languageselector {
-    float: right;
-    margin-right: 5px;
-}
-
-.header-taxDisplayTypeSelector {
-    float: right;
-}
-
-.header-links-wrapper {
-    float: right;
-    text-align: right;
-    width: 700px;
-}
-
-.header-links {
-    display: inline-table;
-    float: right;
-    margin: 10px 0;
-    border: none;
-padding:0;
-}
-
-.header-links ul {
-    padding: 0;
-    margin: 0;
-}
-
-.header-links ul li {
-    display: inline;
-    list-style: none outside none;
-    margin-left: 10px;
-}
-
-.header-links ul li a {
-    background: none repeat scroll 0 0 transparent !important;
-}
-
-.header-links a {
-    color: #AF0304;
-    text-decoration: none;
-}
-
-.header-links a:hover {
-    color: #AF0304;
-    text-decoration: underline;
-}
-
-.header-links a.account {
-    color: #AF0304;
-}
-
-.header-links span.impersonate {
-    color: #E44097;
-    font-weight: 700;
-}
-
-.header-links span.impersonate .finish-impersonation {
-    color: #58DE81;
-}
-
 .master-wrapper-cph-2 {
     float: left;
     width: 690px;
@@ -92,66 +6,12 @@ padding:0;
     padding: 10px 0 0 0;
 }
 
-.header {
-    background: #fff;
-    height: 110px;
-     padding: 0 2px;
-}
+/*  TODO check later
+    .forum-group tr.group-header td{background: none repeat scroll 0 0 #404040;}
+*/
 
-.header-menu {
-    background: none repeat scroll 0 0 #404040;
-    border-radius: 4px;
-    -o-border-radius: 4px;
-    -icab-border-radius: 4px;
-    -khtml-border-radius: 4px;
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    height: 32px;
-    list-style: none outside none;
-    margin: 10px auto 0;
-    padding: 0 10px;
-}
 
-.header-menu a {
-    color: #FFFFFF;
-    font-size: 1.1em;
-    text-decoration:none;
-}
 
-.header-menu li {
-    float: left;
-    list-style: none outside none;
-    padding: 7px 8px;
-    margin-right: 10px;
-    font-size: 1.1em;
-    line-height: 17px;
-}
-.header-menu li:hover {
-	background:#696969;
-}
-
-.forum-group tr.group-header td{background: none repeat scroll 0 0 #404040;}
-
-.footer {
-    background: none repeat scroll 0 0 #FFFFFF;
-    /*border-top: 2px solid #666666;*/
-    clear: both;
-    margin: 0 0 30px;
-    padding: 15px 10px;
-    height: auto;
-}
-
-.top-menu li {
-    list-style-type: none;
-margin-right:10px;
-}
-
-li.dropdown p {
-    margin: 0;
-    padding: 0;
-    text-shadow: none;
-}
 .block-category-navigation, .block-manufacturer-navigation, .block-recently-viewed-products,
 .block-info, .block-shoppingcart, .block-newsletter, .block-livechat, .block-popular-tags, .block-blog-archive,
 .block-poll, .block-popular-blogtags, .block-account-navigation, .product-details-page, .search-panel .search-input, .product-filters,
@@ -167,32 +27,9 @@ li.dropdown p {
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
 }
-.home-page-category-grid .category-item,.sub-category-grid .sub-category-item, .manufacturer-grid .manufacturer-item, 
-.product-details-page .full-description, .related-products-grid .item,.also-purchased-products-grid .item{border: 1px solid #eee;}
-.home-header-left, .home-header-right {
-    margin: 7px 0 0;
-}
-.etalage .etalage_thumb {
-    border: 0 !important;
-}
 
-.blog-page .blogposts .blog-body a, .blog-page .blogposts .tags a, .blog-page .blogposts .blog-details {
-    color: inherit;
-}
 
-.home-page.page p, .blog-body p, .blogpost-page .post-body p, .topic-page .page-body p, .product-variant-line p {
-    padding: 10px;
-}
-.order-completed p, .payment-info p {
-    padding: 10px 0;
-}
-.product-variant-line h1, .product-variant-line h2, .product-variant-line h3, .product-variant-line h4 {
-    padding: 15px 0 0;
-}
 
-.blog-page .blogposts {
-    margin: 0;
-}
 
 .blogpost-page .post-body a, .blogpost-page .tags a {
     color: #5C5B5B;
@@ -451,16 +288,6 @@ width: 145px;
     background: none;
 }
 
-.sub-category-grid .sub-category-item, .manufacturer-grid .manufacturer-item {
-    border: 1px solid #EEEEEE;
-    height: auto;
-    margin: 10px;
-    text-align: center;
-    width: 147px;
-    background: none;
-}
-.sub-category-grid, .manufacturer-grid {width:auto;}
-.sub-category-grid .item-box, .manufacturer-grid .item-box{float: left}
 .product-filters .filter-title span {
     height: auto;
     background: none;
@@ -533,31 +360,13 @@ width: 145px;
     padding: 10px 10px 5px 5px;
 }
 
-.product-grid {
-    margin-left: 5px;
-    margin-right: auto;
-    text-align: center;
-    width: auto;
-    padding: 5px;
-}
 .product-grid.also-purchased-products-grid{text-align: left;margin: 10px 0 0;}
 /*.bestsellers {
     margin-left: auto;
     width: auto;
 }
 */
-.home-page-product-grid .title, .bestsellers .title {
-    margin: 0;
-    text-align: left;
-}
 
-.product-grid .product-item, .featured-product-grid .product-item, .home-page-product-grid .item {
-    height: 250px;
-    margin: 0;
-    padding: 0;
-    text-align: left;
-    width: 155px;
-}
 
 .product-rating-total {
     float: left;
@@ -661,9 +470,7 @@ width: 145px;
 .product-details-page .product-reviews-overview .product-review-box {
     width: auto;
 }
-.compare-products-page {
-    padding: 10px;
-}
+
 .compare-products-page h1{margin: 0}
 .compare-products-table{text-align: center;margin-top: 10px;}
 .block li.separator {
@@ -930,12 +737,8 @@ font-weight:400;
     border: 0;
     margin: 0;
 }
-.search-page {
-    padding: 10px;
-}
-.account-page {
-padding: 10px;
-}
+
+
 .news-items .news-date, .blog-page .blogposts .post .blog-date, .blogpost-page .post-date {
     font-style: normal;
 }
@@ -1092,7 +895,6 @@ color:inherit;
     font-size: 1.2em;
     font-weight: 700;
 }
-.account-page{padding: 0;}
 .header-selectors-wrapper{clear: both}
 .language-selector{margin-right: 5px;}
 .tax-display-type-selector{margin-left: 5px;}
