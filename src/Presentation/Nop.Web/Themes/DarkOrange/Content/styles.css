@@ -1,8 +1,146 @@
-﻿.foo{}
+﻿/*   html5doctor.com Reset Stylesheet (Eric Meyer's Reset Reloaded + HTML5 baseline)  v1.4 2009-07-27 | Authors: Eric Meyer & Richard Clark  html5doctor.com/html-5-reset-stylesheet/*/
+html, body, div, span, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+abbr, address, cite, code,
+del, dfn, em, img, ins, kbd, q, samp,
+small, strong, sub, sup, var,
+b, i, dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, figure, footer, header, hgroup, menu, nav, section, menu,
+time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0; /*font-size: 100%;*/ /*font: normal 1em/1.3 Arial, sans-serif;*/
+    vertical-align: top;
+    background: transparent;
+}
+
+article, aside, figure, footer, header,
+hgroup, nav, section {
+    display: block;
+}
+
+nav ul {
+    list-style: none;
+}
+
+blockquote, q {
+    quotes: none;
+}
+
+blockquote:before, blockquote:after,
+q:before, q:after {
+    content: '';
+    content: none;
+}
+
+*:focus {
+    outline: none;
+}
+
+a {
+    margin: 0;
+    padding: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+    background: transparent;
+    color:#5C5B5B;
+    font-weight: 400;
+}
+
+ins {
+    background-color: #ff9;
+    color: #000;
+    text-decoration: none;
+}
+
+mark {
+    background-color: #ff9;
+    color: #000;
+    font-style: italic;
+    font-weight: bold;
+}
+
+del {
+    text-decoration: line-through;
+}
+
+abbr[title], dfn[title] {
+    border-bottom: 1px dotted #000;
+    cursor: help;
+}
+/* tables still need cellspacing="0" in the markup */
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 1em 0;
+    padding: 0;
+}
+
+input, select {
+    vertical-align: top;
+}
+table input, select{vertical-align: baseline;}
+/*
+fonts.css from the YUI Library: developer.yahoo.com/yui/
+Please refer to developer.yahoo.com/yui/fonts/ for font sizing percentages
+*/
+body {
+    /*font: 13px sans-serif;*/
+    *font-size: small;
+    *font: x-small;
+    line-height: 1.22;
+}
+
+table {
+    font-size: inherit;
+    font: 100%;
+}
+
+input, textarea {
+}
+
+select {
+}
+checkbox, input, radio, select, button {
+font-size:inherit;
+}
+/* maxvoltar.com/archive/-webkit-font-smoothing */
+html {
+    -webkit-font-smoothing: antialiased;
+}
+
+html {
+    overflow-y: scroll;
+}
+/* align checkboxes, radios, text inputs with their label */
+input[type="radio"] {
+    /*vertical-align: text-bottom;*/
+}
+
+input[type="checkbox"] {
+    vertical-align: baseline;
+    *vertical-align: baseline;
+}
+
+
+/* END RESET CSS */
+
+
+
 
 /* HTML GENERAL */
 body,h1,h2,h3,h4,h5,h6,address,blockquote,dd,dl,hr,form,input{margin:0;padding:0;}
-body{font-family:arial, verdana, helvetica, sans-serif;font-size:12px;background:#444 url(images/bg-body.gif) repeat-x;color:#f93;}
+body{text-align: center;font-family:arial, verdana, helvetica, sans-serif;font-size:12px;background:none repeat scroll 0 0 #F6F6F4;color:#5C5B5B;}
 a{color:#3a3a3a;text-decoration:none;}
 a:hover{color:#f93;text-decoration:none;}
 img{border:0;}
@@ -12,6 +150,9 @@ textarea{width:100%;font-family:Verdana, Arial, sans-serif;font-size:11px;}
 checkbox,input,radio,select,button{font-size:11px;}
 fieldset{margin:0px 0px 15px;border:1px solid #c9c9c9;padding:15px;}
 legend{font-weight:bold;line-height:20px;font-size:16px;}
+p {
+    padding: 10px;
+}
 
 /* MASTER PAGE WRAPPERS */
 .master-wrapper-page{margin:10px auto;width:960px;}
