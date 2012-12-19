@@ -6,127 +6,6 @@
     padding: 10px 0 0 0;
 }
 
-/*  TODO check later
-    .forum-group tr.group-header td{background: none repeat scroll 0 0 #404040;}
-*/
-
-
-
-.block-category-navigation, .block-manufacturer-navigation, .block-recently-viewed-products,
-.block-info, .block-shoppingcart, .block-newsletter, .block-livechat, .block-popular-tags, .block-blog-archive,
-.block-poll, .block-popular-blogtags, .block-account-navigation, .product-details-page, .search-panel .search-input, .product-filters,
-.search-page .search-input, fieldset, .product-list .product-item, .product-list .product-item .picture,
-.home-header-left, .home-header-right,.master-wrapper-page, .master-wrapper-center-2{
-    background: none repeat scroll 0 0 #FFF;
-    border: 1px solid #eee;
-    border-radius: 4px;
-    -o-border-radius: 4px;
-    -icab-border-radius: 4px;
-    -khtml-border-radius: 4px;
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-}
-
-
-
-
-.blogpost-page .post-body a, .blogpost-page .tags a {
-    color: #5C5B5B;
-}
-
-.price-range-filter ul {
-    padding-left: 10px;
-}
-
-.search-page table.adv-search {
-    border: none;
-}
-
-.search-text {
-    border: 1px solid #eee;
-    font-size: inherit;
-    padding: 5px 0 5px 5px;
-}
-.product-list .product-item, .product-list .product-item .product-title, .product-list .product-item .product-title a, .compare-products-table tr.product-name {
-    background: none;
-    font-weight: normal;
-}
-
-.product-sorting {
-    margin-left: 10px;
-}
-
-.product-page-size {
-    width: auto;
-}
-
-.product-viewmode {
-    margin-right: 10px;
-}
-
-/*Mini-shopping cart */
-#flyout-cart {
-    display: none;
-    position: absolute;
-    float: left;
-    top: 30px;
-    right: 0px;
-    width: 300px;
-    min-height: 50px;
-    background: #FFF;
-    z-index: 99999;
-}
-
-#flyout-cart.active {
-    display: block;
-}
-
-.mini-shopping-cart {
-    padding: 5px 10px 10px;
-    margin: 0;
-    border: 1px solid #C1C1C1;
-    background: none repeat scroll 0 0 #F6F6F4;
-    font-size: 11px;
-    color: inherit;
-}
-
-.mini-shopping-cart a {
-    font-weight: 700;
-    text-decoration: none;
-    color: inherit;
-}
-
-.mini-shopping-cart a:hover {
-    text-decoration: underline;
-}
-
-.mini-shopping-cart .cart-button, .mini-shopping-cart .checkout-button {
-    margin: 0;
-}
-
-.search-box {
-    background: none repeat scroll 0 0 #F6F6F4;
-    clear: right;
-    float: right;
-    padding: 7px 7px 5px;
-    width: auto;
-    -o-border-radius: 3px;
-    -icab-border-radius: 3px;
-    -khtml-border-radius: 3px;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    border-radius: 3px;
-}
-
-.search-box ul li {
-    float: left;
-    list-style: none outside none;
-    margin: 0;
-    padding: 0;
-}
-
 
 .master-wrapper-leftside-3, .master-wrapper-side-product {
     display: inline;
@@ -165,7 +44,42 @@
     overflow: inherit;
 }
 
-.block .title, .product-filters .filter-title span {
+/*  TODO check later
+    .forum-group tr.group-header td{background: none repeat scroll 0 0 #404040;}
+*/
+
+
+
+.block-category-navigation, .block-manufacturer-navigation, .block-recently-viewed-products,
+.block-info, .block-shoppingcart, .block-newsletter, .block-livechat, .block-popular-tags, .block-blog-archive,
+.block-poll, .block-popular-blogtags, .block-account-navigation, .product-details-page, .search-panel .search-input, .product-filters,
+.search-page .search-input, fieldset, .product-list .product-item, .product-list .product-item .picture,
+.home-header-left, .home-header-right,.master-wrapper-page, .master-wrapper-center-2{
+    background: none repeat scroll 0 0 #FFF;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    -o-border-radius: 4px;
+    -icab-border-radius: 4px;
+    -khtml-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+}
+
+
+
+
+.price-range-filter ul {
+    padding-left: 10px;
+}
+
+.product-list .product-item, .product-list .product-item .product-title, .product-list .product-item .product-title a, .compare-products-table tr.product-name {
+    background: none;
+    font-weight: normal;
+}
+
+/* тот же самый стиль, что и у .block .title{*/
+.product-filters .filter-title span {
     font-size: 1em;
     font-weight: bold;
     letter-spacing: 1px;
@@ -181,47 +95,9 @@
     padding: 0;
 }
 
-.block .listbox {
-    font-size: 11px;
-    line-height: 18px;
-    margin: 0;
-    padding: 5px 10px 10px;
-    background: none repeat scroll 0 0 transparent;
-}
 
-.block .listbox ul {
-    background-color: inherit;
-    color: #5C5B5B;
-    margin: 0;
-    padding: 0;
-}
-.block li {
-    background: url("images/bullet.gif") no-repeat scroll 0 8px transparent;
-    line-height: 18px;
-    list-style: none outside none;
-    padding: 4px 1px 3px 13px;
-}
 
-.block a {
-    color: #5C5B5B;
-    font-size: 1.1em;
-    text-decoration: none;
-    font-weight: 400;
-}
-.block-account-navigation a.inactive, .sublist .inactive a:hover{
-color: #5C5B5B !important;
-font-weight: 400 !important;
-}
-.block-account-navigation a.inactive:hover,.block-account-navigation a.inactive:hover,.block-account-navigation a.active:hover {
-text-decoration: underline !important;
-color:#B80709 !important;
-}
-.block-category-navigation .active a, .block-manufacturer-navigation .active a,.block-account-navigation a.active {
-    color: #5C5B5B;
-}
-.block-category-navigation .active a:hover, .block-manufacturer-navigation .active a:hover,.block-account-navigation a.active:hover {
-    font-weight: 700;
-}
+
 .block-popular-tags .listbox .view-all a {
     color: #5C5B5B;
     font-weight: 700;
