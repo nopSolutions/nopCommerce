@@ -1,6 +1,5 @@
 .bestsellers{text-align: left}
 .product-list .item-box .product-item .product-title {padding-left: 155px;font-size: 14px;}
-.slider-wrapper.theme-default {position: static;}
 input[type="submit"], *:first-child + html input[type="button"], *:first-child + html button {filter: chroma(color=#000000);}
 .headermenu li.dropdown {padding-bottom: 14px;}
 .mini-shopping-cart,.mini-shopping-cart a {color: #3a4045;}

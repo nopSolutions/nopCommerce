@@ -155,17 +155,21 @@ p {
 }
 
 /* MASTER PAGE WRAPPERS */
-.master-wrapper-page{margin:10px auto;width:960px;}
-.master-wrapper-content{float:left;width:960px;margin:15px 0 0;text-align:left;background:#555 url(images/bg-container.gif) repeat-x;}
+.master-wrapper-page{margin:30px auto 0;width:930px;
+    background: none repeat scroll 0 0 #FFF;
+    box-shadow: 0 0.5em 2em rgba(0, 0, 0, 0.1);
+    -moz-box-shadow: 0 0.5em 2em rgba(0, 0, 0, 0.1);
+    -webkit-box-shadow: 0 0.5em 2em rgba(0, 0, 0, 0.1);}
+.master-wrapper-content{float:left;width:900px;margin:15px 15px 0 15px;padding: 15px 0 0;text-align:left;background: none repeat scroll 0 0 #FFFFFF;}
 .master-wrapper-main{}
 /* one column master page */
-.master-wrapper-center-1{float:left;width:940px;color:#000;min-height:600px;padding:10px;background:#FFF;display:inline;border-radius:5px;}
+.master-wrapper-center-1{float:left;width:885px;color:#5C5B5B;min-height:600px;padding:10px;background:#FFF;display:inline;border-radius:5px;}
 /* two column master page */
-.master-wrapper-side-2{float:left;width:180px;margin:0 0 0 10px;font-family:arial, helvetica, sans-serif;display:inline;}
-.master-wrapper-center-2{float:left;width:740px;color:#000;min-height:600px;padding:10px;margin:0 0 0 10px;background:#FFF;display:inline;border-radius:5px;}
+.master-wrapper-side-2{float:left;width:200px;margin:10px 0 10px 0;font-family:arial, helvetica, sans-serif;display:inline;}
+.master-wrapper-center-2{float:left;width:665px;color:#5C5B5B;min-height:600px;padding:10px;margin:10px 0 10px 10px;background:#FFF;display:inline;border-radius:5px;}
 /* three column master page */
 .master-wrapper-leftside-3{float:left;width:180px;margin:0 0 0 10px;font-family:arial, helvetica, sans-serif;display:inline;}
-.master-wrapper-center-3{float:left;width:540px;color:#000;min-height:600px;padding:10px;margin:0 0 0 10px;background:#FFF;display:inline;overflow:hidden;border-radius:5px;}
+.master-wrapper-center-3{float:left;width:510px;color:#5C5B5B;min-height:600px;padding:10px;margin:0 0 0 10px;background:#FFF;display:inline;overflow:hidden;border-radius:5px;}
 .master-wrapper-rightside-3{float:right;width:180px;margin:0 10px;font-family:arial, helvetica, sans-serif;display:inline;}
 
 /* HEADER AND MENU */

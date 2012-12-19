@@ -36,50 +36,11 @@ input[type="text"]:disabled {
 .master-wrapper-center-1 {
     padding: 10px 0;
     width: 890px;
-    color: #5C5B5B;
 }
 
-.master-wrapper-center-2, .master-wrapper-center-3 {
-    color: #5C5B5B;
-}
 
-.master-wrapper-side-2 {
-    width: 200px;
-}
 
-.master-wrapper-center-2 {
-    width: 680px;
-padding:0
-}
 
-.master-wrapper-content {
-    background: none repeat scroll 0 0 #FFFFFF;
-    float: left;
-    margin: 0 auto 0 15px;
-    text-align: left;
-    width: 894px;
-}
-.home-header-left
-{
-    float: left;
-    height: 340px;
-    text-align: left;
-    width: 600px;
-    margin: 5px 0  0 0;
-}
-.home-header-right
-{
-    float: right;
-    height: 340px;
-    width: 270px;
-    margin: 5px 2px 0 5px;
-}
-#homepage-banner{margin-left: 12px;}
-.theme-default .nivo-controlNav {
-    bottom: -42px;
-    float: right;
-    margin-left: -40px;
-}
 .header .icon {
     vertical-align: bottom;
 }
@@ -213,15 +174,6 @@ padding:0;
     color: #58DE81;
 }
 
-.master-wrapper-page {
-    margin: 30px auto 0;
-    width: 924px;
-    background: none repeat scroll 0 0 #FFF;
-    box-shadow: 0 0.5em 2em rgba(0, 0, 0, 0.1);
-    -moz-box-shadow: 0 0.5em 2em rgba(0, 0, 0, 0.1);
-    -webkit-box-shadow: 0 0.5em 2em rgba(0, 0, 0, 0.1);
-}
-
 .master-wrapper-cph-2 {
     float: left;
     width: 690px;
@@ -296,7 +248,6 @@ li.dropdown p {
 .search-page .search-input, fieldset, .product-list .product-item, .product-list .product-item .picture,
 .home-header-left, .home-header-right,.master-wrapper-page, .master-wrapper-center-2{
     background: none repeat scroll 0 0 #FFF;
-    margin-bottom: 10px;
     border: 1px solid #eee;
     border-radius: 4px;
     -o-border-radius: 4px;
@@ -463,12 +414,6 @@ li.dropdown p {
     width: 200px;
 }
 
-.master-wrapper-side-2,.master-wrapper-center-2 {
-    margin: 10px 0;
-}
-.master-wrapper-center-2 {
-    margin-left: 11px;
-}
 .master-wrapper-center-3 {
     overflow: inherit;
 }
@@ -1241,7 +1186,6 @@ color:inherit;
 .header-selectors-wrapper{clear: both}
 .language-selector{margin-right: 5px;}
 .tax-display-type-selector{margin-left: 5px;}
-.master-wrapper-content{padding: 15px 0 0;}
 textarea{border: 1px solid #EEEEEE;}
 .password-recovery-page .buttons{margin: 10px;}
 .address-list-page .add-button {float: left;margin-left: 10px;}

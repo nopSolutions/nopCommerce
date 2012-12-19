@@ -21,15 +21,9 @@
     <h2 class="product-title">
         <a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })">@Model.Name</a>
     </h2>
-    @if(Request.QueryString["viewmode"] !=null)
-    {
-        if(Request.QueryString["viewmode"].Contains("list"))
-        {
-            <div class="description">
-                @Html.Raw(Model.ShortDescription)
-            </div>
-        }
-    }
+    <div class="description">
+        @Html.Raw(Model.ShortDescription)
+    </div>
     <div class="add-info">
         <div class="prices">
             @if (!String.IsNullOrEmpty(Model.ProductPrice.OldPrice))
