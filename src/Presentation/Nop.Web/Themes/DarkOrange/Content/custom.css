@@ -140,17 +140,6 @@
 
 
 
-
-
-
-.compare-products-page h1{margin: 0}
-.compare-products-table{text-align: center;margin-top: 10px;}
-.block li.separator {
-    background: none;
-    margin: 0;
-    width: auto;
-    padding: 0;
-}
 .breadcrumb a {
     color: #5C5B5B;
     font-size: 0.9em;
@@ -576,55 +565,5 @@ textarea{border: 1px solid #EEEEEE;}
 .products-box .actions{text-align: center}
 li.dropdown p{line-height: 18px;}
 
-/*.language-selector{margin-top: 5px}*/
 ul.language-list{line-height: 17px;margin-top: 5px}
 ul.language-list li{float: right}
-
-#flyout-cart{top: 27px}
-/* Pager */
-.pager{margin: 20px 0;}
-.pager a,.pager span {
-display: inline-block;
-min-width: 10px;
-text-align: center;
-color: #555;
-font-size: 11px;
-font-weight: 700;
-padding: 3px 8px;
--webkit-border-radius: 2px;
--moz-border-radius: 2px;
-border-radius: 2px;
--webkit-transition: all 0.218s;
--moz-transition: all 0.218s;
--ms-transition: all 0.218s;
--o-transition: all 0.218s;
-transition: all 0.218s;
-border: 1px solid gainsboro;
-border: 1px solid rgba(0, 0, 0, 0.1);
-background-color: whiteSmoke;
--webkit-user-select: none;
--moz-user-select: none;
-user-select: none;
-cursor: pointer;
-}
-.pager span,.pager a:active {
-background-color: #F9F9F9;
-cursor: default;
-}
-.pager a:hover {
-border: 1px solid #C6C6C6;
-color: #333;
-text-decoration: underline;
--webkit-transition: all 0.0s;
--moz-transition: all 0.0s;
--ms-transition: all 0.0s;
--o-transition: all 0.0s;
-transition: all 0.0s;
-background-color: #F8F8F8;
--webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.1);
--moz-box-shadow: 0 1px 1px rgba(0,0,0,0.1);
-box-shadow: 0 1px 1px rgba(0,0,0,0.1);
-text-decoration:none;
-}
-/* Pager */
-

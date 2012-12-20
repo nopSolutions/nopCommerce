@@ -294,9 +294,49 @@ a.eu-cookie-privacyinfo-tag{color:#F93 !important;text-decoration:underline;}
 
 /* PAGER */
 .pager{text-align:center;}
-.pager a{font-size:1em;}
-.pager a:link{text-align:center;color:#555;}
-.pager span{color:#f93;font-size:1.2em;font-weight:700;}
+.pager a,.pager span {
+display: inline-block;
+min-width: 10px;
+text-align: center;
+color: #555;
+font-size: 11px;
+font-weight: 700;
+padding: 3px 8px;
+-webkit-border-radius: 2px;
+-moz-border-radius: 2px;
+border-radius: 2px;
+-webkit-transition: all 0.218s;
+-moz-transition: all 0.218s;
+-ms-transition: all 0.218s;
+-o-transition: all 0.218s;
+transition: all 0.218s;
+border: 1px solid gainsboro;
+border: 1px solid rgba(0, 0, 0, 0.1);
+background-color: whiteSmoke;
+-webkit-user-select: none;
+-moz-user-select: none;
+user-select: none;
+cursor: pointer;
+    text-decoration: none;
+}
+.pager span,.pager a:active {
+background-color: #F9F9F9;
+cursor: default;
+}
+.pager a:hover {
+border: 1px solid #C6C6C6;
+color: #333;
+-webkit-transition: all 0.0s;
+-moz-transition: all 0.0s;
+-ms-transition: all 0.0s;
+-o-transition: all 0.0s;
+transition: all 0.0s;
+background-color: #F8F8F8;
+-webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+-moz-box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+text-decoration:none;
+}
 
 /* NAVIGATIONS */
 .block{margin-bottom:15px;padding-bottom:5px;padding-left:0;color:#FFF;}
@@ -316,7 +356,7 @@ a.eu-cookie-privacyinfo-tag{color:#F93 !important;text-decoration:underline;}
 .block a{color:#5C5B5B;font-size: 1.1em;font-weight:400;text-decoration:none;}
 .block a:hover {color: #B80709;text-decoration: underline;font-weight: normal;}
 .block li{background: url("images/bullet.gif") no-repeat scroll 0 8px transparent;list-style: none outside none;line-height: 18px;padding: 4px 1px 3px 13px;}
-.block li.separator{height:1px;line-height:1px;background:#f93;width:140px;font-size:1px;margin:5px 0;}
+.block li.separator{background: none;height:1px;line-height:1px;width:auto;font-size:1px;margin:0;padding: 0;}
 .block-category-navigation,.block-manufacturer-navigation,.block-recently-viewed-products,.block-info,.block-newsletter,.block-popular-tags,.block-popular-blogtags,.block-blog-archive,.block-poll,.block-account-navigation{}
 .block-category-navigation .active > a,.block-manufacturer-navigation .active a{color:#5C5B5B;font-weight:700;text-decoration:none;}
 .block-category-navigation .listbox ul .active,.block-manufacturer-navigation .listbox ul .active{font-weight:700;}
@@ -336,13 +376,12 @@ color:#B80709 !important;
 }
 .block-newsletter .options{margin-top:5px;}
 .block-newsletter .buttons{margin-top:5px;}
-.block-recently-viewed-products a:hover{font-weight:700;text-decoration:none;color:#f93;}
 .block-popular-tags li,.block-popular-blogtags li{display:inline!important;}
 .block-popular-tags .listbox .view-all a{color:#5C5B5B;font-weight: 700;}
 .block-blog-archive .year{color:#f93;font-weight:700;text-decoration:none;}
 
 /* MINI-SHOPPING CART */
-#flyout-cart{display:none;position:absolute;float:left;top:30px;right:0px;width:300px;min-height:50px;background:#FFF;z-index:99999;}
+#flyout-cart{display:none;position:absolute;float:left;top:27px;right:0px;width:300px;min-height:50px;background:#FFF;z-index:99999;}
 #flyout-cart.active{display:block;}
 .mini-shopping-cart{padding:5px 10px 10px;margin:0;border: 1px solid #C1C1C1;background: none repeat scroll 0 0 #F6F6F4;font-size:11px;}
 .mini-shopping-cart a{font-weight:700;text-decoration:none;}
@@ -622,7 +661,7 @@ color:#B80709 !important;
 .compare-products-page{}
 .compare-products-page .page-title{}
 .compare-products-page .page-body{margin:0;padding:0;font-size:11px;color:#555;background-color:inherit;}
-.compare-products-table{width:100%;border:0px;border-collapse:collapse;border-spacing:0;empty-cells:show;}
+.compare-products-table{margin-top: 10px;width:100%;border:0px;border-collapse:collapse;border-spacing:0;empty-cells:show;}
 .compare-products-table tr.product-name{background-color:#CCC;font-weight:700;}
 .compare-products-table td{border-width:1px;border-color:#BFBFBF;border-style:solid;padding:3px;vertical-align:top;}
 
