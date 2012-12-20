@@ -136,270 +136,31 @@
     padding-top: 10px;
 }
 
-
-/*Product*/
 .product-details-page .overview {
     width: 250px;
     margin: 5px 0 10px;
     padding: 10px;
 }
 
-
-
-
-.product-details-page .variant-name {
-    color: #5C5B5B;
-}
-
-.related-products-grid .item .product-title, .also-purchased-products-grid .item .product-title {
-    font-weight: normal;
-    padding: 5px;
-}
-/*Product*/
-
-
-.footer-menu {
-    float: left;
-    margin-left: 100px;
-    text-align: left;
-}
-
-.footer-menu-first {
-    margin-left: 0;
-}
-
-.footer-menu h3, .footer-menu-1 h3 {
-    font-size: 14px;
-}
-
-.footer-menu ul, .footer-menu-1 ul {
-    margin: 10px 0;
-    padding: 0;
-    list-style: none outside none;
-}
-
-.footer-menu ul li, .footer-menu-1 ul {
-    line-height: 150%;
-}
-
-.footer-poweredby {
-    border-top: 1px solid #EEEEEE;
-    clear: both;
-    font-size: 11px;
-    padding-top: 10px;
-    float: none;
-}
-
-.footer-disclaimer {
-    float: none;
-}
-
-.footer a {
-    color: #555555;
-}
-
-.button-1, .button-2 {
-    color: #6e6e6e;
-    font: bold 12px Helvetica, Arial, sans-serif;
-    text-decoration: none;
-    padding: 3px 7px; /*position: relative;*/
-    position: static;
-    display: inline-block;
-    text-shadow: 0 1px 0 #fff;
-    -webkit-transition: border-color .218s;
-    -moz-transition: border .218s;
-    -o-transition: border-color .218s;
-    transition: border-color .218s;
-    background: #F6F6F6;
-    background: -webkit-gradient(linear,0% 40%,0% 70%,from(#F6F6F6),to(#DEDEDE));
-    background: -moz-linear-gradient(linear,0% 40%,0% 70%,from(#F6F6F6),to(#DEDEDE));
-    border: solid 1px #dcdcdc;
-    border-radius: 2px;
-    -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;
-    cursor: pointer;
-    height: auto;
-}
-
-.button-1:hover, .button-2:hover {
-    color: #333;
-    border-color: #999;
-    -moz-box-shadow: 0 2px 0 rgba(0, 0, 0, 0.2);
-    -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
-}
-
-.search-box-button.button-1:hover {
-    -moz-box-shadow: none;
-    -webkit-box-shadow: none;
-    box-shadow: none;
-}
-.coupon-code .button-2 {
-    display: block;
-}
-.search-box-text {
-    border: 1px solid #E3E3E3;
-    font-size: inherit;
-    padding: 4px 5px;
-    width: 300px;
-    background: none repeat scroll 0 0 #FFF;
-}
-
-.search-box-button {
-    padding: 4px 5px;
-    background: none repeat scroll 0 0 #F6F6F4;
-    border: 1px solid #D3D3D3;
-    border-radius: 2px 2px 2px 2px;
-    color: #353434;
-    cursor: pointer;
-    font-size: 12px;
-    margin-bottom: 2px;
-    width: 70px;
-}
-.registration-page .buttons {
-    float: none;
-}
-
-.vote-poll-button.button-2 {
-    margin: 10px 0;
-}
-
-.add-to-cart-button.button-1 {
-    padding: 5px 10px;
-    cursor: pointer;
-    background: #7DB72F;
-    background: -webkit-gradient(linear, left top, left bottom, from(#7DB72F), to(#4E7D0E));
-    background: -moz-linear-gradient(top, #7DB72F, #4E7D0E);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#7DB72F', endColorstr='#4E7D0E');
-    color: #fff;
-    text-shadow: none;
-    border-color: #999;
-    border: 0 none;
-    font-weight: 700;
-    font-size: 1.3em;
-    margin-top: -5px;
-    margin-left: 35px;
-}
-
-.product-details-page .product-variant-list .add-to-cart-button.button-1 {
-    margin-top: 15px;
-    margin-left: 0;
-    display: block;
-}
-
-.product-details-page .product-variant-list .product-variant-line .variant-picture {
-    width: 200px;
-    float: none;
-}
-
-.product-item .button-2 {
-    padding: 3px 7px;
-    cursor: pointer;
-    background: #7DB72F;
-    background: -webkit-gradient(linear, left top, left bottom, from(#7DB72F), to(#4E7D0E));
-    background: -moz-linear-gradient(top, #7DB72F, #4E7D0E);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#7DB72F', endColorstr='#4E7D0E');
-    color: #fff;
-    text-shadow: none;
-    border-color: #999;
-    border: 0 none;
-    font-weight: 700;
-}
-
-.add-to-wishlist-button.button-2 {
-    display: block;
-    margin-top: 10px;
-}
-
-.news-items .read-more, .block-blog-archive .year {
-    color: inherit;
-}
-
-.news-items, .news-list-homepage .page-title {
-    margin: 0;
-}
-.news-list-page, .news-list-homepage {
-padding:0 10px;
-}
-.poll-take-poll, .poll-results {
-    border: 0;
-    padding: 0;
-}
-
-.poll-display-text {
-    font-weight: 700;
-    color: #5C5B5B;
-}
-
-.news-items .item, .news-list-homepage .page-title, .blog-page .blogposts .post {
-    border-bottom: 1px solid #eee;
-}
 .product-spec-filter .remove-filter {
 font-weight:400;
 }
-.page-title {
-    border: 0;
-    margin: 0;
-}
 
 
-.news-items .news-date, .blog-page .blogposts .post .blog-date, .blogpost-page .post-date {
-    font-style: normal;
-}
 
-.data-table {
-    border: 1px solid #F6F6F6;
-}
 
-.data-table th, .data-table td {
-    border: 0;
-}
 
-.data-table .even {
-    background-color: #F6F6F6;
-}
 
-.breadcrumb {
-    margin: 5px 0 10px 10px;
-}
 
-.product-specs-box {
-}
-.login-page .new-wrapper, .login-page .returning-wrapper {
-width:43%;
-}
-/*Account*/
-.data-table {
-margin:10px;
-}
-/*Account*/
-/*Orders*/
-.order-summary-content .coupon-box, .order-summary-content .giftcard-box, .estimate-shipping {
-    background: none;
-}
 
-.order-summary-content {
-    padding: 0;
-}
-
-.estimate-shipping .shipping-options {
-    border: none;
-}
-
-.order-summary-content .cart .cart-header-row th, .order-summary-content .cart .cart-header-row th, .wishlist-content .cart .cart-header-row th {
-    background: none;
-    color: #555555;
-}
 .checkout-page .checkout-data, .checkout-one-page .checkout-data {
     font-size: 1em;
 }
 .checkout-page table tr td {
     padding: 3px 0;
 }
-.order-summary-content .cart .cart-header-row th, .order-summary-content .cart .cart-header-row th.picture,
-.wishlist-content .cart .cart-header-row th.picture, .wishlist-content .cart .cart-header-row th,
-.order-summary-content .cart .cart-item-row td, .wishlist-content .cart .cart-item-row td, .order-summary-content .coupon-box,
-.order-summary-content .giftcard-box, .order-summary-content .coupon-box, .order-summary-content .giftcard-box,
+
+.order-summary-content .coupon-box, .order-summary-content .giftcard-box, 
 .estimate-shipping, .checkout-data .confirm-order, .checkout-data .order-completed, .order-details .page-body,
 .order-details .order-details-box, .order-details .products-box, .order-details .shipments-box, .order-details .ordernotes-box,
 .data-table th, .data-table td, .compare-products-table td {
