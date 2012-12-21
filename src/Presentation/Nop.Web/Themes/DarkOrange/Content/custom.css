@@ -3,70 +3,6 @@
 /*  TODO check later
     .forum-group tr.group-header td{background: none repeat scroll 0 0 #404040;}
 */
-.block-category-navigation, .block-manufacturer-navigation, .block-recently-viewed-products,
-.block-info, .block-shoppingcart, .block-newsletter, .block-livechat, .block-popular-tags, .block-blog-archive,
-.block-poll, .block-popular-blogtags, .block-account-navigation, .product-details-page, .search-panel .search-input, .product-filters,
-.search-page .search-input, fieldset, .product-list .product-item, .product-list .product-item .picture{
-    background: none repeat scroll 0 0 #FFF;
-    border: 1px solid #eee;
-    border-radius: 4px;
-    -o-border-radius: 4px;
-    -icab-border-radius: 4px;
-    -khtml-border-radius: 4px;
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-}
-
-.price-range-filter ul {
-    padding-left: 10px;
-}
-
-.compare-products-table tr.product-name {
-    background: none;
-    font-weight: normal;
-}
-
-/* тот же самый стиль, что и у .block .title{*/
-.product-filters .filter-title span {
-    font-size: 1em;
-    font-weight: bold;
-    letter-spacing: 1px;
-    padding: 12px 7px 12px 10px;
-    text-align: left;
-    text-transform: uppercase;
-    color: #5C5B5B;
-    background: none;
-    margin: 0;
-}
-
-.product-filters .filter-title {
-    padding: 0;
-}
-
-.product-filters .filter-title span {
-    height: auto;
-    background: none;
-}
-
-.product-filters .filter-title {
-    background: none;
-}
-
-.product-filters .filter-item {
-    padding: 0 10px 5px;
-}
-
-.product-filters {
-    width: auto;
-}
-
-.price-range-filter .title, .product-spec-filter .title {
-    font-size: 1.1em;
-    font-weight: bold;
-    padding: 0;
-    background: none;
-}
 
 
 .product-list .product-item .product-title, .product-list .product-item .description {
@@ -91,7 +27,3 @@
     padding-top: 10px;
 }
 
-
-.product-spec-filter .remove-filter {
-font-weight:400;
-}
