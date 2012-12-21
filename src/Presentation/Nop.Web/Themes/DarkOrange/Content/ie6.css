@@ -8,6 +8,5 @@
 
 .search-box{width: 400px}
 .search-box ul{ float: right;}
-.search-box-button{margin-left: 0}
-.search-box-button{background-color:#f6f6f6;border: 1px solid #dcdcdc;filter: none;color: #6e6e6e;height: 30px}
+.search-box-button{filter: none;height: 30px}
 
