@@ -4692,7 +4692,7 @@ namespace Nop.Services.Installation
                     ShowProductImagesOnWishList = true,
                     ShowDiscountBox = true,
                     ShowGiftCardBox = true,
-                    CrossSellsNumber = 2,
+                    CrossSellsNumber = 5,
                     EmailWishlistEnabled = true,
                     AllowAnonymousUsersToEmailWishlist = false,
                     MiniShoppingCartEnabled = true,
