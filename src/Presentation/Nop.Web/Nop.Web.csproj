@@ -1315,28 +1315,16 @@
     <Content Include="Scripts\slimbox2.js" />
     <Content Include="Themes\DarkOrange\Content\images\ajax_loader_large.gif" />
     <Content Include="Themes\DarkOrange\Content\images\ajax_loader_small.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\rss.png" />
     <Content Include="Themes\DarkOrange\Content\styles.rtl.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Themes\DarkOrange\Content\images\bbeditor-button-bg.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\bg-body.gif">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Themes\DarkOrange\Content\images\bg-container.gif" />
     <Content Include="Themes\DarkOrange\Content\images\download-sample-bg.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\cart-footer-bg.gif" />
     <Content Include="Themes\DarkOrange\Content\images\cart-header-bg.gif" />
     <Content Include="Themes\DarkOrange\Content\images\closelabel.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\box-header-left.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\box-header-right.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\filterbox-bg.gif" />
     <Content Include="Themes\DarkOrange\Content\images\forum-footer-bg.gif" />
     <Content Include="Themes\DarkOrange\Content\images\forum-header-bg.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\grey-button-bg.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\grid-bg.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\category-bg.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\category-title.gif" />
+    <Content Include="Themes\DarkOrange\Content\images\pm-grid-bg.gif" />
     <Content Include="Themes\DarkOrange\Content\images\ico-arrow-r.gif" />
     <Content Include="Themes\DarkOrange\Content\images\ico-delete.gif" />
     <Content Include="Themes\DarkOrange\Content\images\ico-edit.gif" />
@@ -1351,7 +1339,6 @@
     <Content Include="Themes\DarkOrange\Content\images\loading.gif" />
     <Content Include="Themes\DarkOrange\Content\images\logo.gif" />
     <Content Include="Themes\DarkOrange\Content\images\nextlabel.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\orange-button-bg.gif" />
     <Content Include="Themes\DarkOrange\Content\images\pm-footer-bg.gif" />
     <Content Include="Themes\DarkOrange\Content\images\pm-header-bg.gif" />
     <Content Include="Themes\DarkOrange\Content\images\prevlabel.gif" />

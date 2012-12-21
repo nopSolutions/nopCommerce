@@ -1220,7 +1220,7 @@ fieldset, .product-list .product-item, .product-list .product-item .picture{
 .pm-grid-table-style{font-family:arial;font-size:11px;border:1px solid gray;border-collapse:collapse;background-color:#FFF;margin-left:0;width:100%;}
 .pm-grid-table-style td a{text-decoration:none;display:block;}
 .pm-grid-alt-row-style{background-color:#F4FAFF;}
-.pm-grid-header-style th{background:url(images/grid-bg.gif) repeat-x 50%;color:#fff;padding:5px 10px;text-align:center;vertical-align:middle;font-weight:700;border:solid 1px #676767;}
+.pm-grid-header-style th{background:url(images/pm-grid-bg.gif) repeat-x 50%;color:#fff;padding:5px 10px;text-align:center;vertical-align:middle;font-weight:700;border:solid 1px #676767;}
 .pm-grid-row-style td,.pm-grid-alt-row-style td{padding:4px 10px;border-right:solid 1px #A0C0E7;border-right-color:gray;}
 .pm-grid-pager-style{padding:5px;background:#eee;vertical-align:middle;}
 .pm-grid-pager-style span{font-weight:700;font-size:1.1em;}
@@ -1246,7 +1246,7 @@ fieldset, .product-list .product-item, .product-list .product-item .picture{
 
 /* FORUM MAIN */
 .forums-main{}
-.forums-main .forums-main-header{border-bottom:solid 1px #f3f3f3;height:35px;}
+.forums-main .forums-main-header{border-bottom:solid 1px #f3f3f3;height:50px;margin-bottom: 10px;}
 .forums-main .forums-main-header .current-time{padding-top:20px;font-size:.9em;color:#555;float:left;}
 .forums-main .forums-main-header .forum-search-box{float:right;text-align:right;}
 .forums-main .active-discussions{margin-top:50px;}
