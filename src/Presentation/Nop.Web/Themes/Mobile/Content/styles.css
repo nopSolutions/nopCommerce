@@ -1,5 +1,6 @@
 ﻿.foo{}
 
+
 /* MISC. CLASSES */
 .nobr{white-space:nowrap!important;}
 .wrap{ white-space:normal!important;}
@@ -19,6 +20,7 @@
 .section-title{padding:10px;font-weight:700;clear:both;}
 .home-page-product-grid .title{font-size:.9em;font-weight:700;text-transform:uppercase;padding:7px 10px;color:#333;}
 
+
 /* DATA TABLE */
 .data-table{width:100%;border:1px solid;border-collapse:collapse;border-spacing:0;empty-cells:show;}
 .data-table th{font-weight:bold;padding:3px 8px;white-space:nowrap;vertical-align:middle;}
@@ -26,6 +28,7 @@
 .data-table th,.data-table td{border-bottom:1px solid;border-right:1px solid;}
 .data-table .odd{}
 .data-table .even{background-color: #F3F3F3;}
+
 
 /* TOPICS */
 .topic-html-content{padding-bottom:5px;}
@@ -37,6 +40,7 @@
 .topic-page .page-body{}
 .topic-page .page-body a{text-decoration:underline;}
 
+
 /* VALIDATION AND ERRORS */
 .message-error{font-family:Verdana, Arial, sans-serif;font-weight:700;color:red;}
 .message-error ul{padding:0px;}
@@ -45,15 +49,18 @@
 .field-validation-error{font-family:Verdana, Arial, sans-serif;font-weight:700;color:red;}
 .required{color:red;}
 
+
 /* PAGER */
 .pager{text-align:center;}
 .pager a{font-size:1em;}
 .pager a:link{text-align:center;}
 .pager span{font-size:1.2em;font-weight:700;}
 
+
 /* NAVIGATION BLOCKS */
 .block{margin-bottom:15px;padding-bottom:5px;padding-left:0;color:#FFF;}
 .block .title{font-size:.9em;font-weight:700;text-transform:uppercase;padding:7px 10px;color:#333;}
+
 
 /* PRODUCTS IN LINES - TEMPLATE */
 .product-list{margin:0 auto;padding:0;}
@@ -65,9 +72,11 @@
 .product-list .prices .product-price .price{color:green;}
 .product-list .prices .old-product-price .price{color:red;text-decoration:line-through;}
 
+
 /* FEATURED PRODUCTS */
 .featured-product-grid{text-align:center;}
 .featured-product-grid .title{font-weight:700;text-transform:uppercase;clear:both;margin:0;}
+
 
 /* ORDER SUMMARY, SHOPPING CART, WISHLIST */
 .shopping-cart-page,.wishlist-page{}
@@ -116,6 +125,7 @@
 .order-summary-content .checkout-buttons{margin:0;padding:0;}
 .order-summary-content .addon-buttons{clear:both;margin:0;padding:10px;text-align:right;}
 
+
 /* CHECKOUT */
 .checkout-page{}
 .checkout-page .checkout-data{margin:0;padding:0;background-color:inherit;}
@@ -153,6 +163,7 @@
 .checkout-data .order-completed .body{text-align:left;vertical-align:text-top;}
 .checkout-data .order-completed .select-button{text-align:left;}
 
+
 /* ORDER DETAILS */
 .order-details{margin:0;padding:0;}
 .order-details .page-body{}
@@ -166,6 +177,7 @@
 .order-details .products-box .qty{}
 .order-details .products-box .subtotal{}
 
+
 /* SHIPMENTS */
 .shipment-details{margin:0;padding:0;}
 .shipment-details .page-body{}
@@ -175,6 +187,7 @@
 .shipment-details .products-box .product{}
 .shipment-details .products-box .sku{}
 .shipment-details .products-box .qty{}
+
 
 /* LOGIN */
 .login-page{}
@@ -190,6 +203,7 @@
 .login-page .returning-wrapper .login-block{text-align:left;margin:10px;padding:15px 5px 5px;border:solid 1px #d3d3d3;}
 .login-page .forgot-password{}
 
+
 /* REGISTRATION */
 .registration-page{}
 .registration-page .page-body{}
@@ -201,6 +215,7 @@
 .registration-result-page .page-body{}
 .registration-result-page .section-body{text-align:left;padding:10px;border:1px solid #d7d7d7;height:auto;}
 .registration-result-page .buttons{}
+
 
 /* NEWS */
 .news-list-page{}
@@ -232,6 +247,7 @@
 .news-comment .comment-content .comment-body{}
 .news-comment .comment-content .comment-body a{text-decoration:underline;}
 .news-comment .comment-content .comment-body .comment-text{}
+
 
 /* BLOGS */
 .blog-page{}
@@ -265,6 +281,7 @@
 .blog-comment .comment-content .comment-body a{text-decoration:underline;}
 .blog-comment .comment-content .comment-body .comment-text{}
 
+
 /* EMAIL A FRIEND */
 .email-a-friend-page{margin:0;padding:0;}
 .email-a-friend-page .result{font-weight:bold;}
@@ -274,6 +291,7 @@
 .email-a-friend-page .send-email .your-email{}
 .email-a-friend-page .send-email .personal-message{}
 
+
 /* SEARCH */
 .search-page{margin:0;padding:0;}
 .search-page .search-input{}
@@ -282,14 +300,17 @@
 .search-page .warning{text-decoration:underline;}
 .search-box{margin: 0 0 15px 0px;}
 
+
 /* USER-AGREEMENT PAGE */
 .user-agreement-page{}
 .user-agreement-page .page-body{}
+
 
 /* STORE CLOSED */
 .store-closed-page{}
 .store-closed-page .page-title{}
 .store-closed-page .page-body{}
+
 
 /* PASSWORD RECOVERY AND NEWSLETTER PAGES */
 .password-recovery-page,newsletter-page{}
@@ -297,9 +318,11 @@
 .password-recovery-page .email{}
 .password-recovery-page .result{font-family:Verdana, Arial, sans-serif;font-weight:700;color:red;}
 
+
 /* ACCOUNT ACTIVATION */
 .account-activation-page{}
 .account-activation-page .page-body{}
+
 
 /* CONTACTS */
 .contact-page{}
@@ -311,12 +334,15 @@
 .contact-page .send-email .enquiry{}
 .contact-page .captcha-box{}
 
+
 /* RECENTLY VIEWED AND ADDED PRODUCTS */
 .recently-added-products-page{margin:0;padding:0;}
 .recently-viewed-products-page{margin:0;padding:0;}
 
+
 /* CATALOG PAGES */
 .category-page .category-description,.manufacturer-page .manufacturer-description{font-size:1.1em;}
+
 
 /* CUSTOMER ACCOUNT PAGES */
 .account-page{}
@@ -369,6 +395,7 @@
 .reward-points-page .reward-points-history{}
 .reward-points-page .reward-points-history .item{font-weight:normal;}
 
+
 /* RETURN REQUEST */
 .return-request-page{}
 .return-request-page .products-box{font-weight:normal;}
@@ -377,6 +404,7 @@
 .return-request-page .why .return-actions{}
 .return-request-page .why .comment{}
 .return-request-page .buttons{}
+
 
 /* PRODUCT DETAILS PAGE */
 .product-details-page{}
@@ -447,6 +475,7 @@
 .tier-prices .prices-list .header-table td{border-bottom:solid 3px #d7d7d7;padding-top:3px;padding-bottom:3px;font-weight:700;}
 .tier-prices .prices-list .prices-table .field-header{font-weight:700;text-align:center;}
 
+
 /* PRODUCT REVIEWS PAGE */
 .product-reviews-page{}
 .product-reviews-page .page-title a{text-decoration:underline;}
@@ -468,6 +497,7 @@
 .product-review-list .product-review-item .review-info .separator{margin:0 2px;}
 .product-review-helpfulness{color:#333;}
 .product-review-helpfulness .vote{}
+
 
 /* PRIVATE MESSAGES */
 .send-pm-box{}
@@ -491,6 +521,7 @@
 .pm-read{}
 .pm-unread{font-size:16px;}
 
+
 /* FORUM MAIN */
 .forums-main{}
 .forum-group a{text-decoration:none;}
@@ -505,6 +536,7 @@
 .forum-group .forum .image {float:left;width:36px;height:36px;background:url(images/ico-forum.gif) no-repeat 40% 40%;}
 .forum-group .forum .forum-name{font-weight:700;color:#555;float:left;margin:11px 0 0 7px;}
 .forum-group .forum .topics{font-size:.8em;color:#555;float:right;margin:11px 0 0 7px;}
+
 
 /* FORUM PAGE */
 .forum{}
@@ -525,6 +557,7 @@
 .forum .topics .topic .post-annoucement,.forum .topics .topic .poststicky{float:left;width:36px;height:36px;background:url(images/ico-forum-post-high.gif) no-repeat 40% 40%;}
 .forum .pager{padding:5px 3px 5px 0;}
 
+
 /* FORUM TOPIC EDIT */
 .post-edit{}
 .post-edit .wrapper{}
@@ -533,6 +566,7 @@
 .move-forum-topic{}
 .move-forum-topic .page-body{}
 .move-forum-topic .page-body .options{}
+
 
 /* FORUM TOPIC */
 .forum-topic{}
@@ -558,6 +592,7 @@
 .forum-post .post-content .post-body .posttext .quote{padding:5px;border:dashed 1px #000;background-color:#fff;}
 .forum-post .post-content .signature{border-color:#DDD;border-style:solid;border-width:1px 0 0;font-size:90%;margin:1em 8px 8px;padding:1em 0 20px;text-align:left;font-style:italic;}
 
+
 /* FORUM SEARCH */
 .forum-search-box{padding:5px 0 15px 0;}
 .forum-search{}
@@ -572,6 +607,7 @@
 .forum-search .topics .topic .post{float:left;width:36px;height:36px;background:url(images/ico-forum-post.gif) no-repeat 40% 40%;}
 .forum-search .topics .topic .post-annoucement,.forum-search .topics .topic .poststicky{float:left;width:36px;height:36px;background:url(images/ico-forum-post-high.gif) no-repeat 40% 40%;}
 .forum-search .pager{padding:5px 3px 5px 0;}
+
 
 /* PROFILE PAGE */
 .profile-page{}
@@ -589,6 +625,7 @@
 .profile-page .latest-posts-grid-pager-style{padding:5px;background:#eee;vertical-align:middle;}
 .profile-page .latest-posts-grid-pager-style span{font-weight:700;}
 
+
 /* ACTIVE DISCUSSIONS */
 .active-discussions-page{}
 .active-discussions .active-discussions-title{font-size:1.1em;padding-bottom:5px;font-weight:700;}
@@ -597,6 +634,7 @@
 .active-discussions .topics .topic {vertical-align:middle;padding-left:3px;min-height:40px;}
 .active-discussions .topics .topic .topic-name{font-weight:700;color:#555;float:left;margin:11px 0 0 7px;}
 .active-discussions .topics .topic .replies{font-size:.8em;color:#555;float:right;margin:11px 0 0 7px;}
+
 
 /* BBCODES */
 pre{white-space:pre-wrap;/* css-3 */white-space:0;/* Mozilla, since 1999 */white-space:0;/* Opera 4-6 */white-space:0;/* Opera 7 */word-wrap:break-word;/* Internet Explorer 5.5+ */}
