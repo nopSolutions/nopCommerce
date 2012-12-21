@@ -9,8 +9,9 @@
         </div>
         <div class="clear">
         </div>
-        @(Html.DataList(Model, 3,
-            @<div class="item-box">@Html.Partial("_ProductBox", item)</div>
-        ))
+        @foreach (var item in Model)
+        {
+            <div class="item-box">@Html.Partial("_ProductBox", item)</div>
+        }
     </div>
 }

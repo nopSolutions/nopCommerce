@@ -1148,7 +1148,6 @@
     <Content Include="Content\Images\flags\zm.png" />
     <Content Include="Content\Images\flags\zw.png" />
     <Content Include="Content\Images\ico-close-notification-bar.png" />
-    <Content Include="Themes\DarkOrange\Content\custom.css" />
     <Content Include="Themes\DarkOrange\Content\ie6.css" />
     <Content Include="Themes\DarkOrange\Content\ie7.css" />
     <Content Include="Themes\DarkOrange\Content\images\bullet.gif" />

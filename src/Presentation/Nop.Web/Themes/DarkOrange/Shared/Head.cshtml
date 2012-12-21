@@ -2,6 +2,7 @@
 @using Nop.Core.Infrastructure;
 @using Nop.Web.Framework.UI
 @{
+    //add browser specific CSS files
     var browser = Request.Browser;
     if (browser.Browser == "IE" && browser.MajorVersion == 6)
     {
@@ -12,8 +13,7 @@
         Html.AppendCssFileParts("~/Themes/Nopcommerce/Content/ie7.css");
     }
     
-    
-    Html.AppendCssFileParts("~/Themes/Nopcommerce/Content/custom.css");
+    //add main CSS file
     Html.AppendCssFileParts("~/Themes/Nopcommerce/Content/styles.css");
     
     //TODO add RTL support
