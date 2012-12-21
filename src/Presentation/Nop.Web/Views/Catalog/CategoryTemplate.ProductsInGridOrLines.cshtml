@@ -23,9 +23,8 @@
         <ul>
             <li><a href="@Url.RouteUrl("HomePage")" title="@T("Categories.Breadcrumb.Top")">@T("Categories.Breadcrumb.Top")</a>
                 <span class="delimiter">/</span> </li>
-            @for (int i = 0; i < Model.CategoryBreadcrumb.Count; i++)
+            @foreach (var cat in Model.CategoryBreadcrumb)
             {
-                var cat = Model.CategoryBreadcrumb[i];
                 var isLastCategory = cat.Id == Model.Id;
                 <li>
                     @if (isLastCategory)
