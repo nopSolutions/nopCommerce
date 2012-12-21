@@ -9,15 +9,13 @@ input[type="submit"], *:first-child + html input[type="button"], *:first-child +
 .news-items .read-more,.block-blog-archive .year,.breadcrumb a:hover {color: #5C5B5B;}
 li.dropdown{padding: 8px !important;}
 .topmenu li{padding: 7px 8px 8px !important;}
-textarea {overflow: auto}
-.master-wrapper-side-product{margin-top: 42px}
-.tab-parent{}
-label{vertical-align: bottom}
-.product-list .add-info{float: left;margin-left: 10px;position: absolute;left:140px}
+textarea { overflow: auto;}
+label{ vertical-align: bottom;}
+.product-list .add-info{float: left;margin-left: 10px;position: absolute;left: 140px;}
 .product-list h2 a{text-align: right}
 /*hover issue*/
-.top-menu {position: relative;z-index:3}
+.top-menu {position: relative;z-index: 3;}
 .header-links-wrapper{z-index: 4}
 /*hover issue*/
 a:focus{outline:0;}
-.add-to-cart label{vertical-align: top}
+.add-to-cart label{ vertical-align: top;}

@@ -1756,7 +1756,6 @@
     <Content Include="Views\Common\StoreClosed.cshtml" />
     <Content Include="Views\Common\StoreClosed.Mobile.cshtml" />
     <Content Include="Views\ShoppingCart\_CheckoutAttributes.Mobile.cshtml" />
-    <Content Include="Views\Shared\_ColumnsProduct.cshtml" />
     <Content Include="Themes\DarkOrange\Shared\Head.cshtml" />
     <Content Include="Views\Common\AdminHeaderLinks.cshtml" />
   </ItemGroup>

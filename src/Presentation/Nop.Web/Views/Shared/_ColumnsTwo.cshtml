@@ -28,7 +28,7 @@
         currentProductId = Convert.ToInt32(Url.RequestContext.RouteData.Values["productId"].ToString());
     }
 }
-<div class="master-wrapper-side-2">
+<div class="side-2">
     @if (IsSectionDefined("left"))
     {
         @RenderSection("left")
@@ -50,7 +50,7 @@
         @Html.Widget("left_side_column_after")
     }
 </div>
-<div class="master-wrapper-center-2">
+<div class="center-2">
     @Html.Widget("main_column_before")
     @RenderBody()
     @Html.Widget("main_column_after")

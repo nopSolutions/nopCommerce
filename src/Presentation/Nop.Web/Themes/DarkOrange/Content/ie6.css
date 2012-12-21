@@ -1,24 +1,20 @@
-.master-wrapper-center-2{width: 655px}
 .block-account-navigation a{white-space:normal!important;}
+#newsletter-subscribe-block input{ width: 150px;}
 
 
 
 
 
 
-input {
-    vertical-align: text-bottom;
-}
+
 
 label{vertical-align: bottom}
 .headermenu a:hover{color: #fff;text-decoration: none}
 .bestsellers{text-align: left}
 .news-items .read-more, .block-blog-archive .year,.old-product-price .price,.breadcrumb a:hover {color: #5C5B5B !important;}
 .news-items .read-more:hover, .block-blog-archive .year:hover{font-weight: 700;}
-.master-wrapper-side-product{margin-top: 42px;width: 195px}
 .search-box{width: 400px}
 .search-box ul{float: right}
 .search-box-button{margin-left: 0}
-.master-wrapper-cph-2{width: 650px}
 .search-box-button{background-color:#f6f6f6;border: 1px solid #dcdcdc;filter: none;color: #6e6e6e;height: 30px}
 .email-a-friend,.compare-products{margin: 0;}

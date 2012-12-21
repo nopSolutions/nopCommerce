@@ -1,48 +1,4 @@
-.master-wrapper-cph-2 {
-    float: left;
-    width: 690px;
-    color: #5C5B5B;
-    min-height: 400px;
-    padding: 10px 0 0 0;
-}
 
-
-.master-wrapper-leftside-3, .master-wrapper-side-product {
-    display: inline;
-    float: left;
-    font-family: Tahoma,Verdana,Arial,Helvetica,sans-serif;
-    margin: 10px 0 0;
-    width: 200px;
-}
-
-.master-wrapper-side-product {
-    margin: 40px 0 0 3px;
-}
-
-.product-details-page {
-    margin: 0 15px 10px 0;
-}
-
-.master-wrapper-center-3 {
-    background: none repeat scroll 0 0 #FFFFFF;
-    display: inline;
-    float: left;
-    margin: 10px 0 0 10px;
-    width: 540px;
-    padding: 0;
-}
-
-.master-wrapper-rightside-3 {
-    display: inline;
-    float: right;
-    font-family: Tahoma,Verdana,Arial,Helvetica,sans-serif;
-    margin: 10px 0 0;
-    width: 200px;
-}
-
-.master-wrapper-center-3 {
-    overflow: inherit;
-}
 
 /*  TODO check later
     .forum-group tr.group-header td{background: none repeat scroll 0 0 #404040;}
@@ -50,8 +6,7 @@
 .block-category-navigation, .block-manufacturer-navigation, .block-recently-viewed-products,
 .block-info, .block-shoppingcart, .block-newsletter, .block-livechat, .block-popular-tags, .block-blog-archive,
 .block-poll, .block-popular-blogtags, .block-account-navigation, .product-details-page, .search-panel .search-input, .product-filters,
-.search-page .search-input, fieldset, .product-list .product-item, .product-list .product-item .picture,
-.home-header-left, .home-header-right,.master-wrapper-page, .master-wrapper-center-2{
+.search-page .search-input, fieldset, .product-list .product-item, .product-list .product-item .picture{
     background: none repeat scroll 0 0 #FFF;
     border: 1px solid #eee;
     border-radius: 4px;
