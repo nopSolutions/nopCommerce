@@ -4,30 +4,29 @@
     var selectedItem = Model.Items.Where(x => x.Selected).FirstOrDefault();
 }
 @helper FormatPriceRangeText(CatalogPagingFilteringModel.PriceRangeFilterItem filterItem)
-    {
-    string rangeText = "";
-    if (String.IsNullOrWhiteSpace(filterItem.From))
-    {
-        rangeText = string.Format(T("Filtering.PriceRangeFilter.Under").Text, string.Format("<span class=\"PriceRange\">{0}</span>", filterItem.To));
-    }
-    else if (String.IsNullOrWhiteSpace(filterItem.To))
-    {
-        rangeText = string.Format(T("Filtering.PriceRangeFilter.Over").Text, string.Format("<span class=\"PriceRange\">{0}</span>", filterItem.From));
-    }
-    else
-    {
-        rangeText = string.Format("<span class=\"PriceRange\">{0}</span> - <span class=\"PriceRange\">{1}</span>", filterItem.From, filterItem.To);
-    }
+{
+        string rangeText = "";
+        if (String.IsNullOrWhiteSpace(filterItem.From))
+        {
+            rangeText = string.Format(T("Filtering.PriceRangeFilter.Under").Text, string.Format("<span class=\"PriceRange\">{0}</span>", filterItem.To));
+        }
+        else if (String.IsNullOrWhiteSpace(filterItem.To))
+        {
+            rangeText = string.Format(T("Filtering.PriceRangeFilter.Over").Text, string.Format("<span class=\"PriceRange\">{0}</span>", filterItem.From));
+        }
+        else
+        {
+            rangeText = string.Format("<span class=\"PriceRange\">{0}</span> - <span class=\"PriceRange\">{1}</span>", filterItem.From, filterItem.To);
+        }
     <text>@Html.Raw(rangeText)</text>
 }
 @if (Model.Enabled)
 {
-    <div class="price-range-filter">
-            <div class="title">
-                @T("Filtering.PriceRangeFilter")
-            </div>
-            <div class="clear">
-            </div>
+    <div class="product-filters price-range-filter">
+        <div class="filter-title">
+            <span>@T("Filtering.PriceRangeFilter")</span>
+        </div>
+        <div class="filter-content">
             @if (selectedItem == null)
             {
                 <div class="price-range-selector">
@@ -43,10 +42,13 @@
             {
                 <div class="selected-price-range">
                     @FormatPriceRangeText(selectedItem)
-                    <p>
-                    </p>
+                    
+                </div>
+                <div class="remove-filter">
                     <a href="@Model.RemoveFilterUrl" class="remove-price-range-filter">@T("Filtering.PriceRangeFilter.Remove")</a>
                 </div>
             }
         </div>
+
+    </div>
 }
