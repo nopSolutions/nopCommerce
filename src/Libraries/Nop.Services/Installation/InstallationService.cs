@@ -4511,7 +4511,7 @@ namespace Nop.Services.Installation
                     AllowAnonymousUsersToEmailAFriend = false,
                     RecentlyViewedProductsNumber = 4,
                     RecentlyViewedProductsEnabled = true,
-                    RecentlyAddedProductsNumber = 4,
+                    RecentlyAddedProductsNumber = 8,
                     RecentlyAddedProductsEnabled = true,
                     CompareProductsEnabled = true,
                     ProductSearchAutoCompleteEnabled = true,
