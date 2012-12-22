@@ -100,7 +100,7 @@ input, select {
 /* OTHER RESET STYLESHEET (HTML GENERAL) */
 body{text-align: center;font-family:arial, verdana, helvetica, sans-serif;font-size:12px;background:none repeat scroll 0 0 #F6F6F4;color:#5C5B5B;}
 a{color:#5C5B5B;text-decoration:none;font-weight: normal;}
-a:hover{color:#B80709;text-decoration: underline;font-weight: normal;}
+a:hover{color:#B80709;text-decoration: underline;}
 h1,h2,h3,h4,h5,h6{font-family:arial, helvetica, sans-serif;}
 h2,h3{font-size:16px;}
 textarea{width:100%;font-family:Verdana, Arial, sans-serif;font-size:11px;border: 1px solid #EEEEEE;}
