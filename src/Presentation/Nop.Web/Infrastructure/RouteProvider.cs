@@ -152,9 +152,9 @@ namespace Nop.Web.Infrastructure
                             new[] { "Nop.Web.Controllers" });
             //add product to cart (without any attributes and options)
             routes.MapLocalizedRoute("AddProductToCart",
-                            "addproducttocart/{productId}",
+                            "addproducttocart/{productId}/{shoppingCartTypeId}/{quantity}",
                             new { controller = "ShoppingCart", action = "AddProductToCart" },
-                            new { productId = @"\d+" },
+                            new { productId = @"\d+", shoppingCartTypeId = @"\d+", quantity = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
             //add product variant to cart (with attributes and options)
             routes.MapLocalizedRoute("AddProductVariantToCart",

@@ -1,15 +1,18 @@
 ﻿@model ProductOverviewModel
+@using Nop.Core.Domain.Orders
 @using Nop.Web.Models.Catalog;
 @{
     //prepare "Add to cart" AJAX link
     string addtocartlink = "";
+    var shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart;
+    var quantity = 1;
     if (Model.ProductPrice.ForceRedirectionAfterAddingToCart)
     {
-        addtocartlink = Url.RouteUrl("AddProductToCart", new { productId = Model.Id, forceredirection = Model.ProductPrice.ForceRedirectionAfterAddingToCart });
+        addtocartlink = Url.RouteUrl("AddProductToCart", new { productId = Model.Id, shoppingCartTypeId = shoppingCartTypeId, quantity = quantity, forceredirection = Model.ProductPrice.ForceRedirectionAfterAddingToCart });
     }
     else
     {
-        addtocartlink = Url.RouteUrl("AddProductToCart", new { productId = Model.Id });
+        addtocartlink = Url.RouteUrl("AddProductToCart", new { productId = Model.Id, shoppingCartTypeId = shoppingCartTypeId, quantity = quantity, });
     }    
 }
 <div class="product-item" data-productid="@Model.Id">
