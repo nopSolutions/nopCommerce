@@ -1,12 +1,10 @@
 ﻿@model IList<ProductOverviewModel>
 @{
-    Layout = "~/Views/Shared/_ColumnsThree.cshtml";
+    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
 
     //title
     Html.AddTitleParts(T("PageTitle.RecentlyViewedProducts").Text);
 }
-@using Nop.Core;
-@using Nop.Core.Infrastructure;
 @using Nop.Web.Models.Catalog;
 <div class="page recently-viewed-products-page">
     <div class="page-title">
@@ -18,11 +16,12 @@
         @if (Model.Count > 0)
         {
             <div class="product-grid">
-                @(Html.DataList<ProductOverviewModel>(Model, 2,
-                    @<div class="item-box">
-                        @Html.Partial("_ProductBox", item)
+                @foreach (var product in Model)
+                {
+                    <div class="item-box">
+                        @Html.Partial("_ProductBox", product)
                     </div>
-                ))
+                }
             </div>
         }
     </div>

@@ -1,9 +1,6 @@
 ﻿@model ProductDetailsModel
-@using Nop.Core;
-@using Nop.Core.Domain.Common;
 @using Nop.Core.Domain.Seo;
 @using Nop.Core.Infrastructure;
-@using Nop.Web;
 @using Nop.Web.Models.Catalog;
 @{
     Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
@@ -120,6 +117,8 @@
                 <div class="clear">
                 </div>
                 @Html.Action("RelatedProducts", "Catalog", new { productId = Model.Id })
+                <div class="clear">
+                </div>
             </div>
         }
         @Html.Widget("productdetails_bottom")

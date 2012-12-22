@@ -1,7 +1,7 @@
-﻿@model HomePageBestsellersModel
+﻿@model IList<ProductOverviewModel>
 
 @using Nop.Web.Models.Catalog;
-@if (Model.Products.Count > 0)
+@if (Model.Count > 0)
 {
     <div class="product-grid bestsellers">
         <div class="title">
@@ -9,21 +9,11 @@
         </div>
         <div class="clear">
         </div>
-        @if (Model.UseSmallProductBox)
+        @foreach (var item in Model)
         {
-            @(Html.DataList<ProductOverviewModel>(Model.Products, 3,
-            @<div class="item-box">
-                @Html.Partial("_ProductSmallBox", item)
-            </div>
-                ))
-        }
-        else
-        {
-        @(Html.DataList<ProductOverviewModel>(Model.Products, 2,
-            @<div class="item-box">
+            <div class="item-box">
                 @Html.Partial("_ProductBox", item)
             </div>
-                ))
         }
     </div>
 }

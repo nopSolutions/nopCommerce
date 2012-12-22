@@ -2,7 +2,6 @@
     Layout = "~/Views/Shared/_Root.cshtml";
 }
 @{
-    
     //current category ID
     int currentCategoryId = 0;
     if (Url.RequestContext.RouteData.Values["controller"].ToString().Equals("catalog", StringComparison.InvariantCultureIgnoreCase) &&
@@ -29,7 +28,8 @@
         currentProductId = Convert.ToInt32(Url.RequestContext.RouteData.Values["productId"].ToString());
     }
 }
-<div class="master-wrapper-leftside-3">
+
+<div class="leftside-3">
     @if (IsSectionDefined("left"))
     {
         @RenderSection("left")
@@ -57,12 +57,12 @@
         @Html.Widget("left_side_column_after")
     }
 </div>
-<div class="master-wrapper-center-3">
+<div class="center-3">
     @Html.Widget("main_column_before")
     @RenderBody()
     @Html.Widget("main_column_after")
 </div>
-<div class="master-wrapper-rightside-3">
+<div class="rightside-3">
     @if (IsSectionDefined("right"))
     {
         @RenderSection("right")

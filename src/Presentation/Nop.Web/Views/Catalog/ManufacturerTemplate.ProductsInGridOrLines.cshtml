@@ -1,6 +1,6 @@
 ﻿@model ManufacturerModel
 @{
-    Layout = "~/Views/Shared/_ColumnsThree.cshtml";
+    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
     Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Name);
     Html.AddMetaDescriptionParts(Model.MetaDescription);
     Html.AddMetaKeywordParts(Model.MetaKeywords);
@@ -12,11 +12,8 @@
         Html.AddCanonicalUrlParts(manufacturerUrl);
     }
 }
-@using Nop.Core;
-@using Nop.Core.Domain.Common;
 @using Nop.Core.Domain.Seo;
 @using Nop.Core.Infrastructure;
-@using Nop.Web;
 @using Nop.Web.Models.Catalog;
 @using Nop.Web.Extensions;
 <div class="page manufacturer-page">
@@ -45,10 +42,12 @@
                     @T("Products.FeaturedProducts")
                 </div>
                 <div>
-                    @(Html.DataList<ProductOverviewModel>(Model.FeaturedProducts, 2,
-                    @<div class="item-box">
-                        @Html.Partial("_ProductBox", item)
-                    </div>
+                    @foreach (var product in Model.Products)
+                    {
+                        <div class="item-box">
+                            @Html.Partial("_ProductBox", product)
+                        </div>
+                    }
                 ))
                 </div>
             </div>
@@ -87,14 +86,7 @@
         @*filtering*@
         @if (Model.PagingFilteringContext.PriceRangeFilter.Enabled)
         {
-            <div class="product-filters">
-                <div class="filter-title">
-                    <span>@T("Filtering.FilterResults")</span>
-                </div>
-                <div class="filter-item">
-                    @Html.Partial("_FilterPriceBox", Model.PagingFilteringContext.PriceRangeFilter, new ViewDataDictionary())
-                </div>
-            </div>
+            @Html.Partial("_FilterPriceBox", Model.PagingFilteringContext.PriceRangeFilter, new ViewDataDictionary())
             <div class="clear">
             </div>
         }
@@ -118,11 +110,12 @@
             {
             @*grid mode*@
             <div class="product-grid">
-                @(Html.DataList<ProductOverviewModel>(Model.Products, 2,
-                        @<div class="item-box">
-                            @Html.Partial("_ProductBox", item)
-                        </div>
-                    ))
+                @foreach (var product in Model.Products)
+                {
+                    <div class="item-box">
+                         @Html.Partial("_ProductBox", product)
+                     </div>
+                }
             </div>
             }
         }

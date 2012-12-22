@@ -2153,11 +2153,8 @@ namespace Nop.Web.Controllers
             //ACL
             products = products.Where(p => _aclService.Authorize(p)).ToList();
             //prepare model
-            var model = new HomePageBestsellersModel()
-            {
-                UseSmallProductBox = _catalogSettings.UseSmallProductBoxOnHomePage,
-                Products = PrepareProductOverviewModels(products, !_catalogSettings.UseSmallProductBoxOnHomePage, true, productThumbPictureSize).ToList()
-            };
+            var model = PrepareProductOverviewModels(products, true, true, productThumbPictureSize)
+                .ToList();
             return PartialView(model);
         }
 
@@ -2168,13 +2165,8 @@ namespace Nop.Web.Controllers
             //ACL
             products = products.Where(p => _aclService.Authorize(p)).ToList();
 
-            var model = new HomePageProductsModel()
-            {
-                UseSmallProductBox = _catalogSettings.UseSmallProductBoxOnHomePage,
-                Products = PrepareProductOverviewModels(products, 
-                    !_catalogSettings.UseSmallProductBoxOnHomePage, true, productThumbPictureSize)
-                    .ToList()
-            };
+            var model = PrepareProductOverviewModels(products, true, true, productThumbPictureSize)
+                .ToList();
 
             return PartialView(model);
         }

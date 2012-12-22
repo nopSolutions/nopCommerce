@@ -261,7 +261,9 @@
                                     });
                                 });
                             </script>
-                            <input type="button" id="checkout" name="checkout" value="@T("Checkout.Button")" class="button-1 checkout-button" onclick="startcheckout(); return false;" />
+                            <button type="button" id="checkout" name="checkout" class="button-1 checkout-button" onclick="startcheckout(); return false;" >
+                                <span>@T("Checkout.Button")</span>
+                            </button>
                         }
                     </div>
                 }

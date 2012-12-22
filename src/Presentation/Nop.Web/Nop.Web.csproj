@@ -240,8 +240,6 @@
     <Compile Include="Models\Catalog\CompareProductsModel.cs" />
     <Compile Include="Models\Catalog\ProductOverviewModel.cs" />
     <Compile Include="Models\Catalog\SearchBoxModel.cs" />
-    <Compile Include="Models\Catalog\HomePageBestsellersModel.cs" />
-    <Compile Include="Models\Catalog\HomePageProductsModel.cs" />
     <Compile Include="Models\Catalog\SearchModel.cs" />
     <Compile Include="Models\Catalog\SearchPagingFilteringModel.cs" />
     <Compile Include="Models\Catalog\ProductsByTagModel.cs" />
@@ -267,6 +265,7 @@
     <Compile Include="Models\Checkout\OnePageCheckoutModel.cs" />
     <Compile Include="Models\Checkout\UpdateSectionJsonModel.cs" />
     <Compile Include="Models\Common\AddressModel.cs" />
+    <Compile Include="Models\Common\AdminHeaderLinksModel.cs" />
     <Compile Include="Models\Common\FooterModel.cs" />
     <Compile Include="Models\Common\FaviconModel.cs" />
     <Compile Include="Models\Common\PagerModel.cs" />
@@ -1149,6 +1148,9 @@
     <Content Include="Content\Images\flags\zm.png" />
     <Content Include="Content\Images\flags\zw.png" />
     <Content Include="Content\Images\ico-close-notification-bar.png" />
+    <Content Include="Themes\DarkOrange\Content\ie6.css" />
+    <Content Include="Themes\DarkOrange\Content\ie7.css" />
+    <Content Include="Themes\DarkOrange\Content\images\bullet.gif" />
     <Content Include="Themes\DarkOrange\Content\images\ico-rss.gif" />
     <Content Include="Content\Images\default-image.gif" />
     <Content Include="Content\install\images\install-synchronizing.gif" />
@@ -1316,25 +1318,13 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Themes\DarkOrange\Content\images\bbeditor-button-bg.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\bg-body.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\bg-container.gif" />
     <Content Include="Themes\DarkOrange\Content\images\download-sample-bg.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\cart-footer-bg.gif" />
     <Content Include="Themes\DarkOrange\Content\images\cart-header-bg.gif" />
     <Content Include="Themes\DarkOrange\Content\images\closelabel.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\box-header-left.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\box-header-right.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\filterbox-bg.gif" />
     <Content Include="Themes\DarkOrange\Content\images\forum-footer-bg.gif" />
     <Content Include="Themes\DarkOrange\Content\images\forum-header-bg.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\grey-button-bg.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\grid-bg.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\category-bg.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\category-title.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\ico-account.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\ico-admin.gif" />
+    <Content Include="Themes\DarkOrange\Content\images\pm-grid-bg.gif" />
     <Content Include="Themes\DarkOrange\Content\images\ico-arrow-r.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\ico-cart.gif" />
     <Content Include="Themes\DarkOrange\Content\images\ico-delete.gif" />
     <Content Include="Themes\DarkOrange\Content\images\ico-edit.gif" />
     <Content Include="Themes\DarkOrange\Content\images\ico-forum-post-add.gif" />
@@ -1342,23 +1332,15 @@
     <Content Include="Themes\DarkOrange\Content\images\ico-forum-post.gif" />
     <Content Include="Themes\DarkOrange\Content\images\ico-forum-watch.gif" />
     <Content Include="Themes\DarkOrange\Content\images\ico-forum.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\ico-inbox.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\ico-login.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\ico-logout.gif" />
     <Content Include="Themes\DarkOrange\Content\images\ico-move-topic.gif" />
     <Content Include="Themes\DarkOrange\Content\images\ico-pm.png" />
-    <Content Include="Themes\DarkOrange\Content\images\ico-register.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\ico-wishlist.gif" />
     <Content Include="Themes\DarkOrange\Content\images\arrow-up.png" />
     <Content Include="Themes\DarkOrange\Content\images\loading.gif" />
     <Content Include="Themes\DarkOrange\Content\images\logo.gif" />
     <Content Include="Themes\DarkOrange\Content\images\nextlabel.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\orange-button-bg.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\productbox-list-bg.gif" />
     <Content Include="Themes\DarkOrange\Content\images\pm-footer-bg.gif" />
     <Content Include="Themes\DarkOrange\Content\images\pm-header-bg.gif" />
     <Content Include="Themes\DarkOrange\Content\images\prevlabel.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\productbox-grid-bg.gif" />
     <Content Include="Themes\DarkOrange\Content\images\progress-step-active.gif" />
     <Content Include="Themes\DarkOrange\Content\images\progress-step-inactive.gif" />
     <Content Include="Themes\DarkOrange\Content\images\star-x-active.gif" />
@@ -1420,7 +1402,6 @@
     <Content Include="browserCaps.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Views\Catalog\_ProductSmallBox.cshtml" />
     <Content Include="Views\Checkout\OnePageCheckout.cshtml" />
     <Content Include="Views\Checkout\OpcShippingMethods.cshtml" />
     <Content Include="Views\Checkout\OpcShippingAddress.cshtml" />
@@ -1579,7 +1560,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Themes\DarkOrange\theme.config" />
-    <Content Include="Themes\DarkOrange\Views\Shared\Head.cshtml" />
     <Content Include="Themes\DarkOrange\Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -1762,6 +1742,8 @@
     <Content Include="Views\Common\StoreClosed.cshtml" />
     <Content Include="Views\Common\StoreClosed.Mobile.cshtml" />
     <Content Include="Views\ShoppingCart\_CheckoutAttributes.Mobile.cshtml" />
+    <Content Include="Themes\DarkOrange\Shared\Head.cshtml" />
+    <Content Include="Views\Common\AdminHeaderLinks.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

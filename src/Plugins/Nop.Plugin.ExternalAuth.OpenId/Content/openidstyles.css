@@ -8,6 +8,10 @@
 .oauth-login-openid
 {
 }
+.oauth-login-openid li
+{
+    list-style: none outside none;
+}
 
 #openid_form {
 	

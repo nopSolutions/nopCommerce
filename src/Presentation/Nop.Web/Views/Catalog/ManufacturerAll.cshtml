@@ -1,12 +1,10 @@
 ﻿@model IList<ManufacturerModel>
 @{
-    Layout = "~/Views/Shared/_ColumnsThree.cshtml";
+    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
 
     //title
     Html.AddTitleParts(T("PageTitle.Manufacturers").Text);
 }
-@using Nop.Core;
-@using Nop.Core.Infrastructure;
 @using Nop.Web.Models.Catalog;
 <div class="page manufacturer-list-page">
     <div class="page-title">
@@ -16,10 +14,10 @@
     </div>
     <div class="page-body">
         <div class="manufacturer-grid">
-            @if (Model.Count > 0)
+            @foreach (var item in Model)
             {
-                @(Html.DataList<ManufacturerModel>(Model, 3,
-                    @<div class="manufacturer-item">
+                <div class="item-box">
+                    <div class="manufacturer-item">
                         <h2 class="man-title">
                             <a href="@Url.RouteUrl("Manufacturer", new { SeName = item.SeName })" title="@item.PictureModel.Title">
                                 @item.Name</a>
@@ -29,7 +27,7 @@
                                 <img alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title" /></a>
                         </div>
                     </div>
-                ))
+                </div>
             }
         </div>
     </div>

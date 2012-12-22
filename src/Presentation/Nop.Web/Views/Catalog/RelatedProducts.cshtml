@@ -3,25 +3,15 @@
 @using Nop.Web.Models.Catalog;
 @if (Model.Count > 0)
 {
-    <div class="related-products-grid">
+    <div class="related-products-grid product-grid">
         <div class="title">
             @T("Products.RelatedProducts")
         </div>
         <div class="clear">
         </div>
-        @(Html.DataList<ProductOverviewModel>(Model, 3,
-            @<div class="item-box">
-                <div class="item" data-productid="@item.Id">
-                    <div class="product-title">
-                        <a href="@Url.RouteUrl("Product", new { SeName = item.SeName })" title="@item.DefaultPictureModel.Title">
-                            @item.Name</a>
-                    </div>
-                    <div class="picture">
-                        <a href="@Url.RouteUrl("Product", new { SeName = item.SeName })" title="@item.DefaultPictureModel.Title">
-                            <img alt="@item.DefaultPictureModel.AlternateText" src="@item.DefaultPictureModel.ImageUrl" title="@item.DefaultPictureModel.Title" /></a>
-                    </div>
-                </div>
-            </div>
-            ))
+        @foreach (var item in Model)
+        {
+            <div class="item-box">@Html.Partial("_ProductBox", item)</div>
+        }
     </div>
 }

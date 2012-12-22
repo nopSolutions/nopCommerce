@@ -204,12 +204,7 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether to include "Full description" in compare products
         /// </summary>
         public bool IncludeFullDescriptionInCompareProducts { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to use small product boxes on home page
-        /// </summary>
-        public bool UseSmallProductBoxOnHomePage { get; set; }
-
+        
         /// <summary>
         /// An option indicating whether products on category and manufacturer pages should include featured products as well
         /// </summary>
