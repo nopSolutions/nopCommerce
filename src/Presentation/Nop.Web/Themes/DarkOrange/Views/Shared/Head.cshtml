@@ -1,7 +1,8 @@
 ﻿@using Nop.Core;
 @using Nop.Core.Infrastructure;
+@using Nop.Web.Framework.UI
 @{
-    //add IE6 and IE7 styles (if required)
+    //add browser specific CSS files
     var browser = Request.Browser;
     if (browser.Browser == "IE" && browser.MajorVersion == 6)
     {
@@ -12,20 +13,18 @@
         Html.AppendCssFileParts("~/Themes/DarkOrange/Content/ie7.css");
     }
     
-    Html.AppendCssFileParts("~/Themes/DarkOrange/Content/custom.css");
+    //add main CSS file
     Html.AppendCssFileParts("~/Themes/DarkOrange/Content/styles.css");
+    
+    //TODO add RTL support
+    //var supportRtl = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Rtl;
+
+    //if (supportRtl)
+    //{
+    //    Html.AppendCssFileParts("~/Themes/DarkOrange/Content/styles.rtl.css");
+    //}
+    //else
+    //{
+    //    Html.AppendCssFileParts("~/Themes/DarkOrange/Content/styles.css");
+    //}
 }
-@*@{
-    var supportRtl = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Rtl;
-    if (supportRtl)
-    {
-        //this theme supports RTL
-        Html.AppendCssFileParts("~/Themes/DarkOrange/Content/custom.css");
-        Html.AppendCssFileParts("~/Themes/DarkOrange/Content/styles.rtl.css");
-    }
-    else
-    {
-        Html.AppendCssFileParts("~/Themes/DarkOrange/Content/custom.css");
-        Html.AppendCssFileParts("~/Themes/DarkOrange/Content/styles.css");
-    }
-}*@
