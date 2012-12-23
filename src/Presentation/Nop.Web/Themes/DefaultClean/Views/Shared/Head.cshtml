@@ -6,25 +6,25 @@
     var browser = Request.Browser;
     if (browser.Browser == "IE" && browser.MajorVersion == 6)
     {
-        Html.AppendCssFileParts("~/Themes/DarkOrange/Content/ie6.css");
+        Html.AppendCssFileParts("~/Themes/DefaultClean/Content/ie6.css");
     }
     else if (browser.Browser == "IE" && browser.MajorVersion == 7)
     {
-        Html.AppendCssFileParts("~/Themes/DarkOrange/Content/ie7.css");
+        Html.AppendCssFileParts("~/Themes/DefaultClean/Content/ie7.css");
     }
     
     //add main CSS file
-    Html.AppendCssFileParts("~/Themes/DarkOrange/Content/styles.css");
+    Html.AppendCssFileParts("~/Themes/DefaultClean/Content/styles.css");
     
     //TODO add RTL support
     //var supportRtl = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Rtl;
 
     //if (supportRtl)
     //{
-    //    Html.AppendCssFileParts("~/Themes/DarkOrange/Content/styles.rtl.css");
+    //    Html.AppendCssFileParts("~/Themes/DefaultClean/Content/styles.rtl.css");
     //}
     //else
     //{
-    //    Html.AppendCssFileParts("~/Themes/DarkOrange/Content/styles.css");
+    //    Html.AppendCssFileParts("~/Themes/DefaultClean/Content/styles.css");
     //}
 }

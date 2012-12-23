@@ -1148,10 +1148,10 @@
     <Content Include="Content\Images\flags\zm.png" />
     <Content Include="Content\Images\flags\zw.png" />
     <Content Include="Content\Images\ico-close-notification-bar.png" />
-    <Content Include="Themes\DarkOrange\Content\ie6.css" />
-    <Content Include="Themes\DarkOrange\Content\ie7.css" />
-    <Content Include="Themes\DarkOrange\Content\images\bullet.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\ico-rss.gif" />
+    <Content Include="Themes\DefaultClean\Content\ie6.css" />
+    <Content Include="Themes\DefaultClean\Content\ie7.css" />
+    <Content Include="Themes\DefaultClean\Content\images\bullet.gif" />
+    <Content Include="Themes\DefaultClean\Content\images\ico-rss.gif" />
     <Content Include="Content\Images\default-image.gif" />
     <Content Include="Content\install\images\install-synchronizing.gif" />
     <Content Include="Content\Images\uploaded\placeholder.txt" />
@@ -1312,40 +1312,40 @@
     <Content Include="Scripts\public.onepagecheckout.js" />
     <Content Include="Scripts\public.common.js" />
     <Content Include="Scripts\slimbox2.js" />
-    <Content Include="Themes\DarkOrange\Content\images\ajax_loader_large.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\ajax_loader_small.gif" />
-    <Content Include="Themes\DarkOrange\Content\styles.rtl.css">
+    <Content Include="Themes\DefaultClean\Content\images\ajax_loader_large.gif" />
+    <Content Include="Themes\DefaultClean\Content\images\ajax_loader_small.gif" />
+    <Content Include="Themes\DefaultClean\Content\styles.rtl.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Themes\DarkOrange\Content\images\bbeditor-button-bg.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\download-sample-bg.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\cart-header-bg.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\closelabel.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\forum-footer-bg.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\forum-header-bg.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\pm-grid-bg.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\ico-arrow-r.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\ico-delete.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\ico-edit.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\ico-forum-post-add.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\ico-forum-post-high.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\ico-forum-post.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\ico-forum-watch.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\ico-forum.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\ico-move-topic.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\ico-pm.png" />
-    <Content Include="Themes\DarkOrange\Content\images\arrow-up.png" />
-    <Content Include="Themes\DarkOrange\Content\images\loading.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\logo.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\nextlabel.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\pm-footer-bg.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\pm-header-bg.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\prevlabel.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\progress-step-active.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\progress-step-inactive.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\star-x-active.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\star-x-inactive.gif" />
-    <Content Include="Themes\DarkOrange\Content\styles.css">
+    <Content Include="Themes\DefaultClean\Content\images\bbeditor-button-bg.gif" />
+    <Content Include="Themes\DefaultClean\Content\images\download-sample-bg.gif" />
+    <Content Include="Themes\DefaultClean\Content\images\cart-header-bg.gif" />
+    <Content Include="Themes\DefaultClean\Content\images\closelabel.gif" />
+    <Content Include="Themes\DefaultClean\Content\images\forum-footer-bg.gif" />
+    <Content Include="Themes\DefaultClean\Content\images\forum-header-bg.gif" />
+    <Content Include="Themes\DefaultClean\Content\images\pm-grid-bg.gif" />
+    <Content Include="Themes\DefaultClean\Content\images\ico-arrow-r.gif" />
+    <Content Include="Themes\DefaultClean\Content\images\ico-delete.gif" />
+    <Content Include="Themes\DefaultClean\Content\images\ico-edit.gif" />
+    <Content Include="Themes\DefaultClean\Content\images\ico-forum-post-add.gif" />
+    <Content Include="Themes\DefaultClean\Content\images\ico-forum-post-high.gif" />
+    <Content Include="Themes\DefaultClean\Content\images\ico-forum-post.gif" />
+    <Content Include="Themes\DefaultClean\Content\images\ico-forum-watch.gif" />
+    <Content Include="Themes\DefaultClean\Content\images\ico-forum.gif" />
+    <Content Include="Themes\DefaultClean\Content\images\ico-move-topic.gif" />
+    <Content Include="Themes\DefaultClean\Content\images\ico-pm.png" />
+    <Content Include="Themes\DefaultClean\Content\images\arrow-up.png" />
+    <Content Include="Themes\DefaultClean\Content\images\loading.gif" />
+    <Content Include="Themes\DefaultClean\Content\images\logo.gif" />
+    <Content Include="Themes\DefaultClean\Content\images\nextlabel.gif" />
+    <Content Include="Themes\DefaultClean\Content\images\pm-footer-bg.gif" />
+    <Content Include="Themes\DefaultClean\Content\images\pm-header-bg.gif" />
+    <Content Include="Themes\DefaultClean\Content\images\prevlabel.gif" />
+    <Content Include="Themes\DefaultClean\Content\images\progress-step-active.gif" />
+    <Content Include="Themes\DefaultClean\Content\images\progress-step-inactive.gif" />
+    <Content Include="Themes\DefaultClean\Content\images\star-x-active.gif" />
+    <Content Include="Themes\DefaultClean\Content\images\star-x-inactive.gif" />
+    <Content Include="Themes\DefaultClean\Content\styles.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Themes\Mobile\Content\images\ajax-loader.gif" />
@@ -1559,8 +1559,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Themes\DarkOrange\theme.config" />
-    <Content Include="Themes\DarkOrange\Views\Web.config" />
+    <Content Include="Themes\DefaultClean\theme.config" />
+    <Content Include="Themes\DefaultClean\Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Catalog\CategoryTemplate.ProductsInGridOrLines.cshtml" />
@@ -1742,7 +1742,7 @@
     <Content Include="Views\Common\StoreClosed.cshtml" />
     <Content Include="Views\Common\StoreClosed.Mobile.cshtml" />
     <Content Include="Views\ShoppingCart\_CheckoutAttributes.Mobile.cshtml" />
-    <Content Include="Themes\DarkOrange\Views\Shared\Head.cshtml" />
+    <Content Include="Themes\DefaultClean\Views\Shared\Head.cshtml" />
     <Content Include="Views\Common\AdminHeaderLinks.cshtml" />
   </ItemGroup>
   <PropertyGroup>
