@@ -220,6 +220,10 @@
                         Targets="Plugin-CopyToWeb"
                         Properties="
                         PluginProjectName=Nop.Plugin.Widgets.LivePersonChat"/>
+        <MSBuild Projects ="$(MSBuildProjectFullPath)"
+                        Targets="Plugin-CopyToWeb"
+                        Properties="
+                        PluginProjectName=Nop.Plugin.Widgets.NivoSlider"/>
     </Target>
     
     
