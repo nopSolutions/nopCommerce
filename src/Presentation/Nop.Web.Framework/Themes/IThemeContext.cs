@@ -6,7 +6,7 @@
     public interface IThemeContext
     {
         /// <summary>
-        /// Get or set current theme for desktops (e.g. darkOrange)
+        /// Get or set current theme for desktops
         /// </summary>
         string WorkingDesktopTheme { get; set; }
 

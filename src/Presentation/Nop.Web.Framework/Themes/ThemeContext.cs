@@ -32,7 +32,7 @@ namespace Nop.Web.Framework.Themes
         }
 
         /// <summary>
-        /// Get or set current theme for desktops (e.g. darkOrange)
+        /// Get or set current theme for desktops
         /// </summary>
         public string WorkingDesktopTheme
         {
