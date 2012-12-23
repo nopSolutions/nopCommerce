@@ -1,0 +1,149 @@
+﻿@{
+    Layout = "";
+}
+@model Nop.Plugin.Widgets.NivoSlider.Models.ConfigurationModel
+@using Nop.Web.Framework;
+@using (Html.BeginForm())
+{
+    <fieldset>
+        <legend><strong>@T("Plugins.Widgets.NivoSlider.Picture1")</strong></legend>
+        <table class="adminContent">
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.Picture1Id):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => model.Picture1Id)
+                    @Html.ValidationMessageFor(model => model.Picture1Id)
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.Text1):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => model.Text1)
+                    @Html.ValidationMessageFor(model => model.Text1)
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.Link1):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => model.Link1)
+                    @Html.ValidationMessageFor(model => model.Link1)
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+    <br />
+    
+    <fieldset>
+        <legend><strong>@T("Plugins.Widgets.NivoSlider.Picture2")</strong></legend>
+        <table class="adminContent">
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.Picture2Id):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => model.Picture2Id)
+                    @Html.ValidationMessageFor(model => model.Picture2Id)
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.Text2):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => model.Text2)
+                    @Html.ValidationMessageFor(model => model.Text2)
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.Link2):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => model.Link2)
+                    @Html.ValidationMessageFor(model => model.Link2)
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+    <br />
+    
+    <fieldset>
+        <legend><strong>@T("Plugins.Widgets.NivoSlider.Picture3")</strong></legend>
+        <table class="adminContent">
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.Picture3Id):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => model.Picture3Id)
+                    @Html.ValidationMessageFor(model => model.Picture3Id)
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.Text3):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => model.Text3)
+                    @Html.ValidationMessageFor(model => model.Text3)
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.Link3):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => model.Link3)
+                    @Html.ValidationMessageFor(model => model.Link3)
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+    <br />
+    <fieldset>
+        <legend><strong>@T("Plugins.Widgets.NivoSlider.Picture4")</strong></legend>
+        <table class="adminContent">
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.Picture4Id):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => model.Picture4Id)
+                    @Html.ValidationMessageFor(model => model.Picture4Id)
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.Text4):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => model.Text4)
+                    @Html.ValidationMessageFor(model => model.Text4)
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.Link4):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => model.Link4)
+                    @Html.ValidationMessageFor(model => model.Link4)
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+    <br />
+    <table class="adminContent">
+        <tr>
+            <td colspan="2" width="100%">
+                <input type="submit" name="save" class="t-button" value="@T("Admin.Common.Save")" />
+            </td>
+        </tr>
+    </table>
+}

@@ -11,6 +11,7 @@ using Nop.Core.Data;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Cms;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
@@ -4851,6 +4852,12 @@ namespace Nop.Services.Installation
                 .SaveSettings(new EmailAccountSettings()
                 {
                     DefaultEmailAccountId = _emailAccountRepository.Table.FirstOrDefault().Id
+                });
+
+            EngineContext.Current.Resolve<IConfigurationProvider<WidgetSettings>>()
+                .SaveSettings(new WidgetSettings()
+                {
+                    ActiveWidgetSystemNames = new List<string>() { "Widgets.NivoSlider" },
                 });
         }
 

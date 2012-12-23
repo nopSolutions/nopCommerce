@@ -1,0 +1,40 @@
+﻿@model Nop.Plugin.Widgets.NivoSlider.Models.PublicInfoModel
+@{
+    Layout = "";
+
+    Html.AddScriptParts("~/Plugins/Widgets.NivoSlider/Scripts/jquery.nivo.slider.js");
+    Html.AddCssFileParts("~/Plugins/Widgets.NivoSlider/Content/nivoslider/nivo-slider.css");
+    Html.AddCssFileParts("~/Plugins/Widgets.NivoSlider/Content/nivoslider/themes/default/default.css");
+}
+@using System
+@using Nop.Web.Framework.UI
+
+@helper RenderSliderLine(string pictureUrl, string text, string link, string dataTransition = "")
+{
+    if (!string.IsNullOrEmpty(pictureUrl))
+    {
+        if (!string.IsNullOrEmpty(link))
+        {
+            <a href="@link">
+                <img src="@pictureUrl" data-thumb="@pictureUrl" data-transition="@dataTransition" alt="" title="@text" />
+            </a>
+        }
+        else
+        {
+            <img src="@pictureUrl" data-thumb="@pictureUrl" data-transition="@dataTransition" alt="" title="@text" />
+        }
+    }
+}
+<div class="slider-wrapper theme-default">
+    <div id="nivo-slider" class="nivoSlider">
+        @RenderSliderLine(Model.Picture1Url, Model.Text1, Model.Link1)
+        @RenderSliderLine(Model.Picture2Url, Model.Text2, Model.Link2)
+        @RenderSliderLine(Model.Picture3Url, Model.Text3, Model.Link3, "slideInLeft")
+        @RenderSliderLine(Model.Picture4Url, Model.Text4, Model.Link4)
+    </div>
+</div>
+<script type="text/javascript">
+    $(window).load(function () {
+        $('#nivo-slider').nivoSlider();
+    });
+</script>
