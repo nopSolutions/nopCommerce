@@ -14,6 +14,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Messages;
+using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Catalog;
@@ -73,6 +74,7 @@ namespace Nop.Web.Controllers
         private readonly EmailAccountSettings _emailAccountSettings;
         private readonly CommonSettings _commonSettings;
         private readonly BlogSettings _blogSettings;
+        private readonly NewsSettings _newsSettings;
         private readonly ForumSettings _forumSettings;
         private readonly LocalizationSettings _localizationSettings;
         private readonly CaptchaSettings _captchaSettings;
@@ -95,7 +97,8 @@ namespace Nop.Web.Controllers
             ICustomerActivityService customerActivityService, CustomerSettings customerSettings, 
             TaxSettings taxSettings, CatalogSettings catalogSettings,
             StoreInformationSettings storeInformationSettings, EmailAccountSettings emailAccountSettings,
-            CommonSettings commonSettings, BlogSettings blogSettings, ForumSettings forumSettings,
+            CommonSettings commonSettings, BlogSettings blogSettings, 
+            NewsSettings newsSettings, ForumSettings forumSettings,
             LocalizationSettings localizationSettings, CaptchaSettings captchaSettings)
         {
             this._categoryService = categoryService;
@@ -127,6 +130,7 @@ namespace Nop.Web.Controllers
             this._emailAccountSettings = emailAccountSettings;
             this._commonSettings = commonSettings;
             this._blogSettings = blogSettings;
+            this._newsSettings = newsSettings;
             this._forumSettings = forumSettings;
             this._localizationSettings = localizationSettings;
             this._captchaSettings = captchaSettings;
@@ -414,6 +418,7 @@ namespace Nop.Web.Controllers
                 RecentlyViewedProductsEnabled = _catalogSettings.RecentlyViewedProductsEnabled,
                 CompareProductsEnabled = _catalogSettings.CompareProductsEnabled,
                 BlogEnabled = _blogSettings.Enabled,
+                NewsEnabled = _newsSettings.Enabled,
                 SitemapEnabled = _commonSettings.SitemapEnabled,
                 ForumEnabled = _forumSettings.ForumsEnabled,
                 AllowPrivateMessages = _forumSettings.AllowPrivateMessages,

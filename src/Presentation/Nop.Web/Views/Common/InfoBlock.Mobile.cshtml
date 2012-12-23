@@ -4,7 +4,10 @@
 <div data-role="navbar">
     <ul>
         <li><a href="@Url.RouteUrl("ContactUs")" data-role="button">@T("ContactUs")</a></li>
-        <li><a href="@Url.RouteUrl("Topic", new { SystemName = "aboutus" })" data-role="button">@T("AboutUs")</a></li>
+        @if (Model.NewsEnabled)
+        {
+            <li><a href="@Url.RouteUrl("NewsArchive")" data-role="button">@T("News")</a></li>
+        }
         @if (Model.BlogEnabled)
         {
             <li><a href="@Url.RouteUrl("Blog")" data-role="button">@T("Blog")</a></li>
@@ -26,13 +29,13 @@
 </div>
 <div data-role="navbar">
     <ul>
+        <li><a href="@Url.RouteUrl("Topic", new { SystemName = "aboutus" })" data-role="button">@T("AboutUs")</a></li>
         <li><a href="@Url.RouteUrl("Topic", new { SystemName = "privacyinfo" })" data-role="button">@T("PrivacyNotice")</a></li>
         <li><a href="@Url.RouteUrl("Topic", new { SystemName = "conditionsofUse" })" data-role="button">@T("ConditionsOfUse")</a></li>
     </ul>
 </div>
 @if (Model.AllowPrivateMessages)
-{
-                
+{        
     <div data-role="navbar">
         <ul>
             <li><a href="@Url.RouteUrl("PrivateMessages", new { tab = "" })" data-role="button">@T("PrivateMessages.Inbox")</a></li>
