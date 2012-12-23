@@ -2518,7 +2518,7 @@
                 <Value>A verification email has been sent. Thank you!</Value>
             </LocaleResource>
             <LocaleResource Name="Title">
-                <Value>Subscribe to newsletters</Value>
+                <Value>Newsletter</Value>
             </LocaleResource>
             <LocaleResource Name="Unsubscribe">
                 <Value>Unsubscribe</Value>

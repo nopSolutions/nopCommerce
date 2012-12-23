@@ -134,6 +134,9 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.ColorSquaresRgb.Hint">
     <Value>Choose color to be used with the color squares attribute control.</Value>
   </LocaleResource>
+  <LocaleResource Name="Newsletter.Title">
+    <Value>Newsletter</Value>
+  </LocaleResource>
 </Language>
 '
 
