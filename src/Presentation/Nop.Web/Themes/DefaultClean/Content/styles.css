@@ -284,7 +284,7 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 
 /* NAVIGATIONS */
 .block{margin-bottom:15px;padding-bottom:5px;padding-left:0;}
-.block .title{font-size: 1em;letter-spacing: 1px;text-transform:uppercase;text-align: left;padding: 12px 7px;color:#5C5B5B;border-radius:5px 5px 0px 0px;margin: 0;}
+.block .title{font-size: 1em;letter-spacing: 1px;text-transform:uppercase;text-align: left;padding: 9px 7px;color:#333;border-radius:5px 5px 0px 0px;margin: 0;background:#EEE}
 .block .title strong{font-weight:700;}
 .block .listbox{font-size:11px;padding:5px 10px 10px;line-height:18px;margin:0;border-radius:0px 0px 5px 5px;}
 .block .listbox ul{margin:0;padding:0 0 0 2px;color:#5C5B5B;background-color:inherit;}
