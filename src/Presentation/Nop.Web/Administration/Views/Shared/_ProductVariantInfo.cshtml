@@ -227,7 +227,7 @@
                         @Html.NopLabelFor(model => model.Locales[item].Description):
                     </td>
                     <td class="adminData">
-                        @Html.TextAreaFor(model => model.Locales[item].Description)
+                        @Html.TextAreaFor(model => model.Locales[item].Description, new { style = "Width: 250px; Height: 150px;" })
                         @Html.ValidationMessageFor(model => model.Locales[item].Description)
                     </td>
                 </tr>
@@ -253,7 +253,7 @@
                         @Html.NopLabelFor(model => model.Description):
                     </td>
                     <td class="adminData">
-                        @Html.TextAreaFor(model => model.Description)
+                        @Html.TextAreaFor(model => model.Description, new { style = "Width: 250px; Height: 150px;" })
                         @Html.ValidationMessageFor(model => model.Description)
                     </td>
                 </tr>
