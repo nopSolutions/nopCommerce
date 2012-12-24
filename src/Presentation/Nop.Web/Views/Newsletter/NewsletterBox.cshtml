@@ -8,18 +8,9 @@
     </div>
     <div class="listbox">
         <div id="newsletter-subscribe-block">
-            @T("Newsletter.Email"):
+            @T("Newsletter.Subscribe"):
             @Html.TextBoxFor(x => x.NewsletterEmail, new { id = "newsletter-email" })
             @Html.ValidationMessageFor(x => x.NewsletterEmail)
-            <div class="options">
-                <input id="newsletter-subscribe" type="radio" name="newsletter-subscribe" value="newsletter-subscribe"
-                    checked="checked" />
-                <label for="newsletter-subscribe">@T("Newsletter.Subscribe")</label>
-                <input id="newsletter-unsubscribe" type="radio" name="newsletter-subscribe" value="newsletter-unsubscribe" />
-                <label for="newsletter-unsubscribe">@T("Newsletter.Unsubscribe")</label>
-            </div>
-            <div class="clear">
-            </div>
             <div class="buttons">
                 <input type="button" value="@T("Newsletter.Button")" id="newsletter-subscribe-button" class="button-1 newsletter-subscribe-button" />
                 <span id="subscribe-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
@@ -34,10 +25,6 @@
         $(document).ready(function () {
             $('#newsletter-subscribe-button').click(function () {
                 
-                var subscribe = 'true';
-                if($('#newsletter-unsubscribe').is(':checked')) { 
-                    subscribe = 'false';
-                }
                 var email = $("#newsletter-email").val();
                 var subscribeProgress = $("#subscribe-loading-progress");
                 subscribeProgress.show();
@@ -45,7 +32,7 @@
                     cache: false,
                     type: "POST",
                     url: "@(Url.RouteUrl("SubscribeNewsletter"))",
-                    data: { "subscribe": subscribe, "email": email },
+                    data: { "email": email },
                     success: function (data) {
                         subscribeProgress.hide();
                         $("#newsletter-result-block").html(data.Result);

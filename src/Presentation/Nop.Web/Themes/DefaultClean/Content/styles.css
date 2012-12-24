@@ -303,7 +303,6 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 .block-account-navigation a{white-space:nowrap;}
 .block-account-navigation a.inactive{font-weight:400;text-decoration:none;}
 .block-account-navigation a.inactive:hover {text-decoration: underline !important;color:#B80709 !important;}
-.block-newsletter .options{margin-top:5px;}
 .block-newsletter .buttons{margin-top:5px;}
 .block-popular-tags li,.block-popular-blogtags li{display:inline!important;}
 .block-popular-tags .listbox .view-all a{color:#5C5B5B;font-weight: 700;}

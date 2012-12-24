@@ -137,6 +137,21 @@ set @resources='
   <LocaleResource Name="Newsletter.Title">
     <Value>Newsletter</Value>
   </LocaleResource>
+  <LocaleResource Name="Newsletter.Button">
+    <Value>Subscribe</Value>
+  </LocaleResource>
+  <LocaleResource Name="Newsletter.Unsubscribe">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Newsletter.UnsubscribeEmailSent">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Newsletter.Email">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Newsletter.Subscribe">
+    <Value>Sign up for our newsletter</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1083,4 +1098,9 @@ GO
 --delete obosolete settings
 DELETE FROM [Setting]
 WHERE [Name] = N'customersettings.acceptprivacypolicyenabled'
+GO
+
+--obslete message template
+DELETE FROM [MessageTemplate]
+WHERE [Name]=N'NewsLetterSubscription.DeactivationMessage'
 GO

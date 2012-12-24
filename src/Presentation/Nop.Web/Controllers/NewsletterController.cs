@@ -41,7 +41,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult SubscribeNewsletter(bool subscribe, string email)
+        public ActionResult SubscribeNewsletter(string email)
         {
             string result;
             bool success = false;
@@ -56,24 +56,13 @@ namespace Nop.Web.Controllers
                 var subscription = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmail(email);
                 if (subscription != null)
                 {
-                    if (subscribe)
+                    if (!subscription.Active)
                     {
-                        if (!subscription.Active)
-                        {
-                            _workflowMessageService.SendNewsLetterSubscriptionActivationMessage(subscription, _workContext.WorkingLanguage.Id);
-                        }
-                        result = _localizationService.GetResource("Newsletter.SubscribeEmailSent");
+                        _workflowMessageService.SendNewsLetterSubscriptionActivationMessage(subscription, _workContext.WorkingLanguage.Id);
                     }
-                    else
-                    {
-                        if (subscription.Active)
-                        {
-                            _workflowMessageService.SendNewsLetterSubscriptionDeactivationMessage(subscription, _workContext.WorkingLanguage.Id);
-                        }
-                        result = _localizationService.GetResource("Newsletter.UnsubscribeEmailSent");
-                    }
+                    result = _localizationService.GetResource("Newsletter.SubscribeEmailSent");
                 }
-                else if (subscribe)
+                else
                 {
                     subscription = new NewsLetterSubscription()
                     {
@@ -86,10 +75,6 @@ namespace Nop.Web.Controllers
                     _workflowMessageService.SendNewsLetterSubscriptionActivationMessage(subscription, _workContext.WorkingLanguage.Id);
 
                     result = _localizationService.GetResource("Newsletter.SubscribeEmailSent");
-                }
-                else
-                {
-                    result = _localizationService.GetResource("Newsletter.UnsubscribeEmailSent");
                 }
                 success = true;
             }

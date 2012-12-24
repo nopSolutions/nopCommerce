@@ -2492,7 +2492,6 @@
     <LocaleResource Name="Newsletter">
         <Children>
             <LocaleResource Name="Email">
-                <Value>Email</Value>
                 <Children>
                     <LocaleResource Name="Wrong">
                         <Value>Enter valid email</Value>
@@ -2500,7 +2499,7 @@
                 </Children>
             </LocaleResource>
             <LocaleResource Name="Button">
-                <Value>Submit</Value>
+                <Value>Subscribe</Value>
             </LocaleResource>
             <LocaleResource Name="ResultActivated">
                 <Value>Your subscription has been activated.</Value>
@@ -2509,19 +2508,13 @@
                 <Value>Your subscription has been deactivated.</Value>
             </LocaleResource>
             <LocaleResource Name="Subscribe">
-                <Value>Subscribe</Value>
+              <Value>Sign up for our newsletter</Value>
             </LocaleResource>
             <LocaleResource Name="SubscribeEmailSent">
                 <Value>Thank you for signing up! A verification email has been sent. We appreciate your interest.</Value>
             </LocaleResource>
-            <LocaleResource Name="UnsubscribeEmailSent">
-                <Value>A verification email has been sent. Thank you!</Value>
-            </LocaleResource>
             <LocaleResource Name="Title">
                 <Value>Newsletter</Value>
-            </LocaleResource>
-            <LocaleResource Name="Unsubscribe">
-                <Value>Unsubscribe</Value>
             </LocaleResource>
         </Children>
     </LocaleResource>

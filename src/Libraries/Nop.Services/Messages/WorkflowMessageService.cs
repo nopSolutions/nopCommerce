@@ -704,37 +704,6 @@ namespace Nop.Services.Messages
                 toEmail, toName);
         }
 
-        /// <summary>
-        /// Sends a newsletter subscription deactivation message
-        /// </summary>
-        /// <param name="subscription">Newsletter subscription</param>
-        /// <param name="languageId">Language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        public virtual int SendNewsLetterSubscriptionDeactivationMessage(NewsLetterSubscription subscription,
-            int languageId)
-        {
-            if (subscription == null)
-                throw new ArgumentNullException("subscription");
-
-            languageId = EnsureLanguageIsActive(languageId);
-
-            var messageTemplate = GetLocalizedActiveMessageTemplate("NewsLetterSubscription.DeactivationMessage", languageId);
-            if (messageTemplate == null)
-                return 0;
-
-            var orderTokens = GenerateTokens(subscription);
-
-            //event notification
-            _eventPublisher.MessageTokensAdded(messageTemplate, orderTokens);
-
-            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
-            var toEmail = subscription.Email;
-            var toName = "";
-            return SendNotification(messageTemplate, emailAccount,
-                languageId, orderTokens,
-                toEmail, toName);
-        }
-
         #endregion
         
         #region Send a message to a friend
