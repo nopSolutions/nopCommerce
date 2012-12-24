@@ -124,23 +124,6 @@ namespace Nop.Web.Framework
             //validation
             if (customer != null && !customer.Deleted && customer.Active)
             {
-                //update last activity date
-                if (customer.LastActivityDateUtc.AddMinutes(1.0) < DateTime.UtcNow)
-                {
-                    customer.LastActivityDateUtc = DateTime.UtcNow;
-                    _customerService.UpdateCustomer(customer);
-                }
-
-                //update IP address
-                string currentIpAddress = _webHelper.GetCurrentIpAddress();
-                if (!String.IsNullOrEmpty(currentIpAddress))
-                {
-                    if (!currentIpAddress.Equals(customer.LastIpAddress))
-                    {
-                        customer.LastIpAddress = currentIpAddress;
-                        _customerService.UpdateCustomer(customer);
-                    }
-                }
 
                 _cachedCustomer = customer;
             }

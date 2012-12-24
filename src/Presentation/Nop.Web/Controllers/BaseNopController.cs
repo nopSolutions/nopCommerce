@@ -10,6 +10,8 @@ using Nop.Web.Framework.UI;
 
 namespace Nop.Web.Controllers
 {
+    [CustomerLastActivity]
+    [StoreIpAddress]
     [StoreLastVisitedPage]
     [CheckAffiliate]
     [StoreClosedAttribute]
