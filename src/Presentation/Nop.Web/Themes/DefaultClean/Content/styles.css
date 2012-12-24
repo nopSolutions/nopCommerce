@@ -350,10 +350,10 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 .wishlist-page .share-info .share-label{font-weight:700;}
 .wishlist-page .share-info a.share-link{color: #B80709;text-decoration: none;}
 .order-summary-content,.wishlist-content{margin:0;padding:0;font-size:11px;color:#555;}
-.order-summary-content .totals{float:right;padding:23px 5px 0;width:330px;}
-.order-summary-content .cart-collaterals{padding:20px 0 10px;width:550px;}
-.order-summary-content .deals{display:inline;float:left;margin:0 10px 0 0;width:250px;}
-.order-summary-content .shipping{display:inline;float:left;margin:0;width:280px;}
+.order-summary-content .totals{float:right;padding:23px 5px 0;width:320px;}
+.order-summary-content .cart-collaterals{padding:20px 0 10px;width:580px;}
+.order-summary-content .deals{display:inline;float:left;margin:0 10px 0 0;width:280px;}
+.order-summary-content .shipping{display:inline;float:left;margin:0 10px 0 0;width:280px;}
 .order-summary-content .coupon-box,.order-summary-content .giftcard-box{padding:10px;font-size:11px;color:#555;margin:0 0 10px;border: 1px solid #EEE;}
 .order-summary-content .coupon-box .current-code{padding: 10px 0px 0px 0px;}
 .order-summary-content .coupon-box .discount-coupon-code, .order-summary-content .giftcard-box .gift-card-coupon-code{width:auto;}
