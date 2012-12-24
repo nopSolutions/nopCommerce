@@ -1,4 +1,6 @@
 .search-box {width:390px;}
+.block-newsletter #newsletter-email { width: 150px;}
+
 /*hover issue*/
 /*.top-menu {position: relative;z-index: 3;}
 .header-links-wrapper{z-index: 4}
