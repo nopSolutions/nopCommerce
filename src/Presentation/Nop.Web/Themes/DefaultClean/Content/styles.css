@@ -941,6 +941,7 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 .product-details-page .product-essential .prices{margin-top:15px;margin-bottom:15px;}
 .product-details-page .prices .product-price{color:#B80709;font-weight: bold;font-size: 14px;}
 .product-details-page .prices .old-product-price{color:#5C5B5B;text-decoration:line-through;}
+.product-details-page .customer-entered-price{ margin-bottom: 10px;}
 .product-details-page .add-to-cart{padding-top:10px;}
 .product-details-page .add-to-cart .enter-price-input{width:60px;}
 .product-details-page .add-to-cart .qty-input{width:40px;}
