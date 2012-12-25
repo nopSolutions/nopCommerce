@@ -852,9 +852,7 @@ namespace Nop.Web.Controllers
                     }
                     else
                     {
-                        //if no redirection has been done (to a third-party payment page)
-                        //theoretically it's not possible
-                        return RedirectToRoute("CheckoutCompleted");
+                        return RedirectToRoute("CheckoutCompleted", new { orderId = placeOrderResult.PlacedOrder.Id });
                     }
                 }
                 else
@@ -1621,7 +1619,7 @@ namespace Nop.Web.Controllers
                 {
                     //if no redirection has been done (to a third-party payment page)
                     //theoretically it's not possible
-                    return RedirectToRoute("CheckoutCompleted");
+                    return RedirectToRoute("CheckoutCompleted", new { orderId = order.Id });
                 }
             }
             catch (Exception exc)
