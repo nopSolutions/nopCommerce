@@ -698,6 +698,8 @@ namespace Nop.Web.Controllers
                                     };
             var localizableDisallowPaths = new List<string>()
                                                {
+                                                   "/addproducttocart",
+                                                   "/addproductvarianttocart",
                                                    "/boards/forumwatch",
                                                    "/boards/postedit",
                                                    "/boards/postdelete",
@@ -745,6 +747,7 @@ namespace Nop.Web.Controllers
                                                    "/subscribenewsletter",
                                                    "/topic/authenticate",
                                                    "/viewpm",
+                                                   "/uploadfileproductattribute",
                                                    "/wishlist",
                                                };
 
