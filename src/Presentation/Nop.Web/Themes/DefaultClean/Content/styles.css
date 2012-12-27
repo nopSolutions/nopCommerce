@@ -630,6 +630,7 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 .login-page fieldset legend{font-size:12px;}
 .login-page .new-wrapper{float:left;width:46%;min-height:240px;vertical-align:top;}
 .login-page .new-wrapper .buttons{float:right;margin:30px 30px 5px 30px;}
+.login-page .checkout-as-guest-or-register-block ul { padding-left: 30px;}
 .login-page .returning-wrapper{float:right;width:46%;min-height:240px;vertical-align:top;}
 .login-page .returning-wrapper .message-error{padding:0px;}
 .login-page .returning-wrapper .buttons{float:right;margin:5px 30px;}
