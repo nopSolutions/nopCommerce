@@ -153,7 +153,7 @@ ul.language-list li:hover{cursor:pointer;}
 .header-links{float:right;padding:0px;margin:10px 0;display:inline-table;}
 .header-links ul{padding:0;margin:0;float:left;}
 .header-links ul li{list-style: none outside none;display:inline;padding-right:2px;margin-left:10px;float:left;}
-.header-links a{color:#AF0304;text-decoration:none;}
+.header-links a{color:#AF0304;text-decoration:none;float:left;}
 .header-links a:hover{color:#AF0304;text-decoration: underline;}
 .header-links a.account{color:#AF0304;}
 .admin-header-links{padding:5px;margin-bottom:5px;display:inline-table;}
