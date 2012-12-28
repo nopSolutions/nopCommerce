@@ -310,6 +310,7 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 .block-account-navigation a.inactive:hover {text-decoration: underline !important;color:#B80709 !important;}
 .block-newsletter .buttons{margin-top:5px;}
 .block-popular-tags li,.block-popular-blogtags li{display:inline!important;}
+.block-blog-archive li,.block-popular-tags li,.block-popular-blogtags li{background:none !important;padding-left: 5px !important;}
 .block-popular-tags .listbox .view-all a{color:#5C5B5B;font-weight: 700;}
 .block-blog-archive .year{color:#5C5B5B;font-weight:700;text-decoration:none;}
 .block, .news-list-homepage .item, .product-details-page, .search-panel .search-input, .product-filters,fieldset, .product-list .product-item, .product-list .product-item .picture{background: none repeat scroll 0 0 #FFF;border: 1px solid #eee;border-radius: 4px;-o-border-radius: 4px;-icab-border-radius: 4px;-khtml-border-radius: 4px;-moz-border-radius: 4px;-webkit-border-radius: 4px;-moz-border-radius: 4px;}
