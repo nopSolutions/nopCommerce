@@ -794,9 +794,11 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 .search-box{background: none repeat scroll 0 0 #F6F6F4;float: right;clear: right;width:auto;display:inline;padding: 7px 7px 5px;-o-border-radius: 3px;-icab-border-radius: 3px;-khtml-border-radius: 3px;-moz-border-radius: 3px;-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;}
 .search-box ul{margin:0;padding:0;}
 .search-box ul li{list-style: none outside none;float:left;margin: 0;padding: 0;}
-.search-box .ui-autocomplete-loading{background:white url('images/ajax_loader_small.gif') right center no-repeat;}
 .search-box-text{background: none repeat scroll 0 0 #FFF;width: 300px;border: 1px solid #E3E3E3;padding: 4px 5px;vertical-align:top;font-size:12px;}
 .search-box-button {padding: 4px 5px;background: none repeat scroll 0 0 #F6F6F4;border: 1px solid #D3D3D3;border-radius: 2px 2px 2px 2px;color: #353434;cursor: pointer;font-size: 12px;margin-bottom: 2px;width: 70px;}
+/*override some jQuery UI style*/
+.search-box .ui-autocomplete-loading{background:white url('images/ajax_loader_small.gif') right center no-repeat;}
+.ui-autocomplete{z-index:10 !important} /*ensure that z-index is more than .nivoSlider a.nivo-imageLink used on the home page*/
 
 
 /* PASSWORD RECOVERY AND NEWSLETTER PAGES */
