@@ -146,7 +146,7 @@ a.logo{background: url("images/logo.gif") no-repeat scroll 0 0 transparent;displ
 .language-selector{float:right;}
 .tax-display-type-selector{float:right;}
 ul.language-list{display:inline;line-height:25px;}
-ul.language-list li{list-style:none;display:inline;padding:0 5px;float: right;}
+ul.language-list li{list-style:none;display:inline;padding:0 5px;float:left;}
 ul.language-list li .selected{border:solid 1px #ccc!important;}
 ul.language-list li:hover{cursor:pointer;}
 .header-links-wrapper{position:relative;float:right;text-align:right;width:auto;}
