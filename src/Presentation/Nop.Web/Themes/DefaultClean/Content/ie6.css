@@ -4,11 +4,10 @@
 
 #newsletter-subscribe-block input{ width: 150px;}
 
-.headermenu a:hover{color: #fff;text-decoration: none}
+.headermenu a:hover{color: #fff;text-decoration: none;}
 
-.search-box{width: 400px}
-.search-box ul{ float: right;}
-.search-box-button{filter: none;height: 30px}
+.search-box{ width: 400px;}
+.search-box-button{filter: none;height: 30px;}
 
 .order-summary-content .totals{width:310px;}
 

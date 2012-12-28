@@ -792,7 +792,7 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 .search-input .warning{text-decoration:underline;}
 .search-text{border: 1px solid #eee;vertical-align:top;padding: 5px 0 5px 5px;font-size:12px;width:100%;}
 .search-box{background: none repeat scroll 0 0 #F6F6F4;float: right;clear: right;width:auto;display:inline;padding: 7px 7px 5px;-o-border-radius: 3px;-icab-border-radius: 3px;-khtml-border-radius: 3px;-moz-border-radius: 3px;-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;}
-.search-box ul{margin:0;padding:0;}
+.search-box ul{margin:0;padding:0;float: right;}
 .search-box ul li{list-style: none outside none;float:left;margin: 0;padding: 0;}
 .search-box-text{background: none repeat scroll 0 0 #FFF;width: 300px;border: 1px solid #E3E3E3;padding: 4px 5px;vertical-align:top;font-size:12px;}
 .search-box-button {padding: 4px 5px;background: none repeat scroll 0 0 #F6F6F4;border: 1px solid #D3D3D3;border-radius: 2px 2px 2px 2px;color: #353434;cursor: pointer;font-size: 12px;margin-bottom: 2px;width: 70px;}
