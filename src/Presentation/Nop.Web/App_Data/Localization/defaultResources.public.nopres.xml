@@ -1611,6 +1611,9 @@
                     <LocaleResource Name="ShowFullNames">
                         <Value>Show full names</Value>
                     </LocaleResource>
+                    <LocaleResource Name="ShowFirstName">
+                      <Value>Show first name</Value>
+                    </LocaleResource>
                 </Children>
             </LocaleResource>
             <LocaleResource Name="Nop.Core.Domain.Customers.PasswordFormat">

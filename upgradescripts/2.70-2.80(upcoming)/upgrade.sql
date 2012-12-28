@@ -152,6 +152,9 @@ set @resources='
   <LocaleResource Name="Newsletter.Subscribe">
     <Value>Sign up for our newsletter</Value>
   </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Customers.CustomerNameFormat.ShowFirstName">
+    <Value>Show first name</Value>
+  </LocaleResource>
 </Language>
 '
 

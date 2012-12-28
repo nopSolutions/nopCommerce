@@ -64,11 +64,14 @@ namespace Nop.Services.Customers
                 case CustomerNameFormat.ShowEmails:
                     result = customer.Email;
                     break;
+                case CustomerNameFormat.ShowUsernames:
+                    result = customer.Username;
+                    break;
                 case CustomerNameFormat.ShowFullNames:
                     result = customer.GetFullName();
                     break;
-                case CustomerNameFormat.ShowUsernames:
-                    result = customer.Username;
+                case CustomerNameFormat.ShowFirstName:
+                    result = customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName);
                     break;
                 default:
                     break;
