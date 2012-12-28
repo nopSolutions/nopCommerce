@@ -297,7 +297,7 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 .block .listbox ul{margin:0;padding:0 2px 0 0;color:#5C5B5B;background-color:inherit;}
 .block a{color:#5C5B5B;font-size: 1.1em;font-weight:400;text-decoration:none;}
 .block a:hover {color: #B80709;text-decoration: underline;font-weight: normal;}
-.block li{background: url("images/bullet.gif") no-repeat scroll 0 8px transparent;list-style: none outside none;line-height: 18px;padding: 4px 13px 3px 1px;}
+.block li{background: url("images/bullet.gif") no-repeat right;list-style: none outside none;line-height: 18px;padding: 4px 13px 3px 1px;}
 .block li.separator{background: none;height:1px;line-height:1px;width:auto;font-size:1px;margin:0;padding: 0;}
 .block-category-navigation,.block-manufacturer-navigation,.block-recently-viewed-products,.block-info,.block-newsletter,.block-popular-tags,.block-popular-blogtags,.block-blog-archive,.block-poll,.block-account-navigation{}
 .block-category-navigation .active > a,.block-manufacturer-navigation .active a{color:#5C5B5B;font-weight:700;text-decoration:none;}
