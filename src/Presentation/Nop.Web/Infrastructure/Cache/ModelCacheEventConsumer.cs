@@ -137,12 +137,10 @@ namespace Nop.Web.Infrastructure.Cache
         /// Key for CategoryNavigationModel caching
         /// </summary>
         /// <remarks>
-        /// {0} : current category id
-        /// {1} : current product id
-        /// {2} : language id
-        /// {3} : comma separated list of customer roles
+        /// {0} : language id
+        /// {1} : comma separated list of customer roles
         /// </remarks>
-        public const string CATEGORY_NAVIGATION_MODEL_KEY = "nop.pres.category.navigation-{0}-{1}-{2}-{3}";
+        public const string CATEGORY_NAVIGATION_MODEL_KEY = "nop.pres.category.navigation-{0}-{1}";
         public const string CATEGORY_NAVIGATION_PATTERN_KEY = "nop.pres.category.navigation";
 
         /// <summary>

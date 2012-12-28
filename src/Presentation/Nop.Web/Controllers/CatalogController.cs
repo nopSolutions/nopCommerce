@@ -201,8 +201,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        protected IList<CategoryNavigationModel.CategoryModel> PrepareCategoryNavigationModel(IList<Category> breadCrumb, 
-            int rootCategoryId, int level)
+        protected IList<CategoryNavigationModel.CategoryModel> PrepareCategoryNavigationModel(int rootCategoryId)
         {
             var result = new List<CategoryNavigationModel.CategoryModel>();
             foreach (var category in _categoryService.GetAllCategoriesByParentCategoryId(rootCategoryId))
@@ -211,11 +210,10 @@ namespace Nop.Web.Controllers
                 {
                     Id = category.Id,
                     Name = category.GetLocalized(x => x.Name),
-                    SeName = category.GetSeName(),
-                    NumberOfParentCategories = level
+                    SeName = category.GetSeName()
                 };
 
-                //show product number for each category
+                //product number for each category
                 if (_catalogSettings.ShowCategoryProductNumber)
                 {
                     var categoryIds = new List<int>();
@@ -231,9 +229,7 @@ namespace Nop.Web.Controllers
                 }
 
                 //subcategories
-                for (int i = 0; i <= breadCrumb.Count - 1; i++)
-                    if (breadCrumb[i].Id == category.Id)
-                        categoryModel.SubCategories.AddRange(PrepareCategoryNavigationModel(breadCrumb, category.Id, level + 1));
+                categoryModel.SubCategories.AddRange(PrepareCategoryNavigationModel(category.Id));
 
                 result.Add(categoryModel);
             }
@@ -1050,28 +1046,27 @@ namespace Nop.Web.Controllers
         {
             var customerRolesIds = _workContext.CurrentCustomer.CustomerRoles
                 .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
-            string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_NAVIGATION_MODEL_KEY, currentCategoryId, currentProductId, _workContext.WorkingLanguage.Id, string.Join(",", customerRolesIds));
-            var cacheModel = _cacheManager.Get(cacheKey, () =>
-            {
-                //get current category
-                var currentCategory = _categoryService.GetCategoryById(currentCategoryId);
-                if (currentCategory == null && currentProductId > 0)
+            string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_NAVIGATION_MODEL_KEY, _workContext.WorkingLanguage.Id, string.Join(",", customerRolesIds));
+            var cachedModel = _cacheManager.Get(cacheKey, () => 
+                new CategoryNavigationModel()
                 {
-                    var productCategories = _categoryService.GetProductCategoriesByProductId(currentProductId);
-                    if (productCategories.Count > 0)
-                        currentCategory = productCategories[0].Category;
+                    Categories = PrepareCategoryNavigationModel(0).ToList()
                 }
-
-                //prepare model
-                var model = new CategoryNavigationModel();
-                model.CurrentCategoryId = currentCategory != null ? currentCategory.Id : 0;
-                var breadCrumb = currentCategory != null ? GetCategoryBreadCrumb(currentCategory) : new List<Category>();
-                model.Categories.AddRange(PrepareCategoryNavigationModel(breadCrumb, 0, 0));
-                return model;
-            }
             );
 
-            return PartialView(cacheModel);
+            //"CurrentCategoryId" property of "CategoryNavigationModel" object depends on the current category or product.
+            //We need to clone the cached model (the updated one should not be cached)
+            var model = (CategoryNavigationModel)cachedModel.Clone();
+            var currentCategory = _categoryService.GetCategoryById(currentCategoryId);
+            if (currentCategory == null && currentProductId > 0)
+            {
+                var productCategories = _categoryService.GetProductCategoriesByProductId(currentProductId);
+                if (productCategories.Count > 0)
+                    currentCategory = productCategories[0].Category;
+            }
+            model.CurrentCategoryId = currentCategory != null ? currentCategory.Id : 0;
+
+            return PartialView(model);
         }
 
         [ChildActionOnly]

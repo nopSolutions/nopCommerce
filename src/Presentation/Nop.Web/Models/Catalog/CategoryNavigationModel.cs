@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Nop.Web.Framework.Mvc;
 
 namespace Nop.Web.Models.Catalog
 {
-    public partial class CategoryNavigationModel : BaseNopModel
+    public partial class CategoryNavigationModel : BaseNopModel, ICloneable
     {
         public CategoryNavigationModel()
         {
@@ -12,6 +13,12 @@ namespace Nop.Web.Models.Catalog
 
         public int CurrentCategoryId { get; set; }
         public List<CategoryModel> Categories { get; set; }
+
+        public object Clone()
+        {
+            //we use a shallow copy (deep clone is not required here)
+            return this.MemberwiseClone();
+        }
 
         public class CategoryModel : BaseNopEntityModel
         {
@@ -23,8 +30,6 @@ namespace Nop.Web.Models.Catalog
             public string Name { get; set; }
 
             public string SeName { get; set; }
-
-            public int NumberOfParentCategories { get; set; }
 
             public int? NumberOfProducts { get; set; }
 

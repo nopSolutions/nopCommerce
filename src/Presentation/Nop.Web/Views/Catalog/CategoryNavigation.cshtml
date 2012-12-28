@@ -1,5 +1,26 @@
 ﻿@model CategoryNavigationModel
 @using Nop.Web.Models.Catalog;
+
+@functions{
+    public bool BreadCrumbContainsCurrentCategoryId(CategoryNavigationModel.CategoryModel category)
+    {
+        if (Model.CurrentCategoryId == 0)
+            return false;
+
+        if (category.Id == Model.CurrentCategoryId)
+            return true;
+
+        foreach (var subCategory in category.SubCategories)
+        {
+            if (BreadCrumbContainsCurrentCategoryId(subCategory))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
 @helper RenderCategoryLine(CategoryNavigationModel.CategoryModel category)
 {
     <li class="@(category.Id == Model.CurrentCategoryId ? "active" : "inactive")">
@@ -9,14 +30,17 @@
                 <text> (@(category.NumberOfProducts.Value))</text>
             }
         </a>
-        @if (category.SubCategories.Count > 0)
-        {
+        @{
+            if (category.Id == Model.CurrentCategoryId ||
+                category.SubCategories.Count(BreadCrumbContainsCurrentCategoryId) > 0)
+            {
             <ul class="sublist">
                 @foreach (var subCategory in category.SubCategories)
                 {
                     @RenderCategoryLine(subCategory)
                 }
             </ul>
+            }
         }
     </li>
 }
