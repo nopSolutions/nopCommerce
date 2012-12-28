@@ -1148,6 +1148,9 @@
     <Content Include="Content\Images\flags\zm.png" />
     <Content Include="Content\Images\flags\zw.png" />
     <Content Include="Content\Images\ico-close-notification-bar.png" />
+    <Content Include="Themes\DefaultClean\Content\styles.rtl.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Themes\DefaultClean\Content\ie6.css" />
     <Content Include="Themes\DefaultClean\Content\ie7.css" />
     <Content Include="Themes\DefaultClean\Content\images\bullet.gif" />
