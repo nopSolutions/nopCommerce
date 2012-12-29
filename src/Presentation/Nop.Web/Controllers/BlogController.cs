@@ -403,7 +403,7 @@ namespace Nop.Web.Controllers
                 return Content("");
 
             string link = string.Format("<link href=\"{0}\" rel=\"alternate\" type=\"application/rss+xml\" title=\"{1}: Blog\" />",
-                Url.RouteUrl("BlogRSS", new { languageId = _workContext.WorkingLanguage.Id }, "http"), _storeInformationSettings.StoreName);
+                Url.RouteUrl("BlogRSS", new { languageId = _workContext.WorkingLanguage.Id }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http"), _storeInformationSettings.StoreName);
 
             return Content(link);
         }
