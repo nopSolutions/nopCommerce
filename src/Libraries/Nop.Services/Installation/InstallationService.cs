@@ -4561,7 +4561,7 @@ namespace Nop.Services.Installation
                     HideDownloadableProductsTab = false,
                     HideBackInStockSubscriptionsTab = false,
                     DownloadableProductsValidateUser = false,
-                    CustomerNameFormat = CustomerNameFormat.ShowEmails,
+                    CustomerNameFormat = CustomerNameFormat.ShowFirstName,
                     GenderEnabled = true,
                     DateOfBirthEnabled = true,
                     CompanyEnabled = true,
