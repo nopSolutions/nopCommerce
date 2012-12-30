@@ -11,7 +11,9 @@
             AjaxCart.init(false, '.header-links .cart-qty', '.header-links .wishlist-qty', '#flyout-cart');
         </script>
         @Html.Partial("Header")
-        @Html.Partial("HeaderMenu")
+        <div class="header-menu">
+            @Html.Action("Menu", "Common")
+        </div>
         @Html.Widget("content_before")
         @*ajax loading window*@
         <div class="ajax-loading-block-window" style="display: none">

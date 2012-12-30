@@ -1391,7 +1391,6 @@
     <Content Include="Scripts\jquery-ui.js" />
     <Content Include="Scripts\jquery-ui.min.js" />
     <Content Include="Views\Shared\Header.cshtml" />
-    <Content Include="Views\Shared\HeaderMenu.cshtml" />
     <Content Include="Views\Common\Footer.cshtml" />
     <Content Include="Views\Shared\_RootPopup.cshtml" />
     <Content Include="Views\Customer\_ExternalAuthentication.AssociateMessage.cshtml" />
