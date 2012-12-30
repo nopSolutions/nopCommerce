@@ -7104,18 +7104,27 @@ namespace Nop.Services.Installation
             var pvaEtnies2 = new ProductVariantAttribute()
             {
                 ProductAttribute = _productAttributeRepository.Table.Where(x => x.Name == "Color").Single(),
-                AttributeControlType = AttributeControlType.DropdownList,
+                AttributeControlType = AttributeControlType.ColorSquares,
                 IsRequired = true,
             };
             pvaEtnies2.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
             {
-                Name = "White/Blue",
+                Name = "White",
+                IsPreSelected = true,
+                ColorSquaresRgb = "#FFFFFF",
                 DisplayOrder = 1,
             });
             pvaEtnies2.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
             {
-                Name = "White/Black",
+                Name = "Black",
+                ColorSquaresRgb = "#000000",
                 DisplayOrder = 2,
+            });
+            pvaEtnies2.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
+            {
+                Name = "Green",
+                ColorSquaresRgb = "#1fcb1a",
+                DisplayOrder = 3,
             });
             productEtnies.ProductVariants.FirstOrDefault().ProductVariantAttributes.Add(pvaEtnies2);
             productEtnies.ProductCategories.Add(new ProductCategory()
