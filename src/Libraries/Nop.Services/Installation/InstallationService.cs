@@ -9218,7 +9218,7 @@ namespace Nop.Services.Installation
             {
                 Language = defaultLanguage,
                 Name = "Do you like nopCommerce?",
-                SystemKeyword = "RightColumnPoll",
+                SystemKeyword = "LeftColumnPoll",
                 Published = true,
                 DisplayOrder = 1,
             };
