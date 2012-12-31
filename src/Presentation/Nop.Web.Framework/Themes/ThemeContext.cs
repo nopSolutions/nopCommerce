@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Customers;
@@ -54,10 +55,13 @@ namespace Nop.Web.Framework.Themes
 
                 //ensure that theme exists
                 if (!_themeProvider.ThemeConfigurationExists(theme))
-                    theme = _themeProvider.GetThemeConfigurations()
-                        .Where(x => !x.MobileTheme)
-                        .FirstOrDefault()
-                        .ThemeName;
+                {
+                    var themeInstance = _themeProvider.GetThemeConfigurations()
+                        .FirstOrDefault(x => !x.MobileTheme);
+                    if (themeInstance == null)
+                        throw new Exception("No desktop theme could be loaded");
+                    theme = themeInstance.ThemeName;
+                }
                 
                 //cache theme
                 this._cachedDesktopThemeName = theme;
@@ -94,10 +98,13 @@ namespace Nop.Web.Framework.Themes
 
                 //ensure that theme exists
                 if (!_themeProvider.ThemeConfigurationExists(theme))
-                    theme = _themeProvider.GetThemeConfigurations()
-                        .Where(x => x.MobileTheme)
-                        .FirstOrDefault()
-                        .ThemeName;
+                {
+                    var themeInstance = _themeProvider.GetThemeConfigurations()
+                        .FirstOrDefault(x => x.MobileTheme);
+                    if (themeInstance == null)
+                        throw new Exception("No mobile theme could be loaded");
+                    theme = themeInstance.ThemeName;
+                }
 
                 //cache theme
                 this._cachedMobileThemeName = theme;
