@@ -133,7 +133,7 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
                     }
                 }
             }
-            // Add default options if no services were selected (Priority Mail International, First-Class Mail International Package, and Express Mail International)
+            // Add default options if no services were selected
             if (carrierServicesDomesticSelectedCount == 0)
                 _upsSettings.CarrierServicesOffered = "[03]:[12]:[11]:[08]:";
             else

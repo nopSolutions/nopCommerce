@@ -1,7 +1,7 @@
 ﻿Group: Shipping rate computation
 FriendlyName: USPS (US Postal Service)
 SystemName: Shipping.USPS
-Version: 1.11
+Version: 1.12
 SupportedVersions: 2.80
 Author: nopCommerce team
 DisplayOrder: 1

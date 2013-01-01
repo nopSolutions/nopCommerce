@@ -26,7 +26,7 @@ namespace Nop.Plugin.Shipping.USPS.Domain
                                                 "Priority Mail Small Flat Rate Box",
                                                 "Priority Mail Medium Flat Rate Box",
                                                 "Priority Mail Large Flat Rate Box",
-                                                "Parcel Post",
+                                                "Standard Post",
                                                 "Bound Printed Matter",
                                                 "Media Mail",
                                                 "Library Mail"
@@ -49,7 +49,7 @@ namespace Nop.Plugin.Shipping.USPS.Domain
                                                     "First-Class Mail International Large Envelope",
                                                     "Express Mail International",
                                                     "Priority Mail International Flat Rate Envelope",
-                                                    "First-Class Mail International Package"
+                                                    "First-Class Package International Service"
                                                     };
 
         #region Properties
@@ -123,7 +123,7 @@ namespace Nop.Plugin.Shipping.USPS.Domain
                 case "Priority Mail Large Flat Rate Box":
                     serviceId = "22";
                     break;
-                case "Parcel Post":
+                case "Standard Post":
                     serviceId = "4";
                     break;
                 case "Bound Printed Matter":
@@ -190,7 +190,7 @@ namespace Nop.Plugin.Shipping.USPS.Domain
                 case "Priority Mail International Flat Rate Envelope":
                     serviceId = "8";
                     break;
-                case "First-Class Mail International Package":
+                case "First-Class Package International Service":
                     serviceId = "15";
                     break;
                 default:

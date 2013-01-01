@@ -110,7 +110,7 @@ namespace Nop.Plugin.Shipping.USPS.Controllers
                     }
                 }
             }
-            // Add default options if no services were selected (Priority, Express, and Parcel Post)
+            // Add default options if no services were selected
             if (carrierServicesDomesticSelectedCount == 0)
                 _uspsSettings.CarrierServicesOfferedDomestic = "[1]:[3]:[4]:";
             else
@@ -141,7 +141,7 @@ namespace Nop.Plugin.Shipping.USPS.Controllers
                     }
                 }
             }
-            // Add default options if no services were selected (Priority Mail International, First-Class Mail International Package, and Express Mail International)
+            // Add default options if no services were selected
             if (carrierServicesInternationalSelectedCount == 0)
                 _uspsSettings.CarrierServicesOfferedInternational = "[2]:[15]:[1]:";
             else

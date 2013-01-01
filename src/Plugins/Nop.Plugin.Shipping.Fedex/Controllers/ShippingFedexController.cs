@@ -108,7 +108,7 @@ namespace Nop.Plugin.Shipping.Fedex.Controllers
                         carrierServicesOfferedDomestic.AppendFormat("{0}:", serviceId);
                 }
             }
-            // Add default options if no services were selected (Priority Mail International, First-Class Mail International Package, and Express Mail International)
+            // Add default options if no services were selected
             if (carrierServicesDomesticSelectedCount == 0)
                 _fedexSettings.CarrierServicesOffered = "FEDEX_2_DAY:PRIORITY_OVERNIGHT:FEDEX_GROUND:GROUND_HOME_DELIVERY:INTERNATIONAL_ECONOMY";
             else
