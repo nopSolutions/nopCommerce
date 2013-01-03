@@ -1,5 +1,4 @@
 ﻿@{
-    Html.AppendScriptParts("~/Scripts/jquery.mobile-1.1.1.min.js");
     Html.AppendScriptParts("~/Scripts/jquery.validate.unobtrusive.min.js");
     Html.AppendScriptParts("~/Scripts/jquery.validate.min.js");
     Html.AppendScriptParts("~/Scripts/jquery-1.7.1.min.js");
@@ -22,12 +21,14 @@
     <script type="text/javascript">
         $(document).bind("mobileinit", function () {
             $.mobile.ajaxEnabled = false;
-            /*SSL doesn't work when hashListeningEnabled is disabled
-            $.mobile.hashListeningEnabled = false;*/
+            $.mobile.hashListeningEnabled = false;
         });
     </script>
+    @*Fixing jQuery mobile mobileinit binding issue
+    we should not bundle jquery.mobile.js and place it after mobileinit event*@
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.mobile-1.1.1.min.js")"></script>
     <!--Powered by nopCommerce - http://www.nopCommerce.com-->
-    <!--Copyright (c) 2008-2012-->
+    <!--Copyright (c) 2008-2013-->
 </head>
 <body>
     @RenderBody()
