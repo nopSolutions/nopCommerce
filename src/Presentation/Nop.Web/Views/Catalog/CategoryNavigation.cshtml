@@ -34,12 +34,15 @@
             if (category.Id == Model.CurrentCategoryId ||
                 category.SubCategories.Count(BreadCrumbContainsCurrentCategoryId) > 0)
             {
+                if (category.SubCategories.Count > 0)
+                {
             <ul class="sublist">
                 @foreach (var subCategory in category.SubCategories)
                 {
                     @RenderCategoryLine(subCategory)
                 }
             </ul>
+                }
             }
         }
     </li>
