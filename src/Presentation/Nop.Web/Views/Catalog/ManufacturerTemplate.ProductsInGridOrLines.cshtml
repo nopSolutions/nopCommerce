@@ -42,7 +42,7 @@
                     @T("Products.FeaturedProducts")
                 </div>
                 <div>
-                    @foreach (var product in Model.Products)
+                    @foreach (var product in Model.FeaturedProducts)
                     {
                         <div class="item-box">
                             @Html.Partial("_ProductBox", product)
