@@ -228,6 +228,7 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.HideNameAndDescriptionProperties, mo => mo.Ignore())
                 .ForMember(dest => dest.HidePublishedProperty, mo => mo.Ignore())
                 .ForMember(dest => dest.HideDisplayOrderProperty, mo => mo.Ignore())
+                .ForMember(dest => dest.CopyProductVariantModel, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             Mapper.CreateMap<ProductVariantModel, ProductVariant>()
                 .ForMember(dest => dest.HasTierPrices, mo => mo.Ignore())
