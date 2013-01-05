@@ -238,10 +238,12 @@ namespace Nop.Plugin.Payments.AuthorizeNet
             NameValueCollection form = new NameValueCollection();
             form.Add("x_login", _authorizeNetPaymentSettings.LoginId);
             form.Add("x_tran_key", _authorizeNetPaymentSettings.TransactionKey);
-            if (_authorizeNetPaymentSettings.UseSandbox)
-                form.Add("x_test_request", "TRUE");
-            else
-                form.Add("x_test_request", "FALSE");
+
+            //we should not send "x_test_request" parameter. otherwise, the transaction won't be logged in the sandbox
+            //if (_authorizeNetPaymentSettings.UseSandbox)
+            //    form.Add("x_test_request", "TRUE");
+            //else
+            //    form.Add("x_test_request", "FALSE");
 
             form.Add("x_delim_data", "TRUE");
             form.Add("x_delim_char", "|");
