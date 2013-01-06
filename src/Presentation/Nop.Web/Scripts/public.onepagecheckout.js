@@ -138,6 +138,7 @@ var Billing = {
         Checkout.setLoadWaiting('billing');
         
         $.ajax({
+            cache: false,
             url: this.saveUrl,
             data: $(this.form).serialize(),
             type: 'post',
@@ -199,6 +200,7 @@ var Shipping = {
         Checkout.setLoadWaiting('shipping');
         
         $.ajax({
+            cache: false,
             url: this.saveUrl,
             data: $(this.form).serialize(),
             type: 'post',
@@ -261,6 +263,7 @@ var ShippingMethod = {
             Checkout.setLoadWaiting('shipping-method');
         
             $.ajax({
+                cache: false,
                 url: this.saveUrl,
                 data: $(this.form).serialize(),
                 type: 'post',
@@ -323,6 +326,7 @@ var PaymentMethod = {
         if (this.validate()) {
             Checkout.setLoadWaiting('payment-method');
             $.ajax({
+                cache: false,
                 url: this.saveUrl,
                 data: $(this.form).serialize(),
                 type: 'post',
@@ -368,6 +372,7 @@ var PaymentInfo = {
         
         Checkout.setLoadWaiting('payment-info');
         $.ajax({
+            cache: false,
             url: this.saveUrl,
             data: $(this.form).serialize(),
             type: 'post',
@@ -413,6 +418,7 @@ var ConfirmOrder = {
         
         Checkout.setLoadWaiting('confirm-order');
         $.ajax({
+            cache: false,
             url: this.saveUrl,
             type: 'post',
             success: this.nextStep,
