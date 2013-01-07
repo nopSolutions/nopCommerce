@@ -34,8 +34,7 @@ namespace Nop.Services.Common
         #endregion
 
         #region Methods
-
-
+        
         /// <summary>
         /// Returns a value indicating whether request is made by a mobile device
         /// </summary>
@@ -43,8 +42,20 @@ namespace Nop.Services.Common
         /// <returns>Result</returns>
         public virtual bool IsMobileDevice(HttpContextBase httpContext)
         {
-            return httpContext.Request.Browser.IsMobileDevice ||
-                _storeInformationSettings.EmulateMobileDevice;
+            if (_storeInformationSettings.EmulateMobileDevice)
+                return true;
+
+            //comment the code below if you want tablets to be recognized as mobile devices.
+            //nopCommerce uses the free edition of the 51degrees.mobi library for detecting browser mobile properties.
+            //by default this property (IsTablet) is always false. you will need the premium edition in order to get it supported.
+            bool isTablet = false;
+            if (bool.TryParse(httpContext.Request.Browser["IsTablet"], out isTablet) && isTablet)
+                return false;
+
+            if (httpContext.Request.Browser.IsMobileDevice)
+                return true;
+
+            return false;
         }
 
         /// <summary>
