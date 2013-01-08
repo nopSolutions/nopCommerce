@@ -763,6 +763,8 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 .block-poll .poll-item{margin:0;padding:0;font-size:11px;background-color:inherit;text-align:left;vertical-align:top;}
 .poll-item label{margin:0 0 0 5px;}
 .poll-take-poll,.poll-results{padding:5px;margin-top:10px;}
+.poll-take-poll .answer input[type="radio"]{vertical-align:middle;margin-top:0;}
+.poll-take-poll .answer label{vertical-align: middle;}
 .todays-poll-box .poll-take-poll,.todays-poll-box .poll-results{border:dashed 1px #666;}
 .poll-display-text{font-weight:700;color: #5C5B5B;}
 .poll-total-votes{font-style:italic;}
