@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Reflection;
 using System.Web;
@@ -234,7 +235,15 @@ namespace Nop.Web.Framework
             builder.RegisterType<DefaultLogger>().As<ILogger>().InstancePerHttpRequest();
             builder.RegisterType<CustomerActivityService>().As<ICustomerActivityService>().InstancePerHttpRequest();
 
-            builder.RegisterType<InstallationService>().As<IInstallationService>().InstancePerHttpRequest();
+            if (!String.IsNullOrEmpty(ConfigurationManager.AppSettings["UseFastInstallationService"]) &&
+                Convert.ToBoolean(ConfigurationManager.AppSettings["UseFastInstallationService"]))
+            {
+                builder.RegisterType<SqlFileInstallationService>().As<IInstallationService>().InstancePerHttpRequest();
+            }
+            else
+            {
+                builder.RegisterType<CodeFirstInstallationService>().As<IInstallationService>().InstancePerHttpRequest();
+            }
 
             builder.RegisterType<ForumService>().As<IForumService>().InstancePerHttpRequest();
 

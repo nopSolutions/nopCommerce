@@ -179,6 +179,7 @@
     <Compile Include="Events\ISubscriptionService.cs" />
     <Compile Include="Events\SubscriptionService.cs" />
     <Compile Include="Forums\ForumExtensions.cs" />
+    <Compile Include="Installation\SqlFileInstallationService.cs" />
     <Compile Include="Messages\EventPublisherExtensions.cs" />
     <Compile Include="Messages\NewsLetterSubscriptionService.cs" />
     <Compile Include="News\NewsService.cs" />
@@ -214,7 +215,7 @@
     <Compile Include="ExportImport\IExportManager.cs" />
     <Compile Include="ExportImport\IImportManager.cs" />
     <Compile Include="Installation\IInstallationService.cs" />
-    <Compile Include="Installation\InstallationService.cs" />
+    <Compile Include="Installation\CodeFirstInstallationService.cs" />
     <Compile Include="Localization\LocalizationExtentions.cs" />
     <Compile Include="Directory\MeasureService.cs" />
     <Compile Include="Logging\CustomerActivityService.cs" />

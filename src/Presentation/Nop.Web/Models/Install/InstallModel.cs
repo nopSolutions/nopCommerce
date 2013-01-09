@@ -27,6 +27,7 @@ namespace Nop.Web.Models.Install
         [AllowHtml]
         public string DatabaseConnectionString { get; set; }
         public string DataProvider { get; set; }
+        public bool DisableSqlCompact { get; set; }
         //SQL Server properties
         public string SqlConnectionInfo { get; set; }
         [AllowHtml]

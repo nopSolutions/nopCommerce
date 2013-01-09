@@ -352,6 +352,8 @@
     <Compile Include="Validators\Common\ContactUsValidator.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\Install\create_required_data.sql" />
+    <Content Include="App_Data\Install\create_sample_data.sql" />
     <Content Include="App_Data\Localization\Installation\installation.ar.xml" />
     <Content Include="App_Data\Localization\Installation\installation.bg.xml" />
     <Content Include="App_Data\Localization\Installation\installation.bs-Latn-BA.xml" />

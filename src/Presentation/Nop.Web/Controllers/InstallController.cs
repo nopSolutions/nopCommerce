@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Security.Principal;
@@ -142,12 +143,16 @@ namespace Nop.Web.Controllers
             //set page timeout to 5 minutes
             this.Server.ScriptTimeout = 300;
 
+
             var model = new InstallModel()
             {
                 AdminEmail = "admin@yourStore.com",
                 InstallSampleData = false,
                 DatabaseConnectionString = "",
                 DataProvider = "sqlserver",
+                //fast installation service does not support SQL compact
+                DisableSqlCompact = !String.IsNullOrEmpty(ConfigurationManager.AppSettings["UseFastInstallationService"]) &&
+                    Convert.ToBoolean(ConfigurationManager.AppSettings["UseFastInstallationService"]),
                 SqlAuthenticationType = "sqlauthentication",
                 SqlConnectionInfo = "sqlconnectioninfo_values",
                 SqlServerCreateDatabase = false,
@@ -189,6 +194,9 @@ namespace Nop.Web.Controllers
                     Selected = _locService.GetCurrentLanguage().Code == lang.Code,
                 });
             }
+            model.DisableSqlCompact = !String.IsNullOrEmpty(ConfigurationManager.AppSettings["UseFastInstallationService"]) &&
+                Convert.ToBoolean(ConfigurationManager.AppSettings["UseFastInstallationService"]);
+                
 
             //SQL Server
             if (model.DataProvider.Equals("sqlserver", StringComparison.InvariantCultureIgnoreCase))

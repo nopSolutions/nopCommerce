@@ -190,6 +190,8 @@
                                                     <hr />
                                                 </td>
                                             </tr>
+                                            @if (!Model.DisableSqlCompact)
+                                            {
                                             <tr>
                                                 <td colspan="2" align="left">
                                                     @Html.RadioButton("DataProvider", "sqlce", (Model.DataProvider == "sqlce"), new { id = "provider_sqlce" })
@@ -197,6 +199,7 @@
                                                         @ILS.GetResource("SqlCompact")</label>
                                                 </td>
                                             </tr>
+                                            }
                                             <tr>
                                                 <td colspan="2" align="left">
                                                     @Html.RadioButton("DataProvider", "sqlserver", (Model.DataProvider == "sqlserver"), new { id = "provider_sqlserver" })

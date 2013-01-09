@@ -42,7 +42,7 @@ using Nop.Core.Domain.Seo;
 
 namespace Nop.Services.Installation
 {
-    public partial class InstallationService : IInstallationService
+    public partial class CodeFirstInstallationService : IInstallationService
     {
         #region Fields
 
@@ -85,7 +85,7 @@ namespace Nop.Services.Installation
 
         #region Ctor
 
-        public InstallationService(IRepository<MeasureDimension> measureDimensionRepository,
+        public CodeFirstInstallationService(IRepository<MeasureDimension> measureDimensionRepository,
             IRepository<MeasureWeight> measureWeightRepository,
             IRepository<TaxCategory> taxCategoryRepository,
             IRepository<Language> languageRepository,
@@ -264,7 +264,7 @@ namespace Nop.Services.Installation
 
         private void RecursivelySortChildrenResource(LocaleStringResourceParent resource)
         {
-            ArrayList.Adapter((IList)resource.ChildLocaleStringResources).Sort(new InstallationService.ComparisonComparer<LocaleStringResourceParent>((x1, x2) => x1.ResourceName.CompareTo(x2.ResourceName)));
+            ArrayList.Adapter((IList)resource.ChildLocaleStringResources).Sort(new ComparisonComparer<LocaleStringResourceParent>((x1, x2) => x1.ResourceName.CompareTo(x2.ResourceName)));
 
             foreach (var child in resource.ChildLocaleStringResources)
             {
