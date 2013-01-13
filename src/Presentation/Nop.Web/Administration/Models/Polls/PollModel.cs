@@ -39,11 +39,11 @@ namespace Nop.Admin.Models.Polls
         public int DisplayOrder { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.Polls.Fields.StartDate")]
-        [UIHint("DateNullable")]
+        [UIHint("DateTimeNullable")]
         public DateTime? StartDate { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.Polls.Fields.EndDate")]
-        [UIHint("DateNullable")]
+        [UIHint("DateTimeNullable")]
         public DateTime? EndDate { get; set; }
 
     }

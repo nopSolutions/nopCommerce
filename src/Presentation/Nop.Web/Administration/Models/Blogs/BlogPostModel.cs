@@ -41,11 +41,11 @@ namespace Nop.Admin.Models.Blogs
         public int Comments { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.StartDate")]
-        [UIHint("DateNullable")]
+        [UIHint("DateTimeNullable")]
         public DateTime? StartDate { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.EndDate")]
-        [UIHint("DateNullable")]
+        [UIHint("DateTimeNullable")]
         public DateTime? EndDate { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.CreatedOn")]

@@ -190,11 +190,11 @@ namespace Nop.Admin.Models.Catalog
         public decimal? SpecialPrice { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.SpecialPriceStartDateTimeUtc")]
-        [UIHint("DateNullable")]
+        [UIHint("DateTimeNullable")]
         public DateTime? SpecialPriceStartDateTimeUtc { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.SpecialPriceEndDateTimeUtc")]
-        [UIHint("DateNullable")]
+        [UIHint("DateTimeNullable")]
         public DateTime? SpecialPriceEndDateTimeUtc { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.CustomerEntersPrice")]
@@ -223,11 +223,11 @@ namespace Nop.Admin.Models.Catalog
         public int PictureId { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.AvailableStartDateTime")]
-        [UIHint("DateNullable")]
+        [UIHint("DateTimeNullable")]
         public DateTime? AvailableStartDateTimeUtc { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.AvailableEndDateTime")]
-        [UIHint("DateNullable")]
+        [UIHint("DateTimeNullable")]
         public DateTime? AvailableEndDateTimeUtc { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.Published")]

@@ -5,8 +5,23 @@ declare @resources xml
 --a resource will be delete if its value is empty
 set @resources='
 <Language>
-  <LocaleResource Name="Admin.Catalog.Manufacturers.Acl">
-    <Value></Value>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.StartDate.Hint">
+    <Value>Set the blog post start date in Coordinated Universal Time (UTC). You can also leave it empty.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.EndDate.Hint">
+    <Value>Set the blog post end date in Coordinated Universal Time (UTC). You can also leave it empty.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.StartDate.Hint">
+    <Value>Set the poll start date in Coordinated Universal Time (UTC). You can also leave it empty.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.EndDate.Hint">
+    <Value>Set the poll end date in Coordinated Universal Time (UTC). You can also leave it empty.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Fields.StartDate.Hint">
+    <Value>Set the news item start date in Coordinated Universal Time (UTC). You can also leave it empty.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Fields.EndDate.Hint">
+    <Value>Set the news item end date in Coordinated Universal Time (UTC). You can also leave it empty.</Value>
   </LocaleResource>
 </Language>
 '
