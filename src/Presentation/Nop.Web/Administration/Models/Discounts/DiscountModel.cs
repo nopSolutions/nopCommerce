@@ -38,11 +38,11 @@ namespace Nop.Admin.Models.Discounts
         public string PrimaryStoreCurrencyCode { get; set; }
 
         [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.StartDate")]
-        [UIHint("DateNullable")]
+        [UIHint("DateTimeNullable")]
         public DateTime? StartDateUtc { get; set; }
 
         [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.EndDate")]
-        [UIHint("DateNullable")]
+        [UIHint("DateTimeNullable")]
         public DateTime? EndDateUtc { get; set; }
 
         [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.RequiresCouponCode")]
