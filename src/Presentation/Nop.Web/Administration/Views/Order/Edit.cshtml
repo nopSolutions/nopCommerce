@@ -166,7 +166,7 @@
                 @Html.NopLabelFor(model => model.CustomerId):
             </td>
             <td class="adminData">
-                <a href="@Url.Action("Edit", "Customer", new { id = Model.CustomerId })">@T("Admin.Common.View")</a>
+                @Html.ActionLink(Model.CustomerInfo, "Edit", "Customer", new { id = Model.CustomerId }, new { })
             </td>
         </tr>
         <tr>

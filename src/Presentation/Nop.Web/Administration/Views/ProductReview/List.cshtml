@@ -53,15 +53,14 @@
                         .Width(50)
                         .HtmlAttributes(new { style = "text-align:center" })
                         .HeaderHtmlAttributes(new { style = "text-align:center" });
-
                         columns.Bound(x => x.ProductName)
                             .Width(200)
                             .Template(x => Html.ActionLink(x.ProductName, "Edit", "Product", new { id = x.ProductId }, new { }))
                             .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/Product/Edit/") + "<#= ProductId #>\"><#= ProductName #></a>");
                         columns.Bound(x => x.CustomerId)
-                            .Width(50)
-                            .Template(x => Html.ActionLink(T("Admin.Common.View").Text, "Edit", "Customer", new { id = x.CustomerId }, new { }))
-                            .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/Customer/Edit/") + "<#= CustomerId #>\">" + T("Admin.Common.View").Text + "</a>");
+                            .Width(100)
+                            .Template(x => Html.ActionLink(x.CustomerInfo, "Edit", "Customer", new { id = x.CustomerId }, new { }))
+                            .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/Customer/Edit/") + "<#= CustomerId #>\"><#= CustomerInfo #></a>");
                         columns.Bound(x => x.Title)
                             .Width(150)
                             .Centered();

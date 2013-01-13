@@ -1,5 +1,4 @@
 ﻿@model ProductReviewModel
-@using Telerik.Web.Mvc.UI;
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
 <table class="adminContent">
@@ -13,10 +12,10 @@
     </tr>
     <tr>
         <td class="adminTitle">
-            @Html.NopLabelFor(model => model.CustomerId):
+            @Html.NopLabelFor(model => model.CustomerInfo):
         </td>
         <td class="adminData">
-            @Html.ActionLink(T("Admin.Common.View").Text, "Edit", "Customer", new { id = Model.CustomerId }, new { })
+            @Html.ActionLink(Model.CustomerInfo, "Edit", "Customer", new { id = Model.CustomerId }, new { })
         </td>
     </tr>
     <tr>

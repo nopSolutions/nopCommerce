@@ -41,7 +41,7 @@
             @Html.NopLabelFor(model => model.CustomerId):
         </td>
         <td class="adminData">
-            @Html.ActionLink(T("Admin.Common.View").Text, "Edit", "Customer", new { id = Model.CustomerId }, new { })
+            @Html.ActionLink(Model.CustomerInfo, "Edit", "Customer", new { id = Model.CustomerId }, new { })
         </td>
     </tr>
     <tr>

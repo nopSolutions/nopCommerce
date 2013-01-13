@@ -208,7 +208,7 @@ namespace Nop.Admin.Controllers
             return new CustomerModel()
             {
                 Id = customer.Id,
-                Email = !String.IsNullOrEmpty(customer.Email) ? customer.Email : (customer.IsGuest() ? _localizationService.GetResource("Admin.Customers.Guest") : "Unknown"),
+                Email = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest"),
                 Username = customer.Username,
                 FullName = customer.GetFullName(),
                 Company = customer.GetAttribute<string>(SystemCustomerAttributeNames.Company),
@@ -1462,9 +1462,7 @@ namespace Nop.Admin.Controllers
                     var customer = _customerService.GetCustomerById(x.CustomerId);
                     if (customer != null)
                     {
-                        m.CustomerName = customer.IsGuest()
-                                             ? _localizationService.GetResource("Admin.Customers.Guest")
-                                             : customer.Email;
+                        m.CustomerName = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
                     }
                     return m;
                 }),
@@ -1504,9 +1502,7 @@ namespace Nop.Admin.Controllers
                     var customer = _customerService.GetCustomerById(x.CustomerId);
                     if (customer != null)
                     {
-                        m.CustomerName = customer.IsGuest()
-                                             ? _localizationService.GetResource("Admin.Customers.Guest")
-                                             : customer.Email;
+                        m.CustomerName = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
                     }
                     return m;
                 }),

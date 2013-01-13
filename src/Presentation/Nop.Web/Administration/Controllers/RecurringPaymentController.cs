@@ -74,7 +74,7 @@ namespace Nop.Admin.Controllers
             model.InitialOrderId = recurringPayment.InitialOrder.Id;
             var customer = recurringPayment.InitialOrder.Customer;
             model.CustomerId = customer.Id;
-            model.CustomerEmail = customer.IsGuest() ? _localizationService.GetResource("Admin.Customers.Guest") : customer.Email;
+            model.CustomerEmail = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
             model.PaymentType = _paymentService.GetRecurringPaymentType(recurringPayment.InitialOrder.PaymentMethodSystemName).GetLocalizedEnum(_localizationService, _workContext);
             model.CanCancelRecurringPayment = _orderProcessingService.CanCancelRecurringPayment(_workContext.CurrentCustomer, recurringPayment);
                     

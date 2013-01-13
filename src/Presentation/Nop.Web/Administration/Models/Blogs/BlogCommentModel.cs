@@ -15,6 +15,8 @@ namespace Nop.Admin.Models.Blogs
 
         [NopResourceDisplayName("Admin.ContentManagement.Blog.Comments.Fields.Customer")]
         public int CustomerId { get; set; }
+        [NopResourceDisplayName("Admin.ContentManagement.Blog.Comments.Fields.Customer")]
+        public string CustomerInfo { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.Blog.Comments.Fields.IPAddress")]
         public string IpAddress { get; set; }

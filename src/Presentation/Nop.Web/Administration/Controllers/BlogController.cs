@@ -5,6 +5,7 @@ using System.Web.Mvc;
 using Nop.Admin.Models.Blogs;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Customers;
 using Nop.Services.Blogs;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
@@ -227,8 +228,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             ViewBag.FilterByBlogPostId = filterByBlogPostId;
-            var model = new GridModel<BlogCommentModel>();
-            return View(model);
+            return View();
         }
 
         [HttpPost, GridAction(EnableCustomBinding = true)]
@@ -259,6 +259,8 @@ namespace Nop.Admin.Controllers
                     commentModel.BlogPostId = blogComment.BlogPostId;
                     commentModel.BlogPostTitle = blogComment.BlogPost.Title;
                     commentModel.CustomerId = blogComment.CustomerId;
+                    var customer = blogComment.Customer;
+                    commentModel.CustomerInfo = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
                     commentModel.IpAddress = blogComment.IpAddress;
                     commentModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(blogComment.CreatedOnUtc, DateTimeKind.Utc);
                     commentModel.Comment = Core.Html.HtmlHelper.FormatText(blogComment.CommentText, false, true, false, false, false, false);

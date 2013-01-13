@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web.Mvc;
 using Nop.Admin.Models.Catalog;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Customers;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
@@ -59,6 +60,8 @@ namespace Nop.Admin.Controllers
             model.ProductId = productReview.ProductId;
             model.ProductName = productReview.Product.Name;
             model.CustomerId = productReview.CustomerId;
+            var customer = productReview.Customer;
+            model.CustomerInfo = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
             model.IpAddress = productReview.IpAddress;
             model.Rating = productReview.Rating;
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(productReview.CreatedOnUtc, DateTimeKind.Utc);

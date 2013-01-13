@@ -76,9 +76,7 @@ namespace Nop.Admin.Controllers
                     return new ShoppingCartModel()
                     {
                         CustomerId = x.Id,
-                        CustomerEmail = x.IsGuest() ?
-                        _localizationService.GetResource("Admin.Customers.Guest") :
-                        x.Email,
+                        CustomerEmail = x.IsRegistered() ? x.Email : _localizationService.GetResource("Admin.Customers.Guest"),
                         TotalItems = x.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList().GetTotalProducts()
                     };
                 }),
@@ -156,9 +154,7 @@ namespace Nop.Admin.Controllers
                     return new ShoppingCartModel()
                     {
                         CustomerId = x.Id,
-                        CustomerEmail = x.IsGuest() ?
-                        _localizationService.GetResource("Admin.Customers.Guest") :
-                        x.Email,
+                        CustomerEmail = x.IsRegistered() ? x.Email : _localizationService.GetResource("Admin.Customers.Guest"),
                         TotalItems = x.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist).ToList().GetTotalProducts()
                     };
                 }),

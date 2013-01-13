@@ -18,6 +18,8 @@ namespace Nop.Admin.Models.Orders
 
         [NopResourceDisplayName("Admin.ReturnRequests.Fields.Customer")]
         public int CustomerId { get; set; }
+        [NopResourceDisplayName("Admin.ReturnRequests.Fields.Customer")]
+        public string CustomerInfo { get; set; }
 
         public int ProductVariantId { get; set; }
         [NopResourceDisplayName("Admin.ReturnRequests.Fields.Product")]

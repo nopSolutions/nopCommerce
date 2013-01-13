@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web.Mvc;
 using Nop.Admin.Models.News;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.News;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
@@ -228,8 +229,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             ViewBag.FilterByNewsItemId = filterByNewsItemId;
-            var model = new GridModel<NewsCommentModel>();
-            return View(model);
+            return View();
         }
 
         [HttpPost, GridAction(EnableCustomBinding = true)]
@@ -260,6 +260,8 @@ namespace Nop.Admin.Controllers
                     commentModel.NewsItemId = newsComment.NewsItemId;
                     commentModel.NewsItemTitle = newsComment.NewsItem.Title;
                     commentModel.CustomerId = newsComment.CustomerId;
+                    var customer = newsComment.Customer;
+                    commentModel.CustomerInfo = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
                     commentModel.IpAddress = newsComment.IpAddress;
                     commentModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(newsComment.CreatedOnUtc, DateTimeKind.Utc);
                     commentModel.CommentTitle = newsComment.CommentTitle;
