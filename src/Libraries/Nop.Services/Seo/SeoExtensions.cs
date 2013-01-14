@@ -52,36 +52,6 @@ namespace Nop.Services.Seo
 
         #endregion
 
-        #region Blog / news
-
-        /// <summary>
-        /// Gets blog post SE (search engine) name
-        /// </summary>
-        /// <param name="blogPost">Blog post</param>
-        /// <returns>Blog post SE (search engine) name</returns>
-        public static string GetSeName(this BlogPost blogPost)
-        {
-            if (blogPost == null)
-                throw new ArgumentNullException("blogPost");
-            string seName = GetSeName(blogPost.Title);
-            return seName;
-        }
-
-        /// <summary>
-        /// Gets news item SE (search engine) name
-        /// </summary>
-        /// <param name="newsItem">News item</param>
-        /// <returns>News item SE (search engine) name</returns>
-        public static string GetSeName(this NewsItem newsItem)
-        {
-            if (newsItem == null)
-                throw new ArgumentNullException("newsItem");
-            string seName = GetSeName(newsItem.Title);
-            return seName;
-        }
-
-        #endregion
-
         #region Forum
 
         /// <summary>
