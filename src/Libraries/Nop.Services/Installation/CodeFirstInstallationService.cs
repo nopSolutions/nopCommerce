@@ -4472,7 +4472,7 @@ namespace Nop.Services.Installation
                     ConvertNonWesternChars = false,
                     AllowUnicodeCharsInUrls = true,
                     EnableJsBundling = true,
-                    ReservedUrlRecordSlugs = new List<string>() { "admin", "install", "recentlyviewedproducts", "newproducts", "compareproducts", "clearcomparelist", "setproductreviewhelpfulness", "login", "register", "logout", "cart", "wishlist", "emailwishlist", "checkout", "onepagecheckout", "contactus", "passwordrecovery", "subscribenewsletter", "blog", "boards", "inboxupdate", "sentupdate", "news", "sitemap", "sitemapseo", "search", "config", "eucookielawaccept" },
+                    ReservedUrlRecordSlugs = new List<string>() { "admin", "install", "recentlyviewedproducts", "newproducts", "compareproducts", "clearcomparelist", "setproductreviewhelpfulness", "login", "register", "logout", "cart", "wishlist", "emailwishlist", "checkout", "onepagecheckout", "contactus", "passwordrecovery", "subscribenewsletter", "blog", "boards", "inboxupdate", "sentupdate", "news", "sitemap", "sitemapseo", "search", "config", "eucookielawaccept", "page-not-found" },
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<AdminAreaSettings>>()

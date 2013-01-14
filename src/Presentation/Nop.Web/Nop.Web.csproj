@@ -1746,6 +1746,8 @@
     <Content Include="Views\ShoppingCart\_CheckoutAttributes.Mobile.cshtml" />
     <Content Include="Themes\DefaultClean\Views\Shared\Head.cshtml" />
     <Content Include="Views\Common\AdminHeaderLinks.cshtml" />
+    <Content Include="Views\Common\PageNotFound.cshtml" />
+    <Content Include="Views\Common\PageNotFound.Mobile.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

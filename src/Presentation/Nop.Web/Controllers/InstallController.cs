@@ -398,7 +398,7 @@ namespace Nop.Web.Controllers
 
             _locService.SaveCurrentLanguage(language);
 
-            //Reload the page);
+            //Reload the page
             return RedirectToAction("Index", "Install");
         }
 

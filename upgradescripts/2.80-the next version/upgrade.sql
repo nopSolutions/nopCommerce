@@ -23,6 +23,9 @@ set @resources='
   <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Fields.EndDate.Hint">
     <Value>Set the news item end date in Coordinated Universal Time (UTC). You can also leave it empty.</Value>
   </LocaleResource>
+  <LocaleResource Name="PageTitle.PageNotFound">
+	<Value>Page not found</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -97,4 +100,20 @@ DEALLOCATE cur_existinglanguage
 DROP TABLE #LocaleStringResourceTmp
 GO
 
-
+--add new "one word" URL to "reservedurlrecordslugs" setting
+IF EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'seosettings.reservedurlrecordslugs')
+BEGIN
+	DECLARE @NewUrlRecord nvarchar(4000)
+	SET @NewUrlRecord = N'page-not-found'
+	
+	DECLARE @reservedurlrecordslugs nvarchar(4000)
+	SELECT @reservedurlrecordslugs = [Value] FROM [Setting] WHERE [name] = N'seosettings.reservedurlrecordslugs'
+	
+	IF (CHARINDEX(@NewUrlRecord, @reservedurlrecordslugs) = 0)
+	BEGIN
+		UPDATE [Setting]
+		SET [Value] = @reservedurlrecordslugs + ',' + @NewUrlRecord
+		WHERE [name] = N'seosettings.reservedurlrecordslugs'
+	END
+END
+GO

@@ -653,6 +653,12 @@ namespace Nop.Web.Infrastructure
                             "robots.txt",
                             new { controller = "Common", action = "RobotsTextFile" },
                             new[] { "Nop.Web.Controllers" });
+
+            //page not found
+            routes.MapLocalizedRoute("PageNotFound",
+                            "page-not-found",
+                            new { controller = "Common", action = "PageNotFound" },
+                            new[] { "Nop.Web.Controllers" });
         }
 
         public int Priority

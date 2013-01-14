@@ -85,17 +85,16 @@ namespace Nop.Web.Framework.Seo
                 {
                     //no URL record found
 
-                    //uncomment below to render home page without any redirection
-                    //data.Values["controller"] = "Home";
-                    //data.Values["action"] = "Index";
-                    //return data;
+                    //var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+                    //var response = httpContext.Response;
+                    //response.Status = "302 Found";
+                    //response.RedirectLocation = webHelper.GetStoreLocation(false);
+                    //response.End();
+                    //return null;
 
-                    var webHelper = EngineContext.Current.Resolve<IWebHelper>();
-                    var response = httpContext.Response;
-                    response.Status = "302 Found";
-                    response.RedirectLocation = webHelper.GetStoreLocation(false);
-                    response.End();
-                    return null;
+                    data.Values["controller"] = "Common";
+                    data.Values["action"] = "PageNotFound";
+                    return data;
                 }
                 if (!urlRecord.IsActive)
                 {
@@ -114,12 +113,17 @@ namespace Nop.Web.Framework.Seo
                     else
                     {
                         //no active slug found
-                        var webHelper = EngineContext.Current.Resolve<IWebHelper>();
-                        var response = httpContext.Response;
-                        response.Status = "302 Found";
-                        response.RedirectLocation = webHelper.GetStoreLocation(false);
-                        response.End();
-                        return null;
+                        
+                        //var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+                        //var response = httpContext.Response;
+                        //response.Status = "302 Found";
+                        //response.RedirectLocation = webHelper.GetStoreLocation(false);
+                        //response.End();
+                        //return null;
+                        
+                        data.Values["controller"] = "Common";
+                        data.Values["action"] = "PageNotFound";
+                        return data;
                     }
                 }
 

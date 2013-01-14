@@ -263,6 +263,13 @@ fieldset.form-fields dl dd{padding:3px 0 0 0;}
 .user-agreement-page .page-body{}
 
 
+/* PAGE NOT FOUND */
+.not-found-page{}
+.not-found-page .page-title{}
+.not-found-page .page-body{}
+.not-found-page ul li{list-style:none;margin-top:10px;}
+
+
 /* STORE CLOSED */
 .store-closed-page{}
 .store-closed-page .page-title{}
