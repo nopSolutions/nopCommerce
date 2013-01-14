@@ -134,16 +134,14 @@
                         @T("Search.NoResultsText")
                     </span>
                 }
+                @*list mode*@
                 <div class="product-list">
-                    @*list mode*@
-                    <div class="product-list">
-                        @foreach (var product in Model.Products)
-                        {
-                            <div class="item-box">
-                                @Html.Partial("_ProductBox", product)
-                            </div>
-                        }
-                    </div>
+                    @foreach (var product in Model.Products)
+                    {
+                        <div class="item-box">
+                            @Html.Partial("_ProductBox", product)
+                        </div>
+                    }
                 </div>
                 <div class="clear">
                 </div>
