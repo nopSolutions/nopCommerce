@@ -140,6 +140,15 @@ namespace Nop.Web.Controllers
 
         #region Utilities
 
+        //page not found
+        public ActionResult PageNotFound()
+        {
+            this.Response.StatusCode = 404;
+            this.Response.TrySkipIisCustomErrors = true;
+
+            return View();
+        }
+
         [NonAction]
         protected LanguageSelectorModel PrepareLanguageSelectorModel()
         {
