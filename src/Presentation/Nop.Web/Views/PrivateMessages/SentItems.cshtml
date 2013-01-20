@@ -10,7 +10,7 @@
                 $('#pm-sent-table .rowcheckbox').attr('checked', $(this).is(':checked')).change();
             });
 
-            $('#pm-sent-table .rowcheckbox').live('change', function (e) {
+            $('#pm-sent-table .rowcheckbox').on('change', function (e) {
                 var numChkBoxes = $('#pm-sent-table .rowcheckbox').length;
                 var numChkBoxesChecked = $('#pm-sent-table .rowcheckbox:checked').length;
                 $('#selectall-sent').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);

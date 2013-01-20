@@ -43,17 +43,19 @@
     @if (Model.ShoppingCartEnabled)
     {
         <script type="text/javascript">
-            $('#topcartlink').live('mouseenter', function () {
-                $('#flyout-cart').addClass('active');
-            });
-            $('#topcartlink').live('mouseleave', function () {
-                $('#flyout-cart').removeClass('active');
-            });
-            $('#flyout-cart').live('mouseenter', function () {
-                $('#flyout-cart').addClass('active');
-            });
-            $('#flyout-cart').live('mouseleave', function () {
-                $('#flyout-cart').removeClass('active');
+            $(document).ready(function() {
+                $('#topcartlink').on('mouseenter', function() {
+                    $('#flyout-cart').addClass('active');
+                });
+                $('#topcartlink').on('mouseleave', function () {
+                    $('#flyout-cart').removeClass('active');
+                });
+                $('#flyout-cart').on('mouseenter', function () {
+                    $('#flyout-cart').addClass('active');
+                });
+                $('#flyout-cart').on('mouseleave', function () {
+                    $('#flyout-cart').removeClass('active');
+                });
             });
         </script>
     }

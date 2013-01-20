@@ -10,7 +10,7 @@
                 $('#pm-inbox-table .rowcheckbox').attr('checked', $(this).is(':checked')).change();
             });
 
-            $('#pm-inbox-table .rowcheckbox').live('change', function (e) {
+            $('#pm-inbox-table .rowcheckbox').on('change', function (e) {
                 var numChkBoxes = $('#pm-inbox-table .rowcheckbox').length;
                 var numChkBoxesChecked = $('#pm-inbox-table .rowcheckbox:checked').length;
                 $('#select-all-inbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
