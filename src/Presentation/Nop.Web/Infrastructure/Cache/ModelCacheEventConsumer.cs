@@ -130,8 +130,8 @@ namespace Nop.Web.Infrastructure.Cache
         /// {0} : current manufacturer id
         /// {1} : language id
         /// </remarks>
-        public const string MANUFACTURER_NAVIGATION_MODEL_KEY = "nop.pres.manufacturer.navigation-{0}-{1}-{2}";
-        public const string MANUFACTURER_NAVIGATION_PATTERN_KEY = "nop.pres.manufacturer.navigation";
+        public const string MANUFACTURER_NAVIGATION_MODEL_KEY = "Nop.pres.manufacturer.navigation-{0}-{1}-{2}";
+        public const string MANUFACTURER_NAVIGATION_PATTERN_KEY = "Nop.pres.manufacturer.navigation";
         
         /// <summary>
         /// Key for CategoryNavigationModel caching
@@ -140,8 +140,8 @@ namespace Nop.Web.Infrastructure.Cache
         /// {0} : language id
         /// {1} : comma separated list of customer roles
         /// </remarks>
-        public const string CATEGORY_NAVIGATION_MODEL_KEY = "nop.pres.category.navigation-{0}-{1}";
-        public const string CATEGORY_NAVIGATION_PATTERN_KEY = "nop.pres.category.navigation";
+        public const string CATEGORY_NAVIGATION_MODEL_KEY = "Nop.pres.category.navigation-{0}-{1}";
+        public const string CATEGORY_NAVIGATION_PATTERN_KEY = "Nop.pres.category.navigation";
 
         /// <summary>
         /// Key for GetChildCategoryIds method results caching
@@ -151,8 +151,8 @@ namespace Nop.Web.Infrastructure.Cache
         /// {1} : show hidden?
         /// {2} : comma separated list of customer roles
         /// </remarks>
-        public const string CATEGORY_CHILD_IDENTIFIERS_MODEL_KEY = "nop.pres.category.childidentifiers-{0}-{1}-{2}";
-        public const string CATEGORY_CHILD_IDENTIFIERS_PATTERN_KEY = "nop.pres.category.childidentifiers";
+        public const string CATEGORY_CHILD_IDENTIFIERS_MODEL_KEY = "Nop.pres.category.childidentifiers-{0}-{1}-{2}";
+        public const string CATEGORY_CHILD_IDENTIFIERS_PATTERN_KEY = "Nop.pres.category.childidentifiers";
         
         /// <summary>
         /// Key for ProductBreadcrumbModel caching
@@ -162,8 +162,8 @@ namespace Nop.Web.Infrastructure.Cache
         /// {1} : language id
         /// {2} : comma separated list of customer roles
         /// </remarks>
-        public const string PRODUCT_BREADCRUMB_MODEL_KEY = "nop.pres.product.breadcrumb-{0}-{1}-{2}";
-        public const string PRODUCT_BREADCRUMB_PATTERN_KEY = "nop.pres.product.breadcrumb";
+        public const string PRODUCT_BREADCRUMB_MODEL_KEY = "Nop.pres.product.breadcrumb-{0}-{1}-{2}";
+        public const string PRODUCT_BREADCRUMB_PATTERN_KEY = "Nop.pres.product.breadcrumb";
 
 
         /// <summary>
@@ -173,8 +173,8 @@ namespace Nop.Web.Infrastructure.Cache
         /// {0} : product id
         /// {1} : language id
         /// </remarks>
-        public const string PRODUCTTAG_BY_PRODUCT_MODEL_KEY = "nop.pres.producttag.byproduct-{0}-{1}";
-        public const string PRODUCTTAG_BY_PRODUCT_PATTERN_KEY = "nop.pres.producttag.byproduct";
+        public const string PRODUCTTAG_BY_PRODUCT_MODEL_KEY = "Nop.pres.producttag.byproduct-{0}-{1}";
+        public const string PRODUCTTAG_BY_PRODUCT_PATTERN_KEY = "Nop.pres.producttag.byproduct";
 
         /// <summary>
         /// Key for PopularProductTagsModel caching
@@ -182,8 +182,8 @@ namespace Nop.Web.Infrastructure.Cache
         /// <remarks>
         /// {0} : language id
         /// </remarks>
-        public const string PRODUCTTAG_POPULAR_MODEL_KEY = "nop.pres.producttag.popular-{0}";
-        public const string PRODUCTTAG_POPULAR_PATTERN_KEY = "nop.pres.producttag.popular";
+        public const string PRODUCTTAG_POPULAR_MODEL_KEY = "Nop.pres.producttag.popular-{0}";
+        public const string PRODUCTTAG_POPULAR_PATTERN_KEY = "Nop.pres.producttag.popular";
 
         /// <summary>
         /// Key for ProductManufacturers model caching
@@ -192,8 +192,8 @@ namespace Nop.Web.Infrastructure.Cache
         /// {0} : product id
         /// {1} : language id
         /// </remarks>
-        public const string PRODUCT_MANUFACTURERS_MODEL_KEY = "nop.pres.product.manufacturers-{0}-{1}-{2}";
-        public const string PRODUCT_MANUFACTURERS_PATTERN_KEY = "nop.pres.product.manufacturers";
+        public const string PRODUCT_MANUFACTURERS_MODEL_KEY = "Nop.pres.product.manufacturers-{0}-{1}-{2}";
+        public const string PRODUCT_MANUFACTURERS_PATTERN_KEY = "Nop.pres.product.manufacturers";
 
         /// <summary>
         /// Key for ProductSpecificationModel caching
@@ -202,8 +202,8 @@ namespace Nop.Web.Infrastructure.Cache
         /// {0} : product id
         /// {1} : language id
         /// </remarks>
-        public const string PRODUCT_SPECS_MODEL_KEY = "nop.pres.product.specs-{0}-{1}";
-        public const string PRODUCT_SPECS_PATTERN_KEY = "nop.pres.product.specs";
+        public const string PRODUCT_SPECS_MODEL_KEY = "Nop.pres.product.specs-{0}-{1}";
+        public const string PRODUCT_SPECS_PATTERN_KEY = "Nop.pres.product.specs";
 
         /// <summary>
         /// Key for TopicModel caching
@@ -212,8 +212,8 @@ namespace Nop.Web.Infrastructure.Cache
         /// {0} : topic id
         /// {1} : language id
         /// </remarks>
-        public const string TOPIC_MODEL_KEY = "nop.pres.topic.details-{0}-{1}";
-        public const string TOPIC_PATTERN_KEY = "nop.pres.topic.details";
+        public const string TOPIC_MODEL_KEY = "Nop.pres.topic.details-{0}-{1}";
+        public const string TOPIC_PATTERN_KEY = "Nop.pres.topic.details";
 
         /// <summary>
         /// Key for CategoryTemplate caching
@@ -221,8 +221,8 @@ namespace Nop.Web.Infrastructure.Cache
         /// <remarks>
         /// {0} : category template id
         /// </remarks>
-        public const string CATEGORY_TEMPLATE_MODEL_KEY = "nop.pres.categorytemplate-{0}";
-        public const string CATEGORY_TEMPLATE_PATTERN_KEY = "nop.pres.categorytemplate";
+        public const string CATEGORY_TEMPLATE_MODEL_KEY = "Nop.pres.categorytemplate-{0}";
+        public const string CATEGORY_TEMPLATE_PATTERN_KEY = "Nop.pres.categorytemplate";
 
         /// <summary>
         /// Key for ManufacturerTemplate caching
@@ -230,8 +230,8 @@ namespace Nop.Web.Infrastructure.Cache
         /// <remarks>
         /// {0} : manufacturer template id
         /// </remarks>
-        public const string MANUFACTURER_TEMPLATE_MODEL_KEY = "nop.pres.manufacturertemplate-{0}";
-        public const string MANUFACTURER_TEMPLATE_PATTERN_KEY = "nop.pres.manufacturertemplate";
+        public const string MANUFACTURER_TEMPLATE_MODEL_KEY = "Nop.pres.manufacturertemplate-{0}";
+        public const string MANUFACTURER_TEMPLATE_PATTERN_KEY = "Nop.pres.manufacturertemplate";
 
         /// <summary>
         /// Key for ProductTemplate caching
@@ -239,14 +239,14 @@ namespace Nop.Web.Infrastructure.Cache
         /// <remarks>
         /// {0} : product template id
         /// </remarks>
-        public const string PRODUCT_TEMPLATE_MODEL_KEY = "nop.pres.producttemplate-{0}";
-        public const string PRODUCT_TEMPLATE_PATTERN_KEY = "nop.pres.producttemplate";
+        public const string PRODUCT_TEMPLATE_MODEL_KEY = "Nop.pres.producttemplate-{0}";
+        public const string PRODUCT_TEMPLATE_PATTERN_KEY = "Nop.pres.producttemplate";
 
         /// <summary>
         /// Key for bestsellers identifiers displayed on the home page
         /// </summary>
-        public const string HOMEPAGE_BESTSELLERS_IDS_KEY = "nop.pres.bestsellers.homepage";
-        public const string HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY = "nop.pres.bestsellers.homepage";
+        public const string HOMEPAGE_BESTSELLERS_IDS_KEY = "Nop.pres.bestsellers.homepage";
+        public const string HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY = "Nop.pres.bestsellers.homepage";
 
         /// <summary>
         /// Key for "also purchased" product identifiers displayed on the product details page
@@ -254,8 +254,8 @@ namespace Nop.Web.Infrastructure.Cache
         /// <remarks>
         /// {0} : current product id
         /// </remarks>
-        public const string PRODUCTS_ALSO_PURCHASED_IDS_KEY = "nop.pres.alsopuchased-{0}";
-        public const string PRODUCTS_ALSO_PURCHASED_IDS_PATTERN_KEY = "nop.pres.alsopuchased";
+        public const string PRODUCTS_ALSO_PURCHASED_IDS_KEY = "Nop.pres.alsopuchased-{0}";
+        public const string PRODUCTS_ALSO_PURCHASED_IDS_PATTERN_KEY = "Nop.pres.alsopuchased";
 
         /// <summary>
         /// Key for default product picture caching
@@ -267,8 +267,8 @@ namespace Nop.Web.Infrastructure.Cache
         /// {3} : language ID ("alt" and "title" can depend on localized product name)
         /// {4} : is connection SSL secured?
         /// </remarks>
-        public const string PRODUCT_DEFAULTPICTURE_MODEL_KEY = "nop.pres.product.picture-{0}-{1}-{2}-{3}-{4}";
-        public const string PRODUCT_DEFAULTPICTURE_PATTERN_KEY = "nop.pres.product.picture";
+        public const string PRODUCT_DEFAULTPICTURE_MODEL_KEY = "Nop.pres.product.picture-{0}-{1}-{2}-{3}-{4}";
+        public const string PRODUCT_DEFAULTPICTURE_PATTERN_KEY = "Nop.pres.product.picture";
 
         /// <summary>
         /// Key for category picture caching
@@ -280,8 +280,8 @@ namespace Nop.Web.Infrastructure.Cache
         /// {3} : language ID ("alt" and "title" can depend on localized category name)
         /// {4} : is connection SSL secured?
         /// </remarks>
-        public const string CATEGORY_PICTURE_MODEL_KEY = "nop.pres.category.picture-{0}-{1}-{2}-{3}-{4}";
-        public const string CATEGORY_PICTURE_PATTERN_KEY = "nop.pres.category.picture";
+        public const string CATEGORY_PICTURE_MODEL_KEY = "Nop.pres.category.picture-{0}-{1}-{2}-{3}-{4}";
+        public const string CATEGORY_PICTURE_PATTERN_KEY = "Nop.pres.category.picture";
 
         /// <summary>
         /// Key for manufacturer picture caching
@@ -293,8 +293,8 @@ namespace Nop.Web.Infrastructure.Cache
         /// {3} : language ID ("alt" and "title" can depend on localized manufacturer name)
         /// {4} : is connection SSL secured?
         /// </remarks>
-        public const string MANUFACTURER_PICTURE_MODEL_KEY = "nop.pres.manufacturer.picture-{0}-{1}-{2}-{3}-{4}";
-        public const string MANUFACTURER_PICTURE_PATTERN_KEY = "nop.pres.manufacturer.picture";
+        public const string MANUFACTURER_PICTURE_MODEL_KEY = "Nop.pres.manufacturer.picture-{0}-{1}-{2}-{3}-{4}";
+        public const string MANUFACTURER_PICTURE_PATTERN_KEY = "Nop.pres.manufacturer.picture";
 
         /// <summary>
         /// Key for cart picture caching
@@ -306,8 +306,8 @@ namespace Nop.Web.Infrastructure.Cache
         /// {3} : language ID ("alt" and "title" can depend on localized product name)
         /// {4} : is connection SSL secured?
         /// </remarks>
-        public const string CART_PICTURE_MODEL_KEY = "nop.pres.cart.picture-{0}-{1}-{2}-{3}-{4}";
-        public const string CART_PICTURE_PATTERN_KEY = "nop.pres.cart.picture";
+        public const string CART_PICTURE_MODEL_KEY = "Nop.pres.cart.picture-{0}-{1}-{2}-{3}-{4}";
+        public const string CART_PICTURE_PATTERN_KEY = "Nop.pres.cart.picture";
 
         /// <summary>
         /// Key for home page polls
@@ -315,7 +315,7 @@ namespace Nop.Web.Infrastructure.Cache
         /// <remarks>
         /// {0} : language ID
         /// </remarks>
-        public const string HOMEPAGE_POLLS_MODEL_KEY = "nop.pres.poll.homepage-{0}";
+        public const string HOMEPAGE_POLLS_MODEL_KEY = "Nop.pres.poll.homepage-{0}";
         /// <summary>
         /// Key for polls by system name
         /// </summary>
@@ -323,8 +323,8 @@ namespace Nop.Web.Infrastructure.Cache
         /// {0} : poll system name
         /// {1} : language ID
         /// </remarks>
-        public const string POLL_BY_SYSTEMNAME__MODEL_KEY = "nop.pres.poll.systemname-{0}-{1}";
-        public const string POLLS_PATTERN_KEY = "nop.pres.poll.";
+        public const string POLL_BY_SYSTEMNAME__MODEL_KEY = "Nop.pres.poll.systemname-{0}-{1}";
+        public const string POLLS_PATTERN_KEY = "Nop.pres.poll.";
 
         /// <summary>
         /// Key for blog tag list model
@@ -332,15 +332,15 @@ namespace Nop.Web.Infrastructure.Cache
         /// <remarks>
         /// {0} : language ID
         /// </remarks>
-        public const string BLOG_TAGS_MODEL_KEY = "nop.pres.blog.tags-{0}";
+        public const string BLOG_TAGS_MODEL_KEY = "Nop.pres.blog.tags-{0}";
         /// <summary>
         /// Key for blog archive (years, months) block model
         /// </summary>
         /// <remarks>
         /// {0} : language ID
         /// </remarks>
-        public const string BLOG_MONTHS_MODEL_KEY = "nop.pres.blog.months-{0}";
-        public const string BLOG_PATTERN_KEY = "nop.pres.blog.";
+        public const string BLOG_MONTHS_MODEL_KEY = "Nop.pres.blog.months-{0}";
+        public const string BLOG_PATTERN_KEY = "Nop.pres.blog.";
 
         /// <summary>
         /// Key for home page news
@@ -348,8 +348,8 @@ namespace Nop.Web.Infrastructure.Cache
         /// <remarks>
         /// {0} : language ID
         /// </remarks>
-        public const string HOMEPAGE_NEWSMODEL_KEY = "nop.pres.news.homepage-{0}";
-        public const string NEWS_PATTERN_KEY = "nop.pres.news.";
+        public const string HOMEPAGE_NEWSMODEL_KEY = "Nop.pres.news.homepage-{0}";
+        public const string NEWS_PATTERN_KEY = "Nop.pres.news.";
         
         /// <summary>
         /// Key for states by country id
@@ -359,14 +359,14 @@ namespace Nop.Web.Infrastructure.Cache
         /// {0} : addEmptyStateIfRequired value
         /// {0} : language ID
         /// </remarks>
-        public const string STATEPROVINCES_BY_COUNTRY_MODEL_KEY = "nop.pres.stateprovinces.bycountry-{0}-{1}-{2}";
-        public const string STATEPROVINCES_PATTERN_KEY = "nop.pres.stateprovinces.";
+        public const string STATEPROVINCES_BY_COUNTRY_MODEL_KEY = "Nop.pres.stateprovinces.bycountry-{0}-{1}-{2}";
+        public const string STATEPROVINCES_PATTERN_KEY = "Nop.pres.stateprovinces.";
 
         /// <summary>
         /// Key for available languages
         /// </summary>
-        public const string AVAILABLE_LANGUAGES_MODEL_KEY = "nop.pres.languages.all";
-        public const string AVAILABLE_LANGUAGES_PATTERN_KEY = "nop.pres.languages.";
+        public const string AVAILABLE_LANGUAGES_MODEL_KEY = "Nop.pres.languages.all";
+        public const string AVAILABLE_LANGUAGES_PATTERN_KEY = "Nop.pres.languages.";
 
         /// <summary>
         /// Key for available currencies
@@ -374,8 +374,8 @@ namespace Nop.Web.Infrastructure.Cache
         /// <remarks>
         /// {0} : language ID
         /// </remarks>
-        public const string AVAILABLE_CURRENCIES_MODEL_KEY = "nop.pres.currencies.all-{0}";
-        public const string AVAILABLE_CURRENCIES_PATTERN_KEY = "nop.pres.currencies.";
+        public const string AVAILABLE_CURRENCIES_MODEL_KEY = "Nop.pres.currencies.all-{0}";
+        public const string AVAILABLE_CURRENCIES_PATTERN_KEY = "Nop.pres.currencies.";
 
         private readonly ICacheManager _cacheManager;
         
