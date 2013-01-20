@@ -44,16 +44,16 @@
     {
         <script type="text/javascript">
             $(document).ready(function() {
-                $('#topcartlink').on('mouseenter', function() {
+                $('.header').on('mouseenter', '#topcartlink', function () {
                     $('#flyout-cart').addClass('active');
                 });
-                $('#topcartlink').on('mouseleave', function () {
+                $('.header').on('mouseleave', '#topcartlink', function () {
                     $('#flyout-cart').removeClass('active');
                 });
-                $('#flyout-cart').on('mouseenter', function () {
+                $('.header').on('mouseenter', '#flyout-cart', function () {
                     $('#flyout-cart').addClass('active');
                 });
-                $('#flyout-cart').on('mouseleave', function () {
+                $('.header').on('mouseleave', '#flyout-cart', function () {
                     $('#flyout-cart').removeClass('active');
                 });
             });
