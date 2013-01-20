@@ -53,7 +53,7 @@
             });
 
             //wire up checkboxes. 
-            $('#activityLogType-grid input[type=checkbox][id!=mastercheckbox]').live('change', function (e) {
+            $('#activityLogType-grid').on('change', 'input[type=checkbox][id!=mastercheckbox]', function (e) {
                 updateMasterCheckbox();
             });
         });

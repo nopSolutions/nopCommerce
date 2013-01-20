@@ -119,7 +119,7 @@
             });
 
             //wire up checkboxes. 
-            $('#shipments-grid input[type=checkbox][id!=mastercheckbox]').live('change', function (e) {
+            $('#shipments-grid').on('change', 'input[type=checkbox][id!=mastercheckbox]', function (e) {
                 var $check = $(this);
                 if ($check.is(":checked") == true) {
                     var checked = jQuery.inArray($check.val(), selectedIds);
