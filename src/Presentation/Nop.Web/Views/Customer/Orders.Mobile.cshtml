@@ -31,7 +31,7 @@
                     @T("Account.CustomerOrders.RecurringOrders")
                 </div>
                 <div>
-                    <ul data-role="listview" data-inset="true" data-filter="false">
+                    <ul data-role="listview" data-inset="true" data-filter="false" data-theme="c">
                         @foreach (var item in Model.RecurringOrders)
                         {
                             <li>
@@ -69,7 +69,7 @@
         <div class="order-list">
             @if (Model.Orders.Count > 0)
             {
-                <ul data-role="listview" data-inset="true" data-filter="false">
+                <ul data-role="listview" data-inset="true" data-filter="false" data-theme="c">
                     @foreach (var order in Model.Orders)
                     {
                         <li>

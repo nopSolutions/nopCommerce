@@ -901,6 +901,7 @@
     <Content Include="Content\files\Index.htm" />
     <Content Include="Content\fileuploader\fileuploader.css" />
     <Content Include="Content\fileuploader\images\fileuploader-loading.gif" />
+    <Content Include="Themes\Mobile\Content\images\ajax-loader.gif" />
     <Content Include="Content\Images\default-avatar.jpg" />
     <Content Include="Content\Images\flags\ad.png" />
     <Content Include="Content\Images\flags\ae.png" />
@@ -1150,6 +1151,10 @@
     <Content Include="Content\Images\flags\zm.png" />
     <Content Include="Content\Images\flags\zw.png" />
     <Content Include="Content\Images\ico-close-notification-bar.png" />
+    <Content Include="Themes\Mobile\Content\images\icons-18-black.png" />
+    <Content Include="Themes\Mobile\Content\images\icons-18-white.png" />
+    <Content Include="Themes\Mobile\Content\images\icons-36-black.png" />
+    <Content Include="Themes\Mobile\Content\images\icons-36-white.png" />
     <Content Include="Content\jquery-ui-themes\smoothness\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\jquery-ui-themes\smoothness\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="Content\jquery-ui-themes\smoothness\images\ui-bg_glass_55_fbf9ee_1x400.png" />
@@ -1165,8 +1170,16 @@
     <Content Include="Content\jquery-ui-themes\smoothness\images\ui-icons_cd0a0a_256x240.png" />
     <Content Include="Content\jquery-ui-themes\smoothness\jquery-ui-1.10.0.custom.css" />
     <Content Include="Content\jquery-ui-themes\smoothness\jquery-ui-1.10.0.custom.min.css" />
+    <Content Include="Themes\Mobile\Content\jquery.mobile-1.2.0.css" />
+    <Content Include="Themes\Mobile\Content\jquery.mobile-1.2.0.min.css" />
+    <Content Include="Themes\Mobile\Content\jquery.mobile.structure-1.2.0.css" />
+    <Content Include="Themes\Mobile\Content\jquery.mobile.structure-1.2.0.min.css" />
+    <Content Include="Themes\Mobile\Content\jquery.mobile.theme-1.2.0.css" />
+    <Content Include="Themes\Mobile\Content\jquery.mobile.theme-1.2.0.min.css" />
     <Content Include="Scripts\jquery-ui-1.10.0.js" />
     <Content Include="Scripts\jquery-ui-1.10.0.min.js" />
+    <Content Include="Scripts\jquery.mobile-1.2.0.js" />
+    <Content Include="Scripts\jquery.mobile-1.2.0.min.js" />
     <Content Include="Themes\DefaultClean\Content\images\bullet-left.gif" />
     <Content Include="Themes\DefaultClean\Content\images\bullet-right.gif" />
     <Content Include="Themes\DefaultClean\Content\styles.rtl.css">
@@ -1310,8 +1323,6 @@
     <Content Include="Scripts\2012.2.607\telerik.upload.min.js" />
     <Content Include="Scripts\2012.2.607\telerik.window.min.js" />
     <Content Include="Scripts\fileuploader.js" />
-    <Content Include="Scripts\jquery.mobile-1.1.1.js" />
-    <Content Include="Scripts\jquery.mobile-1.1.1.min.js" />
     <Content Include="Scripts\public.ajaxcart.js" />
     <Content Include="Scripts\public.accordion.js" />
     <Content Include="Scripts\jquery-1.7.1-vsdoc.js" />
@@ -1354,23 +1365,11 @@
     <Content Include="Themes\DefaultClean\Content\styles.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Themes\Mobile\Content\images\ajax-loader.gif" />
-    <Content Include="Themes\Mobile\Content\images\ajax-loader.png" />
     <Content Include="Themes\Mobile\Content\images\ico-forum-post-high.gif" />
     <Content Include="Themes\Mobile\Content\images\ico-forum-post.gif" />
     <Content Include="Themes\Mobile\Content\images\ico-forum.gif" />
-    <Content Include="Themes\Mobile\Content\images\icons-18-black.png" />
-    <Content Include="Themes\Mobile\Content\images\icons-18-white.png" />
-    <Content Include="Themes\Mobile\Content\images\icons-36-black.png" />
-    <Content Include="Themes\Mobile\Content\images\icons-36-white.png" />
     <Content Include="Themes\Mobile\Content\images\star-x-active.gif" />
     <Content Include="Themes\Mobile\Content\images\star-x-inactive.gif" />
-    <Content Include="Themes\Mobile\Content\jquery.mobile-1.1.1.css" />
-    <Content Include="Themes\Mobile\Content\jquery.mobile-1.1.1.min.css" />
-    <Content Include="Themes\Mobile\Content\jquery.mobile.structure-1.1.1.css" />
-    <Content Include="Themes\Mobile\Content\jquery.mobile.structure-1.1.1.min.css" />
-    <Content Include="Themes\Mobile\Content\jquery.mobile.theme-1.1.1.css" />
-    <Content Include="Themes\Mobile\Content\jquery.mobile.theme-1.1.1.min.css" />
     <Content Include="Themes\Mobile\Content\styles.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
