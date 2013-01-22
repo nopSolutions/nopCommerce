@@ -46,7 +46,7 @@ namespace Nop.Web.Framework
                 !(controllerName.Equals("Nop.Web.Controllers.CustomerController", StringComparison.InvariantCultureIgnoreCase) && actionName.Equals("Logout", StringComparison.InvariantCultureIgnoreCase)) &&
                 //ensure it's not the method (AJAX) for accepting EU Cookie law
                 !(controllerName.Equals("Nop.Web.Controllers.CommonController", StringComparison.InvariantCultureIgnoreCase) && actionName.Equals("EuCookieLawAccept", StringComparison.InvariantCultureIgnoreCase)) &&
-                //ensure it's not the method (AJAX) for accepting EU Cookie law
+                //ensure it's not the store closed page
                 !(controllerName.Equals("Nop.Web.Controllers.CommonController", StringComparison.InvariantCultureIgnoreCase) && actionName.Equals("StoreClosed", StringComparison.InvariantCultureIgnoreCase)))
             {
                 if (storeInformationSettings.StoreClosedAllowForAdmins && EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer.IsAdmin())
