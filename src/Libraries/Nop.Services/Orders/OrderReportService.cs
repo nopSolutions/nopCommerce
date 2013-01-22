@@ -421,9 +421,10 @@ namespace Nop.Services.Orders
                               (dontSearchEmail || (o.BillingAddress != null && !String.IsNullOrEmpty(o.BillingAddress.Email) && o.BillingAddress.Email.Contains(billingEmail)))
                         select new { opv, pv };
             
-            var opvPrices = Convert.ToDecimal(query.Sum(o => (decimal?)o.opv.PriceExclTax));
             var productCost = Convert.ToDecimal(query.Sum(o => (decimal?) o.pv.ProductCost * o.opv.Quantity));
-            var profit = opvPrices - productCost;
+
+            var reportSummary = GetOrderAverageReportLine(os, ps, ss, startTimeUtc, endTimeUtc, billingEmail);
+            var profit = reportSummary.SumOrders - reportSummary.SumTax - productCost;
             return profit;
         }
 
