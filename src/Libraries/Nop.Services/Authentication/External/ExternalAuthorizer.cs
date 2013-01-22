@@ -207,7 +207,7 @@ namespace Nop.Services.Authentication.External
             }
 
             //migrate shopping cart
-            _shoppingCartService.MigrateShoppingCart(_workContext.CurrentCustomer, userFound ?? userLoggedIn);
+            _shoppingCartService.MigrateShoppingCart(_workContext.CurrentCustomer, userFound ?? userLoggedIn, true);
             //authenticate
             _authenticationService.SignIn(userFound ?? userLoggedIn, false);
             //activity log

@@ -151,6 +151,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="fromCustomer">From customer</param>
         /// <param name="toCustomer">To customer</param>
-        void MigrateShoppingCart(Customer fromCustomer, Customer toCustomer);
+        /// <param name="includeCouponCodes">A value indicating whether to coupon codes (discount and gift card) should be also re-applied</param>
+        void MigrateShoppingCart(Customer fromCustomer, Customer toCustomer, bool includeCouponCodes);
     }
 }

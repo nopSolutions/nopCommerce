@@ -905,7 +905,8 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="fromCustomer">From customer</param>
         /// <param name="toCustomer">To customer</param>
-        public virtual void MigrateShoppingCart(Customer fromCustomer, Customer toCustomer)
+        /// <param name="includeCouponCodes">A value indicating whether to coupon codes (discount and gift card) should be also re-applied</param>
+        public virtual void MigrateShoppingCart(Customer fromCustomer, Customer toCustomer, bool includeCouponCodes)
         {
             if (fromCustomer == null)
                 throw new ArgumentNullException("fromCustomer");
@@ -915,6 +916,7 @@ namespace Nop.Services.Orders
             if (fromCustomer.Id == toCustomer.Id)
                 return; //the same customer
 
+            //shopping cart items
             var fromCart = fromCustomer.ShoppingCartItems.ToList();
             for (int i = 0; i < fromCart.Count; i++)
             {
@@ -926,6 +928,22 @@ namespace Nop.Services.Orders
             {
                 var sci = fromCart[i];
                 DeleteShoppingCartItem(sci);
+            }
+            
+            //migrate gift card and discount coupon codes
+            if (includeCouponCodes)
+            {
+                //discount
+                if (!String.IsNullOrEmpty(fromCustomer.DiscountCouponCode))
+                    toCustomer.DiscountCouponCode = fromCustomer.DiscountCouponCode;
+
+                //gift card
+                foreach (var gcCode in fromCustomer.ParseAppliedGiftCardCouponCodes())
+                    toCustomer.ApplyGiftCardCouponCode(gcCode);
+
+                //save customer
+                _customerService.UpdateCustomer(toCustomer);
+                 
             }
         }
 

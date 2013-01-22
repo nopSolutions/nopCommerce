@@ -405,7 +405,7 @@ namespace Nop.Web.Controllers
                     var customer = _customerSettings.UsernamesEnabled ? _customerService.GetCustomerByUsername(model.Username) : _customerService.GetCustomerByEmail(model.Email);
 
                     //migrate shopping cart
-                    _shoppingCartService.MigrateShoppingCart(_workContext.CurrentCustomer, customer);
+                    _shoppingCartService.MigrateShoppingCart(_workContext.CurrentCustomer, customer, true);
 
                     //sign in new customer
                     _authenticationService.SignIn(customer, model.RememberMe);
