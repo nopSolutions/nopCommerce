@@ -26,6 +26,15 @@ set @resources='
   <LocaleResource Name="PageTitle.PageNotFound">
 	<Value>Page not found</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.Fields.Username.Required">
+	<Value>Username is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Register.Errors.UsernameIsNotProvided">
+	<Value>Username is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Register.Errors.EmailIsNotProvided">
+	<Value>Email is required.</Value>
+  </LocaleResource>
 </Language>
 '
 

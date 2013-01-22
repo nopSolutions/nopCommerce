@@ -911,13 +911,13 @@ namespace Nop.Web.Controllers
 
             //email
             if (String.IsNullOrEmpty(model.Email))
-                ModelState.AddModelError("", "Email is not provided.");
+                ModelState.AddModelError("", "Email is required.");
             //username 
             if (_customerSettings.UsernamesEnabled &&
                 this._customerSettings.AllowUsersToChangeUsernames)
             {
                 if (String.IsNullOrEmpty(model.Username))
-                    ModelState.AddModelError("", "Username is not provided.");
+                    ModelState.AddModelError("", "Username is required.");
             }
 
             try

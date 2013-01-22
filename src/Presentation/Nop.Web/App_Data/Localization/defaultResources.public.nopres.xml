@@ -416,6 +416,11 @@
                     </LocaleResource>
                     <LocaleResource Name="Username">
                         <Value>Username</Value>
+                        <Children>
+                            <LocaleResource Name="Required">
+                                <Value>Username is required.</Value>
+                            </LocaleResource>
+                        </Children>
                     </LocaleResource>
                     <LocaleResource Name="VatNumber">
                         <Value>VAT number</Value>
@@ -607,13 +612,13 @@
                     <LocaleResource Name="Errors">
                         <Children>
                             <LocaleResource Name="EmailIsNotProvided">
-                                <Value>Email is not provided</Value>
+                                <Value>Email is required.</Value>
                             </LocaleResource>
                             <LocaleResource Name="PasswordIsNotProvided">
                                 <Value>Password is not provided</Value>
                             </LocaleResource>
                             <LocaleResource Name="UsernameIsNotProvided">
-                                <Value>Username is not provided</Value>
+                                <Value>Username is required.</Value>
                             </LocaleResource>
                             <LocaleResource Name="EmailAlreadyExists">
                                 <Value>The specified email already exists</Value>
