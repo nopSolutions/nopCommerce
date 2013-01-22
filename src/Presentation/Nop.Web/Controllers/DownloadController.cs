@@ -31,7 +31,7 @@ namespace Nop.Web.Controllers
         {
             var productVariant = _productService.GetProductVariantById(productVariantId);
             if (productVariant == null)
-                return RedirectToRoute("HomePage");
+                return InvokeHttp404();
 
             if (!productVariant.HasSampleDownload)
                 return Content("Product variant doesn't have a sample download.");
@@ -59,7 +59,7 @@ namespace Nop.Web.Controllers
         {
             var orderProductVariant = _orderService.GetOrderProductVariantByGuid(opvId);
             if (orderProductVariant == null)
-                return RedirectToRoute("HomePage");
+                return InvokeHttp404();
 
             var order = orderProductVariant.Order;
             var productVariant = orderProductVariant.ProductVariant;
@@ -119,7 +119,7 @@ namespace Nop.Web.Controllers
         {
             var orderProductVariant = _orderService.GetOrderProductVariantByGuid(opvId);
             if (orderProductVariant == null)
-                return RedirectToRoute("HomePage");
+                return InvokeHttp404();
 
             var order = orderProductVariant.Order;
             var productVariant = orderProductVariant.ProductVariant;

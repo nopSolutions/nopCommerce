@@ -143,8 +143,28 @@ namespace Nop.Web
 
         protected void Application_Error(Object sender, EventArgs e)
         {
+            var exception = Server.GetLastError();
+
             //log error
-            LogException(Server.GetLastError());
+            LogException(exception);
+
+            //process 404 HTTP errors
+            var httpException = exception as HttpException;
+            if (httpException != null && httpException.GetHttpCode() == 404)
+            {
+                Response.Clear();
+                Server.ClearError();
+                Response.TrySkipIisCustomErrors = true;
+
+                // Call target Controller and pass the routeData.
+                IController errorController = EngineContext.Current.Resolve<Nop.Web.Controllers.CommonController>();
+
+                var routeData = new RouteData();
+                routeData.Values.Add("controller", "Common");
+                routeData.Values.Add("action", "PageNotFound");
+
+                errorController.Execute(new RequestContext(new HttpContextWrapper(Context), routeData));
+            }
         }
         
         protected void EnsureDatabaseIsInstalled()

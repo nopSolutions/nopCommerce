@@ -778,16 +778,16 @@ namespace Nop.Web.Controllers
         {
             var category = _categoryService.GetCategoryById(categoryId);
             if (category == null || category.Deleted)
-                return RedirectToRoute("HomePage");
+                return InvokeHttp404();
 
             //Check whether the current user has a "Manage catalog" permission
             //It allows him to preview a category before publishing
             if (!category.Published && !_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
-                return RedirectToRoute("HomePage");
+                return InvokeHttp404();
 
             //ACL (access control list)
             if (!_aclService.Authorize(category))
-                return RedirectToRoute("HomePage");
+                return InvokeHttp404();
 
             //'Continue shopping' URL
             _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.LastContinueShoppingPage, _webHelper.GetThisPageUrl(false));
@@ -1112,16 +1112,16 @@ namespace Nop.Web.Controllers
         {
             var manufacturer = _manufacturerService.GetManufacturerById(manufacturerId);
             if (manufacturer == null || manufacturer.Deleted)
-                return RedirectToRoute("HomePage");
+                return InvokeHttp404();
 
             //Check whether the current user has a "Manage catalog" permission
             //It allows him to preview a manufacturer before publishing
             if (!manufacturer.Published && !_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
-                return RedirectToRoute("HomePage");
+                return InvokeHttp404();
 
             //ACL (access control list)
             if (!_aclService.Authorize(manufacturer))
-                return RedirectToRoute("HomePage");
+                return InvokeHttp404();
 
             //'Continue shopping' URL
             _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.LastContinueShoppingPage, _webHelper.GetThisPageUrl(false));
@@ -1382,24 +1382,24 @@ namespace Nop.Web.Controllers
         {
             var product = _productService.GetProductById(productId);
             if (product == null || product.Deleted)
-                return RedirectToRoute("HomePage");
+                return InvokeHttp404();
 
             //Is published?
             //Check whether the current user has a "Manage catalog" permission
             //It allows him to preview a product before publishing
             if (!product.Published && !_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
-                return RedirectToRoute("HomePage");
+                return InvokeHttp404();
 
             //ACL (access control list)
             if (!_aclService.Authorize(product))
-                return RedirectToRoute("HomePage");
+                return InvokeHttp404();
 
             //prepare the model
             var model = PrepareProductDetailsPageModel(product);
 
             //check whether we have at leat one variant
             if (model.ProductVariantModels.Count == 0)
-                return RedirectToRoute("HomePage");
+                return InvokeHttp404();
             
             //save as recently viewed
             _recentlyViewedProductsService.AddProductToRecentlyViewedList(product.Id);
@@ -2313,7 +2313,7 @@ namespace Nop.Web.Controllers
         {
             var productTag = _productTagService.GetProductTagById(productTagId);
             if (productTag == null)
-                return RedirectToRoute("HomePage");
+                return InvokeHttp404();
                         
             if (command.PageNumber <= 0) command.PageNumber = 1;
 

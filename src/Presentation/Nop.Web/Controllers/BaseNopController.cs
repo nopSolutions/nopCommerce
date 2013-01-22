@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Web;
 using System.Web.Mvc;
+using System.Web.Routing;
 using Nop.Core;
 using Nop.Core.Infrastructure;
 using Nop.Services.Logging;
@@ -83,6 +85,20 @@ namespace Nop.Web.Controllers
                     ViewData[dataKey] = new List<string>();
                 ((List<string>)ViewData[dataKey]).Add(message);
             }
+        }
+
+        protected virtual ActionResult InvokeHttp404()
+        {
+            // Call target Controller and pass the routeData.
+            IController errorController = EngineContext.Current.Resolve<Nop.Web.Controllers.CommonController>();
+
+            var routeData = new RouteData();
+            routeData.Values.Add("controller", "Common");
+            routeData.Values.Add("action", "PageNotFound");
+
+            errorController.Execute(new RequestContext(this.HttpContext, routeData));
+
+            return new EmptyResult();
         }
 
     }

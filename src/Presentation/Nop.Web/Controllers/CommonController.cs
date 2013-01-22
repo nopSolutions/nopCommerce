@@ -798,7 +798,7 @@ namespace Nop.Web.Controllers
         public ActionResult GenericUrl()
         {
             //seems that no entity was found
-            return RedirectToRoute("HomePage");
+            return InvokeHttp404();
         }
 
         //store is closed
