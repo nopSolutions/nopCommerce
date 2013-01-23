@@ -398,6 +398,8 @@
 .return-request-list-page .request-item{font-weight:normal;}
 .reward-points-page{}
 .reward-points-page .reward-points-overview{}
+.reward-points-page .reward-points-overview .current-balance{}
+.reward-points-page .reward-points-overview .min-balance{}
 .reward-points-page .reward-points-history{}
 .reward-points-page .reward-points-history .item{font-weight:normal;}
 

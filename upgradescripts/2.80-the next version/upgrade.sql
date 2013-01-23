@@ -35,6 +35,15 @@ set @resources='
   <LocaleResource Name="Account.Register.Errors.EmailIsNotProvided">
 	<Value>Email is required.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.MinimumRewardPointsToUse">
+	<Value>Minimum reward points to use</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.MinimumRewardPointsToUse.Hint">
+	<Value>Customers won''t be able to use reward points before they have X amount of points. Set to 0 if you do not want to use this setting.</Value>
+  </LocaleResource>
+  <LocaleResource Name="RewardPoints.MinimumBalance">
+	<Value>Minimum balance allowed to use is {0} reward points ({1}).</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -139,5 +148,13 @@ BEGIN
             <li>If you typed the URL directly, please make sure the spelling is correct.</li>
             <li>The page no longer exists. In this case, we profusely apologize for the inconvenience and for any damage this may cause.</li>
         </ul></p>')
+END
+GO
+
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'rewardpointssettings.minimumrewardpointstouse')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'rewardpointssettings.minimumrewardpointstouse', N'0')
 END
 GO

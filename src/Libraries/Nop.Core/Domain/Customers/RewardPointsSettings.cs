@@ -16,6 +16,11 @@ namespace Nop.Core.Domain.Customers
         public decimal ExchangeRate { get; set; }
 
         /// <summary>
+        /// Gets or sets the minimum reward points to use
+        /// </summary>
+        public int MinimumRewardPointsToUse { get; set; }
+
+        /// <summary>
         /// Gets or sets a number of points awarded for registration
         /// </summary>
         public int PointsForRegistration { get; set; }

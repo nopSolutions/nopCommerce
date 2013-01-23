@@ -12,7 +12,11 @@
     </div>
     <div class="page-body">
         <div class="reward-points-overview">
-            @Model.RewardPointsBalance
+            <div>@T("RewardPoints.CurrentBalance", Model.RewardPointsBalance, Model.RewardPointsAmount)</div>
+            @if (Model.MinimumRewardPointsBalance > 0)
+            {
+                <div>@T("RewardPoints.MinimumBalance", Model.RewardPointsBalance, Model.RewardPointsAmount)</div>
+            }
         </div>
         <div class="section-title">
             @T("RewardPoints.History")

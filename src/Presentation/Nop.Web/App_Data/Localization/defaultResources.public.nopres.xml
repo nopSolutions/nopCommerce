@@ -3715,6 +3715,9 @@
                     </LocaleResource>
                 </Children>
             </LocaleResource>
+            <LocaleResource Name="MinimumBalance">
+              <Value>Minimum balance allowed to use is {0} reward points ({1}).</Value>
+            </LocaleResource>
             <LocaleResource Name="NoHistory">
                 <Value>There is no balance history yet</Value>
             </LocaleResource>

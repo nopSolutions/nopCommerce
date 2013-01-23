@@ -1386,11 +1386,18 @@ namespace Nop.Web.Controllers
                     CreatedOn = _dateTimeHelper.ConvertToUserTime(rph.CreatedOnUtc, DateTimeKind.Utc)
                 });
             }
+            //current amount/balance
             int rewardPointsBalance = customer.GetRewardPointsBalance();
             decimal rewardPointsAmountBase = _orderTotalCalculationService.ConvertRewardPointsToAmount(rewardPointsBalance);
             decimal rewardPointsAmount =_currencyService.ConvertFromPrimaryStoreCurrency(rewardPointsAmountBase,_workContext.WorkingCurrency);
-            model.RewardPointsBalance = string.Format(_localizationService.GetResource("RewardPoints.CurrentBalance"), rewardPointsBalance, _priceFormatter.FormatPrice(rewardPointsAmount, true, false));
-            
+            model.RewardPointsBalance = rewardPointsBalance;
+            model.RewardPointsAmount = _priceFormatter.FormatPrice(rewardPointsAmount, true, false);
+            //minimum amount/balance
+            int minimumRewardPointsBalance =_rewardPointsSettings.MinimumRewardPointsToUse;
+            decimal minimumRewardPointsAmountBase = _orderTotalCalculationService.ConvertRewardPointsToAmount(minimumRewardPointsBalance);
+            decimal minimumRewardPointsAmount = _currencyService.ConvertFromPrimaryStoreCurrency(minimumRewardPointsAmountBase, _workContext.WorkingCurrency);
+            model.MinimumRewardPointsBalance = minimumRewardPointsBalance;
+            model.MinimumRewardPointsAmount = _priceFormatter.FormatPrice(minimumRewardPointsAmount, true, false);
             return View(model);
         }
 

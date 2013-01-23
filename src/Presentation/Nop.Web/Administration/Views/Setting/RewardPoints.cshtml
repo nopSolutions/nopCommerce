@@ -43,6 +43,15 @@
                 @Html.ValidationMessageFor(model => model.ExchangeRate)
             </td>
         </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.MinimumRewardPointsToUse):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.MinimumRewardPointsToUse)
+                @Html.ValidationMessageFor(model => model.MinimumRewardPointsToUse)
+            </td>
+        </tr>
         <tr class="adminSeparator">
             <td colspan="2">
                 <hr />

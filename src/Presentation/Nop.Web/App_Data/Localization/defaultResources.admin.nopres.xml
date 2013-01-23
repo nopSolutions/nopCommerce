@@ -5305,6 +5305,14 @@
                                             </LocaleResource>
                                         </Children>
                                     </LocaleResource>
+                                      <LocaleResource Name="MinimumRewardPointsToUse">
+                                        <Value>Minimum reward points to use</Value>
+                                        <Children>
+                                            <LocaleResource Name="Hint">
+                                                <Value>Customers won't be able to use reward points before they have X amount of points. Set to 0 if you do not want to use this setting.</Value>
+                                            </LocaleResource>
+                                        </Children>
+                                    </LocaleResource>
                                     <LocaleResource Name="PointsForRegistration">
                                         <Value>Points for registration</Value>
                                         <Children>

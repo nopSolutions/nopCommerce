@@ -1346,5 +1346,23 @@ namespace Nop.Services.Tests.Orders
             //we calculate ceiling for reward points
             _orderTotalCalcService.ConvertAmountToRewardPoints(100).ShouldEqual(7);
         }
+
+        [Test]
+        public void Can_check_minimum_reward_points_to_use_requirement()
+        {
+            _rewardPointsSettings.Enabled = true;
+            _rewardPointsSettings.MinimumRewardPointsToUse = 0;
+
+            _orderTotalCalcService.CheckMinimumRewardPointsToUseRequirement(0).ShouldEqual(true);
+            _orderTotalCalcService.CheckMinimumRewardPointsToUseRequirement(1).ShouldEqual(true);
+            _orderTotalCalcService.CheckMinimumRewardPointsToUseRequirement(10).ShouldEqual(true);
+
+
+            _rewardPointsSettings.MinimumRewardPointsToUse = 2;
+            _orderTotalCalcService.CheckMinimumRewardPointsToUseRequirement(0).ShouldEqual(false);
+            _orderTotalCalcService.CheckMinimumRewardPointsToUseRequirement(1).ShouldEqual(false);
+            _orderTotalCalcService.CheckMinimumRewardPointsToUseRequirement(2).ShouldEqual(true);
+            _orderTotalCalcService.CheckMinimumRewardPointsToUseRequirement(10).ShouldEqual(true);
+        }
     }
 }

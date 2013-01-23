@@ -216,5 +216,11 @@ namespace Nop.Services.Orders
         /// <returns>Converted value</returns>
         int ConvertAmountToRewardPoints(decimal amount);
 
+        /// <summary>
+        /// Gets a value indicating whether a customer has minimum amount of reward points to use (if enabled)
+        /// </summary>
+        /// <param name="rewardPoints">Reward points to check</param>
+        /// <returns>true - reward points could use; false - cannot be used.</returns>
+        bool CheckMinimumRewardPointsToUseRequirement(int rewardPoints);
     }
 }

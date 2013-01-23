@@ -13,7 +13,10 @@ namespace Nop.Web.Models.Customer
         }
 
         public IList<RewardPointsHistoryModel> RewardPoints { get; set; }
-        public string RewardPointsBalance { get; set; }
+        public int RewardPointsBalance { get; set; }
+        public string RewardPointsAmount { get; set; }
+        public int MinimumRewardPointsBalance { get; set; }
+        public string MinimumRewardPointsAmount { get; set; }
         public CustomerNavigationModel NavigationModel { get; set; }
 
         #region Nested classes

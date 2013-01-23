@@ -913,18 +913,21 @@ namespace Nop.Services.Orders
                 !ignoreRewardPonts)
             {
                 int rewardPointsBalance = customer.GetRewardPointsBalance();
-                decimal rewardPointsBalanceAmount = ConvertRewardPointsToAmount(rewardPointsBalance);
-                if (orderTotal.HasValue && orderTotal.Value > decimal.Zero)
+                if (CheckMinimumRewardPointsToUseRequirement(rewardPointsBalance))
                 {
-                    if (orderTotal.Value > rewardPointsBalanceAmount)
+                    decimal rewardPointsBalanceAmount = ConvertRewardPointsToAmount(rewardPointsBalance);
+                    if (orderTotal.HasValue && orderTotal.Value > decimal.Zero)
                     {
-                        redeemedRewardPoints = rewardPointsBalance;
-                        redeemedRewardPointsAmount = rewardPointsBalanceAmount;
-                    }
-                    else
-                    {
-                        redeemedRewardPointsAmount = orderTotal.Value;
-                        redeemedRewardPoints = ConvertAmountToRewardPoints(redeemedRewardPointsAmount);
+                        if (orderTotal.Value > rewardPointsBalanceAmount)
+                        {
+                            redeemedRewardPoints = rewardPointsBalance;
+                            redeemedRewardPointsAmount = rewardPointsBalanceAmount;
+                        }
+                        else
+                        {
+                            redeemedRewardPointsAmount = orderTotal.Value;
+                            redeemedRewardPoints = ConvertAmountToRewardPoints(redeemedRewardPointsAmount);
+                        }
                     }
                 }
             }
@@ -1014,6 +1017,20 @@ namespace Nop.Services.Orders
             return result;
         }
  
+
+        /// <summary>
+        /// Gets a value indicating whether a customer has minimum amount of reward points to use (if enabled)
+        /// </summary>
+        /// <param name="rewardPoints">Reward points to check</param>
+        /// <returns>true - reward points could use; false - cannot be used.</returns>
+        public virtual bool CheckMinimumRewardPointsToUseRequirement(int rewardPoints)
+        {
+            if (_rewardPointsSettings.MinimumRewardPointsToUse <= 0)
+                return true;
+
+            return rewardPoints >= _rewardPointsSettings.MinimumRewardPointsToUse;
+        }
+
         #endregion
     }
 }

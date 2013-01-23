@@ -18,7 +18,11 @@
     </div>
     <div class="page-body">
         <div class="reward-points-overview">
-            @Model.RewardPointsBalance
+            <div class="current-balance">@T("RewardPoints.CurrentBalance", Model.RewardPointsBalance, Model.RewardPointsAmount)</div>
+            @if (Model.MinimumRewardPointsBalance > 0)
+            {
+                <div class="min-balance">@T("RewardPoints.MinimumBalance", Model.MinimumRewardPointsBalance, Model.MinimumRewardPointsAmount)</div>
+            }
         </div>
         <div class="clear">
         </div>

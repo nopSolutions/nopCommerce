@@ -14,6 +14,9 @@ namespace Nop.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.RewardPoints.ExchangeRate")]
         public decimal ExchangeRate { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.RewardPoints.MinimumRewardPointsToUse")]
+        public int MinimumRewardPointsToUse { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.RewardPoints.PointsForRegistration")]
         public int PointsForRegistration { get; set; }
 
