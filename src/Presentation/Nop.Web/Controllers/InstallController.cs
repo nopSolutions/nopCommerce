@@ -352,8 +352,16 @@ namespace Nop.Web.Controllers
                         .OrderBy(x => x.PluginDescriptor.Group)
                         .ThenBy(x => x.PluginDescriptor.DisplayOrder)
                         .ToList();
+                    var pluginsIgnoredDuringInstallation = String.IsNullOrEmpty(ConfigurationManager.AppSettings["PluginsIgnoredDuringInstallation"]) ? 
+                        new List<string>(): 
+                        ConfigurationManager.AppSettings["PluginsIgnoredDuringInstallation"]
+                            .Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries)
+                            .Select(x => x.Trim())
+                            .ToList();
                     foreach (var plugin in plugins)
                     {
+                        if (pluginsIgnoredDuringInstallation.Contains(plugin.PluginDescriptor.SystemName))
+                            continue;
                         plugin.Install();
                     }
                     
