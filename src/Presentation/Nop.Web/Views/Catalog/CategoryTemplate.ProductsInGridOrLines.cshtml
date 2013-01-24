@@ -29,9 +29,8 @@
                 <li>
                     @if (isLastCategory)
                     {
-                        @*uncomment to disable clickable link
-                        <strong>@cat.Name</strong>*@
-                        <strong><a href="@Url.RouteUrl("Category", new { SeName = cat.SeName })" title="@cat.Name">@cat.Name</a></strong>
+                        <strong class="current-item">@cat.Name</strong>
+                        @*<strong class="current-item"><a href="@Url.RouteUrl("Category", new { SeName = cat.SeName })" title="@cat.Name">@cat.Name</a></strong>*@
                     }
                     else
                     {

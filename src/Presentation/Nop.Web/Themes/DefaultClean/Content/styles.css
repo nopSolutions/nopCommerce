@@ -681,6 +681,7 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 .breadcrumb li strong{font-weight:bold;}
 .breadcrumb a{font-size: 0.9em;text-decoration:none;color:#5C5B5B;}
 .breadcrumb a:hover{text-decoration: underline;color:#5C5B5B;}
+.breadcrumb .current-item{font-size:0.9em;font-weight:normal;}
 .breadcrumb .delimiter{}
 
 

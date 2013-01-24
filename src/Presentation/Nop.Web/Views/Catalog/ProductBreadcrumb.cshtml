@@ -11,10 +11,9 @@
             <li><a href="@Url.RouteUrl("Category", new { SeName = catBr.SeName })" title="@catBr.Name">@catBr.Name</a>
                 <span class="delimiter">/</span></li>
         }
-        @*uncomment to disable clickable link
-        <strong>@Model.ProductName</strong>*@
         <li>
-            <strong><a href="@Url.RouteUrl("Product", new { SeName = Model.ProductSeName })">@Model.ProductName</a></strong>
+            <strong class="current-item">@Model.ProductName</strong>
+            @*<strong class="current-item"><a href="@Url.RouteUrl("Product", new { SeName = Model.ProductSeName })">@Model.ProductName</a></strong>*@
             @Html.Widget("productbreadcrumb_after")
         </li>
     </ul>
