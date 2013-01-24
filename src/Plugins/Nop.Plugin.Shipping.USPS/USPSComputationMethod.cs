@@ -89,7 +89,24 @@ namespace Nop.Plugin.Shipping.USPS
                 getShippingOptionRequest.ShippingAddress != null &&
                 getShippingOptionRequest.ShippingAddress.Country != null)
             {
-                result = getShippingOptionRequest.ShippingAddress.Country.ThreeLetterIsoCode == "USA";
+                switch (getShippingOptionRequest.ShippingAddress.Country.ThreeLetterIsoCode)
+                {
+                    case "USA": // United States
+                    case "PRI": // Puerto Rico
+                    case "UMI": // United States minor outlying islands
+                    case "ASM": // American Samoa
+                    case "GUM": // Guam
+                    case "MHL": // Marshall Islands
+                    case "FSM": // Micronesia
+                    case "MNP": // Northern Mariana Islands
+                    case "PLW": // Palau
+                    case "VIR": // Virgin Islands (U.S.)
+                        result = true;
+                        break;
+                    default:
+                        result = false;
+                        break;
+                }
             }
             return result;
         }
