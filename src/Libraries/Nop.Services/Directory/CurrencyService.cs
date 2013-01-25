@@ -71,6 +71,8 @@ namespace Nop.Services.Directory
         public virtual IList<ExchangeRate> GetCurrencyLiveRates(string exchangeRateCurrencyCode)
         {
             var exchangeRateProvider = LoadActiveExchangeRateProvider();
+            if (exchangeRateProvider == null)
+                throw new Exception("Active exchange rate provider cannot be loaded");
             return exchangeRateProvider.GetCurrencyLiveRates(exchangeRateCurrencyCode);
         }
 
