@@ -568,6 +568,7 @@ namespace Nop.Admin.Infrastructure
             Mapper.CreateMap<MediaSettingsModel, MediaSettings>()
                 .ForMember(dest => dest.DefaultPictureZoomEnabled, mo => mo.Ignore())
                 .ForMember(dest => dest.DefaultImageQuality, mo => mo.Ignore())
+                .ForMember(dest => dest.MultipleThumbDirectories, mo => mo.Ignore())
                 .ForMember(dest => dest.AutoCompleteSearchThumbPictureSize, mo => mo.Ignore());
             Mapper.CreateMap<CustomerSettings, CustomerUserSettingsModel.CustomerSettingsModel>()
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());

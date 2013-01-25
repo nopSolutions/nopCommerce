@@ -158,3 +158,11 @@ BEGIN
 	VALUES (N'rewardpointssettings.minimumrewardpointstouse', N'0')
 END
 GO
+
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'mediasettings.multiplethumbdirectories')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'mediasettings.multiplethumbdirectories', N'false')
+END
+GO

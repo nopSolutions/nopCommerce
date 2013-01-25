@@ -21,6 +21,12 @@ namespace Nop.Services.Media
     /// </summary>
     public partial class PictureService : IPictureService
     {
+        #region Const
+
+        private const int MULTIPLE_THUMB_DIRECTORIES_LENGTH = 3;
+
+        #endregion
+
         #region Fields
 
         private static readonly object s_lock = new object();
@@ -267,6 +273,20 @@ namespace Nop.Services.Media
         protected virtual string GetThumbLocalPath(string thumbFileName)
         {
             var thumbsDirectoryPath = _webHelper.MapPath("~/content/images/thumbs");
+            if (_mediaSettings.MultipleThumbDirectories)
+            {
+                //get the first two letters of the file name
+                var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(thumbFileName);
+                if (fileNameWithoutExtension != null && fileNameWithoutExtension.Length > MULTIPLE_THUMB_DIRECTORIES_LENGTH)
+                {
+                    var subDirectoryName = fileNameWithoutExtension.Substring(0, MULTIPLE_THUMB_DIRECTORIES_LENGTH);
+                    thumbsDirectoryPath = Path.Combine(thumbsDirectoryPath, subDirectoryName);
+                    if (!System.IO.Directory.Exists(thumbsDirectoryPath))
+                    {
+                        System.IO.Directory.CreateDirectory(thumbsDirectoryPath);
+                    }
+                }
+            }
             var thumbFilePath = Path.Combine(thumbsDirectoryPath, thumbFileName);
             return thumbFilePath;
         }
@@ -282,7 +302,20 @@ namespace Nop.Services.Media
             var storeLocation = useSsl.HasValue
                                     ? _webHelper.GetStoreLocation(useSsl.Value)
                                     : _webHelper.GetStoreLocation();
-            var url = storeLocation + "content/images/thumbs/" + thumbFileName;
+            var url = storeLocation + "content/images/thumbs/";
+
+            if (_mediaSettings.MultipleThumbDirectories)
+            {
+                //get the first two letters of the file name
+                var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(thumbFileName);
+                if (fileNameWithoutExtension != null && fileNameWithoutExtension.Length > MULTIPLE_THUMB_DIRECTORIES_LENGTH)
+                {
+                    var subDirectoryName = fileNameWithoutExtension.Substring(0, MULTIPLE_THUMB_DIRECTORIES_LENGTH);
+                    url = url + subDirectoryName + "/";
+                }
+            }
+
+            url = url + thumbFileName;
             return url;
         }
 
@@ -371,11 +404,11 @@ namespace Nop.Services.Media
             }
             if (targetSize == 0)
             {
-                string relPath = (useSsl.HasValue
+                string url = (useSsl.HasValue
                                  ? _webHelper.GetStoreLocation(useSsl.Value)
                                  : _webHelper.GetStoreLocation())
                                  + "content/images/" + defaultImageFileName;
-                return relPath;
+                return url;
             }
             else
             {

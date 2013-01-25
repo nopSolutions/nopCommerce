@@ -4623,6 +4623,7 @@ namespace Nop.Services.Installation
                     MaximumImageSize = 1280,
                     DefaultPictureZoomEnabled = false,
                     DefaultImageQuality = 100,
+                    MultipleThumbDirectories = false
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<StoreInformationSettings>>()
