@@ -547,11 +547,11 @@ namespace Nop.Web.Controllers
                     //avatar
                     if (_customerSettings.AllowCustomersToUploadAvatars)
                     {
-                        var customer = post.Customer;
-                        string avatarUrl = _pictureService.GetPictureUrl(customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId), _mediaSettings.AvatarPictureSize, false);
-                        if (String.IsNullOrEmpty(avatarUrl) && _customerSettings.DefaultAvatarEnabled)
-                            avatarUrl = _pictureService.GetDefaultPictureUrl(_mediaSettings.AvatarPictureSize, PictureType.Avatar);
-                        forumPostModel.CustomerAvatarUrl = avatarUrl;
+                        forumPostModel.CustomerAvatarUrl = _pictureService.GetPictureUrl(
+                            post.Customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId), 
+                            _mediaSettings.AvatarPictureSize, 
+                            _customerSettings.DefaultAvatarEnabled,
+                            defaultPictureType: PictureType.Avatar);
                     }
                     //location
                     forumPostModel.ShowCustomersLocation = _customerSettings.ShowCustomersLocation;

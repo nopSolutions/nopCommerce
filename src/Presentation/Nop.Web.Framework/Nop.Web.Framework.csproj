@@ -153,7 +153,6 @@
     <Compile Include="Mvc\XmlDownloadResult.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="HtmlExtensions.cs" />
-    <Compile Include="Mvc\ImageResult.cs" />
     <Compile Include="Mvc\IModelAttribute.cs" />
     <Compile Include="Localization\ILocalizedModel.cs" />
     <Compile Include="Localization\ILocalizedModelLocal.cs" />

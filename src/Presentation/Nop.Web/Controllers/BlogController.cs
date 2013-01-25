@@ -121,11 +121,11 @@ namespace Nop.Web.Controllers
                     };
                     if (_customerSettings.AllowCustomersToUploadAvatars)
                     {
-                        var customer = bc.Customer;
-                        string avatarUrl = _pictureService.GetPictureUrl(customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId), _mediaSettings.AvatarPictureSize, false);
-                        if (String.IsNullOrEmpty(avatarUrl) && _customerSettings.DefaultAvatarEnabled)
-                            avatarUrl = _pictureService.GetDefaultPictureUrl(_mediaSettings.AvatarPictureSize, PictureType.Avatar);
-                        commentModel.CustomerAvatarUrl = avatarUrl;
+                        commentModel.CustomerAvatarUrl = _pictureService.GetPictureUrl(
+                            bc.Customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId), 
+                            _mediaSettings.AvatarPictureSize, 
+                            _customerSettings.DefaultAvatarEnabled,
+                            defaultPictureType: PictureType.Avatar);
                     }
                     model.Comments.Add(commentModel);
                 }

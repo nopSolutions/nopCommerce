@@ -163,7 +163,7 @@ namespace Nop.Services.Common
                 //logo
                 if (logoExists)
                 {
-                    var logoFilePath = _pictureService.GetPictureLocalPath(logoPicture, 0, false);
+                    var logoFilePath = _pictureService.GetThumbLocalPath(logoPicture, 0, false);
                     var cellLogo = new PdfPCell(Image.GetInstance(logoFilePath));
                     cellLogo.Border = Rectangle.NO_BORDER;
                     headerTable.AddCell(cellLogo);
@@ -865,7 +865,7 @@ namespace Nop.Services.Common
                             var picBinary = _pictureService.LoadPictureBinary(pic);
                             if (picBinary != null && picBinary.Length > 0)
                             {
-                                var pictureLocalPath = _pictureService.GetPictureLocalPath(pic, 200, false);
+                                var pictureLocalPath = _pictureService.GetThumbLocalPath(pic, 200, false);
                                 var cell = new PdfPCell(Image.GetInstance(pictureLocalPath));
                                 cell.HorizontalAlignment = Element.ALIGN_LEFT;
                                 cell.Border = Rectangle.NO_BORDER;
@@ -907,7 +907,7 @@ namespace Nop.Services.Common
                         var picBinary = _pictureService.LoadPictureBinary(pic);
                         if (picBinary != null && picBinary.Length > 0)
                         {
-                            var pictureLocalPath = _pictureService.GetPictureLocalPath(pic, 200, false);
+                            var pictureLocalPath = _pictureService.GetThumbLocalPath(pic, 200, false);
                             doc.Add(Image.GetInstance(pictureLocalPath));
                         }
                     }

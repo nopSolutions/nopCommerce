@@ -102,25 +102,14 @@ namespace Nop.Web.Controllers
             }
 
             //avatar
-            bool avatarEnabled = false;
-            string avatarUrl = _pictureService.GetDefaultPictureUrl(_mediaSettings.AvatarPictureSize, PictureType.Avatar);
+            var avatarUrl = "";
             if (_customerSettings.AllowCustomersToUploadAvatars)
             {
-                avatarEnabled = true;
-
-                var customerAvatarId = customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId);
-
-                if (customerAvatarId != 0)
-                {
-                    avatarUrl = _pictureService.GetPictureUrl(customerAvatarId, _mediaSettings.AvatarPictureSize, false);
-                }
-                else
-                {
-                    if (!_customerSettings.DefaultAvatarEnabled)
-                    {
-                        avatarEnabled = false;
-                    }
-                }
+                avatarUrl =_pictureService.GetPictureUrl(
+                 customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId),
+                 _mediaSettings.AvatarPictureSize,
+                 _customerSettings.DefaultAvatarEnabled,
+                 defaultPictureType: PictureType.Avatar);
             }
 
             //location
@@ -180,7 +169,6 @@ namespace Nop.Web.Controllers
             var model = new ProfileInfoModel()
             {
                 CustomerProfileId = customer.Id,
-                AvatarEnabled = avatarEnabled,
                 AvatarUrl = avatarUrl,
                 LocationEnabled = locationEnabled,
                 Location = location,

@@ -5,7 +5,6 @@ namespace Nop.Web.Models.Profile
     {
         public int CustomerProfileId { get; set; }
 
-        public bool AvatarEnabled { get; set; }
         public string AvatarUrl { get; set; }
 
         public bool LocationEnabled { get; set; }

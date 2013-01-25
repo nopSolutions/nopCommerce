@@ -779,7 +779,7 @@ namespace Nop.Services.ExportImport
                         var pictures = _pictureService.GetPicturesByProductId(p.Id, 3);
                         for (int i = 0; i < pictures.Count; i++)
                         {
-                            string pictureLocalPath = _pictureService.GetPictureLocalPath(pictures[i]);
+                            string pictureLocalPath = _pictureService.GetThumbLocalPath(pictures[i]);
                             switch (i)
                             {
                                 case 0:

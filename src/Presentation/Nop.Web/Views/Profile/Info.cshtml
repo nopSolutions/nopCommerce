@@ -2,7 +2,7 @@
 @using Nop.Web.Models.Profile;
 <div class="profile-info-box">
     <div class="user-details">
-        @if (Model.AvatarEnabled && !String.IsNullOrEmpty(Model.AvatarUrl))
+        @if (!String.IsNullOrEmpty(Model.AvatarUrl))
         {
             <div class="avatar">
                 <img src="@(Model.AvatarUrl)" class="avatar-img" alt="Avatar" />
