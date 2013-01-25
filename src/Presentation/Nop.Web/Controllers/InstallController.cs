@@ -153,6 +153,8 @@ namespace Nop.Web.Controllers
                 //fast installation service does not support SQL compact
                 DisableSqlCompact = !String.IsNullOrEmpty(ConfigurationManager.AppSettings["UseFastInstallationService"]) &&
                     Convert.ToBoolean(ConfigurationManager.AppSettings["UseFastInstallationService"]),
+                DisableSampleDataOption = !String.IsNullOrEmpty(ConfigurationManager.AppSettings["DisableSampleDataDuringInstallation"]) &&
+                    Convert.ToBoolean(ConfigurationManager.AppSettings["DisableSampleDataDuringInstallation"]),
                 SqlAuthenticationType = "sqlauthentication",
                 SqlConnectionInfo = "sqlconnectioninfo_values",
                 SqlServerCreateDatabase = false,
@@ -196,7 +198,8 @@ namespace Nop.Web.Controllers
             }
             model.DisableSqlCompact = !String.IsNullOrEmpty(ConfigurationManager.AppSettings["UseFastInstallationService"]) &&
                 Convert.ToBoolean(ConfigurationManager.AppSettings["UseFastInstallationService"]);
-                
+            model.DisableSampleDataOption = !String.IsNullOrEmpty(ConfigurationManager.AppSettings["DisableSampleDataDuringInstallation"]) &&
+                Convert.ToBoolean(ConfigurationManager.AppSettings["DisableSampleDataDuringInstallation"]);
 
             //SQL Server
             if (model.DataProvider.Equals("sqlserver", StringComparison.InvariantCultureIgnoreCase))

@@ -174,15 +174,18 @@
                                                     @Html.PasswordFor(x => x.ConfirmPassword, new { @class = "textbox" })
                                                 </td>
                                             </tr>
-                                            <tr>
-                                                <td nowrap="nowrap" align="left">
-                                                    <label for="InstallSampleData">
-                                                        @ILS.GetResource("CreateSampleData"):</label>
-                                                </td>
-                                                <td width="100%">
-                                                    @Html.CheckBoxFor(x => x.InstallSampleData)
-                                                </td>
-                                            </tr>
+                                            @if (!Model.DisableSampleDataOption)
+                                            {
+                                                <tr>
+                                                    <td nowrap="nowrap" align="left">
+                                                        <label for="InstallSampleData">
+                                                            @ILS.GetResource("CreateSampleData"):</label>
+                                                    </td>
+                                                    <td width="100%">
+                                                        @Html.CheckBoxFor(x => x.InstallSampleData)
+                                                    </td>
+                                                </tr>
+                                            }
                                             <tr>
                                                 <td colspan="2" align="left">
                                                     <h3>
