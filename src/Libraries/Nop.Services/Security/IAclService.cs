@@ -41,6 +41,7 @@ namespace Nop.Services.Security
         /// Inserts an ACL record
         /// </summary>
         /// <typeparam name="T">Type</typeparam>
+        /// <param name="customerRoleId">Customer role id</param>
         /// <param name="entity">Entity</param>
         void InsertAclRecord<T>(T entity, int customerRoleId) where T : BaseEntity, IAclSupported;
 
