@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Nop.Admin.Models.Catalog;
+using Nop.Admin.Models.Stores;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -14,6 +15,7 @@ using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Services.Security;
 using Nop.Services.Seo;
+using Nop.Services.Stores;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
 using Telerik.Web.Mvc;
@@ -30,6 +32,8 @@ namespace Nop.Admin.Controllers
         private readonly IManufacturerTemplateService _manufacturerTemplateService;
         private readonly IProductService _productService;
         private readonly ICustomerService _customerService;
+        private readonly IStoreService _storeService;
+        private readonly IStoreMappingService _storeMappingService;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IPictureService _pictureService;
         private readonly ILanguageService _languageService;
@@ -49,7 +53,9 @@ namespace Nop.Admin.Controllers
 
         public ManufacturerController(ICategoryService categoryService, IManufacturerService manufacturerService,
             IManufacturerTemplateService manufacturerTemplateService, IProductService productService,
-            ICustomerService customerService, IUrlRecordService urlRecordService, IPictureService pictureService,
+            ICustomerService customerService, IStoreService storeService,
+            IStoreMappingService storeMappingService,
+            IUrlRecordService urlRecordService, IPictureService pictureService,
             ILanguageService languageService, ILocalizationService localizationService, ILocalizedEntityService localizedEntityService,
             IExportManager exportManager, IWorkContext workContext,
             ICustomerActivityService customerActivityService, IAclService aclService, 
@@ -61,6 +67,8 @@ namespace Nop.Admin.Controllers
             this._manufacturerService = manufacturerService;
             this._productService = productService;
             this._customerService = customerService;
+            this._storeService = storeService;
+            this._storeMappingService = storeMappingService;
             this._urlRecordService = urlRecordService;
             this._pictureService = pictureService;
             this._languageService = languageService;
@@ -186,6 +194,57 @@ namespace Nop.Admin.Controllers
             }
         }
 
+        [NonAction]
+        private void PrepareStoresMappingModel(ManufacturerModel model, Manufacturer manufacturer, bool excludeProperties)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            model.AvailableStores = _storeService
+                .GetAllStores()
+                .Select(s => new StoreModel()
+                                 {
+                                     Id = s.Id,
+                                     Name = s.Name,
+                                     DisplayOrder = s.DisplayOrder
+                                 })
+                .ToList();
+            if (!excludeProperties)
+            {
+                if (manufacturer != null)
+                {
+                    model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(manufacturer);
+                }
+                else
+                {
+                    model.SelectedCustomerRoleIds = new int[0];
+                }
+            }
+        }
+
+        [NonAction]
+        protected void SaveManufacturerStoreMappings(Manufacturer manufacturer, ManufacturerModel model)
+        {
+            var existingStoreMappings = _storeMappingService.GetStoreMappings(manufacturer);
+            var allStores = _storeService.GetAllStores();
+            foreach (var store in allStores)
+            {
+                if (model.SelectedStoreIds != null && model.SelectedStoreIds.Contains(store.Id))
+                {
+                    //new role
+                    if (existingStoreMappings.Where(sm => sm.StoreId == store.Id).Count() == 0)
+                        _storeMappingService.InsertStoreMapping(manufacturer, store.Id);
+                }
+                else
+                {
+                    //removed role
+                    var storeMappingToDelete = existingStoreMappings.Where(sm => sm.StoreId == store.Id).FirstOrDefault();
+                    if (storeMappingToDelete != null)
+                        _storeMappingService.DeleteStoreMapping(storeMappingToDelete);
+                }
+            }
+        }
+
         #endregion
         
         #region List
@@ -245,6 +304,8 @@ namespace Nop.Admin.Controllers
             PrepareTemplatesModel(model);
             //ACL
             PrepareAclModel(model, null, false);
+            //Stores
+            PrepareStoresMappingModel(model, null, false);
             //default values
             model.PageSize = 4;
             model.Published = true;
@@ -276,6 +337,8 @@ namespace Nop.Admin.Controllers
                 UpdatePictureSeoNames(manufacturer);
                 //ACL (customer roles)
                 SaveManufacturerAcl(manufacturer, model);
+                //Stores
+                SaveManufacturerStoreMappings(manufacturer, model);
 
                 //activity log
                 _customerActivityService.InsertActivity("AddNewManufacturer", _localizationService.GetResource("ActivityLog.AddNewManufacturer"), manufacturer.Name);
@@ -289,6 +352,9 @@ namespace Nop.Admin.Controllers
             PrepareTemplatesModel(model);
             //ACL
             PrepareAclModel(model, null, true);
+            //Stores
+            PrepareStoresMappingModel(model, null, true);
+
             return View(model);
         }
 
@@ -317,6 +383,8 @@ namespace Nop.Admin.Controllers
             PrepareTemplatesModel(model);
             //ACL
             PrepareAclModel(model, manufacturer, false);
+            //Store
+            PrepareStoresMappingModel(model, manufacturer, false);
 
             return View(model);
         }
@@ -354,6 +422,8 @@ namespace Nop.Admin.Controllers
                 UpdatePictureSeoNames(manufacturer);
                 //ACL
                 SaveManufacturerAcl(manufacturer, model);
+                //Stores
+                SaveManufacturerStoreMappings(manufacturer, model);
 
                 //activity log
                 _customerActivityService.InsertActivity("EditManufacturer", _localizationService.GetResource("ActivityLog.EditManufacturer"), manufacturer.Name);
@@ -368,6 +438,8 @@ namespace Nop.Admin.Controllers
             PrepareTemplatesModel(model);
             //ACL
             PrepareAclModel(model, manufacturer, true);
+            //Store
+            PrepareStoresMappingModel(model, manufacturer, true);
 
             return View(model);
         }

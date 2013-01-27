@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using FluentValidation.Attributes;
 using Nop.Admin.Models.Customers;
+using Nop.Admin.Models.Stores;
 using Nop.Admin.Validators.Catalog;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Localization;
@@ -87,6 +88,13 @@ namespace Nop.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.AclCustomerRoles")]
         public List<CustomerRoleModel> AvailableCustomerRoles { get; set; }
         public int[] SelectedCustomerRoleIds { get; set; }
+
+        //Store mapping
+        [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.LimitedToStores")]
+        public bool LimitedToStores { get; set; }
+        [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.AvailableStores")]
+        public List<StoreModel> AvailableStores { get; set; }
+        public int[] SelectedStoreIds { get; set; }
 
 
         #region Nested classes

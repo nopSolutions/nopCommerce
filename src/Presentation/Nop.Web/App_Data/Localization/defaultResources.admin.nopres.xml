@@ -1031,6 +1031,22 @@
                                         </LocaleResource>
                                       </Children>
                                     </LocaleResource>
+                                    <LocaleResource Name="LimitedToStores">
+                                      <Value>Limited to stores</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Determines whether the manufacturer is available only at certain stores.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="AvailableStores">
+                                      <Value>Stores</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Select stores for which the manufacturer will be shown.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
                                 </Children>
                             </LocaleResource>
                             <LocaleResource Name="List">
@@ -1068,6 +1084,9 @@
                                         <Value>You need to save the manufacturer before you can add products for this manufacturer page.</Value>
                                     </LocaleResource>
                                 </Children>
+                            </LocaleResource>
+                            <LocaleResource Name="Stores">
+                              <Value>Stores</Value>
                             </LocaleResource>
                             <LocaleResource Name="Added">
                                 <Value>The new manufacturer has been added successfully.</Value>
