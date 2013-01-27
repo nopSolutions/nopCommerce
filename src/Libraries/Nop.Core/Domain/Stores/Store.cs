@@ -1,5 +1,5 @@
 
-namespace Nop.Core.Domain.Directory
+namespace Nop.Core.Domain.Stores
 {
     /// <summary>
     /// Represents a store

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Caching;
 using Nop.Core.Data;
-using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Stores;
 using Nop.Services.Events;
 
-namespace Nop.Services.Directory
+namespace Nop.Services.Stores
 {
     /// <summary>
     /// Store service

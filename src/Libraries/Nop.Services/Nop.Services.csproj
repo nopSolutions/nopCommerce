@@ -170,8 +170,8 @@
     <Compile Include="Customers\ICustomerReportService.cs" />
     <Compile Include="Customers\CustomerReportService.cs" />
     <Compile Include="Customers\DeleteGuestsTask.cs" />
-    <Compile Include="Directory\IStoreService.cs" />
-    <Compile Include="Directory\StoreService.cs" />
+    <Compile Include="Stores\IStoreService.cs" />
+    <Compile Include="Stores\StoreService.cs" />
     <Compile Include="Directory\IGeoCountryLookup.cs" />
     <Compile Include="Directory\GeoCountryLookup.cs" />
     <Compile Include="Events\EventPublisher.cs" />

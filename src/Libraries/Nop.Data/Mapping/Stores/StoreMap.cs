@@ -1,7 +1,7 @@
 using System.Data.Entity.ModelConfiguration;
-using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Stores;
 
-namespace Nop.Data.Mapping.Directory
+namespace Nop.Data.Mapping.Stores
 {
     public partial class StoreMap : EntityTypeConfiguration<Store>
     {

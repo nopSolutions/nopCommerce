@@ -1,10 +1,10 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
-using Nop.Admin.Models.Directory;
-using Nop.Core.Domain.Directory;
-using Nop.Services.Directory;
+using Nop.Admin.Models.Stores;
+using Nop.Core.Domain.Stores;
 using Nop.Services.Localization;
 using Nop.Services.Security;
+using Nop.Services.Stores;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
 

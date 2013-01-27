@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
-using Nop.Admin.Models.Directory;
+using Nop.Admin.Models.Stores;
 using Nop.Services.Localization;
 
-namespace Nop.Admin.Validators.Directory
+namespace Nop.Admin.Validators.Stores
 {
     public class StoreValidator : AbstractValidator<StoreModel>
     {

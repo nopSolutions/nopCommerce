@@ -193,7 +193,7 @@
     <Compile Include="Models\Common\SystemWarningModel.cs" />
     <Compile Include="Models\Common\SystemInfoModel.cs" />
     <Compile Include="Models\Customers\OnlineCustomerModel.cs" />
-    <Compile Include="Models\Directory\StoreModel.cs" />
+    <Compile Include="Models\Stores\StoreModel.cs" />
     <Compile Include="Models\ExternalAuthentication\AuthenticationMethodModel.cs" />
     <Compile Include="Models\Logging\LogListModel.cs" />
     <Compile Include="Models\Messages\NewsLetterSubscriptionListModel.cs" />
@@ -293,7 +293,7 @@
     <Compile Include="Validators\Catalog\ProductTagValidator.cs" />
     <Compile Include="Validators\Catalog\ManufacturerValidator.cs" />
     <Compile Include="Validators\Common\AddressValidator.cs" />
-    <Compile Include="Validators\Directory\StoreValidator.cs" />
+    <Compile Include="Validators\Stores\StoreValidator.cs" />
     <Compile Include="Validators\Tasks\ScheduleTaskValidator.cs" />
     <Compile Include="Validators\Messages\NewsLetterSubscriptionValidator.cs" />
     <Compile Include="Validators\Orders\CheckoutAttributeValueValidator.cs" />

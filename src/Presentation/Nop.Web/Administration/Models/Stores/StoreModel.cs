@@ -1,10 +1,10 @@
 ﻿using System.Web.Mvc;
 using FluentValidation.Attributes;
-using Nop.Admin.Validators.Directory;
+using Nop.Admin.Validators.Stores;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
 
-namespace Nop.Admin.Models.Directory
+namespace Nop.Admin.Models.Stores
 {
     [Validator(typeof(StoreValidator))]
     public partial class StoreModel : BaseNopEntityModel

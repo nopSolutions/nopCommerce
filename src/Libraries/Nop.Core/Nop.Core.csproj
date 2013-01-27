@@ -94,7 +94,7 @@
     <Compile Include="Domain\Common\FulltextSearchMode.cs" />
     <Compile Include="Domain\Common\GenericAttribute.cs" />
     <Compile Include="Domain\Customers\CustomerExtentions.cs" />
-    <Compile Include="Domain\Directory\Store.cs" />
+    <Compile Include="Domain\Stores\Store.cs" />
     <Compile Include="Domain\Orders\GiftCardExtensions.cs" />
     <Compile Include="Domain\Security\AclRecord.cs" />
     <Compile Include="Domain\Security\IAclSupported.cs" />

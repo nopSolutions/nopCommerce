@@ -44,6 +44,7 @@ using Nop.Services.Polls;
 using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
+using Nop.Services.Stores;
 using Nop.Services.Tasks;
 using Nop.Services.Tax;
 using Nop.Services.Topics;

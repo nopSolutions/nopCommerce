@@ -69,7 +69,7 @@
     <Compile Include="Common\AddressPeristenceTests.cs" />
     <Compile Include="Catalog\CategoryPersistenceTests.cs" />
     <Compile Include="Common\GenericAttributePersistenceTests.cs" />
-    <Compile Include="Directory\StorePersistenceTests.cs" />
+    <Compile Include="Stores\StorePersistenceTests.cs" />
     <Compile Include="Security\AclRecordPersistenceTests.cs" />
     <Compile Include="Seo\UrlRecordPersistenceTests.cs" />
     <Compile Include="Customers\ExternalAuthenticationRecordPersistenceTests.cs" />
