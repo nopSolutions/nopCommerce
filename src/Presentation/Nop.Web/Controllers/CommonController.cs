@@ -369,7 +369,7 @@ namespace Nop.Web.Controllers
                 ShoppingCartItems = customer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList().GetTotalProducts(),
                 WishlistEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableWishlist),
                 WishlistItems = customer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist).ToList().GetTotalProducts(),
-                AllowPrivateMessages = _forumSettings.AllowPrivateMessages,
+                AllowPrivateMessages = customer.IsRegistered() && _forumSettings.AllowPrivateMessages,
                 UnreadPrivateMessages = unreadMessage,
                 AlertMessage = alertMessage,
             };
@@ -421,6 +421,8 @@ namespace Nop.Web.Controllers
         [ChildActionOnly]
         public ActionResult InfoBlock()
         {
+            var customer = _workContext.CurrentCustomer;
+
             var model = new InfoBlockModel()
             {
                 RecentlyAddedProductsEnabled = _catalogSettings.RecentlyAddedProductsEnabled,
@@ -430,7 +432,7 @@ namespace Nop.Web.Controllers
                 NewsEnabled = _newsSettings.Enabled,
                 SitemapEnabled = _commonSettings.SitemapEnabled,
                 ForumEnabled = _forumSettings.ForumsEnabled,
-                AllowPrivateMessages = _forumSettings.AllowPrivateMessages,
+                AllowPrivateMessages = customer.IsRegistered() && _forumSettings.AllowPrivateMessages,
             };
 
             return PartialView(model);
