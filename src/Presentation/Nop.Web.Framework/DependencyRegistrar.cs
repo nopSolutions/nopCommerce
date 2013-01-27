@@ -172,6 +172,7 @@ namespace Nop.Web.Framework
             builder.RegisterType<CurrencyService>().As<ICurrencyService>().InstancePerHttpRequest();
             builder.RegisterType<MeasureService>().As<IMeasureService>().InstancePerHttpRequest();
             builder.RegisterType<StateProvinceService>().As<IStateProvinceService>().InstancePerHttpRequest();
+            builder.RegisterType<StoreService>().As<IStoreService>().InstancePerHttpRequest();
 
             builder.RegisterType<DiscountService>().As<IDiscountService>().InstancePerHttpRequest();
 

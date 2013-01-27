@@ -38,6 +38,7 @@ namespace Nop.Services.Security
         public static readonly PermissionRecord ManageActivityLog = new PermissionRecord { Name = "Admin area. Manage Activity Log", SystemName = "ManageActivityLog", Category = "Configuration" };
         public static readonly PermissionRecord ManageAcl = new PermissionRecord { Name = "Admin area. Manage ACL", SystemName = "ManageACL", Category = "Configuration" };
         public static readonly PermissionRecord ManageEmailAccounts = new PermissionRecord { Name = "Admin area. Manage Email Accounts", SystemName = "ManageEmailAccounts", Category = "Configuration" };
+        public static readonly PermissionRecord ManageStores = new PermissionRecord { Name = "Admin area. Manage Stores", SystemName = "ManageStores", Category = "Configuration" };
         public static readonly PermissionRecord ManagePlugins = new PermissionRecord { Name = "Admin area. Manage Plugins", SystemName = "ManagePlugins", Category = "Configuration" };
         public static readonly PermissionRecord ManageSystemLog = new PermissionRecord { Name = "Admin area. Manage System Log", SystemName = "ManageSystemLog", Category = "Configuration" };
         public static readonly PermissionRecord ManageMessageQueue = new PermissionRecord { Name = "Admin area. Manage Message Queue", SystemName = "ManageMessageQueue", Category = "Configuration" };
@@ -89,6 +90,7 @@ namespace Nop.Services.Security
                 ManageActivityLog,
                 ManageAcl,
                 ManageEmailAccounts,
+                ManageStores,
                 ManagePlugins,
                 ManageSystemLog,
                 ManageMessageQueue,
@@ -143,6 +145,7 @@ namespace Nop.Services.Security
                         ManageActivityLog,
                         ManageAcl,
                         ManageEmailAccounts,
+                        ManageStores,
                         ManagePlugins,
                         ManageSystemLog,
                         ManageMessageQueue,

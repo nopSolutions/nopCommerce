@@ -5833,6 +5833,52 @@
                             </LocaleResource>
                         </Children>
                     </LocaleResource>
+                    <LocaleResource Name="Stores">
+                        <Value>Stores</Value>
+                        <Children>
+                            <LocaleResource Name="AddNew">
+                                <Value>Add a new store</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="BackToList">
+                                <Value>back to store list</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="EditStoreDetails">
+                              <Value>Edit store details</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="Fields">
+                                <Children>
+                                    <LocaleResource Name="Name">
+                                        <Value>Name</Value>
+                                        <Children>
+                                            <LocaleResource Name="Hint">
+                                                <Value>The name of the store.</Value>
+                                            </LocaleResource>
+                                            <LocaleResource Name="Required">
+                                                <Value>Please provide a name.</Value>
+                                            </LocaleResource>
+                                        </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="DisplayOrder">
+                                        <Value>Display order</Value>
+                                        <Children>
+                                            <LocaleResource Name="Hint">
+                                                <Value>The display order for this store. 1 represents the top of the list.</Value>
+                                            </LocaleResource>
+                                        </Children>
+                                    </LocaleResource>
+                                </Children>
+                            </LocaleResource>
+                            <LocaleResource Name="Added">
+                                <Value>The new store has been added successfully.</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="Deleted">
+                                <Value>The store has been deleted successfully.</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="Updated">
+                                <Value>The store has been updated successfully.</Value>
+                            </LocaleResource>
+                        </Children>
+                    </LocaleResource>
                     <LocaleResource Name="Tax">
                         <Value>Tax</Value>
                         <Children>

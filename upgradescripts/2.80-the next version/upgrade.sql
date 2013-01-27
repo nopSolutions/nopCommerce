@@ -44,6 +44,42 @@ set @resources='
   <LocaleResource Name="RewardPoints.MinimumBalance">
 	<Value>Minimum balance allowed to use is {0} reward points ({1}).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores">
+	<Value>Stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.AddNew">
+	<Value>Add a new store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.BackToList">
+	<Value>back to store list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.EditStoreDetails">
+	<Value>Edit store details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.Name">
+	<Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.Name.Hint">
+	<Value>The name of the store.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.Name.Required">
+	<Value>Please provide a name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.DisplayOrder">
+	<Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.DisplayOrder.Hint">
+	<Value>The display order for this store. 1 represents the top of the list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Added">
+	<Value>The new store has been added successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Updated">
+	<Value>The store has been updated successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Deleted">
+	<Value>The store has been deleted successfully.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -164,5 +200,47 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'mediasettings.multipleth
 BEGIN
 	INSERT [Setting] ([Name], [Value])
 	VALUES (N'mediasettings.multiplethumbdirectories', N'false')
+END
+GO
+
+
+
+IF NOT EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[Store]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+BEGIN
+CREATE TABLE [dbo].[Store](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Name] nvarchar(400) NOT NULL,
+	[DisplayOrder] int NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+END
+GO
+
+
+
+--new permission
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[PermissionRecord]
+		WHERE [SystemName] = N'ManageStores')
+BEGIN
+	INSERT [dbo].[PermissionRecord] ([Name], [SystemName], [Category])
+	VALUES (N'Admin area. Manage Stores', N'ManageStores', N'Configuration')
+
+	DECLARE @PermissionRecordId INT 
+	SET @PermissionRecordId = @@IDENTITY
+
+
+	--add it to admin role be default
+	DECLARE @AdminCustomerRoleId int
+	SELECT @AdminCustomerRoleId = Id
+	FROM [CustomerRole]
+	WHERE IsSystemRole=1 and [SystemName] = N'Administrators'
+
+	INSERT [dbo].[PermissionRecord_Role_Mapping] ([PermissionRecord_Id], [CustomerRole_Id])
+	VALUES (@PermissionRecordId, @AdminCustomerRoleId)
 END
 GO
