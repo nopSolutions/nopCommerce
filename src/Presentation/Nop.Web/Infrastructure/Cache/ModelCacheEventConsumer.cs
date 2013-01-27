@@ -129,8 +129,10 @@ namespace Nop.Web.Infrastructure.Cache
         /// <remarks>
         /// {0} : current manufacturer id
         /// {1} : language id
+        /// {2} : roles of the current user
+        /// {3} : current store id
         /// </remarks>
-        public const string MANUFACTURER_NAVIGATION_MODEL_KEY = "Nop.pres.manufacturer.navigation-{0}-{1}-{2}";
+        public const string MANUFACTURER_NAVIGATION_MODEL_KEY = "Nop.pres.manufacturer.navigation-{0}-{1}-{2}-{3}";
         public const string MANUFACTURER_NAVIGATION_PATTERN_KEY = "Nop.pres.manufacturer.navigation";
         
         /// <summary>
@@ -191,8 +193,10 @@ namespace Nop.Web.Infrastructure.Cache
         /// <remarks>
         /// {0} : product id
         /// {1} : language id
+        /// {2} : roles of the current user
+        /// {3} : current store id
         /// </remarks>
-        public const string PRODUCT_MANUFACTURERS_MODEL_KEY = "Nop.pres.product.manufacturers-{0}-{1}-{2}";
+        public const string PRODUCT_MANUFACTURERS_MODEL_KEY = "Nop.pres.product.manufacturers-{0}-{1}-{2}-{3}";
         public const string PRODUCT_MANUFACTURERS_PATTERN_KEY = "Nop.pres.product.manufacturers";
 
         /// <summary>
