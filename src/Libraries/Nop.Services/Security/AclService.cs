@@ -7,7 +7,7 @@ using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
 
-namespace Nop.Services.Seo
+namespace Nop.Services.Security
 {
     /// <summary>
     /// ACL service
