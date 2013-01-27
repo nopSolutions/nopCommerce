@@ -173,7 +173,12 @@ namespace Nop.Web.Framework
             builder.RegisterType<CurrencyService>().As<ICurrencyService>().InstancePerHttpRequest();
             builder.RegisterType<MeasureService>().As<IMeasureService>().InstancePerHttpRequest();
             builder.RegisterType<StateProvinceService>().As<IStateProvinceService>().InstancePerHttpRequest();
+
             builder.RegisterType<StoreService>().As<IStoreService>().InstancePerHttpRequest();
+            //pass MemoryCacheManager to SettingService as cacheManager (cache settings between requests)
+            builder.RegisterType<StoreMappingService>().As<IStoreMappingService>()
+                .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
+                .InstancePerHttpRequest();
 
             builder.RegisterType<DiscountService>().As<IDiscountService>().InstancePerHttpRequest();
 

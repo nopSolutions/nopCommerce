@@ -1,6 +1,7 @@
 ﻿using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
 
 namespace Nop.Core
@@ -19,6 +20,12 @@ namespace Nop.Core
         /// Gets or sets the original customer (in case the current one is impersonated)
         /// </summary>
         Customer OriginalCustomerIfImpersonated { get; }
+
+        /// <summary>
+        /// Gets or sets the current store
+        /// </summary>
+        Store CurrentStore { get; }
+
         /// <summary>
         /// Get or set current user working language
         /// </summary>

@@ -5,12 +5,14 @@ using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Authentication;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
+using Nop.Services.Stores;
 using Nop.Web.Framework.Localization;
 
 namespace Nop.Web.Framework
@@ -24,6 +26,7 @@ namespace Nop.Web.Framework
 
         private readonly HttpContextBase _httpContext;
         private readonly ICustomerService _customerService;
+        private readonly IStoreService _storeService;
         private readonly IAuthenticationService _authenticationService;
         private readonly ILanguageService _languageService;
         private readonly ICurrencyService _currencyService;
@@ -32,12 +35,16 @@ namespace Nop.Web.Framework
         private readonly LocalizationSettings _localizationSettings;
         private readonly IWebHelper _webHelper;
 
+        private Store _cachedStore;
+        private bool _storeIsLoaded;
+
         private Customer _cachedCustomer;
         private Customer _originalCustomerIfImpersonated;
         private bool _cachedIsAdmin;
 
         public WebWorkContext(HttpContextBase httpContext,
             ICustomerService customerService,
+            IStoreService storeService,
             IAuthenticationService authenticationService,
             ILanguageService languageService,
             ICurrencyService currencyService,
@@ -47,6 +54,7 @@ namespace Nop.Web.Framework
         {
             this._httpContext = httpContext;
             this._customerService = customerService;
+            this._storeService = storeService;
             this._authenticationService = authenticationService;
             this._languageService = languageService;
             this._currencyService = currencyService;
@@ -157,6 +165,34 @@ namespace Nop.Web.Framework
             {
                 _httpContext.Response.Cookies.Remove(CustomerCookieName);
                 _httpContext.Response.Cookies.Add(cookie);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the current store
+        /// </summary>
+        public Store CurrentStore
+        {
+            get
+            {
+                if (_storeIsLoaded)
+                    return _cachedStore;
+
+                Store store = null;
+                if (_httpContext != null)
+                {
+                    //TODO determine the current store by HTTP_HOST
+                }
+
+                if (store == null)
+                {
+                    //load the first found store
+                    store = _storeService.GetAllStores().FirstOrDefault();
+                }
+
+                _storeIsLoaded = true;
+                _cachedStore = store;
+                return _cachedStore;
             }
         }
 
