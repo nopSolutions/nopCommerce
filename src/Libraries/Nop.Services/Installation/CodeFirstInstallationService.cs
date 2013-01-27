@@ -39,6 +39,7 @@ using Nop.Services.Media;
 using Nop.Services.Localization;
 using Nop.Services.Seo;
 using Nop.Core.Domain.Seo;
+using Nop.Core.Domain.Stores;
 
 namespace Nop.Services.Installation
 {
@@ -46,6 +47,7 @@ namespace Nop.Services.Installation
     {
         #region Fields
 
+        private readonly IRepository<Store> _storeRepository;
         private readonly IRepository<MeasureDimension> _measureDimensionRepository;
         private readonly IRepository<MeasureWeight> _measureWeightRepository;
         private readonly IRepository<TaxCategory> _taxCategoryRepository;
@@ -85,7 +87,8 @@ namespace Nop.Services.Installation
 
         #region Ctor
 
-        public CodeFirstInstallationService(IRepository<MeasureDimension> measureDimensionRepository,
+        public CodeFirstInstallationService(IRepository<Store> storeRepository,
+            IRepository<MeasureDimension> measureDimensionRepository,
             IRepository<MeasureWeight> measureWeightRepository,
             IRepository<TaxCategory> taxCategoryRepository,
             IRepository<Language> languageRepository,
@@ -120,6 +123,7 @@ namespace Nop.Services.Installation
             IGenericAttributeService genericAttributeService,
             IWebHelper webHelper)
         {
+            this._storeRepository = storeRepository;
             this._measureDimensionRepository = measureDimensionRepository;
             this._measureWeightRepository = measureWeightRepository;
             this._taxCategoryRepository = taxCategoryRepository;
@@ -271,6 +275,20 @@ namespace Nop.Services.Installation
                 RecursivelySortChildrenResource(child);
             }
 
+        }
+
+        protected virtual void InstallStores()
+        {
+            var stores = new List<Store>()
+            {
+                new Store()
+                {
+                    Name = "Your store name",
+                    DisplayOrder = 1,
+                },
+            };
+
+            stores.ForEach(x => _storeRepository.Insert(x));
         }
 
         protected virtual void InstallMeasures()
@@ -9773,6 +9791,7 @@ namespace Nop.Services.Installation
         public virtual void InstallData(string defaultUserEmail,
             string defaultUserPassword, bool installSampleData = true)
         {
+            InstallStores();
             InstallMeasures();
             InstallTaxCategories();
             InstallLanguages();

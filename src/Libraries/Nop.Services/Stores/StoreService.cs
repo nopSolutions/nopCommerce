@@ -57,6 +57,10 @@ namespace Nop.Services.Stores
             if (store == null)
                 throw new ArgumentNullException("store");
 
+            var allStores = GetAllStores();
+            if (allStores.Count == 1)
+                throw new Exception("You cannot delete the only configured store");
+
             _storeRepository.Delete(store);
 
             _cacheManager.RemoveByPattern(STORES_PATTERN_KEY);

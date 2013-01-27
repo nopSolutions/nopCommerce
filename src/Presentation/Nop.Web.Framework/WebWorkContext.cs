@@ -36,7 +36,6 @@ namespace Nop.Web.Framework
         private readonly IWebHelper _webHelper;
 
         private Store _cachedStore;
-        private bool _storeIsLoaded;
 
         private Customer _cachedCustomer;
         private Customer _originalCustomerIfImpersonated;
@@ -175,7 +174,7 @@ namespace Nop.Web.Framework
         {
             get
             {
-                if (_storeIsLoaded)
+                if (_cachedStore != null)
                     return _cachedStore;
 
                 Store store = null;
@@ -190,7 +189,6 @@ namespace Nop.Web.Framework
                     store = _storeService.GetAllStores().FirstOrDefault();
                 }
 
-                _storeIsLoaded = true;
                 _cachedStore = store;
                 return _cachedStore;
             }
