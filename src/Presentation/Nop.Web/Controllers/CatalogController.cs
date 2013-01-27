@@ -35,6 +35,7 @@ using Nop.Web.Models.Media;
 using Nop.Services.Logging;
 using Nop.Web.Framework.Events;
 using Nop.Services.Events;
+using Nop.Services.Stores;
 
 namespace Nop.Web.Controllers
 {
@@ -70,6 +71,7 @@ namespace Nop.Web.Controllers
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
         private readonly IAclService _aclService;
+        private readonly IStoreMappingService _storeMappingService;
         private readonly IPermissionService _permissionService;
         private readonly IDownloadService _downloadService;
         private readonly ICustomerActivityService _customerActivityService;
@@ -104,6 +106,7 @@ namespace Nop.Web.Controllers
             IWorkflowMessageService workflowMessageService, IProductTagService productTagService,
             IOrderReportService orderReportService, IGenericAttributeService genericAttributeService,
             IBackInStockSubscriptionService backInStockSubscriptionService, IAclService aclService,
+            IStoreMappingService storeMappingService,
             IPermissionService permissionService, IDownloadService downloadService,
             ICustomerActivityService customerActivityService, IEventPublisher eventPublisher,
             MediaSettings mediaSettings, CatalogSettings catalogSettings,
@@ -140,6 +143,7 @@ namespace Nop.Web.Controllers
             this._genericAttributeService = genericAttributeService;
             this._backInStockSubscriptionService = backInStockSubscriptionService;
             this._aclService = aclService;
+            this._storeMappingService = storeMappingService;
             this._permissionService = permissionService;
             this._downloadService = downloadService;
             this._customerActivityService = customerActivityService;
@@ -1123,6 +1127,10 @@ namespace Nop.Web.Controllers
             if (!_aclService.Authorize(manufacturer))
                 return InvokeHttp404();
 
+            //Store mapping
+            if (!_storeMappingService.Authorize(manufacturer))
+                return InvokeHttp404();
+            
             //'Continue shopping' URL
             _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.LastContinueShoppingPage, _webHelper.GetThisPageUrl(false));
 
