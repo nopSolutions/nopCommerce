@@ -256,7 +256,9 @@ namespace Nop.Web.Framework
                     //find current customer language
                     foreach (var lang in allLanguages)
                     {
-                        if (this.CurrentCustomer != null && this.CurrentCustomer.LanguageId == lang.Id)
+                        if (this.CurrentCustomer != null &&
+                            this.CurrentCustomer.LanguageId.HasValue && 
+                            this.CurrentCustomer.LanguageId == lang.Id)
                         {
                             return lang;
                         }
@@ -299,7 +301,9 @@ namespace Nop.Web.Framework
                     //find current customer language
                     foreach (var currency in allCurrencies)
                     {
-                        if (this.CurrentCustomer != null && this.CurrentCustomer.CurrencyId == currency.Id)
+                        if (this.CurrentCustomer != null &&
+                            this.CurrentCustomer.CurrencyId.HasValue && 
+                            this.CurrentCustomer.CurrencyId == currency.Id)
                         {
                             return currency;
                         }
