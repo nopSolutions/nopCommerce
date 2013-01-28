@@ -265,7 +265,7 @@ namespace Nop.Web.Framework
                     return allLanguages.FirstOrDefault();
                 }
 
-                //if not found in languaged filtered by the current store, then return any language
+                //if not found in languages filtered by the current store, then return any language
                 return _languageService.GetAllLanguages().FirstOrDefault();
             }
             set
@@ -293,13 +293,23 @@ namespace Nop.Web.Framework
                         return primaryStoreCurrency;
                 }
 
-                if (this.CurrentCustomer != null &&
-                    this.CurrentCustomer.Currency != null &&
-                    this.CurrentCustomer.Currency.Published)
-                    return this.CurrentCustomer.Currency;
+                var allCurrencies = _currencyService.GetAllCurrencies(storeId: this.CurrentStore.Id);
+                if (allCurrencies.Count > 0)
+                {
+                    //find current customer language
+                    foreach (var currency in allCurrencies)
+                    {
+                        if (this.CurrentCustomer != null && this.CurrentCustomer.CurrencyId == currency.Id)
+                        {
+                            return currency;
+                        }
+                    }
+                    //it not specified, then return the first found one
+                    return allCurrencies.FirstOrDefault();
+                }
 
-                var currency = _currencyService.GetAllCurrencies().FirstOrDefault();
-                return currency;
+                //if not found in languages filtered by the current store, then return any language
+                return _currencyService.GetAllCurrencies().FirstOrDefault();
             }
             set
             {

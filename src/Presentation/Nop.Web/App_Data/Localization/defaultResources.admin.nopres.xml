@@ -2941,6 +2941,9 @@
                             <LocaleResource Name="EditCurrencyDetails">
                                 <Value>Edit currency details</Value>
                             </LocaleResource>
+                            <LocaleResource Name="Info">
+                              <Value>Info</Value>
+                            </LocaleResource>
                             <LocaleResource Name="GetLiveRates">
                                 <Value>Get live rates</Value>
                             </LocaleResource>
@@ -3061,7 +3064,26 @@
                                             <Value>Click to enable auto update of currency rates each one hour.</Value>
                                         </LocaleResource>
                                     </LocaleResource>
+                                    <LocaleResource Name="LimitedToStores">
+                                      <Value>Limited to stores</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Determines whether the currency is available only at certain stores.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="AvailableStores">
+                                      <Value>Stores</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Select stores for which the currency will be shown.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
                                 </Children>
+                            </LocaleResource>
+                            <LocaleResource Name="Stores">
+                              <Value>Stores</Value>
                             </LocaleResource>
                             <LocaleResource Name="Added">
                                 <Value>The new currency has been added successfully.</Value>

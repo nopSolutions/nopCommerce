@@ -178,10 +178,10 @@ namespace Nop.Web.Controllers
         [NonAction]
         protected CurrencySelectorModel PrepareCurrencySelectorModel()
         {
-            var availableCurrencies = _cacheManager.Get(string.Format(ModelCacheEventConsumer.AVAILABLE_CURRENCIES_MODEL_KEY, _workContext.WorkingLanguage.Id), () =>
+            var availableCurrencies = _cacheManager.Get(string.Format(ModelCacheEventConsumer.AVAILABLE_CURRENCIES_MODEL_KEY, _workContext.WorkingLanguage.Id, _workContext.CurrentStore.Id), () =>
             {
                 var result = _currencyService
-                    .GetAllCurrencies()
+                    .GetAllCurrencies(storeId: _workContext.CurrentStore.Id)
                     .Select(x => new CurrencyModel()
                     {
                         Id = x.Id,

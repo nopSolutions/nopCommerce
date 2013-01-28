@@ -39,8 +39,9 @@ namespace Nop.Services.Directory
         /// Gets all currencies
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Currency collection</returns>
-        IList<Currency> GetAllCurrencies(bool showHidden = false);
+        /// <param name="storeId">Load records allows only in specified store; pass 0 to load all records</param>
+        /// <returns>Currencies</returns>
+        IList<Currency> GetAllCurrencies(bool showHidden = false, int storeId = 0);
 
         /// <summary>
         /// Inserts a currency

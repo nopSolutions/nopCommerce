@@ -5,6 +5,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Stores;
 using Nop.Core.Plugins;
 using Nop.Services.Customers;
 using Nop.Services.Events;
@@ -17,7 +18,7 @@ namespace Nop.Services.Directory
     public partial class CurrencyService : ICurrencyService
     {
         #region Constants
-        private const string CURRENCIES_ALL_KEY = "Nop.currency.all-{0}";
+        private const string CURRENCIES_ALL_KEY = "Nop.currency.all-{0}-{1}";
         private const string CURRENCIES_BY_ID_KEY = "Nop.currency.id-{0}";
         private const string CURRENCIES_PATTERN_KEY = "Nop.currency.";
         #endregion
@@ -25,6 +26,7 @@ namespace Nop.Services.Directory
         #region Fields
 
         private readonly IRepository<Currency> _currencyRepository;
+        private readonly IRepository<StoreMapping> _storeMappingRepository;
         private readonly ICacheManager _cacheManager;
         private readonly ICustomerService _customerService;
         private readonly CurrencySettings _currencySettings;
@@ -40,12 +42,14 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="currencyRepository">Currency repository</param>
+        /// <param name="storeMappingRepository">Store mapping repository</param>
         /// <param name="customerService">Customer service</param>
         /// <param name="currencySettings">Currency settings</param>
         /// <param name="pluginFinder">Plugin finder</param>
         /// <param name="eventPublisher">Event published</param>
         public CurrencyService(ICacheManager cacheManager,
             IRepository<Currency> currencyRepository,
+            IRepository<StoreMapping> storeMappingRepository,
             ICustomerService customerService,
             CurrencySettings currencySettings,
             IPluginFinder pluginFinder,
@@ -53,6 +57,7 @@ namespace Nop.Services.Directory
         {
             this._cacheManager = cacheManager;
             this._currencyRepository = currencyRepository;
+            this._storeMappingRepository = storeMappingRepository;
             this._customerService = customerService;
             this._currencySettings = currencySettings;
             this._pluginFinder = pluginFinder;
@@ -132,16 +137,36 @@ namespace Nop.Services.Directory
         /// Gets all currencies
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Currency collection</returns>
-        public virtual IList<Currency> GetAllCurrencies(bool showHidden = false)
+        /// <param name="storeId">Load records allows only in specified store; pass 0 to load all records</param>
+        /// <returns>Currencies</returns>
+        public virtual IList<Currency> GetAllCurrencies(bool showHidden = false, int storeId = 0)
         {
-            string key = string.Format(CURRENCIES_ALL_KEY, showHidden);
+            string key = string.Format(CURRENCIES_ALL_KEY, showHidden, storeId);
             return _cacheManager.Get(key, () =>
             {
                 var query = _currencyRepository.Table;
                 if (!showHidden)
                     query = query.Where(c => c.Published);
                 query = query.OrderBy(c => c.DisplayOrder);
+
+                //Store mapping
+                if (storeId > 0)
+                {
+                    query = from c in query
+                            join sm in _storeMappingRepository.Table on c.Id equals sm.EntityId into c_sm
+                            from sm in c_sm.DefaultIfEmpty()
+                            where !c.LimitedToStores || (sm.EntityName == "Currency" && storeId == sm.StoreId)
+                            select c;
+
+                    //only distinct languages (group by ID)
+                    query = from c in query
+                            group c by c.Id
+                            into cGroup
+                            orderby cGroup.Key
+                            select cGroup.FirstOrDefault();
+                    query = query.OrderBy(c => c.DisplayOrder);
+                }
+
                 var currencies = query.ToList();
                 return currencies;
             });
