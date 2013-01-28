@@ -63,81 +63,6 @@ namespace Nop.Web.Framework
             this._webHelper = webHelper;
         }
 
-        protected Customer GetCurrentCustomer()
-        {
-            if (_cachedCustomer != null)
-                return _cachedCustomer;
-
-            Customer customer = null;
-            if (_httpContext != null)
-            {
-                //check whether request is made by a search engine
-                //in this case return built-in customer record for search engines 
-                //or comment the following two lines of code in order to disable this functionality
-                if (_webHelper.IsSearchEngine(_httpContext))
-                    customer = _customerService.GetCustomerBySystemName(SystemCustomerNames.SearchEngine);
-
-                //registered user
-                if (customer == null || customer.Deleted || !customer.Active)
-                {
-                    customer = _authenticationService.GetAuthenticatedCustomer();
-                }
-
-                //impersonate user if required (currently used for 'phone order' support)
-                if (customer != null && !customer.Deleted && customer.Active)
-                {
-                        int? impersonatedCustomerId = customer.GetAttribute<int?>(SystemCustomerAttributeNames.ImpersonatedCustomerId);
-                        if (impersonatedCustomerId.HasValue && impersonatedCustomerId.Value > 0)
-                        {
-                            var impersonatedCustomer = _customerService.GetCustomerById(impersonatedCustomerId.Value);
-                            if (impersonatedCustomer != null && !impersonatedCustomer.Deleted && impersonatedCustomer.Active)
-                            {
-                                //set impersonated customer
-                                _originalCustomerIfImpersonated = customer;
-                                customer = impersonatedCustomer;
-                            }
-                        }
-                }
-
-                //load guest customer
-                if (customer == null || customer.Deleted || !customer.Active)
-                {
-                    var customerCookie = GetCustomerCookie();
-                    if (customerCookie != null && !String.IsNullOrEmpty(customerCookie.Value))
-                    {
-                        Guid customerGuid;
-                        if (Guid.TryParse(customerCookie.Value, out customerGuid))
-                        {
-                            var customerByCookie = _customerService.GetCustomerByGuid(customerGuid);
-                            if (customerByCookie != null &&
-                                //this customer (from cookie) should not be registered
-                                !customerByCookie.IsRegistered() &&
-                                //it should not be a built-in 'search engine' customer account
-                                !customerByCookie.IsSearchEngineAccount())
-                                customer = customerByCookie;
-                        }
-                    }
-                }
-
-                //create guest if not exists
-                if (customer == null || customer.Deleted || !customer.Active)
-                {
-                    customer = _customerService.InsertGuestCustomer();
-                }
-
-                SetCustomerCookie(customer.CustomerGuid);
-            }
-
-            //validation
-            if (customer != null && !customer.Deleted && customer.Active)
-            {
-
-                _cachedCustomer = customer;
-            }
-
-            return _cachedCustomer;
-        }
-
         protected HttpCookie GetCustomerCookie()
         {
             if (_httpContext == null || _httpContext.Request == null)
@@ -201,7 +126,77 @@ namespace Nop.Web.Framework
         {
             get
             {
-                return GetCurrentCustomer();
+                if (_cachedCustomer != null)
+                    return _cachedCustomer;
+
+                Customer customer = null;
+                if (_httpContext != null)
+                {
+                    //check whether request is made by a search engine
+                    //in this case return built-in customer record for search engines 
+                    //or comment the following two lines of code in order to disable this functionality
+                    if (_webHelper.IsSearchEngine(_httpContext))
+                        customer = _customerService.GetCustomerBySystemName(SystemCustomerNames.SearchEngine);
+
+                    //registered user
+                    if (customer == null || customer.Deleted || !customer.Active)
+                    {
+                        customer = _authenticationService.GetAuthenticatedCustomer();
+                    }
+
+                    //impersonate user if required (currently used for 'phone order' support)
+                    if (customer != null && !customer.Deleted && customer.Active)
+                    {
+                        int? impersonatedCustomerId = customer.GetAttribute<int?>(SystemCustomerAttributeNames.ImpersonatedCustomerId);
+                        if (impersonatedCustomerId.HasValue && impersonatedCustomerId.Value > 0)
+                        {
+                            var impersonatedCustomer = _customerService.GetCustomerById(impersonatedCustomerId.Value);
+                            if (impersonatedCustomer != null && !impersonatedCustomer.Deleted && impersonatedCustomer.Active)
+                            {
+                                //set impersonated customer
+                                _originalCustomerIfImpersonated = customer;
+                                customer = impersonatedCustomer;
+                            }
+                        }
+                    }
+
+                    //load guest customer
+                    if (customer == null || customer.Deleted || !customer.Active)
+                    {
+                        var customerCookie = GetCustomerCookie();
+                        if (customerCookie != null && !String.IsNullOrEmpty(customerCookie.Value))
+                        {
+                            Guid customerGuid;
+                            if (Guid.TryParse(customerCookie.Value, out customerGuid))
+                            {
+                                var customerByCookie = _customerService.GetCustomerByGuid(customerGuid);
+                                if (customerByCookie != null &&
+                                    //this customer (from cookie) should not be registered
+                                    !customerByCookie.IsRegistered() &&
+                                    //it should not be a built-in 'search engine' customer account
+                                    !customerByCookie.IsSearchEngineAccount())
+                                    customer = customerByCookie;
+                            }
+                        }
+                    }
+
+                    //create guest if not exists
+                    if (customer == null || customer.Deleted || !customer.Active)
+                    {
+                        customer = _customerService.InsertGuestCustomer();
+                    }
+
+                    SetCustomerCookie(customer.CustomerGuid);
+                }
+
+                //validation
+                if (customer != null && !customer.Deleted && customer.Active)
+                {
+
+                    _cachedCustomer = customer;
+                }
+
+                return _cachedCustomer;
             }
             set
             {
@@ -341,6 +336,9 @@ namespace Nop.Web.Framework
             }
         }
 
+        /// <summary>
+        /// Get or set value indicating whether we're in admin area
+        /// </summary>
         public virtual bool IsAdmin
         {
             get
