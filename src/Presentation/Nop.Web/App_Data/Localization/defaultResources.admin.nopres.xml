@@ -1436,7 +1436,7 @@
                                         </LocaleResource>
                                       </Children>
                                     </LocaleResource>
-                                  <LocaleResource Name="AclCustomerRoles">
+                                    <LocaleResource Name="AclCustomerRoles">
                                     <Value>Customer roles</Value>
                                     <Children>
                                       <LocaleResource Name="Hint">
@@ -1451,6 +1451,22 @@
                                                 <Value>Check to publish this product (visible in store). Uncheck to unpublish (product not available in store).</Value>
                                             </LocaleResource>
                                         </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="LimitedToStores">
+                                      <Value>Limited to stores</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Determines whether the product is available only at certain stores.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="AvailableStores">
+                                      <Value>Stores</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Select stores for which the product will be shown.</Value>
+                                        </LocaleResource>
+                                      </Children>
                                     </LocaleResource>
                                 </Children>
                             </LocaleResource>
@@ -1646,6 +1662,9 @@
                                         <Value>You need to save the product before you can add product specification attributes for this product page.</Value>
                                     </LocaleResource>
                                 </Children>
+                            </LocaleResource>
+                            <LocaleResource Name="Stores">
+                              <Value>Stores</Value>
                             </LocaleResource>
                             <LocaleResource Name="Variants">
                                 <Value>Product variants</Value>

@@ -13,6 +13,7 @@ using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Services.Seo;
+using Nop.Services.Stores;
 
 namespace Nop.Services.Orders
 {
@@ -37,6 +38,7 @@ namespace Nop.Services.Orders
         private readonly IEventPublisher _eventPublisher;
         private readonly IPermissionService _permissionService;
         private readonly IAclService _aclService;
+        private readonly IStoreMappingService _storeMappingService;
         #endregion
 
         #region Ctor
@@ -58,6 +60,7 @@ namespace Nop.Services.Orders
         /// <param name="eventPublisher">Event publisher</param>
         /// <param name="permissionService">Permission service</param>
         /// <param name="aclService">ACL service</param>
+        /// <param name="storeMappingService">Store mapping service</param>
         public ShoppingCartService(IRepository<ShoppingCartItem> sciRepository,
             IWorkContext workContext, ICurrencyService currencyService,
             IProductService productService, ILocalizationService localizationService,
@@ -69,7 +72,8 @@ namespace Nop.Services.Orders
             ShoppingCartSettings shoppingCartSettings,
             IEventPublisher eventPublisher,
             IPermissionService permissionService, 
-            IAclService aclService)
+            IAclService aclService,
+            IStoreMappingService storeMappingService)
         {
             this._sciRepository = sciRepository;
             this._workContext = workContext;
@@ -85,6 +89,7 @@ namespace Nop.Services.Orders
             this._eventPublisher = eventPublisher;
             this._permissionService = permissionService;
             this._aclService = aclService;
+            this._storeMappingService = storeMappingService;
         }
 
         #endregion
@@ -274,6 +279,12 @@ namespace Nop.Services.Orders
             
             //ACL
             if (!_aclService.Authorize(product, customer))
+            {
+                warnings.Add(_localizationService.GetResource("ShoppingCart.ProductUnpublished"));
+            }
+
+            //Store mapping
+            if (!_storeMappingService.Authorize(product, _workContext.CurrentStore))
             {
                 warnings.Add(_localizationService.GetResource("ShoppingCart.ProductUnpublished"));
             }

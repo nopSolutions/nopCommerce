@@ -1407,6 +1407,10 @@ namespace Nop.Web.Controllers
             if (!_aclService.Authorize(product))
                 return InvokeHttp404();
 
+            //Store mapping
+            if (!_storeMappingService.Authorize(product))
+                return InvokeHttp404();
+            
             //prepare the model
             var model = PrepareProductDetailsPageModel(product);
 
@@ -2000,8 +2004,8 @@ namespace Nop.Web.Controllers
             {
                 var variants = _productService.GetProductVariantsByProductId(product.Id);
                 //ensure that a product has at least one available variant
-                //and has ACL permission
-                if (variants.Count > 0 && _aclService.Authorize(product))
+                //and has ACL permission and appropriate store mapping
+                if (variants.Count > 0 && _aclService.Authorize(product) && _storeMappingService.Authorize(product))
                     products.Add(product);
             }
             var model = PrepareProductOverviewModels(products, true, true, productThumbPictureSize).ToList();
@@ -2026,8 +2030,8 @@ namespace Nop.Web.Controllers
 
             //load products
             var products = _productService.GetProductsByIds(productIds);
-            //ACL
-            products = products.Where(p => _aclService.Authorize(p)).ToList();
+            //ACL and store mapping
+            products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
             //prepare model
             var model = PrepareProductOverviewModels(products, true, true, productThumbPictureSize).ToList();
 
@@ -2058,8 +2062,8 @@ namespace Nop.Web.Controllers
             var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
 
             var products = _productService.GetCrosssellProductsByShoppingCart(cart, _shoppingCartSettings.CrossSellsNumber);
-            //ACL
-            products = products.Where(p => _aclService.Authorize(p)).ToList();
+            //ACL and store mapping
+            products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
 
 
             //Cross-sell products are dispalyed on the shopping cart page.
@@ -2158,8 +2162,8 @@ namespace Nop.Web.Controllers
 
             //load products
             var products = _productService.GetProductsByIds(report.Select(x => x.EntityId).ToArray());
-            //ACL
-            products = products.Where(p => _aclService.Authorize(p)).ToList();
+            //ACL and store mapping
+            products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
             //prepare model
             var model = PrepareProductOverviewModels(products, true, true, productThumbPictureSize)
                 .ToList();
@@ -2170,8 +2174,8 @@ namespace Nop.Web.Controllers
         public ActionResult HomepageProducts(int? productThumbPictureSize)
         {
             var products = _productService.GetAllProductsDisplayedOnHomePage();
-            //ACL
-            products = products.Where(p => _aclService.Authorize(p)).ToList();
+            //ACL and store mapping
+            products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
 
             var model = PrepareProductOverviewModels(products, true, true, productThumbPictureSize)
                 .ToList();

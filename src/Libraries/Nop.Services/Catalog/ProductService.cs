@@ -10,6 +10,7 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
+using Nop.Core.Domain.Stores;
 using Nop.Data;
 using Nop.Services.Events;
 using Nop.Services.Localization;
@@ -41,6 +42,7 @@ namespace Nop.Services.Catalog
         private readonly IRepository<TierPrice> _tierPriceRepository;
         private readonly IRepository<LocalizedProperty> _localizedPropertyRepository;
         private readonly IRepository<AclRecord> _aclRepository;
+        private readonly IRepository<StoreMapping> _storeMappingRepository;
         private readonly IRepository<ProductPicture> _productPictureRepository;
         private readonly IRepository<ProductSpecificationAttribute> _productSpecificationAttributeRepository;
         private readonly IProductAttributeService _productAttributeService;
@@ -71,6 +73,7 @@ namespace Nop.Services.Catalog
         /// <param name="tierPriceRepository">Tier price repository</param>
         /// <param name="localizedPropertyRepository">Localized property repository</param>
         /// <param name="aclRepository">ACL record repository</param>
+        /// <param name="storeMappingRepository">Store mapping repository</param>
         /// <param name="productPictureRepository">Product picture repository</param>
         /// <param name="productSpecificationAttributeRepository">Product specification attribute repository</param>
         /// <param name="productAttributeService">Product attribute service</param>
@@ -93,6 +96,7 @@ namespace Nop.Services.Catalog
             IRepository<ProductPicture> productPictureRepository,
             IRepository<LocalizedProperty> localizedPropertyRepository,
             IRepository<AclRecord> aclRepository,
+            IRepository<StoreMapping> storeMappingRepository,
             IRepository<ProductSpecificationAttribute> productSpecificationAttributeRepository,
             IProductAttributeService productAttributeService,
             IProductAttributeParser productAttributeParser,
@@ -113,6 +117,7 @@ namespace Nop.Services.Catalog
             this._productPictureRepository = productPictureRepository;
             this._localizedPropertyRepository = localizedPropertyRepository;
             this._aclRepository = aclRepository;
+            this._storeMappingRepository = storeMappingRepository;
             this._productSpecificationAttributeRepository = productSpecificationAttributeRepository;
             this._productAttributeService = productAttributeService;
             this._productAttributeParser = productAttributeParser;
@@ -358,7 +363,9 @@ namespace Nop.Services.Catalog
             //Access control list. Allowed customer roles
             var allowedCustomerRolesIds = _workContext.CurrentCustomer.CustomerRoles
                 .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
-            
+
+            //Current store
+            var currentStoreId = _workContext.CurrentStore.Id;
 
             if (_commonSettings.UseStoredProceduresIfSupported && _dataProvider.StoredProceduredSupported)
             {
@@ -484,6 +491,16 @@ namespace Nop.Services.Catalog
                 pOrderBy.Value = (int)orderBy;
                 pOrderBy.DbType = DbType.Int32;
 
+                var pAllowedCustomerRoleIds = _dataProvider.GetParameter();
+                pAllowedCustomerRoleIds.ParameterName = "AllowedCustomerRoleIds";
+                pAllowedCustomerRoleIds.Value = commaSeparatedAllowedCustomerRoleIds;
+                pAllowedCustomerRoleIds.DbType = DbType.String;
+
+                var pStoreId = _dataProvider.GetParameter();
+                pStoreId.ParameterName = "StoreId";
+                pStoreId.Value = currentStoreId;
+                pStoreId.DbType = DbType.Int32;
+
                 var pPageIndex = _dataProvider.GetParameter();
                 pPageIndex.ParameterName = "PageIndex";
                 pPageIndex.Value = pageIndex;
@@ -493,11 +510,6 @@ namespace Nop.Services.Catalog
                 pPageSize.ParameterName = "PageSize";
                 pPageSize.Value = pageSize;
                 pPageSize.DbType = DbType.Int32;
-
-                var pAllowedCustomerRoleIds= _dataProvider.GetParameter();
-                pAllowedCustomerRoleIds.ParameterName = "AllowedCustomerRoleIds";
-                pAllowedCustomerRoleIds.Value = commaSeparatedAllowedCustomerRoleIds;
-                pAllowedCustomerRoleIds.DbType = DbType.String;
 
                 var pShowHidden = _dataProvider.GetParameter();
                 pShowHidden.ParameterName = "ShowHidden";
@@ -537,9 +549,10 @@ namespace Nop.Services.Catalog
                     pFilteredSpecs,
                     pLanguageId,
                     pOrderBy,
+                    pAllowedCustomerRoleIds,
+                    pStoreId,
                     pPageIndex,
                     pPageSize,
-                    pAllowedCustomerRoleIds,
                     pShowHidden,
                     pLoadFilterableSpecificationAttributeOptionIds,
                     pFilterableSpecificationAttributeOptionIds,
@@ -603,6 +616,16 @@ namespace Nop.Services.Catalog
                             join acl in _aclRepository.Table on p.Id equals acl.EntityId into p_acl
                             from acl in p_acl.DefaultIfEmpty()
                             where !p.SubjectToAcl || (acl.EntityName == "Product" && allowedCustomerRolesIds.Contains(acl.CustomerRoleId))
+                            select p;
+                }
+
+                //Store mapping
+                if (!showHidden)
+                {
+                    query = from p in query
+                            join sm in _storeMappingRepository.Table on p.Id equals sm.EntityId into p_sm
+                            from sm in p_sm.DefaultIfEmpty()
+                            where !p.LimitedToStores || (sm.EntityName == "Product" && currentStoreId == sm.StoreId)
                             select p;
                 }
 
