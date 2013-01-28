@@ -4108,7 +4108,7 @@ namespace Nop.Services.Installation
                                    new EmailAccount
                                        {
                                            Email = "test@mail.com",
-                                           DisplayName = "General contact",
+                                           DisplayName = "Store name",
                                            Host = "smtp.mail.com",
                                            Port = 25,
                                            Username = "123",
@@ -4116,28 +4116,6 @@ namespace Nop.Services.Installation
                                            EnableSsl = false,
                                            UseDefaultCredentials = false
                                        },
-                                   new EmailAccount
-                                       {
-                                           Email = "test@mail.com",
-                                           DisplayName = "Sales representative",
-                                           Host = "smtp.mail.com",
-                                           Port = 25,
-                                           Username = "123",
-                                           Password = "123",
-                                           EnableSsl = false,
-                                           UseDefaultCredentials = false
-                                       },
-                                   new EmailAccount
-                                       {
-                                           Email = "test@mail.com",
-                                           DisplayName = "Customer support",
-                                           Host = "smtp.mail.com",
-                                           Port = 25,
-                                           Username = "123",
-                                           Password = "123",
-                                           EnableSsl = false,
-                                           UseDefaultCredentials = false
-                                       }, 
                                };
             emailAccounts.ForEach(ea => _emailAccountRepository.Insert(ea));
 
@@ -4145,9 +4123,7 @@ namespace Nop.Services.Installation
 
         protected virtual void InstallMessageTemplates()
         {
-            var eaGeneral = _emailAccountRepository.Table.Where(ea => ea.DisplayName.Equals("General contact")).FirstOrDefault();
-            //var eaSale = _emailAccountRepository.Table.Where(ea => ea.DisplayName.Equals("Sales representative")).FirstOrDefault();
-            //var eaCustomer = _emailAccountRepository.Table.Where(ea => ea.DisplayName.Equals("Customer support")).FirstOrDefault();
+            var eaGeneral = _emailAccountRepository.Table.FirstOrDefault();
             var messageTemplates = new List<MessageTemplate>
                                {
                                    new MessageTemplate
