@@ -152,10 +152,10 @@ namespace Nop.Web.Controllers
         [NonAction]
         protected LanguageSelectorModel PrepareLanguageSelectorModel()
         {
-            var availableLanguages = _cacheManager.Get(ModelCacheEventConsumer.AVAILABLE_LANGUAGES_MODEL_KEY, () =>
+            var availableLanguages = _cacheManager.Get(string.Format(ModelCacheEventConsumer.AVAILABLE_LANGUAGES_MODEL_KEY, _workContext.CurrentStore.Id), () =>
             {
                 var result = _languageService
-                    .GetAllLanguages()
+                    .GetAllLanguages(storeId: _workContext.CurrentStore.Id)
                     .Select(x => new LanguageModel()
                     {
                         Id = x.Id,
@@ -782,7 +782,7 @@ namespace Nop.Web.Controllers
             if (_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
             {
                 //URLs are localizable. Append SEO code
-                foreach (var language in _languageService.GetAllLanguages())
+                foreach (var language in _languageService.GetAllLanguages(storeId: _workContext.CurrentStore.Id))
                 {
                     foreach (var path in localizableDisallowPaths)
                     {

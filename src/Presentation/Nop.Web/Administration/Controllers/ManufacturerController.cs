@@ -217,7 +217,7 @@ namespace Nop.Admin.Controllers
                 }
                 else
                 {
-                    model.SelectedCustomerRoleIds = new int[0];
+                    model.SelectedStoreIds = new int[0];
                 }
             }
         }
@@ -383,7 +383,7 @@ namespace Nop.Admin.Controllers
             PrepareTemplatesModel(model);
             //ACL
             PrepareAclModel(model, manufacturer, false);
-            //Store
+            //Stores
             PrepareStoresMappingModel(model, manufacturer, false);
 
             return View(model);
@@ -438,7 +438,7 @@ namespace Nop.Admin.Controllers
             PrepareTemplatesModel(model);
             //ACL
             PrepareAclModel(model, manufacturer, true);
-            //Store
+            //Stores
             PrepareStoresMappingModel(model, manufacturer, true);
 
             return View(model);

@@ -19,6 +19,7 @@ namespace Nop.Data.Tests.Localization
                 FlagImageFileName = "us.png",
                 Rtl = true,
                 Published = true,
+                LimitedToStores = true,
                 DisplayOrder = 1
             };
 
@@ -30,6 +31,7 @@ namespace Nop.Data.Tests.Localization
             fromDb.FlagImageFileName.ShouldEqual("us.png");
             fromDb.Rtl.ShouldEqual(true);
             fromDb.Published.ShouldEqual(true);
+            fromDb.LimitedToStores.ShouldEqual(true);
             fromDb.DisplayOrder.ShouldEqual(1);
         }
 

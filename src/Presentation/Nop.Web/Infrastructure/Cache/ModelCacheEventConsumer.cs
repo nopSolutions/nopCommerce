@@ -370,7 +370,10 @@ namespace Nop.Web.Infrastructure.Cache
         /// <summary>
         /// Key for available languages
         /// </summary>
-        public const string AVAILABLE_LANGUAGES_MODEL_KEY = "Nop.pres.languages.all";
+        /// <remarks>
+        /// {0} : current store ID
+        /// </remarks>
+        public const string AVAILABLE_LANGUAGES_MODEL_KEY = "Nop.pres.languages.all-{0}";
         public const string AVAILABLE_LANGUAGES_PATTERN_KEY = "Nop.pres.languages.";
 
         /// <summary>

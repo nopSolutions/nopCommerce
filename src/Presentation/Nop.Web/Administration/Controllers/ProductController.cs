@@ -310,7 +310,7 @@ namespace Nop.Admin.Controllers
                 }
                 else
                 {
-                    model.SelectedCustomerRoleIds = new int[0];
+                    model.SelectedStoreIds = new int[0];
                 }
             }
         }

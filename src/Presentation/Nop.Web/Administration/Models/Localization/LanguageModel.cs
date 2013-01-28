@@ -1,5 +1,7 @@
-﻿using System.Web.Mvc;
+﻿using System.Collections.Generic;
+using System.Web.Mvc;
 using FluentValidation.Attributes;
+using Nop.Admin.Models.Stores;
 using Nop.Admin.Validators.Localization;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
@@ -33,5 +35,14 @@ namespace Nop.Admin.Models.Localization
 
         [NopResourceDisplayName("Admin.Configuration.Languages.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
+
+
+        //Store mapping
+        [NopResourceDisplayName("Admin.Catalog.Languages.Fields.LimitedToStores")]
+        public bool LimitedToStores { get; set; }
+        [NopResourceDisplayName("Admin.Catalog.Languages.Fields.AvailableStores")]
+        public List<StoreModel> AvailableStores { get; set; }
+        public int[] SelectedStoreIds { get; set; }
+
     }
 }

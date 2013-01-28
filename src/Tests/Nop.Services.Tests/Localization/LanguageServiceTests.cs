@@ -3,6 +3,7 @@ using System.Linq;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Stores;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Events;
@@ -17,6 +18,7 @@ namespace Nop.Services.Tests.Localization
     public class LanguageServiceTests : ServiceTest
     {
         IRepository<Language> _languageRepo;
+        IRepository<StoreMapping> _storeMappingRepo;
         ICustomerService _customerService;
         ILanguageService _languageService;
         ISettingService _settingService;
@@ -46,6 +48,8 @@ namespace Nop.Services.Tests.Localization
 
             _languageRepo.Expect(x => x.Table).Return(new List<Language>() { lang1, lang2 }.AsQueryable());
 
+            _storeMappingRepo = MockRepository.GenerateMock<IRepository<StoreMapping>>();
+
             var cacheManager = new NopNullCache();
 
             _customerService = MockRepository.GenerateMock<ICustomerService>();
@@ -56,7 +60,7 @@ namespace Nop.Services.Tests.Localization
             _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
 
             _localizationSettings = new LocalizationSettings();
-            _languageService = new LanguageService(cacheManager, _languageRepo,
+            _languageService = new LanguageService(cacheManager, _languageRepo, _storeMappingRepo,
                 _customerService, _settingService, _localizationSettings, _eventPublisher);
         }
 

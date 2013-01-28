@@ -416,7 +416,10 @@ namespace Nop.Admin.Controllers
         {
             var model = new LanguageSelectorModel();
             model.CurrentLanguage = _workContext.WorkingLanguage.ToModel();
-            model.AvailableLanguages = _languageService.GetAllLanguages().Select(x => x.ToModel()).ToList();
+            model.AvailableLanguages = _languageService
+                .GetAllLanguages(storeId: _workContext.CurrentStore.Id)
+                .Select(x => x.ToModel())
+                .ToList();
             return PartialView(model);
         }
         public ActionResult LanguageSelected(int customerlanguage)
@@ -428,7 +431,10 @@ namespace Nop.Admin.Controllers
             }
             var model = new LanguageSelectorModel();
             model.CurrentLanguage = _workContext.WorkingLanguage.ToModel();
-            model.AvailableLanguages = _languageService.GetAllLanguages().Select(x => x.ToModel()).ToList();
+            model.AvailableLanguages = _languageService
+                .GetAllLanguages(storeId: _workContext.CurrentStore.Id)
+                .Select(x => x.ToModel())
+                .ToList();
             return PartialView("LanguageSelector", model);
         }
 

@@ -3250,6 +3250,9 @@
                             <LocaleResource Name="Import">
                                 <Value>Import resources</Value>
                             </LocaleResource>
+                            <LocaleResource Name="Info">
+                              <Value>Info</Value>
+                            </LocaleResource>
                             <LocaleResource Name="Resources">
                                 <Value>Language resources</Value>
                                 <Children>
@@ -3357,7 +3360,26 @@
                                             </LocaleResource>
                                         </Children>
                                     </LocaleResource>
+                                    <LocaleResource Name="LimitedToStores">
+                                      <Value>Limited to stores</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Determines whether the language is available only at certain stores.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="AvailableStores">
+                                      <Value>Stores</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Select stores for which the language will be shown.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
                                 </Children>
+                            </LocaleResource>
+                            <LocaleResource Name="Stores">
+                              <Value>Stores</Value>
                             </LocaleResource>
                             <LocaleResource Name="XmlFile">
                                 <Value>Xml file</Value>

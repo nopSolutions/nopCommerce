@@ -125,6 +125,24 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Fields.AvailableStores.Hint">
 	<Value>Select stores for which the product will be shown.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Languages.Info">
+	<Value>Info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Languages.Stores">
+	<Value>Stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Languages.Fields.LimitedToStores">
+	<Value>Limited to stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Languages.Fields.LimitedToStores.Hint">
+	<Value>Determines whether the language is available only at certain stores.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Languages.Fields.AvailableStores">
+	<Value>Stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Languages.Fields.AvailableStores.Hint">
+	<Value>Select stores for which the language will be shown.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -961,3 +979,21 @@ BEGIN
 	DROP TABLE #PageIndex
 END
 GO
+
+
+--Store mapping for languages
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Language]') and NAME='LimitedToStores')
+BEGIN
+	ALTER TABLE [Language]
+	ADD [LimitedToStores] bit NULL
+END
+GO
+
+UPDATE [Language]
+SET [LimitedToStores] = 0
+WHERE [LimitedToStores] IS NULL
+GO
+
+ALTER TABLE [Language] ALTER COLUMN [LimitedToStores] bit NOT NULL
+GO
+

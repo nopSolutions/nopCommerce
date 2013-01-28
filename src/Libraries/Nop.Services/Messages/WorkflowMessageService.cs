@@ -288,6 +288,8 @@ namespace Nop.Services.Messages
             var language = _languageService.GetLanguageById(languageId);
             if (language == null || !language.Published)
                 language = _languageService.GetAllLanguages().FirstOrDefault();
+            if (language == null)
+                throw new Exception("No active language could be loaded");
             return language.Id;
         }
 

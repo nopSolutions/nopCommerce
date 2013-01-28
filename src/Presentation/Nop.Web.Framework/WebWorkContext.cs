@@ -170,7 +170,7 @@ namespace Nop.Web.Framework
         /// <summary>
         /// Gets or sets the current store
         /// </summary>
-        public Store CurrentStore
+        public virtual Store CurrentStore
         {
             get
             {
@@ -197,7 +197,7 @@ namespace Nop.Web.Framework
         /// <summary>
         /// Gets or sets the current customer
         /// </summary>
-        public Customer CurrentCustomer
+        public virtual Customer CurrentCustomer
         {
             get
             {
@@ -213,7 +213,7 @@ namespace Nop.Web.Framework
         /// <summary>
         /// Gets or sets the original customer (in case the current one is impersonated)
         /// </summary>
-        public Customer OriginalCustomerIfImpersonated
+        public virtual Customer OriginalCustomerIfImpersonated
         {
             get
             {
@@ -224,7 +224,7 @@ namespace Nop.Web.Framework
         /// <summary>
         /// Get or set current user working language
         /// </summary>
-        public Language WorkingLanguage
+        public virtual Language WorkingLanguage
         {
             get
             {
@@ -241,13 +241,11 @@ namespace Nop.Web.Framework
                             if (!String.IsNullOrEmpty(seoCode))
                             {
                                 var langByCulture = _languageService.GetAllLanguages()
-                                    .Where(l => seoCode.Equals(l.UniqueSeoCode, StringComparison.InvariantCultureIgnoreCase))
-                                    .FirstOrDefault();
+                                    .FirstOrDefault(l => seoCode.Equals(l.UniqueSeoCode, StringComparison.InvariantCultureIgnoreCase));
                                 if (langByCulture != null && langByCulture.Published)
                                 {
                                     //the language is found. now we need to save it
-                                    if (this.CurrentCustomer != null &&
-                                        !langByCulture.Equals(this.CurrentCustomer.Language))
+                                    if (this.CurrentCustomer != null && !langByCulture.Equals(this.CurrentCustomer.Language))
                                     {
                                         this.CurrentCustomer.Language = langByCulture;
                                         _customerService.UpdateCustomer(this.CurrentCustomer);
@@ -257,13 +255,23 @@ namespace Nop.Web.Framework
                         }
                     }
                 }
-                if (this.CurrentCustomer != null &&
-                    this.CurrentCustomer.Language != null &&
-                    this.CurrentCustomer.Language.Published)
-                    return this.CurrentCustomer.Language;
+                var allLanguages = _languageService.GetAllLanguages(storeId: this.CurrentStore.Id);
+                if (allLanguages.Count > 0)
+                {
+                    //find current customer language
+                    foreach (var lang in allLanguages)
+                    {
+                        if (this.CurrentCustomer != null && this.CurrentCustomer.LanguageId == lang.Id)
+                        {
+                            return lang;
+                        }
+                    }
+                    //it not specified, then return the first found one
+                    return allLanguages.FirstOrDefault();
+                }
 
-                var lang = _languageService.GetAllLanguages().FirstOrDefault();
-                return lang;
+                //if not found in languaged filtered by the current store, then return any language
+                return _languageService.GetAllLanguages().FirstOrDefault();
             }
             set
             {
@@ -278,7 +286,7 @@ namespace Nop.Web.Framework
         /// <summary>
         /// Get or set current user working currency
         /// </summary>
-        public Currency WorkingCurrency
+        public virtual Currency WorkingCurrency
         {
             get
             {
@@ -311,7 +319,7 @@ namespace Nop.Web.Framework
         /// <summary>
         /// Get or set current tax display type
         /// </summary>
-        public TaxDisplayType TaxDisplayType
+        public virtual TaxDisplayType TaxDisplayType
         {
             get
             {
@@ -333,7 +341,7 @@ namespace Nop.Web.Framework
             }
         }
 
-        public bool IsAdmin
+        public virtual bool IsAdmin
         {
             get
             {
