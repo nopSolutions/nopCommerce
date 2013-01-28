@@ -123,20 +123,6 @@ namespace Nop.Services.Customers
         Customer GetCustomerByUsername(string username);
 
         /// <summary>
-        /// Get customers by language identifier
-        /// </summary>
-        /// <param name="languageId">Language identifier</param>
-        /// <returns>Customers</returns>
-        IList<Customer> GetCustomersByLanguageId(int languageId);
-
-        /// <summary>
-        /// Get customers by currency identifier
-        /// </summary>
-        /// <param name="currencyId">Currency identifier</param>
-        /// <returns>Customers</returns>
-        IList<Customer> GetCustomersByCurrencyId(int currencyId);
-
-        /// <summary>
         /// Insert a guest customer
         /// </summary>
         /// <returns>Customer</returns>

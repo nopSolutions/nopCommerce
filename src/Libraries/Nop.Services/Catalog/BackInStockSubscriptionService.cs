@@ -183,7 +183,7 @@ namespace Nop.Services.Catalog
                 //ensure that customer is registered (simple and fast way)
                 if (CommonHelper.IsValidEmail(subscription.Customer.Email))
                 {
-                    _workflowMessageService.SendBackInStockNotification(subscription, subscription.Customer.LanguageId.HasValue ? subscription.Customer.LanguageId.Value : 0);
+                    _workflowMessageService.SendBackInStockNotification(subscription, subscription.Customer.LanguageId);
                     result++;
                 }
             }

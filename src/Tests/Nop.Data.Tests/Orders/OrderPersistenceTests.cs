@@ -285,24 +285,6 @@ namespace Nop.Data.Tests.Orders
         }
         
         [Test]
-        public void Can_save_and_load_customer_with_affiliate()
-        {
-            var order = new Order
-            {
-                OrderGuid = Guid.NewGuid(),
-                Customer = GetTestCustomer(),
-                Affiliate = GetTestAffiliate(),
-                BillingAddress = GetTestBillingAddress(),
-                CreatedOnUtc = new DateTime(2010, 01, 01)
-            };
-
-            var fromDb = SaveAndLoadEntity(order);
-            fromDb.ShouldNotBeNull();
-
-            fromDb.Affiliate.ShouldNotBeNull();
-            fromDb.Affiliate.Active.ShouldEqual(true);
-        }
-        [Test]
         public void Can_save_and_load_order_with_shipments()
         {
             var order = new Order

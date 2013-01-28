@@ -57,12 +57,12 @@ namespace Nop.Core.Domain.Customers
         /// <summary>
         /// Gets or sets the language identifier
         /// </summary>
-        public virtual int? LanguageId { get; set; }
+        public virtual int LanguageId { get; set; }
 
         /// <summary>
         /// Gets or sets the currency identifier
         /// </summary>
-        public virtual int? CurrencyId { get; set; }
+        public virtual int CurrencyId { get; set; }
 
         /// <summary>
         /// Gets or sets the tax display type identifier
@@ -117,7 +117,7 @@ namespace Nop.Core.Domain.Customers
         /// <summary>
         /// Gets or sets the affiliate identifier
         /// </summary>
-        public virtual int? AffiliateId { get; set; }
+        public virtual int AffiliateId { get; set; }
         
         /// <summary>
         /// Gets or sets a value indicating whether the customer is active
@@ -194,21 +194,6 @@ namespace Nop.Core.Domain.Customers
         #endregion
 
         #region Navigation properties
-
-        /// <summary>
-        /// Gets or sets the affiliate
-        /// </summary>
-        public virtual Affiliate Affiliate { get; set; }
-
-        /// <summary>
-        /// Gets or sets the language
-        /// </summary>
-        public virtual Language Language { get; set; }
-
-        /// <summary>
-        /// Gets or sets the currency
-        /// </summary>
-        public virtual Currency Currency { get; set; }
 
         /// <summary>
         /// Gets or sets customer generated content

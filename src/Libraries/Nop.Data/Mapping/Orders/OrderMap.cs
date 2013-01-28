@@ -38,12 +38,6 @@ namespace Nop.Data.Mapping.Orders
             this.HasRequired(o => o.Customer)
                 .WithMany(c => c.Orders)
                 .HasForeignKey(o => o.CustomerId);
-
-
-
-            this.HasOptional(o => o.Affiliate)
-                .WithMany()
-                .HasForeignKey(o => o.AffiliateId);
             
             //code below is commented because it causes some issues on big databases - http://www.nopcommerce.com/boards/t/11126/bug-version-20-command-confirm-takes-several-minutes-using-big-databases.aspx
             //this.HasRequired(o => o.BillingAddress).WithOptional().Map(x => x.MapKey("BillingAddressId")).WillCascadeOnDelete(false);

@@ -201,7 +201,7 @@ namespace Nop.Services.Orders
         {
             var query = _orderRepository.Table;
             query = query.Where(o => !o.Deleted);
-            query = query.Where(o => o.AffiliateId.HasValue && o.AffiliateId == affiliateId);
+            query = query.Where(o => o.AffiliateId == affiliateId);
             query = query.OrderByDescending(o => o.CreatedOnUtc);
 
             var orders = new PagedList<Order>(query, pageIndex, pageSize);

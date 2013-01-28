@@ -237,7 +237,7 @@ namespace Nop.Services.Customers
         {
             var query = _customerRepository.Table;
             query = query.Where(c => !c.Deleted);
-            query = query.Where(c => c.AffiliateId.HasValue && c.AffiliateId == affiliateId);
+            query = query.Where(c => c.AffiliateId == affiliateId);
             query = query.OrderByDescending(c => c.CreatedOnUtc);
 
             var customers = new PagedList<Customer>(query, pageIndex, pageSize);
@@ -437,41 +437,7 @@ namespace Nop.Services.Customers
             var customer = query.FirstOrDefault();
             return customer;
         }
-
-        /// <summary>
-        /// Get customers by language identifier
-        /// </summary>
-        /// <param name="languageId">Language identifier</param>
-        /// <returns>Customers</returns>
-        public virtual IList<Customer> GetCustomersByLanguageId(int languageId)
-        {
-            var query = _customerRepository.Table;
-            if (languageId > 0)
-                query = query.Where(c => c.LanguageId.HasValue && c.LanguageId.Value == languageId);
-            else
-                query = query.Where(c => !c.LanguageId.HasValue);
-            query = query.OrderBy(c => c.Id);
-            var customers = query.ToList();
-            return customers;
-        }
-
-        /// <summary>
-        /// Get customers by currency identifier
-        /// </summary>
-        /// <param name="currencyId">Currency identifier</param>
-        /// <returns>Customers</returns>
-        public virtual IList<Customer> GetCustomersByCurrencyId(int currencyId)
-        {
-            var query = _customerRepository.Table;
-            if (currencyId > 0)
-                query = query.Where(c => c.CurrencyId.HasValue && c.CurrencyId.Value == currencyId);
-            else
-                query = query.Where(c => !c.CurrencyId.HasValue);
-            query = query.OrderBy(c => c.Id);
-            var customers = query.ToList();
-            return customers;
-        }
-
+        
         /// <summary>
         /// Insert a guest customer
         /// </summary>

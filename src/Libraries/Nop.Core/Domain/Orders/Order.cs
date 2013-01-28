@@ -213,7 +213,7 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets or sets the affiliate identifier
         /// </summary>
-        public virtual int? AffiliateId { get; set; }
+        public virtual int AffiliateId { get; set; }
 
         /// <summary>
         /// Gets or sets the customer IP address
@@ -323,11 +323,6 @@ namespace Nop.Core.Domain.Orders
         #endregion
 
         #region Navigation properties
-
-        /// <summary>
-        /// Gets or sets the affiliate
-        /// </summary>
-        public virtual Affiliate Affiliate { get; set; }
 
         /// <summary>
         /// Gets or sets the customer

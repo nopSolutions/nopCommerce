@@ -1034,3 +1034,81 @@ ALTER TABLE [Currency] ALTER COLUMN [LimitedToStores] bit NOT NULL
 GO
 
 
+--drop some constraints
+IF EXISTS (SELECT 1
+           FROM   sysobjects
+           WHERE  name = 'Customer_Currency'
+           AND parent_obj = Object_id('Customer')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+BEGIN
+	ALTER TABLE dbo.[Customer]
+	DROP CONSTRAINT Customer_Currency
+END
+GO
+
+UPDATE [Customer]
+SET [CurrencyId] = 0
+WHERE [CurrencyId] IS NULL
+GO
+
+ALTER TABLE [Customer] ALTER COLUMN [CurrencyId] int NOT NULL
+GO
+
+IF EXISTS (SELECT 1
+           FROM   sysobjects
+           WHERE  name = 'Customer_Language'
+           AND parent_obj = Object_id('Customer')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+BEGIN
+	ALTER TABLE dbo.[Customer]
+	DROP CONSTRAINT Customer_Language
+END
+GO
+
+UPDATE [Customer]
+SET [LanguageId] = 0
+WHERE [LanguageId] IS NULL
+GO
+
+ALTER TABLE [Customer] ALTER COLUMN [LanguageId] int NOT NULL
+GO
+
+IF EXISTS (SELECT 1
+           FROM   sysobjects
+           WHERE  name = 'Customer_Affiliate'
+           AND parent_obj = Object_id('Customer')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+BEGIN
+	ALTER TABLE dbo.[Customer]
+	DROP CONSTRAINT Customer_Affiliate
+END
+GO
+
+UPDATE [Customer]
+SET [AffiliateId] = 0
+WHERE [AffiliateId] IS NULL
+GO
+
+ALTER TABLE [Customer] ALTER COLUMN [AffiliateId] int NOT NULL
+GO
+
+IF EXISTS (SELECT 1
+           FROM   sysobjects
+           WHERE  name = 'Order_Affiliate'
+           AND parent_obj = Object_id('Order')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+BEGIN
+	PRINT('111')
+	ALTER TABLE dbo.[Order]
+	DROP CONSTRAINT Order_Affiliate
+END
+GO
+
+UPDATE [Order]
+SET [AffiliateId] = 0
+WHERE [AffiliateId] IS NULL
+GO
+
+ALTER TABLE [Order] ALTER COLUMN [AffiliateId] int NOT NULL
+GO
+

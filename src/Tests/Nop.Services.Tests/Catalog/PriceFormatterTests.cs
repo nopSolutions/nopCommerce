@@ -27,7 +27,6 @@ namespace Nop.Services.Tests.Catalog
         IRepository<Currency> _currencyRepo;
         IRepository<StoreMapping> _storeMappingRepo;
         ICurrencyService _currencyService;
-        ICustomerService _customerService;
         CurrencySettings _currencySettings;
         IWorkContext _workContext;
         ILocalizationService _localizationService;
@@ -71,11 +70,9 @@ namespace Nop.Services.Tests.Catalog
 
             _storeMappingRepo = MockRepository.GenerateMock<IRepository<StoreMapping>>();
 
-            _customerService = MockRepository.GenerateMock<ICustomerService>();
-
             var pluginFinder = new PluginFinder();
             _currencyService = new CurrencyService(cacheManager, _currencyRepo,_storeMappingRepo,
-                _customerService, _currencySettings, pluginFinder, null);
+                _currencySettings, pluginFinder, null);
 
             _taxSettings = new TaxSettings();
 

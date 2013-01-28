@@ -240,9 +240,9 @@ namespace Nop.Web.Framework
                                 if (langByCulture != null && langByCulture.Published)
                                 {
                                     //the language is found. now we need to save it
-                                    if (this.CurrentCustomer != null && !langByCulture.Equals(this.CurrentCustomer.Language))
+                                    if (this.CurrentCustomer != null && langByCulture.Id != this.CurrentCustomer.LanguageId)
                                     {
-                                        this.CurrentCustomer.Language = langByCulture;
+                                        this.CurrentCustomer.LanguageId = langByCulture.Id;
                                         _customerService.UpdateCustomer(this.CurrentCustomer);
                                     }
                                 }
@@ -257,7 +257,6 @@ namespace Nop.Web.Framework
                     foreach (var lang in allLanguages)
                     {
                         if (this.CurrentCustomer != null &&
-                            this.CurrentCustomer.LanguageId.HasValue && 
                             this.CurrentCustomer.LanguageId == lang.Id)
                         {
                             return lang;
@@ -275,7 +274,7 @@ namespace Nop.Web.Framework
                 if (this.CurrentCustomer == null)
                     return;
 
-                this.CurrentCustomer.Language = value;
+                this.CurrentCustomer.LanguageId = value != null ? value.Id : 0;;
                 _customerService.UpdateCustomer(this.CurrentCustomer);
             }
         }
@@ -302,7 +301,6 @@ namespace Nop.Web.Framework
                     foreach (var currency in allCurrencies)
                     {
                         if (this.CurrentCustomer != null &&
-                            this.CurrentCustomer.CurrencyId.HasValue && 
                             this.CurrentCustomer.CurrencyId == currency.Id)
                         {
                             return currency;
@@ -320,7 +318,7 @@ namespace Nop.Web.Framework
                 if (this.CurrentCustomer == null)
                     return;
 
-                this.CurrentCustomer.Currency = value;
+                this.CurrentCustomer.CurrencyId = value != null ? value.Id : 0;
                 _customerService.UpdateCustomer(this.CurrentCustomer);
             }
         }

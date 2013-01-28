@@ -100,50 +100,6 @@ namespace Nop.Data.Tests.Customers
         }
 
         [Test]
-        public void Can_save_and_load_customer_with_language()
-        {
-            var customer = GetTestCustomer();
-            customer.Language = new Language()
-            {
-                Name = "English",
-                LanguageCulture = "en-Us",
-                FlagImageFileName = "us.png",
-                Published = true,
-                DisplayOrder = 1
-            };
-
-            var fromDb = SaveAndLoadEntity(customer);
-            fromDb.ShouldNotBeNull();
-
-            fromDb.Language.ShouldNotBeNull();
-            fromDb.Language.Name.ShouldEqual("English");
-        }
-
-        [Test]
-        public void Can_save_and_load_customer_with_currency()
-        {
-            var customer = GetTestCustomer();
-            customer.Currency = new Currency()
-            {
-                Name = "US Dollar",
-                CurrencyCode = "USD",
-                Rate = 1,
-                DisplayLocale = "en-US",
-                CustomFormatting = "CustomFormatting 1",
-                Published = true,
-                DisplayOrder = 2,
-                CreatedOnUtc = new DateTime(2010, 01, 01),
-                UpdatedOnUtc = new DateTime(2010, 01, 02),
-            };
-
-            var fromDb = SaveAndLoadEntity(customer);
-            fromDb.ShouldNotBeNull();
-
-            fromDb.Currency.ShouldNotBeNull();
-            fromDb.Currency.Name.ShouldEqual("US Dollar");
-        }
-
-        [Test]
         public void Can_save_customer_with_rewardPointsHistoryEntry()
         {
             var customer = GetTestCustomer();
@@ -174,18 +130,6 @@ namespace Nop.Data.Tests.Customers
             fromDb.ShouldNotBeNull();
             fromDb.Addresses.Count.ShouldEqual(1);
             fromDb.Addresses.First().FirstName.ShouldEqual("Test");
-        }
-
-        [Test]
-        public void Can_save_and_load_customer_with_affiliate()
-        {
-            var customer = GetTestCustomer();
-            customer.Affiliate = GetTestAffiliate();
-
-            var fromDb = SaveAndLoadEntity(customer);
-            fromDb.ShouldNotBeNull();
-            fromDb.Affiliate.ShouldNotBeNull();
-            fromDb.Affiliate.Active.ShouldEqual(true);
         }
 
         [Test]

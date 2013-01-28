@@ -19,7 +19,6 @@ namespace Nop.Services.Tests.Localization
     {
         IRepository<Language> _languageRepo;
         IRepository<StoreMapping> _storeMappingRepo;
-        ICustomerService _customerService;
         ILanguageService _languageService;
         ISettingService _settingService;
         IEventPublisher _eventPublisher;
@@ -52,8 +51,6 @@ namespace Nop.Services.Tests.Localization
 
             var cacheManager = new NopNullCache();
 
-            _customerService = MockRepository.GenerateMock<ICustomerService>();
-
             _settingService = MockRepository.GenerateMock<ISettingService>();
 
             _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
@@ -61,7 +58,7 @@ namespace Nop.Services.Tests.Localization
 
             _localizationSettings = new LocalizationSettings();
             _languageService = new LanguageService(cacheManager, _languageRepo, _storeMappingRepo,
-                _customerService, _settingService, _localizationSettings, _eventPublisher);
+                _settingService, _localizationSettings, _eventPublisher);
         }
 
         [Test]

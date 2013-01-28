@@ -21,21 +21,9 @@ namespace Nop.Data.Mapping.Customers
             this.Ignore(c => c.TaxDisplayType);
             this.Ignore(c => c.VatNumberStatus);
 
-            this.HasOptional(c => c.Language)
-                .WithMany()
-                .HasForeignKey(c => c.LanguageId).WillCascadeOnDelete(false);
-
-            this.HasOptional(c => c.Currency)
-                .WithMany()
-                .HasForeignKey(c => c.CurrencyId).WillCascadeOnDelete(false);
-
             this.HasMany(c => c.CustomerRoles)
                 .WithMany()
                 .Map(m => m.ToTable("Customer_CustomerRole_Mapping"));
-
-            this.HasOptional(c => c.Affiliate)
-                .WithMany()
-                .HasForeignKey(c => c.AffiliateId);
 
             this.HasMany<Address>(c => c.Addresses)
                 .WithMany()

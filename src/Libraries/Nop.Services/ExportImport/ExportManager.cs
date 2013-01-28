@@ -1106,7 +1106,7 @@ namespace Nop.Services.ExportImport
                         worksheet.Cells[row, col].Value = order.CustomerCurrencyCode;
                         col++;
 
-                        worksheet.Cells[row, col].Value = order.AffiliateId.HasValue ? order.AffiliateId.Value : 0;
+                        worksheet.Cells[row, col].Value = order.AffiliateId;
                         col++;
 
                         worksheet.Cells[row, col].Value = order.OrderStatusId;
@@ -1333,10 +1333,10 @@ namespace Nop.Services.ExportImport
                     worksheet.Cells[row, col].Value = customer.PasswordSalt;
                     col++;
 
-                    worksheet.Cells[row, col].Value = customer.LanguageId.HasValue ? customer.LanguageId.Value : 0;
+                    worksheet.Cells[row, col].Value = customer.LanguageId;
                     col++;
 
-                    worksheet.Cells[row, col].Value = customer.CurrencyId.HasValue ? customer.CurrencyId.Value : 0;
+                    worksheet.Cells[row, col].Value = customer.CurrencyId;
                     col++;
 
                     worksheet.Cells[row, col].Value = customer.TaxDisplayTypeId;
@@ -1354,7 +1354,7 @@ namespace Nop.Services.ExportImport
                     worksheet.Cells[row, col].Value = customer.TimeZoneId;
                     col++;
 
-                    worksheet.Cells[row, col].Value = customer.AffiliateId.HasValue ? customer.AffiliateId.Value : 0;
+                    worksheet.Cells[row, col].Value = customer.AffiliateId;
                     col++;
 
                     worksheet.Cells[row, col].Value = customer.Active;
@@ -1489,14 +1489,14 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("Password", null, customer.Password);
                 xmlWriter.WriteElementString("PasswordFormatId", null, customer.PasswordFormatId.ToString());
                 xmlWriter.WriteElementString("PasswordSalt", null, customer.PasswordSalt);
-                xmlWriter.WriteElementString("LanguageId", null, customer.LanguageId.HasValue ? customer.LanguageId.ToString() : "0");
-                xmlWriter.WriteElementString("CurrencyId", null, customer.CurrencyId.HasValue ? customer.CurrencyId.ToString() : "0");
+                xmlWriter.WriteElementString("LanguageId", null, customer.LanguageId.ToString());
+                xmlWriter.WriteElementString("CurrencyId", null, customer.CurrencyId.ToString());
                 xmlWriter.WriteElementString("TaxDisplayTypeId", null, customer.TaxDisplayTypeId.ToString());
                 xmlWriter.WriteElementString("IsTaxExempt", null, customer.IsTaxExempt.ToString());
                 xmlWriter.WriteElementString("VatNumber", null, customer.VatNumber);
                 xmlWriter.WriteElementString("VatNumberStatusId", null, customer.VatNumberStatusId.ToString());
                 xmlWriter.WriteElementString("TimeZoneId", null, customer.TimeZoneId);
-                xmlWriter.WriteElementString("AffiliateId", null, customer.AffiliateId.HasValue ? customer.AffiliateId.ToString() : "0");
+                xmlWriter.WriteElementString("AffiliateId", null, customer.AffiliateId.ToString());
                 xmlWriter.WriteElementString("Active", null, customer.Active.ToString());
 
 

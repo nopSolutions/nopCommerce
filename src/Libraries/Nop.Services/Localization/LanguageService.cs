@@ -27,7 +27,6 @@ namespace Nop.Services.Localization
 
         private readonly IRepository<Language> _languageRepository;
         private readonly IRepository<StoreMapping> _storeMappingRepository;
-        private readonly ICustomerService _customerService;
         private readonly ICacheManager _cacheManager;
         private readonly ISettingService _settingService;
         private readonly LocalizationSettings _localizationSettings;
@@ -43,14 +42,12 @@ namespace Nop.Services.Localization
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="languageRepository">Language repository</param>
         /// <param name="storeMappingRepository">Store mapping repository</param>
-        /// <param name="customerService">Customer service</param>
         /// <param name="settingService">Setting service</param>
         /// <param name="localizationSettings">Localization settings</param>
         /// <param name="eventPublisher">Event published</param>
         public LanguageService(ICacheManager cacheManager,
             IRepository<Language> languageRepository,
             IRepository<StoreMapping> storeMappingRepository,
-            ICustomerService customerService,
             ISettingService settingService,
             LocalizationSettings localizationSettings,
             IEventPublisher eventPublisher)
@@ -58,7 +55,6 @@ namespace Nop.Services.Localization
             this._cacheManager = cacheManager;
             this._languageRepository = languageRepository;
             this._storeMappingRepository = storeMappingRepository;
-            this._customerService = customerService;
             this._settingService = settingService;
             this._localizationSettings = localizationSettings;
             this._eventPublisher = eventPublisher;
@@ -91,15 +87,6 @@ namespace Nop.Services.Localization
                 }
             }
             
-            //update appropriate customers (their language)
-            //it can take a lot of time if you have thousands of associated customers
-            var customers = _customerService.GetCustomersByLanguageId(language.Id);
-            foreach (var customer in customers)
-            {
-                customer.LanguageId = null;
-                _customerService.UpdateCustomer(customer);
-            }
-
             _languageRepository.Delete(language);
 
             //cache

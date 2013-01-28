@@ -28,7 +28,6 @@ namespace Nop.Services.Directory
         private readonly IRepository<Currency> _currencyRepository;
         private readonly IRepository<StoreMapping> _storeMappingRepository;
         private readonly ICacheManager _cacheManager;
-        private readonly ICustomerService _customerService;
         private readonly CurrencySettings _currencySettings;
         private readonly IPluginFinder _pluginFinder;
         private readonly IEventPublisher _eventPublisher;
@@ -43,14 +42,12 @@ namespace Nop.Services.Directory
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="currencyRepository">Currency repository</param>
         /// <param name="storeMappingRepository">Store mapping repository</param>
-        /// <param name="customerService">Customer service</param>
         /// <param name="currencySettings">Currency settings</param>
         /// <param name="pluginFinder">Plugin finder</param>
         /// <param name="eventPublisher">Event published</param>
         public CurrencyService(ICacheManager cacheManager,
             IRepository<Currency> currencyRepository,
             IRepository<StoreMapping> storeMappingRepository,
-            ICustomerService customerService,
             CurrencySettings currencySettings,
             IPluginFinder pluginFinder,
             IEventPublisher eventPublisher)
@@ -58,7 +55,6 @@ namespace Nop.Services.Directory
             this._cacheManager = cacheManager;
             this._currencyRepository = currencyRepository;
             this._storeMappingRepository = storeMappingRepository;
-            this._customerService = customerService;
             this._currencySettings = currencySettings;
             this._pluginFinder = pluginFinder;
             this._eventPublisher = eventPublisher;
@@ -90,15 +86,6 @@ namespace Nop.Services.Directory
             if (currency == null)
                 throw new ArgumentNullException("currency");
             
-            //update appropriate customers (their currency)
-            //it can take a lot of time if you have thousands of associated customers
-            var customers = _customerService.GetCustomersByCurrencyId(currency.Id);
-            foreach (var customer in customers)
-            {
-                customer.CurrencyId = null;
-                _customerService.UpdateCustomer(customer);
-            }
-
             _currencyRepository.Delete(currency);
 
             _cacheManager.RemoveByPattern(CURRENCIES_PATTERN_KEY);

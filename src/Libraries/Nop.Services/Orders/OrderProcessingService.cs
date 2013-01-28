@@ -15,6 +15,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
+using Nop.Services.Affiliates;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -63,6 +64,7 @@ namespace Nop.Services.Orders
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ICurrencyService _currencyService;
+        private readonly IAffiliateService _affiliateService;
         private readonly IEventPublisher _eventPublisher;
 
         private readonly PaymentSettings _paymentSettings;
@@ -102,9 +104,9 @@ namespace Nop.Services.Orders
         /// <param name="encryptionService">Encryption service</param>
         /// <param name="workContext">Work context</param>
         /// <param name="workflowMessageService">Workflow message service</param>
-        /// <param name="smsService">SMS service</param>
         /// <param name="customerActivityService">Customer activity service</param>
         /// <param name="currencyService">Currency service</param>
+        /// <param name="affiliateService">Affiliate service</param>
         /// <param name="eventPublisher">Event published</param>
         /// <param name="paymentSettings">Payment settings</param>
         /// <param name="rewardPointsSettings">Reward points settings</param>
@@ -137,6 +139,7 @@ namespace Nop.Services.Orders
             IWorkflowMessageService workflowMessageService,
             ICustomerActivityService customerActivityService,
             ICurrencyService currencyService,
+            IAffiliateService affiliateService,
             IEventPublisher eventPublisher,
             PaymentSettings paymentSettings,
             RewardPointsSettings rewardPointsSettings,
@@ -170,6 +173,7 @@ namespace Nop.Services.Orders
             this._encryptionService = encryptionService;
             this._customerActivityService = customerActivityService;
             this._currencyService = currencyService;
+            this._affiliateService = affiliateService;
             this._eventPublisher = eventPublisher;
             this._paymentSettings = paymentSettings;
             this._rewardPointsSettings = rewardPointsSettings;
@@ -463,12 +467,19 @@ namespace Nop.Services.Orders
                 if (customer == null)
                     throw new ArgumentException("Customer is not set");
 
+                //affilites
+                int affiliateId = 0;
+                var affiliate = _affiliateService.GetAffiliateById(customer.AffiliateId);
+                if (affiliate != null && affiliate.Active && !affiliate.Deleted)
+                    affiliateId = affiliate.Id;
+
                 //customer currency
                 string customerCurrencyCode = "";
                 decimal customerCurrencyRate = decimal.Zero;
                 if (!processPaymentRequest.IsRecurringPayment)
                 {
-                    var customerCurrency = (customer.Currency != null && customer.Currency.Published) ? customer.Currency : _workContext.WorkingCurrency;
+                    var currencyTmp = _currencyService.GetCurrencyById(customer.CurrencyId);
+                    var customerCurrency = (currencyTmp != null && currencyTmp.Published) ? currencyTmp : _workContext.WorkingCurrency;
                     customerCurrencyCode = customerCurrency.CurrencyCode;
                     var primaryStoreCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
                     customerCurrencyRate = customerCurrency.Rate / primaryStoreCurrency.Rate;
@@ -481,9 +492,13 @@ namespace Nop.Services.Orders
                 //customer language
                 Language customerLanguage = null;
                 if (!processPaymentRequest.IsRecurringPayment)
-                    customerLanguage = customer.Language;
+                {
+                    customerLanguage = _languageService.GetLanguageById(customer.LanguageId);
+                }
                 else
+                {
                     customerLanguage = _languageService.GetLanguageById(initialOrder.CustomerLanguageId);
+                }
                 if (customerLanguage == null || !customerLanguage.Published)
                     customerLanguage = _workContext.WorkingLanguage;
 
@@ -948,7 +963,7 @@ namespace Nop.Services.Orders
                             CheckoutAttributesXml = checkoutAttributesXml,
                             CustomerCurrencyCode = customerCurrencyCode,
                             CurrencyRate = customerCurrencyRate,
-                            AffiliateId = (customer.Affiliate != null && !customer.Affiliate.Deleted && customer.Affiliate.Active) ? customer.AffiliateId : null,
+                            AffiliateId = affiliateId,
                             OrderStatus = OrderStatus.Pending,
                             AllowStoringCreditCardNumber = processPaymentResult.AllowStoringCreditCardNumber,
                             CardType = processPaymentResult.AllowStoringCreditCardNumber ? _encryptionService.EncryptText(processPaymentRequest.CreditCardType) : string.Empty,
