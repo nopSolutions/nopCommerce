@@ -111,32 +111,19 @@ namespace Nop.Services.Catalog
             query = query.Where(m => !m.Deleted);
             query = query.OrderBy(m => m.DisplayOrder);
             
-            //ACL (access control list)
             if (!showHidden)
             {
+                //ACL (access control list)
                 var allowedCustomerRolesIds = _workContext.CurrentCustomer.CustomerRoles
                     .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
-
                 query = from m in query
                         join acl in _aclRepository.Table on m.Id equals acl.EntityId into m_acl
                         from acl in m_acl.DefaultIfEmpty()
                         where !m.SubjectToAcl || (acl.EntityName == "Manufacturer" && allowedCustomerRolesIds.Contains(acl.CustomerRoleId))
                         select m;
 
-                //only distinct manufacturers (group by ID)
-                query = from m in query
-                        group m by m.Id
-                            into mGroup
-                            orderby mGroup.Key
-                            select mGroup.FirstOrDefault();
-                query = query.OrderBy(m => m.DisplayOrder);
-            }
-
-            //Store mapping
-            if (!showHidden)
-            {
+                //Store mapping
                 var currentStoreId = _workContext.CurrentStore.Id;
-
                 query = from m in query
                         join sm in _storeMappingRepository.Table on m.Id equals sm.EntityId into m_sm
                         from sm in m_sm.DefaultIfEmpty()
@@ -151,7 +138,7 @@ namespace Nop.Services.Catalog
                         select mGroup.FirstOrDefault();
                 query = query.OrderBy(m => m.DisplayOrder);
             }
-
+            
             var manufacturers = query.ToList();
             return manufacturers;
         }
@@ -271,12 +258,11 @@ namespace Nop.Services.Catalog
                             orderby pm.DisplayOrder
                             select pm;
 
-                //ACL (access control list)
                 if (!showHidden)
                 {
+                    //ACL (access control list)
                     var allowedCustomerRolesIds = _workContext.CurrentCustomer.CustomerRoles
                         .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
-
                     query = from pm in query
                             join m in _manufacturerRepository.Table on pm.ManufacturerId equals m.Id
                             join acl in _aclRepository.Table on m.Id equals acl.EntityId into m_acl
@@ -285,21 +271,9 @@ namespace Nop.Services.Catalog
                                 !m.SubjectToAcl ||
                                 (acl.EntityName == "Manufacturer" && allowedCustomerRolesIds.Contains(acl.CustomerRoleId))
                             select pm;
-                    
-                    //only distinct manufacturers (group by ID)
-                    query = from pm in query
-                            group pm by pm.Id
-                                into pmGroup
-                                orderby pmGroup.Key
-                                select pmGroup.FirstOrDefault();
-                    query = query.OrderBy(pm => pm.DisplayOrder);
-                }
 
-                //Store mapping
-                if (!showHidden)
-                {
+                    //Store mapping
                     var currentStoreId = _workContext.CurrentStore.Id;
-
                     query = from pm in query
                             join m in _manufacturerRepository.Table on pm.ManufacturerId equals m.Id
                             join sm in _storeMappingRepository.Table on m.Id equals sm.EntityId into m_sm
@@ -344,12 +318,11 @@ namespace Nop.Services.Catalog
                             select pm;
 
 
-                //ACL (access control list)
                 if (!showHidden)
                 {
+                    //ACL (access control list)
                     var allowedCustomerRolesIds = _workContext.CurrentCustomer.CustomerRoles
                         .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
-
                     query = from pm in query
                             join m in _manufacturerRepository.Table on pm.ManufacturerId equals m.Id
                             join acl in _aclRepository.Table on m.Id equals acl.EntityId into m_acl
@@ -357,20 +330,8 @@ namespace Nop.Services.Catalog
                             where !m.SubjectToAcl || (acl.EntityName == "Manufacturer" && allowedCustomerRolesIds.Contains(acl.CustomerRoleId))
                             select pm;
 
-                    //only distinct manufacturers (group by ID)
-                    query = from pm in query
-                            group pm by pm.Id
-                            into mGroup
-                            orderby mGroup.Key
-                            select mGroup.FirstOrDefault();
-                    query = query.OrderBy(pm => pm.DisplayOrder);
-                }
-
-                //Store mapping
-                if (!showHidden)
-                {
+                    //Store mapping
                     var currentStoreId = _workContext.CurrentStore.Id;
-
                     query = from pm in query
                             join m in _manufacturerRepository.Table on pm.ManufacturerId equals m.Id
                             join sm in _storeMappingRepository.Table on m.Id equals sm.EntityId into m_sm

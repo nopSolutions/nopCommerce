@@ -108,32 +108,19 @@ namespace Nop.Services.Catalog
             query = query.Where(c => !c.Deleted);
             query = query.OrderBy(c => c.ParentCategoryId).ThenBy(c => c.DisplayOrder);
             
-            //ACL (access control list)
             if (!showHidden)
             {
+                //ACL (access control list)
                 var allowedCustomerRolesIds = _workContext.CurrentCustomer.CustomerRoles
                     .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
-
                 query = from c in query
                         join acl in _aclRepository.Table on c.Id equals acl.EntityId into c_acl
                         from acl in c_acl.DefaultIfEmpty()
                         where !c.SubjectToAcl || (acl.EntityName == "Category" && allowedCustomerRolesIds.Contains(acl.CustomerRoleId))
                         select c;
 
-                //only distinct categories (group by ID)
-                query = from c in query
-                        group c by c.Id
-                        into cGroup
-                        orderby cGroup.Key
-                        select cGroup.FirstOrDefault();
-                query = query.OrderBy(c => c.ParentCategoryId).ThenBy(c => c.DisplayOrder);
-            }
-
-            //Store mapping
-            if (!showHidden)
-            {
+                //Store mapping
                 var currentStoreId = _workContext.CurrentStore.Id;
-
                 query = from c in query
                         join sm in _storeMappingRepository.Table on c.Id equals sm.EntityId into c_sm
                         from sm in c_sm.DefaultIfEmpty()
@@ -148,7 +135,7 @@ namespace Nop.Services.Catalog
                         select cGroup.FirstOrDefault();
                 query = query.OrderBy(c => c.ParentCategoryId).ThenBy(c => c.DisplayOrder);
             }
-
+            
             var unsortedCategories = query.ToList();
 
             //sort categories
@@ -177,32 +164,19 @@ namespace Nop.Services.Catalog
                 query = query.Where(c => !c.Deleted);
                 query = query.OrderBy(c => c.DisplayOrder);
 
-                //ACL (access control list)
                 if (!showHidden)
                 {
+                    //ACL (access control list)
                     var allowedCustomerRolesIds = _workContext.CurrentCustomer.CustomerRoles
                         .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
-
                     query = from c in query
                             join acl in _aclRepository.Table on c.Id equals acl.EntityId into c_acl
                             from acl in c_acl.DefaultIfEmpty()
                             where !c.SubjectToAcl || (acl.EntityName == "Category" && allowedCustomerRolesIds.Contains(acl.CustomerRoleId))
                             select c;
 
-                    //only distinct categories (group by ID)
-                    query = from c in query
-                            group c by c.Id
-                            into cGroup
-                            orderby cGroup.Key
-                            select cGroup.FirstOrDefault();
-                    query = query.OrderBy(c => c.DisplayOrder);
-                }
-
-                //Multi-store
-                if (!showHidden)
-                {
+                    //Store mapping
                     var currentStoreId = _workContext.CurrentStore.Id;
-
                     query = from c in query
                             join sm in _storeMappingRepository.Table on c.Id equals sm.EntityId into c_sm
                             from sm in c_sm.DefaultIfEmpty()
@@ -365,12 +339,11 @@ namespace Nop.Services.Catalog
                             orderby pc.DisplayOrder
                             select pc;
 
-                //ACL (access control list)
                 if (!showHidden)
                 {
+                    //ACL (access control list)
                     var allowedCustomerRolesIds = _workContext.CurrentCustomer.CustomerRoles
                         .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
-
                     query = from pc in query
                             join c in _categoryRepository.Table on pc.CategoryId equals c.Id
                             join acl in _aclRepository.Table on c.Id equals acl.EntityId into c_acl
@@ -378,20 +351,8 @@ namespace Nop.Services.Catalog
                             where !c.SubjectToAcl || (acl.EntityName == "Category" && allowedCustomerRolesIds.Contains(acl.CustomerRoleId))
                             select pc;
 
-                    //only distinct categories (group by ID)
-                    query = from c in query
-                            group c by c.Id
-                            into cGroup
-                            orderby cGroup.Key
-                            select cGroup.FirstOrDefault();
-                    query = query.OrderBy(pc => pc.DisplayOrder);
-                }
-
-                //Store mapping
-                if (!showHidden)
-                {
+                    //Store mapping
                     var currentStoreId = _workContext.CurrentStore.Id;
-
                     query = from pc in query
                             join c in _categoryRepository.Table on pc.CategoryId equals c.Id
                             join sm in _storeMappingRepository.Table on c.Id equals sm.EntityId into c_sm
@@ -435,12 +396,11 @@ namespace Nop.Services.Catalog
                             orderby pc.DisplayOrder
                             select pc;
 
-                //ACL (access control list)
                 if (!showHidden)
                 {
+                    //ACL (access control list)
                     var allowedCustomerRolesIds = _workContext.CurrentCustomer.CustomerRoles
                         .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
-
                     query = from pc in query
                             join c in _categoryRepository.Table on pc.CategoryId equals c.Id
                             join acl in _aclRepository.Table on c.Id equals acl.EntityId into c_acl
@@ -448,20 +408,8 @@ namespace Nop.Services.Catalog
                             where !c.SubjectToAcl || (acl.EntityName == "Category" && allowedCustomerRolesIds.Contains(acl.CustomerRoleId))
                             select pc;
 
-                    //only distinct categories (group by ID)
-                    query = from pc in query
-                            group pc by pc.Id
-                            into pcGroup
-                            orderby pcGroup.Key
-                            select pcGroup.FirstOrDefault();
-                    query = query.OrderBy(pc => pc.DisplayOrder);
-                }
-
-                //Store mapping
-                if (!showHidden)
-                {
+                    //Store mapping
                     var currentStoreId = _workContext.CurrentStore.Id;
-
                     query = from pc in query
                             join c in _categoryRepository.Table on pc.CategoryId equals c.Id
                             join sm in _storeMappingRepository.Table on c.Id equals sm.EntityId into c_sm
@@ -477,7 +425,7 @@ namespace Nop.Services.Catalog
                             select pcGroup.FirstOrDefault();
                     query = query.OrderBy(pc => pc.DisplayOrder);
                 }
-
+                
                 var productCategories = query.ToList();
                 return productCategories;
             });

@@ -609,19 +609,16 @@ namespace Nop.Services.Catalog
                             select p;
                 }
 
-                //ACL
                 if (!showHidden)
                 {
+                    //ACL (access control list)
                     query = from p in query
                             join acl in _aclRepository.Table on p.Id equals acl.EntityId into p_acl
                             from acl in p_acl.DefaultIfEmpty()
                             where !p.SubjectToAcl || (acl.EntityName == "Product" && allowedCustomerRolesIds.Contains(acl.CustomerRoleId))
                             select p;
-                }
 
-                //Store mapping
-                if (!showHidden)
-                {
+                    //Store mapping
                     query = from p in query
                             join sm in _storeMappingRepository.Table on p.Id equals sm.EntityId into p_sm
                             from sm in p_sm.DefaultIfEmpty()
