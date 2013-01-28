@@ -163,8 +163,9 @@ namespace Nop.Web.Infrastructure.Cache
         /// {0} : product id
         /// {1} : language id
         /// {2} : comma separated list of customer roles
+        /// {3} : current store id
         /// </remarks>
-        public const string PRODUCT_BREADCRUMB_MODEL_KEY = "Nop.pres.product.breadcrumb-{0}-{1}-{2}";
+        public const string PRODUCT_BREADCRUMB_MODEL_KEY = "Nop.pres.product.breadcrumb-{0}-{1}-{2}-{3}";
         public const string PRODUCT_BREADCRUMB_PATTERN_KEY = "Nop.pres.product.breadcrumb";
 
 

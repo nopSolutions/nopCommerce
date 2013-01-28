@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using FluentValidation.Attributes;
 using Nop.Admin.Models.Customers;
+using Nop.Admin.Models.Stores;
 using Nop.Admin.Validators.Catalog;
 using Nop.Core.Domain.Discounts;
 using Nop.Web.Framework;
@@ -97,6 +98,13 @@ namespace Nop.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Categories.Fields.AclCustomerRoles")]
         public List<CustomerRoleModel> AvailableCustomerRoles { get; set; }
         public int[] SelectedCustomerRoleIds { get; set; }
+
+        //Store mapping
+        [NopResourceDisplayName("Admin.Catalog.Categories.Fields.LimitedToStores")]
+        public bool LimitedToStores { get; set; }
+        [NopResourceDisplayName("Admin.Catalog.Categories.Fields.AvailableStores")]
+        public List<StoreModel> AvailableStores { get; set; }
+        public int[] SelectedStoreIds { get; set; }
 
 
         public IList<DropDownItem> ParentCategories { get; set; }

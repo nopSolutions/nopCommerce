@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Nop.Admin.Models.Catalog;
+using Nop.Admin.Models.Stores;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -16,6 +17,7 @@ using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Services.Security;
 using Nop.Services.Seo;
+using Nop.Services.Stores;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
 using Telerik.Web.Mvc;
@@ -41,6 +43,8 @@ namespace Nop.Admin.Controllers
         private readonly IDiscountService _discountService;
         private readonly IPermissionService _permissionService;
         private readonly IAclService _aclService;
+        private readonly IStoreService _storeService;
+        private readonly IStoreMappingService _storeMappingService;
         private readonly IExportManager _exportManager;
         private readonly IWorkContext _workContext;
         private readonly ICustomerActivityService _customerActivityService;
@@ -57,7 +61,7 @@ namespace Nop.Admin.Controllers
             IUrlRecordService urlRecordService, IPictureService pictureService, ILanguageService languageService,
             ILocalizationService localizationService, ILocalizedEntityService localizedEntityService,
             IDiscountService discountService, IPermissionService permissionService,
-            IAclService aclService,
+            IAclService aclService, IStoreService storeService, IStoreMappingService storeMappingService,
             IExportManager exportManager, IWorkContext workContext,
             ICustomerActivityService customerActivityService, AdminAreaSettings adminAreaSettings,
             CatalogSettings catalogSettings)
@@ -75,6 +79,8 @@ namespace Nop.Admin.Controllers
             this._discountService = discountService;
             this._permissionService = permissionService;
             this._aclService = aclService;
+            this._storeService = storeService;
+            this._storeMappingService = storeMappingService;
             this._exportManager = exportManager;
             this._workContext = workContext;
             this._customerActivityService = customerActivityService;
@@ -204,6 +210,57 @@ namespace Nop.Admin.Controllers
                     var aclRecordToDelete = existingAclRecords.Where(acl => acl.CustomerRoleId == customerRole.Id).FirstOrDefault();
                     if (aclRecordToDelete != null)
                         _aclService.DeleteAclRecord(aclRecordToDelete);
+                }
+            }
+        }
+
+        [NonAction]
+        private void PrepareStoresMappingModel(CategoryModel model, Category manufacturer, bool excludeProperties)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            model.AvailableStores = _storeService
+                .GetAllStores()
+                .Select(s => new StoreModel()
+                {
+                    Id = s.Id,
+                    Name = s.Name,
+                    DisplayOrder = s.DisplayOrder
+                })
+                .ToList();
+            if (!excludeProperties)
+            {
+                if (manufacturer != null)
+                {
+                    model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(manufacturer);
+                }
+                else
+                {
+                    model.SelectedCustomerRoleIds = new int[0];
+                }
+            }
+        }
+
+        [NonAction]
+        protected void SaveStoreMappings(Category category, CategoryModel model)
+        {
+            var existingStoreMappings = _storeMappingService.GetStoreMappings(category);
+            var allStores = _storeService.GetAllStores();
+            foreach (var store in allStores)
+            {
+                if (model.SelectedStoreIds != null && model.SelectedStoreIds.Contains(store.Id))
+                {
+                    //new role
+                    if (existingStoreMappings.Where(sm => sm.StoreId == store.Id).Count() == 0)
+                        _storeMappingService.InsertStoreMapping(category, store.Id);
+                }
+                else
+                {
+                    //removed role
+                    var storeMappingToDelete = existingStoreMappings.Where(sm => sm.StoreId == store.Id).FirstOrDefault();
+                    if (storeMappingToDelete != null)
+                        _storeMappingService.DeleteStoreMapping(storeMappingToDelete);
                 }
             }
         }
@@ -387,6 +444,8 @@ namespace Nop.Admin.Controllers
             PrepareDiscountModel(model, null, true);
             //ACL
             PrepareAclModel(model, null, false);
+            //Stores
+            PrepareStoresMappingModel(model, null, false);
             //default values
             model.PageSize = 4;
             model.Published = true;
@@ -428,6 +487,8 @@ namespace Nop.Admin.Controllers
                 UpdatePictureSeoNames(category);
                 //ACL (customer roles)
                 SaveCategoryAcl(category, model);
+                //Stores
+                SaveStoreMappings(category, model);
 
                 //activity log
                 _customerActivityService.InsertActivity("AddNewCategory", _localizationService.GetResource("ActivityLog.AddNewCategory"), category.Name);
@@ -453,6 +514,8 @@ namespace Nop.Admin.Controllers
             PrepareDiscountModel(model, null, true);
             //ACL
             PrepareAclModel(model, null, true);
+            //Stores
+            PrepareStoresMappingModel(model, null, true);
             return View(model);
         }
 
@@ -493,6 +556,8 @@ namespace Nop.Admin.Controllers
             PrepareDiscountModel(model, category, false);
             //ACL
             PrepareAclModel(model, category, false);
+            //Store
+            PrepareStoresMappingModel(model, category, false);
 
             return View(model);
         }
@@ -550,6 +615,8 @@ namespace Nop.Admin.Controllers
                 UpdatePictureSeoNames(category);
                 //ACL
                 SaveCategoryAcl(category, model);
+                //Stores
+                SaveStoreMappings(category, model);
 
                 //activity log
                 _customerActivityService.InsertActivity("EditCategory", _localizationService.GetResource("ActivityLog.EditCategory"), category.Name);
@@ -576,6 +643,9 @@ namespace Nop.Admin.Controllers
             PrepareDiscountModel(model, category, true);
             //ACL
             PrepareAclModel(model, category, true);
+            //Store
+            PrepareStoresMappingModel(model, category, true);
+
             return View(model);
         }
 

@@ -223,7 +223,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected void SaveManufacturerStoreMappings(Manufacturer manufacturer, ManufacturerModel model)
+        protected void SaveStoreMappings(Manufacturer manufacturer, ManufacturerModel model)
         {
             var existingStoreMappings = _storeMappingService.GetStoreMappings(manufacturer);
             var allStores = _storeService.GetAllStores();
@@ -338,7 +338,7 @@ namespace Nop.Admin.Controllers
                 //ACL (customer roles)
                 SaveManufacturerAcl(manufacturer, model);
                 //Stores
-                SaveManufacturerStoreMappings(manufacturer, model);
+                SaveStoreMappings(manufacturer, model);
 
                 //activity log
                 _customerActivityService.InsertActivity("AddNewManufacturer", _localizationService.GetResource("ActivityLog.AddNewManufacturer"), manufacturer.Name);
@@ -423,7 +423,7 @@ namespace Nop.Admin.Controllers
                 //ACL
                 SaveManufacturerAcl(manufacturer, model);
                 //Stores
-                SaveManufacturerStoreMappings(manufacturer, model);
+                SaveStoreMappings(manufacturer, model);
 
                 //activity log
                 _customerActivityService.InsertActivity("EditManufacturer", _localizationService.GetResource("ActivityLog.EditManufacturer"), manufacturer.Name);
