@@ -284,6 +284,7 @@ namespace Nop.Plugin.Payments.GoogleCheckout
 
                 var paymentInfo = new ProcessPaymentRequest()
                 {
+                    StoreId = _workContext.CurrentStore.Id,
                     PaymentMethodSystemName = "Payments.GoogleCheckout",
                     CustomerId = customer.Id,
                     GoogleOrderNumber = googleOrderNumber

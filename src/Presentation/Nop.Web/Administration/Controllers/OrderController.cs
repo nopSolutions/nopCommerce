@@ -308,7 +308,7 @@ namespace Nop.Admin.Controllers
             model.MaxAmountToRefund = order.OrderTotal - order.RefundedAmount;
 
             //recurring payment record
-            var recurringPayment = _orderService.SearchRecurringPayments(0, order.Id, null, 0, int.MaxValue, true).FirstOrDefault();
+            var recurringPayment = _orderService.SearchRecurringPayments(0, 0, order.Id, null, 0, int.MaxValue, true).FirstOrDefault();
             if (recurringPayment != null)
             {
                 model.RecurringPaymentId = recurringPayment.Id;
@@ -603,7 +603,7 @@ namespace Nop.Admin.Controllers
             ShippingStatus? shippingStatus = model.ShippingStatusId > 0 ? (ShippingStatus?)(model.ShippingStatusId) : null;
 
             //load orders
-            var orders = _orderService.SearchOrders(startDateValue, endDateValue, orderStatus,
+            var orders = _orderService.SearchOrders(0, 0, startDateValue, endDateValue, orderStatus,
                 paymentStatus, shippingStatus, model.CustomerEmail, model.OrderGuid, command.Page - 1, command.PageSize);
             var gridModel = new GridModel<OrderModel>
             {
@@ -664,7 +664,7 @@ namespace Nop.Admin.Controllers
 
             try
             {
-                var orders = _orderService.SearchOrders(null, null, null,
+                var orders = _orderService.SearchOrders(0, 0, null, null, null,
                     null, null, null, null, 0, int.MaxValue);
 
                 var xml = _exportManager.ExportOrdersToXml(orders);
@@ -703,7 +703,7 @@ namespace Nop.Admin.Controllers
 
             try
             {
-                var orders = _orderService.SearchOrders(null, null, null,
+                var orders = _orderService.SearchOrders(0, 0, null, null, null,
                     null, null, null, null, 0, int.MaxValue);
                 
                 byte[] bytes = null;

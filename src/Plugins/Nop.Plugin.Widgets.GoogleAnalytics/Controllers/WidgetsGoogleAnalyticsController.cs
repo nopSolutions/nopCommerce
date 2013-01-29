@@ -107,11 +107,9 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
 
         private Order GetLastOrder()
         {
-            Order lastOrder = null;
-            var orders = _orderService.GetOrdersByCustomerId(_workContext.CurrentCustomer.Id);
-            if (orders.Count != 0)
-                lastOrder = orders[0];
-            return lastOrder;
+            var order = _orderService.SearchOrders(_workContext.CurrentStore.Id, _workContext.CurrentCustomer.Id,
+                    null, null, null, null, null, null, null, 0, 1).FirstOrDefault();
+            return order;
         }
         
         //<script type="text/javascript"> 

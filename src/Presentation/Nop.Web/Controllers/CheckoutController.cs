@@ -344,12 +344,13 @@ namespace Nop.Web.Controllers
             if (_orderSettings.MinimumOrderPlacementInterval == 0)
                 return true;
 
-            var lastOrderPlaced = _orderService.GetOrdersByCustomerId(_workContext.CurrentCustomer.Id)
+            var lastOrder = _orderService.SearchOrders(_workContext.CurrentStore.Id, _workContext.CurrentCustomer.Id,
+                null, null, null, null, null, null, null, 0, 1)
                 .FirstOrDefault();
-            if (lastOrderPlaced == null)
+            if (lastOrder == null)
                 return true;
-            
-            var interval = DateTime.UtcNow - lastOrderPlaced.CreatedOnUtc;
+
+            var interval = DateTime.UtcNow - lastOrder.CreatedOnUtc;
             return interval.TotalSeconds > _orderSettings.MinimumOrderPlacementInterval;
         }
 
@@ -874,6 +875,7 @@ namespace Nop.Web.Controllers
                     throw new Exception(_localizationService.GetResource("Checkout.MinOrderPlacementInterval"));
 
                 //place order
+                processPaymentRequest.StoreId = _workContext.CurrentStore.Id;
                 processPaymentRequest.CustomerId = _workContext.CurrentCustomer.Id;
                 processPaymentRequest.PaymentMethodSystemName = _workContext.CurrentCustomer.SelectedPaymentMethodSystemName;
                 var placeOrderResult = _orderProcessingService.PlaceOrder(processPaymentRequest);
@@ -930,8 +932,8 @@ namespace Nop.Web.Controllers
             }
             if (order == null)
             {
-                order = _orderService
-                    .GetOrdersByCustomerId(_workContext.CurrentCustomer.Id)
+                order = _orderService.SearchOrders(_workContext.CurrentStore.Id, _workContext.CurrentCustomer.Id,
+                    null, null, null, null, null, null, null, 0, 1)
                     .FirstOrDefault();
             }
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
@@ -1569,6 +1571,7 @@ namespace Nop.Web.Controllers
                         processPaymentRequest = new ProcessPaymentRequest();
                 }
 
+                processPaymentRequest.StoreId = _workContext.CurrentStore.Id;
                 processPaymentRequest.CustomerId = _workContext.CurrentCustomer.Id;
                 processPaymentRequest.PaymentMethodSystemName = _workContext.CurrentCustomer.SelectedPaymentMethodSystemName;
                 var placeOrderResult = _orderProcessingService.PlaceOrder(processPaymentRequest);
@@ -1644,12 +1647,13 @@ namespace Nop.Web.Controllers
                     return new HttpUnauthorizedResult();
 
                 //get the order
-                var orders = _orderService.GetOrdersByCustomerId(_workContext.CurrentCustomer.Id);
-                if (orders.Count == 0)
+                var order = _orderService.SearchOrders(_workContext.CurrentStore.Id, _workContext.CurrentCustomer.Id,
+                    null, null, null, null, null, null, null, 0, 1)
+                    .FirstOrDefault();
+                if (order == null)
                     return RedirectToRoute("HomePage");
 
                 
-                var order = orders[0];
                 var paymentMethod = _paymentService.LoadPaymentMethodBySystemName(order.PaymentMethodSystemName);
                 if (paymentMethod == null)
                     return RedirectToRoute("HomePage");

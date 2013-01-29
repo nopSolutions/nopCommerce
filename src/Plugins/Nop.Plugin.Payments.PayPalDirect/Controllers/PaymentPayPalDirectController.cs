@@ -267,7 +267,7 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
                             var initialOrder = _orderService.GetOrderByGuid(orderNumberGuid);
                             if (initialOrder != null)
                             {
-                                var recurringPayments = _orderService.SearchRecurringPayments(0, initialOrder.Id, null, 0 , int.MaxValue);
+                                var recurringPayments = _orderService.SearchRecurringPayments(0, 0, initialOrder.Id, null, 0 , int.MaxValue);
                                 foreach (var rp in recurringPayments)
                                 {
                                     switch (newPaymentStatus)

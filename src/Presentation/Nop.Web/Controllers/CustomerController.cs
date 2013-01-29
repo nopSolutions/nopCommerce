@@ -332,7 +332,8 @@ namespace Nop.Web.Controllers
             var model = new CustomerOrderListModel();
             model.NavigationModel = GetCustomerNavigationModel(customer);
             model.NavigationModel.SelectedTab = CustomerNavigationEnum.Orders;
-            var orders = _orderService.GetOrdersByCustomerId(customer.Id);
+            var orders = _orderService.SearchOrders(_workContext.CurrentStore.Id, customer.Id,
+                    null, null, null, null, null, null, null, 0, int.MaxValue);
             foreach (var order in orders)
             {
                 var orderModel = new CustomerOrderListModel.OrderDetailsModel()
@@ -348,7 +349,8 @@ namespace Nop.Web.Controllers
                 model.Orders.Add(orderModel);
             }
 
-            var recurringPayments = _orderService.SearchRecurringPayments(customer.Id, 0, null, 0, int.MaxValue);
+            var recurringPayments = _orderService.SearchRecurringPayments(_workContext.CurrentStore.Id,
+                customer.Id, 0, null, 0, int.MaxValue);
             foreach (var recurringPayment in recurringPayments)
             {
                 var recurringPaymentModel = new CustomerOrderListModel.RecurringOrderModel()

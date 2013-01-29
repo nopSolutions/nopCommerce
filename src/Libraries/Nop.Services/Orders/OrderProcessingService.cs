@@ -532,8 +532,6 @@ namespace Nop.Services.Orders
                         throw new NopException(string.Format("Country '{0}' is not allowed for billing", billingAddress.Country.Name));
                 }
 
-                var storeId = _workContext.CurrentStore.Id;
-                
                 //load and validate customer shopping cart
                 IList<ShoppingCartItem> cart = null;
                 if (!processPaymentRequest.IsRecurringPayment)
@@ -541,7 +539,7 @@ namespace Nop.Services.Orders
                     //load shopping cart
                     cart = customer.ShoppingCartItems
                         .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                        .Where(sci => sci.StoreId == storeId)
+                        .Where(sci => sci.StoreId == processPaymentRequest.StoreId)
                         .ToList();
 
                     if (cart.Count == 0)
@@ -564,7 +562,7 @@ namespace Nop.Services.Orders
                     foreach (var sci in cart)
                     {
                         var sciWarnings = _shoppingCartService.GetShoppingCartItemWarnings(customer, sci.ShoppingCartType,
-                            sci.ProductVariant, storeId, sci.AttributesXml,
+                            sci.ProductVariant, processPaymentRequest.StoreId, sci.AttributesXml,
                             sci.CustomerEnteredPrice, sci.Quantity, false);
                         if (sciWarnings.Count > 0)
                         {
@@ -946,6 +944,7 @@ namespace Nop.Services.Orders
 
                         var order = new Order()
                         {
+                            StoreId = processPaymentRequest.StoreId,
                             OrderGuid = processPaymentRequest.OrderGuid,
                             CustomerId = customer.Id,
                             CustomerLanguageId = customerLanguage.Id,
@@ -1368,7 +1367,7 @@ namespace Nop.Services.Orders
             ReduceRewardPoints(order);
 
             //cancel recurring payments
-            var recurringPayments = _orderService.SearchRecurringPayments(0, order.Id, null, 0 , int.MaxValue);
+            var recurringPayments = _orderService.SearchRecurringPayments(0, 0, order.Id, null, 0 , int.MaxValue);
             foreach (var rp in recurringPayments)
             {
                 //use errors?
@@ -1421,6 +1420,7 @@ namespace Nop.Services.Orders
                 //payment info
                 var paymentInfo = new ProcessPaymentRequest()
                 {
+                    StoreId = initialOrder.StoreId,
                     CustomerId = customer.Id,
                     OrderGuid = Guid.NewGuid(),
                     IsRecurringPayment = true,
@@ -1733,7 +1733,7 @@ namespace Nop.Services.Orders
             _orderService.UpdateOrder(order);
 
             //cancel recurring payments
-            var recurringPayments = _orderService.SearchRecurringPayments(0, order.Id, null, 0, int.MaxValue);
+            var recurringPayments = _orderService.SearchRecurringPayments(0, 0, order.Id, null, 0, int.MaxValue);
             foreach (var rp in recurringPayments)
             {
                 //use errors?
@@ -2461,7 +2461,7 @@ namespace Nop.Services.Orders
             foreach (var opv in order.OrderProductVariants)
             {
                 _shoppingCartService.AddToCart(opv.Order.Customer, opv.ProductVariant,
-                    ShoppingCartType.ShoppingCart, _workContext.CurrentStore.Id, opv.AttributesXml,
+                    ShoppingCartType.ShoppingCart, opv.Order.StoreId, opv.AttributesXml,
                     opv.UnitPriceExclTax, opv.Quantity, false);
             }
         }

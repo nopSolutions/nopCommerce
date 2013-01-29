@@ -133,7 +133,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
-            var payments = _orderService.SearchRecurringPayments(0, 0, null, command.Page - 1, command.PageSize, true);
+            var payments = _orderService.SearchRecurringPayments(0, 0, 0, null, command.Page - 1, command.PageSize, true);
             var gridModel = new GridModel<RecurringPaymentModel>
             {
                 Data = payments.Select(x =>

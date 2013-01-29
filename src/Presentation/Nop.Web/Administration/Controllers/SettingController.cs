@@ -957,7 +957,7 @@ namespace Nop.Admin.Controllers
                     throw new NopException(_localizationService.GetResource("Admin.Configuration.Settings.GeneralCommon.EncryptionKey.TheSame"));
 
                 //update encrypted order info
-                var orders = _orderService.SearchOrders(null, null, null, null, null, null, null, 0, int.MaxValue);
+                var orders = _orderService.SearchOrders(0, 0, null, null, null, null, null, null, null, 0, int.MaxValue);
                 foreach (var order in orders)
                 {
                     string decryptedCardType = _encryptionService.DecryptText(order.CardType, oldEncryptionPrivateKey);

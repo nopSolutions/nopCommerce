@@ -71,6 +71,11 @@ namespace Nop.Core.Domain.Orders
         public virtual Guid OrderGuid { get; set; }
 
         /// <summary>
+        /// Gets or sets the store identifier
+        /// </summary>
+        public virtual int StoreId { get; set; }
+
+        /// <summary>
         /// Gets or sets the customer identifier
         /// </summary>
         public virtual int CustomerId { get; set; }
