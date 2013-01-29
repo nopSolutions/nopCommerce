@@ -109,6 +109,7 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException("shoppingCartItem");
 
             var customer = shoppingCartItem.Customer;
+            var storeId = shoppingCartItem.StoreId;
 
             //reset checkout data
             if (resetCheckoutData)
@@ -124,7 +125,10 @@ namespace Nop.Services.Orders
                 //only for shopping cart items (ignore wishlist)
                 shoppingCartItem.ShoppingCartType == ShoppingCartType.ShoppingCart)
             {
-                var cart = customer.ShoppingCartItems.Where(x => x.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+                var cart = customer.ShoppingCartItems
+                    .Where(x => x.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                    .Where(x => x.StoreId == storeId)
+                    .ToList();
                 customer.CheckoutAttributes = _checkoutAttributeParser.EnsureOnlyActiveAttributes(customer.CheckoutAttributes, cart);
                 _customerService.UpdateCustomer(customer);
             }
@@ -156,10 +160,12 @@ namespace Nop.Services.Orders
         /// <param name="customer">Customer</param>
         /// <param name="shoppingCartType">Shopping cart type</param>
         /// <param name="productVariant">Product variant</param>
+        /// <param name="storeId">Store identifier</param>
         /// <param name="automaticallyAddRequiredProductVariantsIfEnabled">Automatically add required product variants if enabled</param>
         /// <returns>Warnings</returns>
-        public virtual IList<string> GetRequiredProductVariantWarnings(Customer customer, ShoppingCartType shoppingCartType,
-            ProductVariant productVariant, bool automaticallyAddRequiredProductVariantsIfEnabled)
+        public virtual IList<string> GetRequiredProductVariantWarnings(Customer customer, 
+            ShoppingCartType shoppingCartType, ProductVariant productVariant, 
+            int storeId, bool automaticallyAddRequiredProductVariantsIfEnabled)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
@@ -167,7 +173,10 @@ namespace Nop.Services.Orders
             if (productVariant == null)
                 throw new ArgumentNullException("productVariant");
 
-            var cart = customer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == shoppingCartType).ToList();
+            var cart = customer.ShoppingCartItems
+                .Where(sci => sci.ShoppingCartType == shoppingCartType)
+                .Where(sci => sci.StoreId == storeId)
+                .ToList();
 
             var warnings = new List<string>();
 
@@ -209,7 +218,7 @@ namespace Nop.Services.Orders
                             if (automaticallyAddRequiredProductVariantsIfEnabled)
                             {
                                 //pass 'false' for 'automaticallyAddRequiredProductVariantsIfEnabled' to prevent circular references
-                                var addToCartWarnings = AddToCart(customer, rpv, shoppingCartType, "", decimal.Zero, 1, false);
+                                var addToCartWarnings = AddToCart(customer, rpv, shoppingCartType, storeId, "", decimal.Zero, 1, false);
                                 if (addToCartWarnings.Count > 0)
                                 {
                                     //a product wasn't atomatically added for some reasons
@@ -542,6 +551,7 @@ namespace Nop.Services.Orders
         /// <param name="customer">Customer</param>
         /// <param name="shoppingCartType">Shopping cart type</param>
         /// <param name="productVariant">Product variant</param>
+        /// <param name="storeId">Store identifier</param>
         /// <param name="selectedAttributes">Selected attributes</param>
         /// <param name="customerEnteredPrice">Customer entered price</param>
         /// <param name="quantity">Quantity</param>
@@ -552,7 +562,8 @@ namespace Nop.Services.Orders
         /// <param name="getRequiredProductVariantWarnings">A value indicating whether we should validate required product variants (product variants which require other variant to be added to the cart)</param>
         /// <returns>Warnings</returns>
         public virtual IList<string> GetShoppingCartItemWarnings(Customer customer, ShoppingCartType shoppingCartType,
-            ProductVariant productVariant, string selectedAttributes, decimal customerEnteredPrice,
+            ProductVariant productVariant, int storeId, 
+            string selectedAttributes, decimal customerEnteredPrice,
             int quantity, bool automaticallyAddRequiredProductVariantsIfEnabled,
             bool getStandardWarnings = true, bool getAttributesWarnings = true, 
             bool getGiftCardWarnings = true, bool getRequiredProductVariantWarnings = true)
@@ -576,7 +587,7 @@ namespace Nop.Services.Orders
 
             //required product variants
             if (getRequiredProductVariantWarnings)
-                warnings.AddRange(GetRequiredProductVariantWarnings(customer, shoppingCartType, productVariant, automaticallyAddRequiredProductVariantsIfEnabled));
+                warnings.AddRange(GetRequiredProductVariantWarnings(customer, shoppingCartType, productVariant, storeId, automaticallyAddRequiredProductVariantsIfEnabled));
             
             return warnings;
         }
@@ -753,13 +764,14 @@ namespace Nop.Services.Orders
         /// <param name="customer">Customer</param>
         /// <param name="productVariant">Product variant</param>
         /// <param name="shoppingCartType">Shopping cart type</param>
+        /// <param name="storeId">Store identifier</param>
         /// <param name="selectedAttributes">Selected attributes</param>
         /// <param name="customerEnteredPrice">The price enter by a customer</param>
         /// <param name="quantity">Quantity</param>
         /// <param name="automaticallyAddRequiredProductVariantsIfEnabled">Automatically add required product variants if enabled</param>
         /// <returns>Warnings</returns>
-        public virtual IList<string> AddToCart(Customer customer, ProductVariant productVariant, 
-            ShoppingCartType shoppingCartType, string selectedAttributes,
+        public virtual IList<string> AddToCart(Customer customer, ProductVariant productVariant,
+            ShoppingCartType shoppingCartType, int storeId, string selectedAttributes,
             decimal customerEnteredPrice, int quantity, bool automaticallyAddRequiredProductVariantsIfEnabled)
         {
             if (customer == null)
@@ -789,7 +801,10 @@ namespace Nop.Services.Orders
             //reset checkout info
             _customerService.ResetCheckoutData(customer);
 
-            var cart = customer.ShoppingCartItems.Where(sci=>sci.ShoppingCartType == shoppingCartType).ToList();
+            var cart = customer.ShoppingCartItems
+                .Where(sci => sci.ShoppingCartType == shoppingCartType)
+                .Where(sci => sci.StoreId == storeId)
+                .ToList();
 
             var shoppingCartItem = FindShoppingCartItemInTheCart(cart,
                 shoppingCartType, productVariant, selectedAttributes, customerEnteredPrice);
@@ -799,7 +814,8 @@ namespace Nop.Services.Orders
                 //update existing shopping cart item
                 int newQuantity = shoppingCartItem.Quantity + quantity;
                 warnings.AddRange(GetShoppingCartItemWarnings(customer, shoppingCartType, productVariant,
-                    selectedAttributes, customerEnteredPrice, newQuantity, automaticallyAddRequiredProductVariantsIfEnabled));
+                    storeId, selectedAttributes, 
+                    customerEnteredPrice, newQuantity, automaticallyAddRequiredProductVariantsIfEnabled));
 
                 if (warnings.Count == 0)
                 {
@@ -816,7 +832,7 @@ namespace Nop.Services.Orders
             {
                 //new shopping cart item
                 warnings.AddRange(GetShoppingCartItemWarnings(customer, shoppingCartType, productVariant,
-                    selectedAttributes, customerEnteredPrice, quantity, automaticallyAddRequiredProductVariantsIfEnabled));
+                    storeId, selectedAttributes, customerEnteredPrice, quantity, automaticallyAddRequiredProductVariantsIfEnabled));
                 if (warnings.Count == 0)
                 {
                     //maximum items validation
@@ -842,6 +858,7 @@ namespace Nop.Services.Orders
                     shoppingCartItem = new ShoppingCartItem()
                     {
                         ShoppingCartType = shoppingCartType,
+                        StoreId = storeId,
                         ProductVariant = productVariant,
                         AttributesXml = selectedAttributes,
                         CustomerEnteredPrice = customerEnteredPrice,
@@ -876,7 +893,7 @@ namespace Nop.Services.Orders
 
             var warnings = new List<string>();
 
-            var shoppingCartItem = customer.ShoppingCartItems.Where(sci => sci.Id == shoppingCartItemId).FirstOrDefault();
+            var shoppingCartItem = customer.ShoppingCartItems.FirstOrDefault(sci => sci.Id == shoppingCartItemId);
             if (shoppingCartItem != null)
             {
                 if (resetCheckoutData)
@@ -888,7 +905,8 @@ namespace Nop.Services.Orders
                 {
                     //check warnings
                     warnings.AddRange(GetShoppingCartItemWarnings(customer, shoppingCartItem.ShoppingCartType,
-                        shoppingCartItem.ProductVariant, shoppingCartItem.AttributesXml,
+                        shoppingCartItem.ProductVariant, shoppingCartItem.StoreId,
+                        shoppingCartItem.AttributesXml,
                         shoppingCartItem.CustomerEnteredPrice, newQuantity, false));
                     if (warnings.Count == 0)
                     {
@@ -932,7 +950,7 @@ namespace Nop.Services.Orders
             for (int i = 0; i < fromCart.Count; i++)
             {
                 var sci = fromCart[i];
-                AddToCart(toCustomer, sci.ProductVariant, sci.ShoppingCartType,
+                AddToCart(toCustomer, sci.ProductVariant, sci.ShoppingCartType, sci.StoreId, 
                     sci.AttributesXml, sci.CustomerEnteredPrice, sci.Quantity, false);
             }
             for (int i = 0; i < fromCart.Count; i++)

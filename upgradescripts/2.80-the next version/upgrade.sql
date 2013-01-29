@@ -1098,7 +1098,6 @@ IF EXISTS (SELECT 1
            AND parent_obj = Object_id('Order')
            AND Objectproperty(id,N'IsForeignKey') = 1)
 BEGIN
-	PRINT('111')
 	ALTER TABLE dbo.[Order]
 	DROP CONSTRAINT Order_Affiliate
 END
@@ -1110,5 +1109,37 @@ WHERE [AffiliateId] IS NULL
 GO
 
 ALTER TABLE [Order] ALTER COLUMN [AffiliateId] int NOT NULL
+GO
+
+
+--Store mapping to shopping cart items
+
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[ShoppingCartItem]') and NAME='StoreId')
+BEGIN
+	ALTER TABLE [ShoppingCartItem]
+	ADD [StoreId] bit NULL
+END
+GO
+
+DECLARE @DEFAULT_STORE_ID int
+SELECT @DEFAULT_STORE_ID = [Id] FROM [Store] ORDER BY [DisplayOrder]
+UPDATE [ShoppingCartItem]
+SET [StoreId] = @DEFAULT_STORE_ID
+WHERE [StoreId] IS NULL
+GO
+
+ALTER TABLE [ShoppingCartItem] ALTER COLUMN [StoreId] int NOT NULL
+GO
+
+IF NOT EXISTS (SELECT 1
+           FROM   sysobjects
+           WHERE  name = 'ShoppingCartItem_Store'
+           AND parent_obj = Object_id('ShoppingCartItem')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+BEGIN
+	ALTER TABLE [dbo].[ShoppingCartItem] WITH CHECK ADD CONSTRAINT [ShoppingCartItem_Store] FOREIGN KEY([StoreId])
+	REFERENCES [dbo].[Store] ([Id])
+	ON DELETE CASCADE
+END
 GO
 

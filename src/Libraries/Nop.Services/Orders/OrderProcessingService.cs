@@ -531,13 +531,18 @@ namespace Nop.Services.Orders
                     if (billingAddress.Country != null && !billingAddress.Country.AllowsBilling)
                         throw new NopException(string.Format("Country '{0}' is not allowed for billing", billingAddress.Country.Name));
                 }
+
+                var storeId = _workContext.CurrentStore.Id;
                 
                 //load and validate customer shopping cart
                 IList<ShoppingCartItem> cart = null;
                 if (!processPaymentRequest.IsRecurringPayment)
                 {
                     //load shopping cart
-                    cart = customer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+                    cart = customer.ShoppingCartItems
+                        .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                        .Where(sci => sci.StoreId == storeId)
+                        .ToList();
 
                     if (cart.Count == 0)
                         throw new NopException("Cart is empty");
@@ -559,7 +564,7 @@ namespace Nop.Services.Orders
                     foreach (var sci in cart)
                     {
                         var sciWarnings = _shoppingCartService.GetShoppingCartItemWarnings(customer, sci.ShoppingCartType,
-                            sci.ProductVariant, sci.AttributesXml,
+                            sci.ProductVariant, storeId, sci.AttributesXml,
                             sci.CustomerEnteredPrice, sci.Quantity, false);
                         if (sciWarnings.Count > 0)
                         {
@@ -2456,7 +2461,7 @@ namespace Nop.Services.Orders
             foreach (var opv in order.OrderProductVariants)
             {
                 _shoppingCartService.AddToCart(opv.Order.Customer, opv.ProductVariant,
-                     ShoppingCartType.ShoppingCart, opv.AttributesXml,
+                    ShoppingCartType.ShoppingCart, _workContext.CurrentStore.Id, opv.AttributesXml,
                     opv.UnitPriceExclTax, opv.Quantity, false);
             }
         }

@@ -116,7 +116,10 @@ namespace Nop.Plugin.Payments.GoogleCheckout.Controllers
         [ChildActionOnly]
         public ActionResult PaymentInfo()
         {
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+            var cart = _workContext.CurrentCustomer.ShoppingCartItems
+                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                .ToList();
             if (cart.Count == 0)
                 return Content("");
 
@@ -145,7 +148,10 @@ namespace Nop.Plugin.Payments.GoogleCheckout.Controllers
                 if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
                     return RedirectToRoute("Login");
 
-                var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+                var cart = _workContext.CurrentCustomer.ShoppingCartItems
+                    .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                    .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                    .ToList();
                 if (cart.Count == 0)
                     return RedirectToRoute("ShoppingCart");
 

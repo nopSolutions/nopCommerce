@@ -132,7 +132,10 @@ namespace Nop.Plugin.Payments.GoogleCheckout
                     return;
                 }
 
-                var cart = customer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+                var cart = customer.ShoppingCartItems
+                    .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                    .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                    .ToList();
 
                 _workContext.CurrentCustomer = customer;
 

@@ -359,7 +359,10 @@ namespace Nop.Web.Controllers
 
         public ActionResult Index()
         {
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+            var cart = _workContext.CurrentCustomer.ShoppingCartItems
+                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                .ToList();
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
 
@@ -379,6 +382,7 @@ namespace Nop.Web.Controllers
                 var sciWarnings = _shoppingCartService.GetShoppingCartItemWarnings(_workContext.CurrentCustomer,
                     sci.ShoppingCartType,
                     sci.ProductVariant,
+                    sci.StoreId,
                     sci.AttributesXml,
                     sci.CustomerEnteredPrice,
                     sci.Quantity,
@@ -397,7 +401,10 @@ namespace Nop.Web.Controllers
         public ActionResult BillingAddress()
         {
             //validation
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+            var cart = _workContext.CurrentCustomer.ShoppingCartItems
+                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                .ToList();
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
 
@@ -427,7 +434,10 @@ namespace Nop.Web.Controllers
         public ActionResult NewBillingAddress(CheckoutBillingAddressModel model)
         {
             //validation
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+            var cart = _workContext.CurrentCustomer.ShoppingCartItems
+                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                .ToList();
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
 
@@ -462,7 +472,10 @@ namespace Nop.Web.Controllers
         public ActionResult ShippingAddress()
         {
             //validation
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+            var cart = _workContext.CurrentCustomer.ShoppingCartItems
+                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                .ToList();
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
 
@@ -499,7 +512,10 @@ namespace Nop.Web.Controllers
         public ActionResult NewShippingAddress(CheckoutShippingAddressModel model)
         {
             //validation
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+            var cart = _workContext.CurrentCustomer.ShoppingCartItems
+                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                .ToList();
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
 
@@ -542,7 +558,10 @@ namespace Nop.Web.Controllers
         public ActionResult ShippingMethod()
         {
             //validation
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+            var cart = _workContext.CurrentCustomer.ShoppingCartItems
+                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                .ToList();
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
 
@@ -569,7 +588,10 @@ namespace Nop.Web.Controllers
         public ActionResult SelectShippingMethod(string shippingoption)
         {
             //validation
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+            var cart = _workContext.CurrentCustomer.ShoppingCartItems
+                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                .ToList();
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
 
@@ -627,7 +649,10 @@ namespace Nop.Web.Controllers
         public ActionResult PaymentMethod()
         {
             //validation
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+            var cart = _workContext.CurrentCustomer.ShoppingCartItems
+                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                .ToList();
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
 
@@ -668,7 +693,10 @@ namespace Nop.Web.Controllers
         public ActionResult SelectPaymentMethod(string paymentmethod, CheckoutPaymentMethodModel model)
         {
             //validation
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+            var cart = _workContext.CurrentCustomer.ShoppingCartItems
+                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                .ToList();
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
 
@@ -709,7 +737,10 @@ namespace Nop.Web.Controllers
         public ActionResult PaymentInfo()
         {
             //validation
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+            var cart = _workContext.CurrentCustomer.ShoppingCartItems
+                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                .ToList();
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
 
@@ -740,7 +771,10 @@ namespace Nop.Web.Controllers
         public ActionResult EnterPaymentInfo(FormCollection form)
         {
             //validation
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+            var cart = _workContext.CurrentCustomer.ShoppingCartItems
+                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                .ToList();
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
 
@@ -785,7 +819,10 @@ namespace Nop.Web.Controllers
         public ActionResult Confirm()
         {
             //validation
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+            var cart = _workContext.CurrentCustomer.ShoppingCartItems
+                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                .ToList();
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
 
@@ -804,7 +841,10 @@ namespace Nop.Web.Controllers
         public ActionResult ConfirmOrder()
         {
             //validation
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+            var cart = _workContext.CurrentCustomer.ShoppingCartItems
+                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                .ToList();
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
 
@@ -917,7 +957,10 @@ namespace Nop.Web.Controllers
         public ActionResult OnePageCheckout()
         {
             //validation
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+            var cart = _workContext.CurrentCustomer.ShoppingCartItems
+                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                .ToList();
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
 
@@ -947,7 +990,10 @@ namespace Nop.Web.Controllers
             try
             {
                 //validation
-                var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+                var cart = _workContext.CurrentCustomer.ShoppingCartItems
+                    .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                    .ToList();
                 if (cart.Count == 0)
                     throw new Exception("Your cart is empty");
 
@@ -1112,7 +1158,10 @@ namespace Nop.Web.Controllers
             try
             {
                 //validation
-                var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+                var cart = _workContext.CurrentCustomer.ShoppingCartItems
+                    .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                    .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                    .ToList();
                 if (cart.Count == 0)
                     throw new Exception("Your cart is empty");
 
@@ -1214,7 +1263,10 @@ namespace Nop.Web.Controllers
             try
             {
                 //validation
-                var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+                var cart = _workContext.CurrentCustomer.ShoppingCartItems
+                    .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                    .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                    .ToList();
                 if (cart.Count == 0)
                     throw new Exception("Your cart is empty");
 
@@ -1341,7 +1393,10 @@ namespace Nop.Web.Controllers
             try
             {
                 //validation
-                var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+                var cart = _workContext.CurrentCustomer.ShoppingCartItems
+                    .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                    .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                    .ToList();
                 if (cart.Count == 0)
                     throw new Exception("Your cart is empty");
 
@@ -1417,9 +1472,10 @@ namespace Nop.Web.Controllers
             try
             {
                 //validation
-                var cart =
-                    _workContext.CurrentCustomer.ShoppingCartItems.Where(
-                        sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+                var cart = _workContext.CurrentCustomer.ShoppingCartItems
+                    .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                    .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                    .ToList();
                 if (cart.Count == 0)
                     throw new Exception("Your cart is empty");
 
@@ -1483,7 +1539,10 @@ namespace Nop.Web.Controllers
             try
             {
                 //validation
-                var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+                var cart = _workContext.CurrentCustomer.ShoppingCartItems
+                    .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                    .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                    .ToList();
                 if (cart.Count == 0)
                     throw new Exception("Your cart is empty");
 

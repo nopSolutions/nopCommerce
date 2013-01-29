@@ -33,11 +33,12 @@ namespace Nop.Services.Orders
         /// <param name="customer">Customer</param>
         /// <param name="shoppingCartType">Shopping cart type</param>
         /// <param name="productVariant">Product variant</param>
+        /// <param name="storeId">Store identifier</param>
         /// <param name="automaticallyAddRequiredProductVariantsIfEnabled">Automatically add required product variants if enabled</param>
         /// <returns>Warnings</returns>
         IList<string> GetRequiredProductVariantWarnings(Customer customer,
             ShoppingCartType shoppingCartType, ProductVariant productVariant,
-            bool automaticallyAddRequiredProductVariantsIfEnabled);
+            int storeId, bool automaticallyAddRequiredProductVariantsIfEnabled);
 
         /// <summary>
         /// Validates a product variant for standard properties
@@ -79,6 +80,7 @@ namespace Nop.Services.Orders
         /// <param name="customer">Customer</param>
         /// <param name="shoppingCartType">Shopping cart type</param>
         /// <param name="productVariant">Product variant</param>
+        /// <param name="storeId">Store identifier</param>
         /// <param name="selectedAttributes">Selected attributes</param>
         /// <param name="customerEnteredPrice">Customer entered price</param>
         /// <param name="quantity">Quantity</param>
@@ -89,7 +91,8 @@ namespace Nop.Services.Orders
         /// <param name="getRequiredProductVariantWarnings">A value indicating whether we should validate required product variants (product variants which require other variant to be added to the cart)</param>
         /// <returns>Warnings</returns>
         IList<string> GetShoppingCartItemWarnings(Customer customer, ShoppingCartType shoppingCartType,
-            ProductVariant productVariant, string selectedAttributes, decimal customerEnteredPrice,
+            ProductVariant productVariant, int storeId, 
+            string selectedAttributes, decimal customerEnteredPrice,
             int quantity, bool automaticallyAddRequiredProductVariantsIfEnabled,
             bool getStandardWarnings = true, bool getAttributesWarnings = true,
             bool getGiftCardWarnings = true, bool getRequiredProductVariantWarnings = true);
@@ -126,13 +129,14 @@ namespace Nop.Services.Orders
         /// <param name="customer">Customer</param>
         /// <param name="productVariant">Product variant</param>
         /// <param name="shoppingCartType">Shopping cart type</param>
+        /// <param name="storeId">Store identifier</param>
         /// <param name="selectedAttributes">Selected attributes</param>
         /// <param name="customerEnteredPrice">The price enter by a customer</param>
         /// <param name="quantity">Quantity</param>
         /// <param name="automaticallyAddRequiredProductVariantsIfEnabled">Automatically add required product variants if enabled</param>
         /// <returns>Warnings</returns>
         IList<string> AddToCart(Customer customer, ProductVariant productVariant,
-            ShoppingCartType shoppingCartType, string selectedAttributes,
+            ShoppingCartType shoppingCartType, int storeId, string selectedAttributes,
             decimal customerEnteredPrice, int quantity, bool automaticallyAddRequiredProductVariantsIfEnabled);
 
         /// <summary>

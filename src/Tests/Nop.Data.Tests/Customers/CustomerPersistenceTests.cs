@@ -7,6 +7,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
 using Nop.Tests;
 using NUnit.Framework;
@@ -185,6 +186,7 @@ namespace Nop.Data.Tests.Customers
         {
             var customer = GetTestCustomer();
             var productVariant = GetTestProductVariant();
+            var store = GetTestStore();
 
             customer.ShoppingCartItems.Add
             (
@@ -196,7 +198,8 @@ namespace Nop.Data.Tests.Customers
                     Quantity = 2,
                     CreatedOnUtc = new DateTime(2010, 01, 01),
                     UpdatedOnUtc = new DateTime(2010, 01, 02),
-                    ProductVariant = productVariant
+                    ProductVariant = productVariant,
+                    Store = store
                 }
             );
 
@@ -336,6 +339,15 @@ namespace Nop.Data.Tests.Customers
                 NumericIsoCode = 1,
                 SubjectToVat = true,
                 Published = true,
+                DisplayOrder = 1
+            };
+        }
+
+        protected Store GetTestStore()
+        {
+            return new Store
+            {
+                Name = "Store 1",
                 DisplayOrder = 1
             };
         }

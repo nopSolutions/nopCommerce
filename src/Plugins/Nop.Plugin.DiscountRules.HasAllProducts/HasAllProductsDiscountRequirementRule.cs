@@ -11,10 +11,13 @@ namespace Nop.Plugin.DiscountRules.HasAllProducts
 {
     public partial class HasAllProductsDiscountRequirementRule : BasePlugin, IDiscountRequirementRule
     {
+        private readonly IWorkContext _workContext;
         private readonly ISettingService _settingService;
 
-        public HasAllProductsDiscountRequirementRule(ISettingService settingService)
+        public HasAllProductsDiscountRequirementRule(IWorkContext workContext,
+            ISettingService settingService)
         {
+            this._workContext = workContext;
             this._settingService = settingService;
         }
 
@@ -56,7 +59,8 @@ namespace Nop.Plugin.DiscountRules.HasAllProducts
             //it could be the same product variant with distinct product attributes
             //that's why we get the total quantity of this product variant
             var cartQuery = from sci in request.Customer.ShoppingCartItems
-                            where sci.ShoppingCartType == ShoppingCartType.ShoppingCart
+                            where sci.ShoppingCartType == ShoppingCartType.ShoppingCart &&
+                            sci.StoreId == _workContext.CurrentStore.Id
                             group sci by sci.ProductVariantId into g
                             select new { ProductVariantId = g.Key, TotalQuantity = g.Sum(x => x.Quantity) };
             var cart = cartQuery.ToList();
