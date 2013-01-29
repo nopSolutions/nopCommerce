@@ -164,6 +164,21 @@ set @resources='
   <LocaleResource Name="Admin.CurrentCarts.Store">
 	<Value>Store</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.List.Store">
+	<Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.List.Store.Hint">
+	<Value>Search by a specific store.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Store">
+	<Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Store.Hint">
+	<Value>A store name in which this order was placed.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Orders.Store">
+	<Value>Store</Value>
+  </LocaleResource>
 </Language>
 '
 

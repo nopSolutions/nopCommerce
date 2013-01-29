@@ -7427,6 +7427,9 @@
                                     <LocaleResource Name="ShippingStatus">
                                         <Value>Shipping status</Value>
                                     </LocaleResource>
+                                    <LocaleResource Name="Store">
+                                      <Value>Store</Value>
+                                    </LocaleResource>
                                 </Children>
                             </LocaleResource>
                             <LocaleResource Name="RewardPoints">
@@ -8404,6 +8407,14 @@
                                     </LocaleResource>
                                 </Children>
                             </LocaleResource>
+                            <LocaleResource Name="Store">
+                                <Value>Store</Value>
+                                <Children>
+                                    <LocaleResource Name="Hint">
+                                        <Value>A store name in which this order was placed.</Value>
+                                    </LocaleResource>
+                                </Children>
+                            </LocaleResource>
                             <LocaleResource Name="SubscriptionTransactionID">
                                 <Value>Subscription transaction ID</Value>
                                 <Children>
@@ -8486,6 +8497,14 @@
                                 <Children>
                                     <LocaleResource Name="Hint">
                                         <Value>Search by a specific shipping status e.g. Not yet shipped.</Value>
+                                    </LocaleResource>
+                                </Children>
+                            </LocaleResource>
+                            <LocaleResource Name="Store">
+                                <Value>Store</Value>
+                                <Children>
+                                    <LocaleResource Name="Hint">
+                                        <Value>Search by a specific store.</Value>
                                     </LocaleResource>
                                 </Children>
                             </LocaleResource>

@@ -74,6 +74,7 @@ namespace Nop.Admin.Controllers
         private readonly IForumService _forumService;
         private readonly IOpenAuthenticationService _openAuthenticationService;
         private readonly AddressSettings _addressSettings;
+        private readonly IStoreService _storeService;
 
         #endregion
 
@@ -96,7 +97,7 @@ namespace Nop.Admin.Controllers
             IQueuedEmailService queuedEmailService, EmailAccountSettings emailAccountSettings,
             IEmailAccountService emailAccountService, ForumSettings forumSettings,
             IForumService forumService, IOpenAuthenticationService openAuthenticationService,
-            AddressSettings addressSettings)
+            AddressSettings addressSettings, IStoreService storeService)
         {
             this._customerService = customerService;
             this._genericAttributeService = genericAttributeService;
@@ -127,6 +128,7 @@ namespace Nop.Admin.Controllers
             this._forumService = forumService;
             this._openAuthenticationService = openAuthenticationService;
             this._addressSettings = addressSettings;
+            this._storeService = storeService;
         }
 
         #endregion
@@ -230,13 +232,8 @@ namespace Nop.Admin.Controllers
 
             //ensure a customer is not added to both 'Guests' and 'Registered' customer roles
             //ensure that a customer is in at least one required role ('Guests' and 'Registered')
-            bool isInGuestsRole = customerRoles
-                .Where(cr => cr.SystemName == SystemCustomerRoleNames.Guests)
-                .FirstOrDefault() != null;
-            bool isInRegisteredRole =
-                customerRoles
-                .Where(cr => cr.SystemName == SystemCustomerRoleNames.Registered)
-                .FirstOrDefault() != null;
+            bool isInGuestsRole = customerRoles.FirstOrDefault(cr => cr.SystemName == SystemCustomerRoleNames.Guests) != null;
+            bool isInRegisteredRole = customerRoles.FirstOrDefault(cr => cr.SystemName == SystemCustomerRoleNames.Registered) != null;
             if (isInGuestsRole && isInRegisteredRole)
                 return "The customer cannot be in both 'Guests' and 'Registered' customer roles";
             if (!isInGuestsRole && !isInRegisteredRole)
@@ -1386,13 +1383,17 @@ namespace Nop.Admin.Controllers
                 Data = orders.PagedForCommand(command)
                     .Select(order =>
                     {
-                        var orderModel = new CustomerModel.OrderModel();
-                        orderModel.Id = order.Id;
-                        orderModel.OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext);
-                        orderModel.PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext);
-                        orderModel.ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext);
-                        orderModel.OrderTotal = _priceFormatter.FormatPrice(order.OrderTotal, true, false);
-                        orderModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc);
+                        var store = _storeService.GetStoreById(order.StoreId);
+                        var orderModel = new CustomerModel.OrderModel()
+                        {
+                            Id = order.Id, 
+                            OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
+                            PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext),
+                            ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext),
+                            OrderTotal = _priceFormatter.FormatPrice(order.OrderTotal, true, false),
+                            StoreName = store != null ? store.Name : "Unknown",
+                            CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc),
+                        };
                         return orderModel;
                     }),
                 Total = orders.Count
