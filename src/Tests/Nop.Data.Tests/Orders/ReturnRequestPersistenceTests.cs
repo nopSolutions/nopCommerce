@@ -17,6 +17,7 @@ namespace Nop.Data.Tests.Orders
         {
             var rr = new ReturnRequest()
             {
+                StoreId = 1,
                 Customer = GetTestCustomer(),
                 Quantity = 2,
                 ReasonForReturn = "Wrong product",
@@ -30,6 +31,7 @@ namespace Nop.Data.Tests.Orders
 
             var fromDb = SaveAndLoadEntity(rr);
             fromDb.ShouldNotBeNull();
+            fromDb.StoreId.ShouldEqual(1);
             fromDb.Customer.ShouldNotBeNull();
             fromDb.Quantity.ShouldEqual(2);
             fromDb.ReasonForReturn.ShouldEqual("Wrong product");

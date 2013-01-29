@@ -122,7 +122,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests))
                 return AccessDeniedView();
 
-            var returnRequests = _orderService.SearchReturnRequests(0, 0, null, command.Page - 1, command.PageSize);
+            var returnRequests = _orderService.SearchReturnRequests(0, 0, 0, null, command.Page - 1, command.PageSize);
             var returnRequestModels = new List<ReturnRequestModel>();
             foreach (var rr in returnRequests)
             {

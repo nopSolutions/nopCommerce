@@ -515,17 +515,19 @@ namespace Nop.Services.Orders
         /// <summary>
         /// Search return requests
         /// </summary>
+        /// <param name="storeId">Store identifier; 0 to load all entries</param>
         /// <param name="customerId">Customer identifier; null to load all entries</param>
-        /// <param name="orderProductVariantId">Order product variant identifier; null to load all entries</param>
+        /// <param name="orderProductVariantId">Order product variant identifier; 0 to load all entries</param>
         /// <param name="rs">Return request status; null to load all entries</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Return requests</returns>
-        public virtual IPagedList<ReturnRequest> SearchReturnRequests(int customerId,
-            int orderProductVariantId, ReturnRequestStatus? rs,
-            int pageIndex, int pageSize)
+        public virtual IPagedList<ReturnRequest> SearchReturnRequests(int storeId, int customerId,
+            int orderProductVariantId, ReturnRequestStatus? rs, int pageIndex, int pageSize)
         {
             var query = _returnRequestRepository.Table;
+            if (storeId > 0)
+                query = query.Where(rr => storeId == rr.StoreId);
             if (customerId > 0)
                 query = query.Where(rr => customerId == rr.CustomerId);
             if (rs.HasValue)
@@ -537,7 +539,6 @@ namespace Nop.Services.Orders
                 query = query.Where(rr => rr.OrderProductVariantId == orderProductVariantId);
 
             query = query.OrderByDescending(rr => rr.CreatedOnUtc).ThenByDescending(rr=>rr.Id);
-
 
             var returnRequests = new PagedList<ReturnRequest>(query, pageIndex, pageSize);
             return returnRequests;

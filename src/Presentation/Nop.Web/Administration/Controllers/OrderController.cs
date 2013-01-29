@@ -426,7 +426,7 @@ namespace Nop.Admin.Controllers
                     opvModel.RecurringInfo = string.Format(_localizationService.GetResource("Admin.Orders.Products.RecurringPeriod"), opv.ProductVariant.RecurringCycleLength, opv.ProductVariant.RecurringCyclePeriod.GetLocalizedEnum(_localizationService, _workContext));
 
                 //return requests
-                opvModel.ReturnRequestIds = _orderService.SearchReturnRequests(0, opv.Id, null, 0, int.MaxValue)
+                opvModel.ReturnRequestIds = _orderService.SearchReturnRequests(0, 0, opv.Id, null, 0, int.MaxValue)
                     .Select(rr => rr.Id).ToList();
                 //gift cards
                 opvModel.PurchasedGiftCardIds = _giftCardService.GetGiftCardsByPurchasedWithOrderProductVariantId(opv.Id)

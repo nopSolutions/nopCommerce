@@ -24,6 +24,7 @@ namespace Nop.Data.Tests.Orders
             var order = new Order
             {
                 OrderGuid = Guid.NewGuid(),
+                StoreId = 1,
                 Customer = GetTestCustomer(),
                 OrderStatus = OrderStatus.Complete,
                 ShippingStatus = ShippingStatus.Shipped,
@@ -77,6 +78,7 @@ namespace Nop.Data.Tests.Orders
 
             var fromDb = SaveAndLoadEntity(order);
             fromDb.ShouldNotBeNull();
+            fromDb.StoreId.ShouldEqual(1);
             fromDb.Customer.ShouldNotBeNull();
             fromDb.OrderStatus.ShouldEqual(OrderStatus.Complete);
             fromDb.ShippingStatus.ShouldEqual(ShippingStatus.Shipped);

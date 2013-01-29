@@ -1160,3 +1160,22 @@ GO
 
 ALTER TABLE [Order] ALTER COLUMN [StoreId] int NOT NULL
 GO
+
+--Store mapping to return requests
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[ReturnRequest]') and NAME='StoreId')
+BEGIN
+	ALTER TABLE [ReturnRequest]
+	ADD [StoreId] bit NULL
+END
+GO
+
+DECLARE @DEFAULT_STORE_ID int
+SELECT @DEFAULT_STORE_ID = [Id] FROM [Store] ORDER BY [DisplayOrder]
+UPDATE [ReturnRequest]
+SET [StoreId] = @DEFAULT_STORE_ID
+WHERE [StoreId] IS NULL
+GO
+
+ALTER TABLE [ReturnRequest] ALTER COLUMN [StoreId] int NOT NULL
+GO
+
