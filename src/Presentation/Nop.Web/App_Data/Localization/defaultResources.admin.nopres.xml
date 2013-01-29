@@ -6844,6 +6844,9 @@
                     <LocaleResource Name="TotalItems">
                         <Value>Total items</Value>
                     </LocaleResource>
+                    <LocaleResource Name="Store">
+                        <Value>Store</Value>
+                    </LocaleResource>
                     <LocaleResource Name="UpdatedOn">
                         <Value>Updated on</Value>
                     </LocaleResource>

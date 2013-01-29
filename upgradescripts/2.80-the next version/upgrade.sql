@@ -161,6 +161,9 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Currencies.Fields.AvailableStores.Hint">
 	<Value>Select stores for which the currency will be shown.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.CurrentCarts.Store">
+	<Value>Store</Value>
+  </LocaleResource>
 </Language>
 '
 

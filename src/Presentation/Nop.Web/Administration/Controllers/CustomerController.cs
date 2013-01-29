@@ -31,6 +31,7 @@ using Nop.Services.Logging;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Security;
+using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
@@ -1554,6 +1555,7 @@ namespace Nop.Admin.Controllers
                     var sciModel = new ShoppingCartItemModel()
                     {
                         Id = sci.Id,
+                        Store = sci.Store != null ? sci.Store.Name : "Unknown",
                         ProductVariantId = sci.ProductVariantId,
                         Quantity = sci.Quantity,
                         FullProductName = !String.IsNullOrEmpty(sci.ProductVariant.Name) ?

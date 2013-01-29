@@ -39,6 +39,7 @@
                                 columns.Bound(sci => sci.Quantity).Width(100);
                                 columns.Bound(sci => sci.UnitPrice).Width(100);
                                 columns.Bound(sci => sci.Total).Width(100);
+                                columns.Bound(sci => sci.Store).Width(150);
                                 columns.Bound(sci => sci.UpdatedOn).Width(100);
                             })
                             .DataBinding(dataBinding => dataBinding.Ajax()
