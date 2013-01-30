@@ -90,10 +90,7 @@ namespace Nop.Services.Seo
 
         private void WriteProducts()
         {
-            IList<int> filterableSpecificationAttributeOptionIds = null;
-            var products = _productService.SearchProducts(null, 0, null, null,
-                null, 0, null, false, false, 0, null, ProductSortingEnum.CreatedOn, 
-                0,int.MaxValue, false, out filterableSpecificationAttributeOptionIds);
+            var products = _productService.SearchProducts(orderBy: ProductSortingEnum.CreatedOn);
             foreach (var product in products)
             {
                 //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)

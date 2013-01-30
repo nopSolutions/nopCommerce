@@ -203,9 +203,8 @@ namespace Nop.Plugin.Feed.Froogle
 
 
                 IList<int> filterableSpecificationAttributeOptionIds = null;
-                var products = _productService.SearchProducts(null, 0, null, null,
-                    null, 0, null, false, false, 0, null, ProductSortingEnum.CreatedOn,
-                    0, int.MaxValue, false, out filterableSpecificationAttributeOptionIds);
+
+                var products = _productService.SearchProducts();
                 foreach (var product in products)
                 {
                     var productVariants = _productService.GetProductVariantsByProductId(product.Id, false);

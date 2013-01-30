@@ -565,10 +565,11 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             IList<int> filterableSpecificationAttributeOptionIds = null;
-            var products = _productService.SearchProducts(null, 0, null, null, null, 0, string.Empty, false, false,
-                _workContext.WorkingLanguage.Id, new List<int>(),
-                ProductSortingEnum.Position, 0, _adminAreaSettings.GridPageSize,
-                false, out filterableSpecificationAttributeOptionIds, true);
+
+            var products = _productService.SearchProducts(
+                pageSize: _adminAreaSettings.GridPageSize,
+                showHidden: true
+                );
 
             var model = new ProductListModel();
             model.DisplayProductPictures = _adminAreaSettings.DisplayProductPictures;
@@ -604,12 +605,14 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var gridModel = new GridModel();
-            IList<int> filterableSpecificationAttributeOptionIds = null;
-            var products = _productService.SearchProducts(new List<int>() { model.SearchCategoryId },
-                model.SearchManufacturerId, null, null, null, 0, model.SearchProductName, false, false,
-                _workContext.WorkingLanguage.Id, new List<int>(),
-                ProductSortingEnum.Position, command.Page - 1, command.PageSize,
-                false, out filterableSpecificationAttributeOptionIds, true);
+            var products = _productService.SearchProducts(
+                categoryIds: new List<int>() { model.SearchCategoryId },
+                manufacturerId: model.SearchManufacturerId,
+                keywords: model.SearchProductName,
+                pageIndex: command.Page - 1,
+                pageSize: command.PageSize,
+                showHidden: true
+                );
             gridModel.Data = products.Select(x =>
                                                  {
                                                      var productModel = x.ToModel();
@@ -1172,11 +1175,10 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
 
-            IList<int> filterableSpecificationAttributeOptionIds = null;
-            var products = _productService.SearchProducts(null, 0, null, null, null, 0, string.Empty, false, false,
-                _workContext.WorkingLanguage.Id, new List<int>(),
-                ProductSortingEnum.Position, 0, _adminAreaSettings.GridPageSize,
-                false, out filterableSpecificationAttributeOptionIds, true);
+            var products = _productService.SearchProducts(
+                pageSize: _adminAreaSettings.GridPageSize,
+                showHidden: true
+                );
 
             var model = new ProductModel.AddRelatedProductModel();
             model.Products = new GridModel<ProductModel>
@@ -1204,12 +1206,14 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var gridModel = new GridModel();
-            IList<int> filterableSpecificationAttributeOptionIds = null;
-            var products = _productService.SearchProducts(new List<int>() { model.SearchCategoryId }, 
-                model.SearchManufacturerId, null, null, null, 0, model.SearchProductName, false, false,
-                _workContext.WorkingLanguage.Id, new List<int>(),
-                ProductSortingEnum.Position, command.Page - 1, command.PageSize,
-                false, out filterableSpecificationAttributeOptionIds, true);
+            var products = _productService.SearchProducts(
+                categoryIds: new List<int>() { model.SearchCategoryId },
+                manufacturerId: model.SearchManufacturerId,
+                keywords: model.SearchProductName,
+                pageIndex: command.Page - 1,
+                pageSize: command.PageSize,
+                showHidden: true
+                );
             gridModel.Data = products.Select(x => x.ToModel());
             gridModel.Total = products.TotalCount;
             return new JsonResult
@@ -1311,11 +1315,10 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
 
-            IList<int> filterableSpecificationAttributeOptionIds = null;
-            var products = _productService.SearchProducts(null, 0, null, null, null, 0, string.Empty, false, false,
-                _workContext.WorkingLanguage.Id, new List<int>(),
-                ProductSortingEnum.Position, 0, _adminAreaSettings.GridPageSize,
-                false, out filterableSpecificationAttributeOptionIds, true);
+            var products = _productService.SearchProducts(
+                pageSize: _adminAreaSettings.GridPageSize,
+                showHidden: true
+                );
 
             var model = new ProductModel.AddCrossSellProductModel();
             model.Products = new GridModel<ProductModel>
@@ -1343,12 +1346,14 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var gridModel = new GridModel();
-            IList<int> filterableSpecificationAttributeOptionIds = null;
-            var products = _productService.SearchProducts(new List<int>() { model.SearchCategoryId },
-                model.SearchManufacturerId, null, null, null, 0, model.SearchProductName, false, false,
-                _workContext.WorkingLanguage.Id, new List<int>(),
-                ProductSortingEnum.Position, command.Page - 1, command.PageSize,
-                false, out filterableSpecificationAttributeOptionIds, true);
+            var products = _productService.SearchProducts(
+                categoryIds: new List<int>() { model.SearchCategoryId },
+                manufacturerId: model.SearchManufacturerId,
+                keywords: model.SearchProductName,
+                pageIndex: command.Page - 1,
+                pageSize: command.PageSize,
+                showHidden: true
+                );
             gridModel.Data = products.Select(x => x.ToModel());
             gridModel.Total = products.TotalCount;
             return new JsonResult
@@ -1704,12 +1709,7 @@ namespace Nop.Admin.Controllers
 
             try
             {
-                IList<int> filterableSpecificationAttributeOptionIds = null;
-                var products = _productService.SearchProducts(null, 0, null, null, null, 0, string.Empty, false, false,
-                    _workContext.WorkingLanguage.Id, new List<int>(),
-                    ProductSortingEnum.Position, 0, int.MaxValue,
-                    false, out filterableSpecificationAttributeOptionIds, true);
-
+                var products = _productService.SearchProducts(showHidden: true);
 
                 byte[] bytes = null;
                 using (var stream = new MemoryStream())
@@ -1733,12 +1733,7 @@ namespace Nop.Admin.Controllers
 
             try
             {
-                IList<int> filterableSpecificationAttributeOptionIds = null;
-                var products = _productService.SearchProducts(null, 0, null, null, null, 0, string.Empty, false, false,
-                    _workContext.WorkingLanguage.Id, new List<int>(),
-                    ProductSortingEnum.Position, 0, int.MaxValue,
-                    false, out filterableSpecificationAttributeOptionIds, true);
-
+                var products = _productService.SearchProducts(showHidden: true);
                 var xml = _exportManager.ExportProductsToXml(products);
                 return new XmlDownloadResult(xml, "products.xml");
             }
@@ -1775,11 +1770,7 @@ namespace Nop.Admin.Controllers
 
             try
             {
-                IList<int> filterableSpecificationAttributeOptionIds = null;
-                var products = _productService.SearchProducts(null, 0, null, null, null, 0, string.Empty, false, false,
-                    _workContext.WorkingLanguage.Id, new List<int>(),
-                    ProductSortingEnum.Position, 0, int.MaxValue,
-                    false, out filterableSpecificationAttributeOptionIds, true);
+                var products = _productService.SearchProducts(showHidden: true);
                 
                 byte[] bytes = null;
                 using (var stream = new MemoryStream())
