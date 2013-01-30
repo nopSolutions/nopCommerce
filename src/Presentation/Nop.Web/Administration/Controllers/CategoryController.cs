@@ -761,7 +761,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             IList<int> filterableSpecificationAttributeOptionIds = null;
-            var products = _productService.SearchProducts(0, 0, null, null, null, 0, string.Empty, false, false,
+            var products = _productService.SearchProducts(null, 0, null, null, null, 0, string.Empty, false, false,
                 _workContext.WorkingLanguage.Id, new List<int>(),
                 ProductSortingEnum.Position, 0, _adminAreaSettings.GridPageSize,
                 false, out filterableSpecificationAttributeOptionIds, true);
@@ -793,7 +793,7 @@ namespace Nop.Admin.Controllers
 
             var gridModel = new GridModel();
             IList<int> filterableSpecificationAttributeOptionIds = null;
-            var products = _productService.SearchProducts(model.SearchCategoryId,
+            var products = _productService.SearchProducts(new List<int>() { model.SearchCategoryId }, 
                 model.SearchManufacturerId, null, null, null, 0, model.SearchProductName, false, false,
                 _workContext.WorkingLanguage.Id, new List<int>(),
                 ProductSortingEnum.Position, command.Page - 1, command.PageSize,

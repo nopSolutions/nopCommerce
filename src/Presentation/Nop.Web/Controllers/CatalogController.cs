@@ -998,7 +998,7 @@ namespace Nop.Web.Controllers
                 //We use the fast GetTotalNumberOfFeaturedProducts before invoking of the slow SearchProducts
                 //to ensure that we have at least one featured product
                 IList<int> filterableSpecificationAttributeOptionIdsFeatured = null;
-                var featuredProducts = _productService.SearchProducts(category.Id,
+                var featuredProducts = _productService.SearchProducts(new List<int>() { category.Id }, 
                     0, true, null, null, 0, null, false, false,
                     _workContext.WorkingLanguage.Id, null,
                     ProductSortingEnum.Position, 0, int.MaxValue,
@@ -1283,7 +1283,7 @@ namespace Nop.Web.Controllers
                 //We use the fast GetTotalNumberOfFeaturedProducts before invoking of the slow SearchProducts
                 //to ensure that we have at least one featured product
                 IList<int> filterableSpecificationAttributeOptionIdsFeatured = null;
-                var featuredProducts = _productService.SearchProducts(0,
+                var featuredProducts = _productService.SearchProducts(null,
                     manufacturer.Id, true, null, null, 0, null,
                     false, false, _workContext.WorkingLanguage.Id, null,
                     ProductSortingEnum.Position, 0, int.MaxValue,
@@ -1295,7 +1295,7 @@ namespace Nop.Web.Controllers
 
             //products
             IList<int> filterableSpecificationAttributeOptionIds = null;
-            var products = _productService.SearchProducts(0, manufacturer.Id, 
+            var products = _productService.SearchProducts(null, manufacturer.Id, 
                 _catalogSettings.IncludeFeaturedProductsInNormalLists ? null : (bool?)false, 
                 minPriceConverted, maxPriceConverted,
                 0, string.Empty, false, false, _workContext.WorkingLanguage.Id, null,
@@ -2114,7 +2114,7 @@ namespace Nop.Web.Controllers
             if (_catalogSettings.RecentlyAddedProductsEnabled)
             {
                 IList<int> filterableSpecificationAttributeOptionIds = null;
-                var products = _productService.SearchProducts(0, 0, null, null,
+                var products = _productService.SearchProducts(null, 0, null, null,
                     null, 0, null, false, false, _workContext.WorkingLanguage.Id,
                     null, ProductSortingEnum.CreatedOn, 0, _catalogSettings.RecentlyAddedProductsNumber,
                     false, out filterableSpecificationAttributeOptionIds);
@@ -2137,7 +2137,7 @@ namespace Nop.Web.Controllers
 
             var items = new List<SyndicationItem>();
             IList<int> filterableSpecificationAttributeOptionIds = null;
-            var products = _productService.SearchProducts(0, 0, null, null,
+            var products = _productService.SearchProducts(null, 0, null, null,
                 null, 0, null, false, false, _workContext.WorkingLanguage.Id,
                 null, ProductSortingEnum.CreatedOn, 0, _catalogSettings.RecentlyAddedProductsNumber,
                 false, out filterableSpecificationAttributeOptionIds);
@@ -2456,7 +2456,7 @@ namespace Nop.Web.Controllers
 
             //products
             IList<int> filterableSpecificationAttributeOptionIds = null;
-            var products = _productService.SearchProducts(0, 0, false, null, null,
+            var products = _productService.SearchProducts(null, 0, false, null, null,
                 productTag.Id, string.Empty, false, false, _workContext.WorkingLanguage.Id, null,
                 (ProductSortingEnum)command.OrderBy, command.PageNumber - 1, command.PageSize,
                 false, out filterableSpecificationAttributeOptionIds);

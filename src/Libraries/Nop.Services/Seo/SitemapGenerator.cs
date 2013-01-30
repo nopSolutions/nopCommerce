@@ -91,7 +91,7 @@ namespace Nop.Services.Seo
         private void WriteProducts()
         {
             IList<int> filterableSpecificationAttributeOptionIds = null;
-            var products = _productService.SearchProducts(0, 0, null, null,
+            var products = _productService.SearchProducts(null, 0, null, null,
                 null, 0, null, false, false, 0, null, ProductSortingEnum.CreatedOn, 
                 0,int.MaxValue, false, out filterableSpecificationAttributeOptionIds);
             foreach (var product in products)
