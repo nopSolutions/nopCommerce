@@ -157,22 +157,6 @@ namespace Nop.Services.Catalog
         }
 
         /// <summary>
-        /// Gets all products
-        /// </summary>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Product collection</returns>
-        public virtual IList<Product> GetAllProducts(bool showHidden = false)
-        {
-            var query = from p in _productRepository.Table
-                        orderby p.Name
-                        where (showHidden || p.Published) &&
-                        !p.Deleted
-                        select p;
-            var products = query.ToList();
-            return products;
-        }
-
-        /// <summary>
         /// Gets all products displayed on the home page
         /// </summary>
         /// <returns>Product collection</returns>

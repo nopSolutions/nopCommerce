@@ -202,7 +202,10 @@ namespace Nop.Plugin.Feed.Froogle
                 writer.WriteElementString("description", "Information about products");
 
 
-                var products = _productService.GetAllProducts(false);
+                IList<int> filterableSpecificationAttributeOptionIds = null;
+                var products = _productService.SearchProducts(0, 0, null, null,
+                    null, 0, null, false, false, 0, null, ProductSortingEnum.CreatedOn,
+                    0, int.MaxValue, false, out filterableSpecificationAttributeOptionIds);
                 foreach (var product in products)
                 {
                     var productVariants = _productService.GetProductVariantsByProductId(product.Id, false);

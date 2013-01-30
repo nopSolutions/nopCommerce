@@ -19,13 +19,6 @@ namespace Nop.Services.Catalog
         void DeleteProduct(Product product);
 
         /// <summary>
-        /// Gets all products
-        /// </summary>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Product collection</returns>
-        IList<Product> GetAllProducts(bool showHidden = false);
-
-        /// <summary>
         /// Gets all products displayed on the home page
         /// </summary>
         /// <returns>Product collection</returns>

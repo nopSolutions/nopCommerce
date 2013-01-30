@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Services.Catalog;
 using Nop.Services.Topics;
@@ -88,7 +90,10 @@ namespace Nop.Services.Seo
 
         private void WriteProducts()
         {
-            var products = _productService.GetAllProducts(false);
+            IList<int> filterableSpecificationAttributeOptionIds = null;
+            var products = _productService.SearchProducts(0, 0, null, null,
+                null, 0, null, false, false, 0, null, ProductSortingEnum.CreatedOn, 
+                0,int.MaxValue, false, out filterableSpecificationAttributeOptionIds);
             foreach (var product in products)
             {
                 //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
