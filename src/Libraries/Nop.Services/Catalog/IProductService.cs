@@ -57,6 +57,7 @@ namespace Nop.Services.Catalog
         /// <param name="pageSize">Page size</param>
         /// <param name="categoryIds">Category identifiers</param>
         /// <param name="manufacturerId">Manufacturer identifier; 0 to load all records</param>
+        /// <param name="storeId">Store identifier; 0 to load all records</param>
         /// <param name="featuredProducts">A value indicating whether loaded products are marked as featured (relates only to categories and manufacturers). 0 to load featured products only, 1 to load not featured products only, null to load all products</param>
         /// <param name="priceMin">Minimum price; null to load all records</param>
         /// <param name="priceMax">Maximum price; null to load all records</param>
@@ -74,6 +75,7 @@ namespace Nop.Services.Catalog
             int pageSize = 2147483647,  //Int32.MaxValue
             IList<int> categoryIds = null,
             int manufacturerId = 0,
+            int storeId = 0,
             bool? featuredProducts = null,
             decimal? priceMin = null,
             decimal? priceMax = null,
@@ -95,6 +97,7 @@ namespace Nop.Services.Catalog
         /// <param name="pageSize">Page size</param>
         /// <param name="categoryIds">Category identifiers</param>
         /// <param name="manufacturerId">Manufacturer identifier; 0 to load all records</param>
+        /// <param name="storeId">Store identifier; 0 to load all records</param>
         /// <param name="featuredProducts">A value indicating whether loaded products are marked as featured (relates only to categories and manufacturers). 0 to load featured products only, 1 to load not featured products only, null to load all products</param>
         /// <param name="priceMin">Minimum price; null to load all records</param>
         /// <param name="priceMax">Maximum price; null to load all records</param>
@@ -112,8 +115,9 @@ namespace Nop.Services.Catalog
             bool loadFilterableSpecificationAttributeOptionIds = false,
             int pageIndex = 0,
             int pageSize = 2147483647,  //Int32.MaxValue
-            IList<int> categoryIds = null, 
+            IList<int> categoryIds = null,
             int manufacturerId = 0,
+            int storeId = 0,
             bool? featuredProducts = null,
             decimal? priceMin = null,
             decimal? priceMax = null,

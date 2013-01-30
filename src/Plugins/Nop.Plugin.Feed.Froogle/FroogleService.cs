@@ -201,9 +201,6 @@ namespace Nop.Plugin.Feed.Froogle
                 writer.WriteElementString("link", "http://base.google.com/base/");
                 writer.WriteElementString("description", "Information about products");
 
-
-                IList<int> filterableSpecificationAttributeOptionIds = null;
-
                 var products = _productService.SearchProducts();
                 foreach (var product in products)
                 {

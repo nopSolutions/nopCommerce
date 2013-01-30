@@ -227,7 +227,9 @@ namespace Nop.Web.Controllers
                     if (_catalogSettings.ShowCategoryProductNumberIncludingSubcategories)
                         categoryIds.AddRange(GetChildCategoryIds(category.Id));
                     categoryModel.NumberOfProducts = _productService
-                        .SearchProducts(categoryIds: categoryIds, pageSize: 1)
+                        .SearchProducts(categoryIds: categoryIds,
+                        storeId: _workContext.CurrentStore.Id, 
+                        pageSize: 1)
                         .TotalCount;
                 }
 
@@ -996,7 +998,10 @@ namespace Nop.Web.Controllers
                 //We use the fast GetTotalNumberOfFeaturedProducts before invoking of the slow SearchProducts
                 //to ensure that we have at least one featured product
 
-                var featuredProducts = _productService.SearchProducts(categoryIds: new List<int>() { category.Id }, featuredProducts: true);
+                var featuredProducts = _productService.SearchProducts(
+                    categoryIds: new List<int>() { category.Id },
+                        storeId: _workContext.CurrentStore.Id, 
+                        featuredProducts: true);
                 model.FeaturedProducts = PrepareProductOverviewModels(featuredProducts).ToList();
             }
 
@@ -1012,7 +1017,8 @@ namespace Nop.Web.Controllers
             IList<int> alreadyFilteredSpecOptionIds = model.PagingFilteringContext.SpecificationFilter.GetAlreadyFilteredSpecOptionIds(_webHelper);
             IList<int> filterableSpecificationAttributeOptionIds = null;
             var products = _productService.SearchProducts(out filterableSpecificationAttributeOptionIds, true,
-                categoryIds: categoryIds, 
+                categoryIds: categoryIds,
+                storeId: _workContext.CurrentStore.Id,
                 featuredProducts:_catalogSettings.IncludeFeaturedProductsInNormalLists ? null : (bool?)false,
                 priceMin:minPriceConverted, priceMax:maxPriceConverted,
                 filteredSpecs: alreadyFilteredSpecOptionIds,
@@ -1279,7 +1285,8 @@ namespace Nop.Web.Controllers
                 //We use the fast GetTotalNumberOfFeaturedProducts before invoking of the slow SearchProducts
                 //to ensure that we have at least one featured product
                 var featuredProducts = _productService.SearchProducts(
-                    manufacturerId: manufacturer.Id, 
+                    manufacturerId: manufacturer.Id,
+                    storeId: _workContext.CurrentStore.Id,
                     featuredProducts: true);
                 model.FeaturedProducts = PrepareProductOverviewModels(featuredProducts).ToList();
             }
@@ -1290,6 +1297,7 @@ namespace Nop.Web.Controllers
             IList<int> filterableSpecificationAttributeOptionIds = null;
             var products = _productService.SearchProducts(out filterableSpecificationAttributeOptionIds, true,
                 manufacturerId: manufacturer.Id,
+                storeId: _workContext.CurrentStore.Id,
                 featuredProducts: _catalogSettings.IncludeFeaturedProductsInNormalLists ? null : (bool?)false,
                 priceMin: minPriceConverted, 
                 priceMax: maxPriceConverted,
@@ -2109,6 +2117,7 @@ namespace Nop.Web.Controllers
             if (_catalogSettings.RecentlyAddedProductsEnabled)
             {
                 var products = _productService.SearchProducts(
+                    storeId: _workContext.CurrentStore.Id,
                     orderBy:ProductSortingEnum.CreatedOn,
                     pageSize:_catalogSettings.RecentlyAddedProductsNumber);
                 model.AddRange(PrepareProductOverviewModels(products));
@@ -2131,6 +2140,7 @@ namespace Nop.Web.Controllers
             var items = new List<SyndicationItem>();
 
             var products = _productService.SearchProducts(
+                storeId: _workContext.CurrentStore.Id,
                 orderBy: ProductSortingEnum.CreatedOn,
                 pageSize: _catalogSettings.RecentlyAddedProductsNumber);
             foreach (var product in products)
@@ -2448,6 +2458,7 @@ namespace Nop.Web.Controllers
 
             //products
             var products = _productService.SearchProducts(
+                storeId: _workContext.CurrentStore.Id,
                 productTagId: productTag.Id,
                 orderBy: (ProductSortingEnum)command.OrderBy,
                 pageIndex: command.PageNumber - 1,
@@ -2927,7 +2938,8 @@ namespace Nop.Web.Controllers
                     //products
                     products = _productService.SearchProducts(
                         categoryIds: categoryIds,
-                        manufacturerId: manufacturerId,
+                        manufacturerId: manufacturerId, 
+                        storeId: _workContext.CurrentStore.Id,
                         priceMin: minPriceConverted,
                         priceMax: maxPriceConverted,
                         keywords:model.Q,
@@ -2978,6 +2990,7 @@ namespace Nop.Web.Controllers
                 _catalogSettings.ProductSearchAutoCompleteNumberOfProducts : 10;
 
             var products = _productService.SearchProducts(
+                storeId: _workContext.CurrentStore.Id,
                 keywords: term,
                 languageId: _workContext.WorkingLanguage.Id,
                 pageSize: productNumber);

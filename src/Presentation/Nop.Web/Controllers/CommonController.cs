@@ -542,7 +542,7 @@ namespace Nop.Web.Controllers
             if (_commonSettings.SitemapIncludeProducts)
             {
                 //limit product to 200 until paging is supported on this page
-                var products = _productService.SearchProducts(pageSize: 200);
+                var products = _productService.SearchProducts(storeId: _workContext.CurrentStore.Id, pageSize: 200);
                 model.Products = products.Select(product => new ProductOverviewModel()
                 {
                     Id = product.Id,

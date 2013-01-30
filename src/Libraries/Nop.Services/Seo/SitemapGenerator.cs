@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
@@ -14,6 +13,7 @@ namespace Nop.Services.Seo
     /// </summary>
     public partial class SitemapGenerator : BaseSitemapGenerator, ISitemapGenerator
     {
+        private readonly IWorkContext _workContext;
         private readonly ICategoryService _categoryService;
         private readonly IProductService _productService;
         private readonly IManufacturerService _manufacturerService;
@@ -21,10 +21,11 @@ namespace Nop.Services.Seo
         private readonly CommonSettings _commonSettings;
         private readonly IWebHelper _webHelper;
 
-        public SitemapGenerator(ICategoryService categoryService,
+        public SitemapGenerator(IWorkContext workContext, ICategoryService categoryService,
             IProductService productService, IManufacturerService manufacturerService,
             ITopicService topicService, CommonSettings commonSettings, IWebHelper webHelper)
         {
+            this._workContext = workContext;
             this._categoryService = categoryService;
             this._productService = productService;
             this._manufacturerService = manufacturerService;
@@ -90,7 +91,9 @@ namespace Nop.Services.Seo
 
         private void WriteProducts()
         {
-            var products = _productService.SearchProducts(orderBy: ProductSortingEnum.CreatedOn);
+            var products = _productService.SearchProducts(
+                storeId: _workContext.CurrentStore.Id,
+                orderBy: ProductSortingEnum.CreatedOn);
             foreach (var product in products)
             {
                 //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)

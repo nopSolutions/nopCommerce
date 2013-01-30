@@ -260,12 +260,11 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Search products
         /// </summary>
-        /// <param name="filterableSpecificationAttributeOptionIds">The specification attribute option identifiers applied to loaded products (all pages)</param>
-        /// <param name="loadFilterableSpecificationAttributeOptionIds">A value indicating whether we should load the specification attribute option identifiers applied to loaded products (all pages)</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="categoryIds">Category identifiers</param>
         /// <param name="manufacturerId">Manufacturer identifier; 0 to load all records</param>
+        /// <param name="storeId">Store identifier; 0 to load all records</param>
         /// <param name="featuredProducts">A value indicating whether loaded products are marked as featured (relates only to categories and manufacturers). 0 to load featured products only, 1 to load not featured products only, null to load all products</param>
         /// <param name="priceMin">Minimum price; null to load all records</param>
         /// <param name="priceMax">Maximum price; null to load all records</param>
@@ -283,6 +282,7 @@ namespace Nop.Services.Catalog
             int pageSize = 2147483647, //Int32.MaxValue
             IList<int> categoryIds = null,
             int manufacturerId = 0,
+            int storeId = 0,
             bool? featuredProducts = null,
             decimal? priceMin = null,
             decimal? priceMax = null,
@@ -297,9 +297,9 @@ namespace Nop.Services.Catalog
         {
             IList<int> filterableSpecificationAttributeOptionIds = null;
             return SearchProducts(out filterableSpecificationAttributeOptionIds, false,
-                                  pageIndex, pageSize, categoryIds, manufacturerId, featuredProducts,
-                                  priceMin, priceMax, productTagId, keywords, searchDescriptions,
-                                  searchProductTags, languageId, filteredSpecs, orderBy, showHidden);
+                pageIndex, pageSize, categoryIds, manufacturerId, storeId, featuredProducts,
+                priceMin, priceMax, productTagId, keywords, searchDescriptions,
+                searchProductTags, languageId, filteredSpecs, orderBy, showHidden);
         }
 
         /// <summary>
@@ -311,6 +311,7 @@ namespace Nop.Services.Catalog
         /// <param name="pageSize">Page size</param>
         /// <param name="categoryIds">Category identifiers</param>
         /// <param name="manufacturerId">Manufacturer identifier; 0 to load all records</param>
+        /// <param name="storeId">Store identifier; 0 to load all records</param>
         /// <param name="featuredProducts">A value indicating whether loaded products are marked as featured (relates only to categories and manufacturers). 0 to load featured products only, 1 to load not featured products only, null to load all products</param>
         /// <param name="priceMin">Minimum price; null to load all records</param>
         /// <param name="priceMax">Maximum price; null to load all records</param>
@@ -330,6 +331,7 @@ namespace Nop.Services.Catalog
             int pageSize = 2147483647,  //Int32.MaxValue
             IList<int> categoryIds = null,
             int manufacturerId = 0,
+            int storeId = 0,
             bool? featuredProducts = null,
             decimal? priceMin = null,
             decimal? priceMax = null,
@@ -343,6 +345,8 @@ namespace Nop.Services.Catalog
             bool showHidden = false)
         {
             filterableSpecificationAttributeOptionIds = new List<int>();
+
+            //search by keyword
             bool searchLocalizedValue = false;
             if (languageId > 0)
             {
@@ -358,12 +362,13 @@ namespace Nop.Services.Catalog
                 }
             }
 
+            //validate "categoryIds" parameter
+            if (categoryIds !=null && categoryIds.Contains(0))
+                categoryIds.Remove(0);
+
             //Access control list. Allowed customer roles
             var allowedCustomerRolesIds = _workContext.CurrentCustomer.CustomerRoles
                 .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
-
-            //Current store
-            var currentStoreId = _workContext.CurrentStore.Id;
 
             if (_commonSettings.UseStoredProceduresIfSupported && _dataProvider.StoredProceduredSupported)
             {
@@ -428,6 +433,11 @@ namespace Nop.Services.Catalog
                 pManufacturerId.ParameterName = "ManufacturerId";
                 pManufacturerId.Value = manufacturerId;
                 pManufacturerId.DbType = DbType.Int32;
+
+                var pStoreId = _dataProvider.GetParameter();
+                pStoreId.ParameterName = "StoreId";
+                pStoreId.Value = storeId;
+                pStoreId.DbType = DbType.Int32;
 
                 var pProductTagId = _dataProvider.GetParameter();
                 pProductTagId.ParameterName = "ProductTagId";
@@ -494,11 +504,6 @@ namespace Nop.Services.Catalog
                 pAllowedCustomerRoleIds.Value = commaSeparatedAllowedCustomerRoleIds;
                 pAllowedCustomerRoleIds.DbType = DbType.String;
 
-                var pStoreId = _dataProvider.GetParameter();
-                pStoreId.ParameterName = "StoreId";
-                pStoreId.Value = currentStoreId;
-                pStoreId.DbType = DbType.Int32;
-
                 var pPageIndex = _dataProvider.GetParameter();
                 pPageIndex.ParameterName = "PageIndex";
                 pPageIndex.Value = pageIndex;
@@ -535,6 +540,7 @@ namespace Nop.Services.Catalog
                     "ProductLoadAllPaged",
                     pCategoryIds,
                     pManufacturerId,
+                    pStoreId,
                     pProductTagId,
                     pFeaturedProducts,
                     pPriceMin,
@@ -548,7 +554,6 @@ namespace Nop.Services.Catalog
                     pLanguageId,
                     pOrderBy,
                     pAllowedCustomerRoleIds,
-                    pStoreId,
                     pPageIndex,
                     pPageSize,
                     pShowHidden,
@@ -615,12 +620,15 @@ namespace Nop.Services.Catalog
                             from acl in p_acl.DefaultIfEmpty()
                             where !p.SubjectToAcl || (acl.EntityName == "Product" && allowedCustomerRolesIds.Contains(acl.CustomerRoleId))
                             select p;
+                }
 
+                if (storeId > 0)
+                {
                     //Store mapping
                     query = from p in query
                             join sm in _storeMappingRepository.Table on p.Id equals sm.EntityId into p_sm
                             from sm in p_sm.DefaultIfEmpty()
-                            where !p.LimitedToStores || (sm.EntityName == "Product" && currentStoreId == sm.StoreId)
+                            where !p.LimitedToStores || (sm.EntityName == "Product" && storeId == sm.StoreId)
                             select p;
                 }
 
