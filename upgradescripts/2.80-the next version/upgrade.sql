@@ -191,6 +191,9 @@ set @resources='
   <LocaleResource Name="Admin.System.SystemInfo.HTTPHOST.Hint">
 	<Value>HTTP_HOST is used when you have run a multi-store solution to determine the current store.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.Remove">
+	<Value>Remove requirement</Value>
+  </LocaleResource>
 </Language>
 '
 
