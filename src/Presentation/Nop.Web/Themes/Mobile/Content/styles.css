@@ -96,7 +96,7 @@
 .order-summary-content .cart,.wishlist-content .cart{}
 .wishlist-content .cart{margin-bottom:10px;}
 .order-summary-content .cart .cart-item-row,.wishlist-content .cart .cart-item-row{font-weight:normal;}
-.order-summary-content .cart .cart-item-row .product,.wishlist-content .cart .cart-item-row .product{text-align:left;;}
+.order-summary-content .cart .cart-item-row .product,.wishlist-content .cart .cart-item-row .product{text-align:left;}
 .order-summary-content .cart .cart-item-row .product a,.wishlist-content .cart .cart-item-row .product a{}
 .order-summary-content .cart .cart-item-row .sku,.wishlist-content .cart .cart-item-row .sku{}
 .order-summary-content .cart .cart-item-row .quantity,.wishlist-content .cart .cart-item-row .quantity{}

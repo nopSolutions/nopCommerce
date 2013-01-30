@@ -273,7 +273,7 @@ namespace Nop.Web.Framework
                 if (this.CurrentCustomer == null)
                     return;
 
-                this.CurrentCustomer.LanguageId = value != null ? value.Id : 0;;
+                this.CurrentCustomer.LanguageId = value != null ? value.Id : 0;
                 _customerService.UpdateCustomer(this.CurrentCustomer);
             }
         }
