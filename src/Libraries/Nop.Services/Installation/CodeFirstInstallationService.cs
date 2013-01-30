@@ -284,6 +284,7 @@ namespace Nop.Services.Installation
                 new Store()
                 {
                     Name = "Your store name",
+                    Hosts = "yourstore.com,www.yourstore.com",
                     DisplayOrder = 1,
                 },
             };

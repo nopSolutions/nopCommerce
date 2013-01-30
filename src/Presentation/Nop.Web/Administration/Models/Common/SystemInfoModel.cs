@@ -33,6 +33,9 @@ namespace Nop.Admin.Models.Common
         [NopResourceDisplayName("Admin.System.SystemInfo.UTCTime")]
         public DateTime UtcTime { get; set; }
 
+        [NopResourceDisplayName("Admin.System.SystemInfo.HTTPHOST")]
+        public string HttpHost { get; set; }
+
         [NopResourceDisplayName("Admin.System.SystemInfo.LoadedAssemblies")]
         public IList<LoadedAssembly> LoadedAssemblies { get; set; }
 

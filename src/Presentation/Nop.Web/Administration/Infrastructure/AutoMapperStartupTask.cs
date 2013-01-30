@@ -45,6 +45,8 @@ using Nop.Services.Payments;
 using Nop.Services.Shipping;
 using Nop.Services.Seo;
 using Nop.Services.Tax;
+using Nop.Core.Domain.Stores;
+using Nop.Admin.Models.Stores;
 
 namespace Nop.Admin.Infrastructure
 {
@@ -497,6 +499,10 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.PurchasedWithOrderProductVariant, mo => mo.Ignore())
                 .ForMember(dest => dest.IsRecipientNotified, mo => mo.Ignore())
                 .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore());
+            //stores
+            Mapper.CreateMap<Store, StoreModel>()
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+            Mapper.CreateMap<StoreModel, Store>();
 
             //Settings
             Mapper.CreateMap<TaxSettings, TaxSettingsModel>()

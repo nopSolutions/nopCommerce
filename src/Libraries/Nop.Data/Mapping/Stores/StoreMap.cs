@@ -10,6 +10,7 @@ namespace Nop.Data.Mapping.Stores
             this.ToTable("Store");
             this.HasKey(s => s.Id);
             this.Property(s => s.Name).IsRequired().HasMaxLength(400);
+            this.Property(s => s.Hosts).HasMaxLength(1000);
         }
     }
 }

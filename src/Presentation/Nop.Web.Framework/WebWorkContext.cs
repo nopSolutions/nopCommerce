@@ -102,16 +102,15 @@ namespace Nop.Web.Framework
                 if (_cachedStore != null)
                     return _cachedStore;
 
-                Store store = null;
-                if (_httpContext != null)
-                {
-                    //TODO determine the current store by HTTP_HOST
-                }
+                //ty to determine the current store by HTTP_HOST
+                var host = _webHelper.ServerVariables("HTTP_HOST");
+                var allStores = _storeService.GetAllStores();
+                var store = allStores.FirstOrDefault(s => s.ContainsHostValue(host));
 
                 if (store == null)
                 {
                     //load the first found store
-                    store = _storeService.GetAllStores().FirstOrDefault();
+                    store = allStores.FirstOrDefault();
                 }
 
                 _cachedStore = store;
