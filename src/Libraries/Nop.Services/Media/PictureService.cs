@@ -786,7 +786,7 @@ namespace Nop.Services.Media
             if (seoFilename != picture.SeoFilename)
             {
                 //update picture
-                picture = UpdatePicture(picture.Id, LoadPictureBinary(picture), picture.MimeType, seoFilename, false);
+                picture = UpdatePicture(picture.Id, LoadPictureBinary(picture), picture.MimeType, seoFilename, true, false);
             }
             return picture;
         }
