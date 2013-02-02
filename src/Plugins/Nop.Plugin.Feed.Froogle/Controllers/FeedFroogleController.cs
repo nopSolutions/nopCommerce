@@ -31,14 +31,13 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
         private readonly IPluginFinder _pluginFinder;
         private readonly ILogger _logger;
         private readonly IWebHelper _webHelper;
-        private readonly IScheduleTaskService _scheduleTaskService;
         private readonly FroogleSettings _froogleSettings;
         private readonly ISettingService _settingService;
 
         public FeedFroogleController(IGoogleService googleService, 
             IProductService productService, ICurrencyService currencyService,
             ILocalizationService localizationService, IPluginFinder pluginFinder, 
-            ILogger logger, IWebHelper webHelper, IScheduleTaskService scheduleTaskService, 
+            ILogger logger, IWebHelper webHelper,
             FroogleSettings froogleSettings, ISettingService settingService)
         {
             this._googleService = googleService;
@@ -48,17 +47,10 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
             this._pluginFinder = pluginFinder;
             this._logger = logger;
             this._webHelper = webHelper;
-            this._scheduleTaskService = scheduleTaskService;
             this._froogleSettings = froogleSettings;
             this._settingService = settingService;
         }
 
-        [NonAction]
-        private ScheduleTask FindScheduledTask()
-        {
-            return _scheduleTaskService.GetTaskByType("Nop.Plugin.Feed.Froogle.StaticFileGenerationTask, Nop.Plugin.Feed.Froogle");
-        }
-        
         public ActionResult Configure()
         {
             var model = new FeedFroogleModel();
@@ -90,13 +82,6 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
                 });
             }
 
-            //task
-            ScheduleTask task = FindScheduledTask();
-            if (task != null)
-            {
-                model.GenerateStaticFileEachMinutes = task.Seconds / 60;
-                model.TaskEnabled = task.Enabled;
-            }
             //file path
             if (System.IO.File.Exists(System.IO.Path.Combine(HttpRuntime.AppDomainAppPath, "content\\files\\exportimport", _froogleSettings.StaticFileName)))
                 model.StaticFilePath = string.Format("{0}content/files/exportimport/{1}", _webHelper.GetStoreLocation(false), _froogleSettings.StaticFileName);
@@ -119,17 +104,7 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
             _froogleSettings.CurrencyId = model.CurrencyId;
             _froogleSettings.DefaultGoogleCategory = model.DefaultGoogleCategory;
             _settingService.SaveSetting(_froogleSettings);
-
-            // Update the task
-            var task = FindScheduledTask();
-            if (task != null)
-            {
-                task.Enabled = model.TaskEnabled;
-                task.Seconds = model.GenerateStaticFileEachMinutes * 60;
-                _scheduleTaskService.UpdateTask(task);
-                saveResult = _localizationService.GetResource("Plugins.Feed.Froogle.TaskRestart");
-            }
-
+            
             //redisplay the form
             foreach (var c in _currencyService.GetAllCurrencies(false))
             {
@@ -216,15 +191,7 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
                     Value = gc
                 });
             }
-
-            //task
-            ScheduleTask task = FindScheduledTask();
-            if (task != null)
-            {
-                model.GenerateStaticFileEachMinutes = task.Seconds / 60;
-                model.TaskEnabled = task.Enabled;
-            }
-
+            
             //file path
             if (System.IO.File.Exists(System.IO.Path.Combine(HttpRuntime.AppDomainAppPath, "content\\files\\exportimport", _froogleSettings.StaticFileName)))
                 model.StaticFilePath = string.Format("{0}content/files/exportimport/{1}", _webHelper.GetStoreLocation(false), _froogleSettings.StaticFileName);

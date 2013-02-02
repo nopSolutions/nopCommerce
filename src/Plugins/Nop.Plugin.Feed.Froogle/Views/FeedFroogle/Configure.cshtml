@@ -17,26 +17,7 @@
     })
 }
 @helper TabGeneral()
-    { 
-    <script type="text/javascript">
-        $(document).ready(function () {
-
-            $("#@Html.FieldIdFor(model => model.TaskEnabled)").click(toggleTaskEnabled);
-
-            toggleTaskEnabled();
-        });
-
-        function toggleTaskEnabled() {
-            if ($('#@Html.FieldIdFor(model => model.TaskEnabled)').is(':checked')) {
-                $('#pnlGenerateStaticFileEachMinutes').show();
-            }
-            else {
-                $('#pnlGenerateStaticFileEachMinutes').hide();
-            }
-        }
-
-    </script>
-    
+    {
     <table class="adminContent">
         <tr>
             <td colspan="2">
@@ -81,34 +62,6 @@
             <td class="adminData">
                 @Html.DropDownListFor(model => model.DefaultGoogleCategory, Model.AvailableGoogleCategories)
                 @Html.ValidationMessageFor(model => model.DefaultGoogleCategory)
-            </td>
-        </tr>
-        <tr class="adminSeparator">
-            <td colspan="2">
-                <hr />
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(m => m.TaskEnabled):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(m => m.TaskEnabled)
-                @Html.ValidationMessageFor(m => m.TaskEnabled)
-            </td>
-        </tr>
-        <tr id="pnlGenerateStaticFileEachMinutes">
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.GenerateStaticFileEachMinutes):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.GenerateStaticFileEachMinutes)
-                @Html.ValidationMessageFor(model => model.GenerateStaticFileEachMinutes)
-            </td>
-        </tr>
-        <tr class="adminSeparator">
-            <td colspan="2">
-                <hr />
             </td>
         </tr>
         @if (!String.IsNullOrEmpty(Model.StaticFilePath))

@@ -32,7 +32,6 @@ namespace Nop.Plugin.Feed.Froogle
     {
         #region Fields
 
-        private readonly IScheduleTaskService _scheduleTaskService;
         private readonly IGoogleService _googleService;
         private readonly IProductService _productService;
         private readonly ICategoryService _categoryService;
@@ -51,8 +50,7 @@ namespace Nop.Plugin.Feed.Froogle
         #endregion
 
         #region Ctor
-        public FroogleService(IScheduleTaskService scheduleTaskService,
-            IGoogleService googleService,
+        public FroogleService(IGoogleService googleService,
             IProductService productService,
             ICategoryService categoryService,
             IManufacturerService manufacturerService,
@@ -67,7 +65,6 @@ namespace Nop.Plugin.Feed.Froogle
             CurrencySettings currencySettings,
             GoogleProductObjectContext objectContext)
         {
-            this._scheduleTaskService = scheduleTaskService;
             this._googleService = googleService;
             this._productService = productService;
             this._categoryService = categoryService;
@@ -149,11 +146,6 @@ namespace Nop.Plugin.Feed.Froogle
             }
             breadCrumb.Reverse();
             return breadCrumb;
-        }
-
-        private ScheduleTask FindScheduledTask()
-        {
-            return _scheduleTaskService.GetTaskByType("Nop.Plugin.Feed.Froogle.StaticFileGenerationTask, Nop.Plugin.Feed.Froogle");
         }
 
         #endregion
@@ -494,29 +486,8 @@ namespace Nop.Plugin.Feed.Froogle
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Products.Color", "Color");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Products.Size", "Size");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.SuccessResult", "Froogle feed has been successfully generated. {0} to see generated feed");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.TaskEnabled", "Automatically generate a file");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.TaskEnabled.Hint", "Check if you want a file to be automatically generated.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.GenerateStaticFileEachMinutes", "A task period (minutes)");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.GenerateStaticFileEachMinutes.Hint", "Specify a task period in minutes (generation of a new Froogle file).");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.TaskRestart", "If a task setting ('Automatically generate a file') have been changed, please restart the application");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.StaticFilePath", "Generated file path (static)");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.StaticFilePath.Hint", "A file path of the generated Froogle file. It's static for your store and can be shared with the Froogle service.");
-
-            //install a schedule task
-            var task = FindScheduledTask();
-            if (task == null)
-            {
-                task = new ScheduleTask
-                {
-                    Name = "Froogle static file generation",
-                    //each 60 minutes
-                    Seconds = 3600,
-                    Type = "Nop.Plugin.Feed.Froogle.StaticFileGenerationTask, Nop.Plugin.Feed.Froogle",
-                    Enabled = false,
-                    StopOnError = false,
-                };
-                _scheduleTaskService.InsertTask(task);
-            }
 
             base.Install();
         }
@@ -550,19 +521,8 @@ namespace Nop.Plugin.Feed.Froogle
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Products.Color");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Products.Size");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.SuccessResult");
-            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.TaskEnabled");
-            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.TaskEnabled.Hint");
-            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.GenerateStaticFileEachMinutes");
-            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.GenerateStaticFileEachMinutes.Hint");
-            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.TaskRestart");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.StaticFilePath");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.StaticFilePath.Hint");
-
-
-            //Remove scheduled task
-            var task = FindScheduledTask();
-            if (task != null)
-                _scheduleTaskService.DeleteTask(task);
 
             base.Uninstall();
         }

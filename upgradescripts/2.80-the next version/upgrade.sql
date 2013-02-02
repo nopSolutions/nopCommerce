@@ -221,6 +221,21 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.List.SearchStore.Hint">
 	<Value>Search by a specific store.</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Feed.Froogle.GenerateStaticFileEachMinutes">
+	<Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Feed.Froogle.GenerateStaticFileEachMinutes.Hint">
+	<Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Feed.Froogle.TaskEnabled">
+	<Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Feed.Froogle.TaskEnabled.Hint">
+	<Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Feed.Froogle.TaskRestart">
+	<Value></Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1246,3 +1261,5 @@ GO
 ALTER TABLE [ReturnRequest] ALTER COLUMN [StoreId] int NOT NULL
 GO
 
+DELETE FROM [ScheduleTask]
+WHERE [Type] like N'Nop.Plugin.Feed.Froogle.StaticFileGenerationTask, Nop.Plugin.Feed.Froogle'
