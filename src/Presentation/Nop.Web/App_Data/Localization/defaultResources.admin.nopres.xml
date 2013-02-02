@@ -1510,6 +1510,14 @@
                                             </LocaleResource>
                                         </Children>
                                     </LocaleResource>
+                                    <LocaleResource Name="SearchStore">
+                                      <Value>Store</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Search by a specific store.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
                                 </Children>
                             </LocaleResource>
                             <LocaleResource Name="Manage">

@@ -215,6 +215,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Stores.Fields.Url.Required">
 	<Value>Please provide a store URL.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.List.SearchStore">
+	<Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.List.SearchStore.Hint">
+	<Value>Search by a specific store.</Value>
+  </LocaleResource>
 </Language>
 '
 

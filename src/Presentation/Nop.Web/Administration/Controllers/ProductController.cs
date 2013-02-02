@@ -567,6 +567,7 @@ namespace Nop.Admin.Controllers
             var model = new ProductListModel();
             model.DisplayProductPictures = _adminAreaSettings.DisplayProductPictures;
             model.DisplayPdfDownloadCatalog = _pdfSettings.Enabled;
+
             //categories
             model.AvailableCategories.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var c in _categoryService.GetAllCategories(showHidden: true))
@@ -576,6 +577,11 @@ namespace Nop.Admin.Controllers
             model.AvailableManufacturers.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var m in _manufacturerService.GetAllManufacturers(true))
                 model.AvailableManufacturers.Add(new SelectListItem() { Text = m.Name, Value = m.Id.ToString() });
+
+            //stores
+            model.AvailableStores.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var s in _storeService.GetAllStores())
+                model.AvailableStores.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString() });
 
             return View(model);
         }
@@ -590,6 +596,7 @@ namespace Nop.Admin.Controllers
             var products = _productService.SearchProducts(
                 categoryIds: new List<int>() { model.SearchCategoryId },
                 manufacturerId: model.SearchManufacturerId,
+                storeId: model.SearchStoreId,
                 keywords: model.SearchProductName,
                 pageIndex: command.Page - 1,
                 pageSize: command.PageSize,
