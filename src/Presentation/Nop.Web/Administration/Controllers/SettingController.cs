@@ -933,7 +933,7 @@ namespace Nop.Admin.Controllers
         }
         [HttpPost, ActionName("GeneralCommon")]
         [FormValueRequired("changeencryptionkey")]
-        public ActionResult ChangeEnryptionKey(GeneralCommonSettingsModel model)
+        public ActionResult ChangeEncryptionKey(GeneralCommonSettingsModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
