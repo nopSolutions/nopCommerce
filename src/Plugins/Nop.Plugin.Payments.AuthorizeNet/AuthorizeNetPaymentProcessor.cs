@@ -37,17 +37,17 @@ namespace Nop.Plugin.Payments.AuthorizeNet
         private readonly CurrencySettings _currencySettings;
         private readonly IWebHelper _webHelper;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
-        private readonly StoreInformationSettings _storeInformationSettings;
 
         #endregion
 
         #region Ctor
 
         public AuthorizeNetPaymentProcessor(AuthorizeNetPaymentSettings authorizeNetPaymentSettings,
-            ISettingService settingService, ICurrencyService currencyService,
+            ISettingService settingService,
+            ICurrencyService currencyService,
             ICustomerService customerService,
-            CurrencySettings currencySettings, IWebHelper webHelper, IOrderTotalCalculationService orderTotalCalculationService,
-            StoreInformationSettings storeInformationSettings)
+            CurrencySettings currencySettings, IWebHelper webHelper, 
+            IOrderTotalCalculationService orderTotalCalculationService)
         {
             this._authorizeNetPaymentSettings = authorizeNetPaymentSettings;
             this._settingService = settingService;
@@ -56,7 +56,6 @@ namespace Nop.Plugin.Payments.AuthorizeNet
             this._currencySettings = currencySettings;
             this._webHelper = webHelper;
             this._orderTotalCalculationService = orderTotalCalculationService;
-            this._storeInformationSettings = storeInformationSettings;
         }
 
         #endregion
@@ -374,7 +373,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet
                 subscription.customer.phoneNumber = customer.BillingAddress.PhoneNumber;
 
                 subscription.order = new OrderType();
-                subscription.order.description = string.Format("{0} {1}", _storeInformationSettings.StoreName, "Recurring payment");
+                subscription.order.description = "Recurring payment";
 
                 // Create a subscription that is leng of specified occurrences and interval is amount of days ad runs
 

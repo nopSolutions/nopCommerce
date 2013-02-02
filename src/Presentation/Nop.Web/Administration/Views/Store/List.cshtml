@@ -15,11 +15,12 @@
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<CountryModel>()
+            @(Html.Telerik().Grid<StoreModel>()
                     .Name("stores-grid")
                     .Columns(columns =>
                     {
                         columns.Bound(x => x.Name);
+                        columns.Bound(x => x.Url);
                         columns.Bound(x => x.DisplayOrder)
                             .Centered()
                             .Width(100);

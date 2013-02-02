@@ -13,6 +13,10 @@ namespace Nop.Admin.Models.Stores
         [AllowHtml]
         public string Name { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Stores.Fields.Url")]
+        [AllowHtml]
+        public string Url { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Stores.Fields.Hosts")]
         [AllowHtml]
         public string Hosts { get; set; }

@@ -22,22 +22,21 @@ namespace Nop.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly ISettingService _settingService;
         private readonly IEmailSender _emailSender;
+        private readonly IWorkContext _workContext;
         private readonly EmailAccountSettings _emailAccountSettings;
-        private readonly StoreInformationSettings _storeSettings;
         private readonly IPermissionService _permissionService;
 
 		public EmailAccountController(IEmailAccountService emailAccountService,
             ILocalizationService localizationService, ISettingService settingService, 
-            IEmailSender emailSender, 
-            EmailAccountSettings emailAccountSettings, StoreInformationSettings storeSettings,
-            IPermissionService permissionService)
+            IEmailSender emailSender, IWorkContext workContext,
+            EmailAccountSettings emailAccountSettings, IPermissionService permissionService)
 		{
             this._emailAccountService = emailAccountService;
             this._localizationService = localizationService;
             this._emailAccountSettings = emailAccountSettings;
             this._emailSender = emailSender;
             this._settingService = settingService;
-            this._storeSettings = storeSettings;
+            this._workContext = workContext;
             this._permissionService = permissionService;
 		}
 
@@ -205,7 +204,7 @@ namespace Nop.Admin.Controllers
 
                 var from = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
                 var to = new MailAddress(model.SendTestEmailTo);
-                string subject = _storeSettings.StoreName + ". Testing email functionality.";
+                string subject = _workContext.CurrentStore.Name + ". Testing email functionality.";
                 string body = "Email works fine.";
                 _emailSender.SendEmail(emailAccount, subject, body, from, to);
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.EmailAccounts.SendTestEmail.Success"), false);

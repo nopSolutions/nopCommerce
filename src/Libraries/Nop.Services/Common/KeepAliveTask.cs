@@ -1,5 +1,7 @@
 ﻿using System.Net;
+using Nop.Core;
 using Nop.Core.Domain;
+using Nop.Services.Stores;
 using Nop.Services.Tasks;
 
 namespace Nop.Services.Common
@@ -9,20 +11,25 @@ namespace Nop.Services.Common
     /// </summary>
     public partial class KeepAliveTask : ITask
     {
-        private readonly StoreInformationSettings _storeInformationSettings;
-        public KeepAliveTask(StoreInformationSettings storeInformationSettings)
+        private readonly IStoreService _storeService;
+
+        public KeepAliveTask(IStoreService storeService)
         {
-            this._storeInformationSettings = storeInformationSettings;
+            this._storeService = storeService;
         }
         /// <summary>
         /// Executes a task
         /// </summary>
         public void Execute()
         {
-            string url = _storeInformationSettings.StoreUrl + "keepalive";
-            using (var wc = new WebClient())
+            var stores = _storeService.GetAllStores();
+            foreach (var store in stores)
             {
-                wc.DownloadString(url);
+                string url = store.Url + "keepalive";
+                using (var wc = new WebClient())
+                {
+                    wc.DownloadString(url);
+                }
             }
         }
     }

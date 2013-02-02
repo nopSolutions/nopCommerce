@@ -284,6 +284,7 @@ namespace Nop.Services.Installation
                 new Store()
                 {
                     Name = "Your store name",
+                    Url = "http://www.yourStore.com/",
                     Hosts = "yourstore.com,www.yourstore.com",
                     DisplayOrder = 1,
                 },
@@ -4624,8 +4625,6 @@ namespace Nop.Services.Installation
             EngineContext.Current.Resolve<IConfigurationProvider<StoreInformationSettings>>()
                 .SaveSettings(new StoreInformationSettings()
                 {
-                    StoreName = "Your store name",
-                    StoreUrl = "http://www.yourStore.com/",
                     StoreClosed = false,
                     StoreClosedAllowForAdmins = false,
                     DefaultStoreThemeForDesktops = "DefaultClean",

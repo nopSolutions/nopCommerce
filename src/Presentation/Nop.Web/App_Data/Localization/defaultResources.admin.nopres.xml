@@ -4714,22 +4714,6 @@
                                     <LocaleResource Name="LocalizationSettings">
                                         <Value>Localization settings</Value>
                                     </LocaleResource>
-                                    <LocaleResource Name="StoreName">
-                                        <Value>Store name</Value>
-                                        <Children>
-                                            <LocaleResource Name="Hint">
-                                                <Value>Enter the name of your store e.g. Your Store</Value>
-                                            </LocaleResource>
-                                        </Children>
-                                    </LocaleResource>
-                                    <LocaleResource Name="StoreUrl">
-                                        <Value>Store URL</Value>
-                                        <Children>
-                                            <LocaleResource Name="Hint">
-                                                <Value>The URL of your store e.g. http://www.yourstore.com/</Value>
-                                            </LocaleResource>
-                                        </Children>
-                                    </LocaleResource>
                                     <LocaleResource Name="StoreClosed">
                                         <Value>Store closed</Value>
                                         <Children>
@@ -5949,21 +5933,32 @@
                             <LocaleResource Name="Fields">
                                 <Children>
                                     <LocaleResource Name="Name">
-                                        <Value>Name</Value>
+                                        <Value>Store name</Value>
                                         <Children>
                                             <LocaleResource Name="Hint">
-                                                <Value>The name of the store.</Value>
+                                                <Value>Enter the name of your store e.g. Your Store</Value>
                                             </LocaleResource>
                                             <LocaleResource Name="Required">
                                                 <Value>Please provide a name.</Value>
                                             </LocaleResource>
                                         </Children>
                                     </LocaleResource>
-                                  <LocaleResource Name="Hosts">
+                                    <LocaleResource Name="Url">
+                                        <Value>Store URL</Value>
+                                        <Children>
+                                            <LocaleResource Name="Hint">
+                                                <Value>The URL of your store e.g. http://www.yourstore.com/</Value>
+                                            </LocaleResource>
+                                            <LocaleResource Name="Required">
+                                              <Value>Please provide a store URL.</Value>
+                                            </LocaleResource>
+                                        </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="Hosts">
                                     <Value>HOST values</Value>
                                     <Children>
                                       <LocaleResource Name="Hint">
-                                        <Value>The comma separated list of possible HTTP_POST values (for example, "yourstore.com,www.yourstore.com"). This property is required only when you have run a multi-store solution to determine the current store.</Value>
+                                        <Value>The comma separated list of possible HTTP_POST values (for example, "yourstore.com,www.yourstore.com"). This property is required only when you run a multi-store solution to determine the current store.</Value>
                                       </LocaleResource>
                                     </Children>
                                   </LocaleResource>

@@ -40,7 +40,6 @@ namespace Nop.Admin.Controllers
         private readonly ICustomerService _customerService;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IWebHelper _webHelper;
-        private readonly StoreInformationSettings _storeInformationSettings;
         private readonly CurrencySettings _currencySettings;
         private readonly MeasureSettings _measureSettings;
         private readonly IDateTimeHelper _dateTimeHelper;
@@ -56,8 +55,8 @@ namespace Nop.Admin.Controllers
         public CommonController(IPaymentService paymentService, IShippingService shippingService,
             IShoppingCartService shoppingCartService, 
             ICurrencyService currencyService, IMeasureService measureService,
-            ICustomerService customerService, IUrlRecordService urlRecordService, IWebHelper webHelper,
-            StoreInformationSettings storeInformationSettings, CurrencySettings currencySettings,
+            ICustomerService customerService, IUrlRecordService urlRecordService, 
+            IWebHelper webHelper, CurrencySettings currencySettings,
             MeasureSettings measureSettings, IDateTimeHelper dateTimeHelper,
             ILanguageService languageService, IWorkContext workContext,
             IPermissionService permissionService, ILocalizationService localizationService)
@@ -70,7 +69,6 @@ namespace Nop.Admin.Controllers
             this._customerService = customerService;
             this._urlRecordService = urlRecordService;
             this._webHelper = webHelper;
-            this._storeInformationSettings = storeInformationSettings;
             this._currencySettings = currencySettings;
             this._measureSettings = measureSettings;
             this._dateTimeHelper = dateTimeHelper;
@@ -125,10 +123,11 @@ namespace Nop.Admin.Controllers
             var model = new List<SystemWarningModel>();
 
             //store URL
-            if (!String.IsNullOrEmpty(_storeInformationSettings.StoreUrl) &&
-                (_storeInformationSettings.StoreUrl.Equals(_webHelper.GetStoreLocation(false), StringComparison.InvariantCultureIgnoreCase)
+            var currentStoreUrl = _workContext.CurrentStore.Url;
+            if (!String.IsNullOrEmpty(currentStoreUrl) &&
+                (currentStoreUrl.Equals(_webHelper.GetStoreLocation(false), StringComparison.InvariantCultureIgnoreCase)
                 ||
-                _storeInformationSettings.StoreUrl.Equals(_webHelper.GetStoreLocation(true), StringComparison.InvariantCultureIgnoreCase)
+                currentStoreUrl.Equals(_webHelper.GetStoreLocation(true), StringComparison.InvariantCultureIgnoreCase)
                 ))
                 model.Add(new SystemWarningModel()
                     {
@@ -139,7 +138,7 @@ namespace Nop.Admin.Controllers
                 model.Add(new SystemWarningModel()
                 {
                     Level = SystemWarningLevel.Warning,
-                    Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.URL.NoMatch"), _storeInformationSettings.StoreUrl, _webHelper.GetStoreLocation(false))
+                    Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.URL.NoMatch"), currentStoreUrl, _webHelper.GetStoreLocation(false))
                 });
 
 

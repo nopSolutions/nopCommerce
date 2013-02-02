@@ -75,6 +75,9 @@ namespace Nop.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var store = model.ToEntity();
+                //ensure we have "/" at the end
+                if (!store.Url.EndsWith("/"))
+                    store.Url += "/";
                 _storeService.InsertStore(store);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Stores.Added"));
@@ -114,6 +117,9 @@ namespace Nop.Admin.Controllers
             if (ModelState.IsValid)
             {
                 store = model.ToEntity(store);
+                //ensure we have "/" at the end
+                if (!store.Url.EndsWith("/"))
+                    store.Url += "/";
                 _storeService.UpdateStore(store);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Stores.Updated"));

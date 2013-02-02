@@ -15,7 +15,7 @@ namespace Nop.Admin.Controllers
     public partial class HomeController : BaseNopController
     {
         #region Fields
-        private readonly StoreInformationSettings _storeInformationSettings;
+        private readonly IWorkContext _workContext;
         private readonly CommonSettings _commonSettings;
         private readonly ISettingService _settingService;
 
@@ -23,10 +23,10 @@ namespace Nop.Admin.Controllers
 
         #region Ctor
 
-        public HomeController(StoreInformationSettings storeInformationSettings,
+        public HomeController(IWorkContext workContext, 
             CommonSettings commonSettings, ISettingService settingService)
         {
-            this._storeInformationSettings = storeInformationSettings;
+            this._workContext = workContext;
             this._commonSettings = commonSettings;
             this._settingService = settingService;
         }
@@ -48,8 +48,8 @@ namespace Nop.Admin.Controllers
                 string feedUrl = string.Format("http://www.nopCommerce.com/NewsRSS.aspx?Version={0}&Localhost={1}&HideAdvertisements={2}&StoreURL={3}",
                     NopVersion.CurrentVersion, 
                     Request.Url.IsLoopback, 
-                    _commonSettings.HideAdvertisementsOnAdminArea, 
-                    _storeInformationSettings.StoreUrl);
+                    _commonSettings.HideAdvertisementsOnAdminArea,
+                    _workContext.CurrentStore.Url);
 
                 //specify timeout (5 secs)
                 var request = WebRequest.Create(feedUrl);

@@ -35,14 +35,6 @@ namespace Nop.Admin.Models.Settings
                 this.AvailableStoreThemesForDesktops = new List<SelectListItem>();
                 this.AvailableStoreThemesForMobileDevices = new List<SelectListItem>();
             }
-            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.StoreName")]
-            [AllowHtml]
-            public string StoreName { get; set; }
-
-            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.StoreUrl")]
-            [AllowHtml]
-            public string StoreUrl { get; set; }
-
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.MobileDevicesSupported")]
             public bool MobileDevicesSupported { get; set; }
 

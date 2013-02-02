@@ -7,12 +7,13 @@ using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
+using Nop.Core.Domain.Stores;
 
 namespace Nop.Services.Messages
 {
     public partial interface IMessageTokenProvider
     {
-        void AddStoreTokens(IList<Token> tokens);
+        void AddStoreTokens(IList<Token> tokens, Store store);
 
         void AddOrderTokens(IList<Token> tokens, Order order, int languageId);
 

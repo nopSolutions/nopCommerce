@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Nop.Services.Stores;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using Nop.Core;
@@ -42,6 +43,8 @@ namespace Nop.Services.Common
         private readonly IPictureService _pictureService;
         private readonly IProductService _productService;
         private readonly IProductAttributeParser _productAttributeParser;
+        private readonly IStoreService _storeService;
+        private readonly IWorkContext _workContext;
         private readonly IWebHelper _webHelper;
 
         private readonly CatalogSettings _catalogSettings;
@@ -61,7 +64,8 @@ namespace Nop.Services.Common
             IDateTimeHelper dateTimeHelper, IPriceFormatter priceFormatter,
             ICurrencyService currencyService, IMeasureService measureService,
             IPictureService pictureService, IProductService productService, 
-            IProductAttributeParser productAttributeParser, IWebHelper webHelper, 
+            IProductAttributeParser productAttributeParser, IStoreService storeService, 
+            IWorkContext workContext, IWebHelper webHelper, 
             CatalogSettings catalogSettings, CurrencySettings currencySettings,
             MeasureSettings measureSettings, PdfSettings pdfSettings, TaxSettings taxSettings,
             StoreInformationSettings storeInformationSettings, AddressSettings addressSettings)
@@ -76,6 +80,8 @@ namespace Nop.Services.Common
             this._pictureService = pictureService;
             this._productService = productService;
             this._productAttributeParser = productAttributeParser;
+            this._storeService = storeService;
+            this._workContext = workContext;
             this._webHelper = webHelper;
             this._currencySettings = currencySettings;
             this._catalogSettings = catalogSettings;
@@ -172,8 +178,9 @@ namespace Nop.Services.Common
                 var cell = new PdfPCell();
                 cell.Border = Rectangle.NO_BORDER;
                 cell.AddElement(new Paragraph(String.Format(_localizationService.GetResource("PDFInvoice.Order#", lang.Id), order.Id), titleFont));
-                var anchor = new Anchor(_storeInformationSettings.StoreUrl.Trim(new char[] { '/' }), font);
-                anchor.Reference = _storeInformationSettings.StoreUrl;
+                var store = _storeService.GetStoreById(order.StoreId) ?? _workContext.CurrentStore;
+                var anchor = new Anchor(store.Url.Trim(new char[] { '/' }), font);
+                anchor.Reference = store.Url;
                 cell.AddElement(new Paragraph(anchor));
                 cell.AddElement(new Paragraph(String.Format(_localizationService.GetResource("PDFInvoice.OrderDate", lang.Id), _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc).ToString("D", new CultureInfo(lang.LanguageCulture))), font));
                 headerTable.AddCell(cell);

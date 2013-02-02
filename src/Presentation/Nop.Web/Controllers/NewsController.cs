@@ -48,7 +48,6 @@ namespace Nop.Web.Controllers
         private readonly NewsSettings _newsSettings;
         private readonly LocalizationSettings _localizationSettings;
         private readonly CustomerSettings _customerSettings;
-        private readonly StoreInformationSettings _storeInformationSettings;
         private readonly CaptchaSettings _captchaSettings;
         
         #endregion
@@ -62,7 +61,7 @@ namespace Nop.Web.Controllers
             ICacheManager cacheManager, ICustomerActivityService customerActivityService,
             MediaSettings mediaSettings, NewsSettings newsSettings,
             LocalizationSettings localizationSettings, CustomerSettings customerSettings,
-            StoreInformationSettings storeInformationSettings, CaptchaSettings captchaSettings)
+            CaptchaSettings captchaSettings)
         {
             this._newsService = newsService;
             this._workContext = workContext;
@@ -79,7 +78,6 @@ namespace Nop.Web.Controllers
             this._newsSettings = newsSettings;
             this._localizationSettings = localizationSettings;
             this._customerSettings = customerSettings;
-            this._storeInformationSettings = storeInformationSettings;
             this._captchaSettings = captchaSettings;
         }
 
@@ -199,7 +197,7 @@ namespace Nop.Web.Controllers
         public ActionResult ListRss(int languageId)
         {
             var feed = new SyndicationFeed(
-                                    string.Format("{0}: News", _storeInformationSettings.StoreName),
+                                    string.Format("{0}: News", _workContext.CurrentStore.Name),
                                     "News",
                                     new Uri(_webHelper.GetStoreLocation(false)),
                                     "NewsRSS",
@@ -304,7 +302,7 @@ namespace Nop.Web.Controllers
                 return Content("");
 
             string link = string.Format("<link href=\"{0}\" rel=\"alternate\" type=\"application/rss+xml\" title=\"{1}: News\" />",
-                Url.RouteUrl("NewsRSS", new { languageId = _workContext.WorkingLanguage.Id }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http"), _storeInformationSettings.StoreName);
+                Url.RouteUrl("NewsRSS", new { languageId = _workContext.WorkingLanguage.Id }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http"), _workContext.CurrentStore.Name);
 
             return Content(link);
         }

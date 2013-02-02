@@ -405,7 +405,7 @@ namespace Nop.Web.Controllers
         {
             var model = new FooterModel()
             {
-                StoreName = _storeInformationSettings.StoreName
+                StoreName = _workContext.CurrentStore.Name
             };
 
             return PartialView(model);
@@ -472,7 +472,7 @@ namespace Nop.Web.Controllers
             {
                 string email = model.Email.Trim();
                 string fullName = model.FullName;
-                string subject = string.Format(_localizationService.GetResource("ContactUs.EmailSubject"), _storeInformationSettings.StoreName);
+                string subject = string.Format(_localizationService.GetResource("ContactUs.EmailSubject"), _workContext.CurrentStore.Name);
 
                 var emailAccount = _emailAccountService.GetEmailAccountById(_emailAccountSettings.DefaultEmailAccountId);
                 if (emailAccount == null)

@@ -44,7 +44,6 @@ namespace Nop.Plugin.Feed.Froogle
         private readonly IWorkContext _workContext;
         private readonly IMeasureService _measureService;
         private readonly MeasureSettings _measureSettings;
-        private readonly StoreInformationSettings _storeInformationSettings;
         private readonly FroogleSettings _froogleSettings;
         private readonly CurrencySettings _currencySettings;
         private readonly GoogleProductObjectContext _objectContext;
@@ -64,7 +63,6 @@ namespace Nop.Plugin.Feed.Froogle
             IWorkContext workContext,
             IMeasureService measureService,
             MeasureSettings measureSettings,
-            StoreInformationSettings storeInformationSettings,
             FroogleSettings froogleSettings,
             CurrencySettings currencySettings,
             GoogleProductObjectContext objectContext)
@@ -81,7 +79,6 @@ namespace Nop.Plugin.Feed.Froogle
             this._workContext = workContext;
             this._measureService = measureService;
             this._measureSettings = measureSettings;
-            this._storeInformationSettings = storeInformationSettings;
             this._froogleSettings = froogleSettings;
             this._currencySettings = currencySettings;
             this._objectContext = objectContext;
@@ -197,7 +194,7 @@ namespace Nop.Plugin.Feed.Froogle
                 writer.WriteAttributeString("version", "2.0");
                 writer.WriteAttributeString("xmlns", "g", null, googleBaseNamespace);
                 writer.WriteStartElement("channel");
-                writer.WriteElementString("title", string.Format("{0} Google Base", _storeInformationSettings.StoreName));
+                writer.WriteElementString("title", "Google Base feed");
                 writer.WriteElementString("link", "http://base.google.com/base/");
                 writer.WriteElementString("description", "Information about products");
 

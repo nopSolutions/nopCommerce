@@ -57,10 +57,10 @@ set @resources='
 	<Value>Edit store details</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Stores.Fields.Name">
-	<Value>Name</Value>
+	<Value>Store name</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Stores.Fields.Name.Hint">
-	<Value>The name of the store.</Value>
+	<Value>Enter the name of your store e.g. Your Store</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Stores.Fields.Name.Required">
 	<Value>Please provide a name.</Value>
@@ -183,7 +183,7 @@ set @resources='
 	<Value>HOST values</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Stores.Fields.Hosts.Hint">
-	<Value>The comma separated list of possible HTTP_POST values (for example, "yourstore.com,www.yourstore.com"). This property is required only when you have run a multi-store solution to determine the current store.</Value>
+	<Value>The comma separated list of possible HTTP_POST values (for example, "yourstore.com,www.yourstore.com"). This property is required only when you have a multi-store solution to determine the current store.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.SystemInfo.HTTPHOST">
 	<Value>HTTP_HOST</Value>
@@ -193,6 +193,27 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Requirements.Remove">
 	<Value>Remove requirement</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.StoreName">
+	<Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.StoreName.Hint">
+	<Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.StoreUrl">
+	<Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.StoreUrl.Hint">
+	<Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.Url">
+	<Value>Store URL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.Url.Hint">
+	<Value>The URL of your store e.g. http://www.yourstore.com/</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.Url.Required">
+	<Value>Please provide a store URL.</Value>
   </LocaleResource>
 </Language>
 '
@@ -321,24 +342,30 @@ GO
 
 IF NOT EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[Store]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
 BEGIN
-CREATE TABLE [dbo].[Store](
-	[Id] [int] IDENTITY(1,1) NOT NULL,
-	[Name] nvarchar(400) NOT NULL,
-	[Hosts] nvarchar(1000) NULL,
-	[DisplayOrder] int NOT NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[Id] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
-) ON [PRIMARY]
+	CREATE TABLE [dbo].[Store](
+		[Id] [int] IDENTITY(1,1) NOT NULL,
+		[Name] nvarchar(400) NOT NULL,
+		[Url] nvarchar(400) NOT NULL,
+		[Hosts] nvarchar(1000) NULL,
+		[DisplayOrder] int NOT NULL,
+	PRIMARY KEY CLUSTERED 
+	(
+		[Id] ASC
+	)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+	) ON [PRIMARY]
 
-DECLARE @DEFAULT_STORE_NAME nvarchar(400)
-SELECT @DEFAULT_STORE_NAME = [Value] FROM [Setting] WHERE [name] = N'storeinformationsettings.storename' 
+	DECLARE @DEFAULT_STORE_NAME nvarchar(400)
+	SELECT @DEFAULT_STORE_NAME = [Value] FROM [Setting] WHERE [name] = N'storeinformationsettings.storename' 
 
---create the first store
-INSERT INTO [Store] ([Name], [Hosts], [DisplayOrder])
-VALUES (@DEFAULT_STORE_NAME, N'yourstore.com,www.yourstore.com', 1)
+	DECLARE @DEFAULT_STORE_URL nvarchar(400)
+	SELECT @DEFAULT_STORE_URL= [Value] FROM [Setting] WHERE [name] = N'storeinformationsettings.storeurl' 
 
+	--create the first store
+	INSERT INTO [Store] ([Name], [Url], [Hosts], [DisplayOrder])
+	VALUES (@DEFAULT_STORE_NAME, @DEFAULT_STORE_URL, N'yourstore.com,www.yourstore.com', 1)
+
+	DELETE FROM [Setting] WHERE [name] = N'storeinformationsettings.storename' 
+	DELETE FROM [Setting] WHERE [name] = N'storeinformationsettings.storeurl' 
 END
 GO
 

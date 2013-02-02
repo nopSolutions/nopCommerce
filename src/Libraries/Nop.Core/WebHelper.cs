@@ -78,7 +78,7 @@ namespace Nop.Core
         public virtual string GetThisPageUrl(bool includeQueryString, bool useSsl)
         {
             string url = string.Empty;
-            if (_httpContext == null)
+            if (_httpContext == null || _httpContext.Request == null)
                 return url;
 
             if (includeQueryString)
@@ -90,7 +90,10 @@ namespace Nop.Core
             }
             else
             {
-                url = _httpContext.Request.Url.GetLeftPart(UriPartial.Path);
+                if (_httpContext.Request.Url != null)
+                {
+                    url = _httpContext.Request.Url.GetLeftPart(UriPartial.Path);
+                }
             }
             url = url.ToLowerInvariant();
             return url;
@@ -132,19 +135,23 @@ namespace Nop.Core
         /// <returns>Server variable</returns>
         public virtual string ServerVariables(string name)
         {
-            string tmpS = string.Empty;
+            string result = string.Empty;
+
+            if (_httpContext == null || _httpContext.Request == null)
+                return result;
+
             try
             {
                 if (_httpContext.Request.ServerVariables[name] != null)
                 {
-                    tmpS = _httpContext.Request.ServerVariables[name];
+                    result = _httpContext.Request.ServerVariables[name];
                 }
             }
             catch
             {
-                tmpS = string.Empty;
+                result = string.Empty;
             }
-            return tmpS;
+            return result;
         }
 
         /// <summary>
@@ -164,10 +171,10 @@ namespace Nop.Core
             {
                 //HTTP_HOST variable is not available.
                 //It's possible only when HttpContext is not available (for example, running in a schedule task)
-                //so let's resolve StoreInformationSettings here.
-                //Do not inject it via contructor because it'll break the installation (settings are not available at that moment)
-                var storeSettings = EngineContext.Current.Resolve<StoreInformationSettings>();
-                result = storeSettings.StoreUrl;
+                //so let's resolve IWorkContext  here.
+                //Do not inject it via contructor because it'll cause circular references
+                var workContext = EngineContext.Current.Resolve<IWorkContext>();
+                result = workContext.CurrentStore.Url;
             }
             if (!result.EndsWith("/"))
                 result += "/";

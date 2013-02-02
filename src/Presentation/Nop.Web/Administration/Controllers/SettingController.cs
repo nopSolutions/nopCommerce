@@ -681,8 +681,6 @@ namespace Nop.Admin.Controllers
 
             //store information
             var model = new GeneralCommonSettingsModel();
-            model.StoreInformationSettings.StoreName = _storeInformationSettings.StoreName;
-            model.StoreInformationSettings.StoreUrl = _storeInformationSettings.StoreUrl;
             model.StoreInformationSettings.StoreClosed = _storeInformationSettings.StoreClosed;
             model.StoreInformationSettings.StoreClosedAllowForAdmins = _storeInformationSettings.StoreClosedAllowForAdmins;
             //desktop themes
@@ -784,14 +782,6 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
-            //store information
-            _storeInformationSettings.StoreName = model.StoreInformationSettings.StoreName;
-            if (model.StoreInformationSettings.StoreUrl == null)
-                model.StoreInformationSettings.StoreUrl = "";
-            _storeInformationSettings.StoreUrl = model.StoreInformationSettings.StoreUrl;
-            //ensure we have "/" at the end
-            if (!_storeInformationSettings.StoreUrl.EndsWith("/"))
-                _storeInformationSettings.StoreUrl += "/";
             _storeInformationSettings.StoreClosed = model.StoreInformationSettings.StoreClosed;
             _storeInformationSettings.StoreClosedAllowForAdmins = model.StoreInformationSettings.StoreClosedAllowForAdmins;
             _storeInformationSettings.DefaultStoreThemeForDesktops = model.StoreInformationSettings.DefaultStoreThemeForDesktops;
