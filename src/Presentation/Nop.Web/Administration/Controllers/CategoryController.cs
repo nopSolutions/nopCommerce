@@ -46,7 +46,6 @@ namespace Nop.Admin.Controllers
         private readonly IStoreService _storeService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IExportManager _exportManager;
-        private readonly IWorkContext _workContext;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly AdminAreaSettings _adminAreaSettings;
         private readonly CatalogSettings _catalogSettings;
@@ -62,7 +61,7 @@ namespace Nop.Admin.Controllers
             ILocalizationService localizationService, ILocalizedEntityService localizedEntityService,
             IDiscountService discountService, IPermissionService permissionService,
             IAclService aclService, IStoreService storeService, IStoreMappingService storeMappingService,
-            IExportManager exportManager, IWorkContext workContext,
+            IExportManager exportManager,
             ICustomerActivityService customerActivityService, AdminAreaSettings adminAreaSettings,
             CatalogSettings catalogSettings)
         {
@@ -82,7 +81,6 @@ namespace Nop.Admin.Controllers
             this._storeService = storeService;
             this._storeMappingService = storeMappingService;
             this._exportManager = exportManager;
-            this._workContext = workContext;
             this._customerActivityService = customerActivityService;
             this._adminAreaSettings = adminAreaSettings;
             this._catalogSettings = catalogSettings;
