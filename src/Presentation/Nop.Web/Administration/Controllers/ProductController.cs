@@ -564,27 +564,9 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
 
-            IList<int> filterableSpecificationAttributeOptionIds = null;
-
-            var products = _productService.SearchProducts(
-                pageSize: _adminAreaSettings.GridPageSize,
-                showHidden: true
-                );
-
             var model = new ProductListModel();
             model.DisplayProductPictures = _adminAreaSettings.DisplayProductPictures;
             model.DisplayPdfDownloadCatalog = _pdfSettings.Enabled;
-            model.Products = new GridModel<ProductModel>
-            {
-                Data = products.Select(x =>
-                {
-                    var productModel = x.ToModel();
-                    PrepareProductPictureThumbnailModel(productModel, x);
-                    PrepareVariantsModel(productModel, x);
-                    return productModel;
-                }),
-                Total = products.TotalCount
-            };
             //categories
             model.AvailableCategories.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var c in _categoryService.GetAllCategories(showHidden: true))
