@@ -245,6 +245,9 @@ set @resources='
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Deleted">
 	<Value>The message template has been deleted successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.Store.AllStores">
+	<Value>All stores</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1281,10 +1284,8 @@ BEGIN
 END
 GO
 
-DECLARE @DEFAULT_STORE_ID int
-SELECT @DEFAULT_STORE_ID = [Id] FROM [Store] ORDER BY [DisplayOrder]
 UPDATE [MessageTemplate]
-SET [StoreId] = @DEFAULT_STORE_ID
+SET [StoreId] = 0
 WHERE [StoreId] IS NULL
 GO
 

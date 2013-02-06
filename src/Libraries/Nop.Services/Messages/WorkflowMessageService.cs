@@ -99,12 +99,18 @@ namespace Nop.Services.Messages
         private MessageTemplate GetLocalizedActiveMessageTemplate(string messageTemplateName, 
             int languageId, int storeId)
         {
+            //try load a message template by store
             var messageTemplate = _messageTemplateService.GetMessageTemplateByName(messageTemplateName, storeId);
+
+            //try load a message template common for all stores
+            if (messageTemplate == null)
+                messageTemplate = _messageTemplateService.GetMessageTemplateByName(messageTemplateName, 0);
+
+            //no template found
             if (messageTemplate == null)
                 return null;
 
-            //var isActive = messageTemplate.GetLocalized((mt) => mt.IsActive, languageId);
-            //use
+            //ensure it's active
             var isActive = messageTemplate.IsActive;
             if (!isActive)
                 return null;

@@ -37,7 +37,7 @@
             @Html.NopLabelFor(model => model.StoreId):
         </td>
         <td class="adminData">
-            @Html.DropDownListFor(model => model.StoreId, new SelectList(Model.AvailableStores, "Id", "Name"))
+            @Html.DropDownListFor(model => model.StoreId, Model.AvailableStores)
             @Html.ValidationMessageFor(model => model.StoreId)
         </td>
     </tr>
