@@ -12,6 +12,7 @@ namespace Nop.Data.Tests.Messages
         {
             var mt = new MessageTemplate()
             {
+                StoreId = 1,
                 Name = "Template1",
                 BccEmailAddresses = "Bcc",
                 Subject = "Subj",
@@ -23,6 +24,7 @@ namespace Nop.Data.Tests.Messages
 
             var fromDb = SaveAndLoadEntity(mt);
             fromDb.ShouldNotBeNull();
+            fromDb.StoreId.ShouldEqual(1);
             fromDb.Name.ShouldEqual("Template1");
             fromDb.BccEmailAddresses.ShouldEqual("Bcc");
             fromDb.Subject.ShouldEqual("Subj");
