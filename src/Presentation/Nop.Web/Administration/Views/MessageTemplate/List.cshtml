@@ -1,5 +1,4 @@
-﻿@model Telerik.Web.Mvc.GridModel<MessageTemplateModel>
-@using Telerik.Web.Mvc.UI
+﻿@using Telerik.Web.Mvc.UI
 @{
     //page title
     ViewBag.Title = T("Admin.ContentManagement.MessageTemplates").Text;
@@ -15,11 +14,12 @@
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<MessageTemplateModel>(Model.Data)
+            @(Html.Telerik().Grid<MessageTemplateModel>()
                     .Name("templates-grid")
                     .Columns(columns =>
                     {
                         columns.Bound(x => x.Name);
+                        columns.Bound(x => x.StoreName);
                         columns.Bound(x => x.Subject);
                         columns.Bound(x => x.IsActive)
                             .Template(

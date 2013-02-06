@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
 using FluentValidation.Attributes;
+using Nop.Admin.Models.Stores;
 using Nop.Admin.Validators.Messages;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Localization;
@@ -15,6 +16,7 @@ namespace Nop.Admin.Models.Messages
         {
             Locales = new List<MessageTemplateLocalizedModel>();
             AvailableEmailAccounts = new List<EmailAccountModel>();
+            AvailableStores = new List<StoreModel>();
         }
 
 
@@ -43,9 +45,15 @@ namespace Nop.Admin.Models.Messages
 
         [NopResourceDisplayName("Admin.ContentManagement.MessageTemplates.Fields.EmailAccount")]
         public int EmailAccountId { get; set; }
+        public IList<EmailAccountModel> AvailableEmailAccounts { get; set; }
+
+        [NopResourceDisplayName("Admin.ContentManagement.MessageTemplates.Fields.Store")]
+        public string StoreName { get; set; }
+        [NopResourceDisplayName("Admin.ContentManagement.MessageTemplates.Fields.Store")]
+        public int StoreId { get; set; }
+        public IList<StoreModel> AvailableStores { get; set; }
 
         public IList<MessageTemplateLocalizedModel> Locales { get; set; }
-        public IList<EmailAccountModel> AvailableEmailAccounts { get; set; }
     }
 
     public partial class MessageTemplateLocalizedModel : ILocalizedModelLocal

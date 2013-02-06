@@ -6,6 +6,7 @@ using Nop.Core.Domain.Messages;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Security;
+using Nop.Services.Stores;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
 
@@ -23,7 +24,9 @@ namespace Nop.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IMessageTokenProvider _messageTokenProvider;
         private readonly IPermissionService _permissionService;
+        private readonly IStoreService _storeService;
         private readonly EmailAccountSettings _emailAccountSettings;
+
         #endregion Fields
 
         #region Constructors
@@ -32,7 +35,8 @@ namespace Nop.Admin.Controllers
             IEmailAccountService emailAccountService, ILanguageService languageService, 
             ILocalizedEntityService localizedEntityService,
             ILocalizationService localizationService, IMessageTokenProvider messageTokenProvider, 
-            IPermissionService permissionService, EmailAccountSettings emailAccountSettings)
+            IPermissionService permissionService, IStoreService storeService,
+            EmailAccountSettings emailAccountSettings)
         {
             this._messageTemplateService = messageTemplateService;
             this._emailAccountService = emailAccountService;
@@ -41,6 +45,7 @@ namespace Nop.Admin.Controllers
             this._localizationService = localizationService;
             this._messageTokenProvider = messageTokenProvider;
             this._permissionService = permissionService;
+            this._storeService = storeService;
             this._emailAccountSettings = emailAccountSettings;
         }
 
@@ -57,6 +62,7 @@ namespace Nop.Admin.Controllers
 
             return sb.ToString();
         }
+
         #endregion
         
         #region Utilities
@@ -102,13 +108,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageTemplates))
                 return AccessDeniedView();
 
-            var messageTemplates = _messageTemplateService.GetAllMessageTemplates();
-            var gridModel = new GridModel<MessageTemplateModel>
-            {
-                Data = messageTemplates.Select(x => x.ToModel()),
-                Total = messageTemplates.Count
-            };
-            return View(gridModel);
+            return View();
         }
 
         [HttpPost, GridAction(EnableCustomBinding = true)]
@@ -117,10 +117,16 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageTemplates))
                 return AccessDeniedView();
 
-            var messageTemplates = _messageTemplateService.GetAllMessageTemplates();
+            var messageTemplates = _messageTemplateService.GetAllMessageTemplates(0);
             var gridModel = new GridModel<MessageTemplateModel>
             {
-                Data = messageTemplates.Select(x => x.ToModel()),
+                Data = messageTemplates.Select(x =>
+                {
+                    var model = x.ToModel();
+                    var store = _storeService.GetStoreById(x.StoreId);
+                    model.StoreName = store != null ? store.Name : "Unknown";
+                    return model;
+                }),
                 Total = messageTemplates.Count
             };
             return new JsonResult
@@ -138,13 +144,19 @@ namespace Nop.Admin.Controllers
             if (messageTemplate == null)
                 //No message template found with the specified id
                 return RedirectToAction("List");
-
-
+            
             var model = messageTemplate.ToModel();
             model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfAllowedTokens());
             //available email accounts
             foreach (var ea in _emailAccountService.GetAllEmailAccounts())
                 model.AvailableEmailAccounts.Add(ea.ToModel());
+            //stores
+            foreach (var store in _storeService.GetAllStores())
+                model.AvailableStores.Add(store.ToModel());
+            model.AvailableStores = _storeService
+                .GetAllStores()
+                .Select(s => s.ToModel())
+                .ToList();
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
@@ -187,6 +199,9 @@ namespace Nop.Admin.Controllers
             //available email accounts
             foreach (var ea in _emailAccountService.GetAllEmailAccounts())
                 model.AvailableEmailAccounts.Add(ea.ToModel());
+            //stores
+            foreach (var store in _storeService.GetAllStores())
+                model.AvailableStores.Add(store.ToModel());
             return View(model);
         }
         

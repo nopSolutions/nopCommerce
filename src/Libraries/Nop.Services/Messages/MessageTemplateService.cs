@@ -12,9 +12,9 @@ namespace Nop.Services.Messages
     {
         #region Constants
 
-        private const string MESSAGETEMPLATES_ALL_KEY = "Nop.messagetemplate.all";
+        private const string MESSAGETEMPLATES_ALL_KEY = "Nop.messagetemplate.all-{0}";
         private const string MESSAGETEMPLATES_BY_ID_KEY = "Nop.messagetemplate.id-{0}";
-        private const string MESSAGETEMPLATES_BY_NAME_KEY = "Nop.messagetemplate.name-{0}";
+        private const string MESSAGETEMPLATES_BY_NAME_KEY = "Nop.messagetemplate.name-{0}-{1}";
         private const string MESSAGETEMPLATES_PATTERN_KEY = "Nop.messagetemplate.";
 
         #endregion
@@ -121,17 +121,19 @@ namespace Nop.Services.Messages
         /// Gets a message template
         /// </summary>
         /// <param name="messageTemplateName">Message template name</param>
+        /// <param name="storeId">Store identifier</param>
         /// <returns>Message template</returns>
-        public virtual MessageTemplate GetMessageTemplateByName(string messageTemplateName)
+        public virtual MessageTemplate GetMessageTemplateByName(string messageTemplateName, int storeId)
         {
             if (string.IsNullOrWhiteSpace(messageTemplateName))
                 throw new ArgumentException("messageTemplateName");
 
-            string key = string.Format(MESSAGETEMPLATES_BY_NAME_KEY, messageTemplateName);
+            string key = string.Format(MESSAGETEMPLATES_BY_NAME_KEY, messageTemplateName, storeId);
             return _cacheManager.Get(key, () =>
             {
                 var query = from mt in _messageTemplateRepository.Table
-                                   where mt.Name == messageTemplateName
+                                   where mt.Name == messageTemplateName && 
+                                   mt.StoreId == storeId
                                    select mt;
                 return query.FirstOrDefault();
             });
@@ -141,14 +143,17 @@ namespace Nop.Services.Messages
         /// <summary>
         /// Gets all message templates
         /// </summary>
+        /// <param name="storeId">Store identifier; pass 0 to load all records</param>
         /// <returns>Message template list</returns>
-        public virtual IList<MessageTemplate> GetAllMessageTemplates()
+        public virtual IList<MessageTemplate> GetAllMessageTemplates(int storeId)
         {
-            return _cacheManager.Get(MESSAGETEMPLATES_ALL_KEY, () =>
+            string key = string.Format(MESSAGETEMPLATES_ALL_KEY, storeId);
+            return _cacheManager.Get(key, () =>
             {
-                var query = from mt in _messageTemplateRepository.Table
-                            orderby mt.Name                            
-                            select mt;
+                var query = _messageTemplateRepository.Table;
+                if (storeId > 0)
+                    query = query.Where(mt => mt.StoreId <= storeId);
+                query = query.OrderBy(mt => mt.Name).ThenBy(mt => mt.StoreId);
                 var messageTemplates = query.ToList();
                 return messageTemplates;
             });

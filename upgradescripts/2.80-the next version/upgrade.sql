@@ -236,6 +236,12 @@ set @resources='
   <LocaleResource Name="Plugins.Feed.Froogle.TaskRestart">
 	<Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.Store">
+	<Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.Store.Hint">
+	<Value>Choose a store this message template is assigned to.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1263,3 +1269,21 @@ GO
 
 DELETE FROM [ScheduleTask]
 WHERE [Type] like N'Nop.Plugin.Feed.Froogle.StaticFileGenerationTask, Nop.Plugin.Feed.Froogle'
+
+--Store mapping to message templates
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[MessageTemplate]') and NAME='StoreId')
+BEGIN
+	ALTER TABLE [MessageTemplate]
+	ADD [StoreId] bit NULL
+END
+GO
+
+DECLARE @DEFAULT_STORE_ID int
+SELECT @DEFAULT_STORE_ID = [Id] FROM [Store] ORDER BY [DisplayOrder]
+UPDATE [MessageTemplate]
+SET [StoreId] = @DEFAULT_STORE_ID
+WHERE [StoreId] IS NULL
+GO
+
+ALTER TABLE [MessageTemplate] ALTER COLUMN [StoreId] int NOT NULL
+GO

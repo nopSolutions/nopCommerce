@@ -6335,6 +6335,14 @@
                                             </LocaleResource>
                                         </Children>
                                     </LocaleResource>
+                                    <LocaleResource Name="Store">
+                                        <Value>Store</Value>
+                                        <Children>
+                                            <LocaleResource Name="Hint">
+                                                <Value>Choose a store this message template is assigned to.</Value>
+                                            </LocaleResource>
+                                        </Children>
+                                    </LocaleResource>
                                     <LocaleResource Name="BccEmailAddresses">
                                         <Value>BCC</Value>
                                         <Children>

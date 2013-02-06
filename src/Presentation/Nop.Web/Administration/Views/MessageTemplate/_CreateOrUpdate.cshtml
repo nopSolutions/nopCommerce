@@ -32,6 +32,15 @@
             @Html.ValidationMessageFor(model => model.IsActive)
         </td>
     </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.StoreId):
+        </td>
+        <td class="adminData">
+            @Html.DropDownListFor(model => model.StoreId, new SelectList(Model.AvailableStores, "Id", "Name"))
+            @Html.ValidationMessageFor(model => model.StoreId)
+        </td>
+    </tr>
 </table>
 @(Html.LocalizedEditor<MessageTemplateModel, MessageTemplateLocalizedModel>("messagetemplate-localized",
     @<table class="adminContent">
