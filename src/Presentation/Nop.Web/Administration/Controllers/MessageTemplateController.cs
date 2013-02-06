@@ -204,6 +204,24 @@ namespace Nop.Admin.Controllers
                 model.AvailableStores.Add(store.ToModel());
             return View(model);
         }
+
+        [HttpPost]
+        public ActionResult Delete(int id)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageTemplates))
+                return AccessDeniedView();
+
+            var messageTemplate = _messageTemplateService.GetMessageTemplateById(id);
+            if (messageTemplate == null)
+                //No message template found with the specified id
+                return RedirectToAction("List");
+
+            _messageTemplateService.DeleteMessageTemplate(messageTemplate);
+
+
+            SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Deleted"));
+            return RedirectToAction("List");
+        }
         
         #endregion
     }

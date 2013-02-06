@@ -6322,6 +6322,9 @@
                             <LocaleResource Name="BackToList">
                                 <Value>back to return message template list</Value>
                             </LocaleResource>
+                            <LocaleResource Name="Deleted">
+                              <Value>The message template has been deleted successfully.</Value>
+                            </LocaleResource>
                             <LocaleResource Name="EditMessageTemplateDetails">
                                 <Value>Edit message template details</Value>
                             </LocaleResource>

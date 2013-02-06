@@ -242,6 +242,9 @@ set @resources='
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.Store.Hint">
 	<Value>Choose a store this message template is assigned to.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Deleted">
+	<Value>The message template has been deleted successfully.</Value>
+  </LocaleResource>
 </Language>
 '
 
