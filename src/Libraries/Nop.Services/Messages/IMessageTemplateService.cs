@@ -47,5 +47,12 @@ namespace Nop.Services.Messages
         /// <param name="storeId">Store identifier; pass 0 to load all records</param>
         /// <returns>Message template list</returns>
         IList<MessageTemplate> GetAllMessageTemplates(int storeId);
+
+        /// <summary>
+        /// Create a copy of message template with all depended data
+        /// </summary>
+        /// <param name="messageTemplate">Message template</param>
+        /// <returns>Message template copy</returns>
+        MessageTemplate CopyMessageTemplate(MessageTemplate messageTemplate);
     }
 }

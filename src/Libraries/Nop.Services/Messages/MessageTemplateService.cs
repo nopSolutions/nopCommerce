@@ -5,6 +5,7 @@ using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Events;
+using Nop.Services.Localization;
 
 namespace Nop.Services.Messages
 {
@@ -22,6 +23,8 @@ namespace Nop.Services.Messages
         #region Fields
 
         private readonly IRepository<MessageTemplate> _messageTemplateRepository;
+        private readonly ILanguageService _languageService;
+        private readonly ILocalizedEntityService _localizedEntityService;
         private readonly IEventPublisher _eventPublisher;
         private readonly ICacheManager _cacheManager;
 
@@ -36,12 +39,16 @@ namespace Nop.Services.Messages
         /// <param name="messageTemplateRepository">Message template repository</param>
         /// <param name="eventPublisher">Event published</param>
         public MessageTemplateService(ICacheManager cacheManager,
+            ILanguageService languageService,
+            ILocalizedEntityService localizedEntityService,
             IRepository<MessageTemplate> messageTemplateRepository,
             IEventPublisher eventPublisher)
         {
-            _cacheManager = cacheManager;
-            _messageTemplateRepository = messageTemplateRepository;
-            _eventPublisher = eventPublisher;
+            this._cacheManager = cacheManager;
+            this._languageService = languageService;
+            this._localizedEntityService = localizedEntityService;
+            this._messageTemplateRepository = messageTemplateRepository;
+            this._eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -157,6 +164,54 @@ namespace Nop.Services.Messages
                 var messageTemplates = query.ToList();
                 return messageTemplates;
             });
+        }
+
+        /// <summary>
+        /// Create a copy of message template with all depended data
+        /// </summary>
+        /// <param name="messageTemplate">Message template</param>
+        /// <returns>Message template copy</returns>
+        public virtual MessageTemplate CopyMessageTemplate(MessageTemplate messageTemplate)
+        {
+            if (messageTemplate == null)
+                throw new ArgumentNullException("messageTemplate");
+            
+            var mtCopy = new MessageTemplate()
+                             {
+                                 StoreId = messageTemplate.StoreId,
+                                 Name = messageTemplate.Name,
+                                 BccEmailAddresses = messageTemplate.BccEmailAddresses,
+                                 Subject = messageTemplate.Subject,
+                                 Body = messageTemplate.Body,
+                                 IsActive = messageTemplate.IsActive,
+                                 EmailAccountId = messageTemplate.EmailAccountId,
+                             };
+
+            InsertMessageTemplate(mtCopy);
+
+            var languages = _languageService.GetAllLanguages(true);
+
+            //localization
+            foreach (var lang in languages)
+            {
+                var bccEmailAddresses = messageTemplate.GetLocalized(x => x.BccEmailAddresses, lang.Id, false, false);
+                if (!String.IsNullOrEmpty(bccEmailAddresses))
+                    _localizedEntityService.SaveLocalizedValue(mtCopy, x => x.BccEmailAddresses, bccEmailAddresses, lang.Id);
+
+                var subject = messageTemplate.GetLocalized(x => x.Subject, lang.Id, false, false);
+                if (!String.IsNullOrEmpty(subject))
+                    _localizedEntityService.SaveLocalizedValue(mtCopy, x => x.Subject, subject, lang.Id);
+
+                var body = messageTemplate.GetLocalized(x => x.Body, lang.Id, false, false);
+                if (!String.IsNullOrEmpty(body))
+                    _localizedEntityService.SaveLocalizedValue(mtCopy, x => x.Body, subject, lang.Id);
+
+                var emailAccountId = messageTemplate.GetLocalized(x => x.EmailAccountId, lang.Id, false, false);
+                if (emailAccountId > 0)
+                    _localizedEntityService.SaveLocalizedValue(mtCopy, x => x.EmailAccountId, emailAccountId, lang.Id);
+            }
+
+            return mtCopy;
         }
 
         #endregion
