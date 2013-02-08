@@ -2,20 +2,16 @@ using System;
 using System.Collections.Generic;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Seo;
+using Nop.Core.Domain.Stores;
 
 namespace Nop.Core.Domain.News
 {
     /// <summary>
     /// Represents a news item
     /// </summary>
-    public partial class NewsItem : BaseEntity, ISlugSupported
+    public partial class NewsItem : BaseEntity, ISlugSupported, IStoreMappingSupported
     {
         private ICollection<NewsComment> _newsComments;
-
-        /// <summary>
-        /// Gets or sets the store identifier
-        /// </summary>
-        public virtual int StoreId { get; set; }
 
         /// <summary>
         /// Gets or sets the language identifier
@@ -71,6 +67,11 @@ namespace Nop.Core.Domain.News
         /// </remarks>
         /// </summary>
         public virtual int NotApprovedCommentCount { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the entity is limited/restricted to certain stores
+        /// </summary>
+        public virtual bool LimitedToStores { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of entity creation

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using FluentValidation.Attributes;
+using Nop.Admin.Models.Stores;
 using Nop.Admin.Validators.News;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
@@ -14,7 +15,7 @@ namespace Nop.Admin.Models.News
     {
         public NewsItemModel()
         {
-            this.AvailableStores = new List<SelectListItem>();
+            this.AvailableStores = new List<StoreModel>();
         }
 
         [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.Language")]
@@ -24,11 +25,12 @@ namespace Nop.Admin.Models.News
         [AllowHtml]
         public string LanguageName { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.Store")]
-        public string StoreName { get; set; }
-        [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.Store")]
-        public int StoreId { get; set; }
-        public IList<SelectListItem> AvailableStores { get; set; }
+        //Store mapping
+        [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.LimitedToStores")]
+        public bool LimitedToStores { get; set; }
+        [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.AvailableStores")]
+        public List<StoreModel> AvailableStores { get; set; }
+        public int[] SelectedStoreIds { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.Title")]
         [AllowHtml]

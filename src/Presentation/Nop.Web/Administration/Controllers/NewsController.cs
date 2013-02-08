@@ -32,6 +32,7 @@ namespace Nop.Admin.Controllers
         private readonly IPermissionService _permissionService;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IStoreService _storeService;
+        private readonly IStoreMappingService _storeMappingService;
         
 		#endregion
 
@@ -40,7 +41,7 @@ namespace Nop.Admin.Controllers
         public NewsController(INewsService newsService, ILanguageService languageService,
             IDateTimeHelper dateTimeHelper, ICustomerContentService customerContentService,
             ILocalizationService localizationService, IPermissionService permissionService,
-            IUrlRecordService urlRecordService, IStoreService storeService)
+            IUrlRecordService urlRecordService, IStoreService storeService, IStoreMappingService storeMappingService)
         {
             this._newsService = newsService;
             this._languageService = languageService;
@@ -50,10 +51,62 @@ namespace Nop.Admin.Controllers
             this._permissionService = permissionService;
             this._urlRecordService = urlRecordService;
             this._storeService = storeService;
+            this._storeMappingService = storeMappingService;
 		}
 
 		#endregion 
-        
+
+        #region Utilities
+
+        [NonAction]
+        private void PrepareStoresMappingModel(NewsItemModel model, NewsItem newsItem, bool excludeProperties)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            model.AvailableStores = _storeService
+                .GetAllStores()
+                .Select(s => s.ToModel())
+                .ToList();
+            if (!excludeProperties)
+            {
+                if (newsItem != null)
+                {
+                    model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(newsItem);
+                }
+                else
+                {
+                    model.SelectedStoreIds = new int[0];
+                }
+            }
+        }
+
+        [NonAction]
+        protected void SaveStoreMappings(NewsItem newsItem, NewsItemModel model)
+        {
+            var existingStoreMappings = _storeMappingService.GetStoreMappings(newsItem);
+            var allStores = _storeService.GetAllStores();
+            foreach (var store in allStores)
+            {
+                if (model.SelectedStoreIds != null && model.SelectedStoreIds.Contains(store.Id))
+                {
+                    //new role
+                    if (existingStoreMappings.Where(sm => sm.StoreId == store.Id).Count() == 0)
+                        _storeMappingService.InsertStoreMapping(newsItem, store.Id);
+                }
+                else
+                {
+                    //removed role
+                    var storeMappingToDelete = existingStoreMappings.Where(sm => sm.StoreId == store.Id).FirstOrDefault();
+                    if (storeMappingToDelete != null)
+                        _storeMappingService.DeleteStoreMapping(storeMappingToDelete);
+                }
+            }
+        }
+
+
+        #endregion
+
         #region News items
 
         public ActionResult Index()
@@ -94,8 +147,6 @@ namespace Nop.Admin.Controllers
                     m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
                     m.LanguageName = x.Language.Name;
                     m.Comments = x.ApprovedCommentCount + x.NotApprovedCommentCount;
-                    var store = _storeService.GetStoreById(x.StoreId);
-                    m.StoreName = store != null ? store.Name : "Unknown";
                     return m;
                 }),
                 Total = news.TotalCount
@@ -113,9 +164,8 @@ namespace Nop.Admin.Controllers
 
             ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
             var model = new NewsItemModel();
-            //stores
-            foreach (var s in _storeService.GetAllStores())
-                model.AvailableStores.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString() });
+            //Stores
+            PrepareStoresMappingModel(model, null, false);
             //default values
             model.Published = true;
             model.AllowComments = true;
@@ -140,15 +190,17 @@ namespace Nop.Admin.Controllers
                 var seName = newsItem.ValidateSeName(model.SeName, model.Title, true);
                 _urlRecordService.SaveSlug(newsItem, seName, newsItem.LanguageId);
 
+                //Stores
+                SaveStoreMappings(newsItem, model);
+
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.News.NewsItems.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = newsItem.Id }) : RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
             ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
-            //stores
-            foreach (var s in _storeService.GetAllStores())
-                model.AvailableStores.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString() });
+            //Stores
+            PrepareStoresMappingModel(model, null, true);
             return View(model);
         }
 
@@ -166,9 +218,8 @@ namespace Nop.Admin.Controllers
             var model = newsItem.ToModel();
             model.StartDate = newsItem.StartDateUtc;
             model.EndDate = newsItem.EndDateUtc;
-            //stores
-            foreach (var s in _storeService.GetAllStores())
-                model.AvailableStores.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString() });
+            //Store
+            PrepareStoresMappingModel(model, newsItem, false);
             return View(model);
         }
 
@@ -194,15 +245,17 @@ namespace Nop.Admin.Controllers
                 var seName = newsItem.ValidateSeName(model.SeName, model.Title, true);
                 _urlRecordService.SaveSlug(newsItem, seName, newsItem.LanguageId);
 
+                //Stores
+                SaveStoreMappings(newsItem, model);
+
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.News.NewsItems.Updated"));
                 return continueEditing ? RedirectToAction("Edit", new { id = newsItem.Id }) : RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
             ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
-            //stores
-            foreach (var s in _storeService.GetAllStores())
-                model.AvailableStores.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString() });
+            //Store
+            PrepareStoresMappingModel(model, newsItem, true);
             return View(model);
         }
 

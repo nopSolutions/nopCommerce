@@ -6461,14 +6461,6 @@
                                                     </LocaleResource>
                                                 </Children>
                                             </LocaleResource>
-                                            <LocaleResource Name="Store">
-                                              <Value>Store</Value>
-                                              <Children>
-                                                <LocaleResource Name="Hint">
-                                                  <Value>Choose a store this news is assigned to.</Value>
-                                                </LocaleResource>
-                                              </Children>
-                                            </LocaleResource>
                                             <LocaleResource Name="Title">
                                                 <Value>Title</Value>
                                                 <Children>
@@ -6548,7 +6540,26 @@
                                             <LocaleResource Name="Comments">
                                                 <Value>View comments</Value>
                                             </LocaleResource>
+                                            <LocaleResource Name="LimitedToStores">
+                                              <Value>Limited to stores</Value>
+                                              <Children>
+                                                <LocaleResource Name="Hint">
+                                                  <Value>Determines whether the news is available only at certain stores.</Value>
+                                                </LocaleResource>
+                                              </Children>
+                                            </LocaleResource>
+                                            <LocaleResource Name="AvailableStores">
+                                              <Value>Stores</Value>
+                                              <Children>
+                                                <LocaleResource Name="Hint">
+                                                  <Value>Select stores for which the news will be shown.</Value>
+                                                </LocaleResource>
+                                              </Children>
+                                            </LocaleResource>
                                         </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="Info">
+                                      <Value>Info</Value>
                                     </LocaleResource>
                                     <LocaleResource Name="List">
                                       <Children>
@@ -6561,6 +6572,9 @@
                                           </Children>
                                         </LocaleResource>
                                       </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="Stores">
+                                      <Value>Stores</Value>
                                     </LocaleResource>
                                     <LocaleResource Name="Added">
                                         <Value>The new news item has been added successfully.</Value>

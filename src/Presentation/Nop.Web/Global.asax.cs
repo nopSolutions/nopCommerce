@@ -185,7 +185,7 @@ namespace Nop.Web
             if (webHelper.IsStaticResource(this.Request))
                 return;
 
-            //keep alive page requested (we ignore it to prevnt creating a guest customer records)
+            //keep alive page requested (we ignore it to prevent creating a guest customer records)
             string keepAliveUrl = string.Format("{0}keepalive", webHelper.GetStoreLocation());
             if (webHelper.GetThisPageUrl(false).StartsWith(keepAliveUrl, StringComparison.InvariantCultureIgnoreCase))
                 return;

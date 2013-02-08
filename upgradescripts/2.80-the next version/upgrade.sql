@@ -272,11 +272,23 @@ set @resources='
   <LocaleResource Name="Admin.ContentManagement.Topics.List.SearchStore.Hint">
 	<Value>Search by a specific store.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Fields.Store">
-	<Value>Store</Value>
+  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Info">
+	<Value>Info</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Fields.Store.Hint">
-	<Value>Choose a store this news is assigned to.</Value>
+  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Stores">
+	<Value>Stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Fields.LimitedToStores">
+	<Value>Limited to stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Fields.LimitedToStores.Hint">
+	<Value>Determines whether the news is available only at certain stores.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Fields.AvailableStores">
+	<Value>Stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Fields.AvailableStores.Hint">
+	<Value>Select stores for which the news will be shown.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.News.NewsItems.List.SearchStore">
 	<Value>Store</Value>
@@ -1388,20 +1400,18 @@ GO
 
 
 
---Store mapping to news
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[News]') and NAME='StoreId')
+--Store mapping for news
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[News]') and NAME='LimitedToStores')
 BEGIN
 	ALTER TABLE [News]
-	ADD [StoreId] bit NULL
+	ADD [LimitedToStores] bit NULL
 END
 GO
 
-DECLARE @DEFAULT_STORE_ID int
-SELECT @DEFAULT_STORE_ID = [Id] FROM [Store] ORDER BY [DisplayOrder]
 UPDATE [News]
-SET [StoreId] = @DEFAULT_STORE_ID
-WHERE [StoreId] IS NULL
+SET [LimitedToStores] = 0
+WHERE [LimitedToStores] IS NULL
 GO
 
-ALTER TABLE [News] ALTER COLUMN [StoreId] int NOT NULL
+ALTER TABLE [News] ALTER COLUMN [LimitedToStores] bit NOT NULL
 GO
