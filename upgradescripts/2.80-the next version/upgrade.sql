@@ -248,6 +248,9 @@ set @resources='
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.Store.AllStores">
 	<Value>All stores</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Copy">
+	<Value>Copy template</Value>
+  </LocaleResource>
 </Language>
 '
 
