@@ -17,7 +17,7 @@
     })
 }
 @helper TabGeneral()
-    {
+{
     <table class="adminContent">
         <tr>
             <td colspan="2">
@@ -27,8 +27,7 @@
                     <li>Specify default tax values in your Google Merchant Center account settings</li>
                     <li>Specify default shipping values in your Google Merchant Center account settings</li>
                     <li>In order to get more info about required fields look at the following article <a
-                        href="http://www.google.com/support/merchants/bin/answer.py?answer=188494" target="_blank">
-                        http://www.google.com/support/merchants/bin/answer.py?answer=188494</a> </li>
+                        href="http://www.google.com/support/merchants/bin/answer.py?answer=188494" target="_blank">http://www.google.com/support/merchants/bin/answer.py?answer=188494</a> </li>
                 </ul>
             </td>
         </tr>
@@ -64,22 +63,22 @@
                 @Html.ValidationMessageFor(model => model.DefaultGoogleCategory)
             </td>
         </tr>
-        @if (!String.IsNullOrEmpty(Model.StaticFilePath))
+        @if (Model.GeneratedFiles.Count > 0)
         {
             <tr>
                 <td class="adminTitle">
-                    @Html.NopLabelFor(m => m.StaticFilePath):
+                    @Html.NopLabelFor(m => m.GeneratedFiles):
                 </td>
                 <td class="adminData">
-                    <a href="@Model.StaticFilePath" target="_blank">@Model.StaticFilePath</a>
-                </td>
-            </tr>
-        }
-        @if (!String.IsNullOrEmpty(Model.SaveResult))
-        {
-            <tr>
-                <td colspan="2" width="100%" style="color: red">
-                    @Model.SaveResult
+                    @for (int i = 0; i <= Model.GeneratedFiles.Count - 1; i++)
+                    {
+                        var generatedFile = Model.GeneratedFiles[i];
+                        @generatedFile.StoreName <text>-</text> <a href="@generatedFile.FileUrl" target="_blank">@generatedFile.FileUrl</a> 
+                        if (i != Model.GeneratedFiles.Count - 1)
+                        {
+                        <br />
+                        }
+                    }
                 </td>
             </tr>
         }
@@ -105,12 +104,11 @@
     </table>        
 }
 @helper TabOverride()
-    { 
+{ 
     <table class="adminContent froogle">
         <tr>
-            <td colspan="2">
-                You can download the list of allowed Google product category attributes <a href="http://www.google.com/support/merchants/bin/answer.py?answer=160081"
-                    target="_blank">here</a>
+            <td colspan="2">You can download the list of allowed Google product category attributes <a href="http://www.google.com/support/merchants/bin/answer.py?answer=160081"
+                target="_blank">here</a>
             </td>
         </tr>
         <tr class="adminSeparator">
@@ -142,9 +140,9 @@
                         columns.Bound(x => x.Color).Visible(false);
                         columns.Bound(x => x.GoogleSize).Visible(false);
                     })
-                    .ClientRowTemplate(grid =>  "<div class='product-info'>" +
-                            "<#= FullProductVariantName #>" + 
-                            "</div>" + 
+                    .ClientRowTemplate(grid => "<div class='product-info'>" +
+                            "<#= FullProductVariantName #>" +
+                            "</div>" +
                             "<div class='google-info'>" +
                             "<dl>" +
                             string.Format("<dt>{0}:</dt><dd><#= GoogleCategory #></dd>", T("Plugins.Feed.Froogle.Products.GoogleCategory").Text) +
@@ -153,7 +151,7 @@
                             string.Format("<dt>{0}:</dt><dd><#= Color #></dd>", T("Plugins.Feed.Froogle.Products.Color").Text) +
                             string.Format("<dt>{0}:</dt><dd><#= GoogleSize #></dd>", T("Plugins.Feed.Froogle.Products.Size").Text) +
                             "</dl>" +
-                            "</div>" + 
+                            "</div>" +
                             "<div class='commands'>" + grid.EditButton(null) + "</div>" +
                             "</div>")
                     .Editable(editing => editing.Mode(GridEditMode.PopUp))

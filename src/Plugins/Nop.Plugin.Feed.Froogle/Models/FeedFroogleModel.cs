@@ -13,6 +13,7 @@ namespace Nop.Plugin.Feed.Froogle.Models
         {
             AvailableCurrencies = new List<SelectListItem>();
             AvailableGoogleCategories = new List<SelectListItem>();
+            GeneratedFiles = new List<GeneratedFileModel>();
         }
 
         [NopResourceDisplayName("Plugins.Feed.Froogle.ProductPictureSize")]
@@ -27,10 +28,15 @@ namespace Nop.Plugin.Feed.Froogle.Models
         public IList<SelectListItem> AvailableGoogleCategories { get; set; }
 
         public string GenerateFeedResult { get; set; }
-        public string SaveResult { get; set; }
 
         [NopResourceDisplayName("Plugins.Feed.Froogle.StaticFilePath")]
-        public string StaticFilePath { get; set; }
+        public IList<GeneratedFileModel> GeneratedFiles { get; set; }
+        
+        public class GeneratedFileModel : BaseNopModel
+        {
+            public string StoreName { get; set; }
+            public string FileUrl { get; set; }
+        }
 
         public class GoogleProductModel : BaseNopModel
         {

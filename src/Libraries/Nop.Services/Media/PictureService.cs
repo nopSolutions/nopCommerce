@@ -295,12 +295,12 @@ namespace Nop.Services.Media
         /// Get picture (thumb) URL 
         /// </summary>
         /// <param name="thumbFileName">Filename</param>
-        /// <param name="useSsl">Value indicating whether to get SSL protected picture URL; null to use the same value as the current page</param>
+        /// <param name="storeLocation">Store location URL; null to use determine the current store location automatically</param>
         /// <returns>Local picture thumb path</returns>
-        protected virtual string GetThumbUrl(string thumbFileName, bool? useSsl)
+        protected virtual string GetThumbUrl(string thumbFileName, string storeLocation = null)
         {
-            var storeLocation = useSsl.HasValue
-                                    ? _webHelper.GetStoreLocation(useSsl.Value)
+            storeLocation = !String.IsNullOrEmpty(storeLocation)
+                                    ? storeLocation
                                     : _webHelper.GetStoreLocation();
             var url = storeLocation + "content/images/thumbs/";
 
@@ -379,9 +379,11 @@ namespace Nop.Services.Media
         /// </summary>
         /// <param name="targetSize">The target picture size (longest side)</param>
         /// <param name="defaultPictureType">Default picture type</param>
-        /// <param name="useSsl">Value indicating whether to get SSL protected picture URL; null to use the same value as the current page</param>
+        /// <param name="storeLocation">Store location URL; null to use determine the current store location automatically</param>
         /// <returns>Picture URL</returns>
-        public virtual string GetDefaultPictureUrl(int targetSize = 0, PictureType defaultPictureType = PictureType.Entity, bool? useSsl = null)
+        public virtual string GetDefaultPictureUrl(int targetSize = 0, 
+            PictureType defaultPictureType = PictureType.Entity,
+            string storeLocation = null)
         {
             string defaultImageFileName;
             switch (defaultPictureType)
@@ -404,8 +406,8 @@ namespace Nop.Services.Media
             }
             if (targetSize == 0)
             {
-                string url = (useSsl.HasValue
-                                 ? _webHelper.GetStoreLocation(useSsl.Value)
+                string url = (!String.IsNullOrEmpty(storeLocation)
+                                 ? storeLocation
                                  : _webHelper.GetStoreLocation())
                                  + "content/images/" + defaultImageFileName;
                 return url;
@@ -448,7 +450,7 @@ namespace Nop.Services.Media
                         }
                     }
                 }
-                var url = GetThumbUrl(thumbFileName, useSsl);
+                var url = GetThumbUrl(thumbFileName, storeLocation);
                 return url;
             }
         }
@@ -459,14 +461,17 @@ namespace Nop.Services.Media
         /// <param name="pictureId">Picture identifier</param>
         /// <param name="targetSize">The target picture size (longest side)</param>
         /// <param name="showDefaultPicture">A value indicating whether the default picture is shown</param>
-        /// <param name="useSsl">Value indicating whether to get SSL protected picture URL; null to use the same value as the current page</param>
+        /// <param name="storeLocation">Store location URL; null to use determine the current store location automatically</param>
         /// <param name="defaultPictureType">Default picture type</param>
         /// <returns>Picture URL</returns>
-        public virtual string GetPictureUrl(int pictureId, int targetSize = 0, 
-            bool showDefaultPicture = true, bool? useSsl = null, PictureType defaultPictureType = PictureType.Entity)
+        public virtual string GetPictureUrl(int pictureId,
+            int targetSize = 0,
+            bool showDefaultPicture = true, 
+            string storeLocation = null, 
+            PictureType defaultPictureType = PictureType.Entity)
         {
             var picture = GetPictureById(pictureId);
-            return GetPictureUrl(picture, targetSize, showDefaultPicture, useSsl, defaultPictureType);
+            return GetPictureUrl(picture, targetSize, showDefaultPicture, storeLocation, defaultPictureType);
         }
         
         /// <summary>
@@ -475,11 +480,14 @@ namespace Nop.Services.Media
         /// <param name="picture">Picture instance</param>
         /// <param name="targetSize">The target picture size (longest side)</param>
         /// <param name="showDefaultPicture">A value indicating whether the default picture is shown</param>
-        /// <param name="useSsl">Value indicating whether to get SSL protected picture URL; null to use the same value as the current page</param>
+        /// <param name="storeLocation">Store location URL; null to use determine the current store location automatically</param>
         /// <param name="defaultPictureType">Default picture type</param>
         /// <returns>Picture URL</returns>
-        public virtual string GetPictureUrl(Picture picture, int targetSize = 0, 
-            bool showDefaultPicture = true, bool? useSsl = null, PictureType defaultPictureType = PictureType.Entity)
+        public virtual string GetPictureUrl(Picture picture, 
+            int targetSize = 0,
+            bool showDefaultPicture = true, 
+            string storeLocation = null, 
+            PictureType defaultPictureType = PictureType.Entity)
         {
             string url = string.Empty;
             byte[] pictureBinary = null;
@@ -489,7 +497,7 @@ namespace Nop.Services.Media
             {
                 if(showDefaultPicture)
                 {
-                    url = GetDefaultPictureUrl(targetSize, defaultPictureType, useSsl);
+                    url = GetDefaultPictureUrl(targetSize, defaultPictureType, storeLocation);
                 }
                 return url;
             }
@@ -576,7 +584,7 @@ namespace Nop.Services.Media
                     }
                 }
             }
-            url = GetThumbUrl(thumbFileName, useSsl);
+            url = GetThumbUrl(thumbFileName, storeLocation);
             return url;
         }
 

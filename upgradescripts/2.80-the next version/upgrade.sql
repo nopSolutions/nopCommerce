@@ -347,6 +347,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SSLSettings.Hint">
 	<Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Feed.Froogle.ClickHere">
+	<Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Feed.Froogle.SuccessResult">
+	<Value>Froogle feed has been successfully generated.</Value>
+  </LocaleResource>
 </Language>
 '
 

@@ -15,6 +15,7 @@ using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
+using Nop.Services.Stores;
 using Nop.Services.Tasks;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
@@ -31,13 +32,14 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
         private readonly IPluginFinder _pluginFinder;
         private readonly ILogger _logger;
         private readonly IWebHelper _webHelper;
+        private readonly IStoreService _storeService;
         private readonly FroogleSettings _froogleSettings;
         private readonly ISettingService _settingService;
 
         public FeedFroogleController(IGoogleService googleService, 
             IProductService productService, ICurrencyService currencyService,
             ILocalizationService localizationService, IPluginFinder pluginFinder, 
-            ILogger logger, IWebHelper webHelper,
+            ILogger logger, IWebHelper webHelper, IStoreService storeService,
             FroogleSettings froogleSettings, ISettingService settingService)
         {
             this._googleService = googleService;
@@ -47,6 +49,7 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
             this._pluginFinder = pluginFinder;
             this._logger = logger;
             this._webHelper = webHelper;
+            this._storeService = storeService;
             this._froogleSettings = froogleSettings;
             this._settingService = settingService;
         }
@@ -82,10 +85,18 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
                 });
             }
 
-            //file path
-            if (System.IO.File.Exists(System.IO.Path.Combine(HttpRuntime.AppDomainAppPath, "content\\files\\exportimport", _froogleSettings.StaticFileName)))
-                model.StaticFilePath = string.Format("{0}content/files/exportimport/{1}", _webHelper.GetStoreLocation(false), _froogleSettings.StaticFileName);
-
+            //file paths
+            foreach (var store in _storeService.GetAllStores())
+            {
+                var localFilePath = System.IO.Path.Combine(HttpRuntime.AppDomainAppPath, "content\\files\\exportimport", store.Id + "-" + _froogleSettings.StaticFileName);
+                if (System.IO.File.Exists(localFilePath))
+                    model.GeneratedFiles.Add(new FeedFroogleModel.GeneratedFileModel()
+                    {
+                        StoreName = store.Name,
+                        FileUrl = string.Format("{0}content/files/exportimport/{1}-{2}", _webHelper.GetStoreLocation(false), store.Id, _froogleSettings.StaticFileName)
+                    });
+            }
+            
             return View("Nop.Plugin.Feed.Froogle.Views.FeedFroogle.Configure", model);
         }
 
@@ -98,7 +109,6 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
                 return Configure();
             }
 
-            string saveResult = "";
             //save settings
             _froogleSettings.ProductPictureSize = model.ProductPictureSize;
             _froogleSettings.CurrencyId = model.CurrencyId;
@@ -106,34 +116,7 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
             _settingService.SaveSetting(_froogleSettings);
             
             //redisplay the form
-            foreach (var c in _currencyService.GetAllCurrencies(false))
-            {
-                model.AvailableCurrencies.Add(new SelectListItem()
-                {
-                    Text = c.Name,
-                    Value = c.Id.ToString()
-                });
-            }
-            model.AvailableGoogleCategories.Add(new SelectListItem()
-            {
-                Text = "Select a category",
-                Value = ""
-            });
-            foreach (var gc in _googleService.GetTaxonomyList())
-            {
-                model.AvailableGoogleCategories.Add(new SelectListItem()
-                {
-                    Text = gc,
-                    Value = gc
-                });
-            }
-            //file path
-            if (System.IO.File.Exists(System.IO.Path.Combine(HttpRuntime.AppDomainAppPath, "content\\files\\exportimport", _froogleSettings.StaticFileName)))
-                model.StaticFilePath = string.Format("{0}content/files/exportimport/{1}", _webHelper.GetStoreLocation(false), _froogleSettings.StaticFileName);
-
-            //set result text
-            model.SaveResult = saveResult;
-            return View("Nop.Plugin.Feed.Froogle.Views.FeedFroogle.Configure", model);
+            return Configure();
         }
 
         [HttpPost, ActionName("Configure")]
@@ -157,11 +140,10 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
                 if (plugin == null)
                     throw new Exception("Cannot load the plugin");
 
-                plugin.GenerateStaticFile();
+                foreach (var store in _storeService.GetAllStores())
+                    plugin.GenerateStaticFile(store);
 
-                string clickhereStr = string.Format("<a href=\"{0}content/files/exportimport/{1}\" target=\"_blank\">{2}</a>", _webHelper.GetStoreLocation(false), _froogleSettings.StaticFileName, _localizationService.GetResource("Plugins.Feed.Froogle.ClickHere"));
-                string result = string.Format(_localizationService.GetResource("Plugins.Feed.Froogle.SuccessResult"), clickhereStr);
-                model.GenerateFeedResult = result;
+                model.GenerateFeedResult = _localizationService.GetResource("Plugins.Feed.Froogle.SuccessResult");
             }
             catch (Exception exc)
             {
@@ -191,10 +173,18 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
                     Value = gc
                 });
             }
-            
-            //file path
-            if (System.IO.File.Exists(System.IO.Path.Combine(HttpRuntime.AppDomainAppPath, "content\\files\\exportimport", _froogleSettings.StaticFileName)))
-                model.StaticFilePath = string.Format("{0}content/files/exportimport/{1}", _webHelper.GetStoreLocation(false), _froogleSettings.StaticFileName);
+
+            //file paths
+            foreach (var store in _storeService.GetAllStores())
+            {
+                var localFilePath = System.IO.Path.Combine(HttpRuntime.AppDomainAppPath, "content\\files\\exportimport", store.Id + "-" + _froogleSettings.StaticFileName);
+                if (System.IO.File.Exists(localFilePath))
+                    model.GeneratedFiles.Add(new FeedFroogleModel.GeneratedFileModel()
+                    {
+                        StoreName = store.Name,
+                        FileUrl = string.Format("{0}content/files/exportimport/{1}-{2}", _webHelper.GetStoreLocation(false), store.Id, _froogleSettings.StaticFileName)
+                    });
+            }
 
             return View("Nop.Plugin.Feed.Froogle.Views.FeedFroogle.Configure", model);
         }
