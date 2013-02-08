@@ -4,6 +4,7 @@ using System.Linq;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Messages;
+using Nop.Core.Domain.Stores;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 
@@ -23,6 +24,7 @@ namespace Nop.Services.Messages
         #region Fields
 
         private readonly IRepository<MessageTemplate> _messageTemplateRepository;
+        private readonly IRepository<StoreMapping> _storeMappingRepository;
         private readonly ILanguageService _languageService;
         private readonly ILocalizedEntityService _localizedEntityService;
         private readonly IEventPublisher _eventPublisher;
@@ -41,12 +43,14 @@ namespace Nop.Services.Messages
         /// <param name="messageTemplateRepository">Message template repository</param>
         /// <param name="eventPublisher">Event published</param>
         public MessageTemplateService(ICacheManager cacheManager,
+            IRepository<StoreMapping> storeMappingRepository,
             ILanguageService languageService,
             ILocalizedEntityService localizedEntityService,
             IRepository<MessageTemplate> messageTemplateRepository,
             IEventPublisher eventPublisher)
         {
             this._cacheManager = cacheManager;
+            this._storeMappingRepository = storeMappingRepository;
             this._languageService = languageService;
             this._localizedEntityService = localizedEntityService;
             this._messageTemplateRepository = messageTemplateRepository;
@@ -140,10 +144,28 @@ namespace Nop.Services.Messages
             string key = string.Format(MESSAGETEMPLATES_BY_NAME_KEY, messageTemplateName, storeId);
             return _cacheManager.Get(key, () =>
             {
-                var query = from mt in _messageTemplateRepository.Table
-                                   where mt.Name == messageTemplateName && 
-                                   mt.StoreId == storeId
-                                   select mt;
+                var query = _messageTemplateRepository.Table;
+                query = query.Where(t => t.Name == messageTemplateName);
+                query = query.OrderBy(t => t.Id);
+
+                //Store mapping
+                if (storeId > 0)
+                {
+                    query = from t in query
+                            join sm in _storeMappingRepository.Table on t.Id equals sm.EntityId into t_sm
+                            from sm in t_sm.DefaultIfEmpty()
+                            where !t.LimitedToStores || (sm.EntityName == "MessageTemplate" && storeId == sm.StoreId)
+                            select t;
+
+                    //only distinct items (group by ID)
+                    query = from t in query
+                            group t by t.Id
+                            into tGroup
+                            orderby tGroup.Key
+                            select tGroup.FirstOrDefault();
+                    query = query.OrderBy(t => t.Id);
+                }
+
                 return query.FirstOrDefault();
             });
 
@@ -160,34 +182,27 @@ namespace Nop.Services.Messages
             return _cacheManager.Get(key, () =>
             {
                 var query = _messageTemplateRepository.Table;
-                query = query.OrderBy(mt => mt.Name).ThenBy(mt => mt.StoreId);
-                var allMessageTemplates = query.ToList();
-                if (storeId == 0)
-                    return allMessageTemplates;
+                query = query.OrderBy(t => t.Name);
 
-                //filter message templates
-                var messageTemplates = new List<MessageTemplate>();
-                var allSystemNames = allMessageTemplates
-                    .Select(x => x.Name)
-                    .Distinct(StringComparer.InvariantCultureIgnoreCase)
-                    .ToList();
-                foreach (var systemName in allSystemNames)
+                //Store mapping
+                if (storeId > 0)
                 {
-                    //find a message template assigned to the passed storeId
-                    var messageTemplate = allMessageTemplates
-                        .FirstOrDefault(x => x.Name.Equals(systemName, StringComparison.InvariantCultureIgnoreCase) &&
-                            x.StoreId == storeId);
+                    query = from t in query
+                            join sm in _storeMappingRepository.Table on t.Id equals sm.EntityId into t_sm
+                            from sm in t_sm.DefaultIfEmpty()
+                            where !t.LimitedToStores || (sm.EntityName == "MessageTemplate" && storeId == sm.StoreId)
+                            select t;
 
-                    //not found. let's find a message template assigned to all stores in this case
-                    if (messageTemplate == null)
-                        messageTemplate = allMessageTemplates
-                            .FirstOrDefault(x => x.Name.Equals(systemName, StringComparison.InvariantCultureIgnoreCase) &&
-                            x.StoreId == 0);
-
-                    if (messageTemplate != null)
-                        messageTemplates.Add(messageTemplate);
+                    //only distinct items (group by ID)
+                    query = from t in query
+                            group t by t.Id
+                            into tGroup
+                            orderby tGroup.Key
+                            select tGroup.FirstOrDefault();
+                    query = query.OrderBy(t => t.Name);
                 }
-                return messageTemplates;
+
+                return query.ToList();
             });
         }
 
@@ -203,13 +218,13 @@ namespace Nop.Services.Messages
             
             var mtCopy = new MessageTemplate()
                              {
-                                 StoreId = messageTemplate.StoreId,
                                  Name = messageTemplate.Name,
                                  BccEmailAddresses = messageTemplate.BccEmailAddresses,
                                  Subject = messageTemplate.Subject,
                                  Body = messageTemplate.Body,
                                  IsActive = messageTemplate.IsActive,
                                  EmailAccountId = messageTemplate.EmailAccountId,
+                                 LimitedToStores = messageTemplate.LimitedToStores,
                              };
 
             InsertMessageTemplate(mtCopy);

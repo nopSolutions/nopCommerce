@@ -16,7 +16,7 @@ namespace Nop.Admin.Models.Messages
         {
             Locales = new List<MessageTemplateLocalizedModel>();
             AvailableEmailAccounts = new List<EmailAccountModel>();
-            AvailableStores = new List<SelectListItem>();
+            AvailableStores = new List<StoreModel>();
         }
 
 
@@ -47,11 +47,14 @@ namespace Nop.Admin.Models.Messages
         public int EmailAccountId { get; set; }
         public IList<EmailAccountModel> AvailableEmailAccounts { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.MessageTemplates.Fields.Store")]
-        public string StoreName { get; set; }
-        [NopResourceDisplayName("Admin.ContentManagement.MessageTemplates.Fields.Store")]
-        public int StoreId { get; set; }
-        public IList<SelectListItem> AvailableStores { get; set; }
+        //Store mapping
+        [NopResourceDisplayName("Admin.ContentManagement.MessageTemplates.Fields.LimitedToStores")]
+        public bool LimitedToStores { get; set; }
+        [NopResourceDisplayName("Admin.ContentManagement.MessageTemplates.Fields.AvailableStores")]
+        public List<StoreModel> AvailableStores { get; set; }
+        public int[] SelectedStoreIds { get; set; }
+
+
 
         public IList<MessageTemplateLocalizedModel> Locales { get; set; }
     }

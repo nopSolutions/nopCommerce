@@ -236,17 +236,26 @@ set @resources='
   <LocaleResource Name="Plugins.Feed.Froogle.TaskRestart">
 	<Value></Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.Store">
-	<Value>Store</Value>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Info">
+	<Value>Info</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.Store.Hint">
-	<Value>Choose a store this message template is assigned to.</Value>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Stores">
+	<Value>Stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.LimitedToStores">
+	<Value>Limited to stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.LimitedToStores.Hint">
+	<Value>Determines whether the message template is available only at certain stores.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.AvailableStores">
+	<Value>Stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.AvailableStores.Hint">
+	<Value>Select stores for which the message template will be active.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Deleted">
 	<Value>The message template has been deleted successfully.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.Store.AllStores">
-	<Value>All stores</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Copy">
 	<Value>Copy template</Value>
@@ -1372,19 +1381,19 @@ DELETE FROM [ScheduleTask]
 WHERE [Type] like N'Nop.Plugin.Feed.Froogle.StaticFileGenerationTask, Nop.Plugin.Feed.Froogle'
 
 --Store mapping to message templates
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[MessageTemplate]') and NAME='StoreId')
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[MessageTemplate]') and NAME='LimitedToStores')
 BEGIN
 	ALTER TABLE [MessageTemplate]
-	ADD [StoreId] bit NULL
+	ADD [LimitedToStores] bit NULL
 END
 GO
 
 UPDATE [MessageTemplate]
-SET [StoreId] = 0
-WHERE [StoreId] IS NULL
+SET [LimitedToStores] = 0
+WHERE [LimitedToStores] IS NULL
 GO
 
-ALTER TABLE [MessageTemplate] ALTER COLUMN [StoreId] int NOT NULL
+ALTER TABLE [MessageTemplate] ALTER COLUMN [LimitedToStores] bit NOT NULL
 GO
 
 

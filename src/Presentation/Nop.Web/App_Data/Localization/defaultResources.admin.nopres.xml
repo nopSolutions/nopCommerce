@@ -6325,17 +6325,6 @@
                                             </LocaleResource>
                                         </Children>
                                     </LocaleResource>
-                                    <LocaleResource Name="Store">
-                                        <Value>Store</Value>
-                                        <Children>
-                                            <LocaleResource Name="AllStores">
-                                              <Value>All stores</Value>
-                                            </LocaleResource>
-                                            <LocaleResource Name="Hint">
-                                                <Value>Choose a store this message template is assigned to.</Value>
-                                            </LocaleResource>
-                                        </Children>
-                                    </LocaleResource>
                                     <LocaleResource Name="BccEmailAddresses">
                                         <Value>BCC</Value>
                                         <Children>
@@ -6390,19 +6379,41 @@
                                             </LocaleResource>
                                         </Children>
                                     </LocaleResource>
-                                </Children>
-                            </LocaleResource>
-                            <LocaleResource Name="List">
-                                <Children>
-                                    <LocaleResource Name="SearchStore">
-                                      <Value>Store</Value>
+                                    <LocaleResource Name="LimitedToStores">
+                                      <Value>Limited to stores</Value>
                                       <Children>
                                         <LocaleResource Name="Hint">
-                                          <Value>Search by a specific store.</Value>
+                                          <Value>Determines whether the message template is available only at certain stores.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="AvailableStores">
+                                      <Value>Stores</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Select stores for which the message template will be shown.</Value>
                                         </LocaleResource>
                                       </Children>
                                     </LocaleResource>
                                 </Children>
+                            </LocaleResource>
+                            <LocaleResource Name="Info">
+                              <Value>Info</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="List">
+                              <Children>
+                                <LocaleResource Name="SearchStore">
+                                  <Value>Store</Value>
+                                  <Children>
+                                    <LocaleResource Name="Hint">
+                                      <Value>Search by a specific store.</Value>
+                                    </LocaleResource>
+                                  </Children>
+                                </LocaleResource>
+                              </Children>
+                            </LocaleResource>
+                            <LocaleResource Name="Stores">
+                              <Value>Stores</Value>
                             </LocaleResource>
                             <LocaleResource Name="Updated">
                                 <Value>The message template has been updated successfully.</Value>

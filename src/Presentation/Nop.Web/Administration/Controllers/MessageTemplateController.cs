@@ -26,6 +26,7 @@ namespace Nop.Admin.Controllers
         private readonly IMessageTokenProvider _messageTokenProvider;
         private readonly IPermissionService _permissionService;
         private readonly IStoreService _storeService;
+        private readonly IStoreMappingService _storeMappingService;
         private readonly EmailAccountSettings _emailAccountSettings;
 
         #endregion Fields
@@ -37,6 +38,7 @@ namespace Nop.Admin.Controllers
             ILocalizedEntityService localizedEntityService,
             ILocalizationService localizationService, IMessageTokenProvider messageTokenProvider, 
             IPermissionService permissionService, IStoreService storeService,
+            IStoreMappingService storeMappingService,
             EmailAccountSettings emailAccountSettings)
         {
             this._messageTemplateService = messageTemplateService;
@@ -47,6 +49,7 @@ namespace Nop.Admin.Controllers
             this._messageTokenProvider = messageTokenProvider;
             this._permissionService = permissionService;
             this._storeService = storeService;
+            this._storeMappingService = storeMappingService;
             this._emailAccountSettings = emailAccountSettings;
         }
 
@@ -94,7 +97,54 @@ namespace Nop.Admin.Controllers
                                                            localized.LanguageId);
             }
         }
-        
+
+
+        [NonAction]
+        private void PrepareStoresMappingModel(MessageTemplateModel model, MessageTemplate messageTemplate, bool excludeProperties)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            model.AvailableStores = _storeService
+                .GetAllStores()
+                .Select(s => s.ToModel())
+                .ToList();
+            if (!excludeProperties)
+            {
+                if (messageTemplate != null)
+                {
+                    model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(messageTemplate);
+                }
+                else
+                {
+                    model.SelectedStoreIds = new int[0];
+                }
+            }
+        }
+
+        [NonAction]
+        protected void SaveStoreMappings(MessageTemplate messageTemplate, MessageTemplateModel model)
+        {
+            var existingStoreMappings = _storeMappingService.GetStoreMappings(messageTemplate);
+            var allStores = _storeService.GetAllStores();
+            foreach (var store in allStores)
+            {
+                if (model.SelectedStoreIds != null && model.SelectedStoreIds.Contains(store.Id))
+                {
+                    //new role
+                    if (existingStoreMappings.Where(sm => sm.StoreId == store.Id).Count() == 0)
+                        _storeMappingService.InsertStoreMapping(messageTemplate, store.Id);
+                }
+                else
+                {
+                    //removed role
+                    var storeMappingToDelete = existingStoreMappings.Where(sm => sm.StoreId == store.Id).FirstOrDefault();
+                    if (storeMappingToDelete != null)
+                        _storeMappingService.DeleteStoreMapping(storeMappingToDelete);
+                }
+            }
+        }
+
         #endregion
         
         #region Methods
@@ -127,15 +177,7 @@ namespace Nop.Admin.Controllers
             var messageTemplates = _messageTemplateService.GetAllMessageTemplates(model.SearchStoreId);
             var gridModel = new GridModel<MessageTemplateModel>
             {
-                Data = messageTemplates.Select(x =>
-                {
-                    var mtModel = x.ToModel();
-                    var store = _storeService.GetStoreById(x.StoreId);
-                    mtModel.StoreName = x.StoreId == 0 ?
-                        _localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Fields.Store.AllStores")
-                        : (store != null ? store.Name : "Unknown");
-                    return mtModel;
-                }),
+                Data = messageTemplates.Select(x => x.ToModel()),
                 Total = messageTemplates.Count
             };
             return new JsonResult
@@ -159,10 +201,8 @@ namespace Nop.Admin.Controllers
             //available email accounts
             foreach (var ea in _emailAccountService.GetAllEmailAccounts())
                 model.AvailableEmailAccounts.Add(ea.ToModel());
-            //stores
-            model.AvailableStores.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Fields.Store.AllStores"), Value = "0" });
-            foreach (var s in _storeService.GetAllStores())
-                model.AvailableStores.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString() });
+            //Store
+            PrepareStoresMappingModel(model, messageTemplate, false);
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
@@ -193,6 +233,8 @@ namespace Nop.Admin.Controllers
             {
                 messageTemplate = model.ToEntity(messageTemplate);
                 _messageTemplateService.UpdateMessageTemplate(messageTemplate);
+                //Stores
+                SaveStoreMappings(messageTemplate, model);
                 //locales
                 UpdateLocales(messageTemplate, model);
 
@@ -206,10 +248,8 @@ namespace Nop.Admin.Controllers
             //available email accounts
             foreach (var ea in _emailAccountService.GetAllEmailAccounts())
                 model.AvailableEmailAccounts.Add(ea.ToModel());
-            //stores
-            model.AvailableStores.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Fields.Store.AllStores"), Value = "0" });
-            foreach (var s in _storeService.GetAllStores())
-                model.AvailableStores.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString() });
+            //Store
+            PrepareStoresMappingModel(model, messageTemplate, true);
             return View(model);
         }
 
