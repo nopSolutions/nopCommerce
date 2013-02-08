@@ -749,14 +749,6 @@ namespace Nop.Admin.Controllers
             model.SecuritySettings.ReCaptchaPublicKey = _captchaSettings.ReCaptchaPublicKey;
             model.SecuritySettings.ReCaptchaPrivateKey = _captchaSettings.ReCaptchaPrivateKey;
 
-            bool useSsl = !String.IsNullOrEmpty(ConfigurationManager.AppSettings["UseSSL"]) &&
-                          Convert.ToBoolean(ConfigurationManager.AppSettings["UseSSL"]);
-            string sharedSslUrl = ConfigurationManager.AppSettings["SharedSSLUrl"];
-            string nonSharedSslUrl = ConfigurationManager.AppSettings["NonSharedSSLUrl"];
-            model.SecuritySettings.UseSsl = useSsl;
-            model.SecuritySettings.SharedSslUrl = sharedSslUrl;
-            model.SecuritySettings.NonSharedSslUrl = nonSharedSslUrl;
-
             //PDF settings
             model.PdfSettings.Enabled = _pdfSettings.Enabled;
             model.PdfSettings.LetterPageSizeEnabled = _pdfSettings.LetterPageSizeEnabled;
@@ -837,55 +829,6 @@ namespace Nop.Admin.Controllers
                 //captcha is enabled but the keys are not entered
                 ErrorNotification("Captcha is enabled but the appropriate keys are not entered");
             }
-            //save SSL settings
-            try
-            {
-                if (AppDomain.CurrentDomain.IsFullyTrusted)
-                {
-                    //full trust
-                    bool useSsl = !String.IsNullOrEmpty(ConfigurationManager.AppSettings["UseSSL"]) &&
-                                  Convert.ToBoolean(ConfigurationManager.AppSettings["UseSSL"]);
-                    string sharedSslUrl = ConfigurationManager.AppSettings["SharedSSLUrl"];
-                    string nonSharedSslUrl = ConfigurationManager.AppSettings["NonSharedSSLUrl"];
-                    //use this field to prevent web.config saving if not changes are done (can cause application restart)
-                    bool sslChanged = false;
-
-                    var config = WebConfigurationManager.OpenWebConfiguration("~");
-                    if (useSsl != model.SecuritySettings.UseSsl)
-                    {
-                        config.AppSettings.Settings["UseSSL"].Value = model.SecuritySettings.UseSsl.ToString();
-                        sslChanged = true;
-                    }
-                    if (model.SecuritySettings.SharedSslUrl == null)
-                        model.SecuritySettings.SharedSslUrl = "";
-                    if (sharedSslUrl != model.SecuritySettings.SharedSslUrl)
-                    {
-                        config.AppSettings.Settings["SharedSSLUrl"].Value = model.SecuritySettings.SharedSslUrl;
-                        sslChanged = true;
-                    }
-
-                    if (model.SecuritySettings.NonSharedSslUrl == null)
-                        model.SecuritySettings.NonSharedSslUrl = "";
-                    if (nonSharedSslUrl != model.SecuritySettings.NonSharedSslUrl)
-                    {
-                        config.AppSettings.Settings["NonSharedSSLUrl"].Value = model.SecuritySettings.NonSharedSslUrl;
-                        sslChanged = true;
-                    }
-                    if (sslChanged)
-                        config.Save(ConfigurationSaveMode.Modified);
-                }
-                else
-                {
-                    //medium trust
-                    ErrorNotification("SSL settings cannot be saved in medium trust. Manually update web.config file.");
-
-                }
-            }
-            catch (Exception exc)
-            {
-                ErrorNotification("SSL settings cannot be saved in medium trust. Manually update web.config file. " + exc.Message);
-            }
-
 
             //PDF settings
             _pdfSettings.Enabled = model.PdfSettings.Enabled;

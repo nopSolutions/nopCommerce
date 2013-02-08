@@ -284,6 +284,42 @@ set @resources='
   <LocaleResource Name="Admin.ContentManagement.News.NewsItems.List.SearchStore.Hint">
 	<Value>Search by a specific store.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.SslEnabled">
+	<Value>SSL enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.SslEnabled.Hint">
+	<Value>Check if your store will be SSL secured.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.SecureUrl">
+	<Value>Secure URL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.SecureUrl.Hint">
+	<Value>The secure URL of your store e.g. https://www.yourstore.com/ or http://sharedssl.yourstore.com/. Leave it empty if you want nopCommerce to detect secure URL automatically.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.UseSSL">
+	<Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.UseSSL.Hint">
+	<Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SharedSSLUrl">
+	<Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SharedSSLUrl.Hint">
+	<Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.NonSharedSSLUrl">
+	<Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.NonSharedSSLUrl.Hint">
+	<Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SSLSettings">
+	<Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SSLSettings.Hint">
+	<Value></Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -415,6 +451,8 @@ BEGIN
 		[Id] [int] IDENTITY(1,1) NOT NULL,
 		[Name] nvarchar(400) NOT NULL,
 		[Url] nvarchar(400) NOT NULL,
+		[SslEnabled] bit NOT NULL,
+		[SecureUrl] nvarchar(400) NULL,
 		[Hosts] nvarchar(1000) NULL,
 		[DisplayOrder] int NOT NULL,
 	PRIMARY KEY CLUSTERED 
@@ -425,13 +463,16 @@ BEGIN
 
 	DECLARE @DEFAULT_STORE_NAME nvarchar(400)
 	SELECT @DEFAULT_STORE_NAME = [Value] FROM [Setting] WHERE [name] = N'storeinformationsettings.storename' 
-
+	if (@DEFAULT_STORE_NAME is null)
+		SET @DEFAULT_STORE_NAME = N'Your store name'
 	DECLARE @DEFAULT_STORE_URL nvarchar(400)
 	SELECT @DEFAULT_STORE_URL= [Value] FROM [Setting] WHERE [name] = N'storeinformationsettings.storeurl' 
+	if (@DEFAULT_STORE_URL is null)
+		SET @DEFAULT_STORE_URL = N'http://www.yourstore.com/'
 
 	--create the first store
-	INSERT INTO [Store] ([Name], [Url], [Hosts], [DisplayOrder])
-	VALUES (@DEFAULT_STORE_NAME, @DEFAULT_STORE_URL, N'yourstore.com,www.yourstore.com', 1)
+	INSERT INTO [Store] ([Name], [Url], [SslEnabled], [Hosts], [DisplayOrder])
+	VALUES (@DEFAULT_STORE_NAME, @DEFAULT_STORE_URL, 0, N'yourstore.com,www.yourstore.com', 1)
 
 	DELETE FROM [Setting] WHERE [name] = N'storeinformationsettings.storename' 
 	DELETE FROM [Setting] WHERE [name] = N'storeinformationsettings.storeurl' 

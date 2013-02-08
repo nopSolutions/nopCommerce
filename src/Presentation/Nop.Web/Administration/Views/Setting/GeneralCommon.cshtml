@@ -25,12 +25,10 @@
             $("#@Html.FieldIdFor(model => model.StoreInformationSettings.StoreClosed)").click(toggleStoreClosed);
             $("#@Html.FieldIdFor(model => model.StoreInformationSettings.MobileDevicesSupported)").click(toggleMobileDevicesSupported);
             $("#@Html.FieldIdFor(model => model.SecuritySettings.CaptchaEnabled)").click(toggleReCaptcha);
-            $("#@Html.FieldIdFor(model => model.SecuritySettings.UseSsl)").click(toggleSSL);
 
             toggleStoreClosed();
             toggleMobileDevicesSupported();
             toggleReCaptcha();
-            toggleSSL();
         });
 
         function toggleStoreClosed() {
@@ -75,17 +73,6 @@
                 $('#ssCaptchaShowOnProductReviewPagepnl').hide();
                 $('#ssReCaptchaPublicKeypnl').hide();
                 $('#ssReCaptchaPrivateKeypnl').hide();
-            }
-        }
-
-        function toggleSSL() {
-            if ($('#@Html.FieldIdFor(model => model.SecuritySettings.UseSsl)').is(':checked')) {
-                $('#ssSharedSslUrlpnl').show();
-                $('#ssNonSharedSslUrlpnl').show();
-            }
-            else {
-                $('#ssSharedSslUrlpnl').hide();
-                $('#ssNonSharedSslUrlpnl').hide();
             }
         }
     </script>
@@ -413,42 +400,6 @@
             <td class="adminData">
                 @Html.EditorFor(model => model.SecuritySettings.ReCaptchaPrivateKey)
                 @Html.ValidationMessageFor(model => model.SecuritySettings.ReCaptchaPrivateKey)
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <hr />
-                <br />
-                <strong>@T("Admin.Configuration.Settings.GeneralCommon.SSLSettings")</strong>
-                <br />
-                <em>@T("Admin.Configuration.Settings.GeneralCommon.SSLSettings.Hint")</em>
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SecuritySettings.UseSsl):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SecuritySettings.UseSsl)
-                @Html.ValidationMessageFor(model => model.SecuritySettings.UseSsl)
-            </td>
-        </tr>
-        <tr id="ssSharedSslUrlpnl">
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SecuritySettings.SharedSslUrl):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SecuritySettings.SharedSslUrl)
-                @Html.ValidationMessageFor(model => model.SecuritySettings.SharedSslUrl)
-            </td>
-        </tr>
-        <tr id="ssNonSharedSslUrlpnl">
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SecuritySettings.NonSharedSslUrl):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SecuritySettings.NonSharedSslUrl)
-                @Html.ValidationMessageFor(model => model.SecuritySettings.NonSharedSslUrl)
             </td>
         </tr>
     </table>

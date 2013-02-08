@@ -71,7 +71,7 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageStores))
                 return AccessDeniedView();
-
+            
             if (ModelState.IsValid)
             {
                 var store = model.ToEntity();
@@ -113,7 +113,7 @@ namespace Nop.Admin.Controllers
             if (store == null)
                 //No store found with the specified id
                 return RedirectToAction("List");
-
+            
             if (ModelState.IsValid)
             {
                 store = model.ToEntity(store);

@@ -17,6 +17,13 @@ namespace Nop.Admin.Models.Stores
         [AllowHtml]
         public string Url { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Stores.Fields.SslEnabled")]
+        public virtual bool SslEnabled { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Stores.Fields.SecureUrl")]
+        [AllowHtml]
+        public virtual string SecureUrl { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Stores.Fields.Hosts")]
         [AllowHtml]
         public string Hosts { get; set; }

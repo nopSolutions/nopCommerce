@@ -4995,38 +4995,6 @@
                                             </LocaleResource>
                                         </Children>
                                     </LocaleResource>
-                                    <LocaleResource Name="SSLSettings">
-                                        <Value>SSL settings</Value>
-                                        <Children>
-                                            <LocaleResource Name="Hint">
-                                                <Value>SSL settings can also be changed in web.config file.</Value>
-                                            </LocaleResource>
-                                        </Children>
-                                    </LocaleResource>
-                                    <LocaleResource Name="UseSSL">
-                                        <Value>Use SSL</Value>
-                                        <Children>
-                                            <LocaleResource Name="Hint">
-                                                <Value>Click if your site is secured with SSL.  Don't tick if SSL certificate is not installed.</Value>
-                                            </LocaleResource>
-                                        </Children>
-                                    </LocaleResource>
-                                    <LocaleResource Name="SharedSSLUrl">
-                                        <Value>Shared SSL URL</Value>
-                                        <Children>
-                                            <LocaleResource Name="Hint">
-                                                <Value>Enter your shared SSL URL (used when you have shared SSL certificate installed). For example, https://secure123.yourHosting.com/.</Value>
-                                            </LocaleResource>
-                                        </Children>
-                                    </LocaleResource>
-                                    <LocaleResource Name="NonSharedSSLUrl">
-                                        <Value>Non-secured URL</Value>
-                                        <Children>
-                                            <LocaleResource Name="Hint">
-                                                <Value>Enter your non-secured URL (used when you have shared SSL certificate installed). Actually it is your site URL. For example, http://www.example.com/.</Value>
-                                            </LocaleResource>
-                                        </Children>
-                                    </LocaleResource>
                                     <LocaleResource Name="FullTextSettings">
                                         <Value>Full-Text settings</Value>
                                         <Children>
@@ -5961,6 +5929,22 @@
                                               <Value>Please provide a store URL.</Value>
                                             </LocaleResource>
                                         </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="SslEnabled">
+                                      <Value>SSL enabled</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Check if your store will be SSL secured.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="SecureUrl">
+                                      <Value>Secure URL</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>The secure URL of your store e.g. https://www.yourstore.com/ or http://sharedssl.yourstore.com/. Leave it empty if you want nopCommerce to detect secure URL automatically.</Value>
+                                        </LocaleResource>
+                                      </Children>
                                     </LocaleResource>
                                     <LocaleResource Name="Hosts">
                                     <Value>HOST values</Value>

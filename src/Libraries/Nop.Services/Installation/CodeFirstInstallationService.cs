@@ -285,6 +285,7 @@ namespace Nop.Services.Installation
                 {
                     Name = "Your store name",
                     Url = "http://www.yourStore.com/",
+                    SslEnabled = false,
                     Hosts = "yourstore.com,www.yourstore.com",
                     DisplayOrder = 1,
                 },

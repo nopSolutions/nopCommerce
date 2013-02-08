@@ -17,6 +17,16 @@ namespace Nop.Core.Domain.Stores
         public virtual string Url { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether SSL is enabled
+        /// </summary>
+        public virtual bool SslEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets the store secure URL (HTTPS)
+        /// </summary>
+        public virtual string SecureUrl { get; set; }
+
+        /// <summary>
         /// Gets or sets the comma separated list of possible HTTP_HOST values
         /// </summary>
         public virtual string Hosts { get; set; }
