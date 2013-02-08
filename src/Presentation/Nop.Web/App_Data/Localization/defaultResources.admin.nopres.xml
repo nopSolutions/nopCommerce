@@ -6408,6 +6408,18 @@
                                     </LocaleResource>
                                 </Children>
                             </LocaleResource>
+                            <LocaleResource Name="List">
+                                <Children>
+                                    <LocaleResource Name="SearchStore">
+                                      <Value>Store</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Search by a specific store.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                </Children>
+                            </LocaleResource>
                             <LocaleResource Name="Updated">
                                 <Value>The message template has been updated successfully.</Value>
                             </LocaleResource>

@@ -251,6 +251,12 @@ set @resources='
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Copy">
 	<Value>Copy template</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.List.SearchStore">
+	<Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.List.SearchStore.Hint">
+	<Value>Search by a specific store.</Value>
+  </LocaleResource>
 </Language>
 '
 

@@ -1,4 +1,5 @@
-﻿@using Telerik.Web.Mvc.UI
+﻿@model MessageTemplateListModel
+@using Telerik.Web.Mvc.UI
 @{
     //page title
     ViewBag.Title = T("Admin.ContentManagement.MessageTemplates").Text;
@@ -11,32 +12,72 @@
     <div class="options">
     </div>
 </div>
+<table width="100%">
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.SearchStoreId):
+        </td>
+        <td class="adminData">
+            @Html.DropDownList("SearchStoreId", Model.AvailableStores)
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <input type="button" id="search-templates" class="t-button" value="@T("Admin.Common.Search")" />
+        </td>
+    </tr>
+</table>
+<p>
+</p>
 <table class="adminContent">
     <tr>
         <td>
             @(Html.Telerik().Grid<MessageTemplateModel>()
-                    .Name("templates-grid")
-                    .Columns(columns =>
-                    {
-                        columns.Bound(x => x.Name);
-                        columns.Bound(x => x.StoreName);
-                        columns.Bound(x => x.Subject);
-                        columns.Bound(x => x.IsActive)
-                            .Template(
-                                @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.IsActive.ToString().ToLowerInvariant() + ".gif")" />
-                            )
-                            .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= IsActive #>.gif' />")
-                            .Centered()
-                            .Width(100);
-                        columns.Bound(x => x.Id)
-                            .Width(50)
-                            .Centered()
-                            .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
-                            .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
-                            .Title(T("Admin.Common.Edit").Text);
-                    })
-                    .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "MessageTemplate"))
-                    .EnableCustomBinding(true))
+                  .Name("templates-grid")
+                  .Columns(columns =>
+                               {
+                                   columns.Bound(x => x.Name);
+                                   columns.Bound(x => x.StoreName);
+                                   columns.Bound(x => x.Subject);
+                                   columns.Bound(x => x.IsActive)
+                                          .Template(
+                                              @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.IsActive.ToString().ToLowerInvariant() + ".gif")" />
+                                       )
+                                          .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= IsActive #>.gif' />")
+                                          .Centered()
+                                          .Width(100);
+                                   columns.Bound(x => x.Id)
+                                          .Width(50)
+                                          .Centered()
+                                          .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
+                                          .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
+                                          .Title(T("Admin.Common.Edit").Text);
+                               })
+                  .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "MessageTemplate"))
+                  .ClientEvents(events => events.OnDataBinding("onDataBinding"))
+                  .EnableCustomBinding(true))
         </td>
     </tr>
 </table>
+
+    <script type="text/javascript">
+        
+        $(document).ready(function () {
+            //search button
+            $('#search-templates').click(function () {
+                //search
+                var grid = $('#templates-grid').data('tGrid');
+                //no paging support in this grid
+                //grid.currentPage = 1; //new search. Set page size to 1
+                grid.ajaxRequest();
+                return false;
+            });
+        });
+
+        function onDataBinding(e) {
+            var searchModel = {
+                SearchStoreId: $('#SearchStoreId').val()
+            };
+            e.data = searchModel;
+        }
+    </script>  

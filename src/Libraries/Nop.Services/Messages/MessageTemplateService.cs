@@ -159,7 +159,7 @@ namespace Nop.Services.Messages
             {
                 var query = _messageTemplateRepository.Table;
                 if (storeId > 0)
-                    query = query.Where(mt => mt.StoreId <= storeId);
+                    query = query.Where(mt => mt.StoreId == storeId);
                 query = query.OrderBy(mt => mt.Name).ThenBy(mt => mt.StoreId);
                 var messageTemplates = query.ToList();
                 return messageTemplates;

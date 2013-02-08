@@ -109,26 +109,32 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageTemplates))
                 return AccessDeniedView();
 
-            return View();
+            var model = new MessageTemplateListModel();
+            //stores
+            model.AvailableStores.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var s in _storeService.GetAllStores())
+                model.AvailableStores.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString() });
+            
+            return View(model);
         }
 
         [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult List(GridCommand command)
+        public ActionResult List(GridCommand command, MessageTemplateListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageTemplates))
                 return AccessDeniedView();
 
-            var messageTemplates = _messageTemplateService.GetAllMessageTemplates(0);
+            var messageTemplates = _messageTemplateService.GetAllMessageTemplates(model.SearchStoreId);
             var gridModel = new GridModel<MessageTemplateModel>
             {
                 Data = messageTemplates.Select(x =>
                 {
-                    var model = x.ToModel();
+                    var mtModel = x.ToModel();
                     var store = _storeService.GetStoreById(x.StoreId);
-                    model.StoreName = x.StoreId == 0 ?
+                    mtModel.StoreName = x.StoreId == 0 ?
                         _localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Fields.Store.AllStores")
                         : (store != null ? store.Name : "Unknown");
-                    return model;
+                    return mtModel;
                 }),
                 Total = messageTemplates.Count
             };
