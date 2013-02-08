@@ -120,7 +120,8 @@ namespace Nop.Web.Controllers
 
             var pageSize = _forumSettings.PrivateMessagesPageSize;
 
-            var list = _forumService.GetAllPrivateMessages(0, _workContext.CurrentCustomer.Id, null, null, false, string.Empty, page, pageSize);
+            var list = _forumService.GetAllPrivateMessages(_workContext.CurrentStore.Id,
+                0, _workContext.CurrentCustomer.Id, null, null, false, string.Empty, page, pageSize);
 
             var inbox = new List<PrivateMessageModel>();
 
@@ -173,7 +174,8 @@ namespace Nop.Web.Controllers
 
             var pageSize = _forumSettings.PrivateMessagesPageSize;
 
-            var list = _forumService.GetAllPrivateMessages(_workContext.CurrentCustomer.Id, 0, null, false, null, string.Empty, page, pageSize);
+            var list = _forumService.GetAllPrivateMessages(_workContext.CurrentStore.Id, 
+                _workContext.CurrentCustomer.Id, 0, null, false, null, string.Empty, page, pageSize);
 
             var sentItems = new List<PrivateMessageModel>();
 
@@ -408,6 +410,7 @@ namespace Nop.Web.Controllers
 
                     var privateMessage = new PrivateMessage
                     {
+                        Store = _workContext.CurrentStore,
                         ToCustomerId = toCustomer.Id,
                         FromCustomerId = _workContext.CurrentCustomer.Id,
                         Subject = subject,

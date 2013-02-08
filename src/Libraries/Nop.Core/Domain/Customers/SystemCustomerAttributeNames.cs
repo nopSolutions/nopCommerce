@@ -41,7 +41,7 @@ namespace Nop.Core.Domain.Customers
 
         public static string Signature { get { return "Signature"; } }
 
-        public static string NotifiedAboutNewPrivateMessages { get { return "NotifiedAboutNewPrivateMessages"; } }
+        public static string NotifiedAboutNewPrivateMessages { get { return "NotifiedAboutNewPrivateMessages.{0}"; } }
 
         public static string PasswordRecoveryToken { get { return "PasswordRecoveryToken"; } }
 

@@ -1462,3 +1462,34 @@ BEGIN
 	ON DELETE CASCADE
 END
 GO
+
+
+--Store mapping to Forums_PrivateMessage
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Forums_PrivateMessage]') and NAME='StoreId')
+BEGIN
+	ALTER TABLE [Forums_PrivateMessage]
+	ADD [StoreId] bit NULL
+END
+GO
+
+DECLARE @DEFAULT_STORE_ID int
+SELECT @DEFAULT_STORE_ID = [Id] FROM [Store] ORDER BY [DisplayOrder]
+UPDATE [Forums_PrivateMessage]
+SET [StoreId] = @DEFAULT_STORE_ID
+WHERE [StoreId] IS NULL
+GO
+
+ALTER TABLE [Forums_PrivateMessage] ALTER COLUMN [StoreId] int NOT NULL
+GO
+
+IF NOT EXISTS (SELECT 1
+           FROM   sysobjects
+           WHERE  name = 'Forums_PrivateMessage_Store'
+           AND parent_obj = Object_id('Forums_PrivateMessage')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+BEGIN
+	ALTER TABLE [dbo].[Forums_PrivateMessage] WITH CHECK ADD CONSTRAINT [Forums_PrivateMessage_Store] FOREIGN KEY([StoreId])
+	REFERENCES [dbo].[Store] ([Id])
+	ON DELETE CASCADE
+END
+GO

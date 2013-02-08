@@ -12,6 +12,10 @@ namespace Nop.Data.Mapping.Forums
             this.Property(pm => pm.Subject).IsRequired().HasMaxLength(450);
             this.Property(pm => pm.Text).IsRequired();
 
+            this.HasRequired(pm => pm.Store)
+                .WithMany()
+                .HasForeignKey(pm => pm.StoreId);
+
             this.HasRequired(pm => pm.FromCustomer)
                .WithMany()
                .HasForeignKey(pm => pm.FromCustomerId)

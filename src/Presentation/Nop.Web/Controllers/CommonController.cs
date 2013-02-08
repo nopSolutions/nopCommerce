@@ -217,7 +217,8 @@ namespace Nop.Web.Controllers
             var customer = _workContext.CurrentCustomer;
             if (_forumSettings.AllowPrivateMessages && !customer.IsGuest())
             {
-                var privateMessages = _forumservice.GetAllPrivateMessages(0, customer.Id, false, null, false, string.Empty, 0, 1);
+                var privateMessages = _forumservice.GetAllPrivateMessages(_workContext.CurrentStore.Id,
+                    0, customer.Id, false, null, false, string.Empty, 0, 1);
 
                 if (privateMessages.TotalCount > 0)
                 {
@@ -353,10 +354,11 @@ namespace Nop.Web.Controllers
                 unreadMessage = string.Format(_localizationService.GetResource("PrivateMessages.TotalUnread"), unreadMessageCount);
 
                 //notifications here
-                if (_forumSettings.ShowAlertForPM && 
-                    !customer.GetAttribute<bool>(SystemCustomerAttributeNames.NotifiedAboutNewPrivateMessages))
+                var notifiedAboutNewPrivateMessagesAttributeKey = string.Format(SystemCustomerAttributeNames.NotifiedAboutNewPrivateMessages, _workContext.CurrentStore.Id);
+                if (_forumSettings.ShowAlertForPM &&
+                    !customer.GetAttribute<bool>(notifiedAboutNewPrivateMessagesAttributeKey))
                 {
-                    _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.NotifiedAboutNewPrivateMessages, true);
+                    _genericAttributeService.SaveAttribute(customer, notifiedAboutNewPrivateMessagesAttributeKey, true);
                     alertMessage = string.Format(_localizationService.GetResource("PrivateMessages.YouHaveUnreadPM"), unreadMessageCount);
                 }
             }
