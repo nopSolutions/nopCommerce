@@ -1796,7 +1796,8 @@ namespace Nop.Web.Controllers
 
             var customer = _workContext.CurrentCustomer;
             var pageSize = 10;
-            var list = _backInStockSubscriptionService.GetAllSubscriptionsByCustomerId(customer.Id, pageIndex, pageSize);
+            var list = _backInStockSubscriptionService.GetAllSubscriptionsByCustomerId(customer.Id, 
+                _workContext.CurrentStore.Id, pageIndex, pageSize);
 
             var model = new CustomerBackInStockSubscriptionsModel();
             model.NavigationModel = GetCustomerNavigationModel(customer);

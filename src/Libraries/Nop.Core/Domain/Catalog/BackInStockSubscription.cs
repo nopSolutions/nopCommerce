@@ -1,5 +1,6 @@
 using System;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Stores;
 
 namespace Nop.Core.Domain.Catalog
 {
@@ -8,6 +9,11 @@ namespace Nop.Core.Domain.Catalog
     /// </summary>
     public partial class BackInStockSubscription : BaseEntity
     {
+        /// <summary>
+        /// Gets or sets the store identifier
+        /// </summary>
+        public virtual int StoreId { get; set; }
+
         /// <summary>
         /// Gets or sets the product variant identifier
         /// </summary>
@@ -22,6 +28,11 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the date and time of instance creation
         /// </summary>
         public virtual DateTime CreatedOnUtc { get; set; }
+
+        /// <summary>
+        /// Gets the store
+        /// </summary>
+        public virtual Store Store { get; set; }
 
         /// <summary>
         /// Gets the product variant

@@ -1431,3 +1431,34 @@ GO
 
 ALTER TABLE [News] ALTER COLUMN [LimitedToStores] bit NOT NULL
 GO
+
+
+--Store mapping to BackInStockSubscription
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[BackInStockSubscription]') and NAME='StoreId')
+BEGIN
+	ALTER TABLE [BackInStockSubscription]
+	ADD [StoreId] bit NULL
+END
+GO
+
+DECLARE @DEFAULT_STORE_ID int
+SELECT @DEFAULT_STORE_ID = [Id] FROM [Store] ORDER BY [DisplayOrder]
+UPDATE [BackInStockSubscription]
+SET [StoreId] = @DEFAULT_STORE_ID
+WHERE [StoreId] IS NULL
+GO
+
+ALTER TABLE [BackInStockSubscription] ALTER COLUMN [StoreId] int NOT NULL
+GO
+
+IF NOT EXISTS (SELECT 1
+           FROM   sysobjects
+           WHERE  name = 'BackInStockSubscription_Store'
+           AND parent_obj = Object_id('BackInStockSubscription')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+BEGIN
+	ALTER TABLE [dbo].[BackInStockSubscription] WITH CHECK ADD CONSTRAINT [BackInStockSubscription_Store] FOREIGN KEY([StoreId])
+	REFERENCES [dbo].[Store] ([Id])
+	ON DELETE CASCADE
+END
+GO
