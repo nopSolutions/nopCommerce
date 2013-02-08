@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using FluentValidation.Attributes;
@@ -11,12 +12,23 @@ namespace Nop.Admin.Models.News
     [Validator(typeof(NewsItemValidator))]
     public partial class NewsItemModel : BaseNopEntityModel
     {
+        public NewsItemModel()
+        {
+            this.AvailableStores = new List<SelectListItem>();
+        }
+
         [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.Language")]
         public int LanguageId { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.Language")]
         [AllowHtml]
         public string LanguageName { get; set; }
+
+        [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.Store")]
+        public string StoreName { get; set; }
+        [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.Store")]
+        public int StoreId { get; set; }
+        public IList<SelectListItem> AvailableStores { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.Title")]
         [AllowHtml]

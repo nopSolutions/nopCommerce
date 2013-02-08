@@ -357,8 +357,9 @@ namespace Nop.Web.Infrastructure.Cache
         /// </summary>
         /// <remarks>
         /// {0} : language ID
+        /// {1} : store ID
         /// </remarks>
-        public const string HOMEPAGE_NEWSMODEL_KEY = "Nop.pres.news.homepage-{0}";
+        public const string HOMEPAGE_NEWSMODEL_KEY = "Nop.pres.news.homepage-{0}-{1}";
         public const string NEWS_PATTERN_KEY = "Nop.pres.news.";
         
         /// <summary>

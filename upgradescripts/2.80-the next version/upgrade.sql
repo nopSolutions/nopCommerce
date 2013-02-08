@@ -272,6 +272,18 @@ set @resources='
   <LocaleResource Name="Admin.ContentManagement.Topics.List.SearchStore.Hint">
 	<Value>Search by a specific store.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Fields.Store">
+	<Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Fields.Store.Hint">
+	<Value>Choose a store this news is assigned to.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.List.SearchStore">
+	<Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.List.SearchStore.Hint">
+	<Value>Search by a specific store.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1333,3 +1345,22 @@ GO
 ALTER TABLE [Topic] ALTER COLUMN [StoreId] int NOT NULL
 GO
 
+
+
+--Store mapping to news
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[News]') and NAME='StoreId')
+BEGIN
+	ALTER TABLE [News]
+	ADD [StoreId] bit NULL
+END
+GO
+
+DECLARE @DEFAULT_STORE_ID int
+SELECT @DEFAULT_STORE_ID = [Id] FROM [Store] ORDER BY [DisplayOrder]
+UPDATE [News]
+SET [StoreId] = @DEFAULT_STORE_ID
+WHERE [StoreId] IS NULL
+GO
+
+ALTER TABLE [News] ALTER COLUMN [StoreId] int NOT NULL
+GO

@@ -1,6 +1,5 @@
 ﻿@model NewsItemModel
 
-@using Telerik.Web.Mvc.UI;
 @Html.ValidationSummary(true)
 @Html.HiddenFor(model => model.Id)
 <table class="adminContent">
@@ -10,6 +9,15 @@
         </td>
         <td class="adminData">
             @Html.DropDownListFor(model => model.LanguageId, new SelectList(ViewBag.AllLanguages, "Id", "Name"))
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.StoreId):
+        </td>
+        <td class="adminData">
+            @Html.DropDownListFor(model => model.StoreId, Model.AvailableStores)
+            @Html.ValidationMessageFor(model => model.StoreId)
         </td>
     </tr>
     <tr>

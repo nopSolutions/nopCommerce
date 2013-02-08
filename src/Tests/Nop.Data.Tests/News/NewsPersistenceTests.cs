@@ -16,6 +16,7 @@ namespace Nop.Data.Tests.News
         {
             var news = new NewsItem
             {
+                StoreId = 1,
                 Title = "Title 1",
                 Short = "Short 1",
                 Full = "Full 1",
@@ -35,6 +36,7 @@ namespace Nop.Data.Tests.News
 
             var fromDb = SaveAndLoadEntity(news);
             fromDb.ShouldNotBeNull();
+            fromDb.StoreId.ShouldEqual(1);
             fromDb.Title.ShouldEqual("Title 1");
             fromDb.Short.ShouldEqual("Short 1");
             fromDb.Full.ShouldEqual("Full 1");

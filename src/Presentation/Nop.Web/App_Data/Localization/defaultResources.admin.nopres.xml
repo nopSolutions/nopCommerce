@@ -6477,6 +6477,14 @@
                                                     </LocaleResource>
                                                 </Children>
                                             </LocaleResource>
+                                            <LocaleResource Name="Store">
+                                              <Value>Store</Value>
+                                              <Children>
+                                                <LocaleResource Name="Hint">
+                                                  <Value>Choose a store this news is assigned to.</Value>
+                                                </LocaleResource>
+                                              </Children>
+                                            </LocaleResource>
                                             <LocaleResource Name="Title">
                                                 <Value>Title</Value>
                                                 <Children>
@@ -6557,6 +6565,18 @@
                                                 <Value>View comments</Value>
                                             </LocaleResource>
                                         </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="List">
+                                      <Children>
+                                        <LocaleResource Name="SearchStore">
+                                          <Value>Store</Value>
+                                          <Children>
+                                            <LocaleResource Name="Hint">
+                                              <Value>Search by a specific store.</Value>
+                                            </LocaleResource>
+                                          </Children>
+                                        </LocaleResource>
+                                      </Children>
                                     </LocaleResource>
                                     <LocaleResource Name="Added">
                                         <Value>The new news item has been added successfully.</Value>
