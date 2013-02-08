@@ -216,8 +216,9 @@ namespace Nop.Web.Infrastructure.Cache
         /// <remarks>
         /// {0} : topic id
         /// {1} : language id
+        /// {2} : store id
         /// </remarks>
-        public const string TOPIC_MODEL_KEY = "Nop.pres.topic.details-{0}-{1}";
+        public const string TOPIC_MODEL_KEY = "Nop.pres.topic.details-{0}-{1}-{2}";
         public const string TOPIC_PATTERN_KEY = "Nop.pres.topic.details";
 
         /// <summary>

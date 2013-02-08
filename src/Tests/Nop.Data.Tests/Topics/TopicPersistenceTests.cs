@@ -12,6 +12,7 @@ namespace Nop.Data.Tests.Topics
         {
             var topic = new Topic
                                {
+                                   StoreId = 1,
                                    SystemName = "SystemName 1",
                                    IncludeInSitemap = true,
                                    IsPasswordProtected = true,
@@ -25,6 +26,7 @@ namespace Nop.Data.Tests.Topics
 
             var fromDb = SaveAndLoadEntity(topic);
             fromDb.ShouldNotBeNull();
+            fromDb.StoreId.ShouldEqual(1);
             fromDb.SystemName.ShouldEqual("SystemName 1");
             fromDb.IncludeInSitemap.ShouldEqual(true);
             fromDb.IsPasswordProtected.ShouldEqual(true);

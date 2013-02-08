@@ -554,7 +554,9 @@ namespace Nop.Web.Controllers
             }
             if (_commonSettings.SitemapIncludeTopics)
             {
-                var topics = _topicService.GetAllTopics().ToList().FindAll(t => t.IncludeInSitemap);
+                var topics = _topicService.GetAllTopics(_workContext.CurrentStore.Id)
+                    .ToList()
+                    .FindAll(t => t.IncludeInSitemap);
                 model.Topics = topics.Select(topic => new TopicModel()
                 {
                     Id = topic.Id,

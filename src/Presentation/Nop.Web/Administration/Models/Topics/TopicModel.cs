@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
 using FluentValidation.Attributes;
+using Nop.Admin.Models.Stores;
 using Nop.Admin.Validators.Topics;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Localization;
@@ -14,7 +15,14 @@ namespace Nop.Admin.Models.Topics
         public TopicModel()
         {
             Locales = new List<TopicLocalizedModel>();
+            AvailableStores = new List<SelectListItem>();
         }
+
+        [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.Store")]
+        public string StoreName { get; set; }
+        [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.Store")]
+        public int StoreId { get; set; }
+        public IList<SelectListItem> AvailableStores { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.SystemName")]
         [AllowHtml]

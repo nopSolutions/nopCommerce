@@ -8,6 +8,11 @@ namespace Nop.Core.Domain.Topics
     public partial class Topic : BaseEntity, ILocalizedEntity
     {
         /// <summary>
+        /// Gets or sets the store identifier
+        /// </summary>
+        public virtual int StoreId { get; set; }
+
+        /// <summary>
         /// Gets or sets the name
         /// </summary>
         public virtual string SystemName { get; set; }

@@ -66,6 +66,15 @@
                 @Html.ValidationMessageFor(model => model.IncludeInSitemap)
             </td>
         </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.StoreId):
+            </td>
+            <td class="adminData">
+            @Html.DropDownListFor(model => model.StoreId, Model.AvailableStores)
+                @Html.ValidationMessageFor(model => model.StoreId)
+            </td>
+        </tr>
         @if (Model.Id > 0)
         {
             <tr>

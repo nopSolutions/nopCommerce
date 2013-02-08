@@ -240,6 +240,7 @@
     <Compile Include="Models\ShoppingCart\ShoppingCartItemModel.cs" />
     <Compile Include="Models\ShoppingCart\ShoppingCartModel.cs" />
     <Compile Include="Models\Tasks\ScheduleTaskModel.cs" />
+    <Compile Include="Models\Topics\TopicListModel.cs" />
     <Compile Include="Models\Topics\TopicModel.cs" />
     <Compile Include="Models\Shipping\ShippingMethodRestrictionModel.cs" />
     <Compile Include="Models\News\NewsCommentModel.cs" />

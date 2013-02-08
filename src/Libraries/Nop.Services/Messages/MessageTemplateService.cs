@@ -36,6 +36,8 @@ namespace Nop.Services.Messages
         /// Ctor
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
+        /// <param name="languageService">Language service</param>
+        /// <param name="localizedEntityService">Localized entity service</param>
         /// <param name="messageTemplateRepository">Message template repository</param>
         /// <param name="eventPublisher">Event published</param>
         public MessageTemplateService(ICacheManager cacheManager,
@@ -158,10 +160,33 @@ namespace Nop.Services.Messages
             return _cacheManager.Get(key, () =>
             {
                 var query = _messageTemplateRepository.Table;
-                if (storeId > 0)
-                    query = query.Where(mt => mt.StoreId == storeId);
                 query = query.OrderBy(mt => mt.Name).ThenBy(mt => mt.StoreId);
-                var messageTemplates = query.ToList();
+                var allMessageTemplates = query.ToList();
+                if (storeId == 0)
+                    return allMessageTemplates;
+
+                //filter message templates
+                var messageTemplates = new List<MessageTemplate>();
+                var allSystemNames = allMessageTemplates
+                    .Select(x => x.Name)
+                    .Distinct(StringComparer.InvariantCultureIgnoreCase)
+                    .ToList();
+                foreach (var systemName in allSystemNames)
+                {
+                    //find a message template assigned to the passed storeId
+                    var messageTemplate = allMessageTemplates
+                        .FirstOrDefault(x => x.Name.Equals(systemName, StringComparison.InvariantCultureIgnoreCase) &&
+                            x.StoreId == storeId);
+
+                    //not found. let's find a message template assigned to all stores in this case
+                    if (messageTemplate == null)
+                        messageTemplate = allMessageTemplates
+                            .FirstOrDefault(x => x.Name.Equals(systemName, StringComparison.InvariantCultureIgnoreCase) &&
+                            x.StoreId == 0);
+
+                    if (messageTemplate != null)
+                        messageTemplates.Add(messageTemplate);
+                }
                 return messageTemplates;
             });
         }

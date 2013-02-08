@@ -6762,6 +6762,17 @@
                                             </LocaleResource>
                                         </Children>
                                     </LocaleResource>
+                                    <LocaleResource Name="Store">
+                                      <Value>Store</Value>
+                                      <Children>
+                                        <LocaleResource Name="AllStores">
+                                          <Value>All stores</Value>
+                                        </LocaleResource>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Choose a store this topic is assigned to.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
                                     <LocaleResource Name="Body">
                                         <Value>Body</Value>
                                         <Children>
@@ -6811,6 +6822,18 @@
                                         </Children>
                                     </LocaleResource>
                                 </Children>
+                            </LocaleResource>
+                            <LocaleResource Name="List">
+                              <Children>
+                                <LocaleResource Name="SearchStore">
+                                  <Value>Store</Value>
+                                  <Children>
+                                    <LocaleResource Name="Hint">
+                                      <Value>Search by a specific store.</Value>
+                                    </LocaleResource>
+                                  </Children>
+                                </LocaleResource>
+                              </Children>
                             </LocaleResource>
                             <LocaleResource Name="Info">
                                 <Value>Info</Value>

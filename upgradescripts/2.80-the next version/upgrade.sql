@@ -257,6 +257,21 @@ set @resources='
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.List.SearchStore.Hint">
 	<Value>Search by a specific store.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.Store">
+	<Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.Store.Hint">
+	<Value>Choose a store this topic is assigned to.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.Store.AllStores">
+	<Value>All stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.List.SearchStore">
+	<Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.List.SearchStore.Hint">
+	<Value>Search by a specific store.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1300,3 +1315,21 @@ GO
 
 ALTER TABLE [MessageTemplate] ALTER COLUMN [StoreId] int NOT NULL
 GO
+
+
+--Store mapping to topics
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Topic]') and NAME='StoreId')
+BEGIN
+	ALTER TABLE [Topic]
+	ADD [StoreId] bit NULL
+END
+GO
+
+UPDATE [Topic]
+SET [StoreId] = 0
+WHERE [StoreId] IS NULL
+GO
+
+ALTER TABLE [Topic] ALTER COLUMN [StoreId] int NOT NULL
+GO
+
