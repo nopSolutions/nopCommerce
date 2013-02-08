@@ -5,6 +5,7 @@ using Nop.Core.Domain.Media;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Seo;
+using Nop.Services.Stores;
 
 namespace Nop.Services.Catalog
 {
@@ -27,6 +28,7 @@ namespace Nop.Services.Catalog
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IProductTagService _productTagService;
         private readonly IUrlRecordService _urlRecordService;
+        private readonly IStoreMappingService _storeMappingService;
 
         #endregion
 
@@ -38,7 +40,7 @@ namespace Nop.Services.Catalog
             ICategoryService categoryService, IManufacturerService manufacturerService,
             ISpecificationAttributeService specificationAttributeService, IDownloadService downloadService,
             IProductAttributeParser productAttributeParser, IProductTagService productTagService,
-            IUrlRecordService urlRecordService)
+            IUrlRecordService urlRecordService, IStoreMappingService storeMappingService)
         {
             this._productService = productService;
             this._productAttributeService = productAttributeService;
@@ -52,6 +54,7 @@ namespace Nop.Services.Catalog
             this._productAttributeParser = productAttributeParser;
             this._productTagService = productTagService;
             this._urlRecordService = urlRecordService;
+            this._storeMappingService = storeMappingService;
         }
 
         #endregion
@@ -384,6 +387,7 @@ namespace Nop.Services.Catalog
                     MetaDescription = product.MetaDescription,
                     MetaTitle = product.MetaTitle,
                     AllowCustomerReviews = product.AllowCustomerReviews,
+                    LimitedToStores = product.LimitedToStores,
                     Published = isPublished,
                     Deleted = product.Deleted,
                     CreatedOnUtc = DateTime.UtcNow,
@@ -524,6 +528,13 @@ namespace Nop.Services.Catalog
                         DisplayOrder = productSpecificationAttribute.DisplayOrder
                     };
                     _specificationAttributeService.InsertProductSpecificationAttribute(psaCopy);
+                }
+
+                //store mapping
+                var selectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(product);
+                foreach (var id in selectedStoreIds)
+                {
+                    _storeMappingService.InsertStoreMapping(productCopy, id);
                 }
 
                 // product variants
