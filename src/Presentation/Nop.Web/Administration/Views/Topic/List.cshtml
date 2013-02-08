@@ -38,7 +38,6 @@
                     .Columns(columns =>
                     {
                         columns.Bound(x => x.SystemName);
-                        columns.Bound(x => x.StoreName);
                         columns.Bound(x => x.IsPasswordProtected)
                             .Template(
                                 @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.IsPasswordProtected.ToString().ToLowerInvariant() + ".gif")" />

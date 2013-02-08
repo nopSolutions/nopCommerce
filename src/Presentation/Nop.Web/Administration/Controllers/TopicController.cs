@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using Nop.Admin.Models.Topics;
 using Nop.Core.Domain.Topics;
@@ -22,6 +23,7 @@ namespace Nop.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
         private readonly IStoreService _storeService;
+        private readonly IStoreMappingService _storeMappingService;
 
         #endregion Fields
 
@@ -29,7 +31,8 @@ namespace Nop.Admin.Controllers
 
         public TopicController(ITopicService topicService, ILanguageService languageService,
             ILocalizedEntityService localizedEntityService, ILocalizationService localizationService,
-            IPermissionService permissionService, IStoreService storeService)
+            IPermissionService permissionService, IStoreService storeService,
+            IStoreMappingService storeMappingService)
         {
             this._topicService = topicService;
             this._languageService = languageService;
@@ -37,6 +40,7 @@ namespace Nop.Admin.Controllers
             this._localizationService = localizationService;
             this._permissionService = permissionService;
             this._storeService = storeService;
+            this._storeMappingService = storeMappingService;
         }
 
         #endregion
@@ -74,7 +78,53 @@ namespace Nop.Admin.Controllers
                                                            localized.LanguageId);
             }
         }
-        
+
+        [NonAction]
+        private void PrepareStoresMappingModel(TopicModel model, Topic topic, bool excludeProperties)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            model.AvailableStores = _storeService
+                .GetAllStores()
+                .Select(s => s.ToModel())
+                .ToList();
+            if (!excludeProperties)
+            {
+                if (topic != null)
+                {
+                    model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(topic);
+                }
+                else
+                {
+                    model.SelectedStoreIds = new int[0];
+                }
+            }
+        }
+
+        [NonAction]
+        protected void SaveStoreMappings(Topic topic, TopicModel model)
+        {
+            var existingStoreMappings = _storeMappingService.GetStoreMappings(topic);
+            var allStores = _storeService.GetAllStores();
+            foreach (var store in allStores)
+            {
+                if (model.SelectedStoreIds != null && model.SelectedStoreIds.Contains(store.Id))
+                {
+                    //new role
+                    if (existingStoreMappings.Where(sm => sm.StoreId == store.Id).Count() == 0)
+                        _storeMappingService.InsertStoreMapping(topic, store.Id);
+                }
+                else
+                {
+                    //removed role
+                    var storeMappingToDelete = existingStoreMappings.Where(sm => sm.StoreId == store.Id).FirstOrDefault();
+                    if (storeMappingToDelete != null)
+                        _storeMappingService.DeleteStoreMapping(storeMappingToDelete);
+                }
+            }
+        }
+
         #endregion
         
         #region List
@@ -107,15 +157,7 @@ namespace Nop.Admin.Controllers
             var topics = _topicService.GetAllTopics(model.SearchStoreId);
             var gridModel = new GridModel<TopicModel>
             {
-                Data = topics.Select(x =>
-                {
-                    var tModel = x.ToModel();
-                    var store = _storeService.GetStoreById(x.StoreId);
-                    tModel.StoreName = x.StoreId == 0 ?
-                        _localizationService.GetResource("Admin.ContentManagement.Topics.Fields.Store.AllStores")
-                        : (store != null ? store.Name : "Unknown");
-                    return tModel;
-                }),
+                Data = topics.Select(x =>x.ToModel()),
                 Total = topics.Count
             };
             return new JsonResult
@@ -134,10 +176,8 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var model = new TopicModel();
-            //stores
-            model.AvailableStores.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.ContentManagement.Topics.Fields.Store.AllStores"), Value = "0" });
-            foreach (var s in _storeService.GetAllStores())
-                model.AvailableStores.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString() });
+            //Stores
+            PrepareStoresMappingModel(model, null, false);
             //locales
             AddLocales(_languageService, model.Locales);
             return View(model);
@@ -158,6 +198,8 @@ namespace Nop.Admin.Controllers
 
                 var topic = model.ToEntity();
                 _topicService.InsertTopic(topic);
+                //Stores
+                SaveStoreMappings(topic, model);
                 //locales
                 UpdateLocales(topic, model);
 
@@ -167,11 +209,8 @@ namespace Nop.Admin.Controllers
 
             //If we got this far, something failed, redisplay form
 
-            //stores
-            model.AvailableStores.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.ContentManagement.Topics.Fields.Store.AllStores"), Value = "0" });
-            foreach (var s in _storeService.GetAllStores())
-                model.AvailableStores.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString() });
-
+            //Stores
+            PrepareStoresMappingModel(model, null, true);
             return View(model);
         }
 
@@ -187,10 +226,8 @@ namespace Nop.Admin.Controllers
 
             var model = topic.ToModel();
             model.Url = Url.RouteUrl("Topic", new { SystemName = topic.SystemName }, "http");
-            //stores
-            model.AvailableStores.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.ContentManagement.Topics.Fields.Store.AllStores"), Value = "0" });
-            foreach (var s in _storeService.GetAllStores())
-                model.AvailableStores.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString() });
+            //Store
+            PrepareStoresMappingModel(model, topic, false);
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
@@ -226,6 +263,8 @@ namespace Nop.Admin.Controllers
             {
                 topic = model.ToEntity(topic);
                 _topicService.UpdateTopic(topic);
+                //Stores
+                SaveStoreMappings(topic, model);
                 //locales
                 UpdateLocales(topic, model);
                 
@@ -236,11 +275,8 @@ namespace Nop.Admin.Controllers
 
             //If we got this far, something failed, redisplay form
 
-            //stores
-            model.AvailableStores.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.ContentManagement.Topics.Fields.Store.AllStores"), Value = "0" });
-            foreach (var s in _storeService.GetAllStores())
-                model.AvailableStores.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString() });
-
+            //Store
+            PrepareStoresMappingModel(model, topic, true);
             return View(model);
         }
 

@@ -41,10 +41,6 @@ namespace Nop.Web.Controllers
             //load by store
             var topic = _topicService.GetTopicBySystemName(systemName, _workContext.CurrentStore.Id);
             if (topic == null)
-                //not found. let's find topic assigned to all stores
-                topic = _topicService.GetTopicBySystemName(systemName, 0);
-
-            if (topic == null)
                 return null;
 
             var model = new TopicModel()

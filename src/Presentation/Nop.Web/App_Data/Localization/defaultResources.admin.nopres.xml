@@ -6839,6 +6839,22 @@
                                             </LocaleResource>
                                         </Children>
                                     </LocaleResource>
+                                    <LocaleResource Name="LimitedToStores">
+                                      <Value>Limited to stores</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Determines whether the topic is available only at certain stores.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="AvailableStores">
+                                      <Value>Stores</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Select stores for which the topic will be shown.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
                                 </Children>
                             </LocaleResource>
                             <LocaleResource Name="List">
@@ -6855,6 +6871,9 @@
                             </LocaleResource>
                             <LocaleResource Name="Info">
                                 <Value>Info</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="Stores">
+                              <Value>Stores</Value>
                             </LocaleResource>
                             <LocaleResource Name="Added">
                                 <Value>The new topic has been added successfully.</Value>

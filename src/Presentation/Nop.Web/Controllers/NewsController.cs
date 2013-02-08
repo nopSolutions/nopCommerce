@@ -19,6 +19,7 @@ using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.News;
 using Nop.Services.Seo;
+using Nop.Services.Stores;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Security;
@@ -43,6 +44,7 @@ namespace Nop.Web.Controllers
         private readonly IWebHelper _webHelper;
         private readonly ICacheManager _cacheManager;
         private readonly ICustomerActivityService _customerActivityService;
+        private readonly IStoreMappingService _storeMappingService;
 
         private readonly MediaSettings _mediaSettings;
         private readonly NewsSettings _newsSettings;
@@ -59,6 +61,7 @@ namespace Nop.Web.Controllers
             ICustomerContentService customerContentService, IDateTimeHelper dateTimeHelper,
             IWorkflowMessageService workflowMessageService, IWebHelper webHelper,
             ICacheManager cacheManager, ICustomerActivityService customerActivityService,
+            IStoreMappingService storeMappingService,
             MediaSettings mediaSettings, NewsSettings newsSettings,
             LocalizationSettings localizationSettings, CustomerSettings customerSettings,
             CaptchaSettings captchaSettings)
@@ -73,6 +76,7 @@ namespace Nop.Web.Controllers
             this._webHelper = webHelper;
             this._cacheManager = cacheManager;
             this._customerActivityService = customerActivityService;
+            this._storeMappingService = storeMappingService;
 
             this._mediaSettings = mediaSettings;
             this._newsSettings = newsSettings;
@@ -226,7 +230,9 @@ namespace Nop.Web.Controllers
             if (newsItem == null || 
                 !newsItem.Published ||
                 (newsItem.StartDateUtc.HasValue && newsItem.StartDateUtc.Value >= DateTime.UtcNow) ||
-                (newsItem.EndDateUtc.HasValue && newsItem.EndDateUtc.Value <= DateTime.UtcNow))
+                (newsItem.EndDateUtc.HasValue && newsItem.EndDateUtc.Value <= DateTime.UtcNow) ||
+                //Store mapping
+                !_storeMappingService.Authorize(newsItem))
                 return RedirectToRoute("HomePage");
 
             var model = new NewsItemModel();

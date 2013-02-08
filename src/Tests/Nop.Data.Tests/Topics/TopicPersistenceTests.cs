@@ -12,7 +12,6 @@ namespace Nop.Data.Tests.Topics
         {
             var topic = new Topic
                                {
-                                   StoreId = 1,
                                    SystemName = "SystemName 1",
                                    IncludeInSitemap = true,
                                    IsPasswordProtected = true,
@@ -22,11 +21,11 @@ namespace Nop.Data.Tests.Topics
                                    MetaKeywords = "Meta keywords",
                                    MetaDescription = "Meta description",
                                    MetaTitle = "Meta title",
+                                   LimitedToStores = true
                                };
 
             var fromDb = SaveAndLoadEntity(topic);
             fromDb.ShouldNotBeNull();
-            fromDb.StoreId.ShouldEqual(1);
             fromDb.SystemName.ShouldEqual("SystemName 1");
             fromDb.IncludeInSitemap.ShouldEqual(true);
             fromDb.IsPasswordProtected.ShouldEqual(true);
@@ -36,6 +35,7 @@ namespace Nop.Data.Tests.Topics
             fromDb.MetaKeywords.ShouldEqual("Meta keywords");
             fromDb.MetaDescription.ShouldEqual("Meta description");
             fromDb.MetaTitle.ShouldEqual("Meta title");
+            fromDb.LimitedToStores.ShouldEqual(true);
         }
     }
 }

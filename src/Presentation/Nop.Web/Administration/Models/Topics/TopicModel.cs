@@ -15,14 +15,16 @@ namespace Nop.Admin.Models.Topics
         public TopicModel()
         {
             Locales = new List<TopicLocalizedModel>();
-            AvailableStores = new List<SelectListItem>();
+            AvailableStores = new List<StoreModel>();
         }
 
-        [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.Store")]
-        public string StoreName { get; set; }
-        [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.Store")]
-        public int StoreId { get; set; }
-        public IList<SelectListItem> AvailableStores { get; set; }
+        //Store mapping
+        [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.LimitedToStores")]
+        public bool LimitedToStores { get; set; }
+        [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.AvailableStores")]
+        public List<StoreModel> AvailableStores { get; set; }
+        public int[] SelectedStoreIds { get; set; }
+
 
         [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.SystemName")]
         [AllowHtml]
