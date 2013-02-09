@@ -62,8 +62,6 @@ namespace Nop.Data.Tests.Orders
                 CustomerGuid = Guid.NewGuid(),
                 AdminComment = "some comment here",
                 IsTaxExempt = true,
-                VatNumber = "123456",
-                VatNumberStatus = VatNumberStatus.Valid,
                 DiscountCouponCode = "coupon1",
                 Active = true,
                 Deleted = false,

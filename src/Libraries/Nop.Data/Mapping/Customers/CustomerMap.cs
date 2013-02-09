@@ -18,7 +18,6 @@ namespace Nop.Data.Mapping.Customers
             this.Property(c => c.GiftCardCouponCodes);
 
             this.Ignore(u => u.PasswordFormat);
-            this.Ignore(c => c.VatNumberStatus);
 
             this.HasMany(c => c.CustomerRoles)
                 .WithMany()

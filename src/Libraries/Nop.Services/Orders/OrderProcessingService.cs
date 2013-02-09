@@ -759,8 +759,9 @@ namespace Nop.Services.Orders
                     orderTaxTotal = _orderTotalCalculationService.GetTaxTotal(cart, out taxRatesDictionary);
 
                     //VAT number
-                    if (_taxSettings.EuVatEnabled && customer.VatNumberStatus == VatNumberStatus.Valid)
-                        vatNumber = customer.VatNumber;
+                    var customerVatStatus = (VatNumberStatus)customer.GetAttribute<int>(SystemCustomerAttributeNames.VatNumberStatusId);
+                    if (_taxSettings.EuVatEnabled && customerVatStatus == VatNumberStatus.Valid)
+                        vatNumber = customer.GetAttribute<string>(SystemCustomerAttributeNames.VatNumber);
 
                     //tax rates
                     foreach (var kvp in taxRatesDictionary)

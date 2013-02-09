@@ -1574,3 +1574,17 @@ BEGIN
 	DROP COLUMN [LanguageId]
 END
 GO
+
+IF EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Customer]') and NAME='VatNumber')
+BEGIN
+	ALTER TABLE [Customer]
+	DROP COLUMN [VatNumber]
+END
+GO
+
+IF EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Customer]') and NAME='VatNumberStatusId')
+BEGIN
+	ALTER TABLE [Customer]
+	DROP COLUMN [VatNumberStatusId]
+END
+GO

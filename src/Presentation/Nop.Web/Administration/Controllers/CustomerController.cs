@@ -552,8 +552,9 @@ namespace Nop.Admin.Controllers
             foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
                 model.AvailableTimeZones.Add(new SelectListItem() { Text = tzi.DisplayName, Value = tzi.Id, Selected = (tzi.Id == customer.TimeZoneId) });
             model.DisplayVatNumber = _taxSettings.EuVatEnabled;
-            model.VatNumber = customer.VatNumber;
-            model.VatNumberStatusNote = customer.VatNumberStatus.GetLocalizedEnum(_localizationService, _workContext);
+            model.VatNumber = customer.GetAttribute<string>(SystemCustomerAttributeNames.VatNumber);
+            model.VatNumberStatusNote = ((VatNumberStatus)customer.GetAttribute<int>(SystemCustomerAttributeNames.VatNumberStatusId))
+                .GetLocalizedEnum(_localizationService, _workContext);
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(customer.CreatedOnUtc, DateTimeKind.Utc);
             model.LastActivityDate = _dateTimeHelper.ConvertToUserTime(customer.LastActivityDateUtc, DateTimeKind.Utc);
             model.LastIpAddress = customer.LastIpAddress;
@@ -659,8 +660,6 @@ namespace Nop.Admin.Controllers
             {
                 try
                 {
-                    string prevVatNumber = customer.VatNumber;
-
                     customer.AdminComment = model.AdminComment;
                     customer.IsTaxExempt = model.IsTaxExempt;
                     customer.TimeZoneId = model.TimeZoneId;
@@ -691,17 +690,26 @@ namespace Nop.Admin.Controllers
                     //VAT number
                     if (_taxSettings.EuVatEnabled)
                     {
-                        customer.VatNumber = model.VatNumber;
+                        string prevVatNumber = customer.GetAttribute<string>(SystemCustomerAttributeNames.VatNumber);
+
+                        _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.VatNumber, model.VatNumber);
                         //set VAT number status
-                        if (!String.IsNullOrEmpty(customer.VatNumber))
+                        if (!String.IsNullOrEmpty(model.VatNumber))
                         {
-                            if (!customer.VatNumber.Equals(prevVatNumber, StringComparison.InvariantCultureIgnoreCase))
-                                customer.VatNumberStatus = _taxService.GetVatNumberStatus(customer.VatNumber);
+                            if (!model.VatNumber.Equals(prevVatNumber, StringComparison.InvariantCultureIgnoreCase))
+                            {
+                                _genericAttributeService.SaveAttribute(customer, 
+                                    SystemCustomerAttributeNames.VatNumberStatusId, 
+                                    (int)_taxService.GetVatNumberStatus(model.VatNumber));
+                            }
                         }
                         else
-                            customer.VatNumberStatus = VatNumberStatus.Empty;
+                        {
+                            _genericAttributeService.SaveAttribute(customer,
+                                SystemCustomerAttributeNames.VatNumberStatusId, 
+                                (int)VatNumberStatus.Empty);
+                        }
                     }
-                    _customerService.UpdateCustomer(customer);
 
                     //form fields
                     if (_customerSettings.GenderEnabled)
@@ -771,7 +779,8 @@ namespace Nop.Admin.Controllers
             foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
                 model.AvailableTimeZones.Add(new SelectListItem() { Text = tzi.DisplayName, Value = tzi.Id, Selected = (tzi.Id == model.TimeZoneId) });
             model.DisplayVatNumber = _taxSettings.EuVatEnabled;
-            model.VatNumberStatusNote = customer.VatNumberStatus.GetLocalizedEnum(_localizationService, _workContext);
+            model.VatNumberStatusNote = ((VatNumberStatus)customer.GetAttribute<int>(SystemCustomerAttributeNames.VatNumberStatusId))
+                .GetLocalizedEnum(_localizationService, _workContext);
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(customer.CreatedOnUtc, DateTimeKind.Utc);
             model.LastActivityDate = _dateTimeHelper.ConvertToUserTime(customer.LastActivityDateUtc, DateTimeKind.Utc);
             model.LastIpAddress = model.LastIpAddress;
@@ -870,8 +879,9 @@ namespace Nop.Admin.Controllers
                 //No customer found with the specified id
                 return RedirectToAction("List");
 
-            customer.VatNumberStatus = VatNumberStatus.Valid;
-            _customerService.UpdateCustomer(customer);
+            _genericAttributeService.SaveAttribute(customer, 
+                SystemCustomerAttributeNames.VatNumberStatusId,
+                (int)VatNumberStatus.Valid);
 
             return RedirectToAction("Edit", customer.Id);
         }
@@ -888,9 +898,10 @@ namespace Nop.Admin.Controllers
                 //No customer found with the specified id
                 return RedirectToAction("List");
 
-            customer.VatNumberStatus = VatNumberStatus.Invalid;
-            _customerService.UpdateCustomer(customer);
-
+            _genericAttributeService.SaveAttribute(customer,
+                SystemCustomerAttributeNames.VatNumberStatusId,
+                (int)VatNumberStatus.Invalid);
+            
             return RedirectToAction("Edit", customer.Id);
         }
 

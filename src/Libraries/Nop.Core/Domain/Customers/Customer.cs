@@ -81,16 +81,6 @@ namespace Nop.Core.Domain.Customers
         public virtual bool IsTaxExempt { get; set; }
 
         /// <summary>
-        /// Gets or sets a VAT number (including counry code)
-        /// </summary>
-        public virtual string VatNumber { get; set; }
-
-        /// <summary>
-        /// Gets or sets the VAT number status identifier
-        /// </summary>
-        public virtual int VatNumberStatusId { get; set; }
-
-        /// <summary>
         /// Gets or sets the selected checkout attributes (serialized)
         /// </summary>
         public virtual string CheckoutAttributes { get; set; }
@@ -155,25 +145,6 @@ namespace Nop.Core.Domain.Customers
         /// </summary>
         public virtual DateTime LastActivityDateUtc { get; set; }
         
-        #region Custom properties
-
-        /// <summary>
-        /// Gets the VAT number status
-        /// </summary>
-        public virtual VatNumberStatus VatNumberStatus
-        {
-            get
-            {
-                return (VatNumberStatus)this.VatNumberStatusId;
-            }
-            set
-            {
-                this.VatNumberStatusId = (int)value;
-            }
-        }
-        
-        #endregion
-
         #region Navigation properties
 
         /// <summary>

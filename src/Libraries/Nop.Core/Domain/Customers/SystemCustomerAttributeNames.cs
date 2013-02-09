@@ -17,6 +17,8 @@ namespace Nop.Core.Domain.Customers
         public static string StateProvinceId { get { return "StateProvinceId"; } }
         public static string Phone { get { return "Phone"; } }
         public static string Fax { get { return "Fax"; } }
+        public static string VatNumber { get { return "VatNumber"; } }
+        public static string VatNumberStatusId { get { return "VatNumberStatusId"; } }
 
         //Other attributes
         public static string AvatarPictureId { get { return "AvatarPictureId"; } }
