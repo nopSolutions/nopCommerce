@@ -31,7 +31,7 @@ namespace Nop.Core.Domain.Customers
 
         //depends on store
         public static string SelectedPaymentMethod { get { return "SelectedPaymentMethod"; } }
-        public static string LastShippingOption { get { return "LastShippingOption"; } }
+        public static string SelectedShippingOption { get { return "SelectedShippingOption"; } }
         public static string OfferedShippingOptions { get { return "OfferedShippingOptions"; } }
         public static string LastContinueShoppingPage { get { return "LastContinueShoppingPage"; } }
         public static string NotifiedAboutNewPrivateMessages { get { return "NotifiedAboutNewPrivateMessages"; } }

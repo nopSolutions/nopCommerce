@@ -216,7 +216,7 @@ namespace Nop.Plugin.Payments.GoogleCheckout
                 customer.BillingAddress = billingAddress;
                 _customerService.UpdateCustomer(customer);
 
-                _genericAttributeService.SaveAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.LastShippingOption, null, _workContext.CurrentStore.Id);
+                _genericAttributeService.SaveAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.SelectedShippingOption, null, _workContext.CurrentStore.Id);
 
                 bool shoppingCartRequiresShipping = cart.RequiresShipping();
                 if (shoppingCartRequiresShipping)
@@ -276,7 +276,7 @@ namespace Nop.Plugin.Payments.GoogleCheckout
                         var shippingOption = new ShippingOption();
                         shippingOption.Name = shippingMethod.shippingname;
                         shippingOption.Rate = shippingMethod.shippingcost.Value;
-                        _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.LastShippingOption, shippingOption, _workContext.CurrentStore.Id);
+                        _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.SelectedShippingOption, shippingOption, _workContext.CurrentStore.Id);
                     }
                 }
 

@@ -511,16 +511,16 @@ namespace Nop.Services.Orders
             if (isFreeShipping)
                 return decimal.Zero;
 
-            ShippingOption lastShippingOption = null;
+            ShippingOption shippingOption = null;
             if (customer != null)
-                lastShippingOption = customer.GetAttribute<ShippingOption>(SystemCustomerAttributeNames.LastShippingOption, _genericAttributeService, _workContext.CurrentStore.Id);
+                shippingOption = customer.GetAttribute<ShippingOption>(SystemCustomerAttributeNames.SelectedShippingOption, _genericAttributeService, _workContext.CurrentStore.Id);
 
-            if (lastShippingOption != null)
+            if (shippingOption != null)
             {
                 //use last shipping option (get from cache)
 
                 //adjust shipping rate
-                shippingTotal = AdjustShippingRate(lastShippingOption.Rate, cart, out appliedDiscount);
+                shippingTotal = AdjustShippingRate(shippingOption.Rate, cart, out appliedDiscount);
             }
             else
             {
