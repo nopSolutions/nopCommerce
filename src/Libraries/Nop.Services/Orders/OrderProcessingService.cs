@@ -599,7 +599,7 @@ namespace Nop.Services.Orders
                 if (!processPaymentRequest.IsRecurringPayment)
                 {
                     if (_taxSettings.AllowCustomersToSelectTaxDisplayType)
-                        customerTaxDisplayType = customer.TaxDisplayType;
+                        customerTaxDisplayType = (TaxDisplayType)customer.GetAttribute<int>(SystemCustomerAttributeNames.TaxDisplayTypeId, processPaymentRequest.StoreId);
                     else
                         customerTaxDisplayType = _taxSettings.TaxDisplayType;
                 }

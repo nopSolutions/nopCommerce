@@ -61,7 +61,6 @@ namespace Nop.Data.Tests.Orders
             {
                 CustomerGuid = Guid.NewGuid(),
                 AdminComment = "some comment here",
-                TaxDisplayType = TaxDisplayType.IncludingTax,
                 IsTaxExempt = true,
                 VatNumber = "123456",
                 VatNumberStatus = VatNumberStatus.Valid,

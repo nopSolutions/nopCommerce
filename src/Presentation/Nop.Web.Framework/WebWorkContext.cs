@@ -30,6 +30,7 @@ namespace Nop.Web.Framework
         private readonly IAuthenticationService _authenticationService;
         private readonly ILanguageService _languageService;
         private readonly ICurrencyService _currencyService;
+        private readonly IGenericAttributeService _genericAttributeService;
         private readonly TaxSettings _taxSettings;
         private readonly CurrencySettings _currencySettings;
         private readonly LocalizationSettings _localizationSettings;
@@ -47,6 +48,7 @@ namespace Nop.Web.Framework
             IAuthenticationService authenticationService,
             ILanguageService languageService,
             ICurrencyService currencyService,
+            IGenericAttributeService genericAttributeService,
             TaxSettings taxSettings, CurrencySettings currencySettings,
             LocalizationSettings localizationSettings,
             IWebHelper webHelper)
@@ -57,6 +59,7 @@ namespace Nop.Web.Framework
             this._authenticationService = authenticationService;
             this._languageService = languageService;
             this._currencyService = currencyService;
+            this._genericAttributeService = genericAttributeService;
             this._taxSettings = taxSettings;
             this._currencySettings = currencySettings;
             this._localizationSettings = localizationSettings;
@@ -331,10 +334,12 @@ namespace Nop.Web.Framework
         {
             get
             {
-                if (_taxSettings.AllowCustomersToSelectTaxDisplayType)
+                if (_taxSettings.AllowCustomersToSelectTaxDisplayType && this.CurrentCustomer != null)
                 {
-                    if (this.CurrentCustomer != null)
-                        return this.CurrentCustomer.TaxDisplayType;
+                    return (TaxDisplayType)this.CurrentCustomer.GetAttribute<int>(
+                        SystemCustomerAttributeNames.TaxDisplayTypeId,
+                        _genericAttributeService,
+                        this.CurrentStore.Id);
                 }
 
                 return _taxSettings.TaxDisplayType;
@@ -344,8 +349,9 @@ namespace Nop.Web.Framework
                 if (!_taxSettings.AllowCustomersToSelectTaxDisplayType)
                     return;
 
-                this.CurrentCustomer.TaxDisplayType = value;
-                _customerService.UpdateCustomer(this.CurrentCustomer);
+                _genericAttributeService.SaveAttribute(this.CurrentCustomer, 
+                    SystemCustomerAttributeNames.TaxDisplayTypeId, 
+                    (int)value, this.CurrentStore.Id);
             }
         }
 

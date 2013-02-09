@@ -1538,3 +1538,11 @@ GO
 DELETE FROM [GenericAttribute]
 WHERE [KeyGroup] =N'Customer' and [Key]=N'OfferedShippingOptions' and [StoreId] = 0
 GO
+
+--Moved several properties from [Customer] to [GenericAtrribute]
+IF EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Customer]') and NAME='TaxDisplayTypeId')
+BEGIN
+	ALTER TABLE [Customer]
+	DROP COLUMN [TaxDisplayTypeId]
+END
+GO

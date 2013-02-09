@@ -31,7 +31,6 @@ namespace Nop.Data.Tests.Customers
             fromDb.Email.ShouldEqual("a@b.com");
             fromDb.AdminComment.ShouldEqual("some comment here");
             fromDb.AdminComment.ShouldEqual("some comment here");
-            fromDb.TaxDisplayType.ShouldEqual(TaxDisplayType.IncludingTax);
             fromDb.IsTaxExempt.ShouldEqual(true);
             fromDb.SelectedPaymentMethodSystemName.ShouldEqual("test1");
             fromDb.VatNumber.ShouldEqual("123456");
@@ -290,7 +289,6 @@ namespace Nop.Data.Tests.Customers
                 Email = "a@b.com",
                 CustomerGuid = Guid.NewGuid(),
                 AdminComment = "some comment here",
-                TaxDisplayType = TaxDisplayType.IncludingTax,
                 IsTaxExempt = true,
                 SelectedPaymentMethodSystemName = "test1",
                 VatNumber = "123456",

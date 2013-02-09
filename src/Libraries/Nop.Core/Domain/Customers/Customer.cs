@@ -65,11 +65,6 @@ namespace Nop.Core.Domain.Customers
         public virtual int CurrencyId { get; set; }
 
         /// <summary>
-        /// Gets or sets the tax display type identifier
-        /// </summary>
-        public virtual int TaxDisplayTypeId { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether the customer is tax exempt
         /// </summary>
         public virtual bool IsTaxExempt { get; set; }
@@ -160,21 +155,6 @@ namespace Nop.Core.Domain.Customers
         public virtual DateTime LastActivityDateUtc { get; set; }
         
         #region Custom properties
-
-        /// <summary>
-        /// Gets the tax display type
-        /// </summary>
-        public virtual TaxDisplayType TaxDisplayType
-        {
-            get
-            {
-                return (TaxDisplayType)this.TaxDisplayTypeId;
-            }
-            set
-            {
-                this.TaxDisplayTypeId = (int)value;
-            }
-        }
 
         /// <summary>
         /// Gets the VAT number status

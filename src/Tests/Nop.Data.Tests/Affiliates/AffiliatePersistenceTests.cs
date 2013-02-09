@@ -62,7 +62,6 @@ namespace Nop.Data.Tests.Affiliates
             {
                 CustomerGuid = Guid.NewGuid(),
                 AdminComment = "some comment here",
-                TaxDisplayType = TaxDisplayType.IncludingTax,
                 Active = true,
                 Deleted = false,
                 CreatedOnUtc = new DateTime(2010, 01, 01),
