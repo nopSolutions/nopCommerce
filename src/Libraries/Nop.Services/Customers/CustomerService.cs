@@ -497,12 +497,13 @@ namespace Nop.Services.Customers
         /// Reset data required for checkout
         /// </summary>
         /// <param name="customer">Customer</param>
+        /// <param name="storeId">Store identifier</param>
         /// <param name="clearCouponCodes">A value indicating whether to clear coupon code</param>
         /// <param name="clearCheckoutAttributes">A value indicating whether to clear selected checkout attributes</param>
         /// <param name="clearRewardPoints">A value indicating whether to clear "Use reward points" flag</param>
         /// <param name="clearShippingMethod">A value indicating whether to clear selected shipping method</param>
         /// <param name="clearPaymentMethod">A value indicating whether to clear selected payment method</param>
-        public virtual void ResetCheckoutData(Customer customer, 
+        public virtual void ResetCheckoutData(Customer customer, int storeId,
             bool clearCouponCodes = false, bool clearCheckoutAttributes = false,
             bool clearRewardPoints = true, bool clearShippingMethod = true,
             bool clearPaymentMethod = true)
@@ -532,8 +533,8 @@ namespace Nop.Services.Customers
             //clear selected shipping method
             if (clearShippingMethod)
             {
-                _genericAttributeService.SaveAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.LastShippingOption, null);
-                _genericAttributeService.SaveAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.OfferedShippingOptions, null);
+                _genericAttributeService.SaveAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.LastShippingOption, null, storeId);
+                _genericAttributeService.SaveAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.OfferedShippingOptions, null, storeId);
             }
 
             //clear selected payment method

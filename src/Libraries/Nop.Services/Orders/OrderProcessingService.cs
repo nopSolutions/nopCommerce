@@ -689,7 +689,7 @@ namespace Nop.Services.Orders
                         if (shippingAddress.Country != null && !shippingAddress.Country.AllowsShipping)
                             throw new NopException(string.Format("Country '{0}' is not allowed for shipping", shippingAddress.Country.Name));
 
-                        var shippingOption = customer.GetAttribute<ShippingOption>(SystemCustomerAttributeNames.LastShippingOption);
+                        var shippingOption = customer.GetAttribute<ShippingOption>(SystemCustomerAttributeNames.LastShippingOption, processPaymentRequest.StoreId);
                         if (shippingOption != null)
                         {
                             shippingMethodName = shippingOption.Name;
@@ -1297,7 +1297,7 @@ namespace Nop.Services.Orders
 
                         //reset checkout data
                         if (!processPaymentRequest.IsRecurringPayment)
-                            _customerService.ResetCheckoutData(customer, clearCouponCodes: true, clearCheckoutAttributes: true);
+                            _customerService.ResetCheckoutData(customer, processPaymentRequest.StoreId, clearCouponCodes: true, clearCheckoutAttributes: true);
 
                         if (!processPaymentRequest.IsRecurringPayment)
                         {

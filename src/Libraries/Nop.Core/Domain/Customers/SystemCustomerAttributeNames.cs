@@ -20,8 +20,6 @@ namespace Nop.Core.Domain.Customers
 
         //Other attributes
         public static string AvatarPictureId { get { return "AvatarPictureId"; } }
-        public static string LastShippingOption { get { return "LastShippingOption"; } }
-        public static string OfferedShippingOptions { get { return "OfferedShippingOptions"; } }
         public static string ForumPostCount { get { return "ForumPostCount"; } }
         public static string Signature { get { return "Signature"; } }
         public static string PasswordRecoveryToken { get { return "PasswordRecoveryToken"; } }
@@ -32,6 +30,8 @@ namespace Nop.Core.Domain.Customers
 
 
         //depends on store
+        public static string LastShippingOption { get { return "LastShippingOption"; } }
+        public static string OfferedShippingOptions { get { return "OfferedShippingOptions"; } }
         public static string LastContinueShoppingPage { get { return "LastContinueShoppingPage"; } }
         public static string NotifiedAboutNewPrivateMessages { get { return "NotifiedAboutNewPrivateMessages"; } }
         public static string WorkingDesktopThemeName { get { return "WorkingDesktopThemeName"; } }

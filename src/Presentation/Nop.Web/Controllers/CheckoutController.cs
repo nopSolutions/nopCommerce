@@ -182,7 +182,10 @@ namespace Nop.Web.Controllers
             {
                 //performance optimization. cache returned shipping options.
                 //we'll use them later (after a customer has selected an option).
-                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.OfferedShippingOptions, getShippingOptionResponse.ShippingOptions);
+                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, 
+                    SystemCustomerAttributeNames.OfferedShippingOptions, 
+                    getShippingOptionResponse.ShippingOptions,
+                    _workContext.CurrentStore.Id);
             
                 foreach (var shippingOption in getShippingOptionResponse.ShippingOptions)
                 {
@@ -206,7 +209,7 @@ namespace Nop.Web.Controllers
                 }
 
                 //find a selected (previously) shipping method
-                var lastShippingOption = _workContext.CurrentCustomer.GetAttribute<ShippingOption>(SystemCustomerAttributeNames.LastShippingOption);
+                var lastShippingOption = _workContext.CurrentCustomer.GetAttribute<ShippingOption>(SystemCustomerAttributeNames.LastShippingOption, _workContext.CurrentStore.Id);
                 if (lastShippingOption != null)
                 {
                     var shippingOptionToSelect = model.ShippingMethods.ToList()
@@ -371,7 +374,7 @@ namespace Nop.Web.Controllers
                 return new HttpUnauthorizedResult();
 
             //reset checkout data
-            _customerService.ResetCheckoutData(_workContext.CurrentCustomer);
+            _customerService.ResetCheckoutData(_workContext.CurrentCustomer, _workContext.CurrentStore.Id);
 
             //validation (cart)
             var scWarnings = _shoppingCartService.GetShoppingCartWarnings(cart, _workContext.CurrentCustomer.CheckoutAttributes, true);
@@ -574,7 +577,7 @@ namespace Nop.Web.Controllers
 
             if (!cart.RequiresShipping())
             {
-                _genericAttributeService.SaveAttribute<ShippingOption>(_workContext.CurrentCustomer, SystemCustomerAttributeNames.LastShippingOption, null);
+                _genericAttributeService.SaveAttribute<ShippingOption>(_workContext.CurrentCustomer, SystemCustomerAttributeNames.LastShippingOption, null, _workContext.CurrentStore.Id);
                 return RedirectToRoute("CheckoutPaymentMethod");
             }
             
@@ -604,7 +607,7 @@ namespace Nop.Web.Controllers
 
             if (!cart.RequiresShipping())
             {
-                _genericAttributeService.SaveAttribute<ShippingOption>(_workContext.CurrentCustomer, SystemCustomerAttributeNames.LastShippingOption, null);
+                _genericAttributeService.SaveAttribute<ShippingOption>(_workContext.CurrentCustomer, SystemCustomerAttributeNames.LastShippingOption, null, _workContext.CurrentStore.Id);
                 return RedirectToRoute("CheckoutPaymentMethod");
             }
 
@@ -619,7 +622,7 @@ namespace Nop.Web.Controllers
             
             //find it
             //performance optimization. try cache first
-            var shippingOptions = _workContext.CurrentCustomer.GetAttribute<List<ShippingOption>>(SystemCustomerAttributeNames.OfferedShippingOptions);
+            var shippingOptions = _workContext.CurrentCustomer.GetAttribute<List<ShippingOption>>(SystemCustomerAttributeNames.OfferedShippingOptions, _workContext.CurrentStore.Id);
             if (shippingOptions == null || shippingOptions.Count == 0)
             {
                 //not found? let's load them using shipping service
@@ -641,7 +644,7 @@ namespace Nop.Web.Controllers
                 return ShippingMethod();
 
             //save
-            _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.LastShippingOption, shippingOption);
+            _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.LastShippingOption, shippingOption, _workContext.CurrentStore.Id);
             
             return RedirectToRoute("CheckoutPaymentMethod");
         }
@@ -1079,7 +1082,7 @@ namespace Nop.Web.Controllers
                 else
                 {
                     //shipping is not required
-                    _genericAttributeService.SaveAttribute<ShippingOption>(_workContext.CurrentCustomer, SystemCustomerAttributeNames.LastShippingOption, null);
+                    _genericAttributeService.SaveAttribute<ShippingOption>(_workContext.CurrentCustomer, SystemCustomerAttributeNames.LastShippingOption, null, _workContext.CurrentStore.Id);
 
 
                     //Check whether payment workflow is required
@@ -1293,7 +1296,7 @@ namespace Nop.Web.Controllers
                 
                 //find it
                 //performance optimization. try cache first
-                var shippingOptions = _workContext.CurrentCustomer.GetAttribute<List<ShippingOption>>(SystemCustomerAttributeNames.OfferedShippingOptions);
+                var shippingOptions = _workContext.CurrentCustomer.GetAttribute<List<ShippingOption>>(SystemCustomerAttributeNames.OfferedShippingOptions, _workContext.CurrentStore.Id);
                 if (shippingOptions == null || shippingOptions.Count == 0)
                 {
                     //not found? let's load them using shipping service
@@ -1315,7 +1318,7 @@ namespace Nop.Web.Controllers
                     throw new Exception("Selected shipping method can't be loaded");
 
                 //save
-                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.LastShippingOption, shippingOption);
+                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.LastShippingOption, shippingOption, _workContext.CurrentStore.Id);
 
 
                 //Check whether payment workflow is required
