@@ -31,6 +31,7 @@ namespace Nop.Core.Domain.Customers
 
         //depends on store
         public static string CurrencyId { get { return "CurrencyId"; } }
+        public static string LanguageId { get { return "LanguageId"; } }
         public static string SelectedPaymentMethod { get { return "SelectedPaymentMethod"; } }
         public static string SelectedShippingOption { get { return "SelectedShippingOption"; } }
         public static string OfferedShippingOptions { get { return "OfferedShippingOptions"; } }

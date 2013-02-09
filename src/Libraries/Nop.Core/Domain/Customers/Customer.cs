@@ -76,11 +76,6 @@ namespace Nop.Core.Domain.Customers
         public virtual string AdminComment { get; set; }
 
         /// <summary>
-        /// Gets or sets the language identifier
-        /// </summary>
-        public virtual int LanguageId { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether the customer is tax exempt
         /// </summary>
         public virtual bool IsTaxExempt { get; set; }

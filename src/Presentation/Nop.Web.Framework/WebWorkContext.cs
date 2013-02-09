@@ -244,10 +244,12 @@ namespace Nop.Web.Framework
                                 if (langByCulture != null && langByCulture.Published)
                                 {
                                     //the language is found. now we need to save it
-                                    if (this.CurrentCustomer != null && langByCulture.Id != this.CurrentCustomer.LanguageId)
+                                    if (this.CurrentCustomer.GetAttribute<int>(SystemCustomerAttributeNames.LanguageId,
+                                        _genericAttributeService, this.CurrentStore.Id) != langByCulture.Id)
                                     {
-                                        this.CurrentCustomer.LanguageId = langByCulture.Id;
-                                        _customerService.UpdateCustomer(this.CurrentCustomer);
+                                        _genericAttributeService.SaveAttribute(this.CurrentCustomer,
+                                            SystemCustomerAttributeNames.LanguageId,
+                                            langByCulture.Id, this.CurrentStore.Id);
                                     }
                                 }
                             }
@@ -260,7 +262,8 @@ namespace Nop.Web.Framework
                     //find current customer language
                     foreach (var lang in allLanguages)
                     {
-                        if (this.CurrentCustomer.LanguageId == lang.Id)
+                        if (this.CurrentCustomer.GetAttribute<int>(SystemCustomerAttributeNames.LanguageId,
+                            _genericAttributeService, this.CurrentStore.Id) == lang.Id)
                         {
                             return lang;
                         }
@@ -274,8 +277,10 @@ namespace Nop.Web.Framework
             }
             set
             {
-                this.CurrentCustomer.LanguageId = value != null ? value.Id : 0;
-                _customerService.UpdateCustomer(this.CurrentCustomer);
+                var languageId = value != null ? value.Id : 0;
+                _genericAttributeService.SaveAttribute(this.CurrentCustomer,
+                    SystemCustomerAttributeNames.LanguageId,
+                    languageId, this.CurrentStore.Id);
             }
         }
 
