@@ -160,55 +160,70 @@ namespace Nop.Core
                     result += "/";
             }
 
-            if (!DataSettingsHelper.DatabaseIsInstalled())
-                return result;
-
-            //let's resolve IWorkContext  here.
-            //Do not inject it via contructor because it'll cause circular references
-            var workContext = EngineContext.Current.Resolve<IWorkContext>();
-            var currentStore = workContext.CurrentStore;
-            if (currentStore == null)
-                throw new Exception("Current store cannot be loaded");
-
-            if (String.IsNullOrWhiteSpace(result))
+            if (DataSettingsHelper.DatabaseIsInstalled())
             {
-                //HTTP_HOST variable is not available.
-                //This scenario is possible only when HttpContext is not available (for example, running in a schedule task)
-                result = currentStore.Url;
-                if (!result.EndsWith("/"))
-                    result += "/";
-            }
+                #region Database is installed
 
-            if (useSsl)
-            {
-                if (!String.IsNullOrWhiteSpace(currentStore.SecureUrl))
+                //let's resolve IWorkContext  here.
+                //Do not inject it via contructor because it'll cause circular references
+                var workContext = EngineContext.Current.Resolve<IWorkContext>();
+                var currentStore = workContext.CurrentStore;
+                if (currentStore == null)
+                    throw new Exception("Current store cannot be loaded");
+
+                if (String.IsNullOrWhiteSpace(httpHost))
                 {
-                    //Secure URL specified. 
-                    //So a store owner don't want it to be detected automatically.
-                    //In this case let's use the specified secure URL
-                    result = currentStore.SecureUrl;
+                    //HTTP_HOST variable is not available.
+                    //This scenario is possible only when HttpContext is not available (for example, running in a schedule task)
+                    //in this case use URL of a store entity configured in admin area
+                    result = currentStore.Url;
+                    if (!result.EndsWith("/"))
+                        result += "/";
+                }
+
+                if (useSsl)
+                {
+                    if (!String.IsNullOrWhiteSpace(currentStore.SecureUrl))
+                    {
+                        //Secure URL specified. 
+                        //So a store owner don't want it to be detected automatically.
+                        //In this case let's use the specified secure URL
+                        result = currentStore.SecureUrl;
+                    }
+                    else
+                    {
+                        //Secure URL is not specified.
+                        //So a store owner wants it to be detected automatically.
+                        result = result.Replace("http:/", "https:/");
+                    }
                 }
                 else
+                {
+                    if (currentStore.SslEnabled && !String.IsNullOrWhiteSpace(currentStore.SecureUrl))
+                    {
+                        //SSL is enabled in this store and secure URL is specified.
+                        //So a store owner don't want it to be detected automatically.
+                        //In this case let's use the specified non-secure URL
+                        result = currentStore.Url;
+                    }
+                }
+                #endregion
+            }
+            else
+            {
+                #region Database is not installed
+                if (useSsl)
                 {
                     //Secure URL is not specified.
                     //So a store owner wants it to be detected automatically.
                     result = result.Replace("http:/", "https:/");
                 }
+                #endregion
             }
-            else
-            {
-                if (currentStore.SslEnabled && !String.IsNullOrWhiteSpace(currentStore.SecureUrl))
-                {
-                    //SSL is enabled in this store and secure URL is specified.
-                    //So a store owner don't want it to be detected automatically.
-                    //In this case let's use the specified non-secure URL
-                    result = currentStore.Url;
-                }
-            }
+
 
             if (!result.EndsWith("/"))
                 result += "/";
-
             return result.ToLowerInvariant();
         }
         

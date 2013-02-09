@@ -33,7 +33,6 @@ namespace Nop.Services.ExportImport
         private readonly IProductService _productService;
         private readonly IPictureService _pictureService;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
-        private readonly StoreInformationSettings _storeInformationSettings;
 
         #endregion
 
@@ -43,15 +42,13 @@ namespace Nop.Services.ExportImport
             IManufacturerService manufacturerService,
             IProductService productService,
             IPictureService pictureService,
-            INewsLetterSubscriptionService newsLetterSubscriptionService,
-            StoreInformationSettings storeInformationSettings)
+            INewsLetterSubscriptionService newsLetterSubscriptionService)
         {
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
             this._productService = productService;
             this._pictureService = pictureService;
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
-            this._storeInformationSettings = storeInformationSettings;
         }
 
         #endregion
