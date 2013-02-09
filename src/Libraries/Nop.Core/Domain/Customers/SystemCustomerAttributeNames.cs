@@ -26,13 +26,13 @@ namespace Nop.Core.Domain.Customers
         public static string Signature { get { return "Signature"; } }
         public static string PasswordRecoveryToken { get { return "PasswordRecoveryToken"; } }
         public static string AccountActivationToken { get { return "AccountActivationToken"; } }
-        public static string LastContinueShoppingPage { get { return "LastContinueShoppingPage"; } }
         public static string LastVisitedPage { get { return "LastVisitedPage"; } }
         public static string ImpersonatedCustomerId { get { return "ImpersonatedCustomerId"; } }
 
 
 
         //depends on store
+        public static string LastContinueShoppingPage { get { return "LastContinueShoppingPage"; } }
         public static string NotifiedAboutNewPrivateMessages { get { return "NotifiedAboutNewPrivateMessages"; } }
         public static string WorkingDesktopThemeName { get { return "WorkingDesktopThemeName"; } }
         public static string DontUseMobileVersion { get { return "DontUseMobileVersion"; } }

@@ -1526,3 +1526,9 @@ GO
 DELETE FROM [GenericAttribute]
 WHERE [KeyGroup] =N'Customer' and [Key]=N'WorkingDesktopThemeName' and [StoreId] = 0
 GO
+DELETE FROM [GenericAttribute]
+WHERE [KeyGroup] =N'Customer' and [Key]=N'DontUseMobileVersion' and [StoreId] = 0
+GO
+DELETE FROM [GenericAttribute]
+WHERE [KeyGroup] =N'Customer' and [Key]=N'LastContinueShoppingPage' and [StoreId] = 0
+GO

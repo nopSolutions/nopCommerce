@@ -800,7 +800,10 @@ namespace Nop.Web.Controllers
                 return InvokeHttp404();
             
             //'Continue shopping' URL
-            _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.LastContinueShoppingPage, _webHelper.GetThisPageUrl(false));
+            _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, 
+                SystemCustomerAttributeNames.LastContinueShoppingPage, 
+                _webHelper.GetThisPageUrl(false),
+                _workContext.CurrentStore.Id);
 
             if (command.PageNumber <= 0) command.PageNumber = 1;
 
@@ -1140,7 +1143,10 @@ namespace Nop.Web.Controllers
                 return InvokeHttp404();
             
             //'Continue shopping' URL
-            _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.LastContinueShoppingPage, _webHelper.GetThisPageUrl(false));
+            _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, 
+                SystemCustomerAttributeNames.LastContinueShoppingPage, 
+                _webHelper.GetThisPageUrl(false),
+                _workContext.CurrentStore.Id);
 
             if (command.PageNumber <= 0) command.PageNumber = 1;
 
@@ -2833,7 +2839,10 @@ namespace Nop.Web.Controllers
                 model = new SearchModel();
 
             //'Continue shopping' URL
-            _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.LastContinueShoppingPage, _webHelper.GetThisPageUrl(false));
+            _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, 
+                SystemCustomerAttributeNames.LastContinueShoppingPage, 
+                _webHelper.GetThisPageUrl(false),
+                _workContext.CurrentStore.Id);
 
             if (command.PageSize <= 0) command.PageSize = _catalogSettings.SearchPageProductsPerPage;
             if (command.PageNumber <= 0) command.PageNumber = 1;
