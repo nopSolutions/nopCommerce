@@ -473,6 +473,8 @@ namespace Nop.Plugin.Feed.Froogle
             _objectContext.Install();
 
             //locales
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Store", "Store");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Store.Hint", "Select the store that will be used to generate the feed.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Currency", "Currency");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Currency.Hint", "Select the default currency that will be used to generate the feed.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.DefaultGoogleCategory", "Default Google category");
@@ -507,6 +509,8 @@ namespace Nop.Plugin.Feed.Froogle
             _objectContext.Uninstall();
 
             //locales
+            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Store");
+            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Store.Hint");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Currency");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Currency.Hint");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.DefaultGoogleCategory");

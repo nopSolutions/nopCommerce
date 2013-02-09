@@ -353,6 +353,12 @@ set @resources='
   <LocaleResource Name="Plugins.Feed.Froogle.SuccessResult">
 	<Value>Froogle feed has been successfully generated.</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Feed.Froogle.Store">
+	<Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Feed.Froogle.Store.Hint">
+	<Value>Select the store that will be used to generate the feed.</Value>
+  </LocaleResource>
 </Language>
 '
 

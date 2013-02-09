@@ -11,6 +11,7 @@ namespace Nop.Plugin.Feed.Froogle.Models
     {
         public FeedFroogleModel()
         {
+            AvailableStores = new List<SelectListItem>();
             AvailableCurrencies = new List<SelectListItem>();
             AvailableGoogleCategories = new List<SelectListItem>();
             GeneratedFiles = new List<GeneratedFileModel>();
@@ -18,6 +19,10 @@ namespace Nop.Plugin.Feed.Froogle.Models
 
         [NopResourceDisplayName("Plugins.Feed.Froogle.ProductPictureSize")]
         public int ProductPictureSize { get; set; }
+
+        [NopResourceDisplayName("Plugins.Feed.Froogle.Store")]
+        public int StoreId { get; set; }
+        public IList<SelectListItem> AvailableStores { get; set; }
 
         [NopResourceDisplayName("Plugins.Feed.Froogle.Currency")]
         public int CurrencyId { get; set; }
