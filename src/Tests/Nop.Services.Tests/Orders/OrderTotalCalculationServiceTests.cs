@@ -1272,7 +1272,15 @@ namespace Nop.Services.Tests.Orders
                                         Key = SystemCustomerAttributeNames.SelectedPaymentMethod,
                                         KeyGroup = "Customer",
                                         Value = "test1"
-                                    }
+                                    },
+                                new GenericAttribute()
+                                        {
+                                        StoreId = 1,
+                                        EntityId = customer.Id,
+                                        Key = SystemCustomerAttributeNames.UseRewardPointsDuringCheckout,
+                                        KeyGroup = "Customer",
+                                        Value = true.ToString()
+                                        }
                             });
             _paymentService.Expect(ps => ps.GetAdditionalHandlingFee(cart, "test1")).Return(20);
 
@@ -1292,7 +1300,6 @@ namespace Nop.Services.Tests.Orders
             _rewardPointsSettings.Enabled = true;
             _rewardPointsSettings.ExchangeRate = 2; //1 reward point = 2
             customer.AddRewardPointsHistoryEntry(15); //15*2=30
-            customer.UseRewardPointsDuringCheckout = true;
 
             //56 - items, 10 - shipping (fixed), 20 - payment fee, 8.6 - tax, -30 (reward points)
             _orderTotalCalcService.GetShoppingCartTotal(cart, out discountAmount, out appliedDiscount,

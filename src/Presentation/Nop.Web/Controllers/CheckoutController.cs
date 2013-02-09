@@ -718,8 +718,12 @@ namespace Nop.Web.Controllers
                 return new HttpUnauthorizedResult();
 
             //reward points
-            _workContext.CurrentCustomer.UseRewardPointsDuringCheckout = model.UseRewardPoints;
-            _customerService.UpdateCustomer(_workContext.CurrentCustomer);
+            if (_rewardPointsSettings.Enabled)
+            {
+                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
+                    SystemCustomerAttributeNames.UseRewardPointsDuringCheckout, model.UseRewardPoints,
+                    _workContext.CurrentStore.Id);
+            }
 
             //Check whether payment workflow is required
             bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart);
@@ -1442,8 +1446,12 @@ namespace Nop.Web.Controllers
                 TryUpdateModel(model);
 
                 //reward points
-                _workContext.CurrentCustomer.UseRewardPointsDuringCheckout = model.UseRewardPoints;
-                _customerService.UpdateCustomer(_workContext.CurrentCustomer);
+                if (_rewardPointsSettings.Enabled)
+                {
+                    _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
+                        SystemCustomerAttributeNames.UseRewardPointsDuringCheckout, model.UseRewardPoints,
+                        _workContext.CurrentStore.Id);
+                }
 
                 //Check whether payment workflow is required
                 bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart);

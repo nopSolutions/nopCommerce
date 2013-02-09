@@ -26,6 +26,9 @@ namespace Nop.Core.Domain.Customers
         private ICollection<ForumTopic> _forumTopics;
         private ICollection<ForumPost> _forumPosts;
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public Customer()
         {
             this.CustomerGuid = Guid.NewGuid();
@@ -37,18 +40,36 @@ namespace Nop.Core.Domain.Customers
         /// </summary>
         public virtual Guid CustomerGuid { get; set; }
 
+        /// <summary>
+        /// Gets or sets the username
+        /// </summary>
         public virtual string Username { get; set; }
+        /// <summary>
+        /// Gets or sets the email
+        /// </summary>
         public virtual string Email { get; set; }
+        /// <summary>
+        /// Gets or sets the password
+        /// </summary>
         public virtual string Password { get; set; }
 
+        /// <summary>
+        /// Gets or sets the password format
+        /// </summary>
         public virtual int PasswordFormatId { get; set; }
+        /// <summary>
+        /// Gets or sets the password format
+        /// </summary>
         public virtual PasswordFormat PasswordFormat
         {
             get { return (PasswordFormat)PasswordFormatId; }
             set { this.PasswordFormatId = (int)value; }
         }
-
+        /// <summary>
+        /// Gets or sets the password salt
+        /// </summary>
         public virtual string PasswordSalt { get; set; }
+
         /// <summary>
         /// Gets or sets the admin comment
         /// </summary>
@@ -93,11 +114,6 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets the applied gift card coupon codes (serialized)
         /// </summary>
         public virtual string GiftCardCouponCodes { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to use reward points during checkout
-        /// </summary>
-        public virtual bool UseRewardPointsDuringCheckout { get; set; }
 
         /// <summary>
         /// Gets or sets the time zone identifier

@@ -527,7 +527,7 @@ namespace Nop.Services.Customers
             //clear reward points flag
             if (clearRewardPoints)
             {
-                customer.UseRewardPointsDuringCheckout = false;
+                _genericAttributeService.SaveAttribute<bool>(customer, SystemCustomerAttributeNames.UseRewardPointsDuringCheckout, false, storeId);
             }
 
             //clear selected shipping method
