@@ -46,7 +46,7 @@ namespace Nop.Web.Framework.Themes
                 if (_storeInformationSettings.AllowCustomerToSelectTheme)
                 {
                     if (_workContext.CurrentCustomer != null)
-                        theme = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.WorkingDesktopThemeName);
+                        theme = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.WorkingDesktopThemeName, _genericAttributeService, _workContext.CurrentStore.Id);
                 }
 
                 //default store theme
@@ -76,7 +76,7 @@ namespace Nop.Web.Framework.Themes
                 if (_workContext.CurrentCustomer == null)
                     return;
 
-                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.WorkingDesktopThemeName, value);
+                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.WorkingDesktopThemeName, value, _workContext.CurrentStore.Id);
 
                 //clear cache
                 this._desktopThemeIsCached = false;

@@ -1523,3 +1523,6 @@ GO
 DELETE FROM [GenericAttribute]
 WHERE [KeyGroup] =N'Customer' and [Key]=N'NotifiedAboutNewPrivateMessages' and [StoreId] = 0
 GO
+DELETE FROM [GenericAttribute]
+WHERE [KeyGroup] =N'Customer' and [Key]=N'WorkingDesktopThemeName' and [StoreId] = 0
+GO
