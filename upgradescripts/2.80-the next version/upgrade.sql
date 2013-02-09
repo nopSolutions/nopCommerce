@@ -1253,16 +1253,14 @@ IF EXISTS (SELECT 1
 BEGIN
 	ALTER TABLE dbo.[Customer]
 	DROP CONSTRAINT Customer_Currency
+	
+	EXEC ('UPDATE [Customer] SET [CurrencyId] = 0 WHERE [CurrencyId] IS NULL')
+
+	EXEC ('ALTER TABLE [Customer] ALTER COLUMN [CurrencyId] int NOT NULL')
 END
 GO
 
-UPDATE [Customer]
-SET [CurrencyId] = 0
-WHERE [CurrencyId] IS NULL
-GO
 
-ALTER TABLE [Customer] ALTER COLUMN [CurrencyId] int NOT NULL
-GO
 
 IF EXISTS (SELECT 1
            FROM   sysobjects
@@ -1272,15 +1270,11 @@ IF EXISTS (SELECT 1
 BEGIN
 	ALTER TABLE dbo.[Customer]
 	DROP CONSTRAINT Customer_Language
+		
+	EXEC ('UPDATE [Customer] SET  = 0 WHERE [LanguageId] IS NULL')
+
+	EXEC ('ALTER TABLE [Customer] ALTER COLUMN [LanguageId] int NOT NULL')	
 END
-GO
-
-UPDATE [Customer]
-SET [LanguageId] = 0
-WHERE [LanguageId] IS NULL
-GO
-
-ALTER TABLE [Customer] ALTER COLUMN [LanguageId] int NOT NULL
 GO
 
 IF EXISTS (SELECT 1
