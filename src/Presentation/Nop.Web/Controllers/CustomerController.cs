@@ -536,7 +536,9 @@ namespace Nop.Web.Controllers
                 {
                     //properties
                     if (_dateTimeSettings.AllowCustomersToSetTimeZone)
-                        customer.TimeZoneId = model.TimeZoneId;
+                    {
+                        _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.TimeZoneId, model.TimeZoneId);
+                    }
                     //VAT number
                     if (_taxSettings.EuVatEnabled)
                     {
@@ -553,8 +555,6 @@ namespace Nop.Web.Controllers
                             _workflowMessageService.SendNewVatSubmittedStoreOwnerNotification(customer, model.VatNumber, vatAddress, _localizationSettings.DefaultAdminLanguageId);
 
                     }
-                    //save
-                    _customerService.UpdateCustomer(customer);
 
                     //form fields
                     if (_customerSettings.GenderEnabled)
@@ -957,7 +957,9 @@ namespace Nop.Web.Controllers
 
                     //properties
                     if (_dateTimeSettings.AllowCustomersToSetTimeZone)
-                        customer.TimeZoneId = model.TimeZoneId;
+                    {
+                        _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.TimeZoneId, model.TimeZoneId);
+                    }
                     //VAT number
                     if (_taxSettings.EuVatEnabled)
                     {
@@ -977,8 +979,6 @@ namespace Nop.Web.Controllers
                                 _workflowMessageService.SendNewVatSubmittedStoreOwnerNotification(customer, model.VatNumber, vatAddress, _localizationSettings.DefaultAdminLanguageId);
                         }
                     }
-                    //save
-                    _customerService.UpdateCustomer(customer);
 
                     //form fields
                     if (_customerSettings.GenderEnabled)

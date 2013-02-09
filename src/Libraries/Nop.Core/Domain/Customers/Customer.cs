@@ -96,11 +96,6 @@ namespace Nop.Core.Domain.Customers
         public virtual string GiftCardCouponCodes { get; set; }
 
         /// <summary>
-        /// Gets or sets the time zone identifier
-        /// </summary>
-        public virtual string TimeZoneId { get; set; }
-
-        /// <summary>
         /// Gets or sets the affiliate identifier
         /// </summary>
         public virtual int AffiliateId { get; set; }

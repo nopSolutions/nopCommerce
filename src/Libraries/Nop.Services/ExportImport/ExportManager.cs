@@ -1337,9 +1337,6 @@ namespace Nop.Services.ExportImport
                     worksheet.Cells[row, col].Value = customer.IsTaxExempt;
                     col++;
 
-                    worksheet.Cells[row, col].Value = customer.TimeZoneId;
-                    col++;
-
                     worksheet.Cells[row, col].Value = customer.AffiliateId;
                     col++;
 
@@ -1374,6 +1371,7 @@ namespace Nop.Services.ExportImport
                     var fax = customer.GetAttribute<string>(SystemCustomerAttributeNames.Fax);
                     var vatNumber = customer.GetAttribute<int>(SystemCustomerAttributeNames.VatNumber);
                     var vatNumberStatusId = customer.GetAttribute<string>(SystemCustomerAttributeNames.VatNumberStatusId);
+                    var timeZoneId = customer.GetAttribute<string>(SystemCustomerAttributeNames.TimeZoneId);
 
                     var avatarPictureId = customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId);
                     var forumPostCount = customer.GetAttribute<int>(SystemCustomerAttributeNames.ForumPostCount);
@@ -1419,6 +1417,9 @@ namespace Nop.Services.ExportImport
                     col++;
 
                     worksheet.Cells[row, col].Value = vatNumberStatusId;
+                    col++;
+                    
+                    worksheet.Cells[row, col].Value = timeZoneId;
                     col++;
 
                     worksheet.Cells[row, col].Value = avatarPictureId;
@@ -1486,7 +1487,6 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("PasswordFormatId", null, customer.PasswordFormatId.ToString());
                 xmlWriter.WriteElementString("PasswordSalt", null, customer.PasswordSalt);
                 xmlWriter.WriteElementString("IsTaxExempt", null, customer.IsTaxExempt.ToString());
-                xmlWriter.WriteElementString("TimeZoneId", null, customer.TimeZoneId);
                 xmlWriter.WriteElementString("AffiliateId", null, customer.AffiliateId.ToString());
                 xmlWriter.WriteElementString("Active", null, customer.Active.ToString());
 
@@ -1511,7 +1511,8 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("Phone", null, customer.GetAttribute<string>(SystemCustomerAttributeNames.Phone));
                 xmlWriter.WriteElementString("Fax", null, customer.GetAttribute<string>(SystemCustomerAttributeNames.Fax));
                 xmlWriter.WriteElementString("VatNumber", null, customer.GetAttribute<string>(SystemCustomerAttributeNames.VatNumber));
-                xmlWriter.WriteElementString("VatNumberStatusId", null, customer.GetAttribute<string>(SystemCustomerAttributeNames.VatNumberStatusId));
+                xmlWriter.WriteElementString("VatNumberStatusId", null, customer.GetAttribute<int>(SystemCustomerAttributeNames.VatNumberStatusId).ToString());
+                xmlWriter.WriteElementString("TimeZoneId", null, customer.GetAttribute<string>(SystemCustomerAttributeNames.TimeZoneId));
 
                 var newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmail(customer.Email);
                 bool subscribedToNewsletters = newsletter != null && newsletter.Active;

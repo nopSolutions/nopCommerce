@@ -1589,6 +1589,13 @@ BEGIN
 END
 GO
 
+IF EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Customer]') and NAME='TimeZoneId')
+BEGIN
+	ALTER TABLE [Customer]
+	DROP COLUMN [TimeZoneId]
+END
+GO
+
 
 IF EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_GenericAttribute_EntityId_and_KeyGroup' and id=object_id(N'[dbo].[GenericAttribute]'))
 BEGIN
