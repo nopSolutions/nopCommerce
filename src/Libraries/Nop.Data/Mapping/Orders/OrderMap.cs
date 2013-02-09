@@ -23,12 +23,6 @@ namespace Nop.Data.Mapping.Orders
             this.Property(o => o.OrderTotal).HasPrecision(18, 4);
             this.Property(o => o.RefundedAmount).HasPrecision(18, 4);
 
-            this.Property(o => o.TaxRates);
-            this.Property(o => o.AuthorizationTransactionCode);
-            this.Property(o => o.AuthorizationTransactionResult);
-            this.Property(o => o.CaptureTransactionResult);
-            this.Property(o => o.PurchaseOrderNumber);
-
             this.Ignore(o => o.OrderStatus);
             this.Ignore(o => o.PaymentStatus);
             this.Ignore(o => o.ShippingStatus);

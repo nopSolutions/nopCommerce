@@ -11,8 +11,6 @@ namespace Nop.Data.Mapping.Orders
             this.HasKey(rr => rr.Id);
             this.Property(rr => rr.ReasonForReturn).IsRequired();
             this.Property(rr => rr.RequestedAction).IsRequired();
-            this.Property(rr => rr.CustomerComments);
-            this.Property(rr => rr.StaffNotes);
 
             this.Ignore(rr => rr.ReturnRequestStatus);
 

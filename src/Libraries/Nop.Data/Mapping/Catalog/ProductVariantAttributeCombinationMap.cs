@@ -9,7 +9,6 @@ namespace Nop.Data.Mapping.Catalog
         {
             this.ToTable("ProductVariantAttributeCombination");
             this.HasKey(pvac => pvac.Id);
-            this.Property(pvac => pvac.AttributesXml);
 
             this.Property(pv => pv.Sku).HasMaxLength(400);
             this.Property(pv => pv.ManufacturerPartNumber).HasMaxLength(400);
