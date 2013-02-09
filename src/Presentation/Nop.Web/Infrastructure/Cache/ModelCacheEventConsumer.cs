@@ -141,8 +141,9 @@ namespace Nop.Web.Infrastructure.Cache
         /// <remarks>
         /// {0} : language id
         /// {1} : comma separated list of customer roles
+        /// {2} : current store id
         /// </remarks>
-        public const string CATEGORY_NAVIGATION_MODEL_KEY = "Nop.pres.category.navigation-{0}-{1}";
+        public const string CATEGORY_NAVIGATION_MODEL_KEY = "Nop.pres.category.navigation-{0}-{1}-{2}";
         public const string CATEGORY_NAVIGATION_PATTERN_KEY = "Nop.pres.category.navigation";
 
         /// <summary>
@@ -152,8 +153,9 @@ namespace Nop.Web.Infrastructure.Cache
         /// {0} : parent category id
         /// {1} : show hidden?
         /// {2} : comma separated list of customer roles
+        /// {3} : current store id
         /// </remarks>
-        public const string CATEGORY_CHILD_IDENTIFIERS_MODEL_KEY = "Nop.pres.category.childidentifiers-{0}-{1}-{2}";
+        public const string CATEGORY_CHILD_IDENTIFIERS_MODEL_KEY = "Nop.pres.category.childidentifiers-{0}-{1}-{2}-{3}";
         public const string CATEGORY_CHILD_IDENTIFIERS_PATTERN_KEY = "Nop.pres.category.childidentifiers";
         
         /// <summary>
