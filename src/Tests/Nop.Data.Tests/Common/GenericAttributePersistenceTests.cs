@@ -16,6 +16,7 @@ namespace Nop.Data.Tests.Common
                                    KeyGroup = "KeyGroup 1",
                                    Key = "Key 1",
                                    Value = "Value 1",
+                                   StoreId = 2,
                                };
 
             var fromDb = SaveAndLoadEntity(genericAttribute);
@@ -24,6 +25,7 @@ namespace Nop.Data.Tests.Common
             fromDb.KeyGroup.ShouldEqual("KeyGroup 1");
             fromDb.Key.ShouldEqual("Key 1");
             fromDb.Value.ShouldEqual("Value 1");
+            fromDb.StoreId.ShouldEqual(2);
         }
     }
 }

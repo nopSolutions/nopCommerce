@@ -354,11 +354,10 @@ namespace Nop.Web.Controllers
                 unreadMessage = string.Format(_localizationService.GetResource("PrivateMessages.TotalUnread"), unreadMessageCount);
 
                 //notifications here
-                var notifiedAboutNewPrivateMessagesAttributeKey = string.Format(SystemCustomerAttributeNames.NotifiedAboutNewPrivateMessages, _workContext.CurrentStore.Id);
                 if (_forumSettings.ShowAlertForPM &&
-                    !customer.GetAttribute<bool>(notifiedAboutNewPrivateMessagesAttributeKey))
+                    !customer.GetAttribute<bool>(SystemCustomerAttributeNames.NotifiedAboutNewPrivateMessages, _workContext.CurrentStore.Id))
                 {
-                    _genericAttributeService.SaveAttribute(customer, notifiedAboutNewPrivateMessagesAttributeKey, true);
+                    _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.NotifiedAboutNewPrivateMessages, true, _workContext.CurrentStore.Id);
                     alertMessage = string.Format(_localizationService.GetResource("PrivateMessages.YouHaveUnreadPM"), unreadMessageCount);
                 }
             }

@@ -1499,3 +1499,27 @@ BEGIN
 	ON DELETE CASCADE
 END
 GO
+
+
+
+
+--GenericAttributes cuold be limited to some specific store name
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[GenericAttribute]') and NAME='StoreId')
+BEGIN
+	ALTER TABLE [GenericAttribute]
+	ADD [StoreId] bit NULL
+END
+GO
+
+UPDATE [GenericAttribute]
+SET [StoreId] = 0
+WHERE [StoreId] IS NULL
+GO
+
+ALTER TABLE [GenericAttribute] ALTER COLUMN [StoreId] int NOT NULL
+GO
+
+--delete generic attributes which depends on a specific store now
+DELETE FROM [GenericAttribute]
+WHERE [KeyGroup] =N'Customer' and [Key]=N'NotifiedAboutNewPrivateMessages' and [StoreId] = 0
+GO

@@ -1033,10 +1033,8 @@ namespace Nop.Services.Forums
                 throw new NopException("Recipient could not be loaded");
             }
 
-            //UI notification        
-            var notifiedAboutNewPrivateMessagesAttributeKey = string.Format(SystemCustomerAttributeNames.NotifiedAboutNewPrivateMessages, privateMessage.StoreId);
-
-            _genericAttributeService.SaveAttribute(customerTo, notifiedAboutNewPrivateMessagesAttributeKey, false);
+            //UI notification
+            _genericAttributeService.SaveAttribute(customerTo, SystemCustomerAttributeNames.NotifiedAboutNewPrivateMessages, false, privateMessage.StoreId);
 
             //Email notification
             if (_forumSettings.NotifyAboutPrivateMessages)
