@@ -21,6 +21,7 @@ namespace Nop.Services.Common
             var genericAttributeService = EngineContext.Current.Resolve<IGenericAttributeService>();
             return GetAttribute<TPropType>(entity, key, genericAttributeService, storeId);
         }
+
         /// <summary>
         /// Get an attribute of an entity
         /// </summary>
@@ -38,12 +39,9 @@ namespace Nop.Services.Common
 
             string keyGroup = entity.GetUnproxiedEntityType().Name;
 
-            var props = genericAttributeService.GetAttributesForEntity(entity.Id, keyGroup);
+            var props = genericAttributeService.GetAttributesForEntity(entity.Id, keyGroup, storeId);
             //little hack here (only for unit testing). we should write ecpect-return rules in unit tests for such cases
-            if (props == null)
-                return default(TPropType);
-            props = props.Where(x => x.StoreId == storeId).ToList();
-            if (props.Count == 0)
+            if (props == null || props.Count == 0)
                 return default(TPropType);
 
             var prop = props.FirstOrDefault(ga =>

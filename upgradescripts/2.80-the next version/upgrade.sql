@@ -1588,3 +1588,19 @@ BEGIN
 	DROP COLUMN [VatNumberStatusId]
 END
 GO
+
+
+IF EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_GenericAttribute_EntityId_and_KeyGroup' and id=object_id(N'[dbo].[GenericAttribute]'))
+BEGIN
+	DROP INDEX [dbo].[GenericAttribute].[IX_GenericAttribute_EntityId_and_KeyGroup]
+END
+GO
+
+IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_GenericAttribute_EntityId_and_KeyGroup_and_StoreId' and id=object_id(N'[dbo].[GenericAttribute]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_GenericAttribute_EntityId_and_KeyGroup_and_StoreId] ON [dbo].[GenericAttribute] 
+	(
+		[EntityId] ASC, [KeyGroup] ASC, [StoreId] ASC
+	)
+END
+GO

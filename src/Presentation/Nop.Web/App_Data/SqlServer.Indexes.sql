@@ -25,7 +25,7 @@ GO
 CREATE NONCLUSTERED INDEX [IX_Customer_CustomerGuid] ON [Customer] ([CustomerGuid] ASC)
 GO
 
-CREATE NONCLUSTERED INDEX [IX_GenericAttribute_EntityId_and_KeyGroup] ON [GenericAttribute] ([EntityId] ASC, [KeyGroup] ASC)
+CREATE NONCLUSTERED INDEX [IX_GenericAttribute_EntityId_and_KeyGroup_and_StoreId] ON [GenericAttribute] ([EntityId] ASC, [KeyGroup] ASC, [StoreId] ASC)
 GO
 
 CREATE NONCLUSTERED INDEX [IX_QueuedEmail_CreatedOnUtc] ON [QueuedEmail] ([CreatedOnUtc] ASC)

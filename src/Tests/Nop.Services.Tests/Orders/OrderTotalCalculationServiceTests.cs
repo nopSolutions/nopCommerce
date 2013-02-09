@@ -974,14 +974,14 @@ namespace Nop.Services.Tests.Orders
             cart.ForEach(sci => sci.Customer = customer);
             cart.ForEach(sci => sci.CustomerId = customer.Id);
 
-            
-            
-            _genericAttributeService.Expect(x => x.GetAttributesForEntity(customer.Id, "Customer"))
+
+
+            _genericAttributeService.Expect(x => x.GetAttributesForEntity(customer.Id, "Customer", _store.Id))
                 .Return(new List<GenericAttribute>()
                             {
                                 new GenericAttribute()
                                     {
-                                        StoreId = 1,
+                                        StoreId = _store.Id,
                                         EntityId = customer.Id,
                                         Key = SystemCustomerAttributeNames.SelectedPaymentMethod,
                                         KeyGroup = "Customer",
@@ -1086,12 +1086,12 @@ namespace Nop.Services.Tests.Orders
 
 
 
-            _genericAttributeService.Expect(x => x.GetAttributesForEntity(customer.Id, "Customer"))
+            _genericAttributeService.Expect(x => x.GetAttributesForEntity(customer.Id, "Customer", _store.Id))
                 .Return(new List<GenericAttribute>()
                             {
                                 new GenericAttribute()
                                     {
-                                        StoreId = 1,
+                                        StoreId = _store.Id,
                                         EntityId = customer.Id,
                                         Key = SystemCustomerAttributeNames.SelectedPaymentMethod,
                                         KeyGroup = "Customer",
@@ -1173,12 +1173,12 @@ namespace Nop.Services.Tests.Orders
             cart.ForEach(sci => sci.Customer = customer);
             cart.ForEach(sci => sci.CustomerId = customer.Id);
 
-            _genericAttributeService.Expect(x => x.GetAttributesForEntity(customer.Id, "Customer"))
+            _genericAttributeService.Expect(x => x.GetAttributesForEntity(customer.Id, "Customer", _store.Id))
                 .Return(new List<GenericAttribute>()
                             {
                                 new GenericAttribute()
                                     {
-                                        StoreId = 1,
+                                        StoreId = _store.Id,
                                         EntityId = customer.Id,
                                         Key = SystemCustomerAttributeNames.SelectedPaymentMethod,
                                         KeyGroup = "Customer",
@@ -1262,12 +1262,12 @@ namespace Nop.Services.Tests.Orders
 
 
 
-            _genericAttributeService.Expect(x => x.GetAttributesForEntity(customer.Id, "Customer"))
+            _genericAttributeService.Expect(x => x.GetAttributesForEntity(customer.Id, "Customer", _store.Id))
                 .Return(new List<GenericAttribute>()
                             {
                                 new GenericAttribute()
                                     {
-                                        StoreId = 1,
+                                        StoreId = _store.Id,
                                         EntityId = customer.Id,
                                         Key = SystemCustomerAttributeNames.SelectedPaymentMethod,
                                         KeyGroup = "Customer",
@@ -1375,12 +1375,12 @@ namespace Nop.Services.Tests.Orders
             _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToOrderTotal)).Return(new List<Discount>() { discount1 });
 
 
-            _genericAttributeService.Expect(x => x.GetAttributesForEntity(customer.Id, "Customer"))
+            _genericAttributeService.Expect(x => x.GetAttributesForEntity(customer.Id, "Customer", _store.Id))
                 .Return(new List<GenericAttribute>()
                             {
                                 new GenericAttribute()
                                     {
-                                        StoreId = 1,
+                                        StoreId = _store.Id,
                                         EntityId = customer.Id,
                                         Key = SystemCustomerAttributeNames.SelectedPaymentMethod,
                                         KeyGroup = "Customer",
