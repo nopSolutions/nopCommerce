@@ -8,6 +8,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
+using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
@@ -56,7 +57,9 @@ namespace Nop.Services.Tests.Orders
         [SetUp]
         public new void SetUp()
         {
-            _workContext = null;
+            _workContext = MockRepository.GenerateMock<IWorkContext>();
+            _workContext.Expect(x => x.CurrentStore).Return(new Store() { Id = 1 });
+            
 
             var pluginFinder = new PluginFinder();
             var cacheManager = new NopNullCache();
