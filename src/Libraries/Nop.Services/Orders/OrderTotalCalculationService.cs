@@ -645,7 +645,12 @@ namespace Nop.Services.Orders
             var customer = cart.GetCustomer();
             string paymentMethodSystemName = "";
             if (customer != null)
-                paymentMethodSystemName = customer.SelectedPaymentMethodSystemName;
+            {
+                paymentMethodSystemName = customer.GetAttribute<string>(
+                    SystemCustomerAttributeNames.SelectedPaymentMethod,
+                    _genericAttributeService,
+                    _workContext.CurrentStore.Id);
+            }
 
             //order sub total (items + checkout attributes)
             decimal subTotalTaxTotal = decimal.Zero;
@@ -787,7 +792,12 @@ namespace Nop.Services.Orders
             var customer = cart.GetCustomer();
             string paymentMethodSystemName = "";
             if (customer != null)
-                paymentMethodSystemName = customer.SelectedPaymentMethodSystemName;
+            {
+                paymentMethodSystemName = customer.GetAttribute<string>(
+                    SystemCustomerAttributeNames.SelectedPaymentMethod,
+                    _genericAttributeService,
+                    _workContext.CurrentStore.Id);
+            }
 
 
             //subtotal without tax

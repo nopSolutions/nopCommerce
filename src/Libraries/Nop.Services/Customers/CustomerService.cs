@@ -540,7 +540,7 @@ namespace Nop.Services.Customers
             //clear selected payment method
             if (clearPaymentMethod)
             {
-                customer.SelectedPaymentMethodSystemName = "";
+                _genericAttributeService.SaveAttribute<string>(customer, SystemCustomerAttributeNames.SelectedPaymentMethod, null, storeId);
             }
             
             UpdateCustomer(customer);

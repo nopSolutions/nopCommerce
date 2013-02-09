@@ -32,7 +32,6 @@ namespace Nop.Data.Tests.Customers
             fromDb.AdminComment.ShouldEqual("some comment here");
             fromDb.AdminComment.ShouldEqual("some comment here");
             fromDb.IsTaxExempt.ShouldEqual(true);
-            fromDb.SelectedPaymentMethodSystemName.ShouldEqual("test1");
             fromDb.VatNumber.ShouldEqual("123456");
             fromDb.VatNumberStatus.ShouldEqual(VatNumberStatus.Valid);
             fromDb.CheckoutAttributes.ShouldEqual("CheckoutAttributes 1");
@@ -290,7 +289,6 @@ namespace Nop.Data.Tests.Customers
                 CustomerGuid = Guid.NewGuid(),
                 AdminComment = "some comment here",
                 IsTaxExempt = true,
-                SelectedPaymentMethodSystemName = "test1",
                 VatNumber = "123456",
                 VatNumberStatus = VatNumberStatus.Valid,
                 CheckoutAttributes = "CheckoutAttributes 1",

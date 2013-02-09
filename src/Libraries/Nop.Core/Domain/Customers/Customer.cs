@@ -80,11 +80,6 @@ namespace Nop.Core.Domain.Customers
         public virtual int VatNumberStatusId { get; set; }
 
         /// <summary>
-        /// Gets or sets the last payment method system name (selected one)
-        /// </summary>
-        public virtual string SelectedPaymentMethodSystemName { get; set; }
-
-        /// <summary>
         /// Gets or sets the selected checkout attributes (serialized)
         /// </summary>
         public virtual string CheckoutAttributes { get; set; }

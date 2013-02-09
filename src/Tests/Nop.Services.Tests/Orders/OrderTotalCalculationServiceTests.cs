@@ -53,12 +53,14 @@ namespace Nop.Services.Tests.Orders
         ShoppingCartSettings _shoppingCartSettings;
         CatalogSettings _catalogSettings;
         IEventPublisher _eventPublisher;
+        Store _store;
 
         [SetUp]
         public new void SetUp()
         {
+            _store = new Store() {Id = 1};
             _workContext = MockRepository.GenerateMock<IWorkContext>();
-            _workContext.Expect(x => x.CurrentStore).Return(new Store() { Id = 1 });
+            _workContext.Expect(x => x.CurrentStore).Return(_store);
             
 
             var pluginFinder = new PluginFinder();
@@ -921,7 +923,10 @@ namespace Nop.Services.Tests.Orders
         public void Can_get_tax_total()
         {
             //customer
-            Customer customer = new Customer();
+            var customer = new Customer()
+            {
+                Id = 10,
+            };
 
             //shopping cart
             var productVariant1 = new ProductVariant
@@ -971,14 +976,25 @@ namespace Nop.Services.Tests.Orders
 
             
             
-            SortedDictionary<decimal, decimal> taxRates;
-            customer.SelectedPaymentMethodSystemName = "test1";
+            _genericAttributeService.Expect(x => x.GetAttributesForEntity(customer.Id, "Customer"))
+                .Return(new List<GenericAttribute>()
+                            {
+                                new GenericAttribute()
+                                    {
+                                        StoreId = 1,
+                                        EntityId = customer.Id,
+                                        Key = SystemCustomerAttributeNames.SelectedPaymentMethod,
+                                        KeyGroup = "Customer",
+                                        Value = "test1"
+                                    }
+                            });
             _paymentService.Expect(ps => ps.GetAdditionalHandlingFee(cart, "test1")).Return(20);
             //56 - items, 10 - shipping (fixed), 20 - payment fee
 
             //1. shipping is taxable, payment fee is taxable
             _taxSettings.ShippingIsTaxable = true;
             _taxSettings.PaymentMethodAdditionalFeeIsTaxable = true;
+            SortedDictionary<decimal, decimal> taxRates;
             _orderTotalCalcService.GetTaxTotal(cart, out taxRates).ShouldEqual(8.6);
             taxRates.ShouldNotBeNull();
             taxRates.Count.ShouldEqual(1);
@@ -1017,7 +1033,10 @@ namespace Nop.Services.Tests.Orders
         public void Can_get_shopping_cart_total_without_shipping_required()
         {
             //customer
-            Customer customer = new Customer();
+            var customer = new Customer()
+            {
+                Id = 10,
+            };
 
             //shopping cart
             var productVariant1 = new ProductVariant
@@ -1067,7 +1086,18 @@ namespace Nop.Services.Tests.Orders
 
 
 
-            customer.SelectedPaymentMethodSystemName = "test1";
+            _genericAttributeService.Expect(x => x.GetAttributesForEntity(customer.Id, "Customer"))
+                .Return(new List<GenericAttribute>()
+                            {
+                                new GenericAttribute()
+                                    {
+                                        StoreId = 1,
+                                        EntityId = customer.Id,
+                                        Key = SystemCustomerAttributeNames.SelectedPaymentMethod,
+                                        KeyGroup = "Customer",
+                                        Value = "test1"
+                                    }
+                            });
             _paymentService.Expect(ps => ps.GetAdditionalHandlingFee(cart, "test1")).Return(20);
 
 
@@ -1092,7 +1122,10 @@ namespace Nop.Services.Tests.Orders
         public void Can_get_shopping_cart_total_with_shipping_required()
         {
             //customer
-            Customer customer = new Customer();
+            var customer = new Customer()
+            {
+                Id = 10,
+            };
 
             //shopping cart
             var productVariant1 = new ProductVariant
@@ -1140,9 +1173,18 @@ namespace Nop.Services.Tests.Orders
             cart.ForEach(sci => sci.Customer = customer);
             cart.ForEach(sci => sci.CustomerId = customer.Id);
 
-
-
-            customer.SelectedPaymentMethodSystemName = "test1";
+            _genericAttributeService.Expect(x => x.GetAttributesForEntity(customer.Id, "Customer"))
+                .Return(new List<GenericAttribute>()
+                            {
+                                new GenericAttribute()
+                                    {
+                                        StoreId = 1,
+                                        EntityId = customer.Id,
+                                        Key = SystemCustomerAttributeNames.SelectedPaymentMethod,
+                                        KeyGroup = "Customer",
+                                        Value = "test1"
+                                    }
+                            });
             _paymentService.Expect(ps => ps.GetAdditionalHandlingFee(cart, "test1")).Return(20);
 
 
@@ -1167,7 +1209,10 @@ namespace Nop.Services.Tests.Orders
         public void Can_get_shopping_cart_total_with_applied_reward_points()
         {
             //customer
-            Customer customer = new Customer();
+            var customer = new Customer()
+            {
+                Id = 10,
+            };
 
             //shopping cart
             var productVariant1 = new ProductVariant
@@ -1217,7 +1262,18 @@ namespace Nop.Services.Tests.Orders
 
 
 
-            customer.SelectedPaymentMethodSystemName = "test1";
+            _genericAttributeService.Expect(x => x.GetAttributesForEntity(customer.Id, "Customer"))
+                .Return(new List<GenericAttribute>()
+                            {
+                                new GenericAttribute()
+                                    {
+                                        StoreId = 1,
+                                        EntityId = customer.Id,
+                                        Key = SystemCustomerAttributeNames.SelectedPaymentMethod,
+                                        KeyGroup = "Customer",
+                                        Value = "test1"
+                                    }
+                            });
             _paymentService.Expect(ps => ps.GetAdditionalHandlingFee(cart, "test1")).Return(20);
 
 
@@ -1248,7 +1304,10 @@ namespace Nop.Services.Tests.Orders
         public void Can_get_shopping_cart_total_discount()
         {
             //customer
-            Customer customer = new Customer();
+            var customer = new Customer()
+            {
+                Id = 10,
+            };
 
             //shopping cart
             var productVariant1 = new ProductVariant
@@ -1307,8 +1366,20 @@ namespace Nop.Services.Tests.Orders
             };
             _discountService.Expect(ds => ds.IsDiscountValid(discount1, customer)).Return(true);
             _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToOrderTotal)).Return(new List<Discount>() { discount1 });
-            
-            customer.SelectedPaymentMethodSystemName = "test1";
+
+
+            _genericAttributeService.Expect(x => x.GetAttributesForEntity(customer.Id, "Customer"))
+                .Return(new List<GenericAttribute>()
+                            {
+                                new GenericAttribute()
+                                    {
+                                        StoreId = 1,
+                                        EntityId = customer.Id,
+                                        Key = SystemCustomerAttributeNames.SelectedPaymentMethod,
+                                        KeyGroup = "Customer",
+                                        Value = "test1"
+                                    }
+                            });
             _paymentService.Expect(ps => ps.GetAdditionalHandlingFee(cart, "test1")).Return(20);
 
 
