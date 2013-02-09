@@ -81,11 +81,6 @@ namespace Nop.Core.Domain.Customers
         public virtual int LanguageId { get; set; }
 
         /// <summary>
-        /// Gets or sets the currency identifier
-        /// </summary>
-        public virtual int CurrencyId { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether the customer is tax exempt
         /// </summary>
         public virtual bool IsTaxExempt { get; set; }

@@ -260,8 +260,7 @@ namespace Nop.Web.Framework
                     //find current customer language
                     foreach (var lang in allLanguages)
                     {
-                        if (this.CurrentCustomer != null &&
-                            this.CurrentCustomer.LanguageId == lang.Id)
+                        if (this.CurrentCustomer.LanguageId == lang.Id)
                         {
                             return lang;
                         }
@@ -275,9 +274,6 @@ namespace Nop.Web.Framework
             }
             set
             {
-                if (this.CurrentCustomer == null)
-                    return;
-
                 this.CurrentCustomer.LanguageId = value != null ? value.Id : 0;
                 _customerService.UpdateCustomer(this.CurrentCustomer);
             }
@@ -302,10 +298,11 @@ namespace Nop.Web.Framework
                 if (allCurrencies.Count > 0)
                 {
                     //find current customer language
+                    var customerCurrencyId = this.CurrentCustomer.GetAttribute<int>(SystemCustomerAttributeNames.CurrencyId,
+                        _genericAttributeService, this.CurrentStore.Id);
                     foreach (var currency in allCurrencies)
                     {
-                        if (this.CurrentCustomer != null &&
-                            this.CurrentCustomer.CurrencyId == currency.Id)
+                        if (customerCurrencyId == currency.Id)
                         {
                             return currency;
                         }
@@ -319,11 +316,10 @@ namespace Nop.Web.Framework
             }
             set
             {
-                if (this.CurrentCustomer == null)
-                    return;
-
-                this.CurrentCustomer.CurrencyId = value != null ? value.Id : 0;
-                _customerService.UpdateCustomer(this.CurrentCustomer);
+                var currencyId = value != null ? value.Id : 0;
+                _genericAttributeService.SaveAttribute(this.CurrentCustomer,
+                    SystemCustomerAttributeNames.CurrencyId,
+                    currencyId, this.CurrentStore.Id);
             }
         }
 

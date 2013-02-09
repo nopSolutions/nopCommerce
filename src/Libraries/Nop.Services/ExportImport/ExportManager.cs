@@ -1337,9 +1337,6 @@ namespace Nop.Services.ExportImport
                     worksheet.Cells[row, col].Value = customer.LanguageId;
                     col++;
 
-                    worksheet.Cells[row, col].Value = customer.CurrencyId;
-                    col++;
-
                     worksheet.Cells[row, col].Value = customer.IsTaxExempt;
                     col++;
 
@@ -1490,7 +1487,6 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("PasswordFormatId", null, customer.PasswordFormatId.ToString());
                 xmlWriter.WriteElementString("PasswordSalt", null, customer.PasswordSalt);
                 xmlWriter.WriteElementString("LanguageId", null, customer.LanguageId.ToString());
-                xmlWriter.WriteElementString("CurrencyId", null, customer.CurrencyId.ToString());
                 xmlWriter.WriteElementString("IsTaxExempt", null, customer.IsTaxExempt.ToString());
                 xmlWriter.WriteElementString("VatNumber", null, customer.VatNumber);
                 xmlWriter.WriteElementString("VatNumberStatusId", null, customer.VatNumberStatusId.ToString());

@@ -1,6 +1,4 @@
 ﻿using System.Net;
-using Nop.Core;
-using Nop.Core.Domain;
 using Nop.Services.Stores;
 using Nop.Services.Tasks;
 
