@@ -46,7 +46,67 @@ namespace Nop.Services.Configuration
 
         #endregion
 
+        #region Nested classes
+
+        [Serializable]
+        public class SettingForCaching
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
+            public string Value { get; set; }
+            public int StoreId { get; set; }
+        }
+
+        #endregion
+
         #region Utilities
+
+        /// <summary>
+        /// Gets all settings
+        /// </summary>
+        /// <returns>Setting collection</returns>
+        protected virtual IDictionary<string, IList<SettingForCaching>> GetAllSettingsCached()
+        {
+            //cache
+            string key = string.Format(SETTINGS_ALL_KEY);
+            return _cacheManager.Get(key, () =>
+            {
+                var query = from s in _settingRepository.Table
+                            orderby s.Name, s.StoreId
+                            select s;
+                var settings = query.ToList();
+                var dictionary = new Dictionary<string, IList<SettingForCaching>>();
+                foreach (var s in settings)
+                {
+                    var resourceName = s.Name.ToLowerInvariant();
+                    var settingForCaching = new SettingForCaching()
+                            {
+                                Id = s.Id,
+                                Name = s.Name,
+                                Value = s.Value,
+                                StoreId = s.StoreId
+                            };
+                    if (!dictionary.ContainsKey(resourceName))
+                    {
+                        //first setting
+                        dictionary.Add(resourceName, new List<SettingForCaching>()
+                        {
+                            settingForCaching
+                        });
+                    }
+                    else
+                    {
+                        //already added
+                        //most probably it's the setting with the same name but for some certain store (storeId > 0)
+                        dictionary[resourceName].Add(settingForCaching);
+                    }
+                }
+                return dictionary;
+            });
+        }
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Adds a setting
@@ -88,105 +148,6 @@ namespace Nop.Services.Configuration
             _eventPublisher.EntityUpdated(setting);
         }
 
-        #endregion
-
-        #region Methods
-
-        /// <summary>
-        /// Gets a setting by identifier
-        /// </summary>
-        /// <param name="settingId">Setting identifier</param>
-        /// <returns>Setting</returns>
-        public virtual Setting GetSettingById(int settingId)
-        {
-            if (settingId == 0)
-                return null;
-
-            var setting = _settingRepository.GetById(settingId);
-            return setting;
-        }
-
-        /// <summary>
-        /// Get setting by key
-        /// </summary>
-        /// <param name="key">Key</param>
-        /// <returns>Setting object</returns>
-        public virtual Setting GetSettingByKey(string key)
-        {
-            if (String.IsNullOrEmpty(key))
-                return null;
-
-            key = key.Trim().ToLowerInvariant();
-
-            var settings = GetAllSettings();
-            if (settings.ContainsKey(key))
-            {
-                var id = settings[key].Key;
-                return GetSettingById(id);
-            }
-
-            return null;
-        }
-
-
-        /// <summary>
-        /// Get setting value by key
-        /// </summary>
-        /// <typeparam name="T">Type</typeparam>
-        /// <param name="key">Key</param>
-        /// <param name="defaultValue">Default value</param>
-        /// <returns>Setting value</returns>
-        public virtual T GetSettingByKey<T>(string key, T defaultValue = default(T))
-        {
-            if (String.IsNullOrEmpty(key))
-                return defaultValue;
-
-            key = key.Trim().ToLowerInvariant();
-
-            var settings = GetAllSettings();
-            if (settings.ContainsKey(key))
-                return CommonHelper.To<T>(settings[key].Value);
-
-            return defaultValue;
-        }
-
-        /// <summary>
-        /// Set setting value
-        /// </summary>
-        /// <typeparam name="T">Type</typeparam>
-        /// <param name="key">Key</param>
-        /// <param name="value">Value</param>
-        /// <param name="clearCache">A value indicating whether to clear cache after setting update</param>
-        public virtual void SetSetting<T>(string key, T value, bool clearCache = true)
-        {
-            if (key == null)
-                throw new ArgumentNullException("key");
-            key = key.Trim().ToLowerInvariant();
-            
-            var settings = GetAllSettings();
-            
-            Setting setting = null;
-            string valueStr = CommonHelper.GetNopCustomTypeConverter(typeof(T)).ConvertToInvariantString(value);
-            if (settings.ContainsKey(key))
-            {
-                //update
-                var settingId = settings[key].Key;
-                setting = GetSettingById(settingId);
-                setting.Value = valueStr;
-                UpdateSetting(setting, clearCache);
-            }
-            else
-            {
-                //insert
-                setting = new Setting()
-                              {
-                                  Name = key,
-                                  Value = valueStr,
-                              };
-                InsertSetting(setting, clearCache);
-            }
-        }
-
         /// <summary>
         /// Deletes a setting
         /// </summary>
@@ -206,29 +167,94 @@ namespace Nop.Services.Configuration
         }
 
         /// <summary>
+        /// Gets a setting by identifier
+        /// </summary>
+        /// <param name="settingId">Setting identifier</param>
+        /// <returns>Setting</returns>
+        public virtual Setting GetSettingById(int settingId)
+        {
+            if (settingId == 0)
+                return null;
+
+            var setting = _settingRepository.GetById(settingId);
+            return setting;
+        }
+        
+        /// <summary>
+        /// Get setting value by key
+        /// </summary>
+        /// <typeparam name="T">Type</typeparam>
+        /// <param name="key">Key</param>
+        /// <param name="defaultValue">Default value</param>
+        /// <param name="storeId">Store identifier</param>
+        /// <returns>Setting value</returns>
+        public virtual T GetSettingByKey<T>(string key, T defaultValue = default(T), int storeId = 0)
+        {
+            if (String.IsNullOrEmpty(key))
+                return defaultValue;
+
+            var settings = GetAllSettingsCached();
+            key = key.Trim().ToLowerInvariant();
+            if (settings.ContainsKey(key))
+            {
+                var setting = settings[key].FirstOrDefault(x => x.StoreId == storeId);
+                if (setting != null)
+                    return CommonHelper.To<T>(setting.Value);
+            }
+
+            return defaultValue;
+        }
+
+        /// <summary>
+        /// Set setting value
+        /// </summary>
+        /// <typeparam name="T">Type</typeparam>
+        /// <param name="key">Key</param>
+        /// <param name="value">Value</param>
+        /// <param name="storeId">Store identifier</param>
+        /// <param name="clearCache">A value indicating whether to clear cache after setting update</param>
+        public virtual void SetSetting<T>(string key, T value, int storeId = 0, bool clearCache = true)
+        {
+            if (key == null)
+                throw new ArgumentNullException("key");
+            key = key.Trim().ToLowerInvariant();
+            string valueStr = CommonHelper.GetNopCustomTypeConverter(typeof(T)).ConvertToInvariantString(value);
+
+            var allSettings = GetAllSettingsCached();
+            var settingForCaching = allSettings.ContainsKey(key) ? 
+                allSettings[key].FirstOrDefault(x => x.StoreId == storeId) : null;
+            if (settingForCaching != null)
+            {
+                //update
+                var settingId = settingForCaching.Id;
+                var setting = GetSettingById(settingId);
+                setting.Value = valueStr;
+                UpdateSetting(setting, clearCache);
+            }
+            else
+            {
+                //insert
+                var setting = new Setting()
+                {
+                    Name = key,
+                    Value = valueStr,
+                    StoreId = storeId
+                };
+                InsertSetting(setting, clearCache);
+            }
+        }
+
+        /// <summary>
         /// Gets all settings
         /// </summary>
         /// <returns>Setting collection</returns>
-        public virtual IDictionary<string, KeyValuePair<int, string>> GetAllSettings()
+        public virtual IList<Setting> GetAllSettings()
         {
-            //cache
-            string key = string.Format(SETTINGS_ALL_KEY);
-            return _cacheManager.Get(key, () =>
-            {
-                var query = from s in _settingRepository.Table
-                            orderby s.Name
-                            select s;
-                var settings = query.ToList();
-                //format: <name, <id, value>>
-                var dictionary = new Dictionary<string, KeyValuePair<int, string>>();
-                foreach (var s in settings)
-                {
-                    var resourceName = s.Name.ToLowerInvariant();
-                    if (!dictionary.ContainsKey(resourceName))
-                        dictionary.Add(resourceName, new KeyValuePair<int, string>(s.Id, s.Value));
-                }
-                return dictionary;
-            });
+            var query = from s in _settingRepository.Table
+                        orderby s.Name, s.StoreId
+                        select s;
+            var settings = query.ToList();
+            return settings;
         }
 
         /// <summary>
@@ -258,6 +284,7 @@ namespace Nop.Services.Configuration
         {
             _cacheManager.RemoveByPattern(SETTINGS_ALL_KEY);
         }
+
         #endregion
     }
 }

@@ -16,5 +16,9 @@ namespace Nop.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.AllSettings.Fields.Value")]
         [AllowHtml]
         public string Value { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.AllSettings.Fields.StoreName")]
+        [AllowHtml]
+        public string StoreName { get; set; }
     }
 }

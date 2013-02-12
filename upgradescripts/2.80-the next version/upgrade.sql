@@ -359,6 +359,12 @@ set @resources='
   <LocaleResource Name="Plugins.Feed.Froogle.Store.Hint">
 	<Value>Select the store that will be used to generate the feed.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.AllSettings.Fields.StoreName.AllStores">
+	<Value>All stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.AllSettings.Fields.StoreName">
+	<Value>Store</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1610,4 +1616,21 @@ BEGIN
 		[EntityId] ASC, [KeyGroup] ASC, [StoreId] ASC
 	)
 END
+GO
+
+
+--Store mapping to Setting
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Setting]') and NAME='StoreId')
+BEGIN
+	ALTER TABLE [Setting]
+	ADD [StoreId] bit NULL
+END
+GO
+
+UPDATE [Setting]
+SET [StoreId] = 0
+WHERE [StoreId] IS NULL
+GO
+
+ALTER TABLE [Setting] ALTER COLUMN [StoreId] int NOT NULL
 GO

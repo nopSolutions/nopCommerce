@@ -3711,6 +3711,14 @@
                                             <LocaleResource Name="Value">
                                                 <Value>Value</Value>
                                             </LocaleResource>
+                                            <LocaleResource Name="Store">
+                                                <Value>Store</Value>
+                                                  <Children>
+                                                      <LocaleResource Name="AllStores">
+                                                          <Value>All stores</Value>
+                                                      </LocaleResource>
+                                                  </Children>
+                                            </LocaleResource>
                                         </Children>
                                     </LocaleResource>
                                 </Children>

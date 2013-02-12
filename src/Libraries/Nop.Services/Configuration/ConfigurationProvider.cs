@@ -50,12 +50,13 @@ namespace Nop.Services.Configuration
             foreach (var prop in properties)
             {
                 string key = typeof(TSettings).Name + "." + prop.Name;
+                var storeId = 0;
                 //Duck typing is not supported in C#. That's why we're using dynamic type
                 dynamic value = prop.GetValue(settings, null);
                 if (value != null)
-                    _settingService.SetSetting(key, value, false);
+                    _settingService.SetSetting(key, value, storeId, false);
                 else
-                    _settingService.SetSetting(key, "", false);
+                    _settingService.SetSetting(key, "", storeId, false);
             }
 
             //and now clear cache
@@ -69,18 +70,16 @@ namespace Nop.Services.Configuration
             var properties = from prop in typeof(TSettings).GetProperties()
                              select prop;
 
-            var settingList = new List<Setting>();
+            var settingsToDelete = new List<Setting>();
+            var allSettings = _settingService.GetAllSettings();
             foreach (var prop in properties)
             {
                 string key = typeof(TSettings).Name + "." + prop.Name;
-                var setting = _settingService.GetSettingByKey(key);
-                if (setting != null)
-                    settingList.Add(setting);
+                settingsToDelete.AddRange(allSettings.Where(x => x.Name.Equals(key, StringComparison.InvariantCultureIgnoreCase)));
             }
 
-            foreach (var setting in settingList)
+            foreach (var setting in settingsToDelete)
                 _settingService.DeleteSetting(setting);
-
         }
     }
 }

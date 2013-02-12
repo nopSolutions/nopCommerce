@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Domain.Configuration;
@@ -25,27 +26,34 @@ namespace Nop.Services.Tests.Configuration
             throw new InvalidOperationException("Deleting settings is not supported");
         }
         
-        public T GetSettingByKey<T>(string key, T defaultValue = default(T))
+        public T GetSettingByKey<T>(string key, T defaultValue = default(T), int storeId = 0)
         {
             key = key.Trim().ToLowerInvariant();
             var settings = GetAllSettings();
-            if (settings.ContainsKey(key))
-                return CommonHelper.To<T>(settings[key].Value);
+            var setting = settings.FirstOrDefault(x => x.Name.Equals(key, StringComparison.InvariantCultureIgnoreCase) &&
+                x.StoreId == storeId);
+            if (setting != null)
+                return CommonHelper.To<T>(setting.Value);
 
             return defaultValue;
         }
 
-        public void SetSetting<T>(string key, T value, bool clearCache = true)
+        public void SetSetting<T>(string key, T value, int storeId = 0, bool clearCache = true)
         {
             throw new NotImplementedException();
         }
 
-        public IDictionary<string, KeyValuePair<int, string>> GetAllSettings()
+        public IList<Setting> GetAllSettings()
         {
-            var settings = new Dictionary<string, KeyValuePair<int, string>>();
+            var settings = new List<Setting>();
             var appSettings = ConfigurationManager.AppSettings;
-            foreach (var setting in appSettings.AllKeys) {
-                settings.Add(setting.ToLowerInvariant(), new KeyValuePair<int,string>(0, appSettings[setting]));
+            foreach (var setting in appSettings.AllKeys)
+            {
+                settings.Add(new Setting()
+                                 {
+                                     Name = setting.ToLowerInvariant(),
+                                     Value = appSettings[setting]
+                                 });
             }
 
             return settings;
