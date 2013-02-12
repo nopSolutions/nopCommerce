@@ -59,6 +59,16 @@ namespace Nop.Services.Tests.Configuration
             return settings;
         }
 
+        /// <summary>
+        /// Load settings
+        /// </summary>
+        /// <typeparam name="T">Type</typeparam>
+        /// <param name="storeId">Store identifier for which settigns should be loaded</param>
+        public T LoadSetting<T>(int storeId = 0) where T : ISettings, new()
+        {
+            throw new NotImplementedException();
+        }
+
         public void SaveSetting<T>(T settingInstance) where T : ISettings, new()
         {
             throw new NotImplementedException();

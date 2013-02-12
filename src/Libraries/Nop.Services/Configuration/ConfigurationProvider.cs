@@ -14,12 +14,12 @@ namespace Nop.Services.Configuration
         public ConfigurationProvider(ISettingService settingService) 
         {
             this._settingService = settingService;
-            this.BuildConfiguration(0);
+            this.LoadSettings(0);
         }
 
-        public TSettings Settings { get; protected set; }
+        public virtual TSettings Settings { get; protected set; }
 
-        public void BuildConfiguration(int storeId) 
+        public virtual void LoadSettings(int storeId)
         {
             Settings = Activator.CreateInstance<TSettings>();
 
@@ -51,11 +51,10 @@ namespace Nop.Services.Configuration
 
                 //set property
                 prop.SetValue(Settings, value, null);
-
             }
         }
 
-        public void SaveSettings(TSettings settings)
+        public virtual void SaveSettings(TSettings settings)
         {
             var properties = from prop in typeof(TSettings).GetProperties()
                              where prop.CanWrite && prop.CanRead
@@ -83,7 +82,7 @@ namespace Nop.Services.Configuration
             this.Settings = settings;
         }
 
-        public void DeleteSettings()
+        public virtual void DeleteSettings()
         {
             var properties = from prop in typeof(TSettings).GetProperties()
                              select prop;
