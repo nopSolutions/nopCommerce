@@ -14,27 +14,45 @@ namespace Nop.Services.Configuration
         public ConfigurationProvider(ISettingService settingService) 
         {
             this._settingService = settingService;
-            this.BuildConfiguration();
+            this.BuildConfiguration(0);
         }
 
         public TSettings Settings { get; protected set; }
 
-        private void BuildConfiguration() 
+        public void BuildConfiguration(int storeId) 
         {
             Settings = Activator.CreateInstance<TSettings>();
 
-            // get properties we can write to
-            var properties = from prop in typeof(TSettings).GetProperties()
-                             where prop.CanWrite && prop.CanRead
-                             let setting = _settingService.GetSettingByKey<string>(typeof(TSettings).Name + "." + prop.Name)
-                             where setting != null
-                             where CommonHelper.GetNopCustomTypeConverter(prop.PropertyType).CanConvertFrom(typeof(string))
-                             where CommonHelper.GetNopCustomTypeConverter(prop.PropertyType).IsValid(setting)
-                             let value = CommonHelper.GetNopCustomTypeConverter(prop.PropertyType).ConvertFromInvariantString(setting)
-                             select new { prop, value };
+            foreach (var prop in typeof (TSettings).GetProperties())
+            {
+                // get properties we can read and write to
+                if (!prop.CanRead || !prop.CanWrite)
+                    continue;
 
-            // assign properties
-            properties.ToList().ForEach(p => p.prop.SetValue(Settings, p.value, null));
+                var key = typeof (TSettings).Name + "." + prop.Name;
+                //load by store
+                string setting = _settingService.GetSettingByKey<string>(key, storeId: storeId);
+                if (setting == null && storeId > 0)
+                {
+                    //load for all stores if not found
+                    setting = _settingService.GetSettingByKey<string>(key, storeId: 0);
+                }
+
+                if (setting == null)
+                    continue;
+
+                if (!CommonHelper.GetNopCustomTypeConverter(prop.PropertyType).CanConvertFrom(typeof(string)))
+                    continue;
+
+                if (!CommonHelper.GetNopCustomTypeConverter(prop.PropertyType).IsValid(setting))
+                    continue;
+
+                object value = CommonHelper.GetNopCustomTypeConverter(prop.PropertyType).ConvertFromInvariantString(setting);
+
+                //set property
+                prop.SetValue(Settings, value, null);
+
+            }
         }
 
         public void SaveSettings(TSettings settings)

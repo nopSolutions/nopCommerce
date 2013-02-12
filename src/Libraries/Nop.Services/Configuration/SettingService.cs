@@ -226,8 +226,7 @@ namespace Nop.Services.Configuration
             if (settingForCaching != null)
             {
                 //update
-                var settingId = settingForCaching.Id;
-                var setting = GetSettingById(settingId);
+                var setting = GetSettingById(settingForCaching.Id);
                 setting.Value = valueStr;
                 UpdateSetting(setting, clearCache);
             }
