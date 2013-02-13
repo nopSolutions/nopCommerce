@@ -148,7 +148,6 @@
     <Compile Include="Caching\PerRequestCacheManager.cs" />
     <Compile Include="CommonHelper.cs" />
     <Compile Include="ComponentModel\GenericListTypeConverter.cs" />
-    <Compile Include="Configuration\IConfigurationProvider.cs" />
     <Compile Include="Configuration\ISettings.cs" />
     <Compile Include="Configuration\NopConfig.cs" />
     <Compile Include="Domain\Affiliates\Affiliate.cs" />

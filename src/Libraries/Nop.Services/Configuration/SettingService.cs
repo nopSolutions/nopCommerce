@@ -263,20 +263,70 @@ namespace Nop.Services.Configuration
         /// <param name="storeId">Store identifier for which settigns should be loaded</param>
         public virtual T LoadSetting<T>(int storeId = 0) where T : ISettings, new()
         {
-            var provider = EngineContext.Current.Resolve<IConfigurationProvider<T>>();
-            provider.LoadSettings(storeId);
-            return provider.Settings;
+            var settings = Activator.CreateInstance<T>();
+
+            foreach (var prop in typeof(T).GetProperties())
+            {
+                // get properties we can read and write to
+                if (!prop.CanRead || !prop.CanWrite)
+                    continue;
+
+                var key = typeof(T).Name + "." + prop.Name;
+                //load by store
+                string setting = GetSettingByKey<string>(key, storeId: storeId);
+                if (setting == null && storeId > 0)
+                {
+                    //load for all stores if not found
+                    setting = GetSettingByKey<string>(key, storeId: 0);
+                }
+
+                if (setting == null)
+                    continue;
+
+                if (!CommonHelper.GetNopCustomTypeConverter(prop.PropertyType).CanConvertFrom(typeof(string)))
+                    continue;
+
+                if (!CommonHelper.GetNopCustomTypeConverter(prop.PropertyType).IsValid(setting))
+                    continue;
+
+                object value = CommonHelper.GetNopCustomTypeConverter(prop.PropertyType).ConvertFromInvariantString(setting);
+
+                //set property
+                prop.SetValue(settings, value, null);
+            }
+
+            return settings;
         }
 
         /// <summary>
         /// Save settings object
         /// </summary>
         /// <typeparam name="T">Type</typeparam>
-        /// <param name="settingInstance">Setting instance</param>
-        public virtual void SaveSetting<T>(T settingInstance) where T : ISettings, new()
+        /// <param name="settings">Setting instance</param>
+        public virtual void SaveSetting<T>(T settings) where T : ISettings, new()
         {
-            //We should be sure that an appropriate ISettings object will not be cached in IoC tool after updating (by default cached per HTTP request)
-            EngineContext.Current.Resolve<IConfigurationProvider<T>>().SaveSettings(settingInstance);
+            var properties = from prop in typeof(T).GetProperties()
+                             where prop.CanWrite && prop.CanRead
+                             where CommonHelper.GetNopCustomTypeConverter(prop.PropertyType).CanConvertFrom(typeof(string))
+                             select prop;
+
+            /* We do not clear cache after each setting update.
+             * This behavior can increase performance because cached settings will not be cleared 
+             * and loaded from database after each update */
+            foreach (var prop in properties)
+            {
+                string key = typeof(T).Name + "." + prop.Name;
+                var storeId = 0;
+                //Duck typing is not supported in C#. That's why we're using dynamic type
+                dynamic value = prop.GetValue(settings, null);
+                if (value != null)
+                    SetSetting(key, value, storeId, false);
+                else
+                    SetSetting(key, "", storeId, false);
+            }
+
+            //and now clear cache
+            ClearCache();
         }
 
         /// <summary>
@@ -285,7 +335,19 @@ namespace Nop.Services.Configuration
         /// <typeparam name="T">Type</typeparam>
         public virtual void DeleteSetting<T>() where T : ISettings, new()
         {
-            EngineContext.Current.Resolve<IConfigurationProvider<T>>().DeleteSettings();
+            var properties = from prop in typeof(T).GetProperties()
+                             select prop;
+
+            var settingsToDelete = new List<Setting>();
+            var allSettings = GetAllSettings();
+            foreach (var prop in properties)
+            {
+                string key = typeof(T).Name + "." + prop.Name;
+                settingsToDelete.AddRange(allSettings.Where(x => x.Name.Equals(key, StringComparison.InvariantCultureIgnoreCase)));
+            }
+
+            foreach (var setting in settingsToDelete)
+                DeleteSetting(setting);
         }
 
         /// <summary>

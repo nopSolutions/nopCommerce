@@ -33,6 +33,7 @@ using Nop.Core.Domain.Topics;
 using Nop.Core.Infrastructure;
 using Nop.Core.IO;
 using Nop.Services.Common;
+using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
 using Nop.Services.Media;
@@ -4441,8 +4442,8 @@ namespace Nop.Services.Installation
 
         protected virtual void InstallSettings()
         {
-            EngineContext.Current.Resolve<IConfigurationProvider<PdfSettings>>()
-                .SaveSettings(new PdfSettings()
+            var settingService = EngineContext.Current.Resolve<ISettingService>();
+            settingService.SaveSetting(new PdfSettings()
                 {
                     Enabled = true,
                     LetterPageSizeEnabled = false,
@@ -4450,8 +4451,7 @@ namespace Nop.Services.Installation
                     FontFileName = "FreeSerif.ttf",
                 });
 
-            EngineContext.Current.Resolve<IConfigurationProvider<CommonSettings>>()
-                .SaveSettings(new CommonSettings()
+            settingService.SaveSetting(new CommonSettings()
                 {
                     UseSystemEmailForContactUsForm = true,
                     UseStoredProceduresIfSupported = true,
@@ -4466,8 +4466,7 @@ namespace Nop.Services.Installation
                     Log404Errors = true,
                 });
 
-            EngineContext.Current.Resolve<IConfigurationProvider<SeoSettings>>()
-                .SaveSettings(new SeoSettings()
+            settingService.SaveSetting(new SeoSettings()
                 {
                     PageTitleSeparator = ". ",
                     PageTitleSeoAdjustment = PageTitleSeoAdjustment.PagenameAfterStorename,
@@ -4480,15 +4479,13 @@ namespace Nop.Services.Installation
                     ReservedUrlRecordSlugs = new List<string>() { "admin", "install", "recentlyviewedproducts", "newproducts", "compareproducts", "clearcomparelist", "setproductreviewhelpfulness", "login", "register", "logout", "cart", "wishlist", "emailwishlist", "checkout", "onepagecheckout", "contactus", "passwordrecovery", "subscribenewsletter", "blog", "boards", "inboxupdate", "sentupdate", "news", "sitemap", "sitemapseo", "search", "config", "eucookielawaccept", "page-not-found" },
                 });
 
-            EngineContext.Current.Resolve<IConfigurationProvider<AdminAreaSettings>>()
-                .SaveSettings(new AdminAreaSettings()
+            settingService.SaveSetting(new AdminAreaSettings()
                 {
                     GridPageSize = 15,
                     DisplayProductPictures = true,
                 });
-            
-            EngineContext.Current.Resolve<IConfigurationProvider<CatalogSettings>>()
-                .SaveSettings(new CatalogSettings()
+
+            settingService.SaveSetting(new CatalogSettings()
                 {
                     ShowProductSku = false,
                     ShowManufacturerPartNumber = false,
@@ -4539,15 +4536,13 @@ namespace Nop.Services.Installation
                     ManufacturersBlockItemsToDisplay = 5,
                 });
 
-            EngineContext.Current.Resolve<IConfigurationProvider<LocalizationSettings>>()
-                .SaveSettings(new LocalizationSettings()
+            settingService.SaveSetting(new LocalizationSettings()
                 {
                     DefaultAdminLanguageId = _languageRepository.Table.Where(l => l.Name == "English").Single().Id,
                     UseImagesForLanguageSelection = false,
                 });
 
-            EngineContext.Current.Resolve<IConfigurationProvider<CustomerSettings>>()
-                .SaveSettings(new CustomerSettings()
+            settingService.SaveSetting(new CustomerSettings()
                 {
                     UsernamesEnabled = false,
                     CheckUsernameAvailabilityEnabled = false,
@@ -4586,8 +4581,7 @@ namespace Nop.Services.Installation
                     SuffixDeletedCustomers = false,
                 });
 
-            EngineContext.Current.Resolve<IConfigurationProvider<AddressSettings>>()
-                .SaveSettings(new AddressSettings()
+            settingService.SaveSetting(new AddressSettings()
                 {
                     CompanyEnabled = true,
                     StreetAddressEnabled = true,
@@ -4604,8 +4598,7 @@ namespace Nop.Services.Installation
                     FaxEnabled = true,
                 });
 
-            EngineContext.Current.Resolve<IConfigurationProvider<MediaSettings>>()
-                .SaveSettings(new MediaSettings()
+            settingService.SaveSetting(new MediaSettings()
                 {
                     AvatarPictureSize = 85,
                     ProductThumbPictureSize = 125,
@@ -4623,8 +4616,7 @@ namespace Nop.Services.Installation
                     MultipleThumbDirectories = false
                 });
 
-            EngineContext.Current.Resolve<IConfigurationProvider<StoreInformationSettings>>()
-                .SaveSettings(new StoreInformationSettings()
+            settingService.SaveSetting(new StoreInformationSettings()
                 {
                     StoreClosed = false,
                     StoreClosedAllowForAdmins = false,
@@ -4637,8 +4629,7 @@ namespace Nop.Services.Installation
                     DisplayEuCookieLawWarning = false,
                 });
 
-            EngineContext.Current.Resolve<IConfigurationProvider<RewardPointsSettings>>()
-                .SaveSettings(new RewardPointsSettings()
+            settingService.SaveSetting(new RewardPointsSettings()
                 {
                     Enabled = false,
                     ExchangeRate = 1,
@@ -4649,8 +4640,7 @@ namespace Nop.Services.Installation
                     PointsForPurchases_Canceled = OrderStatus.Cancelled,
                 });
 
-            EngineContext.Current.Resolve<IConfigurationProvider<CurrencySettings>>()
-                .SaveSettings(new CurrencySettings()
+            settingService.SaveSetting(new CurrencySettings()
                 {
                     DisplayCurrencyLabel = false,
                     PrimaryStoreCurrencyId = _currencyRepository.Table.Where(c => c.CurrencyCode == "USD").Single().Id,
@@ -4660,15 +4650,13 @@ namespace Nop.Services.Installation
                     LastUpdateTime = 0
                 });
 
-            EngineContext.Current.Resolve<IConfigurationProvider<MeasureSettings>>()
-                .SaveSettings(new MeasureSettings()
+            settingService.SaveSetting(new MeasureSettings()
                 {
                     BaseDimensionId = _measureDimensionRepository.Table.Where(m => m.SystemKeyword == "inches").Single().Id,
                     BaseWeightId = _measureWeightRepository.Table.Where(m => m.SystemKeyword == "lb").Single().Id,
                 });
 
-            EngineContext.Current.Resolve<IConfigurationProvider<MessageTemplatesSettings>>()
-                .SaveSettings(new MessageTemplatesSettings()
+            settingService.SaveSetting(new MessageTemplatesSettings()
                 {
                     CaseInvariantReplacement = false,
                     Color1 = "#b9babe",
@@ -4676,8 +4664,7 @@ namespace Nop.Services.Installation
                     Color3 = "#dde2e6",
                 });
 
-            EngineContext.Current.Resolve<IConfigurationProvider<ShoppingCartSettings>>()
-                .SaveSettings(new ShoppingCartSettings()
+            settingService.SaveSetting(new ShoppingCartSettings()
                 {
                     DisplayCartAfterAddingProduct = false,
                     DisplayWishlistAfterAddingProduct = false,
@@ -4698,8 +4685,7 @@ namespace Nop.Services.Installation
                     RoundPricesDuringCalculation = true,
                 });
 
-            EngineContext.Current.Resolve<IConfigurationProvider<OrderSettings>>()
-                .SaveSettings(new OrderSettings()
+            settingService.SaveSetting(new OrderSettings()
                 {
                     IsReOrderAllowed = true,
                     MinOrderSubtotalAmount = 0,
@@ -4714,16 +4700,14 @@ namespace Nop.Services.Installation
                     MinimumOrderPlacementInterval = 30,
                 });
 
-            EngineContext.Current.Resolve<IConfigurationProvider<SecuritySettings>>()
-                .SaveSettings(new SecuritySettings()
+            settingService.SaveSetting(new SecuritySettings()
                 {
                     ForceSslForAllPages = false,
                     EncryptionKey = "273ece6f97dd844d",
                     AdminAreaAllowedIpAddresses = null
                 });
 
-            EngineContext.Current.Resolve<IConfigurationProvider<ShippingSettings>>()
-                .SaveSettings(new ShippingSettings()
+            settingService.SaveSetting(new ShippingSettings()
                 {
                     ActiveShippingRateComputationMethodSystemNames = new List<string>() { "Shipping.FixedRate" },
                     FreeShippingOverXEnabled = false,
@@ -4734,8 +4718,7 @@ namespace Nop.Services.Installation
                     ReturnValidOptionsIfThereAreAny = true,
                 });
 
-            EngineContext.Current.Resolve<IConfigurationProvider<PaymentSettings>>()
-                .SaveSettings(new PaymentSettings()
+            settingService.SaveSetting(new PaymentSettings()
                 {
                     ActivePaymentMethodSystemNames = new List<string>() 
                     { 
@@ -4749,8 +4732,7 @@ namespace Nop.Services.Installation
                     BypassPaymentMethodSelectionIfOnlyOne = true,
                 });
 
-            EngineContext.Current.Resolve<IConfigurationProvider<TaxSettings>>()
-                .SaveSettings(new TaxSettings()
+            settingService.SaveSetting(new TaxSettings()
                 {
                     TaxBasedOn = TaxBasedOn.BillingAddress,
                     TaxDisplayType = TaxDisplayType.ExcludingTax,
@@ -4775,20 +4757,17 @@ namespace Nop.Services.Installation
                     EuVatEmailAdminWhenNewVatSubmitted = false
                 });
 
-            EngineContext.Current.Resolve<IConfigurationProvider<FileSystemSettings>>()
-                .SaveSettings(new FileSystemSettings()
+            settingService.SaveSetting(new FileSystemSettings()
                 {
                 });
 
-            EngineContext.Current.Resolve<IConfigurationProvider<DateTimeSettings>>()
-                .SaveSettings(new DateTimeSettings()
+            settingService.SaveSetting(new DateTimeSettings()
                 {
                     DefaultStoreTimeZoneId = "",
                     AllowCustomersToSetTimeZone = false
                 });
 
-            EngineContext.Current.Resolve<IConfigurationProvider<BlogSettings>>()
-                .SaveSettings(new BlogSettings()
+            settingService.SaveSetting(new BlogSettings()
                 {
                     Enabled = true,
                     PostsPageSize = 10,
@@ -4797,8 +4776,7 @@ namespace Nop.Services.Installation
                     NumberOfTags = 15,
                     ShowHeaderRssUrl = false,
                 });
-            EngineContext.Current.Resolve<IConfigurationProvider<NewsSettings>>()
-                .SaveSettings(new NewsSettings()
+            settingService.SaveSetting(new NewsSettings()
                 {
                     Enabled = true,
                     AllowNotRegisteredUsersToLeaveComments = true,
@@ -4808,8 +4786,8 @@ namespace Nop.Services.Installation
                     NewsArchivePageSize = 10,
                     ShowHeaderRssUrl = false,
                 });
-            EngineContext.Current.Resolve<IConfigurationProvider<ForumSettings>>()
-                .SaveSettings(new ForumSettings()
+
+            settingService.SaveSetting(new ForumSettings()
                 {
                     ForumsEnabled = false,
                     RelativeDateTimeFormattingEnabled = true,
@@ -4844,14 +4822,12 @@ namespace Nop.Services.Installation
                     ForumSearchTermMinimumLength = 3,
                 });
 
-            EngineContext.Current.Resolve<IConfigurationProvider<EmailAccountSettings>>()
-                .SaveSettings(new EmailAccountSettings()
+            settingService.SaveSetting(new EmailAccountSettings()
                 {
                     DefaultEmailAccountId = _emailAccountRepository.Table.FirstOrDefault().Id
                 });
 
-            EngineContext.Current.Resolve<IConfigurationProvider<WidgetSettings>>()
-                .SaveSettings(new WidgetSettings()
+            settingService.SaveSetting(new WidgetSettings()
                 {
                     ActiveWidgetSystemNames = new List<string>() { "Widgets.NivoSlider" },
                 });

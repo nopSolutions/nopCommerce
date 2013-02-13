@@ -8,25 +8,19 @@ namespace Nop.Services.Tests.Configuration
     [TestFixture]
     public class ConfigurationProviderTests : ServiceTest
     {
-        IConfigurationProvider<TestSettings> config;
+        ISettingService _settingService;
 
         [SetUp]
         public new void SetUp()
         {
-            config = new ConfigurationProvider<TestSettings>(new ConfigFileSettingService());
-        }
-
-        [Test]
-        public void Can_build_configuration()
-        {
-            config.Settings.ShouldBe<TestSettings>();
+            _settingService = new ConfigFileSettingService();
         }
 
         [Test]
         public void Can_get_settings()
         {
             // requires settings to be set in app.config in format TestSettings.[PropertyName]
-            var settings = config.Settings;
+            var settings = _settingService.LoadSetting<TestSettings>();
             settings.ServerName.ShouldEqual("Ruby");
             settings.Ip.ShouldEqual("192.168.0.1");
             settings.PortNumber.ShouldEqual(21);

@@ -150,9 +150,6 @@ namespace Nop.Web.Framework
             builder.RegisterType<FulltextService>().As<IFulltextService>().InstancePerHttpRequest();
             builder.RegisterType<MaintenanceService>().As<IMaintenanceService>().InstancePerHttpRequest();
 
-
-            builder.RegisterGeneric(typeof(ConfigurationProvider<>)).As(typeof(IConfigurationProvider<>));
-            builder.RegisterSource(new SettingsSource());
             
             builder.RegisterType<CustomerContentService>().As<ICustomerContentService>().InstancePerHttpRequest();
             builder.RegisterType<CustomerService>().As<ICustomerService>().InstancePerHttpRequest();
@@ -187,6 +184,8 @@ namespace Nop.Web.Framework
             builder.RegisterType<SettingService>().As<ISettingService>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
                 .InstancePerHttpRequest();
+            builder.RegisterSource(new SettingsSource());
+
             //pass MemoryCacheManager as cacheManager (cache locales between requests)
             builder.RegisterType<LocalizationService>().As<ILocalizationService>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
@@ -332,7 +331,7 @@ namespace Nop.Web.Framework
         static IComponentRegistration BuildRegistration<TSettings>() where TSettings : ISettings, new()
         {
             return RegistrationBuilder
-                .ForDelegate((c, p) => c.Resolve<IConfigurationProvider<TSettings>>().Settings)
+                .ForDelegate((c, p) => c.Resolve<ISettingService>().LoadSetting<TSettings>())
                 .InstancePerHttpRequest()
                 .CreateRegistration();
         }
