@@ -25,18 +25,32 @@ namespace Nop.Services.Tests.Configuration
         {
             throw new InvalidOperationException("Get setting by id is not supported");
         }
-        
-        public override T GetSettingByKey<T>(string key, T defaultValue = default(T), int storeId = 0)
+
+        public override T GetSettingByKey<T>(string key, T defaultValue = default(T),
+            int storeId = 0, bool loadSharedValueIfNotFound = false)
         {
-            key = key.Trim().ToLowerInvariant();
+
+            if (String.IsNullOrEmpty(key))
+                return defaultValue;
+
             var settings = GetAllSettings();
+            key = key.Trim().ToLowerInvariant();
+
             var setting = settings.FirstOrDefault(x => x.Name.Equals(key, StringComparison.InvariantCultureIgnoreCase) &&
                 x.StoreId == storeId);
+
+            //load shared value?
+            if (setting == null && storeId > 0 && loadSharedValueIfNotFound)
+            {
+                setting = settings.FirstOrDefault(x => x.Name.Equals(key, StringComparison.InvariantCultureIgnoreCase) &&
+                    x.StoreId == 0);
+            }
+
             if (setting != null)
                 return CommonHelper.To<T>(setting.Value);
 
             return defaultValue;
-       }
+        }
 
         public override void DeleteSetting(Setting setting)
         {
