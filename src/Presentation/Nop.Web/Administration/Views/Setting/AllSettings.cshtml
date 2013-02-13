@@ -28,9 +28,9 @@
                     })
                     .Columns(columns =>
                     {
-                        columns.Bound(x => x.Name).EditorTemplateName("String");
-                        columns.Bound(x => x.Value).EditorTemplateName("String");
-                        columns.Bound(x => x.StoreName).ReadOnly();
+                        columns.Bound(x => x.Name);
+                        columns.Bound(x => x.Value);
+                        columns.Bound(x => x.Store).EditorTemplateName("Store");
                         columns.Command(commands =>
                         {
                             commands.Edit().Text(T("Admin.Common.Edit").Text);
@@ -52,12 +52,18 @@
                             .Delete("SettingDelete", "Setting")
                             .Insert("SettingAdd", "Setting");
                     })
-                    .ClientEvents(x => x.OnError("grid_onError"))
+                    .ClientEvents(x => x.OnError("grid_onError").OnEdit("grid_onStoreEdit"))
                     .EnableCustomBinding(true))
             <script type="text/javascript">
                 function grid_onError(e) {
                     alert(e.XMLHttpRequest.responseText);
                     e.preventDefault();
+                }
+                
+                function grid_onStoreEdit(e) {
+                    $(e.form).find('#Store').data('tDropDownList').select(function (dataItem) {
+                        return dataItem.Value == e.dataItem['StoreId'];
+                    });
                 }
             </script>
         </td>

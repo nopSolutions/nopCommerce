@@ -51,8 +51,8 @@
                             .Width(100)
                             .ReadOnly()
                             .Filterable(false);
-                        columns.Bound(x => x.Name).EditorTemplateName("String").Width(300);
-                        columns.Bound(x => x.Value).EditorTemplateName("String");
+                        columns.Bound(x => x.Name).Width(300);
+                        columns.Bound(x => x.Value);
                         columns.Command(commands =>
                         {
                             commands.Edit().Text(T("Admin.Common.Edit").Text);

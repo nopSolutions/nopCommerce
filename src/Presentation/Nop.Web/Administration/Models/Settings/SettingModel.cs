@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Web.Mvc;
 using FluentValidation.Attributes;
 using Nop.Admin.Validators.Settings;
 using Nop.Web.Framework;
@@ -18,7 +19,7 @@ namespace Nop.Admin.Models.Settings
         public string Value { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.AllSettings.Fields.StoreName")]
-        [AllowHtml]
-        public string StoreName { get; set; }
+        public string Store { get; set; }
+        public int StoreId { get; set; }
     }
 }
