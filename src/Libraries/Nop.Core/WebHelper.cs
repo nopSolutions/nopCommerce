@@ -166,8 +166,8 @@ namespace Nop.Core
 
                 //let's resolve IWorkContext  here.
                 //Do not inject it via contructor because it'll cause circular references
-                var workContext = EngineContext.Current.Resolve<IWorkContext>();
-                var currentStore = workContext.CurrentStore;
+                var storeContext = EngineContext.Current.Resolve<IStoreContext>();
+                var currentStore = storeContext.CurrentStore;
                 if (currentStore == null)
                     throw new Exception("Current store cannot be loaded");
 

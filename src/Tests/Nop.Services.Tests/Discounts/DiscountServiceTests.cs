@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
@@ -23,6 +24,7 @@ namespace Nop.Services.Tests.Discounts
         IRepository<DiscountUsageHistory> _discountUsageHistoryRepo;
         IEventPublisher _eventPublisher;
         IDiscountService _discountService;
+        IStoreContext _storeContext;
         
         [SetUp]
         public new void SetUp()
@@ -63,7 +65,7 @@ namespace Nop.Services.Tests.Discounts
             _discountUsageHistoryRepo = MockRepository.GenerateMock<IRepository<DiscountUsageHistory>>();
             var pluginFinder = new PluginFinder();
             _discountService = new DiscountService(cacheManager, _discountRepo, _discountRequirementRepo,
-                _discountUsageHistoryRepo, pluginFinder, _eventPublisher);
+                _discountUsageHistoryRepo, _storeContext, pluginFinder, _eventPublisher);
         }
 
         [Test]

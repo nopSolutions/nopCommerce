@@ -18,7 +18,7 @@ namespace Nop.Services.Messages
         private readonly ITokenizer _tokenizer;
         private readonly IQueuedEmailService _queuedEmailService;
         private readonly ICustomerService _customerService;
-        private readonly IWorkContext _workContext;
+        private readonly IStoreContext _storeContext;
         private readonly IEventPublisher _eventPublisher;
 
         /// <summary>
@@ -30,12 +30,12 @@ namespace Nop.Services.Messages
         /// <param name="tokenizer">Tokenizer</param>
         /// <param name="queuedEmailService">Queued email service</param>
         /// <param name="customerService">Customer service</param>
-        /// <param name="workContext">Work context</param>
+        /// <param name="storeContext">Store context</param>
         /// <param name="eventPublisher">Event published</param>
         public CampaignService(IRepository<Campaign> campaignRepository,
             IEmailSender emailSender, IMessageTokenProvider messageTokenProvider,
             ITokenizer tokenizer, IQueuedEmailService queuedEmailService,
-            ICustomerService customerService, IWorkContext workContext,
+            ICustomerService customerService, IStoreContext storeContext,
             IEventPublisher eventPublisher)
         {
             this._campaignRepository = campaignRepository;
@@ -43,7 +43,7 @@ namespace Nop.Services.Messages
             this._messageTokenProvider = messageTokenProvider;
             this._tokenizer = tokenizer;
             this._queuedEmailService = queuedEmailService;
-            this._workContext = workContext;
+            this._storeContext = storeContext;
             this._customerService = customerService;
             this._eventPublisher = eventPublisher;
         }
@@ -144,7 +144,7 @@ namespace Nop.Services.Messages
             foreach (var subscription in subscriptions)
             {
                 var tokens = new List<Token>();
-                _messageTokenProvider.AddStoreTokens(tokens, _workContext.CurrentStore);
+                _messageTokenProvider.AddStoreTokens(tokens, _storeContext.CurrentStore);
                 _messageTokenProvider.AddNewsLetterSubscriptionTokens(tokens, subscription);
                 var customer = _customerService.GetCustomerByEmail(subscription.Email);
                 if (customer != null)
@@ -185,7 +185,7 @@ namespace Nop.Services.Messages
                 throw new ArgumentNullException("emailAccount");
 
             var tokens = new List<Token>();
-            _messageTokenProvider.AddStoreTokens(tokens, _workContext.CurrentStore);
+            _messageTokenProvider.AddStoreTokens(tokens, _storeContext.CurrentStore);
             var customer = _customerService.GetCustomerByEmail(email);
             if (customer != null)
                 _messageTokenProvider.AddCustomerTokens(tokens, customer);

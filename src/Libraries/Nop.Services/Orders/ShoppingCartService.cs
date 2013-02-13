@@ -26,6 +26,7 @@ namespace Nop.Services.Orders
 
         private readonly IRepository<ShoppingCartItem> _sciRepository;
         private readonly IWorkContext _workContext;
+        private readonly IStoreContext _storeContext;
         private readonly ICurrencyService _currencyService;
         private readonly IProductService _productService;
         private readonly ILocalizationService _localizationService;
@@ -48,6 +49,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="sciRepository">Shopping cart repository</param>
         /// <param name="workContext">Work context</param>
+        /// <param name="storeContext">Store context</param>
         /// <param name="currencyService">Currency service</param>
         /// <param name="productService">Product settings</param>
         /// <param name="localizationService">Localization service</param>
@@ -62,7 +64,8 @@ namespace Nop.Services.Orders
         /// <param name="aclService">ACL service</param>
         /// <param name="storeMappingService">Store mapping service</param>
         public ShoppingCartService(IRepository<ShoppingCartItem> sciRepository,
-            IWorkContext workContext, ICurrencyService currencyService,
+            IWorkContext workContext, IStoreContext storeContext,
+            ICurrencyService currencyService,
             IProductService productService, ILocalizationService localizationService,
             IProductAttributeParser productAttributeParser,
             ICheckoutAttributeService checkoutAttributeService,
@@ -77,6 +80,7 @@ namespace Nop.Services.Orders
         {
             this._sciRepository = sciRepository;
             this._workContext = workContext;
+            this._storeContext = storeContext;
             this._currencyService = currencyService;
             this._productService = productService;
             this._localizationService = localizationService;
@@ -293,7 +297,7 @@ namespace Nop.Services.Orders
             }
 
             //Store mapping
-            if (!_storeMappingService.Authorize(product, _workContext.CurrentStore))
+            if (!_storeMappingService.Authorize(product, _storeContext.CurrentStore))
             {
                 warnings.Add(_localizationService.GetResource("ShoppingCart.ProductUnpublished"));
             }

@@ -11,12 +11,10 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct
 {
     public partial class HasOneProductDiscountRequirementRule : BasePlugin, IDiscountRequirementRule
     {
-        private readonly IWorkContext _workContext;
         private readonly ISettingService _settingService;
 
-        public HasOneProductDiscountRequirementRule(IWorkContext workContext, ISettingService settingService)
+        public HasOneProductDiscountRequirementRule(ISettingService settingService)
         {
-            this._workContext = workContext;
             this._settingService = settingService;
         }
 
@@ -59,7 +57,7 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct
             //that's why we get the total quantity of this product variant
             var cartQuery = from sci in request.Customer.ShoppingCartItems
                             where sci.ShoppingCartType == ShoppingCartType.ShoppingCart &&
-                            sci.StoreId == _workContext.CurrentStore.Id
+                            sci.StoreId == request.Store.Id
                             group sci by sci.ProductVariantId into g
                             select new {ProductVariantId = g.Key, TotalQuantity = g.Sum(x => x.Quantity)};
             var cart = cartQuery.ToList();

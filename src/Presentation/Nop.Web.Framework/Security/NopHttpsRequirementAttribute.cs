@@ -44,8 +44,8 @@ namespace Nop.Web.Framework.Security
                     {
                         if (!currentConnectionSecured)
                         {
-                            var workContext = EngineContext.Current.Resolve<IWorkContext>();
-                            if (workContext.CurrentStore.SslEnabled)
+                            var storeContext = EngineContext.Current.Resolve<IStoreContext>();
+                            if (storeContext.CurrentStore.SslEnabled)
                             {
                                 var webHelper = EngineContext.Current.Resolve<IWebHelper>();
                                 //redirect to HTTPS version of page

@@ -123,6 +123,8 @@ namespace Nop.Web.Framework
 
             //work context
             builder.RegisterType<WebWorkContext>().As<IWorkContext>().InstancePerHttpRequest();
+            //store context
+            builder.RegisterType<WebStoreContext>().As<IStoreContext>().InstancePerHttpRequest();
 
             //services
             builder.RegisterType<BackInStockSubscriptionService>().As<IBackInStockSubscriptionService>().InstancePerHttpRequest();

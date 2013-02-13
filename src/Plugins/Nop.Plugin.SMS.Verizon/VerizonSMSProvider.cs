@@ -23,13 +23,15 @@ namespace Nop.Plugin.SMS.Verizon
         private readonly IEmailAccountService _emailAccountService;
         private readonly ILogger _logger;
         private readonly ISettingService _settingService;
-        private readonly IWorkContext _workContext;
+        private readonly IStoreContext _storeContext;
         private readonly EmailAccountSettings _emailAccountSettings;
 
         public VerizonSmsProvider(VerizonSettings verizonSettings,
-            IQueuedEmailService queuedEmailService, IEmailAccountService emailAccountService,
-            ILogger logger, ISettingService settingService, 
-            IWorkContext workContext,
+            IQueuedEmailService queuedEmailService, 
+            IEmailAccountService emailAccountService,
+            ILogger logger,
+            ISettingService settingService,
+            IStoreContext storeContext,
             EmailAccountSettings emailAccountSettings)
         {
             this._verizonSettings = verizonSettings;
@@ -37,7 +39,7 @@ namespace Nop.Plugin.SMS.Verizon
             this._emailAccountService = emailAccountService;
             this._logger = logger;
             this._settingService = settingService;
-            this._workContext = workContext;
+            this._storeContext = storeContext;
             this._emailAccountSettings = emailAccountSettings;
         }
 
@@ -63,7 +65,7 @@ namespace Nop.Plugin.SMS.Verizon
                     FromName = emailAccount.DisplayName,
                     To = _verizonSettings.Email,
                     ToName = string.Empty,
-                    Subject = _workContext.CurrentStore.Name,
+                    Subject = _storeContext.CurrentStore.Name,
                     Body = text,
                     CreatedOnUtc = DateTime.UtcNow,
                     EmailAccountId = emailAccount.Id

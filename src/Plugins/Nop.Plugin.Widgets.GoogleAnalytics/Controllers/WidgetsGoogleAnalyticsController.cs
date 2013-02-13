@@ -18,6 +18,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
     public class WidgetsGoogleAnalyticsController : Controller
     {
         private readonly IWorkContext _workContext;
+        private readonly IStoreContext _storeContext;
         private readonly ISettingService _settingService;
         private readonly IOrderService _orderService;
         private readonly ILogger _logger;
@@ -25,12 +26,14 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly GoogleAnalyticsSettings _googleAnalyticsSettings;
 
-        public WidgetsGoogleAnalyticsController(IWorkContext workContext, ISettingService settingService,
+        public WidgetsGoogleAnalyticsController(IWorkContext workContext, 
+            IStoreContext storeContext, ISettingService settingService,
             IOrderService orderService, ILogger logger, 
             ICategoryService categoryService, IProductAttributeParser productAttributeParser,
             GoogleAnalyticsSettings trackingScriptsSettings)
         {
             this._workContext = workContext;
+            this._storeContext = storeContext;
             this._settingService = settingService;
             this._orderService = orderService;
             this._logger = logger;
@@ -105,7 +108,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
 
         private Order GetLastOrder()
         {
-            var order = _orderService.SearchOrders(_workContext.CurrentStore.Id, _workContext.CurrentCustomer.Id,
+            var order = _orderService.SearchOrders(_storeContext.CurrentStore.Id, _workContext.CurrentCustomer.Id,
                     null, null, null, null, null, null, null, 0, 1).FirstOrDefault();
             return order;
         }
@@ -181,7 +184,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
                 analyticsEcommerceScript = _googleAnalyticsSettings.EcommerceScript + "\n";
                 analyticsEcommerceScript = analyticsEcommerceScript.Replace("{GOOGLEID}", _googleAnalyticsSettings.GoogleId);
                 analyticsEcommerceScript = analyticsEcommerceScript.Replace("{ORDERID}", order.Id.ToString());
-                analyticsEcommerceScript = analyticsEcommerceScript.Replace("{SITE}", _workContext.CurrentStore.Url.Replace("http://", "").Replace("/", ""));
+                analyticsEcommerceScript = analyticsEcommerceScript.Replace("{SITE}", _storeContext.CurrentStore.Url.Replace("http://", "").Replace("/", ""));
                 analyticsEcommerceScript = analyticsEcommerceScript.Replace("{TOTAL}", order.OrderTotal.ToString("0.00", usCulture));
                 analyticsEcommerceScript = analyticsEcommerceScript.Replace("{TAX}", order.OrderTax.ToString("0.00", usCulture));
                 analyticsEcommerceScript = analyticsEcommerceScript.Replace("{SHIP}", order.OrderShippingInclTax.ToString("0.00", usCulture));

@@ -29,6 +29,7 @@ namespace Nop.Services.Discounts
         private readonly IRepository<DiscountRequirement> _discountRequirementRepository;
         private readonly IRepository<DiscountUsageHistory> _discountUsageHistoryRepository;
         private readonly ICacheManager _cacheManager;
+        private readonly IStoreContext _storeContext;
         private readonly IPluginFinder _pluginFinder;
         private readonly IEventPublisher _eventPublisher;
 
@@ -43,12 +44,14 @@ namespace Nop.Services.Discounts
         /// <param name="discountRepository">Discount repository</param>
         /// <param name="discountRequirementRepository">Discount requirement repository</param>
         /// <param name="discountUsageHistoryRepository">Discount usage history repository</param>
+        /// <param name="storeContext">Store context</param>
         /// <param name="pluginFinder">Plugin finder</param>
         /// <param name="eventPublisher">Event published</param>
         public DiscountService(ICacheManager cacheManager,
             IRepository<Discount> discountRepository,
             IRepository<DiscountRequirement> discountRequirementRepository,
             IRepository<DiscountUsageHistory> discountUsageHistoryRepository,
+            IStoreContext storeContext,
             IPluginFinder pluginFinder,
             IEventPublisher eventPublisher)
         {
@@ -56,6 +59,7 @@ namespace Nop.Services.Discounts
             this._discountRepository = discountRepository;
             this._discountRequirementRepository = discountRequirementRepository;
             this._discountUsageHistoryRepository = discountUsageHistoryRepository;
+            this._storeContext = storeContext;
             this._pluginFinder = pluginFinder;
             this._eventPublisher = eventPublisher;
         }
@@ -346,7 +350,8 @@ namespace Nop.Services.Discounts
                 var request = new CheckDiscountRequirementRequest()
                 {
                     DiscountRequirement = req,
-                    Customer = customer
+                    Customer = customer,
+                    Store = _storeContext.CurrentStore
                 };
                 if (!requirementRule.CheckRequirement(request))
                     return false;

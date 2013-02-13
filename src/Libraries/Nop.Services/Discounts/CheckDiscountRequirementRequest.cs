@@ -1,5 +1,6 @@
 ﻿using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
+using Nop.Core.Domain.Stores;
 
 namespace Nop.Services.Discounts
 {
@@ -17,5 +18,10 @@ namespace Nop.Services.Discounts
         /// Gets or sets the customer
         /// </summary>
         public Customer Customer { get; set; }
+
+        /// <summary>
+        /// Gets or sets the store
+        /// </summary>
+        public Store Store { get; set; }
     }
 }

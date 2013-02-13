@@ -38,6 +38,7 @@ namespace Nop.Services.Tests.Orders
     public class OrderProcessingServiceTests : ServiceTest
     {
         IWorkContext _workContext;
+        IStoreContext _storeContext;
         ITaxService _taxService;
         IShippingService _shippingService;
         IShipmentService _shipmentService;
@@ -84,6 +85,7 @@ namespace Nop.Services.Tests.Orders
         public new void SetUp()
         {
             _workContext = null;
+            _storeContext = null;
 
             var pluginFinder = new PluginFinder();
             var cacheManager = new NopNullCache();
@@ -136,7 +138,7 @@ namespace Nop.Services.Tests.Orders
 
             _rewardPointsSettings = new RewardPointsSettings();
 
-            _orderTotalCalcService = new OrderTotalCalculationService(_workContext,
+            _orderTotalCalcService = new OrderTotalCalculationService(_workContext, _storeContext,
                 _priceCalcService, _taxService, _shippingService, _paymentService,
                 _checkoutAttributeParser, _discountService, _giftCardService,
                 _genericAttributeService, 

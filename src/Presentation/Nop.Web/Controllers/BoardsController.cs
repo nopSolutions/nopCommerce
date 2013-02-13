@@ -34,6 +34,7 @@ namespace Nop.Web.Controllers
         private readonly ICountryService _countryService;
         private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
+        private readonly IStoreContext _storeContext;
         private readonly ForumSettings _forumSettings;
         private readonly CustomerSettings _customerSettings;
         private readonly MediaSettings _mediaSettings;
@@ -49,6 +50,7 @@ namespace Nop.Web.Controllers
             ICountryService countryService,
             IWebHelper webHelper,
             IWorkContext workContext,
+            IStoreContext storeContext,
             ForumSettings forumSettings,
             CustomerSettings customerSettings,
             MediaSettings mediaSettings,
@@ -60,6 +62,7 @@ namespace Nop.Web.Controllers
             this._countryService = countryService;
             this._webHelper = webHelper;
             this._workContext = workContext;
+            this._storeContext = storeContext;
             this._forumSettings = forumSettings;
             this._customerSettings = customerSettings;
             this._mediaSettings = mediaSettings;
@@ -272,7 +275,7 @@ namespace Nop.Web.Controllers
             var feedDescription = _localizationService.GetResource("Forum.ActiveDiscussionsFeedDescription");
 
             var feed = new SyndicationFeed(
-                                    string.Format(feedTitle, _workContext.CurrentStore.Name),
+                                    string.Format(feedTitle, _storeContext.CurrentStore.Name),
                                     feedDescription,
                                     new Uri(url),
                                     "ActiveDiscussionsRSS",
@@ -392,7 +395,7 @@ namespace Nop.Web.Controllers
                 var feedDescription = _localizationService.GetResource("Forum.ForumFeedDescription");
 
                 var feed = new SyndicationFeed(
-                                        string.Format(feedTitle, _workContext.CurrentStore.Name, forum.Name),
+                                        string.Format(feedTitle, _storeContext.CurrentStore.Name, forum.Name),
                                         feedDescription,
                                         new Uri(url),
                                         string.Format("ForumRSS:{0}", forum.Id),

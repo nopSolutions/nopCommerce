@@ -48,6 +48,7 @@ namespace Nop.Plugin.Payments.GoogleCheckout
         private readonly IProductAttributeFormatter _productAttributeFormatter;
         private readonly IPriceCalculationService _priceCalculationService;
         private readonly IWorkContext _workContext;
+        private readonly IStoreContext _storeContext;
         private readonly ICustomerService _customerService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ICountryService _countryService;
@@ -66,11 +67,17 @@ namespace Nop.Plugin.Payments.GoogleCheckout
             IShippingService shippingService, 
             IOrderTotalCalculationService orderTotalCalculationService,
             IProductAttributeFormatter productAttributeFormatter,
-            IPriceCalculationService priceCalculationService, IWorkContext workContext,
-            ICustomerService customerService, IGenericAttributeService genericAttributeService, 
+            IPriceCalculationService priceCalculationService, 
+            IWorkContext workContext,
+            IStoreContext storeContext,
+            ICustomerService customerService, 
+            IGenericAttributeService genericAttributeService, 
             ICountryService countryService,
-            IStateProvinceService stateProvinceService, IOrderProcessingService orderProcessingService,
-            IOrderService orderService, ILogger logger, HttpContextBase httpContext)
+            IStateProvinceService stateProvinceService, 
+            IOrderProcessingService orderProcessingService,
+            IOrderService orderService, 
+            ILogger logger, 
+            HttpContextBase httpContext)
         {
             this._settingService = settingService;
             this._webHelper = webHelper;
@@ -80,6 +87,7 @@ namespace Nop.Plugin.Payments.GoogleCheckout
             this._productAttributeFormatter = productAttributeFormatter;
             this._priceCalculationService = priceCalculationService;
             this._workContext = workContext;
+            this._storeContext = storeContext;
             this._customerService = customerService;
             this._genericAttributeService = genericAttributeService;
             this._countryService = countryService;
@@ -134,7 +142,7 @@ namespace Nop.Plugin.Payments.GoogleCheckout
 
                 var cart = customer.ShoppingCartItems
                     .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                    .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                    .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
                     .ToList();
 
                 _workContext.CurrentCustomer = customer;
@@ -216,7 +224,7 @@ namespace Nop.Plugin.Payments.GoogleCheckout
                 customer.BillingAddress = billingAddress;
                 _customerService.UpdateCustomer(customer);
 
-                _genericAttributeService.SaveAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.SelectedShippingOption, null, _workContext.CurrentStore.Id);
+                _genericAttributeService.SaveAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.SelectedShippingOption, null, _storeContext.CurrentStore.Id);
 
                 bool shoppingCartRequiresShipping = cart.RequiresShipping();
                 if (shoppingCartRequiresShipping)
@@ -276,7 +284,7 @@ namespace Nop.Plugin.Payments.GoogleCheckout
                         var shippingOption = new ShippingOption();
                         shippingOption.Name = shippingMethod.shippingname;
                         shippingOption.Rate = shippingMethod.shippingcost.Value;
-                        _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.SelectedShippingOption, shippingOption, _workContext.CurrentStore.Id);
+                        _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.SelectedShippingOption, shippingOption, _storeContext.CurrentStore.Id);
                     }
                 }
 
@@ -284,7 +292,7 @@ namespace Nop.Plugin.Payments.GoogleCheckout
 
                 var paymentInfo = new ProcessPaymentRequest()
                 {
-                    StoreId = _workContext.CurrentStore.Id,
+                    StoreId = _storeContext.CurrentStore.Id,
                     PaymentMethodSystemName = "Payments.GoogleCheckout",
                     CustomerId = customer.Id,
                     GoogleOrderNumber = googleOrderNumber

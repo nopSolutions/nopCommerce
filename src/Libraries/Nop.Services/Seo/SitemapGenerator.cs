@@ -13,7 +13,7 @@ namespace Nop.Services.Seo
     /// </summary>
     public partial class SitemapGenerator : BaseSitemapGenerator, ISitemapGenerator
     {
-        private readonly IWorkContext _workContext;
+        private readonly IStoreContext _storeContext;
         private readonly ICategoryService _categoryService;
         private readonly IProductService _productService;
         private readonly IManufacturerService _manufacturerService;
@@ -21,11 +21,12 @@ namespace Nop.Services.Seo
         private readonly CommonSettings _commonSettings;
         private readonly IWebHelper _webHelper;
 
-        public SitemapGenerator(IWorkContext workContext, ICategoryService categoryService,
-            IProductService productService, IManufacturerService manufacturerService,
-            ITopicService topicService, CommonSettings commonSettings, IWebHelper webHelper)
+        public SitemapGenerator(IStoreContext storeContext,
+            ICategoryService categoryService, IProductService productService, 
+            IManufacturerService manufacturerService, ITopicService topicService, 
+            CommonSettings commonSettings, IWebHelper webHelper)
         {
-            this._workContext = workContext;
+            this._storeContext = storeContext;
             this._categoryService = categoryService;
             this._productService = productService;
             this._manufacturerService = manufacturerService;
@@ -92,7 +93,7 @@ namespace Nop.Services.Seo
         private void WriteProducts()
         {
             var products = _productService.SearchProducts(
-                storeId: _workContext.CurrentStore.Id,
+                storeId: _storeContext.CurrentStore.Id,
                 orderBy: ProductSortingEnum.CreatedOn);
             foreach (var product in products)
             {
@@ -106,7 +107,7 @@ namespace Nop.Services.Seo
 
         private void WriteTopics()
         {
-            var topics = _topicService.GetAllTopics(_workContext.CurrentStore.Id).ToList().FindAll(t => t.IncludeInSitemap);
+            var topics = _topicService.GetAllTopics(_storeContext.CurrentStore.Id).ToList().FindAll(t => t.IncludeInSitemap);
             foreach (var topic in topics)
             {
                 //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)

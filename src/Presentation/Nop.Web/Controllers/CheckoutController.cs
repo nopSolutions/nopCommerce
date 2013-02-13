@@ -36,6 +36,7 @@ namespace Nop.Web.Controllers
 		#region Fields
 
         private readonly IWorkContext _workContext;
+        private readonly IStoreContext _storeContext;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly ILocalizationService _localizationService;
         private readonly ITaxService _taxService;
@@ -65,7 +66,7 @@ namespace Nop.Web.Controllers
 
 		#region Constructors
 
-        public CheckoutController(IWorkContext workContext,
+        public CheckoutController(IWorkContext workContext, IStoreContext storeContext,
             IShoppingCartService shoppingCartService, ILocalizationService localizationService, 
             ITaxService taxService, ICurrencyService currencyService, 
             IPriceFormatter priceFormatter, IOrderProcessingService orderProcessingService,
@@ -79,6 +80,7 @@ namespace Nop.Web.Controllers
             PaymentSettings paymentSettings, AddressSettings addressSettings)
         {
             this._workContext = workContext;
+            this._storeContext = storeContext;
             this._shoppingCartService = shoppingCartService;
             this._localizationService = localizationService;
             this._taxService = taxService;
@@ -185,7 +187,7 @@ namespace Nop.Web.Controllers
                 _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, 
                     SystemCustomerAttributeNames.OfferedShippingOptions, 
                     getShippingOptionResponse.ShippingOptions,
-                    _workContext.CurrentStore.Id);
+                    _storeContext.CurrentStore.Id);
             
                 foreach (var shippingOption in getShippingOptionResponse.ShippingOptions)
                 {
@@ -209,7 +211,7 @@ namespace Nop.Web.Controllers
                 }
 
                 //find a selected (previously) shipping method
-                var selectedShippingOption = _workContext.CurrentCustomer.GetAttribute<ShippingOption>(SystemCustomerAttributeNames.SelectedShippingOption, _workContext.CurrentStore.Id);
+                var selectedShippingOption = _workContext.CurrentCustomer.GetAttribute<ShippingOption>(SystemCustomerAttributeNames.SelectedShippingOption, _storeContext.CurrentStore.Id);
                 if (selectedShippingOption != null)
                 {
                     var shippingOptionToSelect = model.ShippingMethods.ToList()
@@ -280,7 +282,7 @@ namespace Nop.Web.Controllers
             //find a selected (previously) payment method
             var selectedPaymentMethodSystemName = _workContext.CurrentCustomer.GetAttribute<string>(
                 SystemCustomerAttributeNames.SelectedPaymentMethod,
-                _genericAttributeService, _workContext.CurrentStore.Id);
+                _genericAttributeService, _storeContext.CurrentStore.Id);
             if (!String.IsNullOrEmpty(selectedPaymentMethodSystemName))
             {
                 var paymentMethodToSelect = model.PaymentMethods.ToList()
@@ -350,7 +352,7 @@ namespace Nop.Web.Controllers
             if (_orderSettings.MinimumOrderPlacementInterval == 0)
                 return true;
 
-            var lastOrder = _orderService.SearchOrders(_workContext.CurrentStore.Id, _workContext.CurrentCustomer.Id,
+            var lastOrder = _orderService.SearchOrders(_storeContext.CurrentStore.Id, _workContext.CurrentCustomer.Id,
                 null, null, null, null, null, null, null, 0, 1)
                 .FirstOrDefault();
             if (lastOrder == null)
@@ -368,7 +370,7 @@ namespace Nop.Web.Controllers
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
                 .ToList();
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
@@ -377,7 +379,7 @@ namespace Nop.Web.Controllers
                 return new HttpUnauthorizedResult();
 
             //reset checkout data
-            _customerService.ResetCheckoutData(_workContext.CurrentCustomer, _workContext.CurrentStore.Id);
+            _customerService.ResetCheckoutData(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
 
             //validation (cart)
             var scWarnings = _shoppingCartService.GetShoppingCartWarnings(cart, _workContext.CurrentCustomer.CheckoutAttributes, true);
@@ -410,7 +412,7 @@ namespace Nop.Web.Controllers
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
                 .ToList();
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
@@ -443,7 +445,7 @@ namespace Nop.Web.Controllers
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
                 .ToList();
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
@@ -481,7 +483,7 @@ namespace Nop.Web.Controllers
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
                 .ToList();
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
@@ -521,7 +523,7 @@ namespace Nop.Web.Controllers
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
                 .ToList();
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
@@ -567,7 +569,7 @@ namespace Nop.Web.Controllers
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
                 .ToList();
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
@@ -580,7 +582,7 @@ namespace Nop.Web.Controllers
 
             if (!cart.RequiresShipping())
             {
-                _genericAttributeService.SaveAttribute<ShippingOption>(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedShippingOption, null, _workContext.CurrentStore.Id);
+                _genericAttributeService.SaveAttribute<ShippingOption>(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedShippingOption, null, _storeContext.CurrentStore.Id);
                 return RedirectToRoute("CheckoutPaymentMethod");
             }
             
@@ -597,7 +599,7 @@ namespace Nop.Web.Controllers
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
                 .ToList();
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
@@ -611,7 +613,7 @@ namespace Nop.Web.Controllers
             if (!cart.RequiresShipping())
             {
                 _genericAttributeService.SaveAttribute<ShippingOption>(_workContext.CurrentCustomer,
-                    SystemCustomerAttributeNames.SelectedShippingOption, null, _workContext.CurrentStore.Id);
+                    SystemCustomerAttributeNames.SelectedShippingOption, null, _storeContext.CurrentStore.Id);
                 return RedirectToRoute("CheckoutPaymentMethod");
             }
 
@@ -626,7 +628,7 @@ namespace Nop.Web.Controllers
             
             //find it
             //performance optimization. try cache first
-            var shippingOptions = _workContext.CurrentCustomer.GetAttribute<List<ShippingOption>>(SystemCustomerAttributeNames.OfferedShippingOptions, _workContext.CurrentStore.Id);
+            var shippingOptions = _workContext.CurrentCustomer.GetAttribute<List<ShippingOption>>(SystemCustomerAttributeNames.OfferedShippingOptions, _storeContext.CurrentStore.Id);
             if (shippingOptions == null || shippingOptions.Count == 0)
             {
                 //not found? let's load them using shipping service
@@ -648,7 +650,7 @@ namespace Nop.Web.Controllers
                 return ShippingMethod();
 
             //save
-            _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedShippingOption, shippingOption, _workContext.CurrentStore.Id);
+            _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedShippingOption, shippingOption, _storeContext.CurrentStore.Id);
             
             return RedirectToRoute("CheckoutPaymentMethod");
         }
@@ -659,7 +661,7 @@ namespace Nop.Web.Controllers
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
                 .ToList();
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
@@ -676,7 +678,7 @@ namespace Nop.Web.Controllers
             if (!isPaymentWorkflowRequired)
             {
                 _genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer,
-                    SystemCustomerAttributeNames.SelectedPaymentMethod, null, _workContext.CurrentStore.Id);
+                    SystemCustomerAttributeNames.SelectedPaymentMethod, null, _storeContext.CurrentStore.Id);
                 return RedirectToRoute("CheckoutPaymentInfo");
             }
 
@@ -691,8 +693,8 @@ namespace Nop.Web.Controllers
 
                 _genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer,
                     SystemCustomerAttributeNames.SelectedPaymentMethod, 
-                    paymentMethodModel.PaymentMethods[0].PaymentMethodSystemName, 
-                    _workContext.CurrentStore.Id);
+                    paymentMethodModel.PaymentMethods[0].PaymentMethodSystemName,
+                    _storeContext.CurrentStore.Id);
                 return RedirectToRoute("CheckoutPaymentInfo");
             }
 
@@ -706,7 +708,7 @@ namespace Nop.Web.Controllers
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
                 .ToList();
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
@@ -722,7 +724,7 @@ namespace Nop.Web.Controllers
             {
                 _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
                     SystemCustomerAttributeNames.UseRewardPointsDuringCheckout, model.UseRewardPoints,
-                    _workContext.CurrentStore.Id);
+                    _storeContext.CurrentStore.Id);
             }
 
             //Check whether payment workflow is required
@@ -730,7 +732,7 @@ namespace Nop.Web.Controllers
             if (!isPaymentWorkflowRequired)
             {
                 _genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer,
-                    SystemCustomerAttributeNames.SelectedPaymentMethod, null, _workContext.CurrentStore.Id);
+                    SystemCustomerAttributeNames.SelectedPaymentMethod, null, _storeContext.CurrentStore.Id);
                 return RedirectToRoute("CheckoutPaymentInfo");
             }
             //payment method 
@@ -743,7 +745,7 @@ namespace Nop.Web.Controllers
 
             //save
             _genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer,
-                SystemCustomerAttributeNames.SelectedPaymentMethod, paymentmethod, _workContext.CurrentStore.Id);
+                SystemCustomerAttributeNames.SelectedPaymentMethod, paymentmethod, _storeContext.CurrentStore.Id);
             
             return RedirectToRoute("CheckoutPaymentInfo");
         }
@@ -754,7 +756,7 @@ namespace Nop.Web.Controllers
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
                 .ToList();
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
@@ -775,7 +777,7 @@ namespace Nop.Web.Controllers
             //load payment method
             var paymentMethodSystemName = _workContext.CurrentCustomer.GetAttribute<string>(
                 SystemCustomerAttributeNames.SelectedPaymentMethod,
-                _genericAttributeService, _workContext.CurrentStore.Id);
+                _genericAttributeService, _storeContext.CurrentStore.Id);
             var paymentMethod = _paymentService.LoadPaymentMethodBySystemName(paymentMethodSystemName);
             if (paymentMethod == null)
                 return RedirectToRoute("CheckoutPaymentMethod");
@@ -792,7 +794,7 @@ namespace Nop.Web.Controllers
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
                 .ToList();
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
@@ -813,7 +815,7 @@ namespace Nop.Web.Controllers
             //load payment method
             var paymentMethodSystemName = _workContext.CurrentCustomer.GetAttribute<string>(
                 SystemCustomerAttributeNames.SelectedPaymentMethod,
-                _genericAttributeService, _workContext.CurrentStore.Id);
+                _genericAttributeService, _storeContext.CurrentStore.Id);
             var paymentMethod = _paymentService.LoadPaymentMethodBySystemName(paymentMethodSystemName);
             if (paymentMethod == null)
                 return RedirectToRoute("CheckoutPaymentMethod");
@@ -844,7 +846,7 @@ namespace Nop.Web.Controllers
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
                 .ToList();
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
@@ -866,7 +868,7 @@ namespace Nop.Web.Controllers
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
                 .ToList();
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
@@ -897,11 +899,11 @@ namespace Nop.Web.Controllers
                     throw new Exception(_localizationService.GetResource("Checkout.MinOrderPlacementInterval"));
 
                 //place order
-                processPaymentRequest.StoreId = _workContext.CurrentStore.Id;
+                processPaymentRequest.StoreId = _storeContext.CurrentStore.Id;
                 processPaymentRequest.CustomerId = _workContext.CurrentCustomer.Id;
                 processPaymentRequest.PaymentMethodSystemName = _workContext.CurrentCustomer.GetAttribute<string>(
                     SystemCustomerAttributeNames.SelectedPaymentMethod,
-                    _genericAttributeService, _workContext.CurrentStore.Id);
+                    _genericAttributeService, _storeContext.CurrentStore.Id);
                 var placeOrderResult = _orderProcessingService.PlaceOrder(processPaymentRequest);
                 if (placeOrderResult.Success)
                 {
@@ -956,7 +958,7 @@ namespace Nop.Web.Controllers
             }
             if (order == null)
             {
-                order = _orderService.SearchOrders(_workContext.CurrentStore.Id, _workContext.CurrentCustomer.Id,
+                order = _orderService.SearchOrders(_storeContext.CurrentStore.Id, _workContext.CurrentCustomer.Id,
                     null, null, null, null, null, null, null, 0, 1)
                     .FirstOrDefault();
             }
@@ -985,7 +987,7 @@ namespace Nop.Web.Controllers
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
                 .ToList();
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
@@ -1018,7 +1020,7 @@ namespace Nop.Web.Controllers
                 //validation
                 var cart = _workContext.CurrentCustomer.ShoppingCartItems
                     .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
                     .ToList();
                 if (cart.Count == 0)
                     throw new Exception("Your cart is empty");
@@ -1103,7 +1105,7 @@ namespace Nop.Web.Controllers
                 else
                 {
                     //shipping is not required
-                    _genericAttributeService.SaveAttribute<ShippingOption>(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedShippingOption, null, _workContext.CurrentStore.Id);
+                    _genericAttributeService.SaveAttribute<ShippingOption>(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedShippingOption, null, _storeContext.CurrentStore.Id);
 
 
                     //Check whether payment workflow is required
@@ -1123,7 +1125,7 @@ namespace Nop.Web.Controllers
                             var selectedPaymentMethodSystemName = paymentMethodModel.PaymentMethods[0].PaymentMethodSystemName;
                             _genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer,
                                 SystemCustomerAttributeNames.SelectedPaymentMethod,
-                                selectedPaymentMethodSystemName, _workContext.CurrentStore.Id);
+                                selectedPaymentMethodSystemName, _storeContext.CurrentStore.Id);
 
                             var paymentMethodInst = _paymentService.LoadPaymentMethodBySystemName(selectedPaymentMethodSystemName);
                             if (paymentMethodInst == null || !paymentMethodInst.IsPaymentMethodActive(_paymentSettings))
@@ -1159,7 +1161,7 @@ namespace Nop.Web.Controllers
                     {
                         //payment is not required
                         _genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer,
-                            SystemCustomerAttributeNames.SelectedPaymentMethod, null, _workContext.CurrentStore.Id);
+                            SystemCustomerAttributeNames.SelectedPaymentMethod, null, _storeContext.CurrentStore.Id);
 
                         var confirmOrderModel = PrepareConfirmOrderModel(cart);
                         return Json(new
@@ -1189,7 +1191,7 @@ namespace Nop.Web.Controllers
                 //validation
                 var cart = _workContext.CurrentCustomer.ShoppingCartItems
                     .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                    .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                    .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
                     .ToList();
                 if (cart.Count == 0)
                     throw new Exception("Your cart is empty");
@@ -1294,7 +1296,7 @@ namespace Nop.Web.Controllers
                 //validation
                 var cart = _workContext.CurrentCustomer.ShoppingCartItems
                     .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                    .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                    .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
                     .ToList();
                 if (cart.Count == 0)
                     throw new Exception("Your cart is empty");
@@ -1320,7 +1322,7 @@ namespace Nop.Web.Controllers
                 
                 //find it
                 //performance optimization. try cache first
-                var shippingOptions = _workContext.CurrentCustomer.GetAttribute<List<ShippingOption>>(SystemCustomerAttributeNames.OfferedShippingOptions, _workContext.CurrentStore.Id);
+                var shippingOptions = _workContext.CurrentCustomer.GetAttribute<List<ShippingOption>>(SystemCustomerAttributeNames.OfferedShippingOptions, _storeContext.CurrentStore.Id);
                 if (shippingOptions == null || shippingOptions.Count == 0)
                 {
                     //not found? let's load them using shipping service
@@ -1342,7 +1344,7 @@ namespace Nop.Web.Controllers
                     throw new Exception("Selected shipping method can't be loaded");
 
                 //save
-                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedShippingOption, shippingOption, _workContext.CurrentStore.Id);
+                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedShippingOption, shippingOption, _storeContext.CurrentStore.Id);
 
 
                 //Check whether payment workflow is required
@@ -1360,7 +1362,7 @@ namespace Nop.Web.Controllers
                         //so customer doesn't have to choose a payment method
                         var selectedPaymentMethodSystemName = paymentMethodModel.PaymentMethods[0].PaymentMethodSystemName;
                         _genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer,
-                            SystemCustomerAttributeNames.SelectedPaymentMethod, selectedPaymentMethodSystemName, _workContext.CurrentStore.Id);
+                            SystemCustomerAttributeNames.SelectedPaymentMethod, selectedPaymentMethodSystemName, _storeContext.CurrentStore.Id);
 
                         var paymentMethodInst = _paymentService.LoadPaymentMethodBySystemName(selectedPaymentMethodSystemName);
                         if (paymentMethodInst == null || !paymentMethodInst.IsPaymentMethodActive(_paymentSettings))
@@ -1396,7 +1398,7 @@ namespace Nop.Web.Controllers
                 {
                     //payment is not required
                     _genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer,
-                        SystemCustomerAttributeNames.SelectedPaymentMethod, null, _workContext.CurrentStore.Id);
+                        SystemCustomerAttributeNames.SelectedPaymentMethod, null, _storeContext.CurrentStore.Id);
 
                     var confirmOrderModel = PrepareConfirmOrderModel(cart);
                     return Json(new
@@ -1425,7 +1427,7 @@ namespace Nop.Web.Controllers
                 //validation
                 var cart = _workContext.CurrentCustomer.ShoppingCartItems
                     .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                    .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                    .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
                     .ToList();
                 if (cart.Count == 0)
                     throw new Exception("Your cart is empty");
@@ -1450,7 +1452,7 @@ namespace Nop.Web.Controllers
                 {
                     _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
                         SystemCustomerAttributeNames.UseRewardPointsDuringCheckout, model.UseRewardPoints,
-                        _workContext.CurrentStore.Id);
+                        _storeContext.CurrentStore.Id);
                 }
 
                 //Check whether payment workflow is required
@@ -1459,7 +1461,7 @@ namespace Nop.Web.Controllers
                 {
                     //payment is not required
                     _genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer,
-                        SystemCustomerAttributeNames.SelectedPaymentMethod, null, _workContext.CurrentStore.Id);
+                        SystemCustomerAttributeNames.SelectedPaymentMethod, null, _storeContext.CurrentStore.Id);
 
                     var confirmOrderModel = PrepareConfirmOrderModel(cart);
                     return Json(new
@@ -1479,7 +1481,7 @@ namespace Nop.Web.Controllers
 
                 //save
                 _genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer,
-                    SystemCustomerAttributeNames.SelectedPaymentMethod, paymentmethod, _workContext.CurrentStore.Id);
+                    SystemCustomerAttributeNames.SelectedPaymentMethod, paymentmethod, _storeContext.CurrentStore.Id);
                 
 
                 var paymenInfoModel = PreparePaymentInfoModel(paymentMethodInst);
@@ -1508,7 +1510,7 @@ namespace Nop.Web.Controllers
                 //validation
                 var cart = _workContext.CurrentCustomer.ShoppingCartItems
                     .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                    .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                    .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
                     .ToList();
                 if (cart.Count == 0)
                     throw new Exception("Your cart is empty");
@@ -1521,7 +1523,7 @@ namespace Nop.Web.Controllers
 
                 var paymentMethodSystemName = _workContext.CurrentCustomer.GetAttribute<string>(
                     SystemCustomerAttributeNames.SelectedPaymentMethod,
-                    _genericAttributeService, _workContext.CurrentStore.Id);
+                    _genericAttributeService, _storeContext.CurrentStore.Id);
                 var paymentMethod = _paymentService.LoadPaymentMethodBySystemName(paymentMethodSystemName);
                 if (paymentMethod == null)
                     throw new Exception("Payment method is not selected");
@@ -1577,7 +1579,7 @@ namespace Nop.Web.Controllers
                 //validation
                 var cart = _workContext.CurrentCustomer.ShoppingCartItems
                     .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                    .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                    .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
                     .ToList();
                 if (cart.Count == 0)
                     throw new Exception("Your cart is empty");
@@ -1605,11 +1607,11 @@ namespace Nop.Web.Controllers
                         processPaymentRequest = new ProcessPaymentRequest();
                 }
 
-                processPaymentRequest.StoreId = _workContext.CurrentStore.Id;
+                processPaymentRequest.StoreId = _storeContext.CurrentStore.Id;
                 processPaymentRequest.CustomerId = _workContext.CurrentCustomer.Id;
                 processPaymentRequest.PaymentMethodSystemName = _workContext.CurrentCustomer.GetAttribute<string>(
-                    SystemCustomerAttributeNames.SelectedPaymentMethod, 
-                    _genericAttributeService, _workContext.CurrentStore.Id);
+                    SystemCustomerAttributeNames.SelectedPaymentMethod,
+                    _genericAttributeService, _storeContext.CurrentStore.Id);
                 var placeOrderResult = _orderProcessingService.PlaceOrder(processPaymentRequest);
                 if (placeOrderResult.Success)
                 {
@@ -1683,7 +1685,7 @@ namespace Nop.Web.Controllers
                     return new HttpUnauthorizedResult();
 
                 //get the order
-                var order = _orderService.SearchOrders(_workContext.CurrentStore.Id, _workContext.CurrentCustomer.Id,
+                var order = _orderService.SearchOrders(_storeContext.CurrentStore.Id, _workContext.CurrentCustomer.Id,
                     null, null, null, null, null, null, null, 0, 1)
                     .FirstOrDefault();
                 if (order == null)

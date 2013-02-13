@@ -5,20 +5,18 @@ using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
-using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Authentication;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
-using Nop.Services.Stores;
 using Nop.Web.Framework.Localization;
 
 namespace Nop.Web.Framework
 {
     /// <summary>
-    /// Working context for web application
+    /// Work context for web application
     /// </summary>
     public partial class WebWorkContext : IWorkContext
     {
@@ -26,7 +24,7 @@ namespace Nop.Web.Framework
 
         private readonly HttpContextBase _httpContext;
         private readonly ICustomerService _customerService;
-        private readonly IStoreService _storeService;
+        private readonly IStoreContext _storeContext;
         private readonly IAuthenticationService _authenticationService;
         private readonly ILanguageService _languageService;
         private readonly ICurrencyService _currencyService;
@@ -36,15 +34,12 @@ namespace Nop.Web.Framework
         private readonly LocalizationSettings _localizationSettings;
         private readonly IWebHelper _webHelper;
 
-        private Store _cachedStore;
-
         private Customer _cachedCustomer;
         private Customer _originalCustomerIfImpersonated;
-        private bool _cachedIsAdmin;
 
         public WebWorkContext(HttpContextBase httpContext,
             ICustomerService customerService,
-            IStoreService storeService,
+            IStoreContext storeContext,
             IAuthenticationService authenticationService,
             ILanguageService languageService,
             ICurrencyService currencyService,
@@ -55,7 +50,7 @@ namespace Nop.Web.Framework
         {
             this._httpContext = httpContext;
             this._customerService = customerService;
-            this._storeService = storeService;
+            this._storeContext = storeContext;
             this._authenticationService = authenticationService;
             this._languageService = languageService;
             this._currencyService = currencyService;
@@ -92,34 +87,6 @@ namespace Nop.Web.Framework
             {
                 _httpContext.Response.Cookies.Remove(CustomerCookieName);
                 _httpContext.Response.Cookies.Add(cookie);
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the current store
-        /// </summary>
-        public virtual Store CurrentStore
-        {
-            get
-            {
-                if (_cachedStore != null)
-                    return _cachedStore;
-
-                //ty to determine the current store by HTTP_HOST
-                var host = _webHelper.ServerVariables("HTTP_HOST");
-                var allStores = _storeService.GetAllStores();
-                var store = allStores.FirstOrDefault(s => s.ContainsHostValue(host));
-
-                if (store == null)
-                {
-                    //load the first found store
-                    store = allStores.FirstOrDefault();
-                }
-                if (store == null)
-                    throw new Exception("No store could be loaded");
-
-                _cachedStore = store;
-                return _cachedStore;
             }
         }
 
@@ -245,25 +212,25 @@ namespace Nop.Web.Framework
                                 {
                                     //the language is found. now we need to save it
                                     if (this.CurrentCustomer.GetAttribute<int>(SystemCustomerAttributeNames.LanguageId,
-                                        _genericAttributeService, this.CurrentStore.Id) != langByCulture.Id)
+                                        _genericAttributeService, _storeContext.CurrentStore.Id) != langByCulture.Id)
                                     {
                                         _genericAttributeService.SaveAttribute(this.CurrentCustomer,
                                             SystemCustomerAttributeNames.LanguageId,
-                                            langByCulture.Id, this.CurrentStore.Id);
+                                            langByCulture.Id, _storeContext.CurrentStore.Id);
                                     }
                                 }
                             }
                         }
                     }
                 }
-                var allLanguages = _languageService.GetAllLanguages(storeId: this.CurrentStore.Id);
+                var allLanguages = _languageService.GetAllLanguages(storeId: _storeContext.CurrentStore.Id);
                 if (allLanguages.Count > 0)
                 {
                     //find current customer language
                     foreach (var lang in allLanguages)
                     {
                         if (this.CurrentCustomer.GetAttribute<int>(SystemCustomerAttributeNames.LanguageId,
-                            _genericAttributeService, this.CurrentStore.Id) == lang.Id)
+                            _genericAttributeService, _storeContext.CurrentStore.Id) == lang.Id)
                         {
                             return lang;
                         }
@@ -280,7 +247,7 @@ namespace Nop.Web.Framework
                 var languageId = value != null ? value.Id : 0;
                 _genericAttributeService.SaveAttribute(this.CurrentCustomer,
                     SystemCustomerAttributeNames.LanguageId,
-                    languageId, this.CurrentStore.Id);
+                    languageId, _storeContext.CurrentStore.Id);
             }
         }
 
@@ -299,12 +266,12 @@ namespace Nop.Web.Framework
                         return primaryStoreCurrency;
                 }
 
-                var allCurrencies = _currencyService.GetAllCurrencies(storeId: this.CurrentStore.Id);
+                var allCurrencies = _currencyService.GetAllCurrencies(storeId: _storeContext.CurrentStore.Id);
                 if (allCurrencies.Count > 0)
                 {
                     //find current customer language
                     var customerCurrencyId = this.CurrentCustomer.GetAttribute<int>(SystemCustomerAttributeNames.CurrencyId,
-                        _genericAttributeService, this.CurrentStore.Id);
+                        _genericAttributeService, _storeContext.CurrentStore.Id);
                     foreach (var currency in allCurrencies)
                     {
                         if (customerCurrencyId == currency.Id)
@@ -324,7 +291,7 @@ namespace Nop.Web.Framework
                 var currencyId = value != null ? value.Id : 0;
                 _genericAttributeService.SaveAttribute(this.CurrentCustomer,
                     SystemCustomerAttributeNames.CurrencyId,
-                    currencyId, this.CurrentStore.Id);
+                    currencyId, _storeContext.CurrentStore.Id);
             }
         }
 
@@ -340,7 +307,7 @@ namespace Nop.Web.Framework
                     return (TaxDisplayType)this.CurrentCustomer.GetAttribute<int>(
                         SystemCustomerAttributeNames.TaxDisplayTypeId,
                         _genericAttributeService,
-                        this.CurrentStore.Id);
+                        _storeContext.CurrentStore.Id);
                 }
 
                 return _taxSettings.TaxDisplayType;
@@ -351,24 +318,14 @@ namespace Nop.Web.Framework
                     return;
 
                 _genericAttributeService.SaveAttribute(this.CurrentCustomer, 
-                    SystemCustomerAttributeNames.TaxDisplayTypeId, 
-                    (int)value, this.CurrentStore.Id);
+                    SystemCustomerAttributeNames.TaxDisplayTypeId,
+                    (int)value, _storeContext.CurrentStore.Id);
             }
         }
 
         /// <summary>
         /// Get or set value indicating whether we're in admin area
         /// </summary>
-        public virtual bool IsAdmin
-        {
-            get
-            {
-                return _cachedIsAdmin;
-            }
-            set
-            {
-                _cachedIsAdmin = value;
-            }
-        }
+        public virtual bool IsAdmin { get; set; }
     }
 }

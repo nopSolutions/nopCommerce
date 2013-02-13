@@ -10,12 +10,10 @@ namespace Nop.Plugin.DiscountRules.Store
     public partial class StoreDiscountRequirementRule : BasePlugin, IDiscountRequirementRule
     {
         private readonly ISettingService _settingService;
-        private readonly IWorkContext _workContext;
 
-        public StoreDiscountRequirementRule(ISettingService settingService, IWorkContext workContext)
+        public StoreDiscountRequirementRule(ISettingService settingService)
         {
             this._settingService = settingService;
-            this._workContext = workContext;
         }
 
         /// <summary>
@@ -39,7 +37,7 @@ namespace Nop.Plugin.DiscountRules.Store
             if (storeId == 0)
                 return false;
 
-            bool result = _workContext.CurrentStore.Id == storeId;
+            bool result = request.Store.Id == storeId;
             return result;
         }
 

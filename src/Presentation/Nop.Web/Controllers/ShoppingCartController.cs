@@ -48,6 +48,7 @@ namespace Nop.Web.Controllers
 
         private readonly IProductService _productService;
         private readonly IWorkContext _workContext;
+        private readonly IStoreContext _storeContext;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IPictureService _pictureService;
         private readonly ILocalizationService _localizationService;
@@ -90,31 +91,48 @@ namespace Nop.Web.Controllers
 
 		#region Constructors
 
-        public ShoppingCartController(IProductService productService, IWorkContext workContext,
-            IShoppingCartService shoppingCartService, IPictureService pictureService,
+        public ShoppingCartController(IProductService productService, 
+            IStoreContext storeContext,
+            IWorkContext workContext,
+            IShoppingCartService shoppingCartService, 
+            IPictureService pictureService,
             ILocalizationService localizationService, 
-            IProductAttributeService productAttributeService, IProductAttributeFormatter productAttributeFormatter,
+            IProductAttributeService productAttributeService, 
+            IProductAttributeFormatter productAttributeFormatter,
             IProductAttributeParser productAttributeParser,
             ITaxService taxService, ICurrencyService currencyService, 
-            IPriceCalculationService priceCalculationService, IPriceFormatter priceFormatter,
-            ICheckoutAttributeParser checkoutAttributeParser, ICheckoutAttributeFormatter checkoutAttributeFormatter, 
+            IPriceCalculationService priceCalculationService,
+            IPriceFormatter priceFormatter,
+            ICheckoutAttributeParser checkoutAttributeParser,
+            ICheckoutAttributeFormatter checkoutAttributeFormatter, 
             IOrderProcessingService orderProcessingService,
-            IDiscountService discountService,ICustomerService customerService, 
-            IGiftCardService giftCardService, ICountryService countryService,
-            IStateProvinceService stateProvinceService, IShippingService shippingService, 
+            IDiscountService discountService,
+            ICustomerService customerService, 
+            IGiftCardService giftCardService,
+            ICountryService countryService,
+            IStateProvinceService stateProvinceService,
+            IShippingService shippingService, 
             IOrderTotalCalculationService orderTotalCalculationService,
-            ICheckoutAttributeService checkoutAttributeService, IPaymentService paymentService,
+            ICheckoutAttributeService checkoutAttributeService, 
+            IPaymentService paymentService,
             IWorkflowMessageService workflowMessageService,
             IPermissionService permissionService, 
-            IDownloadService downloadService, ICacheManager cacheManager,
-            IWebHelper webHelper, ICustomerActivityService customerActivityService,
-            MediaSettings mediaSettings, ShoppingCartSettings shoppingCartSettings,
-            CatalogSettings catalogSettings, OrderSettings orderSettings,
-            ShippingSettings shippingSettings, TaxSettings taxSettings,
-            CaptchaSettings captchaSettings, AddressSettings addressSettings)
+            IDownloadService downloadService,
+            ICacheManager cacheManager,
+            IWebHelper webHelper, 
+            ICustomerActivityService customerActivityService,
+            MediaSettings mediaSettings,
+            ShoppingCartSettings shoppingCartSettings,
+            CatalogSettings catalogSettings, 
+            OrderSettings orderSettings,
+            ShippingSettings shippingSettings, 
+            TaxSettings taxSettings,
+            CaptchaSettings captchaSettings, 
+            AddressSettings addressSettings)
         {
             this._productService = productService;
             this._workContext = workContext;
+            this._storeContext = storeContext;
             this._shoppingCartService = shoppingCartService;
             this._pictureService = pictureService;
             this._localizationService = localizationService;
@@ -532,13 +550,13 @@ namespace Nop.Web.Controllers
                         model.OrderReviewData.ShippingAddress.PrepareModel(shippingAddress, false, _addressSettings);
                     
                     //selected shipping method
-                    var shippingOption = _workContext.CurrentCustomer.GetAttribute<ShippingOption>(SystemCustomerAttributeNames.SelectedShippingOption, _workContext.CurrentStore.Id);
+                    var shippingOption = _workContext.CurrentCustomer.GetAttribute<ShippingOption>(SystemCustomerAttributeNames.SelectedShippingOption, _storeContext.CurrentStore.Id);
                     if (shippingOption != null)
                         model.OrderReviewData.ShippingMethod = shippingOption.Name;
                 }
                 //payment info
                 var selectedPaymentMethodSystemName = _workContext.CurrentCustomer.GetAttribute<string>(
-                    SystemCustomerAttributeNames.SelectedPaymentMethod, _workContext.CurrentStore.Id);
+                    SystemCustomerAttributeNames.SelectedPaymentMethod, _storeContext.CurrentStore.Id);
                 var paymentMethod = _paymentService.LoadPaymentMethodBySystemName(selectedPaymentMethodSystemName);
                 model.OrderReviewData.PaymentMethod = paymentMethod != null ? paymentMethod.GetLocalizedFriendlyName(_localizationService, _workContext.WorkingLanguage.Id) : "";
             }
@@ -687,7 +705,7 @@ namespace Nop.Web.Controllers
 
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
                 .ToList();
             model.TotalProducts = cart.GetTotalProducts();
             if (cart.Count > 0)
@@ -941,14 +959,14 @@ namespace Nop.Web.Controllers
             //first, try to find existing shopping cart item
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == cartType)
-                .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
                 .ToList();
             var shoppingCartItem = _shoppingCartService.FindShoppingCartItemInTheCart(cart, cartType, productVariant);
             //if we already have the same product variant in the cart, then use the total quantity to validate
             var quantityToValidate = shoppingCartItem != null ? shoppingCartItem.Quantity + quantity : quantity;
             var addToCartWarnings = _shoppingCartService
                 .GetShoppingCartItemWarnings(_workContext.CurrentCustomer, cartType,
-                productVariant, _workContext.CurrentStore.Id, string.Empty, 
+                productVariant, _storeContext.CurrentStore.Id, string.Empty, 
                 decimal.Zero, quantityToValidate, false, true, false, false, false);
             if (addToCartWarnings.Count > 0)
             {
@@ -963,7 +981,7 @@ namespace Nop.Web.Controllers
 
             //now let's try adding product to the cart (now including product attribute validation, etc)
             addToCartWarnings = _shoppingCartService.AddToCart(_workContext.CurrentCustomer,
-                productVariant, cartType, _workContext.CurrentStore.Id,
+                productVariant, cartType, _storeContext.CurrentStore.Id,
                 string.Empty, decimal.Zero, quantity, true);
             if (addToCartWarnings.Count > 0)
             {
@@ -997,7 +1015,7 @@ namespace Nop.Web.Controllers
                             var updatetopwishlistsectionhtml = string.Format("({0})",
                                  _workContext.CurrentCustomer.ShoppingCartItems
                                  .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
-                                 .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                                 .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
                                  .ToList()
                                  .GetTotalProducts());
                             return Json(new
@@ -1029,7 +1047,7 @@ namespace Nop.Web.Controllers
                             var updatetopcartsectionhtml = string.Format("({0})",
                                  _workContext.CurrentCustomer.ShoppingCartItems
                                  .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                                 .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                                 .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
                                  .ToList()
                                  .GetTotalProducts());
                             var updateflyoutcartsectionhtml = _shoppingCartSettings.MiniShoppingCartEnabled
@@ -1230,7 +1248,7 @@ namespace Nop.Web.Controllers
             //save item
             var cartType = (ShoppingCartType)shoppingCartTypeId;
             addToCartWarnings.AddRange(_shoppingCartService.AddToCart(_workContext.CurrentCustomer,
-                productVariant, cartType, _workContext.CurrentStore.Id,
+                productVariant, cartType, _storeContext.CurrentStore.Id,
                 attributes, customerEnteredPriceConverted, quantity, true));
 
             #region Return result
@@ -1268,7 +1286,7 @@ namespace Nop.Web.Controllers
                             var updatetopwishlistsectionhtml = string.Format("({0})",
                                  _workContext.CurrentCustomer.ShoppingCartItems
                                  .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
-                                 .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                                 .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
                                  .ToList()
                                  .GetTotalProducts());
                             return Json(new
@@ -1300,7 +1318,7 @@ namespace Nop.Web.Controllers
                             var updatetopcartsectionhtml = string.Format("({0})",
                                  _workContext.CurrentCustomer.ShoppingCartItems
                                  .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                                 .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                                 .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
                                  .ToList()
                                  .GetTotalProducts());
                             var updateflyoutcartsectionhtml = _shoppingCartSettings.MiniShoppingCartEnabled
@@ -1428,7 +1446,7 @@ namespace Nop.Web.Controllers
 
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
                 .ToList();
             var model = new ShoppingCartModel();
             PrepareShoppingCartModel(model, cart);
@@ -1440,7 +1458,7 @@ namespace Nop.Web.Controllers
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
                 .ToList();
             var model = new ShoppingCartModel();
             PrepareShoppingCartModel(model, cart, 
@@ -1461,7 +1479,7 @@ namespace Nop.Web.Controllers
 
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
                 .ToList();
 
             var allIdsToRemove = form["removefromcart"] != null ? form["removefromcart"].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => int.Parse(x)).ToList() : new List<int>();
@@ -1493,7 +1511,7 @@ namespace Nop.Web.Controllers
             //updated cart
             cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
                 .ToList();
             var model = new ShoppingCartModel();
             PrepareShoppingCartModel(model, cart);
@@ -1530,9 +1548,9 @@ namespace Nop.Web.Controllers
             //get shopping cart item
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(x => x.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(x => x.StoreId == _workContext.CurrentStore.Id)
+                .Where(x => x.StoreId == _storeContext.CurrentStore.Id)
                 .ToList();
-            var sci = cart.Where(x => x.Id == sciId).FirstOrDefault();
+            var sci = cart.FirstOrDefault(x => x.Id == sciId);
             if (sci == null)
             {
                 return RedirectToRoute("ShoppingCart");
@@ -1556,7 +1574,7 @@ namespace Nop.Web.Controllers
             //updated cart
             cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(x => x.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(x => x.StoreId == _workContext.CurrentStore.Id)
+                .Where(x => x.StoreId == _storeContext.CurrentStore.Id)
                 .ToList();
             var model = new ShoppingCartModel();
             PrepareShoppingCartModel(model, cart);
@@ -1587,7 +1605,7 @@ namespace Nop.Web.Controllers
             //get shopping cart item
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(x => x.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(x => x.StoreId == _workContext.CurrentStore.Id)
+                .Where(x => x.StoreId == _storeContext.CurrentStore.Id)
                 .ToList();
             var sci = cart.Where(x => x.Id == sciId).FirstOrDefault();
             if (sci == null)
@@ -1602,7 +1620,7 @@ namespace Nop.Web.Controllers
             //updated cart
             cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(x => x.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(x => x.StoreId == _workContext.CurrentStore.Id)
+                .Where(x => x.StoreId == _storeContext.CurrentStore.Id)
                 .ToList();
             var model = new ShoppingCartModel();
             PrepareShoppingCartModel(model, cart);
@@ -1614,7 +1632,7 @@ namespace Nop.Web.Controllers
         [FormValueRequired("continueshopping")]
         public ActionResult ContinueShopping()
         {
-            string returnUrl = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.LastContinueShoppingPage, _workContext.CurrentStore.Id);
+            string returnUrl = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.LastContinueShoppingPage, _storeContext.CurrentStore.Id);
             if (!String.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
             {
                 return Redirect(returnUrl);
@@ -1632,7 +1650,7 @@ namespace Nop.Web.Controllers
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
                 .ToList();
 
             //parse and save checkout attributes
@@ -1673,7 +1691,7 @@ namespace Nop.Web.Controllers
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
                 .ToList();
             
             //parse and save checkout attributes
@@ -1711,7 +1729,7 @@ namespace Nop.Web.Controllers
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
                 .ToList();
 
             //parse and save checkout attributes
@@ -1751,7 +1769,7 @@ namespace Nop.Web.Controllers
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
                 .ToList();
             
             //parse and save checkout attributes
@@ -1817,7 +1835,7 @@ namespace Nop.Web.Controllers
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
                 .ToList();
             var model = new OrderTotalsModel();
             model.IsEditable = isEditable;
@@ -1858,7 +1876,7 @@ namespace Nop.Web.Controllers
                         model.Shipping = _priceFormatter.FormatShippingPrice(shoppingCartShipping, true);
 
                         //selected shipping method
-                        var shippingOption = _workContext.CurrentCustomer.GetAttribute<ShippingOption>(SystemCustomerAttributeNames.SelectedShippingOption, _workContext.CurrentStore.Id);
+                        var shippingOption = _workContext.CurrentCustomer.GetAttribute<ShippingOption>(SystemCustomerAttributeNames.SelectedShippingOption, _storeContext.CurrentStore.Id);
                         if (shippingOption != null)
                             model.SelectedShippingMethod = shippingOption.Name;
                     }
@@ -1866,7 +1884,7 @@ namespace Nop.Web.Controllers
 
                 //payment method fee
                 string paymentMethodSystemName = _workContext.CurrentCustomer.GetAttribute<string>(
-                    SystemCustomerAttributeNames.SelectedPaymentMethod, _workContext.CurrentStore.Id);
+                    SystemCustomerAttributeNames.SelectedPaymentMethod, _storeContext.CurrentStore.Id);
                 decimal paymentMethodAdditionalFee = _paymentService.GetAdditionalHandlingFee(cart, paymentMethodSystemName);
                 decimal paymentMethodAdditionalFeeWithTaxBase = _taxService.GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee, _workContext.CurrentCustomer);
                 if (paymentMethodAdditionalFeeWithTaxBase > decimal.Zero)
@@ -1980,7 +1998,7 @@ namespace Nop.Web.Controllers
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
                 .ToList();
             var model = new ShoppingCartModel();
 
@@ -1998,7 +2016,7 @@ namespace Nop.Web.Controllers
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
                 .ToList();
             var model = new ShoppingCartModel();
 
@@ -2043,7 +2061,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("HomePage");
             var cart = customer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
-                .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
                 .ToList();
             var model = new WishlistModel();
             PrepareWishlistModel(model, cart, !customerGuid.HasValue);
@@ -2061,7 +2079,7 @@ namespace Nop.Web.Controllers
 
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
-                .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
                 .ToList();
 
             var allIdsToRemove = form["removefromcart"] != null ? form["removefromcart"].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => int.Parse(x)).ToList() : new List<int>();
@@ -2093,7 +2111,7 @@ namespace Nop.Web.Controllers
             //updated wishlist
             cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
-                .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
                 .ToList();
             var model = new WishlistModel();
             PrepareWishlistModel(model, cart);
@@ -2130,9 +2148,9 @@ namespace Nop.Web.Controllers
             //get shopping cart item
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(x => x.ShoppingCartType == ShoppingCartType.Wishlist)
-                .Where(x => x.StoreId == _workContext.CurrentStore.Id)
+                .Where(x => x.StoreId == _storeContext.CurrentStore.Id)
                 .ToList();
-            var sci = cart.Where(x => x.Id == sciId).FirstOrDefault();
+            var sci = cart.FirstOrDefault(x => x.Id == sciId);
             if (sci == null)
             {
                 return RedirectToRoute("Wishlist");
@@ -2156,7 +2174,7 @@ namespace Nop.Web.Controllers
             //updated wishlist
             cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(x => x.ShoppingCartType == ShoppingCartType.Wishlist)
-                .Where(x => x.StoreId == _workContext.CurrentStore.Id)
+                .Where(x => x.StoreId == _storeContext.CurrentStore.Id)
                 .ToList();
             var model = new WishlistModel();
             PrepareWishlistModel(model, cart);
@@ -2187,9 +2205,9 @@ namespace Nop.Web.Controllers
             //get wishlist cart item
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(x => x.ShoppingCartType == ShoppingCartType.Wishlist)
-                .Where(x => x.StoreId == _workContext.CurrentStore.Id)
+                .Where(x => x.StoreId == _storeContext.CurrentStore.Id)
                 .ToList();
-            var sci = cart.Where(x => x.Id == sciId).FirstOrDefault();
+            var sci = cart.FirstOrDefault(x => x.Id == sciId);
             if (sci == null)
             {
                 return RedirectToRoute("Wishlist");
@@ -2202,7 +2220,7 @@ namespace Nop.Web.Controllers
             //updated wishlist
             cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(x => x.ShoppingCartType == ShoppingCartType.Wishlist)
-                .Where(x => x.StoreId == _workContext.CurrentStore.Id)
+                .Where(x => x.StoreId == _storeContext.CurrentStore.Id)
                 .ToList();
             var model = new WishlistModel();
             PrepareWishlistModel(model, cart);
@@ -2228,7 +2246,7 @@ namespace Nop.Web.Controllers
 
             var pageCart = pageCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
-                .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
                 .ToList();
 
             var allWarnings = new List<string>();
@@ -2240,7 +2258,7 @@ namespace Nop.Web.Controllers
                 {
                     var warnings = _shoppingCartService.AddToCart(_workContext.CurrentCustomer,
                         sci.ProductVariant, ShoppingCartType.ShoppingCart,
-                        _workContext.CurrentStore.Id,
+                        _storeContext.CurrentStore.Id,
                         sci.AttributesXml, sci.CustomerEnteredPrice, sci.Quantity, true);
                     if (warnings.Count == 0)
                         numberOfAddedItems++;
@@ -2265,7 +2283,7 @@ namespace Nop.Web.Controllers
                 //no items added. redisplay the wishlist page
                 var cart = pageCustomer.ShoppingCartItems
                     .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
-                    .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                    .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
                     .ToList();
                 var model = new WishlistModel();
                 PrepareWishlistModel(model, cart, !customerGuid.HasValue);
@@ -2299,17 +2317,17 @@ namespace Nop.Web.Controllers
 
             var pageCart = pageCustomer.ShoppingCartItems
                 .Where(x => x.ShoppingCartType == ShoppingCartType.Wishlist)
-                .Where(x => x.StoreId == _workContext.CurrentStore.Id)
+                .Where(x => x.StoreId == _storeContext.CurrentStore.Id)
                 .ToList();
 
-            var sci = pageCart.Where(x => x.Id == sciId).FirstOrDefault();
+            var sci = pageCart.FirstOrDefault(x => x.Id == sciId);
             if (sci == null)
             {
                 return RedirectToRoute("Wishlist");
             }
             var warnings = _shoppingCartService.AddToCart(_workContext.CurrentCustomer,
                                            sci.ProductVariant, ShoppingCartType.ShoppingCart,
-                                           _workContext.CurrentStore.Id,
+                                           _storeContext.CurrentStore.Id,
                                            sci.AttributesXml, sci.CustomerEnteredPrice, sci.Quantity, true);
             if (_shoppingCartSettings.MoveItemsFromWishlistToCart && //settings enabled
                         !customerGuid.HasValue && //own wishlist
@@ -2329,7 +2347,7 @@ namespace Nop.Web.Controllers
                 //no items added. redisplay the wishlist page
                 var cart = pageCustomer.ShoppingCartItems
                     .Where(x => x.ShoppingCartType == ShoppingCartType.Wishlist)
-                    .Where(x => x.StoreId == _workContext.CurrentStore.Id)
+                    .Where(x => x.StoreId == _storeContext.CurrentStore.Id)
                     .ToList();
                 var model = new WishlistModel();
                 PrepareWishlistModel(model, cart, !customerGuid.HasValue);
@@ -2345,7 +2363,7 @@ namespace Nop.Web.Controllers
 
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
-                .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
                 .ToList();
 
             if (cart.Count == 0)
@@ -2369,7 +2387,7 @@ namespace Nop.Web.Controllers
 
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
-                .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
                 .ToList();
             if (cart.Count == 0)
                 return RedirectToRoute("HomePage");

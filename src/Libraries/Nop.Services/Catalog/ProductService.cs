@@ -54,6 +54,7 @@ namespace Nop.Services.Catalog
         private readonly IDbContext _dbContext;
         private readonly ICacheManager _cacheManager;
         private readonly IWorkContext _workContext;
+        private readonly IStoreContext _storeContext;
         private readonly LocalizationSettings _localizationSettings;
         private readonly CommonSettings _commonSettings;
         private readonly IEventPublisher _eventPublisher;
@@ -84,6 +85,7 @@ namespace Nop.Services.Catalog
         /// <param name="dataProvider">Data provider</param>
         /// <param name="dbContext">Database Context</param>
         /// <param name="workContext">Work context</param>
+        /// <param name="storeContext">Store context</param>
         /// <param name="localizationSettings">Localization settings</param>
         /// <param name="commonSettings">Common settings</param>
         /// <param name="eventPublisher">Event published</param>
@@ -104,7 +106,7 @@ namespace Nop.Services.Catalog
             ILanguageService languageService,
             IWorkflowMessageService workflowMessageService,
             IDataProvider dataProvider, IDbContext dbContext,
-            IWorkContext workContext,
+            IWorkContext workContext, IStoreContext storeContext,
             LocalizationSettings localizationSettings, CommonSettings commonSettings,
             IEventPublisher eventPublisher)
         {
@@ -127,6 +129,7 @@ namespace Nop.Services.Catalog
             this._dataProvider = dataProvider;
             this._dbContext = dbContext;
             this._workContext = workContext;
+            this._storeContext= storeContext;
             this._localizationSettings = localizationSettings;
             this._commonSettings = commonSettings;
             this._eventPublisher = eventPublisher;
@@ -357,7 +360,7 @@ namespace Nop.Services.Catalog
                 else
                 {
                     //ensure that we have at least two published languages
-                    var totalPublishedLanguages = _languageService.GetAllLanguages(storeId: _workContext.CurrentStore.Id).Count;
+                    var totalPublishedLanguages = _languageService.GetAllLanguages(storeId: _storeContext.CurrentStore.Id).Count;
                     searchLocalizedValue = totalPublishedLanguages >= 2;
                 }
             }

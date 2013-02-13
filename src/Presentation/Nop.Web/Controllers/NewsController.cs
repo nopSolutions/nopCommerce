@@ -36,6 +36,7 @@ namespace Nop.Web.Controllers
 
         private readonly INewsService _newsService;
         private readonly IWorkContext _workContext;
+        private readonly IStoreContext _storeContext;
         private readonly IPictureService _pictureService;
         private readonly ILocalizationService _localizationService;
         private readonly ICustomerContentService _customerContentService;
@@ -57,7 +58,8 @@ namespace Nop.Web.Controllers
 		#region Constructors
 
         public NewsController(INewsService newsService, 
-            IWorkContext workContext, IPictureService pictureService, ILocalizationService localizationService,
+            IWorkContext workContext, IStoreContext storeContext, 
+            IPictureService pictureService, ILocalizationService localizationService,
             ICustomerContentService customerContentService, IDateTimeHelper dateTimeHelper,
             IWorkflowMessageService workflowMessageService, IWebHelper webHelper,
             ICacheManager cacheManager, ICustomerActivityService customerActivityService,
@@ -68,6 +70,7 @@ namespace Nop.Web.Controllers
         {
             this._newsService = newsService;
             this._workContext = workContext;
+            this._storeContext = storeContext;
             this._pictureService = pictureService;
             this._localizationService = localizationService;
             this._customerContentService = customerContentService;
@@ -143,11 +146,11 @@ namespace Nop.Web.Controllers
         {
             if (!_newsSettings.Enabled || !_newsSettings.ShowNewsOnMainPage)
                 return Content("");
-            
-            var cacheKey = string.Format(ModelCacheEventConsumer.HOMEPAGE_NEWSMODEL_KEY, _workContext.WorkingLanguage.Id, _workContext.CurrentStore.Id);
+
+            var cacheKey = string.Format(ModelCacheEventConsumer.HOMEPAGE_NEWSMODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
             var cachedModel = _cacheManager.Get(cacheKey, () =>
             {
-                var newsItems = _newsService.GetAllNews(_workContext.WorkingLanguage.Id, _workContext.CurrentStore.Id, 0, _newsSettings.MainPageNewsCount);
+                var newsItems = _newsService.GetAllNews(_workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id, 0, _newsSettings.MainPageNewsCount);
                 return new HomePageNewsItemsModel()
                 {
                     WorkingLanguageId = _workContext.WorkingLanguage.Id,
@@ -182,7 +185,7 @@ namespace Nop.Web.Controllers
             if (command.PageSize <= 0) command.PageSize = _newsSettings.NewsArchivePageSize;
             if (command.PageNumber <= 0) command.PageNumber = 1;
 
-            var newsItems = _newsService.GetAllNews(_workContext.WorkingLanguage.Id, _workContext.CurrentStore.Id,
+            var newsItems = _newsService.GetAllNews(_workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id,
                 command.PageNumber - 1, command.PageSize);
             model.PagingFilteringContext.LoadPagedList(newsItems);
 
@@ -201,7 +204,7 @@ namespace Nop.Web.Controllers
         public ActionResult ListRss(int languageId)
         {
             var feed = new SyndicationFeed(
-                                    string.Format("{0}: News", _workContext.CurrentStore.Name),
+                                    string.Format("{0}: News", _storeContext.CurrentStore.Name),
                                     "News",
                                     new Uri(_webHelper.GetStoreLocation(false)),
                                     "NewsRSS",
@@ -211,7 +214,7 @@ namespace Nop.Web.Controllers
                 return new RssActionResult() { Feed = feed };
 
             var items = new List<SyndicationItem>();
-            var newsItems = _newsService.GetAllNews(languageId, _workContext.CurrentStore.Id, 0, int.MaxValue);
+            var newsItems = _newsService.GetAllNews(languageId, _storeContext.CurrentStore.Id, 0, int.MaxValue);
             foreach (var n in newsItems)
             {
                 string newsUrl = Url.RouteUrl("NewsItem", new { SeName = n.GetSeName(n.LanguageId, ensureTwoPublishedLanguages: false) }, "http");
@@ -308,7 +311,7 @@ namespace Nop.Web.Controllers
                 return Content("");
 
             string link = string.Format("<link href=\"{0}\" rel=\"alternate\" type=\"application/rss+xml\" title=\"{1}: News\" />",
-                Url.RouteUrl("NewsRSS", new { languageId = _workContext.WorkingLanguage.Id }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http"), _workContext.CurrentStore.Name);
+                Url.RouteUrl("NewsRSS", new { languageId = _workContext.WorkingLanguage.Id }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http"), _storeContext.CurrentStore.Name);
 
             return Content(link);
         }

@@ -45,6 +45,7 @@ namespace Nop.Admin.Controllers
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILanguageService _languageService;
         private readonly IWorkContext _workContext;
+        private readonly IStoreContext _storeContext;
         private readonly IPermissionService _permissionService;
         private readonly ILocalizationService _localizationService;
 
@@ -52,14 +53,22 @@ namespace Nop.Admin.Controllers
 
         #region Constructors
 
-        public CommonController(IPaymentService paymentService, IShippingService shippingService,
+        public CommonController(IPaymentService paymentService, 
+            IShippingService shippingService,
             IShoppingCartService shoppingCartService, 
-            ICurrencyService currencyService, IMeasureService measureService,
-            ICustomerService customerService, IUrlRecordService urlRecordService, 
-            IWebHelper webHelper, CurrencySettings currencySettings,
-            MeasureSettings measureSettings, IDateTimeHelper dateTimeHelper,
-            ILanguageService languageService, IWorkContext workContext,
-            IPermissionService permissionService, ILocalizationService localizationService)
+            ICurrencyService currencyService, 
+            IMeasureService measureService,
+            ICustomerService customerService, 
+            IUrlRecordService urlRecordService, 
+            IWebHelper webHelper, 
+            CurrencySettings currencySettings,
+            MeasureSettings measureSettings, 
+            IDateTimeHelper dateTimeHelper,
+            ILanguageService languageService, 
+            IWorkContext workContext,
+            IStoreContext storeContext,
+            IPermissionService permissionService, 
+            ILocalizationService localizationService)
         {
             this._paymentService = paymentService;
             this._shippingService = shippingService;
@@ -74,6 +83,7 @@ namespace Nop.Admin.Controllers
             this._dateTimeHelper = dateTimeHelper;
             this._languageService = languageService;
             this._workContext = workContext;
+            this._storeContext = storeContext;
             this._permissionService = permissionService;
             this._localizationService = localizationService;
         }
@@ -123,7 +133,7 @@ namespace Nop.Admin.Controllers
             var model = new List<SystemWarningModel>();
 
             //store URL
-            var currentStoreUrl = _workContext.CurrentStore.Url;
+            var currentStoreUrl = _storeContext.CurrentStore.Url;
             if (!String.IsNullOrEmpty(currentStoreUrl) &&
                 (currentStoreUrl.Equals(_webHelper.GetStoreLocation(false), StringComparison.InvariantCultureIgnoreCase)
                 ||
@@ -417,7 +427,7 @@ namespace Nop.Admin.Controllers
             var model = new LanguageSelectorModel();
             model.CurrentLanguage = _workContext.WorkingLanguage.ToModel();
             model.AvailableLanguages = _languageService
-                .GetAllLanguages(storeId: _workContext.CurrentStore.Id)
+                .GetAllLanguages(storeId: _storeContext.CurrentStore.Id)
                 .Select(x => x.ToModel())
                 .ToList();
             return PartialView(model);
@@ -432,7 +442,7 @@ namespace Nop.Admin.Controllers
             var model = new LanguageSelectorModel();
             model.CurrentLanguage = _workContext.WorkingLanguage.ToModel();
             model.AvailableLanguages = _languageService
-                .GetAllLanguages(storeId: _workContext.CurrentStore.Id)
+                .GetAllLanguages(storeId: _storeContext.CurrentStore.Id)
                 .Select(x => x.ToModel())
                 .ToList();
             return PartialView("LanguageSelector", model);

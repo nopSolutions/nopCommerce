@@ -22,11 +22,6 @@ namespace Nop.Core
         Customer OriginalCustomerIfImpersonated { get; }
 
         /// <summary>
-        /// Gets or sets the current store
-        /// </summary>
-        Store CurrentStore { get; }
-
-        /// <summary>
         /// Get or set current user working language
         /// </summary>
         Language WorkingLanguage { get; set; }

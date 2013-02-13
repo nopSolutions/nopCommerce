@@ -32,6 +32,7 @@ namespace Nop.Services.Tests.Orders
     public class OrderTotalCalculationServiceTests : ServiceTest
     {
         IWorkContext _workContext;
+        IStoreContext _storeContext;
         ITaxService _taxService;
         IShippingService _shippingService;
         IPaymentService _paymentService;
@@ -58,9 +59,11 @@ namespace Nop.Services.Tests.Orders
         [SetUp]
         public new void SetUp()
         {
-            _store = new Store() {Id = 1};
             _workContext = MockRepository.GenerateMock<IWorkContext>();
-            _workContext.Expect(x => x.CurrentStore).Return(_store);
+
+            _store = new Store() { Id = 1 };
+            _storeContext = MockRepository.GenerateMock<IStoreContext>();
+            _storeContext.Expect(x => x.CurrentStore).Return(_store);
             
 
             var pluginFinder = new PluginFinder();
@@ -117,7 +120,7 @@ namespace Nop.Services.Tests.Orders
 
             _rewardPointsSettings = new RewardPointsSettings();
 
-            _orderTotalCalcService = new OrderTotalCalculationService(_workContext,
+            _orderTotalCalcService = new OrderTotalCalculationService(_workContext, _storeContext,
                 _priceCalcService, _taxService, _shippingService, _paymentService,
                 _checkoutAttributeParser, _discountService, _giftCardService, _genericAttributeService,
                 _taxSettings, _rewardPointsSettings, _shippingSettings, _shoppingCartSettings, _catalogSettings);

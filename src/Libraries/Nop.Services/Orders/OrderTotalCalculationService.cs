@@ -26,6 +26,7 @@ namespace Nop.Services.Orders
         #region Fields
 
         private readonly IWorkContext _workContext;
+        private readonly IStoreContext _storeContext;
         private readonly IPriceCalculationService _priceCalculationService;
         private readonly ITaxService _taxService;
         private readonly IShippingService _shippingService;
@@ -47,6 +48,7 @@ namespace Nop.Services.Orders
         /// Ctor
         /// </summary>
         /// <param name="workContext">Work context</param>
+        /// <param name="storeContext">Store context</param>
         /// <param name="priceCalculationService">Price calculation service</param>
         /// <param name="taxService">Tax service</param>
         /// <param name="shippingService">Shipping service</param>
@@ -61,6 +63,7 @@ namespace Nop.Services.Orders
         /// <param name="shoppingCartSettings">Shopping cart settings</param>
         /// <param name="catalogSettings">Catalog settings</param>
         public OrderTotalCalculationService(IWorkContext workContext,
+            IStoreContext storeContext,
             IPriceCalculationService priceCalculationService,
             ITaxService taxService,
             IShippingService shippingService,
@@ -76,6 +79,7 @@ namespace Nop.Services.Orders
             CatalogSettings catalogSettings)
         {
             this._workContext = workContext;
+            this._storeContext = storeContext;
             this._priceCalculationService = priceCalculationService;
             this._taxService = taxService;
             this._shippingService = shippingService;
@@ -513,7 +517,7 @@ namespace Nop.Services.Orders
 
             ShippingOption shippingOption = null;
             if (customer != null)
-                shippingOption = customer.GetAttribute<ShippingOption>(SystemCustomerAttributeNames.SelectedShippingOption, _genericAttributeService, _workContext.CurrentStore.Id);
+                shippingOption = customer.GetAttribute<ShippingOption>(SystemCustomerAttributeNames.SelectedShippingOption, _genericAttributeService, _storeContext.CurrentStore.Id);
 
             if (shippingOption != null)
             {
@@ -649,7 +653,7 @@ namespace Nop.Services.Orders
                 paymentMethodSystemName = customer.GetAttribute<string>(
                     SystemCustomerAttributeNames.SelectedPaymentMethod,
                     _genericAttributeService,
-                    _workContext.CurrentStore.Id);
+                    _storeContext.CurrentStore.Id);
             }
 
             //order sub total (items + checkout attributes)
@@ -796,7 +800,7 @@ namespace Nop.Services.Orders
                 paymentMethodSystemName = customer.GetAttribute<string>(
                     SystemCustomerAttributeNames.SelectedPaymentMethod,
                     _genericAttributeService,
-                    _workContext.CurrentStore.Id);
+                    _storeContext.CurrentStore.Id);
             }
 
 
@@ -921,7 +925,7 @@ namespace Nop.Services.Orders
             if (_rewardPointsSettings.Enabled && 
                 !ignoreRewardPonts &&
                 customer.GetAttribute<bool>(SystemCustomerAttributeNames.UseRewardPointsDuringCheckout,
-                _genericAttributeService, _workContext.CurrentStore.Id))
+                _genericAttributeService, _storeContext.CurrentStore.Id))
             {
                 int rewardPointsBalance = customer.GetRewardPointsBalance();
                 if (CheckMinimumRewardPointsToUseRequirement(rewardPointsBalance))

@@ -52,6 +52,7 @@ namespace Nop.Web.Controllers
         private readonly IProductAttributeService _productAttributeService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IWorkContext _workContext;
+        private readonly IStoreContext _storeContext;
         private readonly ITaxService _taxService;
         private readonly ICurrencyService _currencyService;
         private readonly IPictureService _pictureService;
@@ -96,7 +97,8 @@ namespace Nop.Web.Controllers
             ICategoryTemplateService categoryTemplateService,
             IManufacturerTemplateService manufacturerTemplateService,
             IProductAttributeService productAttributeService, IProductAttributeParser productAttributeParser, 
-            IWorkContext workContext, ITaxService taxService, ICurrencyService currencyService,
+            IWorkContext workContext, IStoreContext storeContext,
+            ITaxService taxService, ICurrencyService currencyService,
             IPictureService pictureService, ILocalizationService localizationService,
             IPriceCalculationService priceCalculationService, IPriceFormatter priceFormatter,
             IWebHelper webHelper, ISpecificationAttributeService specificationAttributeService,
@@ -124,6 +126,7 @@ namespace Nop.Web.Controllers
             this._productAttributeService = productAttributeService;
             this._productAttributeParser = productAttributeParser;
             this._workContext = workContext;
+            this._storeContext = storeContext;
             this._taxService = taxService;
             this._currencyService = currencyService;
             this._pictureService = pictureService;
@@ -170,7 +173,7 @@ namespace Nop.Web.Controllers
         {
             var customerRolesIds = _workContext.CurrentCustomer.CustomerRoles
                 .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
-            string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_CHILD_IDENTIFIERS_MODEL_KEY, parentCategoryId, showHidden, string.Join(",", customerRolesIds), _workContext.CurrentStore.Id);
+            string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_CHILD_IDENTIFIERS_MODEL_KEY, parentCategoryId, showHidden, string.Join(",", customerRolesIds), _storeContext.CurrentStore.Id);
             return _cacheManager.Get(cacheKey, () =>
             { 
                 var categoriesIds = new List<int>();
@@ -228,7 +231,7 @@ namespace Nop.Web.Controllers
                         categoryIds.AddRange(GetChildCategoryIds(category.Id));
                     categoryModel.NumberOfProducts = _productService
                         .SearchProducts(categoryIds: categoryIds,
-                        storeId: _workContext.CurrentStore.Id, 
+                        storeId: _storeContext.CurrentStore.Id, 
                         pageSize: 1)
                         .TotalCount;
                 }
@@ -610,7 +613,7 @@ namespace Nop.Web.Controllers
                 //out of stock
                 model.DisplayBackInStockSubscription = true;
                 model.BackInStockAlreadySubscribed = _backInStockSubscriptionService
-                    .FindSubscription(_workContext.CurrentCustomer.Id, productVariant.Id, _workContext.CurrentStore.Id) != null;
+                    .FindSubscription(_workContext.CurrentCustomer.Id, productVariant.Id, _storeContext.CurrentStore.Id) != null;
             }
 
             #endregion
@@ -803,7 +806,7 @@ namespace Nop.Web.Controllers
             _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, 
                 SystemCustomerAttributeNames.LastContinueShoppingPage, 
                 _webHelper.GetThisPageUrl(false),
-                _workContext.CurrentStore.Id);
+                _storeContext.CurrentStore.Id);
 
             if (command.PageNumber <= 0) command.PageNumber = 1;
 
@@ -1004,7 +1007,7 @@ namespace Nop.Web.Controllers
 
                 var featuredProducts = _productService.SearchProducts(
                     categoryIds: new List<int>() { category.Id },
-                        storeId: _workContext.CurrentStore.Id, 
+                        storeId: _storeContext.CurrentStore.Id, 
                         featuredProducts: true);
                 model.FeaturedProducts = PrepareProductOverviewModels(featuredProducts).ToList();
             }
@@ -1022,7 +1025,7 @@ namespace Nop.Web.Controllers
             IList<int> filterableSpecificationAttributeOptionIds = null;
             var products = _productService.SearchProducts(out filterableSpecificationAttributeOptionIds, true,
                 categoryIds: categoryIds,
-                storeId: _workContext.CurrentStore.Id,
+                storeId: _storeContext.CurrentStore.Id,
                 featuredProducts:_catalogSettings.IncludeFeaturedProductsInNormalLists ? null : (bool?)false,
                 priceMin:minPriceConverted, priceMax:maxPriceConverted,
                 filteredSpecs: alreadyFilteredSpecOptionIds,
@@ -1061,7 +1064,7 @@ namespace Nop.Web.Controllers
         {
             var customerRolesIds = _workContext.CurrentCustomer.CustomerRoles
                 .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
-            string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_NAVIGATION_MODEL_KEY, _workContext.WorkingLanguage.Id, string.Join(",", customerRolesIds), _workContext.CurrentStore.Id);
+            string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_NAVIGATION_MODEL_KEY, _workContext.WorkingLanguage.Id, string.Join(",", customerRolesIds), _storeContext.CurrentStore.Id);
             var cachedModel = _cacheManager.Get(cacheKey, () => 
                 new CategoryNavigationModel()
                 {
@@ -1146,7 +1149,7 @@ namespace Nop.Web.Controllers
             _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, 
                 SystemCustomerAttributeNames.LastContinueShoppingPage, 
                 _webHelper.GetThisPageUrl(false),
-                _workContext.CurrentStore.Id);
+                _storeContext.CurrentStore.Id);
 
             if (command.PageNumber <= 0) command.PageNumber = 1;
 
@@ -1293,7 +1296,7 @@ namespace Nop.Web.Controllers
                 //to ensure that we have at least one featured product
                 var featuredProducts = _productService.SearchProducts(
                     manufacturerId: manufacturer.Id,
-                    storeId: _workContext.CurrentStore.Id,
+                    storeId: _storeContext.CurrentStore.Id,
                     featuredProducts: true);
                 model.FeaturedProducts = PrepareProductOverviewModels(featuredProducts).ToList();
             }
@@ -1304,7 +1307,7 @@ namespace Nop.Web.Controllers
             IList<int> filterableSpecificationAttributeOptionIds = null;
             var products = _productService.SearchProducts(out filterableSpecificationAttributeOptionIds, true,
                 manufacturerId: manufacturer.Id,
-                storeId: _workContext.CurrentStore.Id,
+                storeId: _storeContext.CurrentStore.Id,
                 featuredProducts: _catalogSettings.IncludeFeaturedProductsInNormalLists ? null : (bool?)false,
                 priceMin: minPriceConverted, 
                 priceMax: maxPriceConverted,
@@ -1367,7 +1370,7 @@ namespace Nop.Web.Controllers
         {
             var customerRolesIds = _workContext.CurrentCustomer.CustomerRoles
                 .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
-            string cacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_NAVIGATION_MODEL_KEY, currentManufacturerId, _workContext.WorkingLanguage.Id, string.Join(",", customerRolesIds), _workContext.CurrentStore.Id);
+            string cacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_NAVIGATION_MODEL_KEY, currentManufacturerId, _workContext.WorkingLanguage.Id, string.Join(",", customerRolesIds), _storeContext.CurrentStore.Id);
             var cacheModel = _cacheManager.Get(cacheKey, () =>
                 {
                     var currentManufacturer = _manufacturerService.GetManufacturerById(currentManufacturerId);
@@ -1652,7 +1655,7 @@ namespace Nop.Web.Controllers
 
             //save item
             addToCartWarnings.AddRange(_shoppingCartService.AddToCart(_workContext.CurrentCustomer,
-                productVariant, cartType, _workContext.CurrentStore.Id,
+                productVariant, cartType, _storeContext.CurrentStore.Id,
                 attributes, customerEnteredPriceConverted, quantity, true));
 
             #region Set already entered values
@@ -1887,7 +1890,7 @@ namespace Nop.Web.Controllers
 
             var customerRolesIds = _workContext.CurrentCustomer.CustomerRoles
                 .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
-            var cacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_BREADCRUMB_MODEL_KEY, product.Id, _workContext.WorkingLanguage.Id, string.Join(",", customerRolesIds), _workContext.CurrentStore.Id);
+            var cacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_BREADCRUMB_MODEL_KEY, product.Id, _workContext.WorkingLanguage.Id, string.Join(",", customerRolesIds), _storeContext.CurrentStore.Id);
             var cacheModel = _cacheManager.Get(cacheKey, () =>
             {
                 var model = new ProductDetailsModel.ProductBreadcrumbModel()
@@ -1924,7 +1927,7 @@ namespace Nop.Web.Controllers
         {
             var customerRolesIds = _workContext.CurrentCustomer.CustomerRoles
                 .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
-            string cacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_MANUFACTURERS_MODEL_KEY, productId, _workContext.WorkingLanguage.Id, string.Join(",", customerRolesIds), _workContext.CurrentStore.Id);
+            string cacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_MANUFACTURERS_MODEL_KEY, productId, _workContext.WorkingLanguage.Id, string.Join(",", customerRolesIds), _storeContext.CurrentStore.Id);
             var cacheModel = _cacheManager.Get(cacheKey, () =>
             {
                 var model = _manufacturerService.GetProductManufacturersByProductId(productId)
@@ -2031,10 +2034,10 @@ namespace Nop.Web.Controllers
                 return Content("");
 
             //load and cache report
-            var productIds = _cacheManager.Get(string.Format(ModelCacheEventConsumer.PRODUCTS_ALSO_PURCHASED_IDS_KEY, productId, _workContext.CurrentStore.Id),
+            var productIds = _cacheManager.Get(string.Format(ModelCacheEventConsumer.PRODUCTS_ALSO_PURCHASED_IDS_KEY, productId, _storeContext.CurrentStore.Id),
                 () =>
                     _orderReportService
-                    .GetProductsAlsoPurchasedById(_workContext.CurrentStore.Id, productId, _catalogSettings.ProductsAlsoPurchasedNumber)
+                    .GetProductsAlsoPurchasedById(_storeContext.CurrentStore.Id, productId, _catalogSettings.ProductsAlsoPurchasedNumber)
                     .Select(x => x.Id)
                     .ToArray()
                     );
@@ -2072,7 +2075,7 @@ namespace Nop.Web.Controllers
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
                 .ToList();
 
             var products = _productService.GetCrosssellProductsByShoppingCart(cart, _shoppingCartSettings.CrossSellsNumber);
@@ -2124,7 +2127,7 @@ namespace Nop.Web.Controllers
             if (_catalogSettings.RecentlyAddedProductsEnabled)
             {
                 var products = _productService.SearchProducts(
-                    storeId: _workContext.CurrentStore.Id,
+                    storeId: _storeContext.CurrentStore.Id,
                     orderBy:ProductSortingEnum.CreatedOn,
                     pageSize:_catalogSettings.RecentlyAddedProductsNumber);
                 model.AddRange(PrepareProductOverviewModels(products));
@@ -2135,7 +2138,7 @@ namespace Nop.Web.Controllers
         public ActionResult RecentlyAddedProductsRss()
         {
             var feed = new SyndicationFeed(
-                                    string.Format("{0}: Recently added products", _workContext.CurrentStore.Name),
+                                    string.Format("{0}: Recently added products", _storeContext.CurrentStore.Name),
                                     "Information about products",
                                     new Uri(_webHelper.GetStoreLocation(false)),
                                     "RecentlyAddedProductsRSS",
@@ -2147,7 +2150,7 @@ namespace Nop.Web.Controllers
             var items = new List<SyndicationItem>();
 
             var products = _productService.SearchProducts(
-                storeId: _workContext.CurrentStore.Id,
+                storeId: _storeContext.CurrentStore.Id,
                 orderBy: ProductSortingEnum.CreatedOn,
                 pageSize: _catalogSettings.RecentlyAddedProductsNumber);
             foreach (var product in products)
@@ -2166,11 +2169,11 @@ namespace Nop.Web.Controllers
                 return Content("");
 
             //load and cache report
-            var report = _cacheManager.Get(string.Format(ModelCacheEventConsumer.HOMEPAGE_BESTSELLERS_IDS_KEY, _workContext.CurrentStore.Id), 
+            var report = _cacheManager.Get(string.Format(ModelCacheEventConsumer.HOMEPAGE_BESTSELLERS_IDS_KEY, _storeContext.CurrentStore.Id), 
                 () =>
                     //group by products (not product variants)
                     _orderReportService
-                    .BestSellersReport(_workContext.CurrentStore.Id, null, null, null, null, null, 0, _catalogSettings.NumberOfBestsellersOnHomepage, groupBy: 2));
+                    .BestSellersReport(_storeContext.CurrentStore.Id, null, null, null, null, null, 0, _catalogSettings.NumberOfBestsellersOnHomepage, groupBy: 2));
 
 
             //load products
@@ -2212,7 +2215,7 @@ namespace Nop.Web.Controllers
             model.IsCurrentCustomerRegistered = _workContext.CurrentCustomer.IsRegistered();
             model.MaximumBackInStockSubscriptions = _catalogSettings.MaximumBackInStockSubscriptions;
             model.CurrentNumberOfBackInStockSubscriptions = _backInStockSubscriptionService
-                .GetAllSubscriptionsByCustomerId(_workContext.CurrentCustomer.Id, _workContext.CurrentStore.Id, 0, 1)
+                .GetAllSubscriptionsByCustomerId(_workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id, 0, 1)
                 .TotalCount;
             if (variant.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
                 variant.BackorderMode == BackorderMode.NoBackorders &&
@@ -2222,7 +2225,7 @@ namespace Nop.Web.Controllers
                 //out of stock
                 model.SubscriptionAllowed = true;
                 model.AlreadySubscribed = _backInStockSubscriptionService
-                    .FindSubscription(_workContext.CurrentCustomer.Id, variant.Id, _workContext.CurrentStore.Id) != null;
+                    .FindSubscription(_workContext.CurrentCustomer.Id, variant.Id, _storeContext.CurrentStore.Id) != null;
             }
             return View(model);
         }
@@ -2244,7 +2247,7 @@ namespace Nop.Web.Controllers
             {
                 //out of stock
                 var subscription = _backInStockSubscriptionService
-                    .FindSubscription(_workContext.CurrentCustomer.Id, variant.Id, _workContext.CurrentStore.Id);
+                    .FindSubscription(_workContext.CurrentCustomer.Id, variant.Id, _storeContext.CurrentStore.Id);
                 if (subscription != null)
                 {
                     //unsubscribe
@@ -2254,7 +2257,7 @@ namespace Nop.Web.Controllers
                 else
                 {
                     if (_backInStockSubscriptionService
-                        .GetAllSubscriptionsByCustomerId(_workContext.CurrentCustomer.Id, _workContext.CurrentStore.Id, 0, 1)
+                        .GetAllSubscriptionsByCustomerId(_workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id, 0, 1)
                         .TotalCount >= _catalogSettings.MaximumBackInStockSubscriptions)
                         return Content(string.Format(_localizationService.GetResource("BackInStockSubscriptions.MaxSubscriptions"), _catalogSettings.MaximumBackInStockSubscriptions));
             
@@ -2263,7 +2266,7 @@ namespace Nop.Web.Controllers
                     {
                         Customer = _workContext.CurrentCustomer,
                         ProductVariant = variant,
-                        Store = _workContext.CurrentStore,
+                        Store = _storeContext.CurrentStore,
                         CreatedOnUtc = DateTime.UtcNow
                     };
                     _backInStockSubscriptionService.InsertSubscription(subscription);
@@ -2471,7 +2474,7 @@ namespace Nop.Web.Controllers
 
             //products
             var products = _productService.SearchProducts(
-                storeId: _workContext.CurrentStore.Id,
+                storeId: _storeContext.CurrentStore.Id,
                 productTagId: productTag.Id,
                 orderBy: (ProductSortingEnum)command.OrderBy,
                 pageIndex: command.PageNumber - 1,
@@ -2842,7 +2845,7 @@ namespace Nop.Web.Controllers
             _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, 
                 SystemCustomerAttributeNames.LastContinueShoppingPage, 
                 _webHelper.GetThisPageUrl(false),
-                _workContext.CurrentStore.Id);
+                _storeContext.CurrentStore.Id);
 
             if (command.PageSize <= 0) command.PageSize = _catalogSettings.SearchPageProductsPerPage;
             if (command.PageNumber <= 0) command.PageNumber = 1;
@@ -2954,8 +2957,8 @@ namespace Nop.Web.Controllers
                     //products
                     products = _productService.SearchProducts(
                         categoryIds: categoryIds,
-                        manufacturerId: manufacturerId, 
-                        storeId: _workContext.CurrentStore.Id,
+                        manufacturerId: manufacturerId,
+                        storeId: _storeContext.CurrentStore.Id,
                         priceMin: minPriceConverted,
                         priceMax: maxPriceConverted,
                         keywords:model.Q,
@@ -3006,7 +3009,7 @@ namespace Nop.Web.Controllers
                 _catalogSettings.ProductSearchAutoCompleteNumberOfProducts : 10;
 
             var products = _productService.SearchProducts(
-                storeId: _workContext.CurrentStore.Id,
+                storeId: _storeContext.CurrentStore.Id,
                 keywords: term,
                 languageId: _workContext.WorkingLanguage.Id,
                 pageSize: productNumber);

@@ -53,6 +53,7 @@ namespace Nop.Web.Controllers
         private readonly ICurrencyService _currencyService;
         private readonly ILocalizationService _localizationService;
         private readonly IWorkContext _workContext;
+        private readonly IStoreContext _storeContext;
         private readonly IQueuedEmailService _queuedEmailService;
         private readonly IEmailAccountService _emailAccountService;
         private readonly ISitemapGenerator _sitemapGenerator;
@@ -87,7 +88,7 @@ namespace Nop.Web.Controllers
             IManufacturerService manufacturerService, ITopicService topicService,
             ILanguageService languageService,
             ICurrencyService currencyService, ILocalizationService localizationService,
-            IWorkContext workContext,
+            IWorkContext workContext, IStoreContext storeContext,
             IQueuedEmailService queuedEmailService, IEmailAccountService emailAccountService,
             ISitemapGenerator sitemapGenerator, IThemeContext themeContext,
             IThemeProvider themeProvider, IForumService forumService,
@@ -109,6 +110,7 @@ namespace Nop.Web.Controllers
             this._currencyService = currencyService;
             this._localizationService = localizationService;
             this._workContext = workContext;
+            this._storeContext = storeContext;
             this._queuedEmailService = queuedEmailService;
             this._emailAccountService = emailAccountService;
             this._sitemapGenerator = sitemapGenerator;
@@ -152,10 +154,10 @@ namespace Nop.Web.Controllers
         [NonAction]
         protected LanguageSelectorModel PrepareLanguageSelectorModel()
         {
-            var availableLanguages = _cacheManager.Get(string.Format(ModelCacheEventConsumer.AVAILABLE_LANGUAGES_MODEL_KEY, _workContext.CurrentStore.Id), () =>
+            var availableLanguages = _cacheManager.Get(string.Format(ModelCacheEventConsumer.AVAILABLE_LANGUAGES_MODEL_KEY, _storeContext.CurrentStore.Id), () =>
             {
                 var result = _languageService
-                    .GetAllLanguages(storeId: _workContext.CurrentStore.Id)
+                    .GetAllLanguages(storeId: _storeContext.CurrentStore.Id)
                     .Select(x => new LanguageModel()
                     {
                         Id = x.Id,
@@ -178,10 +180,10 @@ namespace Nop.Web.Controllers
         [NonAction]
         protected CurrencySelectorModel PrepareCurrencySelectorModel()
         {
-            var availableCurrencies = _cacheManager.Get(string.Format(ModelCacheEventConsumer.AVAILABLE_CURRENCIES_MODEL_KEY, _workContext.WorkingLanguage.Id, _workContext.CurrentStore.Id), () =>
+            var availableCurrencies = _cacheManager.Get(string.Format(ModelCacheEventConsumer.AVAILABLE_CURRENCIES_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id), () =>
             {
                 var result = _currencyService
-                    .GetAllCurrencies(storeId: _workContext.CurrentStore.Id)
+                    .GetAllCurrencies(storeId: _storeContext.CurrentStore.Id)
                     .Select(x => new CurrencyModel()
                     {
                         Id = x.Id,
@@ -217,7 +219,7 @@ namespace Nop.Web.Controllers
             var customer = _workContext.CurrentCustomer;
             if (_forumSettings.AllowPrivateMessages && !customer.IsGuest())
             {
-                var privateMessages = _forumservice.GetAllPrivateMessages(_workContext.CurrentStore.Id,
+                var privateMessages = _forumservice.GetAllPrivateMessages(_storeContext.CurrentStore.Id,
                     0, customer.Id, false, null, false, string.Empty, 0, 1);
 
                 if (privateMessages.TotalCount > 0)
@@ -355,9 +357,9 @@ namespace Nop.Web.Controllers
 
                 //notifications here
                 if (_forumSettings.ShowAlertForPM &&
-                    !customer.GetAttribute<bool>(SystemCustomerAttributeNames.NotifiedAboutNewPrivateMessages, _workContext.CurrentStore.Id))
+                    !customer.GetAttribute<bool>(SystemCustomerAttributeNames.NotifiedAboutNewPrivateMessages, _storeContext.CurrentStore.Id))
                 {
-                    _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.NotifiedAboutNewPrivateMessages, true, _workContext.CurrentStore.Id);
+                    _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.NotifiedAboutNewPrivateMessages, true, _storeContext.CurrentStore.Id);
                     alertMessage = string.Format(_localizationService.GetResource("PrivateMessages.YouHaveUnreadPM"), unreadMessageCount);
                 }
             }
@@ -369,13 +371,13 @@ namespace Nop.Web.Controllers
                 ShoppingCartEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart),
                 ShoppingCartItems = customer.ShoppingCartItems
                     .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                    .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                    .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
                     .ToList()
                     .GetTotalProducts(),
                 WishlistEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableWishlist),
                 WishlistItems = customer.ShoppingCartItems
                     .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
-                    .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                    .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
                     .ToList()
                     .GetTotalProducts(),
                 AllowPrivateMessages = customer.IsRegistered() && _forumSettings.AllowPrivateMessages,
@@ -406,7 +408,7 @@ namespace Nop.Web.Controllers
         {
             var model = new FooterModel()
             {
-                StoreName = _workContext.CurrentStore.Name
+                StoreName = _storeContext.CurrentStore.Name
             };
 
             return PartialView(model);
@@ -473,7 +475,7 @@ namespace Nop.Web.Controllers
             {
                 string email = model.Email.Trim();
                 string fullName = model.FullName;
-                string subject = string.Format(_localizationService.GetResource("ContactUs.EmailSubject"), _workContext.CurrentStore.Name);
+                string subject = string.Format(_localizationService.GetResource("ContactUs.EmailSubject"), _storeContext.CurrentStore.Name);
 
                 var emailAccount = _emailAccountService.GetEmailAccountById(_emailAccountSettings.DefaultEmailAccountId);
                 if (emailAccount == null)
@@ -543,7 +545,7 @@ namespace Nop.Web.Controllers
             if (_commonSettings.SitemapIncludeProducts)
             {
                 //limit product to 200 until paging is supported on this page
-                var products = _productService.SearchProducts(storeId: _workContext.CurrentStore.Id, pageSize: 200);
+                var products = _productService.SearchProducts(storeId: _storeContext.CurrentStore.Id, pageSize: 200);
                 model.Products = products.Select(product => new ProductOverviewModel()
                 {
                     Id = product.Id,
@@ -555,7 +557,7 @@ namespace Nop.Web.Controllers
             }
             if (_commonSettings.SitemapIncludeTopics)
             {
-                var topics = _topicService.GetAllTopics(_workContext.CurrentStore.Id)
+                var topics = _topicService.GetAllTopics(_storeContext.CurrentStore.Id)
                     .ToList()
                     .FindAll(t => t.IncludeInSitemap);
                 model.Topics = topics.Select(topic => new TopicModel()
@@ -657,7 +659,7 @@ namespace Nop.Web.Controllers
         public ActionResult ChangeDevice(bool dontUseMobileVersion)
         {
             _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
-                SystemCustomerAttributeNames.DontUseMobileVersion, dontUseMobileVersion, _workContext.CurrentStore.Id);
+                SystemCustomerAttributeNames.DontUseMobileVersion, dontUseMobileVersion, _storeContext.CurrentStore.Id);
 
             string returnurl = _webHelper.GetUrlReferrer();
             if (String.IsNullOrEmpty(returnurl))
@@ -790,7 +792,7 @@ namespace Nop.Web.Controllers
             if (_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
             {
                 //URLs are localizable. Append SEO code
-                foreach (var language in _languageService.GetAllLanguages(storeId: _workContext.CurrentStore.Id))
+                foreach (var language in _languageService.GetAllLanguages(storeId: _storeContext.CurrentStore.Id))
                 {
                     foreach (var path in localizableDisallowPaths)
                     {

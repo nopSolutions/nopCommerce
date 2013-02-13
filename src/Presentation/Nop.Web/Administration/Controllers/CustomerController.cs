@@ -60,6 +60,7 @@ namespace Nop.Admin.Controllers
         private readonly CustomerSettings _customerSettings;
         private readonly ITaxService _taxService;
         private readonly IWorkContext _workContext;
+        private readonly IStoreContext _storeContext;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IOrderService _orderService;
         private readonly IExportManager _exportManager;
@@ -89,8 +90,10 @@ namespace Nop.Admin.Controllers
             ICountryService countryService, IStateProvinceService stateProvinceService, 
             IAddressService addressService,
             CustomerSettings customerSettings, ITaxService taxService, 
-            IWorkContext workContext, IPriceFormatter priceFormatter,
-            IOrderService orderService, IExportManager exportManager,
+            IWorkContext workContext, IStoreContext storeContext,
+            IPriceFormatter priceFormatter,
+            IOrderService orderService, 
+            IExportManager exportManager,
             ICustomerActivityService customerActivityService,
             IPriceCalculationService priceCalculationService,
             IPermissionService permissionService, AdminAreaSettings adminAreaSettings,
@@ -114,6 +117,7 @@ namespace Nop.Admin.Controllers
             this._customerSettings = customerSettings;
             this._taxService = taxService;
             this._workContext = workContext;
+            this._storeContext = storeContext;
             this._priceFormatter = priceFormatter;
             this._orderService = orderService;
             this._exportManager = exportManager;
@@ -1026,7 +1030,7 @@ namespace Nop.Admin.Controllers
 
                 var privateMessage = new PrivateMessage
                 {
-                    Store = _workContext.CurrentStore,
+                    Store = _storeContext.CurrentStore,
                     ToCustomerId = customer.Id,
                     FromCustomerId = _workContext.CurrentCustomer.Id,
                     Subject = model.SendPm.Subject,

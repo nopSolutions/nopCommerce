@@ -44,7 +44,7 @@ namespace Nop.Services.Common
         private readonly IProductService _productService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IStoreService _storeService;
-        private readonly IWorkContext _workContext;
+        private readonly IStoreContext _storeContext;
         private readonly IWebHelper _webHelper;
 
         private readonly CatalogSettings _catalogSettings;
@@ -52,7 +52,6 @@ namespace Nop.Services.Common
         private readonly MeasureSettings _measureSettings;
         private readonly PdfSettings _pdfSettings;
         private readonly TaxSettings _taxSettings;
-        private readonly StoreInformationSettings _storeInformationSettings;
         private readonly AddressSettings _addressSettings;
 
         #endregion
@@ -64,8 +63,8 @@ namespace Nop.Services.Common
             IDateTimeHelper dateTimeHelper, IPriceFormatter priceFormatter,
             ICurrencyService currencyService, IMeasureService measureService,
             IPictureService pictureService, IProductService productService, 
-            IProductAttributeParser productAttributeParser, IStoreService storeService, 
-            IWorkContext workContext, IWebHelper webHelper, 
+            IProductAttributeParser productAttributeParser, IStoreService storeService,
+            IStoreContext storeContext, IWebHelper webHelper, 
             CatalogSettings catalogSettings, CurrencySettings currencySettings,
             MeasureSettings measureSettings, PdfSettings pdfSettings, TaxSettings taxSettings,
             StoreInformationSettings storeInformationSettings, AddressSettings addressSettings)
@@ -81,14 +80,13 @@ namespace Nop.Services.Common
             this._productService = productService;
             this._productAttributeParser = productAttributeParser;
             this._storeService = storeService;
-            this._workContext = workContext;
+            this._storeContext = storeContext;
             this._webHelper = webHelper;
             this._currencySettings = currencySettings;
             this._catalogSettings = catalogSettings;
             this._measureSettings = measureSettings;
             this._pdfSettings = pdfSettings;
             this._taxSettings = taxSettings;
-            this._storeInformationSettings = storeInformationSettings;
             this._addressSettings = addressSettings;
         }
 
@@ -178,7 +176,7 @@ namespace Nop.Services.Common
                 var cell = new PdfPCell();
                 cell.Border = Rectangle.NO_BORDER;
                 cell.AddElement(new Paragraph(String.Format(_localizationService.GetResource("PDFInvoice.Order#", lang.Id), order.Id), titleFont));
-                var store = _storeService.GetStoreById(order.StoreId) ?? _workContext.CurrentStore;
+                var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
                 var anchor = new Anchor(store.Url.Trim(new char[] { '/' }), font);
                 anchor.Reference = store.Url;
                 cell.AddElement(new Paragraph(anchor));

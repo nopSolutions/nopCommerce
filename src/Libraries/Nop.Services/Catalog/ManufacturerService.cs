@@ -32,7 +32,8 @@ namespace Nop.Services.Catalog
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<AclRecord> _aclRepository;
         private readonly IRepository<StoreMapping> _storeMappingRepository;
-        private readonly IWorkContext _workContext; 
+        private readonly IWorkContext _workContext;
+        private readonly IStoreContext _storeContext;
         private readonly IEventPublisher _eventPublisher;
         private readonly ICacheManager _cacheManager;
         #endregion
@@ -49,6 +50,7 @@ namespace Nop.Services.Catalog
         /// <param name="aclRepository">ACL record repository</param>
         /// <param name="storeMappingRepository">Store mapping repository</param>
         /// <param name="workContext">Work context</param>
+        /// <param name="storeContext">Store context</param>
         /// <param name="eventPublisher">Event published</param>
         public ManufacturerService(ICacheManager cacheManager,
             IRepository<Manufacturer> manufacturerRepository,
@@ -57,6 +59,7 @@ namespace Nop.Services.Catalog
             IRepository<AclRecord> aclRepository,
             IRepository<StoreMapping> storeMappingRepository,
             IWorkContext workContext,
+            IStoreContext storeContext,
             IEventPublisher eventPublisher)
         {
             this._cacheManager = cacheManager;
@@ -66,6 +69,7 @@ namespace Nop.Services.Catalog
             this._aclRepository = aclRepository;
             this._storeMappingRepository = storeMappingRepository;
             this._workContext = workContext;
+            this._storeContext = storeContext;
             this._eventPublisher = eventPublisher;
         }
         #endregion
@@ -123,7 +127,7 @@ namespace Nop.Services.Catalog
                         select m;
 
                 //Store mapping
-                var currentStoreId = _workContext.CurrentStore.Id;
+                var currentStoreId = _storeContext.CurrentStore.Id;
                 query = from m in query
                         join sm in _storeMappingRepository.Table on m.Id equals sm.EntityId into m_sm
                         from sm in m_sm.DefaultIfEmpty()
@@ -247,7 +251,7 @@ namespace Nop.Services.Catalog
             if (manufacturerId == 0)
                 return new PagedList<ProductManufacturer>(new List<ProductManufacturer>(), pageIndex, pageSize);
 
-            string key = string.Format(PRODUCTMANUFACTURERS_ALLBYMANUFACTURERID_KEY, showHidden, manufacturerId, pageIndex, pageSize, _workContext.CurrentCustomer.Id, _workContext.CurrentStore.Id);
+            string key = string.Format(PRODUCTMANUFACTURERS_ALLBYMANUFACTURERID_KEY, showHidden, manufacturerId, pageIndex, pageSize, _workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id);
             return _cacheManager.Get(key, () =>
             {
                 var query = from pm in _productManufacturerRepository.Table
@@ -273,7 +277,7 @@ namespace Nop.Services.Catalog
                             select pm;
 
                     //Store mapping
-                    var currentStoreId = _workContext.CurrentStore.Id;
+                    var currentStoreId = _storeContext.CurrentStore.Id;
                     query = from pm in query
                             join m in _manufacturerRepository.Table on pm.ManufacturerId equals m.Id
                             join sm in _storeMappingRepository.Table on m.Id equals sm.EntityId into m_sm
@@ -306,7 +310,7 @@ namespace Nop.Services.Catalog
             if (productId == 0)
                 return new List<ProductManufacturer>();
 
-            string key = string.Format(PRODUCTMANUFACTURERS_ALLBYPRODUCTID_KEY, showHidden, productId, _workContext.CurrentCustomer.Id, _workContext.CurrentStore.Id);
+            string key = string.Format(PRODUCTMANUFACTURERS_ALLBYPRODUCTID_KEY, showHidden, productId, _workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id);
             return _cacheManager.Get(key, () =>
             {
                 var query = from pm in _productManufacturerRepository.Table
@@ -331,7 +335,7 @@ namespace Nop.Services.Catalog
                             select pm;
 
                     //Store mapping
-                    var currentStoreId = _workContext.CurrentStore.Id;
+                    var currentStoreId = _storeContext.CurrentStore.Id;
                     query = from pm in query
                             join m in _manufacturerRepository.Table on pm.ManufacturerId equals m.Id
                             join sm in _storeMappingRepository.Table on m.Id equals sm.EntityId into m_sm

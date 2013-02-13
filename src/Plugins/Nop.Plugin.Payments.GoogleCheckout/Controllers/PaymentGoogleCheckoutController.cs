@@ -31,6 +31,7 @@ namespace Nop.Plugin.Payments.GoogleCheckout.Controllers
         private readonly IWebHelper _webHelper;
         private readonly OrderSettings _orderSettings;
         private readonly IWorkContext _workContext;
+        private readonly IStoreContext _storeContext;
         private readonly CurrencySettings _currencySettings;
         private readonly ICurrencyService _currencyService;
         private readonly PaymentSettings _paymentSettings;
@@ -38,8 +39,8 @@ namespace Nop.Plugin.Payments.GoogleCheckout.Controllers
         public PaymentGoogleCheckoutController(ISettingService settingService, 
             IPaymentService paymentService, IOrderProcessingService orderProcessingService, 
             IWebHelper webHelper, OrderSettings orderSettings, IWorkContext workContext,
-            CurrencySettings currencySettings, ICurrencyService currencyService,
-            PaymentSettings paymentSettings)
+            IStoreContext storeContext, CurrencySettings currencySettings, 
+            ICurrencyService currencyService, PaymentSettings paymentSettings)
         {
             this._settingService = settingService;
             this._paymentService = paymentService;
@@ -47,6 +48,7 @@ namespace Nop.Plugin.Payments.GoogleCheckout.Controllers
             this._webHelper = webHelper;
             this._orderSettings = orderSettings;
             this._workContext = workContext;
+            this._storeContext = storeContext;
             this._currencySettings = currencySettings;
             this._currencyService = currencyService;
             this._paymentSettings = paymentSettings;
@@ -118,7 +120,7 @@ namespace Nop.Plugin.Payments.GoogleCheckout.Controllers
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
                 .ToList();
             if (cart.Count == 0)
                 return Content("");
@@ -150,7 +152,7 @@ namespace Nop.Plugin.Payments.GoogleCheckout.Controllers
 
                 var cart = _workContext.CurrentCustomer.ShoppingCartItems
                     .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                    .Where(sci => sci.StoreId == _workContext.CurrentStore.Id)
+                    .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
                     .ToList();
                 if (cart.Count == 0)
                     return RedirectToRoute("ShoppingCart");

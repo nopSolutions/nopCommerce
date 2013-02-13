@@ -26,7 +26,7 @@ namespace Nop.Services.Stores
         #region Fields
 
         private readonly IRepository<StoreMapping> _storeMappingRepository;
-        private readonly IWorkContext _workContext;
+        private readonly IStoreContext _storeContext;
         private readonly ICacheManager _cacheManager;
 
         #endregion
@@ -37,13 +37,13 @@ namespace Nop.Services.Stores
         /// Ctor
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
-        /// <param name="workContext">Work context</param>
+        /// <param name="storeContext">Store context</param>
         /// <param name="storeMappingRepository">Store mapping repository</param>
-        public StoreMappingService(ICacheManager cacheManager, IWorkContext workContext,
+        public StoreMappingService(ICacheManager cacheManager, IStoreContext storeContext,
             IRepository<StoreMapping> storeMappingRepository)
         {
             this._cacheManager = cacheManager;
-            this._workContext = workContext;
+            this._storeContext = storeContext;
             this._storeMappingRepository = storeMappingRepository;
         }
 
@@ -197,7 +197,7 @@ namespace Nop.Services.Stores
         /// <returns>true - authorized; otherwise, false</returns>
         public virtual bool Authorize<T>(T entity) where T : BaseEntity, IStoreMappingSupported
         {
-            return Authorize(entity, _workContext.CurrentStore);
+            return Authorize(entity, _storeContext.CurrentStore);
         }
 
         /// <summary>
