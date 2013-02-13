@@ -3,30 +3,30 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Configuration;
+using Nop.Core.Data;
 using Nop.Core.Domain.Configuration;
 using Nop.Services.Configuration;
+using Nop.Services.Events;
 
 namespace Nop.Services.Tests.Configuration
 {
-    public class ConfigFileSettingService : ISettingService
+    public class ConfigFileSettingService : SettingService
     {
-        public Setting GetSettingById(int settingId)
+        public ConfigFileSettingService(ICacheManager cacheManager, 
+            IEventPublisher eventPublisher,
+            IRepository<Setting> settingRepository):
+            base (cacheManager, eventPublisher, settingRepository)
+        {
+            
+        }
+        public override Setting GetSettingById(int settingId)
         {
             throw new InvalidOperationException("Get setting by id is not supported");
-        }
-
-        public Setting GetSettingByKey(string key)
-        {
-            throw new InvalidOperationException("Get setting by id is not supported");
-        }
-
-        public void DeleteSetting(Setting setting)
-        {
-            throw new InvalidOperationException("Deleting settings is not supported");
         }
         
-        public T GetSettingByKey<T>(string key, T defaultValue = default(T), int storeId = 0)
+        public override T GetSettingByKey<T>(string key, T defaultValue = default(T), int storeId = 0)
         {
             key = key.Trim().ToLowerInvariant();
             var settings = GetAllSettings();
@@ -36,14 +36,19 @@ namespace Nop.Services.Tests.Configuration
                 return CommonHelper.To<T>(setting.Value);
 
             return defaultValue;
-        }
+       }
 
-        public void SetSetting<T>(string key, T value, int storeId = 0, bool clearCache = true)
+        public override void DeleteSetting(Setting setting)
+        {
+            throw new InvalidOperationException("Deleting settings is not supported");
+        }
+        
+        public override void SetSetting<T>(string key, T value, int storeId = 0, bool clearCache = true)
         {
             throw new NotImplementedException();
         }
 
-        public IList<Setting> GetAllSettings()
+        public override IList<Setting> GetAllSettings()
         {
             var settings = new List<Setting>();
             var appSettings = ConfigurationManager.AppSettings;
@@ -59,33 +64,8 @@ namespace Nop.Services.Tests.Configuration
             return settings;
         }
 
-        /// <summary>
-        /// Load settings
-        /// </summary>
-        /// <typeparam name="T">Type</typeparam>
-        /// <param name="storeId">Store identifier for which settigns should be loaded</param>
-        public T LoadSetting<T>(int storeId = 0) where T : ISettings, new()
+        public override void ClearCache()
         {
-            throw new NotImplementedException();
-        }
-
-        public void SaveSetting<T>(T settingInstance) where T : ISettings, new()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Delete all settings
-        /// </summary>
-        /// <typeparam name="T">Type</typeparam>
-        public void DeleteSetting<T>() where T : ISettings, new()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void ClearCache()
-        {
-            throw new NotImplementedException();
         }
     }
 }
