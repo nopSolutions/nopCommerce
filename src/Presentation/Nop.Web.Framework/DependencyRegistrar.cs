@@ -333,7 +333,11 @@ namespace Nop.Web.Framework
         static IComponentRegistration BuildRegistration<TSettings>() where TSettings : ISettings, new()
         {
             return RegistrationBuilder
-                .ForDelegate((c, p) => c.Resolve<ISettingService>().LoadSetting<TSettings>())
+                .ForDelegate((c, p) =>
+                {
+                    var currentStoreId = c.Resolve<IStoreContext>().CurrentStore.Id;
+                    return c.Resolve<ISettingService>().LoadSetting<TSettings>(currentStoreId);
+                })
                 .InstancePerHttpRequest()
                 .CreateRegistration();
         }
