@@ -74,7 +74,6 @@ namespace Nop.Admin.Controllers
 
 
         private BlogSettings _blogSettings;
-        private ForumSettings _forumSettings;
         private ShippingSettings _shippingSettings;
         private TaxSettings _taxSettings;
         private CatalogSettings _catalogSettings;
@@ -110,7 +109,7 @@ namespace Nop.Admin.Controllers
             IWebHelper webHelper, IFulltextService fulltextService, 
             IMaintenanceService maintenanceService, IStoreService storeService,
             IWorkContext workContext, IGenericAttributeService genericAttributeService,
-            BlogSettings blogSettings, ForumSettings forumSettings,
+            BlogSettings blogSettings, 
             ShippingSettings shippingSettings, TaxSettings taxSettings,
             CatalogSettings catalogSettings, RewardPointsSettings rewardPointsSettings,
             CurrencySettings currencySettings, OrderSettings orderSettings,
@@ -145,7 +144,6 @@ namespace Nop.Admin.Controllers
             this._genericAttributeService = genericAttributeService;
 
             this._blogSettings = blogSettings;
-            this._forumSettings = forumSettings;
             this._shippingSettings = shippingSettings;
             this._taxSettings = taxSettings;
             this._catalogSettings = catalogSettings;
@@ -252,8 +250,36 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
-            var model = _forumSettings.ToModel();
-            model.ForumEditorValues = _forumSettings.ForumEditor.ToSelectList();
+            //load settings for chosen store scope
+            var storeScope = GetActiveStoreScopeConfiguration();
+            var forumSettings = _settingService.LoadSetting<ForumSettings>(storeScope);
+            var model = forumSettings.ToModel();
+            model.ForumEditorValues = forumSettings.ForumEditor.ToSelectList();
+            model.ActiveStoreScopeConfiguration = storeScope;
+            if (storeScope > 0)
+            {
+                model.ForumsEnabled_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.ForumsEnabled, storeScope);
+                model.RelativeDateTimeFormattingEnabled_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.RelativeDateTimeFormattingEnabled, storeScope);
+                model.ShowCustomersPostCount_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.ShowCustomersPostCount, storeScope);
+                model.AllowGuestsToCreatePosts_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.AllowGuestsToCreatePosts, storeScope);
+                model.AllowGuestsToCreateTopics_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.AllowGuestsToCreateTopics, storeScope);
+                model.AllowCustomersToEditPosts_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.AllowCustomersToEditPosts, storeScope);
+                model.AllowCustomersToDeletePosts_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.AllowCustomersToDeletePosts, storeScope);
+                model.AllowCustomersToManageSubscriptions_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.AllowCustomersToManageSubscriptions, storeScope);
+                model.TopicsPageSize_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.TopicsPageSize, storeScope);
+                model.PostsPageSize_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.PostsPageSize, storeScope);
+                model.ForumEditor_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.ForumEditor, storeScope);
+                model.SignaturesEnabled_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.SignaturesEnabled, storeScope);
+                model.AllowPrivateMessages_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.AllowPrivateMessages, storeScope);
+                model.ShowAlertForPM_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.ShowAlertForPM, storeScope);
+                model.NotifyAboutPrivateMessages_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.NotifyAboutPrivateMessages, storeScope);
+                model.ActiveDiscussionsFeedEnabled_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.ActiveDiscussionsFeedEnabled, storeScope);
+                model.ActiveDiscussionsFeedCount_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.ActiveDiscussionsFeedCount, storeScope);
+                model.ForumFeedsEnabled_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.ForumFeedsEnabled, storeScope);
+                model.ForumFeedCount_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.ForumFeedCount, storeScope);
+                model.SearchResultsPageSize_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.SearchResultsPageSize, storeScope);
+            }
+
             return View(model);
         }
         [HttpPost]
@@ -262,8 +288,122 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
-            _forumSettings = model.ToEntity(_forumSettings);
-            _settingService.SaveSetting(_forumSettings);
+
+            //load settings for chosen store scope
+            var storeScope = GetActiveStoreScopeConfiguration();
+            var forumSettings = _settingService.LoadSetting<ForumSettings>(storeScope);
+            forumSettings = model.ToEntity(forumSettings);
+
+            /* We do not clear cache after each setting update.
+             * This behavior can increase performance because cached settings will not be cleared 
+             * and loaded from database after each update */
+            if (model.ForumsEnabled_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(forumSettings, x => x.ForumsEnabled, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(forumSettings, x => x.ForumsEnabled, storeScope);
+            
+            if (model.RelativeDateTimeFormattingEnabled_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(forumSettings, x => x.RelativeDateTimeFormattingEnabled, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(forumSettings, x => x.RelativeDateTimeFormattingEnabled, storeScope);
+            
+            if (model.ShowCustomersPostCount_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(forumSettings, x => x.ShowCustomersPostCount, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(forumSettings, x => x.ShowCustomersPostCount, storeScope);
+            
+            if (model.AllowGuestsToCreatePosts_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(forumSettings, x => x.AllowGuestsToCreatePosts, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(forumSettings, x => x.AllowGuestsToCreatePosts, storeScope);
+            
+            if (model.AllowGuestsToCreateTopics_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(forumSettings, x => x.AllowGuestsToCreateTopics, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(forumSettings, x => x.AllowGuestsToCreateTopics, storeScope);
+            
+            if (model.AllowCustomersToEditPosts_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(forumSettings, x => x.AllowCustomersToEditPosts, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(forumSettings, x => x.AllowCustomersToEditPosts, storeScope);
+            
+            if (model.AllowCustomersToDeletePosts_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(forumSettings, x => x.AllowCustomersToDeletePosts, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(forumSettings, x => x.AllowCustomersToDeletePosts, storeScope);
+            
+            if (model.AllowCustomersToManageSubscriptions_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(forumSettings, x => x.AllowCustomersToManageSubscriptions, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(forumSettings, x => x.AllowCustomersToManageSubscriptions, storeScope);
+            
+            if (model.TopicsPageSize_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(forumSettings, x => x.TopicsPageSize, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(forumSettings, x => x.TopicsPageSize, storeScope);
+            
+            if (model.PostsPageSize_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(forumSettings, x => x.PostsPageSize, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(forumSettings, x => x.PostsPageSize, storeScope);
+            
+            if (model.ForumEditor_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(forumSettings, x => x.ForumEditor, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(forumSettings, x => x.ForumEditor, storeScope);
+            
+            if (model.SignaturesEnabled_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(forumSettings, x => x.SignaturesEnabled, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(forumSettings, x => x.SignaturesEnabled, storeScope);
+            
+            if (model.SignaturesEnabled_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(forumSettings, x => x.SignaturesEnabled, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(forumSettings, x => x.SignaturesEnabled, storeScope);
+            
+            if (model.AllowPrivateMessages_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(forumSettings, x => x.AllowPrivateMessages, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(forumSettings, x => x.AllowPrivateMessages, storeScope);
+            
+            if (model.ShowAlertForPM_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(forumSettings, x => x.ShowAlertForPM, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(forumSettings, x => x.ShowAlertForPM, storeScope);
+            
+            if (model.NotifyAboutPrivateMessages_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(forumSettings, x => x.NotifyAboutPrivateMessages, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(forumSettings, x => x.NotifyAboutPrivateMessages, storeScope);
+            
+            if (model.ActiveDiscussionsFeedEnabled_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(forumSettings, x => x.ActiveDiscussionsFeedEnabled, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(forumSettings, x => x.ActiveDiscussionsFeedEnabled, storeScope);
+            
+            if (model.ActiveDiscussionsFeedCount_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(forumSettings, x => x.ActiveDiscussionsFeedCount, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(forumSettings, x => x.ActiveDiscussionsFeedCount, storeScope);
+            
+            if (model.ForumFeedsEnabled_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(forumSettings, x => x.ForumFeedsEnabled, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(forumSettings, x => x.ForumFeedsEnabled, storeScope);
+            
+            if (model.ForumFeedCount_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(forumSettings, x => x.ForumFeedCount, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(forumSettings, x => x.ForumFeedCount, storeScope);
+            
+            if (model.SearchResultsPageSize_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(forumSettings, x => x.SearchResultsPageSize, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(forumSettings, x => x.SearchResultsPageSize, storeScope);
+            
+            //now clear settings cache
+            _settingService.ClearCache();
 
             //activity log
             _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
@@ -287,13 +427,13 @@ namespace Nop.Admin.Controllers
             model.ActiveStoreScopeConfiguration = storeScope;
             if (storeScope > 0)
             {
-                model.Enabled_OverrideForStore = _settingService.SettingExists(newsSettings, x => newsSettings.Enabled, storeScope);
-                model.AllowNotRegisteredUsersToLeaveComments_OverrideForStore = _settingService.SettingExists(newsSettings, x => newsSettings.AllowNotRegisteredUsersToLeaveComments, storeScope);
-                model.NotifyAboutNewNewsComments_OverrideForStore = _settingService.SettingExists(newsSettings, x => newsSettings.NotifyAboutNewNewsComments, storeScope);
-                model.ShowNewsOnMainPage_OverrideForStore = _settingService.SettingExists(newsSettings, x => newsSettings.ShowNewsOnMainPage, storeScope);
-                model.MainPageNewsCount_OverrideForStore = _settingService.SettingExists(newsSettings, x => newsSettings.MainPageNewsCount, storeScope);
-                model.NewsArchivePageSize_OverrideForStore = _settingService.SettingExists(newsSettings, x => newsSettings.NewsArchivePageSize, storeScope);
-                model.ShowHeaderRssUrl_OverrideForStore = _settingService.SettingExists(newsSettings, x => newsSettings.ShowHeaderRssUrl, storeScope);
+                model.Enabled_OverrideForStore = _settingService.SettingExists(newsSettings, x => x.Enabled, storeScope);
+                model.AllowNotRegisteredUsersToLeaveComments_OverrideForStore = _settingService.SettingExists(newsSettings, x => x.AllowNotRegisteredUsersToLeaveComments, storeScope);
+                model.NotifyAboutNewNewsComments_OverrideForStore = _settingService.SettingExists(newsSettings, x => x.NotifyAboutNewNewsComments, storeScope);
+                model.ShowNewsOnMainPage_OverrideForStore = _settingService.SettingExists(newsSettings, x => x.ShowNewsOnMainPage, storeScope);
+                model.MainPageNewsCount_OverrideForStore = _settingService.SettingExists(newsSettings, x => x.MainPageNewsCount, storeScope);
+                model.NewsArchivePageSize_OverrideForStore = _settingService.SettingExists(newsSettings, x => x.NewsArchivePageSize, storeScope);
+                model.ShowHeaderRssUrl_OverrideForStore = _settingService.SettingExists(newsSettings, x => x.ShowHeaderRssUrl, storeScope);
             }
             return View(model);
         }

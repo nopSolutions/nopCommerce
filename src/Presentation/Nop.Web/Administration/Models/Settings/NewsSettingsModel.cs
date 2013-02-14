@@ -5,6 +5,10 @@ namespace Nop.Admin.Models.Settings
 {
     public partial class NewsSettingsModel : BaseNopModel
     {
+        public int ActiveStoreScopeConfiguration { get; set; }
+
+
+
         [NopResourceDisplayName("Admin.Configuration.Settings.News.Enabled")]
         public bool Enabled { get; set; }
         public bool Enabled_OverrideForStore { get; set; }
@@ -32,8 +36,5 @@ namespace Nop.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.News.ShowHeaderRSSUrl")]
         public bool ShowHeaderRssUrl { get; set; }
         public bool ShowHeaderRssUrl_OverrideForStore { get; set; }
-
-
-        public int ActiveStoreScopeConfiguration { get; set; }
     }
 }
