@@ -157,8 +157,28 @@ namespace Nop.Web.Framework
             {
                 //render only when a certain store is chosen
                 const string cssClass = "multi-store-override-option";
-                var onClick = string.Format("checkOverridenStoreValue(this, '{0}')", helper.FieldIdFor(forInputExpression));
                 var dataInputId = helper.FieldIdFor(forInputExpression);
+                var onClick = string.Format("checkOverridenStoreValue(this, '{0}')", helper.FieldIdFor(forInputExpression));
+                result.Append(helper.CheckBoxFor(expression, new Dictionary<string, object>
+                {
+                    { "class", cssClass },
+                    { "onclick", onClick },
+                    { "data-for-input-id", dataInputId },
+                }));
+            }
+            return MvcHtmlString.Create(result.ToString());
+        }
+
+        public static MvcHtmlString OverrideStoreCheckboxFor<TModel>(this HtmlHelper<TModel> helper,
+            Expression<Func<TModel, bool>> expression,
+            string dataInputId, int activeStoreScopeConfiguration)
+        {
+            var result = new StringBuilder();
+            if (activeStoreScopeConfiguration > 0)
+            {
+                //render only when a certain store is chosen
+                const string cssClass = "multi-store-override-option";
+                var onClick = string.Format("checkOverridenStoreValue(this, '{0}')", dataInputId);
                 result.Append(helper.CheckBoxFor(expression, new Dictionary<string, object>
                 {
                     { "class", cssClass },

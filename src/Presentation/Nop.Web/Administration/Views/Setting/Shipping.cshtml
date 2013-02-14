@@ -5,10 +5,10 @@
 }
 @using (Html.BeginForm())
 {    
-<script type="text/javascript">
-    $(document).ready(function () {
-        $("#@Html.FieldIdFor(model => model.FreeShippingOverXEnabled)").click(toggleFreeShippingOverX);
-            
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#@Html.FieldIdFor(model => model.FreeShippingOverXEnabled)").click(toggleFreeShippingOverX);
+
         toggleFreeShippingOverX();
     });
 
@@ -23,7 +23,7 @@
         }
     }
 
-</script>
+    </script>
     
     <div class="section-header">
         <div class="title">
@@ -34,10 +34,12 @@
             <input type="submit" name="save" class="t-button" value="@T("Admin.Common.Save")" />
         </div>
     </div>
-@Html.ValidationSummary(false)
+    @Html.Action("StoreScopeConfiguration", "Setting")
+    @Html.ValidationSummary(false)
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.FreeShippingOverXEnabled_OverrideForStore, model => model.FreeShippingOverXEnabled, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.FreeShippingOverXEnabled):
             </td>
             <td class="adminData">
@@ -47,6 +49,7 @@
         </tr>
         <tr id="pnlValueOfX">
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.FreeShippingOverXValue_OverrideForStore, model => model.FreeShippingOverXValue, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.FreeShippingOverXValue):
             </td>
             <td class="adminData">
@@ -56,6 +59,7 @@
         </tr>
         <tr id="pnlValueOfXincltax">
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.FreeShippingOverXIncludingTax_OverrideForStore, model => model.FreeShippingOverXIncludingTax, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.FreeShippingOverXIncludingTax):
             </td>
             <td class="adminData">
@@ -65,6 +69,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.EstimateShippingEnabled_OverrideForStore, model => model.EstimateShippingEnabled, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.EstimateShippingEnabled):
             </td>
             <td class="adminData">
@@ -74,6 +79,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.DisplayShipmentEventsToCustomers_OverrideForStore, model => model.DisplayShipmentEventsToCustomers, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.DisplayShipmentEventsToCustomers):
             </td>
             <td class="adminData">
@@ -83,17 +89,13 @@
         </tr>
         <tr>
             <td class="adminTitle" colspan="2">
+                @Html.OverrideStoreCheckboxFor(model => model.ShippingOriginAddress_OverrideForStore, "pnlShippingOriginAddress", Model.ActiveStoreScopeConfiguration)
                 <strong>@Html.LabelFor(model => model.ShippingOriginAddress):</strong>
             </td>
         </tr>
-        <tr>
+        <tr id="pnlShippingOriginAddress">
             <td colspan="2">
                 @Html.EditorFor(x => x.ShippingOriginAddress, "Address")
-            </td>
-        </tr>        
-        <tr class="adminSeparator">
-            <td colspan="2">
-                <hr />
             </td>
         </tr>
     </table>

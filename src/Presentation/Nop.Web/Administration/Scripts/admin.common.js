@@ -53,20 +53,21 @@ function checkAllOverridenStoreValue(item) {
 }
 
 function checkOverridenStoreValue(obj, key) {
+    var elements = $('#' + key + ', #' + key + ' input, #' + key + ' textarea, #' + key + ' select');
     if (!$(obj).is(':checked')) {
-        $('#' + key).attr('disabled', true);
+        elements.attr('disabled', true);
         //Telerik elements are enabled/disabled some other way
-        var telerikElement = $('#' + key).data("tTextBox");
-        if (telerikElement !== undefined) {
-            telerikElement.disable();
+        var telerikElements = elements.data("tTextBox");
+        if (telerikElements !== undefined) {
+            telerikElements.disable();
         }
     }
     else {
-        $('#' + key).removeAttr('disabled');
+        elements.removeAttr('disabled');
         //Telerik elements are enabled/disabled some other way
-        var telerikElement = $('#' + key).data("tTextBox");
-        if (telerikElement !== undefined) {
-            telerikElement.enable();
+        var telerikElements = elements.data("tTextBox");
+        if (telerikElements !== undefined) {
+            telerikElements.enable();
         }
     };
 }

@@ -73,7 +73,6 @@ namespace Nop.Admin.Controllers
         private readonly IGenericAttributeService _genericAttributeService;
 
 
-        private ShippingSettings _shippingSettings;
         private TaxSettings _taxSettings;
         private CatalogSettings _catalogSettings;
         private RewardPointsSettings _rewardPointsSettings;
@@ -108,7 +107,7 @@ namespace Nop.Admin.Controllers
             IWebHelper webHelper, IFulltextService fulltextService, 
             IMaintenanceService maintenanceService, IStoreService storeService,
             IWorkContext workContext, IGenericAttributeService genericAttributeService,
-            ShippingSettings shippingSettings, TaxSettings taxSettings,
+            TaxSettings taxSettings,
             CatalogSettings catalogSettings, RewardPointsSettings rewardPointsSettings,
             CurrencySettings currencySettings, OrderSettings orderSettings,
             ShoppingCartSettings shoppingCartSettings, MediaSettings mediaSettings,
@@ -141,7 +140,6 @@ namespace Nop.Admin.Controllers
             this._workContext = workContext;
             this._genericAttributeService = genericAttributeService;
 
-            this._shippingSettings = shippingSettings;
             this._taxSettings = taxSettings;
             this._catalogSettings = catalogSettings;
             this._rewardPointsSettings = rewardPointsSettings;
@@ -554,11 +552,12 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
-            var model = _shippingSettings.ToModel();
-
-            //shipping origin
-            var originAddress = _shippingSettings.ShippingOriginAddressId > 0
-                                     ? _addressService.GetAddressById(_shippingSettings.ShippingOriginAddressId)
+            //load settings for chosen store scope
+            var storeScope = GetActiveStoreScopeConfiguration();
+            var shippingSettings = _settingService.LoadSetting<ShippingSettings>(storeScope);
+            var model = shippingSettings.ToModel();//shipping origin
+            var originAddress = shippingSettings.ShippingOriginAddressId > 0
+                                     ? _addressService.GetAddressById(shippingSettings.ShippingOriginAddressId)
                                      : null;
             if (originAddress != null)
                 model.ShippingOriginAddress = originAddress.ToModel();
@@ -581,7 +580,17 @@ namespace Nop.Admin.Controllers
             model.ShippingOriginAddress.StateProvinceEnabled = true;
             model.ShippingOriginAddress.ZipPostalCodeEnabled = true;
             model.ShippingOriginAddress.ZipPostalCodeRequired = true;
-
+            model.ActiveStoreScopeConfiguration = storeScope;
+            if (storeScope > 0)
+            {
+                model.FreeShippingOverXEnabled_OverrideForStore = _settingService.SettingExists(shippingSettings, x => x.FreeShippingOverXEnabled, storeScope);
+                model.FreeShippingOverXValue_OverrideForStore = _settingService.SettingExists(shippingSettings, x => x.FreeShippingOverXValue, storeScope);
+                model.FreeShippingOverXIncludingTax_OverrideForStore = _settingService.SettingExists(shippingSettings, x => x.FreeShippingOverXIncludingTax, storeScope);
+                model.EstimateShippingEnabled_OverrideForStore = _settingService.SettingExists(shippingSettings, x => x.EstimateShippingEnabled, storeScope);
+                model.DisplayShipmentEventsToCustomers_OverrideForStore = _settingService.SettingExists(shippingSettings, x => x.DisplayShipmentEventsToCustomers, storeScope);
+                model.ShippingOriginAddress_OverrideForStore = _settingService.SettingExists(shippingSettings, x => x.ShippingOriginAddressId, storeScope);
+            }
+            
             return View(model);
         }
         [HttpPost]
@@ -590,22 +599,70 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
-            _shippingSettings = model.ToEntity(_shippingSettings);
 
-            var originAddress = _addressService.GetAddressById(_shippingSettings.ShippingOriginAddressId) ??
-                                         new Core.Domain.Common.Address()
-                                         {
-                                             CreatedOnUtc = DateTime.UtcNow,
-                                         };
-            originAddress = model.ShippingOriginAddress.ToEntity(originAddress);
-            if (originAddress.Id > 0)
-                _addressService.UpdateAddress(originAddress);
-            else
-                _addressService.InsertAddress(originAddress);
+            //load settings for chosen store scope
+            var storeScope = GetActiveStoreScopeConfiguration();
+            var shippingSettings = _settingService.LoadSetting<ShippingSettings>(storeScope);
+            shippingSettings = model.ToEntity(shippingSettings);
 
-            _shippingSettings.ShippingOriginAddressId = originAddress.Id;
-            _settingService.SaveSetting(_shippingSettings);
-            
+            /* We do not clear cache after each setting update.
+             * This behavior can increase performance because cached settings will not be cleared 
+             * and loaded from database after each update */
+
+            if (model.FreeShippingOverXEnabled_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(shippingSettings, x => x.FreeShippingOverXEnabled, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(shippingSettings, x => x.FreeShippingOverXEnabled, storeScope);
+
+            if (model.FreeShippingOverXValue_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(shippingSettings, x => x.FreeShippingOverXValue, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(shippingSettings, x => x.FreeShippingOverXValue, storeScope);
+
+            if (model.FreeShippingOverXIncludingTax_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(shippingSettings, x => x.FreeShippingOverXIncludingTax, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(shippingSettings, x => x.FreeShippingOverXIncludingTax, storeScope);
+
+            if (model.EstimateShippingEnabled_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(shippingSettings, x => x.EstimateShippingEnabled, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(shippingSettings, x => x.EstimateShippingEnabled, storeScope);
+
+            if (model.DisplayShipmentEventsToCustomers_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(shippingSettings, x => x.DisplayShipmentEventsToCustomers, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(shippingSettings, x => x.DisplayShipmentEventsToCustomers, storeScope);
+
+            if (model.ShippingOriginAddress_OverrideForStore || storeScope == 0)
+            {
+                //update address
+                var addressId = _settingService.SettingExists(shippingSettings, x => x.ShippingOriginAddressId, storeScope) ?
+                    shippingSettings.ShippingOriginAddressId : 0;
+                var originAddress = _addressService.GetAddressById(addressId) ??
+                    new Core.Domain.Common.Address()
+                    {
+                        CreatedOnUtc = DateTime.UtcNow,
+                    };
+                //update ID manually (in case we're in multi-store configuration mode it'll be set to the shared one)
+                model.ShippingOriginAddress.Id = addressId;
+                originAddress = model.ShippingOriginAddress.ToEntity(originAddress);
+                if (originAddress.Id > 0)
+                    _addressService.UpdateAddress(originAddress);
+                else
+                    _addressService.InsertAddress(originAddress);
+                shippingSettings.ShippingOriginAddressId = originAddress.Id;
+
+                _settingService.SaveSetting(shippingSettings, x => x.ShippingOriginAddressId, storeScope, false);
+            }
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(shippingSettings, x => x.ShippingOriginAddressId, storeScope);
+
+
+            //now clear settings cache
+            _settingService.ClearCache();
+
+
             //activity log
             _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
 
