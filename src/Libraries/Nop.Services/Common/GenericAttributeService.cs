@@ -17,7 +17,7 @@ namespace Nop.Services.Common
     {
         #region Constants
         
-        private const string GENERICATTRIBUTE_KEY = "Nop.genericattribute.{0}-{1}-{2}";
+        private const string GENERICATTRIBUTE_KEY = "Nop.genericattribute.{0}-{1}";
         private const string GENERICATTRIBUTE_PATTERN_KEY = "Nop.genericattribute.";
         #endregion
 
@@ -123,17 +123,15 @@ namespace Nop.Services.Common
         /// </summary>
         /// <param name="entityId">Entity identifier</param>
         /// <param name="keyGroup">Key group</param>
-        /// <param name="storeId">Store identifier; pass 0 if this attribute will be available for all stores</param>
         /// <returns>Get attributes</returns>
-        public virtual IList<GenericAttribute> GetAttributesForEntity(int entityId, string keyGroup, int storeId)
+        public virtual IList<GenericAttribute> GetAttributesForEntity(int entityId, string keyGroup)
         {
-            string key = string.Format(GENERICATTRIBUTE_KEY, entityId, keyGroup, storeId);
+            string key = string.Format(GENERICATTRIBUTE_KEY, entityId, keyGroup);
             return _cacheManager.Get(key, () =>
             {
                 var query = from ga in _genericAttributeRepository.Table
                             where ga.EntityId == entityId &&
-                            ga.KeyGroup == keyGroup &&
-                            ga.StoreId == storeId
+                            ga.KeyGroup == keyGroup
                             select ga;
                 var attributes = query.ToList();
                 return attributes;
@@ -155,7 +153,9 @@ namespace Nop.Services.Common
 
             string keyGroup = entity.GetUnproxiedEntityType().Name;
 
-            var props = GetAttributesForEntity(entity.Id, keyGroup, storeId);
+            var props = GetAttributesForEntity(entity.Id, keyGroup)
+                .Where(x => x.StoreId == storeId)
+                .ToList();
             var prop = props.FirstOrDefault(ga =>
                 ga.Key.Equals(key, StringComparison.InvariantCultureIgnoreCase)); //should be culture invariant
 

@@ -74,12 +74,12 @@ namespace Nop.Services.Tests.Helpers
                 Id = 10,
             };
 
-            _genericAttributeService.Expect(x => x.GetAttributesForEntity(customer.Id, "Customer", 0))
+            _genericAttributeService.Expect(x => x.GetAttributesForEntity(customer.Id, "Customer"))
                 .Return(new List<GenericAttribute>()
                             {
                                 new GenericAttribute()
                                     {
-                                        StoreId = _store.Id,
+                                        StoreId = 0,
                                         EntityId = customer.Id,
                                         Key = SystemCustomerAttributeNames.TimeZoneId,
                                         KeyGroup = "Customer",
@@ -102,12 +102,12 @@ namespace Nop.Services.Tests.Helpers
                 Id = 10,
             };
 
-            _genericAttributeService.Expect(x => x.GetAttributesForEntity(customer.Id, "Customer", _store.Id))
+            _genericAttributeService.Expect(x => x.GetAttributesForEntity(customer.Id, "Customer"))
                 .Return(new List<GenericAttribute>()
                             {
                                 new GenericAttribute()
                                     {
-                                        StoreId = _store.Id,
+                                        StoreId = 0,
                                         EntityId = customer.Id,
                                         Key = SystemCustomerAttributeNames.TimeZoneId,
                                         KeyGroup = "Customer",

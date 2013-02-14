@@ -39,9 +39,8 @@ namespace Nop.Services.Common
         /// </summary>
         /// <param name="entityId">Entity identifier</param>
         /// <param name="keyGroup">Key group</param>
-        /// <param name="storeId">Store identifier; pass 0 if this attribute will be available for all stores</param>
         /// <returns>Get attributes</returns>
-        IList<GenericAttribute> GetAttributesForEntity(int entityId, string keyGroup, int storeId);
+        IList<GenericAttribute> GetAttributesForEntity(int entityId, string keyGroup);
         
         /// <summary>
         /// Save attribute value
