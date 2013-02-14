@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
-using System.Web.Configuration;
+using System.Linq.Expressions;
+using System.Reflection;
 using System.Web.Mvc;
 using Nop.Admin.Models.Common;
 using Nop.Admin.Models.Settings;
+using Nop.Admin.Models.Stores;
 using Nop.Core;
+using Nop.Core.Configuration;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
@@ -19,8 +21,8 @@ using Nop.Core.Domain.Media;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
+using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Shipping;
-using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
@@ -40,7 +42,6 @@ using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Themes;
 using Nop.Web.Framework.UI.Captcha;
 using Telerik.Web.Mvc;
-using Nop.Core.Domain.Seo;
 
 namespace Nop.Admin.Controllers
 {
@@ -68,11 +69,12 @@ namespace Nop.Admin.Controllers
         private readonly IFulltextService _fulltextService;
         private readonly IMaintenanceService _maintenanceService;
         private readonly IStoreService _storeService;
+        private readonly IWorkContext _workContext;
+        private readonly IGenericAttributeService _genericAttributeService;
 
 
         private BlogSettings _blogSettings;
         private ForumSettings _forumSettings;
-        private NewsSettings _newsSettings;
         private ShippingSettings _shippingSettings;
         private TaxSettings _taxSettings;
         private CatalogSettings _catalogSettings;
@@ -89,7 +91,6 @@ namespace Nop.Admin.Controllers
         private readonly SecuritySettings _securitySettings;
         private readonly PdfSettings _pdfSettings;
         private readonly LocalizationSettings _localizationSettings;
-        private readonly AdminAreaSettings _adminAreaSettings;
         private readonly CaptchaSettings _captchaSettings;
         private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
 	    private readonly CommonSettings _commonSettings;
@@ -108,7 +109,8 @@ namespace Nop.Admin.Controllers
             ICustomerActivityService customerActivityService, IPermissionService permissionService,
             IWebHelper webHelper, IFulltextService fulltextService, 
             IMaintenanceService maintenanceService, IStoreService storeService,
-            BlogSettings blogSettings, ForumSettings forumSettings, NewsSettings newsSettings,
+            IWorkContext workContext, IGenericAttributeService genericAttributeService,
+            BlogSettings blogSettings, ForumSettings forumSettings,
             ShippingSettings shippingSettings, TaxSettings taxSettings,
             CatalogSettings catalogSettings, RewardPointsSettings rewardPointsSettings,
             CurrencySettings currencySettings, OrderSettings orderSettings,
@@ -116,8 +118,8 @@ namespace Nop.Admin.Controllers
             CustomerSettings customerSettings, AddressSettings addressSettings,
             DateTimeSettings dateTimeSettings, StoreInformationSettings storeInformationSettings,
             SeoSettings seoSettings,SecuritySettings securitySettings, PdfSettings pdfSettings,
-            LocalizationSettings localizationSettings, AdminAreaSettings adminAreaSettings,
-            CaptchaSettings captchaSettings, ExternalAuthenticationSettings externalAuthenticationSettings,
+            LocalizationSettings localizationSettings, CaptchaSettings captchaSettings,
+            ExternalAuthenticationSettings externalAuthenticationSettings,
             CommonSettings commonSettings)
         {
             this._settingService = settingService;
@@ -138,11 +140,12 @@ namespace Nop.Admin.Controllers
             this._webHelper = webHelper;
             this._fulltextService = fulltextService;
             this._maintenanceService = maintenanceService;
-            this._storeService= storeService;
+            this._storeService = storeService;
+            this._workContext = workContext;
+            this._genericAttributeService = genericAttributeService;
 
             this._blogSettings = blogSettings;
             this._forumSettings = forumSettings;
-            this._newsSettings = newsSettings;
             this._shippingSettings = shippingSettings;
             this._taxSettings = taxSettings;
             this._catalogSettings = catalogSettings;
@@ -159,7 +162,6 @@ namespace Nop.Admin.Controllers
             this._securitySettings = securitySettings;
             this._pdfSettings = pdfSettings;
             this._localizationSettings = localizationSettings;
-            this._adminAreaSettings = adminAreaSettings;
             this._captchaSettings = captchaSettings;
             this._externalAuthenticationSettings = externalAuthenticationSettings;
             this._commonSettings = commonSettings;
@@ -168,6 +170,55 @@ namespace Nop.Admin.Controllers
 		#endregion 
         
         #region Methods
+        
+        [NonAction]
+        private int GetActiveStoreScopeConfiguration()
+        {
+            //ensure that we have 2 (or more) stores
+            if (_storeService.GetAllStores().Count < 2)
+                return 0;
+
+
+            var storeId = _workContext.CurrentCustomer.GetAttribute<int>(SystemCustomerAttributeNames.AdminAreaStoreScopeConfiguration);
+            var store = _storeService.GetStoreById(storeId);
+            return store != null ? store.Id : 0;
+        }
+        [ChildActionOnly]
+        public ActionResult StoreScopeConfiguration()
+        {
+            var allStores = _storeService.GetAllStores();
+            if (allStores.Count < 2)
+                return Content("");
+
+            var model = new StoreScopeConfigurationModel();
+            foreach (var s in allStores)
+            {
+                model.Stores.Add(new StoreModel()
+                {
+                    Id = s.Id,
+                    Name = s.Name
+                });
+            }
+            model.StoreId = GetActiveStoreScopeConfiguration();
+
+            return PartialView(model);
+        }
+        public ActionResult ChangeStoreScopeConfiguration(int storeid, string returnUrl = "")
+        {
+            var store = _storeService.GetStoreById(storeid);
+            if (store != null || storeid == 0)
+            {
+                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
+                    SystemCustomerAttributeNames.AdminAreaStoreScopeConfiguration, storeid);
+            }
+            //url referrer
+            if (String.IsNullOrEmpty(returnUrl))
+                returnUrl = _webHelper.GetUrlReferrer();
+            //home page
+            if (String.IsNullOrEmpty(returnUrl))
+                returnUrl = Url.Action("Index", "Home");
+            return Redirect(returnUrl);
+        }
 
         public ActionResult Blog()
         {
@@ -229,7 +280,21 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
-            var model = _newsSettings.ToModel();
+            //load settings for chosen store scope
+            var storeScope = GetActiveStoreScopeConfiguration();
+            var newsSettings = _settingService.LoadSetting<NewsSettings>(storeScope);
+            var model = newsSettings.ToModel();
+            model.ActiveStoreScopeConfiguration = storeScope;
+            if (storeScope > 0)
+            {
+                model.Enabled_OverrideForStore = _settingService.SettingExists(newsSettings, x => newsSettings.Enabled, storeScope);
+                model.AllowNotRegisteredUsersToLeaveComments_OverrideForStore = _settingService.SettingExists(newsSettings, x => newsSettings.AllowNotRegisteredUsersToLeaveComments, storeScope);
+                model.NotifyAboutNewNewsComments_OverrideForStore = _settingService.SettingExists(newsSettings, x => newsSettings.NotifyAboutNewNewsComments, storeScope);
+                model.ShowNewsOnMainPage_OverrideForStore = _settingService.SettingExists(newsSettings, x => newsSettings.ShowNewsOnMainPage, storeScope);
+                model.MainPageNewsCount_OverrideForStore = _settingService.SettingExists(newsSettings, x => newsSettings.MainPageNewsCount, storeScope);
+                model.NewsArchivePageSize_OverrideForStore = _settingService.SettingExists(newsSettings, x => newsSettings.NewsArchivePageSize, storeScope);
+                model.ShowHeaderRssUrl_OverrideForStore = _settingService.SettingExists(newsSettings, x => newsSettings.ShowHeaderRssUrl, storeScope);
+            }
             return View(model);
         }
         [HttpPost]
@@ -238,8 +303,52 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
-            _newsSettings = model.ToEntity(_newsSettings);
-            _settingService.SaveSetting(_newsSettings);
+            //load settings for chosen store scope
+            var storeScope = GetActiveStoreScopeConfiguration();
+            var newsSettings = _settingService.LoadSetting<NewsSettings>(storeScope);
+            newsSettings = model.ToEntity(newsSettings);
+
+            /* We do not clear cache after each setting update.
+             * This behavior can increase performance because cached settings will not be cleared 
+             * and loaded from database after each update */
+            if (model.Enabled_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(newsSettings, x => x.Enabled, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(newsSettings, x => x.Enabled, storeScope);
+
+            if (model.AllowNotRegisteredUsersToLeaveComments_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(newsSettings, x => x.AllowNotRegisteredUsersToLeaveComments, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(newsSettings, x => x.AllowNotRegisteredUsersToLeaveComments, storeScope);
+
+            if (model.NotifyAboutNewNewsComments_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(newsSettings, x => x.NotifyAboutNewNewsComments, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(newsSettings, x => x.NotifyAboutNewNewsComments, storeScope);
+
+            if (model.ShowNewsOnMainPage_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(newsSettings, x => x.ShowNewsOnMainPage, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(newsSettings, x => x.ShowNewsOnMainPage, storeScope);
+
+            if (model.MainPageNewsCount_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(newsSettings, x => x.MainPageNewsCount, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(newsSettings, x => x.MainPageNewsCount, storeScope);
+
+            if (model.NewsArchivePageSize_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(newsSettings, x => x.NewsArchivePageSize, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(newsSettings, x => x.NewsArchivePageSize, storeScope);
+
+            if (model.ShowHeaderRssUrl_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(newsSettings, x => x.ShowHeaderRssUrl, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(newsSettings, x => x.ShowHeaderRssUrl, storeScope);
+
+            //now clear settings cache
+            _settingService.ClearCache();
+
 
             //activity log
             _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));

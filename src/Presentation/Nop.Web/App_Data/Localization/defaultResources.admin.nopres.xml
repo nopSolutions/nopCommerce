@@ -5608,6 +5608,22 @@
                                     </LocaleResource>
                                 </Children>
                             </LocaleResource>
+                            <LocaleResource Name="StoreScope">
+                                <Value>Multi-store configuration for</Value>
+                                <Children>
+                                    <LocaleResource Name="AllStores">
+                                        <Value>All stores</Value>
+                                    </LocaleResource>
+                                    <LocaleResource Name="CheckAll">
+                                        <Value>Check/uncheck all</Value>
+                                        <Children>
+                                          <LocaleResource Name="Hint">
+                                              <Value>(check boxes if you want to set a custom value for this shop)</Value>
+                                          </LocaleResource>
+                                        </Children>
+                                    </LocaleResource>
+                                </Children>
+                            </LocaleResource>
                             <LocaleResource Name="Tax">
                                 <Value>Tax settings</Value>
                                 <Children>

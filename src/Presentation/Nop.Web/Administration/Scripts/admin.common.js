@@ -40,6 +40,40 @@ function showThrobber(message) {
 }
 
 $(document).ready(function () {
+    $('.multi-store-override-option').each(function (k, v) {
+        checkOverridenStoreValue(v, $(v).attr('data-for-input-id'));
+    });
+});
+
+function checkAllOverridenStoreValue(item) {
+    $('.multi-store-override-option').each(function (k, v) {
+        $(v).attr('checked', item.checked);
+        checkOverridenStoreValue(v, $(v).attr('data-for-input-id'));
+    });
+}
+
+function checkOverridenStoreValue(obj, key) {
+    if (!$(obj).is(':checked')) {
+        $('#' + key).attr('disabled', true);
+        //Telerik elements are enabled/disabled some other way
+        var telerikElement = $('#' + key).data("tTextBox");
+        if (telerikElement !== undefined) {
+            telerikElement.disable();
+        }
+    }
+    else {
+        $('#' + key).removeAttr('disabled');
+        //Telerik elements are enabled/disabled some other way
+        var telerikElement = $('#' + key).data("tTextBox");
+        if (telerikElement !== undefined) {
+            telerikElement.enable();
+        }
+    };
+}
+
+
+
+$(document).ready(function () {
     //Setup the ajax indicator
     //TODO We'll not be able to load ajax-loading.gif when site is run in virtual directory. Fix it by creating CSS style
     $('body').append('<div id="ajaxBusy"><p><img src="/administration/content/images/ajax-loading.gif"></p></div>');

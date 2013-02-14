@@ -1,0 +1,33 @@
+﻿@model StoreScopeConfigurationModel
+@using Nop.Core
+@{
+    var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+
+    var stores = Model.Stores.Select(store => new SelectListItem
+        {
+            Text = store.Name,
+            Value = webHelper.ModifyQueryString(Url.Action("ChangeStoreScopeConfiguration", new { storeid = store.Id }), "returnurl=" + HttpUtility.UrlEncode(HttpContext.Current.Request.RawUrl), null),
+            Selected = store.Id.Equals(Model.StoreId)
+        })
+        .ToList();
+    stores.Insert(0, new SelectListItem()
+    {
+        Text = T("Admin.Configuration.Settings.StoreScope.AllStores").Text,
+        Value = webHelper.ModifyQueryString(Url.Action("ChangeStoreScopeConfiguration", new { storeid = 0 }), "returnurl=" + HttpUtility.UrlEncode(HttpContext.Current.Request.RawUrl), null),
+        Selected = 0.Equals(Model.StoreId)
+    });
+}
+<div class="multi-store-scope">
+    <div class="selector">
+        <span class="title">@T("Admin.Configuration.Settings.StoreScope")</span>
+        @Html.DropDownList("store-scope-configuration", stores, new { onchange = "setLocation(this.value);" })
+    </div>
+    @if (Model.StoreId > 0)
+    {
+        <div class="check-all">
+            <input type="checkbox" style="vertical-align: text-top" onclick="checkAllOverridenStoreValue(this)">
+            <b>@T("Admin.Configuration.Settings.StoreScope.CheckAll")</b> @T("Admin.Configuration.Settings.StoreScope.CheckAll.Hint")
+        </div>
+    }
+</div>
+
