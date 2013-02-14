@@ -73,7 +73,6 @@ namespace Nop.Admin.Controllers
         private readonly IGenericAttributeService _genericAttributeService;
 
 
-        private BlogSettings _blogSettings;
         private ShippingSettings _shippingSettings;
         private TaxSettings _taxSettings;
         private CatalogSettings _catalogSettings;
@@ -109,7 +108,6 @@ namespace Nop.Admin.Controllers
             IWebHelper webHelper, IFulltextService fulltextService, 
             IMaintenanceService maintenanceService, IStoreService storeService,
             IWorkContext workContext, IGenericAttributeService genericAttributeService,
-            BlogSettings blogSettings, 
             ShippingSettings shippingSettings, TaxSettings taxSettings,
             CatalogSettings catalogSettings, RewardPointsSettings rewardPointsSettings,
             CurrencySettings currencySettings, OrderSettings orderSettings,
@@ -143,7 +141,6 @@ namespace Nop.Admin.Controllers
             this._workContext = workContext;
             this._genericAttributeService = genericAttributeService;
 
-            this._blogSettings = blogSettings;
             this._shippingSettings = shippingSettings;
             this._taxSettings = taxSettings;
             this._catalogSettings = catalogSettings;
@@ -223,7 +220,21 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
-            var model = _blogSettings.ToModel();
+            //load settings for chosen store scope
+            var storeScope = GetActiveStoreScopeConfiguration();
+            var blogSettings = _settingService.LoadSetting<BlogSettings>(storeScope);
+            var model = blogSettings.ToModel();
+            model.ActiveStoreScopeConfiguration = storeScope;
+            if (storeScope > 0)
+            {
+                model.Enabled_OverrideForStore = _settingService.SettingExists(blogSettings, x => x.Enabled, storeScope);
+                model.PostsPageSize_OverrideForStore = _settingService.SettingExists(blogSettings, x => x.PostsPageSize, storeScope);
+                model.AllowNotRegisteredUsersToLeaveComments_OverrideForStore = _settingService.SettingExists(blogSettings, x => x.AllowNotRegisteredUsersToLeaveComments, storeScope);
+                model.NotifyAboutNewBlogComments_OverrideForStore = _settingService.SettingExists(blogSettings, x => x.NotifyAboutNewBlogComments, storeScope);
+                model.NumberOfTags_OverrideForStore = _settingService.SettingExists(blogSettings, x => x.NumberOfTags, storeScope);
+                model.ShowHeaderRssUrl_OverrideForStore = _settingService.SettingExists(blogSettings, x => x.ShowHeaderRssUrl, storeScope);
+            }
+
             return View(model);
         }
         [HttpPost]
@@ -232,8 +243,46 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
-            _blogSettings = model.ToEntity(_blogSettings);
-            _settingService.SaveSetting(_blogSettings);
+            //load settings for chosen store scope
+            var storeScope = GetActiveStoreScopeConfiguration();
+            var blogSettings = _settingService.LoadSetting<BlogSettings>(storeScope);
+            blogSettings = model.ToEntity(blogSettings);
+
+            /* We do not clear cache after each setting update.
+             * This behavior can increase performance because cached settings will not be cleared 
+             * and loaded from database after each update */
+            if (model.Enabled_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(blogSettings, x => x.Enabled, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(blogSettings, x => x.Enabled, storeScope);
+            
+            if (model.PostsPageSize_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(blogSettings, x => x.PostsPageSize, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(blogSettings, x => x.PostsPageSize, storeScope);
+            
+            if (model.AllowNotRegisteredUsersToLeaveComments_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(blogSettings, x => x.AllowNotRegisteredUsersToLeaveComments, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(blogSettings, x => x.AllowNotRegisteredUsersToLeaveComments, storeScope);
+            
+            if (model.NotifyAboutNewBlogComments_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(blogSettings, x => x.NotifyAboutNewBlogComments, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(blogSettings, x => x.NotifyAboutNewBlogComments, storeScope);
+            
+            if (model.NumberOfTags_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(blogSettings, x => x.NumberOfTags, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(blogSettings, x => x.NumberOfTags, storeScope);
+            
+            if (model.ShowHeaderRssUrl_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(blogSettings, x => x.ShowHeaderRssUrl, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(blogSettings, x => x.ShowHeaderRssUrl, storeScope);
+            
+            //now clear settings cache
+            _settingService.ClearCache();
 
             //activity log
             _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
