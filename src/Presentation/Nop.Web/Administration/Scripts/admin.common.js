@@ -41,34 +41,38 @@ function showThrobber(message) {
 
 $(document).ready(function () {
     $('.multi-store-override-option').each(function (k, v) {
-        checkOverridenStoreValue(v, $(v).attr('data-for-input-id'));
+        checkOverridenStoreValue(v, $(v).attr('data-for-input-selector'));
     });
 });
 
 function checkAllOverridenStoreValue(item) {
     $('.multi-store-override-option').each(function (k, v) {
         $(v).attr('checked', item.checked);
-        checkOverridenStoreValue(v, $(v).attr('data-for-input-id'));
+        checkOverridenStoreValue(v, $(v).attr('data-for-input-selector'));
     });
 }
 
-function checkOverridenStoreValue(obj, key) {
-    var elements = $('#' + key + ', #' + key + ' input, #' + key + ' textarea, #' + key + ' select');
+function checkOverridenStoreValue(obj, selector) {
+    var elementsArray = selector.split(",");
     if (!$(obj).is(':checked')) {
-        elements.attr('disabled', true);
+        $(selector).attr('disabled', true);
         //Telerik elements are enabled/disabled some other way
-        var telerikElements = elements.data("tTextBox");
-        if (telerikElements !== undefined) {
-            telerikElements.disable();
-        }
+        $.each(elementsArray, function(key, value) {
+            var telerikElement = $(value).data("tTextBox");
+            if (telerikElement !== undefined && telerikElement !== null) {
+                telerikElement.disable();
+            }
+        }); 
     }
     else {
-        elements.removeAttr('disabled');
+        $(selector).removeAttr('disabled');
         //Telerik elements are enabled/disabled some other way
-        var telerikElements = elements.data("tTextBox");
-        if (telerikElements !== undefined) {
-            telerikElements.enable();
-        }
+        $.each(elementsArray, function(key, value) {
+            var telerikElement = $(value).data("tTextBox");
+            if (telerikElement !== undefined && telerikElement !== null) {
+                telerikElement.enable();
+            }
+        });
     };
 }
 

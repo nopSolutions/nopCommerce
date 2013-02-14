@@ -21,11 +21,7 @@ namespace Nop.Web.Framework
 {
     public static class HtmlExtensions
     {
-        public static MvcHtmlString ResolveUrl(this HtmlHelper htmlHelper, string url)
-        {
-            var urlHelper = new UrlHelper(htmlHelper.ViewContext.RequestContext);
-            return MvcHtmlString.Create(urlHelper.Content(url));
-        }
+        #region Admin area extensions
 
         public static MvcHtmlString Hint(this HtmlHelper helper, string value)
         {
@@ -147,46 +143,88 @@ namespace Nop.Web.Framework
             return MvcHtmlString.Create(result.ToString());
         }
 
-        public static MvcHtmlString OverrideStoreCheckboxFor<TModel, TValue>(this HtmlHelper<TModel> helper, 
+        public static MvcHtmlString OverrideStoreCheckboxFor<TModel, TValue>(this HtmlHelper<TModel> helper,
             Expression<Func<TModel, bool>> expression,
-            Expression<Func<TModel, TValue>> forInputExpression, 
+            Expression<Func<TModel, TValue>> forInputExpression,
             int activeStoreScopeConfiguration)
         {
+            var dataInputIds = new List<string>();
+            dataInputIds.Add(helper.FieldIdFor(forInputExpression));
+            return OverrideStoreCheckboxFor(helper, expression, activeStoreScopeConfiguration, null, dataInputIds.ToArray());
+        }
+        public static MvcHtmlString OverrideStoreCheckboxFor<TModel, TValue1, TValue2>(this HtmlHelper<TModel> helper,
+            Expression<Func<TModel, bool>> expression,
+            Expression<Func<TModel, TValue1>> forInputExpression1,
+            Expression<Func<TModel, TValue2>> forInputExpression2,
+            int activeStoreScopeConfiguration)
+        {
+            var dataInputIds = new List<string>();
+            dataInputIds.Add(helper.FieldIdFor(forInputExpression1));
+            dataInputIds.Add(helper.FieldIdFor(forInputExpression2));
+            return OverrideStoreCheckboxFor(helper, expression, activeStoreScopeConfiguration, null, dataInputIds.ToArray());
+        }
+        public static MvcHtmlString OverrideStoreCheckboxFor<TModel, TValue1, TValue2, TValue3>(this HtmlHelper<TModel> helper,
+            Expression<Func<TModel, bool>> expression,
+            Expression<Func<TModel, TValue1>> forInputExpression1,
+            Expression<Func<TModel, TValue2>> forInputExpression2,
+            Expression<Func<TModel, TValue3>> forInputExpression3,
+            int activeStoreScopeConfiguration)
+        {
+            var dataInputIds = new List<string>();
+            dataInputIds.Add(helper.FieldIdFor(forInputExpression1));
+            dataInputIds.Add(helper.FieldIdFor(forInputExpression2));
+            dataInputIds.Add(helper.FieldIdFor(forInputExpression3));
+            return OverrideStoreCheckboxFor(helper, expression, activeStoreScopeConfiguration, null, dataInputIds.ToArray());
+        }
+        public static MvcHtmlString OverrideStoreCheckboxFor<TModel>(this HtmlHelper<TModel> helper,
+            Expression<Func<TModel, bool>> expression,
+            string parentContainer,
+            int activeStoreScopeConfiguration)
+        {
+            return OverrideStoreCheckboxFor(helper, expression, activeStoreScopeConfiguration, parentContainer);
+        }
+        private static MvcHtmlString OverrideStoreCheckboxFor<TModel>(this HtmlHelper<TModel> helper,
+            Expression<Func<TModel, bool>> expression,
+            int activeStoreScopeConfiguration,
+            string parentContainer = null,
+            params string[] datainputIds)
+        {
+            if (String.IsNullOrEmpty(parentContainer) && datainputIds == null)
+                throw new ArgumentException("Specify at least one selector");
+
             var result = new StringBuilder();
             if (activeStoreScopeConfiguration > 0)
             {
                 //render only when a certain store is chosen
                 const string cssClass = "multi-store-override-option";
-                var dataInputId = helper.FieldIdFor(forInputExpression);
-                var onClick = string.Format("checkOverridenStoreValue(this, '{0}')", helper.FieldIdFor(forInputExpression));
+                string dataInputSelector = "";
+                if (!String.IsNullOrEmpty(parentContainer))
+                {
+                    dataInputSelector = "#" + parentContainer + " input, #" + parentContainer + " textarea, #" + parentContainer + " select";
+                }
+                if (datainputIds != null && datainputIds.Length > 0)
+                {
+                    dataInputSelector = "#" + String.Join(", #", datainputIds);
+                }
+                var onClick = string.Format("checkOverridenStoreValue(this, '{0}')", dataInputSelector);
                 result.Append(helper.CheckBoxFor(expression, new Dictionary<string, object>
                 {
                     { "class", cssClass },
                     { "onclick", onClick },
-                    { "data-for-input-id", dataInputId },
+                    { "data-for-input-selector", dataInputSelector },
                 }));
             }
             return MvcHtmlString.Create(result.ToString());
         }
 
-        public static MvcHtmlString OverrideStoreCheckboxFor<TModel>(this HtmlHelper<TModel> helper,
-            Expression<Func<TModel, bool>> expression,
-            string dataInputId, int activeStoreScopeConfiguration)
+        #endregion
+
+        #region Common extensions
+
+        public static MvcHtmlString ResolveUrl(this HtmlHelper htmlHelper, string url)
         {
-            var result = new StringBuilder();
-            if (activeStoreScopeConfiguration > 0)
-            {
-                //render only when a certain store is chosen
-                const string cssClass = "multi-store-override-option";
-                var onClick = string.Format("checkOverridenStoreValue(this, '{0}')", dataInputId);
-                result.Append(helper.CheckBoxFor(expression, new Dictionary<string, object>
-                {
-                    { "class", cssClass },
-                    { "onclick", onClick },
-                    { "data-for-input-id", dataInputId },
-                }));
-            }
-            return MvcHtmlString.Create(result.ToString());
+            var urlHelper = new UrlHelper(htmlHelper.ViewContext.RequestContext);
+            return MvcHtmlString.Create(urlHelper.Content(url));
         }
 
         public static MvcHtmlString RequiredHint(this HtmlHelper helper, string additionalText = null)
@@ -299,6 +337,8 @@ namespace Nop.Web.Framework
         {
             return helper.Action("WidgetsByZone", "Widget", new { widgetZone = widgetZone });
         }
+
+        #endregion
     }
 }
 

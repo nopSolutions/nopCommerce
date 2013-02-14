@@ -75,7 +75,6 @@ namespace Nop.Admin.Controllers
 
         private TaxSettings _taxSettings;
         private CatalogSettings _catalogSettings;
-        private RewardPointsSettings _rewardPointsSettings;
         private readonly CurrencySettings _currencySettings;
         private OrderSettings _orderSettings;
         private ShoppingCartSettings _shoppingCartSettings;
@@ -108,7 +107,7 @@ namespace Nop.Admin.Controllers
             IMaintenanceService maintenanceService, IStoreService storeService,
             IWorkContext workContext, IGenericAttributeService genericAttributeService,
             TaxSettings taxSettings,
-            CatalogSettings catalogSettings, RewardPointsSettings rewardPointsSettings,
+            CatalogSettings catalogSettings, 
             CurrencySettings currencySettings, OrderSettings orderSettings,
             ShoppingCartSettings shoppingCartSettings, MediaSettings mediaSettings,
             CustomerSettings customerSettings, AddressSettings addressSettings,
@@ -142,7 +141,6 @@ namespace Nop.Admin.Controllers
 
             this._taxSettings = taxSettings;
             this._catalogSettings = catalogSettings;
-            this._rewardPointsSettings = rewardPointsSettings;
             this._currencySettings = currencySettings;
             this._orderSettings = orderSettings;
             this._shoppingCartSettings = shoppingCartSettings;
@@ -608,7 +606,6 @@ namespace Nop.Admin.Controllers
             /* We do not clear cache after each setting update.
              * This behavior can increase performance because cached settings will not be cleared 
              * and loaded from database after each update */
-
             if (model.FreeShippingOverXEnabled_OverrideForStore || storeScope == 0)
                 _settingService.SaveSetting(shippingSettings, x => x.FreeShippingOverXEnabled, storeScope, false);
             else if (storeScope > 0)
@@ -787,8 +784,25 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
-            var model = _rewardPointsSettings.ToModel();
+
+            //load settings for chosen store scope
+            var storeScope = GetActiveStoreScopeConfiguration();
+            var rewardPointsSettings = _settingService.LoadSetting<RewardPointsSettings>(storeScope);
+            var model = rewardPointsSettings.ToModel();
             model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
+            model.ActiveStoreScopeConfiguration = storeScope;
+            if (storeScope > 0)
+            {
+                model.Enabled_OverrideForStore = _settingService.SettingExists(rewardPointsSettings, x => x.Enabled, storeScope);
+                model.ExchangeRate_OverrideForStore = _settingService.SettingExists(rewardPointsSettings, x => x.ExchangeRate, storeScope);
+                model.MinimumRewardPointsToUse_OverrideForStore = _settingService.SettingExists(rewardPointsSettings, x => x.MinimumRewardPointsToUse, storeScope);
+                model.PointsForRegistration_OverrideForStore = _settingService.SettingExists(rewardPointsSettings, x => x.PointsForRegistration, storeScope);
+                model.PointsForPurchases_OverrideForStore = _settingService.SettingExists(rewardPointsSettings, x => x.PointsForPurchases_Amount, storeScope) ||
+                    _settingService.SettingExists(rewardPointsSettings, x => x.PointsForPurchases_Points, storeScope);
+                model.PointsForPurchases_Awarded_OverrideForStore = _settingService.SettingExists(rewardPointsSettings, x => x.PointsForPurchases_Awarded, storeScope);
+                model.PointsForPurchases_Canceled_OverrideForStore = _settingService.SettingExists(rewardPointsSettings, x => x.PointsForPurchases_Canceled, storeScope);
+            }
+
             return View(model);
         }
         [HttpPost]
@@ -797,19 +811,70 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
-            model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
-
+            //load settings for chosen store scope
+            var storeScope = GetActiveStoreScopeConfiguration();
             if (ModelState.IsValid)
             {
-                _rewardPointsSettings = model.ToEntity(_rewardPointsSettings);
-                _settingService.SaveSetting(_rewardPointsSettings);
+                var rewardPointsSettings = _settingService.LoadSetting<RewardPointsSettings>(storeScope);
+                rewardPointsSettings = model.ToEntity(rewardPointsSettings);
+
+                /* We do not clear cache after each setting update.
+                 * This behavior can increase performance because cached settings will not be cleared 
+                 * and loaded from database after each update */
+                if (model.Enabled_OverrideForStore || storeScope == 0)
+                    _settingService.SaveSetting(rewardPointsSettings, x => x.Enabled, storeScope, false);
+                else if (storeScope > 0)
+                    _settingService.DeleteSetting(rewardPointsSettings, x => x.Enabled, storeScope);
+                
+                if (model.ExchangeRate_OverrideForStore || storeScope == 0)
+                    _settingService.SaveSetting(rewardPointsSettings, x => x.ExchangeRate, storeScope, false);
+                else if (storeScope > 0)
+                    _settingService.DeleteSetting(rewardPointsSettings, x => x.ExchangeRate, storeScope);
+                
+                if (model.MinimumRewardPointsToUse_OverrideForStore || storeScope == 0)
+                    _settingService.SaveSetting(rewardPointsSettings, x => x.MinimumRewardPointsToUse, storeScope, false);
+                else if (storeScope > 0)
+                    _settingService.DeleteSetting(rewardPointsSettings, x => x.MinimumRewardPointsToUse, storeScope);
+                
+                if (model.PointsForRegistration_OverrideForStore || storeScope == 0)
+                    _settingService.SaveSetting(rewardPointsSettings, x => x.PointsForRegistration, storeScope, false);
+                else if (storeScope > 0)
+                    _settingService.DeleteSetting(rewardPointsSettings, x => x.PointsForRegistration, storeScope);
+                
+                if (model.PointsForPurchases_OverrideForStore || storeScope == 0)
+                    _settingService.SaveSetting(rewardPointsSettings, x => x.PointsForPurchases_Amount, storeScope, false);
+                else if (storeScope > 0)
+                    _settingService.DeleteSetting(rewardPointsSettings, x => x.PointsForPurchases_Amount, storeScope);
+
+                if (model.PointsForPurchases_OverrideForStore || storeScope == 0)
+                    _settingService.SaveSetting(rewardPointsSettings, x => x.PointsForPurchases_Points, storeScope, false);
+                else if (storeScope > 0)
+                    _settingService.DeleteSetting(rewardPointsSettings, x => x.PointsForPurchases_Points, storeScope);
+                
+                if (model.PointsForPurchases_Awarded_OverrideForStore || storeScope == 0)
+                    _settingService.SaveSetting(rewardPointsSettings, x => x.PointsForPurchases_Awarded, storeScope, false);
+                else if (storeScope > 0)
+                    _settingService.DeleteSetting(rewardPointsSettings, x => x.PointsForPurchases_Awarded, storeScope);
+                
+                if (model.PointsForPurchases_Canceled_OverrideForStore || storeScope == 0)
+                    _settingService.SaveSetting(rewardPointsSettings, x => x.PointsForPurchases_Canceled, storeScope, false);
+                else if (storeScope > 0)
+                    _settingService.DeleteSetting(rewardPointsSettings, x => x.PointsForPurchases_Canceled, storeScope);
+
+                //now clear settings cache
+                _settingService.ClearCache();
 
                 //activity log
                 _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
-                
-                SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"), false);
+
+                SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
+                return RedirectToAction("RewardPoints");
             }
-            
+
+            //If we got this far, something failed, redisplay form
+            model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
+            model.ActiveStoreScopeConfiguration = storeScope;
+
             return View(model);
         }
 
