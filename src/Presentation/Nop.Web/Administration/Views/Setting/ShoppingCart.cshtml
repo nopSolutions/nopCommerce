@@ -1,5 +1,4 @@
 ﻿@model ShoppingCartSettingsModel
-@using Telerik.Web.Mvc.UI;
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.ShoppingCart").Text;
@@ -46,11 +45,12 @@
         }
         
     </script>
-    
-@Html.ValidationSummary(false)
+    @Html.Action("StoreScopeConfiguration", "Setting")
+    @Html.ValidationSummary(false)
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.DisplayCartAfterAddingProduct_OverrideForStore, model => model.DisplayCartAfterAddingProduct, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.DisplayCartAfterAddingProduct):
             </td>
             <td class="adminData">
@@ -60,6 +60,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.DisplayWishlistAfterAddingProduct_OverrideForStore, model => model.DisplayWishlistAfterAddingProduct, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.DisplayWishlistAfterAddingProduct):
             </td>
             <td class="adminData">
@@ -69,6 +70,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.AllowOutOfStockItemsToBeAddedToWishlist_OverrideForStore, model => model.AllowOutOfStockItemsToBeAddedToWishlist, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.AllowOutOfStockItemsToBeAddedToWishlist):
             </td>
             <td class="adminData">
@@ -78,6 +80,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.MaximumShoppingCartItems_OverrideForStore, model => model.MaximumShoppingCartItems, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.MaximumShoppingCartItems):
             </td>
             <td class="adminData">
@@ -87,6 +90,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.MaximumWishlistItems_OverrideForStore, model => model.MaximumWishlistItems, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.MaximumWishlistItems):
             </td>
             <td class="adminData">
@@ -96,6 +100,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.MoveItemsFromWishlistToCart_OverrideForStore, model => model.MoveItemsFromWishlistToCart, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.MoveItemsFromWishlistToCart):
             </td>
             <td class="adminData">
@@ -105,6 +110,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ShowProductImagesOnShoppingCart_OverrideForStore, model => model.ShowProductImagesOnShoppingCart, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ShowProductImagesOnShoppingCart):
             </td>
             <td class="adminData">
@@ -114,6 +120,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ShowProductImagesOnWishList_OverrideForStore, model => model.ShowProductImagesOnWishList, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ShowProductImagesOnWishList):
             </td>
             <td class="adminData">
@@ -123,6 +130,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ShowDiscountBox_OverrideForStore, model => model.ShowDiscountBox, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ShowDiscountBox):
             </td>
             <td class="adminData">
@@ -132,6 +140,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ShowGiftCardBox_OverrideForStore, model => model.ShowGiftCardBox, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ShowGiftCardBox):
             </td>
             <td class="adminData">
@@ -141,6 +150,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.CrossSellsNumber_OverrideForStore, model => model.CrossSellsNumber, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.CrossSellsNumber):
             </td>
             <td class="adminData">
@@ -150,6 +160,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.EmailWishlistEnabled_OverrideForStore, model => model.EmailWishlistEnabled, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.EmailWishlistEnabled):
             </td>
             <td class="adminData">
@@ -159,6 +170,7 @@
         </tr>
         <tr id="pnlAllowAnonymousUsersToEmailWishlist">
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.AllowAnonymousUsersToEmailWishlist_OverrideForStore, model => model.AllowAnonymousUsersToEmailWishlist, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.AllowAnonymousUsersToEmailWishlist):
             </td>
             <td class="adminData">
@@ -168,6 +180,7 @@
         </tr>        
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.MiniShoppingCartEnabled_OverrideForStore, model => model.MiniShoppingCartEnabled, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.MiniShoppingCartEnabled):
             </td>
             <td class="adminData">
@@ -177,6 +190,7 @@
         </tr>
         <tr id="pnlMiniShoppingCartProductNumber">
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.MiniShoppingCartProductNumber_OverrideForStore, model => model.MiniShoppingCartProductNumber, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.MiniShoppingCartProductNumber):
             </td>
             <td class="adminData">
@@ -186,6 +200,7 @@
         </tr>
         <tr id="pnlShowProductImagesInMiniShoppingCart">
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ShowProductImagesInMiniShoppingCart_OverrideForStore, model => model.ShowProductImagesInMiniShoppingCart, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ShowProductImagesInMiniShoppingCart):
             </td>
             <td class="adminData">
