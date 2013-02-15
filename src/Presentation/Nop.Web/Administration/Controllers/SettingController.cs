@@ -77,7 +77,6 @@ namespace Nop.Admin.Controllers
         private CatalogSettings _catalogSettings;
         private readonly CurrencySettings _currencySettings;
         private ShoppingCartSettings _shoppingCartSettings;
-        private MediaSettings _mediaSettings;
         private CustomerSettings _customerSettings;
         private AddressSettings _addressSettings;
         private readonly DateTimeSettings _dateTimeSettings;
@@ -108,7 +107,7 @@ namespace Nop.Admin.Controllers
             TaxSettings taxSettings,
             CatalogSettings catalogSettings, 
             CurrencySettings currencySettings,
-            ShoppingCartSettings shoppingCartSettings, MediaSettings mediaSettings,
+            ShoppingCartSettings shoppingCartSettings,
             CustomerSettings customerSettings, AddressSettings addressSettings,
             DateTimeSettings dateTimeSettings, StoreInformationSettings storeInformationSettings,
             SeoSettings seoSettings,SecuritySettings securitySettings, PdfSettings pdfSettings,
@@ -142,7 +141,6 @@ namespace Nop.Admin.Controllers
             this._catalogSettings = catalogSettings;
             this._currencySettings = currencySettings;
             this._shoppingCartSettings = shoppingCartSettings;
-            this._mediaSettings = mediaSettings;
             this._customerSettings = customerSettings;
             this._addressSettings = addressSettings;
             this._dateTimeSettings = dateTimeSettings;
@@ -1070,7 +1068,24 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
-            var model = _mediaSettings.ToModel();
+            //load settings for a chosen store scope
+            var storeScope = GetActiveStoreScopeConfiguration();
+            var mediaSettings = _settingService.LoadSetting<MediaSettings>(storeScope);
+            var model = mediaSettings.ToModel();
+            model.ActiveStoreScopeConfiguration = storeScope;
+            if (storeScope > 0)
+            {
+                model.AvatarPictureSize_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.AvatarPictureSize, storeScope);
+                model.ProductThumbPictureSize_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.ProductThumbPictureSize, storeScope);
+                model.ProductDetailsPictureSize_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.ProductDetailsPictureSize, storeScope);
+                model.ProductThumbPictureSizeOnProductDetailsPage_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.ProductThumbPictureSizeOnProductDetailsPage, storeScope);
+                model.ProductVariantPictureSize_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.ProductVariantPictureSize, storeScope);
+                model.CategoryThumbPictureSize_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.CategoryThumbPictureSize, storeScope);
+                model.ManufacturerThumbPictureSize_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.ManufacturerThumbPictureSize, storeScope);
+                model.CartThumbPictureSize_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.CartThumbPictureSize, storeScope);
+                model.MiniCartThumbPictureSize_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.MiniCartThumbPictureSize, storeScope);
+                model.MaximumImageSize_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.MaximumImageSize, storeScope);
+            }
             model.PicturesStoredIntoDatabase = _pictureService.StoreInDb;
             return View(model);
         }
@@ -1081,9 +1096,67 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
-            _mediaSettings = model.ToEntity(_mediaSettings);
-            _settingService.SaveSetting(_mediaSettings);
+            //load settings for a chosen store scope
+            var storeScope = GetActiveStoreScopeConfiguration();
+            var mediaSettings = _settingService.LoadSetting<MediaSettings>(storeScope);
+            mediaSettings = model.ToEntity(mediaSettings);
 
+            /* We do not clear cache after each setting update.
+             * This behavior can increase performance because cached settings will not be cleared 
+             * and loaded from database after each update */
+            if (model.AvatarPictureSize_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(mediaSettings, x => x.AvatarPictureSize, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(mediaSettings, x => x.AvatarPictureSize, storeScope);
+            
+            if (model.ProductThumbPictureSize_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(mediaSettings, x => x.ProductThumbPictureSize, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(mediaSettings, x => x.ProductThumbPictureSize, storeScope);
+            
+            if (model.ProductDetailsPictureSize_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(mediaSettings, x => x.ProductDetailsPictureSize, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(mediaSettings, x => x.ProductDetailsPictureSize, storeScope);
+            
+            if (model.ProductThumbPictureSizeOnProductDetailsPage_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(mediaSettings, x => x.ProductThumbPictureSizeOnProductDetailsPage, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(mediaSettings, x => x.ProductThumbPictureSizeOnProductDetailsPage, storeScope);
+            
+            if (model.ProductVariantPictureSize_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(mediaSettings, x => x.ProductVariantPictureSize, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(mediaSettings, x => x.ProductVariantPictureSize, storeScope);
+            
+            if (model.CategoryThumbPictureSize_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(mediaSettings, x => x.CategoryThumbPictureSize, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(mediaSettings, x => x.CategoryThumbPictureSize, storeScope);
+            
+            if (model.ManufacturerThumbPictureSize_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(mediaSettings, x => x.ManufacturerThumbPictureSize, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(mediaSettings, x => x.ManufacturerThumbPictureSize, storeScope);
+            
+            if (model.CartThumbPictureSize_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(mediaSettings, x => x.CartThumbPictureSize, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(mediaSettings, x => x.CartThumbPictureSize, storeScope);
+            
+            if (model.MiniCartThumbPictureSize_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(mediaSettings, x => x.MiniCartThumbPictureSize, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(mediaSettings, x => x.MiniCartThumbPictureSize, storeScope);
+
+            if (model.MaximumImageSize_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(mediaSettings, x => x.MaximumImageSize, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(mediaSettings, x => x.MaximumImageSize, storeScope);
+                
+            //now clear settings cache
+            _settingService.ClearCache();
+            
             //activity log
             _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
 
