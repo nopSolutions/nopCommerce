@@ -77,10 +77,12 @@
             <input type="submit" name="save" class="t-button" value="@T("Admin.Common.Save")" />
         </div>
     </div>
-@Html.ValidationSummary(false)
+    @Html.Action("StoreScopeConfiguration", "Setting")
+    @Html.ValidationSummary(false)
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.PricesIncludeTax_OverrideForStore, model => model.PricesIncludeTax, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.PricesIncludeTax):
             </td>
             <td class="adminData">
@@ -90,6 +92,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.AllowCustomersToSelectTaxDisplayType_OverrideForStore, model => model.AllowCustomersToSelectTaxDisplayType, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.AllowCustomersToSelectTaxDisplayType):
             </td>
             <td class="adminData">
@@ -99,6 +102,7 @@
         </tr>
         <tr id="pnlTaxDisplayType">
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.TaxDisplayType_OverrideForStore, model => model.TaxDisplayType, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.TaxDisplayType):
             </td>
             <td class="adminData">
@@ -108,6 +112,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.DisplayTaxSuffix_OverrideForStore, model => model.DisplayTaxSuffix, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.DisplayTaxSuffix):
             </td>
             <td class="adminData">
@@ -117,6 +122,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.DisplayTaxRates_OverrideForStore, model => model.DisplayTaxRates, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.DisplayTaxRates):
             </td>
             <td class="adminData">
@@ -126,6 +132,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.HideZeroTax_OverrideForStore, model => model.HideZeroTax, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.HideZeroTax):
             </td>
             <td class="adminData">
@@ -135,6 +142,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.HideTaxInOrderSummary_OverrideForStore, model => model.HideTaxInOrderSummary, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.HideTaxInOrderSummary):
             </td>
             <td class="adminData">
@@ -149,6 +157,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.TaxBasedOn_OverrideForStore, model => model.TaxBasedOn, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.TaxBasedOn):
             </td>
             <td class="adminData">
@@ -158,11 +167,12 @@
         </tr>
         <tr>
             <td class="adminTitle" colspan="2">
+                @Html.OverrideStoreCheckboxFor(model => model.DefaultTaxAddress_OverrideForStore, "pnlDefaultTaxAddress", Model.ActiveStoreScopeConfiguration)
                 <strong>@Html.LabelFor(model => model.DefaultTaxAddress):</strong>
             </td>
         </tr>
         <tr>
-            <td colspan="2">
+            <td colspan="2" id="pnlDefaultTaxAddress">
                 @Html.EditorFor(x => x.DefaultTaxAddress, "Address")
             </td>
         </tr>
@@ -173,6 +183,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ShippingIsTaxable_OverrideForStore, model => model.ShippingIsTaxable, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ShippingIsTaxable):
             </td>
             <td class="adminData">
@@ -182,6 +193,7 @@
         </tr>
         <tr id="pnlShippingPriceIncludesTax">
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ShippingPriceIncludesTax_OverrideForStore, model => model.ShippingPriceIncludesTax, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ShippingPriceIncludesTax):
             </td>
             <td class="adminData">
@@ -191,6 +203,7 @@
         </tr>
         <tr id="pnlShippingTaxClass">
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ShippingTaxClassId_OverrideForStore, model => model.ShippingTaxClassId, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ShippingTaxClassId):
             </td>
             <td class="adminData">
@@ -205,6 +218,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.PaymentMethodAdditionalFeeIsTaxable_OverrideForStore, model => model.PaymentMethodAdditionalFeeIsTaxable, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.PaymentMethodAdditionalFeeIsTaxable):
             </td>
             <td class="adminData">
@@ -214,6 +228,7 @@
         </tr>
         <tr id="pnlPaymentMethodAdditionalFeeIncludesTax">
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.PaymentMethodAdditionalFeeIncludesTax_OverrideForStore, model => model.PaymentMethodAdditionalFeeIncludesTax, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.PaymentMethodAdditionalFeeIncludesTax):
             </td>
             <td class="adminData">
@@ -223,6 +238,7 @@
         </tr>
         <tr id="pnlPaymentMethodAdditionalFeeTaxClass">
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.PaymentMethodAdditionalFeeTaxClassId_OverrideForStore, model => model.PaymentMethodAdditionalFeeTaxClassId, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.PaymentMethodAdditionalFeeTaxClassId):
             </td>
             <td class="adminData">
@@ -237,6 +253,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.EuVatEnabled_OverrideForStore, model => model.EuVatEnabled, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.EuVatEnabled):
             </td>
             <td class="adminData">
@@ -246,6 +263,7 @@
         </tr>
         <tr id="pnlEuVatShopCountry">
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.EuVatShopCountryId_OverrideForStore, model => model.EuVatShopCountryId, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.EuVatShopCountryId):
             </td>
             <td class="adminData">
@@ -255,6 +273,7 @@
         </tr>
         <tr id="pnlEuVatAllowVATExemption">
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.EuVatAllowVatExemption_OverrideForStore, model => model.EuVatAllowVatExemption, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.EuVatAllowVatExemption):
             </td>
             <td class="adminData">
@@ -264,6 +283,7 @@
         </tr>
         <tr id="pnlEuVatUseWebService">
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.EuVatUseWebService_OverrideForStore, model => model.EuVatUseWebService, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.EuVatUseWebService):
             </td>
             <td class="adminData">
@@ -273,6 +293,7 @@
         </tr>
         <tr id="pnlEuVatEmailAdminWhenNewVATSubmitted">
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.EuVatEmailAdminWhenNewVatSubmitted_OverrideForStore, model => model.EuVatEmailAdminWhenNewVatSubmitted, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.EuVatEmailAdminWhenNewVatSubmitted):
             </td>
             <td class="adminData">
