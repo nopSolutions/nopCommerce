@@ -7,6 +7,8 @@ namespace Nop.Admin.Models.Settings
     {
         public int ActiveStoreScopeConfiguration { get; set; }
 
+
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Blog.Enabled")]
         public bool Enabled { get; set; }
         public bool Enabled_OverrideForStore { get; set; }

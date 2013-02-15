@@ -113,11 +113,12 @@
         }
         
     </script>
-
-@Html.ValidationSummary(false)
+    @Html.Action("StoreScopeConfiguration", "Setting")
+    @Html.ValidationSummary(false)
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ShowProductSku_OverrideForStore, model => model.ShowProductSku, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ShowProductSku):
             </td>
             <td class="adminData">
@@ -127,6 +128,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ShowManufacturerPartNumber_OverrideForStore, model => model.ShowManufacturerPartNumber, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ShowManufacturerPartNumber):
             </td>
             <td class="adminData">
@@ -136,6 +138,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ShowGtin_OverrideForStore, model => model.ShowGtin, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ShowGtin):
             </td>
             <td class="adminData">
@@ -145,6 +148,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.AllowProductSorting_OverrideForStore, model => model.AllowProductSorting, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.AllowProductSorting):
             </td>
             <td class="adminData">
@@ -154,6 +158,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.AllowProductViewModeChanging_OverrideForStore, model => model.AllowProductViewModeChanging, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.AllowProductViewModeChanging):
             </td>
             <td class="adminData">
@@ -163,6 +168,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ShowProductsFromSubcategories_OverrideForStore, model => model.ShowProductsFromSubcategories, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ShowProductsFromSubcategories):
             </td>
             <td class="adminData">
@@ -172,6 +178,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ShowCategoryProductNumber_OverrideForStore, model => model.ShowCategoryProductNumber, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ShowCategoryProductNumber):
             </td>
             <td class="adminData">
@@ -181,6 +188,7 @@
         </tr>
         <tr id="pnlShowCategoryProductNumberIncludingSubcategories">
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ShowCategoryProductNumberIncludingSubcategories_OverrideForStore, model => model.ShowCategoryProductNumberIncludingSubcategories, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ShowCategoryProductNumberIncludingSubcategories):
             </td>
             <td class="adminData">
@@ -190,6 +198,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.CategoryBreadcrumbEnabled_OverrideForStore, model => model.CategoryBreadcrumbEnabled, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.CategoryBreadcrumbEnabled):
             </td>
             <td class="adminData">
@@ -199,6 +208,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ShowShareButton_OverrideForStore, model => model.ShowShareButton, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ShowShareButton):
             </td>
             <td class="adminData">
@@ -208,6 +218,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ProductReviewsMustBeApproved_OverrideForStore, model => model.ProductReviewsMustBeApproved, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ProductReviewsMustBeApproved):
             </td>
             <td class="adminData">
@@ -217,6 +228,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.AllowAnonymousUsersToReviewProduct_OverrideForStore, model => model.AllowAnonymousUsersToReviewProduct, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.AllowAnonymousUsersToReviewProduct):
             </td>
             <td class="adminData">
@@ -226,6 +238,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.NotifyStoreOwnerAboutNewProductReviews_OverrideForStore, model => model.NotifyStoreOwnerAboutNewProductReviews, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.NotifyStoreOwnerAboutNewProductReviews):
             </td>
             <td class="adminData">
@@ -235,6 +248,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.EmailAFriendEnabled_OverrideForStore, model => model.EmailAFriendEnabled, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.EmailAFriendEnabled):
             </td>
             <td class="adminData">
@@ -244,6 +258,7 @@
         </tr>
         <tr id="pnlAllowAnonymousUsersToEmailAFriend">
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.AllowAnonymousUsersToEmailAFriend_OverrideForStore, model => model.AllowAnonymousUsersToEmailAFriend, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.AllowAnonymousUsersToEmailAFriend):
             </td>
             <td class="adminData">
@@ -253,6 +268,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.RecentlyViewedProductsEnabled_OverrideForStore, model => model.RecentlyViewedProductsEnabled, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.RecentlyViewedProductsEnabled):
             </td>
             <td class="adminData">
@@ -262,6 +278,7 @@
         </tr>
         <tr id="pnlRecentlyViewedProductsNumber">
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.RecentlyViewedProductsNumber_OverrideForStore, model => model.RecentlyViewedProductsNumber, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.RecentlyViewedProductsNumber):
             </td>
             <td class="adminData">
@@ -271,6 +288,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.RecentlyAddedProductsEnabled_OverrideForStore, model => model.RecentlyAddedProductsEnabled, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.RecentlyAddedProductsEnabled):
             </td>
             <td class="adminData">
@@ -280,6 +298,7 @@
         </tr>
         <tr id="pnlRecentlyAddedProductsNumber">
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.RecentlyAddedProductsNumber_OverrideForStore, model => model.RecentlyAddedProductsNumber, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.RecentlyAddedProductsNumber):
             </td>
             <td class="adminData">
@@ -289,6 +308,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.CompareProductsEnabled_OverrideForStore, model => model.CompareProductsEnabled, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.CompareProductsEnabled):
             </td>
             <td class="adminData">
@@ -298,6 +318,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ShowBestsellersOnHomepage_OverrideForStore, model => model.ShowBestsellersOnHomepage, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ShowBestsellersOnHomepage):
             </td>
             <td class="adminData">
@@ -307,6 +328,7 @@
         </tr>
         <tr id="pnlNumberOfBestsellersOnHomepage">
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.NumberOfBestsellersOnHomepage_OverrideForStore, model => model.NumberOfBestsellersOnHomepage, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.NumberOfBestsellersOnHomepage):
             </td>
             <td class="adminData">
@@ -316,6 +338,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.SearchPageProductsPerPage_OverrideForStore, model => model.SearchPageProductsPerPage, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.SearchPageProductsPerPage):
             </td>
             <td class="adminData">
@@ -325,6 +348,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ProductSearchAutoCompleteEnabled_OverrideForStore, model => model.ProductSearchAutoCompleteEnabled, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ProductSearchAutoCompleteEnabled):
             </td>
             <td class="adminData">
@@ -334,6 +358,7 @@
         </tr>
         <tr id="pnlProductSearchAutoCompleteNumberOfProducts">
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ProductSearchAutoCompleteNumberOfProducts_OverrideForStore, model => model.ProductSearchAutoCompleteNumberOfProducts, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ProductSearchAutoCompleteNumberOfProducts):
             </td>
             <td class="adminData">
@@ -343,6 +368,7 @@
         </tr>
         <tr id="pnlShowProductImagesInSearchAutoComplete">
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ShowProductImagesInSearchAutoComplete_OverrideForStore, model => model.ShowProductImagesInSearchAutoComplete, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ShowProductImagesInSearchAutoComplete):
             </td>
             <td class="adminData">
@@ -352,6 +378,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ProductsAlsoPurchasedEnabled_OverrideForStore, model => model.ProductsAlsoPurchasedEnabled, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ProductsAlsoPurchasedEnabled):
             </td>
             <td class="adminData">
@@ -361,6 +388,7 @@
         </tr>
         <tr id="pnlProductsAlsoPurchasedNumber">
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ProductsAlsoPurchasedNumber_OverrideForStore, model => model.ProductsAlsoPurchasedNumber, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ProductsAlsoPurchasedNumber):
             </td>
             <td class="adminData">
@@ -370,6 +398,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.EnableDynamicPriceUpdate_OverrideForStore, model => model.EnableDynamicPriceUpdate, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.EnableDynamicPriceUpdate):
             </td>
             <td class="adminData">
@@ -379,6 +408,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.NumberOfProductTags_OverrideForStore, model => model.NumberOfProductTags, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.NumberOfProductTags):
             </td>
             <td class="adminData">
@@ -388,6 +418,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ProductsByTagAllowCustomersToSelectPageSize_OverrideForStore, model => model.ProductsByTagAllowCustomersToSelectPageSize, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ProductsByTagAllowCustomersToSelectPageSize):
             </td>
             <td class="adminData">
@@ -397,6 +428,7 @@
         </tr>
         <tr id="pnlPageSize">
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ProductsByTagPageSize_OverrideForStore, model => model.ProductsByTagPageSize, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ProductsByTagPageSize):
             </td>
             <td class="adminData">
@@ -406,6 +438,7 @@
         </tr>
         <tr id="pnlPageSizeOptions">
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ProductsByTagPageSizeOptions_OverrideForStore, model => model.ProductsByTagPageSizeOptions, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ProductsByTagPageSizeOptions):
             </td>
             <td class="adminData">
@@ -415,6 +448,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ManufacturersBlockItemsToDisplay_OverrideForStore, model => model.ManufacturersBlockItemsToDisplay, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ManufacturersBlockItemsToDisplay):
             </td>
             <td class="adminData">
@@ -424,6 +458,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.IncludeShortDescriptionInCompareProducts_OverrideForStore, model => model.IncludeShortDescriptionInCompareProducts, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.IncludeShortDescriptionInCompareProducts):
             </td>
             <td class="adminData">
@@ -433,6 +468,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.IncludeFullDescriptionInCompareProducts_OverrideForStore, model => model.IncludeFullDescriptionInCompareProducts, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.IncludeFullDescriptionInCompareProducts):
             </td>
             <td class="adminData">
@@ -442,6 +478,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.IgnoreDiscounts_OverrideForStore, model => model.IgnoreDiscounts, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.IgnoreDiscounts):
             </td>
             <td class="adminData">
@@ -451,6 +488,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.IgnoreFeaturedProducts_OverrideForStore, model => model.IgnoreFeaturedProducts, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.IgnoreFeaturedProducts):
             </td>
             <td class="adminData">
