@@ -109,7 +109,6 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
             else if (storeScope > 0)
                 _settingService.DeleteSetting(googleAnalyticsSettings, x => x.EcommerceDetailScript, storeScope);
 
-
             //now clear settings cache
             _settingService.ClearCache();
             
@@ -166,8 +165,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
         //</script>
         private string GetTrackingScript()
         {
-            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
-            var googleAnalyticsSettings = _settingService.LoadSetting<GoogleAnalyticsSettings>(storeScope);
+            var googleAnalyticsSettings = _settingService.LoadSetting<GoogleAnalyticsSettings>(_storeContext.CurrentStore.Id);
             string analyticsTrackingScript = "";
             analyticsTrackingScript = googleAnalyticsSettings.TrackingScript + "\n";
             analyticsTrackingScript = analyticsTrackingScript.Replace("{GOOGLEID}", googleAnalyticsSettings.GoogleId);
@@ -213,8 +211,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
         //</script>
         private string GetEcommerceScript(Order order)
         {
-            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
-            var googleAnalyticsSettings = _settingService.LoadSetting<GoogleAnalyticsSettings>(storeScope);
+            var googleAnalyticsSettings = _settingService.LoadSetting<GoogleAnalyticsSettings>(_storeContext.CurrentStore.Id);
             var usCulture = new CultureInfo("en-US");
             string analyticsTrackingScript = "";
             analyticsTrackingScript = googleAnalyticsSettings.TrackingScript + "\n";
