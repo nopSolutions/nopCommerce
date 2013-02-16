@@ -130,7 +130,7 @@ namespace Nop.Web.Infrastructure.Cache
         /// {0} : current manufacturer id
         /// {1} : language id
         /// {2} : roles of the current user
-        /// {3} : current store id
+        /// {3} : current store ID
         /// </remarks>
         public const string MANUFACTURER_NAVIGATION_MODEL_KEY = "Nop.pres.manufacturer.navigation-{0}-{1}-{2}-{3}";
         public const string MANUFACTURER_NAVIGATION_PATTERN_KEY = "Nop.pres.manufacturer.navigation";
@@ -141,7 +141,7 @@ namespace Nop.Web.Infrastructure.Cache
         /// <remarks>
         /// {0} : language id
         /// {1} : comma separated list of customer roles
-        /// {2} : current store id
+        /// {2} : current store ID
         /// </remarks>
         public const string CATEGORY_NAVIGATION_MODEL_KEY = "Nop.pres.category.navigation-{0}-{1}-{2}";
         public const string CATEGORY_NAVIGATION_PATTERN_KEY = "Nop.pres.category.navigation";
@@ -153,7 +153,7 @@ namespace Nop.Web.Infrastructure.Cache
         /// {0} : parent category id
         /// {1} : show hidden?
         /// {2} : comma separated list of customer roles
-        /// {3} : current store id
+        /// {3} : current store ID
         /// </remarks>
         public const string CATEGORY_CHILD_IDENTIFIERS_MODEL_KEY = "Nop.pres.category.childidentifiers-{0}-{1}-{2}-{3}";
         public const string CATEGORY_CHILD_IDENTIFIERS_PATTERN_KEY = "Nop.pres.category.childidentifiers";
@@ -165,7 +165,7 @@ namespace Nop.Web.Infrastructure.Cache
         /// {0} : product id
         /// {1} : language id
         /// {2} : comma separated list of customer roles
-        /// {3} : current store id
+        /// {3} : current store ID
         /// </remarks>
         public const string PRODUCT_BREADCRUMB_MODEL_KEY = "Nop.pres.product.breadcrumb-{0}-{1}-{2}-{3}";
         public const string PRODUCT_BREADCRUMB_PATTERN_KEY = "Nop.pres.product.breadcrumb";
@@ -177,8 +177,9 @@ namespace Nop.Web.Infrastructure.Cache
         /// <remarks>
         /// {0} : product id
         /// {1} : language id
+        /// {2} : current store ID
         /// </remarks>
-        public const string PRODUCTTAG_BY_PRODUCT_MODEL_KEY = "Nop.pres.producttag.byproduct-{0}-{1}";
+        public const string PRODUCTTAG_BY_PRODUCT_MODEL_KEY = "Nop.pres.producttag.byproduct-{0}-{1}-{2}";
         public const string PRODUCTTAG_BY_PRODUCT_PATTERN_KEY = "Nop.pres.producttag.byproduct";
 
         /// <summary>
@@ -186,8 +187,9 @@ namespace Nop.Web.Infrastructure.Cache
         /// </summary>
         /// <remarks>
         /// {0} : language id
+        /// {1} : current store ID
         /// </remarks>
-        public const string PRODUCTTAG_POPULAR_MODEL_KEY = "Nop.pres.producttag.popular-{0}";
+        public const string PRODUCTTAG_POPULAR_MODEL_KEY = "Nop.pres.producttag.popular-{0}-{1}";
         public const string PRODUCTTAG_POPULAR_PATTERN_KEY = "Nop.pres.producttag.popular";
 
         /// <summary>
@@ -197,7 +199,7 @@ namespace Nop.Web.Infrastructure.Cache
         /// {0} : product id
         /// {1} : language id
         /// {2} : roles of the current user
-        /// {3} : current store id
+        /// {3} : current store ID
         /// </remarks>
         public const string PRODUCT_MANUFACTURERS_MODEL_KEY = "Nop.pres.product.manufacturers-{0}-{1}-{2}-{3}";
         public const string PRODUCT_MANUFACTURERS_PATTERN_KEY = "Nop.pres.product.manufacturers";
@@ -254,7 +256,7 @@ namespace Nop.Web.Infrastructure.Cache
         /// Key for bestsellers identifiers displayed on the home page
         /// </summary>
         /// <remarks>
-        /// {0} : current store id
+        /// {0} : current store ID
         /// </remarks>
         public const string HOMEPAGE_BESTSELLERS_IDS_KEY = "Nop.pres.bestsellers.homepage-{0}";
         public const string HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY = "Nop.pres.bestsellers.homepage";
@@ -264,7 +266,7 @@ namespace Nop.Web.Infrastructure.Cache
         /// </summary>
         /// <remarks>
         /// {0} : current product id
-        /// {1} : current store id
+        /// {1} : current store ID
         /// </remarks>
         public const string PRODUCTS_ALSO_PURCHASED_IDS_KEY = "Nop.pres.alsopuchased-{0}-{1}";
         public const string PRODUCTS_ALSO_PURCHASED_IDS_PATTERN_KEY = "Nop.pres.alsopuchased";
@@ -343,8 +345,9 @@ namespace Nop.Web.Infrastructure.Cache
         /// </summary>
         /// <remarks>
         /// {0} : language ID
+        /// {1} : current store ID
         /// </remarks>
-        public const string BLOG_TAGS_MODEL_KEY = "Nop.pres.blog.tags-{0}";
+        public const string BLOG_TAGS_MODEL_KEY = "Nop.pres.blog.tags-{0}-{1}";
         /// <summary>
         /// Key for blog archive (years, months) block model
         /// </summary>
@@ -359,7 +362,7 @@ namespace Nop.Web.Infrastructure.Cache
         /// </summary>
         /// <remarks>
         /// {0} : language ID
-        /// {1} : store ID
+        /// {1} : current store ID
         /// </remarks>
         public const string HOMEPAGE_NEWSMODEL_KEY = "Nop.pres.news.homepage-{0}-{1}";
         public const string NEWS_PATTERN_KEY = "Nop.pres.news.";

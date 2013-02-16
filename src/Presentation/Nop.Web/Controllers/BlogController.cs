@@ -317,7 +317,7 @@ namespace Nop.Web.Controllers
             if (!_blogSettings.Enabled)
                 return Content("");
 
-            var cacheKey = string.Format(ModelCacheEventConsumer.BLOG_TAGS_MODEL_KEY, _workContext.WorkingLanguage.Id);
+            var cacheKey = string.Format(ModelCacheEventConsumer.BLOG_TAGS_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
             var cachedModel = _cacheManager.Get(cacheKey, () =>
             {
                 var model = new BlogPostTagListModel();
