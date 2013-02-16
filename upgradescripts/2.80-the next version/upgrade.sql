@@ -1621,6 +1621,13 @@ BEGIN
 END
 GO
 
+IF EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Customer]') and NAME='GiftCardCouponCodes')
+BEGIN
+	ALTER TABLE [Customer]
+	DROP COLUMN [GiftCardCouponCodes]
+END
+GO
+
 
 --Store mapping to Setting
 IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Setting]') and NAME='StoreId')

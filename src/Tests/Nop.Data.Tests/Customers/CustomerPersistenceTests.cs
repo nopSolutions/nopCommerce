@@ -31,7 +31,6 @@ namespace Nop.Data.Tests.Customers
             fromDb.AdminComment.ShouldEqual("some comment here");
             fromDb.IsTaxExempt.ShouldEqual(true);
             fromDb.CheckoutAttributes.ShouldEqual("CheckoutAttributes 1");
-            fromDb.GiftCardCouponCodes.ShouldEqual("GiftCardCouponCodes 1");
             fromDb.Active.ShouldEqual(true);
             fromDb.Deleted.ShouldEqual(false);
             fromDb.IsSystemAccount.ShouldEqual(true);
@@ -285,7 +284,6 @@ namespace Nop.Data.Tests.Customers
                 AdminComment = "some comment here",
                 IsTaxExempt = true,
                 CheckoutAttributes = "CheckoutAttributes 1",
-                GiftCardCouponCodes = "GiftCardCouponCodes 1",
                 Active = true,
                 Deleted = false,
                 IsSystemAccount = true,
