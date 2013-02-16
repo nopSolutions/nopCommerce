@@ -504,10 +504,7 @@
                     @Html.NopLabelFor(model => model.FullTextSettings.SearchMode):
                 </td>
                 <td class="adminData">
-                    @(Html.Telerik().DropDownListFor(model => model.FullTextSettings.SearchMode)
-                            .BindTo(Model.FullTextSettings.SearchModeValues)
-                                .HtmlAttributes(new { style = "width:355px" })
-                    )
+                    @Html.DropDownListFor(model => model.FullTextSettings.SearchMode, Model.FullTextSettings.SearchModeValues)
                     @Html.ValidationMessageFor(model => model.FullTextSettings.SearchMode)
                 </td>
             </tr>

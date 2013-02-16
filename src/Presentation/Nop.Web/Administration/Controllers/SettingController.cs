@@ -1847,6 +1847,7 @@ namespace Nop.Admin.Controllers
             //full-text support
             model.FullTextSettings.Supported = _fulltextService.IsFullTextSupported();
             model.FullTextSettings.Enabled = _commonSettings.UseFullTextSearch;
+            model.FullTextSettings.SearchMode = (int)_commonSettings.FullTextMode;
             model.FullTextSettings.SearchModeValues = _commonSettings.FullTextMode.ToSelectList();
 
 
@@ -2021,7 +2022,7 @@ namespace Nop.Admin.Controllers
             _settingService.SaveSetting(_localizationSettings);
 
             //full-text
-            _commonSettings.FullTextMode = model.FullTextSettings.SearchMode;
+            _commonSettings.FullTextMode = (FulltextSearchMode)model.FullTextSettings.SearchMode;
             _settingService.SaveSetting(_commonSettings);
 
             //activity log

@@ -191,7 +191,7 @@ namespace Nop.Admin.Models.Settings
             public bool Enabled { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.SearchMode")]
-            public FulltextSearchMode SearchMode { get; set; }
+            public int SearchMode { get; set; }
             public SelectList SearchModeValues { get; set; }
         }
         
