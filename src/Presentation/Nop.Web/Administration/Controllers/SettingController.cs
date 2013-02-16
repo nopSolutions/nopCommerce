@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
 using System.Web.Mvc;
 using Nop.Admin.Models.Common;
 using Nop.Admin.Models.Settings;
 using Nop.Admin.Models.Stores;
 using Nop.Core;
-using Nop.Core.Configuration;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
@@ -118,14 +115,7 @@ namespace Nop.Admin.Controllers
         [NonAction]
         private int GetActiveStoreScopeConfiguration()
         {
-            //ensure that we have 2 (or more) stores
-            if (_storeService.GetAllStores().Count < 2)
-                return 0;
-
-
-            var storeId = _workContext.CurrentCustomer.GetAttribute<int>(SystemCustomerAttributeNames.AdminAreaStoreScopeConfiguration);
-            var store = _storeService.GetStoreById(storeId);
-            return store != null ? store.Id : 0;
+            return this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
         }
         [ChildActionOnly]
         public ActionResult StoreScopeConfiguration()
