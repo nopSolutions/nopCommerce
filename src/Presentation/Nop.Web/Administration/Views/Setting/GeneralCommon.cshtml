@@ -417,6 +417,7 @@
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.PdfSettings.Enabled_OverrideForStore, model => model.PdfSettings.Enabled, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.PdfSettings.Enabled):
             </td>
             <td class="adminData">
@@ -426,6 +427,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.PdfSettings.LetterPageSizeEnabled_OverrideForStore, model => model.PdfSettings.LetterPageSizeEnabled, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.PdfSettings.LetterPageSizeEnabled):
             </td>
             <td class="adminData">
@@ -435,9 +437,10 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.PdfSettings.LogoPictureId_OverrideForStore, "pdf-logo-picture", Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.PdfSettings.LogoPictureId):
             </td>
-            <td class="adminData">
+            <td class="adminData" id="pdf-logo-picture">
                 @Html.EditorFor(model => model.PdfSettings.LogoPictureId)
                 @Html.ValidationMessageFor(model => model.PdfSettings.LogoPictureId)
             </td>

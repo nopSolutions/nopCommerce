@@ -166,13 +166,16 @@ namespace Nop.Admin.Models.Settings
         {
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.PdfEnabled")]
             public bool Enabled { get; set; }
+            public bool Enabled_OverrideForStore { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.PdfLetterPageSizeEnabled")]
             public bool LetterPageSizeEnabled { get; set; }
+            public bool LetterPageSizeEnabled_OverrideForStore { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.PdfLogo")]
             [UIHint("Picture")]
             public int LogoPictureId { get; set; }
+            public bool LogoPictureId_OverrideForStore { get; set; }
         }
 
         public partial class LocalizationSettingsModel : BaseNopModel

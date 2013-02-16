@@ -78,7 +78,6 @@ namespace Nop.Admin.Controllers
         private AddressSettings _addressSettings;
         private readonly DateTimeSettings _dateTimeSettings;
         private readonly SecuritySettings _securitySettings;
-        private readonly PdfSettings _pdfSettings;
         private readonly LocalizationSettings _localizationSettings;
         private readonly CaptchaSettings _captchaSettings;
         private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
@@ -101,7 +100,7 @@ namespace Nop.Admin.Controllers
             IWorkContext workContext, IGenericAttributeService genericAttributeService,
             CurrencySettings currencySettings,
             CustomerSettings customerSettings, AddressSettings addressSettings,
-            DateTimeSettings dateTimeSettings, SecuritySettings securitySettings, PdfSettings pdfSettings,
+            DateTimeSettings dateTimeSettings, SecuritySettings securitySettings,
             LocalizationSettings localizationSettings, CaptchaSettings captchaSettings,
             ExternalAuthenticationSettings externalAuthenticationSettings,
             CommonSettings commonSettings)
@@ -133,7 +132,6 @@ namespace Nop.Admin.Controllers
             this._addressSettings = addressSettings;
             this._dateTimeSettings = dateTimeSettings;
             this._securitySettings = securitySettings;
-            this._pdfSettings = pdfSettings;
             this._localizationSettings = localizationSettings;
             this._captchaSettings = captchaSettings;
             this._externalAuthenticationSettings = externalAuthenticationSettings;
@@ -1836,10 +1834,18 @@ namespace Nop.Admin.Controllers
             model.SecuritySettings.ReCaptchaPrivateKey = _captchaSettings.ReCaptchaPrivateKey;
 
             //PDF settings
-            model.PdfSettings.Enabled = _pdfSettings.Enabled;
-            model.PdfSettings.LetterPageSizeEnabled = _pdfSettings.LetterPageSizeEnabled;
-            model.PdfSettings.LogoPictureId = _pdfSettings.LogoPictureId;
-
+            var pdfSettings = _settingService.LoadSetting<PdfSettings>(storeScope);
+            model.PdfSettings.Enabled = pdfSettings.Enabled;
+            model.PdfSettings.LetterPageSizeEnabled = pdfSettings.LetterPageSizeEnabled;
+            model.PdfSettings.LogoPictureId = pdfSettings.LogoPictureId;
+            //override settings
+            if (storeScope > 0)
+            {
+                model.PdfSettings.Enabled_OverrideForStore = _settingService.SettingExists(pdfSettings, x => x.Enabled, storeScope);
+                model.PdfSettings.LetterPageSizeEnabled_OverrideForStore = _settingService.SettingExists(pdfSettings, x => x.LetterPageSizeEnabled, storeScope);
+                model.PdfSettings.LogoPictureId_OverrideForStore = _settingService.SettingExists(pdfSettings, x => x.LogoPictureId, storeScope);
+            }
+            
             //localization
             model.LocalizationSettings.UseImagesForLanguageSelection = _localizationSettings.UseImagesForLanguageSelection;
             model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled = _localizationSettings.SeoFriendlyUrlsForLanguagesEnabled;
@@ -2005,10 +2011,32 @@ namespace Nop.Admin.Controllers
             }
 
             //PDF settings
-            _pdfSettings.Enabled = model.PdfSettings.Enabled;
-            _pdfSettings.LetterPageSizeEnabled = model.PdfSettings.LetterPageSizeEnabled;
-            _pdfSettings.LogoPictureId = model.PdfSettings.LogoPictureId;
-            _settingService.SaveSetting(_pdfSettings);
+            var pdfSettings = _settingService.LoadSetting<PdfSettings>(storeScope);
+            pdfSettings.Enabled = model.PdfSettings.Enabled;
+            pdfSettings.LetterPageSizeEnabled = model.PdfSettings.LetterPageSizeEnabled;
+            pdfSettings.LogoPictureId = model.PdfSettings.LogoPictureId;
+            /* We do not clear cache after each setting update.
+             * This behavior can increase performance because cached settings will not be cleared 
+             * and loaded from database after each update */
+            if (model.PdfSettings.Enabled_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(pdfSettings, x => x.Enabled, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(pdfSettings, x => x.Enabled, storeScope);
+            
+            if (model.PdfSettings.LetterPageSizeEnabled_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(pdfSettings, x => x.LetterPageSizeEnabled, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(pdfSettings, x => x.LetterPageSizeEnabled, storeScope);
+
+            if (model.PdfSettings.LogoPictureId_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(pdfSettings, x => x.LogoPictureId, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(pdfSettings, x => x.LogoPictureId, storeScope);
+            
+            //now clear settings cache
+            _settingService.ClearCache();
+
+
 
 
             //localization settings
