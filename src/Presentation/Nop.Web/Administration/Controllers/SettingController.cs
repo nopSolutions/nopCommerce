@@ -77,8 +77,6 @@ namespace Nop.Admin.Controllers
         private CustomerSettings _customerSettings;
         private AddressSettings _addressSettings;
         private readonly DateTimeSettings _dateTimeSettings;
-        private readonly StoreInformationSettings _storeInformationSettings;
-        private readonly SeoSettings _seoSettings;
         private readonly SecuritySettings _securitySettings;
         private readonly PdfSettings _pdfSettings;
         private readonly LocalizationSettings _localizationSettings;
@@ -103,8 +101,7 @@ namespace Nop.Admin.Controllers
             IWorkContext workContext, IGenericAttributeService genericAttributeService,
             CurrencySettings currencySettings,
             CustomerSettings customerSettings, AddressSettings addressSettings,
-            DateTimeSettings dateTimeSettings, StoreInformationSettings storeInformationSettings,
-            SeoSettings seoSettings,SecuritySettings securitySettings, PdfSettings pdfSettings,
+            DateTimeSettings dateTimeSettings, SecuritySettings securitySettings, PdfSettings pdfSettings,
             LocalizationSettings localizationSettings, CaptchaSettings captchaSettings,
             ExternalAuthenticationSettings externalAuthenticationSettings,
             CommonSettings commonSettings)
@@ -135,8 +132,6 @@ namespace Nop.Admin.Controllers
             this._customerSettings = customerSettings;
             this._addressSettings = addressSettings;
             this._dateTimeSettings = dateTimeSettings;
-            this._storeInformationSettings = storeInformationSettings;
-            this._seoSettings = seoSettings;
             this._securitySettings = securitySettings;
             this._pdfSettings = pdfSettings;
             this._localizationSettings = localizationSettings;
@@ -1743,53 +1738,80 @@ namespace Nop.Admin.Controllers
             //set page timeout to 5 minutes
             this.Server.ScriptTimeout = 300;
 
-            //store information
             var model = new GeneralCommonSettingsModel();
-            model.StoreInformationSettings.StoreClosed = _storeInformationSettings.StoreClosed;
-            model.StoreInformationSettings.StoreClosedAllowForAdmins = _storeInformationSettings.StoreClosedAllowForAdmins;
+            var storeScope = GetActiveStoreScopeConfiguration();
+            model.ActiveStoreScopeConfiguration = storeScope;
+            //store information
+            var storeInformationSettings = _settingService.LoadSetting<StoreInformationSettings>(storeScope);
+            model.StoreInformationSettings.StoreClosed = storeInformationSettings.StoreClosed;
+            model.StoreInformationSettings.StoreClosedAllowForAdmins = storeInformationSettings.StoreClosedAllowForAdmins;
             //desktop themes
-            model.StoreInformationSettings.DefaultStoreThemeForDesktops = _storeInformationSettings.DefaultStoreThemeForDesktops;
+            model.StoreInformationSettings.DefaultStoreThemeForDesktops = storeInformationSettings.DefaultStoreThemeForDesktops;
             model.StoreInformationSettings.AvailableStoreThemesForDesktops = _themeProvider
                 .GetThemeConfigurations()
-                .Where(x => !x.MobileTheme)  //do not display themes for mobile devices
+                .Where(x => !x.MobileTheme)
                 .Select(x =>
                 {
                     return new SelectListItem()
                     {
                         Text = x.ThemeTitle,
                         Value = x.ThemeName,
-                        Selected = x.ThemeName.Equals(_storeInformationSettings.DefaultStoreThemeForDesktops, StringComparison.InvariantCultureIgnoreCase)
+                        Selected = x.ThemeName.Equals(storeInformationSettings.DefaultStoreThemeForDesktops, StringComparison.InvariantCultureIgnoreCase)
                     };
                 })
                 .ToList();
-            model.StoreInformationSettings.AllowCustomerToSelectTheme = _storeInformationSettings.AllowCustomerToSelectTheme;
-            model.StoreInformationSettings.MobileDevicesSupported = _storeInformationSettings.MobileDevicesSupported;
+            model.StoreInformationSettings.AllowCustomerToSelectTheme = storeInformationSettings.AllowCustomerToSelectTheme;
+            model.StoreInformationSettings.MobileDevicesSupported = storeInformationSettings.MobileDevicesSupported;
             //mobile device themes
-            model.StoreInformationSettings.DefaultStoreThemeForMobileDevices = _storeInformationSettings.DefaultStoreThemeForMobileDevices;
+            model.StoreInformationSettings.DefaultStoreThemeForMobileDevices = storeInformationSettings.DefaultStoreThemeForMobileDevices;
             model.StoreInformationSettings.AvailableStoreThemesForMobileDevices = _themeProvider
                 .GetThemeConfigurations()
-                .Where(x => x.MobileTheme)  //do not display themes for desktops
+                .Where(x => x.MobileTheme)
                 .Select(x =>
                 {
                     return new SelectListItem()
                     {
                         Text = x.ThemeTitle,
                         Value = x.ThemeName,
-                        Selected = x.ThemeName.Equals(_storeInformationSettings.DefaultStoreThemeForMobileDevices, StringComparison.InvariantCultureIgnoreCase)
+                        Selected = x.ThemeName.Equals(storeInformationSettings.DefaultStoreThemeForMobileDevices, StringComparison.InvariantCultureIgnoreCase)
                     };
                 })
                 .ToList();
             //EU Cookie law
-            model.StoreInformationSettings.DisplayEuCookieLawWarning = _storeInformationSettings.DisplayEuCookieLawWarning;
+            model.StoreInformationSettings.DisplayEuCookieLawWarning = storeInformationSettings.DisplayEuCookieLawWarning;
+            //override settings
+            if (storeScope > 0)
+            {
+                model.StoreInformationSettings.MobileDevicesSupported_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.MobileDevicesSupported, storeScope);
+                model.StoreInformationSettings.StoreClosed_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.StoreClosed, storeScope);
+                model.StoreInformationSettings.StoreClosedAllowForAdmins_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.StoreClosedAllowForAdmins, storeScope);
+                model.StoreInformationSettings.DefaultStoreThemeForDesktops_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.DefaultStoreThemeForDesktops, storeScope);
+                model.StoreInformationSettings.DefaultStoreThemeForMobileDevices_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.DefaultStoreThemeForMobileDevices, storeScope);
+                model.StoreInformationSettings.AllowCustomerToSelectTheme_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.AllowCustomerToSelectTheme, storeScope);
+                model.StoreInformationSettings.DisplayEuCookieLawWarning_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.DisplayEuCookieLawWarning, storeScope);
+            }
 
             //seo settings
-            model.SeoSettings.PageTitleSeparator = _seoSettings.PageTitleSeparator;
-            model.SeoSettings.DefaultTitle = _seoSettings.DefaultTitle;
-            model.SeoSettings.DefaultMetaKeywords = _seoSettings.DefaultMetaKeywords;
-            model.SeoSettings.DefaultMetaDescription = _seoSettings.DefaultMetaDescription;
-            model.SeoSettings.ConvertNonWesternChars = _seoSettings.ConvertNonWesternChars;
-            model.SeoSettings.CanonicalUrlsEnabled = _seoSettings.CanonicalUrlsEnabled;
-            model.SeoSettings.PageTitleSeoAdjustmentValues = _seoSettings.PageTitleSeoAdjustment.ToSelectList();
+            var seoSettings = _settingService.LoadSetting<SeoSettings>(storeScope);
+            model.SeoSettings.PageTitleSeparator = seoSettings.PageTitleSeparator;
+            model.SeoSettings.PageTitleSeoAdjustment = (int)seoSettings.PageTitleSeoAdjustment;
+            model.SeoSettings.PageTitleSeoAdjustmentValues = seoSettings.PageTitleSeoAdjustment.ToSelectList();
+            model.SeoSettings.DefaultTitle = seoSettings.DefaultTitle;
+            model.SeoSettings.DefaultMetaKeywords = seoSettings.DefaultMetaKeywords;
+            model.SeoSettings.DefaultMetaDescription = seoSettings.DefaultMetaDescription;
+            model.SeoSettings.ConvertNonWesternChars = seoSettings.ConvertNonWesternChars;
+            model.SeoSettings.CanonicalUrlsEnabled = seoSettings.CanonicalUrlsEnabled;
+            //override settings
+            if (storeScope > 0)
+            {
+                model.SeoSettings.PageTitleSeparator_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.PageTitleSeparator, storeScope);
+                model.SeoSettings.PageTitleSeoAdjustment_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.PageTitleSeoAdjustment, storeScope);
+                model.SeoSettings.DefaultTitle_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.DefaultTitle, storeScope);
+                model.SeoSettings.DefaultMetaKeywords_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.DefaultMetaKeywords, storeScope);
+                model.SeoSettings.DefaultMetaDescription_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.DefaultMetaDescription, storeScope);
+                model.SeoSettings.ConvertNonWesternChars_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.ConvertNonWesternChars, storeScope);
+                model.SeoSettings.CanonicalUrlsEnabled_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.CanonicalUrlsEnabled, storeScope);
+            }
             
             //security settings
             model.SecuritySettings.EncryptionKey = _securitySettings.EncryptionKey;
@@ -1838,30 +1860,117 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
-            _storeInformationSettings.StoreClosed = model.StoreInformationSettings.StoreClosed;
-            _storeInformationSettings.StoreClosedAllowForAdmins = model.StoreInformationSettings.StoreClosedAllowForAdmins;
-            _storeInformationSettings.DefaultStoreThemeForDesktops = model.StoreInformationSettings.DefaultStoreThemeForDesktops;
-            _storeInformationSettings.AllowCustomerToSelectTheme = model.StoreInformationSettings.AllowCustomerToSelectTheme;
+
+            //load settings for a chosen store scope
+            var storeScope = GetActiveStoreScopeConfiguration();
+
+            //store information settings
+            var storeInformationSettings = _settingService.LoadSetting<StoreInformationSettings>(storeScope);
+            storeInformationSettings.StoreClosed = model.StoreInformationSettings.StoreClosed;
+            storeInformationSettings.StoreClosedAllowForAdmins = model.StoreInformationSettings.StoreClosedAllowForAdmins;
+            storeInformationSettings.DefaultStoreThemeForDesktops = model.StoreInformationSettings.DefaultStoreThemeForDesktops;
+            storeInformationSettings.AllowCustomerToSelectTheme = model.StoreInformationSettings.AllowCustomerToSelectTheme;
             //store whether MobileDevicesSupported setting has been changed (requires application restart)
-            bool mobileDevicesSupportedChanged = _storeInformationSettings.MobileDevicesSupported !=
+            bool mobileDevicesSupportedChanged = storeInformationSettings.MobileDevicesSupported !=
                                                  model.StoreInformationSettings.MobileDevicesSupported;
-            _storeInformationSettings.MobileDevicesSupported = model.StoreInformationSettings.MobileDevicesSupported;
-            _storeInformationSettings.DefaultStoreThemeForMobileDevices = model.StoreInformationSettings.DefaultStoreThemeForMobileDevices;
+            storeInformationSettings.MobileDevicesSupported = model.StoreInformationSettings.MobileDevicesSupported;
+            storeInformationSettings.DefaultStoreThemeForMobileDevices = model.StoreInformationSettings.DefaultStoreThemeForMobileDevices;
             //EU Cookie law
-            _storeInformationSettings.DisplayEuCookieLawWarning = model.StoreInformationSettings.DisplayEuCookieLawWarning;
-            _settingService.SaveSetting(_storeInformationSettings);
+            storeInformationSettings.DisplayEuCookieLawWarning = model.StoreInformationSettings.DisplayEuCookieLawWarning;
+
+            /* We do not clear cache after each setting update.
+             * This behavior can increase performance because cached settings will not be cleared 
+             * and loaded from database after each update */
+            if (model.StoreInformationSettings.MobileDevicesSupported_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(storeInformationSettings, x => x.MobileDevicesSupported, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(storeInformationSettings, x => x.MobileDevicesSupported, storeScope);
+
+            if (model.StoreInformationSettings.StoreClosed_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(storeInformationSettings, x => x.StoreClosed, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(storeInformationSettings, x => x.StoreClosed, storeScope);
+
+            if (model.StoreInformationSettings.StoreClosedAllowForAdmins_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(storeInformationSettings, x => x.StoreClosedAllowForAdmins, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(storeInformationSettings, x => x.StoreClosedAllowForAdmins, storeScope);
+
+            if (model.StoreInformationSettings.DefaultStoreThemeForDesktops_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(storeInformationSettings, x => x.DefaultStoreThemeForDesktops, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(storeInformationSettings, x => x.DefaultStoreThemeForDesktops, storeScope);
+
+            if (model.StoreInformationSettings.DefaultStoreThemeForMobileDevices_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(storeInformationSettings, x => x.DefaultStoreThemeForMobileDevices, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(storeInformationSettings, x => x.DefaultStoreThemeForMobileDevices, storeScope);
+
+            if (model.StoreInformationSettings.AllowCustomerToSelectTheme_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(storeInformationSettings, x => x.AllowCustomerToSelectTheme, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(storeInformationSettings, x => x.AllowCustomerToSelectTheme, storeScope);
+
+            if (model.StoreInformationSettings.DisplayEuCookieLawWarning_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(storeInformationSettings, x => x.DisplayEuCookieLawWarning, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(storeInformationSettings, x => x.DisplayEuCookieLawWarning, storeScope);
+            
+            //now clear settings cache
+            _settingService.ClearCache();
 
 
 
             //seo settings
-            _seoSettings.PageTitleSeparator = model.SeoSettings.PageTitleSeparator;
-            _seoSettings.DefaultTitle = model.SeoSettings.DefaultTitle;
-            _seoSettings.DefaultMetaKeywords = model.SeoSettings.DefaultMetaKeywords;
-            _seoSettings.DefaultMetaDescription = model.SeoSettings.DefaultMetaDescription;
-            _seoSettings.ConvertNonWesternChars = model.SeoSettings.ConvertNonWesternChars;
-            _seoSettings.CanonicalUrlsEnabled = model.SeoSettings.CanonicalUrlsEnabled;
-            _seoSettings.PageTitleSeoAdjustment = model.SeoSettings.PageTitleSeoAdjustment;
-            _settingService.SaveSetting(_seoSettings);
+            var seoSettings = _settingService.LoadSetting<SeoSettings>(storeScope);
+            seoSettings.PageTitleSeparator = model.SeoSettings.PageTitleSeparator;
+            seoSettings.PageTitleSeoAdjustment = (PageTitleSeoAdjustment)model.SeoSettings.PageTitleSeoAdjustment;
+            seoSettings.DefaultTitle = model.SeoSettings.DefaultTitle;
+            seoSettings.DefaultMetaKeywords = model.SeoSettings.DefaultMetaKeywords;
+            seoSettings.DefaultMetaDescription = model.SeoSettings.DefaultMetaDescription;
+            seoSettings.ConvertNonWesternChars = model.SeoSettings.ConvertNonWesternChars;
+            seoSettings.CanonicalUrlsEnabled = model.SeoSettings.CanonicalUrlsEnabled;
+
+            /* We do not clear cache after each setting update.
+             * This behavior can increase performance because cached settings will not be cleared 
+             * and loaded from database after each update */
+            if (model.SeoSettings.PageTitleSeparator_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(seoSettings, x => x.PageTitleSeparator, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(seoSettings, x => x.PageTitleSeparator, storeScope);
+            
+            if (model.SeoSettings.PageTitleSeoAdjustment_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(seoSettings, x => x.PageTitleSeoAdjustment, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(seoSettings, x => x.PageTitleSeoAdjustment, storeScope);
+            
+            if (model.SeoSettings.DefaultTitle_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(seoSettings, x => x.DefaultTitle, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(seoSettings, x => x.DefaultTitle, storeScope);
+            
+            if (model.SeoSettings.DefaultMetaKeywords_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(seoSettings, x => x.DefaultMetaKeywords, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(seoSettings, x => x.DefaultMetaKeywords, storeScope);
+            
+            if (model.SeoSettings.DefaultMetaDescription_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(seoSettings, x => x.DefaultMetaDescription, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(seoSettings, x => x.DefaultMetaDescription, storeScope);
+            
+            if (model.SeoSettings.ConvertNonWesternChars_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(seoSettings, x => x.ConvertNonWesternChars, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(seoSettings, x => x.ConvertNonWesternChars, storeScope);
+            
+            if (model.SeoSettings.CanonicalUrlsEnabled_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(seoSettings, x => x.CanonicalUrlsEnabled, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(seoSettings, x => x.CanonicalUrlsEnabled, storeScope);
+
+            //now clear settings cache
+            _settingService.ClearCache();
 
 
 

@@ -1,7 +1,5 @@
 ﻿@model GeneralCommonSettingsModel
 @using Telerik.Web.Mvc.UI;
-@using Nop.Core.Domain.Customers;
-@using Nop.Core.Domain.Security;
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.GeneralCommon").Text;
@@ -17,7 +15,8 @@
             <input type="submit" name="save" class="t-button" value="@T("Admin.Common.Save")" />
         </div>
     </div>
-        
+    @Html.Action("StoreScopeConfiguration", "Setting")
+    @Html.ValidationSummary(false)
     
     <script type="text/javascript">
         $(document).ready(function () {
@@ -77,7 +76,6 @@
         }
     </script>
     
-    @Html.ValidationSummary(false)
 
     
     @Html.Telerik().TabStrip().Name("generalsettings-edit").Items(x =>
@@ -120,10 +118,11 @@
 })
 }
 @helper TabStoreInformationSettings()
-    {
+{
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.StoreClosed_OverrideForStore, model => model.StoreInformationSettings.StoreClosed, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.StoreInformationSettings.StoreClosed):
             </td>
             <td class="adminData">
@@ -133,6 +132,7 @@
         </tr>
         <tr id="pnlStoreClosedAllowForAdmins">
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.StoreClosedAllowForAdmins_OverrideForStore, model => model.StoreInformationSettings.StoreClosedAllowForAdmins, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.StoreInformationSettings.StoreClosedAllowForAdmins):
             </td>
             <td class="adminData">
@@ -142,6 +142,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.DefaultStoreThemeForDesktops_OverrideForStore, model => model.StoreInformationSettings.DefaultStoreThemeForDesktops, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.StoreInformationSettings.DefaultStoreThemeForDesktops):
             </td>
             <td class="adminData">
@@ -151,6 +152,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.AllowCustomerToSelectTheme_OverrideForStore, model => model.StoreInformationSettings.AllowCustomerToSelectTheme, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.StoreInformationSettings.AllowCustomerToSelectTheme):
             </td>
             <td class="adminData">
@@ -160,6 +162,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.MobileDevicesSupported_OverrideForStore, model => model.StoreInformationSettings.MobileDevicesSupported, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.StoreInformationSettings.MobileDevicesSupported):
             </td>
             <td class="adminData">
@@ -169,6 +172,7 @@
         </tr>
         <tr id="pnlDefaultStoreThemeForMobileDevices">
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.DefaultStoreThemeForMobileDevices_OverrideForStore, model => model.StoreInformationSettings.DefaultStoreThemeForMobileDevices, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.StoreInformationSettings.DefaultStoreThemeForMobileDevices):
             </td>
             <td class="adminData">
@@ -178,6 +182,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.DisplayEuCookieLawWarning_OverrideForStore, model => model.StoreInformationSettings.DisplayEuCookieLawWarning, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.StoreInformationSettings.DisplayEuCookieLawWarning):
             </td>
             <td class="adminData">
@@ -188,11 +193,12 @@
     </table>
 }
 @helper TabSEOSettings()
-    {
+{
     
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.PageTitleSeparator_OverrideForStore, model => model.SeoSettings.PageTitleSeparator, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.SeoSettings.PageTitleSeparator):
             </td>
             <td class="adminData">
@@ -202,18 +208,17 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.PageTitleSeoAdjustment_OverrideForStore, model => model.SeoSettings.PageTitleSeoAdjustment, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.SeoSettings.PageTitleSeoAdjustment):
             </td>
             <td class="adminData">
-                @(Html.Telerik().DropDownListFor(model => model.SeoSettings.PageTitleSeoAdjustment)
-                            .BindTo(Model.SeoSettings.PageTitleSeoAdjustmentValues)
-                            .HtmlAttributes(new { style = "width:255px" })
-                )
+                @Html.DropDownListFor(model => model.SeoSettings.PageTitleSeoAdjustment, Model.SeoSettings.PageTitleSeoAdjustmentValues)
                 @Html.ValidationMessageFor(model => model.SeoSettings.PageTitleSeoAdjustment)
             </td>
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.DefaultTitle_OverrideForStore, model => model.SeoSettings.DefaultTitle, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.SeoSettings.DefaultTitle):
             </td>
             <td class="adminData">
@@ -223,6 +228,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.DefaultMetaKeywords_OverrideForStore, model => model.SeoSettings.DefaultMetaKeywords, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.SeoSettings.DefaultMetaKeywords):
             </td>
             <td class="adminData">
@@ -232,6 +238,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.DefaultMetaDescription_OverrideForStore, model => model.SeoSettings.DefaultMetaDescription, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.SeoSettings.DefaultMetaDescription):
             </td>
             <td class="adminData">
@@ -241,6 +248,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.ConvertNonWesternChars_OverrideForStore, model => model.SeoSettings.ConvertNonWesternChars, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.SeoSettings.ConvertNonWesternChars):
             </td>
             <td class="adminData">
@@ -250,6 +258,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.CanonicalUrlsEnabled_OverrideForStore, model => model.SeoSettings.CanonicalUrlsEnabled, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.SeoSettings.CanonicalUrlsEnabled):
             </td>
             <td class="adminData">
@@ -260,7 +269,7 @@
     </table>
 }
 @helper TabSecuritySettings()
-    {
+{
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
@@ -269,7 +278,7 @@
             <td class="adminData">
                 @Html.EditorFor(model => model.SecuritySettings.EncryptionKey)
                 @Html.ValidationMessageFor(model => model.SecuritySettings.EncryptionKey)
-                <input type="submit" name="changeencryptionkey" value="@T("Admin.Common.Change")" id="changeencryptionkey" class="adminButton" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
+                <input type="submit" name="changeencryptionkey" value="@T("Admin.Common.Change")" id="changeencryptionkey" class="adminButton" onclick="return confirm('@T("Admin.Common.AreYouSure")    ');" />
             </td>
         </tr>
         <tr>
@@ -299,8 +308,7 @@
                 Web registration forms. CAPTCHAs are used by many websites to prevent abuse from
                 "bots," or automated programs usually written to generate spam. No computer program
                 can read distorted text as well as humans can, so bots cannot navigate sites protected
-                by CAPTCHAs. nopCommerce uses <a href="http://www.google.com/recaptcha" target="_blank">
-                    reCAPTCHA</a>.
+                by CAPTCHAs. nopCommerce uses <a href="http://www.google.com/recaptcha" target="_blank">reCAPTCHA</a>.
             </td>
         </tr>
         <tr>
@@ -405,7 +413,7 @@
     </table>
 }
 @helper TabPdfSettings()
-    {
+{
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
@@ -437,7 +445,7 @@
     </table>
 }
 @helper TabLocalizationSettings()
-    {
+{
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
@@ -460,7 +468,7 @@
     </table>
 }
 @helper TabFullTextSettings()
-    {
+{
     <table class="adminContent">
         <tr>
             <td colspan="2">
