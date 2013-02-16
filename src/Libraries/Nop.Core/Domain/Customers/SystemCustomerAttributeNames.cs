@@ -22,6 +22,7 @@ namespace Nop.Core.Domain.Customers
         public static string TimeZoneId { get { return "TimeZoneId"; } }
 
         //Other attributes
+        public static string DiscountCouponCode { get { return "DiscountCouponCode"; } }
         public static string AvatarPictureId { get { return "AvatarPictureId"; } }
         public static string ForumPostCount { get { return "ForumPostCount"; } }
         public static string Signature { get { return "Signature"; } }

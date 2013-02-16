@@ -62,7 +62,6 @@ namespace Nop.Data.Tests.Orders
                 CustomerGuid = Guid.NewGuid(),
                 AdminComment = "some comment here",
                 IsTaxExempt = true,
-                DiscountCouponCode = "coupon1",
                 Active = true,
                 Deleted = false,
                 CreatedOnUtc = new DateTime(2010, 01, 01),

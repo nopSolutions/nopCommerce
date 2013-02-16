@@ -514,7 +514,7 @@ namespace Nop.Services.Customers
             //clear entered coupon codes
             if (clearCouponCodes)
             {
-                customer.DiscountCouponCode = "";
+                _genericAttributeService.SaveAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.DiscountCouponCode, null);
                 customer.GiftCardCouponCodes = "";
             }
 

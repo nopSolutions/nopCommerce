@@ -5,10 +5,8 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
-using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Stores;
-using Nop.Core.Domain.Tax;
 using Nop.Tests;
 using NUnit.Framework;
 
@@ -33,7 +31,6 @@ namespace Nop.Data.Tests.Customers
             fromDb.AdminComment.ShouldEqual("some comment here");
             fromDb.IsTaxExempt.ShouldEqual(true);
             fromDb.CheckoutAttributes.ShouldEqual("CheckoutAttributes 1");
-            fromDb.DiscountCouponCode.ShouldEqual("coupon1");
             fromDb.GiftCardCouponCodes.ShouldEqual("GiftCardCouponCodes 1");
             fromDb.Active.ShouldEqual(true);
             fromDb.Deleted.ShouldEqual(false);
@@ -288,7 +285,6 @@ namespace Nop.Data.Tests.Customers
                 AdminComment = "some comment here",
                 IsTaxExempt = true,
                 CheckoutAttributes = "CheckoutAttributes 1",
-                DiscountCouponCode= "coupon1",
                 GiftCardCouponCodes = "GiftCardCouponCodes 1",
                 Active = true,
                 Deleted = false,

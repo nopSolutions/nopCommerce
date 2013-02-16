@@ -7,6 +7,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
+using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Events;
@@ -40,6 +41,7 @@ namespace Nop.Services.Orders
         private readonly IPermissionService _permissionService;
         private readonly IAclService _aclService;
         private readonly IStoreMappingService _storeMappingService;
+        private readonly IGenericAttributeService _genericAttributeService;
         #endregion
 
         #region Ctor
@@ -63,6 +65,7 @@ namespace Nop.Services.Orders
         /// <param name="permissionService">Permission service</param>
         /// <param name="aclService">ACL service</param>
         /// <param name="storeMappingService">Store mapping service</param>
+        /// <param name="genericAttributeService">Generic attribute service</param>
         public ShoppingCartService(IRepository<ShoppingCartItem> sciRepository,
             IWorkContext workContext, IStoreContext storeContext,
             ICurrencyService currencyService,
@@ -76,7 +79,8 @@ namespace Nop.Services.Orders
             IEventPublisher eventPublisher,
             IPermissionService permissionService, 
             IAclService aclService,
-            IStoreMappingService storeMappingService)
+            IStoreMappingService storeMappingService,
+            IGenericAttributeService genericAttributeService)
         {
             this._sciRepository = sciRepository;
             this._workContext = workContext;
@@ -94,6 +98,7 @@ namespace Nop.Services.Orders
             this._permissionService = permissionService;
             this._aclService = aclService;
             this._storeMappingService = storeMappingService;
+            this._genericAttributeService= genericAttributeService;
         }
 
         #endregion
@@ -967,9 +972,10 @@ namespace Nop.Services.Orders
             if (includeCouponCodes)
             {
                 //discount
-                if (!String.IsNullOrEmpty(fromCustomer.DiscountCouponCode))
-                    toCustomer.DiscountCouponCode = fromCustomer.DiscountCouponCode;
-
+                var discountCouponCode  = fromCustomer.GetAttribute<string>(SystemCustomerAttributeNames.DiscountCouponCode);
+                if (!String.IsNullOrEmpty(discountCouponCode))
+                    _genericAttributeService.SaveAttribute(toCustomer, SystemCustomerAttributeNames.DiscountCouponCode, discountCouponCode);
+                
                 //gift card
                 foreach (var gcCode in fromCustomer.ParseAppliedGiftCardCouponCodes())
                     toCustomer.ApplyGiftCardCouponCode(gcCode);

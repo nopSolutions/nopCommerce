@@ -7,6 +7,7 @@ using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Plugins;
+using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Events;
 
@@ -30,6 +31,7 @@ namespace Nop.Services.Discounts
         private readonly IRepository<DiscountUsageHistory> _discountUsageHistoryRepository;
         private readonly ICacheManager _cacheManager;
         private readonly IStoreContext _storeContext;
+        private readonly IGenericAttributeService _genericAttributeService;
         private readonly IPluginFinder _pluginFinder;
         private readonly IEventPublisher _eventPublisher;
 
@@ -45,6 +47,7 @@ namespace Nop.Services.Discounts
         /// <param name="discountRequirementRepository">Discount requirement repository</param>
         /// <param name="discountUsageHistoryRepository">Discount usage history repository</param>
         /// <param name="storeContext">Store context</param>
+        /// <param name="genericAttributeService">Generic attribute service</param>
         /// <param name="pluginFinder">Plugin finder</param>
         /// <param name="eventPublisher">Event published</param>
         public DiscountService(ICacheManager cacheManager,
@@ -52,6 +55,7 @@ namespace Nop.Services.Discounts
             IRepository<DiscountRequirement> discountRequirementRepository,
             IRepository<DiscountUsageHistory> discountUsageHistoryRepository,
             IStoreContext storeContext,
+            IGenericAttributeService genericAttributeService,
             IPluginFinder pluginFinder,
             IEventPublisher eventPublisher)
         {
@@ -60,6 +64,7 @@ namespace Nop.Services.Discounts
             this._discountRequirementRepository = discountRequirementRepository;
             this._discountUsageHistoryRepository = discountUsageHistoryRepository;
             this._storeContext = storeContext;
+            this._genericAttributeService = genericAttributeService;
             this._pluginFinder = pluginFinder;
             this._eventPublisher = eventPublisher;
         }
@@ -296,7 +301,7 @@ namespace Nop.Services.Discounts
 
             var couponCodeToValidate = "";
             if (customer != null)
-                couponCodeToValidate = customer.DiscountCouponCode;
+                couponCodeToValidate = customer.GetAttribute<string>(SystemCustomerAttributeNames.DiscountCouponCode, _genericAttributeService);
 
             return IsDiscountValid(discount, customer, couponCodeToValidate);
         }

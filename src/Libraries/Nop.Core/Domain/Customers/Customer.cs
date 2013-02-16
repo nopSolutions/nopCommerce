@@ -84,12 +84,7 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets the selected checkout attributes (serialized)
         /// </summary>
         public virtual string CheckoutAttributes { get; set; }
-
-        /// <summary>
-        /// Gets or sets the applied discount coupon code
-        /// </summary>
-        public virtual string DiscountCouponCode { get; set; }
-
+        
         /// <summary>
         /// Gets or sets the applied gift card coupon codes (serialized)
         /// </summary>
