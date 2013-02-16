@@ -547,7 +547,9 @@ namespace Nop.Services.Orders
                         throw new NopException("Cart is empty");
 
                     //validate the entire shopping cart
-                    var warnings = _shoppingCartService.GetShoppingCartWarnings(cart, customer.CheckoutAttributes, true);
+                    var warnings = _shoppingCartService.GetShoppingCartWarnings(cart, 
+                        customer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes), 
+                        true);
                     if (warnings.Count > 0)
                     {
                         var warningsSb = new StringBuilder();
@@ -613,13 +615,13 @@ namespace Nop.Services.Orders
                 string checkoutAttributeDescription, checkoutAttributesXml;
                 if (!processPaymentRequest.IsRecurringPayment)
                 {
-                    checkoutAttributeDescription = _checkoutAttributeFormatter.FormatAttributes(customer.CheckoutAttributes, customer);
-                    checkoutAttributesXml = customer.CheckoutAttributes;
+                    checkoutAttributesXml = customer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes);
+                    checkoutAttributeDescription = _checkoutAttributeFormatter.FormatAttributes(checkoutAttributesXml, customer);
                 }
                 else
                 {
-                    checkoutAttributeDescription = initialOrder.CheckoutAttributeDescription;
                     checkoutAttributesXml = initialOrder.CheckoutAttributesXml;
+                    checkoutAttributeDescription = initialOrder.CheckoutAttributeDescription;
                 }
 
                 //applied discount (used to store discount usage history)

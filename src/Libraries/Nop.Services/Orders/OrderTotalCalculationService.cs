@@ -205,7 +205,8 @@ namespace Nop.Services.Orders
             //checkout attributes
             if (customer != null)
             {
-                var caValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(customer.CheckoutAttributes);
+                var checkoutAttributesXml = customer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes, _genericAttributeService);
+                var caValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(checkoutAttributesXml);
                 if (caValues!=null)
                 {
                     foreach (var caValue in caValues)

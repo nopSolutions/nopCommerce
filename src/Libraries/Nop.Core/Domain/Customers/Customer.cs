@@ -81,11 +81,6 @@ namespace Nop.Core.Domain.Customers
         public virtual bool IsTaxExempt { get; set; }
 
         /// <summary>
-        /// Gets or sets the selected checkout attributes (serialized)
-        /// </summary>
-        public virtual string CheckoutAttributes { get; set; }
-        
-        /// <summary>
         /// Gets or sets the affiliate identifier
         /// </summary>
         public virtual int AffiliateId { get; set; }

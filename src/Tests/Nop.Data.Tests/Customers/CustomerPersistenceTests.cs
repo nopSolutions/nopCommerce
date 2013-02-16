@@ -30,7 +30,6 @@ namespace Nop.Data.Tests.Customers
             fromDb.AdminComment.ShouldEqual("some comment here");
             fromDb.AdminComment.ShouldEqual("some comment here");
             fromDb.IsTaxExempt.ShouldEqual(true);
-            fromDb.CheckoutAttributes.ShouldEqual("CheckoutAttributes 1");
             fromDb.Active.ShouldEqual(true);
             fromDb.Deleted.ShouldEqual(false);
             fromDb.IsSystemAccount.ShouldEqual(true);
@@ -283,7 +282,6 @@ namespace Nop.Data.Tests.Customers
                 CustomerGuid = Guid.NewGuid(),
                 AdminComment = "some comment here",
                 IsTaxExempt = true,
-                CheckoutAttributes = "CheckoutAttributes 1",
                 Active = true,
                 Deleted = false,
                 IsSystemAccount = true,

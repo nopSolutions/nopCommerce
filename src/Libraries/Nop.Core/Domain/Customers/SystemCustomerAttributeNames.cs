@@ -24,6 +24,7 @@ namespace Nop.Core.Domain.Customers
         //Other attributes
         public static string DiscountCouponCode { get { return "DiscountCouponCode"; } }
         public static string GiftCardCouponCodes { get { return "GiftCardCouponCodes"; } }
+        public static string CheckoutAttributes { get { return "CheckoutAttributes"; } }
         public static string AvatarPictureId { get { return "AvatarPictureId"; } }
         public static string ForumPostCount { get { return "ForumPostCount"; } }
         public static string Signature { get { return "Signature"; } }

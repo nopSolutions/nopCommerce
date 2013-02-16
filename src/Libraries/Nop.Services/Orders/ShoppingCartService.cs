@@ -138,8 +138,10 @@ namespace Nop.Services.Orders
                     .Where(x => x.ShoppingCartType == ShoppingCartType.ShoppingCart)
                     .Where(x => x.StoreId == storeId)
                     .ToList();
-                customer.CheckoutAttributes = _checkoutAttributeParser.EnsureOnlyActiveAttributes(customer.CheckoutAttributes, cart);
-                _customerService.UpdateCustomer(customer);
+
+                var checkoutAttributesXml = customer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes, _genericAttributeService);
+                checkoutAttributesXml = _checkoutAttributeParser.EnsureOnlyActiveAttributes(checkoutAttributesXml, cart);
+                _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.CheckoutAttributes, checkoutAttributesXml);
             }
 
             //event notification
