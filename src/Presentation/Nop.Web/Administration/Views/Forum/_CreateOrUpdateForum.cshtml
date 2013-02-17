@@ -9,11 +9,7 @@
             @Html.NopLabelFor(model => model.ForumGroupId):
         </td>
         <td class="adminData">
-            @(Html.Telerik().DropDownListFor(x=> x.ForumGroupId)
-                .BindTo(Model.ForumGroups.Select(x =>
-                    new DropDownItem { Value = x.Id.ToString(), Text = x.Name }))
-                .HtmlAttributes(new { style = "width:255px"})
-            )
+            @Html.DropDownListFor(model => model.ForumGroupId, new SelectList(Model.ForumGroups, "Id", "Name"))
             @Html.ValidationMessageFor(model => model.ForumGroupId)
         </td>
     </tr>
