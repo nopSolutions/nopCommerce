@@ -15,6 +15,7 @@ namespace Nop.Services.Catalog
         #region Fields
 
         private readonly IRepository<ProductTag> _productTagRepository;
+        private readonly IRepository<Product> _productRepository;
         private readonly IEventPublisher _eventPublisher;
 
         #endregion
@@ -27,10 +28,12 @@ namespace Nop.Services.Catalog
         /// <param name="productTagRepository">Product tag repository</param>
         /// <param name="eventPublisher">Event published</param>
         public ProductTagService(IRepository<ProductTag> productTagRepository,
+            IRepository<Product> productRepository,
             IEventPublisher eventPublisher)
         {
-            _productTagRepository = productTagRepository;
-            _eventPublisher = eventPublisher;
+            this._productTagRepository = productTagRepository;
+            this._productRepository = productRepository;
+            this._eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -135,14 +138,17 @@ namespace Nop.Services.Catalog
             if (productTag == null)
                 throw new ArgumentNullException("productTag");
 
-            int newTotal = productTag.Products
-                .Where(p => !p.Deleted && p.Published && p.ProductVariants.Where(pv => !pv.Deleted && pv.Published).Count() > 0)
-                .Count();
+            var query = from p in _productRepository.Table
+                        where !p.Deleted && 
+                        p.Published && 
+                        p.ProductTags.Any(pt => pt.Id == productTag.Id) &&
+                        p.ProductVariants.Any(pv => !pv.Deleted && pv.Published)
+                        select p.Id;
+            int newTotal = query.Count();
 
             //we do not delete product tasg with 0 product count
             productTag.ProductCount = newTotal;
             UpdateProductTag(productTag);
-            
         }
         
         #endregion
