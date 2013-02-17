@@ -91,6 +91,14 @@ namespace Nop.Services.Catalog
 
             category.Deleted = true;
             UpdateCategory(category);
+
+            //set a ParentCategory property of the children to 0
+            var subcategories = GetAllCategoriesByParentCategoryId(category.Id);
+            foreach (var subcategory in subcategories)
+            {
+                subcategory.ParentCategoryId = 0;
+                UpdateCategory(subcategory);
+            }
         }
         
         /// <summary>
