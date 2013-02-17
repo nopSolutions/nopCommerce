@@ -12,7 +12,7 @@ namespace Nop.Core
         /// <summary>
         /// Gets or sets the entity identifier
         /// </summary>
-        public virtual int Id { get; set; }
+        public int Id { get; set; }
 
         public override bool Equals(object obj)
         {

@@ -11,17 +11,17 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the product identifier
         /// </summary>
-        public virtual int ProductId { get; set; }
+        public int ProductId { get; set; }
 
         /// <summary>
         /// Gets or sets the picture identifier
         /// </summary>
-        public virtual int PictureId { get; set; }
+        public int PictureId { get; set; }
 
         /// <summary>
         /// Gets or sets the display order
         /// </summary>
-        public virtual int DisplayOrder { get; set; }
+        public int DisplayOrder { get; set; }
         
         /// <summary>
         /// Gets the picture

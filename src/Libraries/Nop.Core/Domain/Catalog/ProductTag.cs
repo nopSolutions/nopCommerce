@@ -10,11 +10,11 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the name
         /// </summary>
-        public virtual string Name { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the tagged product count
         /// </summary>
-        public virtual int ProductCount { get; set; }
+        public int ProductCount { get; set; }
     }
 }

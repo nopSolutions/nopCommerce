@@ -8,32 +8,32 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the product identifier
         /// </summary>
-        public virtual int ProductId { get; set; }
+        public int ProductId { get; set; }
 
         /// <summary>
         /// Gets or sets the specification attribute identifier
         /// </summary>
-        public virtual int SpecificationAttributeOptionId { get; set; }
+        public int SpecificationAttributeOptionId { get; set; }
 
         /// <summary>
         /// Gets or sets the custom value
         /// </summary>
-        public virtual string CustomValue { get; set; }
+        public string CustomValue { get; set; }
 
         /// <summary>
         /// Gets or sets whether the attribute can be filtered by
         /// </summary>
-        public virtual bool AllowFiltering { get; set; }
+        public bool AllowFiltering { get; set; }
 
         /// <summary>
         /// Gets or sets whether the attrbiute will be shown on the product page
         /// </summary>
-        public virtual bool ShowOnProductPage { get; set; }
+        public bool ShowOnProductPage { get; set; }
 
         /// <summary>
         /// Gets or sets the display order
         /// </summary>
-        public virtual int DisplayOrder { get; set; }
+        public int DisplayOrder { get; set; }
         
         /// <summary>
         /// Gets or sets the product

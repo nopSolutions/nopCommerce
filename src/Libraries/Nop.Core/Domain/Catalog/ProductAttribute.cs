@@ -10,11 +10,11 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the name
         /// </summary>
-        public virtual string Name { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the description
         /// </summary>
-        public virtual string Description { get; set; }
+        public string Description { get; set; }
     }
 }

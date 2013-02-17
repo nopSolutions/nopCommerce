@@ -16,62 +16,62 @@ namespace Nop.Core.Domain.Discounts
         /// <summary>
         /// Gets or sets the name
         /// </summary>
-        public virtual string Name { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the discount type identifier
         /// </summary>
-        public virtual int DiscountTypeId { get; set; }
+        public int DiscountTypeId { get; set; }
         
         /// <summary>
         /// Gets or sets a value indicating whether to use percentage
         /// </summary>
-        public virtual bool UsePercentage { get; set; }
+        public bool UsePercentage { get; set; }
 
         /// <summary>
         /// Gets or sets the discount percentage
         /// </summary>
-        public virtual decimal DiscountPercentage { get; set; }
+        public decimal DiscountPercentage { get; set; }
 
         /// <summary>
         /// Gets or sets the discount amount
         /// </summary>
-        public virtual decimal DiscountAmount { get; set; }
+        public decimal DiscountAmount { get; set; }
 
         /// <summary>
         /// Gets or sets the discount start date and time
         /// </summary>
-        public virtual DateTime? StartDateUtc { get; set; }
+        public DateTime? StartDateUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the discount end date and time
         /// </summary>
-        public virtual DateTime? EndDateUtc { get; set; }
+        public DateTime? EndDateUtc { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether discount requires coupon code
         /// </summary>
-        public virtual bool RequiresCouponCode { get; set; }
+        public bool RequiresCouponCode { get; set; }
 
         /// <summary>
         /// Gets or sets the coupon code
         /// </summary>
-        public virtual string CouponCode { get; set; }
+        public string CouponCode { get; set; }
 
         /// <summary>
         /// Gets or sets the discount limitation identifier
         /// </summary>
-        public virtual int DiscountLimitationId { get; set; }
+        public int DiscountLimitationId { get; set; }
 
         /// <summary>
         /// Gets or sets the discount limitation times (used when Limitation is set to "N Times Only" or "N Times Per Customer")
         /// </summary>
-        public virtual int LimitationTimes { get; set; }
+        public int LimitationTimes { get; set; }
         
         /// <summary>
         /// Gets or sets the discount type
         /// </summary>
-        public virtual DiscountType DiscountType
+        public DiscountType DiscountType
         {
             get
             {
@@ -86,7 +86,7 @@ namespace Nop.Core.Domain.Discounts
         /// <summary>
         /// Gets or sets the discount limitation
         /// </summary>
-        public virtual DiscountLimitationType DiscountLimitation
+        public DiscountLimitationType DiscountLimitation
         {
             get
             {

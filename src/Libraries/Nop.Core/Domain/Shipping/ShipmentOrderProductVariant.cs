@@ -9,17 +9,17 @@ namespace Nop.Core.Domain.Shipping
         /// <summary>
         /// Gets or sets the shipment identifier
         /// </summary>
-        public virtual int ShipmentId { get; set; }
+        public int ShipmentId { get; set; }
 
         /// <summary>
         /// Gets or sets the order product variant identifier
         /// </summary>
-        public virtual int OrderProductVariantId { get; set; }
+        public int OrderProductVariantId { get; set; }
 
         /// <summary>
         /// Gets or sets the quantity
         /// </summary>
-        public virtual int Quantity { get; set; }
+        public int Quantity { get; set; }
 
         /// <summary>
         /// Gets the shipment

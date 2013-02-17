@@ -13,17 +13,17 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the specification attribute identifier
         /// </summary>
-        public virtual int SpecificationAttributeId { get; set; }
+        public int SpecificationAttributeId { get; set; }
 
         /// <summary>
         /// Gets or sets the name
         /// </summary>
-        public virtual string Name { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the display order
         /// </summary>
-        public virtual int DisplayOrder { get; set; }
+        public int DisplayOrder { get; set; }
         
         /// <summary>
         /// Gets or sets the specification attribute

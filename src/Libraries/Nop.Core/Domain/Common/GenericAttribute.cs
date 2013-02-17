@@ -8,27 +8,27 @@ namespace Nop.Core.Domain.Common
         /// <summary>
         /// Gets or sets the entity identifier
         /// </summary>
-        public virtual int EntityId { get; set; }
+        public int EntityId { get; set; }
         
         /// <summary>
         /// Gets or sets the key group
         /// </summary>
-        public virtual string KeyGroup { get; set; }
+        public string KeyGroup { get; set; }
 
         /// <summary>
         /// Gets or sets the key
         /// </summary>
-        public virtual string Key { get; set; }
+        public string Key { get; set; }
 
         /// <summary>
         /// Gets or sets the value
         /// </summary>
-        public virtual string Value { get; set; }
+        public string Value { get; set; }
 
         /// <summary>
         /// Gets or sets the store identifier
         /// </summary>
-        public virtual int StoreId { get; set; }
+        public int StoreId { get; set; }
         
     }
 }

@@ -9,31 +9,31 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the specification attribute identifier
         /// </summary>
-        public virtual int SpecificationAttributeId { get; set; }
+        public int SpecificationAttributeId { get; set; }
 
         /// <summary>
         /// Gets or sets the specification attribute name
         /// </summary>
-        public virtual string SpecificationAttributeName { get; set; }
+        public string SpecificationAttributeName { get; set; }
 
         /// <summary>
         /// Gets or sets the specification attribute display order
         /// </summary>
-        public virtual int SpecificationAttributeDisplayOrder { get; set; }
+        public  int SpecificationAttributeDisplayOrder { get; set; }
 
         /// <summary>
         /// Gets or sets the specification attribute option identifier
         /// </summary>
-        public virtual int SpecificationAttributeOptionId { get; set; }
+        public int SpecificationAttributeOptionId { get; set; }
 
         /// <summary>
         /// Gets or sets the specification attribute option name
         /// </summary>
-        public virtual string SpecificationAttributeOptionName { get; set; }
+        public string SpecificationAttributeOptionName { get; set; }
 
         /// <summary>
         /// Gets or sets the specification attribute option display order
         /// </summary>
-        public virtual int SpecificationAttributeOptionDisplayOrder { get; set; }
+        public int SpecificationAttributeOptionDisplayOrder { get; set; }
     }
 }

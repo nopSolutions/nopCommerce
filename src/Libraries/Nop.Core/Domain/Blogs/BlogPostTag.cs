@@ -8,11 +8,11 @@ namespace Nop.Core.Domain.Blogs
         /// <summary>
         /// Gets or sets the name
         /// </summary>
-        public virtual string Name { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the tagged product count
         /// </summary>
-        public virtual int BlogPostCount { get; set; }
+        public int BlogPostCount { get; set; }
     }
 }

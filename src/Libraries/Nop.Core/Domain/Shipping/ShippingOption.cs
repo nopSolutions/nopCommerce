@@ -16,22 +16,22 @@ namespace Nop.Core.Domain.Shipping
         /// <summary>
         /// Gets or sets the system name of shipping rate computation method
         /// </summary>
-        public virtual string ShippingRateComputationMethodSystemName { get; set; }
+        public string ShippingRateComputationMethodSystemName { get; set; }
 
         /// <summary>
         /// Gets or sets a shipping rate (without discounts, additional shipping charges, etc)
         /// </summary>
-        public virtual decimal Rate { get; set; }
+        public decimal Rate { get; set; }
 
         /// <summary>
         /// Gets or sets a shipping option name
         /// </summary>
-        public virtual string Name { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets a shipping option description
         /// </summary>
-        public virtual string Description { get; set; }
+        public string Description { get; set; }
     }
 
 

@@ -13,32 +13,32 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the product identifier
         /// </summary>
-        public virtual int ProductId { get; set; }
+        public int ProductId { get; set; }
 
         /// <summary>
         /// Gets or sets the title
         /// </summary>
-        public virtual string Title { get; set; }
+        public string Title { get; set; }
 
         /// <summary>
         /// Gets or sets the review text
         /// </summary>
-        public virtual string ReviewText { get; set; }
+        public string ReviewText { get; set; }
 
         /// <summary>
         /// Review rating
         /// </summary>
-        public virtual int Rating { get; set; }
+        public int Rating { get; set; }
 
         /// <summary>
         /// Review helpful votes total
         /// </summary>
-        public virtual int HelpfulYesTotal { get; set; }
+        public int HelpfulYesTotal { get; set; }
 
         /// <summary>
         /// Review not helpful votes total
         /// </summary>
-        public virtual int HelpfulNoTotal { get; set; }
+        public int HelpfulNoTotal { get; set; }
 
         /// <summary>
         /// Gets the product

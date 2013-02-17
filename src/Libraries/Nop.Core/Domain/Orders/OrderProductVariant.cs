@@ -14,83 +14,83 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets or sets the order product variant identifier
         /// </summary>
-        public virtual Guid OrderProductVariantGuid { get; set; }
+        public Guid OrderProductVariantGuid { get; set; }
 
         /// <summary>
         /// Gets or sets the order identifier
         /// </summary>
-        public virtual int OrderId { get; set; }
+        public int OrderId { get; set; }
 
         /// <summary>
         /// Gets or sets the product variant identifier
         /// </summary>
-        public virtual int ProductVariantId { get; set; }
+        public int ProductVariantId { get; set; }
 
         /// <summary>
         /// Gets or sets the quantity
         /// </summary>
-        public virtual int Quantity { get; set; }
+        public int Quantity { get; set; }
 
         /// <summary>
         /// Gets or sets the unit price in primary store currency (incl tax)
         /// </summary>
-        public virtual decimal UnitPriceInclTax { get; set; }
+        public decimal UnitPriceInclTax { get; set; }
 
         /// <summary>
         /// Gets or sets the unit price in primary store currency (excl tax)
         /// </summary>
-        public virtual decimal UnitPriceExclTax { get; set; }
+        public decimal UnitPriceExclTax { get; set; }
 
         /// <summary>
         /// Gets or sets the price in primary store currency (incl tax)
         /// </summary>
-        public virtual decimal PriceInclTax { get; set; }
+        public decimal PriceInclTax { get; set; }
 
         /// <summary>
         /// Gets or sets the price in primary store currency (excl tax)
         /// </summary>
-        public virtual decimal PriceExclTax { get; set; }
+        public decimal PriceExclTax { get; set; }
 
         /// <summary>
         /// Gets or sets the discount amount (incl tax)
         /// </summary>
-        public virtual decimal DiscountAmountInclTax { get; set; }
+        public decimal DiscountAmountInclTax { get; set; }
 
         /// <summary>
         /// Gets or sets the discount amount (excl tax)
         /// </summary>
-        public virtual decimal DiscountAmountExclTax { get; set; }
+        public decimal DiscountAmountExclTax { get; set; }
 
         /// <summary>
         /// Gets or sets the attribute description
         /// </summary>
-        public virtual string AttributeDescription { get; set; }
+        public string AttributeDescription { get; set; }
 
         /// <summary>
         /// Gets or sets the product variant attributes in XML format
         /// </summary>
-        public virtual string AttributesXml { get; set; }
+        public string AttributesXml { get; set; }
         
         /// <summary>
         /// Gets or sets the download count
         /// </summary>
-        public virtual int DownloadCount { get; set; }
+        public int DownloadCount { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether download is activated
         /// </summary>
-        public virtual bool IsDownloadActivated { get; set; }
+        public bool IsDownloadActivated { get; set; }
 
         /// <summary>
         /// Gets or sets a license download identifier (in case this is a downloadable product)
         /// </summary>
-        public virtual int? LicenseDownloadId { get; set; }
+        public int? LicenseDownloadId { get; set; }
 
         /// <summary>
         /// Gets or sets the total weight of one item
         /// It's nullable for compatibility with the previous version of nopCommerce where was no such property
         /// </summary>
-        public virtual decimal? ItemWeight { get; set; }
+        public decimal? ItemWeight { get; set; }
 
         /// <summary>
         /// Gets the order

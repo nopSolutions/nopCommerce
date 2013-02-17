@@ -10,26 +10,26 @@ namespace Nop.Plugin.Tax.CountryStateZip.Domain
         /// <summary>
         /// Gets or sets the tax category identifier
         /// </summary>
-        public virtual int TaxCategoryId { get; set; }
+        public int TaxCategoryId { get; set; }
 
         /// <summary>
         /// Gets or sets the country identifier
         /// </summary>
-        public virtual int CountryId { get; set; }
+        public int CountryId { get; set; }
 
         /// <summary>
         /// Gets or sets the state/province identifier
         /// </summary>
-        public virtual int StateProvinceId { get; set; }
+        public int StateProvinceId { get; set; }
 
         /// <summary>
         /// Gets or sets the zip
         /// </summary>
-        public virtual string Zip { get; set; }
+        public string Zip { get; set; }
 
         /// <summary>
         /// Gets or sets the percentage
         /// </summary>
-        public virtual decimal Percentage { get; set; }
+        public decimal Percentage { get; set; }
     }
 }

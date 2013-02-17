@@ -10,62 +10,62 @@ namespace Nop.Core.Domain.Forums
         /// <summary>
         /// Gets or sets the forum group identifier
         /// </summary>
-        public virtual int ForumGroupId { get; set; }
+        public int ForumGroupId { get; set; }
 
         /// <summary>
         /// Gets or sets the name
         /// </summary>
-        public virtual string Name { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the description
         /// </summary>
-        public virtual string Description { get; set; }
+        public string Description { get; set; }
 
         /// <summary>
         /// Gets or sets the number of topics
         /// </summary>
-        public virtual int NumTopics { get; set; }
+        public int NumTopics { get; set; }
 
         /// <summary>
         /// Gets or sets the number of posts
         /// </summary>
-        public virtual int NumPosts { get; set; }
+        public int NumPosts { get; set; }
 
         /// <summary>
         /// Gets or sets the last topic identifier
         /// </summary>
-        public virtual int LastTopicId { get; set; }
+        public int LastTopicId { get; set; }
 
         /// <summary>
         /// Gets or sets the last post identifier
         /// </summary>
-        public virtual int LastPostId { get; set; }
+        public int LastPostId { get; set; }
 
         /// <summary>
         /// Gets or sets the last post customer identifier
         /// </summary>
-        public virtual int LastPostCustomerId { get; set; }
+        public int LastPostCustomerId { get; set; }
 
         /// <summary>
         /// Gets or sets the last post date and time
         /// </summary>
-        public virtual DateTime? LastPostTime { get; set; }
+        public DateTime? LastPostTime { get; set; }
 
         /// <summary>
         /// Gets or sets the display order
         /// </summary>
-        public virtual int DisplayOrder { get; set; }
+        public int DisplayOrder { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of instance creation
         /// </summary>
-        public virtual DateTime CreatedOnUtc { get; set; }
+        public DateTime CreatedOnUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of instance update
         /// </summary>
-        public virtual DateTime UpdatedOnUtc { get; set; }
+        public DateTime UpdatedOnUtc { get; set; }
 
         /// <summary>
         /// Gets the ForumGroup

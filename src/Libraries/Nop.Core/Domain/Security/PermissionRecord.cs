@@ -13,17 +13,17 @@ namespace Nop.Core.Domain.Security
         /// <summary>
         /// Gets or sets the permission name
         /// </summary>
-        public virtual string Name { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the permission system name
         /// </summary>
-        public virtual string SystemName { get; set; }
+        public string SystemName { get; set; }
         
         /// <summary>
         /// Gets or sets the permission category
         /// </summary>
-        public virtual string Category { get; set; }
+        public string Category { get; set; }
         
         /// <summary>
         /// Gets or sets discount usage history

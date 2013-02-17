@@ -23,102 +23,102 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the name
         /// </summary>
-        public virtual string Name { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the short description
         /// </summary>
-        public virtual string ShortDescription { get; set; }
+        public string ShortDescription { get; set; }
 
         /// <summary>
         /// Gets or sets the full description
         /// </summary>
-        public virtual string FullDescription { get; set; }
+        public string FullDescription { get; set; }
 
         /// <summary>
         /// Gets or sets the admin comment
         /// </summary>
-        public virtual string AdminComment { get; set; }
+        public string AdminComment { get; set; }
 
         /// <summary>
         /// Gets or sets a value of used product template identifier
         /// </summary>
-        public virtual int ProductTemplateId { get; set; }
+        public int ProductTemplateId { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to show the product on home page
         /// </summary>
-        public virtual bool ShowOnHomePage { get; set; }
+        public bool ShowOnHomePage { get; set; }
 
         /// <summary>
         /// Gets or sets the meta keywords
         /// </summary>
-        public virtual string MetaKeywords { get; set; }
+        public string MetaKeywords { get; set; }
 
         /// <summary>
         /// Gets or sets the meta description
         /// </summary>
-        public virtual string MetaDescription { get; set; }
+        public string MetaDescription { get; set; }
 
         /// <summary>
         /// Gets or sets the meta title
         /// </summary>
-        public virtual string MetaTitle { get; set; }
+        public string MetaTitle { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the product allows customer reviews
         /// </summary>
-        public virtual bool AllowCustomerReviews { get; set; }
+        public bool AllowCustomerReviews { get; set; }
 
         /// <summary>
         /// Gets or sets the rating sum (approved reviews)
         /// </summary>
-        public virtual int ApprovedRatingSum { get; set; }
+        public int ApprovedRatingSum { get; set; }
 
         /// <summary>
         /// Gets or sets the rating sum (not approved reviews)
         /// </summary>
-        public virtual int NotApprovedRatingSum { get; set; }
+        public int NotApprovedRatingSum { get; set; }
 
         /// <summary>
         /// Gets or sets the total rating votes (approved reviews)
         /// </summary>
-        public virtual int ApprovedTotalReviews { get; set; }
+        public int ApprovedTotalReviews { get; set; }
 
         /// <summary>
         /// Gets or sets the total rating votes (not approved reviews)
         /// </summary>
-        public virtual int NotApprovedTotalReviews { get; set; }
+        public int NotApprovedTotalReviews { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the entity is subject to ACL
         /// </summary>
-        public virtual bool SubjectToAcl { get; set; }
+        public bool SubjectToAcl { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the entity is limited/restricted to certain stores
         /// </summary>
-        public virtual bool LimitedToStores { get; set; }
+        public bool LimitedToStores { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the entity is published
         /// </summary>
-        public virtual bool Published { get; set; }
+        public bool Published { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the entity has been deleted
         /// </summary>
-        public virtual bool Deleted { get; set; }
+        public bool Deleted { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of product creation
         /// </summary>
-        public virtual DateTime CreatedOnUtc { get; set; }
+        public DateTime CreatedOnUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of product update
         /// </summary>
-        public virtual DateTime UpdatedOnUtc { get; set; }
+        public DateTime UpdatedOnUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the product variants

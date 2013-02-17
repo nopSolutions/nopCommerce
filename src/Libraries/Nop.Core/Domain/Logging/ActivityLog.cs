@@ -8,31 +8,25 @@ namespace Nop.Core.Domain.Logging
     /// </summary>
     public partial class ActivityLog : BaseEntity
     {
-        #region Properties
-
         /// <summary>
         /// Gets or sets the activity log type identifier
         /// </summary>
-        public virtual int ActivityLogTypeId { get; set; }
+        public int ActivityLogTypeId { get; set; }
 
         /// <summary>
         /// Gets or sets the customer identifier
         /// </summary>
-        public virtual int CustomerId { get; set; }
+        public int CustomerId { get; set; }
 
         /// <summary>
         /// Gets or sets the activity comment
         /// </summary>
-        public virtual string Comment { get; set; }
+        public string Comment { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of instance creation
         /// </summary>
-        public virtual DateTime CreatedOnUtc { get; set; }
-
-        #endregion
-
-        #region Navigation Properties
+        public DateTime CreatedOnUtc { get; set; }
 
         /// <summary>
         /// Gets the activity log type
@@ -43,7 +37,5 @@ namespace Nop.Core.Domain.Logging
         /// Gets the customer
         /// </summary>
         public virtual Customer Customer { get; set; }
-
-        #endregion
     }
 }

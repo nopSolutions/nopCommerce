@@ -8,67 +8,67 @@ namespace Nop.Core.Domain.Common
         /// <summary>
         /// Gets or sets the first name
         /// </summary>
-        public virtual string FirstName { get; set; }
+        public string FirstName { get; set; }
 
         /// <summary>
         /// Gets or sets the last name
         /// </summary>
-        public virtual string LastName { get; set; }
+        public string LastName { get; set; }
 
         /// <summary>
         /// Gets or sets the email
         /// </summary>
-        public virtual string Email { get; set; }
+        public string Email { get; set; }
 
         /// <summary>
         /// Gets or sets the company
         /// </summary>
-        public virtual string Company { get; set; }
+        public string Company { get; set; }
 
         /// <summary>
         /// Gets or sets the country identifier
         /// </summary>
-        public virtual int? CountryId { get; set; }
+        public int? CountryId { get; set; }
 
         /// <summary>
         /// Gets or sets the state/province identifier
         /// </summary>
-        public virtual int? StateProvinceId { get; set; }
+        public int? StateProvinceId { get; set; }
         
         /// <summary>
         /// Gets or sets the city
         /// </summary>
-        public virtual string City { get; set; }
+        public string City { get; set; }
 
         /// <summary>
         /// Gets or sets the address 1
         /// </summary>
-        public virtual string Address1 { get; set; }
+        public string Address1 { get; set; }
 
         /// <summary>
         /// Gets or sets the address 2
         /// </summary>
-        public virtual string Address2 { get; set; }
+        public string Address2 { get; set; }
 
         /// <summary>
         /// Gets or sets the zip/postal code
         /// </summary>
-        public virtual string ZipPostalCode { get; set; }
+        public string ZipPostalCode { get; set; }
 
         /// <summary>
         /// Gets or sets the phone number
         /// </summary>
-        public virtual string PhoneNumber { get; set; }
+        public string PhoneNumber { get; set; }
 
         /// <summary>
         /// Gets or sets the fax number
         /// </summary>
-        public virtual string FaxNumber { get; set; }
+        public string FaxNumber { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of instance creation
         /// </summary>
-        public virtual DateTime CreatedOnUtc { get; set; }
+        public DateTime CreatedOnUtc { get; set; }
         
         /// <summary>
         /// Gets or sets the country

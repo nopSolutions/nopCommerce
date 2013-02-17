@@ -14,47 +14,47 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets or sets the cycle length
         /// </summary>
-        public virtual int CycleLength { get; set; }
+        public int CycleLength { get; set; }
 
         /// <summary>
         /// Gets or sets the cycle period identifier
         /// </summary>
-        public virtual int CyclePeriodId { get; set; }
+        public int CyclePeriodId { get; set; }
 
         /// <summary>
         /// Gets or sets the total cycles
         /// </summary>
-        public virtual int TotalCycles { get; set; }
+        public int TotalCycles { get; set; }
 
         /// <summary>
         /// Gets or sets the start date
         /// </summary>
-        public virtual DateTime StartDateUtc { get; set; }
+        public DateTime StartDateUtc { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the payment is active
         /// </summary>
-        public virtual bool IsActive { get; set; }
+        public bool IsActive { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the entity has been deleted
         /// </summary>
-        public virtual bool Deleted { get; set; }
+        public bool Deleted { get; set; }
 
         /// <summary>
         /// Gets or sets the initial order identifier
         /// </summary>
-        public virtual int InitialOrderId { get; set; }
+        public int InitialOrderId { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of payment creation
         /// </summary>
-        public virtual DateTime CreatedOnUtc { get; set; }
+        public DateTime CreatedOnUtc { get; set; }
         
         /// <summary>
         /// Gets the next payment date
         /// </summary>
-        public virtual DateTime? NextPaymentDate
+        public DateTime? NextPaymentDate
         {
             get
             {
@@ -155,7 +155,7 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets the cycles remaining
         /// </summary>
-        public virtual int CyclesRemaining
+        public int CyclesRemaining
         {
             get
             {
@@ -172,7 +172,7 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets or sets the payment status
         /// </summary>
-        public virtual RecurringProductCyclePeriod CyclePeriod
+        public RecurringProductCyclePeriod CyclePeriod
         {
             get
             {

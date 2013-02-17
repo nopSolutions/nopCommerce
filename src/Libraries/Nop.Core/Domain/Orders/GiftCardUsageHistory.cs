@@ -10,22 +10,22 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets or sets the gift card identifier
         /// </summary>
-        public virtual int GiftCardId { get; set; }
+        public int GiftCardId { get; set; }
 
         /// <summary>
         /// Gets or sets the order identifier
         /// </summary>
-        public virtual int UsedWithOrderId { get; set; }
+        public int UsedWithOrderId { get; set; }
 
         /// <summary>
         /// Gets or sets the used value (amount)
         /// </summary>
-        public virtual decimal UsedValue { get; set; }
+        public decimal UsedValue { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of instance creation
         /// </summary>
-        public virtual DateTime CreatedOnUtc { get; set; }
+        public DateTime CreatedOnUtc { get; set; }
         
         /// <summary>
         /// Gets the gift card

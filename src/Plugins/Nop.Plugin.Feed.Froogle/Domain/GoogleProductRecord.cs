@@ -7,15 +7,15 @@ namespace Nop.Plugin.Feed.Froogle.Domain
     /// </summary>
     public partial class GoogleProductRecord : BaseEntity
     {
-        public virtual int ProductVariantId { get; set; }
-        public virtual string Taxonomy { get; set; }
+        public int ProductVariantId { get; set; }
+        public string Taxonomy { get; set; }
 
-        public virtual string Gender { get; set; }
-        public virtual string AgeGroup { get; set; }
-        public virtual string Color { get; set; }
-        public virtual string Size { get; set; }
-        public virtual string Material { get; set; }
-        public virtual string Pattern { get; set; }
-        public virtual string ItemGroupId { get; set; }
+        public string Gender { get; set; }
+        public string AgeGroup { get; set; }
+        public string Color { get; set; }
+        public string Size { get; set; }
+        public string Material { get; set; }
+        public string Pattern { get; set; }
+        public string ItemGroupId { get; set; }
     }
 }

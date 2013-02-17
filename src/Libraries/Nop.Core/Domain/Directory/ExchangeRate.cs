@@ -19,17 +19,17 @@ namespace Nop.Core.Domain.Directory
         /// <summary>
         /// The three letter ISO code for the Exchange Rate, e.g. USD
         /// </summary>
-        public virtual string CurrencyCode { get; set; }
+        public string CurrencyCode { get; set; }
 
         /// <summary>
         /// The conversion rate of this currency from the base currency
         /// </summary>
-        public virtual decimal Rate { get; set; }
+        public decimal Rate { get; set; }
 
         /// <summary>
         /// When was this exchange rate updated from the data source (the internet data xml feed)
         /// </summary>
-        public virtual DateTime UpdatedOn { get; set; }
+        public DateTime UpdatedOn { get; set; }
 
         
         /// <summary>

@@ -11,62 +11,62 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets or sets the store identifier
         /// </summary>
-        public virtual int StoreId { get; set; }
+        public int StoreId { get; set; }
 
         /// <summary>
         /// Gets or sets the order product variant identifier
         /// </summary>
-        public virtual int OrderProductVariantId { get; set; }
+        public int OrderProductVariantId { get; set; }
 
         /// <summary>
         /// Gets or sets the customer identifier
         /// </summary>
-        public virtual int CustomerId { get; set; }
+        public int CustomerId { get; set; }
 
         /// <summary>
         /// Gets or sets the quantity
         /// </summary>
-        public virtual int Quantity { get; set; }
+        public int Quantity { get; set; }
 
         /// <summary>
         /// Gets or sets the reason to return
         /// </summary>
-        public virtual string ReasonForReturn { get; set; }
+        public string ReasonForReturn { get; set; }
 
         /// <summary>
         /// Gets or sets the requested action
         /// </summary>
-        public virtual string RequestedAction { get; set; }
+        public string RequestedAction { get; set; }
 
         /// <summary>
         /// Gets or sets the customer comments
         /// </summary>
-        public virtual string CustomerComments { get; set; }
+        public string CustomerComments { get; set; }
 
         /// <summary>
         /// Gets or sets the staff notes
         /// </summary>
-        public virtual string StaffNotes { get; set; }
+        public string StaffNotes { get; set; }
 
         /// <summary>
         /// Gets or sets the return status identifier
         /// </summary>
-        public virtual int ReturnRequestStatusId { get; set; }
+        public int ReturnRequestStatusId { get; set; }
         
         /// <summary>
         /// Gets or sets the date and time of entity creation
         /// </summary>
-        public virtual DateTime CreatedOnUtc { get; set; }
+        public DateTime CreatedOnUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of entity update
         /// </summary>
-        public virtual DateTime UpdatedOnUtc { get; set; }
+        public DateTime UpdatedOnUtc { get; set; }
         
         /// <summary>
         /// Gets or sets the return status
         /// </summary>
-        public virtual ReturnRequestStatus ReturnRequestStatus
+        public ReturnRequestStatus ReturnRequestStatus
         {
             get
             {

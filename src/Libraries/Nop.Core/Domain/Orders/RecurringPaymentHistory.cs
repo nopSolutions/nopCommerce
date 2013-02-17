@@ -10,17 +10,17 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets or sets the recurring payment identifier
         /// </summary>
-        public virtual int RecurringPaymentId { get; set; }
+        public int RecurringPaymentId { get; set; }
 
         /// <summary>
         /// Gets or sets the recurring payment identifier
         /// </summary>
-        public virtual int OrderId { get; set; }
+        public int OrderId { get; set; }
         
         /// <summary>
         /// Gets or sets the date and time of entity creation
         /// </summary>
-        public virtual DateTime CreatedOnUtc { get; set; }
+        public DateTime CreatedOnUtc { get; set; }
         
         /// <summary>
         /// Gets the recurring payment

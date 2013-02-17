@@ -68,262 +68,262 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets or sets the order identifier
         /// </summary>
-        public virtual Guid OrderGuid { get; set; }
+        public Guid OrderGuid { get; set; }
 
         /// <summary>
         /// Gets or sets the store identifier
         /// </summary>
-        public virtual int StoreId { get; set; }
+        public int StoreId { get; set; }
 
         /// <summary>
         /// Gets or sets the customer identifier
         /// </summary>
-        public virtual int CustomerId { get; set; }
+        public int CustomerId { get; set; }
 
         /// <summary>
         /// Gets or sets the billing address identifier
         /// </summary>
-        public virtual int BillingAddressId { get; set; }
+        public int BillingAddressId { get; set; }
 
         /// <summary>
         /// Gets or sets the shipping address identifier
         /// </summary>
-        public virtual int? ShippingAddressId { get; set; }
+        public int? ShippingAddressId { get; set; }
 
         /// <summary>
         /// Gets or sets an order status identifier
         /// </summary>
-        public virtual int OrderStatusId { get; set; }
+        public int OrderStatusId { get; set; }
 
         /// <summary>
         /// Gets or sets the shipping status identifier
         /// </summary>
-        public virtual int ShippingStatusId { get; set; }
+        public int ShippingStatusId { get; set; }
 
         /// <summary>
         /// Gets or sets the payment status identifier
         /// </summary>
-        public virtual int PaymentStatusId { get; set; }
+        public int PaymentStatusId { get; set; }
 
         /// <summary>
         /// Gets or sets the payment method system name
         /// </summary>
-        public virtual string PaymentMethodSystemName { get; set; }
+        public string PaymentMethodSystemName { get; set; }
 
         /// <summary>
         /// Gets or sets the customer currency code (at the moment of order placing)
         /// </summary>
-        public virtual string CustomerCurrencyCode { get; set; }
+        public string CustomerCurrencyCode { get; set; }
 
         /// <summary>
         /// Gets or sets the currency rate
         /// </summary>
-        public virtual decimal CurrencyRate { get; set; }
+        public decimal CurrencyRate { get; set; }
 
         /// <summary>
         /// Gets or sets the customer tax display type identifier
         /// </summary>
-        public virtual int CustomerTaxDisplayTypeId { get; set; }
+        public int CustomerTaxDisplayTypeId { get; set; }
 
         /// <summary>
         /// Gets or sets the VAT number (the European Union Value Added Tax)
         /// </summary>
-        public virtual string VatNumber { get; set; }
+        public string VatNumber { get; set; }
 
         /// <summary>
         /// Gets or sets the order subtotal (incl tax)
         /// </summary>
-        public virtual decimal OrderSubtotalInclTax { get; set; }
+        public decimal OrderSubtotalInclTax { get; set; }
 
         /// <summary>
         /// Gets or sets the order subtotal (excl tax)
         /// </summary>
-        public virtual decimal OrderSubtotalExclTax { get; set; }
+        public decimal OrderSubtotalExclTax { get; set; }
 
         /// <summary>
         /// Gets or sets the order subtotal discount (incl tax)
         /// </summary>
-        public virtual decimal OrderSubTotalDiscountInclTax { get; set; }
+        public decimal OrderSubTotalDiscountInclTax { get; set; }
 
         /// <summary>
         /// Gets or sets the order subtotal discount (excl tax)
         /// </summary>
-        public virtual decimal OrderSubTotalDiscountExclTax { get; set; }
+        public decimal OrderSubTotalDiscountExclTax { get; set; }
 
         /// <summary>
         /// Gets or sets the order shipping (incl tax)
         /// </summary>
-        public virtual decimal OrderShippingInclTax { get; set; }
+        public decimal OrderShippingInclTax { get; set; }
 
         /// <summary>
         /// Gets or sets the order shipping (excl tax)
         /// </summary>
-        public virtual decimal OrderShippingExclTax { get; set; }
+        public decimal OrderShippingExclTax { get; set; }
 
         /// <summary>
         /// Gets or sets the payment method additional fee (incl tax)
         /// </summary>
-        public virtual decimal PaymentMethodAdditionalFeeInclTax { get; set; }
+        public decimal PaymentMethodAdditionalFeeInclTax { get; set; }
 
         /// <summary>
         /// Gets or sets the payment method additional fee (excl tax)
         /// </summary>
-        public virtual decimal PaymentMethodAdditionalFeeExclTax { get; set; }
+        public decimal PaymentMethodAdditionalFeeExclTax { get; set; }
 
         /// <summary>
         /// Gets or sets the tax rates
         /// </summary>
-        public virtual string TaxRates { get; set; }
+        public string TaxRates { get; set; }
 
         /// <summary>
         /// Gets or sets the order tax
         /// </summary>
-        public virtual decimal OrderTax { get; set; }
+        public decimal OrderTax { get; set; }
 
         /// <summary>
         /// Gets or sets the order discount (applied to order total)
         /// </summary>
-        public virtual decimal OrderDiscount { get; set; }
+        public decimal OrderDiscount { get; set; }
 
         /// <summary>
         /// Gets or sets the order total
         /// </summary>
-        public virtual decimal OrderTotal { get; set; }
+        public decimal OrderTotal { get; set; }
 
         /// <summary>
         /// Gets or sets the refunded amount
         /// </summary>
-        public virtual decimal RefundedAmount { get; set; }
+        public decimal RefundedAmount { get; set; }
 
         /// <summary>
         /// Gets or sets the value indicating whether reward points were earned for this order
         /// </summary>
-        public virtual bool RewardPointsWereAdded { get; set; }
+        public bool RewardPointsWereAdded { get; set; }
         
         /// <summary>
         /// Gets or sets the checkout attribute description
         /// </summary>
-        public virtual string CheckoutAttributeDescription { get; set; }
+        public string CheckoutAttributeDescription { get; set; }
 
         /// <summary>
         /// Gets or sets the checkout attributes in XML format
         /// </summary>
-        public virtual string CheckoutAttributesXml { get; set; }
+        public string CheckoutAttributesXml { get; set; }
 
         /// <summary>
         /// Gets or sets the customer language identifier
         /// </summary>
-        public virtual int CustomerLanguageId { get; set; }
+        public int CustomerLanguageId { get; set; }
 
         /// <summary>
         /// Gets or sets the affiliate identifier
         /// </summary>
-        public virtual int AffiliateId { get; set; }
+        public int AffiliateId { get; set; }
 
         /// <summary>
         /// Gets or sets the customer IP address
         /// </summary>
-        public virtual string CustomerIp { get; set; }
+        public string CustomerIp { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether storing of credit card number is allowed
         /// </summary>
-        public virtual bool AllowStoringCreditCardNumber { get; set; }
+        public bool AllowStoringCreditCardNumber { get; set; }
 
         /// <summary>
         /// Gets or sets the card type
         /// </summary>
-        public virtual string CardType { get; set; }
+        public string CardType { get; set; }
 
         /// <summary>
         /// Gets or sets the card name
         /// </summary>
-        public virtual string CardName { get; set; }
+        public string CardName { get; set; }
 
         /// <summary>
         /// Gets or sets the card number
         /// </summary>
-        public virtual string CardNumber { get; set; }
+        public string CardNumber { get; set; }
 
         /// <summary>
         /// Gets or sets the masked credit card number
         /// </summary>
-        public virtual string MaskedCreditCardNumber { get; set; }
+        public string MaskedCreditCardNumber { get; set; }
 
         /// <summary>
         /// Gets or sets the card CVV2
         /// </summary>
-        public virtual string CardCvv2 { get; set; }
+        public string CardCvv2 { get; set; }
 
         /// <summary>
         /// Gets or sets the card expiration month
         /// </summary>
-        public virtual string CardExpirationMonth { get; set; }
+        public string CardExpirationMonth { get; set; }
 
         /// <summary>
         /// Gets or sets the card expiration year
         /// </summary>
-        public virtual string CardExpirationYear { get; set; }
+        public string CardExpirationYear { get; set; }
 
         /// <summary>
         /// Gets or sets the authorization transaction identifier
         /// </summary>
-        public virtual string AuthorizationTransactionId { get; set; }
+        public string AuthorizationTransactionId { get; set; }
 
         /// <summary>
         /// Gets or sets the authorization transaction code
         /// </summary>
-        public virtual string AuthorizationTransactionCode { get; set; }
+        public string AuthorizationTransactionCode { get; set; }
 
         /// <summary>
         /// Gets or sets the authorization transaction result
         /// </summary>
-        public virtual string AuthorizationTransactionResult { get; set; }
+        public string AuthorizationTransactionResult { get; set; }
 
         /// <summary>
         /// Gets or sets the capture transaction identifier
         /// </summary>
-        public virtual string CaptureTransactionId { get; set; }
+        public string CaptureTransactionId { get; set; }
 
         /// <summary>
         /// Gets or sets the capture transaction result
         /// </summary>
-        public virtual string CaptureTransactionResult { get; set; }
+        public string CaptureTransactionResult { get; set; }
 
         /// <summary>
         /// Gets or sets the subscription transaction identifier
         /// </summary>
-        public virtual string SubscriptionTransactionId { get; set; }
+        public string SubscriptionTransactionId { get; set; }
 
         /// <summary>
         /// Gets or sets the purchase order number
         /// </summary>
-        public virtual string PurchaseOrderNumber { get; set; }
+        public string PurchaseOrderNumber { get; set; }
 
         /// <summary>
         /// Gets or sets the paid date and time
         /// </summary>
-        public virtual DateTime? PaidDateUtc { get; set; }
+        public DateTime? PaidDateUtc { get; set; }
         
         /// <summary>
         /// Gets or sets the shipping method
         /// </summary>
-        public virtual string ShippingMethod { get; set; }
+        public string ShippingMethod { get; set; }
 
         /// <summary>
         /// Gets or sets the shipping rate computation method identifier
         /// </summary>
-        public virtual string ShippingRateComputationMethodSystemName { get; set; }
+        public string ShippingRateComputationMethodSystemName { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the entity has been deleted
         /// </summary>
-        public virtual bool Deleted { get; set; }
+        public bool Deleted { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of order creation
         /// </summary>
-        public virtual DateTime CreatedOnUtc { get; set; }
+        public DateTime CreatedOnUtc { get; set; }
 
         #endregion
 
@@ -401,7 +401,7 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets or sets the order status
         /// </summary>
-        public virtual OrderStatus OrderStatus
+        public OrderStatus OrderStatus
         {
             get
             {
@@ -416,7 +416,7 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets or sets the payment status
         /// </summary>
-        public virtual PaymentStatus PaymentStatus
+        public PaymentStatus PaymentStatus
         {
             get
             {
@@ -431,7 +431,7 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets or sets the shipping status
         /// </summary>
-        public virtual ShippingStatus ShippingStatus
+        public ShippingStatus ShippingStatus
         {
             get
             {
@@ -446,7 +446,7 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets or sets the customer tax display type
         /// </summary>
-        public virtual TaxDisplayType CustomerTaxDisplayType
+        public TaxDisplayType CustomerTaxDisplayType
         {
             get
             {
@@ -461,7 +461,7 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets the applied tax rates
         /// </summary>
-        public virtual SortedDictionary<decimal, decimal> TaxRatesDictionary
+        public SortedDictionary<decimal, decimal> TaxRatesDictionary
         {
             get
             {

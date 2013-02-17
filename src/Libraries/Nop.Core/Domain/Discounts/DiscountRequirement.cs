@@ -8,12 +8,12 @@
         /// <summary>
         /// Gets or sets the discount identifier
         /// </summary>
-        public virtual int DiscountId { get; set; }
+        public int DiscountId { get; set; }
         
         /// <summary>
         /// Gets or sets the discount requirement rule system name
         /// </summary>
-        public virtual string DiscountRequirementRuleSystemName { get; set; }
+        public string DiscountRequirementRuleSystemName { get; set; }
         
         /// <summary>
         /// Gets or sets the discount

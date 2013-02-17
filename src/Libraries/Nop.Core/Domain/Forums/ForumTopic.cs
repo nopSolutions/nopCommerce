@@ -11,62 +11,62 @@ namespace Nop.Core.Domain.Forums
         /// <summary>
         /// Gets or sets the forum identifier
         /// </summary>
-        public virtual int ForumId { get; set; }
+        public int ForumId { get; set; }
 
         /// <summary>
         /// Gets or sets the customer identifier
         /// </summary>
-        public virtual int CustomerId { get; set; }
+        public int CustomerId { get; set; }
 
         /// <summary>
         /// Gets or sets the topic type identifier
         /// </summary>
-        public virtual int TopicTypeId { get; set; }
+        public int TopicTypeId { get; set; }
 
         /// <summary>
         /// Gets or sets the subject
         /// </summary>
-        public virtual string Subject { get; set; }
+        public string Subject { get; set; }
 
         /// <summary>
         /// Gets or sets the number of posts
         /// </summary>
-        public virtual int NumPosts { get; set; }
+        public int NumPosts { get; set; }
 
         /// <summary>
         /// Gets or sets the number of views
         /// </summary>
-        public virtual int Views { get; set; }
+        public int Views { get; set; }
 
         /// <summary>
         /// Gets or sets the last post identifier
         /// </summary>
-        public virtual int LastPostId { get; set; }
+        public int LastPostId { get; set; }
 
         /// <summary>
         /// Gets or sets the last post customer identifier
         /// </summary>
-        public virtual int LastPostCustomerId { get; set; }
+        public int LastPostCustomerId { get; set; }
 
         /// <summary>
         /// Gets or sets the last post date and time
         /// </summary>
-        public virtual DateTime? LastPostTime { get; set; }
+        public DateTime? LastPostTime { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of instance creation
         /// </summary>
-        public virtual DateTime CreatedOnUtc { get; set; }
+        public DateTime CreatedOnUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of instance update
         /// </summary>
-        public virtual DateTime UpdatedOnUtc { get; set; }
+        public DateTime UpdatedOnUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the forum topic type
         /// </summary>
-        public virtual ForumTopicType ForumTopicType
+        public ForumTopicType ForumTopicType
         {
             get
             {
@@ -91,7 +91,7 @@ namespace Nop.Core.Domain.Forums
         /// <summary>
         /// Gets the number of replies
         /// </summary>
-        public virtual int NumReplies
+        public int NumReplies
         {
             get
             {

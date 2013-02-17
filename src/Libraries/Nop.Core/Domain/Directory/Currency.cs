@@ -12,52 +12,52 @@ namespace Nop.Core.Domain.Directory
         /// <summary>
         /// Gets or sets the name
         /// </summary>
-        public virtual string Name { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the currency code
         /// </summary>
-        public virtual string CurrencyCode { get; set; }
+        public string CurrencyCode { get; set; }
 
         /// <summary>
         /// Gets or sets the rate
         /// </summary>
-        public virtual decimal Rate { get; set; }
+        public decimal Rate { get; set; }
 
         /// <summary>
         /// Gets or sets the display locale
         /// </summary>
-        public virtual string DisplayLocale { get; set; }
+        public string DisplayLocale { get; set; }
 
         /// <summary>
         /// Gets or sets the custom formatting
         /// </summary>
-        public virtual string CustomFormatting { get; set; }
+        public string CustomFormatting { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the entity is limited/restricted to certain stores
         /// </summary>
-        public virtual bool LimitedToStores { get; set; }
+        public bool LimitedToStores { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the entity is published
         /// </summary>
-        public virtual bool Published { get; set; }
+        public bool Published { get; set; }
 
         /// <summary>
         /// Gets or sets the display order
         /// </summary>
-        public virtual int DisplayOrder { get; set; }
+        public int DisplayOrder { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of instance creation
         /// </summary>
-        public virtual DateTime CreatedOnUtc { get; set; }
+        public DateTime CreatedOnUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of instance update
         /// </summary>
-        public virtual DateTime UpdatedOnUtc { get; set; }
+        public DateTime UpdatedOnUtc { get; set; }
     }
 
 }

@@ -8,37 +8,37 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the product variant identifier
         /// </summary>
-        public virtual int ProductVariantId { get; set; }
+        public int ProductVariantId { get; set; }
 
         /// <summary>
         /// Gets or sets the attributes
         /// </summary>
-        public virtual string AttributesXml { get; set; }
+        public string AttributesXml { get; set; }
 
         /// <summary>
         /// Gets or sets the stock quantity
         /// </summary>
-        public virtual int StockQuantity { get; set; }
+        public int StockQuantity { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to allow orders when out of stock
         /// </summary>
-        public virtual bool AllowOutOfStockOrders { get; set; }
+        public bool AllowOutOfStockOrders { get; set; }
         
         /// <summary>
         /// Gets or sets the SKU
         /// </summary>
-        public virtual string Sku { get; set; }
+        public string Sku { get; set; }
 
         /// <summary>
         /// Gets or sets the manufacturer part number
         /// </summary>
-        public virtual string ManufacturerPartNumber { get; set; }
+        public string ManufacturerPartNumber { get; set; }
 
         /// <summary>
         /// Gets or sets the Global Trade Item Number (GTIN). These identifiers include UPC (in North America), EAN (in Europe), JAN (in Japan), and ISBN (for books).
         /// </summary>
-        public virtual string Gtin { get; set; }
+        public string Gtin { get; set; }
         
         /// <summary>
         /// Gets the product variant

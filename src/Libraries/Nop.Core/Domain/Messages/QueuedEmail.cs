@@ -10,67 +10,67 @@ namespace Nop.Core.Domain.Messages
         /// <summary>
         /// Gets or sets the priority
         /// </summary>
-        public virtual int Priority { get; set; }
+        public int Priority { get; set; }
 
         /// <summary>
         /// Gets or sets the From property
         /// </summary>
-        public virtual string From { get; set; }
+        public string From { get; set; }
 
         /// <summary>
         /// Gets or sets the FromName property
         /// </summary>
-        public virtual string FromName { get; set; }
+        public string FromName { get; set; }
 
         /// <summary>
         /// Gets or sets the To property
         /// </summary>
-        public virtual string To { get; set; }
+        public string To { get; set; }
 
         /// <summary>
         /// Gets or sets the ToName property
         /// </summary>
-        public virtual string ToName { get; set; }
+        public string ToName { get; set; }
 
         /// <summary>
         /// Gets or sets the CC
         /// </summary>
-        public virtual string CC { get; set; }
+        public string CC { get; set; }
 
         /// <summary>
         /// Gets or sets the Bcc
         /// </summary>
-        public virtual string Bcc { get; set; }
+        public string Bcc { get; set; }
 
         /// <summary>
         /// Gets or sets the subject
         /// </summary>
-        public virtual string Subject { get; set; }
+        public string Subject { get; set; }
 
         /// <summary>
         /// Gets or sets the body
         /// </summary>
-        public virtual string Body { get; set; }
+        public string Body { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of item creation in UTC
         /// </summary>
-        public virtual DateTime CreatedOnUtc { get; set; }
+        public DateTime CreatedOnUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the send tries
         /// </summary>
-        public virtual int SentTries { get; set; }
+        public int SentTries { get; set; }
 
         /// <summary>
         /// Gets or sets the sent date and time
         /// </summary>
-        public virtual DateTime? SentOnUtc { get; set; }
+        public DateTime? SentOnUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the used email account identifier
         /// </summary>
-        public virtual int EmailAccountId { get; set; }
+        public int EmailAccountId { get; set; }
 
         /// <summary>
         /// Gets the email account

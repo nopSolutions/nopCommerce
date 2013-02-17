@@ -14,47 +14,47 @@ namespace Nop.Core.Domain.Polls
         /// <summary>
         /// Gets or sets the language identifier
         /// </summary>
-        public virtual int LanguageId { get; set; }
+        public int LanguageId { get; set; }
 
         /// <summary>
         /// Gets or sets the name
         /// </summary>
-        public virtual string Name { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the system keyword
         /// </summary>
-        public virtual string SystemKeyword { get; set; }
+        public string SystemKeyword { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the entity is published
         /// </summary>
-        public virtual bool Published { get; set; }
+        public bool Published { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the entity should be shown on home page
         /// </summary>
-        public virtual bool ShowOnHomePage { get; set; }
+        public bool ShowOnHomePage { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the anonymous votes are allowed
         /// </summary>
-        public virtual bool AllowGuestsToVote { get; set; }
+        public bool AllowGuestsToVote { get; set; }
 
         /// <summary>
         /// Gets or sets the display order
         /// </summary>
-        public virtual int DisplayOrder { get; set; }
+        public int DisplayOrder { get; set; }
 
         /// <summary>
         /// Gets or sets the poll start date and time
         /// </summary>
-        public virtual DateTime? StartDateUtc { get; set; }
+        public DateTime? StartDateUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the poll end date and time
         /// </summary>
-        public virtual DateTime? EndDateUtc { get; set; }
+        public DateTime? EndDateUtc { get; set; }
         
         /// <summary>
         /// Gets or sets the news comments

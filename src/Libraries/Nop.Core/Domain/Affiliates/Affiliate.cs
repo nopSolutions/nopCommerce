@@ -7,17 +7,17 @@ namespace Nop.Core.Domain.Affiliates
     /// </summary>
     public partial class Affiliate : BaseEntity
     {
-        public virtual int AddressId { get; set; }
+        public int AddressId { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the entity has been deleted
         /// </summary>
-        public virtual bool Deleted { get; set; }
+        public bool Deleted { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the entity is active
         /// </summary>
-        public virtual bool Active { get; set; }
+        public bool Active { get; set; }
 
         public virtual Address Address { get; set; }
     }

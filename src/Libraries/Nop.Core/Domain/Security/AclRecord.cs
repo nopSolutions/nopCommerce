@@ -8,16 +8,16 @@ namespace Nop.Core.Domain.Security
         /// <summary>
         /// Gets or sets the entity identifier
         /// </summary>
-        public virtual int EntityId { get; set; }
+        public int EntityId { get; set; }
 
         /// <summary>
         /// Gets or sets the entity name
         /// </summary>
-        public virtual string EntityName { get; set; }
+        public string EntityName { get; set; }
 
         /// <summary>
         /// Gets or sets the customer role identifier
         /// </summary>
-        public virtual int CustomerRoleId { get; set; }
+        public int CustomerRoleId { get; set; }
     }
 }

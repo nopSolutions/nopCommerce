@@ -38,29 +38,29 @@ namespace Nop.Core.Domain.Customers
         /// <summary>
         /// Gets or sets the customer Guid
         /// </summary>
-        public virtual Guid CustomerGuid { get; set; }
+        public Guid CustomerGuid { get; set; }
 
         /// <summary>
         /// Gets or sets the username
         /// </summary>
-        public virtual string Username { get; set; }
+        public string Username { get; set; }
         /// <summary>
         /// Gets or sets the email
         /// </summary>
-        public virtual string Email { get; set; }
+        public string Email { get; set; }
         /// <summary>
         /// Gets or sets the password
         /// </summary>
-        public virtual string Password { get; set; }
+        public string Password { get; set; }
 
         /// <summary>
         /// Gets or sets the password format
         /// </summary>
-        public virtual int PasswordFormatId { get; set; }
+        public int PasswordFormatId { get; set; }
         /// <summary>
         /// Gets or sets the password format
         /// </summary>
-        public virtual PasswordFormat PasswordFormat
+        public PasswordFormat PasswordFormat
         {
             get { return (PasswordFormat)PasswordFormatId; }
             set { this.PasswordFormatId = (int)value; }
@@ -68,62 +68,62 @@ namespace Nop.Core.Domain.Customers
         /// <summary>
         /// Gets or sets the password salt
         /// </summary>
-        public virtual string PasswordSalt { get; set; }
+        public string PasswordSalt { get; set; }
 
         /// <summary>
         /// Gets or sets the admin comment
         /// </summary>
-        public virtual string AdminComment { get; set; }
+        public string AdminComment { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the customer is tax exempt
         /// </summary>
-        public virtual bool IsTaxExempt { get; set; }
+        public bool IsTaxExempt { get; set; }
 
         /// <summary>
         /// Gets or sets the affiliate identifier
         /// </summary>
-        public virtual int AffiliateId { get; set; }
+        public int AffiliateId { get; set; }
         
         /// <summary>
         /// Gets or sets a value indicating whether the customer is active
         /// </summary>
-        public virtual bool Active { get; set; }
+        public bool Active { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the customer has been deleted
         /// </summary>
-        public virtual bool Deleted { get; set; }
+        public bool Deleted { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the customer account is system
         /// </summary>
-        public virtual bool IsSystemAccount { get; set; }
+        public bool IsSystemAccount { get; set; }
 
         /// <summary>
         /// Gets or sets the customer system name
         /// </summary>
-        public virtual string SystemName { get; set; }
+        public string SystemName { get; set; }
 
         /// <summary>
         /// Gets or sets the last IP address
         /// </summary>
-        public virtual string LastIpAddress { get; set; }
+        public string LastIpAddress { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of entity creation
         /// </summary>
-        public virtual DateTime CreatedOnUtc { get; set; }
+        public DateTime CreatedOnUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of last login
         /// </summary>
-        public virtual DateTime? LastLoginDateUtc { get; set; }
+        public DateTime? LastLoginDateUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of last activity
         /// </summary>
-        public virtual DateTime LastActivityDateUtc { get; set; }
+        public DateTime LastActivityDateUtc { get; set; }
         
         #region Navigation properties
 

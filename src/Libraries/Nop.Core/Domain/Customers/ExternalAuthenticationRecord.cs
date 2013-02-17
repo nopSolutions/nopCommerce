@@ -8,37 +8,37 @@ namespace Nop.Core.Domain.Customers
         /// <summary>
         /// Gets or sets the customer identifier
         /// </summary>
-        public virtual int CustomerId { get; set; }
+        public int CustomerId { get; set; }
 
         /// <summary>
         /// Gets or sets the external email
         /// </summary>
-        public virtual string Email { get; set; }
+        public string Email { get; set; }
 
         /// <summary>
         /// Gets or sets the external identifier
         /// </summary>
-        public virtual string ExternalIdentifier { get; set; }
+        public string ExternalIdentifier { get; set; }
 
         /// <summary>
         /// Gets or sets the external display identifier
         /// </summary>
-        public virtual string ExternalDisplayIdentifier { get; set; }
+        public string ExternalDisplayIdentifier { get; set; }
 
         /// <summary>
         /// Gets or sets the OAuthToken
         /// </summary>
-        public virtual string OAuthToken { get; set; }
+        public string OAuthToken { get; set; }
 
         /// <summary>
         /// Gets or sets the OAuthAccessToken
         /// </summary>
-        public virtual string OAuthAccessToken { get; set; }
+        public string OAuthAccessToken { get; set; }
 
         /// <summary>
         /// Gets or sets the provider
         /// </summary>
-        public virtual string ProviderSystemName { get; set; }
+        public string ProviderSystemName { get; set; }
         
         /// <summary>
         /// Gets or sets the customer

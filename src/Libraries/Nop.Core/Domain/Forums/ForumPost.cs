@@ -11,32 +11,32 @@ namespace Nop.Core.Domain.Forums
         /// <summary>
         /// Gets or sets the forum topic identifier
         /// </summary>
-        public virtual int TopicId { get; set; }
+        public int TopicId { get; set; }
 
         /// <summary>
         /// Gets or sets the customer identifier
         /// </summary>
-        public virtual int CustomerId { get; set; }
+        public int CustomerId { get; set; }
 
         /// <summary>
         /// Gets or sets the text
         /// </summary>
-        public virtual string Text { get; set; }
+        public string Text { get; set; }
 
         /// <summary>
         /// Gets or sets the IP address
         /// </summary>
-        public virtual string IPAddress { get; set; }
+        public string IPAddress { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of instance creation
         /// </summary>
-        public virtual DateTime CreatedOnUtc { get; set; }
+        public DateTime CreatedOnUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of instance update
         /// </summary>
-        public virtual DateTime UpdatedOnUtc { get; set; }
+        public DateTime UpdatedOnUtc { get; set; }
 
         /// <summary>
         /// Gets the topic

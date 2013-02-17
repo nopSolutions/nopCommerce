@@ -11,27 +11,27 @@ namespace Nop.Core.Domain.Directory
         /// <summary>
         /// Gets or sets the country identifier
         /// </summary>
-        public virtual int CountryId { get; set; }
+        public int CountryId { get; set; }
 
         /// <summary>
         /// Gets or sets the name
         /// </summary>
-        public virtual string Name { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the abbreviation
         /// </summary>
-        public virtual string Abbreviation { get; set; }
+        public string Abbreviation { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the entity is published
         /// </summary>
-        public virtual bool Published { get; set; }
+        public bool Published { get; set; }
 
         /// <summary>
         /// Gets or sets the display order
         /// </summary>
-        public virtual int DisplayOrder { get; set; }
+        public int DisplayOrder { get; set; }
 
         /// <summary>
         /// Gets or sets the country

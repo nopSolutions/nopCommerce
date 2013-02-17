@@ -8,17 +8,17 @@ namespace Nop.Core.Domain.Localization
         /// <summary>
         /// Gets or sets the language identifier
         /// </summary>
-        public virtual int LanguageId { get; set; }
+        public int LanguageId { get; set; }
 
         /// <summary>
         /// Gets or sets the resource name
         /// </summary>
-        public virtual string ResourceName { get; set; }
+        public string ResourceName { get; set; }
 
         /// <summary>
         /// Gets or sets the resource value
         /// </summary>
-        public virtual string ResourceValue { get; set; }
+        public string ResourceValue { get; set; }
         
         /// <summary>
         /// Gets or sets the language

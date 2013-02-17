@@ -14,33 +14,33 @@ namespace Nop.Core.Domain.Shipping
         /// <summary>
         /// Gets or sets the order identifier
         /// </summary>
-        public virtual int OrderId { get; set; }
+        public int OrderId { get; set; }
         
         /// <summary>
         /// Gets or sets the tracking number of this shipment
         /// </summary>
-        public virtual string TrackingNumber { get; set; }
+        public string TrackingNumber { get; set; }
 
         /// <summary>
         /// Gets or sets the total weight of this shipment
         /// It's nullable for compatibility with the previous version of nopCommerce where was no such property
         /// </summary>
-        public virtual decimal? TotalWeight { get; set; }
+        public decimal? TotalWeight { get; set; }
 
         /// <summary>
         /// Gets or sets the shipped date and time
         /// </summary>
-        public virtual DateTime? ShippedDateUtc { get; set; }
+        public DateTime? ShippedDateUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the delivery date and time
         /// </summary>
-        public virtual DateTime? DeliveryDateUtc { get; set; }
+        public DateTime? DeliveryDateUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the entity creation date
         /// </summary>
-        public virtual DateTime CreatedOnUtc { get; set; }
+        public DateTime CreatedOnUtc { get; set; }
 
         /// <summary>
         /// Gets the order

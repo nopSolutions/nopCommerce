@@ -11,27 +11,27 @@ namespace Nop.Core.Domain.Forums
         /// <summary>
         /// Gets or sets the forum subscription identifier
         /// </summary>
-        public virtual Guid SubscriptionGuid { get; set; }
+        public Guid SubscriptionGuid { get; set; }
 
         /// <summary>
         /// Gets or sets the customer identifier
         /// </summary>
-        public virtual int CustomerId { get; set; }
+        public int CustomerId { get; set; }
 
         /// <summary>
         /// Gets or sets the forum identifier
         /// </summary>
-        public virtual int ForumId { get; set; }
+        public int ForumId { get; set; }
 
         /// <summary>
         /// Gets or sets the topic identifier
         /// </summary>
-        public virtual int TopicId { get; set; }
+        public int TopicId { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of instance creation
         /// </summary>
-        public virtual DateTime CreatedOnUtc { get; set; }
+        public DateTime CreatedOnUtc { get; set; }
 
         /// <summary>
         /// Gets the customer

@@ -10,7 +10,7 @@ namespace Nop.Core.Domain.Polls
         /// <summary>
         /// Gets or sets the poll answer identifier
         /// </summary>
-        public virtual int PollAnswerId { get; set; }
+        public int PollAnswerId { get; set; }
 
         /// <summary>
         /// Gets or sets the poll answer

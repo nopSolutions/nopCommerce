@@ -19,282 +19,282 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the product identifier
         /// </summary>
-        public virtual int ProductId { get; set; }
+        public int ProductId { get; set; }
 
         /// <summary>
         /// Gets or sets the name
         /// </summary>
-        public virtual string Name { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the SKU
         /// </summary>
-        public virtual string Sku { get; set; }
+        public string Sku { get; set; }
 
         /// <summary>
         /// Gets or sets the description
         /// </summary>
-        public virtual string Description { get; set; }
+        public string Description { get; set; }
 
         /// <summary>
         /// Gets or sets the admin comment
         /// </summary>
-        public virtual string AdminComment { get; set; }
+        public string AdminComment { get; set; }
 
         /// <summary>
         /// Gets or sets the manufacturer part number
         /// </summary>
-        public virtual string ManufacturerPartNumber { get; set; }
+        public string ManufacturerPartNumber { get; set; }
 
         /// <summary>
         /// Gets or sets the Global Trade Item Number (GTIN). These identifiers include UPC (in North America), EAN (in Europe), JAN (in Japan), and ISBN (for books).
         /// </summary>
-        public virtual string Gtin { get; set; }
+        public string Gtin { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the product variant is gift card
         /// </summary>
-        public virtual bool IsGiftCard { get; set; }
+        public bool IsGiftCard { get; set; }
 
         /// <summary>
         /// Gets or sets the gift card type identifier
         /// </summary>
-        public virtual int GiftCardTypeId { get; set; }
+        public int GiftCardTypeId { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the product variant requires that other product variants are added to the cart (Product X requires Product Y)
         /// </summary>
-        public virtual bool RequireOtherProducts { get; set; }
+        public bool RequireOtherProducts { get; set; }
 
         /// <summary>
         /// Gets or sets a required product variant identifiers (comma separated)
         /// </summary>
-        public virtual string RequiredProductVariantIds { get; set; }
+        public string RequiredProductVariantIds { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether required product variants are automatically added to the cart
         /// </summary>
-        public virtual bool AutomaticallyAddRequiredProductVariants { get; set; }
+        public bool AutomaticallyAddRequiredProductVariants { get; set; }
         
         /// <summary>
         /// Gets or sets a value indicating whether the product variant is download
         /// </summary>
-        public virtual bool IsDownload { get; set; }
+        public bool IsDownload { get; set; }
 
         /// <summary>
         /// Gets or sets the download identifier
         /// </summary>
-        public virtual int DownloadId { get; set; }
+        public int DownloadId { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this downloadable product can be downloaded unlimited number of times
         /// </summary>
-        public virtual bool UnlimitedDownloads { get; set; }
+        public bool UnlimitedDownloads { get; set; }
 
         /// <summary>
         /// Gets or sets the maximum number of downloads
         /// </summary>
-        public virtual int MaxNumberOfDownloads { get; set; }
+        public int MaxNumberOfDownloads { get; set; }
 
         /// <summary>
         /// Gets or sets the number of days during customers keeps access to the file.
         /// </summary>
-        public virtual int? DownloadExpirationDays { get; set; }
+        public int? DownloadExpirationDays { get; set; }
 
         /// <summary>
         /// Gets or sets the download activation type
         /// </summary>
-        public virtual int DownloadActivationTypeId { get; set; }
+        public int DownloadActivationTypeId { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the product variant has a sample download file
         /// </summary>
-        public virtual bool HasSampleDownload { get; set; }
+        public bool HasSampleDownload { get; set; }
 
         /// <summary>
         /// Gets or sets the sample download identifier
         /// </summary>
-        public virtual int SampleDownloadId { get; set; }
+        public int SampleDownloadId { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the product has user agreement
         /// </summary>
-        public virtual bool HasUserAgreement { get; set; }
+        public bool HasUserAgreement { get; set; }
 
         /// <summary>
         /// Gets or sets the text of license agreement
         /// </summary>
-        public virtual string UserAgreementText { get; set; }
+        public string UserAgreementText { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the product variant is recurring
         /// </summary>
-        public virtual bool IsRecurring { get; set; }
+        public bool IsRecurring { get; set; }
 
         /// <summary>
         /// Gets or sets the cycle length
         /// </summary>
-        public virtual int RecurringCycleLength { get; set; }
+        public int RecurringCycleLength { get; set; }
 
         /// <summary>
         /// Gets or sets the cycle period
         /// </summary>
-        public virtual int RecurringCyclePeriodId { get; set; }
+        public int RecurringCyclePeriodId { get; set; }
 
         /// <summary>
         /// Gets or sets the total cycles
         /// </summary>
-        public virtual int RecurringTotalCycles { get; set; }
+        public int RecurringTotalCycles { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the entity is ship enabled
         /// </summary>
-        public virtual bool IsShipEnabled { get; set; }
+        public bool IsShipEnabled { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the entity is free shipping
         /// </summary>
-        public virtual bool IsFreeShipping { get; set; }
+        public bool IsFreeShipping { get; set; }
 
         /// <summary>
         /// Gets or sets the additional shipping charge
         /// </summary>
-        public virtual decimal AdditionalShippingCharge { get; set; }
+        public decimal AdditionalShippingCharge { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the product variant is marked as tax exempt
         /// </summary>
-        public virtual bool IsTaxExempt { get; set; }
+        public bool IsTaxExempt { get; set; }
 
         /// <summary>
         /// Gets or sets the tax category identifier
         /// </summary>
-        public virtual int TaxCategoryId { get; set; }
+        public int TaxCategoryId { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating how to manage inventory
         /// </summary>
-        public virtual int ManageInventoryMethodId { get; set; }
+        public int ManageInventoryMethodId { get; set; }
 
         /// <summary>
         /// Gets or sets the stock quantity
         /// </summary>
-        public virtual int StockQuantity { get; set; }
+        public int StockQuantity { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to display stock availability
         /// </summary>
-        public virtual bool DisplayStockAvailability { get; set; }
+        public bool DisplayStockAvailability { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to display stock quantity
         /// </summary>
-        public virtual bool DisplayStockQuantity { get; set; }
+        public bool DisplayStockQuantity { get; set; }
         
         /// <summary>
         /// Gets or sets the minimum stock quantity
         /// </summary>
-        public virtual int MinStockQuantity { get; set; }
+        public int MinStockQuantity { get; set; }
 
         /// <summary>
         /// Gets or sets the low stock activity identifier
         /// </summary>
-        public virtual int LowStockActivityId { get; set; }
+        public int LowStockActivityId { get; set; }
 
         /// <summary>
         /// Gets or sets the quantity when admin should be notified
         /// </summary>
-        public virtual int NotifyAdminForQuantityBelow { get; set; }
+        public int NotifyAdminForQuantityBelow { get; set; }
 
         /// <summary>
         /// Gets or sets a value backorder mode identifier
         /// </summary>
-        public virtual int BackorderModeId { get; set; }
+        public int BackorderModeId { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to back in stock subscriptions are allowed
         /// </summary>
-        public virtual bool AllowBackInStockSubscriptions { get; set; }
+        public bool AllowBackInStockSubscriptions { get; set; }
 
         /// <summary>
         /// Gets or sets the order minimum quantity
         /// </summary>
-        public virtual int OrderMinimumQuantity { get; set; }
+        public int OrderMinimumQuantity { get; set; }
 
         /// <summary>
         /// Gets or sets the order maximum quantity
         /// </summary>
-        public virtual int OrderMaximumQuantity { get; set; }
+        public int OrderMaximumQuantity { get; set; }
 
         /// <summary>
         /// Gets or sets the comma seperated list of allowed quantities. null or empty if any quantity is allowed
         /// </summary>
-        public virtual string AllowedQuantities { get; set; }
+        public string AllowedQuantities { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to disable buy (Add to cart) button
         /// </summary>
-        public virtual bool DisableBuyButton { get; set; }
+        public bool DisableBuyButton { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to disable "Add to wishlist" button
         /// </summary>
-        public virtual bool DisableWishlistButton { get; set; }
+        public bool DisableWishlistButton { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this item is available for Pre-Order
         /// </summary>
-        public virtual bool AvailableForPreOrder { get; set; }
+        public bool AvailableForPreOrder { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to show "Call for Pricing" or "Call for quote" instead of price
         /// </summary>
-        public virtual bool CallForPrice { get; set; }
+        public bool CallForPrice { get; set; }
         
         /// <summary>
         /// Gets or sets the price
         /// </summary>
-        public virtual decimal Price { get; set; }
+        public decimal Price { get; set; }
 
         /// <summary>
         /// Gets or sets the old price
         /// </summary>
-        public virtual decimal OldPrice { get; set; }
+        public decimal OldPrice { get; set; }
 
         /// <summary>
         /// Gets or sets the product cost
         /// </summary>
-        public virtual decimal ProductCost { get; set; }
+        public decimal ProductCost { get; set; }
 
         /// <summary>
         /// Gets or sets the product special price
         /// </summary>
-        public virtual decimal? SpecialPrice { get; set; }
+        public decimal? SpecialPrice { get; set; }
 
         /// <summary>
         /// Gets or sets the start date and time of the special price
         /// </summary>
-        public virtual DateTime? SpecialPriceStartDateTimeUtc { get; set; }
+        public DateTime? SpecialPriceStartDateTimeUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the end date and time of the special price
         /// </summary>
-        public virtual DateTime? SpecialPriceEndDateTimeUtc { get; set; }
+        public DateTime? SpecialPriceEndDateTimeUtc { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether a customer enters price
         /// </summary>
-        public virtual bool CustomerEntersPrice { get; set; }
+        public bool CustomerEntersPrice { get; set; }
 
         /// <summary>
         /// Gets or sets the minimum price entered by a customer
         /// </summary>
-        public virtual decimal MinimumCustomerEnteredPrice { get; set; }
+        public decimal MinimumCustomerEnteredPrice { get; set; }
 
         /// <summary>
         /// Gets or sets the maximum price entered by a customer
         /// </summary>
-        public virtual decimal MaximumCustomerEnteredPrice { get; set; }
+        public decimal MaximumCustomerEnteredPrice { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this product variant has tier prices configured
@@ -303,7 +303,7 @@ namespace Nop.Core.Domain.Catalog
         /// if this property is set to false, then we do not need to load tier prices navifation property
         /// </remarks>
         /// </summary>
-        public virtual bool HasTierPrices { get; set; }
+        public bool HasTierPrices { get; set; }
         /// <summary>
         /// Gets or sets a value indicating whether this product variant has discounts applied
         /// <remarks>The same as if we run variant.AppliedDiscounts.Count > 0
@@ -311,67 +311,67 @@ namespace Nop.Core.Domain.Catalog
         /// if this property is set to false, then we do not need to load Applied Discounts navifation property
         /// </remarks>
         /// </summary>
-        public virtual bool HasDiscountsApplied { get; set; }
+        public bool HasDiscountsApplied { get; set; }
 
         /// <summary>
         /// Gets or sets the weight
         /// </summary>
-        public virtual decimal Weight { get; set; }
+        public decimal Weight { get; set; }
 
         /// <summary>
         /// Gets or sets the length
         /// </summary>
-        public virtual decimal Length { get; set; }
+        public decimal Length { get; set; }
 
         /// <summary>
         /// Gets or sets the width
         /// </summary>
-        public virtual decimal Width { get; set; }
+        public decimal Width { get; set; }
 
         /// <summary>
         /// Gets or sets the height
         /// </summary>
-        public virtual decimal Height { get; set; }
+        public decimal Height { get; set; }
 
         /// <summary>
         /// Gets or sets the picture identifier
         /// </summary>
-        public virtual int PictureId { get; set; }
+        public int PictureId { get; set; }
 
         /// <summary>
         /// Gets or sets the available start date and time
         /// </summary>
-        public virtual DateTime? AvailableStartDateTimeUtc { get; set; }
+        public DateTime? AvailableStartDateTimeUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the available end date and time
         /// </summary>
-        public virtual DateTime? AvailableEndDateTimeUtc { get; set; }
+        public DateTime? AvailableEndDateTimeUtc { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the entity is published
         /// </summary>
-        public virtual bool Published { get; set; }
+        public bool Published { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the entity has been deleted
         /// </summary>
-        public virtual bool Deleted { get; set; }
+        public bool Deleted { get; set; }
 
         /// <summary>
         /// Gets or sets the display order
         /// </summary>
-        public virtual int DisplayOrder { get; set; }
+        public int DisplayOrder { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of instance creation
         /// </summary>
-        public virtual DateTime CreatedOnUtc { get; set; }
+        public DateTime CreatedOnUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of instance update
         /// </summary>
-        public virtual DateTime UpdatedOnUtc { get; set; }
+        public DateTime UpdatedOnUtc { get; set; }
 
 
 
@@ -382,7 +382,7 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets the full product name
         /// </summary>
-        public virtual string FullProductName
+        public string FullProductName
         {
             get
             {
@@ -400,7 +400,7 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the backorder mode
         /// </summary>
-        public virtual BackorderMode BackorderMode
+        public BackorderMode BackorderMode
         {
             get
             {
@@ -415,7 +415,7 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the download activation type
         /// </summary>
-        public virtual DownloadActivationType DownloadActivationType
+        public DownloadActivationType DownloadActivationType
         {
             get
             {
@@ -430,7 +430,7 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the gift card type
         /// </summary>
-        public virtual GiftCardType GiftCardType
+        public GiftCardType GiftCardType
         {
             get
             {
@@ -445,7 +445,7 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the low stock activity
         /// </summary>
-        public virtual LowStockActivity LowStockActivity
+        public LowStockActivity LowStockActivity
         {
             get
             {
@@ -460,7 +460,7 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the value indicating how to manage inventory
         /// </summary>
-        public virtual ManageInventoryMethod ManageInventoryMethod
+        public ManageInventoryMethod ManageInventoryMethod
         {
             get
             {
@@ -475,7 +475,7 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the cycle period for recurring products
         /// </summary>
-        public virtual RecurringProductCyclePeriod RecurringCyclePeriod
+        public RecurringProductCyclePeriod RecurringCyclePeriod
         {
             get
             {

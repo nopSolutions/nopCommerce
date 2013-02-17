@@ -13,32 +13,32 @@ namespace Nop.Core.Domain.Customers
         /// <summary>
         /// Gets or sets the customer role name
         /// </summary>
-        public virtual string Name { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the customer role is marked as free shiping
         /// </summary>
-        public virtual bool FreeShipping { get; set; }
+        public bool FreeShipping { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the customer role is marked as tax exempt
         /// </summary>
-        public virtual bool TaxExempt { get; set; }
+        public bool TaxExempt { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the customer role is active
         /// </summary>
-        public virtual bool Active { get; set; }
+        public bool Active { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the customer role is system
         /// </summary>
-        public virtual bool IsSystemRole { get; set; }
+        public bool IsSystemRole { get; set; }
 
         /// <summary>
         /// Gets or sets the customer role system name
         /// </summary>
-        public virtual string SystemName { get; set; }
+        public string SystemName { get; set; }
 
 
         /// <summary>

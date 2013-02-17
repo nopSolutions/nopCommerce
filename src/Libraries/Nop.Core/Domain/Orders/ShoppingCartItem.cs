@@ -13,52 +13,52 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets or sets the store identifier
         /// </summary>
-        public virtual int StoreId { get; set; }
+        public int StoreId { get; set; }
 
         /// <summary>
         /// Gets or sets the shopping cart type identifier
         /// </summary>
-        public virtual int ShoppingCartTypeId { get; set; }
+        public int ShoppingCartTypeId { get; set; }
 
         /// <summary>
         /// Gets or sets the customer identifier
         /// </summary>
-        public virtual int CustomerId { get; set; }
+        public int CustomerId { get; set; }
 
         /// <summary>
         /// Gets or sets the product variant identifier
         /// </summary>
-        public virtual int ProductVariantId { get; set; }
+        public int ProductVariantId { get; set; }
 
         /// <summary>
         /// Gets or sets the product variant attributes
         /// </summary>
-        public virtual string AttributesXml { get; set; }
+        public string AttributesXml { get; set; }
 
         /// <summary>
         /// Gets or sets the price enter by a customer
         /// </summary>
-        public virtual decimal CustomerEnteredPrice { get; set; }
+        public decimal CustomerEnteredPrice { get; set; }
 
         /// <summary>
         /// Gets or sets the quantity
         /// </summary>
-        public virtual int Quantity { get; set; }
+        public int Quantity { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of instance creation
         /// </summary>
-        public virtual DateTime CreatedOnUtc { get; set; }
+        public DateTime CreatedOnUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of instance update
         /// </summary>
-        public virtual DateTime UpdatedOnUtc { get; set; }
+        public DateTime UpdatedOnUtc { get; set; }
         
         /// <summary>
         /// Gets the log type
         /// </summary>
-        public virtual ShoppingCartType ShoppingCartType
+        public ShoppingCartType ShoppingCartType
         {
             get
             {
@@ -88,7 +88,7 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets a value indicating whether the shopping cart item is free shipping
         /// </summary>
-        public virtual bool IsFreeShipping
+        public bool IsFreeShipping
         {
             get
             {
@@ -102,7 +102,7 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets a value indicating whether the shopping cart item is ship enabled
         /// </summary>
-        public virtual bool IsShipEnabled
+        public bool IsShipEnabled
         {
             get
             {
@@ -116,7 +116,7 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets the additional shipping charge
         /// </summary> 
-        public virtual decimal AdditionalShippingCharge
+        public decimal AdditionalShippingCharge
         {
             get
             {
@@ -131,7 +131,7 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets a value indicating whether the shopping cart item is tax exempt
         /// </summary>
-        public virtual bool IsTaxExempt
+        public bool IsTaxExempt
         {
             get
             {

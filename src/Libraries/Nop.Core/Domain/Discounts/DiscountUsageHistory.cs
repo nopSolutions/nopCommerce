@@ -11,17 +11,17 @@ namespace Nop.Core.Domain.Discounts
         /// <summary>
         /// Gets or sets the discount identifier
         /// </summary>
-        public virtual int DiscountId { get; set; }
+        public int DiscountId { get; set; }
 
         /// <summary>
         /// Gets or sets the order identifier
         /// </summary>
-        public virtual int OrderId { get; set; }
+        public int OrderId { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of instance creation
         /// </summary>
-        public virtual DateTime CreatedOnUtc { get; set; }
+        public DateTime CreatedOnUtc { get; set; }
 
 
         /// <summary>
