@@ -12,7 +12,7 @@ namespace Nop.Core.Tests.Domain.Blogs
         {
             var blogPost = new BlogPost()
             {
-                Tags = "tag1, tag2, tag 3 4"
+                Tags = "tag1, tag2, tag 3 4,  "
             };
 
             var tags = blogPost.ParseTags();

@@ -16,7 +16,9 @@ namespace Nop.Core.Domain.Blogs
                 string[] tags2 = blogPost.Tags.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (string tag2 in tags2)
                 {
-                    parsedTags.Add(tag2.Trim());
+                    var tmp = tag2.Trim();
+                    if (!String.IsNullOrEmpty(tmp))
+                        parsedTags.Add(tmp);
                 }
             }
             return parsedTags.ToArray();

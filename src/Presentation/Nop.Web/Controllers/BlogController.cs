@@ -35,6 +35,7 @@ namespace Nop.Web.Controllers
 
         private readonly IBlogService _blogService;
         private readonly IWorkContext _workContext;
+        private readonly IStoreContext _storeContext;
         private readonly IPictureService _pictureService;
         private readonly ILocalizationService _localizationService;
         private readonly ICustomerContentService _customerContentService;
@@ -48,7 +49,6 @@ namespace Nop.Web.Controllers
         private readonly BlogSettings _blogSettings;
         private readonly LocalizationSettings _localizationSettings;
         private readonly CustomerSettings _customerSettings;
-        private readonly StoreInformationSettings _storeInformationSettings;
         private readonly CaptchaSettings _captchaSettings;
         
         #endregion
@@ -56,16 +56,25 @@ namespace Nop.Web.Controllers
 		#region Constructors
 
         public BlogController(IBlogService blogService, 
-            IWorkContext workContext, IPictureService pictureService, ILocalizationService localizationService,
-            ICustomerContentService customerContentService, IDateTimeHelper dateTimeHelper,
-            IWorkflowMessageService workflowMessageService, IWebHelper webHelper,
-            ICacheManager cacheManager, ICustomerActivityService customerActivityService,
-            MediaSettings mediaSettings, BlogSettings blogSettings,
-            LocalizationSettings localizationSettings, CustomerSettings customerSettings,
-            StoreInformationSettings storeInformationSettings, CaptchaSettings captchaSettings)
+            IWorkContext workContext,
+            IStoreContext storeContext,
+            IPictureService pictureService, 
+            ILocalizationService localizationService,
+            ICustomerContentService customerContentService, 
+            IDateTimeHelper dateTimeHelper,
+            IWorkflowMessageService workflowMessageService, 
+            IWebHelper webHelper,
+            ICacheManager cacheManager, 
+            ICustomerActivityService customerActivityService,
+            MediaSettings mediaSettings,
+            BlogSettings blogSettings,
+            LocalizationSettings localizationSettings, 
+            CustomerSettings customerSettings,
+            CaptchaSettings captchaSettings)
         {
             this._blogService = blogService;
             this._workContext = workContext;
+            this._storeContext = storeContext;
             this._pictureService = pictureService;
             this._localizationService = localizationService;
             this._customerContentService = customerContentService;
@@ -79,7 +88,6 @@ namespace Nop.Web.Controllers
             this._blogSettings = blogSettings;
             this._localizationSettings = localizationSettings;
             this._customerSettings = customerSettings;
-            this._storeInformationSettings = storeInformationSettings;
             this._captchaSettings = captchaSettings;
         }
 
@@ -206,7 +214,7 @@ namespace Nop.Web.Controllers
         public ActionResult ListRss(int languageId)
         {
             var feed = new SyndicationFeed(
-                                    string.Format("{0}: Blog", _storeInformationSettings.StoreName),
+                                    string.Format("{0}: Blog", _storeContext.CurrentStore.Name),
                                     "Blog",
                                     new Uri(_webHelper.GetStoreLocation(false)),
                                     "BlogRSS",
@@ -309,7 +317,7 @@ namespace Nop.Web.Controllers
             if (!_blogSettings.Enabled)
                 return Content("");
 
-            var cacheKey = string.Format(ModelCacheEventConsumer.BLOG_TAGS_MODEL_KEY, _workContext.WorkingLanguage.Id);
+            var cacheKey = string.Format(ModelCacheEventConsumer.BLOG_TAGS_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
             var cachedModel = _cacheManager.Get(cacheKey, () =>
             {
                 var model = new BlogPostTagListModel();
@@ -403,7 +411,7 @@ namespace Nop.Web.Controllers
                 return Content("");
 
             string link = string.Format("<link href=\"{0}\" rel=\"alternate\" type=\"application/rss+xml\" title=\"{1}: Blog\" />",
-                Url.RouteUrl("BlogRSS", new { languageId = _workContext.WorkingLanguage.Id }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http"), _storeInformationSettings.StoreName);
+                Url.RouteUrl("BlogRSS", new { languageId = _workContext.WorkingLanguage.Id }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http"), _storeContext.CurrentStore.Name);
 
             return Content(link);
         }

@@ -164,12 +164,15 @@
     <Compile Include="Common\PdfService.cs" />
     <Compile Include="Common\IAddressService.cs" />
     <Compile Include="Common\FulltextService.cs" />
-    <Compile Include="Configuration\ConfigurationProvider.cs" />
     <Compile Include="Customers\ICustomerRegistrationService.cs" />
     <Compile Include="Customers\CustomerRegistrationService.cs" />
     <Compile Include="Customers\ICustomerReportService.cs" />
     <Compile Include="Customers\CustomerReportService.cs" />
     <Compile Include="Customers\DeleteGuestsTask.cs" />
+    <Compile Include="Stores\IStoreMappingService.cs" />
+    <Compile Include="Stores\StoreMappingService.cs" />
+    <Compile Include="Stores\IStoreService.cs" />
+    <Compile Include="Stores\StoreService.cs" />
     <Compile Include="Directory\IGeoCountryLookup.cs" />
     <Compile Include="Directory\GeoCountryLookup.cs" />
     <Compile Include="Events\EventPublisher.cs" />

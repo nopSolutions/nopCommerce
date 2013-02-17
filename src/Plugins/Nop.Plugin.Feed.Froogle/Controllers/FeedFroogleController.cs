@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Nop.Core;
+using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tasks;
 using Nop.Core.Plugins;
 using Nop.Plugin.Feed.Froogle.Domain;
@@ -15,6 +17,7 @@ using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
+using Nop.Services.Stores;
 using Nop.Services.Tasks;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
@@ -31,14 +34,14 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
         private readonly IPluginFinder _pluginFinder;
         private readonly ILogger _logger;
         private readonly IWebHelper _webHelper;
-        private readonly IScheduleTaskService _scheduleTaskService;
+        private readonly IStoreService _storeService;
         private readonly FroogleSettings _froogleSettings;
         private readonly ISettingService _settingService;
 
         public FeedFroogleController(IGoogleService googleService, 
             IProductService productService, ICurrencyService currencyService,
             ILocalizationService localizationService, IPluginFinder pluginFinder, 
-            ILogger logger, IWebHelper webHelper, IScheduleTaskService scheduleTaskService, 
+            ILogger logger, IWebHelper webHelper, IStoreService storeService,
             FroogleSettings froogleSettings, ISettingService settingService)
         {
             this._googleService = googleService;
@@ -48,59 +51,43 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
             this._pluginFinder = pluginFinder;
             this._logger = logger;
             this._webHelper = webHelper;
-            this._scheduleTaskService = scheduleTaskService;
+            this._storeService = storeService;
             this._froogleSettings = froogleSettings;
             this._settingService = settingService;
         }
 
-        [NonAction]
-        private ScheduleTask FindScheduledTask()
-        {
-            return _scheduleTaskService.GetTaskByType("Nop.Plugin.Feed.Froogle.StaticFileGenerationTask, Nop.Plugin.Feed.Froogle");
-        }
-        
         public ActionResult Configure()
         {
             var model = new FeedFroogleModel();
-            //Picture
+            //picture
             model.ProductPictureSize = _froogleSettings.ProductPictureSize;
-            //Currency
+            //stores
+            model.StoreId = _froogleSettings.StoreId;
+            model.AvailableStores.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var s in _storeService.GetAllStores())
+                model.AvailableStores.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString() });
+            //currencies
             model.CurrencyId = _froogleSettings.CurrencyId;
-            foreach (var c in _currencyService.GetAllCurrencies(false))
+            foreach (var c in _currencyService.GetAllCurrencies())
+                model.AvailableCurrencies.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString() });
+            //Google categories
+            model.DefaultGoogleCategory = _froogleSettings.DefaultGoogleCategory;
+            model.AvailableGoogleCategories.Add(new SelectListItem() {Text = "Select a category", Value = ""});
+            foreach (var gc in _googleService.GetTaxonomyList())
+                model.AvailableGoogleCategories.Add(new SelectListItem() {Text = gc, Value = gc});
+
+            //file paths
+            foreach (var store in _storeService.GetAllStores())
             {
-                model.AvailableCurrencies.Add(new SelectListItem()
+                var localFilePath = System.IO.Path.Combine(HttpRuntime.AppDomainAppPath, "content\\files\\exportimport", store.Id + "-" + _froogleSettings.StaticFileName);
+                if (System.IO.File.Exists(localFilePath))
+                    model.GeneratedFiles.Add(new FeedFroogleModel.GeneratedFileModel()
                     {
-                         Text = c.Name,
-                         Value = c.Id.ToString()
+                        StoreName = store.Name,
+                        FileUrl = string.Format("{0}content/files/exportimport/{1}-{2}", _webHelper.GetStoreLocation(false), store.Id, _froogleSettings.StaticFileName)
                     });
             }
-            //Google category
-            model.DefaultGoogleCategory = _froogleSettings.DefaultGoogleCategory;
-            model.AvailableGoogleCategories.Add(new SelectListItem()
-            {
-                Text = "Select a category",
-                Value = ""
-            });
-            foreach (var gc in _googleService.GetTaxonomyList())
-            {
-                model.AvailableGoogleCategories.Add(new SelectListItem()
-                {
-                    Text = gc,
-                    Value = gc
-                });
-            }
-
-            //task
-            ScheduleTask task = FindScheduledTask();
-            if (task != null)
-            {
-                model.GenerateStaticFileEachMinutes = task.Seconds / 60;
-                model.TaskEnabled = task.Enabled;
-            }
-            //file path
-            if (System.IO.File.Exists(System.IO.Path.Combine(HttpRuntime.AppDomainAppPath, "content\\files\\exportimport", _froogleSettings.StaticFileName)))
-                model.StaticFilePath = string.Format("{0}content/files/exportimport/{1}", _webHelper.GetStoreLocation(false), _froogleSettings.StaticFileName);
-
+            
             return View("Nop.Plugin.Feed.Froogle.Views.FeedFroogle.Configure", model);
         }
 
@@ -113,64 +100,21 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
                 return Configure();
             }
 
-            string saveResult = "";
             //save settings
             _froogleSettings.ProductPictureSize = model.ProductPictureSize;
             _froogleSettings.CurrencyId = model.CurrencyId;
+            _froogleSettings.StoreId = model.StoreId;
             _froogleSettings.DefaultGoogleCategory = model.DefaultGoogleCategory;
             _settingService.SaveSetting(_froogleSettings);
-
-            // Update the task
-            var task = FindScheduledTask();
-            if (task != null)
-            {
-                task.Enabled = model.TaskEnabled;
-                task.Seconds = model.GenerateStaticFileEachMinutes * 60;
-                _scheduleTaskService.UpdateTask(task);
-                saveResult = _localizationService.GetResource("Plugins.Feed.Froogle.TaskRestart");
-            }
-
+            
             //redisplay the form
-            foreach (var c in _currencyService.GetAllCurrencies(false))
-            {
-                model.AvailableCurrencies.Add(new SelectListItem()
-                {
-                    Text = c.Name,
-                    Value = c.Id.ToString()
-                });
-            }
-            model.AvailableGoogleCategories.Add(new SelectListItem()
-            {
-                Text = "Select a category",
-                Value = ""
-            });
-            foreach (var gc in _googleService.GetTaxonomyList())
-            {
-                model.AvailableGoogleCategories.Add(new SelectListItem()
-                {
-                    Text = gc,
-                    Value = gc
-                });
-            }
-            //file path
-            if (System.IO.File.Exists(System.IO.Path.Combine(HttpRuntime.AppDomainAppPath, "content\\files\\exportimport", _froogleSettings.StaticFileName)))
-                model.StaticFilePath = string.Format("{0}content/files/exportimport/{1}", _webHelper.GetStoreLocation(false), _froogleSettings.StaticFileName);
-
-            //set result text
-            model.SaveResult = saveResult;
-            return View("Nop.Plugin.Feed.Froogle.Views.FeedFroogle.Configure", model);
+            return Configure();
         }
 
         [HttpPost, ActionName("Configure")]
         [FormValueRequired("generate")]
         public ActionResult GenerateFeed(FeedFroogleModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                return Configure();
-            }
-
-
             try
             {
                 var pluginDescriptor = _pluginFinder.GetPluginDescriptorBySystemName("PromotionFeed.Froogle");
@@ -182,11 +126,17 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
                 if (plugin == null)
                     throw new Exception("Cannot load the plugin");
 
-                plugin.GenerateStaticFile();
+                var stores = new List<Store>();
+                var storeById = _storeService.GetStoreById(_froogleSettings.StoreId);
+                if (storeById != null)
+                    stores.Add(storeById);
+                else
+                    stores.AddRange(_storeService.GetAllStores());
 
-                string clickhereStr = string.Format("<a href=\"{0}content/files/exportimport/{1}\" target=\"_blank\">{2}</a>", _webHelper.GetStoreLocation(false), _froogleSettings.StaticFileName, _localizationService.GetResource("Plugins.Feed.Froogle.ClickHere"));
-                string result = string.Format(_localizationService.GetResource("Plugins.Feed.Froogle.SuccessResult"), clickhereStr);
-                model.GenerateFeedResult = result;
+                foreach (var store in stores)
+                    plugin.GenerateStaticFile(store);
+
+                model.GenerateFeedResult = _localizationService.GetResource("Plugins.Feed.Froogle.SuccessResult");
             }
             catch (Exception exc)
             {
@@ -194,40 +144,29 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
                 _logger.Error(exc.Message, exc);
             }
 
-
-            foreach (var c in _currencyService.GetAllCurrencies(false))
-            {
-                model.AvailableCurrencies.Add(new SelectListItem()
-                {
-                    Text = c.Name,
-                    Value = c.Id.ToString()
-                });
-            }
-            model.AvailableGoogleCategories.Add(new SelectListItem()
-            {
-                Text = "Select a category",
-                Value = ""
-            });
+            //stores
+            model.AvailableStores.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var s in _storeService.GetAllStores())
+                model.AvailableStores.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString() });
+            //currencies
+            foreach (var c in _currencyService.GetAllCurrencies())
+                model.AvailableCurrencies.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString() });
+            //Google categories
+            model.AvailableGoogleCategories.Add(new SelectListItem() { Text = "Select a category", Value = "" });
             foreach (var gc in _googleService.GetTaxonomyList())
-            {
-                model.AvailableGoogleCategories.Add(new SelectListItem()
-                {
-                    Text = gc,
-                    Value = gc
-                });
-            }
+                model.AvailableGoogleCategories.Add(new SelectListItem() { Text = gc, Value = gc });
 
-            //task
-            ScheduleTask task = FindScheduledTask();
-            if (task != null)
+            //file paths
+            foreach (var store in _storeService.GetAllStores())
             {
-                model.GenerateStaticFileEachMinutes = task.Seconds / 60;
-                model.TaskEnabled = task.Enabled;
+                var localFilePath = System.IO.Path.Combine(HttpRuntime.AppDomainAppPath, "content\\files\\exportimport", store.Id + "-" + _froogleSettings.StaticFileName);
+                if (System.IO.File.Exists(localFilePath))
+                    model.GeneratedFiles.Add(new FeedFroogleModel.GeneratedFileModel()
+                    {
+                        StoreName = store.Name,
+                        FileUrl = string.Format("{0}content/files/exportimport/{1}-{2}", _webHelper.GetStoreLocation(false), store.Id, _froogleSettings.StaticFileName)
+                    });
             }
-
-            //file path
-            if (System.IO.File.Exists(System.IO.Path.Combine(HttpRuntime.AppDomainAppPath, "content\\files\\exportimport", _froogleSettings.StaticFileName)))
-                model.StaticFilePath = string.Format("{0}content/files/exportimport/{1}", _webHelper.GetStoreLocation(false), _froogleSettings.StaticFileName);
 
             return View("Nop.Plugin.Feed.Froogle.Views.FeedFroogle.Configure", model);
         }

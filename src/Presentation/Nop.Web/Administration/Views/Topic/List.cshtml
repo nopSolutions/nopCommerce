@@ -1,4 +1,4 @@
-﻿@model Telerik.Web.Mvc.GridModel<TopicModel>
+﻿@model TopicListModel
 @using Telerik.Web.Mvc.UI
 @{    
     //page title
@@ -13,15 +13,31 @@
         <a href="@Url.Action("Create")" class="t-button">@T("Admin.Common.AddNew")</a>
     </div>
 </div>
+<table width="100%">
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.SearchStoreId):
+        </td>
+        <td class="adminData">
+            @Html.DropDownList("SearchStoreId", Model.AvailableStores)
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <input type="button" id="search-topics" class="t-button" value="@T("Admin.Common.Search")" />
+        </td>
+    </tr>
+</table>
+<p>
+</p>
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<TopicModel>(Model.Data)
+            @(Html.Telerik().Grid<TopicModel>()
                     .Name("topics-grid")
                     .Columns(columns =>
                     {
-                        columns.Bound(x => x.SystemName)
-                            .Width(200);
+                        columns.Bound(x => x.SystemName);
                         columns.Bound(x => x.IsPasswordProtected)
                             .Template(
                                 @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.IsPasswordProtected.ToString().ToLowerInvariant() + ".gif")" />
@@ -44,7 +60,30 @@
                             .Title(T("Admin.Common.Edit").Text);
                     })
                     .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "Topic"))
+                    .ClientEvents(events => events.OnDataBinding("onDataBinding"))
                     .EnableCustomBinding(true))
         </td>
     </tr>
 </table>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        //search button
+        $('#search-topics').click(function () {
+            //search
+            var grid = $('#topics-grid').data('tGrid');
+            //no paging support in this grid
+            //grid.currentPage = 1; //new search. Set page size to 1
+            grid.ajaxRequest();
+            return false;
+        });
+    });
+
+    function onDataBinding(e) {
+        var searchModel = {
+            SearchStoreId: $('#SearchStoreId').val()
+        };
+        e.data = searchModel;
+    }
+</script>

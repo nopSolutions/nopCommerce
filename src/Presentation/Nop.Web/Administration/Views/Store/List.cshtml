@@ -1,0 +1,38 @@
+﻿@using Telerik.Web.Mvc.UI
+@{
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Stores").Text;
+}
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
+        @T("Admin.Configuration.Stores")
+    </div>
+    <div class="options">
+        <a href="@Url.Action("Create")" class="t-button">@T("Admin.Common.AddNew")</a>
+    </div>
+</div>
+<table class="adminContent">
+    <tr>
+        <td>
+            @(Html.Telerik().Grid<StoreModel>()
+                    .Name("stores-grid")
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.Name);
+                        columns.Bound(x => x.Url);
+                        columns.Bound(x => x.DisplayOrder)
+                            .Centered()
+                            .Width(100);
+                        columns.Bound(x => x.Id)
+                            .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
+                            .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
+                            .Width(100)
+                            .Centered()
+                            .HeaderTemplate(T("Admin.Common.Edit").Text);
+                    })
+                    .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "Store"))
+                    .EnableCustomBinding(true))
+        </td>
+    </tr>
+</table>

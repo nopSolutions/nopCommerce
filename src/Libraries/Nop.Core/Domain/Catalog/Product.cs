@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Seo;
+using Nop.Core.Domain.Stores;
 
 namespace Nop.Core.Domain.Catalog
 {
     /// <summary>
     /// Represents a product
     /// </summary>
-    public partial class Product : BaseEntity, ILocalizedEntity, ISlugSupported, IAclSupported
+    public partial class Product : BaseEntity, ILocalizedEntity, ISlugSupported, IAclSupported, IStoreMappingSupported
     {
         private ICollection<ProductVariant> _productVariants;
         private ICollection<ProductCategory> _productCategories;
@@ -93,6 +94,11 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether the entity is subject to ACL
         /// </summary>
         public virtual bool SubjectToAcl { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the entity is limited/restricted to certain stores
+        /// </summary>
+        public virtual bool LimitedToStores { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the entity is published

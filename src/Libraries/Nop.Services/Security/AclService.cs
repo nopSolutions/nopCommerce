@@ -7,7 +7,7 @@ using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
 
-namespace Nop.Services.Seo
+namespace Nop.Services.Security
 {
     /// <summary>
     /// ACL service
@@ -120,6 +120,7 @@ namespace Nop.Services.Seo
         /// Inserts an ACL record
         /// </summary>
         /// <typeparam name="T">Type</typeparam>
+        /// <param name="customerRoleId">Customer role id</param>
         /// <param name="entity">Entity</param>
         public virtual void InsertAclRecord<T>(T entity, int customerRoleId) where T : BaseEntity, IAclSupported
         {
@@ -160,13 +161,13 @@ namespace Nop.Services.Seo
         /// <summary>
         /// Find customer role identifiers with granted access
         /// </summary>
-        /// <param name="entityId">Entity identifier</param>
-        /// <param name="entityName">Entity name</param>
+        /// <typeparam name="T">Type</typeparam>
+        /// <param name="entity">Wntity</param>
         /// <returns>Customer role identifiers</returns>
         public virtual int[] GetCustomerRoleIdsWithAccess<T>(T entity) where T : BaseEntity, IAclSupported
         {
             if (entity == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException("entity");
 
             int entityId = entity.Id;
             string entityName = typeof(T).Name;

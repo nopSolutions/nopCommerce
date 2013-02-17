@@ -3,6 +3,7 @@
 }
 @model Nop.Plugin.Widgets.GoogleAnalytics.Models.ConfigurationModel
 @using Nop.Web.Framework;
+@Html.Action("StoreScopeConfiguration", "Setting", new { area = "Admin" })
 @using (Html.BeginForm())
 {
     <table class="adminContent">
@@ -34,6 +35,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.GoogleId_OverrideForStore, model => model.GoogleId, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.GoogleId):
             </td>
             <td class="adminData">
@@ -43,6 +45,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.TrackingScript_OverrideForStore, model => model.TrackingScript, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.TrackingScript):
             </td>
             <td class="adminData">
@@ -52,6 +55,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.EcommerceScript_OverrideForStore, model => model.EcommerceScript, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.EcommerceScript):
             </td>
             <td class="adminData">
@@ -61,6 +65,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.EcommerceDetailScript_OverrideForStore, model => model.EcommerceDetailScript, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.EcommerceDetailScript):
             </td>
             <td class="adminData">

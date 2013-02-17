@@ -2,6 +2,7 @@
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
 using Nop.Tests;
 using NUnit.Framework;
@@ -23,7 +24,8 @@ namespace Nop.Data.Tests.Orders
                 CreatedOnUtc = new DateTime(2010, 01, 01),
                 UpdatedOnUtc = new DateTime(2010, 01, 02),
                 Customer = GetTestCustomer(),
-                ProductVariant = GetTestProductVariant()
+                ProductVariant = GetTestProductVariant(),
+                Store = GetTestStore()
             };
 
             var fromDb = SaveAndLoadEntity(sci);
@@ -40,6 +42,17 @@ namespace Nop.Data.Tests.Orders
 
             fromDb.ProductVariant.ShouldNotBeNull();
 
+            fromDb.Store.ShouldNotBeNull();
+
+        }
+
+        protected Store GetTestStore()
+        {
+            return new Store
+            {
+                Name = "Store 1",
+                DisplayOrder = 1,
+            };
         }
 
         protected Customer GetTestCustomer()
@@ -48,11 +61,7 @@ namespace Nop.Data.Tests.Orders
             {
                 CustomerGuid = Guid.NewGuid(),
                 AdminComment = "some comment here",
-                TaxDisplayType = TaxDisplayType.IncludingTax,
                 IsTaxExempt = true,
-                VatNumber = "123456",
-                VatNumberStatus = VatNumberStatus.Valid,
-                DiscountCouponCode = "coupon1",
                 Active = true,
                 Deleted = false,
                 CreatedOnUtc = new DateTime(2010, 01, 01),

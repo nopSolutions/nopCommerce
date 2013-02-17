@@ -2,7 +2,6 @@
 using System.Web.Mvc;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
-using Telerik.Web.Mvc;
 
 namespace Nop.Admin.Models.Catalog
 {
@@ -12,9 +11,8 @@ namespace Nop.Admin.Models.Catalog
         {
             AvailableCategories = new List<SelectListItem>();
             AvailableManufacturers = new List<SelectListItem>();
+            AvailableStores = new List<SelectListItem>();
         }
-        public GridModel<ProductModel> Products { get; set; }
-
         [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
         [AllowHtml]
         public string SearchProductName { get; set; }
@@ -24,6 +22,9 @@ namespace Nop.Admin.Models.Catalog
 
         [NopResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
         public int SearchManufacturerId { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Products.List.SearchStore")]
+        public int SearchStoreId { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.List.GoDirectlyToSku")]
         [AllowHtml]
@@ -36,5 +37,6 @@ namespace Nop.Admin.Models.Catalog
 
         public IList<SelectListItem> AvailableCategories { get; set; }
         public IList<SelectListItem> AvailableManufacturers { get; set; }
+        public IList<SelectListItem> AvailableStores { get; set; }
     }
 }

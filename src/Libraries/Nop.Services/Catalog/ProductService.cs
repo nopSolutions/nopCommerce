@@ -10,6 +10,7 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
+using Nop.Core.Domain.Stores;
 using Nop.Data;
 using Nop.Services.Events;
 using Nop.Services.Localization;
@@ -41,6 +42,7 @@ namespace Nop.Services.Catalog
         private readonly IRepository<TierPrice> _tierPriceRepository;
         private readonly IRepository<LocalizedProperty> _localizedPropertyRepository;
         private readonly IRepository<AclRecord> _aclRepository;
+        private readonly IRepository<StoreMapping> _storeMappingRepository;
         private readonly IRepository<ProductPicture> _productPictureRepository;
         private readonly IRepository<ProductSpecificationAttribute> _productSpecificationAttributeRepository;
         private readonly IProductAttributeService _productAttributeService;
@@ -52,6 +54,7 @@ namespace Nop.Services.Catalog
         private readonly IDbContext _dbContext;
         private readonly ICacheManager _cacheManager;
         private readonly IWorkContext _workContext;
+        private readonly IStoreContext _storeContext;
         private readonly LocalizationSettings _localizationSettings;
         private readonly CommonSettings _commonSettings;
         private readonly IEventPublisher _eventPublisher;
@@ -71,6 +74,7 @@ namespace Nop.Services.Catalog
         /// <param name="tierPriceRepository">Tier price repository</param>
         /// <param name="localizedPropertyRepository">Localized property repository</param>
         /// <param name="aclRepository">ACL record repository</param>
+        /// <param name="storeMappingRepository">Store mapping repository</param>
         /// <param name="productPictureRepository">Product picture repository</param>
         /// <param name="productSpecificationAttributeRepository">Product specification attribute repository</param>
         /// <param name="productAttributeService">Product attribute service</param>
@@ -81,6 +85,7 @@ namespace Nop.Services.Catalog
         /// <param name="dataProvider">Data provider</param>
         /// <param name="dbContext">Database Context</param>
         /// <param name="workContext">Work context</param>
+        /// <param name="storeContext">Store context</param>
         /// <param name="localizationSettings">Localization settings</param>
         /// <param name="commonSettings">Common settings</param>
         /// <param name="eventPublisher">Event published</param>
@@ -93,6 +98,7 @@ namespace Nop.Services.Catalog
             IRepository<ProductPicture> productPictureRepository,
             IRepository<LocalizedProperty> localizedPropertyRepository,
             IRepository<AclRecord> aclRepository,
+            IRepository<StoreMapping> storeMappingRepository,
             IRepository<ProductSpecificationAttribute> productSpecificationAttributeRepository,
             IProductAttributeService productAttributeService,
             IProductAttributeParser productAttributeParser,
@@ -100,7 +106,7 @@ namespace Nop.Services.Catalog
             ILanguageService languageService,
             IWorkflowMessageService workflowMessageService,
             IDataProvider dataProvider, IDbContext dbContext,
-            IWorkContext workContext,
+            IWorkContext workContext, IStoreContext storeContext,
             LocalizationSettings localizationSettings, CommonSettings commonSettings,
             IEventPublisher eventPublisher)
         {
@@ -113,6 +119,7 @@ namespace Nop.Services.Catalog
             this._productPictureRepository = productPictureRepository;
             this._localizedPropertyRepository = localizedPropertyRepository;
             this._aclRepository = aclRepository;
+            this._storeMappingRepository = storeMappingRepository;
             this._productSpecificationAttributeRepository = productSpecificationAttributeRepository;
             this._productAttributeService = productAttributeService;
             this._productAttributeParser = productAttributeParser;
@@ -122,6 +129,7 @@ namespace Nop.Services.Catalog
             this._dataProvider = dataProvider;
             this._dbContext = dbContext;
             this._workContext = workContext;
+            this._storeContext= storeContext;
             this._localizationSettings = localizationSettings;
             this._commonSettings = commonSettings;
             this._eventPublisher = eventPublisher;
@@ -149,22 +157,6 @@ namespace Nop.Services.Catalog
             //delete product variants
             foreach (var productVariant in product.ProductVariants)
                 DeleteProductVariant(productVariant);
-        }
-
-        /// <summary>
-        /// Gets all products
-        /// </summary>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Product collection</returns>
-        public virtual IList<Product> GetAllProducts(bool showHidden = false)
-        {
-            var query = from p in _productRepository.Table
-                        orderby p.Name
-                        where (showHidden || p.Published) &&
-                        !p.Deleted
-                        select p;
-            var products = query.ToList();
-            return products;
         }
 
         /// <summary>
@@ -271,8 +263,11 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Search products
         /// </summary>
-        /// <param name="categoryId">Category identifier; 0 to load all records</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <param name="categoryIds">Category identifiers</param>
         /// <param name="manufacturerId">Manufacturer identifier; 0 to load all records</param>
+        /// <param name="storeId">Store identifier; 0 to load all records</param>
         /// <param name="featuredProducts">A value indicating whether loaded products are marked as featured (relates only to categories and manufacturers). 0 to load featured products only, 1 to load not featured products only, null to load all products</param>
         /// <param name="priceMin">Minimum price; null to load all records</param>
         /// <param name="priceMax">Maximum price; null to load all records</param>
@@ -280,40 +275,46 @@ namespace Nop.Services.Catalog
         /// <param name="keywords">Keywords</param>
         /// <param name="searchDescriptions">A value indicating whether to search by a specified "keyword" in product descriptions</param>
         /// <param name="searchProductTags">A value indicating whether to search by a specified "keyword" in product tags</param>
-        /// <param name="languageId">Language identifier</param>
+        /// <param name="languageId">Language identifier (search for text searching)</param>
         /// <param name="filteredSpecs">Filtered product specification identifiers</param>
         /// <param name="orderBy">Order by</param>
-        /// <param name="pageIndex">Page index</param>
-        /// <param name="pageSize">Page size</param>
-        /// <param name="loadFilterableSpecificationAttributeOptionIds">A value indicating whether we should load the specification attribute option identifiers applied to loaded products (all pages)</param>
-        /// <param name="filterableSpecificationAttributeOptionIds">The specification attribute option identifiers applied to loaded products (all pages)</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Product collection</returns>
-        public virtual IPagedList<Product> SearchProducts(int categoryId, int manufacturerId, bool? featuredProducts,
-            decimal? priceMin, decimal? priceMax, int productTagId,
-            string keywords, bool searchDescriptions, bool searchProductTags, int languageId,
-            IList<int> filteredSpecs, ProductSortingEnum orderBy,
-            int pageIndex, int pageSize,
-            bool loadFilterableSpecificationAttributeOptionIds, out IList<int> filterableSpecificationAttributeOptionIds,
+        /// <returns>Products</returns>
+        public virtual IPagedList<Product> SearchProducts(
+            int pageIndex = 0,
+            int pageSize = 2147483647, //Int32.MaxValue
+            IList<int> categoryIds = null,
+            int manufacturerId = 0,
+            int storeId = 0,
+            bool? featuredProducts = null,
+            decimal? priceMin = null,
+            decimal? priceMax = null,
+            int productTagId = 0,
+            string keywords = null,
+            bool searchDescriptions = false,
+            bool searchProductTags = false,
+            int languageId = 0,
+            IList<int> filteredSpecs = null,
+            ProductSortingEnum orderBy = ProductSortingEnum.Position,
             bool showHidden = false)
         {
-            var categoryIds = new List<int>();
-            if (categoryId > 0)
-                categoryIds.Add(categoryId);
-
-            return SearchProducts(categoryIds, manufacturerId, featuredProducts,
-                priceMin, priceMax, productTagId, 
-                keywords, searchDescriptions,searchProductTags, languageId,
-                filteredSpecs, orderBy, pageIndex, pageSize,
-                loadFilterableSpecificationAttributeOptionIds, out filterableSpecificationAttributeOptionIds, 
-                showHidden);
+            IList<int> filterableSpecificationAttributeOptionIds = null;
+            return SearchProducts(out filterableSpecificationAttributeOptionIds, false,
+                pageIndex, pageSize, categoryIds, manufacturerId, storeId, featuredProducts,
+                priceMin, priceMax, productTagId, keywords, searchDescriptions,
+                searchProductTags, languageId, filteredSpecs, orderBy, showHidden);
         }
 
         /// <summary>
         /// Search products
         /// </summary>
+        /// <param name="filterableSpecificationAttributeOptionIds">The specification attribute option identifiers applied to loaded products (all pages)</param>
+        /// <param name="loadFilterableSpecificationAttributeOptionIds">A value indicating whether we should load the specification attribute option identifiers applied to loaded products (all pages)</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
         /// <param name="categoryIds">Category identifiers</param>
         /// <param name="manufacturerId">Manufacturer identifier; 0 to load all records</param>
+        /// <param name="storeId">Store identifier; 0 to load all records</param>
         /// <param name="featuredProducts">A value indicating whether loaded products are marked as featured (relates only to categories and manufacturers). 0 to load featured products only, 1 to load not featured products only, null to load all products</param>
         /// <param name="priceMin">Minimum price; null to load all records</param>
         /// <param name="priceMax">Maximum price; null to load all records</param>
@@ -321,25 +322,34 @@ namespace Nop.Services.Catalog
         /// <param name="keywords">Keywords</param>
         /// <param name="searchDescriptions">A value indicating whether to search by a specified "keyword" in product descriptions</param>
         /// <param name="searchProductTags">A value indicating whether to search by a specified "keyword" in product tags</param>
-        /// <param name="languageId">Language identifier</param>
+        /// <param name="languageId">Language identifier (search for text searching)</param>
         /// <param name="filteredSpecs">Filtered product specification identifiers</param>
         /// <param name="orderBy">Order by</param>
-        /// <param name="pageIndex">Page index</param>
-        /// <param name="pageSize">Page size</param>
-        /// <param name="loadFilterableSpecificationAttributeOptionIds">A value indicating whether we should load the specification attribute option identifiers applied to loaded products (all pages)</param>
-        /// <param name="filterableSpecificationAttributeOptionIds">The specification attribute option identifiers applied to loaded products (all pages)</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Product collection</returns>
-        public virtual IPagedList<Product> SearchProducts(IList<int> categoryIds, 
-            int manufacturerId, bool? featuredProducts,
-            decimal? priceMin, decimal? priceMax, int productTagId,
-            string keywords, bool searchDescriptions, bool searchProductTags, int languageId,
-            IList<int> filteredSpecs, ProductSortingEnum orderBy,
-            int pageIndex, int pageSize,
-            bool loadFilterableSpecificationAttributeOptionIds, out IList<int> filterableSpecificationAttributeOptionIds,
+        /// <returns>Products</returns>
+        public virtual IPagedList<Product> SearchProducts(
+            out IList<int> filterableSpecificationAttributeOptionIds,
+            bool loadFilterableSpecificationAttributeOptionIds = false,
+            int pageIndex = 0,
+            int pageSize = 2147483647,  //Int32.MaxValue
+            IList<int> categoryIds = null,
+            int manufacturerId = 0,
+            int storeId = 0,
+            bool? featuredProducts = null,
+            decimal? priceMin = null,
+            decimal? priceMax = null,
+            int productTagId = 0,
+            string keywords = null,
+            bool searchDescriptions = false,
+            bool searchProductTags = false,
+            int languageId = 0,
+            IList<int> filteredSpecs = null,
+            ProductSortingEnum orderBy = ProductSortingEnum.Position,
             bool showHidden = false)
         {
             filterableSpecificationAttributeOptionIds = new List<int>();
+
+            //search by keyword
             bool searchLocalizedValue = false;
             if (languageId > 0)
             {
@@ -350,15 +360,18 @@ namespace Nop.Services.Catalog
                 else
                 {
                     //ensure that we have at least two published languages
-                    var totalPublishedLanguages = _languageService.GetAllLanguages(false).Count;
+                    var totalPublishedLanguages = _languageService.GetAllLanguages(storeId: _storeContext.CurrentStore.Id).Count;
                     searchLocalizedValue = totalPublishedLanguages >= 2;
                 }
             }
 
+            //validate "categoryIds" parameter
+            if (categoryIds !=null && categoryIds.Contains(0))
+                categoryIds.Remove(0);
+
             //Access control list. Allowed customer roles
             var allowedCustomerRolesIds = _workContext.CurrentCustomer.CustomerRoles
                 .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
-            
 
             if (_commonSettings.UseStoredProceduresIfSupported && _dataProvider.StoredProceduredSupported)
             {
@@ -424,6 +437,11 @@ namespace Nop.Services.Catalog
                 pManufacturerId.Value = manufacturerId;
                 pManufacturerId.DbType = DbType.Int32;
 
+                var pStoreId = _dataProvider.GetParameter();
+                pStoreId.ParameterName = "StoreId";
+                pStoreId.Value = storeId;
+                pStoreId.DbType = DbType.Int32;
+
                 var pProductTagId = _dataProvider.GetParameter();
                 pProductTagId.ParameterName = "ProductTagId";
                 pProductTagId.Value = productTagId;
@@ -484,6 +502,11 @@ namespace Nop.Services.Catalog
                 pOrderBy.Value = (int)orderBy;
                 pOrderBy.DbType = DbType.Int32;
 
+                var pAllowedCustomerRoleIds = _dataProvider.GetParameter();
+                pAllowedCustomerRoleIds.ParameterName = "AllowedCustomerRoleIds";
+                pAllowedCustomerRoleIds.Value = commaSeparatedAllowedCustomerRoleIds;
+                pAllowedCustomerRoleIds.DbType = DbType.String;
+
                 var pPageIndex = _dataProvider.GetParameter();
                 pPageIndex.ParameterName = "PageIndex";
                 pPageIndex.Value = pageIndex;
@@ -493,11 +516,6 @@ namespace Nop.Services.Catalog
                 pPageSize.ParameterName = "PageSize";
                 pPageSize.Value = pageSize;
                 pPageSize.DbType = DbType.Int32;
-
-                var pAllowedCustomerRoleIds= _dataProvider.GetParameter();
-                pAllowedCustomerRoleIds.ParameterName = "AllowedCustomerRoleIds";
-                pAllowedCustomerRoleIds.Value = commaSeparatedAllowedCustomerRoleIds;
-                pAllowedCustomerRoleIds.DbType = DbType.String;
 
                 var pShowHidden = _dataProvider.GetParameter();
                 pShowHidden.ParameterName = "ShowHidden";
@@ -525,6 +543,7 @@ namespace Nop.Services.Catalog
                     "ProductLoadAllPaged",
                     pCategoryIds,
                     pManufacturerId,
+                    pStoreId,
                     pProductTagId,
                     pFeaturedProducts,
                     pPriceMin,
@@ -537,9 +556,9 @@ namespace Nop.Services.Catalog
                     pFilteredSpecs,
                     pLanguageId,
                     pOrderBy,
+                    pAllowedCustomerRoleIds,
                     pPageIndex,
                     pPageSize,
-                    pAllowedCustomerRoleIds,
                     pShowHidden,
                     pLoadFilterableSpecificationAttributeOptionIds,
                     pFilterableSpecificationAttributeOptionIds,
@@ -596,13 +615,23 @@ namespace Nop.Services.Catalog
                             select p;
                 }
 
-                //ACL
                 if (!showHidden)
                 {
+                    //ACL (access control list)
                     query = from p in query
                             join acl in _aclRepository.Table on p.Id equals acl.EntityId into p_acl
                             from acl in p_acl.DefaultIfEmpty()
                             where !p.SubjectToAcl || (acl.EntityName == "Product" && allowedCustomerRolesIds.Contains(acl.CustomerRoleId))
+                            select p;
+                }
+
+                if (storeId > 0)
+                {
+                    //Store mapping
+                    query = from p in query
+                            join sm in _storeMappingRepository.Table on p.Id equals sm.EntityId into p_sm
+                            from sm in p_sm.DefaultIfEmpty()
+                            where !p.LimitedToStores || (sm.EntityName == "Product" && storeId == sm.StoreId)
                             select p;
                 }
 

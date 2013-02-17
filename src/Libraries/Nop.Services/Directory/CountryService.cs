@@ -137,8 +137,8 @@ namespace Nop.Services.Directory
             string key = string.Format(COUNTRIES_BY_ID_KEY, countryId);
             return _cacheManager.Get(key, () =>
             {
-                var category = _countryRepository.GetById(countryId);
-                return category;
+                var country = _countryRepository.GetById(countryId);
+                return country;
             });
         }
 

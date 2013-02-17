@@ -12,8 +12,8 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
-using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
+using Nop.Services.Affiliates;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -38,6 +38,7 @@ namespace Nop.Services.Tests.Orders
     public class OrderProcessingServiceTests : ServiceTest
     {
         IWorkContext _workContext;
+        IStoreContext _storeContext;
         ITaxService _taxService;
         IShippingService _shippingService;
         IShipmentService _shipmentService;
@@ -78,11 +79,13 @@ namespace Nop.Services.Tests.Orders
         IOrderProcessingService _orderProcessingService;
         IEventPublisher _eventPublisher;
         CurrencySettings _currencySettings;
+        IAffiliateService _affiliateService;
 
         [SetUp]
         public new void SetUp()
         {
             _workContext = null;
+            _storeContext = null;
 
             var pluginFinder = new PluginFinder();
             var cacheManager = new NopNullCache();
@@ -113,6 +116,7 @@ namespace Nop.Services.Tests.Orders
                 _logger,
                 _productAttributeParser,
                 _checkoutAttributeParser,
+                _genericAttributeService,
                 _localizationService,
                 _shippingSettings, pluginFinder, 
                 _eventPublisher, _shoppingCartSettings);
@@ -135,7 +139,7 @@ namespace Nop.Services.Tests.Orders
 
             _rewardPointsSettings = new RewardPointsSettings();
 
-            _orderTotalCalcService = new OrderTotalCalculationService(_workContext,
+            _orderTotalCalcService = new OrderTotalCalculationService(_workContext, _storeContext,
                 _priceCalcService, _taxService, _shippingService, _paymentService,
                 _checkoutAttributeParser, _discountService, _giftCardService,
                 _genericAttributeService, 
@@ -154,6 +158,7 @@ namespace Nop.Services.Tests.Orders
             _workflowMessageService = MockRepository.GenerateMock<IWorkflowMessageService>();
             _customerActivityService = MockRepository.GenerateMock<ICustomerActivityService>();
             _currencyService = MockRepository.GenerateMock<ICurrencyService>();
+            _affiliateService = MockRepository.GenerateMock<IAffiliateService>();
 
             _paymentSettings = new PaymentSettings()
             {
@@ -180,7 +185,7 @@ namespace Nop.Services.Tests.Orders
                 _shippingService, _shipmentService, _taxService,
                 _customerService, _discountService,
                 _encryptionService, _workContext, _workflowMessageService,
-                _customerActivityService, _currencyService,
+                _customerActivityService, _currencyService, _affiliateService,
                 _eventPublisher, _paymentSettings, _rewardPointsSettings,
                 _orderSettings, _taxSettings, _localizationSettings,
                 _currencySettings);

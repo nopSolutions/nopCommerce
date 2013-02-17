@@ -1,6 +1,7 @@
 ﻿using System;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Stores;
 using Nop.Tests;
 using NUnit.Framework;
 
@@ -14,6 +15,11 @@ namespace Nop.Data.Tests.Catalog
         {
             var backInStockSubscription = new BackInStockSubscription()
                                      {
+                                         Store = new Store
+                                         {
+                                             Name = "Store 1",
+                                             Url = "http://www.yourstore.com",
+                                         },
                                          ProductVariant = new ProductVariant
                                          {
                                              Name = "Product variant name 1",
@@ -42,6 +48,8 @@ namespace Nop.Data.Tests.Catalog
 
             var fromDb = SaveAndLoadEntity(backInStockSubscription);
             fromDb.ShouldNotBeNull();
+
+            fromDb.Store.ShouldNotBeNull();
 
             fromDb.ProductVariant.ShouldNotBeNull();
             fromDb.ProductVariant.Name.ShouldEqual("Product variant name 1");

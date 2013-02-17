@@ -13,36 +13,39 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="subscription">Subscription</param>
         void DeleteSubscription(BackInStockSubscription subscription);
-
+        
         /// <summary>
         /// Gets all subscriptions
         /// </summary>
         /// <param name="customerId">Customer identifier</param>
+        /// <param name="storeId">Store identifier; pass 0 to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Subscriptions</returns>
         IPagedList<BackInStockSubscription> GetAllSubscriptionsByCustomerId(int customerId,
-            int pageIndex, int pageSize, bool showHidden = false);
-
+            int storeId, int pageIndex, int pageSize, bool showHidden = false);
+        
         /// <summary>
         /// Gets all subscriptions
         /// </summary>
         /// <param name="productVariantId">Product variant identifier</param>
+        /// <param name="storeId">Store identifier; pass 0 to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Subscriptions</returns>
         IPagedList<BackInStockSubscription> GetAllSubscriptionsByProductVariantId(int productVariantId,
-            int pageIndex, int pageSize, bool showHidden = false);
+            int storeId, int pageIndex, int pageSize, bool showHidden = false);
 
         /// <summary>
         /// Gets all subscriptions
         /// </summary>
         /// <param name="customerId">Customer id</param>
         /// <param name="productVariantId">Product variant identifier</param>
+        /// <param name="storeId">Store identifier</param>
         /// <returns>Subscriptions</returns>
-        BackInStockSubscription FindSubscription(int customerId, int productVariantId);
+        BackInStockSubscription FindSubscription(int customerId, int productVariantId, int storeId);
 
         /// <summary>
         /// Gets a subscription

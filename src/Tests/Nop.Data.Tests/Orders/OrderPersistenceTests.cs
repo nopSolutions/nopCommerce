@@ -24,6 +24,7 @@ namespace Nop.Data.Tests.Orders
             var order = new Order
             {
                 OrderGuid = Guid.NewGuid(),
+                StoreId = 1,
                 Customer = GetTestCustomer(),
                 OrderStatus = OrderStatus.Complete,
                 ShippingStatus = ShippingStatus.Shipped,
@@ -77,6 +78,7 @@ namespace Nop.Data.Tests.Orders
 
             var fromDb = SaveAndLoadEntity(order);
             fromDb.ShouldNotBeNull();
+            fromDb.StoreId.ShouldEqual(1);
             fromDb.Customer.ShouldNotBeNull();
             fromDb.OrderStatus.ShouldEqual(OrderStatus.Complete);
             fromDb.ShippingStatus.ShouldEqual(ShippingStatus.Shipped);
@@ -284,24 +286,6 @@ namespace Nop.Data.Tests.Orders
             fromDb.OrderProductVariants.First().Quantity.ShouldEqual(1);
         }
         
-        [Test]
-        public void Can_save_and_load_customer_with_affiliate()
-        {
-            var order = new Order
-            {
-                OrderGuid = Guid.NewGuid(),
-                Customer = GetTestCustomer(),
-                Affiliate = GetTestAffiliate(),
-                BillingAddress = GetTestBillingAddress(),
-                CreatedOnUtc = new DateTime(2010, 01, 01)
-            };
-
-            var fromDb = SaveAndLoadEntity(order);
-            fromDb.ShouldNotBeNull();
-
-            fromDb.Affiliate.ShouldNotBeNull();
-            fromDb.Affiliate.Active.ShouldEqual(true);
-        }
         [Test]
         public void Can_save_and_load_order_with_shipments()
         {

@@ -56,9 +56,10 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct
             //it could be the same product variant with distinct product attributes
             //that's why we get the total quantity of this product variant
             var cartQuery = from sci in request.Customer.ShoppingCartItems
-                                   where sci.ShoppingCartType == ShoppingCartType.ShoppingCart
-                                   group sci by sci.ProductVariantId into g
-                                   select new {ProductVariantId = g.Key, TotalQuantity = g.Sum(x => x.Quantity)};
+                            where sci.ShoppingCartType == ShoppingCartType.ShoppingCart &&
+                            sci.StoreId == request.Store.Id
+                            group sci by sci.ProductVariantId into g
+                            select new {ProductVariantId = g.Key, TotalQuantity = g.Sum(x => x.Quantity)};
             var cart = cartQuery.ToList();
 
             //process

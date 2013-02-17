@@ -56,11 +56,8 @@ namespace Nop.Web
         protected void Application_Start()
         {
             //we use our own mobile devices support (".Mobile" is reserved). that's why we disable it.
-            var mobileDisplayMode = DisplayModeProvider
-                .Instance
-                .Modes
-                .Where(x => x.DisplayModeId == DisplayModeProvider.MobileDisplayModeId)
-                .FirstOrDefault();
+            var mobileDisplayMode = DisplayModeProvider.Instance.Modes
+                .FirstOrDefault(x => x.DisplayModeId == DisplayModeProvider.MobileDisplayModeId);
             if (mobileDisplayMode != null)
                 DisplayModeProvider.Instance.Modes.Remove(mobileDisplayMode);
 
@@ -188,7 +185,7 @@ namespace Nop.Web
             if (webHelper.IsStaticResource(this.Request))
                 return;
 
-            //keep alive page requested (we ignore it to prevnt creating a guest customer records)
+            //keep alive page requested (we ignore it to prevent creating a guest customer records)
             string keepAliveUrl = string.Format("{0}keepalive", webHelper.GetStoreLocation());
             if (webHelper.GetThisPageUrl(false).StartsWith(keepAliveUrl, StringComparison.InvariantCultureIgnoreCase))
                 return;

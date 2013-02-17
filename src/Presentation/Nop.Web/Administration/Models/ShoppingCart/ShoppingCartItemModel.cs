@@ -6,6 +6,8 @@ namespace Nop.Admin.Models.ShoppingCart
 {
     public partial class ShoppingCartItemModel : BaseNopEntityModel
     {
+        [NopResourceDisplayName("Admin.CurrentCarts.Store")]
+        public string Store { get; set; }
         [NopResourceDisplayName("Admin.CurrentCarts.Product")]
         public int ProductVariantId { get; set; }
         [NopResourceDisplayName("Admin.CurrentCarts.Product")]

@@ -3,6 +3,8 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Customers;
+using Nop.Services.Common;
 using Nop.Services.Events;
 using Nop.Services.Messages;
 
@@ -17,6 +19,7 @@ namespace Nop.Services.Catalog
 
         private readonly IRepository<BackInStockSubscription> _backInStockSubscriptionRepository;
         private readonly IWorkflowMessageService _workflowMessageService;
+        private readonly IWorkContext _workContext;
         private readonly IEventPublisher _eventPublisher;
 
         #endregion
@@ -28,13 +31,16 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="backInStockSubscriptionRepository">Back in stock subscription repository</param>
         /// <param name="workflowMessageService">Workflow message service</param>
+        /// <param name="workContext">Work context</param>
         /// <param name="eventPublisher">Event publisher</param>
         public BackInStockSubscriptionService(IRepository<BackInStockSubscription> backInStockSubscriptionRepository,
             IWorkflowMessageService workflowMessageService,
+            IWorkContext workContext,
             IEventPublisher eventPublisher)
         {
             this._backInStockSubscriptionRepository = backInStockSubscriptionRepository;
             this._workflowMessageService = workflowMessageService;
+            this._workContext = workContext;
             this._eventPublisher = eventPublisher;
         }
 
@@ -61,16 +67,20 @@ namespace Nop.Services.Catalog
         /// Gets all subscriptions
         /// </summary>
         /// <param name="customerId">Customer identifier</param>
+        /// <param name="storeId">Store identifier; pass 0 to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Subscriptions</returns>
         public virtual IPagedList<BackInStockSubscription> GetAllSubscriptionsByCustomerId(int customerId,
-            int pageIndex, int pageSize, bool showHidden = false)
+            int storeId, int pageIndex, int pageSize, bool showHidden = false)
         {
             var query = _backInStockSubscriptionRepository.Table;
             //customer
             query = query.Where(biss => biss.CustomerId == customerId);
+            //store
+            if (storeId > 0)
+                query = query.Where(biss => biss.StoreId == storeId);
             //product
             query = query.Where(biss => !biss.ProductVariant.Deleted);
             if (!showHidden)
@@ -87,16 +97,20 @@ namespace Nop.Services.Catalog
         /// Gets all subscriptions
         /// </summary>
         /// <param name="productVariantId">Product variant identifier</param>
+        /// <param name="storeId">Store identifier; pass 0 to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Subscriptions</returns>
         public virtual IPagedList<BackInStockSubscription> GetAllSubscriptionsByProductVariantId(int productVariantId,
-            int pageIndex, int pageSize, bool showHidden = false)
+            int storeId, int pageIndex, int pageSize, bool showHidden = false)
         {
             var query = _backInStockSubscriptionRepository.Table;
             //product
             query = query.Where(biss => biss.ProductVariantId == productVariantId);
+            //store
+            if (storeId > 0)
+                query = query.Where(biss => biss.StoreId == storeId);
             //customer
             query = query.Where(biss => !biss.Customer.Deleted);
             if (!showHidden)
@@ -110,12 +124,14 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="customerId">Customer id</param>
         /// <param name="productVariantId">Product variant identifier</param>
+        /// <param name="storeId">Store identifier</param>
         /// <returns>Subscriptions</returns>
-        public virtual BackInStockSubscription FindSubscription(int customerId, int productVariantId)
+        public virtual BackInStockSubscription FindSubscription(int customerId, int productVariantId, int storeId)
         {
             var query = _backInStockSubscriptionRepository.Table;
             query = query.Where(biss => biss.CustomerId == customerId);
             query = query.Where(biss => biss.ProductVariantId == productVariantId);
+            query = query.Where(biss => biss.StoreId == storeId);
             query = query.OrderByDescending(biss => biss.CreatedOnUtc);
 
             var subscription = query.FirstOrDefault();
@@ -177,13 +193,15 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("productVariant");
 
             int result = 0;
-            var subscriptions = GetAllSubscriptionsByProductVariantId(productVariant.Id, 0, int.MaxValue);
+            var subscriptions = GetAllSubscriptionsByProductVariantId(productVariant.Id, 0, 0, int.MaxValue);
             foreach (var subscription in subscriptions)
             {
                 //ensure that customer is registered (simple and fast way)
                 if (CommonHelper.IsValidEmail(subscription.Customer.Email))
                 {
-                    _workflowMessageService.SendBackInStockNotification(subscription, subscription.Customer.LanguageId.HasValue ? subscription.Customer.LanguageId.Value : 0);
+                    var customer = subscription.Customer;
+                    var customerLanguageId = customer.GetAttribute<int>(SystemCustomerAttributeNames.LanguageId, subscription.StoreId);
+                    _workflowMessageService.SendBackInStockNotification(subscription, customerLanguageId);
                     result++;
                 }
             }

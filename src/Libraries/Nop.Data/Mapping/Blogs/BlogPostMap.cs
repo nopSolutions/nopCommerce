@@ -11,7 +11,6 @@ namespace Nop.Data.Mapping.Blogs
             this.HasKey(bp => bp.Id);
             this.Property(bp => bp.Title).IsRequired();
             this.Property(bp => bp.Body).IsRequired();
-            this.Property(bp => bp.Tags);
 
             this.HasRequired(bp => bp.Language)
                 .WithMany()

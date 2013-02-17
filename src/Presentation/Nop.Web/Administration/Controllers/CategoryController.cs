@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Nop.Admin.Models.Catalog;
+using Nop.Admin.Models.Stores;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -16,6 +17,7 @@ using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Services.Security;
 using Nop.Services.Seo;
+using Nop.Services.Stores;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
 using Telerik.Web.Mvc;
@@ -41,8 +43,9 @@ namespace Nop.Admin.Controllers
         private readonly IDiscountService _discountService;
         private readonly IPermissionService _permissionService;
         private readonly IAclService _aclService;
+        private readonly IStoreService _storeService;
+        private readonly IStoreMappingService _storeMappingService;
         private readonly IExportManager _exportManager;
-        private readonly IWorkContext _workContext;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly AdminAreaSettings _adminAreaSettings;
         private readonly CatalogSettings _catalogSettings;
@@ -57,8 +60,8 @@ namespace Nop.Admin.Controllers
             IUrlRecordService urlRecordService, IPictureService pictureService, ILanguageService languageService,
             ILocalizationService localizationService, ILocalizedEntityService localizedEntityService,
             IDiscountService discountService, IPermissionService permissionService,
-            IAclService aclService,
-            IExportManager exportManager, IWorkContext workContext,
+            IAclService aclService, IStoreService storeService, IStoreMappingService storeMappingService,
+            IExportManager exportManager,
             ICustomerActivityService customerActivityService, AdminAreaSettings adminAreaSettings,
             CatalogSettings catalogSettings)
         {
@@ -75,8 +78,9 @@ namespace Nop.Admin.Controllers
             this._discountService = discountService;
             this._permissionService = permissionService;
             this._aclService = aclService;
+            this._storeService = storeService;
+            this._storeMappingService = storeMappingService;
             this._exportManager = exportManager;
-            this._workContext = workContext;
             this._customerActivityService = customerActivityService;
             this._adminAreaSettings = adminAreaSettings;
             this._catalogSettings = catalogSettings;
@@ -204,6 +208,52 @@ namespace Nop.Admin.Controllers
                     var aclRecordToDelete = existingAclRecords.Where(acl => acl.CustomerRoleId == customerRole.Id).FirstOrDefault();
                     if (aclRecordToDelete != null)
                         _aclService.DeleteAclRecord(aclRecordToDelete);
+                }
+            }
+        }
+
+        [NonAction]
+        private void PrepareStoresMappingModel(CategoryModel model, Category category, bool excludeProperties)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            model.AvailableStores = _storeService
+                .GetAllStores()
+                .Select(s => s.ToModel())
+                .ToList();
+            if (!excludeProperties)
+            {
+                if (category != null)
+                {
+                    model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(category);
+                }
+                else
+                {
+                    model.SelectedStoreIds = new int[0];
+                }
+            }
+        }
+
+        [NonAction]
+        protected void SaveStoreMappings(Category category, CategoryModel model)
+        {
+            var existingStoreMappings = _storeMappingService.GetStoreMappings(category);
+            var allStores = _storeService.GetAllStores();
+            foreach (var store in allStores)
+            {
+                if (model.SelectedStoreIds != null && model.SelectedStoreIds.Contains(store.Id))
+                {
+                    //new role
+                    if (existingStoreMappings.Where(sm => sm.StoreId == store.Id).Count() == 0)
+                        _storeMappingService.InsertStoreMapping(category, store.Id);
+                }
+                else
+                {
+                    //removed role
+                    var storeMappingToDelete = existingStoreMappings.Where(sm => sm.StoreId == store.Id).FirstOrDefault();
+                    if (storeMappingToDelete != null)
+                        _storeMappingService.DeleteStoreMapping(storeMappingToDelete);
                 }
             }
         }
@@ -387,6 +437,8 @@ namespace Nop.Admin.Controllers
             PrepareDiscountModel(model, null, true);
             //ACL
             PrepareAclModel(model, null, false);
+            //Stores
+            PrepareStoresMappingModel(model, null, false);
             //default values
             model.PageSize = 4;
             model.Published = true;
@@ -428,6 +480,8 @@ namespace Nop.Admin.Controllers
                 UpdatePictureSeoNames(category);
                 //ACL (customer roles)
                 SaveCategoryAcl(category, model);
+                //Stores
+                SaveStoreMappings(category, model);
 
                 //activity log
                 _customerActivityService.InsertActivity("AddNewCategory", _localizationService.GetResource("ActivityLog.AddNewCategory"), category.Name);
@@ -453,6 +507,8 @@ namespace Nop.Admin.Controllers
             PrepareDiscountModel(model, null, true);
             //ACL
             PrepareAclModel(model, null, true);
+            //Stores
+            PrepareStoresMappingModel(model, null, true);
             return View(model);
         }
 
@@ -493,6 +549,8 @@ namespace Nop.Admin.Controllers
             PrepareDiscountModel(model, category, false);
             //ACL
             PrepareAclModel(model, category, false);
+            //Stores
+            PrepareStoresMappingModel(model, category, false);
 
             return View(model);
         }
@@ -550,6 +608,8 @@ namespace Nop.Admin.Controllers
                 UpdatePictureSeoNames(category);
                 //ACL
                 SaveCategoryAcl(category, model);
+                //Stores
+                SaveStoreMappings(category, model);
 
                 //activity log
                 _customerActivityService.InsertActivity("EditCategory", _localizationService.GetResource("ActivityLog.EditCategory"), category.Name);
@@ -576,6 +636,9 @@ namespace Nop.Admin.Controllers
             PrepareDiscountModel(model, category, true);
             //ACL
             PrepareAclModel(model, category, true);
+            //Stores
+            PrepareStoresMappingModel(model, category, true);
+
             return View(model);
         }
 
@@ -695,11 +758,10 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
 
-            IList<int> filterableSpecificationAttributeOptionIds = null;
-            var products = _productService.SearchProducts(0, 0, null, null, null, 0, string.Empty, false, false,
-                _workContext.WorkingLanguage.Id, new List<int>(),
-                ProductSortingEnum.Position, 0, _adminAreaSettings.GridPageSize,
-                false, out filterableSpecificationAttributeOptionIds, true);
+            var products = _productService.SearchProducts(
+                pageSize: _adminAreaSettings.GridPageSize,
+                showHidden: true
+                );
 
             var model = new CategoryModel.AddCategoryProductModel();
             model.Products = new GridModel<ProductModel>
@@ -727,12 +789,14 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var gridModel = new GridModel();
-            IList<int> filterableSpecificationAttributeOptionIds = null;
-            var products = _productService.SearchProducts(model.SearchCategoryId,
-                model.SearchManufacturerId, null, null, null, 0, model.SearchProductName, false, false,
-                _workContext.WorkingLanguage.Id, new List<int>(),
-                ProductSortingEnum.Position, command.Page - 1, command.PageSize,
-                false, out filterableSpecificationAttributeOptionIds, true);
+            var products = _productService.SearchProducts(
+                categoryIds: new List<int>() { model.SearchCategoryId },
+                manufacturerId: model.SearchManufacturerId,
+                keywords: model.SearchProductName,
+                pageIndex: command.Page - 1,
+                pageSize: command.PageSize,
+                showHidden: true
+                );
             gridModel.Data = products.Select(x => x.ToModel());
             gridModel.Total = products.TotalCount;
             return new JsonResult

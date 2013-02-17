@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Nop.Admin.Models.Directory;
+using Nop.Admin.Models.Stores;
 using Nop.Core;
 using Nop.Core.Domain.Directory;
 using Nop.Services.Configuration;
@@ -10,6 +11,7 @@ using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Security;
+using Nop.Services.Stores;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
 
@@ -28,6 +30,8 @@ namespace Nop.Admin.Controllers
         private readonly IPermissionService _permissionService;
         private readonly ILocalizedEntityService _localizedEntityService;
         private readonly ILanguageService _languageService;
+        private readonly IStoreService _storeService;
+        private readonly IStoreMappingService _storeMappingService;
 
         #endregion
 
@@ -37,7 +41,9 @@ namespace Nop.Admin.Controllers
             CurrencySettings currencySettings, ISettingService settingService,
             IDateTimeHelper dateTimeHelper, ILocalizationService localizationService,
             IPermissionService permissionService,
-            ILocalizedEntityService localizedEntityService, ILanguageService languageService)
+            ILocalizedEntityService localizedEntityService, ILanguageService languageService,
+            IStoreService storeService, 
+            IStoreMappingService storeMappingService)
         {
             this._currencyService = currencyService;
             this._currencySettings = currencySettings;
@@ -47,6 +53,8 @@ namespace Nop.Admin.Controllers
             this._permissionService = permissionService;
             this._localizedEntityService = localizedEntityService;
             this._languageService = languageService;
+            this._storeService = storeService;
+            this._storeMappingService = storeMappingService;
         }
         
         #endregion
@@ -65,6 +73,51 @@ namespace Nop.Admin.Controllers
             }
         }
 
+        [NonAction]
+        private void PrepareStoresMappingModel(CurrencyModel model, Currency currency, bool excludeProperties)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            model.AvailableStores = _storeService
+                .GetAllStores()
+                .Select(s => s.ToModel())
+                .ToList();
+            if (!excludeProperties)
+            {
+                if (currency != null)
+                {
+                    model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(currency);
+                }
+                else
+                {
+                    model.SelectedStoreIds = new int[0];
+                }
+            }
+        }
+
+        [NonAction]
+        protected void SaveStoreMappings(Currency currency, CurrencyModel model)
+        {
+            var existingStoreMappings = _storeMappingService.GetStoreMappings(currency);
+            var allStores = _storeService.GetAllStores();
+            foreach (var store in allStores)
+            {
+                if (model.SelectedStoreIds != null && model.SelectedStoreIds.Contains(store.Id))
+                {
+                    //new role
+                    if (existingStoreMappings.Where(sm => sm.StoreId == store.Id).Count() == 0)
+                        _storeMappingService.InsertStoreMapping(currency, store.Id);
+                }
+                else
+                {
+                    //removed role
+                    var storeMappingToDelete = existingStoreMappings.Where(sm => sm.StoreId == store.Id).FirstOrDefault();
+                    if (storeMappingToDelete != null)
+                        _storeMappingService.DeleteStoreMapping(storeMappingToDelete);
+                }
+            }
+        }
 
         #endregion
 
@@ -201,6 +254,8 @@ namespace Nop.Admin.Controllers
             var model = new CurrencyModel();
             //locales
             AddLocales(_languageService, model.Locales);
+            //Stores
+            PrepareStoresMappingModel(model, null, false);
             //default values
             model.Published = true;
             model.Rate = 1;
@@ -221,12 +276,18 @@ namespace Nop.Admin.Controllers
                 _currencyService.InsertCurrency(currency);
                 //locales
                 UpdateLocales(currency, model);
+                //Stores
+                SaveStoreMappings(currency, model);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Currencies.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = currency.Id }) : RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
+
+            //Stores
+            PrepareStoresMappingModel(model, null, true);
+
             return View(model);
         }
         
@@ -247,6 +308,9 @@ namespace Nop.Admin.Controllers
             {
                 locale.Name = currency.GetLocalized(x => x.Name, languageId, false, false);
             });
+            //Stores
+            PrepareStoresMappingModel(model, currency, false);
+
             return View(model);
         }
 
@@ -268,6 +332,9 @@ namespace Nop.Admin.Controllers
                 _currencyService.UpdateCurrency(currency);
                 //locales
                 UpdateLocales(currency, model);
+                //Stores
+                SaveStoreMappings(currency, model);
+
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Currencies.Updated"));
                 return continueEditing ? RedirectToAction("Edit", new { id = currency.Id }) : RedirectToAction("List");
@@ -275,6 +342,10 @@ namespace Nop.Admin.Controllers
 
             //If we got this far, something failed, redisplay form
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(currency.CreatedOnUtc, DateTimeKind.Utc);
+
+            //Stores
+            PrepareStoresMappingModel(model, currency, true);
+
             return View(model);
         }
         

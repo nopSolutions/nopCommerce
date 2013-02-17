@@ -11,12 +11,18 @@ namespace Nop.Plugin.Feed.Froogle.Models
     {
         public FeedFroogleModel()
         {
+            AvailableStores = new List<SelectListItem>();
             AvailableCurrencies = new List<SelectListItem>();
             AvailableGoogleCategories = new List<SelectListItem>();
+            GeneratedFiles = new List<GeneratedFileModel>();
         }
 
         [NopResourceDisplayName("Plugins.Feed.Froogle.ProductPictureSize")]
         public int ProductPictureSize { get; set; }
+
+        [NopResourceDisplayName("Plugins.Feed.Froogle.Store")]
+        public int StoreId { get; set; }
+        public IList<SelectListItem> AvailableStores { get; set; }
 
         [NopResourceDisplayName("Plugins.Feed.Froogle.Currency")]
         public int CurrencyId { get; set; }
@@ -27,16 +33,15 @@ namespace Nop.Plugin.Feed.Froogle.Models
         public IList<SelectListItem> AvailableGoogleCategories { get; set; }
 
         public string GenerateFeedResult { get; set; }
-        public string SaveResult { get; set; }
 
-
-
-        [NopResourceDisplayName("Plugins.Feed.Froogle.TaskEnabled")]
-        public bool TaskEnabled { get; set; }
-        [NopResourceDisplayName("Plugins.Feed.Froogle.GenerateStaticFileEachMinutes")]
-        public int GenerateStaticFileEachMinutes { get; set; }
         [NopResourceDisplayName("Plugins.Feed.Froogle.StaticFilePath")]
-        public string StaticFilePath { get; set; }
+        public IList<GeneratedFileModel> GeneratedFiles { get; set; }
+        
+        public class GeneratedFileModel : BaseNopModel
+        {
+            public string StoreName { get; set; }
+            public string FileUrl { get; set; }
+        }
 
         public class GoogleProductModel : BaseNopModel
         {

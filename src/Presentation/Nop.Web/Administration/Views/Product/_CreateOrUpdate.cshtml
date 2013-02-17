@@ -22,6 +22,7 @@
     x.Add().Text(T("Admin.Catalog.Products.Pictures").Text).Content(TabPictures().ToHtmlString());
     x.Add().Text(T("Admin.Catalog.Products.SpecificationAttributes").Text).Content(TabSpecificationAttributes().ToHtmlString());
     x.Add().Text(T("Admin.Catalog.Products.Acl").Text).Content(TabAcl().ToHtmlString());
+    x.Add().Text(T("Admin.Catalog.Products.Stores").Text).Content(TabStores().ToHtmlString());
 
     //generate an event
     EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "product-edit"));
@@ -834,6 +835,58 @@
                 else
                 {
                     <div>No customer roles defined</div>
+                }</td>
+        </tr>
+    </table>
+}
+@helper TabStores()
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#@Html.FieldIdFor(model => model.LimitedToStores)").click(toggleStoreMapping);
+        
+            toggleStoreMapping();
+        });
+
+
+        function toggleStoreMapping() {
+            if ($('#@Html.FieldIdFor(model => model.LimitedToStores)').is(':checked')) {
+                $('#pnl-available-stores').show();
+            }
+            else {
+                $('#pnl-available-stores').hide();
+            }
+        }
+
+    </script>
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.LimitedToStores):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.LimitedToStores)
+                @Html.ValidationMessageFor(model => model.LimitedToStores)
+            </td>
+        </tr>
+        <tr id="pnl-available-stores">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AvailableStores):
+            </td>
+            <td class="adminData">
+                @if (Model.AvailableStores != null && Model.AvailableStores.Count > 0)
+                {
+                    foreach (var store in Model.AvailableStores)
+                    {
+                    <div>
+                        <input type="checkbox" name="SelectedStoreIds" value="@store.Id" checked="@(Model.SelectedStoreIds != null && Model.SelectedStoreIds.Contains(store.Id))" />@store.Name
+                    </div>
+                    }
+                }
+                else
+                {
+                    <div>No stores defined</div>
                 }</td>
         </tr>
     </table>

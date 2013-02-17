@@ -16,7 +16,12 @@ namespace Nop.Services.Payments
         }
 
         /// <summary>
-        /// Gets or sets a customer
+        /// Gets or sets a store identifier
+        /// </summary>
+        public int StoreId { get; set; }
+
+        /// <summary>
+        /// Gets or sets a customer identifier
         /// </summary>
         public int CustomerId { get; set; }
 

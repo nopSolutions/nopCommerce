@@ -26,6 +26,7 @@ namespace Nop.Services.Orders
         #region Fields
 
         private readonly IWorkContext _workContext;
+        private readonly IStoreContext _storeContext;
         private readonly IPriceCalculationService _priceCalculationService;
         private readonly ITaxService _taxService;
         private readonly IShippingService _shippingService;
@@ -47,6 +48,7 @@ namespace Nop.Services.Orders
         /// Ctor
         /// </summary>
         /// <param name="workContext">Work context</param>
+        /// <param name="storeContext">Store context</param>
         /// <param name="priceCalculationService">Price calculation service</param>
         /// <param name="taxService">Tax service</param>
         /// <param name="shippingService">Shipping service</param>
@@ -61,6 +63,7 @@ namespace Nop.Services.Orders
         /// <param name="shoppingCartSettings">Shopping cart settings</param>
         /// <param name="catalogSettings">Catalog settings</param>
         public OrderTotalCalculationService(IWorkContext workContext,
+            IStoreContext storeContext,
             IPriceCalculationService priceCalculationService,
             ITaxService taxService,
             IShippingService shippingService,
@@ -76,6 +79,7 @@ namespace Nop.Services.Orders
             CatalogSettings catalogSettings)
         {
             this._workContext = workContext;
+            this._storeContext = storeContext;
             this._priceCalculationService = priceCalculationService;
             this._taxService = taxService;
             this._shippingService = shippingService;
@@ -201,7 +205,8 @@ namespace Nop.Services.Orders
             //checkout attributes
             if (customer != null)
             {
-                var caValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(customer.CheckoutAttributes);
+                var checkoutAttributesXml = customer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes, _genericAttributeService);
+                var caValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(checkoutAttributesXml);
                 if (caValues!=null)
                 {
                     foreach (var caValue in caValues)
@@ -511,16 +516,16 @@ namespace Nop.Services.Orders
             if (isFreeShipping)
                 return decimal.Zero;
 
-            ShippingOption lastShippingOption = null;
+            ShippingOption shippingOption = null;
             if (customer != null)
-                lastShippingOption = customer.GetAttribute<ShippingOption>(SystemCustomerAttributeNames.LastShippingOption, _genericAttributeService);
+                shippingOption = customer.GetAttribute<ShippingOption>(SystemCustomerAttributeNames.SelectedShippingOption, _genericAttributeService, _storeContext.CurrentStore.Id);
 
-            if (lastShippingOption != null)
+            if (shippingOption != null)
             {
                 //use last shipping option (get from cache)
 
                 //adjust shipping rate
-                shippingTotal = AdjustShippingRate(lastShippingOption.Rate, cart, out appliedDiscount);
+                shippingTotal = AdjustShippingRate(shippingOption.Rate, cart, out appliedDiscount);
             }
             else
             {
@@ -645,7 +650,12 @@ namespace Nop.Services.Orders
             var customer = cart.GetCustomer();
             string paymentMethodSystemName = "";
             if (customer != null)
-                paymentMethodSystemName = customer.SelectedPaymentMethodSystemName;
+            {
+                paymentMethodSystemName = customer.GetAttribute<string>(
+                    SystemCustomerAttributeNames.SelectedPaymentMethod,
+                    _genericAttributeService,
+                    _storeContext.CurrentStore.Id);
+            }
 
             //order sub total (items + checkout attributes)
             decimal subTotalTaxTotal = decimal.Zero;
@@ -787,7 +797,12 @@ namespace Nop.Services.Orders
             var customer = cart.GetCustomer();
             string paymentMethodSystemName = "";
             if (customer != null)
-                paymentMethodSystemName = customer.SelectedPaymentMethodSystemName;
+            {
+                paymentMethodSystemName = customer.GetAttribute<string>(
+                    SystemCustomerAttributeNames.SelectedPaymentMethod,
+                    _genericAttributeService,
+                    _storeContext.CurrentStore.Id);
+            }
 
 
             //subtotal without tax
@@ -909,8 +924,9 @@ namespace Nop.Services.Orders
             #region Reward points
 
             if (_rewardPointsSettings.Enabled && 
-                customer != null && customer.UseRewardPointsDuringCheckout && 
-                !ignoreRewardPonts)
+                !ignoreRewardPonts &&
+                customer.GetAttribute<bool>(SystemCustomerAttributeNames.UseRewardPointsDuringCheckout,
+                _genericAttributeService, _storeContext.CurrentStore.Id))
             {
                 int rewardPointsBalance = customer.GetRewardPointsBalance();
                 if (CheckMinimumRewardPointsToUseRequirement(rewardPointsBalance))

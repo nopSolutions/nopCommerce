@@ -13,6 +13,7 @@ using Nop.Core.Domain;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Media;
+using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tasks;
 using Nop.Core.Plugins;
 using Nop.Plugin.Feed.Froogle.Data;
@@ -32,19 +33,16 @@ namespace Nop.Plugin.Feed.Froogle
     {
         #region Fields
 
-        private readonly IScheduleTaskService _scheduleTaskService;
         private readonly IGoogleService _googleService;
         private readonly IProductService _productService;
         private readonly ICategoryService _categoryService;
         private readonly IManufacturerService _manufacturerService;
         private readonly IPictureService _pictureService;
         private readonly ICurrencyService _currencyService;
-        private readonly IWebHelper _webHelper;
         private readonly ISettingService _settingService;
         private readonly IWorkContext _workContext;
         private readonly IMeasureService _measureService;
         private readonly MeasureSettings _measureSettings;
-        private readonly StoreInformationSettings _storeInformationSettings;
         private readonly FroogleSettings _froogleSettings;
         private readonly CurrencySettings _currencySettings;
         private readonly GoogleProductObjectContext _objectContext;
@@ -52,36 +50,30 @@ namespace Nop.Plugin.Feed.Froogle
         #endregion
 
         #region Ctor
-        public FroogleService(IScheduleTaskService scheduleTaskService,
-            IGoogleService googleService,
+        public FroogleService(IGoogleService googleService,
             IProductService productService,
             ICategoryService categoryService,
             IManufacturerService manufacturerService,
             IPictureService pictureService,
             ICurrencyService currencyService,
-            IWebHelper webHelper,
             ISettingService settingService,
             IWorkContext workContext,
             IMeasureService measureService,
             MeasureSettings measureSettings,
-            StoreInformationSettings storeInformationSettings,
             FroogleSettings froogleSettings,
             CurrencySettings currencySettings,
             GoogleProductObjectContext objectContext)
         {
-            this._scheduleTaskService = scheduleTaskService;
             this._googleService = googleService;
             this._productService = productService;
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
             this._pictureService = pictureService;
             this._currencyService = currencyService;
-            this._webHelper = webHelper;
             this._settingService = settingService;
             this._workContext = workContext;
             this._measureService = measureService;
             this._measureSettings = measureSettings;
-            this._storeInformationSettings = storeInformationSettings;
             this._froogleSettings = froogleSettings;
             this._currencySettings = currencySettings;
             this._objectContext = objectContext;
@@ -154,11 +146,6 @@ namespace Nop.Plugin.Feed.Froogle
             return breadCrumb;
         }
 
-        private ScheduleTask FindScheduledTask()
-        {
-            return _scheduleTaskService.GetTaskByType("Nop.Plugin.Feed.Froogle.StaticFileGenerationTask, Nop.Plugin.Feed.Froogle");
-        }
-
         #endregion
 
         #region Methods
@@ -180,9 +167,16 @@ namespace Nop.Plugin.Feed.Froogle
         /// Generate a feed
         /// </summary>
         /// <param name="stream">Stream</param>
+        /// <param name="store">Store</param>
         /// <returns>Generated feed</returns>
-        public void GenerateFeed(Stream stream)
+        public void GenerateFeed(Stream stream, Store store)
         {
+            if (stream == null)
+                throw new ArgumentNullException("stream");
+
+            if (store == null)
+                throw new ArgumentNullException("store");
+
             const string googleBaseNamespace = "http://base.google.com/ns/1.0";
 
             var settings = new XmlWriterSettings
@@ -197,15 +191,14 @@ namespace Nop.Plugin.Feed.Froogle
                 writer.WriteAttributeString("version", "2.0");
                 writer.WriteAttributeString("xmlns", "g", null, googleBaseNamespace);
                 writer.WriteStartElement("channel");
-                writer.WriteElementString("title", string.Format("{0} Google Base", _storeInformationSettings.StoreName));
+                writer.WriteElementString("title", "Google Base feed");
                 writer.WriteElementString("link", "http://base.google.com/base/");
                 writer.WriteElementString("description", "Information about products");
 
-
-                var products = _productService.GetAllProducts(false);
+                var products = _productService.SearchProducts(storeId: store.Id);
                 foreach (var product in products)
                 {
-                    var productVariants = _productService.GetProductVariantsByProductId(product.Id, false);
+                    var productVariants = _productService.GetProductVariantsByProductId(product.Id);
 
                     foreach (var productVariant in productVariants)
                     {
@@ -276,7 +269,7 @@ namespace Nop.Plugin.Feed.Froogle
                         }
 
                         //link [link] - URL directly linking to your item's page on your website
-                        var productUrl = string.Format("{0}{1}", _webHelper.GetStoreLocation(false), product.GetSeName(_workContext.WorkingLanguage.Id));
+                        var productUrl = string.Format("{0}{1}", store.Url, product.GetSeName(_workContext.WorkingLanguage.Id));
                         writer.WriteElementString("link", productUrl);
 
                         //image link [image_link] - URL of an image of the item
@@ -285,11 +278,10 @@ namespace Nop.Plugin.Feed.Froogle
                         if (picture == null)
                             picture = _pictureService.GetPicturesByProductId(product.Id, 1).FirstOrDefault();
 
-                        //always use HTTP when getting image URL
                         if (picture != null)
-                            imageUrl = _pictureService.GetPictureUrl(picture, _froogleSettings.ProductPictureSize, useSsl: false);
+                            imageUrl = _pictureService.GetPictureUrl(picture, _froogleSettings.ProductPictureSize, storeLocation: store.Url);
                         else
-                            imageUrl = _pictureService.GetDefaultPictureUrl(_froogleSettings.ProductPictureSize, useSsl: false);
+                            imageUrl = _pictureService.GetDefaultPictureUrl(_froogleSettings.ProductPictureSize, storeLocation: store.Url);
 
                         writer.WriteElementString("g", "image_link", googleBaseNamespace, imageUrl);
 
@@ -481,7 +473,8 @@ namespace Nop.Plugin.Feed.Froogle
             _objectContext.Install();
 
             //locales
-            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.ClickHere", "Click here");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Store", "Store");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Store.Hint", "Select the store that will be used to generate the feed.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Currency", "Currency");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Currency.Hint", "Select the default currency that will be used to generate the feed.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.DefaultGoogleCategory", "Default Google category");
@@ -497,30 +490,9 @@ namespace Nop.Plugin.Feed.Froogle
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Products.AgeGroup", "Age group");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Products.Color", "Color");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Products.Size", "Size");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.SuccessResult", "Froogle feed has been successfully generated. {0} to see generated feed");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.TaskEnabled", "Automatically generate a file");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.TaskEnabled.Hint", "Check if you want a file to be automatically generated.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.GenerateStaticFileEachMinutes", "A task period (minutes)");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.GenerateStaticFileEachMinutes.Hint", "Specify a task period in minutes (generation of a new Froogle file).");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.TaskRestart", "If a task setting ('Automatically generate a file') have been changed, please restart the application");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.SuccessResult", "Froogle feed has been successfully generated.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.StaticFilePath", "Generated file path (static)");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.StaticFilePath.Hint", "A file path of the generated Froogle file. It's static for your store and can be shared with the Froogle service.");
-
-            //install a schedule task
-            var task = FindScheduledTask();
-            if (task == null)
-            {
-                task = new ScheduleTask
-                {
-                    Name = "Froogle static file generation",
-                    //each 60 minutes
-                    Seconds = 3600,
-                    Type = "Nop.Plugin.Feed.Froogle.StaticFileGenerationTask, Nop.Plugin.Feed.Froogle",
-                    Enabled = false,
-                    StopOnError = false,
-                };
-                _scheduleTaskService.InsertTask(task);
-            }
 
             base.Install();
         }
@@ -537,7 +509,8 @@ namespace Nop.Plugin.Feed.Froogle
             _objectContext.Uninstall();
 
             //locales
-            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.ClickHere");
+            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Store");
+            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Store.Hint");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Currency");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Currency.Hint");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.DefaultGoogleCategory");
@@ -554,19 +527,8 @@ namespace Nop.Plugin.Feed.Froogle
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Products.Color");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Products.Size");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.SuccessResult");
-            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.TaskEnabled");
-            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.TaskEnabled.Hint");
-            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.GenerateStaticFileEachMinutes");
-            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.GenerateStaticFileEachMinutes.Hint");
-            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.TaskRestart");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.StaticFilePath");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.StaticFilePath.Hint");
-
-
-            //Remove scheduled task
-            var task = FindScheduledTask();
-            if (task != null)
-                _scheduleTaskService.DeleteTask(task);
 
             base.Uninstall();
         }
@@ -574,12 +536,15 @@ namespace Nop.Plugin.Feed.Froogle
         /// <summary>
         /// Generate a static file for froogle
         /// </summary>
-        public virtual void GenerateStaticFile()
+        /// <param name="store">Store</param>
+        public virtual void GenerateStaticFile(Store store)
         {
-            string filePath = System.IO.Path.Combine(HttpRuntime.AppDomainAppPath, "content\\files\\exportimport", _froogleSettings.StaticFileName);
+            if (store == null)
+                throw new ArgumentNullException("store");
+            string filePath = System.IO.Path.Combine(HttpRuntime.AppDomainAppPath, "content\\files\\exportimport", store.Id + "-" + _froogleSettings.StaticFileName);
             using (var fs = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite))
             {
-                GenerateFeed(fs);
+                GenerateFeed(fs, store);
             }
         }
 

@@ -7,16 +7,20 @@ using Nop.Core.Plugins;
 using Nop.Services.Configuration;
 using Nop.Services.Discounts;
 using Nop.Services.Localization;
+using Nop.Services.Orders;
 
 namespace Nop.Plugin.DiscountRules.HadSpentAmount
 {
     public partial class HadSpentAmountDiscountRequirementRule : BasePlugin, IDiscountRequirementRule
     {
         private readonly ISettingService _settingService;
+        private readonly IOrderService _orderService;
 
-        public HadSpentAmountDiscountRequirementRule(ISettingService settingService)
+        public HadSpentAmountDiscountRequirementRule(ISettingService settingService, 
+            IOrderService orderService)
         {
             this._settingService = settingService;
+            this._orderService = orderService;
         }
 
         /// <summary>
@@ -39,8 +43,8 @@ namespace Nop.Plugin.DiscountRules.HadSpentAmount
 
             if (request.Customer == null || request.Customer.IsGuest())
                 return false;
-
-            var orders = request.Customer.Orders.Where(o => !o.Deleted && o.OrderStatus == OrderStatus.Complete);
+            var orders = _orderService.SearchOrders(request.Store.Id, request.Customer.Id,
+                null, null, OrderStatus.Complete, null, null, null, null, 0, int.MaxValue);
             decimal spentAmount = orders.Sum(o => o.OrderTotal);
             return spentAmount > spentAmountRequirement;
         }

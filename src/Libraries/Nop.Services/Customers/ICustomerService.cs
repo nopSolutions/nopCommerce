@@ -123,20 +123,6 @@ namespace Nop.Services.Customers
         Customer GetCustomerByUsername(string username);
 
         /// <summary>
-        /// Get customers by language identifier
-        /// </summary>
-        /// <param name="languageId">Language identifier</param>
-        /// <returns>Customers</returns>
-        IList<Customer> GetCustomersByLanguageId(int languageId);
-
-        /// <summary>
-        /// Get customers by currency identifier
-        /// </summary>
-        /// <param name="currencyId">Currency identifier</param>
-        /// <returns>Customers</returns>
-        IList<Customer> GetCustomersByCurrencyId(int currencyId);
-
-        /// <summary>
         /// Insert a guest customer
         /// </summary>
         /// <returns>Customer</returns>
@@ -158,12 +144,13 @@ namespace Nop.Services.Customers
         /// Reset data required for checkout
         /// </summary>
         /// <param name="customer">Customer</param>
+        /// <param name="storeId">Store identifier</param>
         /// <param name="clearCouponCodes">A value indicating whether to clear coupon code</param>
         /// <param name="clearCheckoutAttributes">A value indicating whether to clear selected checkout attributes</param>
         /// <param name="clearRewardPoints">A value indicating whether to clear "Use reward points" flag</param>
         /// <param name="clearShippingMethod">A value indicating whether to clear selected shipping method</param>
         /// <param name="clearPaymentMethod">A value indicating whether to clear selected payment method</param>
-        void ResetCheckoutData(Customer customer,
+        void ResetCheckoutData(Customer customer, int storeId,
             bool clearCouponCodes = false, bool clearCheckoutAttributes = false,
             bool clearRewardPoints = true, bool clearShippingMethod = true,
             bool clearPaymentMethod = true);

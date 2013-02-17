@@ -4,6 +4,7 @@ using System.Diagnostics;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Configuration;
+using Nop.Services.Common;
 using Nop.Services.Customers;
 
 namespace Nop.Services.Helpers
@@ -14,7 +15,7 @@ namespace Nop.Services.Helpers
     public partial class DateTimeHelper : IDateTimeHelper
     {
         private readonly IWorkContext _workContext;
-        private readonly ICustomerService _customerService;
+        private readonly IGenericAttributeService _genericAttributeService;
         private readonly ISettingService _settingService;
         private readonly DateTimeSettings _dateTimeSettings;
 
@@ -22,16 +23,16 @@ namespace Nop.Services.Helpers
         /// Ctor
         /// </summary>
         /// <param name="workContext">Work context</param>
-        /// <param name="customerService">Customer service</param>
+        /// <param name="genericAttributeService">Generic attribute service</param>
         /// <param name="settingService">Setting service</param>
         /// <param name="dateTimeSettings">Datetime settings</param>
         public DateTimeHelper(IWorkContext workContext,
-            ICustomerService customerService,
+            IGenericAttributeService genericAttributeService,
             ISettingService settingService, 
             DateTimeSettings dateTimeSettings)
         {
             this._workContext = workContext;
-            this._customerService = customerService;
+            this._genericAttributeService = genericAttributeService;
             this._settingService = settingService;
             this._dateTimeSettings = dateTimeSettings;
         }
@@ -156,7 +157,7 @@ namespace Nop.Services.Helpers
             {
                 string timeZoneId = string.Empty;
                 if (customer != null)
-                    timeZoneId = customer.TimeZoneId;
+                    timeZoneId = customer.GetAttribute<string>(SystemCustomerAttributeNames.TimeZoneId, _genericAttributeService);
 
                 try
                 {
@@ -232,13 +233,8 @@ namespace Nop.Services.Helpers
                     timeZoneId = value.Id;
                 }
 
-                //registered user only
-                var customer = _workContext.CurrentCustomer;
-                if (customer != null)
-                {
-                    customer.TimeZoneId = timeZoneId;
-                    _customerService.UpdateCustomer(customer);
-                }
+                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
+                    SystemCustomerAttributeNames.TimeZoneId, timeZoneId);
             }
         }
     }

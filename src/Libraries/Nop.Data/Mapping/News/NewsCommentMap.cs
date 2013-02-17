@@ -11,9 +11,6 @@ namespace Nop.Data.Mapping.News
             //commented because it's already configured by CustomerContentMap class
             //this.HasKey(pr => pr.Id);
 
-            this.Property(nc => nc.CommentText);
-            this.Property(nc => nc.CommentTitle);
-
             this.HasRequired(nc => nc.NewsItem)
                 .WithMany(n => n.NewsComments)
                 .HasForeignKey(nc => nc.NewsItemId);

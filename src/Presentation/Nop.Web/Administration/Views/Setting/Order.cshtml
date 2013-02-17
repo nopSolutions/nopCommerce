@@ -16,24 +16,26 @@
             <input type="submit" name="save" class="t-button" value="@T("Admin.Common.Save")" />
         </div>
     </div>
+    @Html.Action("StoreScopeConfiguration", "Setting")
     @Html.ValidationSummary(false)
 
     
      
     @Html.Telerik().TabStrip().Name("ordersettings-edit").Items(x =>
-{
-    x.Add().Text(T("Admin.Configuration.Settings.Order.OrderSettings").Text).Content(TabOrderSettings().ToHtmlString()).Selected(true);
-    x.Add().Text(T("Admin.Configuration.Settings.Order.ReturnRequestSettings").Text).Content(TabReturnRequestSettings().ToHtmlString());
-    
-    //generate an event
-    EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "ordersettings-edit"));
-})
+    {
+        x.Add().Text(T("Admin.Configuration.Settings.Order.OrderSettings").Text).Content(TabOrderSettings().ToHtmlString()).Selected(true);
+        x.Add().Text(T("Admin.Configuration.Settings.Order.ReturnRequestSettings").Text).Content(TabReturnRequestSettings().ToHtmlString());
+
+        //generate an event
+        EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "ordersettings-edit"));
+    })
 }
 @helper TabOrderSettings()
-    {
+{
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.IsReOrderAllowed_OverrideForStore, model => model.IsReOrderAllowed, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.IsReOrderAllowed):
             </td>
             <td class="adminData">
@@ -43,6 +45,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.MinOrderSubtotalAmount_OverrideForStore, model => model.MinOrderSubtotalAmount, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.MinOrderSubtotalAmount):
             </td>
             <td class="adminData">
@@ -52,6 +55,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.MinOrderTotalAmount_OverrideForStore, model => model.MinOrderTotalAmount, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.MinOrderTotalAmount):
             </td>
             <td class="adminData">
@@ -61,6 +65,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.AnonymousCheckoutAllowed_OverrideForStore, model => model.AnonymousCheckoutAllowed, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.AnonymousCheckoutAllowed):
             </td>
             <td class="adminData">
@@ -70,6 +75,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.TermsOfServiceEnabled_OverrideForStore, model => model.TermsOfServiceEnabled, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.TermsOfServiceEnabled):
             </td>
             <td class="adminData">
@@ -79,6 +85,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.OnePageCheckoutEnabled_OverrideForStore, model => model.OnePageCheckoutEnabled, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.OnePageCheckoutEnabled):
             </td>
             <td class="adminData">
@@ -118,7 +125,7 @@
     </table>
 }
 @helper TabReturnRequestSettings()
-    {
+{
     <table class="adminContent">
         <tr>
             <td class="adminTitle" colspan="2">
@@ -130,6 +137,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ReturnRequestsEnabled_OverrideForStore, model => model.ReturnRequestsEnabled, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ReturnRequestsEnabled):
             </td>
             <td class="adminData">
@@ -139,6 +147,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.NumberOfDaysReturnRequestAvailable_OverrideForStore, model => model.NumberOfDaysReturnRequestAvailable, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.NumberOfDaysReturnRequestAvailable):
             </td>
             <td class="adminData">

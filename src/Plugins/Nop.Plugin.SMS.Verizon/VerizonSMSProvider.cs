@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Routing;
+using Nop.Core;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Plugins;
@@ -22,12 +23,15 @@ namespace Nop.Plugin.SMS.Verizon
         private readonly IEmailAccountService _emailAccountService;
         private readonly ILogger _logger;
         private readonly ISettingService _settingService;
-        private readonly StoreInformationSettings _storeSettings;
+        private readonly IStoreContext _storeContext;
         private readonly EmailAccountSettings _emailAccountSettings;
 
         public VerizonSmsProvider(VerizonSettings verizonSettings,
-            IQueuedEmailService queuedEmailService, IEmailAccountService emailAccountService,
-            ILogger logger, ISettingService settingService, StoreInformationSettings storeSettigs,
+            IQueuedEmailService queuedEmailService, 
+            IEmailAccountService emailAccountService,
+            ILogger logger,
+            ISettingService settingService,
+            IStoreContext storeContext,
             EmailAccountSettings emailAccountSettings)
         {
             this._verizonSettings = verizonSettings;
@@ -35,8 +39,7 @@ namespace Nop.Plugin.SMS.Verizon
             this._emailAccountService = emailAccountService;
             this._logger = logger;
             this._settingService = settingService;
-
-            this._storeSettings = storeSettigs;
+            this._storeContext = storeContext;
             this._emailAccountSettings = emailAccountSettings;
         }
 
@@ -52,6 +55,8 @@ namespace Nop.Plugin.SMS.Verizon
                 var emailAccount = _emailAccountService.GetEmailAccountById(_emailAccountSettings.DefaultEmailAccountId);
                 if (emailAccount == null)
                     emailAccount = _emailAccountService.GetAllEmailAccounts().FirstOrDefault();
+                if (emailAccount == null)
+                    throw new Exception("No email account could be loaded");
 
                 var queuedEmail = new QueuedEmail()
                 {
@@ -60,7 +65,7 @@ namespace Nop.Plugin.SMS.Verizon
                     FromName = emailAccount.DisplayName,
                     To = _verizonSettings.Email,
                     ToName = string.Empty,
-                    Subject = _storeSettings.StoreName,
+                    Subject = _storeContext.CurrentStore.Name,
                     Body = text,
                     CreatedOnUtc = DateTime.UtcNow,
                     EmailAccountId = emailAccount.Id

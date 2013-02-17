@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Web.Mvc;
 using Nop.Admin.Models.Localization;
+using Nop.Admin.Models.Stores;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Localization;
 using Nop.Services.Localization;
 using Nop.Services.Security;
+using Nop.Services.Stores;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
@@ -20,8 +22,10 @@ namespace Nop.Admin.Controllers
 	{
 		#region Fields
 
-		private readonly ILanguageService _languageService;
-		private readonly ILocalizationService _localizationService;
+        private readonly ILanguageService _languageService;
+        private readonly ILocalizationService _localizationService;
+        private readonly IStoreService _storeService;
+        private readonly IStoreMappingService _storeMappingService;
         private readonly IPermissionService _permissionService;
         private readonly AdminAreaSettings _adminAreaSettings;
 
@@ -31,18 +35,72 @@ namespace Nop.Admin.Controllers
 
 		public LanguageController(ILanguageService languageService,
             ILocalizationService localizationService,
+            IStoreService storeService, 
+            IStoreMappingService storeMappingService,
             IPermissionService permissionService,
             AdminAreaSettings adminAreaSettings)
 		{
 			this._localizationService = localizationService;
             this._languageService = languageService;
+            this._storeService = storeService;
+            this._storeMappingService = storeMappingService;
             this._permissionService = permissionService;
             this._adminAreaSettings = adminAreaSettings;
 		}
 
 		#endregion 
 
-		#region Languages
+        #region Utilities
+
+        [NonAction]
+        private void PrepareStoresMappingModel(LanguageModel model, Language language, bool excludeProperties)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            model.AvailableStores = _storeService
+                .GetAllStores()
+                .Select(s => s.ToModel())
+                .ToList();
+            if (!excludeProperties)
+            {
+                if (language != null)
+                {
+                    model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(language);
+                }
+                else
+                {
+                    model.SelectedStoreIds = new int[0];
+                }
+            }
+        }
+
+        [NonAction]
+        protected void SaveStoreMappings(Language language, LanguageModel model)
+        {
+            var existingStoreMappings = _storeMappingService.GetStoreMappings(language);
+            var allStores = _storeService.GetAllStores();
+            foreach (var store in allStores)
+            {
+                if (model.SelectedStoreIds != null && model.SelectedStoreIds.Contains(store.Id))
+                {
+                    //new role
+                    if (existingStoreMappings.Where(sm => sm.StoreId == store.Id).Count() == 0)
+                        _storeMappingService.InsertStoreMapping(language, store.Id);
+                }
+                else
+                {
+                    //removed role
+                    var storeMappingToDelete = existingStoreMappings.Where(sm => sm.StoreId == store.Id).FirstOrDefault();
+                    if (storeMappingToDelete != null)
+                        _storeMappingService.DeleteStoreMapping(storeMappingToDelete);
+                }
+            }
+        }
+
+        #endregion
+
+        #region Languages
 
         public ActionResult Index()
         {
@@ -87,6 +145,8 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var model = new LanguageModel();
+            //Stores
+            PrepareStoresMappingModel(model, null, false);
             //default values
             model.Published = true;
             return View(model);
@@ -103,11 +163,18 @@ namespace Nop.Admin.Controllers
                 var language = model.ToEntity();
                 _languageService.InsertLanguage(language);
 
+                //Stores
+                SaveStoreMappings(language, model);
+
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Languages.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = language.Id }) : RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
+
+            //Stores
+            PrepareStoresMappingModel(model, null, true);
+
             return View(model);
         }
 
@@ -123,8 +190,12 @@ namespace Nop.Admin.Controllers
 
             //set page timeout to 5 minutes
             this.Server.ScriptTimeout = 300;
-            
-			return View(language.ToModel());
+
+		    var model = language.ToModel();
+            //Stores
+            PrepareStoresMappingModel(model, language, false);
+
+            return View(model);
 		}
 
         [HttpPost, ParameterBasedOnFormNameAttribute("save-continue", "continueEditing")]
@@ -153,12 +224,19 @@ namespace Nop.Admin.Controllers
                 language = model.ToEntity(language);
                 _languageService.UpdateLanguage(language);
 
+                //Stores
+                SaveStoreMappings(language, model);
+
                 //notification
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Languages.Updated"));
                 return continueEditing ? RedirectToAction("Edit", new { id = language.Id }) : RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
+
+            //Stores
+            PrepareStoresMappingModel(model, language, true);
+
             return View(model);
 		}
 

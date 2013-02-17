@@ -4,6 +4,7 @@ using System.Linq;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Stores;
 using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
 using Nop.Services.Customers;
@@ -19,7 +20,7 @@ namespace Nop.Services.Tests.Directory
     public class CurrencyServiceTests : ServiceTest
     {
         IRepository<Currency> _currencyRepository;
-        ICustomerService _customerService;
+        IRepository<StoreMapping> _storeMappingRepo;
         CurrencySettings _currencySettings;
         IEventPublisher _eventPublisher;
         ICurrencyService _currencyService;
@@ -74,10 +75,10 @@ namespace Nop.Services.Tests.Directory
             _currencyRepository.Expect(x => x.GetById(currencyEUR.Id)).Return(currencyEUR);
             _currencyRepository.Expect(x => x.GetById(currencyRUR.Id)).Return(currencyRUR);
 
+            _storeMappingRepo = MockRepository.GenerateMock<IRepository<StoreMapping>>();
+
             var cacheManager = new NopNullCache();
             
-            _customerService = MockRepository.GenerateMock<ICustomerService>();
-
             _currencySettings = new CurrencySettings();
             _currencySettings.PrimaryStoreCurrencyId = currencyUSD.Id;
             _currencySettings.PrimaryExchangeRateCurrencyId = currencyEUR.Id;
@@ -87,7 +88,7 @@ namespace Nop.Services.Tests.Directory
             
             var pluginFinder = new PluginFinder();
             _currencyService = new CurrencyService(cacheManager,
-                _currencyRepository, _customerService,
+                _currencyRepository, _storeMappingRepo, 
                 _currencySettings, pluginFinder, _eventPublisher);
         }
         

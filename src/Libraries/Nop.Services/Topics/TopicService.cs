@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Data;
+using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Topics;
 using Nop.Services.Events;
 
@@ -15,16 +16,20 @@ namespace Nop.Services.Topics
         #region Fields
 
         private readonly IRepository<Topic> _topicRepository;
+        private readonly IRepository<StoreMapping> _storeMappingRepository;
         private readonly IEventPublisher _eventPublisher;
 
         #endregion
 
         #region Ctor
 
-        public TopicService(IRepository<Topic> topicRepository, IEventPublisher eventPublisher)
+        public TopicService(IRepository<Topic> topicRepository, 
+            IRepository<StoreMapping> storeMappingRepository,
+            IEventPublisher eventPublisher)
         {
-            _topicRepository = topicRepository;
-            _eventPublisher = eventPublisher;
+            this._topicRepository = topicRepository;
+            this._storeMappingRepository = storeMappingRepository;
+            this._eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -63,15 +68,34 @@ namespace Nop.Services.Topics
         /// Gets a topic
         /// </summary>
         /// <param name="systemName">The topic system name</param>
+        /// <param name="storeId">Store identifier</param>
         /// <returns>Topic</returns>
-        public virtual Topic GetTopicBySystemName(string systemName)
+        public virtual Topic GetTopicBySystemName(string systemName, int storeId)
         {
             if (String.IsNullOrEmpty(systemName))
                 return null;
 
-            var query = from t in _topicRepository.Table
-                        where t.SystemName == systemName
+            var query = _topicRepository.Table;
+            query = query.Where(t => t.SystemName == systemName);
+            query = query.OrderBy(t => t.Id);
+
+            //Store mapping
+            if (storeId > 0)
+            {
+                query = from t in query
+                        join sm in _storeMappingRepository.Table on t.Id equals sm.EntityId into t_sm
+                        from sm in t_sm.DefaultIfEmpty()
+                        where !t.LimitedToStores || (sm.EntityName == "Topic" && storeId == sm.StoreId)
                         select t;
+
+                //only distinct items (group by ID)
+                query = from t in query
+                        group t by t.Id
+                        into tGroup
+                        orderby tGroup.Key
+                        select tGroup.FirstOrDefault();
+                query = query.OrderBy(t => t.Id);
+            }
 
             return query.FirstOrDefault();
         }
@@ -79,15 +103,32 @@ namespace Nop.Services.Topics
         /// <summary>
         /// Gets all topics
         /// </summary>
+        /// <param name="storeId">Store identifier; pass 0 to load all records</param>
         /// <returns>Topics</returns>
-        public virtual IList<Topic> GetAllTopics()
+        public virtual IList<Topic> GetAllTopics(int storeId)
         {
-            var query = from t in _topicRepository.Table
-                        orderby t.SystemName
+            var query = _topicRepository.Table;
+            query = query.OrderBy(t => t.SystemName);
+
+            //Store mapping
+            if (storeId > 0)
+            {
+                query = from t in query
+                        join sm in _storeMappingRepository.Table on t.Id equals sm.EntityId into t_sm
+                        from sm in t_sm.DefaultIfEmpty()
+                        where !t.LimitedToStores || (sm.EntityName == "Topic" && storeId == sm.StoreId)
                         select t;
 
-            var topics = query.ToList();
-            return topics;
+                //only distinct items (group by ID)
+                query = from t in query
+                        group t by t.Id
+                        into tGroup
+                        orderby tGroup.Key
+                        select tGroup.FirstOrDefault();
+                query = query.OrderBy(t => t.SystemName);
+            }
+
+            return query.ToList();
         }
 
         /// <summary>

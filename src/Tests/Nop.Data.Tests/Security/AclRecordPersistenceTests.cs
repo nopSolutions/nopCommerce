@@ -1,9 +1,8 @@
 ﻿using Nop.Core.Domain.Security;
-using Nop.Core.Domain.Seo;
 using Nop.Tests;
 using NUnit.Framework;
 
-namespace Nop.Data.Tests.Seo
+namespace Nop.Data.Tests.Security
 {
     [TestFixture]
     public class AclRecordPersistenceTests : PersistenceTest

@@ -13,7 +13,10 @@
         <div class="options">
             <input type="submit" name="save" class="t-button" value="@T("Admin.Common.Save")" />
             <input type="submit" name="save-continue" class="t-button" value="@T("Admin.Common.SaveContinue")" />
+            <input type="submit" name="message-template-copy" class="t-button" value="@T("Admin.ContentManagement.MessageTemplates.Copy")"  onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
+            <span id="message-template-delete" class="t-button">@T("Admin.Common.Delete")</span>
         </div>
     </div>
     @Html.Partial("_CreateOrUpdate", Model)
 }
+@Html.DeleteConfirmation("message-template-delete")

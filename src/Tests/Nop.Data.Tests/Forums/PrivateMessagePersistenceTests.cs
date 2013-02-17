@@ -1,6 +1,7 @@
 ﻿using System;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
+using Nop.Core.Domain.Stores;
 using Nop.Tests;
 using NUnit.Framework;
 
@@ -12,6 +13,10 @@ namespace Nop.Data.Tests.Forums
         [Test]
         public void Can_save_and_load_privatemessage()
         {
+            var store = GetTestStore();
+            var storeFromDb = SaveAndLoadEntity(store);
+            storeFromDb.ShouldNotBeNull();
+
             var customer1 = GetTestCustomer();
             var customer1FromDb = SaveAndLoadEntity(customer1);
             customer1FromDb.ShouldNotBeNull();
@@ -30,6 +35,7 @@ namespace Nop.Data.Tests.Forums
                 CreatedOnUtc = DateTime.UtcNow,
                 FromCustomerId = customer1FromDb.Id,
                 ToCustomerId = customer2FromDb.Id,
+                StoreId = store.Id,
             };
 
             var fromDb = SaveAndLoadEntity(privateMessage);
@@ -51,6 +57,15 @@ namespace Nop.Data.Tests.Forums
                 Deleted = false,
                 CreatedOnUtc = new DateTime(2010, 01, 01),
                 LastActivityDateUtc = new DateTime(2010, 01, 02)
+            };
+        }
+
+        protected Store GetTestStore()
+        {
+            return new Store
+            {
+                Name = "Store 1",
+                DisplayOrder = 1
             };
         }
     }

@@ -1,6 +1,7 @@
 using System;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Stores;
 
 namespace Nop.Core.Domain.Orders
 {
@@ -9,6 +10,11 @@ namespace Nop.Core.Domain.Orders
     /// </summary>
     public partial class ShoppingCartItem : BaseEntity
     {
+        /// <summary>
+        /// Gets or sets the store identifier
+        /// </summary>
+        public virtual int StoreId { get; set; }
+
         /// <summary>
         /// Gets or sets the shopping cart type identifier
         /// </summary>
@@ -63,6 +69,11 @@ namespace Nop.Core.Domain.Orders
                 this.ShoppingCartTypeId = (int)value;
             }
         }
+
+        /// <summary>
+        /// Gets or sets the store
+        /// </summary>
+        public virtual Store Store { get; set; }
 
         /// <summary>
         /// Gets or sets the product variant

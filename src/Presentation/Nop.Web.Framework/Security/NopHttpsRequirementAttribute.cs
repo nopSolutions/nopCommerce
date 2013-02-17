@@ -27,11 +27,7 @@ namespace Nop.Web.Framework.Security
             // otherwise the browser might not propagate the verb and request body correctly.
             if (!String.Equals(filterContext.HttpContext.Request.HttpMethod, "GET", StringComparison.OrdinalIgnoreCase))
                 return;
-
-            var currentConnectionSecured = filterContext.HttpContext.Request.IsSecureConnection;
-            //currentConnectionSecured = webHelper.IsCurrentConnectionSecured();
-
-
+            
             if (!DataSettingsHelper.DatabaseIsInstalled())
                 return;
             var securitySettings = EngineContext.Current.Resolve<SecuritySettings>();
@@ -39,15 +35,19 @@ namespace Nop.Web.Framework.Security
                 //all pages are forced to be SSL no matter of the specified value
                 this.SslRequirement = SslRequirement.Yes;
 
+            var currentConnectionSecured = filterContext.HttpContext.Request.IsSecureConnection;
+            //TODO uncomment currentConnectionSecured = _webHelper.IsCurrentConnectionSecured();
+
             switch (this.SslRequirement)
             {
                 case SslRequirement.Yes:
                     {
                         if (!currentConnectionSecured)
                         {
-                            var webHelper = EngineContext.Current.Resolve<IWebHelper>();
-                            if (webHelper.SslEnabled())
+                            var storeContext = EngineContext.Current.Resolve<IStoreContext>();
+                            if (storeContext.CurrentStore.SslEnabled)
                             {
+                                var webHelper = EngineContext.Current.Resolve<IWebHelper>();
                                 //redirect to HTTPS version of page
                                 //string url = "https://" + filterContext.HttpContext.Request.Url.Host + filterContext.HttpContext.Request.RawUrl;
                                 string url = webHelper.GetThisPageUrl(true, true);

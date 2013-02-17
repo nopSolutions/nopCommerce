@@ -21,6 +21,7 @@ namespace Nop.Data.Tests.Topics
                                    MetaKeywords = "Meta keywords",
                                    MetaDescription = "Meta description",
                                    MetaTitle = "Meta title",
+                                   LimitedToStores = true
                                };
 
             var fromDb = SaveAndLoadEntity(topic);
@@ -34,6 +35,7 @@ namespace Nop.Data.Tests.Topics
             fromDb.MetaKeywords.ShouldEqual("Meta keywords");
             fromDb.MetaDescription.ShouldEqual("Meta description");
             fromDb.MetaTitle.ShouldEqual("Meta title");
+            fromDb.LimitedToStores.ShouldEqual(true);
         }
     }
 }

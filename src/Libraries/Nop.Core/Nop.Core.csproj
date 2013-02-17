@@ -88,12 +88,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ComponentModel\WriteLockDisposable.cs" />
+    <Compile Include="IStoreContext.cs" />
     <Compile Include="Domain\Catalog\BackInStockSubscription.cs" />
     <Compile Include="Domain\Cms\WidgetSettings.cs" />
     <Compile Include="Domain\Common\AddressSettings.cs" />
     <Compile Include="Domain\Common\FulltextSearchMode.cs" />
     <Compile Include="Domain\Common\GenericAttribute.cs" />
     <Compile Include="Domain\Customers\CustomerExtentions.cs" />
+    <Compile Include="Domain\Stores\StoreExtensions.cs" />
+    <Compile Include="Domain\Stores\IStoreMappingSupported.cs" />
+    <Compile Include="Domain\Stores\StoreMapping.cs" />
+    <Compile Include="Domain\Stores\Store.cs" />
     <Compile Include="Domain\Orders\GiftCardExtensions.cs" />
     <Compile Include="Domain\Security\AclRecord.cs" />
     <Compile Include="Domain\Security\IAclSupported.cs" />
@@ -144,7 +149,6 @@
     <Compile Include="Caching\PerRequestCacheManager.cs" />
     <Compile Include="CommonHelper.cs" />
     <Compile Include="ComponentModel\GenericListTypeConverter.cs" />
-    <Compile Include="Configuration\IConfigurationProvider.cs" />
     <Compile Include="Configuration\ISettings.cs" />
     <Compile Include="Configuration\NopConfig.cs" />
     <Compile Include="Domain\Affiliates\Affiliate.cs" />

@@ -35,35 +35,28 @@ namespace Nop.Plugin.Payments.PayPalDirect
 
         private readonly PayPalDirectPaymentSettings _paypalDirectPaymentSettings;
         private readonly ISettingService _settingService;
-        private readonly ITaxService _taxService;
-        private readonly IPriceCalculationService _priceCalculationService;
         private readonly ICurrencyService _currencyService;
         private readonly ICustomerService _customerService;
         private readonly CurrencySettings _currencySettings;
         private readonly IWebHelper _webHelper;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
-        private readonly StoreInformationSettings _storeInformationSettings;
         #endregion
 
         #region Ctor
 
         public PayPalDirectPaymentProcessor(PayPalDirectPaymentSettings paypalDirectPaymentSettings,
             ISettingService settingService, 
-            ITaxService taxService, IPriceCalculationService priceCalculationService,
             ICurrencyService currencyService, ICustomerService customerService,
             CurrencySettings currencySettings, IWebHelper webHelper, 
-            IOrderTotalCalculationService orderTotalCalculationService, StoreInformationSettings storeInformationSettings)
+            IOrderTotalCalculationService orderTotalCalculationService)
         {
             this._paypalDirectPaymentSettings = paypalDirectPaymentSettings;
             this._settingService = settingService;
-            this._taxService = taxService;
-            this._priceCalculationService = priceCalculationService;
             this._currencyService = currencyService;
             this._customerService = customerService;
             this._currencySettings = currencySettings;
             this._webHelper = webHelper;
             this._orderTotalCalculationService = orderTotalCalculationService;
-            this._storeInformationSettings = storeInformationSettings;
         }
 
         #endregion
@@ -569,7 +562,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
 
             //schedule
             details.ScheduleDetails = new ScheduleDetailsType();
-            details.ScheduleDetails.Description = string.Format("{0} - {1}", _storeInformationSettings.StoreName, "recurring payment");
+            details.ScheduleDetails.Description = "Recurring payment";
             details.ScheduleDetails.PaymentPeriod = new BillingPeriodDetailsType();
             details.ScheduleDetails.PaymentPeriod.Amount = new BasicAmountType();
             details.ScheduleDetails.PaymentPeriod.Amount.Value = Math.Round(processPaymentRequest.OrderTotal, 2).ToString("N", new CultureInfo("en-us"));

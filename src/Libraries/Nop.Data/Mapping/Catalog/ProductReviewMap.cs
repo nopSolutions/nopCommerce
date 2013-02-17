@@ -11,9 +11,6 @@ namespace Nop.Data.Mapping.Catalog
             //commented because it's already configured by CustomerContentMap class
             //this.HasKey(pr => pr.Id);
 
-            this.Property(pr => pr.Title);
-            this.Property(pr => pr.ReviewText);
-
             this.HasRequired(pr => pr.Product)
                 .WithMany(p => p.ProductReviews)
                 .HasForeignKey(pr => pr.ProductId);

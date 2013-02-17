@@ -26,6 +26,9 @@ namespace Nop.Core.Domain.Customers
         private ICollection<ForumTopic> _forumTopics;
         private ICollection<ForumPost> _forumPosts;
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public Customer()
         {
             this.CustomerGuid = Guid.NewGuid();
@@ -37,37 +40,40 @@ namespace Nop.Core.Domain.Customers
         /// </summary>
         public virtual Guid CustomerGuid { get; set; }
 
+        /// <summary>
+        /// Gets or sets the username
+        /// </summary>
         public virtual string Username { get; set; }
+        /// <summary>
+        /// Gets or sets the email
+        /// </summary>
         public virtual string Email { get; set; }
+        /// <summary>
+        /// Gets or sets the password
+        /// </summary>
         public virtual string Password { get; set; }
 
+        /// <summary>
+        /// Gets or sets the password format
+        /// </summary>
         public virtual int PasswordFormatId { get; set; }
+        /// <summary>
+        /// Gets or sets the password format
+        /// </summary>
         public virtual PasswordFormat PasswordFormat
         {
             get { return (PasswordFormat)PasswordFormatId; }
             set { this.PasswordFormatId = (int)value; }
         }
-
+        /// <summary>
+        /// Gets or sets the password salt
+        /// </summary>
         public virtual string PasswordSalt { get; set; }
+
         /// <summary>
         /// Gets or sets the admin comment
         /// </summary>
         public virtual string AdminComment { get; set; }
-
-        /// <summary>
-        /// Gets or sets the language identifier
-        /// </summary>
-        public virtual int? LanguageId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the currency identifier
-        /// </summary>
-        public virtual int? CurrencyId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the tax display type identifier
-        /// </summary>
-        public virtual int TaxDisplayTypeId { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the customer is tax exempt
@@ -75,49 +81,9 @@ namespace Nop.Core.Domain.Customers
         public virtual bool IsTaxExempt { get; set; }
 
         /// <summary>
-        /// Gets or sets a VAT number (including counry code)
-        /// </summary>
-        public virtual string VatNumber { get; set; }
-
-        /// <summary>
-        /// Gets or sets the VAT number status identifier
-        /// </summary>
-        public virtual int VatNumberStatusId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the last payment method system name (selected one)
-        /// </summary>
-        public virtual string SelectedPaymentMethodSystemName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the selected checkout attributes (serialized)
-        /// </summary>
-        public virtual string CheckoutAttributes { get; set; }
-
-        /// <summary>
-        /// Gets or sets the applied discount coupon code
-        /// </summary>
-        public virtual string DiscountCouponCode { get; set; }
-
-        /// <summary>
-        /// Gets or sets the applied gift card coupon codes (serialized)
-        /// </summary>
-        public virtual string GiftCardCouponCodes { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to use reward points during checkout
-        /// </summary>
-        public virtual bool UseRewardPointsDuringCheckout { get; set; }
-
-        /// <summary>
-        /// Gets or sets the time zone identifier
-        /// </summary>
-        public virtual string TimeZoneId { get; set; }
-
-        /// <summary>
         /// Gets or sets the affiliate identifier
         /// </summary>
-        public virtual int? AffiliateId { get; set; }
+        public virtual int AffiliateId { get; set; }
         
         /// <summary>
         /// Gets or sets a value indicating whether the customer is active
@@ -159,56 +125,7 @@ namespace Nop.Core.Domain.Customers
         /// </summary>
         public virtual DateTime LastActivityDateUtc { get; set; }
         
-        #region Custom properties
-
-        /// <summary>
-        /// Gets the tax display type
-        /// </summary>
-        public virtual TaxDisplayType TaxDisplayType
-        {
-            get
-            {
-                return (TaxDisplayType)this.TaxDisplayTypeId;
-            }
-            set
-            {
-                this.TaxDisplayTypeId = (int)value;
-            }
-        }
-
-        /// <summary>
-        /// Gets the VAT number status
-        /// </summary>
-        public virtual VatNumberStatus VatNumberStatus
-        {
-            get
-            {
-                return (VatNumberStatus)this.VatNumberStatusId;
-            }
-            set
-            {
-                this.VatNumberStatusId = (int)value;
-            }
-        }
-        
-        #endregion
-
         #region Navigation properties
-
-        /// <summary>
-        /// Gets or sets the affiliate
-        /// </summary>
-        public virtual Affiliate Affiliate { get; set; }
-
-        /// <summary>
-        /// Gets or sets the language
-        /// </summary>
-        public virtual Language Language { get; set; }
-
-        /// <summary>
-        /// Gets or sets the currency
-        /// </summary>
-        public virtual Currency Currency { get; set; }
 
         /// <summary>
         /// Gets or sets customer generated content

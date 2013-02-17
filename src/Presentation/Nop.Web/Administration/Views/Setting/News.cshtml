@@ -1,5 +1,4 @@
 ﻿@model NewsSettingsModel
-@using Telerik.Web.Mvc.UI;
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.News").Text;
@@ -15,10 +14,13 @@
             <input type="submit" name="save" class="t-button" value="@T("Admin.Common.Save")" />
         </div>
     </div>
-@Html.ValidationSummary(false)
+    @Html.Action("StoreScopeConfiguration", "Setting")
+    @Html.ValidationSummary(false)
+    
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.Enabled_OverrideForStore, model => model.Enabled, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.Enabled):
             </td>
             <td class="adminData">
@@ -28,6 +30,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.AllowNotRegisteredUsersToLeaveComments_OverrideForStore, model => model.AllowNotRegisteredUsersToLeaveComments, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.AllowNotRegisteredUsersToLeaveComments):
             </td>
             <td class="adminData">
@@ -37,6 +40,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.NotifyAboutNewNewsComments_OverrideForStore, model => model.NotifyAboutNewNewsComments, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.NotifyAboutNewNewsComments):
             </td>
             <td class="adminData">
@@ -46,6 +50,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ShowNewsOnMainPage_OverrideForStore, model => model.ShowNewsOnMainPage, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ShowNewsOnMainPage):
             </td>
             <td class="adminData">
@@ -55,6 +60,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.MainPageNewsCount_OverrideForStore, model => model.MainPageNewsCount, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.MainPageNewsCount):
             </td>
             <td class="adminData">
@@ -64,6 +70,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.NewsArchivePageSize_OverrideForStore, model => model.NewsArchivePageSize, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.NewsArchivePageSize):
             </td>
             <td class="adminData">
@@ -73,6 +80,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ShowHeaderRssUrl_OverrideForStore, model => model.ShowHeaderRssUrl, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ShowHeaderRssUrl):
             </td>
             <td class="adminData">

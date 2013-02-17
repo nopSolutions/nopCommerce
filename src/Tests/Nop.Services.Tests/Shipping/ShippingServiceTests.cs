@@ -7,6 +7,7 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
 using Nop.Services.Catalog;
+using Nop.Services.Common;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -28,6 +29,7 @@ namespace Nop.Services.Tests.Shipping
         ShippingSettings _shippingSettings;
         IEventPublisher _eventPublisher;
         ILocalizationService _localizationService;
+        IGenericAttributeService _genericAttributeService;
         IShippingService _shippingService;
         ShoppingCartSettings _shoppingCartSettings;
 
@@ -51,6 +53,7 @@ namespace Nop.Services.Tests.Shipping
             _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
 
             _localizationService = MockRepository.GenerateMock<ILocalizationService>();
+            _genericAttributeService = MockRepository.GenerateMock<IGenericAttributeService>();
 
             _shoppingCartSettings = new ShoppingCartSettings();
             _shippingService = new ShippingService(cacheManager, 
@@ -58,6 +61,7 @@ namespace Nop.Services.Tests.Shipping
                 _logger,
                 _productAttributeParser,
                 _checkoutAttributeParser,
+                _genericAttributeService,
                 _localizationService,
                 _shippingSettings, pluginFinder, _eventPublisher,
                 _shoppingCartSettings);

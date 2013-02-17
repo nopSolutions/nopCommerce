@@ -41,12 +41,6 @@ namespace Nop.Core
         bool IsCurrentConnectionSecured();
         
         /// <summary>
-        /// Gets a value indicating whether connection should be secured
-        /// </summary>
-        /// <returns>Result</returns>
-        bool SslEnabled();
-
-        /// <summary>
         /// Gets server variable by name
         /// </summary>
         /// <param name="name">Name</param>

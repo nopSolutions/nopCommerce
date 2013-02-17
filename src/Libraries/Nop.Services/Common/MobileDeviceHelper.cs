@@ -14,6 +14,7 @@ namespace Nop.Services.Common
 
         private readonly StoreInformationSettings _storeInformationSettings;
         private readonly IWorkContext _workContext;
+        private readonly IStoreContext _storeContext;
 
         #endregion
 
@@ -24,11 +25,13 @@ namespace Nop.Services.Common
         /// </summary>
         /// <param name="storeInformationSettings">Store information settings</param>
         /// <param name="workContext">Work context</param>
+        /// <param name="storeContext">Store context</param>
         public MobileDeviceHelper(StoreInformationSettings storeInformationSettings,
-            IWorkContext workContext)
+            IWorkContext workContext, IStoreContext storeContext)
         {
             this._storeInformationSettings = storeInformationSettings;
             this._workContext = workContext;
+            this._storeContext = storeContext;
         }
 
         #endregion
@@ -71,7 +74,7 @@ namespace Nop.Services.Common
         /// </summary>
         public virtual bool CustomerDontUseMobileVersion()
         {
-            return _workContext.CurrentCustomer.GetAttribute<bool>(SystemCustomerAttributeNames.DontUseMobileVersion);
+            return _workContext.CurrentCustomer.GetAttribute<bool>(SystemCustomerAttributeNames.DontUseMobileVersion, _storeContext.CurrentStore.Id);
         }
 
         #endregion

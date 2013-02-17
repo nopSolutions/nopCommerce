@@ -1,0 +1,37 @@
+﻿
+@using Telerik.Web.Mvc.UI;
+@using Nop.Core.Domain.Stores;
+@using Nop.Services.Stores;
+
+@{    
+    var _storeService = EngineContext.Current.Resolve<IStoreService>();
+    var allStores = _storeService.GetAllStores();
+    
+
+    var storeList = new List<SelectListItem>();
+    storeList.Add(new SelectListItem()
+    {
+        Text = T("Admin.Configuration.Settings.AllSettings.Fields.StoreName.AllStores").Text,
+        Value = "0"
+    });
+    foreach (var s in allStores)
+    {
+        var name = s.Name;
+        if (name != null)
+        {
+            //Telerik has an issue when quotes are used. That'why we manually remove all quotes
+            //Find more info here: http://www.nopcommerce.com/boards/t/11413/tabs-can-not-be-selected-in-admin-edit-products.aspx
+            //TODO remove this code once it's fixed by Telerik team
+            name = name.Replace("\"", "");
+        }
+        var item = new SelectListItem()
+        {
+            Text = name,
+            Value = s.Id.ToString()
+        };
+        storeList.Add(item);
+    }
+    
+}
+
+@Html.Telerik().DropDownList().Name("Store").BindTo(storeList)

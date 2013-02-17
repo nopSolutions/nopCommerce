@@ -27,6 +27,10 @@ namespace Nop.Admin.Models.Orders
         [NopResourceDisplayName("Admin.Orders.Fields.OrderGuid")]
         public Guid OrderGuid { get; set; }
 
+        //store
+        [NopResourceDisplayName("Admin.Orders.Fields.Store")]
+        public string StoreName { get; set; }
+
         //customer info
         [NopResourceDisplayName("Admin.Orders.Fields.Customer")]
         public int CustomerId { get; set; }

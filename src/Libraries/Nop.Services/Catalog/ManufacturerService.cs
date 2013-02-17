@@ -6,6 +6,7 @@ using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Security;
+using Nop.Core.Domain.Stores;
 using Nop.Services.Events;
 
 namespace Nop.Services.Catalog
@@ -17,8 +18,8 @@ namespace Nop.Services.Catalog
     {
         #region Constants
         private const string MANUFACTURERS_BY_ID_KEY = "Nop.manufacturer.id-{0}";
-        private const string PRODUCTMANUFACTURERS_ALLBYMANUFACTURERID_KEY = "Nop.productmanufacturer.allbymanufacturerid-{0}-{1}-{2}-{3}-{4}";
-        private const string PRODUCTMANUFACTURERS_ALLBYPRODUCTID_KEY = "Nop.productmanufacturer.allbyproductid-{0}-{1}-{2}";
+        private const string PRODUCTMANUFACTURERS_ALLBYMANUFACTURERID_KEY = "Nop.productmanufacturer.allbymanufacturerid-{0}-{1}-{2}-{3}-{4}-{5}";
+        private const string PRODUCTMANUFACTURERS_ALLBYPRODUCTID_KEY = "Nop.productmanufacturer.allbyproductid-{0}-{1}-{2}-{3}";
         private const string PRODUCTMANUFACTURERS_BY_ID_KEY = "Nop.productmanufacturer.id-{0}";
         private const string MANUFACTURERS_PATTERN_KEY = "Nop.manufacturer.";
         private const string PRODUCTMANUFACTURERS_PATTERN_KEY = "Nop.productmanufacturer.";
@@ -30,7 +31,9 @@ namespace Nop.Services.Catalog
         private readonly IRepository<ProductManufacturer> _productManufacturerRepository;
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<AclRecord> _aclRepository;
-        private readonly IWorkContext _workContext; 
+        private readonly IRepository<StoreMapping> _storeMappingRepository;
+        private readonly IWorkContext _workContext;
+        private readonly IStoreContext _storeContext;
         private readonly IEventPublisher _eventPublisher;
         private readonly ICacheManager _cacheManager;
         #endregion
@@ -45,14 +48,18 @@ namespace Nop.Services.Catalog
         /// <param name="productManufacturerRepository">ProductCategory repository</param>
         /// <param name="productRepository">Product repository</param>
         /// <param name="aclRepository">ACL record repository</param>
+        /// <param name="storeMappingRepository">Store mapping repository</param>
         /// <param name="workContext">Work context</param>
+        /// <param name="storeContext">Store context</param>
         /// <param name="eventPublisher">Event published</param>
         public ManufacturerService(ICacheManager cacheManager,
             IRepository<Manufacturer> manufacturerRepository,
             IRepository<ProductManufacturer> productManufacturerRepository,
             IRepository<Product> productRepository,
             IRepository<AclRecord> aclRepository,
+            IRepository<StoreMapping> storeMappingRepository,
             IWorkContext workContext,
+            IStoreContext storeContext,
             IEventPublisher eventPublisher)
         {
             this._cacheManager = cacheManager;
@@ -60,7 +67,9 @@ namespace Nop.Services.Catalog
             this._productManufacturerRepository = productManufacturerRepository;
             this._productRepository = productRepository;
             this._aclRepository = aclRepository;
+            this._storeMappingRepository = storeMappingRepository;
             this._workContext = workContext;
+            this._storeContext = storeContext;
             this._eventPublisher = eventPublisher;
         }
         #endregion
@@ -106,27 +115,34 @@ namespace Nop.Services.Catalog
             query = query.Where(m => !m.Deleted);
             query = query.OrderBy(m => m.DisplayOrder);
             
-            //ACL (access control list)
             if (!showHidden)
             {
+                //ACL (access control list)
                 var allowedCustomerRolesIds = _workContext.CurrentCustomer.CustomerRoles
                     .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
-
                 query = from m in query
                         join acl in _aclRepository.Table on m.Id equals acl.EntityId into m_acl
                         from acl in m_acl.DefaultIfEmpty()
                         where !m.SubjectToAcl || (acl.EntityName == "Manufacturer" && allowedCustomerRolesIds.Contains(acl.CustomerRoleId))
                         select m;
 
+                //Store mapping
+                var currentStoreId = _storeContext.CurrentStore.Id;
+                query = from m in query
+                        join sm in _storeMappingRepository.Table on m.Id equals sm.EntityId into m_sm
+                        from sm in m_sm.DefaultIfEmpty()
+                        where !m.LimitedToStores || (sm.EntityName == "Manufacturer" && currentStoreId == sm.StoreId)
+                        select m;
+
                 //only distinct manufacturers (group by ID)
                 query = from m in query
                         group m by m.Id
-                            into mGroup
-                            orderby mGroup.Key
-                            select mGroup.FirstOrDefault();
+                        into mGroup
+                        orderby mGroup.Key
+                        select mGroup.FirstOrDefault();
                 query = query.OrderBy(m => m.DisplayOrder);
             }
-
+            
             var manufacturers = query.ToList();
             return manufacturers;
         }
@@ -235,7 +251,7 @@ namespace Nop.Services.Catalog
             if (manufacturerId == 0)
                 return new PagedList<ProductManufacturer>(new List<ProductManufacturer>(), pageIndex, pageSize);
 
-            string key = string.Format(PRODUCTMANUFACTURERS_ALLBYMANUFACTURERID_KEY, showHidden, manufacturerId, pageIndex, pageSize, _workContext.CurrentCustomer.Id);
+            string key = string.Format(PRODUCTMANUFACTURERS_ALLBYMANUFACTURERID_KEY, showHidden, manufacturerId, pageIndex, pageSize, _workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id);
             return _cacheManager.Get(key, () =>
             {
                 var query = from pm in _productManufacturerRepository.Table
@@ -246,12 +262,11 @@ namespace Nop.Services.Catalog
                             orderby pm.DisplayOrder
                             select pm;
 
-                //ACL (access control list)
                 if (!showHidden)
                 {
+                    //ACL (access control list)
                     var allowedCustomerRolesIds = _workContext.CurrentCustomer.CustomerRoles
                         .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
-
                     query = from pm in query
                             join m in _manufacturerRepository.Table on pm.ManufacturerId equals m.Id
                             join acl in _aclRepository.Table on m.Id equals acl.EntityId into m_acl
@@ -260,13 +275,22 @@ namespace Nop.Services.Catalog
                                 !m.SubjectToAcl ||
                                 (acl.EntityName == "Manufacturer" && allowedCustomerRolesIds.Contains(acl.CustomerRoleId))
                             select pm;
-                    
+
+                    //Store mapping
+                    var currentStoreId = _storeContext.CurrentStore.Id;
+                    query = from pm in query
+                            join m in _manufacturerRepository.Table on pm.ManufacturerId equals m.Id
+                            join sm in _storeMappingRepository.Table on m.Id equals sm.EntityId into m_sm
+                            from sm in m_sm.DefaultIfEmpty()
+                            where !m.LimitedToStores || (sm.EntityName == "Manufacturer" && currentStoreId == sm.StoreId)
+                            select pm;
+
                     //only distinct manufacturers (group by ID)
                     query = from pm in query
                             group pm by pm.Id
-                                into pmGroup
-                                orderby pmGroup.Key
-                                select pmGroup.FirstOrDefault();
+                            into pmGroup
+                            orderby pmGroup.Key
+                            select pmGroup.FirstOrDefault();
                     query = query.OrderBy(pm => pm.DisplayOrder);
                 }
 
@@ -286,7 +310,7 @@ namespace Nop.Services.Catalog
             if (productId == 0)
                 return new List<ProductManufacturer>();
 
-            string key = string.Format(PRODUCTMANUFACTURERS_ALLBYPRODUCTID_KEY, showHidden, productId, _workContext.CurrentCustomer.Id);
+            string key = string.Format(PRODUCTMANUFACTURERS_ALLBYPRODUCTID_KEY, showHidden, productId, _workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id);
             return _cacheManager.Get(key, () =>
             {
                 var query = from pm in _productManufacturerRepository.Table
@@ -298,17 +322,25 @@ namespace Nop.Services.Catalog
                             select pm;
 
 
-                //ACL (access control list)
                 if (!showHidden)
                 {
+                    //ACL (access control list)
                     var allowedCustomerRolesIds = _workContext.CurrentCustomer.CustomerRoles
                         .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
-
                     query = from pm in query
                             join m in _manufacturerRepository.Table on pm.ManufacturerId equals m.Id
                             join acl in _aclRepository.Table on m.Id equals acl.EntityId into m_acl
                             from acl in m_acl.DefaultIfEmpty()
                             where !m.SubjectToAcl || (acl.EntityName == "Manufacturer" && allowedCustomerRolesIds.Contains(acl.CustomerRoleId))
+                            select pm;
+
+                    //Store mapping
+                    var currentStoreId = _storeContext.CurrentStore.Id;
+                    query = from pm in query
+                            join m in _manufacturerRepository.Table on pm.ManufacturerId equals m.Id
+                            join sm in _storeMappingRepository.Table on m.Id equals sm.EntityId into m_sm
+                            from sm in m_sm.DefaultIfEmpty()
+                            where !m.LimitedToStores || (sm.EntityName == "Manufacturer" && currentStoreId == sm.StoreId)
                             select pm;
 
                     //only distinct manufacturers (group by ID)

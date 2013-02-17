@@ -237,7 +237,7 @@ namespace Nop.Services.Customers
         {
             var query = _customerRepository.Table;
             query = query.Where(c => !c.Deleted);
-            query = query.Where(c => c.AffiliateId.HasValue && c.AffiliateId == affiliateId);
+            query = query.Where(c => c.AffiliateId == affiliateId);
             query = query.OrderByDescending(c => c.CreatedOnUtc);
 
             var customers = new PagedList<Customer>(query, pageIndex, pageSize);
@@ -437,41 +437,7 @@ namespace Nop.Services.Customers
             var customer = query.FirstOrDefault();
             return customer;
         }
-
-        /// <summary>
-        /// Get customers by language identifier
-        /// </summary>
-        /// <param name="languageId">Language identifier</param>
-        /// <returns>Customers</returns>
-        public virtual IList<Customer> GetCustomersByLanguageId(int languageId)
-        {
-            var query = _customerRepository.Table;
-            if (languageId > 0)
-                query = query.Where(c => c.LanguageId.HasValue && c.LanguageId.Value == languageId);
-            else
-                query = query.Where(c => !c.LanguageId.HasValue);
-            query = query.OrderBy(c => c.Id);
-            var customers = query.ToList();
-            return customers;
-        }
-
-        /// <summary>
-        /// Get customers by currency identifier
-        /// </summary>
-        /// <param name="currencyId">Currency identifier</param>
-        /// <returns>Customers</returns>
-        public virtual IList<Customer> GetCustomersByCurrencyId(int currencyId)
-        {
-            var query = _customerRepository.Table;
-            if (currencyId > 0)
-                query = query.Where(c => c.CurrencyId.HasValue && c.CurrencyId.Value == currencyId);
-            else
-                query = query.Where(c => !c.CurrencyId.HasValue);
-            query = query.OrderBy(c => c.Id);
-            var customers = query.ToList();
-            return customers;
-        }
-
+        
         /// <summary>
         /// Insert a guest customer
         /// </summary>
@@ -531,12 +497,13 @@ namespace Nop.Services.Customers
         /// Reset data required for checkout
         /// </summary>
         /// <param name="customer">Customer</param>
+        /// <param name="storeId">Store identifier</param>
         /// <param name="clearCouponCodes">A value indicating whether to clear coupon code</param>
         /// <param name="clearCheckoutAttributes">A value indicating whether to clear selected checkout attributes</param>
         /// <param name="clearRewardPoints">A value indicating whether to clear "Use reward points" flag</param>
         /// <param name="clearShippingMethod">A value indicating whether to clear selected shipping method</param>
         /// <param name="clearPaymentMethod">A value indicating whether to clear selected payment method</param>
-        public virtual void ResetCheckoutData(Customer customer, 
+        public virtual void ResetCheckoutData(Customer customer, int storeId,
             bool clearCouponCodes = false, bool clearCheckoutAttributes = false,
             bool clearRewardPoints = true, bool clearShippingMethod = true,
             bool clearPaymentMethod = true)
@@ -547,33 +514,33 @@ namespace Nop.Services.Customers
             //clear entered coupon codes
             if (clearCouponCodes)
             {
-                customer.DiscountCouponCode = "";
-                customer.GiftCardCouponCodes = "";
+                _genericAttributeService.SaveAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.DiscountCouponCode, null);
+                _genericAttributeService.SaveAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.GiftCardCouponCodes, null);
             }
 
             //clear checkout attributes
             if (clearCheckoutAttributes)
             {
-                customer.CheckoutAttributes = "";
+                _genericAttributeService.SaveAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.CheckoutAttributes, null);
             }
 
             //clear reward points flag
             if (clearRewardPoints)
             {
-                customer.UseRewardPointsDuringCheckout = false;
+                _genericAttributeService.SaveAttribute<bool>(customer, SystemCustomerAttributeNames.UseRewardPointsDuringCheckout, false, storeId);
             }
 
             //clear selected shipping method
             if (clearShippingMethod)
             {
-                _genericAttributeService.SaveAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.LastShippingOption, null);
-                _genericAttributeService.SaveAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.OfferedShippingOptions, null);
+                _genericAttributeService.SaveAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.SelectedShippingOption, null, storeId);
+                _genericAttributeService.SaveAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.OfferedShippingOptions, null, storeId);
             }
 
             //clear selected payment method
             if (clearPaymentMethod)
             {
-                customer.SelectedPaymentMethodSystemName = "";
+                _genericAttributeService.SaveAttribute<string>(customer, SystemCustomerAttributeNames.SelectedPaymentMethod, null, storeId);
             }
             
             UpdateCustomer(customer);

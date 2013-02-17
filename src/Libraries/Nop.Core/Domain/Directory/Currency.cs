@@ -1,12 +1,13 @@
 using System;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Stores;
 
 namespace Nop.Core.Domain.Directory
 {
     /// <summary>
     /// Represents a currency
     /// </summary>
-    public partial class Currency : BaseEntity, ILocalizedEntity
+    public partial class Currency : BaseEntity, ILocalizedEntity, IStoreMappingSupported
     {
         /// <summary>
         /// Gets or sets the name
@@ -32,6 +33,11 @@ namespace Nop.Core.Domain.Directory
         /// Gets or sets the custom formatting
         /// </summary>
         public virtual string CustomFormatting { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the entity is limited/restricted to certain stores
+        /// </summary>
+        public virtual bool LimitedToStores { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the entity is published

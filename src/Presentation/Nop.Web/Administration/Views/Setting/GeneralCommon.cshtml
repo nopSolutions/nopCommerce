@@ -1,7 +1,5 @@
 ﻿@model GeneralCommonSettingsModel
 @using Telerik.Web.Mvc.UI;
-@using Nop.Core.Domain.Customers;
-@using Nop.Core.Domain.Security;
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.GeneralCommon").Text;
@@ -17,7 +15,8 @@
             <input type="submit" name="save" class="t-button" value="@T("Admin.Common.Save")" />
         </div>
     </div>
-        
+    @Html.Action("StoreScopeConfiguration", "Setting")
+    @Html.ValidationSummary(false)
     
     <script type="text/javascript">
         $(document).ready(function () {
@@ -25,12 +24,10 @@
             $("#@Html.FieldIdFor(model => model.StoreInformationSettings.StoreClosed)").click(toggleStoreClosed);
             $("#@Html.FieldIdFor(model => model.StoreInformationSettings.MobileDevicesSupported)").click(toggleMobileDevicesSupported);
             $("#@Html.FieldIdFor(model => model.SecuritySettings.CaptchaEnabled)").click(toggleReCaptcha);
-            $("#@Html.FieldIdFor(model => model.SecuritySettings.UseSsl)").click(toggleSSL);
 
             toggleStoreClosed();
             toggleMobileDevicesSupported();
             toggleReCaptcha();
-            toggleSSL();
         });
 
         function toggleStoreClosed() {
@@ -77,20 +74,8 @@
                 $('#ssReCaptchaPrivateKeypnl').hide();
             }
         }
-
-        function toggleSSL() {
-            if ($('#@Html.FieldIdFor(model => model.SecuritySettings.UseSsl)').is(':checked')) {
-                $('#ssSharedSslUrlpnl').show();
-                $('#ssNonSharedSslUrlpnl').show();
-            }
-            else {
-                $('#ssSharedSslUrlpnl').hide();
-                $('#ssNonSharedSslUrlpnl').hide();
-            }
-        }
     </script>
     
-    @Html.ValidationSummary(false)
 
     
     @Html.Telerik().TabStrip().Name("generalsettings-edit").Items(x =>
@@ -133,28 +118,11 @@
 })
 }
 @helper TabStoreInformationSettings()
-    {
+{
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
-                @Html.NopLabelFor(model => model.StoreInformationSettings.StoreName):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.StoreInformationSettings.StoreName)
-                @Html.ValidationMessageFor(model => model.StoreInformationSettings.StoreName)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.StoreInformationSettings.StoreUrl):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.StoreInformationSettings.StoreUrl)
-                @Html.ValidationMessageFor(model => model.StoreInformationSettings.StoreUrl)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.StoreClosed_OverrideForStore, model => model.StoreInformationSettings.StoreClosed, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.StoreInformationSettings.StoreClosed):
             </td>
             <td class="adminData">
@@ -164,6 +132,7 @@
         </tr>
         <tr id="pnlStoreClosedAllowForAdmins">
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.StoreClosedAllowForAdmins_OverrideForStore, model => model.StoreInformationSettings.StoreClosedAllowForAdmins, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.StoreInformationSettings.StoreClosedAllowForAdmins):
             </td>
             <td class="adminData">
@@ -173,6 +142,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.DefaultStoreThemeForDesktops_OverrideForStore, model => model.StoreInformationSettings.DefaultStoreThemeForDesktops, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.StoreInformationSettings.DefaultStoreThemeForDesktops):
             </td>
             <td class="adminData">
@@ -182,6 +152,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.AllowCustomerToSelectTheme_OverrideForStore, model => model.StoreInformationSettings.AllowCustomerToSelectTheme, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.StoreInformationSettings.AllowCustomerToSelectTheme):
             </td>
             <td class="adminData">
@@ -191,6 +162,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.MobileDevicesSupported_OverrideForStore, model => model.StoreInformationSettings.MobileDevicesSupported, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.StoreInformationSettings.MobileDevicesSupported):
             </td>
             <td class="adminData">
@@ -200,6 +172,7 @@
         </tr>
         <tr id="pnlDefaultStoreThemeForMobileDevices">
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.DefaultStoreThemeForMobileDevices_OverrideForStore, model => model.StoreInformationSettings.DefaultStoreThemeForMobileDevices, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.StoreInformationSettings.DefaultStoreThemeForMobileDevices):
             </td>
             <td class="adminData">
@@ -209,6 +182,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.DisplayEuCookieLawWarning_OverrideForStore, model => model.StoreInformationSettings.DisplayEuCookieLawWarning, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.StoreInformationSettings.DisplayEuCookieLawWarning):
             </td>
             <td class="adminData">
@@ -219,11 +193,12 @@
     </table>
 }
 @helper TabSEOSettings()
-    {
+{
     
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.PageTitleSeparator_OverrideForStore, model => model.SeoSettings.PageTitleSeparator, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.SeoSettings.PageTitleSeparator):
             </td>
             <td class="adminData">
@@ -233,18 +208,17 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.PageTitleSeoAdjustment_OverrideForStore, model => model.SeoSettings.PageTitleSeoAdjustment, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.SeoSettings.PageTitleSeoAdjustment):
             </td>
             <td class="adminData">
-                @(Html.Telerik().DropDownListFor(model => model.SeoSettings.PageTitleSeoAdjustment)
-                            .BindTo(Model.SeoSettings.PageTitleSeoAdjustmentValues)
-                            .HtmlAttributes(new { style = "width:255px" })
-                )
+                @Html.DropDownListFor(model => model.SeoSettings.PageTitleSeoAdjustment, Model.SeoSettings.PageTitleSeoAdjustmentValues)
                 @Html.ValidationMessageFor(model => model.SeoSettings.PageTitleSeoAdjustment)
             </td>
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.DefaultTitle_OverrideForStore, model => model.SeoSettings.DefaultTitle, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.SeoSettings.DefaultTitle):
             </td>
             <td class="adminData">
@@ -254,6 +228,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.DefaultMetaKeywords_OverrideForStore, model => model.SeoSettings.DefaultMetaKeywords, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.SeoSettings.DefaultMetaKeywords):
             </td>
             <td class="adminData">
@@ -263,6 +238,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.DefaultMetaDescription_OverrideForStore, model => model.SeoSettings.DefaultMetaDescription, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.SeoSettings.DefaultMetaDescription):
             </td>
             <td class="adminData">
@@ -272,6 +248,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.ConvertNonWesternChars_OverrideForStore, model => model.SeoSettings.ConvertNonWesternChars, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.SeoSettings.ConvertNonWesternChars):
             </td>
             <td class="adminData">
@@ -281,6 +258,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.CanonicalUrlsEnabled_OverrideForStore, model => model.SeoSettings.CanonicalUrlsEnabled, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.SeoSettings.CanonicalUrlsEnabled):
             </td>
             <td class="adminData">
@@ -291,7 +269,7 @@
     </table>
 }
 @helper TabSecuritySettings()
-    {
+{
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
@@ -300,7 +278,7 @@
             <td class="adminData">
                 @Html.EditorFor(model => model.SecuritySettings.EncryptionKey)
                 @Html.ValidationMessageFor(model => model.SecuritySettings.EncryptionKey)
-                <input type="submit" name="changeencryptionkey" value="@T("Admin.Common.Change")" id="changeencryptionkey" class="adminButton" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
+                <input type="submit" name="changeencryptionkey" value="@T("Admin.Common.Change")" id="changeencryptionkey" class="adminButton" onclick="return confirm('@T("Admin.Common.AreYouSure")    ');" />
             </td>
         </tr>
         <tr>
@@ -330,8 +308,7 @@
                 Web registration forms. CAPTCHAs are used by many websites to prevent abuse from
                 "bots," or automated programs usually written to generate spam. No computer program
                 can read distorted text as well as humans can, so bots cannot navigate sites protected
-                by CAPTCHAs. nopCommerce uses <a href="http://www.google.com/recaptcha" target="_blank">
-                    reCAPTCHA</a>.
+                by CAPTCHAs. nopCommerce uses <a href="http://www.google.com/recaptcha" target="_blank">reCAPTCHA</a>.
             </td>
         </tr>
         <tr>
@@ -433,49 +410,14 @@
                 @Html.ValidationMessageFor(model => model.SecuritySettings.ReCaptchaPrivateKey)
             </td>
         </tr>
-        <tr>
-            <td colspan="2">
-                <hr />
-                <br />
-                <strong>@T("Admin.Configuration.Settings.GeneralCommon.SSLSettings")</strong>
-                <br />
-                <em>@T("Admin.Configuration.Settings.GeneralCommon.SSLSettings.Hint")</em>
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SecuritySettings.UseSsl):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SecuritySettings.UseSsl)
-                @Html.ValidationMessageFor(model => model.SecuritySettings.UseSsl)
-            </td>
-        </tr>
-        <tr id="ssSharedSslUrlpnl">
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SecuritySettings.SharedSslUrl):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SecuritySettings.SharedSslUrl)
-                @Html.ValidationMessageFor(model => model.SecuritySettings.SharedSslUrl)
-            </td>
-        </tr>
-        <tr id="ssNonSharedSslUrlpnl">
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SecuritySettings.NonSharedSslUrl):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SecuritySettings.NonSharedSslUrl)
-                @Html.ValidationMessageFor(model => model.SecuritySettings.NonSharedSslUrl)
-            </td>
-        </tr>
     </table>
 }
 @helper TabPdfSettings()
-    {
+{
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.PdfSettings.Enabled_OverrideForStore, model => model.PdfSettings.Enabled, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.PdfSettings.Enabled):
             </td>
             <td class="adminData">
@@ -485,6 +427,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.PdfSettings.LetterPageSizeEnabled_OverrideForStore, model => model.PdfSettings.LetterPageSizeEnabled, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.PdfSettings.LetterPageSizeEnabled):
             </td>
             <td class="adminData">
@@ -494,9 +437,10 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.PdfSettings.LogoPictureId_OverrideForStore, "pdf-logo-picture", Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.PdfSettings.LogoPictureId):
             </td>
-            <td class="adminData">
+            <td class="adminData" id="pdf-logo-picture">
                 @Html.EditorFor(model => model.PdfSettings.LogoPictureId)
                 @Html.ValidationMessageFor(model => model.PdfSettings.LogoPictureId)
             </td>
@@ -504,7 +448,7 @@
     </table>
 }
 @helper TabLocalizationSettings()
-    {
+{
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
@@ -527,7 +471,7 @@
     </table>
 }
 @helper TabFullTextSettings()
-    {
+{
     <table class="adminContent">
         <tr>
             <td colspan="2">
@@ -563,10 +507,7 @@
                     @Html.NopLabelFor(model => model.FullTextSettings.SearchMode):
                 </td>
                 <td class="adminData">
-                    @(Html.Telerik().DropDownListFor(model => model.FullTextSettings.SearchMode)
-                            .BindTo(Model.FullTextSettings.SearchModeValues)
-                                .HtmlAttributes(new { style = "width:355px" })
-                    )
+                    @Html.DropDownListFor(model => model.FullTextSettings.SearchMode, Model.FullTextSettings.SearchModeValues)
                     @Html.ValidationMessageFor(model => model.FullTextSettings.SearchMode)
                 </td>
             </tr>

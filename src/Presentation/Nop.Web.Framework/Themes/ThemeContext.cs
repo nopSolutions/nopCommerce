@@ -13,6 +13,7 @@ namespace Nop.Web.Framework.Themes
     public partial class ThemeContext : IThemeContext
     {
         private readonly IWorkContext _workContext;
+        private readonly IStoreContext _storeContext;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly StoreInformationSettings _storeInformationSettings;
         private readonly IThemeProvider _themeProvider;
@@ -23,10 +24,14 @@ namespace Nop.Web.Framework.Themes
         private bool _mobileThemeIsCached;
         private string _cachedMobileThemeName;
 
-        public ThemeContext(IWorkContext workContext, IGenericAttributeService genericAttributeService,
-            StoreInformationSettings storeInformationSettings, IThemeProvider themeProvider)
+        public ThemeContext(IWorkContext workContext,
+            IStoreContext storeContext,
+            IGenericAttributeService genericAttributeService, 
+            StoreInformationSettings storeInformationSettings, 
+            IThemeProvider themeProvider)
         {
             this._workContext = workContext;
+            this._storeContext = storeContext;
             this._genericAttributeService = genericAttributeService;
             this._storeInformationSettings = storeInformationSettings;
             this._themeProvider = themeProvider;
@@ -46,7 +51,7 @@ namespace Nop.Web.Framework.Themes
                 if (_storeInformationSettings.AllowCustomerToSelectTheme)
                 {
                     if (_workContext.CurrentCustomer != null)
-                        theme = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.WorkingDesktopThemeName);
+                        theme = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.WorkingDesktopThemeName, _genericAttributeService, _storeContext.CurrentStore.Id);
                 }
 
                 //default store theme
@@ -76,7 +81,7 @@ namespace Nop.Web.Framework.Themes
                 if (_workContext.CurrentCustomer == null)
                     return;
 
-                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.WorkingDesktopThemeName, value);
+                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.WorkingDesktopThemeName, value, _storeContext.CurrentStore.Id);
 
                 //clear cache
                 this._desktopThemeIsCached = false;

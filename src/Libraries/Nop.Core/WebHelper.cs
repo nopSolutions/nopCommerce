@@ -6,6 +6,7 @@ using System.IO;
 using System.Text;
 using System.Web;
 using System.Web.Hosting;
+using Nop.Core.Data;
 using Nop.Core.Domain;
 using Nop.Core.Infrastructure;
 
@@ -78,7 +79,7 @@ namespace Nop.Core
         public virtual string GetThisPageUrl(bool includeQueryString, bool useSsl)
         {
             string url = string.Empty;
-            if (_httpContext == null)
+            if (_httpContext == null || _httpContext.Request == null)
                 return url;
 
             if (includeQueryString)
@@ -90,7 +91,10 @@ namespace Nop.Core
             }
             else
             {
-                url = _httpContext.Request.Url.GetLeftPart(UriPartial.Path);
+                if (_httpContext.Request.Url != null)
+                {
+                    url = _httpContext.Request.Url.GetLeftPart(UriPartial.Path);
+                }
             }
             url = url.ToLowerInvariant();
             return url;
@@ -113,17 +117,6 @@ namespace Nop.Core
 
             return useSsl;
         }
-
-        /// <summary>
-        /// Gets a value indicating whether connection should be secured
-        /// </summary>
-        /// <returns>Result</returns>
-        public virtual bool SslEnabled()
-        {
-            bool useSsl = !String.IsNullOrEmpty(ConfigurationManager.AppSettings["UseSSL"]) &&
-                Convert.ToBoolean(ConfigurationManager.AppSettings["UseSSL"]);
-            return useSsl;
-        }
         
         /// <summary>
         /// Gets server variable by name
@@ -132,19 +125,23 @@ namespace Nop.Core
         /// <returns>Server variable</returns>
         public virtual string ServerVariables(string name)
         {
-            string tmpS = string.Empty;
+            string result = string.Empty;
+
+            if (_httpContext == null || _httpContext.Request == null)
+                return result;
+
             try
             {
                 if (_httpContext.Request.ServerVariables[name] != null)
                 {
-                    tmpS = _httpContext.Request.ServerVariables[name];
+                    result = _httpContext.Request.ServerVariables[name];
                 }
             }
             catch
             {
-                tmpS = string.Empty;
+                result = string.Empty;
             }
-            return tmpS;
+            return result;
         }
 
         /// <summary>
@@ -154,72 +151,79 @@ namespace Nop.Core
         /// <returns>Store host location</returns>
         public virtual string GetStoreHost(bool useSsl)
         {
-            var httpHost = ServerVariables("HTTP_HOST");
             var result = "";
+            var httpHost = ServerVariables("HTTP_HOST");
             if (!String.IsNullOrEmpty(httpHost))
             {
                 result = "http://" + httpHost;
+                if (!result.EndsWith("/"))
+                    result += "/";
             }
-            else
-            {
-                //HTTP_HOST variable is not available.
-                //It's possible only when HttpContext is not available (for example, running in a schedule task)
-                //so let's resolve StoreInformationSettings here.
-                //Do not inject it via contructor because it'll break the installation (settings are not available at that moment)
-                var storeSettings = EngineContext.Current.Resolve<StoreInformationSettings>();
-                result = storeSettings.StoreUrl;
-            }
-            if (!result.EndsWith("/"))
-                result += "/";
-            if (useSsl)
-            {
-                //shared SSL certificate URL
-                string sharedSslUrl = string.Empty;
-                if (!String.IsNullOrEmpty(ConfigurationManager.AppSettings["SharedSSLUrl"]))
-                    sharedSslUrl = ConfigurationManager.AppSettings["SharedSSLUrl"].Trim();
 
-                if (!String.IsNullOrEmpty(sharedSslUrl))
+            if (DataSettingsHelper.DatabaseIsInstalled())
+            {
+                #region Database is installed
+
+                //let's resolve IWorkContext  here.
+                //Do not inject it via contructor because it'll cause circular references
+                var storeContext = EngineContext.Current.Resolve<IStoreContext>();
+                var currentStore = storeContext.CurrentStore;
+                if (currentStore == null)
+                    throw new Exception("Current store cannot be loaded");
+
+                if (String.IsNullOrWhiteSpace(httpHost))
                 {
-                    //shared SSL
-                    result = sharedSslUrl;
+                    //HTTP_HOST variable is not available.
+                    //This scenario is possible only when HttpContext is not available (for example, running in a schedule task)
+                    //in this case use URL of a store entity configured in admin area
+                    result = currentStore.Url;
+                    if (!result.EndsWith("/"))
+                        result += "/";
+                }
+
+                if (useSsl)
+                {
+                    if (!String.IsNullOrWhiteSpace(currentStore.SecureUrl))
+                    {
+                        //Secure URL specified. 
+                        //So a store owner don't want it to be detected automatically.
+                        //In this case let's use the specified secure URL
+                        result = currentStore.SecureUrl;
+                    }
+                    else
+                    {
+                        //Secure URL is not specified.
+                        //So a store owner wants it to be detected automatically.
+                        result = result.Replace("http:/", "https:/");
+                    }
                 }
                 else
                 {
-                    //standard SSL
-                    result = result.Replace("http:/", "https:/");
+                    if (currentStore.SslEnabled && !String.IsNullOrWhiteSpace(currentStore.SecureUrl))
+                    {
+                        //SSL is enabled in this store and secure URL is specified.
+                        //So a store owner don't want it to be detected automatically.
+                        //In this case let's use the specified non-secure URL
+                        result = currentStore.Url;
+                    }
                 }
+                #endregion
             }
             else
             {
-                if (SslEnabled())
+                #region Database is not installed
+                if (useSsl)
                 {
-                    //SSL is enabled
-
-                    //get shared SSL certificate URL
-                    string sharedSslUrl = string.Empty;
-                    if (!String.IsNullOrEmpty(ConfigurationManager.AppSettings["SharedSSLUrl"]))
-                        sharedSslUrl = ConfigurationManager.AppSettings["SharedSSLUrl"].Trim();
-                    if (!String.IsNullOrEmpty(sharedSslUrl))
-                    {
-                        //shared SSL
-
-                        /* we need to set a store URL here (IoC.Resolve<ISettingManager>().StoreUrl property)
-                         * but we cannot reference Nop.BusinessLogic.dll assembly.
-                         * So we are using one more app config settings - <add key="NonSharedSSLUrl" value="http://www.yourStore.com" />
-                         */
-                        string nonSharedSslUrl = string.Empty;
-                        if (!String.IsNullOrEmpty(ConfigurationManager.AppSettings["NonSharedSSLUrl"]))
-                            nonSharedSslUrl = ConfigurationManager.AppSettings["NonSharedSSLUrl"].Trim();
-                        if (string.IsNullOrEmpty(nonSharedSslUrl))
-                            throw new Exception("NonSharedSSLUrl app config setting is not empty");
-                        result = nonSharedSslUrl;
-                    }
+                    //Secure URL is not specified.
+                    //So a store owner wants it to be detected automatically.
+                    result = result.Replace("http:/", "https:/");
                 }
+                #endregion
             }
+
 
             if (!result.EndsWith("/"))
                 result += "/";
-
             return result.ToLowerInvariant();
         }
         

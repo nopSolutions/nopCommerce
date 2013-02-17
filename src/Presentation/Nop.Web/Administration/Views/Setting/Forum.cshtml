@@ -15,10 +15,12 @@
             <input type="submit" name="save" class="t-button" value="@T("Admin.Common.Save")" />
         </div>
     </div>
+    @Html.Action("StoreScopeConfiguration", "Setting")
     @Html.ValidationSummary(false)
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ForumsEnabled_OverrideForStore, model => model.ForumsEnabled, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ForumsEnabled):
             </td>
             <td class="adminData">
@@ -28,6 +30,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.RelativeDateTimeFormattingEnabled_OverrideForStore, model => model.RelativeDateTimeFormattingEnabled, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.RelativeDateTimeFormattingEnabled):
             </td>
             <td class="adminData">
@@ -37,6 +40,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ShowCustomersPostCount_OverrideForStore, model => model.ShowCustomersPostCount, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ShowCustomersPostCount):
             </td>
             <td class="adminData">
@@ -46,6 +50,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.AllowGuestsToCreatePosts_OverrideForStore, model => model.AllowGuestsToCreatePosts, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.AllowGuestsToCreatePosts):
             </td>
             <td class="adminData">
@@ -55,6 +60,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.AllowGuestsToCreateTopics_OverrideForStore, model => model.AllowGuestsToCreateTopics, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.AllowGuestsToCreateTopics):
             </td>
             <td class="adminData">
@@ -64,6 +70,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.AllowCustomersToEditPosts_OverrideForStore, model => model.AllowCustomersToEditPosts, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.AllowCustomersToEditPosts):
             </td>
             <td class="adminData">
@@ -73,6 +80,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.AllowCustomersToDeletePosts_OverrideForStore, model => model.AllowCustomersToDeletePosts, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.AllowCustomersToDeletePosts):
             </td>
             <td class="adminData">
@@ -82,6 +90,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.AllowCustomersToManageSubscriptions_OverrideForStore, model => model.AllowCustomersToManageSubscriptions, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.AllowCustomersToManageSubscriptions):
             </td>
             <td class="adminData">
@@ -91,6 +100,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.TopicsPageSize_OverrideForStore, model => model.TopicsPageSize, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.TopicsPageSize):
             </td>
             <td class="adminData">
@@ -100,6 +110,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.PostsPageSize_OverrideForStore, model => model.PostsPageSize, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.PostsPageSize):
             </td>
             <td class="adminData">
@@ -109,6 +120,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.SearchResultsPageSize_OverrideForStore, model => model.SearchResultsPageSize, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.SearchResultsPageSize):
             </td>
             <td class="adminData">
@@ -118,6 +130,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ForumEditor_OverrideForStore, model => model.ForumEditor, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ForumEditor):
             </td>
             <td class="adminData">
@@ -127,6 +140,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.SignaturesEnabled_OverrideForStore, model => model.SignaturesEnabled, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.SignaturesEnabled):
             </td>
             <td class="adminData">
@@ -141,6 +155,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.AllowPrivateMessages_OverrideForStore, model => model.AllowPrivateMessages, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.AllowPrivateMessages):
             </td>
             <td class="adminData">
@@ -150,6 +165,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ShowAlertForPM_OverrideForStore, model => model.ShowAlertForPM, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ShowAlertForPM):
             </td>
             <td class="adminData">
@@ -159,6 +175,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.NotifyAboutPrivateMessages_OverrideForStore, model => model.NotifyAboutPrivateMessages, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.NotifyAboutPrivateMessages):
             </td>
             <td class="adminData">
@@ -173,6 +190,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ForumFeedsEnabled_OverrideForStore, model => model.ForumFeedsEnabled, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ForumFeedsEnabled):
             </td>
             <td class="adminData">
@@ -182,6 +200,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ForumFeedCount_OverrideForStore, model => model.ForumFeedCount, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ForumFeedCount):
             </td>
             <td class="adminData">
@@ -191,6 +210,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ActiveDiscussionsFeedEnabled_OverrideForStore, model => model.ActiveDiscussionsFeedEnabled, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ActiveDiscussionsFeedEnabled):
             </td>
             <td class="adminData">
@@ -200,6 +220,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ActiveDiscussionsFeedCount_OverrideForStore, model => model.ActiveDiscussionsFeedCount, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ActiveDiscussionsFeedCount):
             </td>
             <td class="adminData">

@@ -44,6 +44,7 @@ using Nop.Services.Polls;
 using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
+using Nop.Services.Stores;
 using Nop.Services.Tasks;
 using Nop.Services.Tax;
 using Nop.Services.Topics;
@@ -122,6 +123,8 @@ namespace Nop.Web.Framework
 
             //work context
             builder.RegisterType<WebWorkContext>().As<IWorkContext>().InstancePerHttpRequest();
+            //store context
+            builder.RegisterType<WebStoreContext>().As<IStoreContext>().InstancePerHttpRequest();
 
             //services
             builder.RegisterType<BackInStockSubscriptionService>().As<IBackInStockSubscriptionService>().InstancePerHttpRequest();
@@ -149,20 +152,17 @@ namespace Nop.Web.Framework
             builder.RegisterType<FulltextService>().As<IFulltextService>().InstancePerHttpRequest();
             builder.RegisterType<MaintenanceService>().As<IMaintenanceService>().InstancePerHttpRequest();
 
-
-            builder.RegisterGeneric(typeof(ConfigurationProvider<>)).As(typeof(IConfigurationProvider<>));
-            builder.RegisterSource(new SettingsSource());
             
             builder.RegisterType<CustomerContentService>().As<ICustomerContentService>().InstancePerHttpRequest();
             builder.RegisterType<CustomerService>().As<ICustomerService>().InstancePerHttpRequest();
             builder.RegisterType<CustomerRegistrationService>().As<ICustomerRegistrationService>().InstancePerHttpRequest();
             builder.RegisterType<CustomerReportService>().As<ICustomerReportService>().InstancePerHttpRequest();
 
-            //pass MemoryCacheManager to SettingService as cacheManager (cache settings between requests)
+            //pass MemoryCacheManager as cacheManager (cache settings between requests)
             builder.RegisterType<PermissionService>().As<IPermissionService>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
                 .InstancePerHttpRequest();
-            //pass MemoryCacheManager to SettingService as cacheManager (cache settings between requests)
+            //pass MemoryCacheManager as cacheManager (cache settings between requests)
             builder.RegisterType<AclService>().As<IAclService>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
                 .InstancePerHttpRequest();
@@ -173,19 +173,27 @@ namespace Nop.Web.Framework
             builder.RegisterType<MeasureService>().As<IMeasureService>().InstancePerHttpRequest();
             builder.RegisterType<StateProvinceService>().As<IStateProvinceService>().InstancePerHttpRequest();
 
+            builder.RegisterType<StoreService>().As<IStoreService>().InstancePerHttpRequest();
+            //pass MemoryCacheManager as cacheManager (cache settings between requests)
+            builder.RegisterType<StoreMappingService>().As<IStoreMappingService>()
+                .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
+                .InstancePerHttpRequest();
+
             builder.RegisterType<DiscountService>().As<IDiscountService>().InstancePerHttpRequest();
 
 
-            //pass MemoryCacheManager to SettingService as cacheManager (cache settings between requests)
+            //pass MemoryCacheManager as cacheManager (cache settings between requests)
             builder.RegisterType<SettingService>().As<ISettingService>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
                 .InstancePerHttpRequest();
-            //pass MemoryCacheManager to LocalizationService as cacheManager (cache locales between requests)
+            builder.RegisterSource(new SettingsSource());
+
+            //pass MemoryCacheManager as cacheManager (cache locales between requests)
             builder.RegisterType<LocalizationService>().As<ILocalizationService>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
                 .InstancePerHttpRequest();
 
-            //pass MemoryCacheManager to LocalizedEntityService as cacheManager (cache locales between requests)
+            //pass MemoryCacheManager as cacheManager (cache locales between requests)
             builder.RegisterType<LocalizedEntityService>().As<ILocalizedEntityService>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
                 .InstancePerHttpRequest();
@@ -220,7 +228,7 @@ namespace Nop.Web.Framework
             builder.RegisterType<FormsAuthenticationService>().As<IAuthenticationService>().InstancePerHttpRequest();
 
 
-            //pass MemoryCacheManager to UrlRecordService as cacheManager (cache settings between requests)
+            //pass MemoryCacheManager as cacheManager (cache settings between requests)
             builder.RegisterType<UrlRecordService>().As<IUrlRecordService>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
                 .InstancePerHttpRequest();
@@ -325,7 +333,23 @@ namespace Nop.Web.Framework
         static IComponentRegistration BuildRegistration<TSettings>() where TSettings : ISettings, new()
         {
             return RegistrationBuilder
-                .ForDelegate((c, p) => c.Resolve<IConfigurationProvider<TSettings>>().Settings)
+                .ForDelegate((c, p) =>
+                {
+                    var currentStoreId = c.Resolve<IStoreContext>().CurrentStore.Id;
+                    /* uncomment the code below if you want load settings per store only when you have two stores installed.
+                     * it can useful in the following scenario:
+                     * 1. you have two stores
+                     * 2. you override some settings for store1
+                     * 3. then you deleted store2
+                     * 4. now you cannot manage multi-store configuration in admin area (UI)
+                     * 5. but settings for store1 will be loaded and won't be able to edit them (UI)
+                     * although it's easy to connect to your database and execute the following SQL:
+                     * DELETE FROM [Setting] WHERE [StoreId] > 0
+                    */
+                    //var currentStoreId = c.Resolve<IStoreService>().GetAllStores().Count > 1
+                    //    c.Resolve<IStoreContext>().CurrentStore.Id : 0;
+                    return c.Resolve<ISettingService>().LoadSetting<TSettings>(currentStoreId);
+                })
                 .InstancePerHttpRequest()
                 .CreateRegistration();
         }

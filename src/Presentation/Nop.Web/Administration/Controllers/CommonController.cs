@@ -40,12 +40,12 @@ namespace Nop.Admin.Controllers
         private readonly ICustomerService _customerService;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IWebHelper _webHelper;
-        private readonly StoreInformationSettings _storeInformationSettings;
         private readonly CurrencySettings _currencySettings;
         private readonly MeasureSettings _measureSettings;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILanguageService _languageService;
         private readonly IWorkContext _workContext;
+        private readonly IStoreContext _storeContext;
         private readonly IPermissionService _permissionService;
         private readonly ILocalizationService _localizationService;
 
@@ -53,14 +53,22 @@ namespace Nop.Admin.Controllers
 
         #region Constructors
 
-        public CommonController(IPaymentService paymentService, IShippingService shippingService,
+        public CommonController(IPaymentService paymentService, 
+            IShippingService shippingService,
             IShoppingCartService shoppingCartService, 
-            ICurrencyService currencyService, IMeasureService measureService,
-            ICustomerService customerService, IUrlRecordService urlRecordService, IWebHelper webHelper,
-            StoreInformationSettings storeInformationSettings, CurrencySettings currencySettings,
-            MeasureSettings measureSettings, IDateTimeHelper dateTimeHelper,
-            ILanguageService languageService, IWorkContext workContext,
-            IPermissionService permissionService, ILocalizationService localizationService)
+            ICurrencyService currencyService, 
+            IMeasureService measureService,
+            ICustomerService customerService, 
+            IUrlRecordService urlRecordService, 
+            IWebHelper webHelper, 
+            CurrencySettings currencySettings,
+            MeasureSettings measureSettings, 
+            IDateTimeHelper dateTimeHelper,
+            ILanguageService languageService, 
+            IWorkContext workContext,
+            IStoreContext storeContext,
+            IPermissionService permissionService, 
+            ILocalizationService localizationService)
         {
             this._paymentService = paymentService;
             this._shippingService = shippingService;
@@ -70,12 +78,12 @@ namespace Nop.Admin.Controllers
             this._customerService = customerService;
             this._urlRecordService = urlRecordService;
             this._webHelper = webHelper;
-            this._storeInformationSettings = storeInformationSettings;
             this._currencySettings = currencySettings;
             this._measureSettings = measureSettings;
             this._dateTimeHelper = dateTimeHelper;
             this._languageService = languageService;
             this._workContext = workContext;
+            this._storeContext = storeContext;
             this._permissionService = permissionService;
             this._localizationService = localizationService;
         }
@@ -106,6 +114,7 @@ namespace Nop.Admin.Controllers
             model.ServerTimeZone = TimeZone.CurrentTimeZone.StandardName;
             model.ServerLocalTime = DateTime.Now;
             model.UtcTime = DateTime.UtcNow;
+            model.HttpHost = _webHelper.ServerVariables("HTTP_HOST");
             //Environment.GetEnvironmentVariable("USERNAME");
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
@@ -124,10 +133,11 @@ namespace Nop.Admin.Controllers
             var model = new List<SystemWarningModel>();
 
             //store URL
-            if (!String.IsNullOrEmpty(_storeInformationSettings.StoreUrl) &&
-                (_storeInformationSettings.StoreUrl.Equals(_webHelper.GetStoreLocation(false), StringComparison.InvariantCultureIgnoreCase)
+            var currentStoreUrl = _storeContext.CurrentStore.Url;
+            if (!String.IsNullOrEmpty(currentStoreUrl) &&
+                (currentStoreUrl.Equals(_webHelper.GetStoreLocation(false), StringComparison.InvariantCultureIgnoreCase)
                 ||
-                _storeInformationSettings.StoreUrl.Equals(_webHelper.GetStoreLocation(true), StringComparison.InvariantCultureIgnoreCase)
+                currentStoreUrl.Equals(_webHelper.GetStoreLocation(true), StringComparison.InvariantCultureIgnoreCase)
                 ))
                 model.Add(new SystemWarningModel()
                     {
@@ -138,7 +148,7 @@ namespace Nop.Admin.Controllers
                 model.Add(new SystemWarningModel()
                 {
                     Level = SystemWarningLevel.Warning,
-                    Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.URL.NoMatch"), _storeInformationSettings.StoreUrl, _webHelper.GetStoreLocation(false))
+                    Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.URL.NoMatch"), currentStoreUrl, _webHelper.GetStoreLocation(false))
                 });
 
 
@@ -416,7 +426,10 @@ namespace Nop.Admin.Controllers
         {
             var model = new LanguageSelectorModel();
             model.CurrentLanguage = _workContext.WorkingLanguage.ToModel();
-            model.AvailableLanguages = _languageService.GetAllLanguages().Select(x => x.ToModel()).ToList();
+            model.AvailableLanguages = _languageService
+                .GetAllLanguages(storeId: _storeContext.CurrentStore.Id)
+                .Select(x => x.ToModel())
+                .ToList();
             return PartialView(model);
         }
         public ActionResult LanguageSelected(int customerlanguage)
@@ -426,10 +439,7 @@ namespace Nop.Admin.Controllers
             {
                 _workContext.WorkingLanguage = language;
             }
-            var model = new LanguageSelectorModel();
-            model.CurrentLanguage = _workContext.WorkingLanguage.ToModel();
-            model.AvailableLanguages = _languageService.GetAllLanguages().Select(x => x.ToModel()).ToList();
-            return PartialView("LanguageSelector", model);
+            return Content("Changed");
         }
 
         public ActionResult ClearCache()

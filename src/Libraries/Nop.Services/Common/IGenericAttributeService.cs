@@ -49,6 +49,7 @@ namespace Nop.Services.Common
         /// <param name="entity">Entity</param>
         /// <param name="key">Key</param>
         /// <param name="value">Value</param>
-        void SaveAttribute<TPropType>(BaseEntity entity, string key, TPropType value);
+        /// <param name="storeId">Store identifier; pass 0 if this attribute will be available for all stores</param>
+        void SaveAttribute<TPropType>(BaseEntity entity, string key, TPropType value, int storeId = 0);
     }
 }

@@ -31,6 +31,7 @@ using Nop.Services.Logging;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Security;
+using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
@@ -59,6 +60,7 @@ namespace Nop.Admin.Controllers
         private readonly CustomerSettings _customerSettings;
         private readonly ITaxService _taxService;
         private readonly IWorkContext _workContext;
+        private readonly IStoreContext _storeContext;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IOrderService _orderService;
         private readonly IExportManager _exportManager;
@@ -73,6 +75,7 @@ namespace Nop.Admin.Controllers
         private readonly IForumService _forumService;
         private readonly IOpenAuthenticationService _openAuthenticationService;
         private readonly AddressSettings _addressSettings;
+        private readonly IStoreService _storeService;
 
         #endregion
 
@@ -87,15 +90,17 @@ namespace Nop.Admin.Controllers
             ICountryService countryService, IStateProvinceService stateProvinceService, 
             IAddressService addressService,
             CustomerSettings customerSettings, ITaxService taxService, 
-            IWorkContext workContext, IPriceFormatter priceFormatter,
-            IOrderService orderService, IExportManager exportManager,
+            IWorkContext workContext, IStoreContext storeContext,
+            IPriceFormatter priceFormatter,
+            IOrderService orderService, 
+            IExportManager exportManager,
             ICustomerActivityService customerActivityService,
             IPriceCalculationService priceCalculationService,
             IPermissionService permissionService, AdminAreaSettings adminAreaSettings,
             IQueuedEmailService queuedEmailService, EmailAccountSettings emailAccountSettings,
             IEmailAccountService emailAccountService, ForumSettings forumSettings,
             IForumService forumService, IOpenAuthenticationService openAuthenticationService,
-            AddressSettings addressSettings)
+            AddressSettings addressSettings, IStoreService storeService)
         {
             this._customerService = customerService;
             this._genericAttributeService = genericAttributeService;
@@ -112,6 +117,7 @@ namespace Nop.Admin.Controllers
             this._customerSettings = customerSettings;
             this._taxService = taxService;
             this._workContext = workContext;
+            this._storeContext = storeContext;
             this._priceFormatter = priceFormatter;
             this._orderService = orderService;
             this._exportManager = exportManager;
@@ -126,6 +132,7 @@ namespace Nop.Admin.Controllers
             this._forumService = forumService;
             this._openAuthenticationService = openAuthenticationService;
             this._addressSettings = addressSettings;
+            this._storeService = storeService;
         }
 
         #endregion
@@ -229,13 +236,8 @@ namespace Nop.Admin.Controllers
 
             //ensure a customer is not added to both 'Guests' and 'Registered' customer roles
             //ensure that a customer is in at least one required role ('Guests' and 'Registered')
-            bool isInGuestsRole = customerRoles
-                .Where(cr => cr.SystemName == SystemCustomerRoleNames.Guests)
-                .FirstOrDefault() != null;
-            bool isInRegisteredRole =
-                customerRoles
-                .Where(cr => cr.SystemName == SystemCustomerRoleNames.Registered)
-                .FirstOrDefault() != null;
+            bool isInGuestsRole = customerRoles.FirstOrDefault(cr => cr.SystemName == SystemCustomerRoleNames.Guests) != null;
+            bool isInRegisteredRole = customerRoles.FirstOrDefault(cr => cr.SystemName == SystemCustomerRoleNames.Registered) != null;
             if (isInGuestsRole && isInRegisteredRole)
                 return "The customer cannot be in both 'Guests' and 'Registered' customer roles";
             if (!isInGuestsRole && !isInRegisteredRole)
@@ -416,14 +418,15 @@ namespace Nop.Admin.Controllers
                     Username = model.Username,
                     AdminComment = model.AdminComment,
                     IsTaxExempt = model.IsTaxExempt,
-                    TimeZoneId = model.TimeZoneId,
                     Active = model.Active,
                     CreatedOnUtc = DateTime.UtcNow,
                     LastActivityDateUtc = DateTime.UtcNow,
                 };
                 _customerService.InsertCustomer(customer);
-                
+
                 //form fields
+                if (_dateTimeSettings.AllowCustomersToSetTimeZone)
+                    _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.TimeZoneId, model.TimeZoneId);
                 if (_customerSettings.GenderEnabled)
                     _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.Gender, model.Gender);
                 _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.FirstName, model.FirstName);
@@ -547,15 +550,16 @@ namespace Nop.Admin.Controllers
             model.IsTaxExempt = customer.IsTaxExempt;
             model.Active = customer.Active;
             model.AffiliateId = customer.AffiliateId;
-            model.TimeZoneId = customer.TimeZoneId;
+            model.TimeZoneId = customer.GetAttribute<string>(SystemCustomerAttributeNames.TimeZoneId);
             model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
             model.AllowUsersToChangeUsernames = _customerSettings.AllowUsersToChangeUsernames;
             model.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
             foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
-                model.AvailableTimeZones.Add(new SelectListItem() { Text = tzi.DisplayName, Value = tzi.Id, Selected = (tzi.Id == customer.TimeZoneId) });
+                model.AvailableTimeZones.Add(new SelectListItem() { Text = tzi.DisplayName, Value = tzi.Id, Selected = (tzi.Id == model.TimeZoneId) });
             model.DisplayVatNumber = _taxSettings.EuVatEnabled;
-            model.VatNumber = customer.VatNumber;
-            model.VatNumberStatusNote = customer.VatNumberStatus.GetLocalizedEnum(_localizationService, _workContext);
+            model.VatNumber = customer.GetAttribute<string>(SystemCustomerAttributeNames.VatNumber);
+            model.VatNumberStatusNote = ((VatNumberStatus)customer.GetAttribute<int>(SystemCustomerAttributeNames.VatNumberStatusId))
+                .GetLocalizedEnum(_localizationService, _workContext);
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(customer.CreatedOnUtc, DateTimeKind.Utc);
             model.LastActivityDate = _dateTimeHelper.ConvertToUserTime(customer.LastActivityDateUtc, DateTimeKind.Utc);
             model.LastIpAddress = customer.LastIpAddress;
@@ -661,11 +665,8 @@ namespace Nop.Admin.Controllers
             {
                 try
                 {
-                    string prevVatNumber = customer.VatNumber;
-
                     customer.AdminComment = model.AdminComment;
                     customer.IsTaxExempt = model.IsTaxExempt;
-                    customer.TimeZoneId = model.TimeZoneId;
                     customer.Active = model.Active;
                     //email
                     if (!String.IsNullOrWhiteSpace(model.Email))
@@ -693,19 +694,30 @@ namespace Nop.Admin.Controllers
                     //VAT number
                     if (_taxSettings.EuVatEnabled)
                     {
-                        customer.VatNumber = model.VatNumber;
+                        string prevVatNumber = customer.GetAttribute<string>(SystemCustomerAttributeNames.VatNumber);
+
+                        _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.VatNumber, model.VatNumber);
                         //set VAT number status
-                        if (!String.IsNullOrEmpty(customer.VatNumber))
+                        if (!String.IsNullOrEmpty(model.VatNumber))
                         {
-                            if (!customer.VatNumber.Equals(prevVatNumber, StringComparison.InvariantCultureIgnoreCase))
-                                customer.VatNumberStatus = _taxService.GetVatNumberStatus(customer.VatNumber);
+                            if (!model.VatNumber.Equals(prevVatNumber, StringComparison.InvariantCultureIgnoreCase))
+                            {
+                                _genericAttributeService.SaveAttribute(customer, 
+                                    SystemCustomerAttributeNames.VatNumberStatusId, 
+                                    (int)_taxService.GetVatNumberStatus(model.VatNumber));
+                            }
                         }
                         else
-                            customer.VatNumberStatus = VatNumberStatus.Empty;
+                        {
+                            _genericAttributeService.SaveAttribute(customer,
+                                SystemCustomerAttributeNames.VatNumberStatusId, 
+                                (int)VatNumberStatus.Empty);
+                        }
                     }
-                    _customerService.UpdateCustomer(customer);
 
                     //form fields
+                    if (_dateTimeSettings.AllowCustomersToSetTimeZone)
+                        _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.TimeZoneId, model.TimeZoneId);
                     if (_customerSettings.GenderEnabled)
                         _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.Gender, model.Gender);
                     _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.FirstName, model.FirstName);
@@ -773,7 +785,8 @@ namespace Nop.Admin.Controllers
             foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
                 model.AvailableTimeZones.Add(new SelectListItem() { Text = tzi.DisplayName, Value = tzi.Id, Selected = (tzi.Id == model.TimeZoneId) });
             model.DisplayVatNumber = _taxSettings.EuVatEnabled;
-            model.VatNumberStatusNote = customer.VatNumberStatus.GetLocalizedEnum(_localizationService, _workContext);
+            model.VatNumberStatusNote = ((VatNumberStatus)customer.GetAttribute<int>(SystemCustomerAttributeNames.VatNumberStatusId))
+                .GetLocalizedEnum(_localizationService, _workContext);
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(customer.CreatedOnUtc, DateTimeKind.Utc);
             model.LastActivityDate = _dateTimeHelper.ConvertToUserTime(customer.LastActivityDateUtc, DateTimeKind.Utc);
             model.LastIpAddress = model.LastIpAddress;
@@ -872,8 +885,9 @@ namespace Nop.Admin.Controllers
                 //No customer found with the specified id
                 return RedirectToAction("List");
 
-            customer.VatNumberStatus = VatNumberStatus.Valid;
-            _customerService.UpdateCustomer(customer);
+            _genericAttributeService.SaveAttribute(customer, 
+                SystemCustomerAttributeNames.VatNumberStatusId,
+                (int)VatNumberStatus.Valid);
 
             return RedirectToAction("Edit", customer.Id);
         }
@@ -890,9 +904,10 @@ namespace Nop.Admin.Controllers
                 //No customer found with the specified id
                 return RedirectToAction("List");
 
-            customer.VatNumberStatus = VatNumberStatus.Invalid;
-            _customerService.UpdateCustomer(customer);
-
+            _genericAttributeService.SaveAttribute(customer,
+                SystemCustomerAttributeNames.VatNumberStatusId,
+                (int)VatNumberStatus.Invalid);
+            
             return RedirectToAction("Edit", customer.Id);
         }
 
@@ -1015,6 +1030,7 @@ namespace Nop.Admin.Controllers
 
                 var privateMessage = new PrivateMessage
                 {
+                    Store = _storeContext.CurrentStore,
                     ToCustomerId = customer.Id,
                     FromCustomerId = _workContext.CurrentCustomer.Id,
                     Subject = model.SendPm.Subject,
@@ -1377,20 +1393,25 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
-            var orders = _orderService.GetOrdersByCustomerId(customerId);
+            var orders = _orderService.SearchOrders(0, customerId,
+                    null, null, null, null, null, null, null, 0, int.MaxValue);
 
             var model = new GridModel<CustomerModel.OrderModel>
             {
-                Data = orders.OrderBy(x => x.CreatedOnUtc).PagedForCommand(command)
+                Data = orders.PagedForCommand(command)
                     .Select(order =>
                     {
-                        var orderModel = new CustomerModel.OrderModel();
-                        orderModel.Id = order.Id;
-                        orderModel.OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext);
-                        orderModel.PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext);
-                        orderModel.ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext);
-                        orderModel.OrderTotal = _priceFormatter.FormatPrice(order.OrderTotal, true, false);
-                        orderModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc);
+                        var store = _storeService.GetStoreById(order.StoreId);
+                        var orderModel = new CustomerModel.OrderModel()
+                        {
+                            Id = order.Id, 
+                            OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
+                            PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext),
+                            ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext),
+                            OrderTotal = _priceFormatter.FormatPrice(order.OrderTotal, true, false),
+                            StoreName = store != null ? store.Name : "Unknown",
+                            CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc),
+                        };
                         return orderModel;
                     }),
                 Total = orders.Count
@@ -1553,6 +1574,7 @@ namespace Nop.Admin.Controllers
                     var sciModel = new ShoppingCartItemModel()
                     {
                         Id = sci.Id,
+                        Store = sci.Store != null ? sci.Store.Name : "Unknown",
                         ProductVariantId = sci.ProductVariantId,
                         Quantity = sci.Quantity,
                         FullProductName = !String.IsNullOrEmpty(sci.ProductVariant.Name) ?

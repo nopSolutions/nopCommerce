@@ -1,11 +1,12 @@
 using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Stores;
 
 namespace Nop.Core.Domain.Topics
 {
     /// <summary>
     /// Represents a topic
     /// </summary>
-    public partial class Topic : BaseEntity, ILocalizedEntity
+    public partial class Topic : BaseEntity, ILocalizedEntity, IStoreMappingSupported
     {
         /// <summary>
         /// Gets or sets the name
@@ -51,5 +52,11 @@ namespace Nop.Core.Domain.Topics
         /// Gets or sets the meta title
         /// </summary>
         public virtual string MetaTitle { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the entity is limited/restricted to certain stores
+        /// </summary>
+        public virtual bool LimitedToStores { get; set; }
+
     }
 }

@@ -5,9 +5,8 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
-using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
-using Nop.Core.Domain.Tax;
+using Nop.Core.Domain.Stores;
 using Nop.Tests;
 using NUnit.Framework;
 
@@ -30,14 +29,7 @@ namespace Nop.Data.Tests.Customers
             fromDb.Email.ShouldEqual("a@b.com");
             fromDb.AdminComment.ShouldEqual("some comment here");
             fromDb.AdminComment.ShouldEqual("some comment here");
-            fromDb.TaxDisplayType.ShouldEqual(TaxDisplayType.IncludingTax);
             fromDb.IsTaxExempt.ShouldEqual(true);
-            fromDb.SelectedPaymentMethodSystemName.ShouldEqual("test1");
-            fromDb.VatNumber.ShouldEqual("123456");
-            fromDb.VatNumberStatus.ShouldEqual(VatNumberStatus.Valid);
-            fromDb.CheckoutAttributes.ShouldEqual("CheckoutAttributes 1");
-            fromDb.DiscountCouponCode.ShouldEqual("coupon1");
-            fromDb.GiftCardCouponCodes.ShouldEqual("GiftCardCouponCodes 1");
             fromDb.Active.ShouldEqual(true);
             fromDb.Deleted.ShouldEqual(false);
             fromDb.IsSystemAccount.ShouldEqual(true);
@@ -100,50 +92,6 @@ namespace Nop.Data.Tests.Customers
         }
 
         [Test]
-        public void Can_save_and_load_customer_with_language()
-        {
-            var customer = GetTestCustomer();
-            customer.Language = new Language()
-            {
-                Name = "English",
-                LanguageCulture = "en-Us",
-                FlagImageFileName = "us.png",
-                Published = true,
-                DisplayOrder = 1
-            };
-
-            var fromDb = SaveAndLoadEntity(customer);
-            fromDb.ShouldNotBeNull();
-
-            fromDb.Language.ShouldNotBeNull();
-            fromDb.Language.Name.ShouldEqual("English");
-        }
-
-        [Test]
-        public void Can_save_and_load_customer_with_currency()
-        {
-            var customer = GetTestCustomer();
-            customer.Currency = new Currency()
-            {
-                Name = "US Dollar",
-                CurrencyCode = "USD",
-                Rate = 1,
-                DisplayLocale = "en-US",
-                CustomFormatting = "CustomFormatting 1",
-                Published = true,
-                DisplayOrder = 2,
-                CreatedOnUtc = new DateTime(2010, 01, 01),
-                UpdatedOnUtc = new DateTime(2010, 01, 02),
-            };
-
-            var fromDb = SaveAndLoadEntity(customer);
-            fromDb.ShouldNotBeNull();
-
-            fromDb.Currency.ShouldNotBeNull();
-            fromDb.Currency.Name.ShouldEqual("US Dollar");
-        }
-
-        [Test]
         public void Can_save_customer_with_rewardPointsHistoryEntry()
         {
             var customer = GetTestCustomer();
@@ -174,18 +122,6 @@ namespace Nop.Data.Tests.Customers
             fromDb.ShouldNotBeNull();
             fromDb.Addresses.Count.ShouldEqual(1);
             fromDb.Addresses.First().FirstName.ShouldEqual("Test");
-        }
-
-        [Test]
-        public void Can_save_and_load_customer_with_affiliate()
-        {
-            var customer = GetTestCustomer();
-            customer.Affiliate = GetTestAffiliate();
-
-            var fromDb = SaveAndLoadEntity(customer);
-            fromDb.ShouldNotBeNull();
-            fromDb.Affiliate.ShouldNotBeNull();
-            fromDb.Affiliate.Active.ShouldEqual(true);
         }
 
         [Test]
@@ -241,6 +177,7 @@ namespace Nop.Data.Tests.Customers
         {
             var customer = GetTestCustomer();
             var productVariant = GetTestProductVariant();
+            var store = GetTestStore();
 
             customer.ShoppingCartItems.Add
             (
@@ -252,7 +189,8 @@ namespace Nop.Data.Tests.Customers
                     Quantity = 2,
                     CreatedOnUtc = new DateTime(2010, 01, 01),
                     UpdatedOnUtc = new DateTime(2010, 01, 02),
-                    ProductVariant = productVariant
+                    ProductVariant = productVariant,
+                    Store = store
                 }
             );
 
@@ -343,14 +281,7 @@ namespace Nop.Data.Tests.Customers
                 Email = "a@b.com",
                 CustomerGuid = Guid.NewGuid(),
                 AdminComment = "some comment here",
-                TaxDisplayType = TaxDisplayType.IncludingTax,
                 IsTaxExempt = true,
-                SelectedPaymentMethodSystemName = "test1",
-                VatNumber = "123456",
-                VatNumberStatus = VatNumberStatus.Valid,
-                CheckoutAttributes = "CheckoutAttributes 1",
-                DiscountCouponCode= "coupon1",
-                GiftCardCouponCodes = "GiftCardCouponCodes 1",
                 Active = true,
                 Deleted = false,
                 IsSystemAccount = true,
@@ -392,6 +323,15 @@ namespace Nop.Data.Tests.Customers
                 NumericIsoCode = 1,
                 SubjectToVat = true,
                 Published = true,
+                DisplayOrder = 1
+            };
+        }
+
+        protected Store GetTestStore()
+        {
+            return new Store
+            {
+                Name = "Store 1",
                 DisplayOrder = 1
             };
         }

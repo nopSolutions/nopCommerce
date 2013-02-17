@@ -62,6 +62,7 @@ namespace Nop.Services.Orders
         /// <summary>
         /// Get order average report
         /// </summary>
+        /// <param name="storeId">Store identifier</param>
         /// <param name="os">Order status</param>
         /// <param name="ps">Payment status</param>
         /// <param name="ss">Shipping status</param>
@@ -70,7 +71,7 @@ namespace Nop.Services.Orders
         /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
         /// <param name="ignoreCancelledOrders">A value indicating whether to ignore cancelled orders</param>
         /// <returns>Result</returns>
-        public virtual OrderAverageReportLine GetOrderAverageReportLine(OrderStatus? os,
+        public virtual OrderAverageReportLine GetOrderAverageReportLine(int storeId, OrderStatus? os,
             PaymentStatus? ps, ShippingStatus? ss, DateTime? startTimeUtc, DateTime? endTimeUtc,
             string billingEmail, bool ignoreCancelledOrders = false)
         {
@@ -88,6 +89,8 @@ namespace Nop.Services.Orders
 
             var query = _orderRepository.Table;
             query = query.Where(o => !o.Deleted);
+            if (storeId > 0)
+                query = query.Where(o => o.StoreId == storeId);
             if (ignoreCancelledOrders)
             {
                 int cancelledOrderStatusId = (int)OrderStatus.Cancelled;
@@ -118,9 +121,10 @@ namespace Nop.Services.Orders
         /// <summary>
         /// Get order average report
         /// </summary>
+        /// <param name="storeId">Store identifier</param>
         /// <param name="os">Order status</param>
         /// <returns>Result</returns>
-        public virtual OrderAverageReportLineSummary OrderAverageReport(OrderStatus os)
+        public virtual OrderAverageReportLineSummary OrderAverageReport(int storeId, OrderStatus os)
         {
             var item = new OrderAverageReportLineSummary();
             item.OrderStatus = os;
@@ -134,7 +138,7 @@ namespace Nop.Services.Orders
             {
                 DateTime? startTime1 = _dateTimeHelper.ConvertToUtcTime(t1, timeZone);
                 DateTime? endTime1 = null;
-                var todayResult = GetOrderAverageReportLine(os, null,null, startTime1, endTime1, null);
+                var todayResult = GetOrderAverageReportLine(storeId, os, null,null, startTime1, endTime1, null);
                 item.SumTodayOrders = todayResult.SumOrders;
                 item.CountTodayOrders = todayResult.CountOrders;
             }
@@ -146,7 +150,7 @@ namespace Nop.Services.Orders
             {
                 DateTime? startTime2 = _dateTimeHelper.ConvertToUtcTime(t2, timeZone);
                 DateTime? endTime2 = null;
-                var weekResult = GetOrderAverageReportLine(os, null, null, startTime2, endTime2, null);
+                var weekResult = GetOrderAverageReportLine(storeId, os, null, null, startTime2, endTime2, null);
                 item.SumThisWeekOrders = weekResult.SumOrders;
                 item.CountThisWeekOrders = weekResult.CountOrders;
             }
@@ -156,7 +160,7 @@ namespace Nop.Services.Orders
             {
                 DateTime? startTime3 = _dateTimeHelper.ConvertToUtcTime(t3, timeZone);
                 DateTime? endTime3 = null;
-                var monthResult = GetOrderAverageReportLine(os, null, null, startTime3, endTime3, null);
+                var monthResult = GetOrderAverageReportLine(storeId, os, null, null, startTime3, endTime3, null);
                 item.SumThisMonthOrders = monthResult.SumOrders;
                 item.CountThisMonthOrders = monthResult.CountOrders;
             }
@@ -166,14 +170,14 @@ namespace Nop.Services.Orders
             {
                 DateTime? startTime4 = _dateTimeHelper.ConvertToUtcTime(t4, timeZone);
                 DateTime? endTime4 = null;
-                var yearResult = GetOrderAverageReportLine(os, null, null, startTime4, endTime4, null);
+                var yearResult = GetOrderAverageReportLine(storeId, os, null, null, startTime4, endTime4, null);
                 item.SumThisYearOrders = yearResult.SumOrders;
                 item.CountThisYearOrders = yearResult.CountOrders;
             }
             //all time
             DateTime? startTime5 = null;
             DateTime? endTime5 = null;
-            var allTimeResult = GetOrderAverageReportLine(os, null, null, startTime5, endTime5, null);
+            var allTimeResult = GetOrderAverageReportLine(storeId, os, null, null, startTime5, endTime5, null);
             item.SumAllTimeOrders = allTimeResult.SumOrders;
             item.CountAllTimeOrders = allTimeResult.CountOrders;
 
@@ -183,6 +187,7 @@ namespace Nop.Services.Orders
         /// <summary>
         /// Get best sellers report
         /// </summary>
+        /// <param name="storeId">Store identifier</param>
         /// <param name="startTime">Order start time; null to load all</param>
         /// <param name="endTime">Order end time; null to load all</param>
         /// <param name="os">Order status; null to load all records</param>
@@ -194,8 +199,9 @@ namespace Nop.Services.Orders
         /// <param name="groupBy">1 - group by product variants, 2 - group by products</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Result</returns>
-        public virtual IList<BestsellersReportLine> BestSellersReport(DateTime? startTime,
-            DateTime? endTime, OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss,
+        public virtual IList<BestsellersReportLine> BestSellersReport(int storeId, 
+            DateTime? startTime, DateTime? endTime, 
+            OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss,
             int billingCountryId = 0,
             int recordsToReturn = 5, int orderBy = 1, int groupBy = 1, bool showHidden = false)
         {
@@ -216,7 +222,8 @@ namespace Nop.Services.Orders
                          join o in _orderRepository.Table on opv.OrderId equals o.Id
                          join pv in _productVariantRepository.Table on opv.ProductVariantId equals pv.Id
                          join p in _productRepository.Table on pv.ProductId equals p.Id
-                         where (!startTime.HasValue || startTime.Value <= o.CreatedOnUtc) &&
+                         where (storeId == 0 || storeId == o.StoreId) && 
+                         (!startTime.HasValue || startTime.Value <= o.CreatedOnUtc) &&
                          (!endTime.HasValue || endTime.Value >= o.CreatedOnUtc) &&
                          (!orderStatusId.HasValue || orderStatusId == o.OrderStatusId) &&
                          (!paymentStatusId.HasValue || paymentStatusId == o.PaymentStatusId) &&
@@ -287,11 +294,12 @@ namespace Nop.Services.Orders
         /// <summary>
         /// Gets a list of products purchased by other customers who purchased the above
         /// </summary>
+        /// <param name="storeId">Store identifier</param>
         /// <param name="productId">Product identifier</param>
         /// <param name="recordsToReturn">Records to return</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product collection</returns>
-        public virtual IList<Product> GetProductsAlsoPurchasedById(int productId,
+        public virtual IList<Product> GetProductsAlsoPurchasedById(int storeId, int productId,
             int recordsToReturn = 5, bool showHidden = false)
         {
             if (productId == 0)
@@ -310,6 +318,8 @@ namespace Nop.Services.Orders
                          where (query1.Contains(opv.OrderId)) &&
                          (p.Id != productId) &&
                          (showHidden || p.Published) &&
+                         (!opv.Order.Deleted) &&
+                         (storeId == 0 || opv.Order.StoreId == storeId) &&
                          (!p.Deleted) &&
                          (showHidden || pv.Published) &&
                          (showHidden || !pv.Deleted)
@@ -382,6 +392,7 @@ namespace Nop.Services.Orders
         /// <summary>
         /// Get profit report
         /// </summary>
+        /// <param name="storeId">Store identifier</param>
         /// <param name="startTimeUtc">Start date</param>
         /// <param name="endTimeUtc">End date</param>
         /// <param name="os">Order status; null to load all records</param>
@@ -389,8 +400,9 @@ namespace Nop.Services.Orders
         /// <param name="ss">Shipping status; null to load all records</param>
         /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
         /// <returns>Result</returns>
-        public virtual decimal ProfitReport(OrderStatus? os,
-            PaymentStatus? ps, ShippingStatus? ss, DateTime? startTimeUtc, DateTime? endTimeUtc,
+        public virtual decimal ProfitReport(int storeId,
+            OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss, 
+            DateTime? startTimeUtc, DateTime? endTimeUtc,
             string billingEmail)
         {
             int? orderStatusId = null;
@@ -410,7 +422,8 @@ namespace Nop.Services.Orders
                         join o in _orderRepository.Table on opv.OrderId equals o.Id
                         join pv in _productVariantRepository.Table on opv.ProductVariantId equals pv.Id
                         join p in _productRepository.Table on pv.ProductId equals p.Id
-                        where (!startTimeUtc.HasValue || startTimeUtc.Value <= o.CreatedOnUtc) &&
+                        where (storeId == 0 || storeId == o.StoreId) && 
+                              (!startTimeUtc.HasValue || startTimeUtc.Value <= o.CreatedOnUtc) &&
                               (!endTimeUtc.HasValue || endTimeUtc.Value >= o.CreatedOnUtc) &&
                               (!orderStatusId.HasValue || orderStatusId == o.OrderStatusId) &&
                               (!paymentStatusId.HasValue || paymentStatusId == o.PaymentStatusId) &&
@@ -423,7 +436,7 @@ namespace Nop.Services.Orders
             
             var productCost = Convert.ToDecimal(query.Sum(o => (decimal?) o.pv.ProductCost * o.opv.Quantity));
 
-            var reportSummary = GetOrderAverageReportLine(os, ps, ss, startTimeUtc, endTimeUtc, billingEmail);
+            var reportSummary = GetOrderAverageReportLine(storeId, os, ps, ss, startTimeUtc, endTimeUtc, billingEmail);
             var profit = reportSummary.SumOrders - reportSummary.SumTax - productCost;
             return profit;
         }

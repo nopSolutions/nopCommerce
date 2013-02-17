@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Stores;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Events;
@@ -16,7 +18,7 @@ namespace Nop.Services.Localization
     public partial class LanguageService : ILanguageService
     {
         #region Constants
-        private const string LANGUAGES_ALL_KEY = "Nop.language.all-{0}";
+        private const string LANGUAGES_ALL_KEY = "Nop.language.all-{0}-{1}";
         private const string LANGUAGES_BY_ID_KEY = "Nop.language.id-{0}";
         private const string LANGUAGES_PATTERN_KEY = "Nop.language.";
         #endregion
@@ -24,7 +26,7 @@ namespace Nop.Services.Localization
         #region Fields
 
         private readonly IRepository<Language> _languageRepository;
-        private readonly ICustomerService _customerService;
+        private readonly IRepository<StoreMapping> _storeMappingRepository;
         private readonly ICacheManager _cacheManager;
         private readonly ISettingService _settingService;
         private readonly LocalizationSettings _localizationSettings;
@@ -39,20 +41,20 @@ namespace Nop.Services.Localization
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="languageRepository">Language repository</param>
-        /// <param name="customerService">Customer service</param>
+        /// <param name="storeMappingRepository">Store mapping repository</param>
         /// <param name="settingService">Setting service</param>
         /// <param name="localizationSettings">Localization settings</param>
         /// <param name="eventPublisher">Event published</param>
         public LanguageService(ICacheManager cacheManager,
             IRepository<Language> languageRepository,
-            ICustomerService customerService,
+            IRepository<StoreMapping> storeMappingRepository,
             ISettingService settingService,
             LocalizationSettings localizationSettings,
             IEventPublisher eventPublisher)
         {
             this._cacheManager = cacheManager;
             this._languageRepository = languageRepository;
-            this._customerService = customerService;
+            this._storeMappingRepository = storeMappingRepository;
             this._settingService = settingService;
             this._localizationSettings = localizationSettings;
             this._eventPublisher = eventPublisher;
@@ -85,15 +87,6 @@ namespace Nop.Services.Localization
                 }
             }
             
-            //update appropriate customers (their language)
-            //it can take a lot of time if you have thousands of associated customers
-            var customers = _customerService.GetCustomersByLanguageId(language.Id);
-            foreach (var customer in customers)
-            {
-                customer.LanguageId = null;
-                _customerService.UpdateCustomer(customer);
-            }
-
             _languageRepository.Delete(language);
 
             //cache
@@ -106,17 +99,38 @@ namespace Nop.Services.Localization
         /// <summary>
         /// Gets all languages
         /// </summary>
+        /// <param name="storeId">Load records allows only in specified store; pass 0 to load all records</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Language collection</returns>
-        public virtual IList<Language> GetAllLanguages(bool showHidden = false)
+        public virtual IList<Language> GetAllLanguages(bool showHidden = false, int storeId = 0)
         {
-            string key = string.Format(LANGUAGES_ALL_KEY, showHidden);
+            string key = string.Format(LANGUAGES_ALL_KEY, showHidden, storeId);
             return _cacheManager.Get(key, () =>
             {
                 var query = _languageRepository.Table;
                 if (!showHidden)
                     query = query.Where(l => l.Published);
                 query = query.OrderBy(l => l.DisplayOrder);
+
+                //Store mapping
+                if (storeId > 0)
+                {
+                    query = from l in query
+                            join sm in _storeMappingRepository.Table on l.Id equals sm.EntityId into l_sm
+                            from sm in l_sm.DefaultIfEmpty()
+                            where !l.LimitedToStores || (sm.EntityName == "Language" && storeId == sm.StoreId)
+                            select l;
+
+                    //only distinct languages (group by ID)
+                    query = from l in query
+                            group l by l.Id
+                            into lGroup
+                            orderby lGroup.Key
+                            select lGroup.FirstOrDefault();
+                    query = query.OrderBy(l => l.DisplayOrder);
+                }
+
+
                 var languages = query.ToList();
                 return languages;
             });
@@ -134,9 +148,9 @@ namespace Nop.Services.Localization
 
             string key = string.Format(LANGUAGES_BY_ID_KEY, languageId);
             return _cacheManager.Get(key, () =>
-                                              {
-                                                  return _languageRepository.GetById(languageId);
-                                              });
+            {
+                return _languageRepository.GetById(languageId);
+            });
         }
 
         /// <summary>

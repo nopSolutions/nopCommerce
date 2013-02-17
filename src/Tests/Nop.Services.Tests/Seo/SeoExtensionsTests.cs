@@ -44,8 +44,8 @@ namespace Nop.Services.Tests.Seo
         public void Can_allow_unicode_chars()
         {
             //russian letters
-            SeoExtensions.GetSeName("testтест", true, true).ShouldEqual("testтест");
-            SeoExtensions.GetSeName("testтест", true, false).ShouldEqual("test");
+            SeoExtensions.GetSeName("testтест", false, true).ShouldEqual("testтест");
+            SeoExtensions.GetSeName("testтест", false, false).ShouldEqual("test");
         }
     }
 }

@@ -73,6 +73,14 @@
                 @Html.DropDownList("ShippingStatusId", Model.AvailableShippingStatuses)
             </td>
         </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.StoreId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownList("StoreId", Model.AvailableStores)
+            </td>
+        </tr>
        <tr>
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.OrderGuid):
@@ -121,6 +129,7 @@
                             columns.Bound(x => x.PaymentStatus);
                             columns.Bound(x => x.ShippingStatus);
                             columns.Bound(x => x.CustomerEmail);
+                            columns.Bound(x => x.StoreName);
                             columns.Bound(x => x.CreatedOn);
                             columns.Bound(x => x.OrderTotal)
                                  .FooterTemplate(
@@ -218,6 +227,7 @@
                     OrderStatusId: $('#@Html.FieldIdFor(model => model.OrderStatusId)').val(),
                     PaymentStatusId: $('#@Html.FieldIdFor(model => model.PaymentStatusId)').val(),
                     ShippingStatusId: $('#@Html.FieldIdFor(model => model.ShippingStatusId)').val(),
+                    StoreId: $('#@Html.FieldIdFor(model => model.StoreId)').val(),
                     OrderGuid: $('#@Html.FieldIdFor(model => model.OrderGuid)').val()
                     };
             e.data = searchModel;

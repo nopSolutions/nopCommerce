@@ -80,6 +80,14 @@
     </tr>
     <tr>
         <td class="adminTitle">
+            @Html.NopLabelFor(model => model.HttpHost):
+        </td>
+        <td class="adminData">
+            @Model.HttpHost
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
             @Html.NopLabelFor(model => model.LoadedAssemblies):
         </td>
         <td class="adminData">

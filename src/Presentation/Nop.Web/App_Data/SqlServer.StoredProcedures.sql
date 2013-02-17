@@ -67,6 +67,7 @@ CREATE PROCEDURE [dbo].[ProductLoadAllPaged]
 (
 	@CategoryIds		nvarchar(MAX) = null,	--a list of category IDs (comma-separated list). e.g. 1,2,3
 	@ManufacturerId		int = 0,
+	@StoreId			int = 0,
 	@ProductTagId		int = 0,
 	@FeaturedProducts	bit = null,	--0 featured only , 1 not featured only, null - load all products
 	@PriceMin			decimal(18, 4) = null,
@@ -531,6 +532,16 @@ BEGIN
 					FROM [AclRecord] acl
 					WHERE [acl].EntityId = p.Id AND [acl].EntityName = ''Product''
 				)
+			))'
+	END
+	
+	--show hidden and filter by store
+	IF @StoreId > 0
+	BEGIN
+		SET @sql = @sql + '
+		AND (p.LimitedToStores = 0 OR EXISTS (
+			SELECT 1 FROM [StoreMapping] sm
+			WHERE [sm].EntityId = p.Id AND [sm].EntityName = ''Product'' and [sm].StoreId=' + CAST(@StoreId AS nvarchar(max)) + '
 			))'
 	END
 	

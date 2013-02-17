@@ -744,8 +744,9 @@ namespace Nop.Services.Tax
             {
                 // VAT not chargeable if address, customer and config meet our VAT exemption requirements:
                 // returns true if this customer is VAT exempt because they are shipping within the EU but outside our shop country, they have supplied a validated VAT number, and the shop is configured to allow VAT exemption
+                var customerVatStatus = (VatNumberStatus)customer.GetAttribute<int>(SystemCustomerAttributeNames.VatNumberStatusId);
                 return address.CountryId != _taxSettings.EuVatShopCountryId &&
-                    customer.VatNumberStatus == VatNumberStatus.Valid &&
+                    customerVatStatus == VatNumberStatus.Valid &&
                     _taxSettings.EuVatAllowVatExemption;
             }
         }

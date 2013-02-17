@@ -40,6 +40,45 @@ function showThrobber(message) {
 }
 
 $(document).ready(function () {
+    $('.multi-store-override-option').each(function (k, v) {
+        checkOverridenStoreValue(v, $(v).attr('data-for-input-selector'));
+    });
+});
+
+function checkAllOverridenStoreValue(item) {
+    $('.multi-store-override-option').each(function (k, v) {
+        $(v).attr('checked', item.checked);
+        checkOverridenStoreValue(v, $(v).attr('data-for-input-selector'));
+    });
+}
+
+function checkOverridenStoreValue(obj, selector) {
+    var elementsArray = selector.split(",");
+    if (!$(obj).is(':checked')) {
+        $(selector).attr('disabled', true);
+        //Telerik elements are enabled/disabled some other way
+        $.each(elementsArray, function(key, value) {
+            var telerikElement = $(value).data("tTextBox");
+            if (telerikElement !== undefined && telerikElement !== null) {
+                telerikElement.disable();
+            }
+        }); 
+    }
+    else {
+        $(selector).removeAttr('disabled');
+        //Telerik elements are enabled/disabled some other way
+        $.each(elementsArray, function(key, value) {
+            var telerikElement = $(value).data("tTextBox");
+            if (telerikElement !== undefined && telerikElement !== null) {
+                telerikElement.enable();
+            }
+        });
+    };
+}
+
+
+
+$(document).ready(function () {
     //Setup the ajax indicator
     //TODO We'll not be able to load ajax-loading.gif when site is run in virtual directory. Fix it by creating CSS style
     $('body').append('<div id="ajaxBusy"><p><img src="/administration/content/images/ajax-loading.gif"></p></div>');

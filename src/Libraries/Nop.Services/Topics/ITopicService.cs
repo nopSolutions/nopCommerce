@@ -25,14 +25,16 @@ namespace Nop.Services.Topics
         /// Gets a topic
         /// </summary>
         /// <param name="systemName">The topic system name</param>
+        /// <param name="storeId">Store identifier</param>
         /// <returns>Topic</returns>
-        Topic GetTopicBySystemName(string systemName);
+        Topic GetTopicBySystemName(string systemName, int storeId);
 
         /// <summary>
         /// Gets all topics
         /// </summary>
+        /// <param name="storeId">Store identifier; pass 0 to load all records</param>
         /// <returns>Topics</returns>
-        IList<Topic> GetAllTopics();
+        IList<Topic> GetAllTopics(int storeId);
 
         /// <summary>
         /// Inserts a topic

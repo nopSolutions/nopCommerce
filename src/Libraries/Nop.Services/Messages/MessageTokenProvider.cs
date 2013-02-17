@@ -14,6 +14,7 @@ using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
+using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Html;
 using Nop.Services.Catalog;
@@ -474,10 +475,10 @@ namespace Nop.Services.Messages
 
         #region Methods
 
-        public virtual void AddStoreTokens(IList<Token> tokens)
+        public virtual void AddStoreTokens(IList<Token> tokens, Store store)
         {
-            tokens.Add(new Token("Store.Name", _storeSettings.StoreName));
-            tokens.Add(new Token("Store.URL", _storeSettings.StoreUrl, true));
+            tokens.Add(new Token("Store.Name", store.Name));
+            tokens.Add(new Token("Store.URL", store.Url, true));
             var defaultEmailAccount = _emailAccountService.GetEmailAccountById(_emailAccountSettings.DefaultEmailAccountId);
             if (defaultEmailAccount == null)
                 defaultEmailAccount = _emailAccountService.GetAllEmailAccounts().FirstOrDefault();
@@ -609,8 +610,9 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Customer.Email", customer.Email));
             tokens.Add(new Token("Customer.Username", customer.Username));
             tokens.Add(new Token("Customer.FullName", customer.GetFullName()));
-            tokens.Add(new Token("Customer.VatNumber", customer.VatNumber));
-            tokens.Add(new Token("Customer.VatNumberStatus", customer.VatNumberStatus.ToString()));
+            tokens.Add(new Token("Customer.VatNumber", customer.GetAttribute<string>(SystemCustomerAttributeNames.VatNumber)));
+            tokens.Add(new Token("Customer.VatNumberStatus", ((VatNumberStatus)customer.GetAttribute<int>(SystemCustomerAttributeNames.VatNumberStatusId)).ToString()));
+
 
 
             //note: we do not use SEO friendly URLS because we can get errors caused by having .(dot) in the URL (from the emauk address)

@@ -25,6 +25,7 @@ namespace Nop.Data.Tests.News
                 AllowComments = true,
                 ApprovedCommentCount = 1,
                 NotApprovedCommentCount = 2,
+                LimitedToStores = true,
                 CreatedOnUtc = new DateTime(2010, 01, 03),
                 Language = new Language()
                 {
@@ -44,6 +45,7 @@ namespace Nop.Data.Tests.News
             fromDb.AllowComments.ShouldEqual(true);
             fromDb.ApprovedCommentCount.ShouldEqual(1);
             fromDb.NotApprovedCommentCount.ShouldEqual(2);
+            fromDb.LimitedToStores.ShouldEqual(true);
             fromDb.CreatedOnUtc.ShouldEqual(new DateTime(2010, 01, 03));
 
             fromDb.Language.ShouldNotBeNull();

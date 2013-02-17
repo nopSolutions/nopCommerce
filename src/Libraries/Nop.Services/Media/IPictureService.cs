@@ -28,9 +28,11 @@ namespace Nop.Services.Media
         /// </summary>
         /// <param name="targetSize">The target picture size (longest side)</param>
         /// <param name="defaultPictureType">Default picture type</param>
-        /// <param name="useSsl">Value indicating whether to get SSL protected picture URL; null to use the same value as the current page</param>
+        /// <param name="storeLocation">Store location URL; null to use determine the current store location automatically</param>
         /// <returns>Picture URL</returns>
-        string GetDefaultPictureUrl(int targetSize = 0, PictureType defaultPictureType = PictureType.Entity, bool? useSsl = null);
+        string GetDefaultPictureUrl(int targetSize = 0, 
+            PictureType defaultPictureType = PictureType.Entity,
+            string storeLocation = null);
 
         /// <summary>
         /// Get a picture URL
@@ -38,11 +40,14 @@ namespace Nop.Services.Media
         /// <param name="pictureId">Picture identifier</param>
         /// <param name="targetSize">The target picture size (longest side)</param>
         /// <param name="showDefaultPicture">A value indicating whether the default picture is shown</param>
-        /// <param name="useSsl">Value indicating whether to get SSL protected picture URL; null to use the same value as the current page</param>
+        /// <param name="storeLocation">Store location URL; null to use determine the current store location automatically</param>
         /// <param name="defaultPictureType">Default picture type</param>
         /// <returns>Picture URL</returns>
-        string GetPictureUrl(int pictureId, int targetSize = 0, 
-            bool showDefaultPicture = true, bool? useSsl = null, PictureType defaultPictureType = PictureType.Entity);
+        string GetPictureUrl(int pictureId, 
+            int targetSize = 0,
+            bool showDefaultPicture = true, 
+            string storeLocation = null, 
+            PictureType defaultPictureType = PictureType.Entity);
 
         /// <summary>
         /// Get a picture URL
@@ -50,11 +55,14 @@ namespace Nop.Services.Media
         /// <param name="picture">Picture instance</param>
         /// <param name="targetSize">The target picture size (longest side)</param>
         /// <param name="showDefaultPicture">A value indicating whether the default picture is shown</param>
-        /// <param name="useSsl">Value indicating whether to get SSL protected picture URL; null to use the same value as the current page</param>
+        /// <param name="storeLocation">Store location URL; null to use determine the current store location automatically</param>
         /// <param name="defaultPictureType">Default picture type</param>
         /// <returns>Picture URL</returns>
-        string GetPictureUrl(Picture picture, int targetSize = 0, 
-            bool showDefaultPicture = true, bool? useSsl = null, PictureType defaultPictureType = PictureType.Entity);
+        string GetPictureUrl(Picture picture, 
+            int targetSize = 0,
+            bool showDefaultPicture = true, 
+            string storeLocation = null, 
+            PictureType defaultPictureType = PictureType.Entity);
 
         /// <summary>
         /// Get a picture local path

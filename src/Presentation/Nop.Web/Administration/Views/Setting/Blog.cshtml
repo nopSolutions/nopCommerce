@@ -15,10 +15,12 @@
             <input type="submit" name="save" class="t-button" value="@T("Admin.Common.Save")" />
         </div>
     </div>
-@Html.ValidationSummary(false)
+    @Html.Action("StoreScopeConfiguration", "Setting")
+    @Html.ValidationSummary(false)
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.Enabled_OverrideForStore, model => model.Enabled, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.Enabled):
             </td>
             <td class="adminData">
@@ -28,6 +30,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.PostsPageSize_OverrideForStore, model => model.PostsPageSize, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.PostsPageSize):
             </td>
             <td class="adminData">
@@ -37,6 +40,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.AllowNotRegisteredUsersToLeaveComments_OverrideForStore, model => model.AllowNotRegisteredUsersToLeaveComments, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.AllowNotRegisteredUsersToLeaveComments):
             </td>
             <td class="adminData">
@@ -46,6 +50,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.NotifyAboutNewBlogComments_OverrideForStore, model => model.NotifyAboutNewBlogComments, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.NotifyAboutNewBlogComments):
             </td>
             <td class="adminData">
@@ -55,6 +60,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.NumberOfTags_OverrideForStore, model => model.NumberOfTags, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.NumberOfTags):
             </td>
             <td class="adminData">
@@ -64,6 +70,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ShowHeaderRssUrl_OverrideForStore, model => model.ShowHeaderRssUrl, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ShowHeaderRssUrl):
             </td>
             <td class="adminData">

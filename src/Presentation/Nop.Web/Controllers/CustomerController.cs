@@ -46,6 +46,7 @@ namespace Nop.Web.Controllers
         private readonly TaxSettings _taxSettings;
         private readonly ILocalizationService _localizationService;
         private readonly IWorkContext _workContext;
+        private readonly IStoreContext _storeContext;
         private readonly ICustomerService _customerService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ICustomerRegistrationService _customerRegistrationService;
@@ -85,9 +86,12 @@ namespace Nop.Web.Controllers
 
         public CustomerController(IAuthenticationService authenticationService,
             IDateTimeHelper dateTimeHelper,
-            DateTimeSettings dateTimeSettings, TaxSettings taxSettings,
+            DateTimeSettings dateTimeSettings, 
+            TaxSettings taxSettings,
             ILocalizationService localizationService,
-            IWorkContext workContext, ICustomerService customerService,
+            IWorkContext workContext,
+            IStoreContext storeContext,
+            ICustomerService customerService,
             IGenericAttributeService genericAttributeService,
             ICustomerRegistrationService customerRegistrationService,
             ITaxService taxService, RewardPointsSettings rewardPointsSettings,
@@ -112,6 +116,7 @@ namespace Nop.Web.Controllers
             this._taxSettings = taxSettings;
             this._localizationService = localizationService;
             this._workContext = workContext;
+            this._storeContext = storeContext;
             this._customerService = customerService;
             this._genericAttributeService = genericAttributeService;
             this._customerRegistrationService = customerRegistrationService;
@@ -163,7 +168,8 @@ namespace Nop.Web.Controllers
             model.HideAvatar = !_customerSettings.AllowCustomersToUploadAvatars;
             model.HideRewardPoints = !_rewardPointsSettings.Enabled;
             model.HideForumSubscriptions = !_forumSettings.ForumsEnabled || !_forumSettings.AllowCustomersToManageSubscriptions;
-            model.HideReturnRequests = !_orderSettings.ReturnRequestsEnabled || _orderService.SearchReturnRequests(customer.Id, 0, null, 0, 1).Count == 0;
+            model.HideReturnRequests = !_orderSettings.ReturnRequestsEnabled ||
+                _orderService.SearchReturnRequests(_storeContext.CurrentStore.Id, customer.Id, 0, null, 0, 1).Count == 0;
             model.HideDownloadableProducts = _customerSettings.HideDownloadableProductsTab;
             model.HideBackInStockSubscriptions = _customerSettings.HideBackInStockSubscriptionsTab;
             return model;
@@ -212,7 +218,7 @@ namespace Nop.Web.Controllers
 
             if (!excludeProperties)
             {
-                model.VatNumber = customer.VatNumber;
+                model.VatNumber = customer.GetAttribute<string>(SystemCustomerAttributeNames.VatNumber);
                 model.FirstName = customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName);
                 model.LastName = customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName);
                 model.Gender = customer.GetAttribute<string>(SystemCustomerAttributeNames.Gender);
@@ -277,7 +283,8 @@ namespace Nop.Web.Controllers
                 }
             }
             model.DisplayVatNumber = _taxSettings.EuVatEnabled;
-            model.VatNumberStatusNote = customer.VatNumberStatus.GetLocalizedEnum(_localizationService, _workContext);
+            model.VatNumberStatusNote = ((VatNumberStatus)customer.GetAttribute<int>(SystemCustomerAttributeNames.VatNumberStatusId))
+                .GetLocalizedEnum(_localizationService, _workContext);
             model.GenderEnabled = _customerSettings.GenderEnabled;
             model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
             model.CompanyEnabled = _customerSettings.CompanyEnabled;
@@ -332,7 +339,8 @@ namespace Nop.Web.Controllers
             var model = new CustomerOrderListModel();
             model.NavigationModel = GetCustomerNavigationModel(customer);
             model.NavigationModel.SelectedTab = CustomerNavigationEnum.Orders;
-            var orders = _orderService.GetOrdersByCustomerId(customer.Id);
+            var orders = _orderService.SearchOrders(_storeContext.CurrentStore.Id, customer.Id,
+                    null, null, null, null, null, null, null, 0, int.MaxValue);
             foreach (var order in orders)
             {
                 var orderModel = new CustomerOrderListModel.OrderDetailsModel()
@@ -348,7 +356,8 @@ namespace Nop.Web.Controllers
                 model.Orders.Add(orderModel);
             }
 
-            var recurringPayments = _orderService.SearchRecurringPayments(customer.Id, 0, null, 0, int.MaxValue);
+            var recurringPayments = _orderService.SearchRecurringPayments(_storeContext.CurrentStore.Id,
+                customer.Id, 0, null, 0, int.MaxValue);
             foreach (var recurringPayment in recurringPayments)
             {
                 var recurringPaymentModel = new CustomerOrderListModel.RecurringOrderModel()
@@ -532,22 +541,25 @@ namespace Nop.Web.Controllers
                 {
                     //properties
                     if (_dateTimeSettings.AllowCustomersToSetTimeZone)
-                        customer.TimeZoneId = model.TimeZoneId;
+                    {
+                        _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.TimeZoneId, model.TimeZoneId);
+                    }
                     //VAT number
                     if (_taxSettings.EuVatEnabled)
                     {
-                        customer.VatNumber = model.VatNumber;
+                        _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.VatNumber, model.VatNumber);
                         
-                        string vatName = string.Empty;
-                        string vatAddress = string.Empty;
-                        customer.VatNumberStatus = _taxService.GetVatNumberStatus(customer.VatNumber, out vatName, out vatAddress);
+                        string vatName = "";
+                        string vatAddress = "";
+                        var vatNumberStatus = _taxService.GetVatNumberStatus(model.VatNumber, out vatName, out vatAddress);
+                        _genericAttributeService.SaveAttribute(customer,
+                            SystemCustomerAttributeNames.VatNumberStatusId,
+                            (int)vatNumberStatus);
                         //send VAT number admin notification
-                        if (!String.IsNullOrEmpty(customer.VatNumber) && _taxSettings.EuVatEmailAdminWhenNewVatSubmitted)
-                            _workflowMessageService.SendNewVatSubmittedStoreOwnerNotification(customer, customer.VatNumber, vatAddress, _localizationSettings.DefaultAdminLanguageId);
+                        if (!String.IsNullOrEmpty(model.VatNumber) && _taxSettings.EuVatEmailAdminWhenNewVatSubmitted)
+                            _workflowMessageService.SendNewVatSubmittedStoreOwnerNotification(customer, model.VatNumber, vatAddress, _localizationSettings.DefaultAdminLanguageId);
 
                     }
-                    //save
-                    _customerService.UpdateCustomer(customer);
 
                     //form fields
                     if (_customerSettings.GenderEnabled)
@@ -950,24 +962,28 @@ namespace Nop.Web.Controllers
 
                     //properties
                     if (_dateTimeSettings.AllowCustomersToSetTimeZone)
-                        customer.TimeZoneId = model.TimeZoneId;
+                    {
+                        _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.TimeZoneId, model.TimeZoneId);
+                    }
                     //VAT number
                     if (_taxSettings.EuVatEnabled)
                     {
-                        var prevVatNumber = customer.VatNumber;
-                        customer.VatNumber = model.VatNumber;
+                        var prevVatNumber = customer.GetAttribute<string>(SystemCustomerAttributeNames.VatNumber);
+
+                        _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.VatNumber, model.VatNumber);
                         if (prevVatNumber != model.VatNumber)
                         {
-                            string vatName = string.Empty;
-                            string vatAddress = string.Empty;
-                            customer.VatNumberStatus = _taxService.GetVatNumberStatus(customer.VatNumber, out vatName, out vatAddress);
+                            string vatName = "";
+                            string vatAddress = "";
+                            var vatNumberStatus = _taxService.GetVatNumberStatus(model.VatNumber, out vatName, out vatAddress);
+                            _genericAttributeService.SaveAttribute(customer,
+                                    SystemCustomerAttributeNames.VatNumberStatusId,
+                                    (int)vatNumberStatus);
                             //send VAT number admin notification
-                            if (!String.IsNullOrEmpty(customer.VatNumber) && _taxSettings.EuVatEmailAdminWhenNewVatSubmitted)
-                                _workflowMessageService.SendNewVatSubmittedStoreOwnerNotification(customer, customer.VatNumber, vatAddress, _localizationSettings.DefaultAdminLanguageId);
+                            if (!String.IsNullOrEmpty(model.VatNumber) && _taxSettings.EuVatEmailAdminWhenNewVatSubmitted)
+                                _workflowMessageService.SendNewVatSubmittedStoreOwnerNotification(customer, model.VatNumber, vatAddress, _localizationSettings.DefaultAdminLanguageId);
                         }
                     }
-                    //save
-                    _customerService.UpdateCustomer(customer);
 
                     //form fields
                     if (_customerSettings.GenderEnabled)
@@ -1262,7 +1278,7 @@ namespace Nop.Web.Controllers
             var model = new CustomerReturnRequestsModel();
             model.NavigationModel = GetCustomerNavigationModel(customer);
             model.NavigationModel.SelectedTab = CustomerNavigationEnum.ReturnRequests;
-            var returnRequests = _orderService.SearchReturnRequests(customer.Id, 0, null, 0, int.MaxValue);
+            var returnRequests = _orderService.SearchReturnRequests(_storeContext.CurrentStore.Id, customer.Id, 0, null, 0, int.MaxValue);
             foreach (var returnRequest in returnRequests)
             {
                 var opv = _orderService.GetOrderProductVariantById(returnRequest.OrderProductVariantId);
@@ -1793,7 +1809,8 @@ namespace Nop.Web.Controllers
 
             var customer = _workContext.CurrentCustomer;
             var pageSize = 10;
-            var list = _backInStockSubscriptionService.GetAllSubscriptionsByCustomerId(customer.Id, pageIndex, pageSize);
+            var list = _backInStockSubscriptionService.GetAllSubscriptionsByCustomerId(customer.Id,
+                _storeContext.CurrentStore.Id, pageIndex, pageSize);
 
             var model = new CustomerBackInStockSubscriptionsModel();
             model.NavigationModel = GetCustomerNavigationModel(customer);

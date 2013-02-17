@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Web.Mvc;
 using Nop.Admin.Models.Catalog;
+using Nop.Admin.Models.Stores;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -17,6 +18,7 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Services.Security;
+using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
@@ -54,6 +56,8 @@ namespace Nop.Admin.Controllers
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IPermissionService _permissionService;
         private readonly IAclService _aclService;
+        private readonly IStoreService _storeService;
+        private readonly IStoreMappingService _storeMappingService;
         private readonly ICurrencyService _currencyService;
         private readonly CurrencySettings _currencySettings;
         private readonly IMeasureService _measureService;
@@ -77,6 +81,7 @@ namespace Nop.Admin.Controllers
             IExportManager exportManager, IImportManager importManager,
             ICustomerActivityService customerActivityService,
             IPermissionService permissionService, IAclService aclService,
+            IStoreService storeService, IStoreMappingService storeMappingService,
             ICurrencyService currencyService, CurrencySettings currencySettings,
             IMeasureService measureService, MeasureSettings measureSettings,
             PdfSettings pdfSettings, AdminAreaSettings adminAreaSettings)
@@ -102,6 +107,8 @@ namespace Nop.Admin.Controllers
             this._customerActivityService = customerActivityService;
             this._permissionService = permissionService;
             this._aclService = aclService;
+            this._storeService = storeService;
+            this._storeMappingService = storeMappingService;
             this._currencyService = currencyService;
             this._currencySettings = currencySettings;
             this._measureService = measureService;
@@ -276,6 +283,52 @@ namespace Nop.Admin.Controllers
                     var aclRecordToDelete = existingAclRecords.Where(acl => acl.CustomerRoleId == customerRole.Id).FirstOrDefault();
                     if (aclRecordToDelete != null)
                         _aclService.DeleteAclRecord(aclRecordToDelete);
+                }
+            }
+        }
+
+        [NonAction]
+        private void PrepareStoresMappingModel(ProductModel model, Product product, bool excludeProperties)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            model.AvailableStores = _storeService
+                .GetAllStores()
+                .Select(s => s.ToModel())
+                .ToList();
+            if (!excludeProperties)
+            {
+                if (product != null)
+                {
+                    model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(product);
+                }
+                else
+                {
+                    model.SelectedStoreIds = new int[0];
+                }
+            }
+        }
+
+        [NonAction]
+        protected void SaveStoreMappings(Product product, ProductModel model)
+        {
+            var existingStoreMappings = _storeMappingService.GetStoreMappings(product);
+            var allStores = _storeService.GetAllStores();
+            foreach (var store in allStores)
+            {
+                if (model.SelectedStoreIds != null && model.SelectedStoreIds.Contains(store.Id))
+                {
+                    //new role
+                    if (existingStoreMappings.Where(sm => sm.StoreId == store.Id).Count() == 0)
+                        _storeMappingService.InsertStoreMapping(product, store.Id);
+                }
+                else
+                {
+                    //removed role
+                    var storeMappingToDelete = existingStoreMappings.Where(sm => sm.StoreId == store.Id).FirstOrDefault();
+                    if (storeMappingToDelete != null)
+                        _storeMappingService.DeleteStoreMapping(storeMappingToDelete);
                 }
             }
         }
@@ -493,6 +546,7 @@ namespace Nop.Admin.Controllers
                 _productTagService.UpdateProductTagTotals(productTag);
             }
         }
+
         #endregion
 
         #region Methods
@@ -510,26 +564,10 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
 
-            IList<int> filterableSpecificationAttributeOptionIds = null;
-            var products = _productService.SearchProducts(0, 0, null, null, null, 0, string.Empty, false, false,
-                _workContext.WorkingLanguage.Id, new List<int>(),
-                ProductSortingEnum.Position, 0, _adminAreaSettings.GridPageSize,
-                false, out filterableSpecificationAttributeOptionIds, true);
-
             var model = new ProductListModel();
             model.DisplayProductPictures = _adminAreaSettings.DisplayProductPictures;
             model.DisplayPdfDownloadCatalog = _pdfSettings.Enabled;
-            model.Products = new GridModel<ProductModel>
-            {
-                Data = products.Select(x =>
-                {
-                    var productModel = x.ToModel();
-                    PrepareProductPictureThumbnailModel(productModel, x);
-                    PrepareVariantsModel(productModel, x);
-                    return productModel;
-                }),
-                Total = products.TotalCount
-            };
+
             //categories
             model.AvailableCategories.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var c in _categoryService.GetAllCategories(showHidden: true))
@@ -539,6 +577,11 @@ namespace Nop.Admin.Controllers
             model.AvailableManufacturers.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var m in _manufacturerService.GetAllManufacturers(true))
                 model.AvailableManufacturers.Add(new SelectListItem() { Text = m.Name, Value = m.Id.ToString() });
+
+            //stores
+            model.AvailableStores.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var s in _storeService.GetAllStores())
+                model.AvailableStores.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString() });
 
             return View(model);
         }
@@ -550,12 +593,15 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var gridModel = new GridModel();
-            IList<int> filterableSpecificationAttributeOptionIds = null;
-            var products = _productService.SearchProducts(model.SearchCategoryId,
-                model.SearchManufacturerId, null, null, null, 0, model.SearchProductName, false, false,
-                _workContext.WorkingLanguage.Id, new List<int>(),
-                ProductSortingEnum.Position, command.Page - 1, command.PageSize,
-                false, out filterableSpecificationAttributeOptionIds, true);
+            var products = _productService.SearchProducts(
+                categoryIds: new List<int>() { model.SearchCategoryId },
+                manufacturerId: model.SearchManufacturerId,
+                storeId: model.SearchStoreId,
+                keywords: model.SearchProductName,
+                pageIndex: command.Page - 1,
+                pageSize: command.PageSize,
+                showHidden: true
+                );
             gridModel.Data = products.Select(x =>
                                                  {
                                                      var productModel = x.ToModel();
@@ -598,6 +644,7 @@ namespace Nop.Admin.Controllers
             PrepareCategoryMapping(model);
             PrepareManufacturerMapping(model);
             PrepareAclModel(model, null, false);
+            PrepareStoresMappingModel(model, null, false);
             //default values
             model.Published = true;
             model.AllowCustomerReviews = true;
@@ -628,6 +675,8 @@ namespace Nop.Admin.Controllers
                 UpdateLocales(product, model);
                 //ACL (customer roles)
                 SaveProductAcl(product, model);
+                //Stores
+                SaveStoreMappings(product, model);
 
                 //default product variant
                 var variant = model.FirstProductVariantModel.ToEntity();
@@ -658,6 +707,7 @@ namespace Nop.Admin.Controllers
             PrepareCategoryMapping(model);
             PrepareManufacturerMapping(model);
             PrepareAclModel(model, null, true);
+            PrepareStoresMappingModel(model, null, true);
             //first product variant
             FirstVariant_PrepareProductVariantModel(model.FirstProductVariantModel, null, false);
             return View(model);
@@ -695,6 +745,7 @@ namespace Nop.Admin.Controllers
             PrepareCategoryMapping(model);
             PrepareManufacturerMapping(model);
             PrepareAclModel(model, product, false);
+            PrepareStoresMappingModel(model, product, false);
             return View(model);
         }
 
@@ -724,6 +775,8 @@ namespace Nop.Admin.Controllers
                 SaveProductTags(product, ParseProductTags(model.ProductTags));
                 //ACL (customer roles)
                 SaveProductAcl(product, model);
+                //Stores
+                SaveStoreMappings(product, model);
                 //picture seo names
                 UpdatePictureSeoNames(product);
 
@@ -744,6 +797,7 @@ namespace Nop.Admin.Controllers
             PrepareCategoryMapping(model);
             PrepareManufacturerMapping(model);
             PrepareAclModel(model, product, true);
+            PrepareStoresMappingModel(model, product, true);
             return View(model);
         }
 
@@ -1110,11 +1164,10 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
 
-            IList<int> filterableSpecificationAttributeOptionIds = null;
-            var products = _productService.SearchProducts(0, 0, null, null, null, 0, string.Empty, false, false,
-                _workContext.WorkingLanguage.Id, new List<int>(),
-                ProductSortingEnum.Position, 0, _adminAreaSettings.GridPageSize,
-                false, out filterableSpecificationAttributeOptionIds, true);
+            var products = _productService.SearchProducts(
+                pageSize: _adminAreaSettings.GridPageSize,
+                showHidden: true
+                );
 
             var model = new ProductModel.AddRelatedProductModel();
             model.Products = new GridModel<ProductModel>
@@ -1142,12 +1195,14 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var gridModel = new GridModel();
-            IList<int> filterableSpecificationAttributeOptionIds = null;
-            var products = _productService.SearchProducts(model.SearchCategoryId, model.SearchManufacturerId, 
-                null, null, null, 0, model.SearchProductName, false, false,
-                _workContext.WorkingLanguage.Id, new List<int>(),
-                ProductSortingEnum.Position, command.Page - 1, command.PageSize,
-                false, out filterableSpecificationAttributeOptionIds, true);
+            var products = _productService.SearchProducts(
+                categoryIds: new List<int>() { model.SearchCategoryId },
+                manufacturerId: model.SearchManufacturerId,
+                keywords: model.SearchProductName,
+                pageIndex: command.Page - 1,
+                pageSize: command.PageSize,
+                showHidden: true
+                );
             gridModel.Data = products.Select(x => x.ToModel());
             gridModel.Total = products.TotalCount;
             return new JsonResult
@@ -1249,11 +1304,10 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
 
-            IList<int> filterableSpecificationAttributeOptionIds = null;
-            var products = _productService.SearchProducts(0, 0, null, null, null, 0, string.Empty, false, false,
-                _workContext.WorkingLanguage.Id, new List<int>(),
-                ProductSortingEnum.Position, 0, _adminAreaSettings.GridPageSize,
-                false, out filterableSpecificationAttributeOptionIds, true);
+            var products = _productService.SearchProducts(
+                pageSize: _adminAreaSettings.GridPageSize,
+                showHidden: true
+                );
 
             var model = new ProductModel.AddCrossSellProductModel();
             model.Products = new GridModel<ProductModel>
@@ -1281,12 +1335,14 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var gridModel = new GridModel();
-            IList<int> filterableSpecificationAttributeOptionIds = null;
-            var products = _productService.SearchProducts(model.SearchCategoryId,
-                model.SearchManufacturerId, null, null, null, 0, model.SearchProductName, false, false,
-                _workContext.WorkingLanguage.Id, new List<int>(),
-                ProductSortingEnum.Position, command.Page - 1, command.PageSize,
-                false, out filterableSpecificationAttributeOptionIds, true);
+            var products = _productService.SearchProducts(
+                categoryIds: new List<int>() { model.SearchCategoryId },
+                manufacturerId: model.SearchManufacturerId,
+                keywords: model.SearchProductName,
+                pageIndex: command.Page - 1,
+                pageSize: command.PageSize,
+                showHidden: true
+                );
             gridModel.Data = products.Select(x => x.ToModel());
             gridModel.Total = products.TotalCount;
             return new JsonResult
@@ -1642,12 +1698,7 @@ namespace Nop.Admin.Controllers
 
             try
             {
-                IList<int> filterableSpecificationAttributeOptionIds = null;
-                var products = _productService.SearchProducts(0, 0, null, null, null, 0, string.Empty, false, false,
-                    _workContext.WorkingLanguage.Id, new List<int>(),
-                    ProductSortingEnum.Position, 0, int.MaxValue,
-                    false, out filterableSpecificationAttributeOptionIds, true);
-
+                var products = _productService.SearchProducts(showHidden: true);
 
                 byte[] bytes = null;
                 using (var stream = new MemoryStream())
@@ -1671,12 +1722,7 @@ namespace Nop.Admin.Controllers
 
             try
             {
-                IList<int> filterableSpecificationAttributeOptionIds = null;
-                var products = _productService.SearchProducts(0, 0, null, null, null, 0, string.Empty, false, false,
-                    _workContext.WorkingLanguage.Id, new List<int>(),
-                    ProductSortingEnum.Position, 0, int.MaxValue,
-                    false, out filterableSpecificationAttributeOptionIds, true);
-
+                var products = _productService.SearchProducts(showHidden: true);
                 var xml = _exportManager.ExportProductsToXml(products);
                 return new XmlDownloadResult(xml, "products.xml");
             }
@@ -1713,11 +1759,7 @@ namespace Nop.Admin.Controllers
 
             try
             {
-                IList<int> filterableSpecificationAttributeOptionIds = null;
-                var products = _productService.SearchProducts(0, 0, null, null, null, 0, string.Empty, false, false,
-                    _workContext.WorkingLanguage.Id, new List<int>(),
-                    ProductSortingEnum.Position, 0, int.MaxValue,
-                    false, out filterableSpecificationAttributeOptionIds, true);
+                var products = _productService.SearchProducts(showHidden: true);
                 
                 byte[] bytes = null;
                 using (var stream = new MemoryStream())

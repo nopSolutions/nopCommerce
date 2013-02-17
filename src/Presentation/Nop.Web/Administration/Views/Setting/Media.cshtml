@@ -15,7 +15,8 @@
             <input type="submit" name="save" class="t-button" value="@T("Admin.Common.Save")" />
         </div>
     </div>
-@Html.ValidationSummary(false)
+    @Html.Action("StoreScopeConfiguration", "Setting")
+    @Html.ValidationSummary(false)
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
@@ -30,13 +31,14 @@
                 {
                     @T("Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.FileSystem")
                 }
-                
-            <input type="submit" name="change-picture-storage" class="t-button" onclick="return confirm('@T("Admin.Common.AreYouSure")');" value="@T("Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.Change")" />
-             @T("Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.Note")
+
+                <input type="submit" name="change-picture-storage" class="t-button" onclick="return confirm('@T("Admin.Common.AreYouSure")    ');" value="@T("Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.Change")" />
+                @T("Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.Note")
             </td>
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.AvatarPictureSize_OverrideForStore, model => model.AvatarPictureSize, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.AvatarPictureSize):
             </td>
             <td class="adminData">
@@ -46,6 +48,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ProductThumbPictureSize_OverrideForStore, model => model.ProductThumbPictureSize, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ProductThumbPictureSize):
             </td>
             <td class="adminData">
@@ -55,6 +58,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ProductDetailsPictureSize_OverrideForStore, model => model.ProductDetailsPictureSize, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ProductDetailsPictureSize):
             </td>
             <td class="adminData">
@@ -64,6 +68,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ProductThumbPictureSizeOnProductDetailsPage_OverrideForStore, model => model.ProductThumbPictureSizeOnProductDetailsPage, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ProductThumbPictureSizeOnProductDetailsPage):
             </td>
             <td class="adminData">
@@ -73,6 +78,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ProductVariantPictureSize_OverrideForStore, model => model.ProductVariantPictureSize, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ProductVariantPictureSize):
             </td>
             <td class="adminData">
@@ -82,6 +88,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.CategoryThumbPictureSize_OverrideForStore, model => model.CategoryThumbPictureSize, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.CategoryThumbPictureSize):
             </td>
             <td class="adminData">
@@ -91,6 +98,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ManufacturerThumbPictureSize_OverrideForStore, model => model.ManufacturerThumbPictureSize, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ManufacturerThumbPictureSize):
             </td>
             <td class="adminData">
@@ -100,6 +108,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.CartThumbPictureSize_OverrideForStore, model => model.CartThumbPictureSize, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.CartThumbPictureSize):
             </td>
             <td class="adminData">
@@ -109,6 +118,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.MiniCartThumbPictureSize_OverrideForStore, model => model.MiniCartThumbPictureSize, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.MiniCartThumbPictureSize):
             </td>
             <td class="adminData">
@@ -118,6 +128,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.MaximumImageSize_OverrideForStore, model => model.MaximumImageSize, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.MaximumImageSize):
             </td>
             <td class="adminData">

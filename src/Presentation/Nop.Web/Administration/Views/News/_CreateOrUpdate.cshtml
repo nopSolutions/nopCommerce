@@ -1,87 +1,151 @@
 ﻿@model NewsItemModel
-
-@using Telerik.Web.Mvc.UI;
+@using Telerik.Web.Mvc.UI
 @Html.ValidationSummary(true)
 @Html.HiddenFor(model => model.Id)
-<table class="adminContent">
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.LanguageId):
-        </td>
-        <td class="adminData">
-            @Html.DropDownListFor(model => model.LanguageId, new SelectList(ViewBag.AllLanguages, "Id", "Name"))
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.Title):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.Title)
-            @Html.ValidationMessageFor(model => model.Title)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.Short):
-        </td>
-        <td class="adminData">
-            @Html.TextAreaFor(model => model.Short, new { style = "Width: 500px; Height: 150px;" })
-            @Html.ValidationMessageFor(model => model.Short)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.Full):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(x => x.Full, "RichEditor")
-            @Html.ValidationMessageFor(model => model.Full)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.AllowComments):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.AllowComments)
-            @Html.ValidationMessageFor(model => model.AllowComments)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.StartDate):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.StartDate)
-            @Html.ValidationMessageFor(model => model.StartDate)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.EndDate):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.EndDate)
-            @Html.ValidationMessageFor(model => model.EndDate)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.Published):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.Published)
-            @Html.ValidationMessageFor(model => model.Published)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.SeName):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.SeName)
-            @Html.ValidationMessageFor(model => model.SeName)
-        </td>
-    </tr>
-</table>
+
+@Html.Telerik().TabStrip().Name("news-edit").Items(x =>
+{
+    x.Add().Text(T("Admin.ContentManagement.News.NewsItems.Info").Text).Content(TabInfo().ToHtmlString()).Selected(true);
+    x.Add().Text(T("Admin.ContentManagement.News.NewsItems.Stores").Text).Content(TabStores().ToHtmlString());
+
+    //generate an event
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "news-edit"));
+})
+@helper TabInfo()
+{
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.LanguageId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.LanguageId, new SelectList(ViewBag.AllLanguages, "Id", "Name"))
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Title):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Title)
+                @Html.ValidationMessageFor(model => model.Title)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Short):
+            </td>
+            <td class="adminData">
+                @Html.TextAreaFor(model => model.Short, new { style = "Width: 500px; Height: 150px;" })
+                @Html.ValidationMessageFor(model => model.Short)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Full):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(x => x.Full, "RichEditor")
+                @Html.ValidationMessageFor(model => model.Full)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AllowComments):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AllowComments)
+                @Html.ValidationMessageFor(model => model.AllowComments)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.StartDate):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.StartDate)
+                @Html.ValidationMessageFor(model => model.StartDate)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.EndDate):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.EndDate)
+                @Html.ValidationMessageFor(model => model.EndDate)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Published):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Published)
+                @Html.ValidationMessageFor(model => model.Published)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SeName):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SeName)
+                @Html.ValidationMessageFor(model => model.SeName)
+            </td>
+        </tr>
+    </table>
+}
+@helper TabStores()
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#@Html.FieldIdFor(model => model.LimitedToStores)").click(toggleStoreMapping);
+
+            toggleStoreMapping();
+        });
+
+
+        function toggleStoreMapping() {
+            if ($('#@Html.FieldIdFor(model => model.LimitedToStores)').is(':checked')) {
+                $('#pnl-available-stores').show();
+            }
+            else {
+                $('#pnl-available-stores').hide();
+            }
+        }
+
+    </script>
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.LimitedToStores):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.LimitedToStores)
+                @Html.ValidationMessageFor(model => model.LimitedToStores)
+            </td>
+        </tr>
+        <tr id="pnl-available-stores">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AvailableStores):
+            </td>
+            <td class="adminData">
+                @if (Model.AvailableStores != null && Model.AvailableStores.Count > 0)
+                {
+                    foreach (var store in Model.AvailableStores)
+                    {
+                    <div>
+                        <input type="checkbox" name="SelectedStoreIds" value="@store.Id" checked="@(Model.SelectedStoreIds != null && Model.SelectedStoreIds.Contains(store.Id))" />@store.Name
+                    </div>
+                    }
+                }
+                else
+                {
+                    <div>No stores defined</div>
+                }</td>
+        </tr>
+    </table>
+}
+

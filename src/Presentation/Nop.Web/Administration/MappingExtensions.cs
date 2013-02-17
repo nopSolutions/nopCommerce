@@ -18,6 +18,7 @@ using Nop.Admin.Models.Plugins;
 using Nop.Admin.Models.Polls;
 using Nop.Admin.Models.Settings;
 using Nop.Admin.Models.Shipping;
+using Nop.Admin.Models.Stores;
 using Nop.Admin.Models.Tax;
 using Nop.Admin.Models.Topics;
 using Nop.Core.Domain.Blogs;
@@ -35,6 +36,7 @@ using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Polls;
 using Nop.Core.Domain.Shipping;
+using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Plugins;
@@ -881,5 +883,25 @@ namespace Nop.Admin
         }
 
         #endregion
+
+        #region Stores
+
+        public static StoreModel ToModel(this Store entity)
+        {
+            return Mapper.Map<Store, StoreModel>(entity);
+        }
+
+        public static Store ToEntity(this StoreModel model)
+        {
+            return Mapper.Map<StoreModel, Store>(model);
+        }
+
+        public static Store ToEntity(this StoreModel model, Store destination)
+        {
+            return Mapper.Map(model, destination);
+        }
+
+        #endregion
+        
     }
 }

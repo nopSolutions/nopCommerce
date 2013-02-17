@@ -1,5 +1,4 @@
 ﻿@model RewardPointsSettingsModel
-@using Telerik.Web.Mvc.UI;
 @using Nop.Core.Domain.Orders;
 @{
     //page title
@@ -16,7 +15,8 @@
             <input type="submit" name="save" class="t-button" value="@T("Admin.Common.Save")" />
         </div>
     </div>
-@Html.ValidationSummary(false)
+    @Html.Action("StoreScopeConfiguration", "Setting")
+    @Html.ValidationSummary(false)
     <table class="adminContent">
         <tr>
             <td class="adminTitle" colspan="2">
@@ -25,6 +25,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.Enabled_OverrideForStore, model => model.Enabled, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.Enabled):
             </td>
             <td class="adminData">
@@ -34,6 +35,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ExchangeRate_OverrideForStore, model => model.ExchangeRate, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ExchangeRate):
             </td>
             <td class="adminData">
@@ -45,6 +47,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.MinimumRewardPointsToUse_OverrideForStore, model => model.MinimumRewardPointsToUse, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.MinimumRewardPointsToUse):
             </td>
             <td class="adminData">
@@ -60,6 +63,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.PointsForRegistration_OverrideForStore, model => model.PointsForRegistration, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.PointsForRegistration):
             </td>
             <td class="adminData">
@@ -69,6 +73,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.PointsForPurchases_OverrideForStore, model => model.PointsForPurchases_Amount, model => model.PointsForPurchases_Points, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.PointsForPurchases_Amount):
             </td>
             <td class="adminData">
@@ -85,6 +90,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.PointsForPurchases_Awarded_OverrideForStore, model => model.PointsForPurchases_Awarded, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.PointsForPurchases_Awarded):
             </td>
             <td class="adminData">
@@ -94,6 +100,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.PointsForPurchases_Canceled_OverrideForStore, model => model.PointsForPurchases_Canceled, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.PointsForPurchases_Canceled):
             </td>
             <td class="adminData">
