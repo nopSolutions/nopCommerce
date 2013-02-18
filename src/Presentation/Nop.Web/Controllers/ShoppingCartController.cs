@@ -1364,8 +1364,7 @@ namespace Nop.Web.Controllers
             //ensure that this attribute belong to this product variant and has "file upload" type
             var pva = _productAttributeService
                 .GetProductVariantAttributesByProductVariantId(productVariantId)
-                .Where(pa => pa.ProductAttributeId == productAttributeId)
-                .FirstOrDefault();
+                .FirstOrDefault(pa => pa.ProductAttributeId == productAttributeId);
             if (pva == null || pva.AttributeControlType != AttributeControlType.FileUpload)
             {
                 return Json(new
@@ -1526,7 +1525,7 @@ namespace Nop.Web.Controllers
                 var sciId = kvp.Key;
                 var warnings = kvp.Value;
                 //find model
-                var sciModel = model.Items.Where(x => x.Id == sciId).FirstOrDefault();
+                var sciModel = model.Items.FirstOrDefault(x => x.Id == sciId);
                 if (sciModel != null)
                     foreach (var w in warnings)
                         if (!sciModel.Warnings.Contains(w))
@@ -1584,7 +1583,7 @@ namespace Nop.Web.Controllers
             PrepareShoppingCartModel(model, cart);
             //update current warnings
             //find model
-            var sciModel = model.Items.Where(x => x.Id == sciId).FirstOrDefault();
+            var sciModel = model.Items.FirstOrDefault(x => x.Id == sciId);
             if (sciModel != null)
                 foreach (var w in warnings)
                     if (!sciModel.Warnings.Contains(w))
@@ -1611,7 +1610,7 @@ namespace Nop.Web.Controllers
                 .Where(x => x.ShoppingCartType == ShoppingCartType.ShoppingCart)
                 .Where(x => x.StoreId == _storeContext.CurrentStore.Id)
                 .ToList();
-            var sci = cart.Where(x => x.Id == sciId).FirstOrDefault();
+            var sci = cart.FirstOrDefault(x => x.Id == sciId);
             if (sci == null)
             {
                 return RedirectToRoute("ShoppingCart");
@@ -2127,7 +2126,7 @@ namespace Nop.Web.Controllers
                 var sciId = kvp.Key;
                 var warnings = kvp.Value;
                 //find model
-                var sciModel = model.Items.Where(x => x.Id == sciId).FirstOrDefault();
+                var sciModel = model.Items.FirstOrDefault(x => x.Id == sciId);
                 if (sciModel != null)
                     foreach (var w in warnings)
                         if (!sciModel.Warnings.Contains(w))
@@ -2185,7 +2184,7 @@ namespace Nop.Web.Controllers
             PrepareWishlistModel(model, cart);
             //update current warnings
             //find model
-            var sciModel = model.Items.Where(x => x.Id == sciId).FirstOrDefault();
+            var sciModel = model.Items.FirstOrDefault(x => x.Id == sciId);
             if (sciModel != null)
                 foreach (var w in warnings)
                     if (!sciModel.Warnings.Contains(w))

@@ -424,13 +424,13 @@ namespace Nop.Admin.Controllers
                     if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
                     {
                         //new role
-                        if (variant.AppliedDiscounts.Where(d => d.Id == discount.Id).Count() == 0)
+                        if (variant.AppliedDiscounts.Count(d => d.Id == discount.Id) == 0)
                             variant.AppliedDiscounts.Add(discount);
                     }
                     else
                     {
                         //removed role
-                        if (variant.AppliedDiscounts.Where(d => d.Id == discount.Id).Count() > 0)
+                        if (variant.AppliedDiscounts.Count(d => d.Id == discount.Id) > 0)
                             variant.AppliedDiscounts.Remove(discount);
                     }
                 }

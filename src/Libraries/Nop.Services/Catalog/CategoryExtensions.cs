@@ -33,7 +33,7 @@ namespace Nop.Services.Catalog
             {
                 //find categories without parent in provided category source and insert them into result
                 foreach (var cat in source)
-                    if (result.Where(x => x.Id == cat.Id).FirstOrDefault() == null)
+                    if (result.FirstOrDefault(x => x.Id == cat.Id) == null)
                         result.Add(cat);
             }
             return result;

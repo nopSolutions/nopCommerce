@@ -34,7 +34,7 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
             DiscountRequirement discountRequirement = null;
             if (discountRequirementId.HasValue)
             {
-                discountRequirement = discount.DiscountRequirements.Where(dr => dr.Id == discountRequirementId.Value).FirstOrDefault();
+                discountRequirement = discount.DiscountRequirements.FirstOrDefault(dr => dr.Id == discountRequirementId.Value);
                 if (discountRequirement == null)
                     return Content("Failed to load requirement.");
             }
@@ -65,7 +65,7 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
 
             DiscountRequirement discountRequirement = null;
             if (discountRequirementId.HasValue)
-                discountRequirement = discount.DiscountRequirements.Where(dr => dr.Id == discountRequirementId.Value).FirstOrDefault();
+                discountRequirement = discount.DiscountRequirements.FirstOrDefault(dr => dr.Id == discountRequirementId.Value);
 
             if (discountRequirement != null)
             {

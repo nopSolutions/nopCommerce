@@ -103,8 +103,8 @@ namespace Nop.Services.Authentication.External
         public virtual Customer GetUser(OpenAuthenticationParameters parameters)
         {
             var record = _externalAuthenticationRecordRepository.Table
-                .Where(o => o.ExternalIdentifier == parameters.ExternalIdentifier && o.ProviderSystemName == parameters.ProviderSystemName)
-                .FirstOrDefault();
+                .FirstOrDefault(o => o.ExternalIdentifier == parameters.ExternalIdentifier && 
+                    o.ProviderSystemName == parameters.ProviderSystemName);
 
             if (record != null)
                 return _customerService.GetCustomerById(record.CustomerId);
@@ -123,8 +123,8 @@ namespace Nop.Services.Authentication.External
         public virtual void RemoveAssociation(OpenAuthenticationParameters parameters)
         {
             var record = _externalAuthenticationRecordRepository.Table
-                .Where(o => o.ExternalIdentifier == parameters.ExternalIdentifier && o.ProviderSystemName == parameters.ProviderSystemName)
-                .FirstOrDefault();
+                .FirstOrDefault(o => o.ExternalIdentifier == parameters.ExternalIdentifier &&
+                    o.ProviderSystemName == parameters.ProviderSystemName);
 
             if (record != null)
                 _externalAuthenticationRecordRepository.Delete(record);

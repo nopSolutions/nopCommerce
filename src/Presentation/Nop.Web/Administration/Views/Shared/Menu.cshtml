@@ -55,7 +55,7 @@
     })
     .Items(x =>
     {
-        if (adminMenuPlugins.Count() > 0)
+        if (adminMenuPlugins.Any())
         {
             if (!hideAdminMenuItemsBasedOnPermissions || 
                 permissionService.Authorize(StandardPermissionProvider.ManagePlugins))

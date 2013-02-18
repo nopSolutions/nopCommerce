@@ -76,7 +76,7 @@ namespace Nop.Web.Framework
 
         public static string FirstSortableProperty(this Type type)
         {
-            PropertyInfo firstSortableProperty = type.GetProperties().Where(property => property.PropertyType.IsPredefinedType()).FirstOrDefault();
+            PropertyInfo firstSortableProperty = type.GetProperties().FirstOrDefault(property => property.PropertyType.IsPredefinedType());
 
             if (firstSortableProperty == null)
             {

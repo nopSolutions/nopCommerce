@@ -65,12 +65,12 @@ namespace Nop.Services.Tests.Catalog
 
             tierPrices.RemoveDuplicatedQuantities();
 
-            tierPrices.Where(x => x.Id == 1).FirstOrDefault().ShouldBeNull();
-            tierPrices.Where(x => x.Id == 2).FirstOrDefault().ShouldNotBeNull();
-            tierPrices.Where(x => x.Id == 3).FirstOrDefault().ShouldNotBeNull();
-            tierPrices.Where(x => x.Id == 4).FirstOrDefault().ShouldNotBeNull();
-            tierPrices.Where(x => x.Id == 5).FirstOrDefault().ShouldBeNull();
-            tierPrices.Where(x => x.Id == 6).FirstOrDefault().ShouldNotBeNull();
+            tierPrices.FirstOrDefault(x => x.Id == 1).ShouldBeNull();
+            tierPrices.FirstOrDefault(x => x.Id == 2).ShouldNotBeNull();
+            tierPrices.FirstOrDefault(x => x.Id == 3).ShouldNotBeNull();
+            tierPrices.FirstOrDefault(x => x.Id == 4).ShouldNotBeNull();
+            tierPrices.FirstOrDefault(x => x.Id == 5).ShouldBeNull();
+            tierPrices.FirstOrDefault(x => x.Id == 6).ShouldNotBeNull();
         }
     }
 }

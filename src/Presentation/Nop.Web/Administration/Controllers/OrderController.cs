@@ -1192,7 +1192,7 @@ namespace Nop.Admin.Controllers
                 if (formValue.StartsWith("btnSaveOpv", StringComparison.InvariantCultureIgnoreCase))
                     opvId = Convert.ToInt32(formValue.Substring("btnSaveOpv".Length));
 
-            var orderProductVariant = order.OrderProductVariants.Where(x => x.Id == opvId).FirstOrDefault();
+            var orderProductVariant = order.OrderProductVariants.FirstOrDefault(x => x.Id == opvId);
             if (orderProductVariant == null)
                 throw new ArgumentException("No order product variant found with the specified id");
 
@@ -1256,7 +1256,7 @@ namespace Nop.Admin.Controllers
                 if (formValue.StartsWith("btnDeleteOpv", StringComparison.InvariantCultureIgnoreCase))
                     opvId = Convert.ToInt32(formValue.Substring("btnDeleteOpv".Length));
 
-            var orderProductVariant = order.OrderProductVariants.Where(x => x.Id == opvId).FirstOrDefault();
+            var orderProductVariant = order.OrderProductVariants.FirstOrDefault(x => x.Id == opvId);
             if (orderProductVariant == null)
                 throw new ArgumentException("No order product variant found with the specified id");
 
@@ -1288,7 +1288,7 @@ namespace Nop.Admin.Controllers
                 if (formValue.StartsWith("btnResetDownloadCount", StringComparison.InvariantCultureIgnoreCase))
                     opvId = Convert.ToInt32(formValue.Substring("btnResetDownloadCount".Length));
 
-            var orderProductVariant = order.OrderProductVariants.Where(x => x.Id == opvId).FirstOrDefault();
+            var orderProductVariant = order.OrderProductVariants.FirstOrDefault(x => x.Id == opvId);
             if (orderProductVariant == null)
                 throw new ArgumentException("No order product variant found with the specified id");
 
@@ -1321,7 +1321,7 @@ namespace Nop.Admin.Controllers
                 if (formValue.StartsWith("btnPvActivateDownload", StringComparison.InvariantCultureIgnoreCase))
                     opvId = Convert.ToInt32(formValue.Substring("btnPvActivateDownload".Length));
 
-            var orderProductVariant = order.OrderProductVariants.Where(x => x.Id == opvId).FirstOrDefault();
+            var orderProductVariant = order.OrderProductVariants.FirstOrDefault(x => x.Id == opvId);
             if (orderProductVariant == null)
                 throw new ArgumentException("No order product variant found with the specified id");
 
@@ -1343,7 +1343,7 @@ namespace Nop.Admin.Controllers
                 //No order found with the specified id
                 return RedirectToAction("List");
 
-            var orderProductVariant = order.OrderProductVariants.Where(x => x.Id == opvId).FirstOrDefault();
+            var orderProductVariant = order.OrderProductVariants.FirstOrDefault(x => x.Id == opvId);
             if (orderProductVariant == null)
                 throw new ArgumentException("No order product variant found with the specified id");
             
@@ -1372,7 +1372,7 @@ namespace Nop.Admin.Controllers
                 //No order found with the specified id
                 return RedirectToAction("List");
 
-            var orderProductVariant = order.OrderProductVariants.Where(x => x.Id == model.OrderProductVariantId).FirstOrDefault();
+            var orderProductVariant = order.OrderProductVariants.FirstOrDefault(x => x.Id == model.OrderProductVariantId);
             if (orderProductVariant == null)
                 throw new ArgumentException("No order product variant found with the specified id");
 
@@ -1403,7 +1403,7 @@ namespace Nop.Admin.Controllers
                 //No order found with the specified id
                 return RedirectToAction("List");
 
-            var orderProductVariant = order.OrderProductVariants.Where(x => x.Id == model.OrderProductVariantId).FirstOrDefault();
+            var orderProductVariant = order.OrderProductVariants.FirstOrDefault(x => x.Id == model.OrderProductVariantId);
             if (orderProductVariant == null)
                 throw new ArgumentException("No order product variant found with the specified id");
 
@@ -2316,7 +2316,7 @@ namespace Nop.Admin.Controllers
             if (order == null)
                 throw new ArgumentException("No order found with the specified id");
 
-            var orderNote = order.OrderNotes.Where(on => on.Id == orderNoteId).FirstOrDefault();
+            var orderNote = order.OrderNotes.FirstOrDefault(on => on.Id == orderNoteId);
             if (orderNote == null)
                 throw new ArgumentException("No order note found with the specified id");
             _orderService.DeleteOrderNote(orderNote);

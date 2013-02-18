@@ -417,7 +417,7 @@ namespace Nop.Services.Installation
         protected virtual void InstallLocaleResources()
         {
             //'English' language
-            var language = _languageRepository.Table.Where(l => l.Name == "English").Single();
+            var language = _languageRepository.Table.Single(l => l.Name == "English");
 
             //save resoureces
             foreach (var filePath in System.IO.Directory.EnumerateFiles(_webHelper.MapPath("~/App_Data/Localization/"), "*.nopres.xml", SearchOption.TopDirectoryOnly))
@@ -4064,8 +4064,8 @@ namespace Nop.Services.Installation
                 Address1 = "21 West 52nd Street",
                 Address2 = "",
                 City = "New York",
-                StateProvince = _stateProvinceRepository.Table.Where(sp => sp.Name == "New York").FirstOrDefault(),
-                Country = _countryRepository.Table.Where(c => c.ThreeLetterIsoCode == "USA").FirstOrDefault(),
+                StateProvince = _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Name == "New York"),
+                Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "USA"),
                 ZipPostalCode = "10021",
                 CreatedOnUtc = DateTime.UtcNow,
             };
@@ -4128,6 +4128,8 @@ namespace Nop.Services.Installation
         protected virtual void InstallMessageTemplates()
         {
             var eaGeneral = _emailAccountRepository.Table.FirstOrDefault();
+            if (eaGeneral == null)
+                throw new Exception("Default email account cannot be loaded");
             var messageTemplates = new List<MessageTemplate>
                                {
                                    new MessageTemplate
@@ -4538,7 +4540,7 @@ namespace Nop.Services.Installation
 
             settingService.SaveSetting(new LocalizationSettings()
                 {
-                    DefaultAdminLanguageId = _languageRepository.Table.Where(l => l.Name == "English").Single().Id,
+                    DefaultAdminLanguageId = _languageRepository.Table.Single(l => l.Name == "English").Id,
                     UseImagesForLanguageSelection = false,
                 });
 
@@ -4643,8 +4645,8 @@ namespace Nop.Services.Installation
             settingService.SaveSetting(new CurrencySettings()
                 {
                     DisplayCurrencyLabel = false,
-                    PrimaryStoreCurrencyId = _currencyRepository.Table.Where(c => c.CurrencyCode == "USD").Single().Id,
-                    PrimaryExchangeRateCurrencyId = _currencyRepository.Table.Where(c => c.CurrencyCode == "USD").Single().Id,
+                    PrimaryStoreCurrencyId = _currencyRepository.Table.Single(c => c.CurrencyCode == "USD").Id,
+                    PrimaryExchangeRateCurrencyId = _currencyRepository.Table.Single(c => c.CurrencyCode == "USD").Id,
                     ActiveExchangeRateProviderSystemName = "CurrencyExchange.MoneyConverter",
                     AutoUpdateEnabled = false,
                     LastUpdateTime = 0
@@ -4652,8 +4654,8 @@ namespace Nop.Services.Installation
 
             settingService.SaveSetting(new MeasureSettings()
                 {
-                    BaseDimensionId = _measureDimensionRepository.Table.Where(m => m.SystemKeyword == "inches").Single().Id,
-                    BaseWeightId = _measureWeightRepository.Table.Where(m => m.SystemKeyword == "lb").Single().Id,
+                    BaseDimensionId = _measureDimensionRepository.Table.Single(m => m.SystemKeyword == "inches").Id,
+                    BaseWeightId = _measureWeightRepository.Table.Single(m => m.SystemKeyword == "lb").Id,
                 });
 
             settingService.SaveSetting(new MessageTemplatesSettings()
@@ -4822,9 +4824,12 @@ namespace Nop.Services.Installation
                     ForumSearchTermMinimumLength = 3,
                 });
 
+            var eaGeneral = _emailAccountRepository.Table.FirstOrDefault();
+            if (eaGeneral == null)
+                throw new Exception("Default email account cannot be loaded");
             settingService.SaveSetting(new EmailAccountSettings()
                 {
-                    DefaultEmailAccountId = _emailAccountRepository.Table.FirstOrDefault().Id
+                    DefaultEmailAccountId = eaGeneral.Id
                 });
 
             settingService.SaveSetting(new WidgetSettings()
@@ -4971,7 +4976,7 @@ namespace Nop.Services.Installation
 
 
             var categoryTemplateInGridAndLines =
-                _categoryTemplateRepository.Table.Where(pt => pt.Name == "Products in Grid or Lines").FirstOrDefault();
+                _categoryTemplateRepository.Table.FirstOrDefault(pt => pt.Name == "Products in Grid or Lines");
 
 
 
@@ -5322,7 +5327,7 @@ namespace Nop.Services.Installation
         protected virtual void InstallManufacturers()
         {
             var manufacturerTemplateInGridAndLines =
-                _manufacturerTemplateRepository.Table.Where(pt => pt.Name == "Products in Grid or Lines").FirstOrDefault();
+                _manufacturerTemplateRepository.Table.FirstOrDefault(pt => pt.Name == "Products in Grid or Lines");
 
             var allManufacturers = new List<Manufacturer>();
             var manufacturerAsus = new Manufacturer
@@ -5374,9 +5379,9 @@ namespace Nop.Services.Installation
         protected virtual void InstallProducts()
         {
             var productTemplateInGrid =
-                _productTemplateRepository.Table.Where(pt => pt.Name == "Variants in Grid").FirstOrDefault();
+                _productTemplateRepository.Table.FirstOrDefault(pt => pt.Name == "Variants in Grid");
             var productTemplateSingleVariant =
-                _productTemplateRepository.Table.Where(pt => pt.Name == "Single Product Variant").FirstOrDefault();
+                _productTemplateRepository.Table.FirstOrDefault(pt => pt.Name == "Single Product Variant");
             
             //pictures
             var pictureService = EngineContext.Current.Resolve<IPictureService>();
@@ -5420,7 +5425,7 @@ namespace Nop.Services.Installation
             });
             product5GiftCard.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Where(c => c.Name == "Gift Cards").Single(),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Gift Cards"),
                 DisplayOrder = 1,
             });
             product5GiftCard.ProductPictures.Add(new ProductPicture()
@@ -5464,7 +5469,7 @@ namespace Nop.Services.Installation
             });
             product25GiftCard.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Where(c => c.Name == "Gift Cards").Single(),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Gift Cards"),
                 DisplayOrder = 2,
             });
             product25GiftCard.ProductPictures.Add(new ProductPicture()
@@ -5514,7 +5519,7 @@ namespace Nop.Services.Installation
             });
             product50GiftCard.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Where(c => c.Name == "Gift Cards").Single(),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Gift Cards"),
                 DisplayOrder = 3,
             });
             product50GiftCard.ProductPictures.Add(new ProductPicture()
@@ -5564,7 +5569,7 @@ namespace Nop.Services.Installation
             });
             product100GiftCard.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Where(c => c.Name == "Gift Cards").Single(),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Gift Cards"),
                 DisplayOrder = 4,
             });
             product100GiftCard.ProductPictures.Add(new ProductPicture()
@@ -5599,7 +5604,7 @@ namespace Nop.Services.Installation
                 Length = 2,
                 Width = 3,
                 Height = 3,
-                TaxCategoryId = _taxCategoryRepository.Table.Where(tc => tc.Name == "Apparel & Shoes").Single().Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel & Shoes").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -5616,7 +5621,7 @@ namespace Nop.Services.Installation
             });
             var pvaRockabillyPolka1 = new ProductVariantAttribute()
             {
-                ProductAttribute = _productAttributeRepository.Table.Where(x => x.Name == "Size").Single(),
+                ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Size"),
                 AttributeControlType = AttributeControlType.DropdownList,
                 IsRequired = true,
             };
@@ -5653,7 +5658,7 @@ namespace Nop.Services.Installation
             productRockabillyPolka.ProductVariants.FirstOrDefault().ProductVariantAttributes.Add(pvaRockabillyPolka1);
             productRockabillyPolka.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Where(c => c.Name == "Shirts").Single(),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Shirts"),
                 DisplayOrder = 1,
             });
             productRockabillyPolka.ProductPictures.Add(new ProductPicture()
@@ -5688,7 +5693,7 @@ namespace Nop.Services.Installation
                 Length = 2,
                 Width = 2,
                 Height = 3,
-                TaxCategoryId = _taxCategoryRepository.Table.Where(tc => tc.Name == "Electronics & Software").Single().Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -5722,7 +5727,7 @@ namespace Nop.Services.Installation
 
             productAcerAspireOne.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Where(c => c.Name == "Accessories").Single(),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Accessories"),
                 DisplayOrder = 1,
             });
             productAcerAspireOne.ProductPictures.Add(new ProductPicture()
@@ -5762,7 +5767,7 @@ namespace Nop.Services.Installation
                 Length = 2,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Where(tc => tc.Name == "Apparel & Shoes").Single().Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel & Shoes").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -5779,7 +5784,7 @@ namespace Nop.Services.Installation
             });
             var pvaAdidasShoe1 = new ProductVariantAttribute()
             {
-                ProductAttribute = _productAttributeRepository.Table.Where(x => x.Name == "Size").Single(),
+                ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Size"),
                 AttributeControlType = AttributeControlType.DropdownList,
                 IsRequired = true,
             };
@@ -5806,7 +5811,7 @@ namespace Nop.Services.Installation
             productAdidasShoe.ProductVariants.FirstOrDefault().ProductVariantAttributes.Add(pvaAdidasShoe1);
             var pvaAdidasShoe2 = new ProductVariantAttribute()
             {
-                ProductAttribute = _productAttributeRepository.Table.Where(x => x.Name == "Color").Single(),
+                ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Color"),
                 AttributeControlType = AttributeControlType.DropdownList,
                 IsRequired = true,
             };
@@ -5823,7 +5828,7 @@ namespace Nop.Services.Installation
             productAdidasShoe.ProductVariants.FirstOrDefault().ProductVariantAttributes.Add(pvaAdidasShoe2);
             productAdidasShoe.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Where(c => c.Name == "Shoes").Single(),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Shoes"),
                 DisplayOrder = 1,
             });
             productAdidasShoe.ProductPictures.Add(new ProductPicture()
@@ -5863,7 +5868,7 @@ namespace Nop.Services.Installation
                 Length = 2,
                 Width = 2,
                 Height = 3,
-                TaxCategoryId = _taxCategoryRepository.Table.Where(tc => tc.Name == "Electronics & Software").Single().Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -5880,7 +5885,7 @@ namespace Nop.Services.Installation
             });
             productAdobePhotoshop.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Where(c => c.Name == "Software").Single(),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Software"),
                 DisplayOrder = 1,
             });
             productAdobePhotoshop.ProductPictures.Add(new ProductPicture()
@@ -5915,7 +5920,7 @@ namespace Nop.Services.Installation
                 Length = 2,
                 Width = 2,
                 Height = 3,
-                TaxCategoryId = _taxCategoryRepository.Table.Where(tc => tc.Name == "Electronics & Software").Single().Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -5932,7 +5937,7 @@ namespace Nop.Services.Installation
             });
             productApcUps.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Where(c => c.Name == "Accessories").Single(),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Accessories"),
                 DisplayOrder = 1,
             });
             productApcUps.ProductPictures.Add(new ProductPicture()
@@ -5967,7 +5972,7 @@ namespace Nop.Services.Installation
                 Length = 3,
                 Width = 3,
                 Height = 3,
-                TaxCategoryId = _taxCategoryRepository.Table.Where(tc => tc.Name == "Apparel & Shoes").Single().Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel & Shoes").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -6001,7 +6006,7 @@ namespace Nop.Services.Installation
 
             productArrow.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Where(c => c.Name == "Shirts").Single(),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Shirts"),
                 DisplayOrder = 1,
             });
             productArrow.ProductPictures.Add(new ProductPicture()
@@ -6036,7 +6041,7 @@ namespace Nop.Services.Installation
                 Length = 3,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Where(tc => tc.Name == "Electronics & Software").Single().Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -6053,12 +6058,12 @@ namespace Nop.Services.Installation
             });
             productAsusPc1000.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Where(c => c.Name == "Notebooks").Single(),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Notebooks"),
                 DisplayOrder = 1,
             });
             productAsusPc1000.ProductManufacturers.Add(new ProductManufacturer()
             {
-                Manufacturer = _manufacturerRepository.Table.Where(c => c.Name == "ASUS").Single(),
+                Manufacturer = _manufacturerRepository.Table.Single(c => c.Name == "ASUS"),
                 DisplayOrder = 2,
             });
             productAsusPc1000.ProductPictures.Add(new ProductPicture()
@@ -6071,28 +6076,28 @@ namespace Nop.Services.Installation
                 AllowFiltering = false,
                 ShowOnProductPage = true,
                 DisplayOrder = 1,
-                SpecificationAttributeOption = _specificationAttributeRepository.Table.Where(sa => sa.Name == "Screensize").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "10.0''").Single()
+                SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Screensize").SpecificationAttributeOptions.Single(sao => sao.Name == "10.0''")
             });
             productAsusPc1000.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute()
             {
                 AllowFiltering = true,
                 ShowOnProductPage = true,
                 DisplayOrder = 2,
-                SpecificationAttributeOption = _specificationAttributeRepository.Table.Where(sa => sa.Name == "CPU Type").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "AMD").Single()
+                SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "CPU Type").SpecificationAttributeOptions.Single(sao => sao.Name == "AMD")
             });
             productAsusPc1000.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute()
             {
                 AllowFiltering = true,
                 ShowOnProductPage = true,
                 DisplayOrder = 3,
-                SpecificationAttributeOption = _specificationAttributeRepository.Table.Where(sa => sa.Name == "Memory").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "1 GB").Single()
+                SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Memory").SpecificationAttributeOptions.Single(sao => sao.Name == "1 GB")
             });
             productAsusPc1000.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute()
             {
                 AllowFiltering = false,
                 ShowOnProductPage = true,
                 DisplayOrder = 4,
-                SpecificationAttributeOption = _specificationAttributeRepository.Table.Where(sa => sa.Name == "Hardrive").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "160 GB").Single()
+                SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Hardrive").SpecificationAttributeOptions.Single(sao => sao.Name == "160 GB")
             });
             _productRepository.Insert(productAsusPc1000);
 
@@ -6121,7 +6126,7 @@ namespace Nop.Services.Installation
                 Length = 7,
                 Width = 7,
                 Height = 7,
-                TaxCategoryId = _taxCategoryRepository.Table.Where(tc => tc.Name == "Electronics & Software").Single().Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -6138,12 +6143,12 @@ namespace Nop.Services.Installation
             });
             productAsusPc900.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Where(c => c.Name == "Notebooks").Single(),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Notebooks"),
                 DisplayOrder = 1,
             });
             productAsusPc900.ProductManufacturers.Add(new ProductManufacturer()
             {
-                Manufacturer = _manufacturerRepository.Table.Where(c => c.Name == "ASUS").Single(),
+                Manufacturer = _manufacturerRepository.Table.Single(c => c.Name == "ASUS"),
                 DisplayOrder = 1,
             });
             productAsusPc900.ProductPictures.Add(new ProductPicture()
@@ -6156,21 +6161,21 @@ namespace Nop.Services.Installation
                 AllowFiltering = true,
                 ShowOnProductPage = true,
                 DisplayOrder = 2,
-                SpecificationAttributeOption = _specificationAttributeRepository.Table.Where(sa => sa.Name == "CPU Type").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "AMD").Single()
+                SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "CPU Type").SpecificationAttributeOptions.Single(sao => sao.Name == "AMD")
             });
             productAsusPc900.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute()
             {
                 AllowFiltering = true,
                 ShowOnProductPage = true,
                 DisplayOrder = 3,
-                SpecificationAttributeOption = _specificationAttributeRepository.Table.Where(sa => sa.Name == "Memory").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "1 GB").Single()
+                SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Memory").SpecificationAttributeOptions.Single(sao => sao.Name == "1 GB")
             });
             productAsusPc900.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute()
             {
                 AllowFiltering = false,
                 ShowOnProductPage = true,
                 DisplayOrder = 4,
-                SpecificationAttributeOption = _specificationAttributeRepository.Table.Where(sa => sa.Name == "Hardrive").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "160 GB").Single()
+                SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Hardrive").SpecificationAttributeOptions.Single(sao => sao.Name == "160 GB")
             });
             _productRepository.Insert(productAsusPc900);
 
@@ -6200,7 +6205,7 @@ namespace Nop.Services.Installation
                 Length = 2,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Where(tc => tc.Name == "Books").Single().Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Books").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -6217,7 +6222,7 @@ namespace Nop.Services.Installation
             });
             productBestGrillingRecipes.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Where(c => c.Name == "Books").Single(),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Books"),
                 DisplayOrder = 1,
             });
             productBestGrillingRecipes.ProductPictures.Add(new ProductPicture()
@@ -6252,7 +6257,7 @@ namespace Nop.Services.Installation
                 Length = 2,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Where(tc => tc.Name == "Jewelry").Single().Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Jewelry").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -6269,7 +6274,7 @@ namespace Nop.Services.Installation
             });
             productDiamondHeart.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Where(c => c.Name == "Jewelry").Single(),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Jewelry"),
                 DisplayOrder = 1,
             });
             productDiamondHeart.ProductPictures.Add(new ProductPicture()
@@ -6304,7 +6309,7 @@ namespace Nop.Services.Installation
                 Length = 2,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Where(tc => tc.Name == "Electronics & Software").Single().Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -6321,7 +6326,7 @@ namespace Nop.Services.Installation
             });
             productBlackBerry.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Where(c => c.Name == "Cell phones").Single(),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Cell phones"),
                 DisplayOrder = 1,
             });
             productBlackBerry.ProductPictures.Add(new ProductPicture()
@@ -6356,7 +6361,7 @@ namespace Nop.Services.Installation
                 Length = 2,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Where(tc => tc.Name == "Electronics & Software").Single().Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -6373,7 +6378,7 @@ namespace Nop.Services.Installation
             });
             var pvaBuildComputer1 = new ProductVariantAttribute()
             {
-                ProductAttribute = _productAttributeRepository.Table.Where(x => x.Name == "Processor").Single(),
+                ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Processor"),
                 AttributeControlType = AttributeControlType.DropdownList,
                 IsRequired = true,
             };
@@ -6392,7 +6397,7 @@ namespace Nop.Services.Installation
             productBuildComputer.ProductVariants.FirstOrDefault().ProductVariantAttributes.Add(pvaBuildComputer1);
             var pvaBuildComputer2 = new ProductVariantAttribute()
             {
-                ProductAttribute = _productAttributeRepository.Table.Where(x => x.Name == "RAM").Single(),
+                ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "RAM"),
                 AttributeControlType = AttributeControlType.DropdownList,
                 IsRequired = true,
             };
@@ -6416,7 +6421,7 @@ namespace Nop.Services.Installation
             productBuildComputer.ProductVariants.FirstOrDefault().ProductVariantAttributes.Add(pvaBuildComputer2);
             var pvaBuildComputer3 = new ProductVariantAttribute()
             {
-                ProductAttribute = _productAttributeRepository.Table.Where(x => x.Name == "HDD").Single(),
+                ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "HDD"),
                 AttributeControlType = AttributeControlType.RadioList,
                 IsRequired = true,
             };
@@ -6434,7 +6439,7 @@ namespace Nop.Services.Installation
             productBuildComputer.ProductVariants.FirstOrDefault().ProductVariantAttributes.Add(pvaBuildComputer3);
             var pvaBuildComputer4 = new ProductVariantAttribute()
             {
-                ProductAttribute = _productAttributeRepository.Table.Where(x => x.Name == "OS").Single(),
+                ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "OS"),
                 AttributeControlType = AttributeControlType.RadioList,
                 IsRequired = true,
             };
@@ -6454,7 +6459,7 @@ namespace Nop.Services.Installation
             productBuildComputer.ProductVariants.FirstOrDefault().ProductVariantAttributes.Add(pvaBuildComputer4);
             var pvaBuildComputer5 = new ProductVariantAttribute()
             {
-                ProductAttribute = _productAttributeRepository.Table.Where(x => x.Name == "Software").Single(),
+                ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Software"),
                 AttributeControlType = AttributeControlType.Checkboxes,
             };
             pvaBuildComputer5.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
@@ -6479,7 +6484,7 @@ namespace Nop.Services.Installation
             productBuildComputer.ProductVariants.FirstOrDefault().ProductVariantAttributes.Add(pvaBuildComputer5);
             productBuildComputer.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Where(c => c.Name == "Desktops").Single(),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Desktops"),
                 DisplayOrder = 1,
             });
             productBuildComputer.ProductPictures.Add(new ProductPicture()
@@ -6526,7 +6531,7 @@ namespace Nop.Services.Installation
                 Length = 2,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Where(tc => tc.Name == "Electronics & Software").Single().Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -6551,7 +6556,7 @@ namespace Nop.Services.Installation
                 Length = 2,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Where(tc => tc.Name == "Electronics & Software").Single().Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -6568,7 +6573,7 @@ namespace Nop.Services.Installation
             });
             productCanonCamera.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Where(c => c.Name == "Camera, photo").Single(),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Camera, photo"),
                 DisplayOrder = 1,
             });
             productCanonCamera.ProductPictures.Add(new ProductPicture()
@@ -6608,7 +6613,7 @@ namespace Nop.Services.Installation
                 Length = 7,
                 Width = 7,
                 Height = 7,
-                TaxCategoryId = _taxCategoryRepository.Table.Where(tc => tc.Name == "Electronics & Software").Single().Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -6625,7 +6630,7 @@ namespace Nop.Services.Installation
             });
             productCanonCamcoder.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Where(c => c.Name == "Camera, photo").Single(),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Camera, photo"),
                 DisplayOrder = 1,
             });
             productCanonCamcoder.ProductPictures.Add(new ProductPicture()
@@ -6660,7 +6665,7 @@ namespace Nop.Services.Installation
                 Length = 7,
                 Width = 7,
                 Height = 7,
-                TaxCategoryId = _taxCategoryRepository.Table.Where(tc => tc.Name == "Electronics & Software").Single().Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -6677,7 +6682,7 @@ namespace Nop.Services.Installation
             });
             productCompaq.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Where(c => c.Name == "Desktops").Single(),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Desktops"),
                 DisplayOrder = 1,
             });
             productCompaq.ProductPictures.Add(new ProductPicture()
@@ -6713,7 +6718,7 @@ namespace Nop.Services.Installation
                 Length = 2,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Where(tc => tc.Name == "Books").Single().Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Books").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -6730,7 +6735,7 @@ namespace Nop.Services.Installation
             });
             productCookingForTwo.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Where(c => c.Name == "Books").Single(),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Books"),
                 DisplayOrder = 1,
             });
             productCookingForTwo.ProductPictures.Add(new ProductPicture()
@@ -6765,7 +6770,7 @@ namespace Nop.Services.Installation
                 Length = 2,
                 Width = 2,
                 Height = 3,
-                TaxCategoryId = _taxCategoryRepository.Table.Where(tc => tc.Name == "Electronics & Software").Single().Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -6782,7 +6787,7 @@ namespace Nop.Services.Installation
             });
             productCorel.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Where(c => c.Name == "Software").Single(),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Software"),
                 DisplayOrder = 1,
             });
             productCorel.ProductPictures.Add(new ProductPicture()
@@ -6817,7 +6822,7 @@ namespace Nop.Services.Installation
                 Length = 3,
                 Width = 3,
                 Height = 3,
-                TaxCategoryId = _taxCategoryRepository.Table.Where(tc => tc.Name == "Apparel & Shoes").Single().Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel & Shoes").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -6834,7 +6839,7 @@ namespace Nop.Services.Installation
             });
             productCustomTShirt.ProductVariants.FirstOrDefault().ProductVariantAttributes.Add(new ProductVariantAttribute()
             {
-                ProductAttribute = _productAttributeRepository.Table.Where(x => x.Name == "Custom Text").Single(),
+                ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Custom Text"),
                 TextPrompt = "Enter your text:",
                 AttributeControlType = AttributeControlType.TextBox,
                 IsRequired = true,
@@ -6842,7 +6847,7 @@ namespace Nop.Services.Installation
 
             productCustomTShirt.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Where(c => c.Name == "Shirts").Single(),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Shirts"),
                 DisplayOrder = 1,
             });
             productCustomTShirt.ProductPictures.Add(new ProductPicture()
@@ -6877,7 +6882,7 @@ namespace Nop.Services.Installation
                 Length = 2,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Where(tc => tc.Name == "Jewelry").Single().Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Jewelry").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -6894,7 +6899,7 @@ namespace Nop.Services.Installation
             });
             productDiamondEarrings.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Where(c => c.Name == "Jewelry").Single(),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Jewelry"),
                 DisplayOrder = 1,
             });
             productDiamondEarrings.ProductPictures.Add(new ProductPicture()
@@ -6929,7 +6934,7 @@ namespace Nop.Services.Installation
                 Length = 2,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Where(tc => tc.Name == "Jewelry").Single().Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Jewelry").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -6946,7 +6951,7 @@ namespace Nop.Services.Installation
             });
             productDiamondBracelet.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Where(c => c.Name == "Jewelry").Single(),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Jewelry"),
                 DisplayOrder = 1,
             });
             productDiamondBracelet.ProductPictures.Add(new ProductPicture()
@@ -6987,7 +6992,7 @@ namespace Nop.Services.Installation
                 Length = 2,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Where(tc => tc.Name == "Books").Single().Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Books").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -7004,7 +7009,7 @@ namespace Nop.Services.Installation
             });
             productEatingWell.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Where(c => c.Name == "Books").Single(),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Books"),
                 DisplayOrder = 1,
             });
             productEatingWell.ProductPictures.Add(new ProductPicture()
@@ -7039,7 +7044,7 @@ namespace Nop.Services.Installation
                 Length = 2,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Where(tc => tc.Name == "Apparel & Shoes").Single().Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel & Shoes").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -7056,7 +7061,7 @@ namespace Nop.Services.Installation
             });
             var pvaEtnies1 = new ProductVariantAttribute()
             {
-                ProductAttribute = _productAttributeRepository.Table.Where(x => x.Name == "Size").Single(),
+                ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Size"),
                 AttributeControlType = AttributeControlType.DropdownList,
                 IsRequired = true,
             };
@@ -7083,7 +7088,7 @@ namespace Nop.Services.Installation
             productEtnies.ProductVariants.FirstOrDefault().ProductVariantAttributes.Add(pvaEtnies1);
             var pvaEtnies2 = new ProductVariantAttribute()
             {
-                ProductAttribute = _productAttributeRepository.Table.Where(x => x.Name == "Color").Single(),
+                ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Color"),
                 AttributeControlType = AttributeControlType.ColorSquares,
                 IsRequired = true,
             };
@@ -7109,7 +7114,7 @@ namespace Nop.Services.Installation
             productEtnies.ProductVariants.FirstOrDefault().ProductVariantAttributes.Add(pvaEtnies2);
             productEtnies.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Where(c => c.Name == "Shoes").Single(),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Shoes"),
                 DisplayOrder = 1,
             });
             productEtnies.ProductPictures.Add(new ProductPicture()
@@ -7144,7 +7149,7 @@ namespace Nop.Services.Installation
                 Length = 2,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Where(tc => tc.Name == "Apparel & Shoes").Single().Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel & Shoes").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -7161,7 +7166,7 @@ namespace Nop.Services.Installation
             });
             productLeatherHandbag.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Where(c => c.Name == "Apparel accessories").Single(),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Apparel accessories"),
                 DisplayOrder = 1,
             });
             productLeatherHandbag.ProductPictures.Add(new ProductPicture()
@@ -7201,7 +7206,7 @@ namespace Nop.Services.Installation
                 Length = 7,
                 Width = 7,
                 Height = 7,
-                TaxCategoryId = _taxCategoryRepository.Table.Where(tc => tc.Name == "Electronics & Software").Single().Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -7218,12 +7223,12 @@ namespace Nop.Services.Installation
             });
             productHp506.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Where(c => c.Name == "Desktops").Single(),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Desktops"),
                 DisplayOrder = 1,
             });
             productHp506.ProductManufacturers.Add(new ProductManufacturer()
             {
-                Manufacturer = _manufacturerRepository.Table.Where(c => c.Name == "HP").Single(),
+                Manufacturer = _manufacturerRepository.Table.Single(c => c.Name == "HP"),
                 DisplayOrder = 1,
             });
             productHp506.ProductPictures.Add(new ProductPicture()
@@ -7258,7 +7263,7 @@ namespace Nop.Services.Installation
                 Length = 7,
                 Width = 7,
                 Height = 7,
-                TaxCategoryId = _taxCategoryRepository.Table.Where(tc => tc.Name == "Electronics & Software").Single().Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -7275,12 +7280,12 @@ namespace Nop.Services.Installation
             });
             productHpPavilion1.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Where(c => c.Name == "Notebooks").Single(),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Notebooks"),
                 DisplayOrder = 1,
             });
             productHpPavilion1.ProductManufacturers.Add(new ProductManufacturer()
             {
-                Manufacturer = _manufacturerRepository.Table.Where(c => c.Name == "HP").Single(),
+                Manufacturer = _manufacturerRepository.Table.Single(c => c.Name == "HP"),
                 DisplayOrder = 2,
             });
             productHpPavilion1.ProductPictures.Add(new ProductPicture()
@@ -7293,28 +7298,28 @@ namespace Nop.Services.Installation
                 AllowFiltering = false,
                 ShowOnProductPage = true,
                 DisplayOrder = 1,
-                SpecificationAttributeOption = _specificationAttributeRepository.Table.Where(sa => sa.Name == "Screensize").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "14.1''").Single()
+                SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Screensize").SpecificationAttributeOptions.Single(sao => sao.Name == "14.1''")
             });
             productHpPavilion1.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute()
             {
                 AllowFiltering = true,
                 ShowOnProductPage = true,
                 DisplayOrder = 2,
-                SpecificationAttributeOption = _specificationAttributeRepository.Table.Where(sa => sa.Name == "CPU Type").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "Intel").Single()
+                SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "CPU Type").SpecificationAttributeOptions.Single(sao => sao.Name == "Intel")
             });
             productHpPavilion1.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute()
             {
                 AllowFiltering = true,
                 ShowOnProductPage = true,
                 DisplayOrder = 3,
-                SpecificationAttributeOption = _specificationAttributeRepository.Table.Where(sa => sa.Name == "Memory").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "3 GB").Single()
+                SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Memory").SpecificationAttributeOptions.Single(sao => sao.Name == "3 GB")
             });
             productHpPavilion1.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute()
             {
                 AllowFiltering = false,
                 ShowOnProductPage = true,
                 DisplayOrder = 4,
-                SpecificationAttributeOption = _specificationAttributeRepository.Table.Where(sa => sa.Name == "Hardrive").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "250 GB").Single()
+                SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Hardrive").SpecificationAttributeOptions.Single(sao => sao.Name == "250 GB")
             });
             _productRepository.Insert(productHpPavilion1);
 
@@ -7343,7 +7348,7 @@ namespace Nop.Services.Installation
                 Length = 7,
                 Width = 7,
                 Height = 7,
-                TaxCategoryId = _taxCategoryRepository.Table.Where(tc => tc.Name == "Electronics & Software").Single().Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -7360,12 +7365,12 @@ namespace Nop.Services.Installation
             });
             productHpPavilion2.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Where(c => c.Name == "Desktops").Single(),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Desktops"),
                 DisplayOrder = 1,
             });
             productHpPavilion2.ProductManufacturers.Add(new ProductManufacturer()
             {
-                Manufacturer = _manufacturerRepository.Table.Where(c => c.Name == "HP").Single(),
+                Manufacturer = _manufacturerRepository.Table.Single(c => c.Name == "HP"),
                 DisplayOrder = 3,
             });
             productHpPavilion2.ProductPictures.Add(new ProductPicture()
@@ -7405,7 +7410,7 @@ namespace Nop.Services.Installation
                 Length = 7,
                 Width = 7,
                 Height = 7,
-                TaxCategoryId = _taxCategoryRepository.Table.Where(tc => tc.Name == "Electronics & Software").Single().Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -7422,12 +7427,12 @@ namespace Nop.Services.Installation
             });
             productHpPavilion3.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Where(c => c.Name == "Notebooks").Single(),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Notebooks"),
                 DisplayOrder = 1,
             });
             productHpPavilion3.ProductManufacturers.Add(new ProductManufacturer()
             {
-                Manufacturer = _manufacturerRepository.Table.Where(c => c.Name == "HP").Single(),
+                Manufacturer = _manufacturerRepository.Table.Single(c => c.Name == "HP"),
                 DisplayOrder = 4,
             });
             productHpPavilion3.ProductPictures.Add(new ProductPicture()
@@ -7440,28 +7445,28 @@ namespace Nop.Services.Installation
                 AllowFiltering = false,
                 ShowOnProductPage = true,
                 DisplayOrder = 1,
-                SpecificationAttributeOption = _specificationAttributeRepository.Table.Where(sa => sa.Name == "Screensize").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "16.0''").Single()
+                SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Screensize").SpecificationAttributeOptions.Single(sao => sao.Name == "16.0''")
             });
             productHpPavilion3.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute()
             {
                 AllowFiltering = true,
                 ShowOnProductPage = true,
                 DisplayOrder = 2,
-                SpecificationAttributeOption = _specificationAttributeRepository.Table.Where(sa => sa.Name == "CPU Type").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "Intel").Single()
+                SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "CPU Type").SpecificationAttributeOptions.Single(sao => sao.Name == "Intel")            
             });
             productHpPavilion3.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute()
             {
                 AllowFiltering = true,
                 ShowOnProductPage = true,
                 DisplayOrder = 3,
-                SpecificationAttributeOption = _specificationAttributeRepository.Table.Where(sa => sa.Name == "Memory").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "3 GB").Single()
+                SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Memory").SpecificationAttributeOptions.Single(sao => sao.Name == "3 GB")
             });
             productHpPavilion3.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute()
             {
                 AllowFiltering = false,
                 ShowOnProductPage = true,
                 DisplayOrder = 4,
-                SpecificationAttributeOption = _specificationAttributeRepository.Table.Where(sa => sa.Name == "Hardrive").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "320 GB").Single()
+                SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Hardrive").SpecificationAttributeOptions.Single(sao => sao.Name == "320 GB")
             });
             _productRepository.Insert(productHpPavilion3);
 
@@ -7490,7 +7495,7 @@ namespace Nop.Services.Installation
                 Length = 2,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Where(tc => tc.Name == "Apparel & Shoes").Single().Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel & Shoes").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -7507,7 +7512,7 @@ namespace Nop.Services.Installation
             });
             var pvaHat1 = new ProductVariantAttribute()
             {
-                ProductAttribute = _productAttributeRepository.Table.Where(x => x.Name == "Size").Single(),
+                ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Size"),
                 AttributeControlType = AttributeControlType.DropdownList,
                 IsRequired = true,
             };
@@ -7534,7 +7539,7 @@ namespace Nop.Services.Installation
             productHat.ProductVariants.FirstOrDefault().ProductVariantAttributes.Add(pvaHat1);
             productHat.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Where(c => c.Name == "Apparel accessories").Single(),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Apparel accessories"),
                 DisplayOrder = 1,
             });
             productHat.ProductPictures.Add(new ProductPicture()
@@ -7569,7 +7574,7 @@ namespace Nop.Services.Installation
                 Length = 7,
                 Width = 7,
                 Height = 7,
-                TaxCategoryId = _taxCategoryRepository.Table.Where(tc => tc.Name == "Electronics & Software").Single().Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -7586,7 +7591,7 @@ namespace Nop.Services.Installation
             });
             productKensington.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Where(c => c.Name == "Accessories").Single(),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Accessories"),
                 DisplayOrder = 1,
             });
             productKensington.ProductPictures.Add(new ProductPicture()
@@ -7622,7 +7627,7 @@ namespace Nop.Services.Installation
                 Length = 2,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Where(tc => tc.Name == "Apparel & Shoes").Single().Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel & Shoes").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -7656,7 +7661,7 @@ namespace Nop.Services.Installation
 
             productLeviJeans.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Where(c => c.Name == "Jeans").Single(),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Jeans"),
                 DisplayOrder = 1,
             });
             productLeviJeans.ProductPictures.Add(new ProductPicture()
@@ -7696,7 +7701,7 @@ namespace Nop.Services.Installation
                 Length = 7,
                 Width = 7,
                 Height = 7,
-                TaxCategoryId = _taxCategoryRepository.Table.Where(tc => tc.Name == "Electronics & Software").Single().Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -7713,7 +7718,7 @@ namespace Nop.Services.Installation
             });
             productBaseball.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Where(c => c.Name == "Games").Single(),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Games"),
                 DisplayOrder = 1,
             });
             productBaseball.ProductPictures.Add(new ProductPicture()
@@ -7748,7 +7753,7 @@ namespace Nop.Services.Installation
                 Length = 7,
                 Width = 7,
                 Height = 7,
-                TaxCategoryId = _taxCategoryRepository.Table.Where(tc => tc.Name == "Electronics & Software").Single().Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -7765,7 +7770,7 @@ namespace Nop.Services.Installation
             });
             productMedalOfHonor.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Where(c => c.Name == "Games").Single(),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Games"),
                 DisplayOrder = 1,
             });
             productMedalOfHonor.ProductPictures.Add(new ProductPicture()
@@ -7800,7 +7805,7 @@ namespace Nop.Services.Installation
                 Length = 7,
                 Width = 7,
                 Height = 7,
-                TaxCategoryId = _taxCategoryRepository.Table.Where(tc => tc.Name == "Electronics & Software").Single().Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -7817,7 +7822,7 @@ namespace Nop.Services.Installation
             });
             productMouse.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Where(c => c.Name == "Accessories").Single(),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Accessories"),
                 DisplayOrder = 1,
             });
             productMouse.ProductPictures.Add(new ProductPicture()
@@ -7852,7 +7857,7 @@ namespace Nop.Services.Installation
                 Length = 7,
                 Width = 7,
                 Height = 7,
-                TaxCategoryId = _taxCategoryRepository.Table.Where(tc => tc.Name == "Apparel & Shoes").Single().Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel & Shoes").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -7869,7 +7874,7 @@ namespace Nop.Services.Installation
             });
             productGolfBelt.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Where(c => c.Name == "Apparel accessories").Single(),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Apparel accessories"),
                 DisplayOrder = 1,
             });
             productGolfBelt.ProductPictures.Add(new ProductPicture()
@@ -7904,7 +7909,7 @@ namespace Nop.Services.Installation
                 Length = 7,
                 Width = 7,
                 Height = 7,
-                TaxCategoryId = _taxCategoryRepository.Table.Where(tc => tc.Name == "Electronics & Software").Single().Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -7921,7 +7926,7 @@ namespace Nop.Services.Installation
             });
             productPanasonic.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Where(c => c.Name == "Camera, photo").Single(),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Camera, photo"),
                 DisplayOrder = 1,
             });
             productPanasonic.ProductPictures.Add(new ProductPicture()
@@ -7956,7 +7961,7 @@ namespace Nop.Services.Installation
                 Length = 7,
                 Width = 7,
                 Height = 7,
-                TaxCategoryId = _taxCategoryRepository.Table.Where(tc => tc.Name == "Apparel & Shoes").Single().Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel & Shoes").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -7973,7 +7978,7 @@ namespace Nop.Services.Installation
             });
             productSunglasses.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Where(c => c.Name == "Apparel accessories").Single(),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Apparel accessories"),
                 DisplayOrder = 1,
             });
             productSunglasses.ProductPictures.Add(new ProductPicture()
@@ -8008,7 +8013,7 @@ namespace Nop.Services.Installation
                 Length = 7,
                 Width = 7,
                 Height = 7,
-                TaxCategoryId = _taxCategoryRepository.Table.Where(tc => tc.Name == "Electronics & Software").Single().Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -8025,7 +8030,7 @@ namespace Nop.Services.Installation
             });
             productSamsungPhone.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Where(c => c.Name == "Cell phones").Single(),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Cell phones"),
                 DisplayOrder = 1,
             });
             productSamsungPhone.ProductPictures.Add(new ProductPicture()
@@ -8065,7 +8070,7 @@ namespace Nop.Services.Installation
                 Length = 7,
                 Width = 7,
                 Height = 7,
-                TaxCategoryId = _taxCategoryRepository.Table.Where(tc => tc.Name == "Electronics & Software").Single().Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -8082,7 +8087,7 @@ namespace Nop.Services.Installation
             });
             productSonyCamcoder.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Where(c => c.Name == "Camera, photo").Single(),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Camera, photo"),
                 DisplayOrder = 1,
             });
             productSonyCamcoder.ProductPictures.Add(new ProductPicture()
@@ -8118,7 +8123,7 @@ namespace Nop.Services.Installation
                 Length = 2,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Where(tc => tc.Name == "Books").Single().Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Books").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -8135,7 +8140,7 @@ namespace Nop.Services.Installation
             });
             productBestSkilletRecipes.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Where(c => c.Name == "Books").Single(),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Books"),
                 DisplayOrder = 1,
             });
             productBestSkilletRecipes.ProductPictures.Add(new ProductPicture()
@@ -8170,7 +8175,7 @@ namespace Nop.Services.Installation
                 Length = 7,
                 Width = 7,
                 Height = 7,
-                TaxCategoryId = _taxCategoryRepository.Table.Where(tc => tc.Name == "Electronics & Software").Single().Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -8187,7 +8192,7 @@ namespace Nop.Services.Installation
             });
             productSatellite.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Where(c => c.Name == "Notebooks").Single(),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Notebooks"),
                 DisplayOrder = 1,
             });
             productSatellite.ProductPictures.Add(new ProductPicture()
@@ -8200,28 +8205,28 @@ namespace Nop.Services.Installation
                 AllowFiltering = false,
                 ShowOnProductPage = true,
                 DisplayOrder = 1,
-                SpecificationAttributeOption = _specificationAttributeRepository.Table.Where(sa => sa.Name == "Screensize").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "15.4''").Single()
+                SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Screensize").SpecificationAttributeOptions.Single(sao => sao.Name == "15.4''")
             });
             productSatellite.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute()
             {
                 AllowFiltering = true,
                 ShowOnProductPage = true,
                 DisplayOrder = 2,
-                SpecificationAttributeOption = _specificationAttributeRepository.Table.Where(sa => sa.Name == "CPU Type").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "Intel").Single()
+                SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "CPU Type").SpecificationAttributeOptions.Single(sao => sao.Name == "Intel")
             });
             productSatellite.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute()
             {
                 AllowFiltering = true,
                 ShowOnProductPage = true,
                 DisplayOrder = 3,
-                SpecificationAttributeOption = _specificationAttributeRepository.Table.Where(sa => sa.Name == "Memory").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "1 GB").Single()
+                SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Memory").SpecificationAttributeOptions.Single(sao => sao.Name == "1 GB")
             });
             productSatellite.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute()
             {
                 AllowFiltering = false,
                 ShowOnProductPage = true,
                 DisplayOrder = 4,
-                SpecificationAttributeOption = _specificationAttributeRepository.Table.Where(sa => sa.Name == "Hardrive").Single().SpecificationAttributeOptions.Where(sao => sao.Name == "250 GB").Single()
+                SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Hardrive").SpecificationAttributeOptions.Single(sao => sao.Name == "250 GB")
             });
             _productRepository.Insert(productSatellite);
 
@@ -8250,7 +8255,7 @@ namespace Nop.Services.Installation
                 Length = 2,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Where(tc => tc.Name == "Apparel & Shoes").Single().Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel & Shoes").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -8267,7 +8272,7 @@ namespace Nop.Services.Installation
             });
             productDenimShort.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Where(c => c.Name == "Jeans").Single(),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Jeans"),
                 DisplayOrder = 1,
             });
             productDenimShort.ProductPictures.Add(new ProductPicture()
@@ -8302,7 +8307,7 @@ namespace Nop.Services.Installation
                 Length = 2,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Where(tc => tc.Name == "Jewelry").Single().Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Jewelry").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -8319,7 +8324,7 @@ namespace Nop.Services.Installation
             });
             productEngagementRing.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Where(c => c.Name == "Jewelry").Single(),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Jewelry"),
                 DisplayOrder = 1,
             });
             productEngagementRing.ProductPictures.Add(new ProductPicture()
@@ -8359,7 +8364,7 @@ namespace Nop.Services.Installation
                 Length = 7,
                 Width = 7,
                 Height = 7,
-                TaxCategoryId = _taxCategoryRepository.Table.Where(tc => tc.Name == "Electronics & Software").Single().Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -8376,7 +8381,7 @@ namespace Nop.Services.Installation
             });
             productWoW.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Where(c => c.Name == "Games").Single(),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Games"),
                 DisplayOrder = 1,
             });
             productWoW.ProductPictures.Add(new ProductPicture()
@@ -8411,7 +8416,7 @@ namespace Nop.Services.Installation
                 Length = 7,
                 Width = 7,
                 Height = 7,
-                TaxCategoryId = _taxCategoryRepository.Table.Where(tc => tc.Name == "Electronics & Software").Single().Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -8428,7 +8433,7 @@ namespace Nop.Services.Installation
             });
             productSoccer.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Where(c => c.Name == "Games").Single(),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Games"),
                 DisplayOrder = 1,
             });
             productSoccer.ProductPictures.Add(new ProductPicture()
@@ -8478,7 +8483,7 @@ namespace Nop.Services.Installation
             productPokerFace.ProductVariants.Add(new ProductVariant()
             {
                 Price = 2.8M,
-                TaxCategoryId = _taxCategoryRepository.Table.Where(tc => tc.Name == "Downloadable Products").Single().Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Downloadable Products").Id,
                 ManageInventoryMethod = ManageInventoryMethod.DontManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -8503,7 +8508,7 @@ namespace Nop.Services.Installation
             });
             productPokerFace.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Where(c => c.Name == "Digital downloads").Single(),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Digital downloads"),
                 DisplayOrder = 1,
             });
             productPokerFace.ProductPictures.Add(new ProductPicture()
@@ -8553,7 +8558,7 @@ namespace Nop.Services.Installation
             productSingleLadies.ProductVariants.Add(new ProductVariant()
             {
                 Price = 3M,
-                TaxCategoryId = _taxCategoryRepository.Table.Where(tc => tc.Name == "Downloadable Products").Single().Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Downloadable Products").Id,
                 ManageInventoryMethod = ManageInventoryMethod.DontManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -8578,7 +8583,7 @@ namespace Nop.Services.Installation
             });
             productSingleLadies.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Where(c => c.Name == "Digital downloads").Single(),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Digital downloads"),
                 DisplayOrder = 1,
             });
             productSingleLadies.ProductPictures.Add(new ProductPicture()
@@ -8618,7 +8623,7 @@ namespace Nop.Services.Installation
             productBattleOfLa.ProductVariants.Add(new ProductVariant()
             {
                 Price = 3M,
-                TaxCategoryId = _taxCategoryRepository.Table.Where(tc => tc.Name == "Downloadable Products").Single().Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Downloadable Products").Id,
                 ManageInventoryMethod = ManageInventoryMethod.DontManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -8641,7 +8646,7 @@ namespace Nop.Services.Installation
             });
             productBattleOfLa.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Where(c => c.Name == "Digital downloads").Single(),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Digital downloads"),
                 DisplayOrder = 1,
             });
             productBattleOfLa.ProductPictures.Add(new ProductPicture()
@@ -9718,7 +9723,7 @@ namespace Nop.Services.Installation
 
         private void AddProductTag(Product product, string tag)
         {
-            var productTag = _productTagRepository.Table.Where(pt => pt.Name == tag).FirstOrDefault();
+            var productTag = _productTagRepository.Table.FirstOrDefault(pt => pt.Name == tag);
             if (productTag == null)
             {
                 productTag = new ProductTag()

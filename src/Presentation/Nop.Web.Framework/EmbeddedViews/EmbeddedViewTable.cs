@@ -44,9 +44,8 @@ namespace Nop.Web.Framework.EmbeddedViews
             if (string.IsNullOrEmpty(name)) return null;
 
             return Views
-                //.Where(view => view.Name.ToLowerInvariant().Contains(name.ToLowerInvariant()))
-                .Where(view => view.Name.ToLowerInvariant().Equals(name.ToLowerInvariant()))
-                .SingleOrDefault();
+                //.SingleOrDefault(view => view.Name.ToLowerInvariant().Contains(name.ToLowerInvariant()))
+                .SingleOrDefault(view => view.Name.ToLowerInvariant().Equals(name.ToLowerInvariant()));
         }
 
         protected string GetNameFromPath(string viewPath)

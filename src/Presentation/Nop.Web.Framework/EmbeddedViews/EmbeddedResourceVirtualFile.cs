@@ -28,8 +28,7 @@ namespace Nop.Web.Framework.EmbeddedViews
         protected virtual Assembly GetResourceAssembly()
         {
             return AppDomain.CurrentDomain.GetAssemblies()
-                .Where(assembly => string.Equals(assembly.FullName, _embeddedViewMetadata.AssemblyFullName, StringComparison.InvariantCultureIgnoreCase))
-                .FirstOrDefault();
+                .FirstOrDefault(assembly => string.Equals(assembly.FullName, _embeddedViewMetadata.AssemblyFullName, StringComparison.InvariantCultureIgnoreCase));
         }
     }
 }

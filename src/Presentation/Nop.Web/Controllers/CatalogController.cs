@@ -490,13 +490,15 @@ namespace Nop.Web.Controllers
                 var template = _productTemplateService.GetProductTemplateById(product.ProductTemplateId);
                 if (template == null)
                     template = _productTemplateService.GetAllProductTemplates().FirstOrDefault();
+                if (template == null)
+                    throw new Exception("No default template could be loaded");
                 return template.ViewPath;
             });
 
             //pictures
             model.DefaultPictureZoomEnabled = _mediaSettings.DefaultPictureZoomEnabled;
             var pictures = _pictureService.GetPicturesByProductId(product.Id);
-            if (pictures.Count > 0)
+            if (pictures.Any())
             {
                 //default picture
                 model.DefaultPictureModel = new PictureModel()
@@ -1050,6 +1052,8 @@ namespace Nop.Web.Controllers
                     var template = _categoryTemplateService.GetCategoryTemplateById(category.CategoryTemplateId);
                     if (template == null)
                         template = _categoryTemplateService.GetAllCategoryTemplates().FirstOrDefault();
+                    if (template == null)
+                        throw new Exception("No default template could be loaded");
                     return template.ViewPath;
                 });
 
@@ -1327,6 +1331,8 @@ namespace Nop.Web.Controllers
                 var template = _manufacturerTemplateService.GetManufacturerTemplateById(manufacturer.ManufacturerTemplateId);
                 if (template == null)
                     template = _manufacturerTemplateService.GetAllManufacturerTemplates().FirstOrDefault();
+                if (template == null)
+                    throw new Exception("No default template could be loaded");
                 return template.ViewPath;
             });
 
@@ -1666,10 +1672,8 @@ namespace Nop.Web.Controllers
             Action<ProductDetailsModel> setEnteredValues = (productModel) =>
                 {
                     //find product variant model
-                    var productVariantModel = productModel
-                        .ProductVariantModels
-                        .Where(x => x.Id == productVariant.Id)
-                        .FirstOrDefault();
+                    var productVariantModel = productModel.ProductVariantModels
+                        .FirstOrDefault(x => x.Id == productVariant.Id);
                     if (productVariantModel == null)
                         return;
 
@@ -1682,8 +1686,7 @@ namespace Nop.Web.Controllers
                     if (allowedQuantities.Length > 0)
                     {
                         var allowedQuantitySelectedItem = productVariantModel.AddToCart.AllowedQuantities
-                            .Where(x => x.Text == quantity.ToString())
-                            .FirstOrDefault();
+                            .FirstOrDefault(x => x.Text == quantity.ToString());
                         if (allowedQuantitySelectedItem != null)
                         {
                             allowedQuantitySelectedItem.Selected = true;
@@ -1736,8 +1739,7 @@ namespace Nop.Web.Controllers
                                         {
                                             var pvavModel = productVariantModel.ProductVariantAttributes
                                                 .SelectMany(x => x.Values)
-                                                .Where(y => y.Id == selectedAttributeId)
-                                                .FirstOrDefault();
+                                                .FirstOrDefault(y => y.Id == selectedAttributeId);
                                             if (pvavModel != null)
                                                 pvavModel.IsPreSelected = true;
                                         }
@@ -1756,8 +1758,7 @@ namespace Nop.Web.Controllers
                                             {
                                                 var pvavModel = productVariantModel.ProductVariantAttributes
                                                    .SelectMany(x => x.Values)
-                                                   .Where(y => y.Id == selectedAttributeId)
-                                                   .FirstOrDefault();
+                                                   .FirstOrDefault(y => y.Id == selectedAttributeId);
                                                 if (pvavModel != null)
                                                     pvavModel.IsPreSelected = true;
                                             }
@@ -1773,9 +1774,7 @@ namespace Nop.Web.Controllers
                                     {
                                         var pvaModel = productVariantModel
                                             .ProductVariantAttributes
-                                            .Select(x => x)
-                                            .Where(y => y.Id == attribute.Id)
-                                            .FirstOrDefault();
+                                            .FirstOrDefault(y => y.Id == attribute.Id);
 
                                         if (pvaModel != null)
                                             pvaModel.TextValue = txtAttribute;
@@ -1786,9 +1785,7 @@ namespace Nop.Web.Controllers
                                 {
                                     var pvaModel = productVariantModel
                                         .ProductVariantAttributes
-                                        .Select(x => x)
-                                        .Where(y => y.Id == attribute.Id)
-                                        .FirstOrDefault();
+                                        .FirstOrDefault(y => y.Id == attribute.Id);
                                     if (pvaModel != null)
                                     {
                                         int day, month, year;
@@ -2632,9 +2629,8 @@ namespace Nop.Web.Controllers
             }
 
             //delete previous helpfulness
-            var oldPrh = (from prh in productReview.ProductReviewHelpfulnessEntries
-                          where prh.CustomerId == _workContext.CurrentCustomer.Id
-                          select prh).FirstOrDefault();
+            var oldPrh = productReview.ProductReviewHelpfulnessEntries
+                .FirstOrDefault(prh => prh.CustomerId == _workContext.CurrentCustomer.Id);
             if (oldPrh != null)
                 _customerContentService.DeleteCustomerContent(oldPrh);
 
@@ -2652,15 +2648,8 @@ namespace Nop.Web.Controllers
             _customerContentService.InsertCustomerContent(newPrh);
 
             //new totals
-            int helpfulYesTotal = (from prh in productReview.ProductReviewHelpfulnessEntries
-                                   where prh.WasHelpful
-                                   select prh).Count();
-            int helpfulNoTotal = (from prh in productReview.ProductReviewHelpfulnessEntries
-                                  where !prh.WasHelpful
-                                  select prh).Count();
-
-            productReview.HelpfulYesTotal = helpfulYesTotal;
-            productReview.HelpfulNoTotal = helpfulNoTotal;
+            productReview.HelpfulYesTotal = productReview.ProductReviewHelpfulnessEntries.Count(prh => prh.WasHelpful);
+            productReview.HelpfulNoTotal = productReview.ProductReviewHelpfulnessEntries.Count(prh => !prh.WasHelpful);
             _customerContentService.UpdateCustomerContent(productReview);
 
             return Json(new

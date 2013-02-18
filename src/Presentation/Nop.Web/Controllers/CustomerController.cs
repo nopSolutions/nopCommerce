@@ -1100,7 +1100,7 @@ namespace Nop.Web.Controllers
             var customer = _workContext.CurrentCustomer;
 
             //find address (ensure that it belongs to the current customer)
-            var address = customer.Addresses.Where(a => a.Id == addressId).FirstOrDefault();
+            var address = customer.Addresses.FirstOrDefault(a => a.Id == addressId);
             if (address != null)
             {
                 customer.RemoveAddress(address);
@@ -1170,7 +1170,7 @@ namespace Nop.Web.Controllers
 
             var customer = _workContext.CurrentCustomer;
             //find address (ensure that it belongs to the current customer)
-            var address = customer.Addresses.Where(a => a.Id == addressId).FirstOrDefault();
+            var address = customer.Addresses.FirstOrDefault(a => a.Id == addressId);
             if (address == null)
                 //address is not found
                 return RedirectToRoute("CustomerAddresses");
@@ -1192,7 +1192,7 @@ namespace Nop.Web.Controllers
 
             var customer = _workContext.CurrentCustomer;
             //find address (ensure that it belongs to the current customer)
-            var address = customer.Addresses.Where(a => a.Id == addressId).FirstOrDefault();
+            var address = customer.Addresses.FirstOrDefault(a => a.Id == addressId);
             if (address == null)
                 //address is not found
                 return RedirectToRoute("CustomerAddresses");

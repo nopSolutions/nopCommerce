@@ -344,9 +344,7 @@ namespace Nop.Web.Models.Catalog
                 foreach (var saof in allFilters)
                 {
                     //do not add already filtered specification options
-                    if (alreadyFilteredOptions
-                        .Where(x => x.SpecificationAttributeId == saof.SpecificationAttributeId)
-                        .FirstOrDefault() != null)
+                    if (alreadyFilteredOptions.FirstOrDefault(x => x.SpecificationAttributeId == saof.SpecificationAttributeId) != null)
                         continue;
 
                     //else add it

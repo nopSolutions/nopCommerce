@@ -539,10 +539,7 @@ namespace Nop.Services.Forums
                 return null;
             }
 
-            var query = from ft in _forumTopicRepository.Table
-                        where ft.Id == forumTopicId
-                        select ft;
-            var forumTopic = query.SingleOrDefault();
+            var forumTopic = _forumTopicRepository.GetById(forumTopicId);
             if (forumTopic == null)
             {
                 return null;
@@ -785,15 +782,9 @@ namespace Nop.Services.Forums
         public virtual ForumPost GetPostById(int forumPostId)
         {
             if (forumPostId == 0)
-            {
                 return null;
-            }
 
-            var query = from fp in _forumPostRepository.Table
-                        where fp.Id == forumPostId
-                        select fp;
-            var forumPost = query.SingleOrDefault();
-
+            var forumPost = _forumPostRepository.GetById(forumPostId);
             return forumPost;
         }
 
@@ -957,15 +948,9 @@ namespace Nop.Services.Forums
         public virtual PrivateMessage GetPrivateMessageById(int privateMessageId)
         {
             if (privateMessageId == 0)
-            {
                 return null;
-            }
 
-            var query = from pm in _forumPrivateMessageRepository.Table
-                        where pm.Id == privateMessageId
-                        select pm;
-            var privateMessage = query.SingleOrDefault();
-
+            var privateMessage = _forumPrivateMessageRepository.GetById(privateMessageId);
             return privateMessage;
         }
 
@@ -1091,15 +1076,9 @@ namespace Nop.Services.Forums
         public virtual ForumSubscription GetSubscriptionById(int forumSubscriptionId)
         {
             if (forumSubscriptionId == 0)
-            {
                 return null;
-            }
 
-            var query = from fs in _forumSubscriptionRepository.Table
-                        where fs.Id == forumSubscriptionId
-                        select fs;
-            var forumSubscription = query.SingleOrDefault();
-
+            var forumSubscription = _forumSubscriptionRepository.GetById(forumSubscriptionId);
             return forumSubscription;
         }
 

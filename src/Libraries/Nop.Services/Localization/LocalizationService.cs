@@ -394,7 +394,7 @@ namespace Nop.Services.Localization
 
                     //do not use "Insert"/"Update" methods because they clear cache
                     //let's bulk insert
-                    var resource = language.LocaleStringResources.Where(x => x.ResourceName.Equals(name, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+                    var resource = language.LocaleStringResources.FirstOrDefault(x => x.ResourceName.Equals(name, StringComparison.InvariantCultureIgnoreCase));
                     if (resource != null)
                         resource.ResourceValue = value;
                     else

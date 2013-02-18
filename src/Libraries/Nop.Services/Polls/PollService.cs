@@ -177,10 +177,7 @@ namespace Nop.Services.Polls
             if (pollAnswerId == 0)
                 return null;
 
-            var query = from pa in _pollAnswerRepository.Table
-                        where pa.Id == pollAnswerId
-                        select pa;
-            var pollAnswer = query.SingleOrDefault();
+            var pollAnswer = _pollAnswerRepository.GetById(pollAnswerId);
             return pollAnswer;
         }
         
@@ -215,7 +212,7 @@ namespace Nop.Services.Polls
             var result = (from pa in _pollAnswerRepository.Table
                           join pvr in _pollVotingRecords.Table on pa.Id equals pvr.PollAnswerId
                           where pa.PollId == pollId && pvr.CustomerId == customerId
-                          select pvr).Count() > 0;
+                          select pvr).Any();
             return result;
         }
 

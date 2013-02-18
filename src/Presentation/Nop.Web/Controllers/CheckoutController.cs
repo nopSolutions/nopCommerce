@@ -221,7 +221,7 @@ namespace Nop.Web.Controllers
                         shippingOptionToSelect.Selected = true;
                 }
                 //if no option has been selected, let's do it for the first one
-                if (model.ShippingMethods.Where(so => so.Selected).FirstOrDefault() == null)
+                if (model.ShippingMethods.FirstOrDefault(so => so.Selected) == null)
                 {
                     var shippingOptionToSelect = model.ShippingMethods.FirstOrDefault();
                     if (shippingOptionToSelect != null)
@@ -430,7 +430,7 @@ namespace Nop.Web.Controllers
         }
         public ActionResult SelectBillingAddress(int addressId)
         {
-            var address = _workContext.CurrentCustomer.Addresses.Where(a => a.Id == addressId).FirstOrDefault();
+            var address = _workContext.CurrentCustomer.Addresses.FirstOrDefault(a => a.Id == addressId);
             if (address == null)
                 return RedirectToRoute("CheckoutBillingAddress");
 
@@ -508,7 +508,7 @@ namespace Nop.Web.Controllers
         }
         public ActionResult SelectShippingAddress(int addressId)
         {
-            var address = _workContext.CurrentCustomer.Addresses.Where(a => a.Id == addressId).FirstOrDefault();
+            var address = _workContext.CurrentCustomer.Addresses.FirstOrDefault(a => a.Id == addressId);
             if (address == null)
                 return RedirectToRoute("CheckoutShippingAddress");
 
@@ -1038,7 +1038,7 @@ namespace Nop.Web.Controllers
                 if (billingAddressId > 0)
                 {
                     //existing address
-                    var address = _workContext.CurrentCustomer.Addresses.Where(a => a.Id == billingAddressId).FirstOrDefault();
+                    var address = _workContext.CurrentCustomer.Addresses.FirstOrDefault(a => a.Id == billingAddressId);
                     if (address == null)
                         throw new Exception("Address can't be loaded");
 
@@ -1212,7 +1212,7 @@ namespace Nop.Web.Controllers
                 if (shippingAddressId > 0)
                 {
                     //existing address
-                    var address = _workContext.CurrentCustomer.Addresses.Where(a => a.Id == shippingAddressId).FirstOrDefault();
+                    var address = _workContext.CurrentCustomer.Addresses.FirstOrDefault(a => a.Id == shippingAddressId);
                     if (address == null)
                         throw new Exception("Address can't be loaded");
 

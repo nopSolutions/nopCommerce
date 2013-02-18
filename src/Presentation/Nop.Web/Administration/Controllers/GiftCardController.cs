@@ -249,6 +249,8 @@ namespace Nop.Admin.Controllers
                     var customerLang = _languageService.GetLanguageById(order.CustomerLanguageId);
                     if (customerLang == null)
                         customerLang = _languageService.GetAllLanguages().FirstOrDefault();
+                    if (customerLang != null)
+                        languageId = customerLang.Id;
                 }
                 else
                 {

@@ -413,7 +413,7 @@ namespace Nop.Services.ExportImport
                     {
                         foreach (var id in categoryIds.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => Convert.ToInt32(x.Trim())))
                         {
-                            if (productVariant.Product.ProductCategories.Where(x => x.CategoryId == id).FirstOrDefault() == null)
+                            if (productVariant.Product.ProductCategories.FirstOrDefault(x => x.CategoryId == id) == null)
                             {
                                 //ensure that category exists
                                 var category = _categoryService.GetCategoryById(id);
@@ -437,7 +437,7 @@ namespace Nop.Services.ExportImport
                     {
                         foreach (var id in manufacturerIds.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => Convert.ToInt32(x.Trim())))
                         {
-                            if (productVariant.Product.ProductManufacturers.Where(x => x.ManufacturerId == id).FirstOrDefault() == null)
+                            if (productVariant.Product.ProductManufacturers.FirstOrDefault(x => x.ManufacturerId == id) == null)
                             {
                                 //ensure that manufacturer exists
                                 var manufacturer = _manufacturerService.GetManufacturerById(id);

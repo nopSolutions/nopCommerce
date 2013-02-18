@@ -241,11 +241,7 @@ namespace Nop.Services.Logging
             if (activityLogId == 0)
                 return null;
 
-            
-            var query = from al in _activityLogRepository.Table
-                        where al.Id == activityLogId
-                        select al;
-            var activityLog = query.SingleOrDefault();
+            var activityLog = _activityLogRepository.GetById(activityLogId);
             return activityLog;
         }
 

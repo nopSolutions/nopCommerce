@@ -42,8 +42,7 @@ namespace Nop.Services.Orders
             {
                 var shipment = shipments[i];
                 var sopv = shipment.ShipmentOrderProductVariants
-                    .Where(x => x.OrderProductVariantId == opv.Id)
-                    .FirstOrDefault();
+                    .FirstOrDefault(x => x.OrderProductVariantId == opv.Id);
                 if (sopv != null)
                 {
                     totalInShipments += sopv.Quantity;
@@ -92,8 +91,7 @@ namespace Nop.Services.Orders
                     continue;
 
                 var sopv = shipment.ShipmentOrderProductVariants
-                    .Where(x => x.OrderProductVariantId == opv.Id)
-                    .FirstOrDefault();
+                    .FirstOrDefault(x => x.OrderProductVariantId == opv.Id);
                 if (sopv != null)
                 {
                     result += sopv.Quantity;
@@ -123,8 +121,7 @@ namespace Nop.Services.Orders
                     continue;
 
                 var sopv = shipment.ShipmentOrderProductVariants
-                    .Where(x => x.OrderProductVariantId == opv.Id)
-                    .FirstOrDefault();
+                    .FirstOrDefault(x => x.OrderProductVariantId == opv.Id);
                 if (sopv != null)
                 {
                     result += sopv.Quantity;
@@ -154,8 +151,7 @@ namespace Nop.Services.Orders
                     continue;
 
                 var sopv = shipment.ShipmentOrderProductVariants
-                    .Where(x => x.OrderProductVariantId == opv.Id)
-                    .FirstOrDefault();
+                    .FirstOrDefault(x => x.OrderProductVariantId == opv.Id);
                 if (sopv != null)
                 {
                     result += sopv.Quantity;

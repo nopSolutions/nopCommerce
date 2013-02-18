@@ -179,13 +179,13 @@ namespace Nop.Admin.Controllers
                 if (model.SelectedCustomerRoleIds != null && model.SelectedCustomerRoleIds.Contains(customerRole.Id))
                 {
                     //new role
-                    if (existingAclRecords.Where(acl => acl.CustomerRoleId == customerRole.Id).Count() == 0)
+                    if (existingAclRecords.Count(acl => acl.CustomerRoleId == customerRole.Id) == 0)
                         _aclService.InsertAclRecord(manufacturer, customerRole.Id);
                 }
                 else
                 {
                     //removed role
-                    var aclRecordToDelete = existingAclRecords.Where(acl => acl.CustomerRoleId == customerRole.Id).FirstOrDefault();
+                    var aclRecordToDelete = existingAclRecords.FirstOrDefault(acl => acl.CustomerRoleId == customerRole.Id);
                     if (aclRecordToDelete != null)
                         _aclService.DeleteAclRecord(aclRecordToDelete);
                 }
@@ -225,13 +225,13 @@ namespace Nop.Admin.Controllers
                 if (model.SelectedStoreIds != null && model.SelectedStoreIds.Contains(store.Id))
                 {
                     //new role
-                    if (existingStoreMappings.Where(sm => sm.StoreId == store.Id).Count() == 0)
+                    if (existingStoreMappings.Count(sm => sm.StoreId == store.Id) == 0)
                         _storeMappingService.InsertStoreMapping(manufacturer, store.Id);
                 }
                 else
                 {
                     //removed role
-                    var storeMappingToDelete = existingStoreMappings.Where(sm => sm.StoreId == store.Id).FirstOrDefault();
+                    var storeMappingToDelete = existingStoreMappings.FirstOrDefault(sm => sm.StoreId == store.Id);
                     if (storeMappingToDelete != null)
                         _storeMappingService.DeleteStoreMapping(storeMappingToDelete);
                 }

@@ -118,11 +118,12 @@ namespace Nop.Core.Plugins
 
                         //set 'Installed' property
                         pluginDescriptor.Installed = installedPluginSystemNames
-                            .Where(x => x.Equals(pluginDescriptor.SystemName, StringComparison.InvariantCultureIgnoreCase))
-                            .FirstOrDefault() != null;
+                            .FirstOrDefault(x => x.Equals(pluginDescriptor.SystemName, StringComparison.InvariantCultureIgnoreCase)) != null;
 
                         try
                         {
+                            if (descriptionFile.Directory == null)
+                                throw new Exception(string.Format("Directory cannot be resolved for '{0}' description file", descriptionFile.Name));
                             //get list of all DLLs in plugins (not in bin!)
                             var pluginFiles = descriptionFile.Directory.GetFiles("*.dll", SearchOption.AllDirectories)
                                 //just make sure we're not registering shadow copied plugins
@@ -131,7 +132,8 @@ namespace Nop.Core.Plugins
                                 .ToList();
 
                             //other plugin description info
-                            var mainPluginFile = pluginFiles.Where(x => x.Name.Equals(pluginDescriptor.PluginFileName, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+                            var mainPluginFile = pluginFiles
+                                .FirstOrDefault(x => x.Name.Equals(pluginDescriptor.PluginFileName, StringComparison.InvariantCultureIgnoreCase));
                             pluginDescriptor.OriginalAssemblyFile = mainPluginFile;
 
                             //shadow copy main plugin file
@@ -206,8 +208,7 @@ namespace Nop.Core.Plugins
 
             var installedPluginSystemNames = PluginFileParser.ParseInstalledPluginsFile(GetInstalledPluginsFilePath());
             bool alreadyMarkedAsInstalled = installedPluginSystemNames
-                                .Where(x => x.Equals(systemName, StringComparison.InvariantCultureIgnoreCase))
-                                .FirstOrDefault() != null;
+                                .FirstOrDefault(x => x.Equals(systemName, StringComparison.InvariantCultureIgnoreCase)) != null;
             if (!alreadyMarkedAsInstalled)
                 installedPluginSystemNames.Add(systemName);
             PluginFileParser.SaveInstalledPluginsFile(installedPluginSystemNames,filePath);
@@ -232,8 +233,7 @@ namespace Nop.Core.Plugins
 
             var installedPluginSystemNames = PluginFileParser.ParseInstalledPluginsFile(GetInstalledPluginsFilePath());
             bool alreadyMarkedAsInstalled = installedPluginSystemNames
-                                .Where(x => x.Equals(systemName, StringComparison.InvariantCultureIgnoreCase))
-                                .FirstOrDefault() != null;
+                                .FirstOrDefault(x => x.Equals(systemName, StringComparison.InvariantCultureIgnoreCase)) != null;
             if (alreadyMarkedAsInstalled)
                 installedPluginSystemNames.Remove(systemName);
             PluginFileParser.SaveInstalledPluginsFile(installedPluginSystemNames,filePath);
@@ -301,6 +301,8 @@ namespace Nop.Core.Plugins
             try
             {
                 string fileNameWithoutExt = Path.GetFileNameWithoutExtension(fileInfo.FullName);
+                if (fileNameWithoutExt == null)
+                    throw new Exception(string.Format("Cannot get file extnension for {0}", fileInfo.Name));
                 foreach (var a in AppDomain.CurrentDomain.GetAssemblies())
                 {
                     string assemblyName = a.FullName.Split(new[] { ',' }).FirstOrDefault();

@@ -752,13 +752,13 @@ namespace Nop.Admin.Controllers
                             if (model.SelectedCustomerRoleIds != null && model.SelectedCustomerRoleIds.Contains(customerRole.Id))
                             {
                                 //new role
-                                if (customer.CustomerRoles.Where(cr => cr.Id == customerRole.Id).Count() == 0)
+                                if (customer.CustomerRoles.Count(cr => cr.Id == customerRole.Id) == 0)
                                     customer.CustomerRoles.Add(customerRole);
                             }
                             else
                             {
                                 //removed role
-                                if (customer.CustomerRoles.Where(cr => cr.Id == customerRole.Id).Count() > 0)
+                                if (customer.CustomerRoles.Count(cr => cr.Id == customerRole.Id) > 0)
                                     customer.CustomerRoles.Remove(customerRole);
                             }
                         }
@@ -1161,7 +1161,10 @@ namespace Nop.Admin.Controllers
             if (customer == null)
                 throw new ArgumentException("No customer found with the specified id", "customerId");
 
-            var address = customer.Addresses.Where(a => a.Id == addressId).FirstOrDefault();
+            var address = customer.Addresses.FirstOrDefault(a => a.Id == addressId);
+            if (address == null)
+                //No customer found with the specified id
+                return Content("No customer found with the specified id");
             customer.RemoveAddress(address);
             _customerService.UpdateCustomer(customer);
             //now delete the address record

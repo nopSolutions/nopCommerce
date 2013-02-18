@@ -112,13 +112,13 @@ namespace Nop.Admin.Controllers
                 if (model.SelectedStoreIds != null && model.SelectedStoreIds.Contains(store.Id))
                 {
                     //new role
-                    if (existingStoreMappings.Where(sm => sm.StoreId == store.Id).Count() == 0)
+                    if (existingStoreMappings.Count(sm => sm.StoreId == store.Id) == 0)
                         _storeMappingService.InsertStoreMapping(topic, store.Id);
                 }
                 else
                 {
                     //removed role
-                    var storeMappingToDelete = existingStoreMappings.Where(sm => sm.StoreId == store.Id).FirstOrDefault();
+                    var storeMappingToDelete = existingStoreMappings.FirstOrDefault(sm => sm.StoreId == store.Id);
                     if (storeMappingToDelete != null)
                         _storeMappingService.DeleteStoreMapping(storeMappingToDelete);
                 }

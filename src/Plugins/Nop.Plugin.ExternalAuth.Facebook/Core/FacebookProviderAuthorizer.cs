@@ -122,10 +122,9 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Core
             var parameters = new OAuthAuthenticationParameters(Provider.SystemName);
             var identifier = _openAuthenticationService
                 .GetExternalIdentifiersFor(customer)
-                .Where(o => o.ProviderSystemName == parameters.ProviderSystemName)
-                .ToList()
-                .FirstOrDefault();
-
+                .FirstOrDefault(o => o.ProviderSystemName == parameters.ProviderSystemName);
+            if (identifier== null)
+                throw new Exception("No identifier could be loaded");
             return !string.IsNullOrEmpty(identifier.OAuthAccessToken) ? new FacebookClient(identifier.OAuthAccessToken) : null;
         }
 

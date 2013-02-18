@@ -46,7 +46,7 @@ namespace Nop.Data {
         /// <param name="dbContext">The db context.</param>
         /// <returns></returns>
         private static DbEntityEntry<T> GetEntityOrReturnNull<T>(T currentCopy, DbContext dbContext) where T : BaseEntity {
-            return dbContext.ChangeTracker.Entries<T>().Where(e => e.Entity == currentCopy).FirstOrDefault();
+            return dbContext.ChangeTracker.Entries<T>().FirstOrDefault(e => e.Entity == currentCopy);
         }
 
         private static DbContext CastOrThrow(IDbContext context) {

@@ -125,7 +125,7 @@ namespace Nop.Plugin.Shipping.CanadaPost
                 // query using LINQ the "error" node in the XML
                 query = from errors in resultRates.Elements("error")
                         select errors;
-                XElement error = query.First();
+                XElement error = query.FirstOrDefault();
                 if (error != null)
                 {
                     // set the status code information of the request
@@ -140,7 +140,7 @@ namespace Nop.Plugin.Shipping.CanadaPost
                 // the actual status code information
                 query = from response in resultRates.Elements("ratesAndServicesResponse")
                         select response;
-                XElement info = query.First();
+                XElement info = query.FirstOrDefault();
                 // if we have informations
                 if (info != null)
                 {

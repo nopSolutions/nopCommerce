@@ -107,7 +107,7 @@ namespace Nop.Services.Customers
                 query = query.Where(c => registrationTo.Value >= c.CreatedOnUtc);
             query = query.Where(c => !c.Deleted);
             if (customerRoleIds != null && customerRoleIds.Length > 0)
-                query = query.Where(c => c.CustomerRoles.Select(cr => cr.Id).Intersect(customerRoleIds).Count() > 0);
+                query = query.Where(c => c.CustomerRoles.Select(cr => cr.Id).Intersect(customerRoleIds).Any());
             if (!String.IsNullOrWhiteSpace(email))
                 query = query.Where(c => c.Email.Contains(email));
             if (!String.IsNullOrWhiteSpace(username))
@@ -216,8 +216,8 @@ namespace Nop.Services.Customers
                     sctId = (int)sct.Value;
 
                 query = sct.HasValue ?
-                    query.Where(c => c.ShoppingCartItems.Where(x => x.ShoppingCartTypeId == sctId).Count() > 0) :
-                    query.Where(c => c.ShoppingCartItems.Count() > 0);
+                    query.Where(c => c.ShoppingCartItems.Any(x => x.ShoppingCartTypeId == sctId)) :
+                    query.Where(c => c.ShoppingCartItems.Any());
             }
             
             query = query.OrderByDescending(c => c.CreatedOnUtc);
@@ -275,7 +275,7 @@ namespace Nop.Services.Customers
             query = query.Where(c => lastActivityFromUtc <= c.LastActivityDateUtc);
             query = query.Where(c => !c.Deleted);
             if (customerRoleIds != null && customerRoleIds.Length > 0)
-                query = query.Where(c => c.CustomerRoles.Select(cr => cr.Id).Intersect(customerRoleIds).Count() > 0);
+                query = query.Where(c => c.CustomerRoles.Select(cr => cr.Id).Intersect(customerRoleIds).Any());
             
             query = query.OrderByDescending(c => c.LastActivityDateUtc);
             var customers = new PagedList<Customer>(query, pageIndex, pageSize);
@@ -567,14 +567,14 @@ namespace Nop.Services.Customers
                 query = query.Where(c => registrationTo.Value >= c.CreatedOnUtc);
             query = query.Where(c => c.CustomerRoles.Select(cr => cr.Id).Contains(guestRole.Id));
             if (onlyWithoutShoppingCart)
-                query = query.Where(c => c.ShoppingCartItems.Count() == 0);
+                query = query.Where(c => !c.ShoppingCartItems.Any());
             //no orders
-            query = query.Where(c => c.Orders.Count() == 0);
+            query = query.Where(c => !c.Orders.Any());
             //no customer content
-            query = query.Where(c => c.CustomerContent.Count() == 0);
+            query = query.Where(c => !c.CustomerContent.Any());
             //ensure that customers doesn't have forum posts or topics
-            query = query.Where(c => c.ForumTopics.Count() == 0);
-            query = query.Where(c => c.ForumPosts.Count() == 0);
+            query = query.Where(c => !c.ForumTopics.Any());
+            query = query.Where(c => !c.ForumPosts.Any());
             //don't delete system accounts
             query = query.Where(c => !c.IsSystemAccount);
             var customers = query.ToList();

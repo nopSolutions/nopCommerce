@@ -21,7 +21,7 @@
     {
         foreach (var attribute in product.SpecificationAttributeModels)
         {
-            if (specificationAttributes.Where(sa => sa.SpecificationAttributeId == attribute.SpecificationAttributeId).FirstOrDefault() == null)
+            if (specificationAttributes.FirstOrDefault(sa => sa.SpecificationAttributeId == attribute.SpecificationAttributeId) == null)
             {
                 specificationAttributes.Add(attribute);
             }
@@ -101,7 +101,7 @@
                             </td>
                             @foreach (var product in Model.Products)
                             {
-                                var foundProductSpec = product.SpecificationAttributeModels.Where(psa => psa.SpecificationAttributeId == specificationAttribute.SpecificationAttributeId).FirstOrDefault();
+                                var foundProductSpec = product.SpecificationAttributeModels.FirstOrDefault(psa => psa.SpecificationAttributeId == specificationAttribute.SpecificationAttributeId);
                                 var specValue = foundProductSpec != null ? foundProductSpec.SpecificationAttributeOption : "";
                                                                 
                                 <td style="width: @columnWidth;" class="a-center">

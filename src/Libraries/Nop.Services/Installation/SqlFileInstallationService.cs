@@ -190,7 +190,7 @@ namespace Nop.Services.Installation
         protected virtual void InstallLocaleResources()
         {
             //'English' language
-            var language = _languageRepository.Table.Where(l => l.Name == "English").Single();
+            var language = _languageRepository.Table.Single(l => l.Name == "English");
 
             //save resoureces
             foreach (var filePath in System.IO.Directory.EnumerateFiles(_webHelper.MapPath("~/App_Data/Localization/"), "*.nopres.xml", SearchOption.TopDirectoryOnly))

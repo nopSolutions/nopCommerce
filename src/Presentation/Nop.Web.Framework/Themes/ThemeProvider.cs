@@ -31,9 +31,8 @@ namespace Nop.Web.Framework.Themes
         
         public ThemeConfiguration GetThemeConfiguration(string themeName)
         {
-            return
-                _themeConfigurations.SingleOrDefault(
-                    x => x.ThemeName.Equals(themeName, StringComparison.InvariantCultureIgnoreCase));
+            return _themeConfigurations
+                .SingleOrDefault(x => x.ThemeName.Equals(themeName, StringComparison.InvariantCultureIgnoreCase));
         }
 
         public IList<ThemeConfiguration> GetThemeConfigurations()

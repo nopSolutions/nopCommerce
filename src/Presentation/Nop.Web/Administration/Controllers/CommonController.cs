@@ -258,8 +258,7 @@ namespace Nop.Admin.Controllers
 
             //shipping rate coputation methods
             if (_shippingService.LoadActiveShippingRateComputationMethods()
-                .Where(x => x.ShippingRateComputationMethodType == ShippingRateComputationMethodType.Offline)
-                .Count() > 1)
+                .Count(x => x.ShippingRateComputationMethodType == ShippingRateComputationMethodType.Offline)  > 1)
                 model.Add(new SystemWarningModel()
                 {
                     Level = SystemWarningLevel.Warning,
@@ -267,8 +266,7 @@ namespace Nop.Admin.Controllers
                 });
 
             //payment methods
-            if (_paymentService.LoadActivePaymentMethods()
-                .Count() > 0)
+            if (_paymentService.LoadActivePaymentMethods().Any())
                 model.Add(new SystemWarningModel()
                 {
                     Level = SystemWarningLevel.Pass,

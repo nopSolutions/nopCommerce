@@ -87,7 +87,7 @@ namespace Nop.Admin.Controllers
             foreach (var pr in permissionRecords)
                 foreach (var cr in customerRoles)
                 {
-                    bool allowed = pr.CustomerRoles.Where(x => x.Id == cr.Id).ToList().Count() > 0;
+                    bool allowed = pr.CustomerRoles.Count(x => x.Id == cr.Id) > 0;
                     if (!model.Allowed.ContainsKey(pr.SystemName))
                         model.Allowed[pr.SystemName] = new Dictionary<int, bool>();
                     model.Allowed[pr.SystemName][cr.Id] = allowed;
@@ -117,7 +117,7 @@ namespace Nop.Admin.Controllers
                     bool allow = permissionRecordSystemNamesToRestrict.Contains(pr.SystemName);
                     if (allow)
                     {
-                        if (pr.CustomerRoles.Where(x => x.Id == cr.Id).FirstOrDefault() == null)
+                        if (pr.CustomerRoles.FirstOrDefault(x => x.Id == cr.Id) == null)
                         {
                             pr.CustomerRoles.Add(cr);
                             _permissionService.UpdatePermissionRecord(pr);
@@ -125,7 +125,7 @@ namespace Nop.Admin.Controllers
                     }
                     else
                     {
-                        if (pr.CustomerRoles.Where(x => x.Id == cr.Id).FirstOrDefault() != null)
+                        if (pr.CustomerRoles.FirstOrDefault(x => x.Id == cr.Id) != null)
                         {
                             pr.CustomerRoles.Remove(cr);
                             _permissionService.UpdatePermissionRecord(pr);

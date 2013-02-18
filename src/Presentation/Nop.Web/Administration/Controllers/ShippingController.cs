@@ -382,7 +382,7 @@ namespace Nop.Admin.Controllers
                     bool restrict = countryIdsToRestrict.Contains(country.Id);
                     if (restrict)
                     {
-                        if (shippingMethod.RestrictedCountries.Where(c => c.Id == country.Id).FirstOrDefault() == null)
+                        if (shippingMethod.RestrictedCountries.FirstOrDefault(c => c.Id == country.Id) == null)
                         {
                             shippingMethod.RestrictedCountries.Add(country);
                             _shippingService.UpdateShippingMethod(shippingMethod);
@@ -390,7 +390,7 @@ namespace Nop.Admin.Controllers
                     }
                     else
                     {
-                        if (shippingMethod.RestrictedCountries.Where(c => c.Id == country.Id).FirstOrDefault() != null)
+                        if (shippingMethod.RestrictedCountries.FirstOrDefault(c => c.Id == country.Id) != null)
                         {
                             shippingMethod.RestrictedCountries.Remove(country);
                             _shippingService.UpdateShippingMethod(shippingMethod);

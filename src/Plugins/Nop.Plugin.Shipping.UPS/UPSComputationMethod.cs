@@ -539,7 +539,7 @@ namespace Nop.Plugin.Shipping.UPS
             {
                 getShippingOptionRequest.CountryFrom = _countryService.GetCountryById(_upsSettings.DefaultShippedFromCountryId);
                 if (getShippingOptionRequest.CountryFrom == null)
-                    getShippingOptionRequest.CountryFrom = _countryService.GetAllCountries(true).ToList().FirstOrDefault();
+                    getShippingOptionRequest.CountryFrom = _countryService.GetAllCountries(true).FirstOrDefault();
             }
             if (String.IsNullOrEmpty(getShippingOptionRequest.ZipPostalCodeFrom))
                 getShippingOptionRequest.ZipPostalCodeFrom = _upsSettings.DefaultShippedFromZipPostalCode;

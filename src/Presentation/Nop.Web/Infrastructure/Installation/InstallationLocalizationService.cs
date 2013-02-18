@@ -49,15 +49,13 @@ namespace Nop.Web.Infrastructure.Installation
             var availableLanguages = GetAvailableLanguages();
 
             var language = availableLanguages
-                .Where(l => l.Code.Equals(cookieLanguageCode, StringComparison.InvariantCultureIgnoreCase))
-                .FirstOrDefault();
+                .FirstOrDefault(l => l.Code.Equals(cookieLanguageCode, StringComparison.InvariantCultureIgnoreCase));
             if (language != null)
                 return language;
 
             //if we got here, the language code is not found. let's return the default one
             language = availableLanguages
-                .Where(l => l.IsDefault)
-                .FirstOrDefault();
+                .FirstOrDefault(l => l.IsDefault);
             if (language != null)
                 return language;
 

@@ -29,9 +29,7 @@ namespace Nop.Core.Domain.Customers
                 throw new ArgumentNullException("customerRoleSystemName");
 
             var result = customer.CustomerRoles
-                .Where(cr => !onlyActiveCustomerRoles || cr.Active)
-                .Where(cr => cr.SystemName == customerRoleSystemName)
-                .FirstOrDefault() != null;
+                .FirstOrDefault(cr => (!onlyActiveCustomerRoles || cr.Active) && (cr.SystemName == customerRoleSystemName)) != null;
             return result;
         }
 
@@ -141,12 +139,12 @@ namespace Nop.Core.Domain.Customers
         public static int GetRewardPointsBalance(this Customer customer)
         {
             int result = 0;
-            if (customer.RewardPointsHistory.Count > 0)
-                result = customer.RewardPointsHistory
+            var lastRph = customer.RewardPointsHistory
                     .OrderByDescending(rph => rph.CreatedOnUtc)
                     .ThenByDescending(rph => rph.Id)
-                    .FirstOrDefault()
-                    .PointsBalance;
+                    .FirstOrDefault();
+            if (lastRph != null)
+                result = lastRph.PointsBalance;
             return result;
         }
 
