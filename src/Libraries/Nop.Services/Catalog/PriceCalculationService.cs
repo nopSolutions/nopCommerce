@@ -70,23 +70,28 @@ namespace Nop.Services.Catalog
                 }
             }
 
-            var productCategories = _categoryService.GetProductCategoriesByProductId(productVariant.ProductId);
-            if (productCategories != null)
+            //performance optimization
+            //load all category discounts just to ensure that we have at least one
+            if (_discountService.GetAllDiscounts(DiscountType.AssignedToCategories).Any())
             {
-                foreach (var productCategory in productCategories)
+                var productCategories = _categoryService.GetProductCategoriesByProductId(productVariant.ProductId);
+                if (productCategories != null)
                 {
-                    var category = productCategory.Category;
-
-                    if (category.HasDiscountsApplied)
+                    foreach (var productCategory in productCategories)
                     {
-                        //we use this property ("HasDiscountsApplied") for performance optimziation to avoid unnecessary database calls
-                        var categoryDiscounts = category.AppliedDiscounts;
-                        foreach (var discount in categoryDiscounts)
+                        var category = productCategory.Category;
+
+                        if (category.HasDiscountsApplied)
                         {
-                            if (_discountService.IsDiscountValid(discount, customer) &&
-                                discount.DiscountType == DiscountType.AssignedToCategories &&
-                                !allowedDiscounts.ContainsDiscount(discount))
-                                allowedDiscounts.Add(discount);
+                            //we use this property ("HasDiscountsApplied") for performance optimziation to avoid unnecessary database calls
+                            var categoryDiscounts = category.AppliedDiscounts;
+                            foreach (var discount in categoryDiscounts)
+                            {
+                                if (_discountService.IsDiscountValid(discount, customer) &&
+                                    discount.DiscountType == DiscountType.AssignedToCategories &&
+                                    !allowedDiscounts.ContainsDiscount(discount))
+                                    allowedDiscounts.Add(discount);
+                            }
                         }
                     }
                 }

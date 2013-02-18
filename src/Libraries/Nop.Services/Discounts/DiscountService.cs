@@ -8,7 +8,6 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Plugins;
 using Nop.Services.Common;
-using Nop.Services.Customers;
 using Nop.Services.Events;
 
 namespace Nop.Services.Discounts
@@ -19,7 +18,7 @@ namespace Nop.Services.Discounts
     public partial class DiscountService : IDiscountService
     {
         #region Constants
-        private const string DISCOUNTS_ALL_KEY = "Nop.discount.all-{0}-{1}-{2}";
+        private const string DISCOUNTS_ALL_KEY = "Nop.discount.all-{0}-{1}";
         private const string DISCOUNTS_BY_ID_KEY = "Nop.discount.id-{0}";
         private const string DISCOUNTS_PATTERN_KEY = "Nop.discount.";
         #endregion
@@ -167,8 +166,11 @@ namespace Nop.Services.Discounts
             if (discountType.HasValue)
                 discountTypeId = (int)discountType.Value;
 
-            string key = string.Format(DISCOUNTS_ALL_KEY, showHidden, couponCode, discountTypeId.HasValue ? discountTypeId.Value : 0);
-            return _cacheManager.Get(key, () =>
+            //we load all discounts, and filter them by passed "discountType" parameter later
+            //we do it because we know that this method is invoked several times per HTTP request with distinct "discountType" parameter
+            //that's why let's access the database only once
+            string key = string.Format(DISCOUNTS_ALL_KEY, showHidden, couponCode);
+            var result = _cacheManager.Get(key, () =>
             {
                 var query = _discountRepository.Table;
                 if (!showHidden)
@@ -181,10 +183,6 @@ namespace Nop.Services.Discounts
                         && (!d.EndDateUtc.HasValue || d.EndDateUtc >= nowUtc)
                         );
                 }
-                if (discountTypeId.HasValue && discountTypeId.Value > 0)
-                {
-                    query = query.Where(d => d.DiscountTypeId == discountTypeId);
-                }
                 if (!String.IsNullOrWhiteSpace(couponCode))
                 {
                     couponCode = couponCode.Trim();
@@ -196,6 +194,11 @@ namespace Nop.Services.Discounts
                 var discounts = query.ToList();
                 return discounts;
             });
+            if (discountTypeId.HasValue && discountTypeId.Value > 0)
+            {
+                result = result.Where(d => d.DiscountTypeId == discountTypeId).ToList();
+            }
+            return result;
         }
 
         /// <summary>
