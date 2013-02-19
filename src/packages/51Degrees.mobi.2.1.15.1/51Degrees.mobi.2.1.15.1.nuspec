@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>51Degrees.mobi</id>
+    <version>2.1.15.1</version>
+    <authors>James Rosewell,  Thomas Holmes</authors>
+    <owners>James Rosewell,  Thomas Holmes</owners>
+    <licenseUrl>http://51degrees.codeplex.com/license</licenseUrl>
+    <projectUrl>http://51degrees.mobi/</projectUrl>
+    <iconUrl>http://51degrees.mobi/portals/0/NuGetLogo.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Detect mobile devices, adapt the server responses, or redirect to web pages designed for mobile devices. Request.Browser properties will be populated with data from 51Degrees.mobi Lite Device Data.</description>
+    <language>en-GB</language>
+    <tags>mobile, phone, detection, device, data, handset, tablet, responsive design, 51, 51d, 51degrees</tags>
+    <dependencies>
+      <dependency id="Microsoft.Web.Infrastructure" version="1.0.0.0" />
+    </dependencies>
+    <references>
+      <reference file="FiftyOne.Foundation.dll" />
+    </references>
+  </metadata>
+</package>
