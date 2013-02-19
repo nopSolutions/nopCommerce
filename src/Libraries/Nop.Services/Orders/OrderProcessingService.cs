@@ -388,6 +388,13 @@ namespace Nop.Services.Orders
             if (order == null)
                 throw new ArgumentNullException("order");
 
+            if (order.PaymentStatus == PaymentStatus.Paid && !order.PaidDateUtc.HasValue)
+            {
+                //ensure that paid date is set
+                order.PaidDateUtc = DateTime.UtcNow;
+                _orderService.UpdateOrder(order);
+            }
+
             if (order.OrderStatus == OrderStatus.Pending)
             {
                 if (order.PaymentStatus == PaymentStatus.Authorized ||
@@ -417,13 +424,6 @@ namespace Nop.Services.Orders
                         SetOrderStatus(order, OrderStatus.Complete, true);
                     }
                 }
-            }
-
-            if (order.PaymentStatus == PaymentStatus.Paid && !order.PaidDateUtc.HasValue)
-            {
-                //ensure that paid date is set
-                order.PaidDateUtc = DateTime.UtcNow;
-                _orderService.UpdateOrder(order);
             }
         }
 
