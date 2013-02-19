@@ -19,12 +19,9 @@ namespace Nop.Core.Domain.Customers
         private ICollection<CustomerContent> _customerContent;
         private ICollection<CustomerRole> _customerRoles;
         private ICollection<ShoppingCartItem> _shoppingCartItems;
-        private ICollection<Order> _orders;
         private ICollection<RewardPointsHistory> _rewardPointsHistory;
         private ICollection<ReturnRequest> _returnRequests;
         private ICollection<Address> _addresses;
-        private ICollection<ForumTopic> _forumTopics;
-        private ICollection<ForumPost> _forumPosts;
 
         /// <summary>
         /// Ctor
@@ -164,15 +161,6 @@ namespace Nop.Core.Domain.Customers
         }
 
         /// <summary>
-        /// Gets or sets orders
-        /// </summary>
-        public virtual ICollection<Order> Orders
-        {
-            get { return _orders ?? (_orders = new List<Order>()); }
-            protected set { _orders = value; }            
-        }
-
-        /// <summary>
         /// Gets or sets reward points history
         /// </summary>
         public virtual ICollection<RewardPointsHistory> RewardPointsHistory
@@ -207,24 +195,6 @@ namespace Nop.Core.Domain.Customers
         {
             get { return _addresses ?? (_addresses = new List<Address>()); }
             protected set { _addresses = value; }            
-        }
-        
-        /// <summary>
-        /// Gets or sets the created forum topics
-        /// </summary>
-        public virtual ICollection<ForumTopic> ForumTopics
-        {
-            get { return _forumTopics ?? (_forumTopics = new List<ForumTopic>()); }
-            protected set { _forumTopics = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the created forum posts
-        /// </summary>
-        public virtual ICollection<ForumPost> ForumPosts
-        {
-            get { return _forumPosts ?? (_forumPosts = new List<ForumPost>()); }
-            protected set { _forumPosts = value; }
         }
         
         #endregion

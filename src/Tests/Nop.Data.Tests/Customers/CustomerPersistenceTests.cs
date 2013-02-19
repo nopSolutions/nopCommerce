@@ -202,50 +202,6 @@ namespace Nop.Data.Tests.Customers
             (fromDb.ShoppingCartItems.Count == 1).ShouldBeTrue();
             fromDb.ShoppingCartItems.First().AttributesXml.ShouldEqual("AttributesXml 1");
         }
-
-        [Test]
-        public void Can_save_and_load_customer_with_orders()
-        {
-            var customer = GetTestCustomer();
-            customer.Orders.Add
-                (
-                    new Order()
-                    {
-                        OrderGuid = Guid.NewGuid(),
-                        BillingAddress = new Address()
-                        {
-                            Country = new Country()
-                            {
-                                Name = "United States",
-                                TwoLetterIsoCode = "US",
-                                ThreeLetterIsoCode = "USA",
-                            },
-                            CreatedOnUtc = new DateTime(2010, 01, 01),
-                        },
-                        Deleted = true,
-                        CreatedOnUtc = new DateTime(2010, 01, 01)
-                    }
-               );
-
-
-            var fromDb = SaveAndLoadEntity(customer);
-            fromDb.ShouldNotBeNull();
-
-            fromDb.Orders.ShouldNotBeNull();
-            (fromDb.Orders.Count == 1).ShouldBeTrue();
-            fromDb.Orders.First().Deleted.ShouldEqual(true);
-        }
-
-        protected Affiliate GetTestAffiliate()
-        {
-            return new Affiliate
-            {
-                Deleted = true,
-                Active = true,
-                Address = GetTestAddress(),
-            };
-        }
-
         protected Address GetTestAddress()
         {
             return new Address()

@@ -8,6 +8,7 @@ using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Services.Common;
@@ -33,6 +34,9 @@ namespace Nop.Services.Customers
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<CustomerRole> _customerRoleRepository;
         private readonly IRepository<GenericAttribute> _gaRepository;
+        private readonly IRepository<Order> _orderRepository;
+        private readonly IRepository<ForumPost> _forumPostRepository;
+        private readonly IRepository<ForumTopic> _forumTopicRepository;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ICacheManager _cacheManager;
         private readonly IEventPublisher _eventPublisher;
@@ -49,12 +53,19 @@ namespace Nop.Services.Customers
         /// <param name="customerRepository">Customer repository</param>
         /// <param name="customerRoleRepository">Customer role repository</param>
         /// <param name="gaRepository">Generic attribute repository</param>
+        /// <param name="orderRepository">Order repository</param>
+        /// <param name="forumPostRepository">Forum post repository</param>
+        /// <param name="forumTopicRepository">Forum topic repository</param>
         /// <param name="genericAttributeService">Generic attribute service</param>
         /// <param name="eventPublisher">Event published</param>
+        /// <param name="customerSettings">Customer settings</param>
         public CustomerService(ICacheManager cacheManager,
             IRepository<Customer> customerRepository,
             IRepository<CustomerRole> customerRoleRepository,
             IRepository<GenericAttribute> gaRepository,
+            IRepository<Order> orderRepository,
+            IRepository<ForumPost> forumPostRepository,
+            IRepository<ForumTopic> forumTopicRepository,
             IGenericAttributeService genericAttributeService,
             IEventPublisher eventPublisher, 
             CustomerSettings customerSettings)
@@ -63,6 +74,9 @@ namespace Nop.Services.Customers
             this._customerRepository = customerRepository;
             this._customerRoleRepository = customerRoleRepository;
             this._gaRepository = gaRepository;
+            this._orderRepository = orderRepository;
+            this._forumPostRepository = forumPostRepository;
+            this._forumTopicRepository = forumTopicRepository;
             this._genericAttributeService = genericAttributeService;
             this._eventPublisher = eventPublisher;
             this._customerSettings = customerSettings;
@@ -568,15 +582,35 @@ namespace Nop.Services.Customers
             query = query.Where(c => c.CustomerRoles.Select(cr => cr.Id).Contains(guestRole.Id));
             if (onlyWithoutShoppingCart)
                 query = query.Where(c => !c.ShoppingCartItems.Any());
-            //no orders
-            query = query.Where(c => !c.Orders.Any());
+            //no orders (inner join)
+            query = from c in query
+                    join o in _orderRepository.Table on c.Id equals o.CustomerId into c_o
+                    from o in c_o.DefaultIfEmpty()
+                    where !c_o.Any()
+                    select c;
             //no customer content
             query = query.Where(c => !c.CustomerContent.Any());
-            //ensure that customers doesn't have forum posts or topics
-            query = query.Where(c => !c.ForumTopics.Any());
-            query = query.Where(c => !c.ForumPosts.Any());
+            //ensure that customers doesn't have forum posts or topics (inner join)
+            query = from c in query
+                    join fp in _forumPostRepository.Table on c.Id equals fp.CustomerId into c_fp
+                    from fp in c_fp.DefaultIfEmpty()
+                    where !c_fp.Any()
+                    select c;
+            query = from c in query
+                    join ft in _forumTopicRepository.Table on c.Id equals ft.CustomerId into c_ft
+                    from ft in c_ft.DefaultIfEmpty()
+                    where !c_ft.Any()
+                    select c;
             //don't delete system accounts
             query = query.Where(c => !c.IsSystemAccount);
+
+            //only distinct customers (group by ID)
+            query = from c in query
+                    group c by c.Id
+                    into cGroup
+                    orderby cGroup.Key
+                    select cGroup.FirstOrDefault();
+            query = query.OrderBy(c => c.Id);
             var customers = query.ToList();
 
 

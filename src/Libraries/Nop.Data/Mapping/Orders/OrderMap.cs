@@ -30,7 +30,7 @@ namespace Nop.Data.Mapping.Orders
             this.Ignore(o => o.TaxRatesDictionary);
             
             this.HasRequired(o => o.Customer)
-                .WithMany(c => c.Orders)
+                .WithMany()
                 .HasForeignKey(o => o.CustomerId);
             
             //code below is commented because it causes some issues on big databases - http://www.nopcommerce.com/boards/t/11126/bug-version-20-command-confirm-takes-several-minutes-using-big-databases.aspx

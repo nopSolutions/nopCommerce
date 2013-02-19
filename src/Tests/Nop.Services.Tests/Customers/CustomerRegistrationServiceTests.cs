@@ -4,6 +4,8 @@ using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Forums;
+using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -23,6 +25,9 @@ namespace Nop.Services.Tests.Customers
         IRepository<Customer> _customerRepo;
         IRepository<CustomerRole> _customerRoleRepo;
         IRepository<GenericAttribute> _genericAttributeRepo;
+        IRepository<Order> _orderRepo;
+        IRepository<ForumPost> _forumPostRepo;
+        IRepository<ForumTopic> _forumTopicRepo;
         IGenericAttributeService _genericAttributeService;
         IEncryptionService _encryptionService;
         ICustomerService _customerService;
@@ -109,13 +114,17 @@ namespace Nop.Services.Tests.Customers
 
             _customerRoleRepo = MockRepository.GenerateMock<IRepository<CustomerRole>>();
             _genericAttributeRepo = MockRepository.GenerateMock<IRepository<GenericAttribute>>();
+            _orderRepo = MockRepository.GenerateMock<IRepository<Order>>();
+            _forumPostRepo = MockRepository.GenerateMock<IRepository<ForumPost>>();
+            _forumTopicRepo = MockRepository.GenerateMock<IRepository<ForumTopic>>();
 
             _genericAttributeService = MockRepository.GenerateMock<IGenericAttributeService>();
             _newsLetterSubscriptionService = MockRepository.GenerateMock<INewsLetterSubscriptionService>();
             
             _localizationService = MockRepository.GenerateMock<ILocalizationService>();
             _customerService = new CustomerService(new NopNullCache(), _customerRepo, _customerRoleRepo,
-                _genericAttributeRepo, _genericAttributeService, _eventPublisher, _customerSettings);
+                _genericAttributeRepo,_orderRepo, _forumPostRepo, _forumTopicRepo,
+                _genericAttributeService, _eventPublisher, _customerSettings);
             _customerRegistrationService = new CustomerRegistrationService(_customerService,
                 _encryptionService, _newsLetterSubscriptionService, _localizationService,
                 _rewardPointsSettings, _customerSettings);
