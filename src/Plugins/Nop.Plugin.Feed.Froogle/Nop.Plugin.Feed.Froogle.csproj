@@ -35,15 +35,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Autofac">
-      <HintPath>..\..\packages\Autofac.2.6.3.862\lib\NET40\Autofac.dll</HintPath>
+      <HintPath>..\..\packages\Autofac.3.0.1\lib\net40\Autofac.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Autofac.Configuration">
-      <HintPath>..\..\packages\Autofac.2.6.3.862\lib\NET40\Autofac.Configuration.dll</HintPath>
+      <HintPath>..\..\packages\Autofac.3.0.1\lib\net40\Autofac.Configuration.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Autofac.Integration.Mvc">
-      <HintPath>..\..\packages\Autofac.Mvc3.2.6.3.862\lib\NET40\Autofac.Integration.Mvc.dll</HintPath>
+      <HintPath>..\..\packages\Autofac.Mvc4.3.0.0\lib\net40\Autofac.Integration.Mvc.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="EntityFramework">
