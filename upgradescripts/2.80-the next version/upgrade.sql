@@ -377,6 +377,27 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.StoreScope.CheckAll.Hint">
 	<Value>(check boxes if you want to set a custom value for this shop)</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayEuCookieLawWarning">
+	<Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayEuCookieLawWarning.Hint">
+	<Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="EUCookieLaw.Title">
+	<Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="EUCookieLaw.Description">
+	<Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="EUCookieLaw.OK">
+	<Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="EUCookieLaw.Cancel">
+	<Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="EUCookieLaw.CannotBrowse">
+	<Value></Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1650,4 +1671,10 @@ WHERE [StoreId] IS NULL
 GO
 
 ALTER TABLE [Setting] ALTER COLUMN [StoreId] int NOT NULL
+GO
+
+DELETE FROM [Setting] WHERE [name] = N'storeinformationsettings.displayeucookielawwarning' 
+GO
+
+DELETE FROM [GenericAttribute] WHERE [KeyGroup] = N'Customer' and [Key] = N'EuCookieLaw.Accepted'
 GO

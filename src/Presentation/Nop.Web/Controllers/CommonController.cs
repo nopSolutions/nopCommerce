@@ -682,32 +682,6 @@ namespace Nop.Web.Controllers
             return View();
         }
 
-        //EU Cookie law
-        [ChildActionOnly]
-        public ActionResult EuCookieLaw()
-        {
-            if (!_storeInformationSettings.DisplayEuCookieLawWarning)
-                //disabled
-                return Content("");
-
-            if (_workContext.CurrentCustomer.GetAttribute<bool>("EuCookieLaw.Accepted"))
-                //already accepted
-                return Content("");
-
-            return PartialView();
-        }
-        [HttpPost]
-        public ActionResult EuCookieLawAccept()
-        {
-            if (!_storeInformationSettings.DisplayEuCookieLawWarning)
-                //disabled
-                return Json(new { stored = false });
-
-            //save setting
-            _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, "EuCookieLaw.Accepted", true);
-            return Json(new { stored = true });
-        }
-
         public ActionResult RobotsTextFile()
         {
             var disallowPaths = new List<string>()

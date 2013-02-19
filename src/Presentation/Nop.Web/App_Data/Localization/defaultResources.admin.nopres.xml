@@ -4778,14 +4778,6 @@
                                             </LocaleResource>
                                         </Children>
                                     </LocaleResource>
-                                    <LocaleResource Name="DisplayEuCookieLawWarning">
-                                        <Value>Display EU cookie law warning</Value>
-                                        <Children>
-                                            <LocaleResource Name="Hint">
-                                                <Value>Make the site EU cookie law compliant. When enabled, new customers will see an appropriate warning box.</Value>
-                                            </LocaleResource>
-                                        </Children>
-                                    </LocaleResource>
                                     <LocaleResource Name="PdfEnabled">
                                         <Value>Enabled</Value>
                                         <Children>

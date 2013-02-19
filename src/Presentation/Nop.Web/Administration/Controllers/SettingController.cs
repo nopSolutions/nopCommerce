@@ -1748,8 +1748,6 @@ namespace Nop.Admin.Controllers
                     };
                 })
                 .ToList();
-            //EU Cookie law
-            model.StoreInformationSettings.DisplayEuCookieLawWarning = storeInformationSettings.DisplayEuCookieLawWarning;
             //override settings
             if (storeScope > 0)
             {
@@ -1759,7 +1757,6 @@ namespace Nop.Admin.Controllers
                 model.StoreInformationSettings.DefaultStoreThemeForDesktops_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.DefaultStoreThemeForDesktops, storeScope);
                 model.StoreInformationSettings.DefaultStoreThemeForMobileDevices_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.DefaultStoreThemeForMobileDevices, storeScope);
                 model.StoreInformationSettings.AllowCustomerToSelectTheme_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.AllowCustomerToSelectTheme, storeScope);
-                model.StoreInformationSettings.DisplayEuCookieLawWarning_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.DisplayEuCookieLawWarning, storeScope);
             }
 
             //seo settings
@@ -1859,8 +1856,6 @@ namespace Nop.Admin.Controllers
                                                  model.StoreInformationSettings.MobileDevicesSupported;
             storeInformationSettings.MobileDevicesSupported = model.StoreInformationSettings.MobileDevicesSupported;
             storeInformationSettings.DefaultStoreThemeForMobileDevices = model.StoreInformationSettings.DefaultStoreThemeForMobileDevices;
-            //EU Cookie law
-            storeInformationSettings.DisplayEuCookieLawWarning = model.StoreInformationSettings.DisplayEuCookieLawWarning;
 
             /* We do not clear cache after each setting update.
              * This behavior can increase performance because cached settings will not be cleared 
@@ -1895,11 +1890,6 @@ namespace Nop.Admin.Controllers
             else if (storeScope > 0)
                 _settingService.DeleteSetting(storeInformationSettings, x => x.AllowCustomerToSelectTheme, storeScope);
 
-            if (model.StoreInformationSettings.DisplayEuCookieLawWarning_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(storeInformationSettings, x => x.DisplayEuCookieLawWarning, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(storeInformationSettings, x => x.DisplayEuCookieLawWarning, storeScope);
-            
             //now clear settings cache
             _settingService.ClearCache();
 

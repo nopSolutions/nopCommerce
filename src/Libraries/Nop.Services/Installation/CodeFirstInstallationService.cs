@@ -4478,7 +4478,7 @@ namespace Nop.Services.Installation
                     ConvertNonWesternChars = false,
                     AllowUnicodeCharsInUrls = true,
                     EnableJsBundling = true,
-                    ReservedUrlRecordSlugs = new List<string>() { "admin", "install", "recentlyviewedproducts", "newproducts", "compareproducts", "clearcomparelist", "setproductreviewhelpfulness", "login", "register", "logout", "cart", "wishlist", "emailwishlist", "checkout", "onepagecheckout", "contactus", "passwordrecovery", "subscribenewsletter", "blog", "boards", "inboxupdate", "sentupdate", "news", "sitemap", "sitemapseo", "search", "config", "eucookielawaccept", "page-not-found" },
+                    ReservedUrlRecordSlugs = new List<string>() { "admin", "install", "recentlyviewedproducts", "newproducts", "compareproducts", "clearcomparelist", "setproductreviewhelpfulness", "login", "register", "logout", "cart", "wishlist", "emailwishlist", "checkout", "onepagecheckout", "contactus", "passwordrecovery", "subscribenewsletter", "blog", "boards", "inboxupdate", "sentupdate", "news", "sitemap", "sitemapseo", "search", "config", "page-not-found" },
                 });
 
             settingService.SaveSetting(new AdminAreaSettings()
@@ -4628,7 +4628,6 @@ namespace Nop.Services.Installation
                     DefaultStoreThemeForMobileDevices = "Mobile",
                     EmulateMobileDevice = false,
                     DisplayMiniProfilerInPublicStore = false,
-                    DisplayEuCookieLawWarning = false,
                 });
 
             settingService.SaveSetting(new RewardPointsSettings()
