@@ -75,7 +75,8 @@ namespace Nop.Core.Domain.Messages
     /// <summary>
     /// A container for tokens that are added.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T">Entity type</typeparam>
+    /// <typeparam name="U"></typeparam>
     public class EntityTokensAddedEvent<T, U> where T : BaseEntity
     {
         private readonly T _entity;
