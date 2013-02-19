@@ -1636,7 +1636,7 @@ namespace Nop.Web.Controllers
         public ActionResult ContinueShopping()
         {
             string returnUrl = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.LastContinueShoppingPage, _storeContext.CurrentStore.Id);
-            if (!String.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+            if (!String.IsNullOrEmpty(returnUrl))
             {
                 return Redirect(returnUrl);
             }
