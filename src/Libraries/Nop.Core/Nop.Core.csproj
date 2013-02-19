@@ -221,9 +221,7 @@
     <Compile Include="Infrastructure\DependencyManagement\ComponentLifeStyle.cs" />
     <Compile Include="Infrastructure\EngineContext.cs" />
     <Compile Include="Infrastructure\AppDomainTypeFinder.cs" />
-    <Compile Include="Infrastructure\DependencyManagement\AttributeInfo.cs" />
     <Compile Include="Infrastructure\DependencyManagement\IDependencyRegistrar.cs" />
-    <Compile Include="Infrastructure\DependencyManagement\ComponentRegistrationException.cs" />
     <Compile Include="Infrastructure\DependencyManagement\ContainerConfigurer.cs" />
     <Compile Include="Infrastructure\DependencyManagement\ContainerManager.cs" />
     <Compile Include="Infrastructure\EventBroker.cs" />
@@ -286,8 +284,6 @@
     <Compile Include="Plugins\PluginFileParser.cs" />
     <Compile Include="Plugins\PluginManager.cs" />
     <Compile Include="Plugins\PluginDescriptor.cs" />
-    <Compile Include="Infrastructure\DependencyManagement\DependencyAttribute.cs" />
-    <Compile Include="Infrastructure\DependencyManagement\DependencyAttributeRegistrator.cs" />
     <Compile Include="Infrastructure\Singleton.cs" />
     <Compile Include="Plugins\IPlugin.cs" />
     <Compile Include="Plugins\IPluginFinder.cs" />
