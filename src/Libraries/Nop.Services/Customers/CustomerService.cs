@@ -619,6 +619,12 @@ namespace Nop.Services.Customers
             {
                 try
                 {
+                    //delete attributes
+                    var attributes = _genericAttributeService.GetAttributesForEntity(c.Id, "Customer");
+                    foreach (var attribute in attributes)
+                        _genericAttributeService.DeleteAttribute(attribute);
+
+
                     //delete from database
                     _customerRepository.Delete(c);
                     numberOfDeletedCustomers++;
