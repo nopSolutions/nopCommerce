@@ -3,17 +3,28 @@
 <div class="breadcrumb">
     <ul>
         @Html.Widget("productbreadcrumb_before")
-        <li><a href="@Url.RouteUrl("HomePage")" title="@T("Categories.Breadcrumb.Top")">@T("Products.Breadcrumb.Top")</a>
-            <span class="delimiter">/</span> </li>
-        @for (int i = 0; i < Model.CategoryBreadcrumb.Count; i++)
+        <li>
+            <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">
+                <a href="@Url.RouteUrl("HomePage")" itemprop="url">
+                    <span itemprop="title">@T("Products.Breadcrumb.Top")</span>
+                </a>
+            </span>
+            <span class="delimiter">/</span>
+        </li>
+        @foreach (var category in Model.CategoryBreadcrumb)
         {
-            var catBr = Model.CategoryBreadcrumb[i];
-            <li><a href="@Url.RouteUrl("Category", new { SeName = catBr.SeName })" title="@catBr.Name">@catBr.Name</a>
-                <span class="delimiter">/</span></li>
+            <li>
+                <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">
+                    <a href="@Url.RouteUrl("Category", new { SeName = category.SeName })" itemprop="url">
+                        <span itemprop="title">@category.Name</span>
+                    </a>
+                </span>
+                <span class="delimiter">/</span>
+            </li>
         }
         <li>
             <strong class="current-item">@Model.ProductName</strong>
-            @*<strong class="current-item"><a href="@Url.RouteUrl("Product", new { SeName = Model.ProductSeName })">@Model.ProductName</a></strong>*@
+            @*<strong class="current-item"><a href="@Url.RouteUrl("Product", new { SeName = Model.ProductSeName })" itemprop="url">@Model.ProductName</a></strong>*@
             @Html.Widget("productbreadcrumb_after")
         </li>
     </ul>

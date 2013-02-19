@@ -26,65 +26,73 @@
         @Html.Widget("productdetails_top")
         @using (Html.BeginRouteForm("Product", new { SeName = Model.SeName }, FormMethod.Post, new { id = "product-details-form" }))
         {
-            <div class="product-essential">
-                @Html.Widget("productdetails_before_pictures")
-                <!--product pictures-->
-                @Html.Partial("_ProductDetailsPictures", Model)
-                @Html.Widget("productdetails_after_pictures")
-                <div class="overview">
-                    <h1 class="product-name">
-                        @Model.Name
-                    </h1>
-                    <div class="short-description">
-                        @Html.Raw(Model.ShortDescription)
+            <div itemscope itemtype="http://schema.org/Product">
+                <div class="product-essential">
+                    @Html.Widget("productdetails_before_pictures")
+                    <!--product pictures-->
+                    @Html.Partial("_ProductDetailsPictures", Model)
+                    @Html.Widget("productdetails_after_pictures")
+                    <div class="overview">
+                        <h1 class="product-name" itemprop="name">
+                            @Model.Name
+                        </h1>
+                        @if (!String.IsNullOrEmpty(Model.ShortDescription))
+                        {
+                            <div class="short-description">
+                                @Html.Raw(Model.ShortDescription)
+                            </div>
+                        }
+                        <div class="clear">
+                        </div>
+                        @Html.Widget("productdetails_overview_top")
+                        <!--product manufacturers-->
+                        @Html.Action("ProductManufacturers", "Catalog", new { productId = Model.Id })
+                        <div class="clear">
+                        </div>
+                        <!--product reviews-->
+                        @Html.Action("ProductReviewOverview", "Catalog", new { productId = Model.Id })
+                        <div class="clear">
+                        </div>
+                        @Html.Action("ProductEmailAFriendButton", "Catalog", new { productId = Model.Id })
+                        @Html.Action("CompareProductsButton", "Catalog", new { productId = Model.Id })
+                        <div class="clear">
+                        </div>
+                        @Html.Action("ShareButton", "Catalog")
+                        @Html.Widget("productdetails_overview_bottom")
                     </div>
-                    <div class="clear">
-                    </div>
-                    @Html.Widget("productdetails_overview_top")
-                    <!--product manufacturers-->
-                    @Html.Action("ProductManufacturers", "Catalog", new { productId = Model.Id })
-                    <div class="clear">
-                    </div>
-                    <!--product reviews-->
-                    @Html.Action("ProductReviewOverview", "Catalog", new { productId = Model.Id })
-                    <div class="clear">
-                    </div>
-                    @Html.Action("ProductEmailAFriendButton", "Catalog", new { productId = Model.Id })
-                    @Html.Action("CompareProductsButton", "Catalog", new { productId = Model.Id })
-                    <div class="clear">
-                    </div>
-                    @Html.Action("ShareButton", "Catalog")
-                    @Html.Widget("productdetails_overview_bottom")
-                </div>
-                <div class="full-description">
-                    @Html.Raw(Model.FullDescription)
-                </div>
-            </div>
-            <div class="clear">
-            </div>
-            <div class="product-collateral">
-                <!--product variants-->
-                <div class="product-variant-list">
-                    @foreach (var variant in Model.ProductVariantModels)
+                    @if (!String.IsNullOrEmpty(Model.FullDescription))
                     {
-                        var dataDictVariant = new ViewDataDictionary();
-                        dataDictVariant.TemplateInfo.HtmlFieldPrefix = string.Format("variant_{0}", variant.Id);
-                        @Html.Partial("_ProductVariantLine", variant, dataDictVariant)
+                        <div class="full-description" itemprop="description">
+                            @Html.Raw(Model.FullDescription)
+                        </div>
                     }
                 </div>
                 <div class="clear">
                 </div>
-                @Html.Action("ProductSpecifications", "Catalog", new { productId = Model.Id })
-                <div class="clear">
-                </div>
-                @Html.Action("ProductTags", "Catalog", new { productId = Model.Id })
-                <div class="clear">
-                </div>
-                @Html.Action("ProductsAlsoPurchased", "Catalog", new { productId = Model.Id })
-                <div class="clear">
-                </div>
-                @Html.Action("RelatedProducts", "Catalog", new { productId = Model.Id })
-                <div class="clear">
+                <div class="product-collateral">
+                    <!--product variants-->
+                    <div class="product-variant-list">
+                        @foreach (var variant in Model.ProductVariantModels)
+                        {
+                            var dataDictVariant = new ViewDataDictionary();
+                            dataDictVariant.TemplateInfo.HtmlFieldPrefix = string.Format("variant_{0}", variant.Id);
+                            @Html.Partial("_ProductVariantLine", variant, dataDictVariant)
+                        }
+                    </div>
+                    <div class="clear">
+                    </div>
+                    @Html.Action("ProductSpecifications", "Catalog", new { productId = Model.Id })
+                    <div class="clear">
+                    </div>
+                    @Html.Action("ProductTags", "Catalog", new { productId = Model.Id })
+                    <div class="clear">
+                    </div>
+                    @Html.Action("ProductsAlsoPurchased", "Catalog", new { productId = Model.Id })
+                    <div class="clear">
+                    </div>
+                    @Html.Action("RelatedProducts", "Catalog", new { productId = Model.Id })
+                    <div class="clear">
+                    </div>
                 </div>
             </div>
         }

@@ -1,11 +1,6 @@
 ﻿@model ProductDetailsModel.ProductVariantModel.ProductVariantPriceModel
 @using Nop.Web.Models.Catalog;
-@using Nop.Core.Domain.Catalog;
-@using Nop.Core.Infrastructure;
-@using Nop.Core;
-@using System.Text;
 @using System.Globalization;
-@using Nop.Services.Customers;
 @using System.Text.RegularExpressions;
 @{
     string pattern = "(?<val>(\\d+[\\s\\,\\.]?)+)";
@@ -17,7 +12,7 @@
         var priceValForDynUpd_@(Model.ProductVariantId) = @(((float)(Model.PriceValue != Model.PriceWithDiscountValue ? Model.PriceWithDiscountValue : Model.PriceValue)).ToString(new CultureInfo("en-US")));
     </script>
 }
-<div class="prices">
+<div class="prices" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
     @if (Model.CustomerEntersPrice)
     {
         /*display nothing*/
@@ -44,7 +39,7 @@
         <span 
         @if (String.IsNullOrWhiteSpace(Model.PriceWithDiscount))
         {
-            <text>class="product-price"</text>
+            <text>class="product-price" itemprop="price"</text>
         }
         >
             @if (Model.DynamicPriceUpdate && !Model.HidePrices && String.IsNullOrWhiteSpace(Model.PriceWithDiscount))
