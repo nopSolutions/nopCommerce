@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
@@ -243,6 +244,7 @@ namespace Nop.Services.Tests.Catalog
             //set HasDiscountsApplied property
             productVariant.HasDiscountsApplied = true;
             _discountService.Expect(ds => ds.IsDiscountValid(discount1, customer)).Return(true);
+            _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToCategories)).Return(new List<Discount>());
             
             _priceCalcService.GetFinalPrice(productVariant, customer, 0, true, 1).ShouldEqual(9.34M);
         }
@@ -266,8 +268,10 @@ namespace Nop.Services.Tests.Catalog
                     Name = "Product name 1",
                     Published = true
                 }
-            };
-
+            }; 
+            
+            _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToCategories)).Return(new List<Discount>());
+            
             //customer
             Customer customer = null;
             //valid dates
@@ -318,6 +322,7 @@ namespace Nop.Services.Tests.Catalog
             //set HasDiscountsApplied property
             productVariant.HasDiscountsApplied = true;
             _discountService.Expect(ds => ds.IsDiscountValid(discount1, customer)).Return(true);
+            _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToCategories)).Return(new List<Discount>());
 
             var discount2 = new Discount()
             {

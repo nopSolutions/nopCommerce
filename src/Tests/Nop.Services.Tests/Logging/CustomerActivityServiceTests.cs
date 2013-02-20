@@ -87,14 +87,5 @@ namespace Nop.Services.Tests.Logging
             activities = _customerActivityService.GetAllActivities(null, null, 2, 0, 0, 10);
             activities.Contains(_activity2).ShouldBeTrue();
         }
-
-        [Test]
-        public void Can_Find_Activity_By_Id()
-        {
-            var activity = _customerActivityService.GetActivityById(1);
-            activity.ShouldBeTheSameAs(_activity1);
-            activity = _customerActivityService.GetActivityById(2);
-            activity.ShouldBeTheSameAs(_activity2);
-        }
     }
 }
