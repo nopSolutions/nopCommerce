@@ -51,6 +51,23 @@ namespace Nop.Core.Domain.Customers
         }
 
         /// <summary>
+        /// Gets a value indicating whether the customer is a built-in record for background tasks
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <returns>Result</returns>
+        public static bool IsBackgroundTaskAccount(this Customer customer)
+        {
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+
+            if (!customer.IsSystemAccount || String.IsNullOrEmpty(customer.SystemName))
+                return false;
+
+            var result = customer.SystemName.Equals(SystemCustomerNames.BackgroundTask, StringComparison.InvariantCultureIgnoreCase);
+            return result;
+        }
+
+        /// <summary>
         /// Gets a value indicating whether customer is administrator
         /// </summary>
         /// <param name="customer">Customer</param>

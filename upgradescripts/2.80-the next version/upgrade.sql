@@ -1699,3 +1699,11 @@ GO
 
 DELETE FROM [GenericAttribute] WHERE [KeyGroup] = N'Customer' and [Key] = N'EuCookieLaw.Accepted'
 GO
+
+--built-in user record for background tasks
+IF NOT EXISTS (SELECT 1 FROM [Customer] WHERE [SystemName] = N'BackgroundTask')
+BEGIN
+	INSERT [Customer] ([CustomerGuid], [Email], [PasswordFormatId], [AdminComment], [IsTaxExempt], [AffiliateId], [Active], [Deleted], [IsSystemAccount], [SystemName], [CreatedOnUtc], [LastActivityDateUtc]) 
+	VALUES (NEWID(), N'builtin@background-task-record.com', 0, N'Built-in system record used for background tasks.', 0, 0, 1, 0, 1, N'BackgroundTask',GETUTCDATE(),GETUTCDATE())
+END
+GO

@@ -6,6 +6,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Fakes;
 using Nop.Services.Authentication;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -71,20 +72,21 @@ namespace Nop.Web.Framework
 
         protected void SetCustomerCookie(Guid customerGuid)
         {
-            var cookie = new HttpCookie(CustomerCookieName);
-            cookie.HttpOnly = true;
-            cookie.Value = customerGuid.ToString();
-            if (customerGuid == Guid.Empty)
-            {
-                cookie.Expires = DateTime.Now.AddMonths(-1);
-            }
-            else
-            {
-                int cookieExpires = 24 * 365; //TODO make configurable
-                cookie.Expires = DateTime.Now.AddHours(cookieExpires);
-            }
             if (_httpContext != null && _httpContext.Response != null)
             {
+                var cookie = new HttpCookie(CustomerCookieName);
+                cookie.HttpOnly = true;
+                cookie.Value = customerGuid.ToString();
+                if (customerGuid == Guid.Empty)
+                {
+                    cookie.Expires = DateTime.Now.AddMonths(-1);
+                }
+                else
+                {
+                    int cookieExpires = 24*365; //TODO make configurable
+                    cookie.Expires = DateTime.Now.AddHours(cookieExpires);
+                }
+
                 _httpContext.Response.Cookies.Remove(CustomerCookieName);
                 _httpContext.Response.Cookies.Add(cookie);
             }
@@ -101,69 +103,73 @@ namespace Nop.Web.Framework
                     return _cachedCustomer;
 
                 Customer customer = null;
-                if (_httpContext != null)
+                if (_httpContext == null || _httpContext is FakeHttpContext)
                 {
-                    //check whether request is made by a search engine
-                    //in this case return built-in customer record for search engines 
-                    //or comment the following two lines of code in order to disable this functionality
-                    if (_webHelper.IsSearchEngine(_httpContext))
-                        customer = _customerService.GetCustomerBySystemName(SystemCustomerNames.SearchEngine);
-
-                    //registered user
-                    if (customer == null || customer.Deleted || !customer.Active)
-                    {
-                        customer = _authenticationService.GetAuthenticatedCustomer();
-                    }
-
-                    //impersonate user if required (currently used for 'phone order' support)
-                    if (customer != null && !customer.Deleted && customer.Active)
-                    {
-                        int? impersonatedCustomerId = customer.GetAttribute<int?>(SystemCustomerAttributeNames.ImpersonatedCustomerId);
-                        if (impersonatedCustomerId.HasValue && impersonatedCustomerId.Value > 0)
-                        {
-                            var impersonatedCustomer = _customerService.GetCustomerById(impersonatedCustomerId.Value);
-                            if (impersonatedCustomer != null && !impersonatedCustomer.Deleted && impersonatedCustomer.Active)
-                            {
-                                //set impersonated customer
-                                _originalCustomerIfImpersonated = customer;
-                                customer = impersonatedCustomer;
-                            }
-                        }
-                    }
-
-                    //load guest customer
-                    if (customer == null || customer.Deleted || !customer.Active)
-                    {
-                        var customerCookie = GetCustomerCookie();
-                        if (customerCookie != null && !String.IsNullOrEmpty(customerCookie.Value))
-                        {
-                            Guid customerGuid;
-                            if (Guid.TryParse(customerCookie.Value, out customerGuid))
-                            {
-                                var customerByCookie = _customerService.GetCustomerByGuid(customerGuid);
-                                if (customerByCookie != null &&
-                                    //this customer (from cookie) should not be registered
-                                    !customerByCookie.IsRegistered() &&
-                                    //it should not be a built-in 'search engine' customer account
-                                    !customerByCookie.IsSearchEngineAccount())
-                                    customer = customerByCookie;
-                            }
-                        }
-                    }
-
-                    //create guest if not exists
-                    if (customer == null || customer.Deleted || !customer.Active)
-                    {
-                        customer = _customerService.InsertGuestCustomer();
-                    }
-
-                    SetCustomerCookie(customer.CustomerGuid);
+                    //check whether request is made by a background task
+                    //in this case return built-in customer record for background task
+                    customer = _customerService.GetCustomerBySystemName(SystemCustomerNames.BackgroundTask);
                 }
 
-                //validation
+                //check whether request is made by a search engine
+                //in this case return built-in customer record for search engines 
+                //or comment the following two lines of code in order to disable this functionality
+                if (customer == null || customer.Deleted || !customer.Active)
+                {
+                    if (_webHelper.IsSearchEngine(_httpContext))
+                        customer = _customerService.GetCustomerBySystemName(SystemCustomerNames.SearchEngine);
+                }
+
+                //registered user
+                if (customer == null || customer.Deleted || !customer.Active)
+                {
+                    customer = _authenticationService.GetAuthenticatedCustomer();
+                }
+
+                //impersonate user if required (currently used for 'phone order' support)
                 if (customer != null && !customer.Deleted && customer.Active)
                 {
+                    int? impersonatedCustomerId = customer.GetAttribute<int?>(SystemCustomerAttributeNames.ImpersonatedCustomerId);
+                    if (impersonatedCustomerId.HasValue && impersonatedCustomerId.Value > 0)
+                    {
+                        var impersonatedCustomer = _customerService.GetCustomerById(impersonatedCustomerId.Value);
+                        if (impersonatedCustomer != null && !impersonatedCustomer.Deleted && impersonatedCustomer.Active)
+                        {
+                            //set impersonated customer
+                            _originalCustomerIfImpersonated = customer;
+                            customer = impersonatedCustomer;
+                        }
+                    }
+                }
 
+                //load guest customer
+                if (customer == null || customer.Deleted || !customer.Active)
+                {
+                    var customerCookie = GetCustomerCookie();
+                    if (customerCookie != null && !String.IsNullOrEmpty(customerCookie.Value))
+                    {
+                        Guid customerGuid;
+                        if (Guid.TryParse(customerCookie.Value, out customerGuid))
+                        {
+                            var customerByCookie = _customerService.GetCustomerByGuid(customerGuid);
+                            if (customerByCookie != null &&
+                                //this customer (from cookie) should not be registered
+                                !customerByCookie.IsRegistered())
+                                customer = customerByCookie;
+                        }
+                    }
+                }
+
+                //create guest if not exists
+                if (customer == null || customer.Deleted || !customer.Active)
+                {
+                    customer = _customerService.InsertGuestCustomer();
+                }
+
+
+                //validation
+                if (!customer.Deleted && customer.Active)
+                {
+                    SetCustomerCookie(customer.CustomerGuid);
                     _cachedCustomer = customer;
                 }
 

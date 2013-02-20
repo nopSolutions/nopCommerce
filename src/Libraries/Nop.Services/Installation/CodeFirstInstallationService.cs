@@ -4096,6 +4096,23 @@ namespace Nop.Services.Installation
             };
             searchEngineUser.CustomerRoles.Add(crGuests);
             _customerRepository.Insert(searchEngineUser);
+
+
+            //built-in user for background tasks
+            var backgroundTaskUser = new Customer()
+            {
+                Email = "builtin@background-task-record.com",
+                CustomerGuid = Guid.NewGuid(),
+                PasswordFormat = PasswordFormat.Clear,
+                AdminComment = "Built-in system record used for background tasks.",
+                Active = true,
+                IsSystemAccount = true,
+                SystemName = SystemCustomerNames.BackgroundTask,
+                CreatedOnUtc = DateTime.UtcNow,
+                LastActivityDateUtc = DateTime.UtcNow,
+            };
+            backgroundTaskUser.CustomerRoles.Add(crGuests);
+            _customerRepository.Insert(backgroundTaskUser);
         }
 
         protected virtual void HashDefaultCustomerPassword(string defaultUserEmail, string defaultUserPassword)

@@ -124,6 +124,11 @@ namespace Nop.Services.Customers
                 result.AddError("Search engine can't be registered");
                 return result;
             }
+            if (request.Customer.IsBackgroundTaskAccount())
+            {
+                result.AddError("Background task account can't be registered");
+                return result;
+            }
             if (request.Customer.IsRegistered())
             {
                 result.AddError("Current customer is already registered");
