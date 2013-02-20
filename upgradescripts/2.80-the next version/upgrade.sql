@@ -398,6 +398,27 @@ set @resources='
   <LocaleResource Name="EUCookieLaw.CannotBrowse">
 	<Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Manual.Fields.AdditionalFeePercentage">
+	<Value>Additional fee. Use percentage</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payment.CashOnDelivery.AdditionalFeePercentage">
+	<Value>Additional fee. Use percentage</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payment.CheckMoneyOrder.AdditionalFeePercentage">
+	<Value>Additional fee. Use percentage</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payment.PurchaseOrder.AdditionalFeePercentage">
+	<Value>Additional fee. Use percentage</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.AuthorizeNet.Fields.AdditionalFeePercentage">
+	<Value>Additional fee. Use percentage</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalStandard.Fields.AdditionalFeePercentage">
+	<Value>Additional fee. Use percentage</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalDirect.Fields.AdditionalFeePercentage">
+	<Value>Additional fee. Use percentage</Value>
+  </LocaleResource>
 </Language>
 '
 

@@ -233,7 +233,7 @@ namespace Nop.Web.Framework
             var builder = new TagBuilder("span");
             builder.AddCssClass("required");
             var innerText = "*";
-            //add additinal text if specified
+            //add additional text if specified
             if (!String.IsNullOrEmpty(additionalText))
                 innerText += " " + additionalText;
             builder.SetInnerText(innerText);
