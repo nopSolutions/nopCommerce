@@ -8,7 +8,7 @@
 {
     <div class="page back-in-stock-subscription-page">
         <div class="page-title">
-            <h2>
+            <h1>
                 @if (Model.AlreadySubscribed)
                 {
                     @T("BackInStockSubscriptions.AlreadySubscribed")
@@ -17,7 +17,7 @@
                 {
                     @T("BackInStockSubscriptions.PopupTitle")
                 }
-            </h2>
+            </h1>
         </div>
         <div class="page-body">
             @if (!Model.SubscriptionAllowed)

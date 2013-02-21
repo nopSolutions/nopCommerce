@@ -39,7 +39,7 @@
         {
             <div class="product-grid featured-product-grid">
                 <div class="title">
-                    @T("Products.FeaturedProducts")
+                    <strong>@T("Products.FeaturedProducts")</strong>
                 </div>
                 <div>
                     @foreach (var product in Model.FeaturedProducts)
@@ -54,31 +54,32 @@
             </div>
         }
         @Html.Widget("manufacturerdetails_after_featured_products")
-        @*view mode*@
-        @if (Model.PagingFilteringContext.AllowProductViewModeChanging && Model.Products.Count > 0)
-        {
-            <div class="product-viewmode">
-                <span>@T("Categories.ViewMode")</span>
-                @Html.DropDownList("products-viewmode", Model.PagingFilteringContext.AvailableViewModes, new { onchange = "setLocation(this.value);" })
-            </div>
-        }
-        @*sorting*@
-        @if (Model.PagingFilteringContext.AllowProductSorting && Model.Products.Count > 0)
-        {
-            <div class="product-sorting">
-                <span>@T("Categories.OrderBy")</span>
-                @Html.DropDownList("products-orderby", Model.PagingFilteringContext.AvailableSortOptions, new { onchange = "setLocation(this.value);" })
-            </div>
-        }
-    
-        @*page size*@
-        @if (Model.PagingFilteringContext.AllowCustomersToSelectPageSize && Model.Products.Count > 0)
-        {
-            <div class="product-page-size">
-                <span>@T("Manufacturers.PageSize")</span> <span>@Html.DropDownList("products-pagesize", Model.PagingFilteringContext.PageSizeOptions, new { onchange = "setLocation(this.value);" })</span>
-                <span>@T("Manufacturers.PageSize.PerPage")</span>
-            </div>
-        }
+        <div class="product-selectors">
+            @*view mode*@
+            @if (Model.PagingFilteringContext.AllowProductViewModeChanging && Model.Products.Count > 0)
+            {
+                <div class="product-viewmode">
+                    <span>@T("Categories.ViewMode")</span>
+                    @Html.DropDownList("products-viewmode", Model.PagingFilteringContext.AvailableViewModes, new { onchange = "setLocation(this.value);" })
+                </div>
+            }
+            @*sorting*@
+            @if (Model.PagingFilteringContext.AllowProductSorting && Model.Products.Count > 0)
+            {
+                <div class="product-sorting">
+                    <span>@T("Categories.OrderBy")</span>
+                    @Html.DropDownList("products-orderby", Model.PagingFilteringContext.AvailableSortOptions, new { onchange = "setLocation(this.value);" })
+                </div>
+            }
+            @*page size*@
+            @if (Model.PagingFilteringContext.AllowCustomersToSelectPageSize && Model.Products.Count > 0)
+            {
+                <div class="product-page-size">
+                    <span>@T("Manufacturers.PageSize")</span> <span>@Html.DropDownList("products-pagesize", Model.PagingFilteringContext.PageSizeOptions, new { onchange = "setLocation(this.value);" })</span>
+                    <span>@T("Manufacturers.PageSize.PerPage")</span>
+                </div>
+            }
+        </div>
         <div class="clear">
         </div>
         @Html.Widget("manufacturerdetails_before_filters")
@@ -112,8 +113,8 @@
                 @foreach (var product in Model.Products)
                 {
                     <div class="item-box">
-                         @Html.Partial("_ProductBox", product)
-                     </div>
+                        @Html.Partial("_ProductBox", product)
+                    </div>
                 }
             </div>
             }

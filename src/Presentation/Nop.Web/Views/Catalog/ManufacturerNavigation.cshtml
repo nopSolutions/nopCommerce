@@ -9,7 +9,7 @@
         <div class="clear">
         </div>
         <div class="listbox">
-            <ul>
+            <ul class="list">
                 @foreach (var manufacturer in Model.Manufacturers)
                 {
                     <li class="@(manufacturer.IsActive ? "active" : "inactive")"><a href="@Url.RouteUrl("Manufacturer", new { SeName = manufacturer.SeName })">@manufacturer.Name</a>
