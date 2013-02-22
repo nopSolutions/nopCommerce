@@ -419,6 +419,9 @@ set @resources='
   <LocaleResource Name="Plugins.Payments.PayPalDirect.Fields.AdditionalFeePercentage">
 	<Value>Additional fee. Use percentage</Value>
   </LocaleResource>
+  <LocaleResource Name="Wishlist.EmailAFriend.FriendEmail.Hint">
+	<Value>Enter friend''s email</Value>
+  </LocaleResource>
 </Language>
 '
 

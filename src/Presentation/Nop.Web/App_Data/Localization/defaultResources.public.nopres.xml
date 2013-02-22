@@ -4080,10 +4080,10 @@
                     </LocaleResource>
                     <LocaleResource Name="FriendEmail">
                         <Value>Friend's email</Value>
-                        <LocaleResource Name="Hint">
-                            <Value>Enter friend's email</Value>
-                        </LocaleResource>
                         <Children>
+                            <LocaleResource Name="Hint">
+                                <Value>Enter friend's email</Value>
+                            </LocaleResource>
                             <LocaleResource Name="Required">
                                 <Value>Enter friend's email</Value>
                             </LocaleResource>
