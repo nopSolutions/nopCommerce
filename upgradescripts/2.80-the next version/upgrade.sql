@@ -1351,6 +1351,17 @@ BEGIN
 END
 GO
 
+IF EXISTS (SELECT 1
+           FROM   sysobjects
+           WHERE  name = 'Affiliate_AffiliatedCustomers'
+           AND parent_obj = Object_id('Customer')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+BEGIN
+	ALTER TABLE dbo.[Customer]
+	DROP CONSTRAINT Affiliate_AffiliatedCustomers
+END
+GO
+
 UPDATE [Customer]
 SET [AffiliateId] = 0
 WHERE [AffiliateId] IS NULL
@@ -1367,6 +1378,17 @@ IF EXISTS (SELECT 1
 BEGIN
 	ALTER TABLE dbo.[Order]
 	DROP CONSTRAINT Order_Affiliate
+END
+GO
+
+IF EXISTS (SELECT 1
+           FROM   sysobjects
+           WHERE  name = 'Affiliate_AffiliatedOrders'
+           AND parent_obj = Object_id('Order')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+BEGIN
+	ALTER TABLE dbo.[Order]
+	DROP CONSTRAINT Affiliate_AffiliatedOrders
 END
 GO
 
