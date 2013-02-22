@@ -554,8 +554,6 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
 
-            IList<int> filterableSpecificationAttributeOptionIds = null;
-
             var products = _productService.SearchProducts(
                 pageSize: _adminAreaSettings.GridPageSize,
                 showHidden: true
