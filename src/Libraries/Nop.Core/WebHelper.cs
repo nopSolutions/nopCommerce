@@ -127,11 +127,13 @@ namespace Nop.Core
         {
             string result = string.Empty;
 
-            if (_httpContext == null || _httpContext.Request == null)
-                return result;
-
             try
             {
+                if (_httpContext == null || _httpContext.Request == null)
+                    return result;
+
+                //put this method is try-catch 
+                //as described here http://www.nopcommerce.com/boards/t/21356/multi-store-roadmap-lets-discuss-update-done.aspx?p=6#90196
                 if (_httpContext.Request.ServerVariables[name] != null)
                 {
                     result = _httpContext.Request.ServerVariables[name];
