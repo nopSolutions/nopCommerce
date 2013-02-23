@@ -15,6 +15,7 @@
     </div>
     <div class="page-body">
         @Html.Widget("productsbytag_top")
+        <div class="product-selectors">
         @*view mode*@
         @if (Model.PagingFilteringContext.AllowProductViewModeChanging && Model.Products.Count > 0)
         {
@@ -31,7 +32,6 @@
                 @Html.DropDownList("products-orderby", Model.PagingFilteringContext.AvailableSortOptions, new { onchange = "setLocation(this.value);" })
             </div>
         }
-    
         @*page size*@
         @if (Model.PagingFilteringContext.AllowCustomersToSelectPageSize && Model.Products.Count > 0)
         {
@@ -40,6 +40,7 @@
                 <span>@T("Products.Tags.PageSize.PerPage")</span>
             </div>
         }
+        </div>
         <div class="clear">
         </div>
         @Html.Widget("productsbytag_before_product_list")
