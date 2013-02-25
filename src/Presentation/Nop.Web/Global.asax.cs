@@ -149,18 +149,22 @@ namespace Nop.Web
             var httpException = exception as HttpException;
             if (httpException != null && httpException.GetHttpCode() == 404)
             {
-                Response.Clear();
-                Server.ClearError();
-                Response.TrySkipIisCustomErrors = true;
+                var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+                if (!webHelper.IsStaticResource(this.Request))
+                {
+                    Response.Clear();
+                    Server.ClearError();
+                    Response.TrySkipIisCustomErrors = true;
 
-                // Call target Controller and pass the routeData.
-                IController errorController = EngineContext.Current.Resolve<Nop.Web.Controllers.CommonController>();
+                    // Call target Controller and pass the routeData.
+                    IController errorController = EngineContext.Current.Resolve<Nop.Web.Controllers.CommonController>();
 
-                var routeData = new RouteData();
-                routeData.Values.Add("controller", "Common");
-                routeData.Values.Add("action", "PageNotFound");
+                    var routeData = new RouteData();
+                    routeData.Values.Add("controller", "Common");
+                    routeData.Values.Add("action", "PageNotFound");
 
-                errorController.Execute(new RequestContext(new HttpContextWrapper(Context), routeData));
+                    errorController.Execute(new RequestContext(new HttpContextWrapper(Context), routeData));
+                }
             }
         }
         
