@@ -9,7 +9,7 @@
         <div class="clear">
         </div>
         <div class="listbox">
-            <ul>
+            <ul class="list">
                 @for (int i = 0; i < Model.Count; i++)
                 {
                     var product = Model[i];
@@ -17,7 +17,7 @@
                     </li>
                     if (i != Model.Count - 1)
                     {
-                        <li class="separator">&nbsp;</li>
+                    <li class="separator">&nbsp;</li>
                     }
                 }
             </ul>

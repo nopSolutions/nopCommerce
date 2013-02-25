@@ -30,7 +30,6 @@
                     @if (isLastCategory)
                     {
                         <strong class="current-item">@cat.Name</strong>
-@*<strong class="current-item"><a href="@Url.RouteUrl("Category", new { SeName = cat.SeName })" title="@cat.Name">@cat.Name</a></strong>*@
                     }
                     else
                     {
@@ -71,7 +70,7 @@
                 {
                     <div class="item-box">
                         <div class="sub-category-item">
-                            <h2 class="category-title">
+                            <h2 class="title">
                                 <a href="@Url.RouteUrl("Category", new { SeName = item.SeName })" title="@item.PictureModel.Title">
                                     @item.Name</a>
                             </h2>

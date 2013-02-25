@@ -7,7 +7,7 @@
 {
     <div class="product-filters product-spec-filter">
         <div class="filter-title">
-            <span>@T("Filtering.SpecificationFilter")</span>
+            <strong>@T("Filtering.SpecificationFilter")</strong>
         </div>
         <div class="filter-content">
             @if (Model.NotFilteredItems.Count > 0)
@@ -19,7 +19,7 @@
                         {
                             renderedAttributeNames.Add(item.SpecificationAttributeName);
                         <div class="group">
-                            @item.SpecificationAttributeName
+                            <strong>@item.SpecificationAttributeName</strong>
                         </div>
                         }
                         <div class="item">

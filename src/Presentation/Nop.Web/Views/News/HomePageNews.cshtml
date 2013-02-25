@@ -12,10 +12,12 @@
             @foreach (var item in Model.NewsItems)
             {
                 <div class="item">
-                    <a class="news-title" href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })">
-                        @item.Title</a> <span class="news-date">-
-                            @item.CreatedOn.ToString("D")
-                        </span>
+                    <div class="news-head">
+                        <a class="news-title" href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })">
+                            @item.Title</a> <span class="news-date">-
+                                            @item.CreatedOn.ToString("D")
+                            </span>
+                    </div>
                     <div class="news-details">
                         @Html.Raw(item.Short)
                     </div>

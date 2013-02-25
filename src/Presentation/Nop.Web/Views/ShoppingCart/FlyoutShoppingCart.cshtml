@@ -1,6 +1,6 @@
 ﻿@model MiniShoppingCartModel
 @using Nop.Web.Models.ShoppingCart;
-<div id="flyout-cart">
+<div id="flyout-cart" class="flyout-cart">
     <div class="mini-shopping-cart">
         <div class="count">
             @if (Model.TotalProducts == 0)
@@ -46,18 +46,12 @@
                                     </div>
                                     @if (!String.IsNullOrEmpty(item.AttributeInfo))
                                     {
-                                        <div class="clear">
-                                        </div>
                                         <div class="attributes">
                                             @Html.Raw(item.AttributeInfo)
                                         </div>
                                     }
-                                    <div class="clear">
-                                    </div>
-                                    <div class="price">@T("ShoppingCart.Mini.UnitPrice"): @item.UnitPrice</div>
-                                    <div class="clear">
-                                    </div>
-                                    <div class="quantity">@T("ShoppingCart.Mini.Quantity"): @item.Quantity</div>
+                                    <div class="price">@T("ShoppingCart.Mini.UnitPrice"): <span>@item.UnitPrice</span></div>
+                                    <div class="quantity">@T("ShoppingCart.Mini.Quantity"): <span>@item.Quantity</span></div>
                                 </td>
                             </tr>
                         }
@@ -67,7 +61,7 @@
             <div class="clear">
             </div>
             }
-            <div class="totals">@T("ShoppingCart.Totals.SubTotal"): @Model.SubTotal</div>
+            <div class="totals">@T("ShoppingCart.Totals.SubTotal"): <strong>@Model.SubTotal</strong></div>
             <div class="clear">
             </div>
             <div class="buttons">

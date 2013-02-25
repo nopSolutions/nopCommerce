@@ -7,18 +7,20 @@
     <div class="clear">
     </div>
     <div class="listbox">
-        <div id="newsletter-subscribe-block">
-            @T("Newsletter.Subscribe"):
+        <div id="newsletter-subscribe-block" class="newsletter-subscribe-block">
+            <span>@T("Newsletter.Subscribe"):</span>
+            <div class="newsletter-email">
             @Html.TextBoxFor(x => x.NewsletterEmail, new { id = "newsletter-email" })
             @Html.ValidationMessageFor(x => x.NewsletterEmail)
+            </div>
             <div class="buttons">
                 <input type="button" value="@T("Newsletter.Button")" id="newsletter-subscribe-button" class="button-1 newsletter-subscribe-button" />
                 <span id="subscribe-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
             </div>
+</div>
+<div class="clear">
         </div>
-        <div class="clear">
-        </div>
-        <div id="newsletter-result-block">
+        <div id="newsletter-result-block" class="newsletter-result-block">
         </div>
     </div>
     <script type="text/javascript">
