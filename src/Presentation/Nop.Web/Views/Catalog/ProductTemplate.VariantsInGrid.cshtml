@@ -33,9 +33,11 @@
                     @Html.Partial("_ProductDetailsPictures", Model)
                     @Html.Widget("productdetails_after_pictures")
                     <div class="overview">
-                        <h1 class="product-name" itemprop="name">
-                            @Model.Name
-                        </h1>
+                        <div class="product-name">
+                            <h1 itemprop="name">
+                                @Model.Name
+                            </h1>
+                        </div>
                         @if (!String.IsNullOrEmpty(Model.ShortDescription))
                         {
                             <div class="short-description">

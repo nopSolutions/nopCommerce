@@ -36,9 +36,11 @@
                     @Html.Partial("_ProductDetailsPictures", Model)
                     @Html.Widget("productdetails_after_pictures")
                     <div class="overview">
-                        <h1 class="product-name" itemprop="name">
-                            @Model.Name
-                        </h1>
+                        <div class="product-name">
+                            <h1 itemprop="name">
+                                @Model.Name
+                            </h1>
+                        </div>
                         @if (!String.IsNullOrEmpty(Model.ShortDescription))
                         {
                             <div class="short-description">
@@ -69,12 +71,12 @@
                         <div class="clear">
                         </div>
                         @{
-                        var dataDictPrice = new ViewDataDictionary();
-                        dataDictPrice.TemplateInfo.HtmlFieldPrefix = string.Format("price_{0}", defaultProductVariant.Id);
+                            var dataDictPrice = new ViewDataDictionary();
+                            dataDictPrice.TemplateInfo.HtmlFieldPrefix = string.Format("price_{0}", defaultProductVariant.Id);
                             @Html.Partial("_ProductVariantPrice", defaultProductVariant.ProductVariantPrice, dataDictPrice)
                             
-                        var dataDictAddToCart = new ViewDataDictionary();
-                        dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", defaultProductVariant.Id);
+                            var dataDictAddToCart = new ViewDataDictionary();
+                            dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", defaultProductVariant.Id);
                             @Html.Partial("_ProductVariantAddToCart", defaultProductVariant.AddToCart, dataDictAddToCart)                    
                         }
                         <div class="clear">

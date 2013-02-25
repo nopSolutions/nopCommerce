@@ -3,44 +3,42 @@
 @{
     Html.AddScriptParts("~/Scripts/slimbox2.js");
 
-    int productPerRow = 6;
+    int productPerRow = 4;
 }
-<div class="picture">
-    @if (Model.DefaultPictureZoomEnabled)
-    {
-        <a href="@Model.DefaultPictureModel.FullSizeImageUrl" data-gallery="lightbox-pd" title="@Model.Name">
+<div class="gallery">
+    <div class="picture">
+        @if (Model.DefaultPictureZoomEnabled)
+        {
+            <a href="@Model.DefaultPictureModel.FullSizeImageUrl" data-gallery="lightbox-pd" title="@Model.Name">
+                <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" itemprop="image" />
+            </a>
+        }
+        else
+        {
             <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" itemprop="image" />
-        </a>
-    }
-    else
-    {
-        <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" itemprop="image" />
-    }
+        }
+    </div>
     @if (Model.PictureModels.Count > 1)
     {
-        <table class="picture-thumbs">
+        <div class="picture-thumbs">
             @for (int i = 0; i < Model.PictureModels.Count; i++)
             {
                 var picture = Model.PictureModels[i];
 
                 if (i % productPerRow == 0)
                 {
-                @Html.Raw("<tr>")
+                @Html.Raw("<div>")
                 }
-                    
-                <td class="a-left">
-                    <a href="@picture.FullSizeImageUrl" data-gallery="lightbox-p" title="@Model.Name">
-                        <img src="@picture.ImageUrl" alt="@picture.AlternateText" title="@picture.Title" />
-                    </a>
-                </td>
-                                    
+                <a href="@picture.FullSizeImageUrl" data-gallery="lightbox-p" title="@Model.Name">
+                    <img src="@picture.ImageUrl" alt="@picture.AlternateText" title="@picture.Title" />
+                </a>                 
                 if ((i % productPerRow == (productPerRow - 1)) ||
                     //last image
                     (i == (Model.PictureModels.Count - 1)))
                 {
-                @Html.Raw("</tr>")
+                @Html.Raw("</div>")
                 }
             }
-        </table>
+        </div>
     }
 </div>
