@@ -41,26 +41,28 @@
                 using (Html.BeginRouteForm("Wishlist", FormMethod.Post))
                 {
                 <table class="cart">
-                    @if (Model.IsEditable)
-                    {
+                    <colgroup>
+                        @if (Model.IsEditable)
+                        {
+                            <col width="1" />
+                        }
+                        @if (Model.DisplayAddToCart)
+                        {
+                            <col width="1" />
+                        }
+                        @if (Model.ShowSku)
+                        {
+                            <col width="1" />
+                        }
+                        @if (Model.ShowProductImages)
+                        {
+                            <col width="1" />
+                        }
+                        <col />
                         <col width="1" />
-                    }
-                    @if (Model.DisplayAddToCart)
-                    {
                         <col width="1" />
-                    }
-                    @if (Model.ShowSku)
-                    {
                         <col width="1" />
-                    }
-                    @if (Model.ShowProductImages)
-                    {
-                        <col width="1" />
-                    }
-                    <col />
-                    <col width="1" />
-                    <col width="1" />
-                    <col width="1" />
+                    </colgroup>
                     <thead>
                         <tr class="cart-header-row">
                             @if (Model.IsEditable)

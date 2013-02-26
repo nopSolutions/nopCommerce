@@ -106,12 +106,14 @@
                 </div>
                 <div class="products-box">
                     <table class="data-table">
-                        @if (Model.ShowSku)
-                        {
-                            <col width="1" />
-                        }
-                        <col />
-                        <col />
+                        <colgroup>
+                            @if (Model.ShowSku)
+                            {
+                                <col width="1" />
+                            }
+                            <col />
+                            <col />
+                        </colgroup>
                         <thead>
                             <tr>
                                 @if (Model.ShowSku)
@@ -171,10 +173,12 @@
                 </div>
                 <div class="shipment-status-events-box">
                     <table class="data-table">
-                        <col />
-                        <col />
-                        <col />
-                        <col />
+                        <colgroup>
+                            <col />
+                            <col />
+                            <col />
+                            <col />
+                        </colgroup>
                         <thead>
                             <tr>
                                 <th class="a-center">

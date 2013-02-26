@@ -277,14 +277,16 @@
             </div>
             <div class="products-box">
                 <table class="data-table">
-                    @if (Model.ShowSku)
-                    {
-                        <col width="1" />
-                    }
-                    <col />
-                    <col />
-                    <col />
-                    <col />
+                    <colgroup>
+                        @if (Model.ShowSku)
+                        {
+                            <col width="1" />
+                        }
+                        <col />
+                        <col />
+                        <col />
+                        <col />
+                    </colgroup>
                     <thead>
                         <tr>
                             @if (Model.ShowSku)
@@ -533,11 +535,13 @@
             </div>
             <div class="shipments-box">
                 <table class="data-table">
-                    <col width="1" />
-                    <col />
-                    <col />
-                    <col />
-                    <col />
+                    <colgroup>
+                        <col width="1" />
+                        <col />
+                        <col />
+                        <col />
+                        <col />
+                    </colgroup>
                     <thead>
                         <tr>
                             <th class="a-center">
@@ -610,8 +614,10 @@
             </div>
             <div class="ordernotes-box">
                 <table class="data-table">
-                    <col />
-                    <col />
+                    <colgroup>
+                        <col />
+                        <col />
+                    </colgroup>
                     <thead>
                         <tr>
                             <th class="a-center">

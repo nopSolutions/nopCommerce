@@ -6,7 +6,9 @@
     @if (Model.Posts.Count > 0)
     {
         <table class="posts-table">
-            <col />
+            <colgroup>
+                <col />
+            </colgroup>
             <tbody>
                 @for (int i = 0; i < Model.Posts.Count; i++)
                 {

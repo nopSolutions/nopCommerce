@@ -22,11 +22,13 @@
             {
             <div class="items">
                 <table>
-                    @if (Model.ShowProductImages)
-                    {
-                        <col width="1" />
-                    }
-                    <col />
+                    <colgroup>
+                        @if (Model.ShowProductImages)
+                        {
+                            <col width="1" />
+                        }
+                        <col />
+                    </colgroup>
                     <tbody>
                         @for (int i = 0; i < Model.Items.Count; i++)
                         {

@@ -23,22 +23,24 @@
         using (Html.BeginRouteForm("ShoppingCart", FormMethod.Post, new { enctype = "multipart/form-data" }))
         {
         <table class="cart">
-            @if (Model.IsEditable)
-            {
+            <colgroup>
+                @if (Model.IsEditable)
+                {
+                    <col width="1" />
+                }
+                @if (Model.ShowSku)
+                {
+                    <col width="1" />
+                }
+                @if (Model.ShowProductImages)
+                {
+                    <col width="1" />
+                }
+                <col />
                 <col width="1" />
-            }
-            @if (Model.ShowSku)
-            {
                 <col width="1" />
-            }
-            @if (Model.ShowProductImages)
-            {
                 <col width="1" />
-            }
-            <col />
-            <col width="1" />
-            <col width="1" />
-            <col width="1" />
+            </colgroup>
             <thead>
                 <tr class="cart-header-row">
                     @if (Model.IsEditable)

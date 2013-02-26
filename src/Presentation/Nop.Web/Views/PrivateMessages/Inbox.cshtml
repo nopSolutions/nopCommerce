@@ -22,10 +22,12 @@
         using (Html.BeginRouteForm("PrivateMessagesInbox", FormMethod.Post))
         {
         <table class="pm-grid-table-style" cellspacing="0" cellpadding="4" id="pm-inbox-table">
-            <col width="5%" />
-            <col width="20%" />
-            <col width="50%" />
-            <col width="25%" />
+            <colgroup>
+                <col width="5%" />
+                <col width="20%" />
+                <col width="50%" />
+                <col width="25%" />
+            </colgroup>
             <thead>
                 <tr class="pm-grid-header-style">
                     <th class="a-center">
