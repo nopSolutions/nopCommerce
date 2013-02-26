@@ -642,20 +642,23 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 
 /* LOGIN */
 .login-page{}
-.login-page .page-title{}
+.login-page .page-title{margin-bottom:20px;}
 .login-page .page-body{color:#555;}
-.login-page fieldset{padding:10px;}
-.login-page fieldset legend{font-size:12px;}
-.login-page .new-wrapper{float:left;width:46%;min-height:240px;vertical-align:top;}
+.login-page .title{margin:-17px 0 14px;}
+.login-page .title strong{font-size:12px;background:#fff;}
+.login-page .new-wrapper{float:left;width:46%;min-height:240px;padding:10px; border:1px solid #eee; margin-bottom:15px;border-radius:5px;}
+.login-page .returning-wrapper{float:right;width:46%;min-height:240px;padding:10px; border:1px solid #eee; margin-bottom: 15px;border-radius:5px;}
+.login-page .new-wrapper .text{line-height:20px;}
 .login-page .new-wrapper .buttons{float:right;margin:30px 30px 5px 30px;}
-.login-page .checkout-as-guest-or-register-block ul { padding-left: 30px;}
-.login-page .returning-wrapper{float:right;width:46%;min-height:240px;vertical-align:top;}
-.login-page .returning-wrapper .message-error{padding:0px;}
+.login-page .checkout-as-guest-or-register-block ul{padding-left:30px;}
+.login-page .returning-wrapper .inputs{margin:20px 0;}
+.login-page .returning-wrapper .message-error{padding:0;}
 .login-page .returning-wrapper .buttons{float:right;margin:5px 30px;}
-.login-page .returning-wrapper dl dt{width:100px;padding:10px 10px 10px 0;display:block;white-space:nowrap;vertical-align:middle;font-weight:700;}
-.login-page .returning-wrapper dl dd{padding:10px 0;vertical-align:middle;}
-.login-page .returning-wrapper .email,.login-page .returning-wrapper .username,.login-page .returning-wrapper .password{width:170px;}
-.login-page .forgot-password{font-weight:700;}
+.login-page .returning-wrapper label{width:100px;display:inline-block;margin-right:10px;white-space:nowrap;vertical-align:middle;font-weight:700;}
+.login-page .email,.login-page .username,.login-page .password{width:170px;}
+.login-page .returning-customer .reversed label{width:auto;font-weight:400;}
+.login-page .forgot-password{display:block; margin-top:20px; font-weight:700;}
+.login-page .field-validation-error{display:block;}
 .external-auth-errors{text-align:center;border:solid 1px #d3d3d3;vertical-align:top;width:100%;color:Red;}
 .external-auth-errors ul{padding:0px;}
 .external-auth-errors ul li{list-style:none;}
@@ -668,8 +671,13 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 .registration-page{}
 .registration-page .page-title{}
 .registration-page .page-body{margin:0;padding:0;color:#555;background-color:inherit;}
+.registration-page .fieldset{margin-bottom:20px; padding:10px; border:1px solid #eee;border-radius:5px;}
+.registration-page .fieldset .title{margin:-17px 0 14px;}
+.registration-page .fieldset .title strong{background:#fff;}
+.registration-page .inputs{margin:5px 0;}
+.registration-page .inputs label{display:inline-block;width:130px;margin-right:10px;}
 .registration-page .vat-note{display:block;}
-.registration-page .accept-privacy-policy{float:right;margin-bottom:5px;margin-top:5px;clear:both;}
+.registration-page .accept-privacy-policy{float:left;margin-bottom:5px;margin-top:5px;clear:both;}
 .registration-page .accept-privacy-policy .read{text-decoration:underline;}
 .registration-page .buttons{margin-bottom:5px;margin-top:5px;clear:both;}
 .registration-result-page{}
@@ -850,9 +858,18 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 /* CUSTOMER ACCOUNT PAGES */
 .account-page{}
 .account-page .result{font-family:Verdana, Arial, sans-serif;font-size:10px;font-weight:700;color:red;}
-.account-page .page-title{}
+.account-page .page-title{margin-bottom:20px;}
 .account-page .page-body{margin:0;padding:0;color:#555;}
 .account-page .section-body{text-align:left;padding:10px;border:1px solid #d7d7d7;height:auto;}
+.account-page .fieldset{padding:10px;margin-bottom:20px;border:1px solid #eee;border-radius:5px;}
+.account-page .fieldset .title{margin:-17px 0 14px;}
+.account-page .fieldset .title strong{background:#fff;}
+.account-page .fieldset .inputs{margin-bottom:5px;}
+.account-page .fieldset .inputs label{display:inline-block; width:130px;margin-right:10px;}
+.account-page .section{padding:10px; margin-bottom: 20px;border:1px solid #eee;border-radius:5px;}
+.account-page .section .title{margin:-17px 0 14px;}
+.account-page .section .title strong{background:#fff;}
+.account-page .section li{list-style:none;line-height:16px;}
 .address-list-page{}
 .address-list-page .address-list{}
 .address-list-page .address-list .address-item{}
