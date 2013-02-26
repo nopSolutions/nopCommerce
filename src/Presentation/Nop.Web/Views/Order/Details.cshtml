@@ -43,31 +43,18 @@
     <div class="page-body">
         @Html.Widget("orderdetails_page_top")
         <div class="order-overview">
-            <table class="order-overview-table">
-                <tbody>
-                    <tr>
-                        <td colspan="2">
-                            <strong>
-                                @T("Order.Order#")@Model.Id
-                            </strong>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            @T("Order.OrderDate"): @Model.CreatedOn.ToString("D")
-                        </td>
-                        <td class="order-total-top">
-                            @T("Order.OrderTotal"): @Model.OrderTotal
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">
-                            @T("Order.OrderStatus"): @Model.OrderStatus
-                        </td>
-                    </tr>
-                    @Html.Widget("orderdetails_page_overview")
-                </tbody>
-            </table>
+            <div class="order-number">
+                <strong>@T("Order.Order#")@Model.Id</strong>
+            </div>
+            <div class="clear"></div>
+            <div class="order-details">
+                <span>@T("Order.OrderDate"): @Model.CreatedOn.ToString("D")</span>
+                <span>@T("Order.OrderStatus"): @Model.OrderStatus</span>
+            </div>
+            <div class="order-total">
+                @T("Order.OrderTotal"): <strong>@Model.OrderTotal</strong>
+            </div>
+            @Html.Widget("orderdetails_page_overview")
         </div>
         <div class="clear">
         </div>

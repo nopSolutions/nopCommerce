@@ -422,6 +422,9 @@ set @resources='
   <LocaleResource Name="Wishlist.EmailAFriend.FriendEmail.Hint">
 	<Value>Enter friend''s email</Value>
   </LocaleResource>
+  <LocaleResource Name="Sitemap.Topics">
+	<Value>Topics</Value>
+  </LocaleResource>
 </Language>
 '
 

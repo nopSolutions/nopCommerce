@@ -4027,6 +4027,9 @@
             <LocaleResource Name="Products">
                 <Value>Products</Value>
             </LocaleResource>
+            <LocaleResource Name="Topics">
+                <Value>Topics</Value>
+            </LocaleResource>
         </Children>
     </LocaleResource>
     <LocaleResource Name="StoreTheme">

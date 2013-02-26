@@ -27,9 +27,9 @@
             <div class="title">
                 <h2><a href="@Url.RouteUrl("Product", new { SeName = Model.ProductSeName })" class="product">@Model.ProductName</a></h2>
             </div>
-            <p class="message-error">
+            <div class="message-error">
                 @Html.ValidationSummary(true)
-            </p>
+            </div>
             <div class="form-fields">
                 <div class="inputs-left">
                     <div class="inputs">

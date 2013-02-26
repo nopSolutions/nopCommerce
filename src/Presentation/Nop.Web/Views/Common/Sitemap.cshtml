@@ -16,13 +16,18 @@
         @if (Model.Topics.Count > 0)
         {
             <div class="entity">
-                @(Html.DataList(Model.Topics, 4,
-                @<div class="topic-box">
-                    <div class="item">
-                        <a href="@Url.RouteUrl("Topic", new { SystemName = item.SystemName.ToLowerInvariant() })">@item.Title</a>
-                    </div>
+                <div class="entity-title">
+                    <h2>@T("Sitemap.Topics")</h2>
                 </div>
-            ))
+                <div class="entity-body">
+                    <ul>
+                        @foreach (var item in Model.Topics)
+                        { 
+                            <li><a href="@Url.RouteUrl("Topic", new { SystemName = item.SystemName.ToLowerInvariant() })">@item.Title</a></li>
+                        }
+                    </ul>
+                </div>
+
             </div>
             <div class="clear">
             </div>
@@ -30,15 +35,17 @@
         @if (Model.Categories.Count > 0)
         {
             <div class="entity">
-                <h2>
-                    @T("Sitemap.Categories")</h2>
-                @(Html.DataList(Model.Categories, 4,
-                @<div class="category-box">
-                    <div class="item">
-                        <a href="@Url.RouteUrl("Category", new { SeName = item.SeName })">@item.Name</a>
-                    </div>
+                <div class="entity-title">
+                    <h2>@T("Sitemap.Categories")</h2>
                 </div>
-            ))
+                <div class="entity-body">
+                    <ul>
+                        @foreach (var category in Model.Categories)
+                        { 
+                            <li><a href="@Url.RouteUrl("Category", new { SeName = category.SeName })">@category.Name</a></li>
+                        }
+                    </ul>
+                </div>
             </div>
             <div class="clear">
             </div>
@@ -46,15 +53,17 @@
         @if (Model.Manufacturers.Count > 0)
         {
             <div class="entity">
-                <h2>
-                    @T("Sitemap.Manufacturers")</h2>
-                @(Html.DataList(Model.Manufacturers, 4,
-                @<div class="manufacturer-box">
-                    <div class="item">
-                        <a href="@Url.RouteUrl("Manufacturer", new { SeName = item.SeName })">@item.Name</a>
-                    </div>
+                <div class="entity-title">
+                    <h2>@T("Sitemap.Manufacturers")</h2>
                 </div>
-            ))
+                <div class="entity-body">
+                    <ul>
+                        @foreach (var manufacturer in Model.Manufacturers)
+                        { 
+                            <li><a href="@Url.RouteUrl("Manufacturer", new { SeName = manufacturer.SeName })">@manufacturer.Name</a></li>
+                        }
+                    </ul>
+                </div>
             </div>
             <div class="clear">
             </div>
@@ -62,15 +71,17 @@
         @if (Model.Products.Count > 0)
         {
             <div class="entity">
-                <h2>
-                    @T("Sitemap.Products")</h2>
-                @(Html.DataList(Model.Products, 4,
-                @<div class="product-box">
-                    <div class="item">
-                        <a href="@Url.RouteUrl("Product", new { SeName = item.SeName })">@item.Name</a>
-                    </div>
+                <div class="entity-title">
+                    <h2>@T("Sitemap.Products")</h2>
                 </div>
-            ))
+                <div class="entity-body">
+                    <ul>
+                        @foreach (var product in Model.Products)
+                        { 
+                            <li><a href="@Url.RouteUrl("Product", new { SeName = product.SeName })">@product.Name</a></li>
+                        }
+                    </ul>
+                </div>
             </div>
         }
     </div>
