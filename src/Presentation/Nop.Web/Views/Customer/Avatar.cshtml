@@ -24,7 +24,7 @@
             </div>
             <div class="clear">
             </div>
-            <div class="section-body">
+            <div class="fieldset">
                 @if (!String.IsNullOrEmpty(Model.AvatarUrl))
                 {
                     <div class="image">
@@ -44,8 +44,9 @@
             </div>
             <div class="clear">
             </div>
-            <div>
-                @T("Account.Avatar.UploadRules")</div>
+            <div class="info">
+                @T("Account.Avatar.UploadRules")
+            </div>
         </div>
     </div>
 }

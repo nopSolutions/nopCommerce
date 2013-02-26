@@ -26,12 +26,12 @@
         </div>
         <div class="clear">
         </div>
-        <div class="section-title">
-            @T("RewardPoints.History")
-        </div>
-        <div class="clear">
-        </div>
         <div class="reward-points-history">
+            <div class="title">
+                <strong>@T("RewardPoints.History")</strong>
+            </div>
+            <div class="clear">
+            </div>
             @if (Model.RewardPoints.Count > 0)
             {
                 <table class="data-table">

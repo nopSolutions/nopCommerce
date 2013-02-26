@@ -370,8 +370,8 @@
 .back-in-stock-subscription-list-page .description{}
 .back-in-stock-subscription-list-page .no-data{}
 .back-in-stock-subscription-list-page .buttons{}
-.back-in-stock-subscription-list-page .biss-grid-pager-style{padding:5px;background:#eee;vertical-align:middle;}
-.back-in-stock-subscription-list-page .biss-grid-pager-style span{font-weight:700;font-size:1.1em;}
+.back-in-stock-subscription-list-page .grid-pager{padding:5px;background:#eee;vertical-align:middle;}
+.back-in-stock-subscription-list-page .grid-pager span{font-weight:700;font-size:1.1em;}
 .change-password-page{}
 .change-password-page .buttons{}
 .downloadable-products-page{}
@@ -383,8 +383,8 @@
 .forum-subscriptions-page .description{}
 .forum-subscriptions-page .no-data{}
 .forum-subscriptions-page .buttons{}
-.forum-subscriptions-page .fs-grid-pager-style{padding:5px;background:#eee;vertical-align:middle;}
-.forum-subscriptions-page .fs-grid-pager-style span{font-weight:700;}
+.forum-subscriptions-page .grid-pager{padding:5px;background:#eee;vertical-align:middle;}
+.forum-subscriptions-page .grid-pager span{font-weight:700;}
 .customer-info-page{}
 .customer-info-page .buttons{}
 .my-account-home-page{}
