@@ -33,21 +33,21 @@
                             @address.FirstName @address.LastName
                         </li>
                         <li class="email">
-                            @Html.LabelFor(model => model.Addresses[i].Email):
+                            @Html.LabelFor(model => model.Addresses[i].Email, new { }, ":")
                             @address.Email
                         </li>
                         @if (address.PhoneEnabled)
                         {
                             <li class="phone">
-                                @Html.LabelFor(model => model.Addresses[i].PhoneNumber):
-            @address.PhoneNumber
+                                @Html.LabelFor(model => model.Addresses[i].PhoneNumber, new { }, ":")
+                                @address.PhoneNumber
                             </li>
                         }
                         @if (address.FaxEnabled)
                         {
                             <li class="fax">
-                                @Html.LabelFor(model => model.Addresses[i].FaxNumber):
-            @address.FaxNumber
+                                @Html.LabelFor(model => model.Addresses[i].FaxNumber, new { }, ":")
+                                @address.FaxNumber
                             </li>
                         }
                         @if (address.CompanyEnabled && !String.IsNullOrEmpty(address.Company))

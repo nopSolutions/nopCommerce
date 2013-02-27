@@ -82,15 +82,15 @@
                 </div>
                 <div class="form-fields">
                     <div class="inputs">
-                        @Html.LabelFor(model => model.ReturnReason):
+                        @Html.LabelFor(model => model.ReturnReason, new { }, ":")
                         @Html.DropDownListFor(model => model.ReturnReason, Model.AvailableReturnReasons, new { @class = "return-reasons" })
                     </div>
                     <div class="inputs">
-                        @Html.LabelFor(model => model.ReturnAction):
+                        @Html.LabelFor(model => model.ReturnAction, new { }, ":")
                         @Html.DropDownListFor(model => model.ReturnAction, Model.AvailableReturnActions, new { @class = "return-actions" })
                     </div>
                     <div class="inputs">
-                        @Html.LabelFor(model => model.Comments):
+                        @Html.LabelFor(model => model.Comments, new { }, ":")
                         @Html.TextAreaFor(model => model.Comments, new { @class = "comment" })
                         @Html.ValidationMessageFor(model => model.Comments)
                     </div>

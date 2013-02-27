@@ -38,8 +38,8 @@
                 </script>
                 <div class="basic-search">
                     <div class="inputs">
-                        @Html.LabelFor(model => model.Q):
-                    @Html.TextBoxFor(model => model.Q, new { @class = "search-text" })
+                        @Html.LabelFor(model => model.Q, new { }, ":")
+                        @Html.TextBoxFor(model => model.Q, new { @class = "search-text" })
                     </div>
                     @Html.Widget("productsearch_page_basic")
                     <div class="inputs reversed">
@@ -54,7 +54,7 @@
                     @if (Model.AvailableCategories.Count > 0)
                     {
                         <div class="inputs">
-                            @Html.LabelFor(model => model.Cid):
+                            @Html.LabelFor(model => model.Cid, new { }, ":")
                             @Html.DropDownListFor(model => model.Cid, Model.AvailableCategories)
                         </div>
                         <div class="inputs reversed">
@@ -65,7 +65,7 @@
                     @if (Model.AvailableManufacturers.Count > 0)
                     {
                         <div class="inputs">
-                            @Html.LabelFor(model => model.Mid):
+                            @Html.LabelFor(model => model.Mid, new { }, ":")
                             @Html.DropDownListFor(model => model.Mid, Model.AvailableManufacturers)
                         </div>
                     }

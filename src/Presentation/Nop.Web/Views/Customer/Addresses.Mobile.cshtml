@@ -29,20 +29,20 @@
                                         <strong>@address.FirstName @address.LastName</strong>
                                     </div>
                                     <div class="email">
-                                        @Html.LabelFor(model => model.Addresses[i].Email):
+                                        @Html.LabelFor(model => model.Addresses[i].Email, new { }, ":")
                                         @address.Email
                                     </div>
                         @if (address.PhoneEnabled)
                         {
                                     <div class="phone">
-                                        @Html.LabelFor(model => model.Addresses[i].PhoneNumber):
+                                        @Html.LabelFor(model => model.Addresses[i].PhoneNumber, new { }, ":")
                                         @address.PhoneNumber
                                     </div>
                         }
                         @if (address.FaxEnabled)
                         {
                                     <div class="fax">
-                                        @Html.LabelFor(model => model.Addresses[i].FaxNumber):
+                                        @Html.LabelFor(model => model.Addresses[i].FaxNumber, new { }, ":")
                                         @address.FaxNumber
                                     </div>
                         }
