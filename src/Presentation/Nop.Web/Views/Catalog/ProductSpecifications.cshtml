@@ -8,27 +8,25 @@
         </div>
         <div class="clear">
         </div>
-        <div class="product-specs-list">
-            <table class="data-table">
-                <colgroup>
-                    <col width="25%" />
-                    <col />
-                </colgroup>
-                <tbody>
-                    @for (int i = 0; i < Model.Count; i++)
-                    {
-                        var item = Model[i];
-                        <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
-                            <td class="a-left specname">
-                                @item.SpecificationAttributeName
-                            </td>
-                            <td class="a-left specvalue">
-                                @item.SpecificationAttributeOption
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+        <table class="data-table">
+            <colgroup>
+                <col width="25%" />
+                <col />
+            </colgroup>
+            <tbody>
+                @for (int i = 0; i < Model.Count; i++)
+                {
+                    var item = Model[i];
+                    <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
+                        <td class="a-left specname">
+                            @item.SpecificationAttributeName
+                        </td>
+                        <td class="a-left specvalue">
+                            @item.SpecificationAttributeOption
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
 }
