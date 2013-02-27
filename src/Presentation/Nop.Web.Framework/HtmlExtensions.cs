@@ -29,7 +29,10 @@ namespace Nop.Web.Framework
             var builder = new TagBuilder("img");
 
             // Add attributes
-            builder.MergeAttribute("src", ResolveUrl(helper, "~/Administration/Content/images/ico-help.gif").ToHtmlString());
+            var urlHelper = new UrlHelper(helper.ViewContext.RequestContext);
+            var url = MvcHtmlString.Create(urlHelper.Content("~/Administration/Content/images/ico-help.gif")).ToHtmlString();
+
+            builder.MergeAttribute("src", url);
             builder.MergeAttribute("alt", value);
             builder.MergeAttribute("title", value);
 
@@ -75,7 +78,7 @@ namespace Nop.Web.Framework
         {
             return DeleteConfirmation<T>(helper, "", buttonsSelector);
         }
-        public static MvcHtmlString DeleteConfirmation<T>(this HtmlHelper<T> helper, string actionName, string buttonsSelector = null) where T : BaseNopEntityModel
+        public static MvcHtmlString DeleteConfirmation<T>(this HtmlHelper<T> helper, string actionName, string buttonsSelector) where T : BaseNopEntityModel
         {
             if (String.IsNullOrEmpty(actionName))
                 actionName = "Delete";
@@ -220,12 +223,6 @@ namespace Nop.Web.Framework
         #endregion
 
         #region Common extensions
-
-        public static MvcHtmlString ResolveUrl(this HtmlHelper htmlHelper, string url)
-        {
-            var urlHelper = new UrlHelper(htmlHelper.ViewContext.RequestContext);
-            return MvcHtmlString.Create(urlHelper.Content(url));
-        }
 
         public static MvcHtmlString RequiredHint(this HtmlHelper helper, string additionalText = null)
         {
