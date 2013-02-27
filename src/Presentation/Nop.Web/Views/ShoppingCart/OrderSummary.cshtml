@@ -189,6 +189,7 @@
         <div class="clear">
         </div>
         <div class="cart-footer">
+            @Html.Widget("order_summary_cart_footer")
             @if (Model.IsEditable)
             {
                 if (!String.IsNullOrEmpty(Model.MinOrderSubtotalWarning))
