@@ -136,10 +136,10 @@
                     <div class="buttons">
                         @if (order.IsReturnRequestAllowed)
                         {
-                            <input type="button" value="@T("Account.CustomerOrders.ReturnItems")" class="button-2 return-items-button" onclick="setLocation('@Url.RouteUrl("ReturnRequest", new { orderId = order.Id })    ')" />
+                            <input type="button" value="@T("Account.CustomerOrders.ReturnItems")" class="button-2 return-items-button" onclick="setLocation('@Url.RouteUrl("ReturnRequest", new { orderId = order.Id })')" />
                             <text>&nbsp;&nbsp;&nbsp;</text>
                         }
-                        <input type="button" value="@T("Account.CustomerOrders.OrderDetails")" class="button-2 order-details-button" onclick="setLocation('@Url.RouteUrl("OrderDetails", new { orderId = order.Id })    ')" />
+                        <input type="button" value="@T("Account.CustomerOrders.OrderDetails")" class="button-2 order-details-button" onclick="setLocation('@Url.RouteUrl("OrderDetails", new { orderId = order.Id })')" />
                     </div>
                     <div class="clear">
                     </div>

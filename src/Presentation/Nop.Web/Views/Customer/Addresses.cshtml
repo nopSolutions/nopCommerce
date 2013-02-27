@@ -95,8 +95,8 @@
                         }
                     </ul>
                     <div class="buttons">
-                        <input type="button" class="button-2 edit-address-button" onclick="location.href='@(Url.RouteUrl("CustomerAddressEdit", new { addressId = address.Id }))    '" value='@T("Common.Edit")' />
-                        <input type="button" class="button-2 delete-address-button" onclick="if (confirm('@(T("Common.AreYouSure").Text)    ')) {location.href='@(Url.RouteUrl("CustomerAddressDelete", new { addressId = address.Id }))    ';}" value="@T("Common.Delete")" />
+                        <input type="button" class="button-2 edit-address-button" onclick="location.href='@(Url.RouteUrl("CustomerAddressEdit", new { addressId = address.Id }))'" value='@T("Common.Edit")' />
+                        <input type="button" class="button-2 delete-address-button" onclick="if (confirm('@(T("Common.AreYouSure").Text)')) {location.href='@(Url.RouteUrl("CustomerAddressDelete", new { addressId = address.Id }))    ';}" value="@T("Common.Delete")" />
                     </div>
                     <div class="clear">
                     </div>
@@ -109,7 +109,7 @@
             }
         </div>
         <div class="add-button">
-            <input type="button" class="button-1 add-address-button" onclick="location.href='@Url.RouteUrl("CustomerAddressAdd")    '" value="@T("Common.AddNew")" />
+            <input type="button" class="button-1 add-address-button" onclick="location.href='@Url.RouteUrl("CustomerAddressAdd")'" value="@T("Common.AddNew")" />
         </div>
     </div>
 </div>
