@@ -58,8 +58,8 @@
         </div>
         <div class="clear">
         </div>
-        <div class="order-details-box">
-            <table class="order-details-table">
+        <div class="order-addresses">
+            <table>
                 <tbody>
                     <tr>
                         <td class="billinginfo">
@@ -270,12 +270,12 @@
         @Html.Widget("orderdetails_page_beforeproducts")
         @if (Model.Items.Count > 0)
         {
-            <div class="title">
-                <strong>@T("Order.Product(s)")</strong>
-            </div>
-            <div class="clear">
-            </div>
-            <div class="products-box">
+            <div class="section products">
+                <div class="title">
+                    <strong>@T("Order.Product(s)")</strong>
+                </div>
+                <div class="clear">
+                </div>
                 <table class="data-table">
                     <colgroup>
                         @if (Model.ShowSku)
@@ -528,12 +528,12 @@
         {
             if (Model.Shipments.Count > 0)
             {
-            <div class="title">
-                <strong>@T("Order.Shipments")</strong>
-            </div>
-            <div class="clear">
-            </div>
-            <div class="shipments-box">
+            <div class="section shipments">
+                <div class="title">
+                    <strong>@T("Order.Shipments")</strong>
+                </div>
+                <div class="clear">
+                </div>
                 <table class="data-table">
                     <colgroup>
                         <col width="1" />
@@ -607,12 +607,12 @@
         {
             if (Model.OrderNotes.Count > 0)
             {
-            <div class="title">
-               <strong>@T("Order.Notes")</strong>
-            </div>
-            <div class="clear">
-            </div>
-            <div class="ordernotes-box">
+            <div class="section order-notes">
+                <div class="title">
+                    <strong>@T("Order.Notes")</strong>
+                </div>
+                <div class="clear">
+                </div>
                 <table class="data-table">
                     <colgroup>
                         <col />
