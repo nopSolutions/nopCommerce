@@ -43,36 +43,41 @@
             @foreach (var item in Model.BlogPosts)
             {
                 <div class="post">
-                    <a class="blog-title" href="@Url.RouteUrl("BlogPost", new { SeName = item.SeName })">
-                        @item.Title</a><span class="blog-date">-
-                            @item.CreatedOn.ToString("D")
-                        </span>
+                    <div class="post-head">
+                        <a class="blog-title" href="@Url.RouteUrl("BlogPost", new { SeName = item.SeName })">@item.Title</a>
+                        <span class="blog-date">-@item.CreatedOn.ToString("D")</span>
+                    </div>
                     <div class="blog-body">
                         @Html.Raw(item.Body)
                     </div>
                     <div class="clear">
                     </div>
-                    <div class="tags">
-                        @if (item.Tags.Count > 0)
-                        {
-                            @T("Blog.Tags") 
-                            <text>:&nbsp;</text>
-                            for (int i = 0; i < item.Tags.Count; i++)
-                            {
-                                var tag = item.Tags[i];
-                            <a href="@Url.RouteUrl("BlogByTag", new { tag = tag })">@tag</a>
-                                if (i != item.Tags.Count - 1)
+                    @if (item.Tags.Count > 0)
+                    {
+                        <div class="tags">
+                            <label>@T("Blog.Tags"):</label>
+                            <ul>
+                                @for (int i = 0; i < item.Tags.Count; i++)
                                 {
-                            <text>,&nbsp;</text>
+                                    var tag = item.Tags[i];
+                                    <li><a href="@Url.RouteUrl("BlogByTag", new { tag = tag })">@tag</a></li>
+                                    if (i != item.Tags.Count - 1)
+                                    {
+                                    <li class="separator">,</li>
+                                    }
                                 }
-                            }
-                        }
+                            </ul>
+                        </div>
+                    }
+                    <div class="clear">
                     </div>
                     @if (item.AllowComments)
                     {
-                        <a href="@Url.RouteUrl("BlogPost", new { SeName = item.SeName })" class="blog-details">
-                            @string.Format(T("Blog.CommentsLink").Text, item.NumberOfComments)
-                        </a>
+                        <div class="blog-details">
+                            <a href="@Url.RouteUrl("BlogPost", new { SeName = item.SeName })">
+                                @string.Format(T("Blog.CommentsLink").Text, item.NumberOfComments)
+                            </a>
+                        </div>
                     }
                     @Html.Widget("bloglist_page_inside_post")
                 </div>

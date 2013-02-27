@@ -28,65 +28,64 @@
         </div>
         <div class="clear">
         </div>
-        <div class="tags">
-            @if (Model.Tags.Count > 0)
-            {
-                @T("Blog.Tags") 
-                <text>:&nbsp;</text>
-                for (int i = 0; i < Model.Tags.Count; i++)
-                {
-                    var tag = Model.Tags[i];
-                <a href="@Url.RouteUrl("BlogByTag", new { tag = tag })">@tag</a>
-                    if (i != Model.Tags.Count - 1)
+        @if (Model.Tags.Count > 0)
+        {
+            <div class="tags">
+                <label>@T("Blog.Tags"):</label>
+                <ul>
+                    @for (int i = 0; i < Model.Tags.Count; i++)
                     {
-                <text>,&nbsp;</text>
+                        var tag = Model.Tags[i];
+                        <li><a href="@Url.RouteUrl("BlogByTag", new { tag = tag })">@tag</a></li>
+                        if (i != Model.Tags.Count - 1)
+                        {
+                        <li class="separator">,</li>
+                        }
                     }
-                }
-            }
-        </div>
+                </ul>
+            </div>
+        }
         @Html.Widget("blogpost_page_before_comments")
         @if (Model.AllowComments)
         {
             <div class="clear">
             </div>
-            <fieldset class="new-comment">
-                <legend class="title">@T("Blog.Comments.LeaveYourComment")</legend>
+            <div class="fieldset new-comment">
+                <div class="title">
+                    <strong>@T("Blog.Comments.LeaveYourComment")</strong>
+                </div>
+                <div class="notifications">
+                    <div class="message-error">@Html.ValidationSummary(true)</div>
+                    @{
+            var result = TempData["nop.blog.addcomment.result"] as string;
+                    }
+                    @if (!String.IsNullOrEmpty(result))
+                    {
+                        <div class="result">@result</div>
+                    }
+                </div>
                 @using (Html.BeginForm())
                 {
-                    <div>
-                        <div class="message-error">@Html.ValidationSummary(true)</div>
-                        @{
-                    string result = TempData["nop.blog.addcomment.result"] as string;
-                        }
-                        @if (!String.IsNullOrEmpty(result))
+                    <div class="form-fields">
+                        <div class="inputs">
+                            @Html.LabelFor(model => model.AddNewComment.CommentText, new { }, ":")
+                            @Html.TextAreaFor(model => model.AddNewComment.CommentText, new { @class = "comment-text" })
+                            @Html.ValidationMessageFor(model => model.AddNewComment.CommentText)
+                        </div>
+                        @if (Model.AddNewComment.DisplayCaptcha)
                         {
-                            <div class="result">@result</div>
-                        }
-                        <div class="forms-box">
-                            <div class="inputs">
-                                @Html.LabelFor(model => model.AddNewComment.CommentText)
-                                <div class="input-box">
-                                    @Html.TextAreaFor(model => model.AddNewComment.CommentText, new { @class = "comment-text" })
-                                </div>
-                                @Html.ValidationMessageFor(model => model.AddNewComment.CommentText)
+                            <div class="captcha-box">
+                                @Html.Raw(Html.GenerateCaptcha())
                             </div>
-                            @if (Model.AddNewComment.DisplayCaptcha)
-                            {
-                                <div class="captcha-box">
-                                    @Html.Raw(Html.GenerateCaptcha())
-                                </div>
-                                <div class="clear">
-                                </div>
-                            }
-                        </div>
-                        <div class="clear">
-                        </div>
-                        <div class="buttons">
-                            <input type="submit" name="add-comment" class="button-1 blog-post-add-comment-button" value="@T("Blog.Comments.SubmitButton")" />
-                        </div>
+                        }
+                    </div>
+                    <div class="clear">
+                    </div>
+                    <div class="buttons">
+                        <input type="submit" name="add-comment" class="button-1 blog-post-add-comment-button" value="@T("Blog.Comments.SubmitButton")" />
                     </div>
                 }
-            </fieldset>
+            </div>
                 if (Model.Comments.Count > 0)
                 {
             <div class="clear">
@@ -120,7 +119,8 @@
                         </div>
                         <div class="comment-content">
                             <div class="comment-time">
-                                @T("Blog.Comments.CreatedOn"): <span class="stat-value">@comment.CreatedOn.ToString("g")</span>
+                                <label>@T("Blog.Comments.CreatedOn"):</label>
+                                <span class="stat-value">@comment.CreatedOn.ToString("g")</span>
                             </div>
                             <div class="comment-body">
                                 @Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(comment.CommentText, false, true, false, false, false, false))

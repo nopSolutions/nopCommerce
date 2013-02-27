@@ -118,7 +118,6 @@ namespace Nop.Web.Framework.UI.Paging
             {
                 links.Append("<li class=\"total-summary\">");
                 links.Append(string.Format(localizationService.GetResource("Pager.CurrentPage"), model.PageIndex + 1, model.TotalPages, model.TotalItems));
-                links.Append("&nbsp;");
                 links.Append("</li>");
             }
             if (showPagerItems && (model.TotalPages > 1))

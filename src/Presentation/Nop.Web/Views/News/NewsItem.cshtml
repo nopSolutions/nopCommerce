@@ -25,51 +25,47 @@
         {
             <div class="clear">
             </div>
-            <fieldset class="new-comment">
-                <legend class="title">@T("News.Comments.LeaveYourComment")</legend>
+            <div class="fieldset new-comment">
+                <div class="title">
+                    <strong>@T("News.Comments.LeaveYourComment")</strong>
+                </div>
+                <div class="notifications">
+                    <div class="message-error">@Html.ValidationSummary(true)</div>
+                    @{
+            var result = TempData["nop.news.addcomment.result"] as string;
+                    }
+                    @if (!String.IsNullOrEmpty(result))
+                    {
+                        <div class="result">@result</div>
+                    }
+                </div>
                 @using (Html.BeginForm())
                 {
-                    <div>
-                        <div class="message-error">@Html.ValidationSummary(true)</div>
-                        @{
-                    string result = TempData["nop.news.addcomment.result"] as string;
-                        }
-                        @if (!String.IsNullOrEmpty(result))
+                    <div class="form-fields">
+                        <div class="inputs">
+                            @Html.LabelFor(model => model.AddNewComment.CommentTitle, new {}, ":")
+                            @Html.TextBoxFor(model => model.AddNewComment.CommentTitle, new { @class = "comment-title" })
+                            @Html.ValidationMessageFor(model => model.AddNewComment.CommentTitle)
+                        </div>
+                        <div class="inputs">
+                            @Html.LabelFor(model => model.AddNewComment.CommentText, new {}, ":")
+                            @Html.TextAreaFor(model => model.AddNewComment.CommentText, new { @class = "comment-text" })
+                            @Html.ValidationMessageFor(model => model.AddNewComment.CommentText)
+                        </div>
+                        @if (Model.AddNewComment.DisplayCaptcha)
                         {
-                            <div class="result">@result</div>
+                            <div class="captcha-box">
+                                @Html.Raw(Html.GenerateCaptcha())
+                            </div>
                         }
-                        <div class="forms-box">
-                            <div class="inputs">
-                                @Html.LabelFor(model => model.AddNewComment.CommentTitle)
-                                <div class="input-box">
-                                    @Html.TextBoxFor(model => model.AddNewComment.CommentTitle, new { @class = "comment-title" })
-                                </div>
-                                @Html.ValidationMessageFor(model => model.AddNewComment.CommentTitle)
-                            </div>
-                            <div class="inputs">
-                                @Html.LabelFor(model => model.AddNewComment.CommentText)
-                                <div class="input-box">
-                                    @Html.TextAreaFor(model => model.AddNewComment.CommentText, new { @class = "comment-text" })
-                                </div>
-                                @Html.ValidationMessageFor(model => model.AddNewComment.CommentText)
-                            </div>
-                            @if (Model.AddNewComment.DisplayCaptcha)
-                            {
-                                <div class="captcha-box">
-                                    @Html.Raw(Html.GenerateCaptcha())
-                                </div>
-                                <div class="clear">
-                                </div>
-                            }
-                        </div>
-                        <div class="clear">
-                        </div>
-                        <div class="buttons">
-                            <input type="submit" name="add-comment" class="button-1 news-item-add-comment-button" value="@T("News.Comments.SubmitButton")" />
-                        </div>
+                    </div>
+                    <div class="clear">
+                    </div>
+                    <div class="buttons">
+                        <input type="submit" name="add-comment" class="button-1 news-item-add-comment-button" value="@T("News.Comments.SubmitButton")" />
                     </div>
                 }
-            </fieldset>
+            </div>
                 if (Model.Comments.Count > 0)
                 {
             <div class="clear">
@@ -103,13 +99,14 @@
                         </div>
                         <div class="comment-content">
                             <div class="comment-time">
-                                @T("News.Comments.CreatedOn"): <span class="stat-value">@comment.CreatedOn.ToString("g")</span>
+                                <label>@T("News.Comments.CreatedOn"):</label>
+                                <span class="stat-value">@comment.CreatedOn.ToString("g")</span>
                             </div>
                             <div class="comment-title">
-                                <span class="comment-text">@comment.CommentTitle</span>
+                                <strong class="comment-text">@comment.CommentTitle</strong>
                             </div>
                             <div class="comment-body">
-                                <span class="comment-text">@Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(comment.CommentText, false, true, false, false, false, false))</span>
+                                <p class="comment-text">@Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(comment.CommentText, false, true, false, false, false, false))</p>
                             </div>
                         </div>
                         @Html.Widget("newsitem_page_inside_comment")
