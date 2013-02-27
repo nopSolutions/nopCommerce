@@ -8,9 +8,9 @@
             {
                 string controlId = string.Format("checkout_attribute_{0}", attribute.Id);
                 string textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
-                <dt><span class="text-prompt">
+                <dt><label class="text-prompt">
                     @textPrompt
-                </span>
+                </label>
                     @if (attribute.IsRequired)
                     {
                         <span class="required">*</span>

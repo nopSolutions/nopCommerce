@@ -123,9 +123,9 @@
             {
                 string controlId = string.Format("product_attribute_{0}_{1}_{2}", attribute.ProductVariantId, attribute.ProductAttributeId, attribute.Id);
                 string textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
-                <dt><span class="text-prompt">
+                <dt><label class="text-prompt">
                     @textPrompt
-                </span>
+                </label>
                     @if (attribute.IsRequired)
                     {
                         <span class="required">*</span>
