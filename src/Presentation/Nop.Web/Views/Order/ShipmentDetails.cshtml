@@ -1,7 +1,5 @@
 ﻿@model ShipmentDetailsModel
-@using Nop.Core.Domain.Orders;
 @using Nop.Web.Models.Order;
-@using Nop.Services.Localization;
 @{
     Layout = "~/Views/Shared/_ColumnsOne.cshtml";
     //title
@@ -56,8 +54,8 @@
                 </div>
             }
             <div class="shipping-address">
-                <div class="section-title">
-                    @T("Order.Shipments.ShippingAddress")
+                <div class="title">
+                    <strong>@T("Order.Shipments.ShippingAddress")</strong>
                 </div>
                 <div class="name">
                     @Model.Order.ShippingAddress.FirstName @Model.Order.ShippingAddress.LastName
@@ -69,7 +67,8 @@
                     @T("Order.Shipments.Phone"): @Model.Order.ShippingAddress.PhoneNumber
                 </div>
                 <div class="fax">
-                    @T("Order.Shipments.Fax"): @Model.Order.ShippingAddress.FaxNumber</div>
+                    @T("Order.Shipments.Fax"): @Model.Order.ShippingAddress.FaxNumber
+                </div>
                 @if (!String.IsNullOrEmpty(Model.Order.ShippingAddress.Company))
                 {
                     <div class="company">
@@ -77,7 +76,8 @@
                     </div>
                 }
                 <div class="address1">
-                    @Model.Order.ShippingAddress.Address1</div>
+                    @Model.Order.ShippingAddress.Address1
+                </div>
                 @if (!String.IsNullOrEmpty(Model.Order.ShippingAddress.Address2))
                 {
                     <div class="address2">
@@ -86,7 +86,8 @@
                 }
                 <div class="city-state-zip">
                     @Model.Order.ShippingAddress.City, @Model.Order.ShippingAddress.StateProvinceName
-                    @Model.Order.ShippingAddress.ZipPostalCode</div>
+                    @Model.Order.ShippingAddress.ZipPostalCode
+                </div>
                 @if (!String.IsNullOrEmpty(Model.Order.ShippingAddress.CountryName))
                 {
                     <div class="country">
@@ -100,8 +101,9 @@
         @if (Model.Items.Count > 0)
         {
             <div class="products">
-                <div class="section-title">
-                    @T("Order.Shipments.Product(s)")</div>
+                <div class="title">
+                    <strong>@T("Order.Shipments.Product(s)")</strong>
+                </div>
                 <div class="clear">
                 </div>
                 <div class="products-box">
@@ -166,8 +168,8 @@
         @if (Model.ShipmentStatusEvents.Count > 0)
         {
             <div class="shipment-status-events">
-                <div class="section-title">
-                    @T("Order.ShipmentStatusEvents")
+                <div class="title">
+                    <strong>@T("Order.ShipmentStatusEvents")</strong>
                 </div>
                 <div class="clear">
                 </div>

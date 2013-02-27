@@ -270,8 +270,8 @@
         @Html.Widget("orderdetails_page_beforeproducts")
         @if (Model.Items.Count > 0)
         {
-            <div class="section-title">
-                @T("Order.Product(s)")
+            <div class="title">
+                <strong>@T("Order.Product(s)")</strong>
             </div>
             <div class="clear">
             </div>
@@ -528,8 +528,8 @@
         {
             if (Model.Shipments.Count > 0)
             {
-            <div class="section-title">
-                @T("Order.Shipments")
+            <div class="title">
+                <strong>@T("Order.Shipments")</strong>
             </div>
             <div class="clear">
             </div>
@@ -607,8 +607,8 @@
         {
             if (Model.OrderNotes.Count > 0)
             {
-            <div class="section-title">
-                @T("Order.Notes")
+            <div class="title">
+               <strong>@T("Order.Notes")</strong>
             </div>
             <div class="clear">
             </div>
