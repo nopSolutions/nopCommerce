@@ -113,11 +113,13 @@ namespace Nop.Web.Framework.UI.Paging
             var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
 
             var links = new StringBuilder();
-
+            links.Append("<ul>");
             if (showTotalSummary && (model.TotalPages > 0))
             {
+                links.Append("<li class=\"total-summary\">");
                 links.Append(string.Format(localizationService.GetResource("Pager.CurrentPage"), model.PageIndex + 1, model.TotalPages, model.TotalItems));
                 links.Append("&nbsp;");
+                links.Append("</li>");
             }
             if (showPagerItems && (model.TotalPages > 1))
             {
@@ -125,17 +127,17 @@ namespace Nop.Web.Framework.UI.Paging
                 {
                     if ((model.PageIndex >= 3) && (model.TotalPages > individualPagesDisplayedCount))
                     {
-                        if (showIndividualPages)
-                        {
-                            links.Append("&nbsp;");
-                        }
+                        //if (showIndividualPages)
+                        //{
+                        //    links.Append("&nbsp;");
+                        //}
 
                         links.Append(CreatePageLink(1, localizationService.GetResource("Pager.First"), "first-page"));
 
-                        if ((showIndividualPages || (showPrevious && (model.PageIndex > 0))) || showLast)
-                        {
-                            links.Append("&nbsp;...&nbsp;");
-                        }
+                        //if ((showIndividualPages || (showPrevious && (model.PageIndex > 0))) || showLast)
+                        //{
+                        //    links.Append("&nbsp;...&nbsp;");
+                        //}
                     }
                 }
                 if (showPrevious)
@@ -144,10 +146,10 @@ namespace Nop.Web.Framework.UI.Paging
                     {
                         links.Append(CreatePageLink(model.PageIndex, localizationService.GetResource("Pager.Previous"), "previous-page"));
 
-                        if ((showIndividualPages || showLast) || (showNext && ((model.PageIndex + 1) < model.TotalPages)))
-                        {
-                            links.Append("&nbsp;");
-                        }
+                        //if ((showIndividualPages || showLast) || (showNext && ((model.PageIndex + 1) < model.TotalPages)))
+                        //{
+                        //    links.Append("&nbsp;");
+                        //}
                     }
                 }
                 if (showIndividualPages)
@@ -158,26 +160,26 @@ namespace Nop.Web.Framework.UI.Paging
                     {
                         if (model.PageIndex == i)
                         {
-                            links.AppendFormat("<span class=\"current-page\">{0}</span>", (i + 1));
+                            links.AppendFormat("<li class=\"current-page\"><span>{0}</span></li>", (i + 1));
                         }
                         else
                         {
                             links.Append(CreatePageLink(i + 1, (i + 1).ToString(), "individual-page"));
                         }
-                        if (i < lastIndividualPageIndex)
-                        {
-                            links.Append("&nbsp;");
-                        }
+                        //if (i < lastIndividualPageIndex)
+                        //{
+                        //    links.Append("&nbsp;");
+                        //}
                     }
                 }
                 if (showNext)
                 {
                     if ((model.PageIndex + 1) < model.TotalPages)
                     {
-                        if (showIndividualPages)
-                        {
-                            links.Append("&nbsp;");
-                        }
+                        //if (showIndividualPages)
+                        //{
+                        //    links.Append("&nbsp;");
+                        //}
 
                         links.Append(CreatePageLink(model.PageIndex + 2, localizationService.GetResource("Pager.Next"), "next-page"));
                     }
@@ -186,16 +188,16 @@ namespace Nop.Web.Framework.UI.Paging
                 {
                     if (((model.PageIndex + 3) < model.TotalPages) && (model.TotalPages > individualPagesDisplayedCount))
                     {
-                        if (showIndividualPages || (showNext && ((model.PageIndex + 1) < model.TotalPages)))
-                        {
-                            links.Append("&nbsp;...&nbsp;");
-                        }
+                        //if (showIndividualPages || (showNext && ((model.PageIndex + 1) < model.TotalPages)))
+                        //{
+                        //    links.Append("&nbsp;...&nbsp;");
+                        //}
 
                         links.Append(CreatePageLink(model.TotalPages, localizationService.GetResource("Pager.Last"), "last-page"));
                     }
                 }
             }
-
+            links.Append("</ul>");
 			return links.ToString();
 		}
 
@@ -233,12 +235,17 @@ namespace Nop.Web.Framework.UI.Paging
         }
 		protected virtual string CreatePageLink(int pageNumber, string text, string cssClass)
 		{
-			var builder = new TagBuilder("a");
-			builder.SetInnerText(text);
+            var liBuilder = new TagBuilder("li");
             if (!String.IsNullOrWhiteSpace(cssClass))
-                builder.AddCssClass(cssClass);
-			builder.MergeAttribute("href", urlBuilder(pageNumber));
-			return builder.ToString(TagRenderMode.Normal);
+                liBuilder.AddCssClass(cssClass);
+
+			var aBuilder = new TagBuilder("a");
+            aBuilder.SetInnerText(text);
+            aBuilder.MergeAttribute("href", urlBuilder(pageNumber));
+
+            liBuilder.InnerHtml += aBuilder;
+
+            return liBuilder.ToString(TagRenderMode.Normal);
 		}
 
         protected virtual string CreateDefaultUrl(int pageNumber)
