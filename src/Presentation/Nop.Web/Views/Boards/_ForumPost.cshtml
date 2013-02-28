@@ -1,7 +1,4 @@
 ﻿@model ForumPostModel
-@using Nop.Services.Customers;
-@using Nop.Services.Forums;
-@using Nop.Services.Seo;
 @using Nop.Web.Models.Boards;
 @Html.Raw(String.Format("<a name=\"{0}\"></a>", Model.Id))
 <div class="forum-post" id="@Html.Encode(String.Format("post{0}", Model.Id))">

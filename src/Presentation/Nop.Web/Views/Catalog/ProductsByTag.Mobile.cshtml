@@ -6,10 +6,6 @@
     //title
     Html.AddTitleParts(string.Format(T("PageTitle.ProductsByTag").Text, Model.TagName));
 }
-@using Nop.Core;
-@using Nop.Core.Infrastructure;
-@using Nop.Web;
-@using Nop.Web.Models.Catalog;
 @using Nop.Web.Extensions;
 @*product search box*@
 @Html.Action("SearchBox", "Catalog")

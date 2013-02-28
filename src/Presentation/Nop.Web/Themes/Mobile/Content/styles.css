@@ -478,11 +478,11 @@
 .tier-prices{text-align:center;margin-bottom:10px;}
 .tier-prices .prices-header{padding:3px;font-weight:700;}
 .tier-prices .prices-list table{width:100%;border-collapse:collapse;text-align:center;vertical-align:middle;background:#f3f3f3;}
-.tier-prices .prices-list .prices-table td{padding:0;}
-.tier-prices .prices-list .item-table td{border-bottom:solid 3px #d7d7d7;padding-top:3px;padding-bottom:3px;font-weight:700;}
-.tier-prices .prices-list .item-table .item-price{color:Green;}
-.tier-prices .prices-list .header-table td{border-bottom:solid 3px #d7d7d7;padding-top:3px;padding-bottom:3px;font-weight:700;}
-.tier-prices .prices-list .prices-table .field-header{font-weight:700;text-align:center;}
+.tier-prices .prices-list td{border-bottom:solid 3px #d7d7d7;padding-top:3px;padding-bottom:3px;font-weight:700;}
+.tier-prices .prices-list .field-header{font-weight:700;text-align:center;}
+.tier-prices .prices-list .item-quantity{}
+.tier-prices .prices-list .item-price{color:#B80709;}
+
 
 
 /* PRODUCT REVIEWS PAGE */
