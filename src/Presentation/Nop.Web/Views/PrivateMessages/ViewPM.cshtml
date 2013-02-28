@@ -7,52 +7,34 @@
 }
 <div class="page private-message-view-page">
     <div class="page-title">
-        @T("PrivateMessages.View.ViewMessage")
+        <h1>@T("PrivateMessages.View.ViewMessage")</h1>
     </div>
     <div class="page-body">
-        <table class="view-message">
-            <tr>
-                <td class="fieldname">
-                    @T("PrivateMessages.View.From")
-                </td>
-                <td>
-                    @Model.CustomerFromName
-                </td>
-            </tr>
-            <tr>
-                <td class="fieldname">
-                    @T("PrivateMessages.View.To")
-                </td>
-                <td>
-                    @Model.CustomerToName
-                </td>
-            </tr>
-            <tr>
-                <td class="fieldname">
-                    @T("PrivateMessages.View.Subject")
-                </td>
-                <td>
-                    @Model.Subject
-                </td>
-            </tr>
-            <tr>
-                <td class="fieldname">
-                    @T("PrivateMessages.View.Message")
-                </td>
-                <td class="message">
-                    @Html.Raw(Model.Message)
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2" class="options">
-                    <input type="button" class="button-1 reply-pm-button" value="@T("PrivateMessages.View.ReplyButton")" 
+        <div class="view-message">
+            <div>
+                <label>@T("PrivateMessages.View.From")</label>
+                <span>@Model.CustomerFromName</span>
+            </div>
+            <div>
+                <label>@T("PrivateMessages.View.To")</label>
+                <span>@Model.CustomerToName</span>
+            </div>
+            <div>
+                <label>@T("PrivateMessages.View.Subject")</label>
+                <span>@Model.Subject</span>
+            </div>
+            <div class="message">
+                <label>@T("PrivateMessages.View.Message")</label>
+                <span>@Html.Raw(Model.Message)</span>
+            </div>
+            <div class="options">
+                <input type="button" class="button-1 reply-pm-button" value="@T("PrivateMessages.View.ReplyButton")" 
                         onclick="setLocation('@Url.RouteUrl("SendPMReply", new { toCustomerId = Model.FromCustomerId, replyToMessageId = Model.Id })')" />
-                    <input type="button" class="button-2 delete-pm-button" value="@T("PrivateMessages.View.DeleteButton")" 
+                <input type="button" class="button-2 delete-pm-button" value="@T("PrivateMessages.View.DeleteButton")" 
                         onclick="setLocation('@Url.RouteUrl("DeletePM", new { privateMessageId = Model.Id })')" />
-                    <input type="button" class="button-2 back-pm-button" value="@T("PrivateMessages.View.BackButton")" 
+                <input type="button" class="button-2 back-pm-button" value="@T("PrivateMessages.View.BackButton")" 
                         onclick="setLocation('@Url.RouteUrl("PrivateMessages")')" />
-                </td>
-            </tr>
-        </table>
+            </div>
+        </div>
     </div>
 </div>

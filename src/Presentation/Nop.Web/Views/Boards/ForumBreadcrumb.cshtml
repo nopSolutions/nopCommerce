@@ -1,6 +1,6 @@
 ﻿@model ForumBreadcrumbModel
 @using Nop.Web.Models.Boards;
-<div class="breadcrumb">
+<div class="breadcrumb forum-breadcrumb">
     <ul>
         <li><a href="@Url.RouteUrl("HomePage")" title="@T("Forum.Breadcrumb.HomeTitle")">@T("Forum.Home")</a>
             <span class="delimiter">@Html.Raw(Model.Separator)</span></li>

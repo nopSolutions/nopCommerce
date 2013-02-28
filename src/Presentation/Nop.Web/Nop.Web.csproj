@@ -1339,7 +1339,6 @@
     <Content Include="Themes\DefaultClean\Content\images\closelabel.gif" />
     <Content Include="Themes\DefaultClean\Content\images\forum-footer-bg.gif" />
     <Content Include="Themes\DefaultClean\Content\images\forum-header-bg.gif" />
-    <Content Include="Themes\DefaultClean\Content\images\pm-grid-bg.gif" />
     <Content Include="Themes\DefaultClean\Content\images\ico-arrow-r.gif" />
     <Content Include="Themes\DefaultClean\Content\images\ico-delete.gif" />
     <Content Include="Themes\DefaultClean\Content\images\ico-edit.gif" />

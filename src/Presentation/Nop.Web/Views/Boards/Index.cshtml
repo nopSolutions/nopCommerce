@@ -1,6 +1,4 @@
 ﻿@model BoardsIndexModel
-@using Nop.Core.Infrastructure;
-@using Nop.Services.Helpers;
 @using Nop.Web.Models.Boards;
 @{
     Layout = "~/Views/Shared/_ColumnsOne.cshtml";
@@ -8,9 +6,7 @@
     Html.AddTitleParts(T("Forum.PageTitle.Default").Text);
 }
 <div class="page forums-main">
-    <div>
-        @Html.Action("TopicBlock", "Topic", new { systemName = "ForumWelcomeMessage" })
-    </div>
+    @Html.Action("TopicBlock", "Topic", new { systemName = "ForumWelcomeMessage" })
     <div class="clear">
     </div>
     <div class="forums-main-header">

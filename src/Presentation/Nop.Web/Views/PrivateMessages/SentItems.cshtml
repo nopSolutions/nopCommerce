@@ -1,4 +1,4 @@
-﻿@model PrivateMessageListModel 
+﻿@model PrivateMessageListModel
 @using Nop.Web.Extensions;
 @using Nop.Web.Models.PrivateMessages;
 <div class="private-messages-box">
@@ -22,15 +22,15 @@
         {
             
             
-        <table class="pm-grid-table-style" cellspacing="0" cellpadding="4" id="pm-sent-table">
+        <table class="data-table" id="pm-sent-table">
             <colgroup>
                 <col width="5%" />
-                <col width="20%" />
-                <col width="50%" />
-                <col width="25%" />
+                <col />
+                <col />
+                <col />
             </colgroup>
             <thead>
-                <tr class="pm-grid-header-style">
+                <tr>
                     <th class="a-center">
                         <input type="checkbox" id="selectall-sent" />
                     </th>
@@ -49,7 +49,7 @@
                 @for (int i = 0; i < Model.Messages.Count; i++)
                 {
                     var item = Model.Messages[i];
-                    <tr @(i % 2 == 0 ? Html.Raw(" class=\"pm-grid-row-style\"") : Html.Raw(" class=\"pm-grid-alt-row-style\""))>
+                    <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
                         <td class="a-center">
                             <input type="checkbox" name="si@(item.Id)" class="rowcheckbox" />
                         </td>

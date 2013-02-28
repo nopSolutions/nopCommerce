@@ -41,12 +41,9 @@
                         </li>
                     }
                 </ul>
-                @if (Model.PagerModel.TotalPages > 1)
-                {
-                    <div class="pager">
-                        @Html.Pager(Model.PagerModel)
-                    </div>
-                }
+                <div class="pager">
+                    @Html.Pager(Model.PagerModel)
+                </div>
             </div>
         }
         else
