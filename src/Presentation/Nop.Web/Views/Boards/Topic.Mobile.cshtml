@@ -35,18 +35,19 @@
         <div class="pager">
             @{
                 var pager = Html.Pager(new PagerModel()
-                {
-                    PageSize = Model.PostsPageSize,
-                    TotalRecords = Model.PostsTotalRecords,
-                    PageIndex = Model.PostsPageIndex,
-                    ShowTotalSummary = false,
-                    RouteActionName = "TopicSlugPaged",
-                    UseRouteLinks = true,
-                    RouteValues = new RouteValues { id = Model.Id, slug = Model.SeName }
-                });
+                                           {
+                                               PageSize = Model.PostsPageSize,
+                                               TotalRecords = Model.PostsTotalRecords,
+                                               PageIndex = Model.PostsPageIndex,
+                                               ShowTotalSummary = false,
+                                               RouteActionName = "TopicSlugPaged",
+                                               UseRouteLinks = true,
+                                               RouteValues = new RouteValues { id = Model.Id, slug = Model.SeName }
+                                           });
             }
             @pager
         </div>
+        <div class="clear"></div>
     </div>
     <div class="posts">
         @foreach (var post in @Model.ForumPostModels)

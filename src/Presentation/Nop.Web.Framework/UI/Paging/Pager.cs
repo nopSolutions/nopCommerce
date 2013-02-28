@@ -113,7 +113,6 @@ namespace Nop.Web.Framework.UI.Paging
             var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
 
             var links = new StringBuilder();
-            links.Append("<ul>");
             if (showTotalSummary && (model.TotalPages > 0))
             {
                 links.Append("<li class=\"total-summary\">");
@@ -196,8 +195,13 @@ namespace Nop.Web.Framework.UI.Paging
                     }
                 }
             }
-            links.Append("</ul>");
-			return links.ToString();
+
+            var result = links.ToString();
+            if (!String.IsNullOrEmpty(result))
+            {
+                result = "<ul>" + result + "</ul>";
+            }
+            return result;
 		}
 
         protected virtual int GetFirstIndividualPageIndex()

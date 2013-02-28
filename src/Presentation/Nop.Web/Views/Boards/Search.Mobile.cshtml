@@ -42,17 +42,18 @@
                 }
 
                 var pager = Html.Pager(new PagerModel()
-                {
-                    PageSize = Model.TopicPageSize,
-                    TotalRecords = Model.TopicTotalRecords,
-                    PageIndex = Model.TopicPageIndex,
-                    ShowTotalSummary = false,
-                    RouteActionName = "Search",
-                    RouteValues = new ForumSearchRouteValues { adv = adv, searchterms = searchterms, forumId = forumId, within = within, limitDays = limitDays },
-                });
+                                           {
+                                               PageSize = Model.TopicPageSize,
+                                               TotalRecords = Model.TopicTotalRecords,
+                                               PageIndex = Model.TopicPageIndex,
+                                               ShowTotalSummary = false,
+                                               RouteActionName = "Search",
+                                               RouteValues = new ForumSearchRouteValues { adv = adv, searchterms = searchterms, forumId = forumId, within = within, limitDays = limitDays },
+                                           });
             }
             @pager
         </div>
+        <div class="clear"></div>
         <div class="search-results">
             @if (Model.NoResultsVisisble == true)
             {   

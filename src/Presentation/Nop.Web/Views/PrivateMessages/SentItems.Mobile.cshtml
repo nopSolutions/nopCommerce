@@ -1,5 +1,4 @@
 ﻿@model PrivateMessageListModel 
-@using Nop.Web;
 @using Nop.Web.Extensions;
 @using Nop.Web.Models.PrivateMessages;
 <div class="private-messages-box">
@@ -31,11 +30,8 @@
                 </li>
             }
         </ul>
-            if (Model.PagerModel.TotalPages > 1)
-            {
-        <div class="pm-grid-pager-style">
+        <div class="pager">
             @Html.Pager(Model.PagerModel)
         </div>
-            }
     }
 </div>

@@ -21,10 +21,12 @@
                                     @Html.RouteLink(item.ForumTopicTitle, "TopicSlug", new { id = item.ForumTopicId, slug = item.ForumTopicSlug })
                                 </div>
                                 <div class="topic-body">
-                                    <span>@Html.Raw(item.ForumPostText)</span></div>
+                                    <span>@Html.Raw(item.ForumPostText)</span>
+                                </div>
                                 <div class="topic-data">
                                     <span>
-                                        @T("Profile.PostedOn")</span>: <span>@item.Posted</span></div>
+                                        @T("Profile.PostedOn")</span>: <span>@item.Posted</span>
+                                </div>
                             </div>
                         </td>
                     </tr>
@@ -36,10 +38,9 @@
     {
         @T("Profile.LatestPosts.NoPosts")
     }
-    @if (Model.PagerModel.TotalPages > 1)
-    {
-        <div class="latest-posts-grid-pager-style">
-            @Html.Pager(Model.PagerModel)
-        </div>
-    }
+    <div class="clear"></div>
+    <div class="pager">
+        @Html.Pager(Model.PagerModel)
+    </div>
+    <div class="clear"></div>
 </div>

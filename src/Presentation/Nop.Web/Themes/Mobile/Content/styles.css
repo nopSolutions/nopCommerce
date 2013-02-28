@@ -51,10 +51,13 @@
 
 
 /* PAGER */
-.pager{text-align:center;}
-.pager a{font-size:1em;}
-.pager a:link{text-align:center;}
-.pager span{font-size:1.2em;font-weight:700;}
+.pager {text-align: center;}
+.pager ul {float: left;}
+.pager li {float: left;list-style: none outside none;margin-left: 5px;}
+.pager a,.pager span {display: inline-block;text-align: center;font-size: 1em;padding: 0px 5px;}
+.pager span,.pager a:active {}
+
+
 
 
 /* NAVIGATION BLOCKS */
@@ -370,8 +373,6 @@
 .back-in-stock-subscription-list-page .description{}
 .back-in-stock-subscription-list-page .no-data{}
 .back-in-stock-subscription-list-page .buttons{}
-.back-in-stock-subscription-list-page .grid-pager{padding:5px;background:#eee;vertical-align:middle;}
-.back-in-stock-subscription-list-page .grid-pager span{font-weight:700;font-size:1.1em;}
 .change-password-page{}
 .change-password-page .buttons{}
 .downloadable-products-page{}
@@ -383,8 +384,6 @@
 .forum-subscriptions-page .description{}
 .forum-subscriptions-page .no-data{}
 .forum-subscriptions-page .buttons{}
-.forum-subscriptions-page .grid-pager{padding:5px;background:#eee;vertical-align:middle;}
-.forum-subscriptions-page .grid-pager span{font-weight:700;}
 .customer-info-page{}
 .customer-info-page .buttons{}
 .my-account-home-page{}
@@ -526,8 +525,6 @@
 .private-messages-page .page-body{margin:0;padding:0;}
 .private-messages-box{}
 .private-messages-box .item{font-weight:normal;}
-.pm-grid-pager-style{padding:5px;background:#eee;vertical-align:middle;}
-.pm-grid-pager-style span{font-weight:700;}
 .pm-read{}
 .pm-unread{font-size:16px;}
 
@@ -565,7 +562,7 @@
 .forum .topics .topic .replies{font-size:.8em;color:#555;float:right;margin:11px 0 0 7px;}
 .forum .topics .topic .post{float:left;width:36px;height:36px;background:url(images/ico-forum-post.gif) no-repeat 40% 40%;}
 .forum .topics .topic .post-annoucement,.forum .topics .topic .poststicky{float:left;width:36px;height:36px;background:url(images/ico-forum-post-high.gif) no-repeat 40% 40%;}
-.forum .pager{padding:5px 3px 5px 0;}
+
 
 
 /* FORUM TOPIC EDIT */
@@ -586,7 +583,6 @@
 .forum-topic .topic-header .topic-options a,.topic-footer .topic-options a{}
 .forum-topic .posts{}
 .topic-footer{}
-.forum-topic .pager,.topic-footer .pager{padding:10px 0 10px 0;}
 .forum-post{border:1px solid #878787;margin:10px 0;}
 .forum-post .post-info{padding:5px;border-bottom:solid 1px #F3F3F3;}
 .forum-post .post-info .manage{}
@@ -616,7 +612,7 @@
 .forum-search .topics .topic .replies{font-size:.8em;color:#555;float:right;margin:11px 0 0 7px;}
 .forum-search .topics .topic .post{float:left;width:36px;height:36px;background:url(images/ico-forum-post.gif) no-repeat 40% 40%;}
 .forum-search .topics .topic .post-annoucement,.forum-search .topics .topic .poststicky{float:left;width:36px;height:36px;background:url(images/ico-forum-post-high.gif) no-repeat 40% 40%;}
-.forum-search .pager{padding:5px 3px 5px 0;}
+
 
 
 /* PROFILE PAGE */
@@ -632,8 +628,7 @@
 .profile-page .profile-info-box .user-details .avatar .avatar-img{border:solid 2px #CEDBE1!important;}
 .profile-page .profile-info-box .user-stats{padding:10px;}
 .profile-page .profile-info-box .user-stats .title{text-transform:uppercase;margin-bottom:10px;}
-.profile-page .latest-posts-grid-pager-style{padding:5px;background:#eee;vertical-align:middle;}
-.profile-page .latest-posts-grid-pager-style span{font-weight:700;}
+
 
 
 /* ACTIVE DISCUSSIONS */
