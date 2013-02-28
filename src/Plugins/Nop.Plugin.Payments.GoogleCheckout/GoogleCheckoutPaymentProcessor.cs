@@ -652,7 +652,10 @@ namespace Nop.Plugin.Payments.GoogleCheckout
             req.AddMerchantPrivateDataNode(customerInfo);
 
             req.ContinueShoppingUrl = _webHelper.GetStoreLocation(false);
-            req.EditCartUrl = _webHelper.GetStoreLocation(false) + "cart";
+            if (_settingService.GetSettingByKey<bool>("GoogleCheckout.PassEditLink"))
+            {
+                req.EditCartUrl = _webHelper.GetStoreLocation(false) + "cart";
+            }
 
             GCheckoutResponse resp = req.Send();
             return resp;
@@ -763,6 +766,8 @@ namespace Nop.Plugin.Payments.GoogleCheckout
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.GoogleCheckout.Fields.GoogleMerchantKey.Hint", "Specify Google Merchant Key.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.GoogleCheckout.Fields.AuthenticateCallback", "Authenticate callback");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.GoogleCheckout.Fields.AuthenticateCallback.Hint", "Check to ensure that Google handler callback is authenticated.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.GoogleCheckout.Fields.PassEditLink", "Pass 'edit cart' link");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.GoogleCheckout.Fields.PassEditLink.Hint", "Check to pass 'edit cart' link to Google Checkout");
 
             base.Install();
         }
@@ -778,6 +783,8 @@ namespace Nop.Plugin.Payments.GoogleCheckout
             this.DeletePluginLocaleResource("Plugins.Payments.GoogleCheckout.Fields.GoogleMerchantKey.Hint");
             this.DeletePluginLocaleResource("Plugins.Payments.GoogleCheckout.Fields.AuthenticateCallback");
             this.DeletePluginLocaleResource("Plugins.Payments.GoogleCheckout.Fields.AuthenticateCallback.Hint");
+            this.DeletePluginLocaleResource("Plugins.Payments.GoogleCheckout.Fields.PassEditLink");
+            this.DeletePluginLocaleResource("Plugins.Payments.GoogleCheckout.Fields.PassEditLink.Hint");
 
             base.Uninstall();
         }

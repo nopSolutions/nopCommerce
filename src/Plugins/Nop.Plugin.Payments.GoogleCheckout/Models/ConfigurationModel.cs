@@ -16,5 +16,8 @@ namespace Nop.Plugin.Payments.GoogleCheckout.Models
 
         [NopResourceDisplayName("Plugins.Payments.GoogleCheckout.Fields.AuthenticateCallback")]
         public bool AuthenticateCallback { get; set; }
+
+        [NopResourceDisplayName("Plugins.Payments.GoogleCheckout.Fields.PassEditLink")]
+        public bool PassEditLink { get; set; }
     }
 }

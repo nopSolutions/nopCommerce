@@ -446,6 +446,12 @@ set @resources='
   <LocaleResource Name="ShoppingCart.Mini.Items">
 	<Value>{0} item(s)</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.GoogleCheckout.Fields.PassEditLink">
+	<Value>Pass ''edit cart'' link</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.GoogleCheckout.Fields.PassEditLink.Hint">
+	<Value>Check to pass ''edit cart'' link to Google Checkout</Value>
+  </LocaleResource>
 </Language>
 '
 

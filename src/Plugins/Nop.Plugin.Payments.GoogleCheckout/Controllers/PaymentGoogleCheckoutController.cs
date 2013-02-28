@@ -78,6 +78,7 @@ namespace Nop.Plugin.Payments.GoogleCheckout.Controllers
                 model.GoogleVendorId = config.AppSettings.Settings["GoogleMerchantID"].Value;
                 model.GoogleMerchantKey = config.AppSettings.Settings["GoogleMerchantKey"].Value;
                 model.AuthenticateCallback = Convert.ToBoolean(config.AppSettings.Settings["GoogleAuthenticateCallback"].Value);
+                model.PassEditLink = _settingService.GetSettingByKey<bool>("GoogleCheckout.PassEditLink");
             }
             else
             {
@@ -106,6 +107,7 @@ namespace Nop.Plugin.Payments.GoogleCheckout.Controllers
                 config.AppSettings.Settings["GoogleMerchantId"].Value = model.GoogleVendorId;
                 config.AppSettings.Settings["GoogleMerchantKey"].Value = model.GoogleMerchantKey;
                 config.AppSettings.Settings["GoogleAuthenticateCallback"].Value = model.AuthenticateCallback.ToString();
+                _settingService.SetSetting("GoogleCheckout.PassEditLink", model.PassEditLink);
                 config.Save(ConfigurationSaveMode.Modified);
             }
             catch (Exception exc)
