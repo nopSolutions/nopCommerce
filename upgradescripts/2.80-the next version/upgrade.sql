@@ -425,6 +425,24 @@ set @resources='
   <LocaleResource Name="Sitemap.Topics">
 	<Value>Topics</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Mini.OneItemText">
+	<Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Mini.OneItem">
+	<Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Mini.SeveralItemsText">
+	<Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Mini.SeveralItems">
+	<Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Mini.ItemsText">
+	<Value>There are {0} in your cart.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Mini.Items">
+	<Value>{0} item(s)</Value>
+  </LocaleResource>
 </Language>
 '
 
