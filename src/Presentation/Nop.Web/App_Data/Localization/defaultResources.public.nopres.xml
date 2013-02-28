@@ -3879,16 +3879,10 @@
                     <LocaleResource Name="NoItems">
                         <Value>You have no items in your shopping cart.</Value>
                     </LocaleResource>
-                    <LocaleResource Name="OneItem">
-                        <Value>1 item</Value>
+                    <LocaleResource Name="Items">
+                        <Value>{0} item(s)</Value>
                     </LocaleResource>
-                    <LocaleResource Name="OneItemText">
-                        <Value>There is {0} in your cart.</Value>
-                    </LocaleResource>
-                    <LocaleResource Name="SeveralItems">
-                        <Value>{0} items</Value>
-                    </LocaleResource>
-                    <LocaleResource Name="SeveralItemsText">
+                    <LocaleResource Name="ItemsText">
                         <Value>There are {0} in your cart.</Value>
                     </LocaleResource>
                     <LocaleResource Name="Quantity">
