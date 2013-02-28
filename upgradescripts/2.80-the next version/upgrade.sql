@@ -317,6 +317,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Stores.Fields.SslEnabled.Hint">
 	<Value>Check if your store will be SSL secured.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.SslEnabled.Hint2">
+	<Value>WARNING: Do not enable it until you have SSL certificate installed on the server.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Stores.Fields.SecureUrl">
 	<Value>Secure URL</Value>
   </LocaleResource>

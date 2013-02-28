@@ -5952,6 +5952,9 @@
                                         <LocaleResource Name="Hint">
                                           <Value>Check if your store will be SSL secured.</Value>
                                         </LocaleResource>
+                                        <LocaleResource Name="Hint2">
+                                          <Value>WARNING: Do not enable it until you have SSL certificate installed on the server.</Value>
+                                        </LocaleResource>
                                       </Children>
                                     </LocaleResource>
                                     <LocaleResource Name="SecureUrl">

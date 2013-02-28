@@ -48,6 +48,11 @@
             @Html.ValidationMessageFor(model => model.SslEnabled)
         </td>
     </tr>
+    <tr>
+        <td class="adminTitle" colspan="2">
+            <i>@T("Admin.Configuration.Stores.Fields.SslEnabled.Hint2")</i>
+        </td>
+    </tr>
     <tr id="pnlSecureUrl">
         <td class="adminTitle">
             @Html.NopLabelFor(model => model.SecureUrl):
