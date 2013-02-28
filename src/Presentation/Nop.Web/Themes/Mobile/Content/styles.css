@@ -1,9 +1,6 @@
-﻿.foo{}
-
-
-/* MISC. CLASSES */
+﻿/* MISC. CLASSES */
 .nobr{white-space:nowrap!important;}
-.wrap{ white-space:normal!important;}
+.wrap{white-space:normal!important;}
 .a-left{text-align:left!important;}
 .a-center{text-align:center!important;}
 .a-right{text-align:right!important;}
@@ -27,7 +24,7 @@
 .data-table td{padding:3px 8px;}
 .data-table th,.data-table td{border-bottom:1px solid;border-right:1px solid;}
 .data-table .odd{}
-.data-table .even{background-color: #F3F3F3;}
+.data-table .even{background-color:#F3F3F3;}
 
 
 /* TOPICS */
@@ -42,20 +39,20 @@
 
 
 /* VALIDATION AND ERRORS */
-.message-error{font-family:Verdana, Arial, sans-serif;font-weight:700;color:red;}
+.message-error{font-family:Verdana,Arial,sans-serif;font-weight:700;color:red;}
 .message-error ul{padding:0px;}
 .message-error ul li{list-style:none;}
-.validation-summary-errors{font-family:Verdana, Arial, sans-serif;font-weight:700;color:red;}
-.field-validation-error{font-family:Verdana, Arial, sans-serif;font-weight:700;color:red;}
+.validation-summary-errors{font-family:Verdana,Arial,sans-serif;font-weight:700;color:red;}
+.field-validation-error{font-family:Verdana,Arial,sans-serif;font-weight:700;color:red;}
 .required{color:red;}
 
 
 /* PAGER */
-.pager {text-align: center;}
-.pager ul {float: left;}
-.pager li {float: left;list-style: none outside none;margin-left: 5px;}
-.pager a,.pager span {display: inline-block;text-align: center;font-size: 1em;padding: 0px 5px;}
-.pager span,.pager a:active {}
+.pager{text-align:center;}
+.pager ul{float:left;}
+.pager li{float:left;list-style:none outside none;margin-left:5px;}
+.pager a,.pager span{display:inline-block;text-align:center;font-size:1em;padding:0px 5px;}
+.pager span,.pager a:active{}
 
 
 
@@ -95,7 +92,7 @@
 .order-summary-content .coupon-box,.order-summary-content .giftcard-box{padding:10px;background:#F7F5E8;margin:0 0 10px;border:dotted 1px #d3d3d3;}
 .order-summary-content .coupon-box .current-code{}
 .order-summary-content .giftcard-box{}
-.order-summary-content .coupon-box .discount-coupon-code, .order-summary-content .giftcard-box .gift-card-coupon-code{}
+.order-summary-content .coupon-box .discount-coupon-code,.order-summary-content .giftcard-box .gift-card-coupon-code{}
 .order-summary-content .cart,.wishlist-content .cart{}
 .wishlist-content .cart{margin-bottom:10px;}
 .order-summary-content .cart .cart-item-row,.wishlist-content .cart .cart-item-row{font-weight:normal;}
@@ -232,7 +229,7 @@
 .news-item-page .news-date{font-style:italic;}
 .news-item-page .news-body{margin:0;padding:0;}
 .news-item-page .news-body a{text-decoration:underline;}
-.news-item-page .result{font-family:Verdana, Arial, sans-serif;font-weight:700;color:red;}
+.news-item-page .result{font-family:Verdana,Arial,sans-serif;font-weight:700;color:red;}
 .news-item-page .new-comment{margin:10px 0px 10px 0px;}
 .news-item-page .new-comment .title{font-weight:700;font-size:1.1em;color:#3a3a3a;}
 .news-item-page .new-comment .buttons{}
@@ -265,7 +262,7 @@
 .blogpost-page .post-date{color:#9a9a9a;font-style:italic;}
 .blogpost-page .post-body,.blogpost-page .tags{margin:0;padding:0;}
 .blogpost-page .post-body a,.blogpost-page .tags a{text-decoration:underline;}
-.blogpost-page .result{font-family:Verdana, Arial, sans-serif;font-weight:700;color:red;}
+.blogpost-page .result{font-family:Verdana,Arial,sans-serif;font-weight:700;color:red;}
 .blogpost-page .new-comment{margin:10px 0px 10px 0px;}
 .blogpost-page .new-comment .title{font-weight:700;font-size:1.1em;color:#3a3a3a;}
 .blogpost-page .new-comment .buttons{}
@@ -301,7 +298,7 @@
 .search-page .search-results{padding-top:10px;}
 .search-page .search-results .result{font-weight:700;}
 .search-page .warning{text-decoration:underline;}
-.search-box{margin: 0 0 15px 0px;}
+.search-box{margin:0 0 15px 0px;}
 
 
 /* USER-AGREEMENT PAGE */
@@ -325,7 +322,7 @@
 .password-recovery-page,newsletter-page{}
 .password-recovery-page .page-body,newsletter-page .page-body{}
 .password-recovery-page .email{}
-.password-recovery-page .result{font-family:Verdana, Arial, sans-serif;font-weight:700;color:red;}
+.password-recovery-page .result{font-family:Verdana,Arial,sans-serif;font-weight:700;color:red;}
 
 
 /* ACCOUNT ACTIVATION */
@@ -488,7 +485,7 @@
 /* PRODUCT REVIEWS PAGE */
 .product-reviews-page{}
 .product-reviews-page .page-title a{text-decoration:underline;}
-.product-reviews-page .result{font-family:Verdana, Arial, sans-serif;font-weight:700;color:red;}
+.product-reviews-page .result{font-family:Verdana,Arial,sans-serif;font-weight:700;color:red;}
 .product-reviews-page .write-review{margin:10px 0px 10px 0px;}
 .product-reviews-page .write-review .title{font-weight:700;font-size:1.1em;color:#3a3a3a;}
 .product-reviews-page .write-review .review-title{}
@@ -539,8 +536,8 @@
 .forum-group{}
 .forum-group .group-title{font-size:1.1em;font-weight:700;padding-bottom:5px;}
 .forum-group .group-title a{color:#555;}
-.forum-group .forum {vertical-align:middle;padding-left:3px;min-height:40px;}
-.forum-group .forum .image {float:left;width:36px;height:36px;background:url(images/ico-forum.gif) no-repeat 40% 40%;}
+.forum-group .forum{vertical-align:middle;padding-left:3px;min-height:40px;}
+.forum-group .forum .image{float:left;width:36px;height:36px;background:url(images/ico-forum.gif) no-repeat 40% 40%;}
 .forum-group .forum .forum-name{font-weight:700;color:#555;float:left;margin:11px 0 0 7px;}
 .forum-group .forum .topics{font-size:.8em;color:#555;float:right;margin:11px 0 0 7px;}
 
@@ -556,7 +553,7 @@
 .forum .top .actions{}
 .forum .top .actions .newtopic{}
 .forum .topics{}
-.forum .topics .topic {vertical-align:middle;padding-left:3px;min-height:40px;}
+.forum .topics .topic{vertical-align:middle;padding-left:3px;min-height:40px;}
 .forum .topics .topic a{text-decoration:none;}
 .forum .topics .topic .topic-name{font-weight:700;color:#555;float:left;margin:11px 0 0 7px;}
 .forum .topics .topic .replies{font-size:.8em;color:#555;float:right;margin:11px 0 0 7px;}
@@ -607,7 +604,7 @@
 .forum-search .forum-search-panel .search-error{color:Red;}
 .forum-search .forum-search-panel .search-results{}
 .forum-search .topics{}
-.forum-search .topics .topic {vertical-align:middle;padding-left:3px;min-height:40px;}
+.forum-search .topics .topic{vertical-align:middle;padding-left:3px;min-height:40px;}
 .forum-search .topics .topic .topic-name{font-weight:700;color:#555;float:left;margin:11px 0 0 7px;}
 .forum-search .topics .topic .replies{font-size:.8em;color:#555;float:right;margin:11px 0 0 7px;}
 .forum-search .topics .topic .post{float:left;width:36px;height:36px;background:url(images/ico-forum-post.gif) no-repeat 40% 40%;}
@@ -636,14 +633,14 @@
 .active-discussions .active-discussions-title{font-size:1.1em;padding-bottom:5px;font-weight:700;}
 .active-discussions .active-discussions-title .view-all{float:right;text-align:right;}
 .active-discussions .topics{}
-.active-discussions .topics .topic {vertical-align:middle;padding-left:3px;min-height:40px;}
+.active-discussions .topics .topic{vertical-align:middle;padding-left:3px;min-height:40px;}
 .active-discussions .topics .topic .topic-name{font-weight:700;color:#555;float:left;margin:11px 0 0 7px;}
 .active-discussions .topics .topic .replies{font-size:.8em;color:#555;float:right;margin:11px 0 0 7px;}
 
 
 /* BBCODES */
 pre{white-space:pre-wrap;/* css-3 */white-space:0;/* Mozilla, since 1999 */white-space:0;/* Opera 4-6 */white-space:0;/* Opera 7 */word-wrap:break-word;/* Internet Explorer 5.5+ */}
-.csharpcode,.csharpcode pre{font-size:small;color:#000;font-family:Consolas, "Courier New", Courier, Monospace;background-color:#fff;}
+.csharpcode,.csharpcode pre{font-size:small;color:#000;font-family:Consolas,"Courier New",Courier,Monospace;background-color:#fff;}
 .csharpcode pre{margin:0;}
 .csharpcode .rem{color:green;}
 .csharpcode .kwrd{color:#00f;}
