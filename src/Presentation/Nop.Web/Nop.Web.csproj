@@ -1353,8 +1353,6 @@
     <Content Include="Themes\DefaultClean\Content\images\loading.gif" />
     <Content Include="Themes\DefaultClean\Content\images\logo.gif" />
     <Content Include="Themes\DefaultClean\Content\images\nextlabel.gif" />
-    <Content Include="Themes\DefaultClean\Content\images\pm-footer-bg.gif" />
-    <Content Include="Themes\DefaultClean\Content\images\pm-header-bg.gif" />
     <Content Include="Themes\DefaultClean\Content\images\prevlabel.gif" />
     <Content Include="Themes\DefaultClean\Content\images\progress-step-active.gif" />
     <Content Include="Themes\DefaultClean\Content\images\progress-step-inactive.gif" />
