@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Linq;
 using Nop.Core;
 using Nop.Data;
 
@@ -59,16 +60,28 @@ namespace Nop.Plugin.Feed.Froogle.Data
         public void Uninstall()
         {
             //drop the table
-            try
+
+            //It's required to set initializer to null (for SQL Server Compact).
+            //otherwise, you'll get something like "The model backing the 'your context name' context has changed since the database was created. Consider using Code First Migrations to update the database"
+            Database.SetInitializer<GoogleProductObjectContext>(null);
+            string tableName = "GoogleProduct";
+            if (Database.SqlQuery<int>("SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = {0}", tableName).Any<int>())
             {
-                //we place it in try-catch here because previous versions of Froogle didn't have any tables
-                var dbScript = "DROP TABLE GoogleProduct";
+                var dbScript = "DROP TABLE [" + tableName + "]";
                 Database.ExecuteSqlCommand(dbScript);
-                SaveChanges();
             }
-            catch
-            {
-            }
+            SaveChanges();
+            //old way of dropping the table
+            //try
+            //{
+            //    //we place it in try-catch here because previous versions of Froogle didn't have any tables
+            //    var dbScript = "DROP TABLE GoogleProduct";
+            //    Database.ExecuteSqlCommand(dbScript);
+            //    SaveChanges();
+            //}
+            //catch
+            //{
+            //}
         }
 
 
