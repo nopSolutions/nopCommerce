@@ -13,6 +13,7 @@ using Nop.Core.Data;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Common;
 using Nop.Core.Infrastructure;
+using Nop.Core.Infrastructure.DependencyManagement;
 using Nop.Services.Logging;
 using Nop.Services.Tasks;
 using Nop.Web.Framework;
@@ -130,6 +131,12 @@ namespace Nop.Web
                 //stop as early as you can, even earlier with MvcMiniProfiler.MiniProfiler.Stop(discardResults: true);
                 MiniProfiler.Stop();
             }
+
+            //dispose registered resources
+            //we do not register AutofacRequestLifetimeHttpModule as IHttpModule 
+            //because it disposes resources before this Application_EndRequest method is called
+            //and this case the code above will throw an exception
+            AutofacRequestLifetimeHttpModule.ContextEndRequest(sender, e);
         }
 
         protected void Application_AuthenticateRequest(object sender, EventArgs e)

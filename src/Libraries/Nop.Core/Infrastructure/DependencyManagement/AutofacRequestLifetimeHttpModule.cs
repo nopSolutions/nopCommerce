@@ -67,7 +67,7 @@ namespace Nop.Core.Infrastructure.DependencyManagement
             }
         }
 
-        static void ContextEndRequest(object sender, EventArgs e)
+        public static void ContextEndRequest(object sender, EventArgs e)
         {
             ILifetimeScope lifetimeScope = LifetimeScope;
             if (lifetimeScope != null)
