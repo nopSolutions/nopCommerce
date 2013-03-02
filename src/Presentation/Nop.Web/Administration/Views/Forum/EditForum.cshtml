@@ -8,7 +8,7 @@
     <div class="section-header">
         <div class="title">
             <img src="@Url.Content("~/Administration/Content/images/ico-content.png")" alt="" />
-            @T("Admin.ContentManagement.Forums.Forum.EditForum") - @Model.Name  @Html.ActionLink(String.Format("({0})", T("Admin.ContentManagement.Forums.Forum.BackToList")), "List")
+            @T("Admin.ContentManagement.Forums.Forum.EditForum") - @Model.Name  @Html.ActionLink("(" + T("Admin.ContentManagement.Forums.Forum.BackToList") + ")", "List")
         </div>
         <div class="options">
             <input type="submit" name="save" class="t-button" value="@T("Admin.Common.Save")" />
