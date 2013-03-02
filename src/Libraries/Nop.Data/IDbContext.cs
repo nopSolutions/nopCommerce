@@ -1,15 +1,32 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using Nop.Core;
 
 namespace Nop.Data
 {
-    public interface IDbContext 
+    public interface IDbContext
     {
+        /// <summary>
+        /// Get DbSet
+        /// </summary>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <returns>DbSet</returns>
         IDbSet<TEntity> Set<TEntity>() where TEntity : BaseEntity;
 
+        /// <summary>
+        /// Save changes
+        /// </summary>
+        /// <returns></returns>
         int SaveChanges();
 
+        /// <summary>
+        /// Execute stores procedure and load a list of entities at the end
+        /// </summary>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <param name="commandText">Command text</param>
+        /// <param name="parameters">Parameters</param>
+        /// <returns>Entities</returns>
         IList<TEntity> ExecuteStoredProcedureList<TEntity>(string commandText, params object[] parameters)
             where TEntity : BaseEntity, new();
 

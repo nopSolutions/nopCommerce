@@ -69,16 +69,32 @@ namespace Nop.Data
             }
         }
 
+        /// <summary>
+        /// Create database script
+        /// </summary>
+        /// <returns>SQL to generate database</returns>
         public string CreateDatabaseScript()
         {
             return ((IObjectContextAdapter)this).ObjectContext.CreateDatabaseScript();
         }
 
+        /// <summary>
+        /// Get DbSet
+        /// </summary>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <returns>DbSet</returns>
         public new IDbSet<TEntity> Set<TEntity>() where TEntity : BaseEntity
         {
             return base.Set<TEntity>();
         }
         
+        /// <summary>
+        /// Execute stores procedure and load a list of entities at the end
+        /// </summary>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <param name="commandText">Command text</param>
+        /// <param name="parameters">Parameters</param>
+        /// <returns>Entities</returns>
         public IList<TEntity> ExecuteStoredProcedureList<TEntity>(string commandText, params object[] parameters) where TEntity : BaseEntity, new()
         {
             //HACK: Entity Framework Code First doesn't support doesn't support output parameters
