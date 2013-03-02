@@ -464,6 +464,12 @@ set @resources='
   <LocaleResource Name="Admin.ContentManagement.News.Comments.Fields.IPAddress">
 	<Value></Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.HeaderQuantity">
+	<Value>({0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="Wishlist.HeaderQuantity">
+	<Value>({0})</Value>
+  </LocaleResource>
 </Language>
 '
 

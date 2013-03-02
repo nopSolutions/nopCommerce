@@ -1016,7 +1016,7 @@ namespace Nop.Web.Controllers
                         else
                         {
                             //display notification message and update appropriate blocks
-                            var updatetopwishlistsectionhtml = string.Format("({0})",
+                            var updatetopwishlistsectionhtml = string.Format(_localizationService.GetResource("Wishlist.HeaderQuantity"),
                                  _workContext.CurrentCustomer.ShoppingCartItems
                                  .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
                                  .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
@@ -1048,7 +1048,7 @@ namespace Nop.Web.Controllers
                         {
 
                             //display notification message and update appropriate blocks
-                            var updatetopcartsectionhtml = string.Format("({0})",
+                            var updatetopcartsectionhtml = string.Format(_localizationService.GetResource("ShoppingCart.HeaderQuantity"),
                                  _workContext.CurrentCustomer.ShoppingCartItems
                                  .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
                                  .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
@@ -1287,7 +1287,7 @@ namespace Nop.Web.Controllers
                         else
                         {
                             //display notification message and update appropriate blocks
-                            var updatetopwishlistsectionhtml = string.Format("({0})",
+                            var updatetopwishlistsectionhtml = string.Format(_localizationService.GetResource("Wishlist.HeaderQuantity"),
                                  _workContext.CurrentCustomer.ShoppingCartItems
                                  .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
                                  .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
@@ -1319,7 +1319,7 @@ namespace Nop.Web.Controllers
                         {
 
                             //display notification message and update appropriate blocks
-                            var updatetopcartsectionhtml = string.Format("({0})",
+                            var updatetopcartsectionhtml = string.Format(_localizationService.GetResource("ShoppingCart.HeaderQuantity"),
                                  _workContext.CurrentCustomer.ShoppingCartItems
                                  .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
                                  .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)

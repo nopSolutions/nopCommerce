@@ -3859,6 +3859,9 @@
                     </LocaleResource>
                 </Children>
             </LocaleResource>
+            <LocaleResource Name="HeaderQuantity">
+                <Value>({0})</Value>
+            </LocaleResource>
             <LocaleResource Name="ItemTotal">
                 <Value>Total</Value>
             </LocaleResource>
@@ -4068,6 +4071,9 @@
         <Children>
             <LocaleResource Name="CartIsEmpty">
                 <Value>The wishlist is empty!</Value>
+            </LocaleResource>
+            <LocaleResource Name="HeaderQuantity">
+                <Value>({0})</Value>
             </LocaleResource>
             <LocaleResource Name="EmailAFriend">
                 <Value>Email a friend</Value>
