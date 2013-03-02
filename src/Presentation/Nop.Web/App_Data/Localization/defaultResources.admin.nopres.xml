@@ -1151,14 +1151,6 @@
                                             </LocaleResource>
                                         </Children>
                                     </LocaleResource>
-                                    <LocaleResource Name="IPAddress">
-                                        <Value>IP Address</Value>
-                                        <Children>
-                                            <LocaleResource Name="Hint">
-                                                <Value>The IP address.</Value>
-                                            </LocaleResource>
-                                        </Children>
-                                    </LocaleResource>
                                     <LocaleResource Name="Title">
                                         <Value>Title</Value>
                                         <Children>
@@ -6171,9 +6163,6 @@
                                             <LocaleResource Name="Customer">
                                                 <Value>Customer</Value>
                                             </LocaleResource>
-                                            <LocaleResource Name="IPAddress">
-                                                <Value>IP Address</Value>
-                                            </LocaleResource>
                                             <LocaleResource Name="Comment">
                                                 <Value>Comment</Value>
                                             </LocaleResource>
@@ -6452,9 +6441,6 @@
                                             </LocaleResource>
                                             <LocaleResource Name="Customer">
                                                 <Value>Customer</Value>
-                                            </LocaleResource>
-                                            <LocaleResource Name="IPAddress">
-                                                <Value>IP Address</Value>
                                             </LocaleResource>
                                             <LocaleResource Name="CommentTitle">
                                                 <Value>Comment title</Value>

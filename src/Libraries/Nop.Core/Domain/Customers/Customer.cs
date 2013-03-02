@@ -16,7 +16,6 @@ namespace Nop.Core.Domain.Customers
     public partial class Customer : BaseEntity
     {
         private ICollection<ExternalAuthenticationRecord> _externalAuthenticationRecords;
-        private ICollection<CustomerContent> _customerContent;
         private ICollection<CustomerRole> _customerRoles;
         private ICollection<ShoppingCartItem> _shoppingCartItems;
         private ICollection<RewardPointsHistory> _rewardPointsHistory;
@@ -131,15 +130,6 @@ namespace Nop.Core.Domain.Customers
         {
             get { return _externalAuthenticationRecords ?? (_externalAuthenticationRecords = new List<ExternalAuthenticationRecord>()); }
             protected set { _externalAuthenticationRecords = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets customer generated content
-        /// </summary>
-        public virtual ICollection<CustomerContent> CustomerContent
-        {
-            get { return _customerContent ?? (_customerContent = new List<CustomerContent>()); }
-            protected set { _customerContent = value; }
         }
 
         /// <summary>

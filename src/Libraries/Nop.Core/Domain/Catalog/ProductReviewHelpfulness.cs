@@ -1,12 +1,11 @@
 
-using Nop.Core.Domain.Customers;
 
 namespace Nop.Core.Domain.Catalog
 {
     /// <summary>
     /// Represents a product review helpfulness
     /// </summary>
-    public partial class ProductReviewHelpfulness : CustomerContent
+    public partial class ProductReviewHelpfulness : BaseEntity
     {
         /// <summary>
         /// Gets or sets the product review identifier
@@ -17,6 +16,11 @@ namespace Nop.Core.Domain.Catalog
         /// A value indicating whether a review a helpful
         /// </summary>
         public bool WasHelpful { get; set; }
+
+        /// <summary>
+        /// Gets or sets the customer identifier
+        /// </summary>
+        public int CustomerId { get; set; }
 
         /// <summary>
         /// Gets the product

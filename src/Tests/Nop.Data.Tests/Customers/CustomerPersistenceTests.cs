@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -288,6 +287,7 @@ namespace Nop.Data.Tests.Customers
             return new Store
             {
                 Name = "Store 1",
+                Url = "http://www.test.com",
                 DisplayOrder = 1
             };
         }

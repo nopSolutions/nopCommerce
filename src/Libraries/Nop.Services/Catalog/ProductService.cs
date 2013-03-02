@@ -45,6 +45,7 @@ namespace Nop.Services.Catalog
         private readonly IRepository<StoreMapping> _storeMappingRepository;
         private readonly IRepository<ProductPicture> _productPictureRepository;
         private readonly IRepository<ProductSpecificationAttribute> _productSpecificationAttributeRepository;
+        private readonly IRepository<ProductReview> _productReviewRepository;
         private readonly IProductAttributeService _productAttributeService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IProductTagService _productTagService;
@@ -100,6 +101,7 @@ namespace Nop.Services.Catalog
             IRepository<AclRecord> aclRepository,
             IRepository<StoreMapping> storeMappingRepository,
             IRepository<ProductSpecificationAttribute> productSpecificationAttributeRepository,
+            IRepository<ProductReview>  productReviewRepository,
             IProductAttributeService productAttributeService,
             IProductAttributeParser productAttributeParser,
             IProductTagService productTagService,
@@ -121,6 +123,7 @@ namespace Nop.Services.Catalog
             this._aclRepository = aclRepository;
             this._storeMappingRepository = storeMappingRepository;
             this._productSpecificationAttributeRepository = productSpecificationAttributeRepository;
+            this._productReviewRepository = productReviewRepository;
             this._productAttributeService = productAttributeService;
             this._productAttributeParser = productAttributeParser;
             this._productTagService = productTagService;
@@ -1635,6 +1638,63 @@ namespace Nop.Services.Catalog
 
             //event notification
             _eventPublisher.EntityUpdated(productPicture);
+        }
+
+        #endregion
+
+        #region Product reviews
+        
+        /// <summary>
+        /// Gets all product reviews
+        /// </summary>
+        /// <param name="customerId">Customer identifier; 0 to load all records</param>
+        /// <param name="approved">A value indicating whether to content is approved; null to load all records</param> 
+        /// <param name="fromUtc">Item creation from; null to load all records</param>
+        /// <param name="toUtc">Item item creation to; null to load all records</param>
+        /// <returns>Reviews</returns>
+        public virtual IList<ProductReview> GetAllProductReviews(int customerId, bool? approved,
+            DateTime? fromUtc = null, DateTime? toUtc = null)
+        {
+            var query = _productReviewRepository.Table;
+            if (approved.HasValue)
+                query = query.Where(c => c.IsApproved == approved);
+            if (customerId > 0)
+                query = query.Where(c => c.CustomerId == customerId);
+            if (fromUtc.HasValue)
+                query = query.Where(c => fromUtc.Value <= c.CreatedOnUtc);
+            if (toUtc.HasValue)
+                query = query.Where(c => toUtc.Value >= c.CreatedOnUtc);
+            query = query.OrderBy(c => c.CreatedOnUtc);
+            var content = query.ToList();
+            return content;
+        }
+
+        /// <summary>
+        /// Gets product review
+        /// </summary>
+        /// <param name="productReviewId">Product review identifier</param>
+        /// <returns>Product review</returns>
+        public virtual ProductReview GetProductReviewById(int productReviewId)
+        {
+            if (productReviewId == 0)
+                return null;
+
+            var productReview = _productReviewRepository.GetById(productReviewId);
+            return productReview;
+        }
+
+        /// <summary>
+        /// Deletes a product review
+        /// </summary>
+        /// <param name="productReview">Product review</param>
+        public virtual void DeleteProductReview(ProductReview productReview)
+        {
+            if (productReview == null)
+                throw new ArgumentNullException("productReview");
+
+            _productReviewRepository.Delete(productReview);
+
+            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
         }
 
         #endregion

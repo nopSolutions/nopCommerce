@@ -54,19 +54,12 @@ namespace Nop.Core.Domain.News
         public bool AllowComments { get; set; }
 
         /// <summary>
-        /// Gets or sets the total number of approved comments
-        /// <remarks>The same as if we run newsItem.NewsComments.Where(n => n.IsApproved).Count()
+        /// Gets or sets the total number of comments
+        /// <remarks>
         /// We use this property for performance optimization (no SQL command executed)
         /// </remarks>
         /// </summary>
-        public int ApprovedCommentCount { get; set; }
-        /// <summary>
-        /// Gets or sets the total number of not approved comments
-        /// <remarks>The same as if we run newsItem.NewsComments.Where(n => !n.IsApproved).Count()
-        /// We use this property for performance optimization (no SQL command executed)
-        /// </remarks>
-        /// </summary>
-        public int NotApprovedCommentCount { get; set; }
+        public int CommentCount { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the entity is limited/restricted to certain stores

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
@@ -377,6 +378,34 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productPicture">Product picture</param>
         void UpdateProductPicture(ProductPicture productPicture);
+
+        #endregion
+
+        #region Product reviews
+        
+        /// <summary>
+        /// Gets all product reviews
+        /// </summary>
+        /// <param name="customerId">Customer identifier; 0 to load all records</param>
+        /// <param name="approved">A value indicating whether to content is approved; null to load all records</param> 
+        /// <param name="fromUtc">Item creation from; null to load all records</param>
+        /// <param name="toUtc">Item item creation to; null to load all records</param>
+        /// <returns>Reviews</returns>
+        IList<ProductReview> GetAllProductReviews(int customerId, bool? approved,
+            DateTime? fromUtc = null, DateTime? toUtc = null);
+
+        /// <summary>
+        /// Gets product review
+        /// </summary>
+        /// <param name="productReviewId">Product review identifier</param>
+        /// <returns>Product review</returns>
+        ProductReview GetProductReviewById(int productReviewId);
+
+        /// <summary>
+        /// Deletes a product review
+        /// </summary>
+        /// <param name="productReview">Product review</param>
+        void DeleteProductReview(ProductReview productReview);
 
         #endregion
     }

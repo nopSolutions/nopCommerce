@@ -8,8 +8,7 @@ namespace Nop.Data.Mapping.Catalog
         public ProductReviewHelpfulnessMap()
         {
             this.ToTable("ProductReviewHelpfulness");
-            //commented because it's already configured by CustomerContentMap class
-            //this.HasKey(pr => pr.Id);
+            this.HasKey(pr => pr.Id);
 
             this.HasRequired(prh => prh.ProductReview)
                 .WithMany(pr => pr.ProductReviewHelpfulnessEntries)

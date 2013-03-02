@@ -410,8 +410,7 @@ namespace Nop.Admin.Infrastructure
             Mapper.CreateMap<BlogPostModel, BlogPost>()
                 .ForMember(dest => dest.BlogComments, mo => mo.Ignore())
                 .ForMember(dest => dest.Language, mo => mo.Ignore())
-                .ForMember(dest => dest.ApprovedCommentCount, mo => mo.Ignore())
-                .ForMember(dest => dest.NotApprovedCommentCount, mo => mo.Ignore())
+                .ForMember(dest => dest.CommentCount, mo => mo.Ignore())
                 .ForMember(dest => dest.StartDateUtc, mo => mo.Ignore())
                 .ForMember(dest => dest.EndDateUtc, mo => mo.Ignore())
                 .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore());
@@ -428,8 +427,7 @@ namespace Nop.Admin.Infrastructure
             Mapper.CreateMap<NewsItemModel, NewsItem>()
                 .ForMember(dest => dest.NewsComments, mo => mo.Ignore())
                 .ForMember(dest => dest.Language, mo => mo.Ignore())
-                .ForMember(dest => dest.ApprovedCommentCount, mo => mo.Ignore())
-                .ForMember(dest => dest.NotApprovedCommentCount, mo => mo.Ignore())
+                .ForMember(dest => dest.CommentCount, mo => mo.Ignore())
                 .ForMember(dest => dest.StartDateUtc, mo => mo.Ignore())
                 .ForMember(dest => dest.EndDateUtc, mo => mo.Ignore())
                 .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore());

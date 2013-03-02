@@ -124,6 +124,7 @@ namespace Nop.Services.Tests.Customers
             _localizationService = MockRepository.GenerateMock<ILocalizationService>();
             _customerService = new CustomerService(new NopNullCache(), _customerRepo, _customerRoleRepo,
                 _genericAttributeRepo,_orderRepo, _forumPostRepo, _forumTopicRepo,
+                null, null, null, null, null,
                 _genericAttributeService, _eventPublisher, _customerSettings);
             _customerRegistrationService = new CustomerRegistrationService(_customerService,
                 _encryptionService, _newsLetterSubscriptionService, _localizationService,

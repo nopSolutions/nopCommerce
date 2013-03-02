@@ -69,9 +69,23 @@ namespace Nop.Services.Blogs
         void UpdateBlogPost(BlogPost blogPost);
 
         /// <summary>
-        /// Update blog post comment totals
+        /// Gets all comments
         /// </summary>
-        /// <param name="blogPost">Blog post</param>
-        void UpdateCommentTotals(BlogPost blogPost);
+        /// <param name="customerId">Customer identifier; 0 to load all records</param>
+        /// <returns>Comments</returns>
+        IList<BlogComment> GetAllComments(int customerId);
+
+        /// <summary>
+        /// Gets a blog comment
+        /// </summary>
+        /// <param name="blogCommentId">Blog comment identifier</param>
+        /// <returns>Blog comment</returns>
+        BlogComment GetBlogCommentById(int blogCommentId);
+
+        /// <summary>
+        /// Deletes a blog comment
+        /// </summary>
+        /// <param name="blogComment">Blog comment</param>
+        void DeleteBlogComment(BlogComment blogComment);
     }
 }

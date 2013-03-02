@@ -27,7 +27,6 @@ namespace Nop.Admin.Controllers
         private readonly INewsService _newsService;
         private readonly ILanguageService _languageService;
         private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly ICustomerContentService _customerContentService;
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
         private readonly IUrlRecordService _urlRecordService;
@@ -38,15 +37,18 @@ namespace Nop.Admin.Controllers
 
 		#region Constructors
 
-        public NewsController(INewsService newsService, ILanguageService languageService,
-            IDateTimeHelper dateTimeHelper, ICustomerContentService customerContentService,
-            ILocalizationService localizationService, IPermissionService permissionService,
-            IUrlRecordService urlRecordService, IStoreService storeService, IStoreMappingService storeMappingService)
+        public NewsController(INewsService newsService, 
+            ILanguageService languageService,
+            IDateTimeHelper dateTimeHelper,
+            ILocalizationService localizationService,
+            IPermissionService permissionService,
+            IUrlRecordService urlRecordService,
+            IStoreService storeService, 
+            IStoreMappingService storeMappingService)
         {
             this._newsService = newsService;
             this._languageService = languageService;
             this._dateTimeHelper = dateTimeHelper;
-            this._customerContentService = customerContentService;
             this._localizationService = localizationService;
             this._permissionService = permissionService;
             this._urlRecordService = urlRecordService;
@@ -146,7 +148,7 @@ namespace Nop.Admin.Controllers
                         m.EndDate = _dateTimeHelper.ConvertToUserTime(x.EndDateUtc.Value, DateTimeKind.Utc);
                     m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
                     m.LanguageName = x.Language.Name;
-                    m.Comments = x.ApprovedCommentCount + x.NotApprovedCommentCount;
+                    m.Comments = x.CommentCount;
                     return m;
                 }),
                 Total = news.TotalCount
@@ -305,7 +307,7 @@ namespace Nop.Admin.Controllers
             else
             {
                 //load all news comments
-                comments = _customerContentService.GetAllCustomerContent<NewsComment>(0, null);
+                comments = _newsService.GetAllComments(0);
             }
 
             var gridModel = new GridModel<NewsCommentModel>
@@ -319,7 +321,6 @@ namespace Nop.Admin.Controllers
                     commentModel.CustomerId = newsComment.CustomerId;
                     var customer = newsComment.Customer;
                     commentModel.CustomerInfo = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
-                    commentModel.IpAddress = newsComment.IpAddress;
                     commentModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(newsComment.CreatedOnUtc, DateTimeKind.Utc);
                     commentModel.CommentTitle = newsComment.CommentTitle;
                     commentModel.CommentText = Core.Html.HtmlHelper.FormatText(newsComment.CommentText, false, true, false, false, false, false);
@@ -339,14 +340,15 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
                 return AccessDeniedView();
 
-            var comment = _customerContentService.GetCustomerContentById(id) as NewsComment;
+            var comment = _newsService.GetNewsCommentById(id);
             if (comment == null)
                 throw new ArgumentException("No comment found with the specified id");
 
             var newsItem = comment.NewsItem;
-            _customerContentService.DeleteCustomerContent(comment);
+            _newsService.DeleteNewsComment(comment);
             //update totals
-            _newsService.UpdateCommentTotals(newsItem);
+            newsItem.CommentCount = newsItem.NewsComments.Count;
+            _newsService.UpdateNews(newsItem);
 
             return Comments(filterByNewsItemId, command);
         }

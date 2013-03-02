@@ -19,8 +19,7 @@ namespace Nop.Data.Tests.Blogs
                 Title = "Title 1",
                 Body = "Body 1",
                 AllowComments = true,
-                ApprovedCommentCount = 1,
-                NotApprovedCommentCount = 2,
+                CommentCount = 1,
                 Tags = "Tags 1",
                 StartDateUtc = new DateTime(2010, 01, 01),
                 EndDateUtc = new DateTime(2010, 01, 02),
@@ -37,8 +36,7 @@ namespace Nop.Data.Tests.Blogs
             fromDb.Title.ShouldEqual("Title 1");
             fromDb.Body.ShouldEqual("Body 1");
             fromDb.AllowComments.ShouldEqual(true);
-            fromDb.ApprovedCommentCount.ShouldEqual(1);
-            fromDb.NotApprovedCommentCount.ShouldEqual(2);
+            fromDb.CommentCount.ShouldEqual(1);
             fromDb.Tags.ShouldEqual("Tags 1");
             fromDb.StartDateUtc.ShouldEqual(new DateTime(2010, 01, 01));
             fromDb.EndDateUtc.ShouldEqual(new DateTime(2010, 01, 02));
@@ -67,10 +65,7 @@ namespace Nop.Data.Tests.Blogs
                 (
                     new BlogComment
                     {
-                        IpAddress = "192.168.1.1",
-                        IsApproved = true,
                         CreatedOnUtc = new DateTime(2010, 01, 03),
-                        UpdatedOnUtc = new DateTime(2010, 01, 04),
                         Customer = GetTestCustomer()
                     }
                 );
@@ -80,7 +75,6 @@ namespace Nop.Data.Tests.Blogs
 
             fromDb.BlogComments.ShouldNotBeNull();
             (fromDb.BlogComments.Count == 1).ShouldBeTrue();
-            fromDb.BlogComments.First().IpAddress.ShouldEqual("192.168.1.1");
         }
 
         protected Customer GetTestCustomer()

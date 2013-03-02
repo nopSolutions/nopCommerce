@@ -18,9 +18,6 @@ namespace Nop.Admin.Models.News
         [NopResourceDisplayName("Admin.ContentManagement.News.Comments.Fields.Customer")]
         public string CustomerInfo { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.News.Comments.Fields.IPAddress")]
-        public string IpAddress { get; set; }
-
         [AllowHtml]
         [NopResourceDisplayName("Admin.ContentManagement.News.Comments.Fields.CommentTitle")]
         public string CommentTitle { get; set; }

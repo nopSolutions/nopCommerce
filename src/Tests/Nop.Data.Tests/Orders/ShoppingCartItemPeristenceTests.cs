@@ -51,6 +51,7 @@ namespace Nop.Data.Tests.Orders
             return new Store
             {
                 Name = "Store 1",
+                Url = "http://www.test.com",
                 DisplayOrder = 1,
             };
         }

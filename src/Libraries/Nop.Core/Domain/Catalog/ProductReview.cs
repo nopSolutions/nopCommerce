@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Nop.Core.Domain.Customers;
 
@@ -6,14 +7,24 @@ namespace Nop.Core.Domain.Catalog
     /// <summary>
     /// Represents a product review
     /// </summary>
-    public partial class ProductReview : CustomerContent
+    public partial class ProductReview : BaseEntity
     {
         private ICollection<ProductReviewHelpfulness> _productReviewHelpfulnessEntries;
+
+        /// <summary>
+        /// Gets or sets the customer identifier
+        /// </summary>
+        public int CustomerId { get; set; }
 
         /// <summary>
         /// Gets or sets the product identifier
         /// </summary>
         public int ProductId { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the content is approved
+        /// </summary>
+        public bool IsApproved { get; set; }
 
         /// <summary>
         /// Gets or sets the title
@@ -39,6 +50,16 @@ namespace Nop.Core.Domain.Catalog
         /// Review not helpful votes total
         /// </summary>
         public int HelpfulNoTotal { get; set; }
+
+        /// <summary>
+        /// Gets or sets the date and time of instance creation
+        /// </summary>
+        public DateTime CreatedOnUtc { get; set; }
+
+        /// <summary>
+        /// Gets or sets the product
+        /// </summary>
+        public virtual Customer Customer { get; set; }
 
         /// <summary>
         /// Gets the product

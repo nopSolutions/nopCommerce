@@ -153,7 +153,6 @@ namespace Nop.Web.Framework
             builder.RegisterType<MaintenanceService>().As<IMaintenanceService>().InstancePerHttpRequest();
 
             
-            builder.RegisterType<CustomerContentService>().As<ICustomerContentService>().InstancePerHttpRequest();
             builder.RegisterType<CustomerService>().As<ICustomerService>().InstancePerHttpRequest();
             builder.RegisterType<CustomerRegistrationService>().As<ICustomerRegistrationService>().InstancePerHttpRequest();
             builder.RegisterType<CustomerReportService>().As<ICustomerReportService>().InstancePerHttpRequest();

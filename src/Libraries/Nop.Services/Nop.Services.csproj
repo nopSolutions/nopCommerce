@@ -194,12 +194,10 @@
     <Compile Include="Authentication\IAuthenticationService.cs" />
     <Compile Include="Directory\CountryService.cs" />
     <Compile Include="Directory\CurrencyService.cs" />
-    <Compile Include="Customers\CustomerContentService.cs" />
     <Compile Include="Customers\CustomerService.cs" />
     <Compile Include="Catalog\ICompareProductsService.cs" />
     <Compile Include="Directory\ICountryService.cs" />
     <Compile Include="Directory\ICurrencyService.cs" />
-    <Compile Include="Customers\ICustomerContentService.cs" />
     <Compile Include="Customers\ICustomerService.cs" />
     <Compile Include="Directory\IMeasureService.cs" />
     <Compile Include="Directory\IStateProvinceService.cs" />

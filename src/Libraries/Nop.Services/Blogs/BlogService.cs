@@ -22,6 +22,7 @@ namespace Nop.Services.Blogs
         #region Fields
 
         private readonly IRepository<BlogPost> _blogPostRepository;
+        private readonly IRepository<BlogComment> _blogCommentRepository;
         private readonly ICacheManager _cacheManager;
         private readonly IEventPublisher _eventPublisher;
 
@@ -29,12 +30,14 @@ namespace Nop.Services.Blogs
 
         #region Ctor
 
-        public BlogService(IRepository<BlogPost> blogPostRepository, 
+        public BlogService(IRepository<BlogPost> blogPostRepository,
+            IRepository<BlogComment> blogCommentRepository,
             ICacheManager cacheManager, IEventPublisher eventPublisher)
         {
-            _blogPostRepository = blogPostRepository;
-            _cacheManager = cacheManager;
-            _eventPublisher = eventPublisher;
+            this._blogPostRepository = blogPostRepository;
+            this._blogCommentRepository = blogCommentRepository;
+            this._cacheManager = cacheManager;
+            this._eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -206,28 +209,45 @@ namespace Nop.Services.Blogs
         }
         
         /// <summary>
-        /// Update blog post comment totals
+        /// Gets all comments
         /// </summary>
-        /// <param name="blogPost">Blog post</param>
-        public virtual void UpdateCommentTotals(BlogPost blogPost)
+        /// <param name="customerId">Customer identifier; 0 to load all records</param>
+        /// <returns>Comments</returns>
+        public virtual IList<BlogComment> GetAllComments(int customerId)
         {
-            if (blogPost == null)
-                throw new ArgumentNullException("blogPost");
+            var query = from c in _blogCommentRepository.Table
+                        orderby c.CreatedOnUtc
+                        where (customerId == 0 || c.CustomerId == customerId)
+                        select c;
+            var content = query.ToList();
+            return content;
+        }
 
-            int approvedCommentCount = 0;
-            int notApprovedCommentCount = 0;
-            var blogComments = blogPost.BlogComments;
-            foreach (var bc in blogComments)
-            {
-                if (bc.IsApproved)
-                    approvedCommentCount++;
-                else
-                    notApprovedCommentCount++;
-            }
+        /// <summary>
+        /// Gets a blog comment
+        /// </summary>
+        /// <param name="blogCommentId">Blog comment identifier</param>
+        /// <returns>Blog comment</returns>
+        public virtual BlogComment GetBlogCommentById(int blogCommentId)
+        {
+            if (blogCommentId == 0)
+                return null;
 
-            blogPost.ApprovedCommentCount = approvedCommentCount;
-            blogPost.NotApprovedCommentCount = notApprovedCommentCount;
-            UpdateBlogPost(blogPost);
+            return _blogCommentRepository.GetById(blogCommentId);
+        }
+
+        /// <summary>
+        /// Deletes a blog comment
+        /// </summary>
+        /// <param name="blogComment">Blog comment</param>
+        public virtual void DeleteBlogComment(BlogComment blogComment)
+        {
+            if (blogComment == null)
+                throw new ArgumentNullException("blogComment");
+
+            _blogCommentRepository.Delete(blogComment);
+
+            _cacheManager.RemoveByPattern(BLOGPOST_PATTERN_KEY);
         }
 
         #endregion

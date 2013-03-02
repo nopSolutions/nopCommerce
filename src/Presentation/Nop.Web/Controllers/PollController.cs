@@ -136,10 +136,6 @@ namespace Nop.Web.Controllers
                 {
                     PollAnswerId = pollAnswer.Id,
                     CustomerId = _workContext.CurrentCustomer.Id,
-                    IpAddress = _webHelper.GetCurrentIpAddress(),
-                    IsApproved = true,
-                    CreatedOnUtc = DateTime.UtcNow,
-                    UpdatedOnUtc = DateTime.UtcNow,
                 });
                 //update totals
                 pollAnswer.NumberOfVotes = pollAnswer.PollVotingRecords.Count;

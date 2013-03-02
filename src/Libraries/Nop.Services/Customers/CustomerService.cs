@@ -6,10 +6,14 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
+using Nop.Core.Domain.Blogs;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
+using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Polls;
 using Nop.Core.Domain.Shipping;
 using Nop.Services.Common;
 using Nop.Services.Events;
@@ -37,6 +41,11 @@ namespace Nop.Services.Customers
         private readonly IRepository<Order> _orderRepository;
         private readonly IRepository<ForumPost> _forumPostRepository;
         private readonly IRepository<ForumTopic> _forumTopicRepository;
+        private readonly IRepository<BlogComment> _blogCommentRepository;
+        private readonly IRepository<NewsComment> _newsCommentRepository;
+        private readonly IRepository<PollVotingRecord> _pollVotingRecordRepository;
+        private readonly IRepository<ProductReview> _productReviewRepository;
+        private readonly IRepository<ProductReviewHelpfulness> _productReviewHelpfulnessRepository;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ICacheManager _cacheManager;
         private readonly IEventPublisher _eventPublisher;
@@ -56,6 +65,11 @@ namespace Nop.Services.Customers
         /// <param name="orderRepository">Order repository</param>
         /// <param name="forumPostRepository">Forum post repository</param>
         /// <param name="forumTopicRepository">Forum topic repository</param>
+        /// <param name="blogCommentRepository">Blog commentrepository</param>
+        /// <param name="newsCommentRepository">News comment repository</param>
+        /// <param name="pollVotingRecordRepository">Poll voting record repository</param>
+        /// <param name="productReviewRepository">Product review repository</param>
+        /// <param name="productReviewHelpfulnessRepository">Product review helpfulness repository</param>
         /// <param name="genericAttributeService">Generic attribute service</param>
         /// <param name="eventPublisher">Event published</param>
         /// <param name="customerSettings">Customer settings</param>
@@ -66,6 +80,11 @@ namespace Nop.Services.Customers
             IRepository<Order> orderRepository,
             IRepository<ForumPost> forumPostRepository,
             IRepository<ForumTopic> forumTopicRepository,
+            IRepository<BlogComment> blogCommentRepository,
+            IRepository<NewsComment> newsCommentRepository,
+            IRepository<PollVotingRecord> pollVotingRecordRepository,
+            IRepository<ProductReview> productReviewRepository,
+            IRepository<ProductReviewHelpfulness> productReviewHelpfulnessRepository,
             IGenericAttributeService genericAttributeService,
             IEventPublisher eventPublisher, 
             CustomerSettings customerSettings)
@@ -77,6 +96,11 @@ namespace Nop.Services.Customers
             this._orderRepository = orderRepository;
             this._forumPostRepository = forumPostRepository;
             this._forumTopicRepository = forumTopicRepository;
+            this._blogCommentRepository = blogCommentRepository;
+            this._newsCommentRepository = newsCommentRepository;
+            this._pollVotingRecordRepository = pollVotingRecordRepository;
+            this._productReviewRepository = productReviewRepository;
+            this._productReviewHelpfulnessRepository = productReviewHelpfulnessRepository;
             this._genericAttributeService = genericAttributeService;
             this._eventPublisher = eventPublisher;
             this._customerSettings = customerSettings;
@@ -582,20 +606,49 @@ namespace Nop.Services.Customers
             query = query.Where(c => c.CustomerRoles.Select(cr => cr.Id).Contains(guestRole.Id));
             if (onlyWithoutShoppingCart)
                 query = query.Where(c => !c.ShoppingCartItems.Any());
-            //no orders (inner join)
+            //no orders
             query = from c in query
                     join o in _orderRepository.Table on c.Id equals o.CustomerId into c_o
                     from o in c_o.DefaultIfEmpty()
                     where !c_o.Any()
                     select c;
-            //no customer content
-            query = query.Where(c => !c.CustomerContent.Any());
-            //ensure that customers doesn't have forum posts or topics (inner join)
+            //no blog comments
+            query = from c in query
+                    join bc in _blogCommentRepository.Table on c.Id equals bc.CustomerId into c_bc
+                    from bc in c_bc.DefaultIfEmpty()
+                    where !c_bc.Any()
+                    select c;
+            //no news comments
+            query = from c in query
+                    join nc in _newsCommentRepository.Table on c.Id equals nc.CustomerId into c_nc
+                    from nc in c_nc.DefaultIfEmpty()
+                    where !c_nc.Any()
+                    select c;
+            //no product reviews
+            query = from c in query
+                    join pr in _productReviewRepository.Table on c.Id equals pr.CustomerId into c_pr
+                    from pr in c_pr.DefaultIfEmpty()
+                    where !c_pr.Any()
+                    select c;
+            //no product reviews helpfulness
+            query = from c in query
+                    join prh in _productReviewHelpfulnessRepository.Table on c.Id equals prh.CustomerId into c_prh
+                    from prh in c_prh.DefaultIfEmpty()
+                    where !c_prh.Any()
+                    select c;
+            //no poll voting
+            query = from c in query
+                    join pvr in _pollVotingRecordRepository.Table on c.Id equals pvr.CustomerId into c_pvr
+                    from pvr in c_pvr.DefaultIfEmpty()
+                    where !c_pvr.Any()
+                    select c;
+            //no forum posts 
             query = from c in query
                     join fp in _forumPostRepository.Table on c.Id equals fp.CustomerId into c_fp
                     from fp in c_fp.DefaultIfEmpty()
                     where !c_fp.Any()
                     select c;
+            //no forum topics
             query = from c in query
                     join ft in _forumTopicRepository.Table on c.Id equals ft.CustomerId into c_ft
                     from ft in c_ft.DefaultIfEmpty()

@@ -113,10 +113,6 @@ namespace Nop.Data.Tests.Polls
                 (
                     new PollVotingRecord
                     {
-                        IpAddress = "192.168.1.1",
-                        IsApproved = true,
-                        CreatedOnUtc = new DateTime(2010, 01, 03),
-                        UpdatedOnUtc = new DateTime(2010, 01, 04),
                         Customer = GetTestCustomer()
                     }
                 );

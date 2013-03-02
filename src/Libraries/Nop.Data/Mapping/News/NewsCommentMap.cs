@@ -8,12 +8,15 @@ namespace Nop.Data.Mapping.News
         public NewsCommentMap()
         {
             this.ToTable("NewsComment");
-            //commented because it's already configured by CustomerContentMap class
-            //this.HasKey(pr => pr.Id);
+            this.HasKey(pr => pr.Id);
 
             this.HasRequired(nc => nc.NewsItem)
                 .WithMany(n => n.NewsComments)
                 .HasForeignKey(nc => nc.NewsItemId);
+
+            this.HasRequired(cc => cc.Customer)
+                .WithMany()
+                .HasForeignKey(cc => cc.CustomerId);
         }
     }
 }

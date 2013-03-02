@@ -23,8 +23,7 @@ namespace Nop.Data.Tests.News
                 StartDateUtc = new DateTime(2010, 01, 01),
                 EndDateUtc = new DateTime(2010, 01, 02),
                 AllowComments = true,
-                ApprovedCommentCount = 1,
-                NotApprovedCommentCount = 2,
+                CommentCount = 1,
                 LimitedToStores = true,
                 CreatedOnUtc = new DateTime(2010, 01, 03),
                 Language = new Language()
@@ -43,8 +42,7 @@ namespace Nop.Data.Tests.News
             fromDb.StartDateUtc.ShouldEqual(new DateTime(2010, 01, 01));
             fromDb.EndDateUtc.ShouldEqual(new DateTime(2010, 01, 02));
             fromDb.AllowComments.ShouldEqual(true);
-            fromDb.ApprovedCommentCount.ShouldEqual(1);
-            fromDb.NotApprovedCommentCount.ShouldEqual(2);
+            fromDb.CommentCount.ShouldEqual(1);
             fromDb.LimitedToStores.ShouldEqual(true);
             fromDb.CreatedOnUtc.ShouldEqual(new DateTime(2010, 01, 03));
 
@@ -74,10 +72,7 @@ namespace Nop.Data.Tests.News
                     new NewsComment
                     {
                         CommentText = "Comment text 1",
-                        IpAddress = "192.168.1.1",
-                        IsApproved = true,
                         CreatedOnUtc = new DateTime(2010, 01, 03),
-                        UpdatedOnUtc = new DateTime(2010, 01, 04),
                         Customer = GetTestCustomer()
                     }
                 );

@@ -26,7 +26,6 @@ namespace Nop.Admin.Controllers
         private readonly IBlogService _blogService;
         private readonly ILanguageService _languageService;
         private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly ICustomerContentService _customerContentService;
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
         private readonly IUrlRecordService _urlRecordService;
@@ -37,14 +36,13 @@ namespace Nop.Admin.Controllers
 		#region Constructors
 
         public BlogController(IBlogService blogService, ILanguageService languageService,
-            IDateTimeHelper dateTimeHelper, ICustomerContentService customerContentService,
+            IDateTimeHelper dateTimeHelper, 
             ILocalizationService localizationService, IPermissionService permissionService,
             IUrlRecordService urlRecordService, AdminAreaSettings adminAreaSettings)
         {
             this._blogService = blogService;
             this._languageService = languageService;
             this._dateTimeHelper = dateTimeHelper;
-            this._customerContentService = customerContentService;
             this._localizationService = localizationService;
             this._permissionService = permissionService;
             this._urlRecordService = urlRecordService;
@@ -77,7 +75,7 @@ namespace Nop.Admin.Controllers
                         m.EndDate = _dateTimeHelper.ConvertToUserTime(x.EndDateUtc.Value, DateTimeKind.Utc);
                     m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
                     m.LanguageName = x.Language.Name;
-                    m.Comments = x.ApprovedCommentCount + x.NotApprovedCommentCount;
+                    m.Comments = x.CommentCount;
                     return m;
                 }),
                 Total = blogPosts.TotalCount
@@ -103,7 +101,7 @@ namespace Nop.Admin.Controllers
                         m.EndDate = _dateTimeHelper.ConvertToUserTime(x.EndDateUtc.Value, DateTimeKind.Utc);
                     m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
                     m.LanguageName = x.Language.Name;
-                    m.Comments = x.ApprovedCommentCount + x.NotApprovedCommentCount;
+                    m.Comments = x.CommentCount;
                     return m;
                 }),
                 Total = blogPosts.TotalCount
@@ -247,7 +245,7 @@ namespace Nop.Admin.Controllers
             else
             {
                 //load all blog comments
-                comments = _customerContentService.GetAllCustomerContent<BlogComment>(0, null);
+                comments = _blogService.GetAllComments(0);
             }
 
             var gridModel = new GridModel<BlogCommentModel>
@@ -261,7 +259,6 @@ namespace Nop.Admin.Controllers
                     commentModel.CustomerId = blogComment.CustomerId;
                     var customer = blogComment.Customer;
                     commentModel.CustomerInfo = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
-                    commentModel.IpAddress = blogComment.IpAddress;
                     commentModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(blogComment.CreatedOnUtc, DateTimeKind.Utc);
                     commentModel.Comment = Core.Html.HtmlHelper.FormatText(blogComment.CommentText, false, true, false, false, false, false);
                     return commentModel;
@@ -280,14 +277,15 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedView();
 
-            var comment = _customerContentService.GetCustomerContentById(id) as BlogComment;
+            var comment = _blogService.GetBlogCommentById(id);
             if (comment == null)
                 throw new ArgumentException("No comment found with the specified id");
 
             var blogPost = comment.BlogPost;
-            _customerContentService.DeleteCustomerContent(comment);
+            _blogService.DeleteBlogComment(comment);
             //update totals
-            _blogService.UpdateCommentTotals(blogPost);
+            blogPost.CommentCount = blogPost.BlogComments.Count;
+            _blogService.UpdateBlogPost(blogPost);
 
             return Comments(filterByBlogPostId, command);
         }

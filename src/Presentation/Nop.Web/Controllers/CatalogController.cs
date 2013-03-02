@@ -61,7 +61,6 @@ namespace Nop.Web.Controllers
         private readonly IPriceFormatter _priceFormatter;
         private readonly IWebHelper _webHelper;
         private readonly ISpecificationAttributeService _specificationAttributeService;
-        private readonly ICustomerContentService _customerContentService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IRecentlyViewedProductsService _recentlyViewedProductsService;
@@ -102,7 +101,7 @@ namespace Nop.Web.Controllers
             IPictureService pictureService, ILocalizationService localizationService,
             IPriceCalculationService priceCalculationService, IPriceFormatter priceFormatter,
             IWebHelper webHelper, ISpecificationAttributeService specificationAttributeService,
-            ICustomerContentService customerContentService, IDateTimeHelper dateTimeHelper,
+            IDateTimeHelper dateTimeHelper,
             IShoppingCartService shoppingCartService,
             IRecentlyViewedProductsService recentlyViewedProductsService, ICompareProductsService compareProductsService,
             IWorkflowMessageService workflowMessageService, IProductTagService productTagService,
@@ -110,7 +109,8 @@ namespace Nop.Web.Controllers
             IBackInStockSubscriptionService backInStockSubscriptionService, IAclService aclService,
             IStoreMappingService storeMappingService,
             IPermissionService permissionService, IDownloadService downloadService,
-            ICustomerActivityService customerActivityService, IEventPublisher eventPublisher,
+            ICustomerActivityService customerActivityService,
+            IEventPublisher eventPublisher,
             MediaSettings mediaSettings, CatalogSettings catalogSettings,
             ShoppingCartSettings shoppingCartSettings, StoreInformationSettings storeInformationSettings,
             LocalizationSettings localizationSettings, CustomerSettings customerSettings, 
@@ -135,7 +135,6 @@ namespace Nop.Web.Controllers
             this._priceFormatter = priceFormatter;
             this._webHelper = webHelper;
             this._specificationAttributeService = specificationAttributeService;
-            this._customerContentService = customerContentService;
             this._dateTimeHelper = dateTimeHelper;
             this._shoppingCartService = shoppingCartService;
             this._recentlyViewedProductsService = recentlyViewedProductsService;
@@ -559,12 +558,13 @@ namespace Nop.Web.Controllers
             var productReviews = product.ProductReviews.Where(pr => pr.IsApproved).OrderBy(pr => pr.CreatedOnUtc);
             foreach (var pr in productReviews)
             {
+                var customer = pr.Customer;
                 model.Items.Add(new ProductReviewModel()
                 {
                     Id = pr.Id,
                     CustomerId = pr.CustomerId,
-                    CustomerName = pr.Customer.FormatUserName(),
-                    AllowViewingProfiles = _customerSettings.AllowViewingProfiles && pr.Customer != null && !pr.Customer.IsGuest(),
+                    CustomerName = customer.FormatUserName(),
+                    AllowViewingProfiles = _customerSettings.AllowViewingProfiles && customer != null && !customer.IsGuest(),
                     Title = pr.Title,
                     ReviewText = pr.ReviewText,
                     Rating = pr.Rating,
@@ -2571,7 +2571,6 @@ namespace Nop.Web.Controllers
                 {
                     ProductId = product.Id,
                     CustomerId = _workContext.CurrentCustomer.Id,
-                    IpAddress = _webHelper.GetCurrentIpAddress(),
                     Title = model.AddProductReview.Title,
                     ReviewText = model.AddProductReview.ReviewText,
                     Rating = rating,
@@ -2579,9 +2578,9 @@ namespace Nop.Web.Controllers
                     HelpfulNoTotal = 0,
                     IsApproved = isApproved,
                     CreatedOnUtc = DateTime.UtcNow,
-                    UpdatedOnUtc = DateTime.UtcNow,
                 };
-                _customerContentService.InsertCustomerContent(productReview);
+                product.ProductReviews.Add(productReview);
+                _productService.UpdateProduct(product);
 
                 //update product totals
                 _productService.UpdateProductReviewTotals(product);
@@ -2615,7 +2614,7 @@ namespace Nop.Web.Controllers
         [HttpPost]
         public ActionResult SetProductReviewHelpfulness(int productReviewId, bool washelpful)
         {
-            var productReview = _customerContentService.GetCustomerContentById(productReviewId) as ProductReview;
+            var productReview = _productService.GetProductReviewById(productReviewId);
             if (productReview == null)
                 throw new ArgumentException("No product review found with the specified id");
 
@@ -2641,28 +2640,30 @@ namespace Nop.Web.Controllers
             }
 
             //delete previous helpfulness
-            var oldPrh = productReview.ProductReviewHelpfulnessEntries
-                .FirstOrDefault(prh => prh.CustomerId == _workContext.CurrentCustomer.Id);
-            if (oldPrh != null)
-                _customerContentService.DeleteCustomerContent(oldPrh);
-
-            //insert new helpfulness
-            var newPrh = new ProductReviewHelpfulness()
+            var prh = productReview.ProductReviewHelpfulnessEntries
+                .FirstOrDefault(x => x.CustomerId == _workContext.CurrentCustomer.Id);
+            if (prh != null)
             {
-                ProductReviewId = productReview.Id,
-                CustomerId = _workContext.CurrentCustomer.Id,
-                IpAddress = _webHelper.GetCurrentIpAddress(),
-                WasHelpful = washelpful,
-                IsApproved = true, //always approved
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            };
-            _customerContentService.InsertCustomerContent(newPrh);
+                //existing one
+                prh.WasHelpful = washelpful;
+            }
+            else
+            {
+                //insert new helpfulness
+                prh = new ProductReviewHelpfulness()
+                {
+                    ProductReviewId = productReview.Id,
+                    CustomerId = _workContext.CurrentCustomer.Id,
+                    WasHelpful = washelpful,
+                };
+                productReview.ProductReviewHelpfulnessEntries.Add(prh);
+            }
+            _productService.UpdateProduct(productReview.Product);
 
             //new totals
-            productReview.HelpfulYesTotal = productReview.ProductReviewHelpfulnessEntries.Count(prh => prh.WasHelpful);
-            productReview.HelpfulNoTotal = productReview.ProductReviewHelpfulnessEntries.Count(prh => !prh.WasHelpful);
-            _customerContentService.UpdateCustomerContent(productReview);
+            productReview.HelpfulYesTotal = productReview.ProductReviewHelpfulnessEntries.Count(x => x.WasHelpful);
+            productReview.HelpfulNoTotal = productReview.ProductReviewHelpfulnessEntries.Count(x => !x.WasHelpful);
+            _productService.UpdateProduct(productReview.Product);
 
             return Json(new
             {

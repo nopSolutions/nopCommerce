@@ -452,6 +452,18 @@ set @resources='
   <LocaleResource Name="Plugins.Payments.GoogleCheckout.Fields.PassEditLink.Hint">
 	<Value>Check to pass ''edit cart'' link to Google Checkout</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.Comments.Fields.IPAddress">
+	<Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.Fields.IPAddress">
+	<Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.Fields.IPAddress.Hint">
+	<Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.Comments.Fields.IPAddress">
+	<Value></Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1762,3 +1774,715 @@ BEGIN
 	VALUES (NEWID(), N'builtin@background-task-record.com', 0, N'Built-in system record used for background tasks.', 0, 0, 1, 0, 1, N'BackgroundTask',GETUTCDATE(),GETUTCDATE())
 END
 GO
+
+--move records from CustomerContent to NewsComment
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[NewsComment]') and NAME='CreatedOnUtc')
+BEGIN
+	ALTER TABLE [NewsComment]
+	ADD [CreatedOnUtc] datetime NULL
+END
+GO
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[NewsComment]') and NAME='CustomerId')
+BEGIN
+	ALTER TABLE [NewsComment]
+	ADD [CustomerId] int NULL
+END
+GO
+
+IF EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[CustomerContent]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+BEGIN
+	DECLARE @ExistingNewsCommentID int
+	DECLARE cur_existingcomment CURSOR FOR
+	SELECT [ID]
+	FROM [NewsComment]
+	OPEN cur_existingcomment
+	FETCH NEXT FROM cur_existingcomment INTO @ExistingNewsCommentID
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+		DECLARE @CustomerID int
+		SET @CustomerID = null -- clear cache (variable scope)
+		
+		DECLARE @CreatedOnUtc datetime
+		SET @CreatedOnUtc = null -- clear cache (variable scope)
+		
+		DECLARE @sql nvarchar(4000)
+		SET @sql = 'SELECT @CustomerID = cc.[CustomerId], @CreatedOnUtc = cc.[CreatedOnUtc] FROM [CustomerContent] cc WHERE cc.[Id]=' + ISNULL(CAST(@ExistingNewsCommentID AS nvarchar(max)), '0')
+		EXEC sp_executesql @sql,N'@CustomerID int OUTPUT, @CreatedOnUtc datetime OUTPUT',@CustomerID OUTPUT,@CreatedOnUtc OUTPUT
+		
+		UPDATE [NewsComment] 
+		SET [CustomerId] = @CustomerID,
+		[CreatedOnUtc] = @CreatedOnUtc
+		WHERE [Id]=@ExistingNewsCommentID
+		
+		--fetch next language identifier
+		FETCH NEXT FROM cur_existingcomment INTO @ExistingNewsCommentID
+	END
+	CLOSE cur_existingcomment
+	DEALLOCATE cur_existingcomment
+END
+GO
+
+ALTER TABLE [NewsComment] ALTER COLUMN [CustomerId] int NOT NULL
+GO
+
+ALTER TABLE [NewsComment] ALTER COLUMN [CreatedOnUtc] datetime NOT NULL
+GO
+
+IF NOT EXISTS (SELECT 1
+           FROM   sysobjects
+           WHERE  name = 'NewsComment_Customer'
+           AND parent_obj = Object_id('NewsComment')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+BEGIN
+	ALTER TABLE [dbo].[NewsComment] WITH CHECK ADD CONSTRAINT [NewsComment_Customer] FOREIGN KEY([CustomerId])
+	REFERENCES [dbo].[Customer] ([Id])
+	ON DELETE CASCADE
+END
+GO
+
+
+--move records from CustomerContent to BlogComment
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[BlogComment]') and NAME='CreatedOnUtc')
+BEGIN
+	ALTER TABLE [BlogComment]
+	ADD [CreatedOnUtc] datetime NULL
+END
+GO
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[BlogComment]') and NAME='CustomerId')
+BEGIN
+	ALTER TABLE [BlogComment]
+	ADD [CustomerId] int NULL
+END
+GO
+
+IF EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[CustomerContent]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+BEGIN
+	DECLARE @ExistingBlogCommentID int
+	DECLARE cur_existingcomment CURSOR FOR
+	SELECT [ID]
+	FROM [BlogComment]
+	OPEN cur_existingcomment
+	FETCH NEXT FROM cur_existingcomment INTO @ExistingBlogCommentID
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+		DECLARE @CustomerID int
+		SET @CustomerID = null -- clear cache (variable scope)
+		
+		DECLARE @CreatedOnUtc datetime
+		SET @CreatedOnUtc = null -- clear cache (variable scope)
+		
+		DECLARE @sql nvarchar(4000)
+		SET @sql = 'SELECT @CustomerID = cc.[CustomerId], @CreatedOnUtc = cc.[CreatedOnUtc] FROM [CustomerContent] cc WHERE cc.[Id]=' + ISNULL(CAST(@ExistingBlogCommentID AS nvarchar(max)), '0')
+		EXEC sp_executesql @sql,N'@CustomerID int OUTPUT, @CreatedOnUtc datetime OUTPUT',@CustomerID OUTPUT,@CreatedOnUtc OUTPUT
+		
+		UPDATE [BlogComment] 
+		SET [CustomerId] = @CustomerID,
+		[CreatedOnUtc] = @CreatedOnUtc
+		WHERE [Id]=@ExistingBlogCommentID
+		
+		--fetch next language identifier
+		FETCH NEXT FROM cur_existingcomment INTO @ExistingBlogCommentID
+	END
+	CLOSE cur_existingcomment
+	DEALLOCATE cur_existingcomment
+END
+GO
+
+ALTER TABLE [BlogComment] ALTER COLUMN [CustomerId] int NOT NULL
+GO
+
+ALTER TABLE [BlogComment] ALTER COLUMN [CreatedOnUtc] datetime NOT NULL
+GO
+
+IF NOT EXISTS (SELECT 1
+           FROM   sysobjects
+           WHERE  name = 'BlogComment_Customer'
+           AND parent_obj = Object_id('BlogComment')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+BEGIN
+	ALTER TABLE [dbo].[BlogComment] WITH CHECK ADD CONSTRAINT [BlogComment_Customer] FOREIGN KEY([CustomerId])
+	REFERENCES [dbo].[Customer] ([Id])
+	ON DELETE CASCADE
+END
+GO
+
+
+--move records from CustomerContent to ProductReview
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[ProductReview]') and NAME='CreatedOnUtc')
+BEGIN
+	ALTER TABLE [ProductReview]
+	ADD [CreatedOnUtc] datetime NULL
+END
+GO
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[ProductReview]') and NAME='IsApproved')
+BEGIN
+	ALTER TABLE [ProductReview]
+	ADD [IsApproved] bit NULL
+END
+GO
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[ProductReview]') and NAME='CustomerId')
+BEGIN
+	ALTER TABLE [ProductReview]
+	ADD [CustomerId] int NULL
+END
+GO
+
+IF EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[CustomerContent]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+BEGIN
+	DECLARE @ExistingProductReviewID int
+	DECLARE cur_existingcomment CURSOR FOR
+	SELECT [ID]
+	FROM [ProductReview]
+	OPEN cur_existingcomment
+	FETCH NEXT FROM cur_existingcomment INTO @ExistingProductReviewID
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+		DECLARE @CustomerID int
+		SET @CustomerID = null -- clear cache (variable scope)
+		
+		DECLARE @IsApproved bit
+		SET @IsApproved = null -- clear cache (variable scope)
+		
+		DECLARE @CreatedOnUtc datetime
+		SET @CreatedOnUtc = null -- clear cache (variable scope)
+		
+		DECLARE @sql nvarchar(4000)
+		SET @sql = 'SELECT @CustomerID = cc.[CustomerId], @IsApproved = cc.[IsApproved], @CreatedOnUtc = cc.[CreatedOnUtc] FROM [CustomerContent] cc WHERE cc.[Id]=' + ISNULL(CAST(@ExistingProductReviewID AS nvarchar(max)), '0')
+		EXEC sp_executesql @sql,N'@CustomerID int OUTPUT, @IsApproved bit OUTPUT, @CreatedOnUtc datetime OUTPUT',@CustomerID OUTPUT,@IsApproved OUTPUT,@CreatedOnUtc OUTPUT
+		
+		UPDATE [ProductReview] 
+		SET [CustomerId] = @CustomerID,
+		[IsApproved] = @IsApproved,
+		[CreatedOnUtc] = @CreatedOnUtc
+		WHERE [Id]=@ExistingProductReviewID
+		
+		--fetch next language identifier
+		FETCH NEXT FROM cur_existingcomment INTO @ExistingProductReviewID
+	END
+	CLOSE cur_existingcomment
+	DEALLOCATE cur_existingcomment
+END
+GO
+
+ALTER TABLE [ProductReview] ALTER COLUMN [CustomerId] int NOT NULL
+GO
+
+ALTER TABLE [ProductReview] ALTER COLUMN [IsApproved] bit NOT NULL
+GO
+
+ALTER TABLE [ProductReview] ALTER COLUMN [CreatedOnUtc] datetime NOT NULL
+GO
+
+IF NOT EXISTS (SELECT 1
+           FROM   sysobjects
+           WHERE  name = 'ProductReview_Customer'
+           AND parent_obj = Object_id('ProductReview')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+BEGIN
+	ALTER TABLE [dbo].[ProductReview] WITH CHECK ADD CONSTRAINT [ProductReview_Customer] FOREIGN KEY([CustomerId])
+	REFERENCES [dbo].[Customer] ([Id])
+	ON DELETE CASCADE
+END
+GO
+
+
+
+--move records from CustomerContent to ProductReviewHelpfulness
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[ProductReviewHelpfulness]') and NAME='CustomerId')
+BEGIN
+	ALTER TABLE [ProductReviewHelpfulness]
+	ADD [CustomerId] int NULL
+END
+GO
+
+IF EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[CustomerContent]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+BEGIN
+	DECLARE @ExistingProductReviewHelpfulnessID int
+	DECLARE cur_existingcomment CURSOR FOR
+	SELECT [ID]
+	FROM [ProductReviewHelpfulness]
+	OPEN cur_existingcomment
+	FETCH NEXT FROM cur_existingcomment INTO @ExistingProductReviewHelpfulnessID
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+		DECLARE @CustomerID int
+		SET @CustomerID = null -- clear cache (variable scope)
+		
+		DECLARE @sql nvarchar(4000)
+		SET @sql = 'SELECT @CustomerID = cc.[CustomerId] FROM [CustomerContent] cc WHERE cc.[Id]=' + ISNULL(CAST(@ExistingProductReviewHelpfulnessID AS nvarchar(max)), '0')
+		EXEC sp_executesql @sql,N'@CustomerID int OUTPUT',@CustomerID OUTPUT
+		
+		UPDATE [ProductReviewHelpfulness] 
+		SET [CustomerId] = @CustomerID
+		WHERE [Id]=@ExistingProductReviewHelpfulnessID
+		
+		--fetch next language identifier
+		FETCH NEXT FROM cur_existingcomment INTO @ExistingProductReviewHelpfulnessID
+	END
+	CLOSE cur_existingcomment
+	DEALLOCATE cur_existingcomment
+END
+GO
+
+ALTER TABLE [ProductReviewHelpfulness] ALTER COLUMN [CustomerId] int NOT NULL
+GO
+
+
+
+--move records from CustomerContent to PollVotingRecord
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[PollVotingRecord]') and NAME='CustomerId')
+BEGIN
+	ALTER TABLE [PollVotingRecord]
+	ADD [CustomerId] int NULL
+END
+GO
+
+IF EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[CustomerContent]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+BEGIN
+	DECLARE @ExistingPollVotingRecordID int
+	DECLARE cur_existingcomment CURSOR FOR
+	SELECT [ID]
+	FROM [PollVotingRecord]
+	OPEN cur_existingcomment
+	FETCH NEXT FROM cur_existingcomment INTO @ExistingPollVotingRecordID
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+		DECLARE @CustomerID int
+		SET @CustomerID = null -- clear cache (variable scope)
+		
+		DECLARE @sql nvarchar(4000)
+		SET @sql = 'SELECT @CustomerID = cc.[CustomerId] FROM [CustomerContent] cc WHERE cc.[Id]=' + ISNULL(CAST(@ExistingPollVotingRecordID AS nvarchar(max)), '0')
+		EXEC sp_executesql @sql,N'@CustomerID int OUTPUT',@CustomerID OUTPUT
+		
+		UPDATE [PollVotingRecord] 
+		SET [CustomerId] = @CustomerID
+		WHERE [Id]=@ExistingPollVotingRecordID
+		
+		--fetch next language identifier
+		FETCH NEXT FROM cur_existingcomment INTO @ExistingPollVotingRecordID
+	END
+	CLOSE cur_existingcomment
+	DEALLOCATE cur_existingcomment
+END
+GO
+
+ALTER TABLE [PollVotingRecord] ALTER COLUMN [CustomerId] int NOT NULL
+GO
+
+IF NOT EXISTS (SELECT 1
+           FROM   sysobjects
+           WHERE  name = 'PollVotingRecord_Customer'
+           AND parent_obj = Object_id('PollVotingRecord')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+BEGIN
+	ALTER TABLE [dbo].[PollVotingRecord] WITH CHECK ADD CONSTRAINT [PollVotingRecord_Customer] FOREIGN KEY([CustomerId])
+	REFERENCES [dbo].[Customer] ([Id])
+	ON DELETE CASCADE
+END
+GO
+
+--remove CustomerContent table 
+IF EXISTS (SELECT 1
+           FROM   sysobjects
+           WHERE  name = 'BlogComment_TypeConstraint_From_CustomerContent_To_BlogComment'
+           AND parent_obj = Object_id('BlogComment')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+BEGIN
+	ALTER TABLE dbo.[BlogComment]
+	DROP CONSTRAINT BlogComment_TypeConstraint_From_CustomerContent_To_BlogComment
+END
+GO
+
+IF EXISTS (SELECT 1
+           FROM   sysobjects
+           WHERE  name = 'ProductReview_TypeConstraint_From_CustomerContent_To_ProductReview'
+           AND parent_obj = Object_id('ProductReview')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+BEGIN
+	ALTER TABLE dbo.[ProductReview]
+	DROP CONSTRAINT ProductReview_TypeConstraint_From_CustomerContent_To_ProductReview
+END
+GO
+
+IF EXISTS (SELECT 1
+           FROM   sysobjects
+           WHERE  name = 'ProductReviewHelpfulness_TypeConstraint_From_CustomerContent_To_ProductReviewHelpfulness'
+           AND parent_obj = Object_id('ProductReviewHelpfulness')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+BEGIN
+	ALTER TABLE dbo.[ProductReviewHelpfulness]
+	DROP CONSTRAINT ProductReviewHelpfulness_TypeConstraint_From_CustomerContent_To_ProductReviewHelpfulness
+END
+GO
+
+IF EXISTS (SELECT 1
+           FROM   sysobjects
+           WHERE  name = 'NewsComment_TypeConstraint_From_CustomerContent_To_NewsComment'
+           AND parent_obj = Object_id('NewsComment')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+BEGIN
+	ALTER TABLE dbo.[NewsComment]
+	DROP CONSTRAINT NewsComment_TypeConstraint_From_CustomerContent_To_NewsComment
+END
+GO
+
+IF EXISTS (SELECT 1
+           FROM   sysobjects
+           WHERE  name = 'PollVotingRecord_TypeConstraint_From_CustomerContent_To_PollVotingRecord'
+           AND parent_obj = Object_id('PollVotingRecord')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+BEGIN
+	ALTER TABLE dbo.[PollVotingRecord]
+	DROP CONSTRAINT PollVotingRecord_TypeConstraint_From_CustomerContent_To_PollVotingRecord
+END
+GO
+
+IF EXISTS (SELECT 1
+           FROM   sysobjects
+           WHERE  name = 'CustomerContent_Customer'
+           AND parent_obj = Object_id('CustomerContent')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+BEGIN
+	ALTER TABLE dbo.[CustomerContent]
+	DROP CONSTRAINT CustomerContent_Customer
+END
+GO
+
+IF EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[CustomerContent]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+BEGIN
+	EXEC('DROP TABLE [CustomerContent]')
+END
+GO
+
+--now we should add IDENTITY to the primary keys of these tables (moved from CustomerContent)
+--1. Product reviews
+IF EXISTS (SELECT 1
+           FROM   sysobjects
+           WHERE  name = 'ProductReview_Customer'
+           AND parent_obj = Object_id('ProductReview')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+BEGIN
+	ALTER TABLE dbo.[ProductReview]
+	DROP CONSTRAINT ProductReview_Customer
+END
+GO
+IF EXISTS (SELECT 1
+           FROM   sysobjects
+           WHERE  name = 'ProductReview_Product1'
+           AND parent_obj = Object_id('ProductReview')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+BEGIN
+	ALTER TABLE dbo.[ProductReview]
+	DROP CONSTRAINT ProductReview_Product1
+END
+GO
+IF EXISTS (SELECT 1
+           FROM   sysobjects
+           WHERE  name = 'ProductReviewHelpfulness_ProductReview1'
+           AND parent_obj = Object_id('ProductReviewHelpfulness')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+BEGIN
+	ALTER TABLE dbo.[ProductReviewHelpfulness]
+	DROP CONSTRAINT ProductReviewHelpfulness_ProductReview1
+END
+GO
+IF NOT EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[Tmp_ProductReview]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+BEGIN
+CREATE TABLE [dbo].[Tmp_ProductReview](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[CustomerId] [int] NOT NULL,
+	[ProductId] [int] NOT NULL,
+	[IsApproved] [bit] NOT NULL,
+	[Title] [nvarchar](max) NULL,
+	[ReviewText] [nvarchar](max) NULL,
+	[Rating] [int] NOT NULL,
+	[HelpfulYesTotal] [int] NOT NULL,
+	[HelpfulNoTotal] [int] NOT NULL,
+	[CreatedOnUtc] [datetime] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+END
+GO
+SET IDENTITY_INSERT dbo.Tmp_ProductReview ON
+GO
+IF EXISTS(SELECT TOP 1 * FROM dbo.ProductReview)
+EXEC('INSERT INTO dbo.Tmp_ProductReview ([Id],[ProductId],[Title],[ReviewText],[Rating],[HelpfulYesTotal],[HelpfulNoTotal],[CreatedOnUtc],[CustomerId],[IsApproved])
+SELECT [Id],[ProductId],[Title],[ReviewText],[Rating],[HelpfulYesTotal],[HelpfulNoTotal],[CreatedOnUtc],[CustomerId],[IsApproved] FROM dbo.ProductReview')
+GO
+SET IDENTITY_INSERT dbo.Tmp_ProductReview OFF
+GO
+DROP TABLE dbo.ProductReview
+GO
+EXECUTE sp_rename N'dbo.Tmp_ProductReview', N'ProductReview', 'OBJECT'
+GO
+ALTER TABLE [dbo].[ProductReview]  WITH CHECK ADD  CONSTRAINT [ProductReview_Customer] FOREIGN KEY([CustomerId])
+REFERENCES [dbo].[Customer] ([Id])
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[ProductReview]  WITH CHECK ADD  CONSTRAINT [ProductReview_Product1] FOREIGN KEY([ProductId])
+REFERENCES [dbo].[Product] ([Id])
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[ProductReviewHelpfulness]  WITH CHECK ADD  CONSTRAINT [ProductReviewHelpfulness_ProductReview1] FOREIGN KEY([ProductReviewId])
+REFERENCES [dbo].[ProductReview] ([Id])
+ON DELETE CASCADE
+GO
+
+
+
+
+
+--2. News comment
+IF EXISTS (SELECT 1
+           FROM   sysobjects
+           WHERE  name = 'NewsComment_Customer'
+           AND parent_obj = Object_id('NewsComment')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+BEGIN
+	ALTER TABLE dbo.[NewsComment]
+	DROP CONSTRAINT NewsComment_Customer
+END
+GO
+IF EXISTS (SELECT 1
+           FROM   sysobjects
+           WHERE  name = 'NewsComment_NewsItem'
+           AND parent_obj = Object_id('NewsComment')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+BEGIN
+	ALTER TABLE dbo.[NewsComment]
+	DROP CONSTRAINT NewsComment_NewsItem
+END
+GO
+IF NOT EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[Tmp_NewsComment]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+BEGIN
+CREATE TABLE [dbo].[Tmp_NewsComment](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[CommentTitle] [nvarchar](max) NULL,
+	[CommentText] [nvarchar](max) NULL,
+	[NewsItemId] [int] NOT NULL,
+	[CustomerId] [int] NOT NULL,
+	[CreatedOnUtc] [datetime] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+END
+GO
+SET IDENTITY_INSERT dbo.Tmp_NewsComment ON
+GO
+IF EXISTS(SELECT TOP 1 * FROM dbo.NewsComment)
+EXEC('INSERT INTO dbo.Tmp_NewsComment ([Id],[CommentTitle],[CommentText],[NewsItemId],[CustomerId],[CreatedOnUtc])
+SELECT [Id],[CommentTitle],[CommentText],[NewsItemId],[CustomerId],[CreatedOnUtc] FROM dbo.NewsComment')
+GO
+SET IDENTITY_INSERT dbo.Tmp_NewsComment OFF
+GO
+DROP TABLE dbo.NewsComment
+GO
+EXECUTE sp_rename N'dbo.Tmp_NewsComment', N'NewsComment', 'OBJECT'
+GO
+ALTER TABLE [dbo].[NewsComment]  WITH CHECK ADD  CONSTRAINT [NewsComment_Customer] FOREIGN KEY([CustomerId])
+REFERENCES [dbo].[Customer] ([Id])
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[NewsComment]  WITH CHECK ADD  CONSTRAINT [NewsComment_NewsItem] FOREIGN KEY([NewsItemId])
+REFERENCES [dbo].[News] ([Id])
+ON DELETE CASCADE
+GO
+
+
+--3. Blog comment
+IF EXISTS (SELECT 1
+           FROM   sysobjects
+           WHERE  name = 'BlogComment_Customer'
+           AND parent_obj = Object_id('BlogComment')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+BEGIN
+	ALTER TABLE dbo.[BlogComment]
+	DROP CONSTRAINT BlogComment_Customer
+END
+GO
+IF EXISTS (SELECT 1
+           FROM   sysobjects
+           WHERE  name = 'BlogComment_BlogPost'
+           AND parent_obj = Object_id('BlogComment')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+BEGIN
+	ALTER TABLE dbo.[BlogComment]
+	DROP CONSTRAINT BlogComment_BlogPost
+END
+GO
+IF NOT EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[Tmp_BlogComment]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+BEGIN
+CREATE TABLE [dbo].[Tmp_BlogComment](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[CommentText] [nvarchar](max) NULL,
+	[BlogPostId] [int] NOT NULL,
+	[CustomerId] [int] NOT NULL,
+	[CreatedOnUtc] [datetime] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+END
+GO
+SET IDENTITY_INSERT dbo.Tmp_BlogComment ON
+GO
+IF EXISTS(SELECT TOP 1 * FROM dbo.BlogComment)
+EXEC('INSERT INTO dbo.Tmp_BlogComment ([Id],[CommentText],[BlogPostId],[CustomerId],[CreatedOnUtc])
+SELECT [Id],[CommentText],[BlogPostId],[CustomerId],[CreatedOnUtc] FROM dbo.BlogComment')
+GO
+SET IDENTITY_INSERT dbo.Tmp_BlogComment OFF
+GO
+DROP TABLE dbo.BlogComment
+GO
+EXECUTE sp_rename N'dbo.Tmp_BlogComment', N'BlogComment', 'OBJECT'
+GO
+ALTER TABLE [dbo].[BlogComment]  WITH CHECK ADD  CONSTRAINT [BlogComment_Customer] FOREIGN KEY([CustomerId])
+REFERENCES [dbo].[Customer] ([Id])
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[BlogComment]  WITH CHECK ADD  CONSTRAINT [BlogComment_BlogPost] FOREIGN KEY([BlogPostId])
+REFERENCES [dbo].[BlogPost] ([Id])
+ON DELETE CASCADE
+GO
+
+
+
+--4. Product review helpfulness
+IF EXISTS (SELECT 1
+           FROM   sysobjects
+           WHERE  name = 'ProductReviewHelpfulness_ProductReview'
+           AND parent_obj = Object_id('ProductReviewHelpfulness')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+BEGIN
+	ALTER TABLE dbo.[ProductReviewHelpfulness]
+	DROP CONSTRAINT ProductReviewHelpfulness_ProductReview
+END
+GO
+IF NOT EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[Tmp_ProductReviewHelpfulness]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+BEGIN
+CREATE TABLE [dbo].[Tmp_ProductReviewHelpfulness](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[ProductReviewId] [int] NOT NULL,
+	[WasHelpful] [bit] NOT NULL,
+	[CustomerId] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+END
+GO
+SET IDENTITY_INSERT dbo.Tmp_ProductReviewHelpfulness ON
+GO
+IF EXISTS(SELECT TOP 1 * FROM dbo.ProductReviewHelpfulness)
+EXEC('INSERT INTO dbo.Tmp_ProductReviewHelpfulness ([Id],[ProductReviewId],[WasHelpful],[CustomerId])
+SELECT [Id],[ProductReviewId],[WasHelpful],[CustomerId] FROM dbo.ProductReviewHelpfulness')
+GO
+SET IDENTITY_INSERT dbo.Tmp_ProductReviewHelpfulness OFF
+GO
+DROP TABLE dbo.ProductReviewHelpfulness
+GO
+EXECUTE sp_rename N'dbo.Tmp_ProductReviewHelpfulness', N'ProductReviewHelpfulness', 'OBJECT'
+GO
+ALTER TABLE [dbo].[ProductReviewHelpfulness]  WITH CHECK ADD  CONSTRAINT [ProductReviewHelpfulness_ProductReview] FOREIGN KEY([ProductReviewId])
+REFERENCES [dbo].[ProductReview] ([Id])
+ON DELETE CASCADE
+GO
+
+
+
+--5. Poll voting record
+IF EXISTS (SELECT 1
+           FROM   sysobjects
+           WHERE  name = 'PollVotingRecord_Customer'
+           AND parent_obj = Object_id('PollVotingRecord')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+BEGIN
+	ALTER TABLE dbo.[PollVotingRecord]
+	DROP CONSTRAINT PollVotingRecord_Customer
+END
+GO
+IF EXISTS (SELECT 1
+           FROM   sysobjects
+           WHERE  name = 'PollVotingRecord_PollAnswer'
+           AND parent_obj = Object_id('PollVotingRecord')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+BEGIN
+	ALTER TABLE dbo.[PollVotingRecord]
+	DROP CONSTRAINT PollVotingRecord_PollAnswer
+END
+GO
+IF NOT EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[Tmp_PollVotingRecord]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+BEGIN
+CREATE TABLE [dbo].[Tmp_PollVotingRecord](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[PollAnswerId] [int] NOT NULL,
+	[CustomerId] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+END
+GO
+SET IDENTITY_INSERT dbo.Tmp_PollVotingRecord ON
+GO
+IF EXISTS(SELECT TOP 1 * FROM dbo.PollVotingRecord)
+EXEC('INSERT INTO dbo.Tmp_PollVotingRecord ([Id],[PollAnswerId],[CustomerId])
+SELECT [Id],[PollAnswerId],[CustomerId] FROM dbo.PollVotingRecord')
+GO
+SET IDENTITY_INSERT dbo.Tmp_PollVotingRecord OFF
+GO
+DROP TABLE dbo.PollVotingRecord
+GO
+EXECUTE sp_rename N'dbo.Tmp_PollVotingRecord', N'PollVotingRecord', 'OBJECT'
+GO
+ALTER TABLE [dbo].[PollVotingRecord]  WITH CHECK ADD  CONSTRAINT [PollVotingRecord_Customer] FOREIGN KEY([CustomerId])
+REFERENCES [dbo].[Customer] ([Id])
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[PollVotingRecord]  WITH CHECK ADD  CONSTRAINT [PollVotingRecord_PollAnswer] FOREIGN KEY([PollAnswerId])
+REFERENCES [dbo].[PollAnswer] ([Id])
+ON DELETE CASCADE
+GO
+
+
+--drop [ApprovedCommentCount] and [NotApprovedCommentCount] columns
+IF EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[BlogPost]') and NAME='ApprovedCommentCount')
+BEGIN
+	ALTER TABLE [BlogPost]
+	ADD [CommentCount] int NULL
+	
+	EXEC ('UPDATE [BlogPost] SET [CommentCount] = [ApprovedCommentCount]')
+
+	ALTER TABLE [BlogPost] ALTER COLUMN [CommentCount] int NOT NULL
+	
+	EXEC ('ALTER TABLE [BlogPost] DROP COLUMN [ApprovedCommentCount]')
+	
+	EXEC ('ALTER TABLE [BlogPost] DROP COLUMN [NotApprovedCommentCount]')
+END
+GO
+
+--drop [ApprovedCommentCount] and [NotApprovedCommentCount] columns
+IF EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[News]') and NAME='ApprovedCommentCount')
+BEGIN
+	ALTER TABLE [News]
+	ADD [CommentCount] int NULL
+	
+	EXEC ('UPDATE [News] SET [CommentCount] = [ApprovedCommentCount]')
+
+	ALTER TABLE [News] ALTER COLUMN [CommentCount] int NOT NULL
+	
+	EXEC ('ALTER TABLE [News] DROP COLUMN [ApprovedCommentCount]')
+	
+	EXEC ('ALTER TABLE [News] DROP COLUMN [NotApprovedCommentCount]')
+END
+GO
+
+

@@ -20,9 +20,6 @@ namespace Nop.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.ProductReviews.Fields.Customer")]
         public string CustomerInfo { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.ProductReviews.Fields.IPAddress")]
-        public string IpAddress { get; set; }
-
         [AllowHtml]
         [NopResourceDisplayName("Admin.Catalog.ProductReviews.Fields.Title")]
         public string Title { get; set; }

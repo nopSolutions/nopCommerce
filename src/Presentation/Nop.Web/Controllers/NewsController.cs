@@ -39,7 +39,6 @@ namespace Nop.Web.Controllers
         private readonly IStoreContext _storeContext;
         private readonly IPictureService _pictureService;
         private readonly ILocalizationService _localizationService;
-        private readonly ICustomerContentService _customerContentService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IWebHelper _webHelper;
@@ -60,7 +59,7 @@ namespace Nop.Web.Controllers
         public NewsController(INewsService newsService, 
             IWorkContext workContext, IStoreContext storeContext, 
             IPictureService pictureService, ILocalizationService localizationService,
-            ICustomerContentService customerContentService, IDateTimeHelper dateTimeHelper,
+            IDateTimeHelper dateTimeHelper,
             IWorkflowMessageService workflowMessageService, IWebHelper webHelper,
             ICacheManager cacheManager, ICustomerActivityService customerActivityService,
             IStoreMappingService storeMappingService,
@@ -73,7 +72,6 @@ namespace Nop.Web.Controllers
             this._storeContext = storeContext;
             this._pictureService = pictureService;
             this._localizationService = localizationService;
-            this._customerContentService = customerContentService;
             this._dateTimeHelper = dateTimeHelper;
             this._workflowMessageService = workflowMessageService;
             this._webHelper = webHelper;
@@ -108,11 +106,11 @@ namespace Nop.Web.Controllers
             model.Full = newsItem.Full;
             model.AllowComments = newsItem.AllowComments;
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(newsItem.CreatedOnUtc, DateTimeKind.Utc);
-            model.NumberOfComments = newsItem.ApprovedCommentCount;
+            model.NumberOfComments = newsItem.CommentCount;
             model.AddNewComment.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnNewsCommentPage;
             if (prepareComments)
             {
-                var newsComments = newsItem.NewsComments.Where(n => n.IsApproved).OrderBy(pr => pr.CreatedOnUtc);
+                var newsComments = newsItem.NewsComments.OrderBy(pr => pr.CreatedOnUtc);
                 foreach (var nc in newsComments)
                 {
                     var commentModel = new NewsCommentModel()
@@ -273,17 +271,15 @@ namespace Nop.Web.Controllers
                 {
                     NewsItemId = newsItem.Id,
                     CustomerId = _workContext.CurrentCustomer.Id,
-                    IpAddress = _webHelper.GetCurrentIpAddress(),
                     CommentTitle = model.AddNewComment.CommentTitle,
                     CommentText = model.AddNewComment.CommentText,
-                    IsApproved = true,
                     CreatedOnUtc = DateTime.UtcNow,
-                    UpdatedOnUtc = DateTime.UtcNow,
                 };
-                _customerContentService.InsertCustomerContent(comment);
-
+                newsItem.NewsComments.Add(comment);
                 //update totals
-                _newsService.UpdateCommentTotals(newsItem);
+                newsItem.CommentCount = newsItem.NewsComments.Count;
+                _newsService.UpdateNews(newsItem);
+
 
                 //notify a store owner;
                 if (_newsSettings.NotifyAboutNewNewsComments)

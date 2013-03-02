@@ -134,7 +134,6 @@
     <Compile Include="Mapping\Security\PermissionRecordMap.cs" />
     <Compile Include="Mapping\Directory\StateProvinceMap.cs" />
     <Compile Include="Mapping\Catalog\ProductReviewMap.cs" />
-    <Compile Include="Mapping\Customers\CustomerContentMap.cs" />
     <Compile Include="Mapping\Catalog\ProductAttributeMap.cs" />
     <Compile Include="Mapping\Localization\LocalizedPropertyMap.cs" />
     <Compile Include="Mapping\Catalog\TierPriceMap.cs" />

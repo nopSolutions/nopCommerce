@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -22,6 +23,7 @@ namespace Nop.Services.News
         #region Fields
 
         private readonly IRepository<NewsItem> _newsItemRepository;
+        private readonly IRepository<NewsComment> _newsCommentRepository;
         private readonly IRepository<StoreMapping> _storeMappingRepository;
         private readonly ICacheManager _cacheManager;
         private readonly IEventPublisher _eventPublisher;
@@ -31,11 +33,13 @@ namespace Nop.Services.News
         #region Ctor
 
         public NewsService(IRepository<NewsItem> newsItemRepository, 
+            IRepository<NewsComment> newsCommentRepository,
             IRepository<StoreMapping> storeMappingRepository,
             ICacheManager cacheManager, 
             IEventPublisher eventPublisher)
         {
             this._newsItemRepository = newsItemRepository;
+            this._newsCommentRepository = newsCommentRepository;
             this._storeMappingRepository = storeMappingRepository;
             this._cacheManager = cacheManager;
             this._eventPublisher = eventPublisher;
@@ -161,28 +165,45 @@ namespace Nop.Services.News
         }
         
         /// <summary>
-        /// Update news item comment totals
+        /// Gets all comments
         /// </summary>
-        /// <param name="newsItem">News item</param>
-        public virtual void UpdateCommentTotals(NewsItem newsItem)
+        /// <param name="customerId">Customer identifier; 0 to load all records</param>
+        /// <returns>Comments</returns>
+        public virtual IList<NewsComment> GetAllComments(int customerId)
         {
-            if (newsItem == null)
-                throw new ArgumentNullException("newsItem");
+            var query = from c in _newsCommentRepository.Table
+                        orderby c.CreatedOnUtc
+                        where (customerId == 0 || c.CustomerId == customerId)
+                        select c;
+            var content = query.ToList();
+            return content;
+        }
 
-            int approvedCommentCount = 0;
-            int notApprovedCommentCount = 0;
-            var newsComments = newsItem.NewsComments;
-            foreach (var nc in newsComments)
-            {
-                if (nc.IsApproved)
-                    approvedCommentCount++;
-                else
-                    notApprovedCommentCount++;
-            }
+        /// <summary>
+        /// Gets a news comment
+        /// </summary>
+        /// <param name="newsCommentId">News comment identifier</param>
+        /// <returns>News comment</returns>
+        public virtual NewsComment GetNewsCommentById(int newsCommentId)
+        {
+            if (newsCommentId == 0)
+                return null;
 
-            newsItem.ApprovedCommentCount = approvedCommentCount;
-            newsItem.NotApprovedCommentCount = notApprovedCommentCount;
-            UpdateNews(newsItem);
+            return _newsCommentRepository.GetById(newsCommentId);
+        }
+
+        /// <summary>
+        /// Deletes a news comment
+        /// </summary>
+        /// <param name="newsComment">News comment</param>
+        public virtual void DeleteNewsComment(NewsComment newsComment)
+        {
+            if (newsComment == null)
+                throw new ArgumentNullException("newsComment");
+
+            _newsCommentRepository.Delete(newsComment);
+
+            _cacheManager.RemoveByPattern(NEWS_PATTERN_KEY);
         }
 
         #endregion

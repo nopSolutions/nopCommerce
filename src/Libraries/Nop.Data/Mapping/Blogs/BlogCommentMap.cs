@@ -8,12 +8,15 @@ namespace Nop.Data.Mapping.Blogs
         public BlogCommentMap()
         {
             this.ToTable("BlogComment");
-            //commented because it's already configured by CustomerContentMap class
-            //this.HasKey(pr => pr.Id);
+            this.HasKey(pr => pr.Id);
 
             this.HasRequired(bc => bc.BlogPost)
                 .WithMany(bp => bp.BlogComments)
                 .HasForeignKey(bc => bc.BlogPostId);
+
+            this.HasRequired(cc => cc.Customer)
+                .WithMany()
+                .HasForeignKey(cc => cc.CustomerId);
         }
     }
 }

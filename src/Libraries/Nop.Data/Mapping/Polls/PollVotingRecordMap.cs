@@ -8,12 +8,15 @@ namespace Nop.Data.Mapping.Polls
         public PollVotingRecordMap()
         {
             this.ToTable("PollVotingRecord");
-            //commented because it's already configured by CustomerContentMap class
-            //this.HasKey(pr => pr.Id);
+            this.HasKey(pr => pr.Id);
 
             this.HasRequired(pvr => pvr.PollAnswer)
                 .WithMany(pa => pa.PollVotingRecords)
                 .HasForeignKey(pvr => pvr.PollAnswerId);
+
+            this.HasRequired(cc => cc.Customer)
+                .WithMany()
+                .HasForeignKey(cc => cc.CustomerId);
         }
     }
 }

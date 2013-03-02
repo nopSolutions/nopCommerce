@@ -21,7 +21,6 @@ namespace Nop.Admin.Controllers
     {
         #region Fields
 
-        private readonly ICustomerContentService _customerContentService;
         private readonly IProductService _productService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
@@ -31,11 +30,9 @@ namespace Nop.Admin.Controllers
 
         #region Constructors
 
-        public ProductReviewController(ICustomerContentService customerContentService,
-            IProductService productService, IDateTimeHelper dateTimeHelper,
+        public ProductReviewController(IProductService productService, IDateTimeHelper dateTimeHelper,
             ILocalizationService localizationService, IPermissionService permissionService)
         {
-            this._customerContentService = customerContentService;
             this._productService = productService;
             this._dateTimeHelper = dateTimeHelper;
             this._localizationService = localizationService;
@@ -62,7 +59,6 @@ namespace Nop.Admin.Controllers
             model.CustomerId = productReview.CustomerId;
             var customer = productReview.Customer;
             model.CustomerInfo = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
-            model.IpAddress = productReview.IpAddress;
             model.Rating = productReview.Rating;
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(productReview.CreatedOnUtc, DateTimeKind.Utc);
             if (!excludeProperties)
@@ -107,8 +103,7 @@ namespace Nop.Admin.Controllers
             DateTime? createdToFromValue = (model.CreatedOnTo == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.CreatedOnTo.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
-            var productReviews = _customerContentService.GetAllCustomerContent<ProductReview>(0, null,
-                createdOnFromValue, createdToFromValue);
+            var productReviews = _productService.GetAllProductReviews(0, null, createdOnFromValue, createdToFromValue);
             var gridModel = new GridModel<ProductReviewModel>
             {
                 Data = productReviews.PagedForCommand(command).Select(x =>
@@ -131,7 +126,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
 
-            var productReview = _customerContentService.GetCustomerContentById(id) as ProductReview;
+            var productReview = _productService.GetProductReviewById(id);
             if (productReview == null)
                 //No product review found with the specified id
                 return RedirectToAction("List");
@@ -147,7 +142,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
 
-            var productReview = _customerContentService.GetCustomerContentById(model.Id) as ProductReview;
+            var productReview = _productService.GetProductReviewById(model.Id);
             if (productReview == null)
                 //No product review found with the specified id
                 return RedirectToAction("List");
@@ -157,8 +152,7 @@ namespace Nop.Admin.Controllers
                 productReview.Title = model.Title;
                 productReview.ReviewText = model.ReviewText;
                 productReview.IsApproved = model.IsApproved;
-                productReview.UpdatedOnUtc = DateTime.UtcNow;
-                _customerContentService.UpdateCustomerContent(productReview);
+                _productService.UpdateProduct(productReview.Product);
                 
                 //update product totals
                 _productService.UpdateProductReviewTotals(productReview.Product);
@@ -180,13 +174,13 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
 
-            var productReview = _customerContentService.GetCustomerContentById(id) as ProductReview;
+            var productReview = _productService.GetProductReviewById(id);
             if (productReview == null)
                 //No product review found with the specified id
                 return RedirectToAction("List");
 
             var product = productReview.Product;
-            _customerContentService.DeleteCustomerContent(productReview);
+            _productService.DeleteProductReview(productReview);
             //update product totals
             _productService.UpdateProductReviewTotals(product);
 
@@ -204,11 +198,11 @@ namespace Nop.Admin.Controllers
             {
                 foreach (var id in selectedIds)
                 {
-                    var productReview = _customerContentService.GetCustomerContentById(id) as ProductReview;
+                    var productReview = _productService.GetProductReviewById(id);
                     if (productReview != null)
                     {
                         productReview.IsApproved = true;
-                        _customerContentService.UpdateCustomerContent(productReview);
+                        _productService.UpdateProduct(productReview.Product);
                         //update product totals
                         _productService.UpdateProductReviewTotals(productReview.Product);
                     }
@@ -228,11 +222,11 @@ namespace Nop.Admin.Controllers
             {
                 foreach (var id in selectedIds)
                 {
-                    var productReview = _customerContentService.GetCustomerContentById(id) as ProductReview;
+                    var productReview = _productService.GetProductReviewById(id);
                     if (productReview != null)
                     {
                         productReview.IsApproved = false;
-                        _customerContentService.UpdateCustomerContent(productReview);
+                        _productService.UpdateProduct(productReview.Product);
                         //update product totals
                         _productService.UpdateProductReviewTotals(productReview.Product);
                     }

@@ -38,7 +38,6 @@ namespace Nop.Web.Controllers
         private readonly IStoreContext _storeContext;
         private readonly IPictureService _pictureService;
         private readonly ILocalizationService _localizationService;
-        private readonly ICustomerContentService _customerContentService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IWebHelper _webHelper;
@@ -60,7 +59,6 @@ namespace Nop.Web.Controllers
             IStoreContext storeContext,
             IPictureService pictureService, 
             ILocalizationService localizationService,
-            ICustomerContentService customerContentService, 
             IDateTimeHelper dateTimeHelper,
             IWorkflowMessageService workflowMessageService, 
             IWebHelper webHelper,
@@ -77,7 +75,6 @@ namespace Nop.Web.Controllers
             this._storeContext = storeContext;
             this._pictureService = pictureService;
             this._localizationService = localizationService;
-            this._customerContentService = customerContentService;
             this._dateTimeHelper = dateTimeHelper;
             this._workflowMessageService = workflowMessageService;
             this._webHelper = webHelper;
@@ -111,11 +108,11 @@ namespace Nop.Web.Controllers
             model.AllowComments = blogPost.AllowComments;
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(blogPost.CreatedOnUtc, DateTimeKind.Utc);
             model.Tags = blogPost.ParseTags().ToList();
-            model.NumberOfComments = blogPost.ApprovedCommentCount;
+            model.NumberOfComments = blogPost.CommentCount;
             model.AddNewComment.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnBlogCommentPage;
             if (prepareComments)
             {
-                var blogComments = blogPost.BlogComments.Where(pr => pr.IsApproved).OrderBy(pr => pr.CreatedOnUtc);
+                var blogComments = blogPost.BlogComments.OrderBy(pr => pr.CreatedOnUtc);
                 foreach (var bc in blogComments)
                 {
                     var commentModel = new BlogCommentModel()
@@ -281,16 +278,13 @@ namespace Nop.Web.Controllers
                 {
                     BlogPostId = blogPost.Id,
                     CustomerId = _workContext.CurrentCustomer.Id,
-                    IpAddress = _webHelper.GetCurrentIpAddress(),
                     CommentText = model.AddNewComment.CommentText,
-                    IsApproved = true,
                     CreatedOnUtc = DateTime.UtcNow,
-                    UpdatedOnUtc = DateTime.UtcNow,
                 };
-                _customerContentService.InsertCustomerContent(comment);
-
+                blogPost.BlogComments.Add(comment);
                 //update totals
-                _blogService.UpdateCommentTotals(blogPost);
+                blogPost.CommentCount = blogPost.BlogComments.Count;
+                _blogService.UpdateBlogPost(blogPost);
 
                 //notify a store owner
                 if (_blogSettings.NotifyAboutNewBlogComments)
