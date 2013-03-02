@@ -123,9 +123,15 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
 
             try
             {
+                var controller = routeData.Values["controller"];
+                var action = routeData.Values["action"];
+
+                if (controller == null || action == null)
+                    return Content("");
+
                 //Special case, if we are in last step of checkout, we can use order total for conversion value
-                if (routeData.Values["controller"].ToString().Equals("checkout", StringComparison.InvariantCultureIgnoreCase) &&
-                    routeData.Values["action"].ToString().Equals("completed", StringComparison.InvariantCultureIgnoreCase))
+                if (controller.ToString().Equals("checkout", StringComparison.InvariantCultureIgnoreCase) &&
+                    action.ToString().Equals("completed", StringComparison.InvariantCultureIgnoreCase))
                 {
                     var lastOrder = GetLastOrder();
                     globalScript += GetEcommerceScript(lastOrder);
