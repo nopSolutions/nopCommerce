@@ -135,7 +135,7 @@ namespace Nop.Web
             //dispose registered resources
             //we do not register AutofacRequestLifetimeHttpModule as IHttpModule 
             //because it disposes resources before this Application_EndRequest method is called
-            //and this case the code above will throw an exception
+            //and in this case the code above will throw an exception
             AutofacRequestLifetimeHttpModule.ContextEndRequest(sender, e);
         }
 
