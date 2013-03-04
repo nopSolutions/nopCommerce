@@ -6148,7 +6148,7 @@
                                                 <Value>Meta title</Value>
                                                 <Children>
                                                     <LocaleResource Name="Hint">
-                                                        <Value>Override the page title. The default is the name of the blog post.</Value>
+                                                        <Value>Override the page title. The default is the title of the blog post.</Value>
                                                     </LocaleResource>
                                                 </Children>
                                             </LocaleResource>
@@ -6515,71 +6515,95 @@
                                                     </LocaleResource>
                                                 </Children>
                                             </LocaleResource>
-                                            <LocaleResource Name="SeName">
-                                                <Value>Search engine friendly page name</Value>
-                                                <Children>
-                                                    <LocaleResource Name="Hint">
-                                                        <Value>Set a search engine friendly page name e.g. 'the-best-news' to make your page URL 'http://www.yourStore.com/the-best-news'. Leave empty to generate it automatically based on the title of the news.</Value>
-                                                    </LocaleResource>
-                                                </Children>
-                                            </LocaleResource>
                                             <LocaleResource Name="Short">
-                                                <Value>Short description</Value>
-                                                <Children>
-                                                    <LocaleResource Name="Hint">
-                                                        <Value>The short description of this news entry.</Value>
-                                                    </LocaleResource>
-                                                    <LocaleResource Name="Required">
-                                                        <Value>Short description is required.</Value>
-                                                    </LocaleResource>
-                                                </Children>
+                                              <Value>Short description</Value>
+                                              <Children>
+                                                <LocaleResource Name="Hint">
+                                                  <Value>The short description of this news entry.</Value>
+                                                </LocaleResource>
+                                                <LocaleResource Name="Required">
+                                                  <Value>Short description is required.</Value>
+                                                </LocaleResource>
+                                              </Children>
                                             </LocaleResource>
                                             <LocaleResource Name="Full">
-                                                <Value>Full description</Value>
-                                                <Children>
-                                                    <LocaleResource Name="Hint">
-                                                        <Value>The full description of this news entry.</Value>
-                                                    </LocaleResource>
-                                                    <LocaleResource Name="Required">
-                                                        <Value>Full description is required.</Value>
-                                                    </LocaleResource>
-                                                </Children>
+                                              <Value>Full description</Value>
+                                              <Children>
+                                                <LocaleResource Name="Hint">
+                                                  <Value>The full description of this news entry.</Value>
+                                                </LocaleResource>
+                                                <LocaleResource Name="Required">
+                                                  <Value>Full description is required.</Value>
+                                                </LocaleResource>
+                                              </Children>
                                             </LocaleResource>
                                             <LocaleResource Name="AllowComments">
-                                                <Value>Allow comments</Value>
-                                                <Children>
-                                                    <LocaleResource Name="Hint">
-                                                        <Value>When checked, customers can leave comments about your news entry.</Value>
-                                                    </LocaleResource>
-                                                </Children>
+                                              <Value>Allow comments</Value>
+                                              <Children>
+                                                <LocaleResource Name="Hint">
+                                                  <Value>When checked, customers can leave comments about your news entry.</Value>
+                                                </LocaleResource>
+                                              </Children>
                                             </LocaleResource>
                                             <LocaleResource Name="Published">
-                                                <Value>Published</Value>
-                                                <Children>
-                                                    <LocaleResource Name="Hint">
-                                                        <Value>Determines whether the news item is published (visible) in your store.</Value>
-                                                    </LocaleResource>
-                                                </Children>
+                                              <Value>Published</Value>
+                                              <Children>
+                                                <LocaleResource Name="Hint">
+                                                  <Value>Determines whether the news item is published (visible) in your store.</Value>
+                                                </LocaleResource>
+                                              </Children>
                                             </LocaleResource>
                                             <LocaleResource Name="StartDate">
-                                                <Value>Start date</Value>
-                                                <Children>
-                                                    <LocaleResource Name="Hint">
-                                                        <Value>Set the news item start date in Coordinated Universal Time (UTC). You can also leave it empty.</Value>
-                                                    </LocaleResource>
-                                                </Children>
+                                              <Value>Start date</Value>
+                                              <Children>
+                                                <LocaleResource Name="Hint">
+                                                  <Value>Set the news item start date in Coordinated Universal Time (UTC). You can also leave it empty.</Value>
+                                                </LocaleResource>
+                                              </Children>
                                             </LocaleResource>
                                             <LocaleResource Name="EndDate">
-                                                <Value>End date</Value>
-                                                <Children>
-                                                    <LocaleResource Name="Hint">
-                                                        <Value>Set the news item end date in Coordinated Universal Time (UTC). You can also leave it empty.</Value>
-                                                    </LocaleResource>
-                                                </Children>
+                                              <Value>End date</Value>
+                                              <Children>
+                                                <LocaleResource Name="Hint">
+                                                  <Value>Set the news item end date in Coordinated Universal Time (UTC). You can also leave it empty.</Value>
+                                                </LocaleResource>
+                                              </Children>
                                             </LocaleResource>
                                             <LocaleResource Name="CreatedOn">
-                                                <Value>Created on</Value>
+                                              <Value>Created on</Value>
                                             </LocaleResource>
+                                            <LocaleResource Name="MetaKeywords">
+                                              <Value>Meta keywords</Value>
+                                              <Children>
+                                                <LocaleResource Name="Hint">
+                                                  <Value>Meta keywords to be added to news page header.</Value>
+                                                </LocaleResource>
+                                              </Children>
+                                            </LocaleResource>
+                                            <LocaleResource Name="MetaDescription">
+                                              <Value>Meta description</Value>
+                                              <Children>
+                                                <LocaleResource Name="Hint">
+                                                  <Value>Meta description to be added to news page header.</Value>
+                                                </LocaleResource>
+                                              </Children>
+                                            </LocaleResource>
+                                            <LocaleResource Name="MetaTitle">
+                                              <Value>Meta title</Value>
+                                              <Children>
+                                                <LocaleResource Name="Hint">
+                                                  <Value>Override the page title. The default is the title of the news.</Value>
+                                                </LocaleResource>
+                                              </Children>
+                                            </LocaleResource>
+                                          <LocaleResource Name="SeName">
+                                            <Value>Search engine friendly page name</Value>
+                                            <Children>
+                                              <LocaleResource Name="Hint">
+                                                <Value>Set a search engine friendly page name e.g. 'the-best-news' to make your page URL 'http://www.yourStore.com/the-best-news'. Leave empty to generate it automatically based on the title of the news.</Value>
+                                              </LocaleResource>
+                                            </Children>
+                                          </LocaleResource>
                                             <LocaleResource Name="Comments">
                                                 <Value>View comments</Value>
                                             </LocaleResource>

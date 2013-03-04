@@ -26,6 +26,9 @@ namespace Nop.Data.Tests.News
                 CommentCount = 1,
                 LimitedToStores = true,
                 CreatedOnUtc = new DateTime(2010, 01, 03),
+                MetaTitle = "MetaTitle 1",
+                MetaDescription = "MetaDescription 1",
+                MetaKeywords = "MetaKeywords 1",
                 Language = new Language()
                 {
                     Name = "English",
@@ -45,6 +48,9 @@ namespace Nop.Data.Tests.News
             fromDb.CommentCount.ShouldEqual(1);
             fromDb.LimitedToStores.ShouldEqual(true);
             fromDb.CreatedOnUtc.ShouldEqual(new DateTime(2010, 01, 03));
+            fromDb.MetaTitle.ShouldEqual("MetaTitle 1");
+            fromDb.MetaDescription.ShouldEqual("MetaDescription 1");
+            fromDb.MetaKeywords.ShouldEqual("MetaKeywords 1");
 
             fromDb.Language.ShouldNotBeNull();
             fromDb.Language.Name.ShouldEqual("English");

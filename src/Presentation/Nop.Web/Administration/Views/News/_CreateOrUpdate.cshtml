@@ -6,6 +6,7 @@
 @Html.Telerik().TabStrip().Name("news-edit").Items(x =>
 {
     x.Add().Text(T("Admin.ContentManagement.News.NewsItems.Info").Text).Content(TabInfo().ToHtmlString()).Selected(true);
+    x.Add().Text(T("Admin.Common.SEO").Text).Content(TabSeo().ToHtmlString());
     x.Add().Text(T("Admin.ContentManagement.News.NewsItems.Stores").Text).Content(TabStores().ToHtmlString());
 
     //generate an event
@@ -83,6 +84,39 @@
             <td class="adminData">
                 @Html.EditorFor(model => model.Published)
                 @Html.ValidationMessageFor(model => model.Published)
+            </td>
+        </tr>
+    </table>
+}
+
+@helper TabSeo()
+{
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.MetaKeywords):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(x => x.MetaKeywords)
+                @Html.ValidationMessageFor(model => model.MetaKeywords)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.MetaDescription):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(x => x.MetaDescription)
+                @Html.ValidationMessageFor(model => model.MetaDescription)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.MetaTitle):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(x => x.MetaTitle)
+                @Html.ValidationMessageFor(model => model.MetaTitle)
             </td>
         </tr>
         <tr>

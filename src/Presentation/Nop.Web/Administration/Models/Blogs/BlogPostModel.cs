@@ -22,10 +22,6 @@ namespace Nop.Admin.Models.Blogs
         [AllowHtml]
         public string Title { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.SeName")]
-        [AllowHtml]
-        public string SeName { get; set; }
-
         [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.Body")]
         [AllowHtml]
         public string Body { get; set; }
@@ -59,6 +55,10 @@ namespace Nop.Admin.Models.Blogs
         [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.MetaTitle")]
         [AllowHtml]
         public string MetaTitle { get; set; }
+
+        [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.SeName")]
+        [AllowHtml]
+        public string SeName { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.CreatedOn")]
         public DateTime CreatedOn { get; set; }

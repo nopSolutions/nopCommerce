@@ -67,6 +67,21 @@ namespace Nop.Core.Domain.News
         public bool LimitedToStores { get; set; }
 
         /// <summary>
+        /// Gets or sets the meta keywords
+        /// </summary>
+        public string MetaKeywords { get; set; }
+
+        /// <summary>
+        /// Gets or sets the meta description
+        /// </summary>
+        public string MetaDescription { get; set; }
+
+        /// <summary>
+        /// Gets or sets the meta title
+        /// </summary>
+        public string MetaTitle { get; set; }
+
+        /// <summary>
         /// Gets or sets the date and time of entity creation
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }

@@ -486,9 +486,30 @@ set @resources='
 	<Value>Meta title</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.MetaTitle.Hint">
-	<Value>Override the page title. The default is the name of the blog post.</Value>
+	<Value>Override the page title. The default is the title of the blog post.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Info">
+	<Value>Info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Fields.MetaKeywords">
+	<Value>Meta keywords</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Fields.MetaKeywords.Hint">
+	<Value>Meta keywords to be added to news page header.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Fields.MetaDescription">
+	<Value>Meta description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Fields.MetaDescription.Hint">
+	<Value>Meta description to be added to news page header.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Fields.MetaTitle">
+	<Value>Meta title</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Fields.MetaTitle.Hint">
+	<Value>Override the page title. The default is the title of the news.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Info">
 	<Value>Info</Value>
   </LocaleResource>
 </Language>
@@ -2531,6 +2552,29 @@ GO
 IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[BlogPost]') and NAME='MetaDescription')
 BEGIN
 	ALTER TABLE [BlogPost]
+	ADD [MetaDescription] nvarchar(MAX) NULL
+END
+GO
+
+
+--SEO settings for news
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[News]') and NAME='MetaKeywords')
+BEGIN
+	ALTER TABLE [News]
+	ADD [MetaKeywords] nvarchar(400) NULL
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[News]') and NAME='MetaTitle')
+BEGIN
+	ALTER TABLE [News]
+	ADD [MetaTitle] nvarchar(400) NULL
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[News]') and NAME='MetaDescription')
+BEGIN
+	ALTER TABLE [News]
 	ADD [MetaDescription] nvarchar(MAX) NULL
 END
 GO

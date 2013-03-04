@@ -100,6 +100,9 @@ namespace Nop.Web.Controllers
                 throw new ArgumentNullException("model");
 
             model.Id = newsItem.Id;
+            model.MetaTitle = newsItem.MetaTitle;
+            model.MetaDescription = newsItem.MetaDescription;
+            model.MetaKeywords = newsItem.MetaKeywords;
             model.SeName = newsItem.GetSeName(newsItem.LanguageId, ensureTwoPublishedLanguages: false);
             model.Title = newsItem.Title;
             model.Short = newsItem.Short;
