@@ -2226,12 +2226,32 @@ END
 GO
 IF EXISTS (SELECT 1
            FROM   sysobjects
+           WHERE  name = 'ProductReview_Product'
+           AND parent_obj = Object_id('ProductReview')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+BEGIN
+	ALTER TABLE dbo.[ProductReview]
+	DROP CONSTRAINT ProductReview_Product
+END
+GO
+IF EXISTS (SELECT 1
+           FROM   sysobjects
            WHERE  name = 'ProductReviewHelpfulness_ProductReview1'
            AND parent_obj = Object_id('ProductReviewHelpfulness')
            AND Objectproperty(id,N'IsForeignKey') = 1)
 BEGIN
 	ALTER TABLE dbo.[ProductReviewHelpfulness]
 	DROP CONSTRAINT ProductReviewHelpfulness_ProductReview1
+END
+GO
+IF EXISTS (SELECT 1
+           FROM   sysobjects
+           WHERE  name = 'ProductReviewHelpfulness_ProductReview'
+           AND parent_obj = Object_id('ProductReviewHelpfulness')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+BEGIN
+	ALTER TABLE dbo.[ProductReviewHelpfulness]
+	DROP CONSTRAINT ProductReviewHelpfulness_ProductReview
 END
 GO
 IF NOT EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[Tmp_ProductReview]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
@@ -2270,11 +2290,11 @@ ALTER TABLE [dbo].[ProductReview]  WITH CHECK ADD  CONSTRAINT [ProductReview_Cus
 REFERENCES [dbo].[Customer] ([Id])
 ON DELETE CASCADE
 GO
-ALTER TABLE [dbo].[ProductReview]  WITH CHECK ADD  CONSTRAINT [ProductReview_Product1] FOREIGN KEY([ProductId])
+ALTER TABLE [dbo].[ProductReview]  WITH CHECK ADD  CONSTRAINT [ProductReview_Product] FOREIGN KEY([ProductId])
 REFERENCES [dbo].[Product] ([Id])
 ON DELETE CASCADE
 GO
-ALTER TABLE [dbo].[ProductReviewHelpfulness]  WITH CHECK ADD  CONSTRAINT [ProductReviewHelpfulness_ProductReview1] FOREIGN KEY([ProductReviewId])
+ALTER TABLE [dbo].[ProductReviewHelpfulness]  WITH CHECK ADD  CONSTRAINT [ProductReviewHelpfulness_ProductReview] FOREIGN KEY([ProductReviewId])
 REFERENCES [dbo].[ProductReview] ([Id])
 ON DELETE CASCADE
 GO
@@ -2292,6 +2312,16 @@ IF EXISTS (SELECT 1
 BEGIN
 	ALTER TABLE dbo.[NewsComment]
 	DROP CONSTRAINT NewsComment_Customer
+END
+GO
+IF EXISTS (SELECT 1
+           FROM   sysobjects
+           WHERE  name = 'NewsComment_NewsItem1'
+           AND parent_obj = Object_id('NewsComment')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+BEGIN
+	ALTER TABLE dbo.[NewsComment]
+	DROP CONSTRAINT NewsComment_NewsItem1
 END
 GO
 IF EXISTS (SELECT 1
@@ -2355,6 +2385,16 @@ END
 GO
 IF EXISTS (SELECT 1
            FROM   sysobjects
+           WHERE  name = 'BlogComment_BlogPost1'
+           AND parent_obj = Object_id('BlogComment')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+BEGIN
+	ALTER TABLE dbo.[BlogComment]
+	DROP CONSTRAINT BlogComment_BlogPost1
+END
+GO
+IF EXISTS (SELECT 1
+           FROM   sysobjects
            WHERE  name = 'BlogComment_BlogPost'
            AND parent_obj = Object_id('BlogComment')
            AND Objectproperty(id,N'IsForeignKey') = 1)
@@ -2412,6 +2452,16 @@ BEGIN
 	DROP CONSTRAINT ProductReviewHelpfulness_ProductReview
 END
 GO
+IF EXISTS (SELECT 1
+           FROM   sysobjects
+           WHERE  name = 'ProductReviewHelpfulness_ProductReview1'
+           AND parent_obj = Object_id('ProductReviewHelpfulness')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+BEGIN
+	ALTER TABLE dbo.[ProductReviewHelpfulness]
+	DROP CONSTRAINT ProductReviewHelpfulness_ProductReview1
+END
+GO
 IF NOT EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[Tmp_ProductReviewHelpfulness]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
 BEGIN
 CREATE TABLE [dbo].[Tmp_ProductReviewHelpfulness](
@@ -2454,6 +2504,16 @@ IF EXISTS (SELECT 1
 BEGIN
 	ALTER TABLE dbo.[PollVotingRecord]
 	DROP CONSTRAINT PollVotingRecord_Customer
+END
+GO
+IF EXISTS (SELECT 1
+           FROM   sysobjects
+           WHERE  name = 'PollVotingRecord_PollAnswer1'
+           AND parent_obj = Object_id('PollVotingRecord')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+BEGIN
+	ALTER TABLE dbo.[PollVotingRecord]
+	DROP CONSTRAINT PollVotingRecord_PollAnswer1
 END
 GO
 IF EXISTS (SELECT 1
