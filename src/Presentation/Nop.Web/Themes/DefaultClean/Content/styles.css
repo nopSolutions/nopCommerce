@@ -680,7 +680,7 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 .blogpost-page .tags label{float:left;margin-right:5px;}
 .blogpost-page .tags li{float:left;list-style:none;}
 .blogpost-page .tags li.separator{margin-right:5px;}
-.blogpost-page .result{font-family:Verdana,Arial,sans-serif;font-size:10px;font-weight:700;color:red;}
+.blogpost-page .result{font-family:Verdana,Arial,sans-serif;font-size:10px;font-weight:700;color:red;margin-bottom:10px;}
 .blogpost-page .new-comment{margin-top:10px;}
 .blogpost-page .new-comment .captcha-box{margin-bottom:12px;}
 .blogpost-page .new-comment .comment-text{width:350px;height:150px;}
