@@ -4,7 +4,9 @@
     Layout = "~/Views/Shared/_Root.cshtml";
 
     //title
-    Html.AddTitleParts(Model.Title);
+    Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Title);
+    Html.AddMetaDescriptionParts(Model.MetaDescription);
+    Html.AddMetaKeywordParts(Model.MetaKeywords);
 }
 <div class="page blogpost-page">
     <div class="page-title">

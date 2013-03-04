@@ -48,6 +48,18 @@ namespace Nop.Admin.Models.Blogs
         [UIHint("DateTimeNullable")]
         public DateTime? EndDate { get; set; }
 
+        [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.MetaKeywords")]
+        [AllowHtml]
+        public string MetaKeywords { get; set; }
+
+        [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.MetaDescription")]
+        [AllowHtml]
+        public string MetaDescription { get; set; }
+
+        [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.MetaTitle")]
+        [AllowHtml]
+        public string MetaTitle { get; set; }
+
         [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.CreatedOn")]
         public DateTime CreatedOn { get; set; }
 

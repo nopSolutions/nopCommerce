@@ -470,6 +470,27 @@ set @resources='
   <LocaleResource Name="Wishlist.HeaderQuantity">
 	<Value>({0})</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.MetaKeywords">
+	<Value>Meta keywords</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.MetaKeywords.Hint">
+	<Value>Meta keywords to be added to blog post page header.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.MetaDescription">
+	<Value>Meta description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.MetaDescription.Hint">
+	<Value>Meta description to be added to blog post page header.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.MetaTitle">
+	<Value>Meta title</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.MetaTitle.Hint">
+	<Value>Override the page title. The default is the name of the blog post.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Info">
+	<Value>Info</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -2492,3 +2513,24 @@ END
 GO
 
 
+--SEO settings for blog
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[BlogPost]') and NAME='MetaKeywords')
+BEGIN
+	ALTER TABLE [BlogPost]
+	ADD [MetaKeywords] nvarchar(400) NULL
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[BlogPost]') and NAME='MetaTitle')
+BEGIN
+	ALTER TABLE [BlogPost]
+	ADD [MetaTitle] nvarchar(400) NULL
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[BlogPost]') and NAME='MetaDescription')
+BEGIN
+	ALTER TABLE [BlogPost]
+	ADD [MetaDescription] nvarchar(MAX) NULL
+END
+GO

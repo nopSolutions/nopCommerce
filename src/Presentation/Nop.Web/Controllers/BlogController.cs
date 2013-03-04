@@ -102,6 +102,9 @@ namespace Nop.Web.Controllers
                 throw new ArgumentNullException("model");
 
             model.Id = blogPost.Id;
+            model.MetaTitle = blogPost.MetaTitle;
+            model.MetaDescription = blogPost.MetaDescription;
+            model.MetaKeywords = blogPost.MetaKeywords;
             model.SeName = blogPost.GetSeName(blogPost.LanguageId, ensureTwoPublishedLanguages: false);
             model.Title = blogPost.Title;
             model.Body = blogPost.Body;

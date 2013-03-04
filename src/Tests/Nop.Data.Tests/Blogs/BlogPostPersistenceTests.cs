@@ -24,6 +24,9 @@ namespace Nop.Data.Tests.Blogs
                 StartDateUtc = new DateTime(2010, 01, 01),
                 EndDateUtc = new DateTime(2010, 01, 02),
                 CreatedOnUtc = new DateTime(2010, 01, 03),
+                MetaTitle = "MetaTitle 1",
+                MetaDescription = "MetaDescription 1",
+                MetaKeywords = "MetaKeywords 1",
                 Language = new Language()
                 {
                     Name = "English",
@@ -41,6 +44,9 @@ namespace Nop.Data.Tests.Blogs
             fromDb.StartDateUtc.ShouldEqual(new DateTime(2010, 01, 01));
             fromDb.EndDateUtc.ShouldEqual(new DateTime(2010, 01, 02));
             fromDb.CreatedOnUtc.ShouldEqual(new DateTime(2010, 01, 03));
+            fromDb.MetaTitle.ShouldEqual("MetaTitle 1");
+            fromDb.MetaDescription.ShouldEqual("MetaDescription 1");
+            fromDb.MetaKeywords.ShouldEqual("MetaKeywords 1");
 
             fromDb.Language.ShouldNotBeNull();
             fromDb.Language.Name.ShouldEqual("English");
