@@ -14,6 +14,19 @@
 @helper TabInfo()
 { 
     var cultures = System.Globalization.CultureInfo.GetCultures(System.Globalization.CultureTypes.SpecificCultures).ToList();
+    
+    
+    <script type="text/javascript">
+        function toggleFlags() {
+            $('#pnlAllFlags').toggle();
+            if ($('#pnlAllFlags').css('display') == 'none') {
+                $('#displayAllFlags').html('@T("Admin.Common.Show")');
+            }
+            else {
+                $('#displayAllFlags').html('@T("Admin.Common.Hide")');
+            }
+        }
+    </script>
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
@@ -54,6 +67,16 @@
             <td class="adminData">
                 @Html.EditorFor(model => model.FlagImageFileName)
                 @Html.ValidationMessageFor(model => model.FlagImageFileName)
+                <br/>
+                <a id="displayAllFlags" href="javascript:toggleFlags();">@T("Admin.Common.Show")</a>
+                <div id="pnlAllFlags" style="display: none">
+                    @foreach (var fileName in Model.FlagFileNames)
+                    {
+                        <img alt="" src="@Url.Content("~/Content/Images/flags/" + fileName)"/>
+                        @fileName
+                        <text>, </text>
+                    }
+                </div>
             </td>
         </tr>
         <tr>
@@ -91,7 +114,7 @@
         $(document).ready(function () {
 
             $("#@Html.FieldIdFor(model => model.LimitedToStores)").click(toggleStoreMapping);
-        
+
             toggleStoreMapping();
         });
 

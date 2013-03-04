@@ -11,6 +11,11 @@ namespace Nop.Admin.Models.Localization
     [Validator(typeof(LanguageValidator))]
     public partial class LanguageModel : BaseNopEntityModel
     {
+        public LanguageModel()
+        {
+            FlagFileNames = new List<string>();
+        }
+
         [NopResourceDisplayName("Admin.Configuration.Languages.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
@@ -23,9 +28,11 @@ namespace Nop.Admin.Models.Localization
         [AllowHtml]
         public string UniqueSeoCode { get; set; }
         
+        //flags
         [NopResourceDisplayName("Admin.Configuration.Languages.Fields.FlagImageFileName")]
         [AllowHtml]
         public string FlagImageFileName { get; set; }
+        public IList<string> FlagFileNames { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Languages.Fields.Rtl")]
         public bool Rtl { get; set; }

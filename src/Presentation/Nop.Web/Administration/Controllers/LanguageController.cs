@@ -5,6 +5,7 @@ using System.Text;
 using System.Web.Mvc;
 using Nop.Admin.Models.Localization;
 using Nop.Admin.Models.Stores;
+using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Localization;
 using Nop.Services.Localization;
@@ -27,6 +28,7 @@ namespace Nop.Admin.Controllers
         private readonly IStoreService _storeService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IPermissionService _permissionService;
+        private readonly IWebHelper _webHelper;
         private readonly AdminAreaSettings _adminAreaSettings;
 
 		#endregion
@@ -38,6 +40,7 @@ namespace Nop.Admin.Controllers
             IStoreService storeService, 
             IStoreMappingService storeMappingService,
             IPermissionService permissionService,
+            IWebHelper webHelper,
             AdminAreaSettings adminAreaSettings)
 		{
 			this._localizationService = localizationService;
@@ -45,12 +48,25 @@ namespace Nop.Admin.Controllers
             this._storeService = storeService;
             this._storeMappingService = storeMappingService;
             this._permissionService = permissionService;
+            this._webHelper= webHelper;
             this._adminAreaSettings = adminAreaSettings;
 		}
 
 		#endregion 
 
         #region Utilities
+
+        [NonAction]
+        private void PrepareFlagsModel(LanguageModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+            
+            model.FlagFileNames = System.IO.Directory
+                .EnumerateFiles(_webHelper.MapPath("~/Content/Images/flags/"), "*.png", SearchOption.TopDirectoryOnly)
+                .Select(System.IO.Path.GetFileName)
+                .ToList();
+        }
 
         [NonAction]
         private void PrepareStoresMappingModel(LanguageModel model, Language language, bool excludeProperties)
@@ -147,6 +163,8 @@ namespace Nop.Admin.Controllers
             var model = new LanguageModel();
             //Stores
             PrepareStoresMappingModel(model, null, false);
+            //flags
+            PrepareFlagsModel(model);
             //default values
             model.Published = true;
             return View(model);
@@ -174,6 +192,8 @@ namespace Nop.Admin.Controllers
 
             //Stores
             PrepareStoresMappingModel(model, null, true);
+            //flags
+            PrepareFlagsModel(model);
 
             return View(model);
         }
@@ -194,6 +214,8 @@ namespace Nop.Admin.Controllers
 		    var model = language.ToModel();
             //Stores
             PrepareStoresMappingModel(model, language, false);
+            //flags
+            PrepareFlagsModel(model);
 
             return View(model);
 		}
@@ -236,6 +258,8 @@ namespace Nop.Admin.Controllers
 
             //Stores
             PrepareStoresMappingModel(model, language, true);
+            //flags
+            PrepareFlagsModel(model);
 
             return View(model);
 		}
