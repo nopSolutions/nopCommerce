@@ -629,7 +629,7 @@ BEGIN
 		AND [psam].[ProductId] IN (SELECT [pi].ProductId FROM #PageIndex [pi])
 
 		--build comma separated list of filterable identifiers
-		SELECT @FilterableSpecificationAttributeOptionIds = COALESCE(@FilterableSpecificationAttributeOptionIds + ',' , '') + CAST(SpecificationAttributeOptionId as nvarchar(1000))
+		SELECT @FilterableSpecificationAttributeOptionIds = COALESCE(@FilterableSpecificationAttributeOptionIds + ',' , '') + CAST(SpecificationAttributeOptionId as nvarchar(4000))
 		FROM #FilterableSpecs
 
 		DROP TABLE #FilterableSpecs
