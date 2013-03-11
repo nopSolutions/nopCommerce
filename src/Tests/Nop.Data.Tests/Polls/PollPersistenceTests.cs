@@ -113,7 +113,8 @@ namespace Nop.Data.Tests.Polls
                 (
                     new PollVotingRecord
                     {
-                        Customer = GetTestCustomer()
+                        Customer = GetTestCustomer(),
+                        CreatedOnUtc = DateTime.UtcNow
                     }
                 );
             var fromDb = SaveAndLoadEntity(poll);

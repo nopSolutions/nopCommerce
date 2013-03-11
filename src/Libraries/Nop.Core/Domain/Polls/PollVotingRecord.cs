@@ -1,3 +1,4 @@
+using System;
 using Nop.Core.Domain.Customers;
 
 namespace Nop.Core.Domain.Polls
@@ -16,6 +17,11 @@ namespace Nop.Core.Domain.Polls
         /// Gets or sets the customer identifier
         /// </summary>
         public int CustomerId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the date and time of instance creation
+        /// </summary>
+        public DateTime CreatedOnUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the customer

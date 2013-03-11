@@ -2085,6 +2085,13 @@ BEGIN
 END
 GO
 
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[PollVotingRecord]') and NAME='CreatedOnUtc')
+BEGIN
+	ALTER TABLE [PollVotingRecord]
+	ADD [CreatedOnUtc] datetime NULL
+END
+GO
+
 IF EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[CustomerContent]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
 BEGIN
 	DECLARE @ExistingPollVotingRecordID int
@@ -2098,12 +2105,16 @@ BEGIN
 		DECLARE @CustomerID int
 		SET @CustomerID = null -- clear cache (variable scope)
 		
+		DECLARE @CreatedOnUtc datetime
+		SET @CreatedOnUtc = null -- clear cache (variable scope)
+		
 		DECLARE @sql nvarchar(4000)
-		SET @sql = 'SELECT @CustomerID = cc.[CustomerId] FROM [CustomerContent] cc WHERE cc.[Id]=' + ISNULL(CAST(@ExistingPollVotingRecordID AS nvarchar(max)), '0')
-		EXEC sp_executesql @sql,N'@CustomerID int OUTPUT',@CustomerID OUTPUT
+		SET @sql = 'SELECT @CustomerID = cc.[CustomerId], @CreatedOnUtc = cc.[CreatedOnUtc] FROM [CustomerContent] cc WHERE cc.[Id]=' + ISNULL(CAST(@ExistingPollVotingRecordID AS nvarchar(max)), '0')
+		EXEC sp_executesql @sql,N'@CustomerID int OUTPUT, @CreatedOnUtc datetime OUTPUT',@CustomerID OUTPUT, @CreatedOnUtc OUTPUT
 		
 		UPDATE [PollVotingRecord] 
-		SET [CustomerId] = @CustomerID
+		SET [CustomerId] = @CustomerID,
+		[CreatedOnUtc] = @CreatedOnUtc
 		WHERE [Id]=@ExistingPollVotingRecordID
 		
 		--fetch next language identifier
@@ -2115,6 +2126,14 @@ END
 GO
 
 ALTER TABLE [PollVotingRecord] ALTER COLUMN [CustomerId] int NOT NULL
+GO
+
+UPDATE [PollVotingRecord]
+SET [CreatedOnUtc] = GETUTCDATE()
+WHERE [CreatedOnUtc] is null
+GO 
+
+ALTER TABLE [PollVotingRecord] ALTER COLUMN [CreatedOnUtc] datetime NOT NULL
 GO
 
 IF NOT EXISTS (SELECT 1
@@ -2532,6 +2551,7 @@ CREATE TABLE [dbo].[Tmp_PollVotingRecord](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[PollAnswerId] [int] NOT NULL,
 	[CustomerId] [int] NOT NULL,
+	[CreatedOnUtc] [datetime] NOT NULL,
 PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -2542,8 +2562,8 @@ GO
 SET IDENTITY_INSERT dbo.Tmp_PollVotingRecord ON
 GO
 IF EXISTS(SELECT TOP 1 * FROM dbo.PollVotingRecord)
-EXEC('INSERT INTO dbo.Tmp_PollVotingRecord ([Id],[PollAnswerId],[CustomerId])
-SELECT [Id],[PollAnswerId],[CustomerId] FROM dbo.PollVotingRecord')
+EXEC('INSERT INTO dbo.Tmp_PollVotingRecord ([Id],[PollAnswerId],[CustomerId],[CreatedOnUtc])
+SELECT [Id],[PollAnswerId],[CustomerId],[CreatedOnUtc] FROM dbo.PollVotingRecord')
 GO
 SET IDENTITY_INSERT dbo.Tmp_PollVotingRecord OFF
 GO
