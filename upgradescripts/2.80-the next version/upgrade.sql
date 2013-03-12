@@ -2658,3 +2658,10 @@ BEGIN
 	ADD [MetaDescription] nvarchar(MAX) NULL
 END
 GO
+
+
+--delete abondoned records from [GenericAttribute] table
+DELETE FROM [GenericAttribute]
+WHERE [EntityId] NOT IN (SELECT c.[Id] FROM [Customer] c) and [KeyGroup]=N'Customer'
+GO
+
