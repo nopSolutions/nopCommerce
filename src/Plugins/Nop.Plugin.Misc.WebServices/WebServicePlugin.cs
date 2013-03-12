@@ -9,7 +9,7 @@ namespace Nop.Plugin.Misc.WebServices
 {
     public class WebServicePlugin : BasePlugin, IMiscPlugin
     {
-        #region Ctor
+        #region Fields
 
         private readonly IPermissionService _permissionService;
 
