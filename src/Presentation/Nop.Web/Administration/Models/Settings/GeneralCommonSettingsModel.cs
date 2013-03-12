@@ -181,6 +181,9 @@ namespace Nop.Admin.Models.Settings
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.SeoFriendlyUrlsForLanguagesEnabled")]
             public bool SeoFriendlyUrlsForLanguagesEnabled { get; set; }
+
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.LoadAllLocaleRecordsOnStartup")]
+            public bool LoadAllLocaleRecordsOnStartup { get; set; }
         }
 
         public partial class FullTextSettingsModel : BaseNopModel

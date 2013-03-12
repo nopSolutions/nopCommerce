@@ -4899,6 +4899,14 @@
                                             </LocaleResource>
                                         </Children>
                                     </LocaleResource>
+                                    <LocaleResource Name="LoadAllLocaleRecordsOnStartup">
+                                        <Value>Load all locales on startup</Value>
+                                        <Children>
+                                            <LocaleResource Name="Hint">
+                                                <Value>When enabled, all locale resources will be loaded on application startup. The application start will be slower, but then all pages could be opened much faster.</Value>
+                                            </LocaleResource>
+                                        </Children>
+                                    </LocaleResource>
                                     <LocaleResource Name="CaptchaEnabled">
                                         <Value>CAPTCHA enabled</Value>
                                         <Children>

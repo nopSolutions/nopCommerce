@@ -458,6 +458,15 @@
                 @Html.ValidationMessageFor(model => model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
             </td>
         </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.LocalizationSettings.LoadAllLocaleRecordsOnStartup):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.LocalizationSettings.LoadAllLocaleRecordsOnStartup)
+                @Html.ValidationMessageFor(model => model.LocalizationSettings.LoadAllLocaleRecordsOnStartup)
+            </td>
+        </tr>
     </table>
 }
 @helper TabFullTextSettings()

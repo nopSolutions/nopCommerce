@@ -1822,6 +1822,7 @@ namespace Nop.Admin.Controllers
             var localizationSettings = _settingService.LoadSetting<LocalizationSettings>(storeScope);
             model.LocalizationSettings.UseImagesForLanguageSelection = localizationSettings.UseImagesForLanguageSelection;
             model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled = localizationSettings.SeoFriendlyUrlsForLanguagesEnabled;
+            model.LocalizationSettings.LoadAllLocaleRecordsOnStartup = localizationSettings.LoadAllLocaleRecordsOnStartup;
 
             //full-text support
             var commonSettings = _settingService.LoadSetting<CommonSettings>(storeScope);
@@ -2017,6 +2018,7 @@ namespace Nop.Admin.Controllers
                 //clear cached values of routes
                 System.Web.Routing.RouteTable.Routes.ClearSeoFriendlyUrlsCachedValueForRoutes();
             }
+            localizationSettings.LoadAllLocaleRecordsOnStartup = model.LocalizationSettings.LoadAllLocaleRecordsOnStartup;
             _settingService.SaveSetting(localizationSettings);
 
             //full-text

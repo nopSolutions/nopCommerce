@@ -512,6 +512,12 @@ set @resources='
   <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Info">
 	<Value>Info</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.LoadAllLocaleRecordsOnStartup">
+	<Value>Load all locales on startup</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.LoadAllLocaleRecordsOnStartup.Hint">
+	<Value>When enabled, all locale resources will be loaded on application startup. The application start will be slower, but then all pages could be opened much faster.</Value>
+  </LocaleResource>
 </Language>
 '
 
