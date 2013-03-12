@@ -378,12 +378,16 @@ namespace Nop.Services.Orders
             }
         }
 
+        #endregion
+
+        #region Methods
+
         /// <summary>
         /// Checks order status
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>Validated order</returns>
-        protected void CheckOrderStatus(Order order)
+        public void CheckOrderStatus(Order order)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -406,7 +410,7 @@ namespace Nop.Services.Orders
 
             if (order.OrderStatus == OrderStatus.Pending)
             {
-                if (order.ShippingStatus == ShippingStatus.PartiallyShipped || 
+                if (order.ShippingStatus == ShippingStatus.PartiallyShipped ||
                     order.ShippingStatus == ShippingStatus.Shipped ||
                     order.ShippingStatus == ShippingStatus.Delivered)
                 {
@@ -426,10 +430,6 @@ namespace Nop.Services.Orders
                 }
             }
         }
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         /// Places an order
