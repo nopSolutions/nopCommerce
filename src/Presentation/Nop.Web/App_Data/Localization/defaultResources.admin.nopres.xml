@@ -4481,6 +4481,14 @@
                                             </LocaleResource>
                                         </Children>
                                     </LocaleResource>
+                                    <LocaleResource Name="StoreLastVisitedPage">
+                                        <Value>Store last visited page</Value>
+                                        <Children>
+                                            <LocaleResource Name="Hint">
+                                                <Value>When enabled, the last visited page will be stored. When disabled, it can improved performance.</Value>
+                                            </LocaleResource>
+                                        </Children>
+                                    </LocaleResource>
                                     <LocaleResource Name="UsernamesEnabled">
                                         <Value>'Usernames' enabled</Value>
                                         <Children>

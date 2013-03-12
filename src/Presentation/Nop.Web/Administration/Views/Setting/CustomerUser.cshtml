@@ -203,6 +203,15 @@
                 @Html.ValidationMessageFor(model => model.CustomerSettings.HideNewsletterBlock)
             </td>
         </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CustomerSettings.StoreLastVisitedPage):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.CustomerSettings.StoreLastVisitedPage)
+                @Html.ValidationMessageFor(model => model.CustomerSettings.StoreLastVisitedPage)
+            </td>
+        </tr>
     </table>
 }
 @helper TabCustomerFormFields()

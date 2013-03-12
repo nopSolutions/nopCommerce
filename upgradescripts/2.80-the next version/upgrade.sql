@@ -518,6 +518,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.LoadAllLocaleRecordsOnStartup.Hint">
 	<Value>When enabled, all locale resources will be loaded on application startup. The application start will be slower, but then all pages could be opened much faster.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.StoreLastVisitedPage">
+	<Value>Store last visited page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.StoreLastVisitedPage.Hint">
+	<Value>When enabled, the last visited page will be stored. When disabled, it can improved performance.</Value>
+  </LocaleResource>
 </Language>
 '
 
