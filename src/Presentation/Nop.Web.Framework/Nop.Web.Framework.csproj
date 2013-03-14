@@ -135,7 +135,6 @@
     <Compile Include="Seo\GenericPathRouteExtensions.cs" />
     <Compile Include="StoreClosedAttribute.cs" />
     <Compile Include="StoreLastVisitedPageAttribute.cs" />
-    <Compile Include="StaticFileHandler.cs" />
     <Compile Include="RemotePost.cs" />
     <Compile Include="Controllers\BaseNopPaymentController.cs" />
     <Compile Include="Controllers\FormValueRequiredAttribute.cs" />
