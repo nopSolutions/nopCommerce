@@ -5,8 +5,8 @@
 @Html.HiddenFor(model => model.Id)
 @Html.Telerik().TabStrip().Name("language-edit").Items(x =>
 {
-    x.Add().Text(T("Admin.Catalog.Languages.Info").Text).Content(TabInfo().ToHtmlString()).Selected(true);
-    x.Add().Text(T("Admin.Catalog.Languages.Stores").Text).Content(TabStores().ToHtmlString());
+    x.Add().Text(T("Admin.Configuration.Languages.Info").Text).Content(TabInfo().ToHtmlString()).Selected(true);
+    x.Add().Text(T("Admin.Configuration.Languages.Stores").Text).Content(TabStores().ToHtmlString());
 
     //generate an event
     EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "language-edit"));

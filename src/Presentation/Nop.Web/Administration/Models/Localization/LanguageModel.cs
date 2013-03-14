@@ -45,9 +45,9 @@ namespace Nop.Admin.Models.Localization
 
 
         //Store mapping
-        [NopResourceDisplayName("Admin.Catalog.Languages.Fields.LimitedToStores")]
+        [NopResourceDisplayName("Admin.Configuration.Languages.Fields.LimitedToStores")]
         public bool LimitedToStores { get; set; }
-        [NopResourceDisplayName("Admin.Catalog.Languages.Fields.AvailableStores")]
+        [NopResourceDisplayName("Admin.Configuration.Languages.Fields.AvailableStores")]
         public List<StoreModel> AvailableStores { get; set; }
         public int[] SelectedStoreIds { get; set; }
 

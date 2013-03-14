@@ -4,8 +4,8 @@
 @Html.HiddenFor(model => model.Id)
 @Html.Telerik().TabStrip().Name("currency-edit").Items(x =>
 {
-    x.Add().Text(T("Admin.Catalog.Currencies.Info").Text).Content(TabInfo().ToHtmlString()).Selected(true);
-    x.Add().Text(T("Admin.Catalog.Currencies.Stores").Text).Content(TabStores().ToHtmlString());
+    x.Add().Text(T("Admin.Catalog.Configuration.Info").Text).Content(TabInfo().ToHtmlString()).Selected(true);
+    x.Add().Text(T("Admin.Catalog.Configuration.Stores").Text).Content(TabStores().ToHtmlString());
 
     //generate an event
     EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "currency-edit"));
