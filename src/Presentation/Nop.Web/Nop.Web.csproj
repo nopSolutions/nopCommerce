@@ -161,9 +161,9 @@
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="Telerik.Web.Mvc, Version=2012.1.214.340, Culture=neutral, PublicKeyToken=121fae78165ba3d4, processorArchitecture=MSIL">
+    <Reference Include="Telerik.Web.Mvc, Version=2013.1.219.340, Culture=neutral, PublicKeyToken=29ac1a93ec063d92, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\TelerikMvcExtensions.2012.2.607\lib\net40\Telerik.Web.Mvc.dll</HintPath>
+      <HintPath>..\..\packages\TelerikMvcExtensions.2013.1.219\lib\net40\Telerik.Web.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="WebGrease, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -171,6 +171,191 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_GlobalResources\EditorLocalization.bg-BG.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EditorLocalization.bg-BG.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_GlobalResources\EditorLocalization.da-DK.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EditorLocalization.da-DK.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_GlobalResources\EditorLocalization.de-DE.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EditorLocalization.de-DE.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_GlobalResources\EditorLocalization.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EditorLocalization.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_GlobalResources\EditorLocalization.en-US.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EditorLocalization.en-US.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_GlobalResources\EditorLocalization.fr-FR.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EditorLocalization.fr-FR.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_GlobalResources\EditorLocalization.nl-NL.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EditorLocalization.nl-NL.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_GlobalResources\EditorLocalization.pl-PL.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EditorLocalization.pl-PL.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_GlobalResources\EditorLocalization.pt-BR.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EditorLocalization.pt-BR.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_GlobalResources\EditorLocalization.pt-PT.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EditorLocalization.pt-PT.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_GlobalResources\EditorLocalization.ru-RU.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EditorLocalization.ru-RU.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_GlobalResources\EditorLocalization.uk-UA.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EditorLocalization.uk-UA.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_GlobalResources\EditorLocalization.zh-CN.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EditorLocalization.zh-CN.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_GlobalResources\GridLocalization.bg-BG.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GridLocalization.bg-BG.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_GlobalResources\GridLocalization.da-DK.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GridLocalization.da-DK.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_GlobalResources\GridLocalization.de-DE.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GridLocalization.de-DE.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_GlobalResources\GridLocalization.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GridLocalization.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_GlobalResources\GridLocalization.en-US.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GridLocalization.en-US.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_GlobalResources\GridLocalization.es-ES.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GridLocalization.es-ES.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_GlobalResources\GridLocalization.fr-FR.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GridLocalization.fr-FR.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_GlobalResources\GridLocalization.nl-NL.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GridLocalization.nl-NL.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_GlobalResources\GridLocalization.pl-PL.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GridLocalization.pl-PL.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_GlobalResources\GridLocalization.pt-BR.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GridLocalization.pt-BR.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_GlobalResources\GridLocalization.pt-PT.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GridLocalization.pt-PT.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_GlobalResources\GridLocalization.ru-RU.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GridLocalization.ru-RU.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_GlobalResources\GridLocalization.uk-UA.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GridLocalization.uk-UA.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_GlobalResources\GridLocalization.zh-CN.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GridLocalization.zh-CN.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_GlobalResources\UploadLocalization.bg-BG.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UploadLocalization.bg-BG.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_GlobalResources\UploadLocalization.da-DK.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UploadLocalization.da-DK.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_GlobalResources\UploadLocalization.en-US.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UploadLocalization.en-US.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_GlobalResources\UploadLocalization.fr-FR.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UploadLocalization.fr-FR.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_GlobalResources\UploadLocalization.nl-NL.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UploadLocalization.nl-NL.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_GlobalResources\UploadLocalization.pl-PL.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UploadLocalization.pl-PL.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_GlobalResources\UploadLocalization.pt-BR.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UploadLocalization.pt-BR.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_GlobalResources\UploadLocalization.pt-PT.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UploadLocalization.pt-PT.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_GlobalResources\UploadLocalization.ru-RU.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UploadLocalization.ru-RU.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_GlobalResources\UploadLocalization.zh-CN.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UploadLocalization.zh-CN.resx</DependentUpon>
+    </Compile>
     <Compile Include="Controllers\BaseNopController.cs" />
     <Compile Include="Controllers\BoardsController.cs" />
     <Compile Include="Controllers\CatalogController.cs" />
@@ -390,206 +575,206 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="App_Data\SqlServer.Indexes.sql" />
-    <Content Include="Content\2012.2.607\Black\editor.png" />
-    <Content Include="Content\2012.2.607\Black\imagebrowser.png" />
-    <Content Include="Content\2012.2.607\Black\loading.gif" />
-    <Content Include="Content\2012.2.607\Black\slider-h.gif" />
-    <Content Include="Content\2012.2.607\Black\slider-v.gif" />
-    <Content Include="Content\2012.2.607\Black\sprite-vertical.png" />
-    <Content Include="Content\2012.2.607\Black\sprite.png" />
-    <Content Include="Content\2012.2.607\Black\treeview-line.png" />
-    <Content Include="Content\2012.2.607\Black\treeview-nodes-rtl.png" />
-    <Content Include="Content\2012.2.607\Black\treeview-nodes.png" />
-    <Content Include="Content\2012.2.607\Default\editor.png" />
-    <Content Include="Content\2012.2.607\Default\imagebrowser.png" />
-    <Content Include="Content\2012.2.607\Default\loading.gif" />
-    <Content Include="Content\2012.2.607\Default\slider-h.gif" />
-    <Content Include="Content\2012.2.607\Default\slider-v.gif" />
-    <Content Include="Content\2012.2.607\Default\sprite-vertical.png" />
-    <Content Include="Content\2012.2.607\Default\sprite.png" />
-    <Content Include="Content\2012.2.607\Default\treeview-line.png" />
-    <Content Include="Content\2012.2.607\Default\treeview-nodes-rtl.png" />
-    <Content Include="Content\2012.2.607\Default\treeview-nodes.png" />
-    <Content Include="Content\2012.2.607\Forest\editor.png" />
-    <Content Include="Content\2012.2.607\Forest\imagebrowser.png" />
-    <Content Include="Content\2012.2.607\Forest\loading.gif" />
-    <Content Include="Content\2012.2.607\Forest\slider-h.gif" />
-    <Content Include="Content\2012.2.607\Forest\slider-v.gif" />
-    <Content Include="Content\2012.2.607\Forest\sprite-vertical.png" />
-    <Content Include="Content\2012.2.607\Forest\sprite.png" />
-    <Content Include="Content\2012.2.607\Forest\treeview-line.png" />
-    <Content Include="Content\2012.2.607\Forest\treeview-nodes-rtl.png" />
-    <Content Include="Content\2012.2.607\Forest\treeview-nodes.png" />
-    <Content Include="Content\2012.2.607\Hay\editor.png" />
-    <Content Include="Content\2012.2.607\Hay\imagebrowser.png" />
-    <Content Include="Content\2012.2.607\Hay\loading.gif" />
-    <Content Include="Content\2012.2.607\Hay\slider-h.gif" />
-    <Content Include="Content\2012.2.607\Hay\slider-v.gif" />
-    <Content Include="Content\2012.2.607\Hay\sprite-vertical.png" />
-    <Content Include="Content\2012.2.607\Hay\sprite.png" />
-    <Content Include="Content\2012.2.607\Hay\treeview-line.png" />
-    <Content Include="Content\2012.2.607\Hay\treeview-nodes-rtl.png" />
-    <Content Include="Content\2012.2.607\Hay\treeview-nodes.png" />
-    <Content Include="Content\2012.2.607\Metro\editor.png" />
-    <Content Include="Content\2012.2.607\Metro\imagebrowser.png" />
-    <Content Include="Content\2012.2.607\Metro\loading.gif" />
-    <Content Include="Content\2012.2.607\Metro\slider-h.gif" />
-    <Content Include="Content\2012.2.607\Metro\slider-v.gif" />
-    <Content Include="Content\2012.2.607\Metro\sprite.png" />
-    <Content Include="Content\2012.2.607\Office2007\editor.png" />
-    <Content Include="Content\2012.2.607\Office2007\imagebrowser.png" />
-    <Content Include="Content\2012.2.607\Office2007\loading.gif" />
-    <Content Include="Content\2012.2.607\Office2007\slider-h.gif" />
-    <Content Include="Content\2012.2.607\Office2007\slider-v.gif" />
-    <Content Include="Content\2012.2.607\Office2007\sprite-vertical.png" />
-    <Content Include="Content\2012.2.607\Office2007\sprite.png" />
-    <Content Include="Content\2012.2.607\Office2007\treeview-line.png" />
-    <Content Include="Content\2012.2.607\Office2007\treeview-nodes-rtl.png" />
-    <Content Include="Content\2012.2.607\Office2007\treeview-nodes.png" />
-    <Content Include="Content\2012.2.607\Office2010Black\editor.png" />
-    <Content Include="Content\2012.2.607\Office2010Black\imagebrowser.png" />
-    <Content Include="Content\2012.2.607\Office2010Black\loading.gif" />
-    <Content Include="Content\2012.2.607\Office2010Black\slider-h.gif" />
-    <Content Include="Content\2012.2.607\Office2010Black\slider-v.gif" />
-    <Content Include="Content\2012.2.607\Office2010Black\sprite-vertical.png" />
-    <Content Include="Content\2012.2.607\Office2010Black\sprite.png" />
-    <Content Include="Content\2012.2.607\Office2010Black\treeview-line.png" />
-    <Content Include="Content\2012.2.607\Office2010Black\treeview-nodes-rtl.png" />
-    <Content Include="Content\2012.2.607\Office2010Black\treeview-nodes.png" />
-    <Content Include="Content\2012.2.607\Office2010Blue\editor.png" />
-    <Content Include="Content\2012.2.607\Office2010Blue\gradient.png" />
-    <Content Include="Content\2012.2.607\Office2010Blue\imagebrowser.png" />
-    <Content Include="Content\2012.2.607\Office2010Blue\loading.gif" />
-    <Content Include="Content\2012.2.607\Office2010Blue\slider-h.gif" />
-    <Content Include="Content\2012.2.607\Office2010Blue\slider-v.gif" />
-    <Content Include="Content\2012.2.607\Office2010Blue\sprite-vertical.png" />
-    <Content Include="Content\2012.2.607\Office2010Blue\sprite.png" />
-    <Content Include="Content\2012.2.607\Office2010Silver\editor.png" />
-    <Content Include="Content\2012.2.607\Office2010Silver\gradient.png" />
-    <Content Include="Content\2012.2.607\Office2010Silver\imagebrowser.png" />
-    <Content Include="Content\2012.2.607\Office2010Silver\loading.gif" />
-    <Content Include="Content\2012.2.607\Office2010Silver\slider-h.gif" />
-    <Content Include="Content\2012.2.607\Office2010Silver\slider-v.gif" />
-    <Content Include="Content\2012.2.607\Office2010Silver\sprite-vertical.png" />
-    <Content Include="Content\2012.2.607\Office2010Silver\sprite.png" />
-    <Content Include="Content\2012.2.607\Outlook\editor.png" />
-    <Content Include="Content\2012.2.607\Outlook\imagebrowser.png" />
-    <Content Include="Content\2012.2.607\Outlook\loading.gif" />
-    <Content Include="Content\2012.2.607\Outlook\slider-h.gif" />
-    <Content Include="Content\2012.2.607\Outlook\slider-v.gif" />
-    <Content Include="Content\2012.2.607\Outlook\sprite-vertical.png" />
-    <Content Include="Content\2012.2.607\Outlook\sprite.png" />
-    <Content Include="Content\2012.2.607\Outlook\treeview-line.png" />
-    <Content Include="Content\2012.2.607\Outlook\treeview-nodes-rtl.png" />
-    <Content Include="Content\2012.2.607\Outlook\treeview-nodes.png" />
-    <Content Include="Content\2012.2.607\Simple\editor.png" />
-    <Content Include="Content\2012.2.607\Simple\imagebrowser.png" />
-    <Content Include="Content\2012.2.607\Simple\loading.gif" />
-    <Content Include="Content\2012.2.607\Simple\slider-h.gif" />
-    <Content Include="Content\2012.2.607\Simple\slider-v.gif" />
-    <Content Include="Content\2012.2.607\Simple\sprite.png" />
-    <Content Include="Content\2012.2.607\Simple\treeview-line.png" />
-    <Content Include="Content\2012.2.607\Simple\treeview-nodes-rtl.png" />
-    <Content Include="Content\2012.2.607\Simple\treeview-nodes.png" />
-    <Content Include="Content\2012.2.607\Sitefinity\editor.png" />
-    <Content Include="Content\2012.2.607\Sitefinity\imagebrowser.png" />
-    <Content Include="Content\2012.2.607\Sitefinity\loading.gif" />
-    <Content Include="Content\2012.2.607\Sitefinity\slider-h.gif" />
-    <Content Include="Content\2012.2.607\Sitefinity\slider-v.gif" />
-    <Content Include="Content\2012.2.607\Sitefinity\sprite-vertical.png" />
-    <Content Include="Content\2012.2.607\Sitefinity\sprite.png" />
-    <Content Include="Content\2012.2.607\Sitefinity\treeview-line.png" />
-    <Content Include="Content\2012.2.607\Sitefinity\treeview-nodes-rtl.png" />
-    <Content Include="Content\2012.2.607\Sitefinity\treeview-nodes.png" />
-    <Content Include="Content\2012.2.607\Sunset\editor.png" />
-    <Content Include="Content\2012.2.607\Sunset\imagebrowser.png" />
-    <Content Include="Content\2012.2.607\Sunset\loading.gif" />
-    <Content Include="Content\2012.2.607\Sunset\slider-h.gif" />
-    <Content Include="Content\2012.2.607\Sunset\slider-v.gif" />
-    <Content Include="Content\2012.2.607\Sunset\sprite-vertical.png" />
-    <Content Include="Content\2012.2.607\Sunset\sprite.png" />
-    <Content Include="Content\2012.2.607\Sunset\treeview-line.png" />
-    <Content Include="Content\2012.2.607\Sunset\treeview-nodes-rtl.png" />
-    <Content Include="Content\2012.2.607\Sunset\treeview-nodes.png" />
-    <Content Include="Content\2012.2.607\telerik.black.min.css" />
-    <Content Include="Content\2012.2.607\telerik.common.min.css" />
-    <Content Include="Content\2012.2.607\telerik.default.min.css" />
-    <Content Include="Content\2012.2.607\telerik.forest.min.css" />
-    <Content Include="Content\2012.2.607\telerik.hay.min.css" />
-    <Content Include="Content\2012.2.607\telerik.metro.min.css" />
-    <Content Include="Content\2012.2.607\telerik.office2007.min.css" />
-    <Content Include="Content\2012.2.607\telerik.office2010black.min.css" />
-    <Content Include="Content\2012.2.607\telerik.office2010blue.min.css" />
-    <Content Include="Content\2012.2.607\telerik.office2010silver.min.css" />
-    <Content Include="Content\2012.2.607\telerik.outlook.min.css" />
-    <Content Include="Content\2012.2.607\telerik.rtl.min.css" />
-    <Content Include="Content\2012.2.607\telerik.simple.min.css" />
-    <Content Include="Content\2012.2.607\telerik.sitefinity.min.css" />
-    <Content Include="Content\2012.2.607\telerik.sunset.min.css" />
-    <Content Include="Content\2012.2.607\telerik.telerik.min.css" />
-    <Content Include="Content\2012.2.607\telerik.transparent.min.css" />
-    <Content Include="Content\2012.2.607\telerik.vista.min.css" />
-    <Content Include="Content\2012.2.607\telerik.web20.min.css" />
-    <Content Include="Content\2012.2.607\telerik.webblue.min.css" />
-    <Content Include="Content\2012.2.607\telerik.windows7.min.css" />
-    <Content Include="Content\2012.2.607\Telerik\editor.png" />
-    <Content Include="Content\2012.2.607\Telerik\imagebrowser.png" />
-    <Content Include="Content\2012.2.607\Telerik\loading.gif" />
-    <Content Include="Content\2012.2.607\Telerik\slider-h.gif" />
-    <Content Include="Content\2012.2.607\Telerik\slider-v.gif" />
-    <Content Include="Content\2012.2.607\Telerik\sprite-vertical.png" />
-    <Content Include="Content\2012.2.607\Telerik\sprite.png" />
-    <Content Include="Content\2012.2.607\Telerik\treeview-line.png" />
-    <Content Include="Content\2012.2.607\Telerik\treeview-nodes-rtl.png" />
-    <Content Include="Content\2012.2.607\Telerik\treeview-nodes.png" />
-    <Content Include="Content\2012.2.607\Transparent\active.png" />
-    <Content Include="Content\2012.2.607\Transparent\editor.png" />
-    <Content Include="Content\2012.2.607\Transparent\gradient.png" />
-    <Content Include="Content\2012.2.607\Transparent\group.png" />
-    <Content Include="Content\2012.2.607\Transparent\hover.png" />
-    <Content Include="Content\2012.2.607\Transparent\imagebrowser.png" />
-    <Content Include="Content\2012.2.607\Transparent\loading.gif" />
-    <Content Include="Content\2012.2.607\Transparent\selected.png" />
-    <Content Include="Content\2012.2.607\Transparent\slider-h.gif" />
-    <Content Include="Content\2012.2.607\Transparent\slider-v.gif" />
-    <Content Include="Content\2012.2.607\Transparent\sprite-vertical.png" />
-    <Content Include="Content\2012.2.607\Transparent\sprite.png" />
-    <Content Include="Content\2012.2.607\Transparent\toolbar.png" />
-    <Content Include="Content\2012.2.607\Transparent\widget.png" />
-    <Content Include="Content\2012.2.607\Vista\editor.png" />
-    <Content Include="Content\2012.2.607\Vista\imagebrowser.png" />
-    <Content Include="Content\2012.2.607\Vista\loading.gif" />
-    <Content Include="Content\2012.2.607\Vista\slider-h.gif" />
-    <Content Include="Content\2012.2.607\Vista\slider-v.gif" />
-    <Content Include="Content\2012.2.607\Vista\sprite-vertical.png" />
-    <Content Include="Content\2012.2.607\Vista\sprite.png" />
-    <Content Include="Content\2012.2.607\Web20\editor.png" />
-    <Content Include="Content\2012.2.607\Web20\imagebrowser.png" />
-    <Content Include="Content\2012.2.607\Web20\loading.gif" />
-    <Content Include="Content\2012.2.607\Web20\slider-h.gif" />
-    <Content Include="Content\2012.2.607\Web20\slider-v.gif" />
-    <Content Include="Content\2012.2.607\Web20\sprite-vertical.png" />
-    <Content Include="Content\2012.2.607\Web20\sprite.png" />
-    <Content Include="Content\2012.2.607\Web20\treeview-line.png" />
-    <Content Include="Content\2012.2.607\Web20\treeview-nodes-rtl.png" />
-    <Content Include="Content\2012.2.607\Web20\treeview-nodes.png" />
-    <Content Include="Content\2012.2.607\WebBlue\editor.png" />
-    <Content Include="Content\2012.2.607\WebBlue\imagebrowser.png" />
-    <Content Include="Content\2012.2.607\WebBlue\loading.gif" />
-    <Content Include="Content\2012.2.607\WebBlue\slider-h.gif" />
-    <Content Include="Content\2012.2.607\WebBlue\slider-v.gif" />
-    <Content Include="Content\2012.2.607\WebBlue\sprite-vertical.png" />
-    <Content Include="Content\2012.2.607\WebBlue\sprite.png" />
-    <Content Include="Content\2012.2.607\WebBlue\treeview-line.png" />
-    <Content Include="Content\2012.2.607\WebBlue\treeview-nodes-rtl.png" />
-    <Content Include="Content\2012.2.607\WebBlue\treeview-nodes.png" />
-    <Content Include="Content\2012.2.607\Windows7\editor.png" />
-    <Content Include="Content\2012.2.607\Windows7\imagebrowser.png" />
-    <Content Include="Content\2012.2.607\Windows7\loading.gif" />
-    <Content Include="Content\2012.2.607\Windows7\slider-h.gif" />
-    <Content Include="Content\2012.2.607\Windows7\slider-v.gif" />
-    <Content Include="Content\2012.2.607\Windows7\sprite-vertical.png" />
-    <Content Include="Content\2012.2.607\Windows7\sprite.png" />
+    <Content Include="Content\2013.1.219\Black\editor.png" />
+    <Content Include="Content\2013.1.219\Black\imagebrowser.png" />
+    <Content Include="Content\2013.1.219\Black\loading.gif" />
+    <Content Include="Content\2013.1.219\Black\slider-h.gif" />
+    <Content Include="Content\2013.1.219\Black\slider-v.gif" />
+    <Content Include="Content\2013.1.219\Black\sprite-vertical.png" />
+    <Content Include="Content\2013.1.219\Black\sprite.png" />
+    <Content Include="Content\2013.1.219\Black\treeview-line.png" />
+    <Content Include="Content\2013.1.219\Black\treeview-nodes-rtl.png" />
+    <Content Include="Content\2013.1.219\Black\treeview-nodes.png" />
+    <Content Include="Content\2013.1.219\Default\editor.png" />
+    <Content Include="Content\2013.1.219\Default\imagebrowser.png" />
+    <Content Include="Content\2013.1.219\Default\loading.gif" />
+    <Content Include="Content\2013.1.219\Default\slider-h.gif" />
+    <Content Include="Content\2013.1.219\Default\slider-v.gif" />
+    <Content Include="Content\2013.1.219\Default\sprite-vertical.png" />
+    <Content Include="Content\2013.1.219\Default\sprite.png" />
+    <Content Include="Content\2013.1.219\Default\treeview-line.png" />
+    <Content Include="Content\2013.1.219\Default\treeview-nodes-rtl.png" />
+    <Content Include="Content\2013.1.219\Default\treeview-nodes.png" />
+    <Content Include="Content\2013.1.219\Forest\editor.png" />
+    <Content Include="Content\2013.1.219\Forest\imagebrowser.png" />
+    <Content Include="Content\2013.1.219\Forest\loading.gif" />
+    <Content Include="Content\2013.1.219\Forest\slider-h.gif" />
+    <Content Include="Content\2013.1.219\Forest\slider-v.gif" />
+    <Content Include="Content\2013.1.219\Forest\sprite-vertical.png" />
+    <Content Include="Content\2013.1.219\Forest\sprite.png" />
+    <Content Include="Content\2013.1.219\Forest\treeview-line.png" />
+    <Content Include="Content\2013.1.219\Forest\treeview-nodes-rtl.png" />
+    <Content Include="Content\2013.1.219\Forest\treeview-nodes.png" />
+    <Content Include="Content\2013.1.219\Hay\editor.png" />
+    <Content Include="Content\2013.1.219\Hay\imagebrowser.png" />
+    <Content Include="Content\2013.1.219\Hay\loading.gif" />
+    <Content Include="Content\2013.1.219\Hay\slider-h.gif" />
+    <Content Include="Content\2013.1.219\Hay\slider-v.gif" />
+    <Content Include="Content\2013.1.219\Hay\sprite-vertical.png" />
+    <Content Include="Content\2013.1.219\Hay\sprite.png" />
+    <Content Include="Content\2013.1.219\Hay\treeview-line.png" />
+    <Content Include="Content\2013.1.219\Hay\treeview-nodes-rtl.png" />
+    <Content Include="Content\2013.1.219\Hay\treeview-nodes.png" />
+    <Content Include="Content\2013.1.219\Metro\editor.png" />
+    <Content Include="Content\2013.1.219\Metro\imagebrowser.png" />
+    <Content Include="Content\2013.1.219\Metro\loading.gif" />
+    <Content Include="Content\2013.1.219\Metro\slider-h.gif" />
+    <Content Include="Content\2013.1.219\Metro\slider-v.gif" />
+    <Content Include="Content\2013.1.219\Metro\sprite.png" />
+    <Content Include="Content\2013.1.219\Office2007\editor.png" />
+    <Content Include="Content\2013.1.219\Office2007\imagebrowser.png" />
+    <Content Include="Content\2013.1.219\Office2007\loading.gif" />
+    <Content Include="Content\2013.1.219\Office2007\slider-h.gif" />
+    <Content Include="Content\2013.1.219\Office2007\slider-v.gif" />
+    <Content Include="Content\2013.1.219\Office2007\sprite-vertical.png" />
+    <Content Include="Content\2013.1.219\Office2007\sprite.png" />
+    <Content Include="Content\2013.1.219\Office2007\treeview-line.png" />
+    <Content Include="Content\2013.1.219\Office2007\treeview-nodes-rtl.png" />
+    <Content Include="Content\2013.1.219\Office2007\treeview-nodes.png" />
+    <Content Include="Content\2013.1.219\Office2010Black\editor.png" />
+    <Content Include="Content\2013.1.219\Office2010Black\imagebrowser.png" />
+    <Content Include="Content\2013.1.219\Office2010Black\loading.gif" />
+    <Content Include="Content\2013.1.219\Office2010Black\slider-h.gif" />
+    <Content Include="Content\2013.1.219\Office2010Black\slider-v.gif" />
+    <Content Include="Content\2013.1.219\Office2010Black\sprite-vertical.png" />
+    <Content Include="Content\2013.1.219\Office2010Black\sprite.png" />
+    <Content Include="Content\2013.1.219\Office2010Black\treeview-line.png" />
+    <Content Include="Content\2013.1.219\Office2010Black\treeview-nodes-rtl.png" />
+    <Content Include="Content\2013.1.219\Office2010Black\treeview-nodes.png" />
+    <Content Include="Content\2013.1.219\Office2010Blue\editor.png" />
+    <Content Include="Content\2013.1.219\Office2010Blue\gradient.png" />
+    <Content Include="Content\2013.1.219\Office2010Blue\imagebrowser.png" />
+    <Content Include="Content\2013.1.219\Office2010Blue\loading.gif" />
+    <Content Include="Content\2013.1.219\Office2010Blue\slider-h.gif" />
+    <Content Include="Content\2013.1.219\Office2010Blue\slider-v.gif" />
+    <Content Include="Content\2013.1.219\Office2010Blue\sprite-vertical.png" />
+    <Content Include="Content\2013.1.219\Office2010Blue\sprite.png" />
+    <Content Include="Content\2013.1.219\Office2010Silver\editor.png" />
+    <Content Include="Content\2013.1.219\Office2010Silver\gradient.png" />
+    <Content Include="Content\2013.1.219\Office2010Silver\imagebrowser.png" />
+    <Content Include="Content\2013.1.219\Office2010Silver\loading.gif" />
+    <Content Include="Content\2013.1.219\Office2010Silver\slider-h.gif" />
+    <Content Include="Content\2013.1.219\Office2010Silver\slider-v.gif" />
+    <Content Include="Content\2013.1.219\Office2010Silver\sprite-vertical.png" />
+    <Content Include="Content\2013.1.219\Office2010Silver\sprite.png" />
+    <Content Include="Content\2013.1.219\Outlook\editor.png" />
+    <Content Include="Content\2013.1.219\Outlook\imagebrowser.png" />
+    <Content Include="Content\2013.1.219\Outlook\loading.gif" />
+    <Content Include="Content\2013.1.219\Outlook\slider-h.gif" />
+    <Content Include="Content\2013.1.219\Outlook\slider-v.gif" />
+    <Content Include="Content\2013.1.219\Outlook\sprite-vertical.png" />
+    <Content Include="Content\2013.1.219\Outlook\sprite.png" />
+    <Content Include="Content\2013.1.219\Outlook\treeview-line.png" />
+    <Content Include="Content\2013.1.219\Outlook\treeview-nodes-rtl.png" />
+    <Content Include="Content\2013.1.219\Outlook\treeview-nodes.png" />
+    <Content Include="Content\2013.1.219\Simple\editor.png" />
+    <Content Include="Content\2013.1.219\Simple\imagebrowser.png" />
+    <Content Include="Content\2013.1.219\Simple\loading.gif" />
+    <Content Include="Content\2013.1.219\Simple\slider-h.gif" />
+    <Content Include="Content\2013.1.219\Simple\slider-v.gif" />
+    <Content Include="Content\2013.1.219\Simple\sprite.png" />
+    <Content Include="Content\2013.1.219\Simple\treeview-line.png" />
+    <Content Include="Content\2013.1.219\Simple\treeview-nodes-rtl.png" />
+    <Content Include="Content\2013.1.219\Simple\treeview-nodes.png" />
+    <Content Include="Content\2013.1.219\Sitefinity\editor.png" />
+    <Content Include="Content\2013.1.219\Sitefinity\imagebrowser.png" />
+    <Content Include="Content\2013.1.219\Sitefinity\loading.gif" />
+    <Content Include="Content\2013.1.219\Sitefinity\slider-h.gif" />
+    <Content Include="Content\2013.1.219\Sitefinity\slider-v.gif" />
+    <Content Include="Content\2013.1.219\Sitefinity\sprite-vertical.png" />
+    <Content Include="Content\2013.1.219\Sitefinity\sprite.png" />
+    <Content Include="Content\2013.1.219\Sitefinity\treeview-line.png" />
+    <Content Include="Content\2013.1.219\Sitefinity\treeview-nodes-rtl.png" />
+    <Content Include="Content\2013.1.219\Sitefinity\treeview-nodes.png" />
+    <Content Include="Content\2013.1.219\Sunset\editor.png" />
+    <Content Include="Content\2013.1.219\Sunset\imagebrowser.png" />
+    <Content Include="Content\2013.1.219\Sunset\loading.gif" />
+    <Content Include="Content\2013.1.219\Sunset\slider-h.gif" />
+    <Content Include="Content\2013.1.219\Sunset\slider-v.gif" />
+    <Content Include="Content\2013.1.219\Sunset\sprite-vertical.png" />
+    <Content Include="Content\2013.1.219\Sunset\sprite.png" />
+    <Content Include="Content\2013.1.219\Sunset\treeview-line.png" />
+    <Content Include="Content\2013.1.219\Sunset\treeview-nodes-rtl.png" />
+    <Content Include="Content\2013.1.219\Sunset\treeview-nodes.png" />
+    <Content Include="Content\2013.1.219\telerik.black.min.css" />
+    <Content Include="Content\2013.1.219\telerik.common.min.css" />
+    <Content Include="Content\2013.1.219\telerik.default.min.css" />
+    <Content Include="Content\2013.1.219\telerik.forest.min.css" />
+    <Content Include="Content\2013.1.219\telerik.hay.min.css" />
+    <Content Include="Content\2013.1.219\telerik.metro.min.css" />
+    <Content Include="Content\2013.1.219\telerik.office2007.min.css" />
+    <Content Include="Content\2013.1.219\telerik.office2010black.min.css" />
+    <Content Include="Content\2013.1.219\telerik.office2010blue.min.css" />
+    <Content Include="Content\2013.1.219\telerik.office2010silver.min.css" />
+    <Content Include="Content\2013.1.219\telerik.outlook.min.css" />
+    <Content Include="Content\2013.1.219\telerik.rtl.min.css" />
+    <Content Include="Content\2013.1.219\telerik.simple.min.css" />
+    <Content Include="Content\2013.1.219\telerik.sitefinity.min.css" />
+    <Content Include="Content\2013.1.219\telerik.sunset.min.css" />
+    <Content Include="Content\2013.1.219\telerik.telerik.min.css" />
+    <Content Include="Content\2013.1.219\telerik.transparent.min.css" />
+    <Content Include="Content\2013.1.219\telerik.vista.min.css" />
+    <Content Include="Content\2013.1.219\telerik.web20.min.css" />
+    <Content Include="Content\2013.1.219\telerik.webblue.min.css" />
+    <Content Include="Content\2013.1.219\telerik.windows7.min.css" />
+    <Content Include="Content\2013.1.219\Telerik\editor.png" />
+    <Content Include="Content\2013.1.219\Telerik\imagebrowser.png" />
+    <Content Include="Content\2013.1.219\Telerik\loading.gif" />
+    <Content Include="Content\2013.1.219\Telerik\slider-h.gif" />
+    <Content Include="Content\2013.1.219\Telerik\slider-v.gif" />
+    <Content Include="Content\2013.1.219\Telerik\sprite-vertical.png" />
+    <Content Include="Content\2013.1.219\Telerik\sprite.png" />
+    <Content Include="Content\2013.1.219\Telerik\treeview-line.png" />
+    <Content Include="Content\2013.1.219\Telerik\treeview-nodes-rtl.png" />
+    <Content Include="Content\2013.1.219\Telerik\treeview-nodes.png" />
+    <Content Include="Content\2013.1.219\Transparent\active.png" />
+    <Content Include="Content\2013.1.219\Transparent\editor.png" />
+    <Content Include="Content\2013.1.219\Transparent\gradient.png" />
+    <Content Include="Content\2013.1.219\Transparent\group.png" />
+    <Content Include="Content\2013.1.219\Transparent\hover.png" />
+    <Content Include="Content\2013.1.219\Transparent\imagebrowser.png" />
+    <Content Include="Content\2013.1.219\Transparent\loading.gif" />
+    <Content Include="Content\2013.1.219\Transparent\selected.png" />
+    <Content Include="Content\2013.1.219\Transparent\slider-h.gif" />
+    <Content Include="Content\2013.1.219\Transparent\slider-v.gif" />
+    <Content Include="Content\2013.1.219\Transparent\sprite-vertical.png" />
+    <Content Include="Content\2013.1.219\Transparent\sprite.png" />
+    <Content Include="Content\2013.1.219\Transparent\toolbar.png" />
+    <Content Include="Content\2013.1.219\Transparent\widget.png" />
+    <Content Include="Content\2013.1.219\Vista\editor.png" />
+    <Content Include="Content\2013.1.219\Vista\imagebrowser.png" />
+    <Content Include="Content\2013.1.219\Vista\loading.gif" />
+    <Content Include="Content\2013.1.219\Vista\slider-h.gif" />
+    <Content Include="Content\2013.1.219\Vista\slider-v.gif" />
+    <Content Include="Content\2013.1.219\Vista\sprite-vertical.png" />
+    <Content Include="Content\2013.1.219\Vista\sprite.png" />
+    <Content Include="Content\2013.1.219\Web20\editor.png" />
+    <Content Include="Content\2013.1.219\Web20\imagebrowser.png" />
+    <Content Include="Content\2013.1.219\Web20\loading.gif" />
+    <Content Include="Content\2013.1.219\Web20\slider-h.gif" />
+    <Content Include="Content\2013.1.219\Web20\slider-v.gif" />
+    <Content Include="Content\2013.1.219\Web20\sprite-vertical.png" />
+    <Content Include="Content\2013.1.219\Web20\sprite.png" />
+    <Content Include="Content\2013.1.219\Web20\treeview-line.png" />
+    <Content Include="Content\2013.1.219\Web20\treeview-nodes-rtl.png" />
+    <Content Include="Content\2013.1.219\Web20\treeview-nodes.png" />
+    <Content Include="Content\2013.1.219\WebBlue\editor.png" />
+    <Content Include="Content\2013.1.219\WebBlue\imagebrowser.png" />
+    <Content Include="Content\2013.1.219\WebBlue\loading.gif" />
+    <Content Include="Content\2013.1.219\WebBlue\slider-h.gif" />
+    <Content Include="Content\2013.1.219\WebBlue\slider-v.gif" />
+    <Content Include="Content\2013.1.219\WebBlue\sprite-vertical.png" />
+    <Content Include="Content\2013.1.219\WebBlue\sprite.png" />
+    <Content Include="Content\2013.1.219\WebBlue\treeview-line.png" />
+    <Content Include="Content\2013.1.219\WebBlue\treeview-nodes-rtl.png" />
+    <Content Include="Content\2013.1.219\WebBlue\treeview-nodes.png" />
+    <Content Include="Content\2013.1.219\Windows7\editor.png" />
+    <Content Include="Content\2013.1.219\Windows7\imagebrowser.png" />
+    <Content Include="Content\2013.1.219\Windows7\loading.gif" />
+    <Content Include="Content\2013.1.219\Windows7\slider-h.gif" />
+    <Content Include="Content\2013.1.219\Windows7\slider-v.gif" />
+    <Content Include="Content\2013.1.219\Windows7\sprite-vertical.png" />
+    <Content Include="Content\2013.1.219\Windows7\sprite.png" />
     <Content Include="Content\editors\BBEditor\ed.js" />
     <Content Include="Content\editors\BBEditor\images\bold.gif" />
     <Content Include="Content\editors\BBEditor\images\code.gif" />
@@ -900,6 +1085,36 @@
     <Content Include="Content\fileuploader\fileuploader.css" />
     <Content Include="Content\fileuploader\images\fileuploader-loading.gif" />
     <Content Include="favicon.ico" />
+    <Content Include="Scripts\2013.1.219\jquery-1.7.1.min.js" />
+    <Content Include="Scripts\2013.1.219\jquery.validate.min.js" />
+    <Content Include="Scripts\2013.1.219\telerik.all.min.js" />
+    <Content Include="Scripts\2013.1.219\telerik.autocomplete.min.js" />
+    <Content Include="Scripts\2013.1.219\telerik.calendar.min.js" />
+    <Content Include="Scripts\2013.1.219\telerik.chart.min.js" />
+    <Content Include="Scripts\2013.1.219\telerik.combobox.min.js" />
+    <Content Include="Scripts\2013.1.219\telerik.common.min.js" />
+    <Content Include="Scripts\2013.1.219\telerik.datepicker.min.js" />
+    <Content Include="Scripts\2013.1.219\telerik.datetimepicker.min.js" />
+    <Content Include="Scripts\2013.1.219\telerik.draganddrop.min.js" />
+    <Content Include="Scripts\2013.1.219\telerik.editor.min.js" />
+    <Content Include="Scripts\2013.1.219\telerik.grid.editing.min.js" />
+    <Content Include="Scripts\2013.1.219\telerik.grid.filtering.min.js" />
+    <Content Include="Scripts\2013.1.219\telerik.grid.grouping.min.js" />
+    <Content Include="Scripts\2013.1.219\telerik.grid.min.js" />
+    <Content Include="Scripts\2013.1.219\telerik.grid.reordering.min.js" />
+    <Content Include="Scripts\2013.1.219\telerik.grid.resizing.min.js" />
+    <Content Include="Scripts\2013.1.219\telerik.imagebrowser.min.js" />
+    <Content Include="Scripts\2013.1.219\telerik.list.min.js" />
+    <Content Include="Scripts\2013.1.219\telerik.menu.min.js" />
+    <Content Include="Scripts\2013.1.219\telerik.panelbar.min.js" />
+    <Content Include="Scripts\2013.1.219\telerik.slider.min.js" />
+    <Content Include="Scripts\2013.1.219\telerik.splitter.min.js" />
+    <Content Include="Scripts\2013.1.219\telerik.tabstrip.min.js" />
+    <Content Include="Scripts\2013.1.219\telerik.textbox.min.js" />
+    <Content Include="Scripts\2013.1.219\telerik.timepicker.min.js" />
+    <Content Include="Scripts\2013.1.219\telerik.treeview.min.js" />
+    <Content Include="Scripts\2013.1.219\telerik.upload.min.js" />
+    <Content Include="Scripts\2013.1.219\telerik.window.min.js" />
     <Content Include="Themes\Mobile\Content\images\ajax-loader.gif" />
     <Content Include="Content\Images\default-avatar.jpg" />
     <Content Include="Content\Images\flags\ad.png" />
@@ -1291,36 +1506,6 @@
     <Content Include="FileNotFound.htm" />
     <Content Include="Global.asax" />
     <Content Include="license.txt" />
-    <Content Include="Scripts\2012.2.607\jquery-1.7.1.min.js" />
-    <Content Include="Scripts\2012.2.607\jquery.validate.min.js" />
-    <Content Include="Scripts\2012.2.607\telerik.all.min.js" />
-    <Content Include="Scripts\2012.2.607\telerik.autocomplete.min.js" />
-    <Content Include="Scripts\2012.2.607\telerik.calendar.min.js" />
-    <Content Include="Scripts\2012.2.607\telerik.chart.min.js" />
-    <Content Include="Scripts\2012.2.607\telerik.combobox.min.js" />
-    <Content Include="Scripts\2012.2.607\telerik.common.min.js" />
-    <Content Include="Scripts\2012.2.607\telerik.datepicker.min.js" />
-    <Content Include="Scripts\2012.2.607\telerik.datetimepicker.min.js" />
-    <Content Include="Scripts\2012.2.607\telerik.draganddrop.min.js" />
-    <Content Include="Scripts\2012.2.607\telerik.editor.min.js" />
-    <Content Include="Scripts\2012.2.607\telerik.grid.editing.min.js" />
-    <Content Include="Scripts\2012.2.607\telerik.grid.filtering.min.js" />
-    <Content Include="Scripts\2012.2.607\telerik.grid.grouping.min.js" />
-    <Content Include="Scripts\2012.2.607\telerik.grid.min.js" />
-    <Content Include="Scripts\2012.2.607\telerik.grid.reordering.min.js" />
-    <Content Include="Scripts\2012.2.607\telerik.grid.resizing.min.js" />
-    <Content Include="Scripts\2012.2.607\telerik.imagebrowser.min.js" />
-    <Content Include="Scripts\2012.2.607\telerik.list.min.js" />
-    <Content Include="Scripts\2012.2.607\telerik.menu.min.js" />
-    <Content Include="Scripts\2012.2.607\telerik.panelbar.min.js" />
-    <Content Include="Scripts\2012.2.607\telerik.slider.min.js" />
-    <Content Include="Scripts\2012.2.607\telerik.splitter.min.js" />
-    <Content Include="Scripts\2012.2.607\telerik.tabstrip.min.js" />
-    <Content Include="Scripts\2012.2.607\telerik.textbox.min.js" />
-    <Content Include="Scripts\2012.2.607\telerik.timepicker.min.js" />
-    <Content Include="Scripts\2012.2.607\telerik.treeview.min.js" />
-    <Content Include="Scripts\2012.2.607\telerik.upload.min.js" />
-    <Content Include="Scripts\2012.2.607\telerik.window.min.js" />
     <Content Include="Scripts\fileuploader.js" />
     <Content Include="Scripts\public.ajaxcart.js" />
     <Content Include="Scripts\public.accordion.js" />
@@ -1387,7 +1572,6 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
-    <Content Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Views\Shared\Header.cshtml" />
     <Content Include="Views\Common\Footer.cshtml" />
     <Content Include="Views\Shared\_RootPopup.cshtml" />
@@ -1742,6 +1926,228 @@
     <Content Include="Views\Common\AdminHeaderLinks.cshtml" />
     <Content Include="Views\Common\PageNotFound.cshtml" />
     <Content Include="Views\Common\PageNotFound.Mobile.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_GlobalResources\UploadLocalization.zh-CN.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>UploadLocalization.zh-CN.designer.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_GlobalResources\UploadLocalization.ru-RU.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>UploadLocalization.ru-RU.designer.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_GlobalResources\UploadLocalization.pt-PT.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>UploadLocalization.pt-PT.designer.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_GlobalResources\UploadLocalization.pt-BR.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>UploadLocalization.pt-BR.designer.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_GlobalResources\UploadLocalization.pl-PL.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>UploadLocalization.pl-PL.designer.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_GlobalResources\UploadLocalization.nl-NL.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>UploadLocalization.nl-NL.designer.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_GlobalResources\UploadLocalization.fr-FR.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>UploadLocalization.fr-FR.designer.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_GlobalResources\UploadLocalization.en-US.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>UploadLocalization.en-US.designer.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_GlobalResources\UploadLocalization.da-DK.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>UploadLocalization.da-DK.designer.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_GlobalResources\UploadLocalization.bg-BG.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>UploadLocalization.bg-BG.designer.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_GlobalResources\GridLocalization.zh-CN.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>GridLocalization.zh-CN.designer.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_GlobalResources\GridLocalization.uk-UA.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>GridLocalization.uk-UA.designer.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_GlobalResources\GridLocalization.ru-RU.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>GridLocalization.ru-RU.designer.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_GlobalResources\GridLocalization.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>GridLocalization.designer.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_GlobalResources\GridLocalization.pt-PT.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>GridLocalization.pt-PT.designer.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_GlobalResources\GridLocalization.pt-BR.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>GridLocalization.pt-BR.designer.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_GlobalResources\GridLocalization.pl-PL.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>GridLocalization.pl-PL.designer.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_GlobalResources\GridLocalization.nl-NL.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>GridLocalization.nl-NL.designer.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_GlobalResources\GridLocalization.fr-FR.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>GridLocalization.fr-FR.designer.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_GlobalResources\GridLocalization.es-ES.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>GridLocalization.es-ES.designer.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_GlobalResources\GridLocalization.en-US.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>GridLocalization.en-US.designer.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_GlobalResources\GridLocalization.de-DE.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>GridLocalization.de-DE.designer.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_GlobalResources\GridLocalization.da-DK.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>GridLocalization.da-DK.designer.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_GlobalResources\GridLocalization.bg-BG.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>GridLocalization.bg-BG.designer.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_GlobalResources\EditorLocalization.zh-CN.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>EditorLocalization.zh-CN.designer.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_GlobalResources\EditorLocalization.uk-UA.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>EditorLocalization.uk-UA.designer.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_GlobalResources\EditorLocalization.ru-RU.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>EditorLocalization.ru-RU.designer.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_GlobalResources\EditorLocalization.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>EditorLocalization.designer.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_GlobalResources\EditorLocalization.pt-PT.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>EditorLocalization.pt-PT.designer.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_GlobalResources\EditorLocalization.pt-BR.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>EditorLocalization.pt-BR.designer.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_GlobalResources\EditorLocalization.pl-PL.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>EditorLocalization.pl-PL.designer.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_GlobalResources\EditorLocalization.nl-NL.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>EditorLocalization.nl-NL.designer.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_GlobalResources\EditorLocalization.fr-FR.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>EditorLocalization.fr-FR.designer.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_GlobalResources\EditorLocalization.en-US.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>EditorLocalization.en-US.designer.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_GlobalResources\EditorLocalization.de-DE.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>EditorLocalization.de-DE.designer.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_GlobalResources\EditorLocalization.da-DK.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>EditorLocalization.da-DK.designer.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_GlobalResources\EditorLocalization.bg-BG.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>EditorLocalization.bg-BG.designer.cs</LastGenOutput>
+    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

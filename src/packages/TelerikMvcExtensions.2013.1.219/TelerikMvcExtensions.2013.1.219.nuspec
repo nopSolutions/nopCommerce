@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>TelerikMvcExtensions</id>
+    <version>2013.1.219</version>
+    <authors>Telerik</authors>
+    <owners>Telerik</owners>
+    <projectUrl>http://www.telerik.com/products/aspnet-mvc.aspx</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Telerik Extensions for ASP.NET MVC is a set of UI components for ASP.NET MVC</description>
+    <summary>Telerik Extensions for ASP.NET MVC is a set of UI components for ASP.NET MVC</summary>
+    <language>en-US</language>
+    <references>
+      <reference file="Telerik.Web.Mvc.dll" />
+    </references>
+  </metadata>
+</package>
