@@ -62,7 +62,6 @@ namespace Nop.Core.Infrastructure
             }
         }
 
-
         public override IList<Assembly> GetAssemblies()
         {
             if (this.EnsureBinFolderAssembliesLoaded && !_binFolderAssembliesLoaded)
@@ -75,6 +74,7 @@ namespace Nop.Core.Infrastructure
 
             return base.GetAssemblies();
         }
+
         #endregion
     }
 }
