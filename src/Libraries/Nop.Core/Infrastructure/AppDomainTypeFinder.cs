@@ -16,18 +16,25 @@ namespace Nop.Core.Infrastructure
     /// </summary>
     public class AppDomainTypeFinder : ITypeFinder
     {
-        #region Private Fields
+        #region Fields
 
         private bool loadAppDomainAssemblies = true;
-
         private string assemblySkipLoadingPattern = "^System|^mscorlib|^Microsoft|^CppCodeProvider|^VJSharpCodeProvider|^WebDev|^Castle|^Iesi|^log4net|^NHibernate|^nunit|^TestDriven|^MbUnit|^Rhino|^QuickGraph|^TestFu|^Telerik|^ComponentArt|^MvcContrib|^AjaxControlToolkit|^Antlr3|^Remotion|^Recaptcha";
-
         private string assemblyRestrictToLoadingPattern = ".*";
         private IList<string> assemblyNames = new List<string>();
 
+        /// <summary>
+        /// Caches attributed assembly information so they don't have to be re-read
+        /// </summary>
+        private readonly List<AttributedAssembly> _attributedAssemblies = new List<AttributedAssembly>();
+        /// <summary>
+        /// Caches the assembly attributes that have been searched for
+        /// </summary>
+        private readonly List<Type> _assemblyAttributesSearched = new List<Type>();
+
         #endregion
 
-        #region Constructors
+        #region Ctor
 
         /// <summary>Creates a new instance of the AppDomainTypeFinder.</summary>
         public AppDomainTypeFinder()
@@ -75,7 +82,7 @@ namespace Nop.Core.Infrastructure
 
         #endregion
 
-        #region Internal Attributed Assembly class
+        #region Nested classes
 
         private class AttributedAssembly
         {
@@ -85,7 +92,7 @@ namespace Nop.Core.Infrastructure
 
         #endregion
 
-        #region ITypeFinder
+        #region Methods
 
         public IEnumerable<Type> FindClassesOfType<T>(bool onlyConcreteClasses = true)
         {
@@ -156,17 +163,7 @@ namespace Nop.Core.Infrastructure
         {
             return FindAssembliesWithAttribute<T>(GetAssemblies());
         }
-
-        /// <summary>
-        /// Caches attributed assembly information so they don't have to be re-read
-        /// </summary>
-        private readonly List<AttributedAssembly> _attributedAssemblies = new List<AttributedAssembly>();
-
-        /// <summary>
-        /// Caches the assembly attributes that have been searched for
-        /// </summary>
-        private readonly List<Type> _assemblyAttributesSearched = new List<Type>();
-
+        
         public IEnumerable<Assembly> FindAssembliesWithAttribute<T>(IEnumerable<Assembly> assemblies)
         {
             //check if we've already searched this assembly);)
@@ -218,7 +215,11 @@ namespace Nop.Core.Infrastructure
 
         #endregion
 
-        /// <summary>Iterates all assemblies in the AppDomain and if it's name matches the configured patterns add it to our list.</summary>
+        #region Utilities
+
+        /// <summary>
+        /// Iterates all assemblies in the AppDomain and if it's name matches the configured patterns add it to our list.
+        /// </summary>
         /// <param name="addedAssemblyNames"></param>
         /// <param name="assemblies"></param>
         private void AddAssembliesInAppDomain(List<string> addedAssemblyNames, List<Assembly> assemblies)
@@ -236,7 +237,11 @@ namespace Nop.Core.Infrastructure
             }
         }
 
-        /// <summary>Adds specificly configured assemblies.</summary>
+        /// <summary>
+        /// Adds specificly configured assemblies.
+        /// </summary>
+        /// <param name="addedAssemblyNames"></param>
+        /// <param name="assemblies"></param>
         protected virtual void AddConfiguredAssemblies(List<string> addedAssemblyNames, List<Assembly> assemblies)
         {
             foreach (string assemblyName in AssemblyNames)
@@ -250,26 +255,44 @@ namespace Nop.Core.Infrastructure
             }
         }
 
-        /// <summary>Check if a dll is one of the shipped dlls that we know don't need to be investigated.</summary>
-        /// <param name="assemblyFullName">The name of the assembly to check.</param>
-        /// <returns>True if the assembly should be loaded into Nop.</returns>
+        /// <summary>
+        /// Check if a dll is one of the shipped dlls that we know don't need to be investigated.
+        /// </summary>
+        /// <param name="assemblyFullName">
+        /// The name of the assembly to check.
+        /// </param>
+        /// <returns>
+        /// True if the assembly should be loaded into Nop.
+        /// </returns>
         public virtual bool Matches(string assemblyFullName)
         {
             return !Matches(assemblyFullName, AssemblySkipLoadingPattern)
                    && Matches(assemblyFullName, AssemblyRestrictToLoadingPattern);
         }
 
-        /// <summary>Check if a dll is one of the shipped dlls that we know don't need to be investigated.</summary>
-        /// <param name="assemblyFullName">The assembly name to match.</param>
-        /// <param name="pattern">The regular expression pattern to match against the assembly name.</param>
-        /// <returns>True if the pattern matches the assembly name.</returns>
+        /// <summary>
+        /// Check if a dll is one of the shipped dlls that we know don't need to be investigated.
+        /// </summary>
+        /// <param name="assemblyFullName">
+        /// The assembly name to match.
+        /// </param>
+        /// <param name="pattern">
+        /// The regular expression pattern to match against the assembly name.
+        /// </param>
+        /// <returns>
+        /// True if the pattern matches the assembly name.
+        /// </returns>
         protected virtual bool Matches(string assemblyFullName, string pattern)
         {
             return Regex.IsMatch(assemblyFullName, pattern, RegexOptions.IgnoreCase | RegexOptions.Compiled);
         }
 
-        /// <summary>Makes sure matching assemblies in the supplied folder are loaded in the app domain.</summary>
-        /// <param name="directoryPath">The physical path to a directory containing dlls to load in the app domain.</param>
+        /// <summary>
+        /// Makes sure matching assemblies in the supplied folder are loaded in the app domain.
+        /// </summary>
+        /// <param name="directoryPath">
+        /// The physical path to a directory containing dlls to load in the app domain.
+        /// </param>
         protected virtual void LoadMatchingAssemblies(string directoryPath)
         {
             var loadedAssemblyNames = new List<string>();
@@ -307,6 +330,12 @@ namespace Nop.Core.Infrastructure
             }
         }
 
+        /// <summary>
+        /// Does type implement generic?
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="openGeneric"></param>
+        /// <returns></returns>
         protected virtual bool DoesTypeImplementOpenGeneric(Type type, Type openGeneric)
         {
             try
@@ -326,6 +355,7 @@ namespace Nop.Core.Infrastructure
                 return false;
             }
         }
-        
+
+        #endregion
     }
 }
