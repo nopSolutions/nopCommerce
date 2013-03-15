@@ -326,8 +326,9 @@ namespace Nop.Web.Infrastructure.Cache
         /// </summary>
         /// <remarks>
         /// {0} : language ID
+        /// {1} : current store ID
         /// </remarks>
-        public const string BLOG_MONTHS_MODEL_KEY = "Nop.pres.blog.months-{0}";
+        public const string BLOG_MONTHS_MODEL_KEY = "Nop.pres.blog.months-{0}-{1}";
         public const string BLOG_PATTERN_KEY = "Nop.pres.blog.";
 
         /// <summary>

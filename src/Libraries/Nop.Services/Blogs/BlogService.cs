@@ -5,6 +5,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Blogs;
+using Nop.Core.Domain.Stores;
 using Nop.Services.Events;
 
 namespace Nop.Services.Blogs
@@ -23,6 +24,7 @@ namespace Nop.Services.Blogs
 
         private readonly IRepository<BlogPost> _blogPostRepository;
         private readonly IRepository<BlogComment> _blogCommentRepository;
+        private readonly IRepository<StoreMapping> _storeMappingRepository;
         private readonly ICacheManager _cacheManager;
         private readonly IEventPublisher _eventPublisher;
 
@@ -32,10 +34,13 @@ namespace Nop.Services.Blogs
 
         public BlogService(IRepository<BlogPost> blogPostRepository,
             IRepository<BlogComment> blogCommentRepository,
-            ICacheManager cacheManager, IEventPublisher eventPublisher)
+            IRepository<StoreMapping> storeMappingRepository,
+            ICacheManager cacheManager, 
+            IEventPublisher eventPublisher)
         {
             this._blogPostRepository = blogPostRepository;
             this._blogCommentRepository = blogCommentRepository;
+            this._storeMappingRepository = storeMappingRepository;
             this._cacheManager = cacheManager;
             this._eventPublisher = eventPublisher;
         }
@@ -82,6 +87,7 @@ namespace Nop.Services.Blogs
         /// <summary>
         /// Gets all blog posts
         /// </summary>
+        /// <param name="storeId">The store identifier; pass 0 to load all records</param>
         /// <param name="languageId">Language identifier; 0 if you want to get all records</param>
         /// <param name="dateFrom">Filter by created date; null if you want to get all records</param>
         /// <param name="dateTo">Filter by created date; null if you want to get all records</param>
@@ -89,7 +95,7 @@ namespace Nop.Services.Blogs
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Blog posts</returns>
-        public virtual IPagedList<BlogPost> GetAllBlogPosts(int languageId,
+        public virtual IPagedList<BlogPost> GetAllBlogPosts(int storeId, int languageId,
             DateTime? dateFrom, DateTime? dateTo, int pageIndex, int pageSize, bool showHidden = false)
         {
             var query = _blogPostRepository.Table;
@@ -105,6 +111,24 @@ namespace Nop.Services.Blogs
                 query = query.Where(b => !b.StartDateUtc.HasValue || b.StartDateUtc <= utcNow);
                 query = query.Where(b => !b.EndDateUtc.HasValue || b.EndDateUtc >= utcNow);
             }
+
+            if (storeId > 0)
+            {
+                //Store mapping
+                query = from bp in query
+                        join sm in _storeMappingRepository.Table on bp.Id equals sm.EntityId into bp_sm
+                        from sm in bp_sm.DefaultIfEmpty()
+                        where !bp.LimitedToStores || (sm.EntityName == "BlogPost" && storeId == sm.StoreId)
+                        select bp;
+
+                //only distinct blog posts (group by ID)
+                query = from bp in query
+                        group bp by bp.Id
+                        into bpGroup
+                        orderby bpGroup.Key
+                        select bpGroup.FirstOrDefault();
+            }
+
             query = query.OrderByDescending(b => b.CreatedOnUtc);
             
             var blogPosts = new PagedList<BlogPost>(query, pageIndex, pageSize);
@@ -114,19 +138,20 @@ namespace Nop.Services.Blogs
         /// <summary>
         /// Gets all blog posts
         /// </summary>
+        /// <param name="storeId">The store identifier; pass 0 to load all records</param>
         /// <param name="languageId">Language identifier. 0 if you want to get all news</param>
         /// <param name="tag">Tag</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Blog posts</returns>
-        public virtual IPagedList<BlogPost> GetAllBlogPostsByTag(int languageId, string tag,
+        public virtual IPagedList<BlogPost> GetAllBlogPostsByTag(int storeId, int languageId, string tag,
             int pageIndex, int pageSize, bool showHidden = false)
         {
             tag = tag.Trim();
 
             //we laod all records and only then filter them by tag
-            var blogPostsAll = GetAllBlogPosts(languageId, null, null, 0, int.MaxValue, showHidden);
+            var blogPostsAll = GetAllBlogPosts(storeId, languageId, null, null, 0, int.MaxValue, showHidden);
             var taggedBlogPosts = new List<BlogPost>();
             foreach (var blogPost in blogPostsAll)
             {
@@ -143,14 +168,15 @@ namespace Nop.Services.Blogs
         /// <summary>
         /// Gets all blog post tags
         /// </summary>
+        /// <param name="storeId">The store identifier; pass 0 to load all records</param>
         /// <param name="languageId">Language identifier. 0 if you want to get all news</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Blog post tags</returns>
-        public virtual IList<BlogPostTag> GetAllBlogPostTags(int languageId, bool showHidden = false)
+        public virtual IList<BlogPostTag> GetAllBlogPostTags(int storeId, int languageId, bool showHidden = false)
         {
             var blogPostTags = new List<BlogPostTag>();
 
-            var blogPosts = GetAllBlogPosts(languageId, null, null, 0, int.MaxValue, showHidden);
+            var blogPosts = GetAllBlogPosts(storeId, languageId, null, null, 0, int.MaxValue, showHidden);
             foreach (var blogPost in blogPosts)
             {
                 var tags = blogPost.ParseTags();

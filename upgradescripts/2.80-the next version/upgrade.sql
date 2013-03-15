@@ -533,6 +533,21 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Acl">
 	<Value>Access control list</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Stores">
+	<Value>Stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.LimitedToStores">
+	<Value>Limited to stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.LimitedToStores.Hint">
+	<Value>Determines whether the blog post is available only at certain stores.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.AvailableStores">
+	<Value>Stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.AvailableStores.Hint">
+	<Value>Select stores for which the blog post will be shown.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -2686,3 +2701,20 @@ DELETE FROM [GenericAttribute]
 WHERE [EntityId] NOT IN (SELECT c.[Id] FROM [Customer] c) and [KeyGroup]=N'Customer'
 GO
 
+
+
+--Store mapping for blog posts
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[BlogPost]') and NAME='LimitedToStores')
+BEGIN
+	ALTER TABLE [BlogPost]
+	ADD [LimitedToStores] bit NULL
+END
+GO
+
+UPDATE [BlogPost]
+SET [LimitedToStores] = 0
+WHERE [LimitedToStores] IS NULL
+GO
+
+ALTER TABLE [BlogPost] ALTER COLUMN [LimitedToStores] bit NOT NULL
+GO

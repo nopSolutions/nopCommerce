@@ -2,13 +2,14 @@ using System;
 using System.Collections.Generic;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Seo;
+using Nop.Core.Domain.Stores;
 
 namespace Nop.Core.Domain.Blogs
 {
     /// <summary>
     /// Represents a blog post
     /// </summary>
-    public partial class BlogPost : BaseEntity, ISlugSupported
+    public partial class BlogPost : BaseEntity, ISlugSupported, IStoreMappingSupported
     {
         private ICollection<BlogComment> _blogComments;
 
@@ -69,7 +70,12 @@ namespace Nop.Core.Domain.Blogs
         /// Gets or sets the meta title
         /// </summary>
         public string MetaTitle { get; set; }
-
+        
+        /// <summary>
+        /// Gets or sets a value indicating whether the entity is limited/restricted to certain stores
+        /// </summary>
+        public virtual bool LimitedToStores { get; set; }
+ 
         /// <summary>
         /// Gets or sets the date and time of entity creation
         /// </summary>

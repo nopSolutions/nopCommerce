@@ -27,6 +27,7 @@ namespace Nop.Data.Tests.Blogs
                 MetaTitle = "MetaTitle 1",
                 MetaDescription = "MetaDescription 1",
                 MetaKeywords = "MetaKeywords 1",
+                LimitedToStores = true,
                 Language = new Language()
                 {
                     Name = "English",
@@ -47,6 +48,7 @@ namespace Nop.Data.Tests.Blogs
             fromDb.MetaTitle.ShouldEqual("MetaTitle 1");
             fromDb.MetaDescription.ShouldEqual("MetaDescription 1");
             fromDb.MetaKeywords.ShouldEqual("MetaKeywords 1");
+            fromDb.LimitedToStores.ShouldEqual(true);
 
             fromDb.Language.ShouldNotBeNull();
             fromDb.Language.Name.ShouldEqual("English");

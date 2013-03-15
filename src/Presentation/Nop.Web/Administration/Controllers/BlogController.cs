@@ -12,6 +12,7 @@ using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Services.Seo;
+using Nop.Services.Stores;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
@@ -29,6 +30,8 @@ namespace Nop.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
         private readonly IUrlRecordService _urlRecordService;
+        private readonly IStoreService _storeService;
+        private readonly IStoreMappingService _storeMappingService;
         private readonly AdminAreaSettings _adminAreaSettings;
 
         #endregion
@@ -38,7 +41,9 @@ namespace Nop.Admin.Controllers
         public BlogController(IBlogService blogService, ILanguageService languageService,
             IDateTimeHelper dateTimeHelper, 
             ILocalizationService localizationService, IPermissionService permissionService,
-            IUrlRecordService urlRecordService, AdminAreaSettings adminAreaSettings)
+            IUrlRecordService urlRecordService,
+            IStoreService storeService, IStoreMappingService storeMappingService,
+            AdminAreaSettings adminAreaSettings)
         {
             this._blogService = blogService;
             this._languageService = languageService;
@@ -46,10 +51,62 @@ namespace Nop.Admin.Controllers
             this._localizationService = localizationService;
             this._permissionService = permissionService;
             this._urlRecordService = urlRecordService;
+            this._storeService = storeService;
+            this._storeMappingService = storeMappingService;
             this._adminAreaSettings = adminAreaSettings;
 		}
 
 		#endregion 
+        
+        #region Utilities
+
+        [NonAction]
+        private void PrepareStoresMappingModel(BlogPostModel model, BlogPost blogPost, bool excludeProperties)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            model.AvailableStores = _storeService
+                .GetAllStores()
+                .Select(s => s.ToModel())
+                .ToList();
+            if (!excludeProperties)
+            {
+                if (blogPost != null)
+                {
+                    model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(blogPost);
+                }
+                else
+                {
+                    model.SelectedStoreIds = new int[0];
+                }
+            }
+        }
+
+        [NonAction]
+        protected void SaveStoreMappings(BlogPost blogPost, BlogPostModel model)
+        {
+            var existingStoreMappings = _storeMappingService.GetStoreMappings(blogPost);
+            var allStores = _storeService.GetAllStores();
+            foreach (var store in allStores)
+            {
+                if (model.SelectedStoreIds != null && model.SelectedStoreIds.Contains(store.Id))
+                {
+                    //new role
+                    if (existingStoreMappings.Count(sm => sm.StoreId == store.Id) == 0)
+                        _storeMappingService.InsertStoreMapping(blogPost, store.Id);
+                }
+                else
+                {
+                    //removed role
+                    var storeMappingToDelete = existingStoreMappings.FirstOrDefault(sm => sm.StoreId == store.Id);
+                    if (storeMappingToDelete != null)
+                        _storeMappingService.DeleteStoreMapping(storeMappingToDelete);
+                }
+            }
+        }
+
+        #endregion
         
 		#region Blog posts
 
@@ -63,24 +120,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedView();
 
-            var blogPosts = _blogService.GetAllBlogPosts(0, null, null, 0, _adminAreaSettings.GridPageSize, true);
-            var gridModel = new GridModel<BlogPostModel>
-            {
-                Data = blogPosts.Select(x =>
-                {
-                    var m = x.ToModel();
-                    if (x.StartDateUtc.HasValue)
-                        m.StartDate = _dateTimeHelper.ConvertToUserTime(x.StartDateUtc.Value, DateTimeKind.Utc);
-                    if (x.EndDateUtc.HasValue)
-                        m.EndDate = _dateTimeHelper.ConvertToUserTime(x.EndDateUtc.Value, DateTimeKind.Utc);
-                    m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
-                    m.LanguageName = x.Language.Name;
-                    m.Comments = x.CommentCount;
-                    return m;
-                }),
-                Total = blogPosts.TotalCount
-            };
-			return View(gridModel);
+			return View();
 		}
 
 		[HttpPost, GridAction(EnableCustomBinding = true)]
@@ -89,7 +129,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedView();
 
-            var blogPosts = _blogService.GetAllBlogPosts(0, null, null, command.Page - 1, command.PageSize, true);
+            var blogPosts = _blogService.GetAllBlogPosts(0, 0, null, null, command.Page - 1, command.PageSize, true);
             var gridModel = new GridModel<BlogPostModel>
             {
                 Data = blogPosts.Select(x =>
@@ -119,6 +159,8 @@ namespace Nop.Admin.Controllers
 
             ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
             var model = new BlogPostModel();
+            //Stores
+            PrepareStoresMappingModel(model, null, false);
             //default values
             model.AllowComments = true;
             return View(model);
@@ -142,12 +184,17 @@ namespace Nop.Admin.Controllers
                 var seName = blogPost.ValidateSeName(model.SeName, model.Title, true);
                 _urlRecordService.SaveSlug(blogPost, seName, blogPost.LanguageId);
 
+                //Stores
+                SaveStoreMappings(blogPost, model);
+
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = blogPost.Id }) : RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
             ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
+            //Stores
+            PrepareStoresMappingModel(model, null, true);
             return View(model);
         }
 
@@ -165,6 +212,8 @@ namespace Nop.Admin.Controllers
             var model = blogPost.ToModel();
             model.StartDate = blogPost.StartDateUtc;
             model.EndDate = blogPost.EndDateUtc;
+            //Store
+            PrepareStoresMappingModel(model, blogPost, false);
             return View(model);
 		}
 
@@ -190,12 +239,17 @@ namespace Nop.Admin.Controllers
                 var seName = blogPost.ValidateSeName(model.SeName, model.Title, true);
                 _urlRecordService.SaveSlug(blogPost, seName, blogPost.LanguageId);
 
+                //Stores
+                SaveStoreMappings(blogPost, model);
+
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Updated"));
                 return continueEditing ? RedirectToAction("Edit", new { id = blogPost.Id }) : RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
             ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
+            //Store
+            PrepareStoresMappingModel(model, blogPost, true);
             return View(model);
 		}
 

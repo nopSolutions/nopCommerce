@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using FluentValidation.Attributes;
+using Nop.Admin.Models.Stores;
 using Nop.Admin.Validators.Blogs;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
@@ -62,6 +64,14 @@ namespace Nop.Admin.Models.Blogs
 
         [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.CreatedOn")]
         public DateTime CreatedOn { get; set; }
+
+        //Store mapping
+        [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.LimitedToStores")]
+        public bool LimitedToStores { get; set; }
+        [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.AvailableStores")]
+        public List<StoreModel> AvailableStores { get; set; }
+        public int[] SelectedStoreIds { get; set; }
+
 
     }
 }
