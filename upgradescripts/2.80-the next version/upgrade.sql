@@ -525,13 +525,13 @@ set @resources='
 	<Value>When enabled, the last visited page will be stored. When disabled, it can improved performance.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Acl">
-	<Value>Access control list (ACL)</Value>
+	<Value>Access control list</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Acl">
-	<Value>Access control list (ACL)</Value>
+	<Value>Access control list</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Acl">
-	<Value>Access control list (ACL)</Value>
+	<Value>Access control list</Value>
   </LocaleResource>
 </Language>
 '
