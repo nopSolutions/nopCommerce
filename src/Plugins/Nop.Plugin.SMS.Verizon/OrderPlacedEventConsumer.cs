@@ -30,7 +30,6 @@ namespace Nop.Plugin.SMS.Verizon
             if (!_verizonSettings.Enabled)
                 return;
 
-            //is plugin installed?
             var pluginDescriptor = _pluginFinder.GetPluginDescriptorBySystemName("Mobile.SMS.Verizon");
             if (pluginDescriptor == null)
                 return;
@@ -40,6 +39,7 @@ namespace Nop.Plugin.SMS.Verizon
                 return;
 
             var order = eventMessage.Order;
+
             //send SMS
             if (plugin.SendSms(String.Format("New order(#{0}) has been placed.", order.Id)))
             {

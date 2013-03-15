@@ -33,7 +33,6 @@ namespace Nop.Web.Framework.Mvc.Routes
             if (providerType == null)
                 throw new ArgumentNullException("providerType");
 
-
             foreach (var plugin in PluginManager.ReferencedPlugins)
             {
                 if (plugin.ReferencedAssembly == null)

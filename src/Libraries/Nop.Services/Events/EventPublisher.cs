@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Nop.Core.Infrastructure;
+using Nop.Core.Plugins;
 using Nop.Services.Logging;
 
 namespace Nop.Services.Events
@@ -22,18 +23,18 @@ namespace Nop.Services.Events
         }
 
         /// <summary>
-        /// Publish event
+        /// Publish to cunsumer
         /// </summary>
         /// <typeparam name="T">Type</typeparam>
+        /// <param name="x">Event consumer</param>
         /// <param name="eventMessage">Event message</param>
-        public void Publish<T>(T eventMessage)
+        protected virtual void PublishToConsumer<T>(IConsumer<T> x, T eventMessage)
         {
-            var subscriptions = _subscriptionService.GetSubscriptions<T>();
-            subscriptions.ToList().ForEach(x => PublishToConsumer(x, eventMessage));
-        }
+            //Ignore not installed plugins
+            var plugin = FindPlugin(x.GetType());
+            if (plugin != null && !plugin.Installed)
+                return;
 
-        private static void PublishToConsumer<T>(IConsumer<T> x, T eventMessage)
-        {
             try
             {
                 x.HandleEvent(eventMessage);
@@ -52,15 +53,40 @@ namespace Nop.Services.Events
                     //do nothing
                 }
             }
-            finally
-            {
-                //TODO actually we should not dispose it
-                var instance = x as IDisposable;
-                if (instance != null)
-                {
-                    instance.Dispose();
-                }
-            }
         }
+
+        /// <summary>
+        /// Find a plugin descriptor by some type which is located into its assembly
+        /// </summary>
+        /// <param name="providerType">Provider type</param>
+        /// <returns>Plugin descriptor</returns>
+        protected virtual PluginDescriptor FindPlugin(Type providerType)
+        {
+            if (providerType == null)
+                throw new ArgumentNullException("providerType");
+
+            foreach (var plugin in PluginManager.ReferencedPlugins)
+            {
+                if (plugin.ReferencedAssembly == null)
+                    continue;
+
+                if (plugin.ReferencedAssembly.FullName == providerType.Assembly.FullName)
+                    return plugin;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Publish event
+        /// </summary>
+        /// <typeparam name="T">Type</typeparam>
+        /// <param name="eventMessage">Event message</param>
+        public void Publish<T>(T eventMessage)
+        {
+            var subscriptions = _subscriptionService.GetSubscriptions<T>();
+            subscriptions.ToList().ForEach(x => PublishToConsumer(x, eventMessage));
+        }
+
     }
 }
