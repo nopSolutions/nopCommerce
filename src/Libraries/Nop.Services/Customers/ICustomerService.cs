@@ -67,14 +67,6 @@ namespace Nop.Services.Customers
             int[] customerRoleIds, int pageIndex, int pageSize);
 
         /// <summary>
-        /// Gets all customers by customer role id
-        /// </summary>
-        /// <param name="customerRoleId">Customer role identifier</param>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Customer collection</returns>
-        IList<Customer> GetCustomersByCustomerRoleId(int customerRoleId, bool showHidden = false);
-
-        /// <summary>
         /// Delete a customer
         /// </summary>
         /// <param name="customer">Customer</param>

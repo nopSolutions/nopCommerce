@@ -321,26 +321,6 @@ namespace Nop.Services.Customers
         }
 
         /// <summary>
-        /// Gets all customers by customer role id
-        /// </summary>
-        /// <param name="customerRoleId">Customer role identifier</param>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Customer collection</returns>
-        public virtual IList<Customer> GetCustomersByCustomerRoleId(int customerRoleId, bool showHidden = false)
-        {
-            var query = from c in _customerRepository.Table
-                        from cr in c.CustomerRoles
-                        where (showHidden || c.Active) &&
-                            !c.Deleted &&
-                            cr.Id == customerRoleId
-                        orderby c.CreatedOnUtc descending
-                        select c;
-            
-            var customers = query.ToList();
-            return customers;
-        }
-
-        /// <summary>
         /// Delete a customer
         /// </summary>
         /// <param name="customer">Customer</param>
