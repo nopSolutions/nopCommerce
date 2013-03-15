@@ -15,15 +15,15 @@ namespace Nop.Services.Customers
         /// <summary>
         /// Get best customers
         /// </summary>
-        /// <param name="startTime">Order start time; null to load all</param>
-        /// <param name="endTime">Order end time; null to load all</param>
+        /// <param name="createdFromUtc">Order created date from (UTC); null to load all records</param>
+        /// <param name="createdToUtc">Order created date to (UTC); null to load all records</param>
         /// <param name="os">Order status; null to load all records</param>
         /// <param name="ps">Order payment status; null to load all records</param>
         /// <param name="ss">Order shippment status; null to load all records</param>
         /// <param name="orderBy">1 - order by order total, 2 - order by number of orders</param>
         /// <returns>Report</returns>
-        IList<BestCustomerReportLine> GetBestCustomersReport(DateTime? startTime,
-            DateTime? endTime, OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss, int orderBy);
+        IList<BestCustomerReportLine> GetBestCustomersReport(DateTime? createdFromUtc,
+            DateTime? createdToUtc, OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss, int orderBy);
         
         /// <summary>
         /// Gets a report of customers registered in the last days

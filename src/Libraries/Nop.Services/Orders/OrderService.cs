@@ -141,8 +141,8 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="storeId">Store identifier; 0 to load all orders</param>
         /// <param name="customerId">Customer identifier; 0 to load all orders</param>
-        /// <param name="startTime">Order start time; null to load all orders</param>
-        /// <param name="endTime">Order end time; null to load all orders</param>
+        /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
+        /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
         /// <param name="os">Order status; null to load all orders</param>
         /// <param name="ps">Order payment status; null to load all orders</param>
         /// <param name="ss">Order shippment status; null to load all orders</param>
@@ -152,7 +152,7 @@ namespace Nop.Services.Orders
         /// <param name="pageSize">Page size</param>
         /// <returns>Order collection</returns>
         public virtual IPagedList<Order> SearchOrders(int storeId, int customerId,
-            DateTime? startTime, DateTime? endTime,
+            DateTime? createdFromUtc, DateTime? createdToUtc, 
             OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss,
             string billingEmail, string orderGuid, int pageIndex, int pageSize)
         {
@@ -173,10 +173,10 @@ namespace Nop.Services.Orders
                 query = query.Where(o => o.StoreId == storeId);
             if (customerId > 0)
                 query = query.Where(o => o.CustomerId == customerId);
-            if (startTime.HasValue)
-                query = query.Where(o => startTime.Value <= o.CreatedOnUtc);
-            if (endTime.HasValue)
-                query = query.Where(o => endTime.Value >= o.CreatedOnUtc);
+            if (createdFromUtc.HasValue)
+                query = query.Where(o => createdFromUtc.Value <= o.CreatedOnUtc);
+            if (createdToUtc.HasValue)
+                query = query.Where(o => createdToUtc.Value >= o.CreatedOnUtc);
             if (orderStatusId.HasValue)
                 query = query.Where(o => orderStatusId.Value == o.OrderStatusId);
             if (paymentStatusId.HasValue)
@@ -320,15 +320,15 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="orderId">Order identifier; null to load all records</param>
         /// <param name="customerId">Customer identifier; null to load all records</param>
-        /// <param name="startTime">Order start time; null to load all records</param>
-        /// <param name="endTime">Order end time; null to load all records</param>
+        /// <param name="createdFromUtc">Order created date from (UTC); null to load all records</param>
+        /// <param name="createdToUtc">Order created date to (UTC); null to load all records</param>
         /// <param name="os">Order status; null to load all records</param>
         /// <param name="ps">Order payment status; null to load all records</param>
         /// <param name="ss">Order shippment status; null to load all records</param>
         /// <param name="loadDownloableProductsOnly">Value indicating whether to load downloadable products only</param>
         /// <returns>Order collection</returns>
         public virtual IList<OrderProductVariant> GetAllOrderProductVariants(int? orderId,
-            int? customerId, DateTime? startTime, DateTime? endTime,
+            int? customerId, DateTime? createdFromUtc, DateTime? createdToUtc, 
             OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss,
             bool loadDownloableProductsOnly)
         {
@@ -350,8 +350,8 @@ namespace Nop.Services.Orders
                         join pv in _pvRepository.Table on opv.ProductVariantId equals pv.Id
                         where (!orderId.HasValue || orderId.Value == 0 || orderId == o.Id) &&
                         (!customerId.HasValue || customerId.Value == 0 || customerId == o.CustomerId) &&
-                        (!startTime.HasValue || startTime.Value <= o.CreatedOnUtc) &&
-                        (!endTime.HasValue || endTime.Value >= o.CreatedOnUtc) &&
+                        (!createdFromUtc.HasValue || createdFromUtc.Value <= o.CreatedOnUtc) &&
+                        (!createdToUtc.HasValue || createdToUtc.Value >= o.CreatedOnUtc) &&
                         (!orderStatusId.HasValue || orderStatusId == o.OrderStatusId) &&
                         (!paymentStatusId.HasValue || paymentStatusId.Value == o.PaymentStatusId) &&
                         (!shippingStatusId.HasValue || shippingStatusId.Value == o.ShippingStatusId) &&

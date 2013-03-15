@@ -61,19 +61,19 @@ namespace Nop.Services.Shipping
         /// <summary>
         /// Search shipments
         /// </summary>
-        /// <param name="createdFrom">Created date from; null to load all records</param>
-        /// <param name="createdTo">Created date to; null to load all records</param>
+        /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
+        /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Customer collection</returns>
-        public virtual IPagedList<Shipment> GetAllShipments(DateTime? createdFrom, DateTime? createdTo, 
+        public virtual IPagedList<Shipment> GetAllShipments(DateTime? createdFromUtc, DateTime? createdToUtc, 
             int pageIndex, int pageSize)
         {
             var query = _shipmentRepository.Table;
-            if (createdFrom.HasValue)
-                query = query.Where(s => createdFrom.Value <= s.CreatedOnUtc);
-            if (createdTo.HasValue)
-                query = query.Where(s => createdTo.Value >= s.CreatedOnUtc);
+            if (createdFromUtc.HasValue)
+                query = query.Where(s => createdFromUtc.Value <= s.CreatedOnUtc);
+            if (createdToUtc.HasValue)
+                query = query.Where(s => createdToUtc.Value >= s.CreatedOnUtc);
             query = query.Where(s => s.Order != null && !s.Order.Deleted);
             query = query.OrderByDescending(s => s.CreatedOnUtc);
 

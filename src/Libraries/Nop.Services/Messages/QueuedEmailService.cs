@@ -114,16 +114,16 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="fromEmail">From Email</param>
         /// <param name="toEmail">To Email</param>
-        /// <param name="startTime">The start time</param>
-        /// <param name="endTime">The end time</param>
+        /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
+        /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
         /// <param name="loadNotSentItemsOnly">A value indicating whether to load only not sent emails</param>
         /// <param name="maxSendTries">Maximum send tries</param>
         /// <param name="loadNewest">A value indicating whether we should sort queued email descending; otherwise, ascending.</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Email item list</returns>
-        public virtual IPagedList<QueuedEmail> SearchEmails(string fromEmail, 
-            string toEmail, DateTime? startTime, DateTime? endTime, 
+        public virtual IPagedList<QueuedEmail> SearchEmails(string fromEmail,
+            string toEmail, DateTime? createdFromUtc, DateTime? createdToUtc, 
             bool loadNotSentItemsOnly, int maxSendTries,
             bool loadNewest, int pageIndex, int pageSize)
         {
@@ -135,10 +135,10 @@ namespace Nop.Services.Messages
                 query = query.Where(qe => qe.From.Contains(fromEmail));
             if (!String.IsNullOrEmpty(toEmail))
                 query = query.Where(qe => qe.To.Contains(toEmail));
-            if (startTime.HasValue)
-                query = query.Where(qe => qe.CreatedOnUtc >= startTime);
-            if (endTime.HasValue)
-                query = query.Where(qe => qe.CreatedOnUtc <= endTime);
+            if (createdFromUtc.HasValue)
+                query = query.Where(qe => qe.CreatedOnUtc >= createdFromUtc);
+            if (createdToUtc.HasValue)
+                query = query.Where(qe => qe.CreatedOnUtc <= createdToUtc);
             if (loadNotSentItemsOnly)
                 query = query.Where(qe => !qe.SentOnUtc.HasValue);
             query = query.Where(qe => qe.SentTries < maxSendTries);

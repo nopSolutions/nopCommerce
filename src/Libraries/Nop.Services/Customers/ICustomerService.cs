@@ -16,8 +16,8 @@ namespace Nop.Services.Customers
         /// <summary>
         /// Gets all customers
         /// </summary>
-        /// <param name="registrationFrom">Customer registration from; null to load all customers</param>
-        /// <param name="registrationTo">Customer registration to; null to load all customers</param>
+        /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
+        /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
         /// <param name="customerRoleIds">A list of customer role identifiers to filter by (at least one match); pass null or empty list in order to load all customers; </param>
         /// <param name="email">Email; null to load all customers</param>
         /// <param name="username">Username; null to load all customers</param>
@@ -33,8 +33,8 @@ namespace Nop.Services.Customers
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Customer collection</returns>
-        IPagedList<Customer> GetAllCustomers(DateTime? registrationFrom,
-           DateTime? registrationTo, int[] customerRoleIds, string email, string username,
+        IPagedList<Customer> GetAllCustomers(DateTime? createdFromUtc,
+            DateTime? createdToUtc, int[] customerRoleIds, string email, string username,
            string firstName, string lastName, int dayOfBirth, int monthOfBirth,
            string company, string phone, string zipPostalCode,
            bool loadOnlyWithShoppingCart, ShoppingCartType? sct, int pageIndex, int pageSize);
@@ -158,12 +158,12 @@ namespace Nop.Services.Customers
         /// <summary>
         /// Delete guest customer records
         /// </summary>
-        /// <param name="registrationFrom">Customer registration from; null to load all customers</param>
-        /// <param name="registrationTo">Customer registration to; null to load all customers</param>
+        /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
+        /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
         /// <param name="onlyWithoutShoppingCart">A value indicating whether to delete customers only without shopping cart</param>
         /// <returns>Number of deleted customers</returns>
-        int DeleteGuestCustomers(DateTime? registrationFrom,
-           DateTime? registrationTo, bool onlyWithoutShoppingCart);
+        int DeleteGuestCustomers(DateTime? createdFromUtc,
+            DateTime? createdToUtc, bool onlyWithoutShoppingCart);
 
         #endregion
 

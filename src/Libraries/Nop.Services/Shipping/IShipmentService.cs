@@ -19,12 +19,12 @@ namespace Nop.Services.Shipping
         /// <summary>
         /// Search shipments
         /// </summary>
-        /// <param name="createdFrom">Created date from; null to load all records</param>
-        /// <param name="createdTo">Created date to; null to load all records</param>
+        /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
+        /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Customer collection</returns>
-        IPagedList<Shipment> GetAllShipments(DateTime? createdFrom, DateTime? createdTo, 
+        IPagedList<Shipment> GetAllShipments(DateTime? createdFromUtc, DateTime? createdToUtc, 
             int pageIndex, int pageSize);
         
         /// <summary>

@@ -50,15 +50,15 @@ namespace Nop.Services.Customers
         /// <summary>
         /// Get best customers
         /// </summary>
-        /// <param name="startTime">Order start time; null to load all</param>
-        /// <param name="endTime">Order end time; null to load all</param>
+        /// <param name="createdFromUtc">Order created date from (UTC); null to load all records</param>
+        /// <param name="createdToUtc">Order created date to (UTC); null to load all records</param>
         /// <param name="os">Order status; null to load all records</param>
         /// <param name="ps">Order payment status; null to load all records</param>
         /// <param name="ss">Order shippment status; null to load all records</param>
         /// <param name="orderBy">1 - order by order total, 2 - order by number of orders</param>
         /// <returns>Report</returns>
-        public virtual IList<BestCustomerReportLine> GetBestCustomersReport(DateTime? startTime,
-            DateTime? endTime, OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss, int orderBy)
+        public virtual IList<BestCustomerReportLine> GetBestCustomersReport(DateTime? createdFromUtc, 
+            DateTime? createdToUtc, OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss, int orderBy)
         {
             int? orderStatusId = null;
             if (os.HasValue)
@@ -73,8 +73,8 @@ namespace Nop.Services.Customers
                 shippingStatusId = (int)ss.Value;
             var query1 = from c in _customerRepository.Table
                          join o in _orderRepository.Table on c.Id equals o.CustomerId
-                         where (!startTime.HasValue || startTime.Value <= o.CreatedOnUtc) &&
-                         (!endTime.HasValue || endTime.Value >= o.CreatedOnUtc) &&
+                         where (!createdFromUtc.HasValue || createdFromUtc.Value <= o.CreatedOnUtc) &&
+                         (!createdToUtc.HasValue || createdToUtc.Value >= o.CreatedOnUtc) &&
                          (!orderStatusId.HasValue || orderStatusId == o.OrderStatusId) &&
                          (!paymentStatusId.HasValue || paymentStatusId == o.PaymentStatusId) &&
                          (!shippingStatusId.HasValue || shippingStatusId == o.ShippingStatusId) &&

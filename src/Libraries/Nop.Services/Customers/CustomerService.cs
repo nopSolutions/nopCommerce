@@ -115,8 +115,8 @@ namespace Nop.Services.Customers
         /// <summary>
         /// Gets all customers
         /// </summary>
-        /// <param name="registrationFrom">Customer registration from; null to load all customers</param>
-        /// <param name="registrationTo">Customer registration to; null to load all customers</param>
+        /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
+        /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
         /// <param name="customerRoleIds">A list of customer role identifiers to filter by (at least one match); pass null or empty list in order to load all customers; </param>
         /// <param name="email">Email; null to load all customers</param>
         /// <param name="username">Username; null to load all customers</param>
@@ -132,17 +132,17 @@ namespace Nop.Services.Customers
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Customer collection</returns>
-        public virtual IPagedList<Customer> GetAllCustomers(DateTime? registrationFrom,
-            DateTime? registrationTo, int[] customerRoleIds, string email, string username,
+        public virtual IPagedList<Customer> GetAllCustomers(DateTime? createdFromUtc,
+            DateTime? createdToUtc, int[] customerRoleIds, string email, string username,
             string firstName, string lastName, int dayOfBirth, int monthOfBirth,
             string company, string phone, string zipPostalCode,
             bool loadOnlyWithShoppingCart, ShoppingCartType? sct, int pageIndex, int pageSize)
         {
             var query = _customerRepository.Table;
-            if (registrationFrom.HasValue)
-                query = query.Where(c => registrationFrom.Value <= c.CreatedOnUtc);
-            if (registrationTo.HasValue)
-                query = query.Where(c => registrationTo.Value >= c.CreatedOnUtc);
+            if (createdFromUtc.HasValue)
+                query = query.Where(c => createdFromUtc.Value <= c.CreatedOnUtc);
+            if (createdToUtc.HasValue)
+                query = query.Where(c => createdToUtc.Value >= c.CreatedOnUtc);
             query = query.Where(c => !c.Deleted);
             if (customerRoleIds != null && customerRoleIds.Length > 0)
                 query = query.Where(c => c.CustomerRoles.Select(cr => cr.Id).Intersect(customerRoleIds).Any());
@@ -587,22 +587,22 @@ namespace Nop.Services.Customers
         /// <summary>
         /// Delete guest customer records
         /// </summary>
-        /// <param name="registrationFrom">Customer registration from; null to load all customers</param>
-        /// <param name="registrationTo">Customer registration to; null to load all customers</param>
+        /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
+        /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
         /// <param name="onlyWithoutShoppingCart">A value indicating whether to delete customers only without shopping cart</param>
         /// <returns>Number of deleted customers</returns>
-        public virtual int DeleteGuestCustomers(DateTime? registrationFrom,
-            DateTime? registrationTo, bool onlyWithoutShoppingCart)
+        public virtual int DeleteGuestCustomers(DateTime? createdFromUtc, 
+            DateTime? createdToUtc, bool onlyWithoutShoppingCart)
         {
             var guestRole = GetCustomerRoleBySystemName(SystemCustomerRoleNames.Guests);
             if (guestRole == null)
                 throw new NopException("'Guests' role could not be loaded");
 
             var query = _customerRepository.Table;
-            if (registrationFrom.HasValue)
-                query = query.Where(c => registrationFrom.Value <= c.CreatedOnUtc);
-            if (registrationTo.HasValue)
-                query = query.Where(c => registrationTo.Value >= c.CreatedOnUtc);
+            if (createdFromUtc.HasValue)
+                query = query.Where(c => createdFromUtc.Value <= c.CreatedOnUtc);
+            if (createdToUtc.HasValue)
+                query = query.Where(c => createdToUtc.Value >= c.CreatedOnUtc);
             query = query.Where(c => c.CustomerRoles.Select(cr => cr.Id).Contains(guestRole.Id));
             if (onlyWithoutShoppingCart)
                 query = query.Where(c => !c.ShoppingCartItems.Any());

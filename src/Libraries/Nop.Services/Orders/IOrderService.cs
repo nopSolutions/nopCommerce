@@ -46,8 +46,8 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="storeId">Store identifier; null to load all orders</param>
         /// <param name="customerId">Customer identifier; null to load all orders</param>
-        /// <param name="startTime">Order start time; null to load all orders</param>
-        /// <param name="endTime">Order end time; null to load all orders</param>
+        /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
+        /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
         /// <param name="os">Order status; null to load all orders</param>
         /// <param name="ps">Order payment status; null to load all orders</param>
         /// <param name="ss">Order shippment status; null to load all orders</param>
@@ -56,8 +56,8 @@ namespace Nop.Services.Orders
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Order collection</returns>
-        IPagedList<Order> SearchOrders(int storeId, int customerId, 
-            DateTime? startTime, DateTime? endTime,
+        IPagedList<Order> SearchOrders(int storeId, int customerId,
+            DateTime? createdFromUtc, DateTime? createdToUtc, 
             OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss, 
             string billingEmail, string orderGuid, int pageIndex, int pageSize);
         
@@ -119,15 +119,15 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="orderId">Order identifier; null to load all records</param>
         /// <param name="customerId">Customer identifier; null to load all records</param>
-        /// <param name="startTime">Order start time; null to load all records</param>
-        /// <param name="endTime">Order end time; null to load all records</param>
+        /// <param name="createdFromUtc">Order created date from (UTC); null to load all records</param>
+        /// <param name="createdToUtc">Order created date to (UTC); null to load all records</param>
         /// <param name="os">Order status; null to load all records</param>
         /// <param name="ps">Order payment status; null to load all records</param>
         /// <param name="ss">Order shippment status; null to load all records</param>
         /// <param name="loadDownloableProductsOnly">Value indicating whether to load downloadable products only</param>
         /// <returns>Order collection</returns>
         IList<OrderProductVariant> GetAllOrderProductVariants(int? orderId,
-           int? customerId, DateTime? startTime, DateTime? endTime,
+           int? customerId, DateTime? createdFromUtc, DateTime? createdToUtc, 
            OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss,
            bool loadDownloableProductsOnly = false);
 

@@ -41,8 +41,8 @@ namespace Nop.Services.Orders
         /// Get best sellers report
         /// </summary>
         /// <param name="storeId">Store identifier</param>
-        /// <param name="startTime">Order start time; null to load all</param>
-        /// <param name="endTime">Order end time; null to load all</param>
+        /// <param name="createdFromUtc">Order created date from (UTC); null to load all records</param>
+        /// <param name="createdToUtc">Order created date to (UTC); null to load all records</param>
         /// <param name="os">Order status; null to load all records</param>
         /// <param name="ps">Order payment status; null to load all records</param>
         /// <param name="ss">Shipping status; null to load all records</param>
@@ -52,8 +52,8 @@ namespace Nop.Services.Orders
         /// <param name="groupBy">1 - group by product variants, 2 - group by products</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Result</returns>
-        IList<BestsellersReportLine> BestSellersReport(int storeId, 
-            DateTime? startTime, DateTime? endTime, 
+        IList<BestsellersReportLine> BestSellersReport(int storeId,
+            DateTime? createdFromUtc, DateTime? createdToUtc,  
             OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss,
             int billingCountryId = 0, int recordsToReturn = 5, 
             int orderBy = 1, int groupBy = 1, bool showHidden = false);
@@ -72,14 +72,14 @@ namespace Nop.Services.Orders
         /// <summary>
         /// Gets a list of product variants that were never sold
         /// </summary>
-        /// <param name="startTime">Order start time; null to load all</param>
-        /// <param name="endTime">Order end time; null to load all</param>
+        /// <param name="createdFromUtc">Order created date from (UTC); null to load all records</param>
+        /// <param name="createdToUtc">Order created date to (UTC); null to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product variants</returns>
-        IPagedList<ProductVariant> ProductsNeverSold(DateTime? startTime,
-            DateTime? endTime, int pageIndex, int pageSize, bool showHidden = false);
+        IPagedList<ProductVariant> ProductsNeverSold(DateTime? createdFromUtc, 
+            DateTime? createdToUtc, int pageIndex, int pageSize, bool showHidden = false);
 
         /// <summary>
         /// Get profit report
