@@ -628,7 +628,7 @@
                         <Value>Categories</Value>
                         <Children>
                             <LocaleResource Name="Acl">
-                              <Value>ACL</Value>
+                              <Value>Access control list</Value>
                             </LocaleResource>
                             <LocaleResource Name="AddNew">
                                 <Value>Add a new category</Value>
@@ -897,7 +897,7 @@
                         <Value>Manufacturers</Value>
                         <Children>
                             <LocaleResource Name="Acl">
-                              <Value>ACL</Value>
+                              <Value>Access control list</Value>
                             </LocaleResource>
                             <LocaleResource Name="Info">
                                 <Value>Manufacturer Info</Value>
@@ -1231,7 +1231,7 @@
                         <Value>Products</Value>
                         <Children>
                             <LocaleResource Name="Acl">
-                              <Value>ACL</Value>
+                              <Value>Access control list</Value>
                             </LocaleResource>
                             <LocaleResource Name="AddNew">
                                 <Value>Add a new product</Value>
