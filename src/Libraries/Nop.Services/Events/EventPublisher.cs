@@ -5,15 +5,27 @@ using Nop.Services.Logging;
 
 namespace Nop.Services.Events
 {
+    /// <summary>
+    /// Evnt publisher
+    /// </summary>
     public class EventPublisher : IEventPublisher
     {
         private readonly ISubscriptionService _subscriptionService;
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="subscriptionService"></param>
         public EventPublisher(ISubscriptionService subscriptionService)
         {
             _subscriptionService = subscriptionService;
         }
 
+        /// <summary>
+        /// Publish event
+        /// </summary>
+        /// <typeparam name="T">Type</typeparam>
+        /// <param name="eventMessage">Event message</param>
         public void Publish<T>(T eventMessage)
         {
             var subscriptions = _subscriptionService.GetSubscriptions<T>();
