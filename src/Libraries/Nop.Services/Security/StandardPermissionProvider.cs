@@ -12,6 +12,7 @@ namespace Nop.Services.Security
         public static readonly PermissionRecord ManageCatalog = new PermissionRecord { Name = "Admin area. Manage Catalog", SystemName = "ManageCatalog", Category = "Catalog" };
         public static readonly PermissionRecord ManageCustomers = new PermissionRecord { Name = "Admin area. Manage Customers", SystemName = "ManageCustomers", Category = "Customers" };
         public static readonly PermissionRecord ManageCustomerRoles = new PermissionRecord { Name = "Admin area. Manage Customer Roles", SystemName = "ManageCustomerRoles", Category = "Customers" };
+        public static readonly PermissionRecord ManageVendors = new PermissionRecord { Name = "Admin area. Manage Vendors", SystemName = "ManageVendors", Category = "Customers" };
         public static readonly PermissionRecord ManageOrders = new PermissionRecord { Name = "Admin area. Manage Orders", SystemName = "ManageOrders", Category = "Orders" };
         public static readonly PermissionRecord ManageGiftCards = new PermissionRecord { Name = "Admin area. Manage Gift Cards", SystemName = "ManageGiftCards", Category = "Orders" };
         public static readonly PermissionRecord ManageReturnRequests = new PermissionRecord { Name = "Admin area. Manage Return Requests", SystemName = "ManageReturnRequests", Category = "Orders" };
@@ -64,6 +65,7 @@ namespace Nop.Services.Security
                 ManageCatalog,
                 ManageCustomers,
                 ManageCustomerRoles,
+                ManageVendors,
                 ManageOrders,
                 ManageGiftCards,
                 ManageReturnRequests,
@@ -119,6 +121,7 @@ namespace Nop.Services.Security
                         ManageCatalog,
                         ManageCustomers,
                         ManageCustomerRoles,
+                        ManageVendors,
                         ManageOrders,
                         ManageGiftCards,
                         ManageReturnRequests,

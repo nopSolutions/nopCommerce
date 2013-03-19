@@ -548,6 +548,63 @@ set @resources='
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.AvailableStores.Hint">
 	<Value>Select stores for which the blog post will be shown.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Vendors">
+	<Value>Vendors</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.AddNew">
+	<Value>Add a new vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.BackToList">
+	<Value>back to vendor list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.EditVendorDetails">
+	<Value>Edit vendor details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Added">
+	<Value>The new vendor has been added successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Deleted">
+	<Value>The vendor has been deleted successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Updated">
+	<Value>The vendor has been updated successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.Name">
+	<Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.Name.Hint">
+	<Value>The name of the vendor.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.Name.Required">
+	<Value>Please provide a name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.Email">
+	<Value>Email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.Email.Hint">
+	<Value>Enter email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.Email.Required">
+	<Value>Email is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.Description">
+	<Value>Description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.Description.Hint">
+	<Value>The description of the vendor.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.AdminComment">
+	<Value>Admin comment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.AdminComment.Hint">
+	<Value>Admin comment. For internal use.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.Active">
+	<Value>Active</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.Active.Hint">
+	<Value>A value indicating whether the vendor is active.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -2717,4 +2774,49 @@ WHERE [LimitedToStores] IS NULL
 GO
 
 ALTER TABLE [BlogPost] ALTER COLUMN [LimitedToStores] bit NOT NULL
+GO
+
+
+
+--vendor support
+IF NOT EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[Vendor]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+BEGIN
+	CREATE TABLE [dbo].[Vendor](
+		[Id] [int] IDENTITY(1,1) NOT NULL,
+		[Name] nvarchar(400) NOT NULL,
+		[Email] nvarchar(400) NOT NULL,
+		[Description] nvarchar(MAX) NULL,
+		[AdminComment] nvarchar(MAX) NULL,
+		[Active] [bit] NOT NULL,
+		[Deleted] [bit] NOT NULL,
+	PRIMARY KEY CLUSTERED 
+	(
+		[Id] ASC
+	)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+	) ON [PRIMARY]
+END
+GO
+
+--new permission
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[PermissionRecord]
+		WHERE [SystemName] = N'ManageVendors')
+BEGIN
+	INSERT [dbo].[PermissionRecord] ([Name], [SystemName], [Category])
+	VALUES (N'Admin area. Manage Vendors', N'ManageVendors', N'Customers')
+
+	DECLARE @PermissionRecordId INT 
+	SET @PermissionRecordId = @@IDENTITY
+
+
+	--add it to admin role be default
+	DECLARE @AdminCustomerRoleId int
+	SELECT @AdminCustomerRoleId = Id
+	FROM [CustomerRole]
+	WHERE IsSystemRole=1 and [SystemName] = N'Administrators'
+
+	INSERT [dbo].[PermissionRecord_Role_Mapping] ([PermissionRecord_Id], [CustomerRole_Id])
+	VALUES (@PermissionRecordId, @AdminCustomerRoleId)
+END
 GO

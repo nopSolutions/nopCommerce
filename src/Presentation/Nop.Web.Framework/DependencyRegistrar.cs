@@ -48,6 +48,7 @@ using Nop.Services.Stores;
 using Nop.Services.Tasks;
 using Nop.Services.Tax;
 using Nop.Services.Topics;
+using Nop.Services.Vendors;
 using Nop.Web.Framework.EmbeddedViews;
 using Nop.Web.Framework.Mvc.Routes;
 using Nop.Web.Framework.Themes;
@@ -147,6 +148,7 @@ namespace Nop.Web.Framework
             builder.RegisterType<ManufacturerTemplateService>().As<IManufacturerTemplateService>().InstancePerHttpRequest();
 
             builder.RegisterType<AffiliateService>().As<IAffiliateService>().InstancePerHttpRequest();
+            builder.RegisterType<VendorService>().As<IVendorService>().InstancePerHttpRequest();
             builder.RegisterType<AddressService>().As<IAddressService>().InstancePerHttpRequest();
             builder.RegisterType<GenericAttributeService>().As<IGenericAttributeService>().InstancePerHttpRequest();
             builder.RegisterType<FulltextService>().As<IFulltextService>().InstancePerHttpRequest();

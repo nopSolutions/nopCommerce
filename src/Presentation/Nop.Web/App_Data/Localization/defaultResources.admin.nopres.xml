@@ -10769,6 +10769,79 @@
                     </LocaleResource>
                 </Children>
             </LocaleResource>
+            <LocaleResource Name="Vendors">
+              <Value>Vendors</Value>
+              <Children>
+                <LocaleResource Name="AddNew">
+                  <Value>Add a new vendor</Value>
+                </LocaleResource>
+                <LocaleResource Name="BackToList">
+                  <Value>back to vendor list</Value>
+                </LocaleResource>
+                <LocaleResource Name="EditVendorDetails">
+                  <Value>Edit vendor details</Value>
+                </LocaleResource>
+                <LocaleResource Name="Fields">
+                  <Children>
+                    <LocaleResource Name="Name">
+                      <Value>Name</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>The name of the vendor.</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="Required">
+                          <Value>Please provide a name.</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="Email">
+                      <Value>Email</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>Enter email</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="Required">
+                          <Value>Email is required.</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="Description">
+                      <Value>Description</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>The description of the vendor.</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="AdminComment">
+                      <Value>Admin comment</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>Admin comment. For internal use.</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="Active">
+                      <Value>Active</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>A value indicating whether the vendor is active.</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                  </Children>
+                </LocaleResource>
+                <LocaleResource Name="Added">
+                  <Value>The new vendor has been added successfully.</Value>
+                </LocaleResource>
+                <LocaleResource Name="Deleted">
+                  <Value>The vendor has been deleted successfully.</Value>
+                </LocaleResource>
+                <LocaleResource Name="Updated">
+                  <Value>The vendor has been updated successfully.</Value>
+                </LocaleResource>
+              </Children>
+            </LocaleResource>
         </Children>
     </LocaleResource>
 </Language>
