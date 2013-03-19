@@ -136,7 +136,8 @@ namespace Nop.Web
             //we do not register AutofacRequestLifetimeHttpModule as IHttpModule 
             //because it disposes resources before this Application_EndRequest method is called
             //and in this case the code above will throw an exception
-            AutofacRequestLifetimeHttpModule.ContextEndRequest(sender, e);
+            //UPDATE: we cannot do it. For more info see the following forum topic - http://www.nopcommerce.com/boards/t/22456/30-changeset-3db3868edcf2-loaderlock-was-detected.aspx
+            //AutofacRequestLifetimeHttpModule.ContextEndRequest(sender, e);
         }
 
         protected void Application_AuthenticateRequest(object sender, EventArgs e)
