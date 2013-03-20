@@ -4,6 +4,7 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Stores;
+using Nop.Core.Domain.Vendors;
 
 namespace Nop.Core.Domain.Catalog
 {
@@ -44,6 +45,11 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value of used product template identifier
         /// </summary>
         public int ProductTemplateId { get; set; }
+
+        /// <summary>
+        /// Gets or sets a vendor identifier
+        /// </summary>
+        public int? VendorId { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to show the product on home page
@@ -123,11 +129,17 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the product variants
         /// </summary>
+        public virtual Vendor Vendor { get; set; }
+
+        /// <summary>
+        /// Gets or sets the product variants
+        /// </summary>
         public virtual ICollection<ProductVariant> ProductVariants
         {
             get { return _productVariants ?? (_productVariants = new List<ProductVariant>()); }
             protected set { _productVariants = value; }
         }
+
         /// <summary>
         /// Gets or sets the collection of ProductCategory
         /// </summary>

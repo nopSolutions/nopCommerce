@@ -16,6 +16,10 @@ namespace Nop.Data.Mapping.Catalog
             this.HasMany(p => p.ProductTags)
                 .WithMany()
                 .Map(m => m.ToTable("Product_ProductTag_Mapping"));
+
+            this.HasOptional(p => p.Vendor)
+                .WithMany()
+                .HasForeignKey(p => p.VendorId).WillCascadeOnDelete(false);
         }
     }
 }

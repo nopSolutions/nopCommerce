@@ -107,6 +107,15 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.NopLabelFor(model => model.VendorId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.VendorId, Model.AvailableVendors)
+                @Html.ValidationMessageFor(model => model.VendorId)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.NopLabelFor(model => model.ProductTemplateId):
             </td>
             <td class="adminData">

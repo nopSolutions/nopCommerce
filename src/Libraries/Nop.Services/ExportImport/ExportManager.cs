@@ -223,6 +223,7 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("ShortDescription", null, product.ShortDescription);
                 xmlWriter.WriteElementString("FullDescription", null, product.FullDescription);
                 xmlWriter.WriteElementString("AdminComment", null, product.AdminComment);
+                xmlWriter.WriteElementString("VendorId", null, product.VendorId.ToString());
                 xmlWriter.WriteElementString("ProductTemplateId", null, product.ProductTemplateId.ToString());
                 xmlWriter.WriteElementString("ShowOnHomePage", null, product.ShowOnHomePage.ToString());
                 xmlWriter.WriteElementString("MetaKeywords", null, product.MetaKeywords);
@@ -461,6 +462,7 @@ namespace Nop.Services.ExportImport
                     "Name",
                     "ShortDescription",
                     "FullDescription",
+                    "VendorId",
                     "ProductTemplateId",
                     "ShowOnHomePage",
                     "MetaKeywords",
@@ -555,6 +557,9 @@ namespace Nop.Services.ExportImport
                         col++;
 
                         worksheet.Cells[row, col].Value = p.FullDescription;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = p.VendorId;
                         col++;
 
                         worksheet.Cells[row, col].Value = p.ProductTemplateId;

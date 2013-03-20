@@ -1356,6 +1356,17 @@
                                             </LocaleResource>
                                         </Children>
                                     </LocaleResource>
+                                    <LocaleResource Name="Vendor">
+                                          <Value>Vendor</Value>
+                                          <Children>
+                                              <LocaleResource Name="Hint">
+                                                  <Value>Choose a vendor of this product. This can be useful if you're using multi-vendor functionality.</Value>
+                                              </LocaleResource>
+                                              <LocaleResource Name="None">
+                                                  <Value>No vendor</Value>
+                                              </LocaleResource>
+                                          </Children>
+                                      </LocaleResource>
                                     <LocaleResource Name="ProductTemplate">
                                         <Value>Product template</Value>
                                         <Children>
@@ -1510,6 +1521,14 @@
                                         </LocaleResource>
                                       </Children>
                                     </LocaleResource>
+                                  <LocaleResource Name="SearchVendor">
+                                    <Value>Vendor</Value>
+                                    <Children>
+                                      <LocaleResource Name="Hint">
+                                        <Value>Search by a specific vendor.</Value>
+                                      </LocaleResource>
+                                    </Children>
+                                  </LocaleResource>
                                 </Children>
                             </LocaleResource>
                             <LocaleResource Name="Manage">

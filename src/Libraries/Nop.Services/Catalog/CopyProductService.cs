@@ -380,6 +380,7 @@ namespace Nop.Services.Catalog
                     Name = newName,
                     ShortDescription = product.ShortDescription,
                     FullDescription = product.FullDescription,
+                    VendorId = product.VendorId,
                     ProductTemplateId = product.ProductTemplateId,
                     AdminComment = product.AdminComment,
                     ShowOnHomePage = product.ShowOnHomePage,

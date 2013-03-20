@@ -2,6 +2,7 @@
 using System.Linq;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
+using Nop.Core.Domain.Vendors;
 using Nop.Tests;
 using NUnit.Framework;
 
@@ -252,6 +253,28 @@ namespace Nop.Data.Tests.Catalog
             (fromDb.ProductTags.Count == 1).ShouldBeTrue();
             fromDb.ProductTags.First().Name.ShouldEqual("Tag name 1");
         }
+
+        [Test]
+        public void Can_save_and_load_product_with_vendor()
+        {
+            var product = new Product
+            {
+                Name = "Name 1",
+                Vendor = new Vendor()
+                {
+                    Name = "Name 1",
+                    Email = "Email 1",
+                },
+                CreatedOnUtc = new DateTime(2010, 01, 01),
+                UpdatedOnUtc = new DateTime(2010, 01, 02)
+            };
+            var fromDb = SaveAndLoadEntity(product);
+            fromDb.ShouldNotBeNull();
+
+            fromDb.Vendor.ShouldNotBeNull();
+            fromDb.Vendor.Name.ShouldEqual("Name 1");
+        }
+
 
     }
 }

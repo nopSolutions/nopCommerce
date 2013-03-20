@@ -22,6 +22,7 @@ namespace Nop.Admin.Models.Catalog
             ProductPictureModels = new List<ProductPictureModel>();
             CopyProductModel = new CopyProductModel();
             AvailableProductTemplates = new List<SelectListItem>();
+            AvailableVendors = new List<SelectListItem>();
         }
 
         //picture thumbnail
@@ -45,9 +46,12 @@ namespace Nop.Admin.Models.Catalog
         public string AdminComment { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.ProductTemplate")]
-        [AllowHtml]
         public int ProductTemplateId { get; set; }
         public IList<SelectListItem> AvailableProductTemplates { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.Vendor")]
+        public int? VendorId { get; set; }
+        public IList<SelectListItem> AvailableVendors { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.ShowOnHomePage")]
         public bool ShowOnHomePage { get; set; }

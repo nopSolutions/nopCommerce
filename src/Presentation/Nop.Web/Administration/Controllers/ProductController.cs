@@ -20,6 +20,7 @@ using Nop.Services.Media;
 using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
+using Nop.Services.Vendors;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
@@ -58,6 +59,7 @@ namespace Nop.Admin.Controllers
         private readonly IAclService _aclService;
         private readonly IStoreService _storeService;
         private readonly IStoreMappingService _storeMappingService;
+        private readonly IVendorService _vendorService;
         private readonly ICurrencyService _currencyService;
         private readonly CurrencySettings _currencySettings;
         private readonly IMeasureService _measureService;
@@ -82,6 +84,7 @@ namespace Nop.Admin.Controllers
             ICustomerActivityService customerActivityService,
             IPermissionService permissionService, IAclService aclService,
             IStoreService storeService, IStoreMappingService storeMappingService,
+             IVendorService vendorService,
             ICurrencyService currencyService, CurrencySettings currencySettings,
             IMeasureService measureService, MeasureSettings measureSettings,
             PdfSettings pdfSettings, AdminAreaSettings adminAreaSettings)
@@ -109,6 +112,7 @@ namespace Nop.Admin.Controllers
             this._aclService = aclService;
             this._storeService = storeService;
             this._storeMappingService = storeMappingService;
+            this._vendorService = vendorService;
             this._currencyService = currencyService;
             this._currencySettings = currencySettings;
             this._measureService = measureService;
@@ -171,7 +175,29 @@ namespace Nop.Admin.Controllers
             foreach (var productTag in productTags)
                 _productTagService.UpdateProductTagTotals(productTag);
         }
-        
+
+        [NonAction]
+        private void PrepareVendorsModel(ProductModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            model.AvailableVendors.Add(new SelectListItem()
+            {
+                Text = _localizationService.GetResource("Admin.Catalog.Products.Fields.Vendor.None"), 
+                Value = "0"
+            });
+            var vendors = _vendorService.GetAllVendors(0, int.MaxValue, true);
+            foreach (var vendor in vendors)
+            {
+                model.AvailableVendors.Add(new SelectListItem()
+                {
+                    Text = vendor.Name,
+                    Value = vendor.Id.ToString()
+                });
+            }
+        }
+
         [NonAction]
         private void PrepareTemplatesModel(ProductModel model)
         {
@@ -583,6 +609,11 @@ namespace Nop.Admin.Controllers
             foreach (var s in _storeService.GetAllStores())
                 model.AvailableStores.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString() });
 
+            //vendors
+            model.AvailableVendors.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var v in _vendorService.GetAllVendors(0, int.MaxValue, true))
+                model.AvailableVendors.Add(new SelectListItem() { Text = v.Name, Value = v.Id.ToString() });
+
             return View(model);
         }
 
@@ -597,6 +628,7 @@ namespace Nop.Admin.Controllers
                 categoryIds: new List<int>() { model.SearchCategoryId },
                 manufacturerId: model.SearchManufacturerId,
                 storeId: model.SearchStoreId,
+                vendorId: model.SearchVendorId,
                 keywords: model.SearchProductName,
                 pageIndex: command.Page - 1,
                 pageSize: command.PageSize,
@@ -638,6 +670,7 @@ namespace Nop.Admin.Controllers
 
             //product
             AddLocales(_languageService, model.Locales);
+            PrepareVendorsModel(model);
             PrepareTemplatesModel(model);
             PrepareAddSpecificationAttributeModel(model);
             PrepareAddProductPictureModel(model);
@@ -667,6 +700,9 @@ namespace Nop.Admin.Controllers
                 var product = model.ToEntity();
                 product.CreatedOnUtc = DateTime.UtcNow;
                 product.UpdatedOnUtc = DateTime.UtcNow;
+                //some validation
+                if (product.VendorId == 0)
+                    product.VendorId = null;
                 _productService.InsertProduct(product);
                 //search engine name
                 model.SeName = product.ValidateSeName(model.SeName, product.Name, true);
@@ -701,6 +737,7 @@ namespace Nop.Admin.Controllers
             //If we got this far, something failed, redisplay form
 
             //product
+            PrepareVendorsModel(model);
             PrepareTemplatesModel(model);
             PrepareAddSpecificationAttributeModel(model);
             PrepareAddProductPictureModel(model);
@@ -739,6 +776,7 @@ namespace Nop.Admin.Controllers
             PrepareTags(model, product);
             PrepareCopyProductModel(model, product);
             PrepareVariantsModel(model, product);
+            PrepareVendorsModel(model);
             PrepareTemplatesModel(model);
             PrepareAddSpecificationAttributeModel(model);
             PrepareAddProductPictureModel(model);
@@ -765,6 +803,9 @@ namespace Nop.Admin.Controllers
                 //product
                 product = model.ToEntity(product);
                 product.UpdatedOnUtc = DateTime.UtcNow;
+                //some validation
+                if (product.VendorId == 0)
+                    product.VendorId = null;
                 _productService.UpdateProduct(product);
                 //search engine name
                 model.SeName = product.ValidateSeName(model.SeName, product.Name, true);
@@ -791,6 +832,7 @@ namespace Nop.Admin.Controllers
             PrepareTags(model, product);
             PrepareCopyProductModel(model, product);
             PrepareVariantsModel(model, product);
+            PrepareVendorsModel(model);
             PrepareTemplatesModel(model);
             PrepareAddSpecificationAttributeModel(model);
             PrepareAddProductPictureModel(model);
