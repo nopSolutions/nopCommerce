@@ -17,16 +17,12 @@ namespace Nop.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
         [AllowHtml]
         public string SearchProductName { get; set; }
-
         [NopResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
         public int SearchCategoryId { get; set; }
-
         [NopResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
         public int SearchManufacturerId { get; set; }
-
         [NopResourceDisplayName("Admin.Catalog.Products.List.SearchStore")]
         public int SearchStoreId { get; set; }
-
         [NopResourceDisplayName("Admin.Catalog.Products.List.SearchVendor")]
         public int SearchVendorId { get; set; }
 

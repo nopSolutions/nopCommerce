@@ -1227,6 +1227,16 @@ namespace Nop.Admin.Controllers
             foreach (var m in _manufacturerService.GetAllManufacturers(true))
                 model.AvailableManufacturers.Add(new SelectListItem() { Text = m.Name, Value = m.Id.ToString() });
 
+            //stores
+            model.AvailableStores.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var s in _storeService.GetAllStores())
+                model.AvailableStores.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString() });
+
+            //vendors
+            model.AvailableVendors.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var v in _vendorService.GetAllVendors(0, int.MaxValue, true))
+                model.AvailableVendors.Add(new SelectListItem() { Text = v.Name, Value = v.Id.ToString() });
+
             return View(model);
         }
 
@@ -1240,6 +1250,8 @@ namespace Nop.Admin.Controllers
             var products = _productService.SearchProducts(
                 categoryIds: new List<int>() { model.SearchCategoryId },
                 manufacturerId: model.SearchManufacturerId,
+                storeId: model.SearchStoreId,
+                vendorId: model.SearchVendorId,
                 keywords: model.SearchProductName,
                 pageIndex: command.Page - 1,
                 pageSize: command.PageSize,
@@ -1367,6 +1379,16 @@ namespace Nop.Admin.Controllers
             foreach (var m in _manufacturerService.GetAllManufacturers(true))
                 model.AvailableManufacturers.Add(new SelectListItem() { Text = m.Name, Value = m.Id.ToString() });
 
+            //stores
+            model.AvailableStores.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var s in _storeService.GetAllStores())
+                model.AvailableStores.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString() });
+
+            //vendors
+            model.AvailableVendors.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var v in _vendorService.GetAllVendors(0, int.MaxValue, true))
+                model.AvailableVendors.Add(new SelectListItem() { Text = v.Name, Value = v.Id.ToString() });
+
             return View(model);
         }
 
@@ -1380,6 +1402,8 @@ namespace Nop.Admin.Controllers
             var products = _productService.SearchProducts(
                 categoryIds: new List<int>() { model.SearchCategoryId },
                 manufacturerId: model.SearchManufacturerId,
+                storeId: model.SearchStoreId,
+                vendorId: model.SearchVendorId,
                 keywords: model.SearchProductName,
                 pageIndex: command.Page - 1,
                 pageSize: command.PageSize,

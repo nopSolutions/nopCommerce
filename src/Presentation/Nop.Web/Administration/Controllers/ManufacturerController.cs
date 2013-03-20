@@ -16,6 +16,7 @@ using Nop.Services.Media;
 using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Stores;
+using Nop.Services.Vendors;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
 using Telerik.Web.Mvc;
@@ -41,6 +42,7 @@ namespace Nop.Admin.Controllers
         private readonly ILocalizedEntityService _localizedEntityService;
         private readonly IExportManager _exportManager;
         private readonly ICustomerActivityService _customerActivityService;
+        private readonly IVendorService _vendorService;
         private readonly IAclService _aclService; 
         private readonly IPermissionService _permissionService;
         private readonly AdminAreaSettings _adminAreaSettings;
@@ -57,8 +59,8 @@ namespace Nop.Admin.Controllers
             IUrlRecordService urlRecordService, IPictureService pictureService,
             ILanguageService languageService, ILocalizationService localizationService,
             ILocalizedEntityService localizedEntityService, IExportManager exportManager,
-            ICustomerActivityService customerActivityService, IAclService aclService, 
-            IPermissionService permissionService,
+            ICustomerActivityService customerActivityService, IVendorService vendorService,
+            IAclService aclService, IPermissionService permissionService,
             AdminAreaSettings adminAreaSettings, CatalogSettings catalogSettings)
         {
             this._categoryService = categoryService;
@@ -75,6 +77,7 @@ namespace Nop.Admin.Controllers
             this._localizedEntityService = localizedEntityService;
             this._exportManager = exportManager;
             this._customerActivityService = customerActivityService;
+            this._vendorService = vendorService;
             this._aclService = aclService;
             this._permissionService = permissionService;
             this._adminAreaSettings = adminAreaSettings;
@@ -575,6 +578,16 @@ namespace Nop.Admin.Controllers
             foreach (var m in _manufacturerService.GetAllManufacturers(true))
                 model.AvailableManufacturers.Add(new SelectListItem() { Text = m.Name, Value = m.Id.ToString() });
 
+            //stores
+            model.AvailableStores.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var s in _storeService.GetAllStores())
+                model.AvailableStores.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString() });
+
+            //vendors
+            model.AvailableVendors.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var v in _vendorService.GetAllVendors(0, int.MaxValue, true))
+                model.AvailableVendors.Add(new SelectListItem() { Text = v.Name, Value = v.Id.ToString() });
+
             return View(model);
         }
 
@@ -588,6 +601,8 @@ namespace Nop.Admin.Controllers
             var products = _productService.SearchProducts(
                 categoryIds: new List<int>() { model.SearchCategoryId },
                 manufacturerId: model.SearchManufacturerId,
+                storeId: model.SearchStoreId,
+                vendorId: model.SearchVendorId,
                 keywords: model.SearchProductName,
                 pageIndex: command.Page - 1,
                 pageSize: command.PageSize,

@@ -54,6 +54,22 @@
             </td>
         </tr>
         <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SearchStoreId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownList("SearchStoreId", Model.AvailableStores)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SearchVendorId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownList("SearchVendorId", Model.AvailableVendors)
+            </td>
+        </tr>
+        <tr>
             <td colspan="2">
                 <input type="button" id="search-products" class="t-button" value="@T("Admin.Common.Search")" />
             </td>
@@ -119,7 +135,9 @@
             var searchModel = {
                 SearchProductName: $('#@Html.FieldIdFor(model => model.SearchProductName)').val(),
                 SearchCategoryId: $('#SearchCategoryId').val(),
-                SearchManufacturerId: $('#SearchManufacturerId').val()
+                SearchManufacturerId: $('#SearchManufacturerId').val(),
+                SearchStoreId: $('#SearchStoreId').val(),
+                SearchVendorId: $('#SearchVendorId').val()
             };
             e.data = searchModel;
         }

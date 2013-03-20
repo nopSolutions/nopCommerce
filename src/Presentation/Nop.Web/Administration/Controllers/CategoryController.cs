@@ -18,6 +18,7 @@ using Nop.Services.Media;
 using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Stores;
+using Nop.Services.Vendors;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
 using Telerik.Web.Mvc;
@@ -47,6 +48,7 @@ namespace Nop.Admin.Controllers
         private readonly IStoreMappingService _storeMappingService;
         private readonly IExportManager _exportManager;
         private readonly ICustomerActivityService _customerActivityService;
+        private readonly IVendorService _vendorService;
         private readonly AdminAreaSettings _adminAreaSettings;
         private readonly CatalogSettings _catalogSettings;
 
@@ -61,7 +63,7 @@ namespace Nop.Admin.Controllers
             ILocalizationService localizationService, ILocalizedEntityService localizedEntityService,
             IDiscountService discountService, IPermissionService permissionService,
             IAclService aclService, IStoreService storeService, IStoreMappingService storeMappingService,
-            IExportManager exportManager,
+            IExportManager exportManager, IVendorService vendorService, 
             ICustomerActivityService customerActivityService, AdminAreaSettings adminAreaSettings,
             CatalogSettings catalogSettings)
         {
@@ -77,6 +79,7 @@ namespace Nop.Admin.Controllers
             this._localizedEntityService = localizedEntityService;
             this._discountService = discountService;
             this._permissionService = permissionService;
+            this._vendorService = vendorService;
             this._aclService = aclService;
             this._storeService = storeService;
             this._storeMappingService = storeMappingService;
@@ -779,6 +782,16 @@ namespace Nop.Admin.Controllers
             foreach (var m in _manufacturerService.GetAllManufacturers(true))
                 model.AvailableManufacturers.Add(new SelectListItem() { Text = m.Name, Value = m.Id.ToString() });
 
+            //stores
+            model.AvailableStores.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var s in _storeService.GetAllStores())
+                model.AvailableStores.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString() });
+
+            //vendors
+            model.AvailableVendors.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var v in _vendorService.GetAllVendors(0, int.MaxValue, true))
+                model.AvailableVendors.Add(new SelectListItem() { Text = v.Name, Value = v.Id.ToString() });
+
             return View(model);
         }
 
@@ -792,6 +805,8 @@ namespace Nop.Admin.Controllers
             var products = _productService.SearchProducts(
                 categoryIds: new List<int>() { model.SearchCategoryId },
                 manufacturerId: model.SearchManufacturerId,
+                storeId: model.SearchStoreId,
+                vendorId: model.SearchVendorId,
                 keywords: model.SearchProductName,
                 pageIndex: command.Page - 1,
                 pageSize: command.PageSize,
