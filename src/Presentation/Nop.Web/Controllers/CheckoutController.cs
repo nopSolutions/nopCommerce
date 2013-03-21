@@ -352,7 +352,7 @@ namespace Nop.Web.Controllers
             if (_orderSettings.MinimumOrderPlacementInterval == 0)
                 return true;
 
-            var lastOrder = _orderService.SearchOrders(_storeContext.CurrentStore.Id, _workContext.CurrentCustomer.Id,
+            var lastOrder = _orderService.SearchOrders(_storeContext.CurrentStore.Id, 0, _workContext.CurrentCustomer.Id,
                 null, null, null, null, null, null, null, 0, 1)
                 .FirstOrDefault();
             if (lastOrder == null)
@@ -959,7 +959,7 @@ namespace Nop.Web.Controllers
             }
             if (order == null)
             {
-                order = _orderService.SearchOrders(_storeContext.CurrentStore.Id, _workContext.CurrentCustomer.Id,
+                order = _orderService.SearchOrders(_storeContext.CurrentStore.Id, 0, _workContext.CurrentCustomer.Id,
                     null, null, null, null, null, null, null, 0, 1)
                     .FirstOrDefault();
             }
@@ -1686,7 +1686,7 @@ namespace Nop.Web.Controllers
                     return new HttpUnauthorizedResult();
 
                 //get the order
-                var order = _orderService.SearchOrders(_storeContext.CurrentStore.Id, _workContext.CurrentCustomer.Id,
+                var order = _orderService.SearchOrders(_storeContext.CurrentStore.Id, 0, _workContext.CurrentCustomer.Id,
                     null, null, null, null, null, null, null, 0, 1)
                     .FirstOrDefault();
                 if (order == null)

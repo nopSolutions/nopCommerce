@@ -339,7 +339,7 @@ namespace Nop.Web.Controllers
             var model = new CustomerOrderListModel();
             model.NavigationModel = GetCustomerNavigationModel(customer);
             model.NavigationModel.SelectedTab = CustomerNavigationEnum.Orders;
-            var orders = _orderService.SearchOrders(_storeContext.CurrentStore.Id, customer.Id,
+            var orders = _orderService.SearchOrders(_storeContext.CurrentStore.Id, 0, customer.Id,
                     null, null, null, null, null, null, null, 0, int.MaxValue);
             foreach (var order in orders)
             {

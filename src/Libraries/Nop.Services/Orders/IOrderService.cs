@@ -45,6 +45,7 @@ namespace Nop.Services.Orders
         /// Search orders
         /// </summary>
         /// <param name="storeId">Store identifier; null to load all orders</param>
+        /// <param name="vendorId">Vendor identifier; null to load all orders</param>
         /// <param name="customerId">Customer identifier; null to load all orders</param>
         /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
         /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
@@ -56,7 +57,7 @@ namespace Nop.Services.Orders
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Order collection</returns>
-        IPagedList<Order> SearchOrders(int storeId, int customerId,
+        IPagedList<Order> SearchOrders(int storeId, int vendorId, int customerId,
             DateTime? createdFromUtc, DateTime? createdToUtc, 
             OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss, 
             string billingEmail, string orderGuid, int pageIndex, int pageSize);

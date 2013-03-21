@@ -619,7 +619,13 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.List.SearchVendor.Hint">
 	<Value>Search by a specific vendor.</Value>
-  </LocaleResource>	
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.List.Vendor">
+	<Value>Vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.List.Vendor.Hint">
+	<Value>Search by a specific vendor. You''ll see orders with products from a specified vendor.</Value>
+  </LocaleResource>
 </Language>
 '
 

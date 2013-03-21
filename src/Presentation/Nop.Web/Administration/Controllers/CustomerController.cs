@@ -1396,7 +1396,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
-            var orders = _orderService.SearchOrders(0, customerId,
+            var orders = _orderService.SearchOrders(0, 0, customerId,
                     null, null, null, null, null, null, null, 0, int.MaxValue);
 
             var model = new GridModel<CustomerModel.OrderModel>

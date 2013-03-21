@@ -81,6 +81,14 @@
                 @Html.DropDownList("StoreId", Model.AvailableStores)
             </td>
         </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.VendorId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownList("VendorId", Model.AvailableVendors)
+            </td>
+        </tr>
        <tr>
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.OrderGuid):
@@ -228,6 +236,7 @@
                     PaymentStatusId: $('#@Html.FieldIdFor(model => model.PaymentStatusId)').val(),
                     ShippingStatusId: $('#@Html.FieldIdFor(model => model.ShippingStatusId)').val(),
                     StoreId: $('#@Html.FieldIdFor(model => model.StoreId)').val(),
+                    VendorId: $('#@Html.FieldIdFor(model => model.VendorId)').val(),
                     OrderGuid: $('#@Html.FieldIdFor(model => model.OrderGuid)').val()
                     };
             e.data = searchModel;

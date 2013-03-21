@@ -8729,6 +8729,14 @@
                                     </LocaleResource>
                                 </Children>
                             </LocaleResource>
+                            <LocaleResource Name="Vendor">
+                              <Value>Vendor</Value>
+                              <Children>
+                                <LocaleResource Name="Hint">
+                                  <Value>Search by a specific vendor. You'll see orders with products from a specified vendor.</Value>
+                                </LocaleResource>
+                              </Children>
+                            </LocaleResource>
                             <LocaleResource Name="OrderGuid">
                                 <Value>Order GUID</Value>
                                 <Children>

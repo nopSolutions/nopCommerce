@@ -15,6 +15,7 @@ namespace Nop.Admin.Models.Orders
             AvailablePaymentStatuses = new List<SelectListItem>();
             AvailableShippingStatuses = new List<SelectListItem>();
             AvailableStores = new List<SelectListItem>();
+            AvailableVendors = new List<SelectListItem>();
         }
 
         [NopResourceDisplayName("Admin.Orders.List.StartDate")]
@@ -38,6 +39,8 @@ namespace Nop.Admin.Models.Orders
 
         [NopResourceDisplayName("Admin.Orders.List.Store")]
         public int StoreId { get; set; }
+        [NopResourceDisplayName("Admin.Orders.List.Vendor")]
+        public int VendorId { get; set; }
 
         [NopResourceDisplayName("Admin.Orders.List.OrderGuid")]
         [AllowHtml]
@@ -47,11 +50,11 @@ namespace Nop.Admin.Models.Orders
         [AllowHtml]
         public int GoDirectlyToNumber { get; set; }
 
-        
 
         public IList<SelectListItem> AvailableOrderStatuses { get; set; }
         public IList<SelectListItem> AvailablePaymentStatuses { get; set; }
         public IList<SelectListItem> AvailableShippingStatuses { get; set; }
         public IList<SelectListItem> AvailableStores { get; set; }
+        public IList<SelectListItem> AvailableVendors { get; set; }
     }
 }

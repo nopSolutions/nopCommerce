@@ -17,6 +17,7 @@ namespace Nop.Services.Orders
         /// Get order average report
         /// </summary>
         /// <param name="storeId">Store identifier</param>
+        /// <param name="vendorId">Vendor identifier</param>
         /// <param name="os">Order status</param>
         /// <param name="ps">Payment status</param>
         /// <param name="ss">Shipping status</param>
@@ -25,7 +26,7 @@ namespace Nop.Services.Orders
         /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
         /// <param name="ignoreCancelledOrders">A value indicating whether to ignore cancelled orders</param>
         /// <returns>Result</returns>
-        OrderAverageReportLine GetOrderAverageReportLine(int storeId, OrderStatus? os,
+        OrderAverageReportLine GetOrderAverageReportLine(int storeId, int vendorId, OrderStatus? os,
             PaymentStatus? ps, ShippingStatus? ss, DateTime? startTimeUtc,
             DateTime? endTimeUtc, string billingEmail, bool ignoreCancelledOrders = false);
         
@@ -85,6 +86,7 @@ namespace Nop.Services.Orders
         /// Get profit report
         /// </summary>
         /// <param name="storeId">Store identifier</param>
+        /// <param name="vendorId">Vendor identifier</param>
         /// <param name="startTimeUtc">Start date</param>
         /// <param name="endTimeUtc">End date</param>
         /// <param name="os">Order status; null to load all records</param>
@@ -92,7 +94,8 @@ namespace Nop.Services.Orders
         /// <param name="ss">Shipping status; null to load all records</param>
         /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
         /// <returns>Result</returns>
-        decimal ProfitReport(int storeId, OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss, 
+        decimal ProfitReport(int storeId, int vendorId, 
+            OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss, 
             DateTime? startTimeUtc, DateTime? endTimeUtc, string billingEmail);
     }
 }

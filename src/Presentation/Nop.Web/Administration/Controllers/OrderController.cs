@@ -27,6 +27,7 @@ using Nop.Services.Payments;
 using Nop.Services.Security;
 using Nop.Services.Shipping;
 using Nop.Services.Stores;
+using Nop.Services.Vendors;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
@@ -68,6 +69,7 @@ namespace Nop.Admin.Controllers
         private readonly IDownloadService _downloadService;
         private readonly IShipmentService _shipmentService;
         private readonly IStoreService _storeService;
+        private readonly IVendorService _vendorService;
 
         private readonly CatalogSettings _catalogSettings;
         private readonly CurrencySettings _currencySettings;
@@ -94,7 +96,7 @@ namespace Nop.Admin.Controllers
             IProductAttributeService productAttributeService, IProductAttributeParser productAttributeParser,
             IProductAttributeFormatter productAttributeFormatter, IShoppingCartService shoppingCartService,
             IGiftCardService giftCardService, IDownloadService downloadService,
-            IShipmentService shipmentService, IStoreService storeService,
+            IShipmentService shipmentService, IStoreService storeService, IVendorService vendorService,
             CatalogSettings catalogSettings, CurrencySettings currencySettings, TaxSettings taxSettings,
             MeasureSettings measureSettings, PdfSettings pdfSettings, AddressSettings addressSettings)
 		{
@@ -127,6 +129,7 @@ namespace Nop.Admin.Controllers
             this._downloadService = downloadService;
             this._shipmentService = shipmentService;
             this._storeService = storeService;
+            this._vendorService = vendorService;
 
             this._catalogSettings = catalogSettings;
             this._currencySettings = currencySettings;
@@ -592,15 +595,14 @@ namespace Nop.Admin.Controllers
             model.AvailableShippingStatuses.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
 
             //stores
-            foreach (var store in _storeService.GetAllStores())
-            {
-                model.AvailableStores.Add(new SelectListItem()
-                {
-                    Text = store.Name,
-                    Value = store.Id.ToString()
-                });
-            }
-            model.AvailableStores.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableStores.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var s in _storeService.GetAllStores())
+                model.AvailableStores.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString() });
+
+            //vendors
+            model.AvailableVendors.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var v in _vendorService.GetAllVendors(0, int.MaxValue, true))
+                model.AvailableVendors.Add(new SelectListItem() { Text = v.Name, Value = v.Id.ToString() });
 
             return View(model);
 		}
@@ -622,8 +624,10 @@ namespace Nop.Admin.Controllers
             ShippingStatus? shippingStatus = model.ShippingStatusId > 0 ? (ShippingStatus?)(model.ShippingStatusId) : null;
 
             //load orders
-            var orders = _orderService.SearchOrders(model.StoreId, 0, startDateValue, endDateValue, orderStatus,
-                paymentStatus, shippingStatus, model.CustomerEmail, model.OrderGuid, command.Page - 1, command.PageSize);
+            var orders = _orderService.SearchOrders(model.StoreId, model.VendorId, 0,
+                startDateValue, endDateValue, orderStatus,
+                paymentStatus, shippingStatus, model.CustomerEmail, model.OrderGuid,
+                command.Page - 1, command.PageSize);
             var gridModel = new GridModel<OrderModel>
             {
                 Data = orders.Select(x =>
@@ -646,10 +650,12 @@ namespace Nop.Admin.Controllers
 
             //summary report
             //implemented as a workaround described here: http://www.telerik.com/community/forums/aspnet-mvc/grid/gridmodel-aggregates-how-to-use.aspx
-            var reportSummary = _orderReportService.GetOrderAverageReportLine(model.StoreId, orderStatus, 
-                paymentStatus, shippingStatus, startDateValue, endDateValue, model.CustomerEmail);
-            var profit = _orderReportService.ProfitReport(model.StoreId, orderStatus, 
-                paymentStatus, shippingStatus, startDateValue, endDateValue, model.CustomerEmail);
+            var reportSummary = _orderReportService.GetOrderAverageReportLine(model.StoreId,
+                model.VendorId, orderStatus,  paymentStatus, shippingStatus, 
+                startDateValue, endDateValue, model.CustomerEmail);
+            var profit = _orderReportService.ProfitReport(model.StoreId, 
+                model.VendorId, orderStatus, paymentStatus, shippingStatus, 
+                startDateValue, endDateValue, model.CustomerEmail);
 		    var aggregator = new OrderModel()
 		    {
                 aggregatorprofit = _priceFormatter.FormatPrice(profit, true, false),
@@ -685,7 +691,7 @@ namespace Nop.Admin.Controllers
 
             try
             {
-                var orders = _orderService.SearchOrders(0, 0, null, null, null,
+                var orders = _orderService.SearchOrders(0, 0, 0, null, null, null,
                     null, null, null, null, 0, int.MaxValue);
 
                 var xml = _exportManager.ExportOrdersToXml(orders);
@@ -724,7 +730,7 @@ namespace Nop.Admin.Controllers
 
             try
             {
-                var orders = _orderService.SearchOrders(0, 0, null, null, null,
+                var orders = _orderService.SearchOrders(0, 0, 0, null, null, null,
                     null, null, null, null, 0, int.MaxValue);
                 
                 byte[] bytes = null;
@@ -2540,7 +2546,7 @@ namespace Nop.Admin.Controllers
         {
             var model = new List<OrderIncompleteReportLineModel>();
             //not paid
-            var psPending = _orderReportService.GetOrderAverageReportLine(0, null, PaymentStatus.Pending, null, null, null, null, true);
+            var psPending = _orderReportService.GetOrderAverageReportLine(0, 0, null, PaymentStatus.Pending, null, null, null, null, true);
             model.Add(new OrderIncompleteReportLineModel()
             {
                 Item = _localizationService.GetResource("Admin.SalesReport.Incomplete.TotalUnpaidOrders"),
@@ -2548,7 +2554,7 @@ namespace Nop.Admin.Controllers
                 Total = _priceFormatter.FormatPrice(psPending.SumOrders, true, false)
             });
             //not shipped
-            var ssPending = _orderReportService.GetOrderAverageReportLine(0, null, null, ShippingStatus.NotYetShipped, null, null, null, true);
+            var ssPending = _orderReportService.GetOrderAverageReportLine(0, 0, null, null, ShippingStatus.NotYetShipped, null, null, null, true);
             model.Add(new OrderIncompleteReportLineModel()
             {
                 Item = _localizationService.GetResource("Admin.SalesReport.Incomplete.TotalNotShippedOrders"),
@@ -2556,7 +2562,7 @@ namespace Nop.Admin.Controllers
                 Total = _priceFormatter.FormatPrice(ssPending.SumOrders, true, false)
             });
             //pending
-            var osPending = _orderReportService.GetOrderAverageReportLine(0, OrderStatus.Pending, null, null, null, null, null, true);
+            var osPending = _orderReportService.GetOrderAverageReportLine(0, 0, OrderStatus.Pending, null, null, null, null, null, true);
             model.Add(new OrderIncompleteReportLineModel()
             {
                 Item = _localizationService.GetResource("Admin.SalesReport.Incomplete.TotalIncompleteOrders"),
