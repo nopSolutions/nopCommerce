@@ -69,8 +69,7 @@ namespace Nop.Services.Seo
             if (urlRecordId == 0)
                 return null;
 
-            var urlRecord = _urlRecordRepository.GetById(urlRecordId);
-            return urlRecord;
+            return _urlRecordRepository.GetById(urlRecordId);
         }
 
         /// <summary>

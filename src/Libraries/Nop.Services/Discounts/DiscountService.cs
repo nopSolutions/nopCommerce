@@ -19,7 +19,6 @@ namespace Nop.Services.Discounts
     {
         #region Constants
         private const string DISCOUNTS_ALL_KEY = "Nop.discount.all-{0}-{1}";
-        private const string DISCOUNTS_BY_ID_KEY = "Nop.discount.id-{0}";
         private const string DISCOUNTS_PATTERN_KEY = "Nop.discount.";
         #endregion
 
@@ -145,12 +144,7 @@ namespace Nop.Services.Discounts
             if (discountId == 0)
                 return null;
 
-            string key = string.Format(DISCOUNTS_BY_ID_KEY, discountId);
-            return _cacheManager.Get(key, () =>
-            {
-                var discount = _discountRepository.GetById(discountId);
-                return discount;
-            });
+            return _discountRepository.GetById(discountId);
         }
 
         /// <summary>
@@ -377,8 +371,7 @@ namespace Nop.Services.Discounts
             if (discountUsageHistoryId == 0)
                 return null;
 
-            var duh = _discountUsageHistoryRepository.GetById(discountUsageHistoryId);
-            return duh;
+            return _discountUsageHistoryRepository.GetById(discountUsageHistoryId);
         }
 
         /// <summary>

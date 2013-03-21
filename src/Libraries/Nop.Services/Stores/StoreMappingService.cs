@@ -76,8 +76,7 @@ namespace Nop.Services.Stores
             if (storeMappingId == 0)
                 return null;
 
-            var storeMapping = _storeMappingRepository.GetById(storeMappingId);
-            return storeMapping;
+            return _storeMappingRepository.GetById(storeMappingId);
         }
 
         /// <summary>

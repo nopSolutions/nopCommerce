@@ -103,8 +103,7 @@ namespace Nop.Services.Messages
             if (campaignId == 0)
                 return null;
 
-            var campaign = _campaignRepository.GetById(campaignId);
-            return campaign;
+            return _campaignRepository.GetById(campaignId);
 
         }
 

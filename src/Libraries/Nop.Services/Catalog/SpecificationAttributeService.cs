@@ -14,11 +14,7 @@ namespace Nop.Services.Catalog
     public partial class SpecificationAttributeService : ISpecificationAttributeService
     {
         #region Constants
-        private const string SPECIFICATIONATTRIBUTE_BY_ID_KEY = "Nop.specificationattributes.id-{0}";
-        private const string SPECIFICATIONATTRIBUTEOPTION_BY_ID_KEY = "Nop.specificationattributeoptions.id-{0}";
         private const string PRODUCTSPECIFICATIONATTRIBUTE_ALLBYPRODUCTID_KEY = "Nop.productspecificationattribute.allbyproductid-{0}-{1}-{2}";
-        private const string SPECIFICATIONATTRIBUTE_PATTERN_KEY = "Nop.specificationattributes.";
-        private const string SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY = "Nop.specificationattributeoptions.";
         private const string PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY = "Nop.productspecificationattribute.";
         #endregion
 
@@ -71,12 +67,7 @@ namespace Nop.Services.Catalog
             if (specificationAttributeId == 0)
                 return null;
 
-            string key = string.Format(SPECIFICATIONATTRIBUTE_BY_ID_KEY, specificationAttributeId);
-            return _cacheManager.Get(key, () =>
-            {
-                var sa = _specificationAttributeRepository.GetById(specificationAttributeId);
-                return sa;
-            });
+            return _specificationAttributeRepository.GetById(specificationAttributeId);
         }
 
         /// <summary>
@@ -103,8 +94,6 @@ namespace Nop.Services.Catalog
 
             _specificationAttributeRepository.Delete(specificationAttribute);
 
-            _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTE_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY);
 
             //event notification
@@ -122,8 +111,6 @@ namespace Nop.Services.Catalog
 
             _specificationAttributeRepository.Insert(specificationAttribute);
 
-            _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTE_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY);
 
             //event notification
@@ -141,8 +128,6 @@ namespace Nop.Services.Catalog
 
             _specificationAttributeRepository.Update(specificationAttribute);
 
-            _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTE_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY);
 
             //event notification
@@ -163,12 +148,7 @@ namespace Nop.Services.Catalog
             if (specificationAttributeOptionId == 0)
                 return null;
 
-            string key = string.Format(SPECIFICATIONATTRIBUTEOPTION_BY_ID_KEY, specificationAttributeOptionId);
-            return _cacheManager.Get(key, () =>
-            {
-                var sao = _specificationAttributeOptionRepository.GetById(specificationAttributeOptionId);
-                return sao;
-            });
+            return _specificationAttributeOptionRepository.GetById(specificationAttributeOptionId);
         }
 
         /// <summary>
@@ -197,8 +177,6 @@ namespace Nop.Services.Catalog
 
             _specificationAttributeOptionRepository.Delete(specificationAttributeOption);
 
-            _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTE_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY);
 
             //event notification
@@ -216,8 +194,6 @@ namespace Nop.Services.Catalog
 
             _specificationAttributeOptionRepository.Insert(specificationAttributeOption);
 
-            _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTE_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY);
 
             //event notification
@@ -235,8 +211,6 @@ namespace Nop.Services.Catalog
 
             _specificationAttributeOptionRepository.Update(specificationAttributeOption);
 
-            _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTE_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY);
 
             //event notification
@@ -258,8 +232,6 @@ namespace Nop.Services.Catalog
 
             _productSpecificationAttributeRepository.Delete(productSpecificationAttribute);
 
-            _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTE_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY);
 
             //event notification
@@ -319,8 +291,7 @@ namespace Nop.Services.Catalog
             if (productSpecificationAttributeId == 0)
                 return null;
             
-            var productSpecificationAttribute = _productSpecificationAttributeRepository.GetById(productSpecificationAttributeId);
-            return productSpecificationAttribute;
+            return _productSpecificationAttributeRepository.GetById(productSpecificationAttributeId);
         }
 
         /// <summary>
@@ -334,8 +305,6 @@ namespace Nop.Services.Catalog
 
             _productSpecificationAttributeRepository.Insert(productSpecificationAttribute);
 
-            _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTE_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY);
 
             //event notification
@@ -353,8 +322,6 @@ namespace Nop.Services.Catalog
 
             _productSpecificationAttributeRepository.Update(productSpecificationAttribute);
 
-            _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTE_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY);
 
             //event notification

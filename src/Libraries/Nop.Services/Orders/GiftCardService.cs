@@ -64,8 +64,7 @@ namespace Nop.Services.Orders
             if (giftCardId == 0)
                 return null;
 
-            var giftCard = _giftCardRepository.GetById(giftCardId);
-            return giftCard;
+            return _giftCardRepository.GetById(giftCardId);
         }
 
         /// <summary>

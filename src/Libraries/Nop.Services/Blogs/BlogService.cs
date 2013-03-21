@@ -15,11 +15,6 @@ namespace Nop.Services.Blogs
     /// </summary>
     public partial class BlogService : IBlogService
     {
-        #region Constants
-        private const string BLOGPOST_BY_ID_KEY = "Nop.blogpost.id-{0}";
-        private const string BLOGPOST_PATTERN_KEY = "Nop.blogpost.";
-        #endregion
-
         #region Fields
 
         private readonly IRepository<BlogPost> _blogPostRepository;
@@ -60,8 +55,6 @@ namespace Nop.Services.Blogs
 
             _blogPostRepository.Delete(blogPost);
 
-            _cacheManager.RemoveByPattern(BLOGPOST_PATTERN_KEY);
-
             //event notification
             _eventPublisher.EntityDeleted(blogPost);
         }
@@ -76,12 +69,7 @@ namespace Nop.Services.Blogs
             if (blogPostId == 0)
                 return null;
 
-            string key = string.Format(BLOGPOST_BY_ID_KEY, blogPostId);
-            return _cacheManager.Get(key, () =>
-            {
-                var pv = _blogPostRepository.GetById(blogPostId);
-                return pv;
-            });
+            return _blogPostRepository.GetById(blogPostId);
         }
 
         /// <summary>
@@ -211,8 +199,6 @@ namespace Nop.Services.Blogs
 
             _blogPostRepository.Insert(blogPost);
 
-            _cacheManager.RemoveByPattern(BLOGPOST_PATTERN_KEY);
-
             //event notification
             _eventPublisher.EntityInserted(blogPost);
         }
@@ -227,8 +213,6 @@ namespace Nop.Services.Blogs
                 throw new ArgumentNullException("blogPost");
 
             _blogPostRepository.Update(blogPost);
-
-            _cacheManager.RemoveByPattern(BLOGPOST_PATTERN_KEY);
 
             //event notification
             _eventPublisher.EntityUpdated(blogPost);
@@ -272,8 +256,6 @@ namespace Nop.Services.Blogs
                 throw new ArgumentNullException("blogComment");
 
             _blogCommentRepository.Delete(blogComment);
-
-            _cacheManager.RemoveByPattern(BLOGPOST_PATTERN_KEY);
         }
 
         #endregion

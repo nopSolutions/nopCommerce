@@ -15,7 +15,6 @@ namespace Nop.Services.Tax
     {
         #region Constants
         private const string TAXCATEGORIES_ALL_KEY = "Nop.taxcategory.all";
-        private const string TAXCATEGORIES_BY_ID_KEY = "Nop.taxcategory.id-{0}";
         private const string TAXCATEGORIES_PATTERN_KEY = "Nop.taxcategory.";
         #endregion
 
@@ -92,12 +91,7 @@ namespace Nop.Services.Tax
             if (taxCategoryId == 0)
                 return null;
 
-            string key = string.Format(TAXCATEGORIES_BY_ID_KEY, taxCategoryId);
-            return _cacheManager.Get(key, () =>
-            {
-                var taxCategory = _taxCategoryRepository.GetById(taxCategoryId);
-                return taxCategory;
-            });
+            return _taxCategoryRepository.GetById(taxCategoryId);
         }
 
         /// <summary>

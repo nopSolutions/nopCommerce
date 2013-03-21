@@ -73,8 +73,7 @@ namespace Nop.Services.Localization
             if (localizedPropertyId == 0)
                 return null;
 
-            var localizedProperty = _localizedPropertyRepository.GetById(localizedPropertyId);
-            return localizedProperty;
+            return _localizedPropertyRepository.GetById(localizedPropertyId);
         }
 
         /// <summary>

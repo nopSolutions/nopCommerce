@@ -79,8 +79,7 @@ namespace Nop.Services.Messages
             if (queuedEmailId == 0)
                 return null;
 
-            var queuedEmail = _queuedEmailRepository.GetById(queuedEmailId);
-            return queuedEmail;
+            return _queuedEmailRepository.GetById(queuedEmailId);
 
         }
 

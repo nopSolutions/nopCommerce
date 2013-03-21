@@ -141,8 +141,7 @@ namespace Nop.Services.Logging
             if (logId == 0)
                 return null;
 
-            var log = _logRepository.GetById(logId);
-            return log;
+            return _logRepository.GetById(logId);
         }
 
         /// <summary>

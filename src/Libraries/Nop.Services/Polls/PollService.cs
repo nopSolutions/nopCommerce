@@ -13,17 +13,11 @@ namespace Nop.Services.Polls
     /// </summary>
     public partial class PollService : IPollService
     {
-        #region Constants
-        private const string POLLS_BY_ID_KEY = "Nop.polls.id-{0}";
-        private const string POLLS_PATTERN_KEY = "Nop.polls.";
-        #endregion
-
         #region Fields
 
         private readonly IRepository<Poll> _pollRepository;
         private readonly IRepository<PollAnswer> _pollAnswerRepository;
         private readonly IRepository<PollVotingRecord> _pollVotingRecords;
-        private readonly ICacheManager _cacheManager;
         private readonly IEventPublisher _eventPublisher;
 
         #endregion
@@ -33,12 +27,11 @@ namespace Nop.Services.Polls
         public PollService(IRepository<Poll> pollRepository, 
             IRepository<PollAnswer> pollAnswerRepository,
             IRepository<PollVotingRecord> pollVotingRecords,
-            ICacheManager cacheManager, IEventPublisher eventPublisher)
+            IEventPublisher eventPublisher)
         {
             this._pollRepository = pollRepository;
             this._pollAnswerRepository = pollAnswerRepository;
             this._pollVotingRecords = pollVotingRecords;
-            this._cacheManager = cacheManager;
             this._eventPublisher = eventPublisher;
         }
 
@@ -56,12 +49,7 @@ namespace Nop.Services.Polls
             if (pollId == 0)
                 return null;
 
-            string key = string.Format(POLLS_BY_ID_KEY, pollId);
-            return _cacheManager.Get(key, () =>
-            {
-                var poll = _pollRepository.GetById(pollId);
-                return poll;
-            });
+            return _pollRepository.GetById(pollId);
         }
 
         /// <summary>
@@ -127,8 +115,6 @@ namespace Nop.Services.Polls
 
             _pollRepository.Delete(poll);
 
-            _cacheManager.RemoveByPattern(POLLS_PATTERN_KEY);
-
             //event notification
             _eventPublisher.EntityDeleted(poll);
         }
@@ -143,8 +129,6 @@ namespace Nop.Services.Polls
                 throw new ArgumentNullException("poll");
 
             _pollRepository.Insert(poll);
-
-            _cacheManager.RemoveByPattern(POLLS_PATTERN_KEY);
 
             //event notification
             _eventPublisher.EntityInserted(poll);
@@ -161,8 +145,6 @@ namespace Nop.Services.Polls
 
             _pollRepository.Update(poll);
 
-            _cacheManager.RemoveByPattern(POLLS_PATTERN_KEY);
-
             //event notification
             _eventPublisher.EntityUpdated(poll);
         }
@@ -177,8 +159,7 @@ namespace Nop.Services.Polls
             if (pollAnswerId == 0)
                 return null;
 
-            var pollAnswer = _pollAnswerRepository.GetById(pollAnswerId);
-            return pollAnswer;
+            return _pollAnswerRepository.GetById(pollAnswerId);
         }
         
         /// <summary>
@@ -191,8 +172,6 @@ namespace Nop.Services.Polls
                 throw new ArgumentNullException("pollAnswer");
 
             _pollAnswerRepository.Delete(pollAnswer);
-
-            _cacheManager.RemoveByPattern(POLLS_PATTERN_KEY);
 
             //event notification
             _eventPublisher.EntityDeleted(pollAnswer);

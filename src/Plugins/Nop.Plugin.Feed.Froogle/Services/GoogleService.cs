@@ -61,8 +61,7 @@ namespace Nop.Plugin.Feed.Froogle.Services
             if (googleProductRecordId == 0)
                 return null;
 
-            var record = _gpRepository.GetById(googleProductRecordId);
-            return record;
+            return _gpRepository.GetById(googleProductRecordId);
         }
 
         public virtual GoogleProductRecord GetByProductVariantId(int productVariantId)

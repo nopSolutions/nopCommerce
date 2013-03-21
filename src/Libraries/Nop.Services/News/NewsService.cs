@@ -15,17 +15,11 @@ namespace Nop.Services.News
     /// </summary>
     public partial class NewsService : INewsService
     {
-        #region Constants
-        private const string NEWS_BY_ID_KEY = "Nop.news.id-{0}";
-        private const string NEWS_PATTERN_KEY = "Nop.news.";
-        #endregion
-
         #region Fields
 
         private readonly IRepository<NewsItem> _newsItemRepository;
         private readonly IRepository<NewsComment> _newsCommentRepository;
         private readonly IRepository<StoreMapping> _storeMappingRepository;
-        private readonly ICacheManager _cacheManager;
         private readonly IEventPublisher _eventPublisher;
 
         #endregion
@@ -35,13 +29,11 @@ namespace Nop.Services.News
         public NewsService(IRepository<NewsItem> newsItemRepository, 
             IRepository<NewsComment> newsCommentRepository,
             IRepository<StoreMapping> storeMappingRepository,
-            ICacheManager cacheManager, 
             IEventPublisher eventPublisher)
         {
             this._newsItemRepository = newsItemRepository;
             this._newsCommentRepository = newsCommentRepository;
             this._storeMappingRepository = storeMappingRepository;
-            this._cacheManager = cacheManager;
             this._eventPublisher = eventPublisher;
         }
 
@@ -59,9 +51,7 @@ namespace Nop.Services.News
                 throw new ArgumentNullException("newsItem");
 
             _newsItemRepository.Delete(newsItem);
-
-            _cacheManager.RemoveByPattern(NEWS_PATTERN_KEY);
-
+            
             //event notification
             _eventPublisher.EntityDeleted(newsItem);
         }
@@ -76,12 +66,7 @@ namespace Nop.Services.News
             if (newsId == 0)
                 return null;
 
-            string key = string.Format(NEWS_BY_ID_KEY, newsId);
-            return _cacheManager.Get(key, () =>
-            {
-                var n = _newsItemRepository.GetById(newsId);
-                return n;
-            });
+            return _newsItemRepository.GetById(newsId);
         }
 
         /// <summary>
@@ -141,8 +126,6 @@ namespace Nop.Services.News
 
             _newsItemRepository.Insert(news);
 
-            _cacheManager.RemoveByPattern(NEWS_PATTERN_KEY);
-
             //event notification
             _eventPublisher.EntityInserted(news);
         }
@@ -157,9 +140,7 @@ namespace Nop.Services.News
                 throw new ArgumentNullException("news");
 
             _newsItemRepository.Update(news);
-
-            _cacheManager.RemoveByPattern(NEWS_PATTERN_KEY);
-
+            
             //event notification
             _eventPublisher.EntityUpdated(news);
         }
@@ -202,8 +183,6 @@ namespace Nop.Services.News
                 throw new ArgumentNullException("newsComment");
 
             _newsCommentRepository.Delete(newsComment);
-
-            _cacheManager.RemoveByPattern(NEWS_PATTERN_KEY);
         }
 
         #endregion

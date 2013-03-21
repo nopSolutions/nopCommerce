@@ -178,8 +178,7 @@ namespace Nop.Services.Configuration
             if (settingId == 0)
                 return null;
 
-            var setting = _settingRepository.GetById(settingId);
-            return setting;
+            return _settingRepository.GetById(settingId);
         }
         
         /// <summary>

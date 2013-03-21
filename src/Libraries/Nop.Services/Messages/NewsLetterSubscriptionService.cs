@@ -123,8 +123,7 @@ namespace Nop.Services.Messages
         {
             if (newsLetterSubscriptionId == 0) return null;
 
-            var queuedEmail = _subscriptionRepository.GetById(newsLetterSubscriptionId);
-            return queuedEmail;
+            return _subscriptionRepository.GetById(newsLetterSubscriptionId);
         }
 
         /// <summary>

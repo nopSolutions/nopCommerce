@@ -28,7 +28,6 @@ namespace Nop.Services.Customers
         #region Constants
 
         private const string CUSTOMERROLES_ALL_KEY = "Nop.customerrole.all-{0}";
-        private const string CUSTOMERROLES_BY_ID_KEY = "Nop.customerrole.id-{0}";
         private const string CUSTOMERROLES_BY_SYSTEMNAME_KEY = "Nop.customerrole.systemname-{0}";
         private const string CUSTOMERROLES_PATTERN_KEY = "Nop.customerrole.";
         #endregion
@@ -355,8 +354,7 @@ namespace Nop.Services.Customers
             if (customerId == 0)
                 return null;
             
-            var customer = _customerRepository.GetById(customerId);
-            return customer;
+            return _customerRepository.GetById(customerId);
         }
 
         /// <summary>
@@ -704,12 +702,7 @@ namespace Nop.Services.Customers
             if (customerRoleId == 0)
                 return null;
 
-            string key = string.Format(CUSTOMERROLES_BY_ID_KEY, customerRoleId);
-            return _cacheManager.Get(key, () =>
-            {
-                var customerRole = _customerRoleRepository.GetById(customerRoleId);
-                return customerRole;
-            });
+            return _customerRoleRepository.GetById(customerRoleId);
         }
 
         /// <summary>

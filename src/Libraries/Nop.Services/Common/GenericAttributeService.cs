@@ -78,8 +78,7 @@ namespace Nop.Services.Common
             if (attributeId == 0)
                 return null;
 
-            var attribute = _genericAttributeRepository.GetById(attributeId);
-            return attribute;
+            return _genericAttributeRepository.GetById(attributeId);
         }
 
         /// <summary>

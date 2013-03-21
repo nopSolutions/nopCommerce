@@ -20,9 +20,7 @@ namespace Nop.Services.Forums
     {
         #region Constants
         private const string FORUMGROUP_ALL_KEY = "Nop.forumgroup.all";
-        private const string FORUMGROUP_BY_ID_KEY = "Nop.forumgroup.id-{0}";
         private const string FORUM_ALLBYFORUMGROUPID_KEY = "Nop.forum.allbyforumgroupid-{0}";
-        private const string FORUM_BY_ID_KEY = "Nop.forum.id-{0}";
         private const string FORUMGROUP_PATTERN_KEY = "Nop.forumgroup.";
         private const string FORUM_PATTERN_KEY = "Nop.forum.";
         #endregion
@@ -285,12 +283,7 @@ namespace Nop.Services.Forums
                 return null;
             }
 
-            string key = string.Format(FORUMGROUP_BY_ID_KEY, forumGroupId);
-            return _cacheManager.Get(key, () =>
-            {
-                var forumGroup = _forumGroupRepository.GetById(forumGroupId);
-                return forumGroup;
-            });
+            return _forumGroupRepository.GetById(forumGroupId);
         }
 
         /// <summary>
@@ -405,16 +398,9 @@ namespace Nop.Services.Forums
         public virtual Forum GetForumById(int forumId)
         {
             if (forumId == 0)
-            {
                 return null;
-            }
 
-            string key = string.Format(FORUM_BY_ID_KEY, forumId);
-            return _cacheManager.Get(key, () =>
-            {
-                var forum = _forumRepository.GetById(forumId);
-                return forum;
-            });
+            return _forumRepository.GetById(forumId);
         }
 
         /// <summary>
@@ -535,15 +521,11 @@ namespace Nop.Services.Forums
         public virtual ForumTopic GetTopicById(int forumTopicId, bool increaseViews)
         {
             if (forumTopicId == 0)
-            {
                 return null;
-            }
 
             var forumTopic = _forumTopicRepository.GetById(forumTopicId);
             if (forumTopic == null)
-            {
                 return null;
-            }
 
             if (increaseViews)
             {
@@ -784,8 +766,7 @@ namespace Nop.Services.Forums
             if (forumPostId == 0)
                 return null;
 
-            var forumPost = _forumPostRepository.GetById(forumPostId);
-            return forumPost;
+            return _forumPostRepository.GetById(forumPostId);
         }
 
         /// <summary>
@@ -950,8 +931,7 @@ namespace Nop.Services.Forums
             if (privateMessageId == 0)
                 return null;
 
-            var privateMessage = _forumPrivateMessageRepository.GetById(privateMessageId);
-            return privateMessage;
+            return _forumPrivateMessageRepository.GetById(privateMessageId);
         }
 
         /// <summary>
@@ -1078,8 +1058,7 @@ namespace Nop.Services.Forums
             if (forumSubscriptionId == 0)
                 return null;
 
-            var forumSubscription = _forumSubscriptionRepository.GetById(forumSubscriptionId);
-            return forumSubscription;
+            return _forumSubscriptionRepository.GetById(forumSubscriptionId);
         }
 
         /// <summary>
