@@ -407,7 +407,9 @@ namespace Nop.Admin.Controllers
                     IsDownloadActivated = opv.IsDownloadActivated,
                     LicenseDownloadId = opv.LicenseDownloadId
                 };
-
+                //vendor;
+                var vendor = opv.ProductVariant.Product.Vendor;
+                opvModel.Vendor = vendor != null ? vendor.Name : "";
 
                 //unit price
                 opvModel.UnitPriceInclTaxValue = opv.UnitPriceInclTax;

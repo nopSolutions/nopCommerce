@@ -65,7 +65,7 @@
 }
 @Html.DeleteConfirmation("order-delete")
 @helper TabInfo()
-    {
+{
     <script type="text/javascript">
         $(document).ready(function () {
             toggleOrderTotals(false);
@@ -680,7 +680,7 @@
     </table>
 }
 @helper TabBillingInfo()
-    {
+{
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
@@ -820,7 +820,7 @@
     </table>
 }
 @helper TabShippingInfo()
-    {
+{
         if (Model.IsShippable && Model.ShippingAddress != null)
         {
     <table class="adminContent">
@@ -1039,7 +1039,7 @@
         }
 }
 @helper TabProducts()
-    {
+{
     <table class="adminContent">
         <tr>
             <td class="adminData">
@@ -1138,6 +1138,12 @@
                                             <br />
                                             <strong>@T("Admin.Orders.Products.SKU")</strong><text>:</text>
                                             @item.Sku
+                                        }
+                                        @if (!String.IsNullOrEmpty(item.Vendor))
+                                        {
+                                            <br />
+                                            <strong>@T("Admin.Orders.Products.Vendor")</strong><text>:</text>
+                                            @item.Vendor
                                         }
                                         @if (item.ReturnRequestIds.Count > 0)
                                         {
@@ -1388,7 +1394,7 @@
     </table>
 }
 @helper TabOrderNotes()
-    {
+{
     <table class="adminContent">
         <tr>
             <td>

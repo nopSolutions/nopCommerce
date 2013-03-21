@@ -8876,6 +8876,9 @@
                             <LocaleResource Name="SKU">
                                 <Value>SKU</Value>
                             </LocaleResource>
+                            <LocaleResource Name="Vendor">
+                              <Value>Vendor</Value>
+                            </LocaleResource>
                             <LocaleResource Name="RecurringPeriod">
                                 <Value>[Auto-ship, Every {0} {1}]</Value>
                             </LocaleResource>
