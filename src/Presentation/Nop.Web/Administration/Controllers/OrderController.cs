@@ -398,6 +398,7 @@ namespace Nop.Admin.Controllers
                 {
                     Id = opv.Id,
                     ProductVariantId = opv.ProductVariantId,
+                    FullProductName = opv.ProductVariant.FullProductName,
                     Sku = opv.ProductVariant.FormatSku(opv.AttributesXml, _productAttributeParser),
                     Quantity = opv.Quantity,
                     IsDownload = opv.ProductVariant.IsDownload,
@@ -407,11 +408,6 @@ namespace Nop.Admin.Controllers
                     LicenseDownloadId = opv.LicenseDownloadId
                 };
 
-                //product name
-                if (!String.IsNullOrEmpty(opv.ProductVariant.Name))
-                    opvModel.FullProductName = string.Format("{0} ({1})", opv.ProductVariant.Product.Name, opv.ProductVariant.Name);
-                else
-                    opvModel.FullProductName = opv.ProductVariant.Product.Name;
 
                 //unit price
                 opvModel.UnitPriceInclTaxValue = opv.UnitPriceInclTax;
@@ -545,6 +541,7 @@ namespace Nop.Admin.Controllers
                         Id = sopv.Id,
                         OrderProductVariantId = opv.Id,
                         ProductVariantId = opv.ProductVariantId,
+                        FullProductName = opv.ProductVariant.FullProductName,
                         Sku = opv.ProductVariant.FormatSku(opv.AttributesXml, _productAttributeParser),
                         AttributeInfo = opv.AttributeDescription,
                         ItemWeight = opv.ItemWeight.HasValue ? string.Format("{0:F2} [{1}]", opv.ItemWeight, baseWeightIn) : "",
@@ -555,12 +552,6 @@ namespace Nop.Admin.Controllers
                         QuantityToAdd = maxQtyToAdd,
                     };
 
-                    //product name
-                    if (!String.IsNullOrEmpty(opv.ProductVariant.Name))
-                        sopvModel.FullProductName = string.Format("{0} ({1})", opv.ProductVariant.Product.Name,
-                                                                  opv.ProductVariant.Name);
-                    else
-                        sopvModel.FullProductName = opv.ProductVariant.Product.Name;
                     model.Products.Add(sopvModel);
                 }
             }
@@ -1967,6 +1958,7 @@ namespace Nop.Admin.Controllers
                 {
                     OrderProductVariantId = opv.Id,
                     ProductVariantId = opv.ProductVariantId,
+                    FullProductName = opv.ProductVariant.FullProductName,
                     Sku = opv.ProductVariant.FormatSku(opv.AttributesXml, _productAttributeParser),
                     AttributeInfo = opv.AttributeDescription,
                     ItemWeight = opv.ItemWeight.HasValue ? string.Format("{0:F2} [{1}]", opv.ItemWeight, baseWeightIn) : "",
@@ -1977,11 +1969,6 @@ namespace Nop.Admin.Controllers
                     QuantityToAdd = maxQtyToAdd,
                 };
 
-                //product name
-                if (!String.IsNullOrEmpty(opv.ProductVariant.Name))
-                    sopvModel.FullProductName = string.Format("{0} ({1})", opv.ProductVariant.Product.Name, opv.ProductVariant.Name);
-                else
-                    sopvModel.FullProductName = opv.ProductVariant.Product.Name;
                 model.Products.Add(sopvModel);
             }
 
