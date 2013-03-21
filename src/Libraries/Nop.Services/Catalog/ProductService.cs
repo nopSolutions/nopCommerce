@@ -719,7 +719,7 @@ namespace Nop.Services.Catalog
                 //vendor filtering
                 if (vendorId > 0)
                 {
-                    query = query.Where(p => p.VendorId.HasValue && p.VendorId.Value == vendorId);
+                    query = query.Where(p => p.VendorId == vendorId);
                 }
 
                 //related products filtering

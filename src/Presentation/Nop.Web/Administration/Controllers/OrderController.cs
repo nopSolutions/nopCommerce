@@ -408,7 +408,7 @@ namespace Nop.Admin.Controllers
                     LicenseDownloadId = opv.LicenseDownloadId
                 };
                 //vendor;
-                var vendor = opv.ProductVariant.Product.Vendor;
+                var vendor = _vendorService.GetVendorById(opv.ProductVariant.Product.VendorId);
                 opvModel.Vendor = vendor != null ? vendor.Name : "";
 
                 //unit price

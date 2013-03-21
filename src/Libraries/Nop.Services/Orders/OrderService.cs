@@ -178,7 +178,7 @@ namespace Nop.Services.Orders
             {
                 query = query
                     .Where(o => o.OrderProductVariants
-                    .Any(opv => opv.ProductVariant.Product.VendorId.HasValue && opv.ProductVariant.Product.VendorId.Value == vendorId));
+                    .Any(opv => opv.ProductVariant.Product.VendorId == vendorId));
             }
             if (createdFromUtc.HasValue)
                 query = query.Where(o => createdFromUtc.Value <= o.CreatedOnUtc);

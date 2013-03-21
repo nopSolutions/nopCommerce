@@ -96,7 +96,7 @@ namespace Nop.Services.Orders
             {
                 query = query
                     .Where(o => o.OrderProductVariants
-                    .Any(opv => opv.ProductVariant.Product.VendorId.HasValue && opv.ProductVariant.Product.VendorId.Value == vendorId));
+                    .Any(opv => opv.ProductVariant.Product.VendorId == vendorId));
             }
             if (ignoreCancelledOrders)
             {
@@ -437,7 +437,7 @@ namespace Nop.Services.Orders
                               (!paymentStatusId.HasValue || paymentStatusId == o.PaymentStatusId) &&
                               (!shippingStatusId.HasValue || shippingStatusId == o.ShippingStatusId) &&
                               (!o.Deleted) &&
-                              (vendorId == 0 || (opv.ProductVariant.Product.VendorId.HasValue && opv.ProductVariant.Product.VendorId.Value == vendorId)) &&
+                              (vendorId == 0 || opv.ProductVariant.Product.VendorId == vendorId) &&
                               //we do not ignore deleted products when calculating order reports
                               //(!p.Deleted) &&
                               //(!pv.Deleted) &&

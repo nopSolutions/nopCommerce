@@ -700,9 +700,6 @@ namespace Nop.Admin.Controllers
                 var product = model.ToEntity();
                 product.CreatedOnUtc = DateTime.UtcNow;
                 product.UpdatedOnUtc = DateTime.UtcNow;
-                //some validation
-                if (product.VendorId == 0)
-                    product.VendorId = null;
                 _productService.InsertProduct(product);
                 //search engine name
                 model.SeName = product.ValidateSeName(model.SeName, product.Name, true);
@@ -803,9 +800,6 @@ namespace Nop.Admin.Controllers
                 //product
                 product = model.ToEntity(product);
                 product.UpdatedOnUtc = DateTime.UtcNow;
-                //some validation
-                if (product.VendorId == 0)
-                    product.VendorId = null;
                 _productService.UpdateProduct(product);
                 //search engine name
                 model.SeName = product.ValidateSeName(model.SeName, product.Name, true);

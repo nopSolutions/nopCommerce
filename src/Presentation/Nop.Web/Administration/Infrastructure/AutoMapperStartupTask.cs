@@ -225,7 +225,6 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.NotApprovedRatingSum, mo => mo.Ignore())
                 .ForMember(dest => dest.ApprovedTotalReviews, mo => mo.Ignore())
                 .ForMember(dest => dest.NotApprovedTotalReviews, mo => mo.Ignore())
-                .ForMember(dest => dest.Vendor, mo => mo.Ignore())
                 .ForMember(dest => dest.ProductVariants, mo => mo.Ignore())
                 .ForMember(dest => dest.ProductCategories, mo => mo.Ignore())
                 .ForMember(dest => dest.ProductManufacturers, mo => mo.Ignore())

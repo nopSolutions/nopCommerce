@@ -49,7 +49,7 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets a vendor identifier
         /// </summary>
-        public int? VendorId { get; set; }
+        public int VendorId { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to show the product on home page
@@ -125,11 +125,6 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the date and time of product update
         /// </summary>
         public DateTime UpdatedOnUtc { get; set; }
-
-        /// <summary>
-        /// Gets or sets the product variants
-        /// </summary>
-        public virtual Vendor Vendor { get; set; }
 
         /// <summary>
         /// Gets or sets the product variants

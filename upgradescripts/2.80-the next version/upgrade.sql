@@ -2852,16 +2852,13 @@ BEGIN
 	ADD [VendorId] int NULL
 END
 GO
-IF EXISTS (SELECT 1
-           FROM   sysobjects
-           WHERE  name = 'Product_Vendor'
-           AND parent_obj = Object_id('Product')
-           AND Objectproperty(id,N'IsForeignKey') = 1)
-ALTER TABLE dbo.Product
-DROP CONSTRAINT Product_Vendor
+
+UPDATE [Product]
+SET [VendorId] = 0
+WHERE [VendorId] IS NULL
 GO
-ALTER TABLE [dbo].[Product]  WITH CHECK ADD  CONSTRAINT [Product_Vendor] FOREIGN KEY([VendorId])
-REFERENCES [dbo].[Vendor] ([Id])
+
+ALTER TABLE [Product] ALTER COLUMN [VendorId] int NOT NULL
 GO
 
 IF EXISTS (
