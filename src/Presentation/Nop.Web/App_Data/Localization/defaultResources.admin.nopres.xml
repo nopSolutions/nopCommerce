@@ -10870,6 +10870,17 @@
                         </LocaleResource>
                       </Children>
                     </LocaleResource>
+                    <LocaleResource Name="AssociatedCustomerEmails">
+                      <Value>Customers</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>A list of customer accounts which could be used to manage products and orders of this vendor (have access to the vendor portal). You can associate customers to a vendor on a customer details page.</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="None">
+                          <Value>No customer account associated to this vendor.</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
                   </Children>
                 </LocaleResource>
                 <LocaleResource Name="Added">

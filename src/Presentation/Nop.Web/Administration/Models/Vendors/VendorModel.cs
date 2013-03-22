@@ -1,4 +1,5 @@
-﻿using FluentValidation.Attributes;
+﻿using System.Collections.Generic;
+using FluentValidation.Attributes;
 using Nop.Admin.Validators.Vendors;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
@@ -8,6 +9,11 @@ namespace Nop.Admin.Models.Vendors
     [Validator(typeof(VendorValidator))]
     public partial class VendorModel : BaseNopEntityModel
     {
+        public VendorModel()
+        {
+            AssociatedCustomerEmails = new List<string>();
+        }
+
         [NopResourceDisplayName("Admin.Vendors.Fields.Name")]
         public string Name { get; set; }
 
@@ -22,5 +28,8 @@ namespace Nop.Admin.Models.Vendors
 
         [NopResourceDisplayName("Admin.Vendors.Fields.Active")]
         public bool Active { get; set; }
+
+        [NopResourceDisplayName("Admin.Vendors.Fields.AssociatedCustomerEmails")]
+        public IList<string> AssociatedCustomerEmails { get; set; }
     }
 }

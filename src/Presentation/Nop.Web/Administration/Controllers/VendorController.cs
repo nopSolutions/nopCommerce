@@ -3,6 +3,7 @@ using System.Linq;
 using System.Web.Mvc;
 using Nop.Admin.Models.Vendors;
 using Nop.Core.Domain.Vendors;
+using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Services.Vendors;
@@ -16,6 +17,7 @@ namespace Nop.Admin.Controllers
     {
         #region Fields
 
+        private readonly ICustomerService _customerService;
         private readonly ILocalizationService _localizationService;
         private readonly IVendorService _vendorService;
         private readonly IPermissionService _permissionService;
@@ -24,9 +26,12 @@ namespace Nop.Admin.Controllers
 
         #region Constructors
 
-        public VendorController(ILocalizationService localizationService,
-            IVendorService vendorService, IPermissionService permissionService)
+        public VendorController(ICustomerService customerService, 
+            ILocalizationService localizationService,
+            IVendorService vendorService, 
+            IPermissionService permissionService)
         {
+            this._customerService = customerService;
             this._localizationService = localizationService;
             this._vendorService = vendorService;
             this._permissionService = permissionService;
@@ -45,6 +50,10 @@ namespace Nop.Admin.Controllers
             if (vendor != null)
             {
                 model.Id = vendor.Id;
+                model.AssociatedCustomerEmails = _customerService
+                    .GetAllCustomers(vendorId: vendor.Id)
+                    .Select(c => c.Email)
+                    .ToList();
                 if (!excludeProperties)
                 {
                     model.Name = vendor.Name;

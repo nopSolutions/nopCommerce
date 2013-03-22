@@ -638,6 +638,15 @@ set @resources='
   <LocaleResource Name="Admin.Customers.Customers.Fields.Vendor.None">
 	<Value>No vendor</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.AssociatedCustomerEmails">
+	<Value>Customers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.AssociatedCustomerEmails.Hint">
+	<Value>A list of customer accounts which could be used to manage products and orders of this vendor (have access to the vendor portal). You can associate customers to a vendor on a customer details page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.AssociatedCustomerEmails.None">
+	<Value>No customer account associated to this vendor.</Value>
+  </LocaleResource>
 </Language>
 '
 
