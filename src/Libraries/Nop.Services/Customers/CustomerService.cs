@@ -116,6 +116,8 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
         /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
+        /// <param name="affiliateId">Affiliate identifier</param>
+        /// <param name="vendorId">Vendor identifier</param>
         /// <param name="customerRoleIds">A list of customer role identifiers to filter by (at least one match); pass null or empty list in order to load all customers; </param>
         /// <param name="email">Email; null to load all customers</param>
         /// <param name="username">Username; null to load all customers</param>
@@ -131,17 +133,24 @@ namespace Nop.Services.Customers
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Customer collection</returns>
-        public virtual IPagedList<Customer> GetAllCustomers(DateTime? createdFromUtc,
-            DateTime? createdToUtc, int[] customerRoleIds, string email, string username,
-            string firstName, string lastName, int dayOfBirth, int monthOfBirth,
-            string company, string phone, string zipPostalCode,
-            bool loadOnlyWithShoppingCart, ShoppingCartType? sct, int pageIndex, int pageSize)
+        public virtual IPagedList<Customer> GetAllCustomers(DateTime? createdFromUtc = null,
+            DateTime? createdToUtc = null, int affiliateId = 0, int vendorId = 0,
+            int[] customerRoleIds = null, string email = null, string username = null,
+            string firstName = null, string lastName = null,
+            int dayOfBirth = 0, int monthOfBirth = 0,
+            string company = null, string phone = null, string zipPostalCode = null,
+            bool loadOnlyWithShoppingCart = false, ShoppingCartType? sct = null,
+            int pageIndex = 0, int pageSize = 2147483647)
         {
             var query = _customerRepository.Table;
             if (createdFromUtc.HasValue)
                 query = query.Where(c => createdFromUtc.Value <= c.CreatedOnUtc);
             if (createdToUtc.HasValue)
                 query = query.Where(c => createdToUtc.Value >= c.CreatedOnUtc);
+            if (affiliateId > 0)
+                query = query.Where(c => affiliateId == c.AffiliateId);
+            if (vendorId > 0)
+                query = query.Where(c => vendorId == c.VendorId);
             query = query.Where(c => !c.Deleted);
             if (customerRoleIds != null && customerRoleIds.Length > 0)
                 query = query.Where(c => c.CustomerRoles.Select(cr => cr.Id).Intersect(customerRoleIds).Any());
@@ -257,24 +266,6 @@ namespace Nop.Services.Customers
                     query.Where(c => c.ShoppingCartItems.Any());
             }
             
-            query = query.OrderByDescending(c => c.CreatedOnUtc);
-
-            var customers = new PagedList<Customer>(query, pageIndex, pageSize);
-            return customers;
-        }
-
-        /// <summary>
-        /// Gets all customers by affiliate identifier
-        /// </summary>
-        /// <param name="affiliateId">Affiliate identifier</param>
-        /// <param name="pageIndex">Page index</param>
-        /// <param name="pageSize">Page size</param>
-        /// <returns>Customers</returns>
-        public virtual IPagedList<Customer> GetAllCustomers(int affiliateId, int pageIndex, int pageSize)
-        {
-            var query = _customerRepository.Table;
-            query = query.Where(c => !c.Deleted);
-            query = query.Where(c => c.AffiliateId == affiliateId);
             query = query.OrderByDescending(c => c.CreatedOnUtc);
 
             var customers = new PagedList<Customer>(query, pageIndex, pageSize);

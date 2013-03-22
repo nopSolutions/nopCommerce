@@ -299,9 +299,10 @@ namespace Nop.Admin.Controllers
                 AvailableCustomerRoles = _customerService.GetAllCustomerRoles(true).Select(cr => cr.ToModel()).ToList(),
                 SearchCustomerRoleIds = defaultRoleIds,
             };
-            var customers = _customerService.GetAllCustomers(null, null, defaultRoleIds, null,
-                null, null, null, 0, 0, null, null, null,
-                false, null, 0, _adminAreaSettings.GridPageSize);
+            var customers = _customerService.GetAllCustomers( 
+                customerRoleIds: defaultRoleIds, 
+                pageIndex: 0,
+                pageSize: _adminAreaSettings.GridPageSize);
             //customer list
             listModel.Customers = new GridModel<CustomerModel>
             {
@@ -325,13 +326,21 @@ namespace Nop.Admin.Controllers
                 searchDayOfBirth = Convert.ToInt32(model.SearchDayOfBirth);
             if (!String.IsNullOrWhiteSpace(model.SearchMonthOfBirth))
                 searchMonthOfBirth = Convert.ToInt32(model.SearchMonthOfBirth);
-
-            var customers = _customerService.GetAllCustomers(null, null,
-                searchCustomerRoleIds, model.SearchEmail, model.SearchUsername,
-                model.SearchFirstName, model.SearchLastName,
-                searchDayOfBirth, searchMonthOfBirth,
-                model.SearchCompany, model.SearchPhone, model.SearchZipPostalCode,
-                false, null, command.Page - 1, command.PageSize);
+            
+            var customers = _customerService.GetAllCustomers(
+                customerRoleIds: searchCustomerRoleIds,
+                email: model.SearchEmail,
+                username: model.SearchUsername,
+                firstName: model.SearchFirstName,
+                lastName: model.SearchLastName,
+                dayOfBirth: searchDayOfBirth,
+                monthOfBirth: searchMonthOfBirth,
+                company: model.SearchCompany,
+                phone: model.SearchPhone,
+                zipPostalCode: model.SearchZipPostalCode,
+                loadOnlyWithShoppingCart: false,
+                pageIndex: command.Page - 1,
+                pageSize: command.PageSize);
             var gridModel = new GridModel<CustomerModel>
             {
                 Data = customers.Select(PrepareCustomerModelForList),
@@ -1672,9 +1681,7 @@ namespace Nop.Admin.Controllers
 
             try
             {
-                var customers = _customerService.GetAllCustomers(null, null, null, null,
-                    null, null, null, 0, 0, null, null, null, 
-                    false, null, 0, int.MaxValue);
+                var customers = _customerService.GetAllCustomers();
 
                 byte[] bytes = null;
                 using (var stream = new MemoryStream())
@@ -1722,9 +1729,7 @@ namespace Nop.Admin.Controllers
 
             try
             {
-                var customers = _customerService.GetAllCustomers(null, null, null, null,
-                    null, null, null, 0, 0, null, null, null, 
-                    false, null, 0, int.MaxValue);
+                var customers = _customerService.GetAllCustomers();
                 
                 var xml = _exportManager.ExportCustomersToXml(customers);
                 return new XmlDownloadResult(xml, "customers.xml");

@@ -65,9 +65,11 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
-            var customers = _customerService.GetAllCustomers(null, null, null, null, null,
-                null, null, 0, 0, null, null, null, true, ShoppingCartType.ShoppingCart,
-                command.Page - 1, command.PageSize);
+            var customers = _customerService.GetAllCustomers(
+                loadOnlyWithShoppingCart: true,
+                sct: ShoppingCartType.ShoppingCart,
+                pageIndex: command.Page - 1,
+                pageSize: command.PageSize);
 
             var gridModel = new GridModel<ShoppingCartModel>
             {
@@ -142,9 +144,11 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
-            var customers = _customerService.GetAllCustomers(null, null, null, null, null,
-                null, null, 0, 0, null, null, null, 
-                true, ShoppingCartType.Wishlist, command.Page - 1, command.PageSize);
+            var customers = _customerService.GetAllCustomers(
+                loadOnlyWithShoppingCart: true,
+                sct: ShoppingCartType.Wishlist,
+                pageIndex: command.Page - 1,
+                pageSize: command.PageSize);
 
             var gridModel = new GridModel<ShoppingCartModel>
             {
