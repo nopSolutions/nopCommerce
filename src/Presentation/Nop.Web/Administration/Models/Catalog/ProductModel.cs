@@ -50,7 +50,7 @@ namespace Nop.Admin.Models.Catalog
         public IList<SelectListItem> AvailableProductTemplates { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.Vendor")]
-        public int? VendorId { get; set; }
+        public int VendorId { get; set; }
         public IList<SelectListItem> AvailableVendors { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.ShowOnHomePage")]

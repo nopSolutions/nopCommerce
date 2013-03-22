@@ -1,5 +1,3 @@
-using Nop.Core.Domain.Common;
-
 namespace Nop.Core.Domain.Vendors
 {
     /// <summary>

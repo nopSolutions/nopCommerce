@@ -629,6 +629,15 @@ set @resources='
   <LocaleResource Name="Admin.Orders.Products.Vendor">
 	<Value>Vendor</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.Vendor">
+	<Value>Manager of vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.Vendor.Hint">
+	<Value>Choose a vendor associated to this customer account. When associated this customer will be able to login to the chosen vendor portal and manage his products and orders.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.Vendor.None">
+	<Value>No vendor</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -3461,4 +3470,20 @@ BEGIN
 	
 	DROP TABLE #PageIndex
 END
+GO
+
+--Customer-vendor mapping (managers)
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Customer]') and NAME='VendorId')
+BEGIN
+	ALTER TABLE [Customer]
+	ADD [VendorId] int NULL
+END
+GO
+
+UPDATE [Customer]
+SET [VendorId] = 0
+WHERE [VendorId] IS NULL
+GO
+
+ALTER TABLE [Customer] ALTER COLUMN [VendorId] int NOT NULL
 GO

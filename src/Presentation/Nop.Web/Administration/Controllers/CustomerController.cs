@@ -33,6 +33,7 @@ using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
+using Nop.Services.Vendors;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
@@ -60,6 +61,7 @@ namespace Nop.Admin.Controllers
         private readonly CustomerSettings _customerSettings;
         private readonly ITaxService _taxService;
         private readonly IWorkContext _workContext;
+        private readonly IVendorService _vendorService;
         private readonly IStoreContext _storeContext;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IOrderService _orderService;
@@ -90,7 +92,8 @@ namespace Nop.Admin.Controllers
             ICountryService countryService, IStateProvinceService stateProvinceService, 
             IAddressService addressService,
             CustomerSettings customerSettings, ITaxService taxService, 
-            IWorkContext workContext, IStoreContext storeContext,
+            IWorkContext workContext, IVendorService vendorService,
+            IStoreContext storeContext,
             IPriceFormatter priceFormatter,
             IOrderService orderService, 
             IExportManager exportManager,
@@ -117,6 +120,7 @@ namespace Nop.Admin.Controllers
             this._customerSettings = customerSettings;
             this._taxService = taxService;
             this._workContext = workContext;
+            this._vendorService = vendorService;
             this._storeContext = storeContext;
             this._priceFormatter = priceFormatter;
             this._orderService = orderService;
@@ -247,6 +251,28 @@ namespace Nop.Admin.Controllers
             return "";
         }
 
+        [NonAction]
+        private void PrepareVendorsModel(CustomerModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            model.AvailableVendors.Add(new SelectListItem()
+            {
+                Text = _localizationService.GetResource("Admin.Customers.Customers.Fields.Vendor.None"),
+                Value = "0"
+            });
+            var vendors = _vendorService.GetAllVendors(0, int.MaxValue, true);
+            foreach (var vendor in vendors)
+            {
+                model.AvailableVendors.Add(new SelectListItem()
+                {
+                    Text = vendor.Name,
+                    Value = vendor.Id.ToString()
+                });
+            }
+        }
+
         #endregion
 
         #region Customers
@@ -336,6 +362,8 @@ namespace Nop.Admin.Controllers
                 .ToList();
             model.SelectedCustomerRoleIds = new int[0];
             model.AllowManagingCustomerRoles = _permissionService.Authorize(StandardPermissionProvider.ManageCustomerRoles);
+            //vendors
+            PrepareVendorsModel(model);
             //form fields
             model.GenderEnabled = _customerSettings.GenderEnabled;
             model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
@@ -416,6 +444,7 @@ namespace Nop.Admin.Controllers
                     CustomerGuid = Guid.NewGuid(),
                     Email = model.Email,
                     Username = model.Username,
+                    VendorId = model.VendorId,
                     AdminComment = model.AdminComment,
                     IsTaxExempt = model.IsTaxExempt,
                     Active = model.Active,
@@ -493,6 +522,8 @@ namespace Nop.Admin.Controllers
                 .Select(cr => cr.ToModel())
                 .ToList();
             model.AllowManagingCustomerRoles = allowManagingCustomerRoles;
+            //vendors
+            PrepareVendorsModel(model);
             //form fields
             model.GenderEnabled = _customerSettings.GenderEnabled;
             model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
@@ -546,6 +577,9 @@ namespace Nop.Admin.Controllers
             model.Id = customer.Id;
             model.Email = customer.Email;
             model.Username = customer.Username;
+            //vendors
+            model.VendorId = customer.VendorId;
+            PrepareVendorsModel(model);
             model.AdminComment = customer.AdminComment;
             model.IsTaxExempt = customer.IsTaxExempt;
             model.Active = customer.Active;
@@ -715,6 +749,9 @@ namespace Nop.Admin.Controllers
                         }
                     }
 
+                    //vendor
+                    customer.VendorId = model.VendorId;
+
                     //form fields
                     if (_dateTimeSettings.AllowCustomersToSetTimeZone)
                         _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.TimeZoneId, model.TimeZoneId);
@@ -791,6 +828,8 @@ namespace Nop.Admin.Controllers
             model.LastActivityDate = _dateTimeHelper.ConvertToUserTime(customer.LastActivityDateUtc, DateTimeKind.Utc);
             model.LastIpAddress = model.LastIpAddress;
             model.LastVisitedPage = customer.GetAttribute<string>(SystemCustomerAttributeNames.LastVisitedPage);
+            //vendors
+            PrepareVendorsModel(model);
             //form fields
             model.GenderEnabled = _customerSettings.GenderEnabled;
             model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;

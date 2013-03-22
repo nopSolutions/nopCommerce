@@ -7290,6 +7290,17 @@
                                             </LocaleResource>
                                         </Children>
                                     </LocaleResource>
+                                    <LocaleResource Name="Vendor">
+                                          <Value>Manager of vendor</Value>
+                                          <Children>
+                                              <LocaleResource Name="Hint">
+                                                  <Value>Choose a vendor associated to this customer account. When associated this customer will be able to login to the chosen vendor portal and manage his products and orders.</Value>
+                                              </LocaleResource>
+                                              <LocaleResource Name="None">
+                                                  <Value>No vendor</Value>
+                                              </LocaleResource>
+                                          </Children>
+                                      </LocaleResource>
                                     <LocaleResource Name="Gender">
                                         <Value>Gender</Value>
                                         <Children>
