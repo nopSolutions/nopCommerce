@@ -1275,14 +1275,9 @@ namespace Nop.Services.ExportImport
                         "PasswordStr",//why can't we use 'Password' name?
                         "PasswordFormatId",
                         "PasswordSalt",
-                        "LanguageId",
-                        "CurrencyId",
-                        "TaxDisplayTypeId",
                         "IsTaxExempt",
-                        "VatNumber",
-                        "VatNumberStatusId",
-                        "TimeZoneId",
                         "AffiliateId",
+                        "VendorId",
                         "Active",
                         "IsGuest",
                         "IsRegistered",
@@ -1300,6 +1295,9 @@ namespace Nop.Services.ExportImport
                         "StateProvinceId",
                         "Phone",
                         "Fax",
+                        "VatNumber",
+                        "VatNumberStatusId",
+                        "TimeZoneId",
                         "AvatarPictureId",
                         "ForumPostCount",
                         "Signature",
@@ -1345,6 +1343,9 @@ namespace Nop.Services.ExportImport
                     worksheet.Cells[row, col].Value = customer.AffiliateId;
                     col++;
 
+                    worksheet.Cells[row, col].Value = customer.VendorId;
+                    col++;
+
                     worksheet.Cells[row, col].Value = customer.Active;
                     col++;
 
@@ -1374,8 +1375,8 @@ namespace Nop.Services.ExportImport
                     var stateProvinceId = customer.GetAttribute<int>(SystemCustomerAttributeNames.StateProvinceId);
                     var phone = customer.GetAttribute<string>(SystemCustomerAttributeNames.Phone);
                     var fax = customer.GetAttribute<string>(SystemCustomerAttributeNames.Fax);
-                    var vatNumber = customer.GetAttribute<int>(SystemCustomerAttributeNames.VatNumber);
-                    var vatNumberStatusId = customer.GetAttribute<string>(SystemCustomerAttributeNames.VatNumberStatusId);
+                    var vatNumber = customer.GetAttribute<string>(SystemCustomerAttributeNames.VatNumber);
+                    var vatNumberStatusId = customer.GetAttribute<int>(SystemCustomerAttributeNames.VatNumberStatusId);
                     var timeZoneId = customer.GetAttribute<string>(SystemCustomerAttributeNames.TimeZoneId);
 
                     var avatarPictureId = customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId);
@@ -1440,12 +1441,6 @@ namespace Nop.Services.ExportImport
                 }
 
 
-
-
-
-
-
-
                 // we had better add some document properties to the spreadsheet 
 
                 // set some core property values
@@ -1493,6 +1488,7 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("PasswordSalt", null, customer.PasswordSalt);
                 xmlWriter.WriteElementString("IsTaxExempt", null, customer.IsTaxExempt.ToString());
                 xmlWriter.WriteElementString("AffiliateId", null, customer.AffiliateId.ToString());
+                xmlWriter.WriteElementString("VendorId", null, customer.VendorId.ToString());
                 xmlWriter.WriteElementString("Active", null, customer.Active.ToString());
 
 
