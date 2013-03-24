@@ -4031,12 +4031,20 @@ namespace Nop.Services.Installation
                 IsSystemRole = true,
                 SystemName = SystemCustomerRoleNames.Guests,
             };
+            var crVendors = new CustomerRole
+            {
+                Name = "Vendors",
+                Active = true,
+                IsSystemRole = true,
+                SystemName = SystemCustomerRoleNames.Vendors,
+            };
             var customerRoles = new List<CustomerRole>
                                 {
                                     crAdministrators,
                                     crForumModerators,
                                     crRegistered,
-                                    crGuests
+                                    crGuests,
+                                    crVendors
                                 };
             customerRoles.ForEach(cr => _customerRoleRepository.Insert(cr));
 
@@ -4722,7 +4730,8 @@ namespace Nop.Services.Installation
                 {
                     ForceSslForAllPages = false,
                     EncryptionKey = "273ece6f97dd844d",
-                    AdminAreaAllowedIpAddresses = null
+                    AdminAreaAllowedIpAddresses = null,
+                    HideAdminMenuItemsBasedOnPermissions = true,
                 });
 
             settingService.SaveSetting(new ShippingSettings()

@@ -819,7 +819,7 @@ BEGIN
 	SET @PermissionRecordId = @@IDENTITY
 
 
-	--add it to admin role be default
+	--add it to admin role by default
 	DECLARE @AdminCustomerRoleId int
 	SELECT @AdminCustomerRoleId = Id
 	FROM [CustomerRole]
@@ -2852,7 +2852,7 @@ BEGIN
 	SET @PermissionRecordId = @@IDENTITY
 
 
-	--add it to admin role be default
+	--add it to admin role by default
 	DECLARE @AdminCustomerRoleId int
 	SELECT @AdminCustomerRoleId = Id
 	FROM [CustomerRole]
@@ -3496,3 +3496,194 @@ GO
 
 ALTER TABLE [Customer] ALTER COLUMN [VendorId] int NOT NULL
 GO
+
+--new "Vendors" customer role
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[CustomerRole]
+		WHERE [SystemName] = N'Vendors' and [IsSystemRole]=1)
+BEGIN
+	INSERT [dbo].[CustomerRole] ([Name], [FreeShipping], [TaxExempt], [Active], [IsSystemRole], [SystemName])
+	VALUES (N'Vendors', 0, 0, 1, 1, N'Vendors')
+	
+	DECLARE @VendorsCustomerRoleId INT 
+	SET @VendorsCustomerRoleId = @@IDENTITY
+	
+	DECLARE @AccessAdminPanelPermissionRecordId INT 
+	SELECT @AccessAdminPanelPermissionRecordId = [Id] FROM [PermissionRecord]
+	WHERE [SystemName] = N'AccessAdminPanel' 
+
+	INSERT [dbo].[PermissionRecord_Role_Mapping] ([PermissionRecord_Id], [CustomerRole_Id])
+	VALUES (@AccessAdminPanelPermissionRecordId, @VendorsCustomerRoleId)
+END
+GO
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[PermissionRecord]
+		WHERE [SystemName] = N'AccessAdminPanel')
+BEGIN
+	DECLARE @PermissionRecordId INT 
+	SELECT @PermissionRecordId = [Id] FROM [PermissionRecord]
+	WHERE [SystemName] = N'AccessAdminPanel' 
+
+	--add it to vendors role
+	DECLARE @VendorsCustomerRoleId int
+	SELECT @VendorsCustomerRoleId = Id
+	FROM [CustomerRole]
+	WHERE IsSystemRole=1 and [SystemName] = N'Vendors'
+
+	INSERT [dbo].[PermissionRecord_Role_Mapping] ([PermissionRecord_Id], [CustomerRole_Id])
+	VALUES (@PermissionRecordId, @VendorsCustomerRoleId)
+END
+GO
+--split "Manage catalog" permission to several permissions
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[PermissionRecord]
+		WHERE [SystemName] = N'ManageProducts')
+BEGIN
+	INSERT [dbo].[PermissionRecord] ([Name], [SystemName], [Category])
+	VALUES (N'Admin area. Manage Products', N'ManageProducts', N'Catalog')
+
+	DECLARE @PermissionRecordId INT 
+	SET @PermissionRecordId = @@IDENTITY
+
+
+	--add it to admin role by default
+	DECLARE @AdminCustomerRoleId int
+	SELECT @AdminCustomerRoleId = Id
+	FROM [CustomerRole]
+	WHERE IsSystemRole=1 and [SystemName] = N'Administrators'
+
+	INSERT [dbo].[PermissionRecord_Role_Mapping] ([PermissionRecord_Id], [CustomerRole_Id])
+	VALUES (@PermissionRecordId, @AdminCustomerRoleId)
+
+
+	--add it to vendors role by default
+	DECLARE @VendorsCustomerRoleId int
+	SELECT @VendorsCustomerRoleId = Id
+	FROM [CustomerRole]
+	WHERE IsSystemRole=1 and [SystemName] = N'Vendors'
+
+	INSERT [dbo].[PermissionRecord_Role_Mapping] ([PermissionRecord_Id], [CustomerRole_Id])
+	VALUES (@PermissionRecordId, @VendorsCustomerRoleId)
+END
+GO
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[PermissionRecord]
+		WHERE [SystemName] = N'ManageCategories')
+BEGIN
+	INSERT [dbo].[PermissionRecord] ([Name], [SystemName], [Category])
+	VALUES (N'Admin area. Manage Categories', N'ManageCategories', N'Catalog')
+
+	DECLARE @PermissionRecordId INT 
+	SET @PermissionRecordId = @@IDENTITY
+
+
+	--add it to admin role by default
+	DECLARE @AdminCustomerRoleId int
+	SELECT @AdminCustomerRoleId = Id
+	FROM [CustomerRole]
+	WHERE IsSystemRole=1 and [SystemName] = N'Administrators'
+
+	INSERT [dbo].[PermissionRecord_Role_Mapping] ([PermissionRecord_Id], [CustomerRole_Id])
+	VALUES (@PermissionRecordId, @AdminCustomerRoleId)
+END
+GO
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[PermissionRecord]
+		WHERE [SystemName] = N'ManageManufacturers')
+BEGIN
+	INSERT [dbo].[PermissionRecord] ([Name], [SystemName], [Category])
+	VALUES (N'Admin area. Manage Manufacturers', N'ManageManufacturers', N'Catalog')
+
+	DECLARE @PermissionRecordId INT 
+	SET @PermissionRecordId = @@IDENTITY
+
+
+	--add it to admin role by default
+	DECLARE @AdminCustomerRoleId int
+	SELECT @AdminCustomerRoleId = Id
+	FROM [CustomerRole]
+	WHERE IsSystemRole=1 and [SystemName] = N'Administrators'
+
+	INSERT [dbo].[PermissionRecord_Role_Mapping] ([PermissionRecord_Id], [CustomerRole_Id])
+	VALUES (@PermissionRecordId, @AdminCustomerRoleId)
+END
+GO
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[PermissionRecord]
+		WHERE [SystemName] = N'ManageProductReviews')
+BEGIN
+	INSERT [dbo].[PermissionRecord] ([Name], [SystemName], [Category])
+	VALUES (N'Admin area. Manage Product Reviews', N'ManageProductReviews', N'Catalog')
+
+	DECLARE @PermissionRecordId INT 
+	SET @PermissionRecordId = @@IDENTITY
+
+
+	--add it to admin role by default
+	DECLARE @AdminCustomerRoleId int
+	SELECT @AdminCustomerRoleId = Id
+	FROM [CustomerRole]
+	WHERE IsSystemRole=1 and [SystemName] = N'Administrators'
+
+	INSERT [dbo].[PermissionRecord_Role_Mapping] ([PermissionRecord_Id], [CustomerRole_Id])
+	VALUES (@PermissionRecordId, @AdminCustomerRoleId)
+END
+GO
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[PermissionRecord]
+		WHERE [SystemName] = N'ManageProductTags')
+BEGIN
+	INSERT [dbo].[PermissionRecord] ([Name], [SystemName], [Category])
+	VALUES (N'Admin area. Manage Product Tags', N'ManageProductTags', N'Catalog')
+
+	DECLARE @PermissionRecordId INT 
+	SET @PermissionRecordId = @@IDENTITY
+
+
+	--add it to admin role by default
+	DECLARE @AdminCustomerRoleId int
+	SELECT @AdminCustomerRoleId = Id
+	FROM [CustomerRole]
+	WHERE IsSystemRole=1 and [SystemName] = N'Administrators'
+
+	INSERT [dbo].[PermissionRecord_Role_Mapping] ([PermissionRecord_Id], [CustomerRole_Id])
+	VALUES (@PermissionRecordId, @AdminCustomerRoleId)
+END
+GO
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[PermissionRecord]
+		WHERE [SystemName] = N'ManageAttributes')
+BEGIN
+	INSERT [dbo].[PermissionRecord] ([Name], [SystemName], [Category])
+	VALUES (N'Admin area. Manage Attributes', N'ManageAttributes', N'Catalog')
+
+	DECLARE @PermissionRecordId INT 
+	SET @PermissionRecordId = @@IDENTITY
+
+
+	--add it to admin role by default
+	DECLARE @AdminCustomerRoleId int
+	SELECT @AdminCustomerRoleId = Id
+	FROM [CustomerRole]
+	WHERE IsSystemRole=1 and [SystemName] = N'Administrators'
+
+	INSERT [dbo].[PermissionRecord_Role_Mapping] ([PermissionRecord_Id], [CustomerRole_Id])
+	VALUES (@PermissionRecordId, @AdminCustomerRoleId)
+END
+GO
+--delete obsolete permission
+DELETE FROM [dbo].[PermissionRecord]
+WHERE [SystemName] = N'ManageCatalog'
+GO
+--enable "Hide admin menu items based on permissions" setting
+UPDATE [Setting]
+SET [Value] = N'true'
+WHERE [name] = N'securitysettings.hideadminmenuitemsbasedonpermissions'

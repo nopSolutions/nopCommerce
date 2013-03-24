@@ -4,12 +4,20 @@ using Nop.Core.Domain.Security;
 
 namespace Nop.Services.Security
 {
+    /// <summary>
+    /// Standard permission provider
+    /// </summary>
     public partial class StandardPermissionProvider : IPermissionProvider
     {
         //admin area permissions
         public static readonly PermissionRecord AccessAdminPanel = new PermissionRecord { Name = "Access admin area", SystemName = "AccessAdminPanel", Category = "Standard" };
         public static readonly PermissionRecord AllowCustomerImpersonation = new PermissionRecord { Name = "Admin area. Allow Customer Impersonation", SystemName = "AllowCustomerImpersonation", Category = "Customers" };
-        public static readonly PermissionRecord ManageCatalog = new PermissionRecord { Name = "Admin area. Manage Catalog", SystemName = "ManageCatalog", Category = "Catalog" };
+        public static readonly PermissionRecord ManageProducts = new PermissionRecord { Name = "Admin area. Manage Products", SystemName = "ManageProducts", Category = "Catalog" };
+        public static readonly PermissionRecord ManageCategories = new PermissionRecord { Name = "Admin area. Manage Categories", SystemName = "ManageCategories", Category = "Catalog" };
+        public static readonly PermissionRecord ManageManufacturers = new PermissionRecord { Name = "Admin area. Manage Manufacturers", SystemName = "ManageManufacturers", Category = "Catalog" };
+        public static readonly PermissionRecord ManageProductReviews = new PermissionRecord { Name = "Admin area. Manage Product Reviews", SystemName = "ManageProductReviews", Category = "Catalog" };
+        public static readonly PermissionRecord ManageProductTags = new PermissionRecord { Name = "Admin area. Manage Product Tags", SystemName = "ManageProductTags", Category = "Catalog" };
+        public static readonly PermissionRecord ManageAttributes = new PermissionRecord { Name = "Admin area. Manage Attributes", SystemName = "ManageAttributes", Category = "Catalog" };
         public static readonly PermissionRecord ManageCustomers = new PermissionRecord { Name = "Admin area. Manage Customers", SystemName = "ManageCustomers", Category = "Customers" };
         public static readonly PermissionRecord ManageCustomerRoles = new PermissionRecord { Name = "Admin area. Manage Customer Roles", SystemName = "ManageCustomerRoles", Category = "Customers" };
         public static readonly PermissionRecord ManageVendors = new PermissionRecord { Name = "Admin area. Manage Vendors", SystemName = "ManageVendors", Category = "Customers" };
@@ -62,7 +70,12 @@ namespace Nop.Services.Security
             {
                 AccessAdminPanel,
                 AllowCustomerImpersonation,
-                ManageCatalog,
+                ManageProducts,
+                ManageCategories,
+                ManageManufacturers,
+                ManageProductReviews,
+                ManageProductTags,
+                ManageAttributes,
                 ManageCustomers,
                 ManageCustomerRoles,
                 ManageVendors,
@@ -118,7 +131,12 @@ namespace Nop.Services.Security
                     {
                         AccessAdminPanel,
                         AllowCustomerImpersonation,
-                        ManageCatalog,
+                        ManageProducts,
+                        ManageCategories,
+                        ManageManufacturers,
+                        ManageProductReviews,
+                        ManageProductTags,
+                        ManageAttributes,
                         ManageCustomers,
                         ManageCustomerRoles,
                         ManageVendors,
@@ -195,6 +213,15 @@ namespace Nop.Services.Security
                         PublicStoreAllowNavigation,
                     }
                 },
+                new DefaultPermissionRecord 
+                {
+                    CustomerRoleSystemName = SystemCustomerRoleNames.Vendors,
+                    PermissionRecords = new[] 
+                    {
+                        AccessAdminPanel,
+                        ManageProducts,
+                    }
+                }
             };
         }
     }

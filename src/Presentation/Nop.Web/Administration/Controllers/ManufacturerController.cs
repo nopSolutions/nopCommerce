@@ -252,7 +252,7 @@ namespace Nop.Admin.Controllers
 
         public ActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();
 
             var model = new ManufacturerListModel();
@@ -268,7 +268,7 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult List(GridCommand command, ManufacturerListModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();
 
             var manufacturers = _manufacturerService.GetAllManufacturers(model.SearchManufacturerName,
@@ -290,7 +290,7 @@ namespace Nop.Admin.Controllers
 
         public ActionResult Create()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();
 
             var model = new ManufacturerModel();
@@ -315,7 +315,7 @@ namespace Nop.Admin.Controllers
         [HttpPost, ParameterBasedOnFormNameAttribute("save-continue", "continueEditing")]
         public ActionResult Create(ManufacturerModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();
 
             if (ModelState.IsValid)
@@ -356,7 +356,7 @@ namespace Nop.Admin.Controllers
 
         public ActionResult Edit(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();
 
             var manufacturer = _manufacturerService.GetManufacturerById(id);
@@ -388,7 +388,7 @@ namespace Nop.Admin.Controllers
         [HttpPost, ParameterBasedOnFormNameAttribute("save-continue", "continueEditing")]
         public ActionResult Edit(ManufacturerModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();
 
             var manufacturer = _manufacturerService.GetManufacturerById(model.Id);
@@ -443,7 +443,7 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult Delete(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();
 
             var manufacturer = _manufacturerService.GetManufacturerById(id);
@@ -466,7 +466,7 @@ namespace Nop.Admin.Controllers
 
         public ActionResult ExportXml()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();
 
             try
@@ -489,7 +489,7 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult ProductList(GridCommand command, int manufacturerId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();
 
             var productManufacturers = _manufacturerService.GetProductManufacturersByManufacturerId(manufacturerId,
@@ -522,7 +522,7 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult ProductUpdate(GridCommand command, ManufacturerModel.ManufacturerProductModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();
 
             var productManufacturer = _manufacturerService.GetProductManufacturerById(model.Id);
@@ -539,7 +539,7 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult ProductDelete(int id, GridCommand command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();
 
             var productManufacturer = _manufacturerService.GetProductManufacturerById(id);
@@ -554,7 +554,7 @@ namespace Nop.Admin.Controllers
 
         public ActionResult ProductAddPopup(int manufacturerId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();
 
             var products = _productService.SearchProducts(
@@ -594,7 +594,7 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult ProductAddPopupList(GridCommand command, ManufacturerModel.AddManufacturerProductModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();
 
             var gridModel = new GridModel();
@@ -620,7 +620,7 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("save")]
         public ActionResult ProductAddPopup(string btnId, string formId, ManufacturerModel.AddManufacturerProductModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();
 
             if (model.SelectedProductIds != null)
