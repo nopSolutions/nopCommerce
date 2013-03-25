@@ -234,7 +234,7 @@ namespace Nop.Web.Framework
                 var vendor = _vendorService.GetVendorById(currentCustomer.VendorId);
 
                 //validation
-                if (!vendor.Deleted && vendor.Active)
+                if (vendor != null && !vendor.Deleted && vendor.Active)
                     _cachedVendor = vendor;
 
                 return _cachedVendor;

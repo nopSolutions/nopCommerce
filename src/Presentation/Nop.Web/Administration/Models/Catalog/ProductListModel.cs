@@ -14,6 +14,7 @@ namespace Nop.Admin.Models.Catalog
             AvailableStores = new List<SelectListItem>();
             AvailableVendors = new List<SelectListItem>();
         }
+
         [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
         [AllowHtml]
         public string SearchProductName { get; set; }
@@ -33,7 +34,7 @@ namespace Nop.Admin.Models.Catalog
         public bool DisplayProductPictures { get; set; }
         public bool DisplayPdfDownloadCatalog { get; set; }
 
-
+        public bool IsLoggedInAsVendor { get; set; }
 
         public IList<SelectListItem> AvailableCategories { get; set; }
         public IList<SelectListItem> AvailableManufacturers { get; set; }

@@ -593,6 +593,8 @@ namespace Nop.Admin.Controllers
             var model = new ProductListModel();
             model.DisplayProductPictures = _adminAreaSettings.DisplayProductPictures;
             model.DisplayPdfDownloadCatalog = _pdfSettings.Enabled;
+            //a vendor should has access only to his products
+            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
 
             //categories
             model.AvailableCategories.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
@@ -623,6 +625,12 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
+            //a vendor should has access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                model.SearchVendorId = _workContext.CurrentVendor.Id;
+            }
+
             var gridModel = new GridModel();
             var products = _productService.SearchProducts(
                 categoryIds: new List<int>() { model.SearchCategoryId },
@@ -635,11 +643,11 @@ namespace Nop.Admin.Controllers
                 showHidden: true
                 );
             gridModel.Data = products.Select(x =>
-                                                 {
-                                                     var productModel = x.ToModel();
-                                                     PrepareProductPictureThumbnailModel(productModel, x);
-                                                     return productModel;
-                                                 });
+            {
+                var productModel = x.ToModel();
+                PrepareProductPictureThumbnailModel(productModel, x);
+                return productModel;
+            });
             gridModel.Total = products.TotalCount;
             return new JsonResult
             {

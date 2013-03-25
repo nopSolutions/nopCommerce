@@ -4,7 +4,6 @@ using System.ServiceModel.Syndication;
 using System.Web.Mvc;
 using System.Xml;
 using Nop.Core;
-using Nop.Core.Domain;
 using Nop.Core.Domain.Common;
 using Nop.Services.Configuration;
 using Nop.Web.Framework.Controllers;
