@@ -299,6 +299,10 @@ namespace Nop.Admin.Controllers
                 //No product review found with the specified id
                 return RedirectToAction("Edit", "Product", new { id = productId });
 
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
+                return RedirectToAction("List", "Product");
+
             var model = new ProductVariantModel()
             {
                 ProductId = productId,
@@ -320,6 +324,15 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
+
+            //If we got this far, something failed, redisplay form
+            var product = _productService.GetProductById(model.ProductId);
+            if (product == null)
+                throw new ArgumentException("No product found with the specified id");
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
+                return RedirectToAction("List", "Product");
 
             if (ModelState.IsValid)
             {
@@ -352,11 +365,6 @@ namespace Nop.Admin.Controllers
                 return continueEditing ? RedirectToAction("Edit", new { id = variant.Id }) : RedirectToAction("Edit", "Product", new { id = variant.ProductId });
             }
 
-
-            //If we got this far, something failed, redisplay form
-            var product = _productService.GetProductById(model.ProductId);
-            if (product == null)
-                throw new ArgumentException("No product found with the specified id");
             //common
             PrepareProductModel(model, product);
             PrepareProductVariantModel(model, null, false);
@@ -375,6 +383,12 @@ namespace Nop.Admin.Controllers
             var variant = _productService.GetProductVariantById(id);
             if (variant == null || variant.Deleted)
                 //No product variant found with the specified id
+                return RedirectToAction("List", "Product");
+
+            var product = variant.Product;
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return RedirectToAction("List", "Product");
 
             var model = variant.ToModel();
@@ -405,6 +419,12 @@ namespace Nop.Admin.Controllers
             var variant = _productService.GetProductVariantById(model.Id);
             if (variant == null || variant.Deleted)
                 //No product variant found with the specified id
+                return RedirectToAction("List", "Product");
+
+            var product = variant.Product;
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return RedirectToAction("List", "Product");
 
             if (ModelState.IsValid)
@@ -491,6 +511,12 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("List", "Product");
 
             var productId = variant.ProductId;
+            var product = variant.Product;
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
+                return RedirectToAction("List", "Product");
+
             _productService.DeleteProductVariant(variant);
             //update product tag totals
             UpdateProductTagTotals(variant);
@@ -556,6 +582,13 @@ namespace Nop.Admin.Controllers
             try
             {
                 var originalProductVariant = _productService.GetProductVariantById(copyModel.Id);
+
+                var product = originalProductVariant.Product;
+
+                //a vendor should have access only to his products
+                if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
+                    return RedirectToAction("List", "Product");
+
                 var newProductVariant = _copyProductService.CopyProductVariant(originalProductVariant,
                     originalProductVariant.Product.Id, copyModel.Name, copyModel.Published, true);
                 SuccessNotification("The product variant has been copied successfully");
@@ -674,6 +707,16 @@ namespace Nop.Admin.Controllers
             if (productVariant == null)
                 throw new ArgumentException("No product variant found with the specified id");
 
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                var product = _productService.GetProductById(productVariant.ProductId);
+                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
+                {
+                    return Content("This is not your product");
+                }
+            }
+
             var tierPrices = productVariant.TierPrices;
             var tierPricesModel = tierPrices
                 .Select(x =>
@@ -708,6 +751,20 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                var variant = _productService.GetProductVariantById(model.ProductVariantId);
+                if (variant != null)
+                {
+                    var product = _productService.GetProductById(variant.ProductId);
+                    if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
+                    {
+                        return Content("This is not your product");
+                    }
+                }
+            }
+
             var tierPrice = new TierPrice()
             {
                 ProductVariantId = model.ProductVariantId,
@@ -734,6 +791,20 @@ namespace Nop.Admin.Controllers
             if (tierPrice == null)
                 throw new ArgumentException("No tier price found with the specified id");
 
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                var variant = _productService.GetProductVariantById(tierPrice.ProductVariantId);
+                if (variant != null)
+                {
+                    var product = _productService.GetProductById(variant.ProductId);
+                    if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
+                    {
+                        return Content("This is not your product");
+                    }
+                }
+            }
+
             //use CustomerRole property (not CustomerRoleId) because appropriate property is stored in it
             tierPrice.CustomerRoleId = Int32.Parse(model.CustomerRole) != 0 ? Int32.Parse(model.CustomerRole) : (int?)null;
             tierPrice.Quantity = model.Quantity;
@@ -755,6 +826,19 @@ namespace Nop.Admin.Controllers
 
             var productVariantId = tierPrice.ProductVariantId;
             var productVariant = _productService.GetProductVariantById(productVariantId);
+            if (productVariant == null)
+                throw new ArgumentException("No product variant found with the specified id");
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                var product = _productService.GetProductById(productVariant.ProductId);
+                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
+                {
+                    return Content("This is not your product");
+                }
+            }
+
             _productService.DeleteTierPrice(tierPrice);
 
             //update "HasTierPrices" property
@@ -772,6 +856,20 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
+
+            var productVariant = _productService.GetProductVariantById(productVariantId);
+            if (productVariant == null)
+                throw new ArgumentException("No product variant found with the specified id");
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                var product = _productService.GetProductById(productVariant.ProductId);
+                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
+                {
+                    return Content("This is not your product");
+                }
+            }
 
             var productVariantAttributes = _productAttributeService.GetProductVariantAttributesByProductVariantId(productVariantId);
             var productVariantAttributesModel = productVariantAttributes
@@ -817,6 +915,20 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                var variant = _productService.GetProductVariantById(model.ProductVariantId);
+                if (variant != null)
+                {
+                    var product = _productService.GetProductById(variant.ProductId);
+                    if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
+                    {
+                        return Content("This is not your product");
+                    }
+                }
+            }
+
             var pva = new ProductVariantAttribute()
             {
                 ProductVariantId = model.ProductVariantId,
@@ -841,6 +953,20 @@ namespace Nop.Admin.Controllers
             if (pva == null)
                 throw new ArgumentException("No product variant attribute found with the specified id");
 
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                var variant = _productService.GetProductVariantById(pva.ProductVariantId);
+                if (variant != null)
+                {
+                    var product = _productService.GetProductById(variant.ProductId);
+                    if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
+                    {
+                        return Content("This is not your product");
+                    }
+                }
+            }
+
             //use ProductAttribute property (not ProductAttributeId) because appropriate property is stored in it
             pva.ProductAttributeId = Int32.Parse(model.ProductAttribute);
             pva.TextPrompt = model.TextPrompt;
@@ -864,6 +990,20 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentException("No product variant attribute found with the specified id");
 
             var productVariantId = pva.ProductVariantId;
+            var productVariant = _productService.GetProductVariantById(productVariantId);
+            if (productVariant == null)
+                throw new ArgumentException("No product variant found with the specified id");
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                var product = _productService.GetProductById(productVariant.ProductId);
+                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
+                {
+                    return Content("This is not your product");
+                }
+            }
+
             _productAttributeService.DeleteProductVariantAttribute(pva);
 
             return ProductVariantAttributeList(command, productVariantId);
@@ -880,6 +1020,20 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var pva = _productAttributeService.GetProductVariantAttributeById(productVariantAttributeId);
+            if (pva == null)
+                throw new ArgumentException("No product variant attribute found with the specified id");
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                var productVariant = pva.ProductVariant;
+                var product = _productService.GetProductById(productVariant.ProductId);
+                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
+                {
+                    return RedirectToAction("List", "Product");
+                }
+            }
+
             var model = new ProductVariantModel.ProductVariantAttributeValueListModel()
             {
                 ProductVariantName = pva.ProductVariant.Product.Name + " " + pva.ProductVariant.Name,
@@ -896,6 +1050,21 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
+
+            var pva = _productAttributeService.GetProductVariantAttributeById(productVariantAttributeId);
+            if (pva == null)
+                throw new ArgumentException("No product variant attribute found with the specified id");
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                var productVariant = pva.ProductVariant;
+                var product = _productService.GetProductById(productVariant.ProductId);
+                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
+                {
+                    return Content("This is not your product");
+                }
+            }
 
             var values = _productAttributeService.GetProductVariantAttributeValues(productVariantAttributeId);
             var gridModel = new GridModel<ProductVariantModel.ProductVariantAttributeValueModel>
@@ -929,6 +1098,20 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var pva = _productAttributeService.GetProductVariantAttributeById(productAttributeAttributeId);
+            if (pva == null)
+                throw new ArgumentException("No product variant attribute found with the specified id");
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                var productVariant = pva.ProductVariant;
+                var product = _productService.GetProductById(productVariant.ProductId);
+                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
+                {
+                    return RedirectToAction("List", "Product");
+                }
+            }
+
             var model = new ProductVariantModel.ProductVariantAttributeValueModel();
             model.ProductVariantAttributeId = productAttributeAttributeId;
 
@@ -951,6 +1134,17 @@ namespace Nop.Admin.Controllers
             if (pva == null)
                 //No product variant attribute found with the specified id
                 return RedirectToAction("List", "Product");
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                var productVariant = pva.ProductVariant;
+                var product = _productService.GetProductById(productVariant.ProductId);
+                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
+                {
+                    return RedirectToAction("List", "Product");
+                }
+            }
 
             if (pva.AttributeControlType == AttributeControlType.ColorSquares)
             {
@@ -1004,6 +1198,17 @@ namespace Nop.Admin.Controllers
                 //No attribute value found with the specified id
                 return RedirectToAction("List", "Product");
 
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                var productVariant = pvav.ProductVariantAttribute.ProductVariant;
+                var product = _productService.GetProductById(productVariant.ProductId);
+                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
+                {
+                    return RedirectToAction("List", "Product");
+                }
+            }
+
             var model = new ProductVariantModel.ProductVariantAttributeValueModel()
             {
                 ProductVariantAttributeId = pvav.ProductVariantAttributeId,
@@ -1034,6 +1239,17 @@ namespace Nop.Admin.Controllers
             if (pvav == null)
                 //No attribute value found with the specified id
                 return RedirectToAction("List", "Product");
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                var productVariant = pvav.ProductVariantAttribute.ProductVariant;
+                var product = _productService.GetProductById(productVariant.ProductId);
+                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
+                {
+                    return RedirectToAction("List", "Product");
+                }
+            }
 
             if (pvav.ProductVariantAttribute.AttributeControlType == AttributeControlType.ColorSquares)
             {
@@ -1083,6 +1299,17 @@ namespace Nop.Admin.Controllers
             if (pvav == null)
                 throw new ArgumentException("No product variant attribute value found with the specified id");
 
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                var productVariant = pvav.ProductVariantAttribute.ProductVariant;
+                var product = _productService.GetProductById(productVariant.ProductId);
+                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
+                {
+                    return Content("This is not your product");
+                }
+            }
+
             _productAttributeService.DeleteProductVariantAttributeValue(pvav);
 
             return ProductAttributeValueList(productVariantAttributeId, command);
@@ -1097,6 +1324,20 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
+
+            var productVariant = _productService.GetProductVariantById(productVariantId);
+            if (productVariant == null)
+                throw new ArgumentException("No product variant found with the specified id");
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                var product = _productService.GetProductById(productVariant.ProductId);
+                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
+                {
+                    return Content("This is not your product");
+                }
+            }
 
             var productVariantAttributeCombinations = _productAttributeService.GetAllProductVariantAttributeCombinations(productVariantId);
             var productVariantAttributesModel = productVariantAttributeCombinations
@@ -1150,6 +1391,17 @@ namespace Nop.Admin.Controllers
             if (pvac == null)
                 throw new ArgumentException("No product variant attribute combination found with the specified id");
 
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                var productVariant = _productService.GetProductVariantById(pvac.ProductVariantId);
+                var product = _productService.GetProductById(productVariant.ProductId);
+                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
+                {
+                    return Content("This is not your product");
+                }
+            }
+
             pvac.StockQuantity = model.StockQuantity1;
             pvac.AllowOutOfStockOrders = model.AllowOutOfStockOrders1;
             pvac.Sku = model.Sku1;
@@ -1170,14 +1422,22 @@ namespace Nop.Admin.Controllers
             if (pvac == null)
                 throw new ArgumentException("No product variant attribute combination found with the specified id");
 
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                var productVariant = _productService.GetProductVariantById(pvac.ProductVariantId);
+                var product = _productService.GetProductById(productVariant.ProductId);
+                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
+                {
+                    return Content("This is not your product");
+                }
+            }
+
             var productVariantId = pvac.ProductVariantId;
             _productAttributeService.DeleteProductVariantAttributeCombination(pvac);
 
             return ProductVariantAttributeCombinationList(command, productVariantId);
         }
-        
-        
-        
         
         //edit
         public ActionResult AddAttributeCombinationPopup(string btnId, string formId, int productVariantId)
@@ -1189,6 +1449,16 @@ namespace Nop.Admin.Controllers
             if (variant == null)
                 //No product variant found with the specified id
                 return RedirectToAction("List", "Product");
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                var product = _productService.GetProductById(variant.ProductId);
+                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
+                {
+                    return RedirectToAction("List", "Product");
+                }
+            }
 
             ViewBag.btnId = btnId;
             ViewBag.formId = formId;
@@ -1209,6 +1479,16 @@ namespace Nop.Admin.Controllers
             if (variant == null)
                 //No product variant found with the specified id
                 return RedirectToAction("List", "Product");
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                var product = _productService.GetProductById(variant.ProductId);
+                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
+                {
+                    return RedirectToAction("List", "Product");
+                }
+            }
 
             ViewBag.btnId = btnId;
             ViewBag.formId = formId;
