@@ -675,7 +675,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var model = new ProductModel();
-
+            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
             //product
             AddLocales(_languageService, model.Locales);
             PrepareVendorsModel(model);
@@ -704,6 +704,12 @@ namespace Nop.Admin.Controllers
 
             if (ModelState.IsValid)
             {
+                //a vendor should have access only to his products
+                if (_workContext.CurrentVendor != null)
+                {
+                    model.VendorId = _workContext.CurrentVendor.Id;
+                }
+
                 //product
                 var product = model.ToEntity();
                 product.CreatedOnUtc = DateTime.UtcNow;
@@ -742,6 +748,7 @@ namespace Nop.Admin.Controllers
             //If we got this far, something failed, redisplay form
 
             //product
+            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
             PrepareVendorsModel(model);
             PrepareTemplatesModel(model);
             PrepareAddSpecificationAttributeModel(model);
@@ -771,6 +778,7 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("List");
 
             var model = product.ToModel();
+            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
                 {
                     locale.Name = product.GetLocalized(x => x.Name, languageId, false, false);
@@ -813,6 +821,12 @@ namespace Nop.Admin.Controllers
 
             if (ModelState.IsValid)
             {
+                //a vendor should have access only to his products
+                if (_workContext.CurrentVendor != null)
+                {
+                    model.VendorId = _workContext.CurrentVendor.Id;
+                }
+
                 //product
                 product = model.ToEntity(product);
                 product.UpdatedOnUtc = DateTime.UtcNow;
@@ -839,6 +853,7 @@ namespace Nop.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
+            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
             PrepareTags(model, product);
             PrepareCopyProductModel(model, product);
             PrepareVariantsModel(model, product);
@@ -1800,7 +1815,10 @@ namespace Nop.Admin.Controllers
 
             try
             {
-                var products = _productService.SearchProducts(showHidden: true);
+                //a vendor should have access only to his products
+                int vendorId = _workContext.CurrentVendor != null ? _workContext.CurrentVendor.Id : 0;
+
+                var products = _productService.SearchProducts(vendorId: vendorId, showHidden: true);
 
                 byte[] bytes = null;
                 using (var stream = new MemoryStream())
@@ -1824,7 +1842,10 @@ namespace Nop.Admin.Controllers
 
             try
             {
-                var products = _productService.SearchProducts(showHidden: true);
+                //a vendor should have access only to his products
+                int vendorId = _workContext.CurrentVendor != null ? _workContext.CurrentVendor.Id : 0;
+
+                var products = _productService.SearchProducts(vendorId: vendorId, showHidden: true);
                 var xml = _exportManager.ExportProductsToXml(products);
                 return new XmlDownloadResult(xml, "products.xml");
             }
@@ -1849,6 +1870,11 @@ namespace Nop.Admin.Controllers
                     .ToArray();
                 products.AddRange(_productService.GetProductsByIds(ids));
             }
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                products = products.Where(p => p.VendorId == _workContext.CurrentVendor.Id).ToList();
+            }
 
             var xml = _exportManager.ExportProductsToXml(products);
             return new XmlDownloadResult(xml, "products.xml");
@@ -1861,7 +1887,10 @@ namespace Nop.Admin.Controllers
 
             try
             {
-                var products = _productService.SearchProducts(showHidden: true);
+                //a vendor should have access only to his products
+                int vendorId = _workContext.CurrentVendor != null ? _workContext.CurrentVendor.Id : 0;
+
+                var products = _productService.SearchProducts(vendorId: vendorId, showHidden: true);
                 
                 byte[] bytes = null;
                 using (var stream = new MemoryStream())
@@ -1892,6 +1921,11 @@ namespace Nop.Admin.Controllers
                     .ToArray();
                 products.AddRange(_productService.GetProductsByIds(ids));
             }
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                products = products.Where(p => p.VendorId == _workContext.CurrentVendor.Id).ToList();
+            }
 
             byte[] bytes = null;
             using (var stream = new MemoryStream())
@@ -1903,10 +1937,14 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ImportExcel(FormCollection form)
+        public ActionResult ImportExcel()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
+
+            //a vendor cannot import products
+            if (_workContext.CurrentVendor != null)
+                return RedirectToAction("List");
 
             try
             {

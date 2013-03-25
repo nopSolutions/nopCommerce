@@ -106,6 +106,10 @@ namespace Nop.Admin.Models.Catalog
         public ProductVariantModel FirstProductVariantModel { get; set; }
 
 
+        //vendor
+        public bool IsLoggedInAsVendor { get; set; }
+
+
 
         //categories
         public int NumberOfAvailableCategories { get; set; }

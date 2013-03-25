@@ -105,7 +105,7 @@
                 @Html.ValidationMessageFor(model => model.AdminComment)
             </td>
         </tr>
-        <tr>
+        <tr @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.VendorId):
             </td>
