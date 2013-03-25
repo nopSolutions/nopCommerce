@@ -174,7 +174,7 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult GoogleProductList(GridCommand command)
         {
-            var productVariants = _productService.SearchProductVariants(0, 0, "", false,
+            var productVariants = _productService.SearchProductVariants(0, 0, 0, "", false,
                 command.Page - 1, command.PageSize, true);
             var productVariantsModel = productVariants
                 .Select(x =>

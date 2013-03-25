@@ -860,23 +860,27 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Get low stock product variants
         /// </summary>
+        /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
         /// <returns>Result</returns>
-        public virtual IList<ProductVariant> GetLowStockProductVariants()
+        public virtual IList<ProductVariant> GetLowStockProductVariants(int vendorId)
         {
             //Track inventory for product variant
             var query1 = from pv in _productVariantRepository.Table
                          orderby pv.MinStockQuantity
                          where !pv.Deleted &&
                          pv.ManageInventoryMethodId == (int)ManageInventoryMethod.ManageStock &&
-                         pv.MinStockQuantity >= pv.StockQuantity
+                         pv.MinStockQuantity >= pv.StockQuantity &&
+                         (vendorId == 0 || pv.Product.VendorId == vendorId)
                          select pv;
             var productVariants1 = query1.ToList();
+
             //Track inventory for product variant by product attributes
             var query2 = from pv in _productVariantRepository.Table
                          from pvac in pv.ProductVariantAttributeCombinations
                          where !pv.Deleted &&
                          pv.ManageInventoryMethodId == (int)ManageInventoryMethod.ManageStockByAttributes &&
-                         pvac.StockQuantity <= 0
+                         pvac.StockQuantity <= 0 &&
+                         (vendorId == 0 || pv.Product.VendorId == vendorId)
                          select pv;
             //only distinct products (group by ID)
             //if we use standard Distinct() method, then all fields will be compared (low performance)
@@ -1181,14 +1185,16 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="categoryId">Category identifier; 0 to load all records</param>
         /// <param name="manufacturerId">Manufacturer identifier; 0 to load all records</param>
+        /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
         /// <param name="keywords">Keywords</param>
         /// <param name="searchDescriptions">A value indicating whether to search in descriptions</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product variants</returns>
-        public virtual IPagedList<ProductVariant> SearchProductVariants(int categoryId, int manufacturerId,
-             string keywords, bool searchDescriptions, int pageIndex, int pageSize, bool showHidden = false)
+        public virtual IPagedList<ProductVariant> SearchProductVariants(int categoryId, 
+            int manufacturerId, int vendorId, string keywords, bool searchDescriptions, 
+            int pageIndex, int pageSize, bool showHidden = false)
         {
             //products
             var query = _productVariantRepository.Table;
@@ -1201,6 +1207,10 @@ namespace Nop.Services.Catalog
             if (!showHidden)
             {
                 query = query.Where(pv => pv.Product.Published);
+            }
+            if (vendorId > 0)
+            {
+                query = query.Where(pv => pv.Product.VendorId == vendorId);
             }
 
             //searching by keyword

@@ -1446,7 +1446,7 @@ namespace Nop.Admin.Controllers
 
             var gridModel = new GridModel();
             var productVariants = _productService.SearchProductVariants(model.SearchCategoryId,
-                model.SearchManufacturerId, model.SearchProductName, false,
+                model.SearchManufacturerId, 0, model.SearchProductName, false,
                 command.Page - 1, command.PageSize, true);
             gridModel.Data = productVariants.Select(x =>
             {

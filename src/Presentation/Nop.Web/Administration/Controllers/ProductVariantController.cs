@@ -528,50 +528,6 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("Edit", "Product", new { id = productId });
         }
 
-        public ActionResult LowStockReport()
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
-            var allVariants = _productService.GetLowStockProductVariants();
-            var model = new GridModel<ProductVariantModel>()
-            {
-                Data = allVariants.Take(_adminAreaSettings.GridPageSize).Select(x =>
-                {
-                    var variantModel = x.ToModel();
-                    //Full product variant name
-                    variantModel.Name = x.FullProductName;
-                    return variantModel;
-                }),
-                Total = allVariants.Count
-            };
-
-            return View(model);
-        }
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult LowStockReportList(GridCommand command)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
-            var allVariants = _productService.GetLowStockProductVariants();
-            var model = new GridModel<ProductVariantModel>()
-            {
-                Data = allVariants.PagedForCommand(command).Select(x =>
-                {
-                    var variantModel = x.ToModel();
-                    //Full product variant name
-                    variantModel.Name = x.FullProductName;
-                    return variantModel;
-                }),
-                Total = allVariants.Count
-            };
-            return new JsonResult
-            {
-                Data = model
-            };
-        }
-
         [HttpPost]
         public ActionResult CopyProductVariant(ProductVariantModel model)
         {
@@ -600,6 +556,47 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("Edit", new { id = copyModel.Id });
             }
         }
+
+        #endregion
+
+        #region Low stock reports
+
+        public ActionResult LowStockReport()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+                return AccessDeniedView();
+
+            return View();
+        }
+        [HttpPost, GridAction(EnableCustomBinding = true)]
+        public ActionResult LowStockReportList(GridCommand command)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+                return AccessDeniedView();
+
+            int vendorId = 0;
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+                vendorId = _workContext.CurrentVendor.Id;
+
+            var allVariants = _productService.GetLowStockProductVariants(vendorId);
+            var model = new GridModel<ProductVariantModel>()
+            {
+                Data = allVariants.PagedForCommand(command).Select(x =>
+                {
+                    var variantModel = x.ToModel();
+                    //Full product variant name
+                    variantModel.Name = x.FullProductName;
+                    return variantModel;
+                }),
+                Total = allVariants.Count
+            };
+            return new JsonResult
+            {
+                Data = model
+            };
+        }
+
         #endregion
 
         #region Bulk editing
@@ -628,10 +625,15 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            var gridModel = new GridModel();
+            int vendorId = 0;
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+                vendorId = _workContext.CurrentVendor.Id;
+
             var productVariants = _productService.SearchProductVariants(model.SearchCategoryId,
-                model.SearchManufacturerId, model.SearchProductName, false,
+                model.SearchManufacturerId, vendorId, model.SearchProductName, false,
                 command.Page - 1, command.PageSize, true);
+            var gridModel = new GridModel();
             gridModel.Data = productVariants.Select(x =>
             {
                 var productVariantModel = new BulkEditProductVariantModel()
@@ -672,6 +674,10 @@ namespace Nop.Admin.Controllers
                     var pv = _productService.GetProductVariantById(pvModel.Id);
                     if (pv != null)
                     {
+                        //a vendor should have access only to his products
+                        if (_workContext.CurrentVendor != null && pv.Product.VendorId != _workContext.CurrentVendor.Id)
+                            continue;
+
                         pv.Sku = pvModel.Sku;
                         pv.Price = pvModel.Price;
                         pv.OldPrice = pvModel.OldPrice;
@@ -688,7 +694,13 @@ namespace Nop.Admin.Controllers
                     //delete
                     var pv = _productService.GetProductVariantById(pvModel.Id);
                     if (pv != null)
+                    {
+                        //a vendor should have access only to his products
+                        if (_workContext.CurrentVendor != null && pv.Product.VendorId != _workContext.CurrentVendor.Id)
+                            continue;
+
                         _productService.DeleteProductVariant(pv);
+                    }
                 }
             }
             return BulkEditSelect(command, model);
