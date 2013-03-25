@@ -360,8 +360,10 @@ namespace Nop.Admin.Controllers
         [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult GetOptionsByAttributeId(string attributeId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-                return AccessDeniedView();
+            //do not make any permission validation here 
+            //because this method could be used on some other pages (such as product editing)
+            //if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
+            //    return AccessDeniedView();
 
             // This action method gets called via an ajax request
             if (String.IsNullOrEmpty(attributeId))

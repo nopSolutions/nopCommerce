@@ -240,7 +240,6 @@ namespace Nop.Admin.Models.Catalog
                 AvailableStores = new List<SelectListItem>();
                 AvailableVendors = new List<SelectListItem>();
             }
-            public GridModel<ProductModel> Products { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
             [AllowHtml]
@@ -262,6 +261,9 @@ namespace Nop.Admin.Models.Catalog
             public int ProductId { get; set; }
 
             public int[] SelectedProductIds { get; set; }
+
+            //vendor
+            public bool IsLoggedInAsVendor { get; set; }
         }
 
         public partial class CrossSellProductModel : BaseNopEntityModel
@@ -283,7 +285,6 @@ namespace Nop.Admin.Models.Catalog
                 AvailableStores = new List<SelectListItem>();
                 AvailableVendors = new List<SelectListItem>();
             }
-            public GridModel<ProductModel> Products { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
             [AllowHtml]
@@ -305,6 +306,9 @@ namespace Nop.Admin.Models.Catalog
             public int ProductId { get; set; }
 
             public int[] SelectedProductIds { get; set; }
+
+            //vendor
+            public bool IsLoggedInAsVendor { get; set; }
         }
 
         #endregion

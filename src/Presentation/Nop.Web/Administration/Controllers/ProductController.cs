@@ -997,6 +997,16 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                var product = _productService.GetProductById(productId);
+                if (product != null&& product.VendorId != _workContext.CurrentVendor.Id)
+                {
+                    return Content("This is not your product");
+                }
+            }
+
             var productCategories = _categoryService.GetProductCategoriesByProductId(productId, true);
             var productCategoriesModel = productCategories
                 .Select(x =>
@@ -1033,7 +1043,17 @@ namespace Nop.Admin.Controllers
 
             var productId = model.ProductId;
             var categoryId = Int32.Parse(model.Category); //use Category property (not CategoryId) because appropriate property is stored in it
-              
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                var product = _productService.GetProductById(productId);
+                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
+                {
+                    return Content("This is not your product");
+                }
+            }
+
             var existingProductCategories = _categoryService.GetProductCategoriesByCategoryId(categoryId, 0, int.MaxValue, true);
             if (existingProductCategories.FindProductCategory(productId, categoryId) == null)
             {
@@ -1060,6 +1080,16 @@ namespace Nop.Admin.Controllers
             if (productCategory == null)
                 throw new ArgumentException("No product category mapping found with the specified id");
 
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                var product = _productService.GetProductById(productCategory.ProductId);
+                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
+                {
+                    return Content("This is not your product");
+                }
+            }
+
             //use Category property (not CategoryId) because appropriate property is stored in it
             productCategory.CategoryId = Int32.Parse(model.Category);
             productCategory.IsFeaturedProduct = model.IsFeaturedProduct;
@@ -1080,6 +1110,17 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentException("No product category mapping found with the specified id");
 
             var productId = productCategory.ProductId;
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                var product = _productService.GetProductById(productId);
+                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
+                {
+                    return Content("This is not your product");
+                }
+            }
+
             _categoryService.DeleteProductCategory(productCategory);
 
             return ProductCategoryList(command, productId);
@@ -1094,6 +1135,16 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                var product = _productService.GetProductById(productId);
+                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
+                {
+                    return Content("This is not your product");
+                }
+            }
 
             var productManufacturers = _manufacturerService.GetProductManufacturersByProductId(productId, true);
             var productManufacturersModel = productManufacturers
@@ -1132,6 +1183,16 @@ namespace Nop.Admin.Controllers
             var productId = model.ProductId;
             var manufacturerId = Int32.Parse(model.Manufacturer); //use Manufacturer property (not ManufacturerId) because appropriate property is stored in it
 
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                var product = _productService.GetProductById(productId);
+                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
+                {
+                    return Content("This is not your product");
+                }
+            }
+
             var existingProductmanufacturers = _manufacturerService.GetProductManufacturersByManufacturerId(manufacturerId, 0, int.MaxValue, true);
             if (existingProductmanufacturers.FindProductManufacturer(productId, manufacturerId) == null)
             {
@@ -1158,6 +1219,16 @@ namespace Nop.Admin.Controllers
             if (productManufacturer == null)
                 throw new ArgumentException("No product manufacturer mapping found with the specified id");
 
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                var product = _productService.GetProductById(productManufacturer.ProductId);
+                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
+                {
+                    return Content("This is not your product");
+                }
+            }
+
             //use Manufacturer property (not ManufacturerId) because appropriate property is stored in it
             productManufacturer.ManufacturerId = Int32.Parse(model.Manufacturer);
             productManufacturer.IsFeaturedProduct = model.IsFeaturedProduct;
@@ -1178,6 +1249,17 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentException("No product manufacturer mapping found with the specified id");
 
             var productId = productManufacturer.ProductId;
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                var product = _productService.GetProductById(productId);
+                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
+                {
+                    return Content("This is not your product");
+                }
+            }
+
             _manufacturerService.DeleteProductManufacturer(productManufacturer);
 
             return ProductManufacturerList(command, productId);
@@ -1192,6 +1274,16 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                var product = _productService.GetProductById(productId);
+                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
+                {
+                    return Content("This is not your product");
+                }
+            }
 
             var relatedProducts = _productService.GetRelatedProductsByProductId1(productId, true);
             var relatedProductsModel = relatedProducts
@@ -1230,6 +1322,16 @@ namespace Nop.Admin.Controllers
             if (relatedProduct == null)
                 throw new ArgumentException("No related product found with the specified id");
 
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                var product = _productService.GetProductById(relatedProduct.ProductId1);
+                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
+                {
+                    return Content("This is not your product");
+                }
+            }
+
             relatedProduct.DisplayOrder = model.DisplayOrder;
             _productService.UpdateRelatedProduct(relatedProduct);
 
@@ -1247,6 +1349,17 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentException("No related product found with the specified id");
 
             var productId = relatedProduct.ProductId1;
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                var product = _productService.GetProductById(productId);
+                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
+                {
+                    return Content("This is not your product");
+                }
+            }
+
             _productService.DeleteRelatedProduct(relatedProduct);
 
             return RelatedProductList(command, productId);
@@ -1257,17 +1370,10 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            var products = _productService.SearchProducts(
-                pageSize: _adminAreaSettings.GridPageSize,
-                showHidden: true
-                );
-
             var model = new ProductModel.AddRelatedProductModel();
-            model.Products = new GridModel<ProductModel>
-            {
-                Data = products.Select(x => x.ToModel()),
-                Total = products.TotalCount
-            };
+            //a vendor should have access only to his products
+            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+
             //categories
             model.AvailableCategories.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var c in _categoryService.GetAllCategories(showHidden: true))
@@ -1297,7 +1403,12 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            var gridModel = new GridModel();
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                model.SearchVendorId = _workContext.CurrentVendor.Id;
+            }
+
             var products = _productService.SearchProducts(
                 categoryIds: new List<int>() { model.SearchCategoryId },
                 manufacturerId: model.SearchManufacturerId,
@@ -1308,6 +1419,7 @@ namespace Nop.Admin.Controllers
                 pageSize: command.PageSize,
                 showHidden: true
                 );
+            var gridModel = new GridModel();
             gridModel.Data = products.Select(x => x.ToModel());
             gridModel.Total = products.TotalCount;
             return new JsonResult
@@ -1330,6 +1442,10 @@ namespace Nop.Admin.Controllers
                     var product = _productService.GetProductById(id);
                     if (product != null)
                     {
+                        //a vendor should have access only to his products
+                        if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
+                            continue;
+
                         var existingRelatedProducts = _productService.GetRelatedProductsByProductId1(model.ProductId);
                         if (existingRelatedProducts.FindRelatedProduct(model.ProductId, id) == null)
                         {
@@ -1345,10 +1461,11 @@ namespace Nop.Admin.Controllers
                 }
             }
 
+            //a vendor should have access only to his products
+            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
             ViewBag.RefreshPage = true;
             ViewBag.btnId = btnId;
             ViewBag.formId = formId;
-            model.Products = new GridModel<ProductModel>();
             return View(model);
         }
         
@@ -1361,6 +1478,16 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                var product = _productService.GetProductById(productId);
+                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
+                {
+                    return Content("This is not your product");
+                }
+            }
 
             var crossSellProducts = _productService.GetCrossSellProductsByProductId1(productId, true);
             var crossSellProductsModel = crossSellProducts
@@ -1399,6 +1526,17 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentException("No cross-sell product found with the specified id");
 
             var productId = crossSellProduct.ProductId1;
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                var product = _productService.GetProductById(productId);
+                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
+                {
+                    return Content("This is not your product");
+                }
+            }
+
             _productService.DeleteCrossSellProduct(crossSellProduct);
 
             return CrossSellProductList(command, productId);
@@ -1409,17 +1547,10 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            var products = _productService.SearchProducts(
-                pageSize: _adminAreaSettings.GridPageSize,
-                showHidden: true
-                );
-
             var model = new ProductModel.AddCrossSellProductModel();
-            model.Products = new GridModel<ProductModel>
-            {
-                Data = products.Select(x => x.ToModel()),
-                Total = products.TotalCount
-            };
+            //a vendor should have access only to his products
+            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+
             //categories
             model.AvailableCategories.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var c in _categoryService.GetAllCategories(showHidden: true))
@@ -1449,7 +1580,12 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            var gridModel = new GridModel();
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                model.SearchVendorId = _workContext.CurrentVendor.Id;
+            }
+
             var products = _productService.SearchProducts(
                 categoryIds: new List<int>() { model.SearchCategoryId },
                 manufacturerId: model.SearchManufacturerId,
@@ -1460,6 +1596,7 @@ namespace Nop.Admin.Controllers
                 pageSize: command.PageSize,
                 showHidden: true
                 );
+            var gridModel = new GridModel();
             gridModel.Data = products.Select(x => x.ToModel());
             gridModel.Total = products.TotalCount;
             return new JsonResult
@@ -1482,6 +1619,10 @@ namespace Nop.Admin.Controllers
                     var product = _productService.GetProductById(id);
                     if (product != null)
                     {
+                        //a vendor should have access only to his products
+                        if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
+                            continue;
+
                         var existingCrossSellProducts = _productService.GetCrossSellProductsByProductId1(model.ProductId);
                         if (existingCrossSellProducts.FindCrossSellProduct(model.ProductId, id) == null)
                         {
@@ -1496,10 +1637,11 @@ namespace Nop.Admin.Controllers
                 }
             }
 
+            //a vendor should have access only to his products
+            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
             ViewBag.RefreshPage = true;
             ViewBag.btnId = btnId;
             ViewBag.formId = formId;
-            model.Products = new GridModel<ProductModel>();
             return View(model);
         }
 
@@ -1519,6 +1661,10 @@ namespace Nop.Admin.Controllers
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
+                return RedirectToAction("List");
+
             _productService.InsertProductPicture(new ProductPicture()
             {
                 PictureId = pictureId,
@@ -1536,6 +1682,16 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                var product = _productService.GetProductById(productId);
+                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
+                {
+                    return Content("This is not your product");
+                }
+            }
 
             var productPictures = _productService.GetProductPicturesByProductId(productId);
             var productPicturesModel = productPictures
@@ -1574,6 +1730,16 @@ namespace Nop.Admin.Controllers
             if (productPicture == null)
                 throw new ArgumentException("No product picture found with the specified id");
 
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                var product = _productService.GetProductById(productPicture.ProductId);
+                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
+                {
+                    return Content("This is not your product");
+                }
+            }
+
             productPicture.DisplayOrder = model.DisplayOrder;
             _productService.UpdateProductPicture(productPicture);
 
@@ -1591,9 +1757,19 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentException("No product picture found with the specified id");
 
             var productId = productPicture.ProductId;
-            _productService.DeleteProductPicture(productPicture);
 
-            var picture = _pictureService.GetPictureById(productPicture.PictureId);
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                var product = _productService.GetProductById(productId);
+                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
+                {
+                    return Content("This is not your product");
+                }
+            }
+
+            _productService.DeleteProductPicture(productPicture);
+            var picture = _pictureService.GetPictureById(productId);
             _pictureService.DeletePicture(picture);
             
             return ProductPictureList(command, productId);
@@ -1610,6 +1786,16 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                var product = _productService.GetProductById(productId);
+                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
+                {
+                    return RedirectToAction("List");
+                }
+            }
 
             var psa = new ProductSpecificationAttribute()
             {
@@ -1630,6 +1816,16 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                var product = _productService.GetProductById(productId);
+                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
+                {
+                    return Content("This is not your product");
+                }
+            }
 
             var productrSpecs = _specificationAttributeService.GetProductSpecificationAttributesByProductId(productId);
 
@@ -1670,6 +1866,21 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var psa = _specificationAttributeService.GetProductSpecificationAttributeById(psaId);
+            if (psa == null)
+                return Content("No product specification attribute found with the specified id");
+
+            var productId = psa.Product.Id;
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                var product = _productService.GetProductById(productId);
+                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
+                {
+                    return Content("This is not your product");
+                }
+            }
+
             psa.CustomValue = model.CustomValue;
             psa.AllowFiltering = model.AllowFiltering;
             psa.ShowOnProductPage = model.ShowOnProductPage;
@@ -1690,6 +1901,17 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentException("No specification attribute found with the specified id");
 
             var productId = psa.ProductId;
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                var product = _productService.GetProductById(productId);
+                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
+                {
+                    return Content("This is not your product");
+                }
+            }
+
             _specificationAttributeService.DeleteProductSpecificationAttribute(psa);
 
             return ProductSpecAttrList(command, productId);
