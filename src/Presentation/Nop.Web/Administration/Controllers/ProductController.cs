@@ -593,7 +593,7 @@ namespace Nop.Admin.Controllers
             var model = new ProductListModel();
             model.DisplayProductPictures = _adminAreaSettings.DisplayProductPictures;
             model.DisplayPdfDownloadCatalog = _pdfSettings.Enabled;
-            //a vendor should has access only to his products
+            //a vendor should have access only to his products
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
 
             //categories
@@ -625,7 +625,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            //a vendor should has access only to his products
+            //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
             {
                 model.SearchVendorId = _workContext.CurrentVendor.Id;
@@ -766,6 +766,10 @@ namespace Nop.Admin.Controllers
                 //No product found with the specified id
                 return RedirectToAction("List");
 
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
+                return RedirectToAction("List");
+
             var model = product.ToModel();
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
                 {
@@ -801,6 +805,10 @@ namespace Nop.Admin.Controllers
             var product = _productService.GetProductById(model.Id);
             if (product == null || product.Deleted)
                 //No product found with the specified id
+                return RedirectToAction("List");
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
@@ -853,6 +861,14 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var product = _productService.GetProductById(id);
+            if (product == null)
+                //No product found with the specified id
+                return RedirectToAction("List");
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
+                return RedirectToAction("List");
+
             _productService.DeleteProduct(product);
             //update product tag totals
             UpdateProductTagTotals(product);
@@ -881,6 +897,11 @@ namespace Nop.Admin.Controllers
                 for (int i = 0; i < products.Count; i++)
                 {
                     var product = products[i];
+
+                    //a vendor should have access only to his products
+                    if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
+                        continue;
+
                     _productService.DeleteProduct(product);
                     //update product tag totals
                     UpdateProductTagTotals(product);
@@ -896,6 +917,14 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
+
+            var product = _productService.GetProductById(productId);
+            if (product == null)
+                return Content("No product found");
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
+                return Content("This is not your product");
 
             var variants = _productService.GetProductVariantsByProductId(productId, true);
 
@@ -926,6 +955,11 @@ namespace Nop.Admin.Controllers
             try
             {
                 var originalProduct = _productService.GetProductById(copyModel.Id);
+
+                //a vendor should have access only to his products
+                if (_workContext.CurrentVendor != null && originalProduct.VendorId != _workContext.CurrentVendor.Id)
+                    return RedirectToAction("List");
+
                 var newProduct = _copyProductService.CopyProduct(originalProduct, 
                     copyModel.Name, copyModel.Published, copyModel.CopyImages);
                 SuccessNotification("The product has been copied successfully");
