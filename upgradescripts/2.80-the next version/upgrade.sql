@@ -3693,3 +3693,7 @@ GO
 UPDATE [Setting]
 SET [Value] = N'true'
 WHERE [name] = N'securitysettings.hideadminmenuitemsbasedonpermissions'
+--delete obsolete permission
+DELETE FROM [dbo].[PermissionRecord]
+WHERE [SystemName] = N'UploadPictures'
+GO
