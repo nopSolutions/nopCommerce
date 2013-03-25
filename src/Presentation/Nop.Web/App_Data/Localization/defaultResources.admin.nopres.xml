@@ -7206,6 +7206,9 @@
                             <LocaleResource Name="AddNew">
                                 <Value>Add a new customer</Value>
                             </LocaleResource>
+                            <LocaleResource Name="AdminCouldNotbeVendor">
+                              <Value>A customer with a vendor associated could not be in "Administrators" role.</Value>
+                            </LocaleResource>
                             <LocaleResource Name="AssociatedExternalAuth">
                                 <Value>External authentication</Value>
                                 <Children>

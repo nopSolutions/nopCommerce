@@ -647,6 +647,9 @@ set @resources='
   <LocaleResource Name="Admin.Vendors.Fields.AssociatedCustomerEmails.None">
 	<Value>No customer account associated to this vendor.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.AdminCouldNotbeVendor">
+	<Value>A customer with a vendor associated could not be in "Administrators" role.</Value>
+  </LocaleResource>
 </Language>
 '
 
