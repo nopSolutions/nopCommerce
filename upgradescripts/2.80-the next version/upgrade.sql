@@ -650,6 +650,9 @@ set @resources='
   <LocaleResource Name="Admin.Customers.Customers.AdminCouldNotbeVendor">
 	<Value>A customer with a vendor associated could not be in "Administrators" role.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.VendorShouldBeInVendorsRole">
+	<Value>Note: if you have a vendor associated with this customer, then also ensure it is in "Vendors" customer role.</Value>
+  </LocaleResource>
 </Language>
 '
 

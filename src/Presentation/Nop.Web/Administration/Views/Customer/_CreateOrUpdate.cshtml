@@ -182,6 +182,7 @@
             <td class="adminData">
                 @Html.DropDownListFor(model => model.VendorId, Model.AvailableVendors)
                 @Html.ValidationMessageFor(model => model.VendorId)
+                <i>@T("Admin.Customers.Customers.VendorShouldBeInVendorsRole")</i>
             </td>
         </tr>
         @if (Model.GenderEnabled)

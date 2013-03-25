@@ -7758,6 +7758,9 @@
                                     </LocaleResource>
                                 </Children>
                             </LocaleResource>
+                            <LocaleResource Name="VendorShouldBeInVendorsRole">
+                              <Value>Note: if you have a vendor associated with this customer, then also ensure it is in "Vendors" customer role.</Value>
+                            </LocaleResource>
                             <LocaleResource Name="Added">
                                 <Value>The new customer has been added successfully.</Value>
                             </LocaleResource>
