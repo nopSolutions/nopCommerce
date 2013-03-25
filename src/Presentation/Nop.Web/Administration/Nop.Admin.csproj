@@ -193,6 +193,7 @@
     <Compile Include="Models\Common\MaintenanceModel.cs" />
     <Compile Include="Models\Common\SystemWarningModel.cs" />
     <Compile Include="Models\Common\SystemInfoModel.cs" />
+    <Compile Include="Models\Home\DashboardModel.cs" />
     <Compile Include="Models\Vendors\VendorModel.cs" />
     <Compile Include="Models\Customers\OnlineCustomerModel.cs" />
     <Compile Include="Models\Messages\MessageTemplateListModel.cs" />

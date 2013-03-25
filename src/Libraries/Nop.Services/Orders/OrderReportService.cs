@@ -194,7 +194,8 @@ namespace Nop.Services.Orders
         /// <summary>
         /// Get best sellers report
         /// </summary>
-        /// <param name="storeId">Store identifier</param>
+        /// <param name="storeId">Store identifier; 0 to load all records</param>
+        /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
         /// <param name="createdFromUtc">Order created date from (UTC); null to load all records</param>
         /// <param name="createdToUtc">Order created date to (UTC); null to load all records</param>
         /// <param name="os">Order status; null to load all records</param>
@@ -206,11 +207,11 @@ namespace Nop.Services.Orders
         /// <param name="groupBy">1 - group by product variants, 2 - group by products</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Result</returns>
-        public virtual IList<BestsellersReportLine> BestSellersReport(int storeId,
-            DateTime? createdFromUtc, DateTime? createdToUtc, 
-            OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss,
-            int billingCountryId = 0,
-            int recordsToReturn = 5, int orderBy = 1, int groupBy = 1, bool showHidden = false)
+        public virtual IList<BestsellersReportLine> BestSellersReport(int storeId = 0, int vendorId = 0,
+            DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
+            OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
+            int billingCountryId = 0, int recordsToReturn = 5,
+            int orderBy = 1, int groupBy = 1, bool showHidden = false)
         {
             int? orderStatusId = null;
             if (os.HasValue)
@@ -237,6 +238,7 @@ namespace Nop.Services.Orders
                          (!shippingStatusId.HasValue || shippingStatusId == o.ShippingStatusId) &&
                          (!o.Deleted) &&
                          (!p.Deleted) &&
+                         (vendorId == 0 || p.VendorId == vendorId) &&
                          (!pv.Deleted) &&
                          (billingCountryId == 0 || o.BillingAddress.CountryId == billingCountryId) &&
                          (showHidden || p.Published) &&

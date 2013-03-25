@@ -2179,8 +2179,9 @@ namespace Nop.Web.Controllers
             var report = _cacheManager.Get(string.Format(ModelCacheEventConsumer.HOMEPAGE_BESTSELLERS_IDS_KEY, _storeContext.CurrentStore.Id), 
                 () =>
                     //group by products (not product variants)
-                    _orderReportService
-                    .BestSellersReport(_storeContext.CurrentStore.Id, null, null, null, null, null, 0, _catalogSettings.NumberOfBestsellersOnHomepage, groupBy: 2));
+                    _orderReportService.BestSellersReport(storeId: _storeContext.CurrentStore.Id,
+                    recordsToReturn: _catalogSettings.NumberOfBestsellersOnHomepage,
+                    groupBy: 2));
 
 
             //load products

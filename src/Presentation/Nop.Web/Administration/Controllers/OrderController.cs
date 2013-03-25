@@ -2327,9 +2327,17 @@ namespace Nop.Admin.Controllers
         [NonAction]
         protected IList<BestsellersReportLineModel> GetBestsellersBriefReportModel(int recordsToReturn, int orderBy)
         {
+            //a vendor should have access only to his products
+            int vendorId = 0;
+            if (_workContext.CurrentVendor != null)
+                vendorId = _workContext.CurrentVendor.Id;
+
             //group by product variants (not products)
-            var report = _orderReportService.BestSellersReport(0, null, null,
-                null, null, null, 0, recordsToReturn, orderBy, 1, true);
+            var report = _orderReportService.BestSellersReport(
+                vendorId : vendorId,
+                recordsToReturn: recordsToReturn,
+                orderBy: orderBy,
+                showHidden: true);
 
             var model = report.Select(x =>
             {
@@ -2426,8 +2434,15 @@ namespace Nop.Admin.Controllers
             //return first 100 records
 
             //group by product variants (not products)
-            var items = _orderReportService.BestSellersReport(0, startDateValue, endDateValue,
-                orderStatus, paymentStatus, null, model.BillingCountryId, 100, 2, 1, true);
+            var items = _orderReportService.BestSellersReport(
+                createdFromUtc: startDateValue,
+                createdToUtc: endDateValue,
+                os: orderStatus,
+                ps: paymentStatus,
+                billingCountryId: model.BillingCountryId,
+                recordsToReturn: 100,
+                orderBy: 2,
+                showHidden: true);
             var gridModel = new GridModel<BestsellersReportLineModel>
             {
                 Data = items.Select(x =>
