@@ -94,6 +94,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult SystemInfo()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
+                return AccessDeniedView();
+
             var model = new SystemInfoModel();
             model.NopVersion = NopVersion.CurrentVersion;
             try
@@ -130,6 +133,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult Warnings()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
+                return AccessDeniedView();
+
             var model = new List<SystemWarningModel>();
 
             //store URL
@@ -442,6 +448,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult ClearCache()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
+                return AccessDeniedView();
+
             var cacheManager = new MemoryCacheManager();
             cacheManager.Clear();
 
