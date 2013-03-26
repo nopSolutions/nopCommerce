@@ -115,6 +115,8 @@ namespace Nop.Admin.Controllers
 
             var model = new VendorModel();
             PrepareVendorModel(model, null, false);
+            //default value
+            model.Active = true;
             return View(model);
         }
 
