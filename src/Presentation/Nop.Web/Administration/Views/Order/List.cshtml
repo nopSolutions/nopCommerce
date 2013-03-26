@@ -60,7 +60,7 @@
                 @Html.DropDownList("OrderStatusId", Model.AvailableOrderStatuses)
             </td>
         </tr>
-        <tr @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+        <tr>
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.PaymentStatusId):
             </td>
@@ -140,7 +140,11 @@
                             {
                                 //a vendor does not see order details such statuses or totals
                                 columns.Bound(x => x.OrderStatus);
-                                columns.Bound(x => x.PaymentStatus);
+                            }
+                            columns.Bound(x => x.PaymentStatus);
+                            if (!Model.IsLoggedInAsVendor)
+                            {
+                                //a vendor does not see order details such statuses or totals
                                 columns.Bound(x => x.ShippingStatus);
                             }
                             columns.Bound(x => x.CustomerEmail);

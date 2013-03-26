@@ -39,7 +39,7 @@
                 @Html.DropDownList("OrderStatusId", Model.AvailableOrderStatuses)
             </td>
         </tr>
-        <tr @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+        <tr>
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.PaymentStatusId):
             </td>

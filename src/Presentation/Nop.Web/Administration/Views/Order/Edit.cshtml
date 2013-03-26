@@ -21,6 +21,14 @@
                 <span id="order-delete" class="t-button">@T("Admin.Common.Delete")</span>
             }
             <input type="submit" id="btnRefreshPage" name="btnRefreshPage" style="display: none" />
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#btnRefreshPage').click(function () {
+                        //refresh page
+                        location.reload();
+                    });
+                });
+            </script>
         </div>
     </div>
     
