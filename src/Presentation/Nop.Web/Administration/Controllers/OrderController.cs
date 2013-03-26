@@ -173,6 +173,33 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
+        protected bool HasAccessToShipment(Shipment shipment)
+        {
+            if (shipment == null)
+                throw new ArgumentNullException("shipment");
+
+            if (_workContext.CurrentVendor == null)
+                //not a vendor; has access
+                return true;
+
+            var hasVendorProducts = false;
+            var vendorId = _workContext.CurrentVendor.Id;
+            foreach (var sopv in shipment.ShipmentOrderProductVariants)
+            {
+                var opv = _orderService.GetOrderProductVariantById(sopv.OrderProductVariantId);
+                if (opv != null)
+                {
+                    if (opv.ProductVariant.Product.VendorId == vendorId)
+                    {
+                        hasVendorProducts = true;
+                        break;
+                    }
+                }
+            }
+            return hasVendorProducts;
+        }
+
+        [NonAction]
         protected void PrepareOrderDetailsModel(OrderModel model, Order order)
         {
             if (order == null)
@@ -2025,7 +2052,6 @@ namespace Nop.Admin.Controllers
         
         #region Shipments
 
-
         public ActionResult ShipmentList()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
@@ -2072,6 +2098,10 @@ namespace Nop.Admin.Controllers
             if (order == null)
                 throw new ArgumentException("No order found with the specified id");
 
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && !HasAccessToOrder(order))
+                return Content("");
+
             //shipments
             var shipmentModels = new List<ShipmentModel>();
             var shipments = order.Shipments.OrderBy(s => s.CreatedOnUtc).ToList();
@@ -2098,6 +2128,10 @@ namespace Nop.Admin.Controllers
             var order = _orderService.GetOrderById(orderId);
             if (order == null)
                 //No order found with the specified id
+                return RedirectToAction("List");
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && !HasAccessToOrder(order))
                 return RedirectToAction("List");
 
             var model = new ShipmentModel()
@@ -2159,6 +2193,10 @@ namespace Nop.Admin.Controllers
             var order = _orderService.GetOrderById(orderId);
             if (order == null)
                 //No order found with the specified id
+                return RedirectToAction("List");
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && !HasAccessToOrder(order))
                 return RedirectToAction("List");
 
             Shipment shipment = null;
@@ -2247,6 +2285,10 @@ namespace Nop.Admin.Controllers
                 //No shipment found with the specified id
                 return RedirectToAction("List");
 
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && !HasAccessToShipment(shipment))
+                return RedirectToAction("List");
+
             var model = PrepareShipmentModel(shipment, true);
             return View(model);
         }
@@ -2262,10 +2304,14 @@ namespace Nop.Admin.Controllers
                 //No shipment found with the specified id
                 return RedirectToAction("List");
 
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && !HasAccessToShipment(shipment))
+                return RedirectToAction("List");
+
             var orderId = shipment.OrderId;
+            _shipmentService.DeleteShipment(shipment);
 
             SuccessNotification(_localizationService.GetResource("Admin.Orders.Shipments.Deleted"));
-            _shipmentService.DeleteShipment(shipment);
             return RedirectToAction("Edit", new { id = orderId });
         }
 
@@ -2279,6 +2325,10 @@ namespace Nop.Admin.Controllers
             var shipment = _shipmentService.GetShipmentById(model.Id);
             if (shipment == null)
                 //No shipment found with the specified id
+                return RedirectToAction("List");
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && !HasAccessToShipment(shipment))
                 return RedirectToAction("List");
 
             shipment.TrackingNumber = model.TrackingNumber;
@@ -2297,6 +2347,10 @@ namespace Nop.Admin.Controllers
             var shipment = _shipmentService.GetShipmentById(id);
             if (shipment == null)
                 //No shipment found with the specified id
+                return RedirectToAction("List");
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && !HasAccessToShipment(shipment))
                 return RedirectToAction("List");
 
             try
@@ -2324,6 +2378,10 @@ namespace Nop.Admin.Controllers
                 //No shipment found with the specified id
                 return RedirectToAction("List");
 
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && !HasAccessToShipment(shipment))
+                return RedirectToAction("List");
+
             try
             {
                 _orderProcessingService.Deliver(shipment, true);
@@ -2347,7 +2405,9 @@ namespace Nop.Admin.Controllers
                 //no shipment found with the specified id
                 return RedirectToAction("List");
 
-            var order = shipment.Order;
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && !HasAccessToShipment(shipment))
+                return RedirectToAction("List");
 
             var shipments = new List<Shipment>();
             shipments.Add(shipment);
@@ -2366,7 +2426,12 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
-            var shipments = _shipmentService.GetAllShipments(null, null, 0, int.MaxValue);
+            var shipments = _shipmentService.GetAllShipments(null, null, 0, int.MaxValue).ToList();
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                shipments = shipments.Where(s => HasAccessToShipment(s)).ToList();
+            }
             
             byte[] bytes = null;
             using (var stream = new MemoryStream())
@@ -2390,6 +2455,11 @@ namespace Nop.Admin.Controllers
                     .Select(x => Convert.ToInt32(x))
                     .ToArray();
                 shipments.AddRange(_shipmentService.GetShipmentsByIds(ids));
+            }
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                shipments = shipments.Where(s => HasAccessToShipment(s)).ToList();
             }
 
             byte[] bytes = null;
