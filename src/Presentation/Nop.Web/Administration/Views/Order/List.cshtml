@@ -193,6 +193,12 @@
                 return false;
             });
 
+            $("#@Html.FieldIdFor(model => model.CustomerEmail)").keydown(function (event) {
+                if (event.keyCode == 13) {
+                    $("#btnSearch").click();
+                    return false;
+                }
+            });
 
             //"Export Excel selected" button
             $('#exportexcel-selected').click(function (e) {
