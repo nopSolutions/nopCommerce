@@ -1,0 +1,223 @@
+﻿@model OrderModel
+@using Telerik.Web.Mvc.UI;
+@if (Model.IsShippable && Model.ShippingAddress != null)
+    {
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ShippingAddress):
+            </td>
+            <td class="adminData">
+                <table style="border: solid 1px black; padding: 5px;">
+                    @if (Model.ShippingAddress.FirstNameEnabled || Model.ShippingAddress.LastNameEnabled)
+                    {
+                        <tr>
+                            <td>
+                                @T("Admin.Orders.Address.FullName"):
+                            </td>
+                            <td>
+                                @Model.ShippingAddress.FirstName @Model.ShippingAddress.LastName
+                            </td>
+                        </tr>
+                    }
+                    @if (Model.ShippingAddress.EmailEnabled)
+                    {
+                        <tr>
+                            <td>
+                                @T("Admin.Orders.Address.Email"):
+                            </td>
+                            <td>
+                                @Model.ShippingAddress.Email
+                            </td>
+                        </tr>
+                    }
+                    @if (Model.ShippingAddress.PhoneEnabled)
+                    {
+                        <tr>
+                            <td>
+                                @T("Admin.Orders.Address.Phone"):
+                            </td>
+                            <td>
+                                @Model.ShippingAddress.PhoneNumber
+                            </td>
+                        </tr>
+                    }
+                    @if (Model.ShippingAddress.FaxEnabled)
+                    {
+                        <tr>
+                            <td>
+                                @T("Admin.Orders.Address.Fax"):
+                            </td>
+                            <td>
+                                @Model.ShippingAddress.FaxNumber
+                            </td>
+                        </tr>
+                    }
+                    @if (Model.ShippingAddress.CompanyEnabled)
+                    {
+                        <tr>
+                            <td>
+                                @T("Admin.Orders.Address.Company"):
+                            </td>
+                            <td>
+                                @Model.ShippingAddress.Company
+                            </td>
+                        </tr>
+                    }
+                    @if (Model.ShippingAddress.StreetAddressEnabled)
+                    {
+                        <tr>
+                            <td>
+                                @T("Admin.Orders.Address.Address1"):
+                            </td>
+                            <td>
+                                @Model.ShippingAddress.Address1
+                            </td>
+                        </tr>
+                    }
+                    @if (Model.ShippingAddress.StreetAddress2Enabled)
+                    {
+                        <tr>
+                            <td>
+                                @T("Admin.Orders.Address.Address2"):
+                            </td>
+                            <td>
+                                @Model.ShippingAddress.Address2
+                            </td>
+                        </tr>
+                    }
+                    @if (Model.ShippingAddress.CityEnabled)
+                    {
+                        <tr>
+                            <td>
+                                @T("Admin.Orders.Address.City"):
+                            </td>
+                            <td>
+                                @Model.ShippingAddress.City
+                            </td>
+                        </tr>
+                    }
+                    @if (Model.ShippingAddress.StateProvinceEnabled)
+                    {
+                        <tr>
+                            <td>
+                                @T("Admin.Orders.Address.StateProvince"):
+                            </td>
+                            <td>
+                                @Model.ShippingAddress.StateProvinceName
+                            </td>
+                        </tr>
+                    }
+                    @if (Model.ShippingAddress.ZipPostalCodeEnabled)
+                    {
+                        <tr>
+                            <td>
+                                @T("Admin.Orders.Address.ZipPostalCode"):
+                            </td>
+                            <td>
+                                @Model.ShippingAddress.ZipPostalCode
+                            </td>
+                        </tr>
+                    }
+                    @if (Model.ShippingAddress.CountryEnabled)
+                    {
+                        <tr>
+                            <td>
+                                @T("Admin.Orders.Address.Country"):
+                            </td>
+                            <td>
+                                @Model.ShippingAddress.CountryName
+                            </td>
+                        </tr>
+                    }
+                    @if (!Model.IsLoggedInAsVendor)
+                    {
+                        <tr>
+                            <td colspan="2">
+                                <a href="@Url.Action("AddressEdit", new { addressId = Model.ShippingAddress.Id, orderId = Model.Id })" class="t-button">@T("Admin.Common.Edit")</a>
+                            </td>
+                        </tr>
+                    }
+                </table>
+                <div style="padding-top: 15px;">
+                    <img alt="google maps" src="@Url.Content("~/Administration/Content/images/google-maps.gif")" />
+                    <a href="@Html.Raw(Model.ShippingAddressGoogleMapsUrl)" target="_blank">@T("Admin.Orders.Fields.ShippingAddress.ViewOnGoogleMaps")</a>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ShippingMethod):
+            </td>
+            <td class="adminData">
+                @Model.ShippingMethod
+            </td>
+        </tr>
+        @if (!Model.IsLoggedInAsVendor)
+        {
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.ShippingStatus):
+                </td>
+                <td class="adminData">
+                    @Model.ShippingStatus
+                </td>
+            </tr>
+        }
+    </table>
+        
+    <div class="clear">
+    </div>    
+    <p>
+        <strong>
+            @T("Admin.Orders.Shipments")
+        </strong>
+    </p>
+    <div class="clear">
+    </div>  
+    <table class="adminContent">
+        <tr>
+            <td>
+                @(Html.Telerik().Grid<ShipmentModel>().Name("shipments-grid")
+                .DataBinding(binding =>
+                {
+                    binding.Ajax().Select("ShipmentsSelect", "Order", new { orderId = Model.Id });
+                })
+                .Columns(columns =>
+                {
+                    columns.Bound(x => x.Id).Width(50);
+                    columns.Bound(x => x.TrackingNumber);
+                    columns.Bound(x => x.TotalWeight);
+                    columns.Bound(x => x.ShippedDate);
+                    columns.Bound(x => x.DeliveryDate);
+                    columns.Bound(x => x.Id)
+                        .Template(x => Html.ActionLink(T("Admin.Common.View").Text, "ShipmentDetails", "Order", new { id = x.Id }, new { }))
+                        .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/Order/ShipmentDetails/") + "<#= Id #>\">" + T("Admin.Common.View").Text + "</a>")
+                        .Width(50)
+                        .Centered()
+                        .HeaderTemplate(T("Admin.Common.View").Text);
+                })
+                .EnableCustomBinding(true))
+            </td>
+        </tr>
+        @if (Model.CanAddNewShipments)
+        {
+            <tr>
+                <td class="adminData">
+                    <input type="submit" id="btnAddNewShipment" name="btnAddNewShipment" value="@T("Admin.Orders.Shipments.AddNew")" onclick="javascript:setLocation('@(Url.Action("AddShipment", "Order", new { orderId = Model.Id }))    '); return false;" class="t-button" />
+                </td>
+            </tr>
+        }
+    </table>
+    }
+    else
+    {
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle"></td>
+            <td class="adminData">
+                @T("Admin.Orders.ShippingInfo.NotRequired")
+            </td>
+        </tr>
+    </table>
+    }
