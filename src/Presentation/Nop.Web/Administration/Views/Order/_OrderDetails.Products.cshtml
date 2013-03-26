@@ -107,11 +107,11 @@
                                         <strong>@T("Admin.Orders.Products.SKU")</strong><text>:</text>
                                         @item.Sku
                                     }
-                                    @if (!String.IsNullOrEmpty(item.Vendor))
+                                    @if (!String.IsNullOrEmpty(item.VendorName))
                                     {
                                         <br />
                                         <strong>@T("Admin.Orders.Products.Vendor")</strong><text>:</text>
-                                        @item.Vendor
+                                        @item.VendorName
                                     }
                                     @if (item.ReturnRequestIds.Count > 0)
                                     {

@@ -420,7 +420,15 @@ namespace Nop.Admin.Controllers
             #region Products
             model.CheckoutAttributeInfo = order.CheckoutAttributeDescription;
             bool hasDownloadableItems = false;
-            foreach (var opv in order.OrderProductVariants)
+            var products = order.OrderProductVariants;
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                products = products
+                    .Where(opv => opv.ProductVariant.Product.VendorId == _workContext.CurrentVendor.Id)
+                    .ToList();
+            }
+            foreach (var opv in products)
             {
                 if (opv.ProductVariant != null && opv.ProductVariant.IsDownload)
                     hasDownloadableItems = true;
@@ -438,9 +446,9 @@ namespace Nop.Admin.Controllers
                     IsDownloadActivated = opv.IsDownloadActivated,
                     LicenseDownloadId = opv.LicenseDownloadId
                 };
-                //vendor;
+                //vendor
                 var vendor = _vendorService.GetVendorById(opv.ProductVariant.Product.VendorId);
-                opvModel.Vendor = vendor != null ? vendor.Name : "";
+                opvModel.VendorName = vendor != null ? vendor.Name : "";
 
                 //unit price
                 opvModel.UnitPriceInclTaxValue = opv.UnitPriceInclTax;
