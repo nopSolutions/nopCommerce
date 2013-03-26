@@ -2089,7 +2089,7 @@ namespace Nop.Admin.Controllers
 		}
         
         [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult ShipmentsSelect(int orderId, GridCommand command)
+        public ActionResult ShipmentsByOrder(int orderId, GridCommand command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -2104,7 +2104,11 @@ namespace Nop.Admin.Controllers
 
             //shipments
             var shipmentModels = new List<ShipmentModel>();
-            var shipments = order.Shipments.OrderBy(s => s.CreatedOnUtc).ToList();
+            var shipments = order.Shipments
+                //a vendor should have access only to his products
+                .Where(s => _workContext.CurrentVendor == null || HasAccessToShipment(s))
+                .OrderBy(s => s.CreatedOnUtc)
+                .ToList();
             foreach (var shipment in shipments)
                 shipmentModels.Add(PrepareShipmentModel(shipment, false));
 
@@ -2145,8 +2149,14 @@ namespace Nop.Admin.Controllers
             var baseDimension = _measureService.GetMeasureDimensionById(_measureSettings.BaseDimensionId);
             var baseDimensionIn = baseDimension != null ? baseDimension.Name : "";
 
+            var orderProductVariants = order.OrderProductVariants;
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                orderProductVariants = orderProductVariants.Where(opv => HasAccessToOrderProductVariant(opv)).ToList();
+            }
 
-            foreach (var opv in order.OrderProductVariants)
+            foreach (var opv in orderProductVariants)
             {
                 //we can ship only shippable products
                 if (!opv.ProductVariant.IsShipEnabled)
@@ -2199,10 +2209,16 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null && !HasAccessToOrder(order))
                 return RedirectToAction("List");
 
-            Shipment shipment = null;
+            var orderProductVariants = order.OrderProductVariants;
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                orderProductVariants = orderProductVariants.Where(opv => HasAccessToOrderProductVariant(opv)).ToList();
+            }
 
+            Shipment shipment = null;
             decimal? totalWeight = null;
-            foreach (var opv in order.OrderProductVariants)
+            foreach (var opv in orderProductVariants)
             {
                 //is shippable
                 if (!opv.ProductVariant.IsShipEnabled)
@@ -2238,10 +2254,11 @@ namespace Nop.Admin.Controllers
                 }
                 if (shipment == null)
                 {
+                    var trackingNumber = form["TrackingNumber"];
                     shipment = new Shipment()
                     {
                         OrderId = order.Id,
-                        TrackingNumber = form["TrackingNumber"],
+                        TrackingNumber = trackingNumber,
                         TotalWeight = null,
                         ShippedDateUtc = null,
                         DeliveryDateUtc = null,

@@ -181,7 +181,7 @@
                 @(Html.Telerik().Grid<ShipmentModel>().Name("shipments-grid")
                 .DataBinding(binding =>
                 {
-                    binding.Ajax().Select("ShipmentsSelect", "Order", new { orderId = Model.Id });
+                    binding.Ajax().Select("ShipmentsByOrder", "Order", new { orderId = Model.Id });
                 })
                 .Columns(columns =>
                 {
