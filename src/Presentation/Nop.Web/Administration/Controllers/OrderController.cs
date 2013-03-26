@@ -2357,12 +2357,18 @@ namespace Nop.Admin.Controllers
         }
         public ActionResult BestsellersBriefReportByQuantity()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Content("");
+
             var model = GetBestsellersBriefReportModel(5, 1);
             return PartialView(model);
         }
         [GridAction(EnableCustomBinding = true)]
         public ActionResult BestsellersBriefReportByQuantityList(GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Content("");
+
             var model = GetBestsellersBriefReportModel(5, 1);
             var gridModel = new GridModel<BestsellersReportLineModel>
             {
@@ -2376,12 +2382,18 @@ namespace Nop.Admin.Controllers
         }
         public ActionResult BestsellersBriefReportByAmount()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Content("");
+
             var model = GetBestsellersBriefReportModel(5, 2);
             return PartialView(model);
         }
         [GridAction(EnableCustomBinding = true)]
         public ActionResult BestsellersBriefReportByAmountList(GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Content("");
+
             var model = GetBestsellersBriefReportModel(5, 2);
             var gridModel = new GridModel<BestsellersReportLineModel>
             {
@@ -2399,6 +2411,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult BestsellersReport()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
             var model = new BestsellersReportModel();
 
             //order statuses
@@ -2416,11 +2431,22 @@ namespace Nop.Admin.Controllers
             }
             model.AvailableCountries.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
 
+            //vendor
+            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+
             return View(model);
         }
         [GridAction(EnableCustomBinding = true)]
         public ActionResult BestsellersReportList(GridCommand command, BestsellersReportModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Content("");
+
+            //a vendor should have access only to his products
+            int vendorId = 0;
+            if (_workContext.CurrentVendor != null)
+                vendorId = _workContext.CurrentVendor.Id;
+            
             DateTime? startDateValue = (model.StartDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
 
@@ -2442,6 +2468,7 @@ namespace Nop.Admin.Controllers
                 billingCountryId: model.BillingCountryId,
                 recordsToReturn: 100,
                 orderBy: 2,
+                vendorId: vendorId,
                 showHidden: true);
             var gridModel = new GridModel<BestsellersReportLineModel>
             {
@@ -2470,19 +2497,31 @@ namespace Nop.Admin.Controllers
 
         public ActionResult NeverSoldReport()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
             var model = new NeverSoldReportModel();
             return View(model);
         }
         [GridAction(EnableCustomBinding = true)]
         public ActionResult NeverSoldReportList(GridCommand command, NeverSoldReportModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Content("");
+
+            //a vendor should have access only to his products
+            int vendorId = 0;
+            if (_workContext.CurrentVendor != null)
+                vendorId = _workContext.CurrentVendor.Id;
+
             DateTime? startDateValue = (model.StartDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
 
             DateTime? endDateValue = (model.EndDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
             
-            var items = _orderReportService.ProductsNeverSold(startDateValue, endDateValue,
+            var items = _orderReportService.ProductsNeverSold(vendorId,
+                startDateValue, endDateValue,
                 command.Page - 1, command.PageSize, true);
             var gridModel = new GridModel<NeverSoldReportLineModel>
             {
@@ -2527,12 +2566,22 @@ namespace Nop.Admin.Controllers
         [ChildActionOnly]
         public ActionResult OrderAverageReport()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Content("");
+
             var model = GetOrderAverageReportModel();
             return PartialView(model);
         }
         [GridAction(EnableCustomBinding = true)]
         public ActionResult OrderAverageReportList(GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Content("");
+
+            //a vendor does have access to this report
+            if (_workContext.CurrentVendor != null)
+                return Content("");
+
             var model = GetOrderAverageReportModel();
             var gridModel = new GridModel<OrderAverageReportLineSummaryModel>
             {
@@ -2578,12 +2627,22 @@ namespace Nop.Admin.Controllers
         [ChildActionOnly]
         public ActionResult OrderIncompleteReport()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Content("");
+
             var model = GetOrderIncompleteReportModel();
             return PartialView(model);
         }
         [GridAction(EnableCustomBinding = true)]
         public ActionResult OrderIncompleteReportList(GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Content("");
+            
+            //a vendor does have access to this report
+            if (_workContext.CurrentVendor != null)
+                return Content("");
+
             var model = GetOrderIncompleteReportModel();
             var gridModel = new GridModel<OrderIncompleteReportLineModel>
             {

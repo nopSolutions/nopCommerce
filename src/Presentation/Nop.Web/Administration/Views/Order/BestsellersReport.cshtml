@@ -31,7 +31,7 @@
                 @Html.EditorFor(model => Model.EndDate)
             </td>
         </tr>
-        <tr>
+        <tr @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.OrderStatusId):
             </td>
@@ -39,7 +39,7 @@
                 @Html.DropDownList("OrderStatusId", Model.AvailableOrderStatuses)
             </td>
         </tr>
-        <tr>
+        <tr @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.PaymentStatusId):
             </td>

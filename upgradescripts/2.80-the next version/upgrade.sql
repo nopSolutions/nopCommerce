@@ -3521,6 +3521,14 @@ BEGIN
 
 	INSERT [dbo].[PermissionRecord_Role_Mapping] ([PermissionRecord_Id], [CustomerRole_Id])
 	VALUES (@AccessAdminPanelPermissionRecordId, @VendorsCustomerRoleId)
+	
+	
+	DECLARE @ManageOrdersPermissionRecordId INT 
+	SELECT @ManageOrdersPermissionRecordId = [Id] FROM [PermissionRecord]
+	WHERE [SystemName] = N'ManageOrders' 
+
+	INSERT [dbo].[PermissionRecord_Role_Mapping] ([PermissionRecord_Id], [CustomerRole_Id])
+	VALUES (@ManageOrdersPermissionRecordId, @VendorsCustomerRoleId)
 END
 GO
 IF NOT EXISTS (

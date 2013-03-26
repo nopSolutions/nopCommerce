@@ -35,5 +35,8 @@ namespace Nop.Admin.Models.Orders
         public IList<SelectListItem> AvailableOrderStatuses { get; set; }
         public IList<SelectListItem> AvailablePaymentStatuses { get; set; }
         public IList<SelectListItem> AvailableCountries { get; set; }
+
+
+        public bool IsLoggedInAsVendor { get; set; }
     }
 }

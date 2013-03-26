@@ -1517,6 +1517,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult ReportBestCustomersByOrderTotalList(GridCommand command, BestCustomersReportModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return Content("");
+
             DateTime? startDateValue = (model.StartDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
 
@@ -1557,6 +1560,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult ReportBestCustomersByNumberOfOrdersList(GridCommand command, BestCustomersReportModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return Content("");
+
             DateTime? startDateValue = (model.StartDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
 
@@ -1598,12 +1604,18 @@ namespace Nop.Admin.Controllers
         [ChildActionOnly]
         public ActionResult ReportRegisteredCustomers()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return Content("");
+
             var model = GetReportRegisteredCustomersModel();
             return PartialView(model);
         }
         [GridAction(EnableCustomBinding = true)]
         public ActionResult ReportRegisteredCustomersList(GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return Content("");
+
             var model = GetReportRegisteredCustomersModel();
             var gridModel = new GridModel<RegisteredCustomerReportLineModel>
             {
@@ -1623,6 +1635,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult GetCartList(int customerId, int cartTypeId)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return Content("");
+
             var customer = _customerService.GetCustomerById(customerId);
             var cart = customer.ShoppingCartItems.Where(x => x.ShoppingCartTypeId == cartTypeId).ToList();
 
@@ -1657,8 +1672,11 @@ namespace Nop.Admin.Controllers
         #region Activity log
 
         [HttpPost, GridAction(EnableCustomBinding = true)]
-        public JsonResult ListActivityLog(GridCommand command, int customerId)
+        public ActionResult ListActivityLog(GridCommand command, int customerId)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return Content("");
+
             var activityLog = _customerActivityService.GetAllActivities(null, null, customerId, 0, command.Page - 1, command.PageSize);
             var gridModel = new GridModel<CustomerModel.ActivityLogModel>
             {
@@ -1676,7 +1694,10 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = activityLog.TotalCount
             };
-            return new JsonResult { Data = gridModel }; ;
+            return new JsonResult
+            {
+                Data = gridModel
+            };
         }
 
         #endregion

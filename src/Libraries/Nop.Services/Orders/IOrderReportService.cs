@@ -74,14 +74,16 @@ namespace Nop.Services.Orders
         /// <summary>
         /// Gets a list of product variants that were never sold
         /// </summary>
+        /// <param name="vendorId">Vendor identifier</param>
         /// <param name="createdFromUtc">Order created date from (UTC); null to load all records</param>
         /// <param name="createdToUtc">Order created date to (UTC); null to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product variants</returns>
-        IPagedList<ProductVariant> ProductsNeverSold(DateTime? createdFromUtc, 
-            DateTime? createdToUtc, int pageIndex, int pageSize, bool showHidden = false);
+        IPagedList<ProductVariant> ProductsNeverSold(int vendorId, 
+            DateTime? createdFromUtc, DateTime? createdToUtc,
+            int pageIndex, int pageSize, bool showHidden = false);
 
         /// <summary>
         /// Get profit report
