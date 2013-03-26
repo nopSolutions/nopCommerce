@@ -15,7 +15,6 @@ namespace Nop.Plugin.Tax.CountryStateZip.Services
     {
         #region Constants
         private const string TAXRATE_ALL_KEY = "Nop.taxrate.all-{0}-{1}";
-        private const string TAXRATE_BY_ID_KEY = "Nop.taxrate.id-{0}";
         private const string TAXRATE_PATTERN_KEY = "Nop.taxrate.";
         #endregion
 
@@ -130,12 +129,7 @@ namespace Nop.Plugin.Tax.CountryStateZip.Services
             if (taxRateId == 0)
                 return null;
 
-            string key = string.Format(TAXRATE_BY_ID_KEY, taxRateId);
-            return _cacheManager.Get(key, () =>
-            {
-                var taxRate = _taxRateRepository.GetById(taxRateId);
-                return taxRate;
-            });
+           return _taxRateRepository.GetById(taxRateId);
         }
 
         /// <summary>

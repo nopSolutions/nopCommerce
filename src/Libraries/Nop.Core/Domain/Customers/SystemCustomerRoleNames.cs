@@ -10,5 +10,7 @@ namespace Nop.Core.Domain.Customers
         public static string Registered { get { return "Registered"; } }
 
         public static string Guests { get { return "Guests"; } }
+
+        public static string Vendors { get { return "Vendors"; } }
     }
 }

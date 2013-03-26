@@ -74,11 +74,7 @@ namespace Nop.Admin.Controllers
 
             model.Id = returnRequest.Id;
             model.ProductVariantId = opv.ProductVariantId;
-            //product name
-            if (!String.IsNullOrEmpty(opv.ProductVariant.Name))
-                model.ProductName = string.Format("{0} ({1})", opv.ProductVariant.Product.Name, opv.ProductVariant.Name);
-            else
-                model.ProductName = opv.ProductVariant.Product.Name;
+            model.ProductName = opv.ProductVariant.FullProductName;
             model.OrderId = opv.OrderId;
             model.CustomerId = returnRequest.CustomerId;
             var customer = returnRequest.Customer;

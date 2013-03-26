@@ -23,11 +23,14 @@
             <input type="button" id="exportxml-selected" class="t-button" value="@T("Admin.Common.ExportToXml.Selected")" />
             <a href="@Url.Action("ExportExcelAll")" class="t-button">@T("Admin.Common.ExportToExcel.All")</a>
             <input type="button" id="exportexcel-selected" class="t-button" value="@T("Admin.Common.ExportToExcel.Selected")" />
-            <input type="button" id="importexcel" name="importexcel" class="t-button" value="@T("Admin.Common.ImportFromExcel")" />
+            @if (!Model.IsLoggedInAsVendor)
+            {
+                //a vendor cannot import products
+                <input type="button" id="importexcel" name="importexcel" class="t-button" value="@T("Admin.Common.ImportFromExcel")" />
+            }
             <input type="button" id="delete-selected" class="t-button" value="@T("Admin.Common.Delete.Selected")" />
         </div>
     </div>
-
     <table width="100%">
         <tr>
             <td class="adminTitle">
@@ -59,6 +62,14 @@
             </td>
             <td class="adminData">
                 @Html.DropDownList("SearchStoreId", Model.AvailableStores)
+            </td>
+        </tr>
+        <tr @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SearchVendorId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownList("SearchVendorId", Model.AvailableVendors)
             </td>
         </tr>
         <tr>
@@ -123,7 +134,7 @@
                                 .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= Published #>.gif' />")
                                 .Centered()
                                 .Width(100);
-                         })
+                        })
                          .DataBinding(dataBinding => dataBinding.Ajax()
                              .Select("GetVariants", "Product", new
                              {
@@ -226,7 +237,8 @@
                 SearchProductName: $('#@Html.FieldIdFor(model => model.SearchProductName)').val(),
                 SearchCategoryId: $('#SearchCategoryId').val(),
                 SearchManufacturerId: $('#SearchManufacturerId').val(),
-                SearchStoreId: $('#SearchStoreId').val()
+                SearchStoreId: $('#SearchStoreId').val(),
+                SearchVendorId: $('#SearchVendorId').val()
             };
             e.data = searchModel;
         }

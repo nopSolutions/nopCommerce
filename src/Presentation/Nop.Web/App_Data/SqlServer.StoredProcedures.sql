@@ -68,6 +68,7 @@ CREATE PROCEDURE [dbo].[ProductLoadAllPaged]
 	@CategoryIds		nvarchar(MAX) = null,	--a list of category IDs (comma-separated list). e.g. 1,2,3
 	@ManufacturerId		int = 0,
 	@StoreId			int = 0,
+	@VendorId			int = 0,
 	@ProductTagId		int = 0,
 	@FeaturedProducts	bit = null,	--0 featured only , 1 not featured only, null - load all products
 	@PriceMin			decimal(18, 4) = null,
@@ -459,6 +460,13 @@ BEGIN
 			SET @sql = @sql + '
 		AND pmm.IsFeaturedProduct = ' + CAST(@FeaturedProducts AS nvarchar(max))
 		END
+	END
+	
+	--filter by vendor
+	IF @VendorId > 0
+	BEGIN
+		SET @sql = @sql + '
+		AND p.VendorId = ' + CAST(@VendorId AS nvarchar(max))
 	END
 	
 	--filter by product tag

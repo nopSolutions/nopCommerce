@@ -17,7 +17,6 @@ namespace Nop.Services.Directory
         private const string COUNTRIES_ALL_KEY = "Nop.country.all-{0}";
         private const string COUNTRIES_BILLING_KEY = "Nop.country.billing-{0}";
         private const string COUNTRIES_SHIPPING_KEY = "Nop.country.shipping-{0}";
-        private const string COUNTRIES_BY_ID_KEY = "Nop.country.id-{0}";
         private const string COUNTRIES_PATTERN_KEY = "Nop.country.";
         #endregion
         
@@ -134,12 +133,7 @@ namespace Nop.Services.Directory
             if (countryId == 0)
                 return null;
 
-            string key = string.Format(COUNTRIES_BY_ID_KEY, countryId);
-            return _cacheManager.Get(key, () =>
-            {
-                var country = _countryRepository.GetById(countryId);
-                return country;
-            });
+            return _countryRepository.GetById(countryId);
         }
 
         /// <summary>

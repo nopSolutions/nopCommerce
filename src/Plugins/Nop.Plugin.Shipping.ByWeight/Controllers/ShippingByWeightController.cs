@@ -12,6 +12,7 @@ using Nop.Plugin.Shipping.ByWeight.Services;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
+using Nop.Services.Security;
 using Nop.Services.Shipping;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
@@ -28,6 +29,7 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
         private readonly IShippingByWeightService _shippingByWeightService;
         private readonly ISettingService _settingService;
         private readonly ILocalizationService _localizationService;
+        private readonly IPermissionService _permissionService;
 
         private readonly ICurrencyService _currencyService;
         private readonly CurrencySettings _currencySettings;
@@ -38,7 +40,7 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
             ICountryService countryService, IStateProvinceService stateProvinceService,
             ShippingByWeightSettings shippingByWeightSettings,
             IShippingByWeightService shippingByWeightService, ISettingService settingService,
-            ILocalizationService localizationService, 
+            ILocalizationService localizationService, IPermissionService permissionService,
             ICurrencyService currencyService, CurrencySettings currencySettings,
             IMeasureService measureService, MeasureSettings measureSettings)
         {
@@ -49,6 +51,7 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
             this._shippingByWeightService = shippingByWeightService;
             this._settingService = settingService;
             this._localizationService = localizationService;
+            this._permissionService = permissionService;
 
             this._currencyService = currencyService;
             this._currencySettings = currencySettings;
@@ -67,6 +70,7 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
             base.Initialize(requestContext);
         }
 
+        [ChildActionOnly]
         public ActionResult Configure()
         {
             var model = new ShippingByWeightListModel();
@@ -76,9 +80,22 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
             return View("Nop.Plugin.Shipping.ByWeight.Views.ShippingByWeight.Configure", model);
         }
 
+        [HttpPost]
+        public ActionResult SaveGeneralSettings(ShippingByWeightListModel model)
+        {
+            //save settings
+            _shippingByWeightSettings.LimitMethodsToCreated = model.LimitMethodsToCreated;
+            _settingService.SaveSetting(_shippingByWeightSettings);
+
+            return Json(new { Result = true });
+        }
+
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult RatesList(GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return Content("Access denied");
+
             var records = _shippingByWeightService.GetAll(command.Page - 1, command.PageSize);
             var sbwModel = records.Select(x =>
                 {
@@ -137,6 +154,9 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult RateDelete(int id, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return Content("Access denied");
+
             var sbw = _shippingByWeightService.GetById(id);
             if (sbw != null)
                 _shippingByWeightService.DeleteShippingByWeightRecord(sbw);
@@ -144,19 +164,12 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
             return RatesList(command);
         }
 
-        [HttpPost]
-        public ActionResult SaveGeneralSettings(ShippingByWeightListModel model)
-        {
-            //save settings
-            _shippingByWeightSettings.LimitMethodsToCreated = model.LimitMethodsToCreated;
-            _settingService.SaveSetting(_shippingByWeightSettings);
-
-            return Json(new { Result = true });
-        }
-
         //add
         public ActionResult AddPopup()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return Content("Access denied");
+
             var model = new ShippingByWeightModel();
             model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
             model.BaseWeightIn = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name;
@@ -182,6 +195,9 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
         [HttpPost]
         public ActionResult AddPopup(string btnId, string formId, ShippingByWeightModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return Content("Access denied");
+
             var sbw = new ShippingByWeightRecord()
             {
                 CountryId = model.CountryId,
@@ -206,6 +222,9 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
         //edit
         public ActionResult EditPopup(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return Content("Access denied");
+
             var sbw = _shippingByWeightService.GetById(id);
             if (sbw == null)
                 //No record found with the specified id
@@ -254,6 +273,9 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
         [HttpPost]
         public ActionResult EditPopup(string btnId, string formId, ShippingByWeightModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return Content("Access denied");
+
             var sbw = _shippingByWeightService.GetById(model.Id);
             if (sbw == null)
                 //No record found with the specified id

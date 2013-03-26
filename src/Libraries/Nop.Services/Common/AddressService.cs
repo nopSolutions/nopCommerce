@@ -104,8 +104,7 @@ namespace Nop.Services.Common
             if (addressId == 0)
                 return null;
 
-            var address = _addressRepository.GetById(addressId);
-            return address;
+            return _addressRepository.GetById(addressId);
         }
 
         /// <summary>

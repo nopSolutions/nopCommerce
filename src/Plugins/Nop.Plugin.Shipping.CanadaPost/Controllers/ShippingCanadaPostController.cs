@@ -17,6 +17,7 @@ namespace Nop.Plugin.Shipping.CanadaPost.Controllers
             this._settingService = settingService;
         }
 
+        [ChildActionOnly]
         public ActionResult Configure()
         {
             var model = new CanadaPostShippingModel();
@@ -27,6 +28,7 @@ namespace Nop.Plugin.Shipping.CanadaPost.Controllers
         }
 
         [HttpPost]
+        [ChildActionOnly]
         public ActionResult Configure(CanadaPostShippingModel model)
         {
             if (!ModelState.IsValid)

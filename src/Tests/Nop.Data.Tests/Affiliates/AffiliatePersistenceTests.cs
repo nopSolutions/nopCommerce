@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Linq;
 using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.Common;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
-using Nop.Core.Domain.Orders;
-using Nop.Core.Domain.Tax;
 using Nop.Tests;
 using NUnit.Framework;
 
@@ -53,40 +49,6 @@ namespace Nop.Data.Tests.Affiliates
                     TwoLetterIsoCode = "US",
                     ThreeLetterIsoCode = "USA",
                 }
-            };
-        }
-
-        protected Customer GetTestCustomer()
-        {
-            return new Customer
-            {
-                CustomerGuid = Guid.NewGuid(),
-                AdminComment = "some comment here",
-                Active = true,
-                Deleted = false,
-                CreatedOnUtc = new DateTime(2010, 01, 01),
-                LastActivityDateUtc = new DateTime(2010, 01, 02)
-            };
-        }
-
-        protected Order GetTestOrder()
-        {
-            return new Order()
-            {
-                OrderGuid = Guid.NewGuid(),
-                Customer = GetTestCustomer(),
-                BillingAddress = new Address()
-                {
-                    Country = new Country()
-                    {
-                        Name = "United States",
-                        TwoLetterIsoCode = "US",
-                        ThreeLetterIsoCode = "USA",
-                    },
-                    CreatedOnUtc = new DateTime(2010, 01, 01),
-                },
-                Deleted = true,
-                CreatedOnUtc = new DateTime(2010, 05, 06)
             };
         }
     }

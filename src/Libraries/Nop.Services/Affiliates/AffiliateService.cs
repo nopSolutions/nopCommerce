@@ -30,8 +30,8 @@ namespace Nop.Services.Affiliates
         public AffiliateService(IRepository<Affiliate> affiliateRepository,
             IEventPublisher eventPublisher)
         {
-            _affiliateRepository = affiliateRepository;
-            _eventPublisher = eventPublisher;
+            this._affiliateRepository = affiliateRepository;
+            this._eventPublisher = eventPublisher;
         }
 
         #endregion

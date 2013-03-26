@@ -18,6 +18,8 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
         /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
+        /// <param name="affiliateId">Affiliate identifier</param>
+        /// <param name="vendorId">Vendor identifier</param>
         /// <param name="customerRoleIds">A list of customer role identifiers to filter by (at least one match); pass null or empty list in order to load all customers; </param>
         /// <param name="email">Email; null to load all customers</param>
         /// <param name="username">Username; null to load all customers</param>
@@ -33,21 +35,15 @@ namespace Nop.Services.Customers
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Customer collection</returns>
-        IPagedList<Customer> GetAllCustomers(DateTime? createdFromUtc,
-            DateTime? createdToUtc, int[] customerRoleIds, string email, string username,
-           string firstName, string lastName, int dayOfBirth, int monthOfBirth,
-           string company, string phone, string zipPostalCode,
-           bool loadOnlyWithShoppingCart, ShoppingCartType? sct, int pageIndex, int pageSize);
+        IPagedList<Customer> GetAllCustomers(DateTime? createdFromUtc = null,
+            DateTime? createdToUtc = null, int affiliateId = 0, int vendorId = 0,
+            int[] customerRoleIds = null, string email = null, string username = null,
+            string firstName = null, string lastName = null,
+            int dayOfBirth = 0, int monthOfBirth = 0,
+            string company = null, string phone = null, string zipPostalCode = null,
+            bool loadOnlyWithShoppingCart = false, ShoppingCartType? sct = null,
+            int pageIndex = 0, int pageSize = 2147483647); //Int32.MaxValue
         
-        /// <summary>
-        /// Gets all customers by affiliate identifier
-        /// </summary>
-        /// <param name="affiliateId">Affiliate identifier</param>
-        /// <param name="pageIndex">Page index</param>
-        /// <param name="pageSize">Page size</param>
-        /// <returns>Customers</returns>
-        IPagedList<Customer> GetAllCustomers(int affiliateId, int pageIndex, int pageSize);
-
         /// <summary>
         /// Gets all customers by customer format (including deleted ones)
         /// </summary>

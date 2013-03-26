@@ -6,12 +6,14 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Domain.Vendors;
 using Nop.Core.Fakes;
 using Nop.Services.Authentication;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
+using Nop.Services.Vendors;
 using Nop.Web.Framework.Localization;
 
 namespace Nop.Web.Framework
@@ -21,10 +23,17 @@ namespace Nop.Web.Framework
     /// </summary>
     public partial class WebWorkContext : IWorkContext
     {
+        #region Const
+
         private const string CustomerCookieName = "Nop.customer";
+
+        #endregion
+
+        #region Fields
 
         private readonly HttpContextBase _httpContext;
         private readonly ICustomerService _customerService;
+        private readonly IVendorService _vendorService;
         private readonly IStoreContext _storeContext;
         private readonly IAuthenticationService _authenticationService;
         private readonly ILanguageService _languageService;
@@ -37,9 +46,15 @@ namespace Nop.Web.Framework
 
         private Customer _cachedCustomer;
         private Customer _originalCustomerIfImpersonated;
+        private Vendor _cachedVendor;
+
+        #endregion
+
+        #region Ctor
 
         public WebWorkContext(HttpContextBase httpContext,
             ICustomerService customerService,
+            IVendorService vendorService,
             IStoreContext storeContext,
             IAuthenticationService authenticationService,
             ILanguageService languageService,
@@ -51,6 +66,7 @@ namespace Nop.Web.Framework
         {
             this._httpContext = httpContext;
             this._customerService = customerService;
+            this._vendorService = vendorService;
             this._storeContext = storeContext;
             this._authenticationService = authenticationService;
             this._languageService = languageService;
@@ -61,6 +77,10 @@ namespace Nop.Web.Framework
             this._localizationSettings = localizationSettings;
             this._webHelper = webHelper;
         }
+
+        #endregion
+
+        #region Utilities
 
         protected HttpCookie GetCustomerCookie()
         {
@@ -91,6 +111,10 @@ namespace Nop.Web.Framework
                 _httpContext.Response.Cookies.Add(cookie);
             }
         }
+
+        #endregion
+
+        #region Properties
 
         /// <summary>
         /// Gets or sets the current customer
@@ -190,6 +214,30 @@ namespace Nop.Web.Framework
             get
             {
                 return _originalCustomerIfImpersonated;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the current vendor (logged-in manager)
+        /// </summary>
+        public virtual Vendor CurrentVendor
+        {
+            get
+            {
+                if (_cachedVendor != null)
+                    return _cachedVendor;
+
+                var currentCustomer = this.CurrentCustomer;
+                if (currentCustomer == null)
+                    return null;
+
+                var vendor = _vendorService.GetVendorById(currentCustomer.VendorId);
+
+                //validation
+                if (vendor != null && !vendor.Deleted && vendor.Active)
+                    _cachedVendor = vendor;
+
+                return _cachedVendor;
             }
         }
 
@@ -333,5 +381,7 @@ namespace Nop.Web.Framework
         /// Get or set value indicating whether we're in admin area
         /// </summary>
         public virtual bool IsAdmin { get; set; }
+
+        #endregion
     }
 }

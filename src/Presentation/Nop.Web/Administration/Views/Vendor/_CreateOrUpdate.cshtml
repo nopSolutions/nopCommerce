@@ -1,0 +1,79 @@
+﻿@model VendorModel
+
+@using Telerik.Web.Mvc.UI;
+
+@Html.ValidationSummary(false)
+@Html.HiddenFor(model => model.Id)
+
+<table class="adminContent">
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.Name):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.Name)
+            @Html.ValidationMessageFor(model => model.Name)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.Email):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.Email)
+            @Html.ValidationMessageFor(model => model.Email)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.Description):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.Description)
+            @Html.ValidationMessageFor(model => model.Description)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.AdminComment):
+        </td>
+        <td class="adminData">
+            @Html.TextAreaFor(model => model.AdminComment, new { style = "Width: 250px; Height: 150px;" })
+            @Html.ValidationMessageFor(model => model.AdminComment)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.Active):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.Active)
+            @Html.ValidationMessageFor(model => model.Active)
+        </td>
+    </tr>
+    @if (Model.Id > 0)
+    {
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AssociatedCustomerEmails):
+            </td>
+            <td class="adminData">
+                @if (Model.AssociatedCustomerEmails.Count > 0)
+                {
+                    for (int i = 0; i < Model.AssociatedCustomerEmails.Count; i++)
+                    {
+                    @Model.AssociatedCustomerEmails[i]
+                        if (i != Model.AssociatedCustomerEmails.Count - 1)
+                        {
+                    <text>, </text>
+                        }
+                    }
+                }
+                else
+                {
+                    @T("Admin.Vendors.Fields.AssociatedCustomerEmails.None")
+                }
+            </td>
+        </tr>
+    }
+</table>

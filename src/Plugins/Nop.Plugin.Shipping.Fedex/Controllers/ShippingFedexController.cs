@@ -22,6 +22,7 @@ namespace Nop.Plugin.Shipping.Fedex.Controllers
             this._settingService = settingService;
         }
 
+        [ChildActionOnly]
         public ActionResult Configure()
         {
             var model = new FedexShippingModel();
@@ -67,6 +68,7 @@ namespace Nop.Plugin.Shipping.Fedex.Controllers
         }
 
         [HttpPost]
+        [ChildActionOnly]
         public ActionResult Configure(FedexShippingModel model)
         {
             if (!ModelState.IsValid)

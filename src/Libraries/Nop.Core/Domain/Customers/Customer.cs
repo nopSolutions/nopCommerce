@@ -80,6 +80,11 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets the affiliate identifier
         /// </summary>
         public int AffiliateId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the vendor identifier with which this customer is associated (maganer)
+        /// </summary>
+        public int VendorId { get; set; }
         
         /// <summary>
         /// Gets or sets a value indicating whether the customer is active

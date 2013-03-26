@@ -13,18 +13,10 @@ namespace Nop.Services.Catalog
     /// </summary>
     public partial class ManufacturerTemplateService : IManufacturerTemplateService
     {
-        #region Constants
-        private const string MANUFACTURERTEMPLATES_BY_ID_KEY = "Nop.manufacturertemplate.id-{0}";
-        private const string MANUFACTURERTEMPLATES_ALL_KEY = "Nop.manufacturertemplate.all";
-        private const string MANUFACTURERTEMPLATES_PATTERN_KEY = "Nop.manufacturertemplate.";
-
-        #endregion
-
         #region Fields
 
         private readonly IRepository<ManufacturerTemplate> _manufacturerTemplateRepository;
         private readonly IEventPublisher _eventPublisher;
-        private readonly ICacheManager _cacheManager;
 
         #endregion
         
@@ -33,14 +25,11 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="cacheManager">Cache manager</param>
         /// <param name="manufacturerTemplateRepository">Manufacturer template repository</param>
         /// <param name="eventPublisher">Event published</param>
-        public ManufacturerTemplateService(ICacheManager cacheManager,
-            IRepository<ManufacturerTemplate> manufacturerTemplateRepository,
+        public ManufacturerTemplateService(IRepository<ManufacturerTemplate> manufacturerTemplateRepository,
             IEventPublisher eventPublisher)
         {
-            _cacheManager = cacheManager;
             _manufacturerTemplateRepository = manufacturerTemplateRepository;
             _eventPublisher = eventPublisher;
         }
@@ -60,8 +49,6 @@ namespace Nop.Services.Catalog
 
             _manufacturerTemplateRepository.Delete(manufacturerTemplate);
 
-            _cacheManager.RemoveByPattern(MANUFACTURERTEMPLATES_PATTERN_KEY);
-
             //event notification
             _eventPublisher.EntityDeleted(manufacturerTemplate);
         }
@@ -72,18 +59,14 @@ namespace Nop.Services.Catalog
         /// <returns>Manufacturer templates</returns>
         public virtual IList<ManufacturerTemplate> GetAllManufacturerTemplates()
         {
-            string key = MANUFACTURERTEMPLATES_ALL_KEY;
-            return _cacheManager.Get(key, () =>
-            {
-                var query = from pt in _manufacturerTemplateRepository.Table
-                            orderby pt.DisplayOrder
-                            select pt;
+            var query = from pt in _manufacturerTemplateRepository.Table
+                        orderby pt.DisplayOrder
+                        select pt;
 
-                var templates = query.ToList();
-                return templates;
-            });
+            var templates = query.ToList();
+            return templates;
         }
- 
+
         /// <summary>
         /// Gets a manufacturer template
         /// </summary>
@@ -94,12 +77,7 @@ namespace Nop.Services.Catalog
             if (manufacturerTemplateId == 0)
                 return null;
 
-            string key = string.Format(MANUFACTURERTEMPLATES_BY_ID_KEY, manufacturerTemplateId);
-            return _cacheManager.Get(key, () =>
-            {
-                var template = _manufacturerTemplateRepository.GetById(manufacturerTemplateId);
-                return template;
-            });
+            return _manufacturerTemplateRepository.GetById(manufacturerTemplateId);
         }
 
         /// <summary>
@@ -112,9 +90,6 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("manufacturerTemplate");
 
             _manufacturerTemplateRepository.Insert(manufacturerTemplate);
-
-            //cache
-            _cacheManager.RemoveByPattern(MANUFACTURERTEMPLATES_PATTERN_KEY);
 
             //event notification
             _eventPublisher.EntityInserted(manufacturerTemplate);
@@ -130,9 +105,6 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("manufacturerTemplate");
 
             _manufacturerTemplateRepository.Update(manufacturerTemplate);
-
-            //cache
-            _cacheManager.RemoveByPattern(MANUFACTURERTEMPLATES_PATTERN_KEY);
 
             //event notification
             _eventPublisher.EntityUpdated(manufacturerTemplate);

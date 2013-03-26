@@ -80,8 +80,7 @@ namespace Nop.Services.Catalog
             if (productTagId == 0)
                 return null;
 
-            var productTag = _productTagRepository.GetById(productTagId);
-            return productTag;
+            return _productTagRepository.GetById(productTagId);
         }
 
         /// <summary>

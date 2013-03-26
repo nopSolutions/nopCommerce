@@ -120,7 +120,7 @@ namespace Nop.Admin.Controllers
 
         public ActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageRecurringPayments))
                 return AccessDeniedView();
 
             var gridModel = new GridModel<RecurringPaymentModel>();
@@ -130,7 +130,7 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult List(GridCommand command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageRecurringPayments))
                 return AccessDeniedView();
 
             var payments = _orderService.SearchRecurringPayments(0, 0, 0, null, command.Page - 1, command.PageSize, true);
@@ -153,7 +153,7 @@ namespace Nop.Admin.Controllers
         //edit
         public ActionResult Edit(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageRecurringPayments))
                 return AccessDeniedView();
 
             var payment = _orderService.GetRecurringPaymentById(id);
@@ -170,7 +170,7 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("save", "save-continue")]
         public ActionResult Edit(RecurringPaymentModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageRecurringPayments))
                 return AccessDeniedView();
 
             var payment = _orderService.GetRecurringPaymentById(model.Id);
@@ -192,7 +192,7 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult Delete(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageRecurringPayments))
                 return AccessDeniedView();
 
             var payment = _orderService.GetRecurringPaymentById(id);
@@ -213,7 +213,7 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult HistoryList(int recurringPaymentId, GridCommand command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageRecurringPayments))
                 return AccessDeniedView();
 
             var payment = _orderService.GetRecurringPaymentById(recurringPaymentId);
@@ -244,7 +244,7 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("processnextpayment")]
         public ActionResult ProcessNextPayment(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageRecurringPayments))
                 return AccessDeniedView();
 
             var payment = _orderService.GetRecurringPaymentById(id);
@@ -277,7 +277,7 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("cancelpayment")]
         public ActionResult CancelRecurringPayment(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageRecurringPayments))
                 return AccessDeniedView();
 
             var payment = _orderService.GetRecurringPaymentById(id);

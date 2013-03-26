@@ -11,6 +11,7 @@ using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
+using Nop.Core.Domain.Vendors;
 using Nop.Services.Customers;
 using Nop.Services.Events;
 using Nop.Services.Localization;
@@ -294,6 +295,45 @@ namespace Nop.Services.Messages
         #endregion
 
         #region Order workflow
+
+        /// <summary>
+        /// Sends an order placed notification to a vendor
+        /// </summary>
+        /// <param name="order">Order instance</param>
+        /// <param name="vendor">Vendor instance</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        public virtual int SendOrderPlacedVendorNotification(Order order, Vendor vendor, int languageId)
+        {
+            if (order == null)
+                throw new ArgumentNullException("order");
+
+            if (vendor == null)
+                throw new ArgumentNullException("vendor");
+
+            var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
+            languageId = EnsureLanguageIsActive(languageId, store.Id);
+
+            var messageTemplate = GetLocalizedActiveMessageTemplate("OrderPlaced.VendorNotification", languageId, store.Id);
+            if (messageTemplate == null)
+                return 0;
+
+            //tokens
+            var tokens = new List<Token>();
+            _messageTokenProvider.AddStoreTokens(tokens, store);
+            _messageTokenProvider.AddOrderTokens(tokens, order, languageId);
+            _messageTokenProvider.AddCustomerTokens(tokens, order.Customer);
+
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+
+            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+            var toEmail = vendor.Email;
+            var toName = vendor.Name;
+            return SendNotification(messageTemplate, emailAccount,
+                languageId, tokens,
+                toEmail, toName);
+        }
 
         /// <summary>
         /// Sends an order placed notification to a store owner

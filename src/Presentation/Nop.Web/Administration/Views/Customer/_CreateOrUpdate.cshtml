@@ -175,6 +175,16 @@
                 </td>
             </tr>
         }
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.VendorId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.VendorId, Model.AvailableVendors)
+                @Html.ValidationMessageFor(model => model.VendorId)
+                <i>@T("Admin.Customers.Customers.VendorShouldBeInVendorsRole")</i>
+            </td>
+        </tr>
         @if (Model.GenderEnabled)
         {
             <tr>

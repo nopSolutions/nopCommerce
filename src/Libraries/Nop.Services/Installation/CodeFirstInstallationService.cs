@@ -4031,12 +4031,20 @@ namespace Nop.Services.Installation
                 IsSystemRole = true,
                 SystemName = SystemCustomerRoleNames.Guests,
             };
+            var crVendors = new CustomerRole
+            {
+                Name = "Vendors",
+                Active = true,
+                IsSystemRole = true,
+                SystemName = SystemCustomerRoleNames.Vendors,
+            };
             var customerRoles = new List<CustomerRole>
                                 {
                                     crAdministrators,
                                     crForumModerators,
                                     crRegistered,
-                                    crGuests
+                                    crGuests,
+                                    crVendors
                                 };
             customerRoles.ForEach(cr => _customerRoleRepository.Insert(cr));
 
@@ -4362,6 +4370,15 @@ namespace Nop.Services.Installation
                                            Name = "RecurringPaymentCancelled.StoreOwnerNotification",
                                            Subject = "%Store.Name%. Recurring payment cancelled",
                                            Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />%Customer.FullName% (%Customer.Email%) has just cancelled a recurring payment ID=%RecurringPayment.ID%.</p>",
+                                           IsActive = true,
+                                           EmailAccountId = eaGeneral.Id,
+                                       },
+                                   new MessageTemplate
+                                       {
+                                           Name = "OrderPlaced.VendorNotification",
+                                           Subject = "%Store.Name%. Order placed",
+                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />%Customer.FullName% (%Customer.Email%) has just placed on order. <br /><br />Order Number: %Order.OrderNumber%<br />Date Ordered: %Order.CreatedOn%</p>",
+                                           //this template is disabled by default
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
@@ -4722,7 +4739,8 @@ namespace Nop.Services.Installation
                 {
                     ForceSslForAllPages = false,
                     EncryptionKey = "273ece6f97dd844d",
-                    AdminAreaAllowedIpAddresses = null
+                    AdminAreaAllowedIpAddresses = null,
+                    HideAdminMenuItemsBasedOnPermissions = true,
                 });
 
             settingService.SaveSetting(new ShippingSettings()

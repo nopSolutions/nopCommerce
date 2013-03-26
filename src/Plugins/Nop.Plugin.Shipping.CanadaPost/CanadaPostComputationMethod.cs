@@ -63,10 +63,10 @@ namespace Nop.Plugin.Shipping.CanadaPost
         /// <returns></returns>
         private string SendMessage(string eParcelMessage)
         {
-            using (Socket socCanadaPost = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp))
+            using (var socCanadaPost = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp))
             {
                 socCanadaPost.ReceiveTimeout = 12000;
-                IPEndPoint remoteEndPoint = new IPEndPoint(Dns.GetHostAddresses(_canadaPostSettings.Url)[0], _canadaPostSettings.Port);
+                var remoteEndPoint = new IPEndPoint(Dns.GetHostAddresses(_canadaPostSettings.Url)[0], _canadaPostSettings.Port);
 
                 socCanadaPost.Connect(remoteEndPoint);
                 byte[] data = System.Text.Encoding.ASCII.GetBytes(eParcelMessage);

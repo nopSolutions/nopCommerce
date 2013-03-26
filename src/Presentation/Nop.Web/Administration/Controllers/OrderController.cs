@@ -27,6 +27,7 @@ using Nop.Services.Payments;
 using Nop.Services.Security;
 using Nop.Services.Shipping;
 using Nop.Services.Stores;
+using Nop.Services.Vendors;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
@@ -68,6 +69,7 @@ namespace Nop.Admin.Controllers
         private readonly IDownloadService _downloadService;
         private readonly IShipmentService _shipmentService;
         private readonly IStoreService _storeService;
+        private readonly IVendorService _vendorService;
 
         private readonly CatalogSettings _catalogSettings;
         private readonly CurrencySettings _currencySettings;
@@ -94,7 +96,7 @@ namespace Nop.Admin.Controllers
             IProductAttributeService productAttributeService, IProductAttributeParser productAttributeParser,
             IProductAttributeFormatter productAttributeFormatter, IShoppingCartService shoppingCartService,
             IGiftCardService giftCardService, IDownloadService downloadService,
-            IShipmentService shipmentService, IStoreService storeService,
+            IShipmentService shipmentService, IStoreService storeService, IVendorService vendorService,
             CatalogSettings catalogSettings, CurrencySettings currencySettings, TaxSettings taxSettings,
             MeasureSettings measureSettings, PdfSettings pdfSettings, AddressSettings addressSettings)
 		{
@@ -127,6 +129,7 @@ namespace Nop.Admin.Controllers
             this._downloadService = downloadService;
             this._shipmentService = shipmentService;
             this._storeService = storeService;
+            this._vendorService = vendorService;
 
             this._catalogSettings = catalogSettings;
             this._currencySettings = currencySettings;
@@ -139,6 +142,62 @@ namespace Nop.Admin.Controllers
         #endregion
 
         #region Utilities
+
+        [NonAction]
+        protected bool HasAccessToOrder(Order order)
+        {
+            if (order == null)
+                throw new ArgumentNullException("order");
+
+            if (_workContext.CurrentVendor == null)
+                //not a vendor; has access
+                return true;
+
+            var vendorId = _workContext.CurrentVendor.Id;
+            var hasVendorProducts = order.OrderProductVariants.Any(opv => opv.ProductVariant.Product.VendorId == vendorId);
+            return hasVendorProducts;
+        }
+
+        [NonAction]
+        protected bool HasAccessToOrderProductVariant(OrderProductVariant opv)
+        {
+            if (opv == null)
+                throw new ArgumentNullException("opv");
+
+            if (_workContext.CurrentVendor == null)
+                //not a vendor; has access
+                return true;
+
+            var vendorId = _workContext.CurrentVendor.Id;
+            return opv.ProductVariant.Product.VendorId == vendorId;
+        }
+
+        [NonAction]
+        protected bool HasAccessToShipment(Shipment shipment)
+        {
+            if (shipment == null)
+                throw new ArgumentNullException("shipment");
+
+            if (_workContext.CurrentVendor == null)
+                //not a vendor; has access
+                return true;
+
+            var hasVendorProducts = false;
+            var vendorId = _workContext.CurrentVendor.Id;
+            foreach (var sopv in shipment.ShipmentOrderProductVariants)
+            {
+                var opv = _orderService.GetOrderProductVariantById(sopv.OrderProductVariantId);
+                if (opv != null)
+                {
+                    if (opv.ProductVariant.Product.VendorId == vendorId)
+                    {
+                        hasVendorProducts = true;
+                        break;
+                    }
+                }
+            }
+            return hasVendorProducts;
+        }
 
         [NonAction]
         protected void PrepareOrderDetailsModel(OrderModel model, Order order)
@@ -164,6 +223,8 @@ namespace Nop.Admin.Controllers
             model.AllowCustomersToSelectTaxDisplayType = _taxSettings.AllowCustomersToSelectTaxDisplayType;
             model.TaxDisplayType = _taxSettings.TaxDisplayType;
             model.AffiliateId = order.AffiliateId;
+            //a vendor should have access only to his products
+            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
             
             #region Order totals
 
@@ -386,7 +447,15 @@ namespace Nop.Admin.Controllers
             #region Products
             model.CheckoutAttributeInfo = order.CheckoutAttributeDescription;
             bool hasDownloadableItems = false;
-            foreach (var opv in order.OrderProductVariants)
+            var products = order.OrderProductVariants;
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                products = products
+                    .Where(opv => opv.ProductVariant.Product.VendorId == _workContext.CurrentVendor.Id)
+                    .ToList();
+            }
+            foreach (var opv in products)
             {
                 if (opv.ProductVariant != null && opv.ProductVariant.IsDownload)
                     hasDownloadableItems = true;
@@ -395,6 +464,7 @@ namespace Nop.Admin.Controllers
                 {
                     Id = opv.Id,
                     ProductVariantId = opv.ProductVariantId,
+                    FullProductName = opv.ProductVariant.FullProductName,
                     Sku = opv.ProductVariant.FormatSku(opv.AttributesXml, _productAttributeParser),
                     Quantity = opv.Quantity,
                     IsDownload = opv.ProductVariant.IsDownload,
@@ -403,12 +473,9 @@ namespace Nop.Admin.Controllers
                     IsDownloadActivated = opv.IsDownloadActivated,
                     LicenseDownloadId = opv.LicenseDownloadId
                 };
-
-                //product name
-                if (!String.IsNullOrEmpty(opv.ProductVariant.Name))
-                    opvModel.FullProductName = string.Format("{0} ({1})", opv.ProductVariant.Product.Name, opv.ProductVariant.Name);
-                else
-                    opvModel.FullProductName = opv.ProductVariant.Product.Name;
+                //vendor
+                var vendor = _vendorService.GetVendorById(opv.ProductVariant.Product.VendorId);
+                opvModel.VendorName = vendor != null ? vendor.Name : "";
 
                 //unit price
                 opvModel.UnitPriceInclTaxValue = opv.UnitPriceInclTax;
@@ -542,6 +609,7 @@ namespace Nop.Admin.Controllers
                         Id = sopv.Id,
                         OrderProductVariantId = opv.Id,
                         ProductVariantId = opv.ProductVariantId,
+                        FullProductName = opv.ProductVariant.FullProductName,
                         Sku = opv.ProductVariant.FormatSku(opv.AttributesXml, _productAttributeParser),
                         AttributeInfo = opv.AttributeDescription,
                         ItemWeight = opv.ItemWeight.HasValue ? string.Format("{0:F2} [{1}]", opv.ItemWeight, baseWeightIn) : "",
@@ -552,12 +620,6 @@ namespace Nop.Admin.Controllers
                         QuantityToAdd = maxQtyToAdd,
                     };
 
-                    //product name
-                    if (!String.IsNullOrEmpty(opv.ProductVariant.Name))
-                        sopvModel.FullProductName = string.Format("{0} ({1})", opv.ProductVariant.Product.Name,
-                                                                  opv.ProductVariant.Name);
-                    else
-                        sopvModel.FullProductName = opv.ProductVariant.Product.Name;
                     model.Products.Add(sopvModel);
                 }
             }
@@ -592,15 +654,17 @@ namespace Nop.Admin.Controllers
             model.AvailableShippingStatuses.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
 
             //stores
-            foreach (var store in _storeService.GetAllStores())
-            {
-                model.AvailableStores.Add(new SelectListItem()
-                {
-                    Text = store.Name,
-                    Value = store.Id.ToString()
-                });
-            }
-            model.AvailableStores.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableStores.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var s in _storeService.GetAllStores())
+                model.AvailableStores.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString() });
+
+            //vendors
+            model.AvailableVendors.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var v in _vendorService.GetAllVendors(0, int.MaxValue, true))
+                model.AvailableVendors.Add(new SelectListItem() { Text = v.Name, Value = v.Id.ToString() });
+
+            //a vendor should have access only to orders with his products
+            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
 
             return View(model);
 		}
@@ -610,6 +674,12 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                model.VendorId = _workContext.CurrentVendor.Id;
+            }
 
             DateTime? startDateValue = (model.StartDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
@@ -622,8 +692,10 @@ namespace Nop.Admin.Controllers
             ShippingStatus? shippingStatus = model.ShippingStatusId > 0 ? (ShippingStatus?)(model.ShippingStatusId) : null;
 
             //load orders
-            var orders = _orderService.SearchOrders(model.StoreId, 0, startDateValue, endDateValue, orderStatus,
-                paymentStatus, shippingStatus, model.CustomerEmail, model.OrderGuid, command.Page - 1, command.PageSize);
+            var orders = _orderService.SearchOrders(model.StoreId, model.VendorId, 0,
+                startDateValue, endDateValue, orderStatus,
+                paymentStatus, shippingStatus, model.CustomerEmail, model.OrderGuid,
+                command.Page - 1, command.PageSize);
             var gridModel = new GridModel<OrderModel>
             {
                 Data = orders.Select(x =>
@@ -646,10 +718,12 @@ namespace Nop.Admin.Controllers
 
             //summary report
             //implemented as a workaround described here: http://www.telerik.com/community/forums/aspnet-mvc/grid/gridmodel-aggregates-how-to-use.aspx
-            var reportSummary = _orderReportService.GetOrderAverageReportLine(model.StoreId, orderStatus, 
-                paymentStatus, shippingStatus, startDateValue, endDateValue, model.CustomerEmail);
-            var profit = _orderReportService.ProfitReport(model.StoreId, orderStatus, 
-                paymentStatus, shippingStatus, startDateValue, endDateValue, model.CustomerEmail);
+            var reportSummary = _orderReportService.GetOrderAverageReportLine(model.StoreId,
+                model.VendorId, orderStatus,  paymentStatus, shippingStatus, 
+                startDateValue, endDateValue, model.CustomerEmail);
+            var profit = _orderReportService.ProfitReport(model.StoreId, 
+                model.VendorId, orderStatus, paymentStatus, shippingStatus, 
+                startDateValue, endDateValue, model.CustomerEmail);
 		    var aggregator = new OrderModel()
 		    {
                 aggregatorprofit = _priceFormatter.FormatPrice(profit, true, false),
@@ -683,9 +757,13 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
+            //a vendor cannot export orders
+            if (_workContext.CurrentVendor != null)
+                return AccessDeniedView();
+
             try
             {
-                var orders = _orderService.SearchOrders(0, 0, null, null, null,
+                var orders = _orderService.SearchOrders(0, 0, 0, null, null, null,
                     null, null, null, null, 0, int.MaxValue);
 
                 var xml = _exportManager.ExportOrdersToXml(orders);
@@ -701,6 +779,10 @@ namespace Nop.Admin.Controllers
         public ActionResult ExportXmlSelected(string selectedIds)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
+            //a vendor cannot export orders
+            if (_workContext.CurrentVendor != null)
                 return AccessDeniedView();
 
             var orders = new List<Order>();
@@ -722,9 +804,13 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
+            //a vendor cannot export orders
+            if (_workContext.CurrentVendor != null)
+                return AccessDeniedView();
+
             try
             {
-                var orders = _orderService.SearchOrders(0, 0, null, null, null,
+                var orders = _orderService.SearchOrders(0, 0, 0, null, null, null,
                     null, null, null, null, 0, int.MaxValue);
                 
                 byte[] bytes = null;
@@ -745,6 +831,10 @@ namespace Nop.Admin.Controllers
         public ActionResult ExportExcelSelected(string selectedIds)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
+            //a vendor cannot export orders
+            if (_workContext.CurrentVendor != null)
                 return AccessDeniedView();
 
             var orders = new List<Order>();
@@ -783,7 +873,11 @@ namespace Nop.Admin.Controllers
             if (order == null)
                 //No order found with the specified id
                 return RedirectToAction("List");
-            
+
+            //a vendor does not have to this functionality
+            if (_workContext.CurrentVendor != null)
+                return RedirectToAction("Edit", "Order", new { id = id });
+
             try
             {
                 _orderProcessingService.CancelOrder(order, true);
@@ -812,7 +906,11 @@ namespace Nop.Admin.Controllers
             if (order == null)
                 //No order found with the specified id
                 return RedirectToAction("List");
-            
+
+            //a vendor does not have to this functionality
+            if (_workContext.CurrentVendor != null)
+                return RedirectToAction("Edit", "Order", new { id = id });
+
             try
             {
                 var errors = _orderProcessingService.Capture(order);
@@ -844,7 +942,11 @@ namespace Nop.Admin.Controllers
             if (order == null)
                 //No order found with the specified id
                 return RedirectToAction("List");
-            
+
+            //a vendor does not have to this functionality
+            if (_workContext.CurrentVendor != null)
+                return RedirectToAction("Edit", "Order", new { id = id });
+
             try
             {
                 _orderProcessingService.MarkOrderAsPaid(order);
@@ -873,6 +975,10 @@ namespace Nop.Admin.Controllers
             if (order == null)
                 //No order found with the specified id
                 return RedirectToAction("List");
+
+            //a vendor does not have to this functionality
+            if (_workContext.CurrentVendor != null)
+                return RedirectToAction("Edit", "Order", new { id = id });
 
             try
             {
@@ -905,6 +1011,10 @@ namespace Nop.Admin.Controllers
                 //No order found with the specified id
                 return RedirectToAction("List");
 
+            //a vendor does not have to this functionality
+            if (_workContext.CurrentVendor != null)
+                return RedirectToAction("Edit", "Order", new { id = id });
+
             try
             {
                 _orderProcessingService.RefundOffline(order);
@@ -933,6 +1043,10 @@ namespace Nop.Admin.Controllers
             if (order == null)
                 //No order found with the specified id
                 return RedirectToAction("List");
+
+            //a vendor does not have to this functionality
+            if (_workContext.CurrentVendor != null)
+                return RedirectToAction("Edit", "Order", new { id = id });
 
             try
             {
@@ -965,6 +1079,10 @@ namespace Nop.Admin.Controllers
                 //No order found with the specified id
                 return RedirectToAction("List");
 
+            //a vendor does not have to this functionality
+            if (_workContext.CurrentVendor != null)
+                return RedirectToAction("Edit", "Order", new { id = id });
+
             try
             {
                 _orderProcessingService.VoidOffline(order);
@@ -992,6 +1110,10 @@ namespace Nop.Admin.Controllers
                 //No order found with the specified id
                 return RedirectToAction("List");
 
+            //a vendor does not have to this functionality
+            if (_workContext.CurrentVendor != null)
+                return RedirectToAction("Edit", "Order", new { id = id });
+
             var model = new OrderModel();
             PrepareOrderDetailsModel(model, order);
 
@@ -1009,6 +1131,10 @@ namespace Nop.Admin.Controllers
             if (order == null)
                 //No order found with the specified id
                 return RedirectToAction("List");
+
+            //a vendor does not have to this functionality
+            if (_workContext.CurrentVendor != null)
+                return RedirectToAction("Edit", "Order", new { id = id });
 
             try
             {
@@ -1068,6 +1194,10 @@ namespace Nop.Admin.Controllers
                 //No order found with the specified id
                 return RedirectToAction("List");
 
+            //a vendor does not have to this functionality
+            if (_workContext.CurrentVendor != null && !HasAccessToOrder(order))
+                return RedirectToAction("List");
+
             var model = new OrderModel();
             PrepareOrderDetailsModel(model, order);
 
@@ -1085,6 +1215,10 @@ namespace Nop.Admin.Controllers
                 //No order found with the specified id
                 return RedirectToAction("List");
 
+            //a vendor does not have to this functionality
+            if (_workContext.CurrentVendor != null)
+                return RedirectToAction("Edit", "Order", new { id = id });
+
             _orderProcessingService.DeleteOrder(order);
             return RedirectToAction("List");
         }
@@ -1093,6 +1227,10 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
+
+            //a vendor does not have to this functionality
+            if (_workContext.CurrentVendor != null)
+                return RedirectToAction("Edit", "Order", new { id = orderId });
 
             var order = _orderService.GetOrderById(orderId);
             var orders = new List<Order>();
@@ -1117,6 +1255,10 @@ namespace Nop.Admin.Controllers
             if (order == null)
                 //No order found with the specified id
                 return RedirectToAction("List");
+
+            //a vendor does not have to this functionality
+            if (_workContext.CurrentVendor != null)
+                return RedirectToAction("Edit", "Order", new { id = id });
 
             if (order.AllowStoringCreditCardNumber)
             {
@@ -1153,6 +1295,10 @@ namespace Nop.Admin.Controllers
                 //No order found with the specified id
                 return RedirectToAction("List");
 
+            //a vendor does not have to this functionality
+            if (_workContext.CurrentVendor != null)
+                return RedirectToAction("Edit", "Order", new { id = id });
+
             order.OrderSubtotalInclTax = model.OrderSubtotalInclTaxValue;
             order.OrderSubtotalExclTax = model.OrderSubtotalExclTaxValue;
             order.OrderSubTotalDiscountInclTax = model.OrderSubTotalDiscountInclTaxValue;
@@ -1183,6 +1329,10 @@ namespace Nop.Admin.Controllers
             if (order == null)
                 //No order found with the specified id
                 return RedirectToAction("List");
+
+            //a vendor does not have to this functionality
+            if (_workContext.CurrentVendor != null)
+                return RedirectToAction("Edit", "Order", new { id = id });
 
             ViewData["selectedTab"] = "products";
 
@@ -1248,6 +1398,10 @@ namespace Nop.Admin.Controllers
                 //No order found with the specified id
                 return RedirectToAction("List");
 
+            //a vendor does not have to this functionality
+            if (_workContext.CurrentVendor != null)
+                return RedirectToAction("Edit", "Order", new { id = id });
+
             ViewData["selectedTab"] = "products";
 
             //get order product variant identifier
@@ -1292,6 +1446,10 @@ namespace Nop.Admin.Controllers
             if (orderProductVariant == null)
                 throw new ArgumentException("No order product variant found with the specified id");
 
+            //ensure a vendor has access only to his products 
+            if (_workContext.CurrentVendor != null && !HasAccessToOrderProductVariant(orderProductVariant))
+                return RedirectToAction("List");
+
             orderProductVariant.DownloadCount = 0;
             _orderService.UpdateOrder(order);
 
@@ -1325,6 +1483,10 @@ namespace Nop.Admin.Controllers
             if (orderProductVariant == null)
                 throw new ArgumentException("No order product variant found with the specified id");
 
+            //ensure a vendor has access only to his products 
+            if (_workContext.CurrentVendor != null && !HasAccessToOrderProductVariant(orderProductVariant))
+                return RedirectToAction("List");
+
             orderProductVariant.IsDownloadActivated = !orderProductVariant.IsDownloadActivated;
             _orderService.UpdateOrder(order);
 
@@ -1349,6 +1511,10 @@ namespace Nop.Admin.Controllers
             
             if (!orderProductVariant.ProductVariant.IsDownload)
                 throw new ArgumentException("Product variant is not downloadable");
+
+            //ensure a vendor has access only to his products 
+            if (_workContext.CurrentVendor != null && !HasAccessToOrderProductVariant(orderProductVariant))
+                return RedirectToAction("List");
 
             var model = new OrderModel.UploadLicenseModel()
             {
@@ -1375,6 +1541,10 @@ namespace Nop.Admin.Controllers
             var orderProductVariant = order.OrderProductVariants.FirstOrDefault(x => x.Id == model.OrderProductVariantId);
             if (orderProductVariant == null)
                 throw new ArgumentException("No order product variant found with the specified id");
+
+            //ensure a vendor has access only to his products 
+            if (_workContext.CurrentVendor != null && !HasAccessToOrderProductVariant(orderProductVariant))
+                return RedirectToAction("List");
 
             //attach license
             if (model.LicenseDownloadId > 0)
@@ -1407,6 +1577,10 @@ namespace Nop.Admin.Controllers
             if (orderProductVariant == null)
                 throw new ArgumentException("No order product variant found with the specified id");
 
+            //ensure a vendor has access only to his products 
+            if (_workContext.CurrentVendor != null && !HasAccessToOrderProductVariant(orderProductVariant))
+                return RedirectToAction("List");
+
             //attach license
             orderProductVariant.LicenseDownloadId = null;
             _orderService.UpdateOrder(order);
@@ -1423,6 +1597,10 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
+
+            //a vendor does not have to this functionality
+            if (_workContext.CurrentVendor != null)
+                return RedirectToAction("Edit", "Order", new { id = orderId });
 
             var model = new OrderModel.AddOrderProductModel();
             model.OrderId = orderId;
@@ -1445,9 +1623,13 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
+            //a vendor does not have to this functionality
+            if (_workContext.CurrentVendor != null)
+                return Content("");
+
             var gridModel = new GridModel();
             var productVariants = _productService.SearchProductVariants(model.SearchCategoryId,
-                model.SearchManufacturerId, model.SearchProductName, false,
+                model.SearchManufacturerId, 0, model.SearchProductName, false,
                 command.Page - 1, command.PageSize, true);
             gridModel.Data = productVariants.Select(x =>
             {
@@ -1472,6 +1654,10 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
+            //a vendor does not have to this functionality
+            if (_workContext.CurrentVendor != null)
+                return RedirectToAction("Edit", "Order", new { id = orderId });
+
             var model = PrepareAddProductToOrderModel(orderId, productVariantId);
             return View(model);
         }
@@ -1481,6 +1667,10 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
+
+            //a vendor does not have to this functionality
+            if (_workContext.CurrentVendor != null)
+                return RedirectToAction("Edit", "Order", new { id = orderId });
 
             var order = _orderService.GetOrderById(orderId);
             var productVariant = _productService.GetProductVariantById(productVariantId);
@@ -1738,6 +1928,10 @@ namespace Nop.Admin.Controllers
                 //No order found with the specified id
                 return RedirectToAction("List");
 
+            //a vendor does not have to this functionality
+            if (_workContext.CurrentVendor != null)
+                return RedirectToAction("Edit", "Order", new { id = orderId });
+
             var address = _addressService.GetAddressById(addressId);
             if (address == null)
                 throw new ArgumentException("No address found with the specified id", "addressId");
@@ -1795,6 +1989,10 @@ namespace Nop.Admin.Controllers
             if (order == null)
                 //No order found with the specified id
                 return RedirectToAction("List");
+
+            //a vendor does not have to this functionality
+            if (_workContext.CurrentVendor != null)
+                return RedirectToAction("Edit", "Order", new { id = order.Id });
 
             var address = _addressService.GetAddressById(model.Address.Id);
             if (address == null)
@@ -1854,7 +2052,6 @@ namespace Nop.Admin.Controllers
         
         #region Shipments
 
-
         public ActionResult ShipmentList()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
@@ -1877,8 +2074,13 @@ namespace Nop.Admin.Controllers
             DateTime? endDateValue = (model.EndDate == null) ? null 
                             :(DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
+            //a vendor should have access only to his products
+            int vendorId = 0;
+            if (_workContext.CurrentVendor != null)
+                vendorId = _workContext.CurrentVendor.Id;
+
             //load shipments
-            var shipments = _shipmentService.GetAllShipments(startDateValue, endDateValue, 
+            var shipments = _shipmentService.GetAllShipments(vendorId, startDateValue, endDateValue, 
                 command.Page - 1, command.PageSize);
             var gridModel = new GridModel<ShipmentModel>
             {
@@ -1892,7 +2094,7 @@ namespace Nop.Admin.Controllers
 		}
         
         [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult ShipmentsSelect(int orderId, GridCommand command)
+        public ActionResult ShipmentsByOrder(int orderId, GridCommand command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -1901,9 +2103,17 @@ namespace Nop.Admin.Controllers
             if (order == null)
                 throw new ArgumentException("No order found with the specified id");
 
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && !HasAccessToOrder(order))
+                return Content("");
+
             //shipments
             var shipmentModels = new List<ShipmentModel>();
-            var shipments = order.Shipments.OrderBy(s => s.CreatedOnUtc).ToList();
+            var shipments = order.Shipments
+                //a vendor should have access only to his products
+                .Where(s => _workContext.CurrentVendor == null || HasAccessToShipment(s))
+                .OrderBy(s => s.CreatedOnUtc)
+                .ToList();
             foreach (var shipment in shipments)
                 shipmentModels.Add(PrepareShipmentModel(shipment, false));
 
@@ -1929,6 +2139,10 @@ namespace Nop.Admin.Controllers
                 //No order found with the specified id
                 return RedirectToAction("List");
 
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && !HasAccessToOrder(order))
+                return RedirectToAction("List");
+
             var model = new ShipmentModel()
             {
                 OrderId = order.Id,
@@ -1940,8 +2154,14 @@ namespace Nop.Admin.Controllers
             var baseDimension = _measureService.GetMeasureDimensionById(_measureSettings.BaseDimensionId);
             var baseDimensionIn = baseDimension != null ? baseDimension.Name : "";
 
+            var orderProductVariants = order.OrderProductVariants;
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                orderProductVariants = orderProductVariants.Where(opv => HasAccessToOrderProductVariant(opv)).ToList();
+            }
 
-            foreach (var opv in order.OrderProductVariants)
+            foreach (var opv in orderProductVariants)
             {
                 //we can ship only shippable products
                 if (!opv.ProductVariant.IsShipEnabled)
@@ -1961,6 +2181,7 @@ namespace Nop.Admin.Controllers
                 {
                     OrderProductVariantId = opv.Id,
                     ProductVariantId = opv.ProductVariantId,
+                    FullProductName = opv.ProductVariant.FullProductName,
                     Sku = opv.ProductVariant.FormatSku(opv.AttributesXml, _productAttributeParser),
                     AttributeInfo = opv.AttributeDescription,
                     ItemWeight = opv.ItemWeight.HasValue ? string.Format("{0:F2} [{1}]", opv.ItemWeight, baseWeightIn) : "",
@@ -1971,11 +2192,6 @@ namespace Nop.Admin.Controllers
                     QuantityToAdd = maxQtyToAdd,
                 };
 
-                //product name
-                if (!String.IsNullOrEmpty(opv.ProductVariant.Name))
-                    sopvModel.FullProductName = string.Format("{0} ({1})", opv.ProductVariant.Product.Name, opv.ProductVariant.Name);
-                else
-                    sopvModel.FullProductName = opv.ProductVariant.Product.Name;
                 model.Products.Add(sopvModel);
             }
 
@@ -1994,10 +2210,20 @@ namespace Nop.Admin.Controllers
                 //No order found with the specified id
                 return RedirectToAction("List");
 
-            Shipment shipment = null;
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && !HasAccessToOrder(order))
+                return RedirectToAction("List");
 
+            var orderProductVariants = order.OrderProductVariants;
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                orderProductVariants = orderProductVariants.Where(opv => HasAccessToOrderProductVariant(opv)).ToList();
+            }
+
+            Shipment shipment = null;
             decimal? totalWeight = null;
-            foreach (var opv in order.OrderProductVariants)
+            foreach (var opv in orderProductVariants)
             {
                 //is shippable
                 if (!opv.ProductVariant.IsShipEnabled)
@@ -2033,10 +2259,11 @@ namespace Nop.Admin.Controllers
                 }
                 if (shipment == null)
                 {
+                    var trackingNumber = form["TrackingNumber"];
                     shipment = new Shipment()
                     {
                         OrderId = order.Id,
-                        TrackingNumber = form["TrackingNumber"],
+                        TrackingNumber = trackingNumber,
                         TotalWeight = null,
                         ShippedDateUtc = null,
                         DeliveryDateUtc = null,
@@ -2080,6 +2307,10 @@ namespace Nop.Admin.Controllers
                 //No shipment found with the specified id
                 return RedirectToAction("List");
 
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && !HasAccessToShipment(shipment))
+                return RedirectToAction("List");
+
             var model = PrepareShipmentModel(shipment, true);
             return View(model);
         }
@@ -2095,10 +2326,14 @@ namespace Nop.Admin.Controllers
                 //No shipment found with the specified id
                 return RedirectToAction("List");
 
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && !HasAccessToShipment(shipment))
+                return RedirectToAction("List");
+
             var orderId = shipment.OrderId;
+            _shipmentService.DeleteShipment(shipment);
 
             SuccessNotification(_localizationService.GetResource("Admin.Orders.Shipments.Deleted"));
-            _shipmentService.DeleteShipment(shipment);
             return RedirectToAction("Edit", new { id = orderId });
         }
 
@@ -2112,6 +2347,10 @@ namespace Nop.Admin.Controllers
             var shipment = _shipmentService.GetShipmentById(model.Id);
             if (shipment == null)
                 //No shipment found with the specified id
+                return RedirectToAction("List");
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && !HasAccessToShipment(shipment))
                 return RedirectToAction("List");
 
             shipment.TrackingNumber = model.TrackingNumber;
@@ -2130,6 +2369,10 @@ namespace Nop.Admin.Controllers
             var shipment = _shipmentService.GetShipmentById(id);
             if (shipment == null)
                 //No shipment found with the specified id
+                return RedirectToAction("List");
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && !HasAccessToShipment(shipment))
                 return RedirectToAction("List");
 
             try
@@ -2157,6 +2400,10 @@ namespace Nop.Admin.Controllers
                 //No shipment found with the specified id
                 return RedirectToAction("List");
 
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && !HasAccessToShipment(shipment))
+                return RedirectToAction("List");
+
             try
             {
                 _orderProcessingService.Deliver(shipment, true);
@@ -2180,7 +2427,9 @@ namespace Nop.Admin.Controllers
                 //no shipment found with the specified id
                 return RedirectToAction("List");
 
-            var order = shipment.Order;
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && !HasAccessToShipment(shipment))
+                return RedirectToAction("List");
 
             var shipments = new List<Shipment>();
             shipments.Add(shipment);
@@ -2199,8 +2448,13 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
-            var shipments = _shipmentService.GetAllShipments(null, null, 0, int.MaxValue);
-            
+            //a vendor should have access only to his products
+            int vendorId = 0;
+            if (_workContext.CurrentVendor != null)
+                vendorId = _workContext.CurrentVendor.Id;
+
+            var shipments = _shipmentService.GetAllShipments(vendorId, null, null, 0, int.MaxValue).ToList();
+
             byte[] bytes = null;
             using (var stream = new MemoryStream())
             {
@@ -2223,6 +2477,11 @@ namespace Nop.Admin.Controllers
                     .Select(x => Convert.ToInt32(x))
                     .ToArray();
                 shipments.AddRange(_shipmentService.GetShipmentsByIds(ids));
+            }
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                shipments = shipments.Where(s => HasAccessToShipment(s)).ToList();
             }
 
             byte[] bytes = null;
@@ -2247,6 +2506,10 @@ namespace Nop.Admin.Controllers
             var order = _orderService.GetOrderById(orderId);
             if (order == null)
                 throw new ArgumentException("No order found with the specified id");
+
+            //a vendor does not have to this functionality
+            if (_workContext.CurrentVendor != null)
+                return Content("");
 
             //order notes
             var orderNoteModels = new List<OrderModel.OrderNote>();
@@ -2285,6 +2548,10 @@ namespace Nop.Admin.Controllers
             if (order == null)
                 return Json(new { Result = false }, JsonRequestBehavior.AllowGet);
 
+            //a vendor does not have to this functionality
+            if (_workContext.CurrentVendor != null)
+                return Json(new { Result = false }, JsonRequestBehavior.AllowGet);
+
             var orderNote = new OrderNote()
             {
                 DisplayToCustomer = displayToCustomer,
@@ -2316,6 +2583,10 @@ namespace Nop.Admin.Controllers
             if (order == null)
                 throw new ArgumentException("No order found with the specified id");
 
+            //a vendor does not have to this functionality
+            if (_workContext.CurrentVendor != null)
+                return RedirectToAction("Edit", "Order", new { id = orderId });
+
             var orderNote = order.OrderNotes.FirstOrDefault(on => on.Id == orderNoteId);
             if (orderNote == null)
                 throw new ArgumentException("No order note found with the specified id");
@@ -2324,7 +2595,6 @@ namespace Nop.Admin.Controllers
             return OrderNotesSelect(orderId, command);
         }
 
-
         #endregion
 
         #region Reports
@@ -2332,9 +2602,17 @@ namespace Nop.Admin.Controllers
         [NonAction]
         protected IList<BestsellersReportLineModel> GetBestsellersBriefReportModel(int recordsToReturn, int orderBy)
         {
+            //a vendor should have access only to his products
+            int vendorId = 0;
+            if (_workContext.CurrentVendor != null)
+                vendorId = _workContext.CurrentVendor.Id;
+
             //group by product variants (not products)
-            var report = _orderReportService.BestSellersReport(0, null, null,
-                null, null, null, 0, recordsToReturn, orderBy, 1, true);
+            var report = _orderReportService.BestSellersReport(
+                vendorId : vendorId,
+                recordsToReturn: recordsToReturn,
+                orderBy: orderBy,
+                showHidden: true);
 
             var model = report.Select(x =>
             {
@@ -2354,12 +2632,18 @@ namespace Nop.Admin.Controllers
         }
         public ActionResult BestsellersBriefReportByQuantity()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Content("");
+
             var model = GetBestsellersBriefReportModel(5, 1);
             return PartialView(model);
         }
         [GridAction(EnableCustomBinding = true)]
         public ActionResult BestsellersBriefReportByQuantityList(GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Content("");
+
             var model = GetBestsellersBriefReportModel(5, 1);
             var gridModel = new GridModel<BestsellersReportLineModel>
             {
@@ -2373,12 +2657,18 @@ namespace Nop.Admin.Controllers
         }
         public ActionResult BestsellersBriefReportByAmount()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Content("");
+
             var model = GetBestsellersBriefReportModel(5, 2);
             return PartialView(model);
         }
         [GridAction(EnableCustomBinding = true)]
         public ActionResult BestsellersBriefReportByAmountList(GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Content("");
+
             var model = GetBestsellersBriefReportModel(5, 2);
             var gridModel = new GridModel<BestsellersReportLineModel>
             {
@@ -2396,6 +2686,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult BestsellersReport()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
             var model = new BestsellersReportModel();
 
             //order statuses
@@ -2413,11 +2706,22 @@ namespace Nop.Admin.Controllers
             }
             model.AvailableCountries.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
 
+            //vendor
+            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+
             return View(model);
         }
         [GridAction(EnableCustomBinding = true)]
         public ActionResult BestsellersReportList(GridCommand command, BestsellersReportModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Content("");
+
+            //a vendor should have access only to his products
+            int vendorId = 0;
+            if (_workContext.CurrentVendor != null)
+                vendorId = _workContext.CurrentVendor.Id;
+            
             DateTime? startDateValue = (model.StartDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
 
@@ -2431,8 +2735,16 @@ namespace Nop.Admin.Controllers
             //return first 100 records
 
             //group by product variants (not products)
-            var items = _orderReportService.BestSellersReport(0, startDateValue, endDateValue,
-                orderStatus, paymentStatus, null, model.BillingCountryId, 100, 2, 1, true);
+            var items = _orderReportService.BestSellersReport(
+                createdFromUtc: startDateValue,
+                createdToUtc: endDateValue,
+                os: orderStatus,
+                ps: paymentStatus,
+                billingCountryId: model.BillingCountryId,
+                recordsToReturn: 100,
+                orderBy: 2,
+                vendorId: vendorId,
+                showHidden: true);
             var gridModel = new GridModel<BestsellersReportLineModel>
             {
                 Data = items.Select(x =>
@@ -2460,19 +2772,31 @@ namespace Nop.Admin.Controllers
 
         public ActionResult NeverSoldReport()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
             var model = new NeverSoldReportModel();
             return View(model);
         }
         [GridAction(EnableCustomBinding = true)]
         public ActionResult NeverSoldReportList(GridCommand command, NeverSoldReportModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Content("");
+
+            //a vendor should have access only to his products
+            int vendorId = 0;
+            if (_workContext.CurrentVendor != null)
+                vendorId = _workContext.CurrentVendor.Id;
+
             DateTime? startDateValue = (model.StartDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
 
             DateTime? endDateValue = (model.EndDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
             
-            var items = _orderReportService.ProductsNeverSold(startDateValue, endDateValue,
+            var items = _orderReportService.ProductsNeverSold(vendorId,
+                startDateValue, endDateValue,
                 command.Page - 1, command.PageSize, true);
             var gridModel = new GridModel<NeverSoldReportLineModel>
             {
@@ -2517,12 +2841,22 @@ namespace Nop.Admin.Controllers
         [ChildActionOnly]
         public ActionResult OrderAverageReport()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Content("");
+
             var model = GetOrderAverageReportModel();
             return PartialView(model);
         }
         [GridAction(EnableCustomBinding = true)]
         public ActionResult OrderAverageReportList(GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Content("");
+
+            //a vendor does have access to this report
+            if (_workContext.CurrentVendor != null)
+                return Content("");
+
             var model = GetOrderAverageReportModel();
             var gridModel = new GridModel<OrderAverageReportLineSummaryModel>
             {
@@ -2540,7 +2874,7 @@ namespace Nop.Admin.Controllers
         {
             var model = new List<OrderIncompleteReportLineModel>();
             //not paid
-            var psPending = _orderReportService.GetOrderAverageReportLine(0, null, PaymentStatus.Pending, null, null, null, null, true);
+            var psPending = _orderReportService.GetOrderAverageReportLine(0, 0, null, PaymentStatus.Pending, null, null, null, null, true);
             model.Add(new OrderIncompleteReportLineModel()
             {
                 Item = _localizationService.GetResource("Admin.SalesReport.Incomplete.TotalUnpaidOrders"),
@@ -2548,7 +2882,7 @@ namespace Nop.Admin.Controllers
                 Total = _priceFormatter.FormatPrice(psPending.SumOrders, true, false)
             });
             //not shipped
-            var ssPending = _orderReportService.GetOrderAverageReportLine(0, null, null, ShippingStatus.NotYetShipped, null, null, null, true);
+            var ssPending = _orderReportService.GetOrderAverageReportLine(0, 0, null, null, ShippingStatus.NotYetShipped, null, null, null, true);
             model.Add(new OrderIncompleteReportLineModel()
             {
                 Item = _localizationService.GetResource("Admin.SalesReport.Incomplete.TotalNotShippedOrders"),
@@ -2556,7 +2890,7 @@ namespace Nop.Admin.Controllers
                 Total = _priceFormatter.FormatPrice(ssPending.SumOrders, true, false)
             });
             //pending
-            var osPending = _orderReportService.GetOrderAverageReportLine(0, OrderStatus.Pending, null, null, null, null, null, true);
+            var osPending = _orderReportService.GetOrderAverageReportLine(0, 0, OrderStatus.Pending, null, null, null, null, null, true);
             model.Add(new OrderIncompleteReportLineModel()
             {
                 Item = _localizationService.GetResource("Admin.SalesReport.Incomplete.TotalIncompleteOrders"),
@@ -2568,12 +2902,22 @@ namespace Nop.Admin.Controllers
         [ChildActionOnly]
         public ActionResult OrderIncompleteReport()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Content("");
+
             var model = GetOrderIncompleteReportModel();
             return PartialView(model);
         }
         [GridAction(EnableCustomBinding = true)]
         public ActionResult OrderIncompleteReportList(GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Content("");
+            
+            //a vendor does have access to this report
+            if (_workContext.CurrentVendor != null)
+                return Content("");
+
             var model = GetOrderIncompleteReportModel();
             var gridModel = new GridModel<OrderIncompleteReportLineModel>
             {

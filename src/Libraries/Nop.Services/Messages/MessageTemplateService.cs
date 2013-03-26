@@ -16,7 +16,6 @@ namespace Nop.Services.Messages
         #region Constants
 
         private const string MESSAGETEMPLATES_ALL_KEY = "Nop.messagetemplate.all-{0}";
-        private const string MESSAGETEMPLATES_BY_ID_KEY = "Nop.messagetemplate.id-{0}";
         private const string MESSAGETEMPLATES_BY_NAME_KEY = "Nop.messagetemplate.name-{0}-{1}";
         private const string MESSAGETEMPLATES_PATTERN_KEY = "Nop.messagetemplate.";
 
@@ -128,12 +127,7 @@ namespace Nop.Services.Messages
             if (messageTemplateId == 0)
                 return null;
 
-            string key = string.Format(MESSAGETEMPLATES_BY_ID_KEY, messageTemplateId);
-            return _cacheManager.Get(key, () =>
-            {
-                var manufacturer = _messageTemplateRepository.GetById(messageTemplateId);
-                return manufacturer;
-            });
+            return _messageTemplateRepository.GetById(messageTemplateId);
         }
 
         /// <summary>

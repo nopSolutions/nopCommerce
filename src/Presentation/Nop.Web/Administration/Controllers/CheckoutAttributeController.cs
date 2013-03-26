@@ -119,7 +119,7 @@ namespace Nop.Admin.Controllers
 
         public ActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
             var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes();
@@ -139,7 +139,7 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult List(GridCommand command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
             var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes();
@@ -162,7 +162,7 @@ namespace Nop.Admin.Controllers
         //create
         public ActionResult Create()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
             var model = new CheckoutAttributeModel();
@@ -175,7 +175,7 @@ namespace Nop.Admin.Controllers
         [HttpPost, ParameterBasedOnFormNameAttribute("save-continue", "continueEditing")]
         public ActionResult Create(CheckoutAttributeModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
             if (ModelState.IsValid)
@@ -199,7 +199,7 @@ namespace Nop.Admin.Controllers
         //edit
         public ActionResult Edit(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
             var checkoutAttribute = _checkoutAttributeService.GetCheckoutAttributeById(id);
@@ -222,7 +222,7 @@ namespace Nop.Admin.Controllers
         [HttpPost, ParameterBasedOnFormNameAttribute("save-continue", "continueEditing")]
         public ActionResult Edit(CheckoutAttributeModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
             var checkoutAttribute = _checkoutAttributeService.GetCheckoutAttributeById(model.Id);
@@ -253,7 +253,7 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult Delete(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
             var checkoutAttribute = _checkoutAttributeService.GetCheckoutAttributeById(id);
@@ -274,7 +274,7 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult ValueList(int checkoutAttributeId, GridCommand command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
             var values = _checkoutAttributeService.GetCheckoutAttributeValues(checkoutAttributeId);
@@ -305,7 +305,7 @@ namespace Nop.Admin.Controllers
         //create
         public ActionResult ValueCreatePopup(int checkoutAttributeId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
             var checkoutAttribute = _checkoutAttributeService.GetCheckoutAttributeById(checkoutAttributeId);
@@ -326,7 +326,7 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult ValueCreatePopup(string btnId, string formId, CheckoutAttributeValueModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
             var checkoutAttribute = _checkoutAttributeService.GetCheckoutAttributeById(model.CheckoutAttributeId);
@@ -381,7 +381,7 @@ namespace Nop.Admin.Controllers
         //edit
         public ActionResult ValueEditPopup(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
             var cav = _checkoutAttributeService.GetCheckoutAttributeValueById(id);
@@ -415,7 +415,7 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult ValueEditPopup(string btnId, string formId, CheckoutAttributeValueModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
             var cav = _checkoutAttributeService.GetCheckoutAttributeValueById(model.Id);
@@ -467,7 +467,7 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult ValueDelete(int valueId, int checkoutAttributeId, GridCommand command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
             var cav = _checkoutAttributeService.GetCheckoutAttributeValueById(valueId);

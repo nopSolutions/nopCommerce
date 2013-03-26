@@ -33,6 +33,7 @@ using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
+using Nop.Services.Vendors;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
@@ -60,6 +61,7 @@ namespace Nop.Admin.Controllers
         private readonly CustomerSettings _customerSettings;
         private readonly ITaxService _taxService;
         private readonly IWorkContext _workContext;
+        private readonly IVendorService _vendorService;
         private readonly IStoreContext _storeContext;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IOrderService _orderService;
@@ -90,7 +92,8 @@ namespace Nop.Admin.Controllers
             ICountryService countryService, IStateProvinceService stateProvinceService, 
             IAddressService addressService,
             CustomerSettings customerSettings, ITaxService taxService, 
-            IWorkContext workContext, IStoreContext storeContext,
+            IWorkContext workContext, IVendorService vendorService,
+            IStoreContext storeContext,
             IPriceFormatter priceFormatter,
             IOrderService orderService, 
             IExportManager exportManager,
@@ -117,6 +120,7 @@ namespace Nop.Admin.Controllers
             this._customerSettings = customerSettings;
             this._taxService = taxService;
             this._workContext = workContext;
+            this._vendorService = vendorService;
             this._storeContext = storeContext;
             this._priceFormatter = priceFormatter;
             this._orderService = orderService;
@@ -247,6 +251,28 @@ namespace Nop.Admin.Controllers
             return "";
         }
 
+        [NonAction]
+        private void PrepareVendorsModel(CustomerModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            model.AvailableVendors.Add(new SelectListItem()
+            {
+                Text = _localizationService.GetResource("Admin.Customers.Customers.Fields.Vendor.None"),
+                Value = "0"
+            });
+            var vendors = _vendorService.GetAllVendors(0, int.MaxValue, true);
+            foreach (var vendor in vendors)
+            {
+                model.AvailableVendors.Add(new SelectListItem()
+                {
+                    Text = vendor.Name,
+                    Value = vendor.Id.ToString()
+                });
+            }
+        }
+
         #endregion
 
         #region Customers
@@ -273,9 +299,10 @@ namespace Nop.Admin.Controllers
                 AvailableCustomerRoles = _customerService.GetAllCustomerRoles(true).Select(cr => cr.ToModel()).ToList(),
                 SearchCustomerRoleIds = defaultRoleIds,
             };
-            var customers = _customerService.GetAllCustomers(null, null, defaultRoleIds, null,
-                null, null, null, 0, 0, null, null, null,
-                false, null, 0, _adminAreaSettings.GridPageSize);
+            var customers = _customerService.GetAllCustomers( 
+                customerRoleIds: defaultRoleIds, 
+                pageIndex: 0,
+                pageSize: _adminAreaSettings.GridPageSize);
             //customer list
             listModel.Customers = new GridModel<CustomerModel>
             {
@@ -299,13 +326,21 @@ namespace Nop.Admin.Controllers
                 searchDayOfBirth = Convert.ToInt32(model.SearchDayOfBirth);
             if (!String.IsNullOrWhiteSpace(model.SearchMonthOfBirth))
                 searchMonthOfBirth = Convert.ToInt32(model.SearchMonthOfBirth);
-
-            var customers = _customerService.GetAllCustomers(null, null,
-                searchCustomerRoleIds, model.SearchEmail, model.SearchUsername,
-                model.SearchFirstName, model.SearchLastName,
-                searchDayOfBirth, searchMonthOfBirth,
-                model.SearchCompany, model.SearchPhone, model.SearchZipPostalCode,
-                false, null, command.Page - 1, command.PageSize);
+            
+            var customers = _customerService.GetAllCustomers(
+                customerRoleIds: searchCustomerRoleIds,
+                email: model.SearchEmail,
+                username: model.SearchUsername,
+                firstName: model.SearchFirstName,
+                lastName: model.SearchLastName,
+                dayOfBirth: searchDayOfBirth,
+                monthOfBirth: searchMonthOfBirth,
+                company: model.SearchCompany,
+                phone: model.SearchPhone,
+                zipPostalCode: model.SearchZipPostalCode,
+                loadOnlyWithShoppingCart: false,
+                pageIndex: command.Page - 1,
+                pageSize: command.PageSize);
             var gridModel = new GridModel<CustomerModel>
             {
                 Data = customers.Select(PrepareCustomerModelForList),
@@ -336,6 +371,8 @@ namespace Nop.Admin.Controllers
                 .ToList();
             model.SelectedCustomerRoleIds = new int[0];
             model.AllowManagingCustomerRoles = _permissionService.Authorize(StandardPermissionProvider.ManageCustomerRoles);
+            //vendors
+            PrepareVendorsModel(model);
             //form fields
             model.GenderEnabled = _customerSettings.GenderEnabled;
             model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
@@ -416,6 +453,7 @@ namespace Nop.Admin.Controllers
                     CustomerGuid = Guid.NewGuid(),
                     Email = model.Email,
                     Username = model.Username,
+                    VendorId = model.VendorId,
                     AdminComment = model.AdminComment,
                     IsTaxExempt = model.IsTaxExempt,
                     Active = model.Active,
@@ -493,6 +531,8 @@ namespace Nop.Admin.Controllers
                 .Select(cr => cr.ToModel())
                 .ToList();
             model.AllowManagingCustomerRoles = allowManagingCustomerRoles;
+            //vendors
+            PrepareVendorsModel(model);
             //form fields
             model.GenderEnabled = _customerSettings.GenderEnabled;
             model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
@@ -546,6 +586,9 @@ namespace Nop.Admin.Controllers
             model.Id = customer.Id;
             model.Email = customer.Email;
             model.Username = customer.Username;
+            //vendors
+            model.VendorId = customer.VendorId;
+            PrepareVendorsModel(model);
             model.AdminComment = customer.AdminComment;
             model.IsTaxExempt = customer.IsTaxExempt;
             model.Active = customer.Active;
@@ -715,6 +758,9 @@ namespace Nop.Admin.Controllers
                         }
                     }
 
+                    //vendor
+                    customer.VendorId = model.VendorId;
+
                     //form fields
                     if (_dateTimeSettings.AllowCustomersToSetTimeZone)
                         _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.TimeZoneId, model.TimeZoneId);
@@ -765,6 +811,15 @@ namespace Nop.Admin.Controllers
                         _customerService.UpdateCustomer(customer);
                     }
 
+                    //ensure that a customer with a vendor associated is not in "Administrators" role
+                    //otherwise, he won't be have access to the other functionality in admin area
+                    if (customer.IsAdmin() && customer.VendorId > 0)
+                    {
+                        customer.VendorId = 0;
+                        _customerService.UpdateCustomer(customer);
+                        ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.AdminCouldNotbeVendor"));
+                    }
+
                     //activity log
                     _customerActivityService.InsertActivity("EditCustomer", _localizationService.GetResource("ActivityLog.EditCustomer"), customer.Id);
 
@@ -791,6 +846,8 @@ namespace Nop.Admin.Controllers
             model.LastActivityDate = _dateTimeHelper.ConvertToUserTime(customer.LastActivityDateUtc, DateTimeKind.Utc);
             model.LastIpAddress = model.LastIpAddress;
             model.LastVisitedPage = customer.GetAttribute<string>(SystemCustomerAttributeNames.LastVisitedPage);
+            //vendors
+            PrepareVendorsModel(model);
             //form fields
             model.GenderEnabled = _customerSettings.GenderEnabled;
             model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
@@ -1396,7 +1453,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
-            var orders = _orderService.SearchOrders(0, customerId,
+            var orders = _orderService.SearchOrders(0, 0, customerId,
                     null, null, null, null, null, null, null, 0, int.MaxValue);
 
             var model = new GridModel<CustomerModel.OrderModel>
@@ -1460,6 +1517,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult ReportBestCustomersByOrderTotalList(GridCommand command, BestCustomersReportModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return Content("");
+
             DateTime? startDateValue = (model.StartDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
 
@@ -1500,6 +1560,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult ReportBestCustomersByNumberOfOrdersList(GridCommand command, BestCustomersReportModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return Content("");
+
             DateTime? startDateValue = (model.StartDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
 
@@ -1541,12 +1604,18 @@ namespace Nop.Admin.Controllers
         [ChildActionOnly]
         public ActionResult ReportRegisteredCustomers()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return Content("");
+
             var model = GetReportRegisteredCustomersModel();
             return PartialView(model);
         }
         [GridAction(EnableCustomBinding = true)]
         public ActionResult ReportRegisteredCustomersList(GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return Content("");
+
             var model = GetReportRegisteredCustomersModel();
             var gridModel = new GridModel<RegisteredCustomerReportLineModel>
             {
@@ -1566,6 +1635,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult GetCartList(int customerId, int cartTypeId)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return Content("");
+
             var customer = _customerService.GetCustomerById(customerId);
             var cart = customer.ShoppingCartItems.Where(x => x.ShoppingCartTypeId == cartTypeId).ToList();
 
@@ -1580,9 +1652,7 @@ namespace Nop.Admin.Controllers
                         Store = sci.Store != null ? sci.Store.Name : "Unknown",
                         ProductVariantId = sci.ProductVariantId,
                         Quantity = sci.Quantity,
-                        FullProductName = !String.IsNullOrEmpty(sci.ProductVariant.Name) ?
-                            string.Format("{0} ({1})", sci.ProductVariant.Product.Name, sci.ProductVariant.Name) :
-                            sci.ProductVariant.Product.Name,
+                        FullProductName = sci.ProductVariant.FullProductName,
                         UnitPrice = _priceFormatter.FormatPrice(_taxService.GetProductPrice(sci.ProductVariant, _priceCalculationService.GetUnitPrice(sci, true), out taxRate)),
                         Total = _priceFormatter.FormatPrice(_taxService.GetProductPrice(sci.ProductVariant, _priceCalculationService.GetSubTotal(sci, true), out taxRate)),
                         UpdatedOn = _dateTimeHelper.ConvertToUserTime(sci.UpdatedOnUtc, DateTimeKind.Utc)
@@ -1602,8 +1672,11 @@ namespace Nop.Admin.Controllers
         #region Activity log
 
         [HttpPost, GridAction(EnableCustomBinding = true)]
-        public JsonResult ListActivityLog(GridCommand command, int customerId)
+        public ActionResult ListActivityLog(GridCommand command, int customerId)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return Content("");
+
             var activityLog = _customerActivityService.GetAllActivities(null, null, customerId, 0, command.Page - 1, command.PageSize);
             var gridModel = new GridModel<CustomerModel.ActivityLogModel>
             {
@@ -1621,7 +1694,10 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = activityLog.TotalCount
             };
-            return new JsonResult { Data = gridModel }; ;
+            return new JsonResult
+            {
+                Data = gridModel
+            };
         }
 
         #endregion
@@ -1635,9 +1711,7 @@ namespace Nop.Admin.Controllers
 
             try
             {
-                var customers = _customerService.GetAllCustomers(null, null, null, null,
-                    null, null, null, 0, 0, null, null, null, 
-                    false, null, 0, int.MaxValue);
+                var customers = _customerService.GetAllCustomers();
 
                 byte[] bytes = null;
                 using (var stream = new MemoryStream())
@@ -1685,9 +1759,7 @@ namespace Nop.Admin.Controllers
 
             try
             {
-                var customers = _customerService.GetAllCustomers(null, null, null, null,
-                    null, null, null, 0, 0, null, null, null, 
-                    false, null, 0, int.MaxValue);
+                var customers = _customerService.GetAllCustomers();
                 
                 var xml = _exportManager.ExportCustomersToXml(customers);
                 return new XmlDownloadResult(xml, "customers.xml");

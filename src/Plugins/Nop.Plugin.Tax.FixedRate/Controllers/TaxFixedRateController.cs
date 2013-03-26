@@ -5,6 +5,7 @@ using System.Threading;
 using System.Web.Mvc;
 using Nop.Plugin.Tax.FixedRate.Models;
 using Nop.Services.Configuration;
+using Nop.Services.Security;
 using Nop.Services.Tax;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
@@ -17,11 +18,15 @@ namespace Nop.Plugin.Tax.FixedRate.Controllers
     {
         private readonly ITaxCategoryService _taxCategoryService;
         private readonly ISettingService _settingService;
+        private readonly IPermissionService _permissionService;
 
-        public TaxFixedRateController(ITaxCategoryService taxCategoryService, ISettingService settingService)
+        public TaxFixedRateController(ITaxCategoryService taxCategoryService,
+            ISettingService settingService,
+            IPermissionService permissionService)
         {
             this._taxCategoryService = taxCategoryService;
             this._settingService = settingService;
+            this._permissionService = permissionService;
         }
 
         protected override void Initialize(System.Web.Routing.RequestContext requestContext)
@@ -35,6 +40,7 @@ namespace Nop.Plugin.Tax.FixedRate.Controllers
             base.Initialize(requestContext);
         }
 
+        [ChildActionOnly]
         public ActionResult Configure()
         {
             var taxCategories = _taxCategoryService.GetAllTaxCategories();
@@ -62,6 +68,9 @@ namespace Nop.Plugin.Tax.FixedRate.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult Configure(GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+                return Content("Access denied");
+
             var tmp = new List<FixedTaxRateModel>();
             foreach (var taxCategory in _taxCategoryService.GetAllTaxCategories())
                 tmp.Add(new FixedTaxRateModel()
@@ -86,6 +95,9 @@ namespace Nop.Plugin.Tax.FixedRate.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult TaxRateUpdate(FixedTaxRateModel model, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+                return Content("Access denied");
+
             int taxCategoryId = model.TaxCategoryId;
             decimal rate = model.Rate;
 

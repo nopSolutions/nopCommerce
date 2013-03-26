@@ -59,6 +59,7 @@ namespace Nop.Services.Catalog
         /// <param name="categoryIds">Category identifiers</param>
         /// <param name="manufacturerId">Manufacturer identifier; 0 to load all records</param>
         /// <param name="storeId">Store identifier; 0 to load all records</param>
+        /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
         /// <param name="featuredProducts">A value indicating whether loaded products are marked as featured (relates only to categories and manufacturers). 0 to load featured products only, 1 to load not featured products only, null to load all products</param>
         /// <param name="priceMin">Minimum price; null to load all records</param>
         /// <param name="priceMax">Maximum price; null to load all records</param>
@@ -77,6 +78,7 @@ namespace Nop.Services.Catalog
             IList<int> categoryIds = null,
             int manufacturerId = 0,
             int storeId = 0,
+            int vendorId = 0,
             bool? featuredProducts = null,
             decimal? priceMin = null,
             decimal? priceMax = null,
@@ -99,6 +101,7 @@ namespace Nop.Services.Catalog
         /// <param name="categoryIds">Category identifiers</param>
         /// <param name="manufacturerId">Manufacturer identifier; 0 to load all records</param>
         /// <param name="storeId">Store identifier; 0 to load all records</param>
+        /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
         /// <param name="featuredProducts">A value indicating whether loaded products are marked as featured (relates only to categories and manufacturers). 0 to load featured products only, 1 to load not featured products only, null to load all products</param>
         /// <param name="priceMin">Minimum price; null to load all records</param>
         /// <param name="priceMax">Maximum price; null to load all records</param>
@@ -119,6 +122,7 @@ namespace Nop.Services.Catalog
             IList<int> categoryIds = null,
             int manufacturerId = 0,
             int storeId = 0,
+            int vendorId = 0,
             bool? featuredProducts = null,
             decimal? priceMin = null,
             decimal? priceMax = null,
@@ -144,8 +148,9 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Get low stock product variants
         /// </summary>
+        /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
         /// <returns>Result</returns>
-        IList<ProductVariant> GetLowStockProductVariants();
+        IList<ProductVariant> GetLowStockProductVariants(int vendorId);
 
         /// <summary>
         /// Gets a product variant
@@ -210,14 +215,16 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="categoryId">Category identifier; 0 to load all records</param>
         /// <param name="manufacturerId">Manufacturer identifier; 0 to load all records</param>
+        /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
         /// <param name="keywords">Keywords</param>
         /// <param name="searchDescriptions">A value indicating whether to search in descriptions</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product variants</returns>
-        IPagedList<ProductVariant> SearchProductVariants(int categoryId, int manufacturerId, 
-            string keywords, bool searchDescriptions, int pageIndex, int pageSize, bool showHidden = false);
+        IPagedList<ProductVariant> SearchProductVariants(int categoryId,
+            int manufacturerId, int vendorId, string keywords, bool searchDescriptions,
+            int pageIndex, int pageSize, bool showHidden = false);
 
         /// <summary>
         /// Update HasTierPrices property (used for performance optimization)

@@ -104,7 +104,6 @@
     <Compile Include="FroogleSettings.cs" />
     <Compile Include="Models\FeedFroogleModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RouteProvider.cs" />
     <Compile Include="Services\IGoogleService.cs" />
     <Compile Include="Services\GoogleService.cs" />
   </ItemGroup>

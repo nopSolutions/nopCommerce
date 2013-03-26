@@ -25,6 +25,7 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
             this._countryService = countryService;
         }
 
+        [ChildActionOnly]
         public ActionResult Configure()
         {
             var model = new UPSShippingModel();
@@ -96,6 +97,7 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
         }
 
         [HttpPost]
+        [ChildActionOnly]
         public ActionResult Configure(UPSShippingModel model)
         {
             if (!ModelState.IsValid)

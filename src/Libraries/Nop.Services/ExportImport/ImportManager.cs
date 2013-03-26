@@ -66,6 +66,7 @@ namespace Nop.Services.ExportImport
                     "Name",
                     "ShortDescription",
                     "FullDescription",
+                    "VendorId",
                     "ProductTemplateId",
                     "ShowOnHomePage",
                     "MetaKeywords",
@@ -154,6 +155,7 @@ namespace Nop.Services.ExportImport
                     string name = worksheet.Cells[iRow, GetColumnIndex(properties, "Name")].Value as string;
                     string shortDescription = worksheet.Cells[iRow, GetColumnIndex(properties, "ShortDescription")].Value as string;
                     string fullDescription = worksheet.Cells[iRow, GetColumnIndex(properties, "FullDescription")].Value as string;
+                    int vendorId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "VendorId")].Value);
                     int productTemplateId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "ProductTemplateId")].Value);
                     bool showOnHomePage = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "ShowOnHomePage")].Value);
                     string metaKeywords = worksheet.Cells[iRow, GetColumnIndex(properties, "MetaKeywords")].Value as string;
@@ -244,6 +246,7 @@ namespace Nop.Services.ExportImport
                         product.Name = name;
                         product.ShortDescription = shortDescription;
                         product.FullDescription = fullDescription;
+                        product.VendorId = vendorId;
                         product.ProductTemplateId = productTemplateId;
                         product.ShowOnHomePage = showOnHomePage;
                         product.MetaKeywords = metaKeywords;

@@ -22,6 +22,7 @@ namespace Nop.Admin.Models.Catalog
             ProductPictureModels = new List<ProductPictureModel>();
             CopyProductModel = new CopyProductModel();
             AvailableProductTemplates = new List<SelectListItem>();
+            AvailableVendors = new List<SelectListItem>();
         }
 
         //picture thumbnail
@@ -45,9 +46,12 @@ namespace Nop.Admin.Models.Catalog
         public string AdminComment { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.ProductTemplate")]
-        [AllowHtml]
         public int ProductTemplateId { get; set; }
         public IList<SelectListItem> AvailableProductTemplates { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.Vendor")]
+        public int VendorId { get; set; }
+        public IList<SelectListItem> AvailableVendors { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.ShowOnHomePage")]
         public bool ShowOnHomePage { get; set; }
@@ -100,6 +104,10 @@ namespace Nop.Admin.Models.Catalog
         public IList<ProductVariantModel> ProductVariantModels { get; set; }
         //default variant (the first one) 
         public ProductVariantModel FirstProductVariantModel { get; set; }
+
+
+        //vendor
+        public bool IsLoggedInAsVendor { get; set; }
 
 
 
@@ -229,25 +237,33 @@ namespace Nop.Admin.Models.Catalog
             {
                 AvailableCategories = new List<SelectListItem>();
                 AvailableManufacturers = new List<SelectListItem>();
+                AvailableStores = new List<SelectListItem>();
+                AvailableVendors = new List<SelectListItem>();
             }
-            public GridModel<ProductModel> Products { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
             [AllowHtml]
             public string SearchProductName { get; set; }
-
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
             public int SearchCategoryId { get; set; }
-
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
             public int SearchManufacturerId { get; set; }
+            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchStore")]
+            public int SearchStoreId { get; set; }
+            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchVendor")]
+            public int SearchVendorId { get; set; }
 
             public IList<SelectListItem> AvailableCategories { get; set; }
             public IList<SelectListItem> AvailableManufacturers { get; set; }
+            public IList<SelectListItem> AvailableStores { get; set; }
+            public IList<SelectListItem> AvailableVendors { get; set; }
 
             public int ProductId { get; set; }
 
             public int[] SelectedProductIds { get; set; }
+
+            //vendor
+            public bool IsLoggedInAsVendor { get; set; }
         }
 
         public partial class CrossSellProductModel : BaseNopEntityModel
@@ -266,25 +282,33 @@ namespace Nop.Admin.Models.Catalog
             {
                 AvailableCategories = new List<SelectListItem>();
                 AvailableManufacturers = new List<SelectListItem>();
+                AvailableStores = new List<SelectListItem>();
+                AvailableVendors = new List<SelectListItem>();
             }
-            public GridModel<ProductModel> Products { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
             [AllowHtml]
             public string SearchProductName { get; set; }
-
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
             public int SearchCategoryId { get; set; }
-
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
             public int SearchManufacturerId { get; set; }
+            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchStore")]
+            public int SearchStoreId { get; set; }
+            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchVendor")]
+            public int SearchVendorId { get; set; }
 
             public IList<SelectListItem> AvailableCategories { get; set; }
             public IList<SelectListItem> AvailableManufacturers { get; set; }
+            public IList<SelectListItem> AvailableStores { get; set; }
+            public IList<SelectListItem> AvailableVendors { get; set; }
 
             public int ProductId { get; set; }
 
             public int[] SelectedProductIds { get; set; }
+
+            //vendor
+            public bool IsLoggedInAsVendor { get; set; }
         }
 
         #endregion

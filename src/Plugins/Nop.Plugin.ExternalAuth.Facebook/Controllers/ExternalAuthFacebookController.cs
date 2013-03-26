@@ -5,6 +5,7 @@ using Nop.Plugin.ExternalAuth.Facebook.Core;
 using Nop.Plugin.ExternalAuth.Facebook.Models;
 using Nop.Services.Authentication.External;
 using Nop.Services.Configuration;
+using Nop.Services.Security;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 
@@ -17,24 +18,30 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
         private readonly IOAuthProviderFacebookAuthorizer _oAuthProviderFacebookAuthorizer;
         private readonly IOpenAuthenticationService _openAuthenticationService;
         private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
+        private readonly IPermissionService _permissionService;
 
         public ExternalAuthFacebookController(ISettingService settingService,
             FacebookExternalAuthSettings facebookExternalAuthSettings,
             IOAuthProviderFacebookAuthorizer oAuthProviderFacebookAuthorizer,
             IOpenAuthenticationService openAuthenticationService,
-            ExternalAuthenticationSettings externalAuthenticationSettings)
+            ExternalAuthenticationSettings externalAuthenticationSettings,
+            IPermissionService permissionService)
         {
             this._settingService = settingService;
             this._facebookExternalAuthSettings = facebookExternalAuthSettings;
             this._oAuthProviderFacebookAuthorizer = oAuthProviderFacebookAuthorizer;
             this._openAuthenticationService = openAuthenticationService;
             this._externalAuthenticationSettings = externalAuthenticationSettings;
+            this._permissionService = permissionService;
         }
         
         [AdminAuthorize]
         [ChildActionOnly]
         public ActionResult Configure()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageExternalAuthenticationMethods))
+                return Content("Access denied");
+
             var model = new ConfigurationModel();
             model.ClientKeyIdentifier = _facebookExternalAuthSettings.ClientKeyIdentifier;
             model.ClientSecret = _facebookExternalAuthSettings.ClientSecret;
@@ -47,6 +54,9 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
         [ChildActionOnly]
         public ActionResult Configure(ConfigurationModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageExternalAuthenticationMethods))
+                return Content("Access denied");
+
             if (!ModelState.IsValid)
                 return Configure();
             

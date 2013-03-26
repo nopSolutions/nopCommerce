@@ -17,6 +17,7 @@ using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
+using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Services.Tasks;
 using Nop.Web.Framework.Controllers;
@@ -37,12 +38,14 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
         private readonly IStoreService _storeService;
         private readonly FroogleSettings _froogleSettings;
         private readonly ISettingService _settingService;
+        private readonly IPermissionService _permissionService;
 
         public FeedFroogleController(IGoogleService googleService, 
             IProductService productService, ICurrencyService currencyService,
             ILocalizationService localizationService, IPluginFinder pluginFinder, 
             ILogger logger, IWebHelper webHelper, IStoreService storeService,
-            FroogleSettings froogleSettings, ISettingService settingService)
+            FroogleSettings froogleSettings, ISettingService settingService, 
+            IPermissionService permissionService)
         {
             this._googleService = googleService;
             this._productService = productService;
@@ -54,8 +57,10 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
             this._storeService = storeService;
             this._froogleSettings = froogleSettings;
             this._settingService = settingService;
+            this._permissionService = permissionService;
         }
 
+        [ChildActionOnly]
         public ActionResult Configure()
         {
             var model = new FeedFroogleModel();
@@ -92,6 +97,7 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
         }
 
         [HttpPost]
+        [ChildActionOnly]
         [FormValueRequired("save")]
         public ActionResult Configure(FeedFroogleModel model)
         {
@@ -112,6 +118,7 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
         }
 
         [HttpPost, ActionName("Configure")]
+        [ChildActionOnly]
         [FormValueRequired("generate")]
         public ActionResult GenerateFeed(FeedFroogleModel model)
         {
@@ -174,7 +181,10 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult GoogleProductList(GridCommand command)
         {
-            var productVariants = _productService.SearchProductVariants(0, 0, "", false,
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+                return Content("Access denied");
+
+            var productVariants = _productService.SearchProductVariants(0, 0, 0, "", false,
                 command.Page - 1, command.PageSize, true);
             var productVariantsModel = productVariants
                 .Select(x =>
@@ -214,6 +224,9 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult GoogleProductUpdate(GridCommand command, FeedFroogleModel.GoogleProductModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+                return Content("Access denied");
+
             var googleProduct = _googleService.GetByProductVariantId(model.ProductVariantId);
             if (googleProduct != null)
             {

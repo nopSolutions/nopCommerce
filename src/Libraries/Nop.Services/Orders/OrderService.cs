@@ -140,6 +140,7 @@ namespace Nop.Services.Orders
         /// Search orders
         /// </summary>
         /// <param name="storeId">Store identifier; 0 to load all orders</param>
+        /// <param name="vendorId">Vendor identifier; null to load all orders</param>
         /// <param name="customerId">Customer identifier; 0 to load all orders</param>
         /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
         /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
@@ -151,7 +152,7 @@ namespace Nop.Services.Orders
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Order collection</returns>
-        public virtual IPagedList<Order> SearchOrders(int storeId, int customerId,
+        public virtual IPagedList<Order> SearchOrders(int storeId, int vendorId, int customerId,
             DateTime? createdFromUtc, DateTime? createdToUtc, 
             OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss,
             string billingEmail, string orderGuid, int pageIndex, int pageSize)
@@ -173,6 +174,12 @@ namespace Nop.Services.Orders
                 query = query.Where(o => o.StoreId == storeId);
             if (customerId > 0)
                 query = query.Where(o => o.CustomerId == customerId);
+            if (vendorId > 0)
+            {
+                query = query
+                    .Where(o => o.OrderProductVariants
+                    .Any(opv => opv.ProductVariant.Product.VendorId == vendorId));
+            }
             if (createdFromUtc.HasValue)
                 query = query.Where(o => createdFromUtc.Value <= o.CreatedOnUtc);
             if (createdToUtc.HasValue)

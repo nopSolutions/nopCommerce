@@ -1356,6 +1356,17 @@
                                             </LocaleResource>
                                         </Children>
                                     </LocaleResource>
+                                    <LocaleResource Name="Vendor">
+                                          <Value>Vendor</Value>
+                                          <Children>
+                                              <LocaleResource Name="Hint">
+                                                  <Value>Choose a vendor of this product. This can be useful if you're using multi-vendor functionality.</Value>
+                                              </LocaleResource>
+                                              <LocaleResource Name="None">
+                                                  <Value>No vendor</Value>
+                                              </LocaleResource>
+                                          </Children>
+                                      </LocaleResource>
                                     <LocaleResource Name="ProductTemplate">
                                         <Value>Product template</Value>
                                         <Children>
@@ -1510,6 +1521,14 @@
                                         </LocaleResource>
                                       </Children>
                                     </LocaleResource>
+                                  <LocaleResource Name="SearchVendor">
+                                    <Value>Vendor</Value>
+                                    <Children>
+                                      <LocaleResource Name="Hint">
+                                        <Value>Search by a specific vendor.</Value>
+                                      </LocaleResource>
+                                    </Children>
+                                  </LocaleResource>
                                 </Children>
                             </LocaleResource>
                             <LocaleResource Name="Manage">
@@ -7187,6 +7206,9 @@
                             <LocaleResource Name="AddNew">
                                 <Value>Add a new customer</Value>
                             </LocaleResource>
+                            <LocaleResource Name="AdminCouldNotbeVendor">
+                              <Value>A customer with a vendor associated could not be in "Administrators" role.</Value>
+                            </LocaleResource>
                             <LocaleResource Name="AssociatedExternalAuth">
                                 <Value>External authentication</Value>
                                 <Children>
@@ -7271,6 +7293,17 @@
                                             </LocaleResource>
                                         </Children>
                                     </LocaleResource>
+                                    <LocaleResource Name="Vendor">
+                                          <Value>Manager of vendor</Value>
+                                          <Children>
+                                              <LocaleResource Name="Hint">
+                                                  <Value>Choose a vendor associated to this customer account. When associated this customer will be able to login to the chosen vendor portal and manage his products and orders.</Value>
+                                              </LocaleResource>
+                                              <LocaleResource Name="None">
+                                                  <Value>No vendor</Value>
+                                              </LocaleResource>
+                                          </Children>
+                                      </LocaleResource>
                                     <LocaleResource Name="Gender">
                                         <Value>Gender</Value>
                                         <Children>
@@ -7724,6 +7757,9 @@
                                         </Children>
                                     </LocaleResource>
                                 </Children>
+                            </LocaleResource>
+                            <LocaleResource Name="VendorShouldBeInVendorsRole">
+                              <Value>Note: if you have a vendor associated with this customer, then also ensure it is in "Vendors" customer role.</Value>
                             </LocaleResource>
                             <LocaleResource Name="Added">
                                 <Value>The new customer has been added successfully.</Value>
@@ -8710,6 +8746,14 @@
                                     </LocaleResource>
                                 </Children>
                             </LocaleResource>
+                            <LocaleResource Name="Vendor">
+                              <Value>Vendor</Value>
+                              <Children>
+                                <LocaleResource Name="Hint">
+                                  <Value>Search by a specific vendor. You'll see orders with products from a specified vendor.</Value>
+                                </LocaleResource>
+                              </Children>
+                            </LocaleResource>
                             <LocaleResource Name="OrderGuid">
                                 <Value>Order GUID</Value>
                                 <Children>
@@ -8848,6 +8892,9 @@
                             </LocaleResource>
                             <LocaleResource Name="SKU">
                                 <Value>SKU</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="Vendor">
+                              <Value>Vendor</Value>
                             </LocaleResource>
                             <LocaleResource Name="RecurringPeriod">
                                 <Value>[Auto-ship, Every {0} {1}]</Value>
@@ -10768,6 +10815,90 @@
                         </Children>
                     </LocaleResource>
                 </Children>
+            </LocaleResource>
+            <LocaleResource Name="Vendors">
+              <Value>Vendors</Value>
+              <Children>
+                <LocaleResource Name="AddNew">
+                  <Value>Add a new vendor</Value>
+                </LocaleResource>
+                <LocaleResource Name="BackToList">
+                  <Value>back to vendor list</Value>
+                </LocaleResource>
+                <LocaleResource Name="EditVendorDetails">
+                  <Value>Edit vendor details</Value>
+                </LocaleResource>
+                <LocaleResource Name="Fields">
+                  <Children>
+                    <LocaleResource Name="Name">
+                      <Value>Name</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>The name of the vendor.</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="Required">
+                          <Value>Please provide a name.</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="Email">
+                      <Value>Email</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>Enter email</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="Required">
+                          <Value>Email is required.</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="Description">
+                      <Value>Description</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>The description of the vendor.</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="AdminComment">
+                      <Value>Admin comment</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>Admin comment. For internal use.</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="Active">
+                      <Value>Active</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>A value indicating whether the vendor is active.</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="AssociatedCustomerEmails">
+                      <Value>Customers</Value>
+                      <Children>
+                        <LocaleResource Name="Hint">
+                          <Value>A list of customer accounts which could be used to manage products and orders of this vendor (have access to the vendor portal). You can associate customers to a vendor on a customer details page. If you don't want the vendor to have access to the vendor portal, then do not associate any customer account with it.</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="None">
+                          <Value>No customer account associated to this vendor.</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                  </Children>
+                </LocaleResource>
+                <LocaleResource Name="Added">
+                  <Value>The new vendor has been added successfully.</Value>
+                </LocaleResource>
+                <LocaleResource Name="Deleted">
+                  <Value>The vendor has been deleted successfully.</Value>
+                </LocaleResource>
+                <LocaleResource Name="Updated">
+                  <Value>The vendor has been updated successfully.</Value>
+                </LocaleResource>
+              </Children>
             </LocaleResource>
         </Children>
     </LocaleResource>

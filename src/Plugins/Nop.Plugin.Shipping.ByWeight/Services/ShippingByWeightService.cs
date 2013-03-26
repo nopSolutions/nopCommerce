@@ -113,8 +113,7 @@ namespace Nop.Plugin.Shipping.ByWeight.Services
             if (shippingByWeightRecordId == 0)
                 return null;
 
-            var record = _sbwRepository.GetById(shippingByWeightRecordId);
-            return record;
+            return _sbwRepository.GetById(shippingByWeightRecordId);
         }
 
         public virtual void InsertShippingByWeightRecord(ShippingByWeightRecord shippingByWeightRecord)

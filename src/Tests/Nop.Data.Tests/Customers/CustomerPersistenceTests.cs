@@ -27,8 +27,9 @@ namespace Nop.Data.Tests.Customers
             fromDb.PasswordSalt.ShouldEqual("");
             fromDb.Email.ShouldEqual("a@b.com");
             fromDb.AdminComment.ShouldEqual("some comment here");
-            fromDb.AdminComment.ShouldEqual("some comment here");
             fromDb.IsTaxExempt.ShouldEqual(true);
+            fromDb.AffiliateId.ShouldEqual(1);
+            fromDb.VendorId.ShouldEqual(2);
             fromDb.Active.ShouldEqual(true);
             fromDb.Deleted.ShouldEqual(false);
             fromDb.IsSystemAccount.ShouldEqual(true);
@@ -237,6 +238,8 @@ namespace Nop.Data.Tests.Customers
                 CustomerGuid = Guid.NewGuid(),
                 AdminComment = "some comment here",
                 IsTaxExempt = true,
+                AffiliateId = 1,
+                VendorId = 2,
                 Active = true,
                 Deleted = false,
                 IsSystemAccount = true,

@@ -19,7 +19,6 @@ namespace Nop.Services.Localization
     {
         #region Constants
         private const string LANGUAGES_ALL_KEY = "Nop.language.all-{0}-{1}";
-        private const string LANGUAGES_BY_ID_KEY = "Nop.language.id-{0}";
         private const string LANGUAGES_PATTERN_KEY = "Nop.language.";
         #endregion
 
@@ -146,11 +145,7 @@ namespace Nop.Services.Localization
             if (languageId == 0)
                 return null;
 
-            string key = string.Format(LANGUAGES_BY_ID_KEY, languageId);
-            return _cacheManager.Get(key, () =>
-            {
-                return _languageRepository.GetById(languageId);
-            });
+            return _languageRepository.GetById(languageId);
         }
 
         /// <summary>

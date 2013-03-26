@@ -76,7 +76,6 @@
     <Compile Include="Controllers\ShippingAustraliaPostController.cs" />
     <Compile Include="Models\AustraliaPostShippingModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RouteProvider.cs" />
     <Compile Include="AustraliaPostSettings.cs" />
   </ItemGroup>
   <ItemGroup>

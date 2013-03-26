@@ -111,8 +111,7 @@ namespace Nop.Services.Localization
             if (localeStringResourceId == 0)
                 return null;
 
-            var localeStringResource = _lsrRepository.GetById(localeStringResourceId);
-            return localeStringResource;
+            return _lsrRepository.GetById(localeStringResourceId);
         }
 
         /// <summary>

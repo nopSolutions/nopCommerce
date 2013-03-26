@@ -17,11 +17,10 @@ namespace Nop.Services.Catalog
     public partial class CategoryService : ICategoryService
     {
         #region Constants
-        private const string CATEGORIES_BY_ID_KEY = "Nop.category.id-{0}";
+
         private const string CATEGORIES_BY_PARENT_CATEGORY_ID_KEY = "Nop.category.byparent-{0}-{1}-{2}-{3}";
         private const string PRODUCTCATEGORIES_ALLBYCATEGORYID_KEY = "Nop.productcategory.allbycategoryid-{0}-{1}-{2}-{3}-{4}-{5}";
         private const string PRODUCTCATEGORIES_ALLBYPRODUCTID_KEY = "Nop.productcategory.allbyproductid-{0}-{1}-{2}-{3}";
-        private const string PRODUCTCATEGORIES_BY_ID_KEY = "Nop.productcategory.id-{0}";
         private const string CATEGORIES_PATTERN_KEY = "Nop.category.";
         private const string PRODUCTCATEGORIES_PATTERN_KEY = "Nop.productcategory.";
 
@@ -237,12 +236,7 @@ namespace Nop.Services.Catalog
             if (categoryId == 0)
                 return null;
 
-            string key = string.Format(CATEGORIES_BY_ID_KEY, categoryId);
-            return _cacheManager.Get(key, () =>
-            {
-                var category = _categoryRepository.GetById(categoryId);
-                return category;
-            });
+           return _categoryRepository.GetById(categoryId);
         }
 
         /// <summary>
@@ -471,11 +465,7 @@ namespace Nop.Services.Catalog
             if (productCategoryId == 0)
                 return null;
 
-            string key = string.Format(PRODUCTCATEGORIES_BY_ID_KEY, productCategoryId);
-            return _cacheManager.Get(key, () =>
-            {
-                return _productCategoryRepository.GetById(productCategoryId);
-            });
+            return _productCategoryRepository.GetById(productCategoryId);
         }
 
         /// <summary>

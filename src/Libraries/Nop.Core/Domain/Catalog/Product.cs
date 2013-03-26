@@ -46,6 +46,11 @@ namespace Nop.Core.Domain.Catalog
         public int ProductTemplateId { get; set; }
 
         /// <summary>
+        /// Gets or sets a vendor identifier
+        /// </summary>
+        public int VendorId { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether to show the product on home page
         /// </summary>
         public bool ShowOnHomePage { get; set; }
@@ -128,6 +133,7 @@ namespace Nop.Core.Domain.Catalog
             get { return _productVariants ?? (_productVariants = new List<ProductVariant>()); }
             protected set { _productVariants = value; }
         }
+
         /// <summary>
         /// Gets or sets the collection of ProductCategory
         /// </summary>

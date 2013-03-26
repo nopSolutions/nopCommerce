@@ -12,20 +12,17 @@ namespace Nop.Admin.Controllers
     public partial class PictureController : BaseNopController
     {
         private readonly IPictureService _pictureService;
-        private readonly IPermissionService _permissionService;
 
-        public PictureController(IPictureService pictureService,
-             IPermissionService permissionService)
+        public PictureController(IPictureService pictureService)
         {
             this._pictureService = pictureService;
-            this._permissionService = permissionService;
         }
 
         [HttpPost]
         public ActionResult AsyncUpload()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.UploadPictures))
-                return Json(new { success = false, error = "You do not have required permissions" }, "text/plain");
+            //if (!_permissionService.Authorize(StandardPermissionProvider.UploadPictures))
+            //    return Json(new { success = false, error = "You do not have required permissions" }, "text/plain");
 
             //we process it distinct ways based on a browser
             //find more info here http://stackoverflow.com/questions/4884920/mvc3-valums-ajax-file-upload

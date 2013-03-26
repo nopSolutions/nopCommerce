@@ -15,7 +15,6 @@ namespace Nop.Services.Stores
     {
         #region Constants
         private const string STORES_ALL_KEY = "Nop.stores.all";
-        private const string STORES_BY_ID_KEY = "Nop.stores.id-{0}";
         private const string STORES_PATTERN_KEY = "Nop.stores.";
         #endregion
         
@@ -96,12 +95,7 @@ namespace Nop.Services.Stores
             if (storeId == 0)
                 return null;
 
-            string key = string.Format(STORES_BY_ID_KEY, storeId);
-            return _cacheManager.Get(key, () =>
-            {
-                var store = _storeRepository.GetById(storeId);
-                return store;
-            });
+            return _storeRepository.GetById(storeId);
         }
 
         /// <summary>

@@ -49,8 +49,7 @@ namespace Nop.Services.Media
             if (downloadId == 0)
                 return null;
             
-            var download = _downloadRepository.GetById(downloadId);
-            return download;
+            return _downloadRepository.GetById(downloadId);
         }
 
         /// <summary>

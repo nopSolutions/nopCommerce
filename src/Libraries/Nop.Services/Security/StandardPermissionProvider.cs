@@ -4,15 +4,26 @@ using Nop.Core.Domain.Security;
 
 namespace Nop.Services.Security
 {
+    /// <summary>
+    /// Standard permission provider
+    /// </summary>
     public partial class StandardPermissionProvider : IPermissionProvider
     {
         //admin area permissions
         public static readonly PermissionRecord AccessAdminPanel = new PermissionRecord { Name = "Access admin area", SystemName = "AccessAdminPanel", Category = "Standard" };
         public static readonly PermissionRecord AllowCustomerImpersonation = new PermissionRecord { Name = "Admin area. Allow Customer Impersonation", SystemName = "AllowCustomerImpersonation", Category = "Customers" };
-        public static readonly PermissionRecord ManageCatalog = new PermissionRecord { Name = "Admin area. Manage Catalog", SystemName = "ManageCatalog", Category = "Catalog" };
+        public static readonly PermissionRecord ManageProducts = new PermissionRecord { Name = "Admin area. Manage Products", SystemName = "ManageProducts", Category = "Catalog" };
+        public static readonly PermissionRecord ManageCategories = new PermissionRecord { Name = "Admin area. Manage Categories", SystemName = "ManageCategories", Category = "Catalog" };
+        public static readonly PermissionRecord ManageManufacturers = new PermissionRecord { Name = "Admin area. Manage Manufacturers", SystemName = "ManageManufacturers", Category = "Catalog" };
+        public static readonly PermissionRecord ManageProductReviews = new PermissionRecord { Name = "Admin area. Manage Product Reviews", SystemName = "ManageProductReviews", Category = "Catalog" };
+        public static readonly PermissionRecord ManageProductTags = new PermissionRecord { Name = "Admin area. Manage Product Tags", SystemName = "ManageProductTags", Category = "Catalog" };
+        public static readonly PermissionRecord ManageAttributes = new PermissionRecord { Name = "Admin area. Manage Attributes", SystemName = "ManageAttributes", Category = "Catalog" };
         public static readonly PermissionRecord ManageCustomers = new PermissionRecord { Name = "Admin area. Manage Customers", SystemName = "ManageCustomers", Category = "Customers" };
         public static readonly PermissionRecord ManageCustomerRoles = new PermissionRecord { Name = "Admin area. Manage Customer Roles", SystemName = "ManageCustomerRoles", Category = "Customers" };
+        public static readonly PermissionRecord ManageVendors = new PermissionRecord { Name = "Admin area. Manage Vendors", SystemName = "ManageVendors", Category = "Customers" };
+        public static readonly PermissionRecord ManageCurrentCarts = new PermissionRecord { Name = "Admin area. Manage Current Carts", SystemName = "ManageCurrentCarts", Category = "Orders" };
         public static readonly PermissionRecord ManageOrders = new PermissionRecord { Name = "Admin area. Manage Orders", SystemName = "ManageOrders", Category = "Orders" };
+        public static readonly PermissionRecord ManageRecurringPayments = new PermissionRecord { Name = "Admin area. Manage Recurring Payments", SystemName = "ManageRecurringPayments", Category = "Orders" };
         public static readonly PermissionRecord ManageGiftCards = new PermissionRecord { Name = "Admin area. Manage Gift Cards", SystemName = "ManageGiftCards", Category = "Orders" };
         public static readonly PermissionRecord ManageReturnRequests = new PermissionRecord { Name = "Admin area. Manage Return Requests", SystemName = "ManageReturnRequests", Category = "Orders" };
         public static readonly PermissionRecord ManageAffiliates = new PermissionRecord { Name = "Admin area. Manage Affiliates", SystemName = "ManageAffiliates", Category = "Promo" };
@@ -43,7 +54,6 @@ namespace Nop.Services.Security
         public static readonly PermissionRecord ManageSystemLog = new PermissionRecord { Name = "Admin area. Manage System Log", SystemName = "ManageSystemLog", Category = "Configuration" };
         public static readonly PermissionRecord ManageMessageQueue = new PermissionRecord { Name = "Admin area. Manage Message Queue", SystemName = "ManageMessageQueue", Category = "Configuration" };
         public static readonly PermissionRecord ManageMaintenance = new PermissionRecord { Name = "Admin area. Manage Maintenance", SystemName = "ManageMaintenance", Category = "Configuration" };
-        public static readonly PermissionRecord UploadPictures = new PermissionRecord { Name = "Admin area. Upload Pictures", SystemName = "UploadPictures", Category = "Configuration" };
         public static readonly PermissionRecord HtmlEditorManagePictures = new PermissionRecord { Name = "Admin area. HTML Editor. Manage pictures", SystemName = "HtmlEditor.ManagePictures", Category = "Configuration" };
         public static readonly PermissionRecord ManageScheduleTasks = new PermissionRecord { Name = "Admin area. Manage Schedule Tasks", SystemName = "ManageScheduleTasks", Category = "Configuration" };
         
@@ -61,10 +71,18 @@ namespace Nop.Services.Security
             {
                 AccessAdminPanel,
                 AllowCustomerImpersonation,
-                ManageCatalog,
+                ManageProducts,
+                ManageCategories,
+                ManageManufacturers,
+                ManageProductReviews,
+                ManageProductTags,
+                ManageAttributes,
                 ManageCustomers,
                 ManageCustomerRoles,
+                ManageVendors,
+                ManageCurrentCarts,
                 ManageOrders,
+                ManageRecurringPayments,
                 ManageGiftCards,
                 ManageReturnRequests,
                 ManageAffiliates,
@@ -95,7 +113,6 @@ namespace Nop.Services.Security
                 ManageSystemLog,
                 ManageMessageQueue,
                 ManageMaintenance,
-                UploadPictures,
                 HtmlEditorManagePictures,
                 ManageScheduleTasks,
                 DisplayPrices,
@@ -116,10 +133,18 @@ namespace Nop.Services.Security
                     {
                         AccessAdminPanel,
                         AllowCustomerImpersonation,
-                        ManageCatalog,
+                        ManageProducts,
+                        ManageCategories,
+                        ManageManufacturers,
+                        ManageProductReviews,
+                        ManageProductTags,
+                        ManageAttributes,
                         ManageCustomers,
                         ManageCustomerRoles,
+                        ManageVendors,
+                        ManageCurrentCarts,
                         ManageOrders,
+                        ManageRecurringPayments,
                         ManageGiftCards,
                         ManageReturnRequests,
                         ManageAffiliates,
@@ -150,7 +175,6 @@ namespace Nop.Services.Security
                         ManageSystemLog,
                         ManageMessageQueue,
                         ManageMaintenance,
-                        UploadPictures,
                         HtmlEditorManagePictures,
                         ManageScheduleTasks,
                         DisplayPrices,
@@ -192,6 +216,16 @@ namespace Nop.Services.Security
                         PublicStoreAllowNavigation,
                     }
                 },
+                new DefaultPermissionRecord 
+                {
+                    CustomerRoleSystemName = SystemCustomerRoleNames.Vendors,
+                    PermissionRecords = new[] 
+                    {
+                        AccessAdminPanel,
+                        ManageProducts,
+                        ManageOrders,
+                    }
+                }
             };
         }
     }

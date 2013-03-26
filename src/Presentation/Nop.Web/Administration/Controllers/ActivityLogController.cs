@@ -56,6 +56,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult ListTypes(GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
+                return AccessDeniedView();
+
             var activityLogTypeModel = _customerActivityService.GetAllActivityTypes().Select(x => x.ToModel());
             var gridModel = new GridModel<ActivityLogTypeModel>
             {
@@ -122,8 +125,11 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost, GridAction(EnableCustomBinding = true)]
-        public JsonResult ListLogs(GridCommand command, ActivityLogSearchModel model)
+        public ActionResult ListLogs(GridCommand command, ActivityLogSearchModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
+                return AccessDeniedView();
+
             DateTime? startDateValue = (model.CreatedOnFrom == null) ? null
                 : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.CreatedOnFrom.Value, _dateTimeHelper.CurrentTimeZone);
 

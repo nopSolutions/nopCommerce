@@ -53,7 +53,7 @@ namespace Nop.Admin.Controllers
         //shopping carts
         public ActionResult CurrentCarts()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
                 return AccessDeniedView();
 
             return View();
@@ -62,12 +62,14 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult CurrentCarts(GridCommand command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
                 return AccessDeniedView();
 
-            var customers = _customerService.GetAllCustomers(null, null, null, null, null,
-                null, null, 0, 0, null, null, null, true, ShoppingCartType.ShoppingCart,
-                command.Page - 1, command.PageSize);
+            var customers = _customerService.GetAllCustomers(
+                loadOnlyWithShoppingCart: true,
+                sct: ShoppingCartType.ShoppingCart,
+                pageIndex: command.Page - 1,
+                pageSize: command.PageSize);
 
             var gridModel = new GridModel<ShoppingCartModel>
             {
@@ -91,7 +93,7 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult GetCartDetails(int customerId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
                 return AccessDeniedView();
 
             var customer = _customerService.GetCustomerById(customerId);
@@ -108,9 +110,7 @@ namespace Nop.Admin.Controllers
                         Store = sci.Store != null ? sci.Store.Name : "Unknown",
                         ProductVariantId = sci.ProductVariantId,
                         Quantity = sci.Quantity,
-                        FullProductName = !String.IsNullOrEmpty(sci.ProductVariant.Name) ?
-                            string.Format("{0} ({1})", sci.ProductVariant.Product.Name, sci.ProductVariant.Name) :
-                            sci.ProductVariant.Product.Name,
+                        FullProductName = sci.ProductVariant.FullProductName,
                         UnitPrice = _priceFormatter.FormatPrice(_taxService.GetProductPrice(sci.ProductVariant, _priceCalculationService.GetUnitPrice(sci, true), out taxRate)),
                         Total = _priceFormatter.FormatPrice(_taxService.GetProductPrice(sci.ProductVariant, _priceCalculationService.GetSubTotal(sci, true), out taxRate)),
                         UpdatedOn = _dateTimeHelper.ConvertToUserTime(sci.UpdatedOnUtc, DateTimeKind.Utc)
@@ -132,7 +132,7 @@ namespace Nop.Admin.Controllers
         //wishlists
         public ActionResult CurrentWishlists()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
                 return AccessDeniedView();
 
             return View();
@@ -141,12 +141,14 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult CurrentWishlists(GridCommand command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
                 return AccessDeniedView();
 
-            var customers = _customerService.GetAllCustomers(null, null, null, null, null,
-                null, null, 0, 0, null, null, null, 
-                true, ShoppingCartType.Wishlist, command.Page - 1, command.PageSize);
+            var customers = _customerService.GetAllCustomers(
+                loadOnlyWithShoppingCart: true,
+                sct: ShoppingCartType.Wishlist,
+                pageIndex: command.Page - 1,
+                pageSize: command.PageSize);
 
             var gridModel = new GridModel<ShoppingCartModel>
             {
@@ -170,7 +172,7 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult GetWishlistDetails(int customerId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
                 return AccessDeniedView();
 
             var customer = _customerService.GetCustomerById(customerId);
@@ -187,9 +189,7 @@ namespace Nop.Admin.Controllers
                         Store = sci.Store != null ? sci.Store.Name : "Unknown",
                         ProductVariantId = sci.ProductVariantId,
                         Quantity = sci.Quantity,
-                        FullProductName = !String.IsNullOrEmpty(sci.ProductVariant.Name) ?
-                            string.Format("{0} ({1})", sci.ProductVariant.Product.Name, sci.ProductVariant.Name) :
-                            sci.ProductVariant.Product.Name,
+                        FullProductName = sci.ProductVariant.FullProductName,
                         UnitPrice = _priceFormatter.FormatPrice(_taxService.GetProductPrice(sci.ProductVariant, _priceCalculationService.GetUnitPrice(sci, true), out taxRate)),
                         Total = _priceFormatter.FormatPrice(_taxService.GetProductPrice(sci.ProductVariant, _priceCalculationService.GetSubTotal(sci, true), out taxRate)),
                         UpdatedOn = _dateTimeHelper.ConvertToUserTime(sci.UpdatedOnUtc, DateTimeKind.Utc)

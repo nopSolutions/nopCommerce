@@ -7,7 +7,6 @@ using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Blogs;
-using Nop.Services.Customers;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Security;

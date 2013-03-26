@@ -25,10 +25,7 @@ namespace Nop.Services.Catalog
     public partial class ProductService : IProductService
     {
         #region Constants
-        private const string PRODUCTS_BY_ID_KEY = "Nop.product.id-{0}";
         private const string PRODUCTVARIANTS_ALL_KEY = "Nop.productvariant.all-{0}-{1}";
-        private const string PRODUCTVARIANTS_BY_ID_KEY = "Nop.productvariant.id-{0}";
-        private const string PRODUCTS_PATTERN_KEY = "Nop.product.";
         private const string PRODUCTVARIANTS_PATTERN_KEY = "Nop.productvariant.";
         private const string TIERPRICES_PATTERN_KEY = "Nop.tierprice.";
         #endregion
@@ -188,12 +185,7 @@ namespace Nop.Services.Catalog
             if (productId == 0)
                 return null;
 
-            string key = string.Format(PRODUCTS_BY_ID_KEY, productId);
-            return _cacheManager.Get(key, () =>
-            {
-                var product = _productRepository.GetById(productId);
-                return product;
-            });
+            return _productRepository.GetById(productId);
         }
 
         /// <summary>
@@ -234,7 +226,6 @@ namespace Nop.Services.Catalog
             _productRepository.Insert(product);
 
             //clear cache
-            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(TIERPRICES_PATTERN_KEY);
             
@@ -255,7 +246,6 @@ namespace Nop.Services.Catalog
             _productRepository.Update(product);
 
             //cache
-            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(TIERPRICES_PATTERN_KEY);
 
@@ -271,6 +261,7 @@ namespace Nop.Services.Catalog
         /// <param name="categoryIds">Category identifiers</param>
         /// <param name="manufacturerId">Manufacturer identifier; 0 to load all records</param>
         /// <param name="storeId">Store identifier; 0 to load all records</param>
+        /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
         /// <param name="featuredProducts">A value indicating whether loaded products are marked as featured (relates only to categories and manufacturers). 0 to load featured products only, 1 to load not featured products only, null to load all products</param>
         /// <param name="priceMin">Minimum price; null to load all records</param>
         /// <param name="priceMax">Maximum price; null to load all records</param>
@@ -289,6 +280,7 @@ namespace Nop.Services.Catalog
             IList<int> categoryIds = null,
             int manufacturerId = 0,
             int storeId = 0,
+            int vendorId = 0,
             bool? featuredProducts = null,
             decimal? priceMin = null,
             decimal? priceMax = null,
@@ -303,7 +295,7 @@ namespace Nop.Services.Catalog
         {
             IList<int> filterableSpecificationAttributeOptionIds = null;
             return SearchProducts(out filterableSpecificationAttributeOptionIds, false,
-                pageIndex, pageSize, categoryIds, manufacturerId, storeId, featuredProducts,
+                pageIndex, pageSize, categoryIds, manufacturerId, storeId, vendorId, featuredProducts,
                 priceMin, priceMax, productTagId, keywords, searchDescriptions,
                 searchProductTags, languageId, filteredSpecs, orderBy, showHidden);
         }
@@ -318,6 +310,7 @@ namespace Nop.Services.Catalog
         /// <param name="categoryIds">Category identifiers</param>
         /// <param name="manufacturerId">Manufacturer identifier; 0 to load all records</param>
         /// <param name="storeId">Store identifier; 0 to load all records</param>
+        /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
         /// <param name="featuredProducts">A value indicating whether loaded products are marked as featured (relates only to categories and manufacturers). 0 to load featured products only, 1 to load not featured products only, null to load all products</param>
         /// <param name="priceMin">Minimum price; null to load all records</param>
         /// <param name="priceMax">Maximum price; null to load all records</param>
@@ -338,6 +331,7 @@ namespace Nop.Services.Catalog
             IList<int> categoryIds = null,
             int manufacturerId = 0,
             int storeId = 0,
+            int vendorId = 0,
             bool? featuredProducts = null,
             decimal? priceMin = null,
             decimal? priceMax = null,
@@ -445,6 +439,11 @@ namespace Nop.Services.Catalog
                 pStoreId.Value = storeId;
                 pStoreId.DbType = DbType.Int32;
 
+                var pVendorId = _dataProvider.GetParameter();
+                pVendorId.ParameterName = "VendorId";
+                pVendorId.Value = vendorId;
+                pVendorId.DbType = DbType.Int32;
+
                 var pProductTagId = _dataProvider.GetParameter();
                 pProductTagId.ParameterName = "ProductTagId";
                 pProductTagId.Value = productTagId;
@@ -547,6 +546,7 @@ namespace Nop.Services.Catalog
                     pCategoryIds,
                     pManufacturerId,
                     pStoreId,
+                    pVendorId,
                     pProductTagId,
                     pFeaturedProducts,
                     pPriceMin,
@@ -706,6 +706,12 @@ namespace Nop.Services.Catalog
                             select p;
                 }
 
+                //vendor filtering
+                if (vendorId > 0)
+                {
+                    query = query.Where(p => p.VendorId == vendorId);
+                }
+
                 //related products filtering
                 //if (relatedToProductId > 0)
                 //{
@@ -854,23 +860,27 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Get low stock product variants
         /// </summary>
+        /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
         /// <returns>Result</returns>
-        public virtual IList<ProductVariant> GetLowStockProductVariants()
+        public virtual IList<ProductVariant> GetLowStockProductVariants(int vendorId)
         {
             //Track inventory for product variant
             var query1 = from pv in _productVariantRepository.Table
                          orderby pv.MinStockQuantity
                          where !pv.Deleted &&
                          pv.ManageInventoryMethodId == (int)ManageInventoryMethod.ManageStock &&
-                         pv.MinStockQuantity >= pv.StockQuantity
+                         pv.MinStockQuantity >= pv.StockQuantity &&
+                         (vendorId == 0 || pv.Product.VendorId == vendorId)
                          select pv;
             var productVariants1 = query1.ToList();
+
             //Track inventory for product variant by product attributes
             var query2 = from pv in _productVariantRepository.Table
                          from pvac in pv.ProductVariantAttributeCombinations
                          where !pv.Deleted &&
                          pv.ManageInventoryMethodId == (int)ManageInventoryMethod.ManageStockByAttributes &&
-                         pvac.StockQuantity <= 0
+                         pvac.StockQuantity <= 0 &&
+                         (vendorId == 0 || pv.Product.VendorId == vendorId)
                          select pv;
             //only distinct products (group by ID)
             //if we use standard Distinct() method, then all fields will be compared (low performance)
@@ -896,12 +906,7 @@ namespace Nop.Services.Catalog
             if (productVariantId == 0)
                 return null;
 
-            string key = string.Format(PRODUCTVARIANTS_BY_ID_KEY, productVariantId);
-            return _cacheManager.Get(key, () =>
-            {
-                var pv = _productVariantRepository.GetById(productVariantId);
-                return pv;
-            });
+            return _productVariantRepository.GetById(productVariantId);
         }
         
         /// <summary>
@@ -972,7 +977,6 @@ namespace Nop.Services.Catalog
 
             _productVariantRepository.Insert(productVariant);
 
-            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(TIERPRICES_PATTERN_KEY);
 
@@ -991,7 +995,6 @@ namespace Nop.Services.Catalog
 
             _productVariantRepository.Update(productVariant);
 
-            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(TIERPRICES_PATTERN_KEY);
 
@@ -1182,14 +1185,16 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="categoryId">Category identifier; 0 to load all records</param>
         /// <param name="manufacturerId">Manufacturer identifier; 0 to load all records</param>
+        /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
         /// <param name="keywords">Keywords</param>
         /// <param name="searchDescriptions">A value indicating whether to search in descriptions</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product variants</returns>
-        public virtual IPagedList<ProductVariant> SearchProductVariants(int categoryId, int manufacturerId,
-             string keywords, bool searchDescriptions, int pageIndex, int pageSize, bool showHidden = false)
+        public virtual IPagedList<ProductVariant> SearchProductVariants(int categoryId, 
+            int manufacturerId, int vendorId, string keywords, bool searchDescriptions, 
+            int pageIndex, int pageSize, bool showHidden = false)
         {
             //products
             var query = _productVariantRepository.Table;
@@ -1202,6 +1207,10 @@ namespace Nop.Services.Catalog
             if (!showHidden)
             {
                 query = query.Where(pv => pv.Product.Published);
+            }
+            if (vendorId > 0)
+            {
+                query = query.Where(pv => pv.Product.VendorId == vendorId);
             }
 
             //searching by keyword
@@ -1320,8 +1329,7 @@ namespace Nop.Services.Catalog
             if (relatedProductId == 0)
                 return null;
             
-            var relatedProduct = _relatedProductRepository.GetById(relatedProductId);
-            return relatedProduct;
+            return _relatedProductRepository.GetById(relatedProductId);
         }
 
         /// <summary>
@@ -1402,8 +1410,7 @@ namespace Nop.Services.Catalog
             if (crossSellProductId == 0)
                 return null;
 
-            var crossSellProduct = _crossSellProductRepository.GetById(crossSellProductId);
-            return crossSellProduct;
+            return _crossSellProductRepository.GetById(crossSellProductId);
         }
 
         /// <summary>
@@ -1502,7 +1509,6 @@ namespace Nop.Services.Catalog
 
             _tierPriceRepository.Delete(tierPrice);
 
-            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(TIERPRICES_PATTERN_KEY);
 
@@ -1520,8 +1526,7 @@ namespace Nop.Services.Catalog
             if (tierPriceId == 0)
                 return null;
             
-            var tierPrice = _tierPriceRepository.GetById(tierPriceId);
-            return tierPrice;
+            return _tierPriceRepository.GetById(tierPriceId);
         }
 
         /// <summary>
@@ -1535,7 +1540,6 @@ namespace Nop.Services.Catalog
 
             _tierPriceRepository.Insert(tierPrice);
 
-            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(TIERPRICES_PATTERN_KEY);
 
@@ -1554,7 +1558,6 @@ namespace Nop.Services.Catalog
 
             _tierPriceRepository.Update(tierPrice);
 
-            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(TIERPRICES_PATTERN_KEY);
 
@@ -1606,8 +1609,7 @@ namespace Nop.Services.Catalog
             if (productPictureId == 0)
                 return null;
 
-            var pp = _productPictureRepository.GetById(productPictureId);
-            return pp;
+            return _productPictureRepository.GetById(productPictureId);
         }
 
         /// <summary>
@@ -1679,8 +1681,7 @@ namespace Nop.Services.Catalog
             if (productReviewId == 0)
                 return null;
 
-            var productReview = _productReviewRepository.GetById(productReviewId);
-            return productReview;
+            return _productReviewRepository.GetById(productReviewId);
         }
 
         /// <summary>
@@ -1693,8 +1694,6 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("productReview");
 
             _productReviewRepository.Delete(productReview);
-
-            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
         }
 
         #endregion

@@ -18,7 +18,6 @@ namespace Nop.Services.Logging
     {
         #region Constants
         private const string ACTIVITYTYPE_ALL_KEY = "Nop.activitytype.all";
-        private const string ACTIVITYTYPE_BY_ID_KEY = "Nop.activitytype.id-{0}";
         private const string ACTIVITYTYPE_PATTERN_KEY = "Nop.activitytype.";
         #endregion
 
@@ -132,11 +131,7 @@ namespace Nop.Services.Logging
             if (activityLogTypeId == 0)
                 return null;
 
-            string key = string.Format(ACTIVITYTYPE_BY_ID_KEY, activityLogTypeId);
-            return _cacheManager.Get(key, () =>
-            {
-                return _activityLogTypeRepository.GetById(activityLogTypeId);
-            });
+            return _activityLogTypeRepository.GetById(activityLogTypeId);
         }
 
         /// <summary>
@@ -241,8 +236,7 @@ namespace Nop.Services.Logging
             if (activityLogId == 0)
                 return null;
 
-            var activityLog = _activityLogRepository.GetById(activityLogId);
-            return activityLog;
+            return _activityLogRepository.GetById(activityLogId);
         }
 
         /// <summary>

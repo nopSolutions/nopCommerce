@@ -8,18 +8,6 @@ namespace Nop.Plugin.ExternalAuth.Facebook
     {
         public void RegisterRoutes(RouteCollection routes)
         {
-            routes.MapRoute("Plugin.ExternalAuth.Facebook.Configure",
-                 "Plugins/ExternalAuthFacebook/Configure",
-                 new { controller = "ExternalAuthFacebook", action = "Configure" },
-                 new[] { "Nop.Plugin.ExternalAuth.Facebook.Controllers" }
-            );
-
-            routes.MapRoute("Plugin.ExternalAuth.Facebook.PublicInfo",
-                 "Plugins/ExternalAuthFacebook/PublicInfo",
-                 new { controller = "ExternalAuthFacebook", action = "PublicInfo" },
-                 new[] { "Nop.Plugin.ExternalAuth.Facebook.Controllers" }
-            );
-
             routes.MapRoute("Plugin.ExternalAuth.Facebook.Login",
                  "Plugins/ExternalAuthFacebook/Login",
                  new { controller = "ExternalAuthFacebook", action = "Login" },

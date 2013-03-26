@@ -109,13 +109,8 @@ namespace Nop.Admin.Controllers
                         var appliedToProductVariantModel = new DiscountModel.AppliedToProductVariantModel()
                         {
                             ProductVariantId = pv.Id,
+                            FullProductName = pv.FullProductName
                         };
-                        //full product name
-                        if (!String.IsNullOrEmpty(pv.Name))
-                            appliedToProductVariantModel.FullProductName = string.Format("{0} ({1})", pv.Product.Name, pv.Name);
-                        else
-                            appliedToProductVariantModel.FullProductName = pv.Product.Name;
-
                         model.AppliedToProductVariantModels.Add(appliedToProductVariantModel);
                     }
                 }

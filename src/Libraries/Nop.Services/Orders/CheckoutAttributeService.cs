@@ -15,9 +15,7 @@ namespace Nop.Services.Orders
     {
         #region Constants
         private const string CHECKOUTATTRIBUTES_ALL_KEY = "Nop.checkoutattribute.all";
-        private const string CHECKOUTATTRIBUTES_BY_ID_KEY = "Nop.checkoutattribute.id-{0}";
         private const string CHECKOUTATTRIBUTEVALUES_ALL_KEY = "Nop.checkoutattributevalue.all-{0}";
-        private const string CHECKOUTATTRIBUTEVALUES_BY_ID_KEY = "Nop.checkoutattributevalue.id-{0}";
         private const string CHECKOUTATTRIBUTES_PATTERN_KEY = "Nop.checkoutattribute.";
         private const string CHECKOUTATTRIBUTEVALUES_PATTERN_KEY = "Nop.checkoutattributevalue.";
         #endregion
@@ -101,12 +99,7 @@ namespace Nop.Services.Orders
             if (checkoutAttributeId == 0)
                 return null;
 
-            string key = string.Format(CHECKOUTATTRIBUTES_BY_ID_KEY, checkoutAttributeId);
-            return _cacheManager.Get(key, () =>
-            {
-                var checkoutAttribute = _checkoutAttributeRepository.GetById(checkoutAttributeId);
-                return checkoutAttribute;
-            });
+            return _checkoutAttributeRepository.GetById(checkoutAttributeId);
         }
 
         /// <summary>
@@ -196,12 +189,7 @@ namespace Nop.Services.Orders
             if (checkoutAttributeValueId == 0)
                 return null;
 
-            string key = string.Format(CHECKOUTATTRIBUTEVALUES_BY_ID_KEY, checkoutAttributeValueId);
-            return _cacheManager.Get(key, () =>
-            {
-                var checkoutAttributeValue = _checkoutAttributeValueRepository.GetById(checkoutAttributeValueId);
-                return checkoutAttributeValue;
-            });
+            return _checkoutAttributeValueRepository.GetById(checkoutAttributeValueId);
         }
 
         /// <summary>

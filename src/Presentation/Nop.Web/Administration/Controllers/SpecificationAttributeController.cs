@@ -81,7 +81,7 @@ namespace Nop.Admin.Controllers
 
         public ActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
             var specificationAttributes = _specificationAttributeService.GetSpecificationAttributes();
@@ -96,7 +96,7 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult List(GridCommand command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
             var specificationAttributes = _specificationAttributeService.GetSpecificationAttributes();
@@ -114,7 +114,7 @@ namespace Nop.Admin.Controllers
         //create
         public ActionResult Create()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
             var model = new SpecificationAttributeModel();
@@ -126,7 +126,7 @@ namespace Nop.Admin.Controllers
         [HttpPost, ParameterBasedOnFormNameAttribute("save-continue", "continueEditing")]
         public ActionResult Create(SpecificationAttributeModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
             if (ModelState.IsValid)
@@ -149,7 +149,7 @@ namespace Nop.Admin.Controllers
         //edit
         public ActionResult Edit(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
             var specificationAttribute = _specificationAttributeService.GetSpecificationAttributeById(id);
@@ -170,7 +170,7 @@ namespace Nop.Admin.Controllers
         [HttpPost, ParameterBasedOnFormNameAttribute("save-continue", "continueEditing")]
         public ActionResult Edit(SpecificationAttributeModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
             var specificationAttribute = _specificationAttributeService.GetSpecificationAttributeById(model.Id);
@@ -200,7 +200,7 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult Delete(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
             var specificationAttribute = _specificationAttributeService.GetSpecificationAttributeById(id);
@@ -225,7 +225,7 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult OptionList(int specificationAttributeId, GridCommand command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
             var options = _specificationAttributeService.GetSpecificationAttributeOptionsBySpecificationAttribute(specificationAttributeId);
@@ -252,7 +252,7 @@ namespace Nop.Admin.Controllers
         //create
         public ActionResult OptionCreatePopup(int specificationAttributeId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
             var model = new SpecificationAttributeOptionModel();
@@ -265,7 +265,7 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult OptionCreatePopup(string btnId, string formId, SpecificationAttributeOptionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
             var specificationAttribute = _specificationAttributeService.GetSpecificationAttributeById(model.SpecificationAttributeId);
@@ -293,7 +293,7 @@ namespace Nop.Admin.Controllers
         //edit
         public ActionResult OptionEditPopup(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
             var sao = _specificationAttributeService.GetSpecificationAttributeOptionById(id);
@@ -314,7 +314,7 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult OptionEditPopup(string btnId, string formId, SpecificationAttributeOptionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
             var sao = _specificationAttributeService.GetSpecificationAttributeOptionById(model.Id);
@@ -343,7 +343,7 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult OptionDelete(int optionId, int specificationAttributeId, GridCommand command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
             var sao = _specificationAttributeService.GetSpecificationAttributeOptionById(optionId);
@@ -360,8 +360,10 @@ namespace Nop.Admin.Controllers
         [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult GetOptionsByAttributeId(string attributeId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
-                return AccessDeniedView();
+            //do not make any permission validation here 
+            //because this method could be used on some other pages (such as product editing)
+            //if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
+            //    return AccessDeniedView();
 
             // This action method gets called via an ajax request
             if (String.IsNullOrEmpty(attributeId))

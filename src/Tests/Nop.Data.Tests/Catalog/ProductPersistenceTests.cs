@@ -2,6 +2,7 @@
 using System.Linq;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
+using Nop.Core.Domain.Vendors;
 using Nop.Tests;
 using NUnit.Framework;
 
@@ -19,7 +20,8 @@ namespace Nop.Data.Tests.Catalog
                 ShortDescription = "ShortDescription 1",
                 FullDescription = "FullDescription 1",
                 AdminComment = "AdminComment 1",
-                ProductTemplateId = 1,
+                VendorId = 1,
+                ProductTemplateId = 2,
                 ShowOnHomePage = false,
                 MetaKeywords = "Meta keywords",
                 MetaDescription = "Meta description",
@@ -43,7 +45,8 @@ namespace Nop.Data.Tests.Catalog
             fromDb.ShortDescription.ShouldEqual("ShortDescription 1");
             fromDb.FullDescription.ShouldEqual("FullDescription 1");
             fromDb.AdminComment.ShouldEqual("AdminComment 1");
-            fromDb.ProductTemplateId.ShouldEqual(1);
+            fromDb.VendorId.ShouldEqual(1);
+            fromDb.ProductTemplateId.ShouldEqual(2);
             fromDb.ShowOnHomePage.ShouldEqual(false);
             fromDb.MetaKeywords.ShouldEqual("Meta keywords");
             fromDb.MetaDescription.ShouldEqual("Meta description");
@@ -252,6 +255,5 @@ namespace Nop.Data.Tests.Catalog
             (fromDb.ProductTags.Count == 1).ShouldBeTrue();
             fromDb.ProductTags.First().Name.ShouldEqual("Tag name 1");
         }
-
     }
 }

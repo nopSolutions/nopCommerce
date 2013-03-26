@@ -84,7 +84,7 @@ namespace Nop.Admin.Controllers
 
         public ActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
                 return AccessDeniedView();
 
             var model = new ProductReviewListModel();
@@ -94,7 +94,7 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult List(GridCommand command, ProductReviewListModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
                 return AccessDeniedView();
 
             DateTime? createdOnFromValue = (model.CreatedOnFrom == null) ? null
@@ -123,7 +123,7 @@ namespace Nop.Admin.Controllers
         //edit
         public ActionResult Edit(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
                 return AccessDeniedView();
 
             var productReview = _productService.GetProductReviewById(id);
@@ -139,7 +139,7 @@ namespace Nop.Admin.Controllers
         [HttpPost, ParameterBasedOnFormNameAttribute("save-continue", "continueEditing")]
         public ActionResult Edit(ProductReviewModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
                 return AccessDeniedView();
 
             var productReview = _productService.GetProductReviewById(model.Id);
@@ -171,7 +171,7 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult Delete(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
                 return AccessDeniedView();
 
             var productReview = _productService.GetProductReviewById(id);
@@ -191,7 +191,7 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult ApproveSelected(ICollection<int> selectedIds)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
                 return AccessDeniedView();
 
             if (selectedIds != null)
@@ -215,7 +215,7 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult DisapproveSelected(ICollection<int> selectedIds)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
                 return AccessDeniedView();
 
             if (selectedIds != null)
@@ -235,9 +235,6 @@ namespace Nop.Admin.Controllers
 
             return Json(new { Result = true });
         }
-
-
-
 
         #endregion
     }

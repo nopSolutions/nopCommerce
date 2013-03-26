@@ -15,7 +15,6 @@ namespace Nop.Services.Directory
     {
         #region Constants
         private const string STATEPROVINCES_ALL_KEY = "Nop.stateprovince.all-{0}";
-        private const string STATEPROVINCES_BY_ID_KEY = "Nop.stateprovince.id-{0}";
         private const string STATEPROVINCES_PATTERN_KEY = "Nop.stateprovince.";
         #endregion
 
@@ -74,12 +73,7 @@ namespace Nop.Services.Directory
             if (stateProvinceId == 0)
                 return null;
 
-            string key = string.Format(STATEPROVINCES_BY_ID_KEY, stateProvinceId);
-            return _cacheManager.Get(key, () =>
-            {
-                var category = _stateProvinceRepository.GetById(stateProvinceId);
-                return category;
-            });
+            return _stateProvinceRepository.GetById(stateProvinceId);
         }
 
         /// <summary>
