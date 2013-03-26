@@ -18,6 +18,7 @@ namespace Nop.Services.Shipping
 
         private readonly IRepository<Shipment> _shipmentRepository;
         private readonly IRepository<ShipmentOrderProductVariant> _sopvRepository;
+        private readonly IRepository<OrderProductVariant> _opvRepository;
         private readonly IEventPublisher _eventPublisher;
         
         #endregion
@@ -29,13 +30,16 @@ namespace Nop.Services.Shipping
         /// </summary>
         /// <param name="shipmentRepository">Shipment repository</param>
         /// <param name="sopvRepository">Shipment order product variant repository</param>
+        /// <param name="opvRepository">Order product variant repository</param>
         /// <param name="eventPublisher">Event published</param>
         public ShipmentService(IRepository<Shipment> shipmentRepository,
             IRepository<ShipmentOrderProductVariant> sopvRepository,
+            IRepository<OrderProductVariant> opvRepository,
             IEventPublisher eventPublisher)
         {
             this._shipmentRepository = shipmentRepository;
             this._sopvRepository = sopvRepository;
+            this._opvRepository = opvRepository;
             _eventPublisher = eventPublisher;
         }
 
@@ -61,12 +65,14 @@ namespace Nop.Services.Shipping
         /// <summary>
         /// Search shipments
         /// </summary>
+        /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
         /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
         /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Customer collection</returns>
-        public virtual IPagedList<Shipment> GetAllShipments(DateTime? createdFromUtc, DateTime? createdToUtc, 
+        public virtual IPagedList<Shipment> GetAllShipments(int vendorId, 
+            DateTime? createdFromUtc, DateTime? createdToUtc, 
             int pageIndex, int pageSize)
         {
             var query = _shipmentRepository.Table;
@@ -75,6 +81,16 @@ namespace Nop.Services.Shipping
             if (createdToUtc.HasValue)
                 query = query.Where(s => createdToUtc.Value >= s.CreatedOnUtc);
             query = query.Where(s => s.Order != null && !s.Order.Deleted);
+            if (vendorId > 0)
+            {
+                var queryVendorOrderProductVariants = from opv in _opvRepository.Table
+                                                      where opv.ProductVariant.Product.VendorId == vendorId
+                                                      select opv.Id;
+
+                query = from s in query
+                        where queryVendorOrderProductVariants.Intersect(s.ShipmentOrderProductVariants.Select(sopv => sopv.OrderProductVariantId)).Any()
+                        select s;
+            }
             query = query.OrderByDescending(s => s.CreatedOnUtc);
 
             var shipments = new PagedList<Shipment>(query, pageIndex, pageSize);

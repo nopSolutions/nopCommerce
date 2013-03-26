@@ -2074,8 +2074,13 @@ namespace Nop.Admin.Controllers
             DateTime? endDateValue = (model.EndDate == null) ? null 
                             :(DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
+            //a vendor should have access only to his products
+            int vendorId = 0;
+            if (_workContext.CurrentVendor != null)
+                vendorId = _workContext.CurrentVendor.Id;
+
             //load shipments
-            var shipments = _shipmentService.GetAllShipments(startDateValue, endDateValue, 
+            var shipments = _shipmentService.GetAllShipments(vendorId, startDateValue, endDateValue, 
                 command.Page - 1, command.PageSize);
             var gridModel = new GridModel<ShipmentModel>
             {
@@ -2443,13 +2448,13 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
-            var shipments = _shipmentService.GetAllShipments(null, null, 0, int.MaxValue).ToList();
             //a vendor should have access only to his products
+            int vendorId = 0;
             if (_workContext.CurrentVendor != null)
-            {
-                shipments = shipments.Where(s => HasAccessToShipment(s)).ToList();
-            }
-            
+                vendorId = _workContext.CurrentVendor.Id;
+
+            var shipments = _shipmentService.GetAllShipments(vendorId, null, null, 0, int.MaxValue).ToList();
+
             byte[] bytes = null;
             using (var stream = new MemoryStream())
             {
