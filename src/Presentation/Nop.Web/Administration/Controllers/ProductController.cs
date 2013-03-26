@@ -2166,7 +2166,7 @@ namespace Nop.Admin.Controllers
 
             //a vendor cannot import products
             if (_workContext.CurrentVendor != null)
-                return RedirectToAction("List");
+                return AccessDeniedView();
 
             try
             {

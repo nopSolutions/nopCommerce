@@ -4,7 +4,6 @@
 
 @{
     var gridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSize;
-    var hideProfitReport = false;
     
     //page title
     ViewBag.Title = T("Admin.Orders").Text;
@@ -18,10 +17,14 @@
             @T("Admin.Orders")
         </div>
         <div class="options">
-            <a href="@Url.Action("ExportXmlAll")" class="t-button">@T("Admin.Common.ExportToXml.All")</a>
-            <input type="button" id="exportxml-selected" class="t-button" value="@T("Admin.Common.ExportToXml.Selected")" />
-            <a href="@Url.Action("ExportExcelAll")" class="t-button">@T("Admin.Common.ExportToExcel.All")</a>
-            <input type="button" id="exportexcel-selected" class="t-button" value="@T("Admin.Common.ExportToExcel.Selected")" />
+            @if (!Model.IsLoggedInAsVendor)
+            {
+                //a vendor cannot export/import orders
+                <a href="@Url.Action("ExportXmlAll")" class="t-button">@T("Admin.Common.ExportToXml.All")</a>
+                <input type="button" id="exportxml-selected" class="t-button" value="@T("Admin.Common.ExportToXml.Selected")" />
+                <a href="@Url.Action("ExportExcelAll")" class="t-button">@T("Admin.Common.ExportToExcel.All")</a>
+                <input type="button" id="exportexcel-selected" class="t-button" value="@T("Admin.Common.ExportToExcel.Selected")" />
+            }
         </div>
     </div>
     <table width="100%">
@@ -49,7 +52,7 @@
                 @Html.EditorFor(model => Model.CustomerEmail)
             </td>
         </tr>
-        <tr>
+        <tr @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.OrderStatusId):
             </td>
@@ -57,7 +60,7 @@
                 @Html.DropDownList("OrderStatusId", Model.AvailableOrderStatuses)
             </td>
         </tr>
-        <tr>
+        <tr @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.PaymentStatusId):
             </td>
@@ -65,7 +68,7 @@
                 @Html.DropDownList("PaymentStatusId", Model.AvailablePaymentStatuses)
             </td>
         </tr>
-        <tr>
+        <tr @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.ShippingStatusId):
             </td>
@@ -81,7 +84,7 @@
                 @Html.DropDownList("StoreId", Model.AvailableStores)
             </td>
         </tr>
-        <tr>
+        <tr @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.VendorId):
             </td>
@@ -133,22 +136,30 @@
                             .HeaderHtmlAttributes(new { style = "text-align:center" });
 
                             columns.Bound(x => x.Id);
-                            columns.Bound(x => x.OrderStatus);
-                            columns.Bound(x => x.PaymentStatus);
-                            columns.Bound(x => x.ShippingStatus);
+                            if (!Model.IsLoggedInAsVendor)
+                            {
+                                //a vendor does not see order details such statuses or totals
+                                columns.Bound(x => x.OrderStatus);
+                                columns.Bound(x => x.PaymentStatus);
+                                columns.Bound(x => x.ShippingStatus);
+                            }
                             columns.Bound(x => x.CustomerEmail);
                             columns.Bound(x => x.StoreName);
                             columns.Bound(x => x.CreatedOn);
-                            columns.Bound(x => x.OrderTotal)
-                                 .FooterTemplate(
-                                 string.Format("<div><strong>{0}:</strong></div>" +
-                                 (hideProfitReport ? "{1}" : "<div>{1}: <span id=\"aggregator-profit-block\"></span></div>") +
-                                 "<div>{2}: <span id=\"aggregator-tax-block\"></span></div>" +
-                                 "<div>{3}: <span id=\"aggregator-total-block\"></span></div>",
-                                 @T("Admin.Orders.Report.Summary").Text,
-                                 (hideProfitReport ? "" : @T("Admin.Orders.Report.Profit").Text),
-                                 @T("Admin.Orders.Report.Tax").Text,
-                                 @T("Admin.Orders.Report.Total").Text));
+                            if (!Model.IsLoggedInAsVendor)
+                            {
+                                //a vendor does not see order details such statuses or totals
+                                columns.Bound(x => x.OrderTotal)
+                                       .FooterTemplate(
+                                           string.Format("<div><strong>{0}:</strong></div>" +
+                                                         "<div>{1}: <span id=\"aggregator-profit-block\"></span></div>" +
+                                                         "<div>{2}: <span id=\"aggregator-tax-block\"></span></div>" +
+                                                         "<div>{3}: <span id=\"aggregator-total-block\"></span></div>",
+                                                         T("Admin.Orders.Report.Summary").Text,
+                                                         T("Admin.Orders.Report.Profit").Text,
+                                                         T("Admin.Orders.Report.Tax").Text,
+                                                         T("Admin.Orders.Report.Total").Text));
+                            }
                             columns.Bound(x => x.Id)
                                 .Template(x => Html.ActionLink(T("Admin.Common.View").Text, "Edit", new { id = x.Id }))
                                 .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.View").Text + "</a>")
@@ -270,11 +281,7 @@
         }
         function updateAggregates(aggs) {
             for (var key in aggs) {
-
-                @if (!hideProfitReport)
-                {
-                <text>$('#aggregator-profit-block').text(aggs['aggregatorprofit']);</text>
-                }
+                $('#aggregator-profit-block').text(aggs['aggregatorprofit']);
                 $('#aggregator-tax-block').text(aggs['aggregatortax']);
                 $('#aggregator-total-block').text(aggs['aggregatortotal']);
             }

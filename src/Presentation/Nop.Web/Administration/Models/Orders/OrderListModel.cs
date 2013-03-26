@@ -50,6 +50,8 @@ namespace Nop.Admin.Models.Orders
         [AllowHtml]
         public int GoDirectlyToNumber { get; set; }
 
+        public bool IsLoggedInAsVendor { get; set; }
+
 
         public IList<SelectListItem> AvailableOrderStatuses { get; set; }
         public IList<SelectListItem> AvailablePaymentStatuses { get; set; }

@@ -597,6 +597,9 @@ namespace Nop.Admin.Controllers
             foreach (var v in _vendorService.GetAllVendors(0, int.MaxValue, true))
                 model.AvailableVendors.Add(new SelectListItem() { Text = v.Name, Value = v.Id.ToString() });
 
+            //a vendor should have access only to orders with his products
+            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+
             return View(model);
 		}
 
@@ -605,6 +608,12 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                model.VendorId = _workContext.CurrentVendor.Id;
+            }
 
             DateTime? startDateValue = (model.StartDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
@@ -682,6 +691,10 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
+            //a vendor cannot export orders
+            if (_workContext.CurrentVendor != null)
+                return AccessDeniedView();
+
             try
             {
                 var orders = _orderService.SearchOrders(0, 0, 0, null, null, null,
@@ -702,6 +715,10 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
+            //a vendor cannot export orders
+            if (_workContext.CurrentVendor != null)
+                return AccessDeniedView();
+
             var orders = new List<Order>();
             if (selectedIds != null)
             {
@@ -719,6 +736,10 @@ namespace Nop.Admin.Controllers
 	    public ActionResult ExportExcelAll()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
+            //a vendor cannot export orders
+            if (_workContext.CurrentVendor != null)
                 return AccessDeniedView();
 
             try
@@ -744,6 +765,10 @@ namespace Nop.Admin.Controllers
         public ActionResult ExportExcelSelected(string selectedIds)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
+            //a vendor cannot export orders
+            if (_workContext.CurrentVendor != null)
                 return AccessDeniedView();
 
             var orders = new List<Order>();
