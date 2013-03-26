@@ -79,7 +79,6 @@
   <ItemGroup>
     <Compile Include="Controllers\TaxFixedRateController.cs" />
     <Compile Include="Models\FixedTaxRateModel.cs" />
-    <Compile Include="RouteProvider.cs" />
     <Compile Include="FixedRateTaxProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

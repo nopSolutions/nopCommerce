@@ -1,7 +1,7 @@
 ﻿Group: SMS providers
 FriendlyName: Verizon SMS Provider
 SystemName: Mobile.SMS.Verizon
-Version: 1.08
+Version: 1.09
 SupportedVersions: 2.80
 Author: nopCommerce team
 DisplayOrder: 1

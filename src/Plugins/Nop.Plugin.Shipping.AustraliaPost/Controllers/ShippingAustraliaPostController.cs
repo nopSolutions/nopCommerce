@@ -17,6 +17,7 @@ namespace Nop.Plugin.Shipping.AustraliaPost.Controllers
             this._settingService = settingService;
         }
 
+        [ChildActionOnly]
         public ActionResult Configure()
         {
             var model = new AustraliaPostShippingModel();
@@ -27,6 +28,7 @@ namespace Nop.Plugin.Shipping.AustraliaPost.Controllers
         }
 
         [HttpPost]
+        [ChildActionOnly]
         public ActionResult Configure(AustraliaPostShippingModel model)
         {
             if (!ModelState.IsValid)

@@ -27,6 +27,7 @@ namespace Nop.Plugin.Sms.Verizon.Controllers
             this._localizationService = localizationService;
         }
 
+        [ChildActionOnly]
         public ActionResult Configure()
         {
             var model = new SmsVerizonModel();
@@ -35,6 +36,7 @@ namespace Nop.Plugin.Sms.Verizon.Controllers
             return View("Nop.Plugin.SMS.Verizon.Views.SmsVerizon.Configure", model);
         }
 
+        [ChildActionOnly]
         [HttpPost, ActionName("Configure")]
         [FormValueRequired("save")]
         public ActionResult ConfigurePOST(SmsVerizonModel model)
@@ -52,6 +54,7 @@ namespace Nop.Plugin.Sms.Verizon.Controllers
             return View("Nop.Plugin.SMS.Verizon.Views.SmsVerizon.Configure", model);
         }
 
+        [ChildActionOnly]
         [HttpPost, ActionName("Configure")]
         [FormValueRequired("test-sms")]
         public ActionResult TestSms(SmsVerizonModel model)

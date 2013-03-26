@@ -80,7 +80,6 @@
     <Compile Include="Controllers\ShippingUSPSController.cs" />
     <Compile Include="Models\USPSShippingModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RouteProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Libraries\Nop.Core\Nop.Core.csproj">

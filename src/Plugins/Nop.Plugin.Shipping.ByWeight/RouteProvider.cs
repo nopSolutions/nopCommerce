@@ -8,11 +8,6 @@ namespace Nop.Plugin.Shipping.ByWeight
     {
         public void RegisterRoutes(RouteCollection routes)
         {
-            routes.MapRoute("Plugin.Shipping.ByWeight.Configure",
-                 "Plugins/ShippingByWeight/Configure",
-                 new { controller = "ShippingByWeight", action = "Configure" },
-                 new[] { "Nop.Plugin.Shipping.ByWeight.Controllers" }
-            );
             routes.MapRoute("Plugin.Shipping.ByWeight.SaveGeneralSettings",
                  "Plugins/ShippingByWeight/SaveGeneralSettings",
                  new { controller = "ShippingByWeight", action = "SaveGeneralSettings", },

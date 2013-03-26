@@ -76,7 +76,6 @@
     <Compile Include="GoogleAnalyticPlugin.cs" />
     <Compile Include="Models\ConfigurationModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RouteProvider.cs" />
     <Compile Include="GoogleAnalyticsSettings.cs" />
   </ItemGroup>
   <ItemGroup>

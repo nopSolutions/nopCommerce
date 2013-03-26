@@ -7,6 +7,7 @@ using Nop.Plugin.Tax.CountryStateZip.Domain;
 using Nop.Plugin.Tax.CountryStateZip.Models;
 using Nop.Plugin.Tax.CountryStateZip.Services;
 using Nop.Services.Directory;
+using Nop.Services.Security;
 using Nop.Services.Tax;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
@@ -20,15 +21,19 @@ namespace Nop.Plugin.Tax.CountryStateZip.Controllers
         private readonly ICountryService _countryService;
         private readonly IStateProvinceService _stateProvinceService;
         private readonly ITaxRateService _taxRateService;
+        private readonly IPermissionService _permissionService;
 
         public TaxCountryStateZipController(ITaxCategoryService taxCategoryService,
-            ICountryService countryService, IStateProvinceService stateProvinceService,
-            ITaxRateService taxRateService)
+            ICountryService countryService, 
+            IStateProvinceService stateProvinceService,
+            ITaxRateService taxRateService,
+            IPermissionService permissionService)
         {
             this._taxCategoryService = taxCategoryService;
             this._countryService = countryService;
             this._stateProvinceService = stateProvinceService;
             this._taxRateService = taxRateService;
+            this._permissionService = permissionService;
         }
 
         protected override void Initialize(System.Web.Routing.RequestContext requestContext)
@@ -41,6 +46,8 @@ namespace Nop.Plugin.Tax.CountryStateZip.Controllers
 
             base.Initialize(requestContext);
         }
+
+        [ChildActionOnly]
         public ActionResult Configure()
         {
             var taxCategories = _taxCategoryService.GetAllTaxCategories();
@@ -67,6 +74,9 @@ namespace Nop.Plugin.Tax.CountryStateZip.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult RatesList(GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+                return Content("Access denied");
+
             var records = _taxRateService.GetAllTaxRates(command.Page - 1, command.PageSize);
             var taxRatesModel = records
                 .Select(x =>
@@ -105,6 +115,9 @@ namespace Nop.Plugin.Tax.CountryStateZip.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult RateUpdate(TaxRateModel model, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+                return Content("Access denied");
+
             var taxRate = _taxRateService.GetTaxRateById(model.Id);
             taxRate.Zip = model.Zip == "*" ? null : model.Zip;
             taxRate.Percentage = model.Percentage;
@@ -116,6 +129,9 @@ namespace Nop.Plugin.Tax.CountryStateZip.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult RateDelete(int id, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+                return Content("Access denied");
+
             var taxRate = _taxRateService.GetTaxRateById(id);
             if (taxRate != null)
                 _taxRateService.DeleteTaxRate(taxRate);
@@ -126,6 +142,9 @@ namespace Nop.Plugin.Tax.CountryStateZip.Controllers
         [HttpPost]
         public ActionResult AddTaxRate(TaxRateListModel model)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+                return Content("Access denied");
+
             var taxRate = new TaxRate()
             {
                 TaxCategoryId = model.AddTaxCategoryId,
@@ -138,6 +157,5 @@ namespace Nop.Plugin.Tax.CountryStateZip.Controllers
 
             return Json(new { Result = true });
         }
-
     }
 }

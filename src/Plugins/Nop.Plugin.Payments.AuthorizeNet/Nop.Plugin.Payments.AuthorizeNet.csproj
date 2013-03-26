@@ -89,7 +89,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="RouteProvider.cs" />
     <Compile Include="TransactMode.cs" />
     <Compile Include="Validators\PaymentInfoValidator.cs" />
     <Compile Include="Web References\net.authorize.api\Reference.cs">

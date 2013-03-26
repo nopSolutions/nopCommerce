@@ -5,6 +5,7 @@ using System.Threading;
 using System.Web.Mvc;
 using Nop.Plugin.Shipping.FixedRateShipping.Models;
 using Nop.Services.Configuration;
+using Nop.Services.Security;
 using Nop.Services.Shipping;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
@@ -17,11 +18,15 @@ namespace Nop.Plugin.Shipping.FixedRateShipping.Controllers
     {
         private readonly IShippingService _shippingService;
         private readonly ISettingService _settingService;
+        private readonly IPermissionService _permissionService;
 
-        public ShippingFixedRateController(IShippingService shippingServicee, ISettingService settingService)
+        public ShippingFixedRateController(IShippingService shippingServicee,
+            ISettingService settingService, 
+            IPermissionService permissionService)
         {
             this._shippingService = shippingServicee;
             this._settingService = settingService;
+            this._permissionService = permissionService;
         }
         
         protected override void Initialize(System.Web.Routing.RequestContext requestContext)
@@ -35,6 +40,7 @@ namespace Nop.Plugin.Shipping.FixedRateShipping.Controllers
             base.Initialize(requestContext);
         }
 
+        [ChildActionOnly]
         public ActionResult Configure()
         {
             var shippingMethods = _shippingService.GetAllShippingMethods();
@@ -62,6 +68,9 @@ namespace Nop.Plugin.Shipping.FixedRateShipping.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult Configure(GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return Content("Access denied");
+
             var tmp = new List<FixedShippingRateModel>();
             foreach (var shippingMethod in _shippingService.GetAllShippingMethods())
                 tmp.Add(new FixedShippingRateModel()
@@ -86,6 +95,9 @@ namespace Nop.Plugin.Shipping.FixedRateShipping.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult ShippingRateUpdate(FixedShippingRateModel model, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return Content("Access denied");
+
             int shippingMethodId = model.ShippingMethodId;
             decimal rate = model.Rate;
 

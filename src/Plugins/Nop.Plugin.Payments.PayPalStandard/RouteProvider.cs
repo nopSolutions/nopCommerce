@@ -8,18 +8,6 @@ namespace Nop.Plugin.Payments.PayPalStandard
     {
         public void RegisterRoutes(RouteCollection routes)
         {
-            routes.MapRoute("Plugin.Payments.PayPalStandard.Configure",
-                 "Plugins/PaymentPayPalStandard/Configure",
-                 new { controller = "PaymentPayPalStandard", action = "Configure" },
-                 new[] { "Nop.Plugin.Payments.PayPalStandard.Controllers" }
-            );
-
-            routes.MapRoute("Plugin.Payments.PayPalStandard.PaymentInfo",
-                 "Plugins/PaymentPayPalStandard/PaymentInfo",
-                 new { controller = "PaymentPayPalStandard", action = "PaymentInfo" },
-                 new[] { "Nop.Plugin.Payments.PayPalStandard.Controllers" }
-            );
-            
             //PDT
             routes.MapRoute("Plugin.Payments.PayPalStandard.PDTHandler",
                  "Plugins/PaymentPayPalStandard/PDTHandler",

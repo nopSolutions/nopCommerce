@@ -6,6 +6,7 @@ using Nop.Plugin.DiscountRules.CustomerRoles.Models;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
+using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
 
 namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
@@ -16,17 +17,23 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
         private readonly IDiscountService _discountService;
         private readonly ICustomerService _customerService;
         private readonly ISettingService _settingService;
+        private readonly IPermissionService _permissionService;
 
         public DiscountRulesCustomerRolesController(IDiscountService discountService,
-            ICustomerService customerService, ISettingService settingService)
+            ICustomerService customerService, ISettingService settingService,
+            IPermissionService permissionService)
         {
             this._discountService = discountService;
             this._customerService = customerService;
             this._settingService = settingService;
+            this._permissionService = permissionService;
         }
 
         public ActionResult Configure(int discountId, int? discountRequirementId)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+                return Content("Access denied");
+
             var discount = _discountService.GetDiscountById(discountId);
             if (discount == null)
                 throw new ArgumentException("Discount could not be loaded");
@@ -59,6 +66,9 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
         [HttpPost]
         public ActionResult Configure(int discountId, int? discountRequirementId, int customerRoleId)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+                return Content("Access denied");
+
             var discount = _discountService.GetDiscountById(discountId);
             if (discount == null)
                 throw new ArgumentException("Discount could not be loaded");

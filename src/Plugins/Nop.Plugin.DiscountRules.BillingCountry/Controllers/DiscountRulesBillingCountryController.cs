@@ -7,6 +7,7 @@ using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Discounts;
 using Nop.Services.Localization;
+using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
 
 namespace Nop.Plugin.DiscountRules.BillingCountry.Controllers
@@ -18,19 +19,24 @@ namespace Nop.Plugin.DiscountRules.BillingCountry.Controllers
         private readonly IDiscountService _discountService;
         private readonly ICountryService _countryService;
         private readonly ISettingService _settingService;
+        private readonly IPermissionService _permissionService;
 
         public DiscountRulesBillingCountryController(ILocalizationService localizationService, 
             IDiscountService discountService, ICountryService countryService,
-            ISettingService settingService)
+            ISettingService settingService, IPermissionService permissionService)
         {
             this._localizationService = localizationService;
             this._discountService = discountService;
             this._countryService = countryService;
             this._settingService = settingService;
+            this._permissionService = permissionService;
         }
 
         public ActionResult Configure(int discountId, int? discountRequirementId)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+                return Content("Access denied");
+
             var discount = _discountService.GetDiscountById(discountId);
             if (discount == null)
                 throw new ArgumentException("Discount could not be loaded");
@@ -63,6 +69,9 @@ namespace Nop.Plugin.DiscountRules.BillingCountry.Controllers
         [HttpPost]
         public ActionResult Configure(int discountId, int? discountRequirementId, int countryId)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+                return Content("Access denied");
+
             var discount = _discountService.GetDiscountById(discountId);
             if (discount == null)
                 throw new ArgumentException("Discount could not be loaded");

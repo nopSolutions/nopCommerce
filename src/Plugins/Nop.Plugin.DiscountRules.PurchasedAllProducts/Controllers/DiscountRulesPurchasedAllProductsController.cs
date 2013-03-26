@@ -4,8 +4,8 @@ using System.Web.Mvc;
 using Nop.Core.Domain.Discounts;
 using Nop.Plugin.DiscountRules.PurchasedAllProducts.Models;
 using Nop.Services.Configuration;
-using Nop.Services.Customers;
 using Nop.Services.Discounts;
+using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
 
 namespace Nop.Plugin.DiscountRules.PurchasedAllProducts.Controllers
@@ -15,16 +15,21 @@ namespace Nop.Plugin.DiscountRules.PurchasedAllProducts.Controllers
     {
         private readonly IDiscountService _discountService;
         private readonly ISettingService _settingService;
+        private readonly IPermissionService _permissionService;
 
         public DiscountRulesPurchasedAllProductsController(IDiscountService discountService,
-            ISettingService settingService)
+            ISettingService settingService, IPermissionService permissionService)
         {
             this._discountService = discountService;
             this._settingService = settingService;
+            this._permissionService = permissionService;
         }
 
         public ActionResult Configure(int discountId, int? discountRequirementId)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+                return Content("Access denied");
+
             var discount = _discountService.GetDiscountById(discountId);
             if (discount == null)
                 throw new ArgumentException("Discount could not be loaded");
@@ -53,6 +58,9 @@ namespace Nop.Plugin.DiscountRules.PurchasedAllProducts.Controllers
         [HttpPost]
         public ActionResult Configure(int discountId, int? discountRequirementId, string variantIds)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+                return Content("Access denied");
+
             var discount = _discountService.GetDiscountById(discountId);
             if (discount == null)
                 throw new ArgumentException("Discount could not be loaded");

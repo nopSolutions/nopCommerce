@@ -89,7 +89,6 @@
     <Compile Include="Controllers\ShippingUPSController.cs" />
     <Compile Include="Models\UPSShippingModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RouteProvider.cs" />
     <Compile Include="Web References\track\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

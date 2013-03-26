@@ -86,7 +86,6 @@
     <Compile Include="Domain\RequestResult.cs" />
     <Compile Include="Models\CanadaPostShippingModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RouteProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Views\ShippingCanadaPost\Configure.cshtml" />

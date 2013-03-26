@@ -20,6 +20,7 @@ namespace Nop.Plugin.Shipping.USPS.Controllers
             this._settingService = settingService;
         }
 
+        [ChildActionOnly]
         public ActionResult Configure()
         {
             var model = new USPSShippingModel();
@@ -69,6 +70,7 @@ namespace Nop.Plugin.Shipping.USPS.Controllers
         }
 
         [HttpPost]
+        [ChildActionOnly]
         public ActionResult Configure(USPSShippingModel model)
         {
             if (!ModelState.IsValid)
