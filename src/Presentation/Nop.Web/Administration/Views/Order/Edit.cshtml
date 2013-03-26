@@ -8,18 +8,20 @@
 }
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "order-form" }))
 {
-
     <div class="section-header">
         <div class="title">
             <img src="@Url.Content("~/Administration/Content/images/ico-sales.png")" alt="" />
             @T("Admin.Orders.EditOrderDetails") - @Model.Id @Html.ActionLink("(" + T("Admin.Orders.BackToList") + ")", "List")
         </div>
         <div class="options">
-            @if (Model.DisplayPdfInvoice)
+            @if (Model.DisplayPdfInvoice && !Model.IsLoggedInAsVendor)
             {
                 <a href="@Url.Action("PdfInvoice", new { orderId = Model.Id })" class="t-button">@T("Admin.Orders.PdfInvoice")</a>
             }
-            <span id="order-delete" class="t-button">@T("Admin.Common.Delete")</span>
+            @if (!Model.IsLoggedInAsVendor)
+            {
+                <span id="order-delete" class="t-button">@T("Admin.Common.Delete")</span>
+            }
             <input type="submit" id="btnRefreshPage" name="btnRefreshPage" style="display: none" />
         </div>
     </div>
@@ -32,7 +34,11 @@
     var tabBillingInfo = x.Add().Text(T("Admin.Orders.BillingInfo").Text).Content(TabBillingInfo().ToHtmlString());
     var tabShippingInfo = x.Add().Text(T("Admin.Orders.ShippingInfo").Text).Content(TabShippingInfo().ToHtmlString());
     var tabProducts = x.Add().Text(T("Admin.Orders.Products").Text).Content(TabProducts().ToHtmlString());
-    var tabOrderNotes = x.Add().Text(T("Admin.Orders.OrderNotes").Text).Content(TabOrderNotes().ToHtmlString());
+    TabStripItemBuilder tabOrderNotes = null;
+    if (!Model.IsLoggedInAsVendor)
+    {
+        tabOrderNotes = x.Add().Text(T("Admin.Orders.OrderNotes").Text).Content(TabOrderNotes().ToHtmlString());
+    }
 
     var selectedTab = (string)ViewData["selectedTab"];
     switch (selectedTab)
@@ -50,7 +56,10 @@
             tabProducts.Selected(true);
             break;
         case "ordernotes":
-            tabOrderNotes.Selected(true);
+            if (tabOrderNotes != null)
+            {
+                tabOrderNotes.Selected(true);
+            }
             break;
         default:
             tabInfo.Selected(true);
@@ -66,8 +75,10 @@
 @Html.DeleteConfirmation("order-delete")
 @helper TabInfo()
 {
+    if (!Model.IsLoggedInAsVendor)
+    {
     <script type="text/javascript">
-        $(document).ready(function () {
+        $(document).ready(function() {
             toggleOrderTotals(false);
             toggleCC(false);
         });
@@ -78,8 +89,7 @@
                 $('#btnEditOrderTotals').hide();
                 $('#btnSaveOrderTotals').show();
                 $('#btnCancelOrderTotals').show();
-            }
-            else {
+            } else {
                 $('#trEditOrderTotals').hide();
                 $('#btnEditOrderTotals').show();
                 $('#btnSaveOrderTotals').hide();
@@ -91,55 +101,58 @@
             if (editmode) {
                 $('#lblCardType').hide();
                 $('#@Html.FieldIdFor(model => model.CardType)').show();
-                $('#lblCardName').hide();
-                $('#@Html.FieldIdFor(model => model.CardName)').show();
-                $('#lblCardNumber').hide();
-                $('#@Html.FieldIdFor(model => model.CardNumber)').show();
-                $('#lblCardCvv2').hide();
-                $('#@Html.FieldIdFor(model => model.CardCvv2)').show();
-                $('#lblCardExpirationMonth').hide();
-                $('#@Html.FieldIdFor(model => model.CardExpirationMonth)').show();
-                $('#lblCardExpirationYear').hide();
-                $('#@Html.FieldIdFor(model => model.CardExpirationYear)').show();
-                $('#btnEditCC').hide();
-                $('#btnSaveCC').show();
-                $('#btnCancelCC').show();
-            }
-            else {
-                $('#lblCardType').show();
-                $('#@Html.FieldIdFor(model => model.CardType)').hide();
-                $('#lblCardName').show();
-                $('#@Html.FieldIdFor(model => model.CardName)').hide();
-                $('#lblCardNumber').show();
-                $('#@Html.FieldIdFor(model => model.CardNumber)').hide();
-                $('#lblCardCvv2').show();
-                $('#@Html.FieldIdFor(model => model.CardCvv2)').hide();
-                $('#lblCardExpirationMonth').show();
-                $('#@Html.FieldIdFor(model => model.CardExpirationMonth)').hide();
-                $('#lblCardExpirationYear').show();
-                $('#@Html.FieldIdFor(model => model.CardExpirationYear)').hide();
-                $('#btnEditCC').show();
-                $('#btnSaveCC').hide();
-                $('#btnCancelCC').hide();
-            }
-        }
+                         $('#lblCardName').hide();
+                         $('#@Html.FieldIdFor(model => model.CardName)').show();
+                         $('#lblCardNumber').hide();
+                         $('#@Html.FieldIdFor(model => model.CardNumber)').show();
+                         $('#lblCardCvv2').hide();
+                         $('#@Html.FieldIdFor(model => model.CardCvv2)').show();
+                         $('#lblCardExpirationMonth').hide();
+                         $('#@Html.FieldIdFor(model => model.CardExpirationMonth)').show();
+                         $('#lblCardExpirationYear').hide();
+                         $('#@Html.FieldIdFor(model => model.CardExpirationYear)').show();
+                         $('#btnEditCC').hide();
+                         $('#btnSaveCC').show();
+                         $('#btnCancelCC').show();
+                     } else {
+                         $('#lblCardType').show();
+                         $('#@Html.FieldIdFor(model => model.CardType)').hide();
+                         $('#lblCardName').show();
+                         $('#@Html.FieldIdFor(model => model.CardName)').hide();
+                         $('#lblCardNumber').show();
+                         $('#@Html.FieldIdFor(model => model.CardNumber)').hide();
+                         $('#lblCardCvv2').show();
+                         $('#@Html.FieldIdFor(model => model.CardCvv2)').hide();
+                         $('#lblCardExpirationMonth').show();
+                         $('#@Html.FieldIdFor(model => model.CardExpirationMonth)').hide();
+                         $('#lblCardExpirationYear').show();
+                         $('#@Html.FieldIdFor(model => model.CardExpirationYear)').hide();
+                         $('#btnEditCC').show();
+                         $('#btnSaveCC').hide();
+                         $('#btnCancelCC').hide();
+                     }
+                 }
 
     </script>
+    }
     <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                <strong>
-                    @Html.NopLabelFor(model => model.OrderStatus): </strong>
-            </td>
-            <td class="adminData">
-                <strong>
-                    @Model.OrderStatus</strong>&nbsp;
-                @if (Model.CanCancelOrder)
-                {
-                    <input type="submit" name="cancelorder" value="@T("Admin.Orders.Fields.OrderStatus.Cancel")" id="cancelorder" class="adminButton" onclick="return confirm('@T("Admin.Common.AreYouSure")');"  />
-                }
-            </td>
-        </tr>
+        @if (!Model.IsLoggedInAsVendor)
+        {
+            <tr>
+                <td class="adminTitle">
+                    <strong>
+                        @Html.NopLabelFor(model => model.OrderStatus): </strong>
+                </td>
+                <td class="adminData">
+                    <strong>
+                        @Model.OrderStatus</strong>&nbsp;
+                    @if (Model.CanCancelOrder)
+                    {
+                        <input type="submit" name="cancelorder" value="@T("Admin.Orders.Fields.OrderStatus.Cancel")" id="cancelorder" class="adminButton" onclick="return confirm('@T("Admin.Common.AreYouSure")    ');"  />
+                    }
+                </td>
+            </tr>
+        }
         <tr>
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.Id):
@@ -148,14 +161,17 @@
                 @Model.Id
             </td>
         </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.OrderGuid):
-            </td>
-            <td class="adminData">
-                @Model.OrderGuid
-            </td>
-        </tr>
+        @if (!Model.IsLoggedInAsVendor)
+        {
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.OrderGuid):
+                </td>
+                <td class="adminData">
+                    @Model.OrderGuid
+                </td>
+            </tr>
+        }
         <tr>
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.StoreName):
@@ -169,24 +185,27 @@
                 <hr />
             </td>
         </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.CustomerId):
-            </td>
-            <td class="adminData">
-                @Html.ActionLink(Model.CustomerInfo, "Edit", "Customer", new { id = Model.CustomerId }, new { })
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.CustomerIp):
-            </td>
-            <td class="adminData">
-                @Model.CustomerIp
-            </td>
-        </tr>
-        @if (Model.RecurringPaymentId > 0)
+
+        @if (!Model.IsLoggedInAsVendor)
         {
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.CustomerId):
+                </td>
+                <td class="adminData">
+                    @Html.ActionLink(Model.CustomerInfo, "Edit", "Customer", new { id = Model.CustomerId }, new { })
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.CustomerIp):
+                </td>
+                <td class="adminData">
+                    @Model.CustomerIp
+                </td>
+            </tr>
+            if (Model.RecurringPaymentId > 0)
+            {
             <tr>
                 <td class="adminTitle">
                     @Html.NopLabelFor(model => model.RecurringPaymentId):
@@ -195,9 +214,9 @@
                     <a href="@Url.Action("Edit", "RecurringPayment", new { id = Model.RecurringPaymentId })">@T("Admin.Common.View")</a>
                 </td>
             </tr>
-        }
-        @if (!String.IsNullOrEmpty(Model.VatNumber))
-        {
+            }
+            if (!String.IsNullOrEmpty(Model.VatNumber))
+            {
             <tr>
                 <td class="adminTitle">
                     @Html.NopLabelFor(model => model.VatNumber):
@@ -206,20 +225,20 @@
                     @Model.VatNumber
                 </td>
             </tr>
-        }        
-    @if (Model.AffiliateId.HasValue && Model.AffiliateId.Value > 0)
-    {
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.AffiliateId):
-        </td>
-        <td class="adminData">
-            <a href="@Url.Action("Edit", "Affiliate", new { id = Model.AffiliateId.Value })">@Model.AffiliateId.Value - @T("Admin.Common.View")</a>
-        </td>
-    </tr>
-    }
-        @if (Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.IncludingTax)
-        {
+            }
+            if (Model.AffiliateId.HasValue && Model.AffiliateId.Value > 0)
+            {
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.AffiliateId):
+                </td>
+                <td class="adminData">
+                    <a href="@Url.Action("Edit", "Affiliate", new { id = Model.AffiliateId.Value })">@Model.AffiliateId.Value - @T("Admin.Common.View")</a>
+                </td>
+            </tr>
+            }
+            if (Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.IncludingTax)
+            {
             <tr>
                 <td class="adminTitle">
                     @Html.NopLabelFor(model => model.OrderSubtotalInclTax):
@@ -228,9 +247,9 @@
                     @Model.OrderSubtotalInclTax
                 </td>
             </tr>
-        }
-        @if (Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.ExcludingTax)
-        {
+            }
+            if (Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.ExcludingTax)
+            {
             <tr>
                 <td class="adminTitle">
                     @Html.NopLabelFor(model => model.OrderSubtotalExclTax):
@@ -239,10 +258,10 @@
                     @Model.OrderSubtotalExclTax
                 </td>
             </tr>
-        }
-        @if ((Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.IncludingTax)
-                        && !String.IsNullOrEmpty(Model.OrderSubTotalDiscountInclTax))
-        {
+            }
+            if ((Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.IncludingTax)
+                 && !String.IsNullOrEmpty(Model.OrderSubTotalDiscountInclTax))
+            {
             <tr>
                 <td class="adminTitle">
                     @Html.NopLabelFor(model => model.OrderSubTotalDiscountInclTax):
@@ -251,10 +270,10 @@
                     @Model.OrderSubTotalDiscountInclTax
                 </td>
             </tr>
-        }
-        @if ((Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.ExcludingTax)
-                        && !String.IsNullOrEmpty(Model.OrderSubTotalDiscountExclTax))
-        {
+            }
+            if ((Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.ExcludingTax)
+                 && !String.IsNullOrEmpty(Model.OrderSubTotalDiscountExclTax))
+            {
             <tr>
                 <td class="adminTitle">
                     @Html.NopLabelFor(model => model.OrderSubTotalDiscountExclTax):
@@ -263,9 +282,9 @@
                     @Model.OrderSubTotalDiscountExclTax
                 </td>
             </tr>
-        }
-        @if (Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.IncludingTax)
-        {
+            }
+            if (Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.IncludingTax)
+            {
             <tr>
                 <td class="adminTitle">
                     @Html.NopLabelFor(model => model.OrderShippingInclTax):
@@ -274,9 +293,9 @@
                     @Model.OrderShippingInclTax
                 </td>
             </tr>
-        }
-        @if (Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.ExcludingTax)
-        {
+            }
+            if (Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.ExcludingTax)
+            {
             <tr>
                 <td class="adminTitle">
                     @Html.NopLabelFor(model => model.OrderShippingExclTax):
@@ -285,10 +304,10 @@
                     @Model.OrderShippingExclTax
                 </td>
             </tr>
-        }
-        @if ((Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.IncludingTax)
-                        && !String.IsNullOrEmpty(Model.PaymentMethodAdditionalFeeInclTax))
-        {
+            }
+            if ((Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.IncludingTax)
+                 && !String.IsNullOrEmpty(Model.PaymentMethodAdditionalFeeInclTax))
+            {
             <tr>
                 <td class="adminTitle">
                     @Html.NopLabelFor(model => model.PaymentMethodAdditionalFeeInclTax):
@@ -297,10 +316,10 @@
                     @Model.PaymentMethodAdditionalFeeInclTax
                 </td>
             </tr>
-        }
-        @if ((Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.ExcludingTax)
-                        && !String.IsNullOrEmpty(Model.PaymentMethodAdditionalFeeExclTax))
-        {
+            }
+            if ((Model.AllowCustomersToSelectTaxDisplayType || Model.TaxDisplayType == TaxDisplayType.ExcludingTax)
+                 && !String.IsNullOrEmpty(Model.PaymentMethodAdditionalFeeExclTax))
+            {
             <tr>
                 <td class="adminTitle">
                     @Html.NopLabelFor(model => model.PaymentMethodAdditionalFeeExclTax):
@@ -309,11 +328,11 @@
                     @Model.PaymentMethodAdditionalFeeExclTax
                 </td>
             </tr>
-        }
-        @if (Model.DisplayTaxRates)
-        {
-            foreach (var tr in Model.TaxRates)
+            }
+            if (Model.DisplayTaxRates)
             {
+                foreach (var tr in Model.TaxRates)
+                {
             <tr>
                 <td class="adminTitle">
                     @Html.NopLabelFor(model => model.Tax) @tr.Rate%:
@@ -322,10 +341,10 @@
                     @tr.Value
                 </td>
             </tr>
+                }
             }
-        }
-        @if (Model.DisplayTax)
-        {
+            if (Model.DisplayTax)
+            {
             <tr>
                 <td class="adminTitle">
                     @Html.NopLabelFor(model => model.Tax):
@@ -334,9 +353,9 @@
                     @Model.Tax
                 </td>
             </tr>
-        }
-        @if (!String.IsNullOrEmpty(Model.OrderTotalDiscount))
-        {
+            }
+            if (!String.IsNullOrEmpty(Model.OrderTotalDiscount))
+            {
             <tr>
                 <td class="adminTitle">
                     @Html.NopLabelFor(model => model.OrderTotalDiscount):
@@ -345,9 +364,9 @@
                     @Model.OrderTotalDiscount
                 </td>
             </tr>
-        }
-        @foreach (var gc in Model.GiftCards)
-        {
+            }
+            foreach (var gc in Model.GiftCards)
+            {
             <tr>
                 <td class="adminTitle">
                     @Html.NopLabelFor(model => model.GiftCards[0].CouponCode) (@(gc.CouponCode)):
@@ -356,137 +375,137 @@
                     @gc.Amount
                 </td>
             </tr>
-        }
-        @if (Model.RedeemedRewardPoints > 0)
-        {
+            }
+            if (Model.RedeemedRewardPoints > 0)
+            {
+<tr>
+                     <td class="adminTitle">
+                         @Html.NopLabelFor(model => model.RedeemedRewardPoints):
+                     </td>
+                     <td class="adminData">
+                         @Model.RedeemedRewardPoints @T("Admin.Orders.Fields.RedeemedRewardPoints.Points")
+                <text>/</text>
+                         @Model.RedeemedRewardPointsAmount
+            </td>
+                 </tr>
+            }
             <tr>
                 <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.RedeemedRewardPoints):
+                    @Html.NopLabelFor(model => model.OrderTotal):
                 </td>
                 <td class="adminData">
-                    @Model.RedeemedRewardPoints @T("Admin.Orders.Fields.RedeemedRewardPoints.Points")
-                    <text>/</text>
-                    @Model.RedeemedRewardPointsAmount
+                    @Model.OrderTotal
                 </td>
             </tr>
-        }
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.OrderTotal):
+            if (!String.IsNullOrEmpty(Model.RefundedAmount))
+            {
+<tr>
+                     <td class="adminTitle">
+                         @Html.NopLabelFor(model => model.RefundedAmount):
+                     </td>
+                     <td class="adminData">
+                         @Model.RefundedAmount
             </td>
-            <td class="adminData">
-                @Model.OrderTotal
-            </td>
-        </tr>
-        @if (!String.IsNullOrEmpty(Model.RefundedAmount))
-        {            
+                 </tr>
+            }
+            <tr id="trEditOrderTotals">
+                <td colspan="2">
+                    <table style="border: solid 1px black; padding: 5px;">
+                        <tr>
+                            <td>
+                                @Html.NopLabelFor(model => model.OrderSubtotalInclTaxValue):
+                            </td>
+                            <td>
+                                @T("Admin.Orders.Fields.Edit.InclTax") @Html.EditorFor(model => model.OrderSubtotalInclTaxValue)
+                            </td>
+                            <td>
+                                @T("Admin.Orders.Fields.Edit.ExclTax") @Html.EditorFor(model => model.OrderSubtotalExclTaxValue)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                @Html.NopLabelFor(model => model.OrderSubTotalDiscountInclTaxValue):
+                            </td>
+                            <td>
+                                @T("Admin.Orders.Fields.Edit.InclTax") @Html.EditorFor(model => model.OrderSubTotalDiscountInclTaxValue)
+                            </td>
+                            <td>
+                                @T("Admin.Orders.Fields.Edit.ExclTax") @Html.EditorFor(model => model.OrderSubTotalDiscountExclTaxValue)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                @Html.NopLabelFor(model => model.OrderShippingInclTaxValue):
+                            </td>
+                            <td>
+                                @T("Admin.Orders.Fields.Edit.InclTax") @Html.EditorFor(model => model.OrderShippingInclTaxValue)
+                            </td>
+                            <td>
+                                @T("Admin.Orders.Fields.Edit.ExclTax") @Html.EditorFor(model => model.OrderShippingExclTaxValue)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                @Html.NopLabelFor(model => model.PaymentMethodAdditionalFeeInclTaxValue):
+                            </td>
+                            <td>
+                                @T("Admin.Orders.Fields.Edit.InclTax") @Html.EditorFor(model => model.PaymentMethodAdditionalFeeInclTaxValue)
+                            </td>
+                            <td>
+                                @T("Admin.Orders.Fields.Edit.ExclTax") @Html.EditorFor(model => model.PaymentMethodAdditionalFeeExclTaxValue)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                @Html.NopLabelFor(model => model.TaxRatesValue):
+                            </td>
+                            <td colspan="2">
+                                @Html.EditorFor(model => model.TaxRatesValue)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                @Html.NopLabelFor(model => model.TaxValue):
+                            </td>
+                            <td colspan="2">
+                                @Html.EditorFor(model => model.TaxValue)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                @Html.NopLabelFor(model => model.OrderTotalDiscountValue):
+                            </td>
+                            <td colspan="2">
+                                @Html.EditorFor(model => model.OrderTotalDiscountValue)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                @Html.NopLabelFor(model => model.OrderTotalValue):
+                            </td>
+                            <td colspan="2">
+                                @Html.EditorFor(model => model.OrderTotalValue)
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
             <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.RefundedAmount):
+                <td>
+                    <input type="submit" name="btnEditOrderTotals" value="@T("Admin.Orders.Fields.EditOrderTotals")" onclick=" toggleOrderTotals(true);return false; " id="btnEditOrderTotals" class="adminButton" />
+                    <input type="submit" name="btnSaveOrderTotals" value="@T("Admin.Orders.Fields.SaveOrderTotals")" id="btnSaveOrderTotals" class="adminButton" onclick=" return confirm('@T("Admin.Common.AreYouSure")    '); " />
                 </td>
-                <td class="adminData">
-                    @Model.RefundedAmount
+                <td>
+                    <input type="submit" name="btnCancelOrderTotals" value="@T("Admin.Orders.Fields.CancelOrderTotals")" onclick=" toggleOrderTotals(false);return false; " id="btnCancelOrderTotals" class="adminButton" />
                 </td>
             </tr>
-        }
-        <tr id="trEditOrderTotals">
-            <td colspan="2">
-                <table style="border: solid 1px black; padding: 5px;">
-                    <tr>
-                        <td>
-                            @Html.NopLabelFor(model => model.OrderSubtotalInclTaxValue):
-                        </td>
-                        <td>
-                            @T("Admin.Orders.Fields.Edit.InclTax") @Html.EditorFor(model => model.OrderSubtotalInclTaxValue)
-                        </td>
-                        <td>
-                            @T("Admin.Orders.Fields.Edit.ExclTax") @Html.EditorFor(model => model.OrderSubtotalExclTaxValue)
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            @Html.NopLabelFor(model => model.OrderSubTotalDiscountInclTaxValue):
-                        </td>
-                        <td>
-                            @T("Admin.Orders.Fields.Edit.InclTax") @Html.EditorFor(model => model.OrderSubTotalDiscountInclTaxValue)
-                        </td>
-                        <td>
-                            @T("Admin.Orders.Fields.Edit.ExclTax") @Html.EditorFor(model => model.OrderSubTotalDiscountExclTaxValue)
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            @Html.NopLabelFor(model => model.OrderShippingInclTaxValue):
-                        </td>
-                        <td>
-                            @T("Admin.Orders.Fields.Edit.InclTax") @Html.EditorFor(model => model.OrderShippingInclTaxValue)
-                        </td>
-                        <td>
-                            @T("Admin.Orders.Fields.Edit.ExclTax") @Html.EditorFor(model => model.OrderShippingExclTaxValue)
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            @Html.NopLabelFor(model => model.PaymentMethodAdditionalFeeInclTaxValue):
-                        </td>
-                        <td>
-                            @T("Admin.Orders.Fields.Edit.InclTax") @Html.EditorFor(model => model.PaymentMethodAdditionalFeeInclTaxValue)
-                        </td>
-                        <td>
-                            @T("Admin.Orders.Fields.Edit.ExclTax") @Html.EditorFor(model => model.PaymentMethodAdditionalFeeExclTaxValue)
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            @Html.NopLabelFor(model => model.TaxRatesValue):
-                        </td>
-                        <td colspan="2">
-                            @Html.EditorFor(model => model.TaxRatesValue)
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            @Html.NopLabelFor(model => model.TaxValue):
-                        </td>
-                        <td colspan="2">
-                            @Html.EditorFor(model => model.TaxValue)
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            @Html.NopLabelFor(model => model.OrderTotalDiscountValue):
-                        </td>
-                        <td colspan="2">
-                            @Html.EditorFor(model => model.OrderTotalDiscountValue)
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            @Html.NopLabelFor(model => model.OrderTotalValue):
-                        </td>
-                        <td colspan="2">
-                            @Html.EditorFor(model => model.OrderTotalValue)
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <input type="submit" name="btnEditOrderTotals" value="@T("Admin.Orders.Fields.EditOrderTotals")" onclick="toggleOrderTotals(true);return false;" id="btnEditOrderTotals" class="adminButton" />
-                <input type="submit" name="btnSaveOrderTotals" value="@T("Admin.Orders.Fields.SaveOrderTotals")" id="btnSaveOrderTotals" class="adminButton" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
-            </td>
-            <td>
-                <input type="submit" name="btnCancelOrderTotals" value="@T("Admin.Orders.Fields.CancelOrderTotals")" onclick="toggleOrderTotals(false);return false;" id="btnCancelOrderTotals" class="adminButton" />
-            </td>
-        </tr>
-        <tr class="adminSeparator">
-            <td colspan="2">
-                <hr />
-            </td>
-        </tr>
-        @if (Model.AllowStoringCreditCardNumber)
-        {
+            <tr class="adminSeparator">
+                <td colspan="2">
+                    <hr />
+                </td>
+            </tr>
+            if (Model.AllowStoringCreditCardNumber)
+            {
             <tr>
                 <td class="adminTitle">
                     @Html.NopLabelFor(model => model.CardType):
@@ -496,9 +515,9 @@
                     @Html.EditorFor(model => model.CardType)
                 </td>
             </tr>
-        }
-        @if (Model.AllowStoringCreditCardNumber)
-        {
+            }
+            if (Model.AllowStoringCreditCardNumber)
+            {
             <tr>
                 <td class="adminTitle">
                     @Html.NopLabelFor(model => model.CardName):
@@ -508,9 +527,9 @@
                     @Html.EditorFor(model => model.CardName)
                 </td>
             </tr>
-        }
-        @if (Model.AllowStoringCreditCardNumber || !String.IsNullOrEmpty(Model.CardNumber))
-        {
+            }
+            if (Model.AllowStoringCreditCardNumber || !String.IsNullOrEmpty(Model.CardNumber))
+            {
             <tr>
                 <td class="adminTitle">
                     @Html.NopLabelFor(model => model.CardNumber):
@@ -520,9 +539,9 @@
                     @Html.EditorFor(model => model.CardNumber)
                 </td>
             </tr>
-        }
-        @if (Model.AllowStoringCreditCardNumber)
-        {
+            }
+            if (Model.AllowStoringCreditCardNumber)
+            {
             <tr>
                 <td class="adminTitle">
                     @Html.NopLabelFor(model => model.CardCvv2):
@@ -532,9 +551,9 @@
                     @Html.EditorFor(model => model.CardCvv2)
                 </td>
             </tr>
-        }
-        @if (Model.AllowStoringCreditCardNumber)
-        {
+            }
+            if (Model.AllowStoringCreditCardNumber)
+            {
             <tr>
                 <td class="adminTitle">
                     @Html.NopLabelFor(model => model.CardExpirationMonth):
@@ -544,9 +563,9 @@
                     @Html.EditorFor(model => model.CardExpirationMonth)
                 </td>
             </tr>
-        }
-        @if (Model.AllowStoringCreditCardNumber)
-        {
+            }
+            if (Model.AllowStoringCreditCardNumber)
+            {
             <tr>
                 <td class="adminTitle">
                     @Html.NopLabelFor(model => model.CardExpirationYear):
@@ -556,21 +575,21 @@
                     @Html.EditorFor(model => model.CardExpirationYear)
                 </td>
             </tr>
-        }
-        @if (Model.AllowStoringCreditCardNumber)
-        {
+            }
+            if (Model.AllowStoringCreditCardNumber)
+            {
             <tr>
                 <td>
-                    <input type="submit" name="btnEditCC" value="@T("Admin.Orders.Fields.EditCC")" onclick="toggleCC(true);return false;" id="btnEditCC" class="adminButton" />
-                    <input type="submit" name="btnSaveCC" value="@T("Admin.Orders.Fields.SaveCC")" id="btnSaveCC" class="adminButton" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
+                    <input type="submit" name="btnEditCC" value="@T("Admin.Orders.Fields.EditCC")" onclick=" toggleCC(true);return false; " id="btnEditCC" class="adminButton" />
+                    <input type="submit" name="btnSaveCC" value="@T("Admin.Orders.Fields.SaveCC")" id="btnSaveCC" class="adminButton" onclick=" return confirm('@T("Admin.Common.AreYouSure")    '); " />
                 </td>
                 <td>
-                    <input type="submit" name="btnCancelCC" value="@T("Admin.Orders.Fields.CancelCC")" onclick="toggleCC(false);return false;" id="btnCancelCC" class="adminButton" />
+                    <input type="submit" name="btnCancelCC" value="@T("Admin.Orders.Fields.CancelCC")" onclick=" toggleCC(false);return false; " id="btnCancelCC" class="adminButton" />
                 </td>
             </tr>
-        }
-        @if (Model.DisplayPurchaseOrderNumber)
-        {
+            }
+            if (Model.DisplayPurchaseOrderNumber)
+            {
             <tr>
                 <td class="adminTitle">
                     @Html.NopLabelFor(model => model.PurchaseOrderNumber):
@@ -579,9 +598,9 @@
                     @Model.PurchaseOrderNumber
                 </td>
             </tr>
-        }
-        @if (!String.IsNullOrEmpty(Model.AuthorizationTransactionId))
-        {
+            }
+            if (!String.IsNullOrEmpty(Model.AuthorizationTransactionId))
+            {
             <tr>
                 <td class="adminTitle">
                     @Html.NopLabelFor(model => model.AuthorizationTransactionId):
@@ -590,9 +609,9 @@
                     @Model.AuthorizationTransactionId
                 </td>
             </tr>
-        }
-        @if (!String.IsNullOrEmpty(Model.CaptureTransactionId))
-        {
+            }
+            if (!String.IsNullOrEmpty(Model.CaptureTransactionId))
+            {
             <tr>
                 <td class="adminTitle">
                     @Html.NopLabelFor(model => model.CaptureTransactionId):
@@ -601,9 +620,9 @@
                     @Model.CaptureTransactionId
                 </td>
             </tr>
-        }
-        @if (!String.IsNullOrEmpty(Model.SubscriptionTransactionId))
-        {
+            }
+            if (!String.IsNullOrEmpty(Model.SubscriptionTransactionId))
+            {
             <tr>
                 <td class="adminTitle">
                     @Html.NopLabelFor(model => model.SubscriptionTransactionId):
@@ -612,63 +631,72 @@
                     @Model.SubscriptionTransactionId
                 </td>
             </tr>
-        }
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.PaymentMethod):
-            </td>
-            <td class="adminData">
-                @Model.PaymentMethod
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.PaymentStatus):
-            </td>
-            <td class="adminData">
-                @Model.PaymentStatus &nbsp;
-                @if (Model.CanCapture)
-                {
-                    <input type="submit" name="captureorder" value="@T("Admin.Orders.Fields.Capture")" id="captureorder" class="adminButton" onclick="return confirm('@T("Admin.Common.AreYouSure")');" /><text>&nbsp;</text>
-                }
-                @if (Model.CanMarkOrderAsPaid)
-                {
-                    <input type="submit" name="markorderaspaid" value="@T("Admin.Orders.Fields.MarkAsPaid")" id="markorderaspaid" class="adminButton" onclick="return confirm('@T("Admin.Common.AreYouSure")');" /><text>&nbsp;</text>
-                }
-                @if (Model.CanRefund)
-                {
-                    <input type="submit" name="refundorder" value="@T("Admin.Orders.Fields.Refund")" id="refundorder" class="adminButton" onclick="return confirm('@T("Admin.Common.AreYouSure")');" /><text>&nbsp;</text>
-                }
-                @if (Model.CanRefundOffline)
-                {
-                    <input type="submit" name="refundorderoffline" value="@T("Admin.Orders.Fields.RefundOffline")" id="refundorderoffline" class="adminButton" onclick="return confirm('@T("Admin.Common.AreYouSure")');" /><text>&nbsp;</text>
-                }
-                @if (Model.CanPartiallyRefund)
-                {
-                    <input type="submit" id="partiallyrefundorder" name="partiallyrefundorder" value="@T("Admin.Orders.Fields.PartialRefund")" onclick="javascript:OpenWindow('@(Url.Action("PartiallyRefundOrderPopup", "Order", new { id = Model.Id, online = true, btnId = "btnRefreshPage", formId = "order-form" }))', 500, 300, true); return false;" class="adminButton" /><text>&nbsp;</text>
-                }
-                @if (Model.CanPartiallyRefundOffline)
-                {
-                    <input type="submit" id="partiallyrefundorderoffline" name="partiallyrefundorderoffline" value="@T("Admin.Orders.Fields.PartialRefundOffline")" onclick="javascript:OpenWindow('@(Url.Action("PartiallyRefundOrderPopup", "Order", new { id = Model.Id, online = false, btnId = "btnRefreshPage", formId = "order-form" }))', 500, 300, true); return false;" class="adminButton" /><text>&nbsp;</text>
-                }
-                @if (Model.CanVoid)
-                {
-                    <input type="submit" name="voidorder" value="@T("Admin.Orders.Fields.Void")" id="voidorder" class="adminButton" onclick="return confirm('@T("Admin.Common.AreYouSure")');" /><text>&nbsp;</text>
-                }
-                @if (Model.CanVoidOffline)
-                {
-                    <input type="submit" name="voidorderoffline" value="@T("Admin.Orders.Fields.VoidOffline")" id="voidorderoffline" class="adminButton" onclick="return confirm('@T("Admin.Common.AreYouSure")');" /><text>&nbsp;</text>
-                }
-                <script type="text/javascript">
-                    $(document).ready(function () {
-                        $('#btnRefreshPage').click(function () {
-                            //refresh page
-                            location.reload();
+            }
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.PaymentMethod):
+                </td>
+                <td class="adminData">
+                    @Model.PaymentMethod
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.PaymentStatus):
+                </td>
+                <td class="adminData">
+                    @Model.PaymentStatus &nbsp;
+                    @if (Model.CanCapture)
+                    {
+                        <input type="submit" name="captureorder" value="@T("Admin.Orders.Fields.Capture")" id="captureorder" class="adminButton" onclick=" return confirm('@T("Admin.Common.AreYouSure")    '); " />
+                        <text>&nbsp;</text>
+                    }
+                    @if (Model.CanMarkOrderAsPaid)
+                    {
+                        <input type="submit" name="markorderaspaid" value="@T("Admin.Orders.Fields.MarkAsPaid")" id="markorderaspaid" class="adminButton" onclick=" return confirm('@T("Admin.Common.AreYouSure")    '); " />
+                        <text>&nbsp;</text>
+                    }
+                    @if (Model.CanRefund)
+                    {
+                        <input type="submit" name="refundorder" value="@T("Admin.Orders.Fields.Refund")" id="refundorder" class="adminButton" onclick=" return confirm('@T("Admin.Common.AreYouSure")    '); " />
+                        <text>&nbsp;</text>
+                    }
+                    @if (Model.CanRefundOffline)
+                    {
+                        <input type="submit" name="refundorderoffline" value="@T("Admin.Orders.Fields.RefundOffline")" id="refundorderoffline" class="adminButton" onclick=" return confirm('@T("Admin.Common.AreYouSure")    '); " />
+                        <text>&nbsp;</text>
+                    }
+                    @if (Model.CanPartiallyRefund)
+                    {
+                        <input type="submit" id="partiallyrefundorder" name="partiallyrefundorder" value="@T("Admin.Orders.Fields.PartialRefund")" onclick=" javascript:OpenWindow('@(Url.Action("PartiallyRefundOrderPopup", "Order", new { id = Model.Id, online = true, btnId = "btnRefreshPage", formId = "order-form" }))    ', 500, 300, true); return false; " class="adminButton" />
+                        <text>&nbsp;</text>
+                    }
+                    @if (Model.CanPartiallyRefundOffline)
+                    {
+                        <input type="submit" id="partiallyrefundorderoffline" name="partiallyrefundorderoffline" value="@T("Admin.Orders.Fields.PartialRefundOffline")" onclick=" javascript:OpenWindow('@(Url.Action("PartiallyRefundOrderPopup", "Order", new { id = Model.Id, online = false, btnId = "btnRefreshPage", formId = "order-form" }))    ', 500, 300, true); return false; " class="adminButton" />
+                        <text>&nbsp;</text>
+                    }
+                    @if (Model.CanVoid)
+                    {
+                        <input type="submit" name="voidorder" value="@T("Admin.Orders.Fields.Void")" id="voidorder" class="adminButton" onclick=" return confirm('@T("Admin.Common.AreYouSure")    '); " />
+                        <text>&nbsp;</text>
+                    }
+                    @if (Model.CanVoidOffline)
+                    {
+                        <input type="submit" name="voidorderoffline" value="@T("Admin.Orders.Fields.VoidOffline")" id="voidorderoffline" class="adminButton" onclick=" return confirm('@T("Admin.Common.AreYouSure")    '); " />
+                        <text>&nbsp;</text>
+                    }
+                    <script type="text/javascript">
+                        $(document).ready(function() {
+                            $('#btnRefreshPage').click(function() {
+                                //refresh page
+                                location.reload();
+                            });
                         });
-                    });
-                </script>
-            </td>
-        </tr>
+                    </script>
+                </td>
+            </tr>
+        }
         <tr>
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.CreatedOn):
@@ -712,108 +740,111 @@
                     }
                     @if (Model.BillingAddress.PhoneEnabled)
                     {
-                    <tr>
-                        <td>
-                            @T("Admin.Orders.Address.Phone"):
-                        </td>
-                        <td>
-                            @Model.BillingAddress.PhoneNumber
-                        </td>
-                    </tr>
+                        <tr>
+                            <td>
+                                @T("Admin.Orders.Address.Phone"):
+                            </td>
+                            <td>
+                                @Model.BillingAddress.PhoneNumber
+                            </td>
+                        </tr>
                     }
                     @if (Model.BillingAddress.FaxEnabled)
                     {
-                    <tr>
-                        <td>
-                            @T("Admin.Orders.Address.Fax"):
-                        </td>
-                        <td>
-                            @Model.BillingAddress.FaxNumber
-                        </td>
-                    </tr>
+                        <tr>
+                            <td>
+                                @T("Admin.Orders.Address.Fax"):
+                            </td>
+                            <td>
+                                @Model.BillingAddress.FaxNumber
+                            </td>
+                        </tr>
                     }
                     @if (Model.BillingAddress.CompanyEnabled)
                     {
-                    <tr>
-                        <td>
-                            @T("Admin.Orders.Address.Company"):
-                        </td>
-                        <td>
-                            @Model.BillingAddress.Company
-                        </td>
-                    </tr>
+                        <tr>
+                            <td>
+                                @T("Admin.Orders.Address.Company"):
+                            </td>
+                            <td>
+                                @Model.BillingAddress.Company
+                            </td>
+                        </tr>
                     }
                     @if (Model.BillingAddress.StreetAddressEnabled)
                     {
-                    <tr>
-                        <td>
-                            @T("Admin.Orders.Address.Address1"):
-                        </td>
-                        <td>
-                            @Model.BillingAddress.Address1
-                        </td>
-                    </tr>
+                        <tr>
+                            <td>
+                                @T("Admin.Orders.Address.Address1"):
+                            </td>
+                            <td>
+                                @Model.BillingAddress.Address1
+                            </td>
+                        </tr>
                     }
                     @if (Model.BillingAddress.StreetAddress2Enabled)
                     {
-                    <tr>
-                        <td>
-                            @T("Admin.Orders.Address.Address2"):
-                        </td>
-                        <td>
-                            @Model.BillingAddress.Address2
-                        </td>
-                    </tr>
+                        <tr>
+                            <td>
+                                @T("Admin.Orders.Address.Address2"):
+                            </td>
+                            <td>
+                                @Model.BillingAddress.Address2
+                            </td>
+                        </tr>
                     }
                     @if (Model.BillingAddress.CityEnabled)
                     {
-                    <tr>
-                        <td>
-                            @T("Admin.Orders.Address.City"):
-                        </td>
-                        <td>
-                            @Model.BillingAddress.City
-                        </td>
-                    </tr>
+                        <tr>
+                            <td>
+                                @T("Admin.Orders.Address.City"):
+                            </td>
+                            <td>
+                                @Model.BillingAddress.City
+                            </td>
+                        </tr>
                     }
                     @if (Model.BillingAddress.StateProvinceEnabled)
                     {
-                    <tr>
-                        <td>
-                            @T("Admin.Orders.Address.StateProvince"):
-                        </td>
-                        <td>
-                            @Model.BillingAddress.StateProvinceName
-                        </td>
-                    </tr>
+                        <tr>
+                            <td>
+                                @T("Admin.Orders.Address.StateProvince"):
+                            </td>
+                            <td>
+                                @Model.BillingAddress.StateProvinceName
+                            </td>
+                        </tr>
                     }
                     @if (Model.BillingAddress.ZipPostalCodeEnabled)
                     {
-                    <tr>
-                        <td>
-                            @T("Admin.Orders.Address.ZipPostalCode"):
-                        </td>
-                        <td>
-                            @Model.BillingAddress.ZipPostalCode
-                        </td>
-                    </tr>
+                        <tr>
+                            <td>
+                                @T("Admin.Orders.Address.ZipPostalCode"):
+                            </td>
+                            <td>
+                                @Model.BillingAddress.ZipPostalCode
+                            </td>
+                        </tr>
                     }
                     @if (Model.BillingAddress.CountryEnabled)
                     {
-                    <tr>
-                        <td>
-                            @T("Admin.Orders.Address.Country"):
-                        </td>
-                        <td>
-                            @Model.BillingAddress.CountryName
-                        </td>
-                    </tr>
+                        <tr>
+                            <td>
+                                @T("Admin.Orders.Address.Country"):
+                            </td>
+                            <td>
+                                @Model.BillingAddress.CountryName
+                            </td>
+                        </tr>
                     }
-                    <tr>
-                        <td colspan="2">
-                            <a href="@Url.Action("AddressEdit", new { addressId = Model.BillingAddress.Id, orderId = Model.Id })" class="t-button">@T("Admin.Common.Edit")</a>
-                        </td>
-                    </tr>
+                    @if (!Model.IsLoggedInAsVendor)
+                    {
+                        <tr>
+                            <td colspan="2">
+                                <a href="@Url.Action("AddressEdit", new { addressId = Model.BillingAddress.Id, orderId = Model.Id })" class="t-button">@T("Admin.Common.Edit")</a>
+                            </td>
+                        </tr>
+                    }
                 </table>
             </td>
         </tr>
@@ -821,8 +852,8 @@
 }
 @helper TabShippingInfo()
 {
-        if (Model.IsShippable && Model.ShippingAddress != null)
-        {
+    if (Model.IsShippable && Model.ShippingAddress != null)
+    {
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
@@ -843,102 +874,102 @@
                     }
                     @if (Model.ShippingAddress.EmailEnabled)
                     {
-                    <tr>
-                        <td>
-                            @T("Admin.Orders.Address.Email"):
-                        </td>
-                        <td>
-                            @Model.ShippingAddress.Email
-                        </td>
-                    </tr>
+                        <tr>
+                            <td>
+                                @T("Admin.Orders.Address.Email"):
+                            </td>
+                            <td>
+                                @Model.ShippingAddress.Email
+                            </td>
+                        </tr>
                     }
                     @if (Model.ShippingAddress.PhoneEnabled)
                     {
-                    <tr>
-                        <td>
-                            @T("Admin.Orders.Address.Phone"):
-                        </td>
-                        <td>
-                            @Model.ShippingAddress.PhoneNumber
-                        </td>
-                    </tr>
+                        <tr>
+                            <td>
+                                @T("Admin.Orders.Address.Phone"):
+                            </td>
+                            <td>
+                                @Model.ShippingAddress.PhoneNumber
+                            </td>
+                        </tr>
                     }
                     @if (Model.ShippingAddress.FaxEnabled)
                     {
-                    <tr>
-                        <td>
-                            @T("Admin.Orders.Address.Fax"):
-                        </td>
-                        <td>
-                            @Model.ShippingAddress.FaxNumber
-                        </td>
-                    </tr>
+                        <tr>
+                            <td>
+                                @T("Admin.Orders.Address.Fax"):
+                            </td>
+                            <td>
+                                @Model.ShippingAddress.FaxNumber
+                            </td>
+                        </tr>
                     }
                     @if (Model.ShippingAddress.CompanyEnabled)
                     {
-                    <tr>
-                        <td>
-                            @T("Admin.Orders.Address.Company"):
-                        </td>
-                        <td>
-                            @Model.ShippingAddress.Company
-                        </td>
-                    </tr>
+                        <tr>
+                            <td>
+                                @T("Admin.Orders.Address.Company"):
+                            </td>
+                            <td>
+                                @Model.ShippingAddress.Company
+                            </td>
+                        </tr>
                     }
                     @if (Model.ShippingAddress.StreetAddressEnabled)
                     {
-                    <tr>
-                        <td>
-                            @T("Admin.Orders.Address.Address1"):
-                        </td>
-                        <td>
-                            @Model.ShippingAddress.Address1
-                        </td>
-                    </tr>
+                        <tr>
+                            <td>
+                                @T("Admin.Orders.Address.Address1"):
+                            </td>
+                            <td>
+                                @Model.ShippingAddress.Address1
+                            </td>
+                        </tr>
                     }
                     @if (Model.ShippingAddress.StreetAddress2Enabled)
                     {
-                    <tr>
-                        <td>
-                            @T("Admin.Orders.Address.Address2"):
-                        </td>
-                        <td>
-                            @Model.ShippingAddress.Address2
-                        </td>
-                    </tr>
+                        <tr>
+                            <td>
+                                @T("Admin.Orders.Address.Address2"):
+                            </td>
+                            <td>
+                                @Model.ShippingAddress.Address2
+                            </td>
+                        </tr>
                     }
                     @if (Model.ShippingAddress.CityEnabled)
                     {
-                    <tr>
-                        <td>
-                            @T("Admin.Orders.Address.City"):
-                        </td>
-                        <td>
-                            @Model.ShippingAddress.City
-                        </td>
-                    </tr>
+                        <tr>
+                            <td>
+                                @T("Admin.Orders.Address.City"):
+                            </td>
+                            <td>
+                                @Model.ShippingAddress.City
+                            </td>
+                        </tr>
                     }
                     @if (Model.ShippingAddress.StateProvinceEnabled)
                     {
-                    <tr>
-                        <td>
-                            @T("Admin.Orders.Address.StateProvince"):
-                        </td>
-                        <td>
-                            @Model.ShippingAddress.StateProvinceName
-                        </td>
-                    </tr>
+                        <tr>
+                            <td>
+                                @T("Admin.Orders.Address.StateProvince"):
+                            </td>
+                            <td>
+                                @Model.ShippingAddress.StateProvinceName
+                            </td>
+                        </tr>
                     }
                     @if (Model.ShippingAddress.ZipPostalCodeEnabled)
                     {
-                    <tr>
-                        <td>
-                            @T("Admin.Orders.Address.ZipPostalCode"):
-                        </td>
-                        <td>
-                            @Model.ShippingAddress.ZipPostalCode
-                        </td>
-                    </tr>
+                        <tr>
+                            <td>
+                                @T("Admin.Orders.Address.ZipPostalCode"):
+                            </td>
+                            <td>
+                                @Model.ShippingAddress.ZipPostalCode
+                            </td>
+                        </tr>
                     }
                     @if (Model.ShippingAddress.CountryEnabled)
                     {
@@ -951,11 +982,14 @@
                             </td>
                         </tr>
                     }
-                    <tr>
-                        <td colspan="2">
-                            <a href="@Url.Action("AddressEdit", new { addressId = Model.ShippingAddress.Id, orderId = Model.Id })" class="t-button">@T("Admin.Common.Edit")</a>
-                        </td>
-                    </tr>
+                    @if (!Model.IsLoggedInAsVendor)
+                    {
+                        <tr>
+                            <td colspan="2">
+                                <a href="@Url.Action("AddressEdit", new { addressId = Model.ShippingAddress.Id, orderId = Model.Id })" class="t-button">@T("Admin.Common.Edit")</a>
+                            </td>
+                        </tr>
+                    }
                 </table>
                 <div style="padding-top: 15px;">
                     <img alt="google maps" src="@Url.Content("~/Administration/Content/images/google-maps.gif")" />
@@ -971,14 +1005,17 @@
                 @Model.ShippingMethod
             </td>
         </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.ShippingStatus):
-            </td>
-            <td class="adminData">
-                @Model.ShippingStatus
-            </td>
-        </tr>
+        @if (!Model.IsLoggedInAsVendor)
+        {
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.ShippingStatus):
+                </td>
+                <td class="adminData">
+                    @Model.ShippingStatus
+                </td>
+            </tr>
+        }
     </table>
         
     <div class="clear">
@@ -990,7 +1027,7 @@
     </p>
     <div class="clear">
     </div>  
-        <table class="adminContent">
+    <table class="adminContent">
         <tr>
             <td>
                 @(Html.Telerik().Grid<ShipmentModel>().Name("shipments-grid")
@@ -1019,24 +1056,23 @@
         {
             <tr>
                 <td class="adminData">
-                    <input type="submit" id="btnAddNewShipment" name="btnAddNewShipment" value="@T("Admin.Orders.Shipments.AddNew")" onclick="javascript:setLocation('@(Url.Action("AddShipment", "Order", new { orderId = Model.Id }))'); return false;" class="t-button" />
+                    <input type="submit" id="btnAddNewShipment" name="btnAddNewShipment" value="@T("Admin.Orders.Shipments.AddNew")" onclick="javascript:setLocation('@(Url.Action("AddShipment", "Order", new { orderId = Model.Id }))    '); return false;" class="t-button" />
                 </td>
             </tr>
         }
     </table>
-        }
-        else
-        {
+    }
+    else
+    {
     <table class="adminContent">
         <tr>
-            <td class="adminTitle">
-            </td>
+            <td class="adminTitle"></td>
             <td class="adminData">
                 @T("Admin.Orders.ShippingInfo.NotRequired")
             </td>
         </tr>
     </table>
-        }
+    }
 }
 @helper TabProducts()
 {
@@ -1046,34 +1082,34 @@
                 @foreach (var item in Model.Items)
                 {
                     <script type="text/javascript">
-        $(document).ready(function() {
-        toggleOpvEdit@(item.Id)(false);
+                        $(document).ready(function() {
+                            toggleOpvEdit@(item.Id)(false);
         });
                     </script>
         
                     <script type="text/javascript">
-        function toggleOpvEdit@(item.Id) (editMode) {
-        if (editMode) {
-        $('#pnlEditPvUnitPrice@(item.Id)').show();
-        $('#pnlEditPvQuantity@(item.Id)').show();
-        $('#pnlEditPvDiscount@(item.Id)').show();
-        $('#pnlEditPvPrice@(item.Id)').show();
-        $('#btnEditOpv@(item.Id)').hide();
-        $('#btnDeleteOpv@(item.Id)').hide();
-        $('#btnSaveOpv@(item.Id)').show();
-        $('#btnCancelOpv@(item.Id)').show();
+                        function toggleOpvEdit@(item.Id) (editMode) {
+                            if (editMode) {
+                                $('#pnlEditPvUnitPrice@(item.Id)').show();
+            $('#pnlEditPvQuantity@(item.Id)').show();
+            $('#pnlEditPvDiscount@(item.Id)').show();
+            $('#pnlEditPvPrice@(item.Id)').show();
+            $('#btnEditOpv@(item.Id)').hide();
+            $('#btnDeleteOpv@(item.Id)').hide();
+            $('#btnSaveOpv@(item.Id)').show();
+            $('#btnCancelOpv@(item.Id)').show();
         }
         else {
-        $('#pnlEditPvUnitPrice@(item.Id)').hide();
-        $('#pnlEditPvQuantity@(item.Id)').hide();
-        $('#pnlEditPvDiscount@(item.Id)').hide();
-        $('#pnlEditPvPrice@(item.Id)').hide();
-        $('#btnEditOpv@(item.Id)').show();
-        $('#btnDeleteOpv@(item.Id)').show();
-        $('#btnSaveOpv@(item.Id)').hide();
-        $('#btnCancelOpv@(item.Id)').hide();
+            $('#pnlEditPvUnitPrice@(item.Id)').hide();
+            $('#pnlEditPvQuantity@(item.Id)').hide();
+            $('#pnlEditPvDiscount@(item.Id)').hide();
+            $('#pnlEditPvPrice@(item.Id)').hide();
+            $('#btnEditOpv@(item.Id)').show();
+            $('#btnDeleteOpv@(item.Id)').show();
+            $('#btnSaveOpv@(item.Id)').hide();
+            $('#btnCancelOpv@(item.Id)').hide();
         }
-        }
+    }
                     </script>
 
                 }
@@ -1087,7 +1123,10 @@
                     <col />
                     <col />
                     <col />
-                    <col />
+                    @if (!Model.IsLoggedInAsVendor)
+                    {
+                        <col />
+                    }
                     <thead>
                         <tr class="headerstyle">
                             <th align="center">
@@ -1111,9 +1150,12 @@
                             <th align="center">
                                 @T("Admin.Orders.Products.Total")
                             </th>
-                            <th align="center">
-                                @T("Admin.Common.Edit")
-                            </th>
+                            @if (!Model.IsLoggedInAsVendor)
+                            {
+                                <th align="center">
+                                    @T("Admin.Common.Edit")
+                                </th>
+                            }
                         </tr>
                     </thead>
                     <tbody>
@@ -1153,10 +1195,10 @@
                                             @T("Admin.Orders.Products.ReturnRequests")<text>:</text>
                                             for (int i = 0; i < item.ReturnRequestIds.Count; i++)
                                             {
-                                                <a href="@Url.Action("Edit", "ReturnRequest", new { id = item.ReturnRequestIds[i] })">@item.ReturnRequestIds[i]</a>
+                                            <a href="@Url.Action("Edit", "ReturnRequest", new { id = item.ReturnRequestIds[i] })">@item.ReturnRequestIds[i]</a>
                                                 if (i != item.ReturnRequestIds.Count - 1)
                                                 {
-                                                    <text>,</text>
+                                            <text>,</text>
                                                 }
                                             }
                                         }
@@ -1168,10 +1210,10 @@
                                             @T("Admin.Orders.Products.GiftCards")<text>:</text>
                                             for (int i = 0; i < item.PurchasedGiftCardIds.Count; i++)
                                             {
-                                                <a href="@Url.Action("Edit", "GiftCard", new { id = item.PurchasedGiftCardIds[i] })">@item.PurchasedGiftCardIds[i]</a>
+                                            <a href="@Url.Action("Edit", "GiftCard", new { id = item.PurchasedGiftCardIds[i] })">@item.PurchasedGiftCardIds[i]</a>
                                                 if (i != item.PurchasedGiftCardIds.Count - 1)
                                                 {
-                                                    <text>,</text>
+                                            <text>,</text>
                                                 }
                                             }
                                         }
@@ -1183,14 +1225,14 @@
                                         @if (item.IsDownload)
                                         {
                                             <div>
-                                                @string.Format(T("Admin.Orders.Products.Download.DownloadCount").Text, item.DownloadCount) 
+                                                @string.Format(T("Admin.Orders.Products.Download.DownloadCount").Text, item.DownloadCount)
                                                 <input type="submit" name="btnResetDownloadCount@(item.Id)" value="@T("Admin.Orders.Products.Download.ResetDownloadCount")" title="@T("Admin.Orders.Products.Download.ResetDownloadCount.Title")" id="btnResetDownloadCount@(item.Id)" class="adminButton" />
-                                                <hr />  
+                                                <hr />
                                             </div>
                                             if (item.DownloadActivationType == DownloadActivationType.Manually)
                                             {
                                             <div>
-                                                <input type="submit" name="btnPvActivateDownload@(item.Id)" @(item.IsDownloadActivated ? " value=" + T("Admin.Orders.Products.Download.Deactivate") : " value=" + T("Admin.Orders.Products.Download.Activate")) id="btnPvActivateDownload@(item.Id)" class="adminButton" />                                                
+                                                <input type="submit" name="btnPvActivateDownload@(item.Id)" @(item.IsDownloadActivated ? " value=" + T("Admin.Orders.Products.Download.Deactivate") : " value=" + T("Admin.Orders.Products.Download.Activate")) id="btnPvActivateDownload@(item.Id)" class="adminButton" />
                                                 <hr />
                                             </div>
                                             }
@@ -1366,19 +1408,23 @@
                                         </table>
                                     </div>
                                 </td>
-                                <td align="center" style="width: 15%;">
-                                    <input type="submit" name="btnEditOpv@(item.Id)" value="@T("Admin.Common.Edit")" onclick="toggleOpvEdit@(item.Id)(true);return false;" id="btnEditOpv@(item.Id)" class="adminButton" />
-                                    <input type="submit" name="btnDeleteOpv@(item.Id)" value="@T("Admin.Common.Delete")" id="btnDeleteOpv@(item.Id)" class="adminButton" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
-                                    <input type="submit" name="btnSaveOpv@(item.Id)" value="@T("Admin.Common.Save")" id="btnSaveOpv@(item.Id)" class="adminButton" style="display: none;" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
-                                    <input type="submit" name="btnCancelOpv@(item.Id)" value="@T("Admin.Common.Cancel")" onclick="toggleOpvEdit@(item.Id)(false);return false;" id="btnCancelOpv@(item.Id)" class="adminButton" style="display: none;" />
-                                </td>
+
+                                @if (!Model.IsLoggedInAsVendor)
+                                {
+                                    <td align="center" style="width: 15%;">
+                                        <input type="submit" name="btnEditOpv@(item.Id)" value="@T("Admin.Common.Edit")" onclick="toggleOpvEdit@(item.Id)    (true);return false; " id="btnEditOpv@(item.Id)" class="adminButton" />
+                                        <input type="submit" name="btnDeleteOpv@(item.Id)" value="@T("Admin.Common.Delete")" id="btnDeleteOpv@(item.Id)" class="adminButton" onclick=" return confirm('@T("Admin.Common.AreYouSure")    '); " />
+                                        <input type="submit" name="btnSaveOpv@(item.Id)" value="@T("Admin.Common.Save")" id="btnSaveOpv@(item.Id)" class="adminButton" style="display:none;" onclick=" return confirm('@T("Admin.Common.AreYouSure")    '); " />
+                                        <input type="submit" name="btnCancelOpv@(item.Id)" value="@T("Admin.Common.Cancel")" onclick="toggleOpvEdit@(item.Id)    (false);return false; " id="btnCancelOpv@(item.Id)" class="adminButton" style="display:none;" />
+                                    </td>
+                                }
                             </tr>
                         }
                     </tbody>
                 </table>
             </td>
         </tr>
-        @if (!String.IsNullOrEmpty(Model.CheckoutAttributeInfo))
+        @if (!String.IsNullOrEmpty(Model.CheckoutAttributeInfo) && !Model.IsLoggedInAsVendor)
         {
             <tr>
                 <td class="adminData">
@@ -1386,11 +1432,14 @@
                 </td>
             </tr>
         }
-        <tr>
-            <td class="adminData">
-                <input type="submit" id="btnAddNewProduct" name="btnAddNewProduct" value="@T("Admin.Orders.Products.AddNew")" onclick="javascript:setLocation('@(Url.Action("AddProductToOrder", "Order", new { orderId = Model.Id }))'); return false;" class="t-button" />
-            </td>
-        </tr>
+        @if (!Model.IsLoggedInAsVendor)
+        {
+            <tr>
+                <td class="adminData">
+                    <input type="submit" id="btnAddNewProduct" name="btnAddNewProduct" value="@T("Admin.Orders.Products.AddNew")" onclick=" javascript:setLocation('@(Url.Action("AddProductToOrder", "Order", new { orderId = Model.Id }))    '); return false; " class="t-button" />
+                </td>
+            </tr>
+        }
     </table>
 }
 @helper TabOrderNotes()
@@ -1468,9 +1517,9 @@
                     url: "@(Url.Action("OrderNoteAdd", "Order"))",
                     data: { "DisplayToCustomer": orderNoteDisplayToCustomer, "message": orderNoteMessage, "orderId": @Model.Id },
                     success: function (data) {
-                         var ordernotesGrid = $("#ordernotes-grid");
-                         ordernotesGrid.data('tGrid').ajaxRequest();
-                         $('#addOrderNote').attr('disabled', false);
+                        var ordernotesGrid = $("#ordernotes-grid");
+                        ordernotesGrid.data('tGrid').ajaxRequest();
+                        $('#addOrderNote').attr('disabled', false);
                     },
                     error:function (xhr, ajaxOptions, thrownError){
                         alert('Failed to add order note.');

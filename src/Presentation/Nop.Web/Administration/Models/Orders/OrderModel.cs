@@ -21,6 +21,8 @@ namespace Nop.Admin.Models.Orders
             Items = new List<OrderProductVariantModel>();
         }
 
+        public bool IsLoggedInAsVendor { get; set; }
+
         //identifiers
         [NopResourceDisplayName("Admin.Orders.Fields.ID")]
         public override int Id { get; set; }

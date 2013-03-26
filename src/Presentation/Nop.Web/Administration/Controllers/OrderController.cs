@@ -144,6 +144,35 @@ namespace Nop.Admin.Controllers
         #region Utilities
 
         [NonAction]
+        protected bool HasAccessToOrder(Order order)
+        {
+            if (order == null)
+                throw new ArgumentNullException("order");
+
+            if (_workContext.CurrentVendor == null)
+                //not a vendor; has access
+                return true;
+
+            var vendorId = _workContext.CurrentVendor.Id;
+            var hasVendorProducts = order.OrderProductVariants.Any(opv => opv.ProductVariant.Product.VendorId == vendorId);
+            return hasVendorProducts;
+        }
+
+        [NonAction]
+        protected bool HasAccessToOrderProductVariant(OrderProductVariant opv)
+        {
+            if (opv == null)
+                throw new ArgumentNullException("opv");
+
+            if (_workContext.CurrentVendor == null)
+                //not a vendor; has access
+                return true;
+
+            var vendorId = _workContext.CurrentVendor.Id;
+            return opv.ProductVariant.Product.VendorId == vendorId;
+        }
+
+        [NonAction]
         protected void PrepareOrderDetailsModel(OrderModel model, Order order)
         {
             if (order == null)
@@ -167,6 +196,8 @@ namespace Nop.Admin.Controllers
             model.AllowCustomersToSelectTaxDisplayType = _taxSettings.AllowCustomersToSelectTaxDisplayType;
             model.TaxDisplayType = _taxSettings.TaxDisplayType;
             model.AffiliateId = order.AffiliateId;
+            //a vendor should have access only to his products
+            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
             
             #region Order totals
 
@@ -807,7 +838,11 @@ namespace Nop.Admin.Controllers
             if (order == null)
                 //No order found with the specified id
                 return RedirectToAction("List");
-            
+
+            //a vendor does not have to this functionality
+            if (_workContext.CurrentVendor != null)
+                return RedirectToAction("Edit", "Order", new { id = id });
+
             try
             {
                 _orderProcessingService.CancelOrder(order, true);
@@ -836,7 +871,11 @@ namespace Nop.Admin.Controllers
             if (order == null)
                 //No order found with the specified id
                 return RedirectToAction("List");
-            
+
+            //a vendor does not have to this functionality
+            if (_workContext.CurrentVendor != null)
+                return RedirectToAction("Edit", "Order", new { id = id });
+
             try
             {
                 var errors = _orderProcessingService.Capture(order);
@@ -868,7 +907,11 @@ namespace Nop.Admin.Controllers
             if (order == null)
                 //No order found with the specified id
                 return RedirectToAction("List");
-            
+
+            //a vendor does not have to this functionality
+            if (_workContext.CurrentVendor != null)
+                return RedirectToAction("Edit", "Order", new { id = id });
+
             try
             {
                 _orderProcessingService.MarkOrderAsPaid(order);
@@ -897,6 +940,10 @@ namespace Nop.Admin.Controllers
             if (order == null)
                 //No order found with the specified id
                 return RedirectToAction("List");
+
+            //a vendor does not have to this functionality
+            if (_workContext.CurrentVendor != null)
+                return RedirectToAction("Edit", "Order", new { id = id });
 
             try
             {
@@ -929,6 +976,10 @@ namespace Nop.Admin.Controllers
                 //No order found with the specified id
                 return RedirectToAction("List");
 
+            //a vendor does not have to this functionality
+            if (_workContext.CurrentVendor != null)
+                return RedirectToAction("Edit", "Order", new { id = id });
+
             try
             {
                 _orderProcessingService.RefundOffline(order);
@@ -957,6 +1008,10 @@ namespace Nop.Admin.Controllers
             if (order == null)
                 //No order found with the specified id
                 return RedirectToAction("List");
+
+            //a vendor does not have to this functionality
+            if (_workContext.CurrentVendor != null)
+                return RedirectToAction("Edit", "Order", new { id = id });
 
             try
             {
@@ -989,6 +1044,10 @@ namespace Nop.Admin.Controllers
                 //No order found with the specified id
                 return RedirectToAction("List");
 
+            //a vendor does not have to this functionality
+            if (_workContext.CurrentVendor != null)
+                return RedirectToAction("Edit", "Order", new { id = id });
+
             try
             {
                 _orderProcessingService.VoidOffline(order);
@@ -1016,6 +1075,10 @@ namespace Nop.Admin.Controllers
                 //No order found with the specified id
                 return RedirectToAction("List");
 
+            //a vendor does not have to this functionality
+            if (_workContext.CurrentVendor != null)
+                return RedirectToAction("Edit", "Order", new { id = id });
+
             var model = new OrderModel();
             PrepareOrderDetailsModel(model, order);
 
@@ -1033,6 +1096,10 @@ namespace Nop.Admin.Controllers
             if (order == null)
                 //No order found with the specified id
                 return RedirectToAction("List");
+
+            //a vendor does not have to this functionality
+            if (_workContext.CurrentVendor != null)
+                return RedirectToAction("Edit", "Order", new { id = id });
 
             try
             {
@@ -1092,6 +1159,10 @@ namespace Nop.Admin.Controllers
                 //No order found with the specified id
                 return RedirectToAction("List");
 
+            //a vendor does not have to this functionality
+            if (_workContext.CurrentVendor != null && !HasAccessToOrder(order))
+                return RedirectToAction("List");
+
             var model = new OrderModel();
             PrepareOrderDetailsModel(model, order);
 
@@ -1109,6 +1180,10 @@ namespace Nop.Admin.Controllers
                 //No order found with the specified id
                 return RedirectToAction("List");
 
+            //a vendor does not have to this functionality
+            if (_workContext.CurrentVendor != null)
+                return RedirectToAction("Edit", "Order", new { id = id });
+
             _orderProcessingService.DeleteOrder(order);
             return RedirectToAction("List");
         }
@@ -1117,6 +1192,10 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
+
+            //a vendor does not have to this functionality
+            if (_workContext.CurrentVendor != null)
+                return RedirectToAction("Edit", "Order", new { id = orderId });
 
             var order = _orderService.GetOrderById(orderId);
             var orders = new List<Order>();
@@ -1141,6 +1220,10 @@ namespace Nop.Admin.Controllers
             if (order == null)
                 //No order found with the specified id
                 return RedirectToAction("List");
+
+            //a vendor does not have to this functionality
+            if (_workContext.CurrentVendor != null)
+                return RedirectToAction("Edit", "Order", new { id = id });
 
             if (order.AllowStoringCreditCardNumber)
             {
@@ -1177,6 +1260,10 @@ namespace Nop.Admin.Controllers
                 //No order found with the specified id
                 return RedirectToAction("List");
 
+            //a vendor does not have to this functionality
+            if (_workContext.CurrentVendor != null)
+                return RedirectToAction("Edit", "Order", new { id = id });
+
             order.OrderSubtotalInclTax = model.OrderSubtotalInclTaxValue;
             order.OrderSubtotalExclTax = model.OrderSubtotalExclTaxValue;
             order.OrderSubTotalDiscountInclTax = model.OrderSubTotalDiscountInclTaxValue;
@@ -1207,6 +1294,10 @@ namespace Nop.Admin.Controllers
             if (order == null)
                 //No order found with the specified id
                 return RedirectToAction("List");
+
+            //a vendor does not have to this functionality
+            if (_workContext.CurrentVendor != null)
+                return RedirectToAction("Edit", "Order", new { id = id });
 
             ViewData["selectedTab"] = "products";
 
@@ -1272,6 +1363,10 @@ namespace Nop.Admin.Controllers
                 //No order found with the specified id
                 return RedirectToAction("List");
 
+            //a vendor does not have to this functionality
+            if (_workContext.CurrentVendor != null)
+                return RedirectToAction("Edit", "Order", new { id = id });
+
             ViewData["selectedTab"] = "products";
 
             //get order product variant identifier
@@ -1316,6 +1411,10 @@ namespace Nop.Admin.Controllers
             if (orderProductVariant == null)
                 throw new ArgumentException("No order product variant found with the specified id");
 
+            //ensure a vendor has access only to his products 
+            if (_workContext.CurrentVendor != null && !HasAccessToOrderProductVariant(orderProductVariant))
+                return RedirectToAction("List");
+
             orderProductVariant.DownloadCount = 0;
             _orderService.UpdateOrder(order);
 
@@ -1349,6 +1448,10 @@ namespace Nop.Admin.Controllers
             if (orderProductVariant == null)
                 throw new ArgumentException("No order product variant found with the specified id");
 
+            //ensure a vendor has access only to his products 
+            if (_workContext.CurrentVendor != null && !HasAccessToOrderProductVariant(orderProductVariant))
+                return RedirectToAction("List");
+
             orderProductVariant.IsDownloadActivated = !orderProductVariant.IsDownloadActivated;
             _orderService.UpdateOrder(order);
 
@@ -1373,6 +1476,10 @@ namespace Nop.Admin.Controllers
             
             if (!orderProductVariant.ProductVariant.IsDownload)
                 throw new ArgumentException("Product variant is not downloadable");
+
+            //ensure a vendor has access only to his products 
+            if (_workContext.CurrentVendor != null && !HasAccessToOrderProductVariant(orderProductVariant))
+                return RedirectToAction("List");
 
             var model = new OrderModel.UploadLicenseModel()
             {
@@ -1399,6 +1506,10 @@ namespace Nop.Admin.Controllers
             var orderProductVariant = order.OrderProductVariants.FirstOrDefault(x => x.Id == model.OrderProductVariantId);
             if (orderProductVariant == null)
                 throw new ArgumentException("No order product variant found with the specified id");
+
+            //ensure a vendor has access only to his products 
+            if (_workContext.CurrentVendor != null && !HasAccessToOrderProductVariant(orderProductVariant))
+                return RedirectToAction("List");
 
             //attach license
             if (model.LicenseDownloadId > 0)
@@ -1431,6 +1542,10 @@ namespace Nop.Admin.Controllers
             if (orderProductVariant == null)
                 throw new ArgumentException("No order product variant found with the specified id");
 
+            //ensure a vendor has access only to his products 
+            if (_workContext.CurrentVendor != null && !HasAccessToOrderProductVariant(orderProductVariant))
+                return RedirectToAction("List");
+
             //attach license
             orderProductVariant.LicenseDownloadId = null;
             _orderService.UpdateOrder(order);
@@ -1447,6 +1562,10 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
+
+            //a vendor does not have to this functionality
+            if (_workContext.CurrentVendor != null)
+                return RedirectToAction("Edit", "Order", new { id = orderId });
 
             var model = new OrderModel.AddOrderProductModel();
             model.OrderId = orderId;
@@ -1468,6 +1587,10 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
+
+            //a vendor does not have to this functionality
+            if (_workContext.CurrentVendor != null)
+                return Content("");
 
             var gridModel = new GridModel();
             var productVariants = _productService.SearchProductVariants(model.SearchCategoryId,
@@ -1496,6 +1619,10 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
+            //a vendor does not have to this functionality
+            if (_workContext.CurrentVendor != null)
+                return RedirectToAction("Edit", "Order", new { id = orderId });
+
             var model = PrepareAddProductToOrderModel(orderId, productVariantId);
             return View(model);
         }
@@ -1505,6 +1632,10 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
+
+            //a vendor does not have to this functionality
+            if (_workContext.CurrentVendor != null)
+                return RedirectToAction("Edit", "Order", new { id = orderId });
 
             var order = _orderService.GetOrderById(orderId);
             var productVariant = _productService.GetProductVariantById(productVariantId);
@@ -1762,6 +1893,10 @@ namespace Nop.Admin.Controllers
                 //No order found with the specified id
                 return RedirectToAction("List");
 
+            //a vendor does not have to this functionality
+            if (_workContext.CurrentVendor != null)
+                return RedirectToAction("Edit", "Order", new { id = orderId });
+
             var address = _addressService.GetAddressById(addressId);
             if (address == null)
                 throw new ArgumentException("No address found with the specified id", "addressId");
@@ -1819,6 +1954,10 @@ namespace Nop.Admin.Controllers
             if (order == null)
                 //No order found with the specified id
                 return RedirectToAction("List");
+
+            //a vendor does not have to this functionality
+            if (_workContext.CurrentVendor != null)
+                return RedirectToAction("Edit", "Order", new { id = order.Id });
 
             var address = _addressService.GetAddressById(model.Address.Id);
             if (address == null)
@@ -2268,6 +2407,10 @@ namespace Nop.Admin.Controllers
             if (order == null)
                 throw new ArgumentException("No order found with the specified id");
 
+            //a vendor does not have to this functionality
+            if (_workContext.CurrentVendor != null)
+                return Content("");
+
             //order notes
             var orderNoteModels = new List<OrderModel.OrderNote>();
             foreach (var orderNote in order.OrderNotes
@@ -2305,6 +2448,10 @@ namespace Nop.Admin.Controllers
             if (order == null)
                 return Json(new { Result = false }, JsonRequestBehavior.AllowGet);
 
+            //a vendor does not have to this functionality
+            if (_workContext.CurrentVendor != null)
+                return Json(new { Result = false }, JsonRequestBehavior.AllowGet);
+
             var orderNote = new OrderNote()
             {
                 DisplayToCustomer = displayToCustomer,
@@ -2336,6 +2483,10 @@ namespace Nop.Admin.Controllers
             if (order == null)
                 throw new ArgumentException("No order found with the specified id");
 
+            //a vendor does not have to this functionality
+            if (_workContext.CurrentVendor != null)
+                return RedirectToAction("Edit", "Order", new { id = orderId });
+
             var orderNote = order.OrderNotes.FirstOrDefault(on => on.Id == orderNoteId);
             if (orderNote == null)
                 throw new ArgumentException("No order note found with the specified id");
@@ -2343,7 +2494,6 @@ namespace Nop.Admin.Controllers
 
             return OrderNotesSelect(orderId, command);
         }
-
 
         #endregion
 
