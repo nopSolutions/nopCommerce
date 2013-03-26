@@ -4373,6 +4373,15 @@ namespace Nop.Services.Installation
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
+                                   new MessageTemplate
+                                       {
+                                           Name = "OrderPlaced.VendorNotification",
+                                           Subject = "%Store.Name%. Order placed",
+                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />%Customer.FullName% (%Customer.Email%) has just placed on order. <br /><br />Order Number: %Order.OrderNumber%<br />Date Ordered: %Order.CreatedOn%</p>",
+                                           //this template is disabled by default
+                                           IsActive = true,
+                                           EmailAccountId = eaGeneral.Id,
+                                       },
                                };
             messageTemplates.ForEach(mt => _messageTemplateRepository.Insert(mt));
 

@@ -15,6 +15,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Domain.Vendors;
 using Nop.Services.Affiliates;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -29,6 +30,7 @@ using Nop.Services.Payments;
 using Nop.Services.Security;
 using Nop.Services.Shipping;
 using Nop.Services.Tax;
+using Nop.Services.Vendors;
 
 namespace Nop.Services.Orders
 {
@@ -62,6 +64,7 @@ namespace Nop.Services.Orders
         private readonly IEncryptionService _encryptionService;
         private readonly IWorkContext _workContext;
         private readonly IWorkflowMessageService _workflowMessageService;
+        private readonly IVendorService _vendorService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ICurrencyService _currencyService;
         private readonly IAffiliateService _affiliateService;
@@ -137,6 +140,7 @@ namespace Nop.Services.Orders
             IEncryptionService encryptionService,
             IWorkContext workContext,
             IWorkflowMessageService workflowMessageService,
+            IVendorService vendorService,
             ICustomerActivityService customerActivityService,
             ICurrencyService currencyService,
             IAffiliateService affiliateService,
@@ -165,6 +169,7 @@ namespace Nop.Services.Orders
             this._checkoutAttributeFormatter = checkoutAttributeFormatter;
             this._workContext = workContext;
             this._workflowMessageService = workflowMessageService;
+            this._vendorService = vendorService;
             this._shippingService = shippingService;
             this._shipmentService = shipmentService;
             this._taxService = taxService;
@@ -1294,6 +1299,37 @@ namespace Nop.Services.Orders
                                 CreatedOnUtc = DateTime.UtcNow
                             });
                             _orderService.UpdateOrder(order);
+                        }
+
+                        var vendors = new List<Vendor>();
+                        foreach (var opv in order.OrderProductVariants)
+                        {
+                            var vendorId = opv.ProductVariant.Product.VendorId;
+                            //find existing
+                            var vendor = vendors.FirstOrDefault(v => v.Id == vendorId);
+                            if (vendor == null)
+                            {
+                                //not found. load by Id
+                                vendor = _vendorService.GetVendorById(vendorId);
+                                if (vendor != null)
+                                {
+                                    vendors.Add(vendor);
+                                }
+                            }
+                        }
+                        foreach (var vendor in vendors)
+                        {
+                            int orderPlacedVendorNotificationQueuedEmailId = _workflowMessageService.SendOrderPlacedVendorNotification(order, vendor, order.CustomerLanguageId);
+                            if (orderPlacedVendorNotificationQueuedEmailId > 0)
+                            {
+                                order.OrderNotes.Add(new OrderNote()
+                                {
+                                    Note = string.Format("\"Order placed\" email (to vendor) has been queued. Queued email identifier: {0}.", orderPlacedVendorNotificationQueuedEmailId),
+                                    DisplayToCustomer = false,
+                                    CreatedOnUtc = DateTime.UtcNow
+                                });
+                                _orderService.UpdateOrder(order);
+                            }
                         }
 
                         //check order status

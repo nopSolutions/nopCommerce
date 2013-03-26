@@ -28,6 +28,7 @@ using Nop.Services.Payments;
 using Nop.Services.Security;
 using Nop.Services.Shipping;
 using Nop.Services.Tax;
+using Nop.Services.Vendors;
 using Nop.Tests;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -80,6 +81,7 @@ namespace Nop.Services.Tests.Orders
         IEventPublisher _eventPublisher;
         CurrencySettings _currencySettings;
         IAffiliateService _affiliateService;
+        IVendorService _vendorService;
 
         [SetUp]
         public new void SetUp()
@@ -159,6 +161,7 @@ namespace Nop.Services.Tests.Orders
             _customerActivityService = MockRepository.GenerateMock<ICustomerActivityService>();
             _currencyService = MockRepository.GenerateMock<ICurrencyService>();
             _affiliateService = MockRepository.GenerateMock<IAffiliateService>();
+            _vendorService = MockRepository.GenerateMock<IVendorService>();
 
             _paymentSettings = new PaymentSettings()
             {
@@ -184,7 +187,8 @@ namespace Nop.Services.Tests.Orders
                 _giftCardService, _shoppingCartService, _checkoutAttributeFormatter,
                 _shippingService, _shipmentService, _taxService,
                 _customerService, _discountService,
-                _encryptionService, _workContext, _workflowMessageService,
+                _encryptionService, _workContext, 
+                _workflowMessageService, _vendorService,
                 _customerActivityService, _currencyService, _affiliateService,
                 _eventPublisher, _paymentSettings, _rewardPointsSettings,
                 _orderSettings, _taxSettings, _localizationSettings,

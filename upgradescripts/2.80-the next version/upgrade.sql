@@ -3754,3 +3754,14 @@ BEGIN
 END
 GO
 
+
+--'Order placed for vendor' message template
+IF NOT EXISTS (
+		SELECT 1
+		FROM [MessageTemplate]
+		WHERE [Name] = N'OrderPlaced.VendorNotification')
+BEGIN
+	INSERT [MessageTemplate] ([Name], [BccEmailAddresses], [Subject], [Body], [IsActive], [EmailAccountId], [LimitedToStores])
+	VALUES (N'OrderPlaced.VendorNotification', null, N'%Store.Name%. Order placed', N'<p><a href="%Store.URL%">%Store.Name%</a> <br /><br />%Customer.FullName% (%Customer.Email%) has just placed on order. <br /><br />Order Number: %Order.OrderNumber%<br />Date Ordered: %Order.CreatedOn%</p>', 0, 0, 0)
+END
+GO
