@@ -6,14 +6,14 @@
         <div class="createdon">@Model.PostCreatedOnStr</div>
         @if (Model.ShowTopic)
         {
-            <div>
-                <text>@T("Forum.In"):</text>
+            <div class="origin">
+                <label>@T("Forum.In"):</label>
                 @Html.RouteLink(Model.ForumTopicSubject, "TopicSlug", new { id = Model.ForumTopicId, slug = Model.ForumTopicSeName })
             </div>
         }
         @if (Model.CustomerId > 0)
         {
-            <div>
+            <div class="author">
                 @if (Model.AllowViewingProfiles && !Model.IsCustomerGuest)
                 {
                     @T("Forum.By")<text>:</text> @Html.RouteLink(Model.CustomerName, "CustomerProfile", new { Id = Model.CustomerId })
@@ -28,7 +28,7 @@
 }
 else
 {
-    <div class="nopost">
+    <div class="no-post">
         @T("Forum.NoPosts")
     </div>
 }

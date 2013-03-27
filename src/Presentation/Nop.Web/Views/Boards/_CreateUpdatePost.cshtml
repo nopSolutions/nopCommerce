@@ -2,23 +2,23 @@
 @using Nop.Core.Domain.Forums;
 @using Nop.Web.Extensions;
 @using Nop.Web.Models.Boards;
-@using (Html.BeginForm())
-{
-    <div class="page post-edit">
-        @Html.Action("ForumBreadcrumb", new { forumTopicId = Model.ForumTopicId })
-        <div class="clear">
-        </div>
-        <div class="title">
-            @if (Model.IsEdit)
-            {
-                @T("Forum.EditPost")
-            }
-            else
-            {
-                @T("Forum.NewPost")
-            }
-        </div>
-        <div class="wrapper">
+@Html.Action("ForumBreadcrumb", new { forumTopicId = Model.ForumTopicId })
+<div class="clear">
+</div>
+<div class="page forum-edit-page">
+    <div class="page-title">
+        @if (Model.IsEdit)
+        {
+            <h1>@T("Forum.EditPost")</h1>
+        }
+        else
+        {
+            <h1>@T("Forum.NewPost")</h1>
+        }
+    </div>
+    <div class="page-body">
+        @using (Html.BeginForm())
+        {
             <div class="message-error">
                 @Html.ValidationSummary(true)
             </div>
@@ -26,55 +26,37 @@
             @Html.HiddenFor(model => model.ForumTopicId)
             <div class="clear">
             </div>
-            <table class="post-topic">
-                <tr>
-                    <td class="fieldname">
-                        @T("Forum.ForumName"):
-                    </td>
-                    <td>
-                        @Model.ForumName
-                    </td>
-                </tr>
-                <tr>
-                    <td class="fieldname">
-                        @T("Forum.TopicTitle"):
-                    </td>
-                    <td>
-                        @Model.ForumTopicSubject
-                    </td>
-                </tr>
-                <tr>
-                    <td class="fieldname">
-                    </td>
-                    <td>
-                        @if (Model.ForumEditor == EditorType.BBCodeEditor)
-                        {
-                            @Html.BBCodeEditor("Text");
-                        }
-                        @Html.TextAreaFor(model => model.Text, new { @class = "forum-post-text", TextMode = "MultiLine" })
-                        @Html.ValidationMessageFor(model => model.Text)
-                    </td>
-                </tr>
+    
+            <div class="form-fields">
+                <div class="inputs">
+                    <label>@T("Forum.ForumName"):</label>
+                    <strong>@Model.ForumName</strong>
+                </div>
+                <div class="inputs">
+                    <label>@T("Forum.TopicTitle"):</label>
+                    @Model.ForumTopicSubject
+                </div>
+                <div class="inputs">
+                    @if (Model.ForumEditor == EditorType.BBCodeEditor)
+                    {
+                        @Html.BBCodeEditor("Text");
+                    }
+                    @Html.TextAreaFor(model => model.Text, new { @class = "forum-post-text", TextMode = "MultiLine" })
+                    @Html.ValidationMessageFor(model => model.Text)
+                </div>
                 @if (Model.IsCustomerAllowedToSubscribe)
                 {
-                    <tr>
-                        <td class="fieldname">
-                            @T("Forum.Options"):
-                        </td>
-                        <td>
-                            @Html.EditorFor(model => model.Subscribed)
-                            @Html.LabelFor(model => model.Subscribed, T("Forum.NotifyWhenSomeonePostsInThisTopic").Text)
-                        </td>
-                    </tr>
+                    <div class="inputs">
+                        <label>@T("Forum.Options"):</label>
+                        @Html.EditorFor(model => model.Subscribed)
+                        <span>@T("Forum.NotifyWhenSomeonePostsInThisTopic")</span>
+                    </div>
                 }
-                <tr>
-                    <td colspan="2" class="options">
-                        <input type="submit" value="@T("Forum.Submit")" class="button-1 submit-forum-topic-button" />
-                        <input type="button" class="button-2 cancel-forum-topic-button" value="@T("Forum.Cancel")" 
-                        onclick="setLocation('@Url.RouteUrl("TopicSlug", new { id = Model.ForumTopicId, slug = Model.ForumTopicSeName })')" />
-                    </td>
-                </tr>
-            </table>
-        </div>
+            </div>
+            <div class="buttons">
+                <input type="submit" value="@T("Forum.Submit")" class="button-2 submit-post-button" />
+                <input type="button" class="button-2 cancel-post-button" value="@T("Forum.Cancel")" onclick="setLocation('@Url.RouteUrl("TopicSlug", new { id = Model.ForumTopicId, slug = Model.ForumTopicSeName })')" />
+            </div>
+        }
     </div>
-}
+</div>
