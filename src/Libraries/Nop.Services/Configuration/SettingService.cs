@@ -19,7 +19,16 @@ namespace Nop.Services.Configuration
     public partial class SettingService : ISettingService
     {
         #region Constants
+
+        /// <summary>
+        /// Key for caching
+        /// </summary>
         private const string SETTINGS_ALL_KEY = "Nop.setting.all";
+        /// <summary>
+        /// Key pattern to clear cache
+        /// </summary>
+        private const string SETTINGS_PATTERN_KEY = "Nop.setting.";
+
         #endregion
 
         #region Fields
@@ -124,7 +133,7 @@ namespace Nop.Services.Configuration
 
             //cache
             if (clearCache)
-                _cacheManager.RemoveByPattern(SETTINGS_ALL_KEY);
+                _cacheManager.RemoveByPattern(SETTINGS_PATTERN_KEY);
 
             //event notification
             _eventPublisher.EntityInserted(setting);
@@ -144,7 +153,7 @@ namespace Nop.Services.Configuration
 
             //cache
             if (clearCache)
-                _cacheManager.RemoveByPattern(SETTINGS_ALL_KEY);
+                _cacheManager.RemoveByPattern(SETTINGS_PATTERN_KEY);
 
             //event notification
             _eventPublisher.EntityUpdated(setting);
@@ -162,7 +171,7 @@ namespace Nop.Services.Configuration
             _settingRepository.Delete(setting);
 
             //cache
-            _cacheManager.RemoveByPattern(SETTINGS_ALL_KEY);
+            _cacheManager.RemoveByPattern(SETTINGS_PATTERN_KEY);
 
             //event notification
             _eventPublisher.EntityDeleted(setting);
@@ -471,7 +480,7 @@ namespace Nop.Services.Configuration
         /// </summary>
         public virtual void ClearCache()
         {
-            _cacheManager.RemoveByPattern(SETTINGS_ALL_KEY);
+            _cacheManager.RemoveByPattern(SETTINGS_PATTERN_KEY);
         }
 
         #endregion

@@ -14,10 +14,33 @@ namespace Nop.Services.Directory
     public partial class CountryService : ICountryService
     {
         #region Constants
+
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : show hidden records?
+        /// </remarks>
         private const string COUNTRIES_ALL_KEY = "Nop.country.all-{0}";
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : show hidden records?
+        /// </remarks>
         private const string COUNTRIES_BILLING_KEY = "Nop.country.billing-{0}";
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : show hidden records?
+        /// </remarks>
         private const string COUNTRIES_SHIPPING_KEY = "Nop.country.shipping-{0}";
+        /// <summary>
+        /// Key pattern to clear cache
+        /// </summary>
         private const string COUNTRIES_PATTERN_KEY = "Nop.country.";
+
         #endregion
         
         #region Fields

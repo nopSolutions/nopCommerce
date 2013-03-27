@@ -23,17 +23,9 @@ namespace Nop.Services.Shipping
     /// </summary>
     public partial class ShippingService : IShippingService
     {
-        #region Constants
-
-        private const string SHIPPINGMETHODS_BY_ID_KEY = "Nop.shippingMethod.id-{0}";
-        private const string SHIPPINGMETHODS_PATTERN_KEY = "Nop.shippingMethod.";
-
-        #endregion
-
         #region Fields
 
         private readonly IRepository<ShippingMethod> _shippingMethodRepository;
-        private readonly ICacheManager _cacheManager;
         private readonly ILogger _logger;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
@@ -51,7 +43,6 @@ namespace Nop.Services.Shipping
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="cacheManager">Cache manager</param>
         /// <param name="shippingMethodRepository">Shipping method repository</param>
         /// <param name="logger">Logger</param>
         /// <param name="productAttributeParser">Product attribute parser</param>
@@ -62,8 +53,7 @@ namespace Nop.Services.Shipping
         /// <param name="pluginFinder">Plugin finder</param>
         /// <param name="eventPublisher">Event published</param>
         /// <param name="shoppingCartSettings">Shopping cart settings</param>
-        public ShippingService(ICacheManager cacheManager, 
-            IRepository<ShippingMethod> shippingMethodRepository,
+        public ShippingService(IRepository<ShippingMethod> shippingMethodRepository,
             ILogger logger,
             IProductAttributeParser productAttributeParser,
             ICheckoutAttributeParser checkoutAttributeParser,
@@ -74,7 +64,6 @@ namespace Nop.Services.Shipping
             IEventPublisher eventPublisher,
             ShoppingCartSettings shoppingCartSettings)
         {
-            this._cacheManager = cacheManager;
             this._shippingMethodRepository = shippingMethodRepository;
             this._logger = logger;
             this._productAttributeParser = productAttributeParser;
@@ -143,8 +132,6 @@ namespace Nop.Services.Shipping
 
             _shippingMethodRepository.Delete(shippingMethod);
 
-            _cacheManager.RemoveByPattern(SHIPPINGMETHODS_PATTERN_KEY);
-
             //event notification
             _eventPublisher.EntityDeleted(shippingMethod);
         }
@@ -159,12 +146,7 @@ namespace Nop.Services.Shipping
             if (shippingMethodId == 0)
                 return null;
 
-            string key = string.Format(SHIPPINGMETHODS_BY_ID_KEY, shippingMethodId);
-            return _cacheManager.Get(key, () =>
-            {
-                var shippingMethod = _shippingMethodRepository.GetById(shippingMethodId);
-                return shippingMethod;
-            });
+            return _shippingMethodRepository.GetById(shippingMethodId);
         }
         
         /// <summary>
@@ -210,8 +192,6 @@ namespace Nop.Services.Shipping
 
             _shippingMethodRepository.Insert(shippingMethod);
 
-            _cacheManager.RemoveByPattern(SHIPPINGMETHODS_PATTERN_KEY);
-
             //event notification
             _eventPublisher.EntityInserted(shippingMethod);
         }
@@ -226,8 +206,6 @@ namespace Nop.Services.Shipping
                 throw new ArgumentNullException("shippingMethod");
 
             _shippingMethodRepository.Update(shippingMethod);
-
-            _cacheManager.RemoveByPattern(SHIPPINGMETHODS_PATTERN_KEY);
 
             //event notification
             _eventPublisher.EntityUpdated(shippingMethod);

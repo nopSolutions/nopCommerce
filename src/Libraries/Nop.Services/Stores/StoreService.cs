@@ -14,8 +14,16 @@ namespace Nop.Services.Stores
     public partial class StoreService : IStoreService
     {
         #region Constants
+
+        /// <summary>
+        /// Key for caching
+        /// </summary>
         private const string STORES_ALL_KEY = "Nop.stores.all";
+        /// <summary>
+        /// Key pattern to clear cache
+        /// </summary>
         private const string STORES_PATTERN_KEY = "Nop.stores.";
+
         #endregion
         
         #region Fields

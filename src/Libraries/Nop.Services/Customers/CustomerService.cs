@@ -27,9 +27,25 @@ namespace Nop.Services.Customers
     {
         #region Constants
 
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : show hidden records?
+        /// </remarks>
         private const string CUSTOMERROLES_ALL_KEY = "Nop.customerrole.all-{0}";
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : system name
+        /// </remarks>
         private const string CUSTOMERROLES_BY_SYSTEMNAME_KEY = "Nop.customerrole.systemname-{0}";
+        /// <summary>
+        /// Key pattern to clear cache
+        /// </summary>
         private const string CUSTOMERROLES_PATTERN_KEY = "Nop.customerrole.";
+
         #endregion
 
         #region Fields

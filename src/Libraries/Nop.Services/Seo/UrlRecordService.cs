@@ -14,7 +14,18 @@ namespace Nop.Services.Seo
     {
         #region Constants
 
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : entity ID
+        /// {1} : entity name
+        /// {2} : language ID
+        /// </remarks>
         private const string URLRECORD_ACTIVE_BY_ID_NAME_LANGUAGE_KEY = "Nop.urlrecord.active.id-name-language-{0}-{1}-{2}";
+        /// <summary>
+        /// Key pattern to clear cache
+        /// </summary>
         private const string URLRECORD_PATTERN_KEY = "Nop.urlrecord.";
 
         #endregion

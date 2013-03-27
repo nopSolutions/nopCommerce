@@ -22,9 +22,27 @@ namespace Nop.Services.Localization
     public partial class LocalizationService : ILocalizationService
     {
         #region Constants
+
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : language ID
+        /// </remarks>
         private const string LOCALSTRINGRESOURCES_ALL_KEY = "Nop.lsr.all-{0}";
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : language ID
+        /// {1} : resource key
+        /// </remarks>
         private const string LOCALSTRINGRESOURCES_BY_RESOURCENAME_KEY = "Nop.lsr.{0}-{1}";
+        /// <summary>
+        /// Key pattern to clear cache
+        /// </summary>
         private const string LOCALSTRINGRESOURCES_PATTERN_KEY = "Nop.lsr.";
+
         #endregion
 
         #region Fields

@@ -19,10 +19,27 @@ namespace Nop.Services.Forums
     public partial class ForumService : IForumService
     {
         #region Constants
+
+        /// <summary>
+        /// Key for caching
+        /// </summary>
         private const string FORUMGROUP_ALL_KEY = "Nop.forumgroup.all";
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : forum group ID
+        /// </remarks>
         private const string FORUM_ALLBYFORUMGROUPID_KEY = "Nop.forum.allbyforumgroupid-{0}";
+        /// <summary>
+        /// Key pattern to clear cache
+        /// </summary>
         private const string FORUMGROUP_PATTERN_KEY = "Nop.forumgroup.";
+        /// <summary>
+        /// Key pattern to clear cache
+        /// </summary>
         private const string FORUM_PATTERN_KEY = "Nop.forum.";
+
         #endregion
 
         #region Fields

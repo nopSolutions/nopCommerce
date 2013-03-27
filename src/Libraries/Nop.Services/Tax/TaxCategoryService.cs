@@ -14,8 +14,16 @@ namespace Nop.Services.Tax
     public partial class TaxCategoryService : ITaxCategoryService
     {
         #region Constants
+
+        /// <summary>
+        /// Key for caching
+        /// </summary>
         private const string TAXCATEGORIES_ALL_KEY = "Nop.taxcategory.all";
+        /// <summary>
+        /// Key pattern to clear cache
+        /// </summary>
         private const string TAXCATEGORIES_PATTERN_KEY = "Nop.taxcategory.";
+
         #endregion
 
         #region Fields

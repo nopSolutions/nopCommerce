@@ -18,8 +18,20 @@ namespace Nop.Services.Discounts
     public partial class DiscountService : IDiscountService
     {
         #region Constants
+
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : show hidden records?
+        /// {1} : coupon code
+        /// </remarks>
         private const string DISCOUNTS_ALL_KEY = "Nop.discount.all-{0}-{1}";
+        /// <summary>
+        /// Key pattern to clear cache
+        /// </summary>
         private const string DISCOUNTS_PATTERN_KEY = "Nop.discount.";
+
         #endregion
 
         #region Fields

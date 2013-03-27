@@ -14,8 +14,19 @@ namespace Nop.Services.Directory
     public partial class StateProvinceService : IStateProvinceService
     {
         #region Constants
+
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {1} : country ID
+        /// </remarks>
         private const string STATEPROVINCES_ALL_KEY = "Nop.stateprovince.all-{0}";
+        /// <summary>
+        /// Key pattern to clear cache
+        /// </summary>
         private const string STATEPROVINCES_PATTERN_KEY = "Nop.stateprovince.";
+
         #endregion
 
         #region Fields

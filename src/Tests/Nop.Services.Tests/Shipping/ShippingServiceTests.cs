@@ -56,8 +56,7 @@ namespace Nop.Services.Tests.Shipping
             _genericAttributeService = MockRepository.GenerateMock<IGenericAttributeService>();
 
             _shoppingCartSettings = new ShoppingCartSettings();
-            _shippingService = new ShippingService(cacheManager, 
-                _shippingMethodRepository, 
+            _shippingService = new ShippingService(_shippingMethodRepository, 
                 _logger,
                 _productAttributeParser,
                 _checkoutAttributeParser,

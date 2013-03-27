@@ -14,7 +14,19 @@ namespace Nop.Services.Catalog
     public partial class SpecificationAttributeService : ISpecificationAttributeService
     {
         #region Constants
+
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : product ID
+        /// {1} : allow filtering
+        /// {2} : show on product page
+        /// </remarks>
         private const string PRODUCTSPECIFICATIONATTRIBUTE_ALLBYPRODUCTID_KEY = "Nop.productspecificationattribute.allbyproductid-{0}-{1}-{2}";
+        /// <summary>
+        /// Key pattern to clear cache
+        /// </summary>
         private const string PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY = "Nop.productspecificationattribute.";
         #endregion
 

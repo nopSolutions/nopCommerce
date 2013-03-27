@@ -18,8 +18,20 @@ namespace Nop.Services.Directory
     public partial class CurrencyService : ICurrencyService
     {
         #region Constants
+
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : show hidden records?
+        /// {1} : store ID
+        /// </remarks>
         private const string CURRENCIES_ALL_KEY = "Nop.currency.all-{0}-{1}";
+        /// <summary>
+        /// Key pattern to clear cache
+        /// </summary>
         private const string CURRENCIES_PATTERN_KEY = "Nop.currency.";
+
         #endregion
 
         #region Fields

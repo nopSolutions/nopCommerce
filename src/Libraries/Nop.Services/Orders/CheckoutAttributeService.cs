@@ -14,9 +14,25 @@ namespace Nop.Services.Orders
     public partial class CheckoutAttributeService : ICheckoutAttributeService
     {
         #region Constants
+
+        /// <summary>
+        /// Key for caching
+        /// </summary>
         private const string CHECKOUTATTRIBUTES_ALL_KEY = "Nop.checkoutattribute.all";
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : checkout attribute ID
+        /// </remarks>
         private const string CHECKOUTATTRIBUTEVALUES_ALL_KEY = "Nop.checkoutattributevalue.all-{0}";
+        /// <summary>
+        /// Key pattern to clear cache
+        /// </summary>
         private const string CHECKOUTATTRIBUTES_PATTERN_KEY = "Nop.checkoutattribute.";
+        /// <summary>
+        /// Key pattern to clear cache
+        /// </summary>
         private const string CHECKOUTATTRIBUTEVALUES_PATTERN_KEY = "Nop.checkoutattributevalue.";
         #endregion
         

@@ -91,8 +91,7 @@ namespace Nop.Services.Tests.Orders
             _shippingSettings.ActiveShippingRateComputationMethodSystemNames.Add("FixedRateTestShippingRateComputationMethod");
             _shippingMethodRepository = MockRepository.GenerateMock<IRepository<ShippingMethod>>();
             _logger = new NullLogger();
-            _shippingService = new ShippingService(cacheManager,
-                _shippingMethodRepository,
+            _shippingService = new ShippingService(_shippingMethodRepository,
                 _logger,
                 _productAttributeParser,
                 _checkoutAttributeParser,

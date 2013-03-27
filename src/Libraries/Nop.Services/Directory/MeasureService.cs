@@ -15,10 +15,24 @@ namespace Nop.Services.Directory
     public partial class MeasureService : IMeasureService
     {
         #region Constants
+
+        /// <summary>
+        /// Key for caching
+        /// </summary>
         private const string MEASUREDIMENSIONS_ALL_KEY = "Nop.measuredimension.all";
+        /// <summary>
+        /// Key for caching
+        /// </summary>
         private const string MEASUREWEIGHTS_ALL_KEY = "Nop.measureweight.all";
+        /// <summary>
+        /// Key pattern to clear cache
+        /// </summary>
         private const string MEASUREDIMENSIONS_PATTERN_KEY = "Nop.measuredimension.";
+        /// <summary>
+        /// Key pattern to clear cache
+        /// </summary>
         private const string MEASUREWEIGHTS_PATTERN_KEY = "Nop.measureweight.";
+
         #endregion
 
         #region Fields

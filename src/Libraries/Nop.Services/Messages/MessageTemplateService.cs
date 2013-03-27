@@ -15,8 +15,24 @@ namespace Nop.Services.Messages
     {
         #region Constants
 
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : store ID
+        /// </remarks>
         private const string MESSAGETEMPLATES_ALL_KEY = "Nop.messagetemplate.all-{0}";
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : template name
+        /// {1} : store ID
+        /// </remarks>
         private const string MESSAGETEMPLATES_BY_NAME_KEY = "Nop.messagetemplate.name-{0}-{1}";
+        /// <summary>
+        /// Key pattern to clear cache
+        /// </summary>
         private const string MESSAGETEMPLATES_PATTERN_KEY = "Nop.messagetemplate.";
 
         #endregion

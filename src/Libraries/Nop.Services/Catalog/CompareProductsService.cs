@@ -12,6 +12,9 @@ namespace Nop.Services.Catalog
     {
         #region Constants
 
+        /// <summary>
+        /// Compare products cookie name
+        /// </summary>
         private const string COMPARE_PRODUCTS_COOKIE_NAME = "nop.CompareProducts";
 
         #endregion

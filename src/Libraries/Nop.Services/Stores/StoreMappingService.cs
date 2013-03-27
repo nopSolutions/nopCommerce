@@ -18,7 +18,17 @@ namespace Nop.Services.Stores
     {
         #region Constants
 
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : entity ID
+        /// {1} : entity name
+        /// </remarks>
         private const string STOREMAPPING_BY_ENTITYID_NAME_KEY = "Nop.storemapping.entityid-name-{0}-{1}";
+        /// <summary>
+        /// Key pattern to clear cache
+        /// </summary>
         private const string STOREMAPPING_PATTERN_KEY = "Nop.storemapping.";
 
         #endregion

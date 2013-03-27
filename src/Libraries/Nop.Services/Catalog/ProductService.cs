@@ -25,9 +25,19 @@ namespace Nop.Services.Catalog
     public partial class ProductService : IProductService
     {
         #region Constants
+
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : product ID
+        /// {1} : show hidden records?
+        /// </remarks>
         private const string PRODUCTVARIANTS_ALL_KEY = "Nop.productvariant.all-{0}-{1}";
+        /// <summary>
+        /// Key pattern to clear cache
+        /// </summary>
         private const string PRODUCTVARIANTS_PATTERN_KEY = "Nop.productvariant.";
-        private const string TIERPRICES_PATTERN_KEY = "Nop.tierprice.";
         #endregion
 
         #region Fields
@@ -227,7 +237,6 @@ namespace Nop.Services.Catalog
 
             //clear cache
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(TIERPRICES_PATTERN_KEY);
             
             //event notification
             _eventPublisher.EntityInserted(product);
@@ -247,7 +256,6 @@ namespace Nop.Services.Catalog
 
             //cache
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(TIERPRICES_PATTERN_KEY);
 
             //event notification
             _eventPublisher.EntityUpdated(product);
@@ -978,7 +986,6 @@ namespace Nop.Services.Catalog
             _productVariantRepository.Insert(productVariant);
 
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(TIERPRICES_PATTERN_KEY);
 
             //event notification
             _eventPublisher.EntityInserted(productVariant);
@@ -996,7 +1003,6 @@ namespace Nop.Services.Catalog
             _productVariantRepository.Update(productVariant);
 
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(TIERPRICES_PATTERN_KEY);
 
             //event notification
             _eventPublisher.EntityUpdated(productVariant);
@@ -1510,7 +1516,6 @@ namespace Nop.Services.Catalog
             _tierPriceRepository.Delete(tierPrice);
 
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(TIERPRICES_PATTERN_KEY);
 
             //event notification
             _eventPublisher.EntityDeleted(tierPrice);
@@ -1541,7 +1546,6 @@ namespace Nop.Services.Catalog
             _tierPriceRepository.Insert(tierPrice);
 
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(TIERPRICES_PATTERN_KEY);
 
             //event notification
             _eventPublisher.EntityInserted(tierPrice);
@@ -1559,7 +1563,6 @@ namespace Nop.Services.Catalog
             _tierPriceRepository.Update(tierPrice);
 
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(TIERPRICES_PATTERN_KEY);
 
             //event notification
             _eventPublisher.EntityUpdated(tierPrice);

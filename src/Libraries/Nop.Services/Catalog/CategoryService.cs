@@ -18,10 +18,45 @@ namespace Nop.Services.Catalog
     {
         #region Constants
 
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : parent category ID
+        /// {1} : show hidden records?
+        /// {2} : current customer ID
+        /// {3} : store ID
+        /// </remarks>
         private const string CATEGORIES_BY_PARENT_CATEGORY_ID_KEY = "Nop.category.byparent-{0}-{1}-{2}-{3}";
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : show hidden records?
+        /// {1} : category ID
+        /// {2} : page index
+        /// {3} : page size
+        /// {4} : current customer ID
+        /// {5} : store ID
+        /// </remarks>
         private const string PRODUCTCATEGORIES_ALLBYCATEGORYID_KEY = "Nop.productcategory.allbycategoryid-{0}-{1}-{2}-{3}-{4}-{5}";
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : show hidden records?
+        /// {1} : product ID
+        /// {2} : current customer ID
+        /// {3} : store ID
+        /// </remarks>
         private const string PRODUCTCATEGORIES_ALLBYPRODUCTID_KEY = "Nop.productcategory.allbyproductid-{0}-{1}-{2}-{3}";
+        /// <summary>
+        /// Key pattern to clear cache
+        /// </summary>
         private const string CATEGORIES_PATTERN_KEY = "Nop.category.";
+        /// <summary>
+        /// Key pattern to clear cache
+        /// </summary>
         private const string PRODUCTCATEGORIES_PATTERN_KEY = "Nop.productcategory.";
 
         #endregion

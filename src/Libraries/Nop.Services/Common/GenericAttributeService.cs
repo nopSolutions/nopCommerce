@@ -16,8 +16,18 @@ namespace Nop.Services.Common
     public partial class GenericAttributeService : IGenericAttributeService
     {
         #region Constants
-        
+
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : entity ID
+        /// {1} : key group
+        /// </remarks>
         private const string GENERICATTRIBUTE_KEY = "Nop.genericattribute.{0}-{1}";
+        /// <summary>
+        /// Key pattern to clear cache
+        /// </summary>
         private const string GENERICATTRIBUTE_PATTERN_KEY = "Nop.genericattribute.";
         #endregion
 

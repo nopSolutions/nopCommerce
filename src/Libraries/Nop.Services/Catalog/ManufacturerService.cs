@@ -17,9 +17,34 @@ namespace Nop.Services.Catalog
     public partial class ManufacturerService : IManufacturerService
     {
         #region Constants
+
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : show hidden records?
+        /// {1} : manufacturer ID
+        /// {2} : page index
+        /// {3} : page size
+        /// {4} : current customer ID
+        /// {5} : store ID
+        /// </remarks>
         private const string PRODUCTMANUFACTURERS_ALLBYMANUFACTURERID_KEY = "Nop.productmanufacturer.allbymanufacturerid-{0}-{1}-{2}-{3}-{4}-{5}";
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : show hidden records?
+        /// {1} : product ID
+        /// {2} : current customer ID
+        /// {3} : store ID
+        /// </remarks>
         private const string PRODUCTMANUFACTURERS_ALLBYPRODUCTID_KEY = "Nop.productmanufacturer.allbyproductid-{0}-{1}-{2}-{3}";
+        /// <summary>
+        /// Key pattern to clear cache
+        /// </summary>
         private const string PRODUCTMANUFACTURERS_PATTERN_KEY = "Nop.productmanufacturer.";
+
         #endregion
 
         #region Fields

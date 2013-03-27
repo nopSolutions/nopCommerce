@@ -15,8 +15,18 @@ namespace Nop.Services.Security
     public partial class AclService : IAclService
     {
         #region Constants
-
+        
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : entity ID
+        /// {1} : entity name
+        /// </remarks>
         private const string ACLRECORD_BY_ENTITYID_NAME_KEY = "Nop.aclrecord.entityid-name-{0}-{1}";
+        /// <summary>
+        /// Key pattern to clear cache
+        /// </summary>
         private const string ACLRECORD_PATTERN_KEY = "Nop.aclrecord.";
 
         #endregion

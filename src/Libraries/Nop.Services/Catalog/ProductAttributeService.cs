@@ -14,11 +14,35 @@ namespace Nop.Services.Catalog
     public partial class ProductAttributeService : IProductAttributeService
     {
         #region Constants
+        /// <summary>
+        /// Key for caching
+        /// </summary>
         private const string PRODUCTATTRIBUTES_ALL_KEY = "Nop.productattribute.all";
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : product variant ID
+        /// </remarks>
         private const string PRODUCTVARIANTATTRIBUTES_ALL_KEY = "Nop.productvariantattribute.all-{0}";
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : product variant attribute ID
+        /// </remarks>
         private const string PRODUCTVARIANTATTRIBUTEVALUES_ALL_KEY = "Nop.productvariantattributevalue.all-{0}";
+        /// <summary>
+        /// Key pattern to clear cache
+        /// </summary>
         private const string PRODUCTATTRIBUTES_PATTERN_KEY = "Nop.productattribute.";
+        /// <summary>
+        /// Key pattern to clear cache
+        /// </summary>
         private const string PRODUCTVARIANTATTRIBUTES_PATTERN_KEY = "Nop.productvariantattribute.";
+        /// <summary>
+        /// Key pattern to clear cache
+        /// </summary>
         private const string PRODUCTVARIANTATTRIBUTEVALUES_PATTERN_KEY = "Nop.productvariantattributevalue.";
         #endregion
 

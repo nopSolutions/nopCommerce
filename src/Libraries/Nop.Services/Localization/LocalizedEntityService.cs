@@ -17,8 +17,28 @@ namespace Nop.Services.Localization
     {
         #region Constants
 
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : language ID
+        /// {1} : entity ID
+        /// {2} : locale key group
+        /// {3} : locale key
+        /// </remarks>
         private const string LOCALIZEDPROPERTY_KEY = "Nop.localizedproperty.value-{0}-{1}-{2}-{3}";
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : locale key group
+        /// {1} : locale key
+        /// {2} : locale value
+        /// </remarks
         private const string LOCALIZEDPROPERTY_ENTITYID_KEY = "Nop.localizedproperty.entityid-{0}-{1}-{2}";
+        /// <summary>
+        /// Key pattern to clear cache
+        /// </summary>
         private const string LOCALIZEDPROPERTY_PATTERN_KEY = "Nop.localizedproperty.";
 
         #endregion

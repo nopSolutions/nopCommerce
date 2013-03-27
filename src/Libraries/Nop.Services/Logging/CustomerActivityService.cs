@@ -17,8 +17,16 @@ namespace Nop.Services.Logging
     public class CustomerActivityService : ICustomerActivityService
     {
         #region Constants
+
+        /// <summary>
+        /// Key for caching
+        /// </summary>
         private const string ACTIVITYTYPE_ALL_KEY = "Nop.activitytype.all";
+        /// <summary>
+        /// Key pattern to clear cache
+        /// </summary>
         private const string ACTIVITYTYPE_PATTERN_KEY = "Nop.activitytype.";
+
         #endregion
 
         #region Fields
