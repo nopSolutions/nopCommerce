@@ -550,9 +550,10 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 .price-range-filter .remove-filter a{font-weight:700;color:#b80709;}
 .product-spec-filter{}
 .product-spec-filter .filter-title{background:url(images/ico-arrow-r.gif) no-repeat top right;padding-right:20px;}
-.product-spec-filter .available-items,.product-spec-filter .already-filtered-items{width:100%;}
-.product-spec-filter .group{display:block;font-weight:700;}
-.product-spec-filter .available-items .item{padding:3px 16px 3px 2px;}
+.product-spec-filter .available-items,.product-spec-filter .already-filtered-items{width:100%;overflow:hidden;}
+.product-spec-filter .group{display:block;clear:both;font-weight:700;}
+.product-spec-filter .group li{list-style:none;}
+.product-spec-filter .available-items .item{padding:3px 16px 3px 2px;list-style:none;}
 .product-spec-filter .already-filtered-items .filter-title{background:none;padding:15px 0 5px 5px;}
 .product-spec-filter .already-filtered-items .item{padding:5px 0;}
 .product-spec-filter .remove-filter{padding-top:5px;}
