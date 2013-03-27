@@ -248,15 +248,16 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 .mini-shopping-cart a{font-weight:700;text-decoration:none;}
 .mini-shopping-cart a:hover{text-decoration:underline;}
 .mini-shopping-cart .count{margin:10px 0px 10px;}
-.mini-shopping-cart .items{overflow:hidden;}
-.mini-shopping-cart .items table{border-collapse:collapse;width:100%;}
-.mini-shopping-cart .items table .first td{border-top:1px solid #EEEEEE;}
-.mini-shopping-cart .items table td{border-bottom:1px solid #EEEEEE;padding:10px 5px;vertical-align:top;}
-.mini-shopping-cart .items .item{border-bottom:1px solid #CFCFCF;margin:5px 0;}
-.mini-shopping-cart .items .item .product .name{clear:both;}
-.mini-shopping-cart .items .item .product .attributes{font-size:10px;margin:0px;}
-.mini-shopping-cart .items .item .price{font-size:10px;margin:10px 0px 0px 0px;}
-.mini-shopping-cart .items .item .quantity{font-size:10px;margin:0px}
+.mini-shopping-cart .items{}
+.mini-shopping-cart .item{overflow:hidden;clear:both;border-bottom:1px solid #EEEEEE;}
+.mini-shopping-cart .item.first{border-top:1px solid #EEEEEE;}
+.mini-shopping-cart .item > div{padding:10px 5px;}
+.mini-shopping-cart .item .picture{float:left;width:50px;text-align:center;}
+.mini-shopping-cart .item .product{float:right;width:208px;}
+.mini-shopping-cart .item .name{margin-bottom:5px;}
+.mini-shopping-cart .item .attributes{font-size:10px;margin:0px;}
+.mini-shopping-cart .item .price{font-size:10px;margin:10px 0px 0px 0px;}
+.mini-shopping-cart .item .quantity{font-size:10px;margin:0px}
 .mini-shopping-cart .totals{margin:10px 0px;text-align:right;}
 .mini-shopping-cart .buttons{margin:10px 0px;text-align:right;}
 .mini-shopping-cart .cart-button,.mini-shopping-cart .checkout-button{margin:0;}
