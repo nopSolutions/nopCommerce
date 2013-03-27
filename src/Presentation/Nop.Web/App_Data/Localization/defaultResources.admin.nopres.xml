@@ -10540,6 +10540,9 @@
                             <LocaleResource Name="Bold">
                                 <Value>Bold</Value>
                             </LocaleResource>
+                            <LocaleResource Name="Close">
+                                <Value>Close</Value>
+                            </LocaleResource>
                             <LocaleResource Name="CreateLink">
                                 <Value>Insert hyperlink</Value>
                             </LocaleResource>
@@ -10600,6 +10603,9 @@
                             <LocaleResource Name="JustifyRight">
                                 <Value>Align text right</Value>
                             </LocaleResource>
+                            <LocaleResource Name="Or">
+                                <Value>or</Value>
+                            </LocaleResource>
                             <LocaleResource Name="OrderBy">
                                 <Value>Arrange by:</Value>
                             </LocaleResource>
@@ -10621,6 +10627,9 @@
                             <LocaleResource Name="Style">
                                 <Value>Styles</Value>
                             </LocaleResource>
+                            <LocaleResource Name="Tooltip">
+                                <Value>Tooltip</Value>
+                            </LocaleResource>
                             <LocaleResource Name="Underline">
                                 <Value>Underline</Value>
                             </LocaleResource>
@@ -10629,6 +10638,9 @@
                             </LocaleResource>
                             <LocaleResource Name="UploadFile">
                                 <Value>Upload</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="WebAddress">
+                                <Value>Web address</Value>
                             </LocaleResource>
                         </Children>
                     </LocaleResource>

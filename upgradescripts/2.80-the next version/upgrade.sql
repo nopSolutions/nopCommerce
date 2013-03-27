@@ -653,6 +653,27 @@ set @resources='
   <LocaleResource Name="Admin.Customers.Customers.VendorShouldBeInVendorsRole">
 	<Value>Note: if you have a vendor associated with this customer, then also ensure it is in "Vendors" customer role.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.EditorLocalization.Close">
+	<Value>Close</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.EditorLocalization.Or">
+	<Value>or</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.EditorLocalization.Tooltip">
+	<Value>Tooltip</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.EditorLocalization.WebAddress">
+	<Value>Web address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.EditorLocalization.">
+	<Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.">
+	<Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.">
+	<Value></Value>
+  </LocaleResource>
 </Language>
 '
 
