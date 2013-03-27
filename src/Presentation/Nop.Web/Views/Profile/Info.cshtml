@@ -10,42 +10,48 @@
         }
         @if (Model.LocationEnabled)
         {            
-            <div class="profile-stat">
-                @T("Profile.Country"): <span class="profile-stat-value">@Model.Location</span>
-            </div>  
+            <ul class="user-stats">
+                    <li class="location">
+                <label>@T("Profile.Country"):</label>
+                    <span>@Model.Location</span>
+                        </li>
+            </ul>
         }
         @if (Model.PMEnabled)
         {
-            <div class="profile-stat">
-                <div class="send-pm-box">
-                    @Html.RouteLink(T("Forum.PrivateMessages.PM").Text, "SendPM", new { toCustomerId = Model.CustomerProfileId }, new { @class = "pm-link-button" })
-                </div>
-            </div>  
+            <div class="send-pm-box">
+                @Html.RouteLink(T("Forum.PrivateMessages.PM").Text, "SendPM", new { toCustomerId = Model.CustomerProfileId }, new { @class = "pm-link-button" })
+            </div>
         }
         @Html.Widget("profile_page_info_userdetails")
     </div>
-    <div class="user-stats">
+    <div class="profile-stats">
         <div class="title">
             @T("Profile.Statistics")
         </div>
+        <ul>
         @if (Model.TotalPostsEnabled)
         {
-            <div class="profile-stat">
-                @T("Profile.TotalPosts"): <span class="profile-stat-value">@Model.TotalPosts</span>
-            </div>         
+            <li>
+                <label>@T("Profile.TotalPosts"):</label>
+                <span>@Model.TotalPosts</span>
+            </li>          
         }
         @if (Model.JoinDateEnabled)
         {        
-            <div class="profile-stat">
-                @T("Profile.JoinDate"): <span class="profile-stat-value">@Model.JoinDate</span>
-            </div>
+            <li>
+                <label>@T("Profile.JoinDate"):</label>
+                <span>@Model.JoinDate</span>
+            </li>
         }
         @if (Model.DateOfBirthEnabled)
         {
-            <div class="profile-stat">
-                @T("Profile.DateOfBirth"): <span class="profile-stat-value">@Model.DateOfBirth</span>
-            </div>
+            <li>
+                <label>@T("Profile.DateOfBirth"):</label>
+                <span>@Model.DateOfBirth</span>
+            </li>
         }
+            </ul>
         @Html.Widget("profile_page_info_userstats")
     </div>
     <div class="clear">

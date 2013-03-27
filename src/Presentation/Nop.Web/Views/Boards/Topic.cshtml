@@ -13,11 +13,11 @@
         $('#watch-topic-bottom').text(context.Text);
     }
 </script>
+@Html.Action("ForumBreadcrumb", new { forumTopicId = Model.Id })
+@Html.Partial("_SearchBox")
+<div class="clear">
+</div>
 <div class="page forum-topic">
-    @Html.Action("ForumBreadcrumb", new { forumTopicId = Model.Id })
-    @Html.Partial("_SearchBox")
-    <div class="clear">
-    </div>
     <div class="title">
         <h2 class="topic-name">
             <span>@Model.Subject</span></h2>

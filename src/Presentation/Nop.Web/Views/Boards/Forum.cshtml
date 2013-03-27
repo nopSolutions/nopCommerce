@@ -13,10 +13,11 @@
         $('#watch-forum').text(context.Text);
     }
 </script>
+@Html.Action("ForumBreadcrumb", new { forumId = Model.Id }) 
+@Html.Partial("_SearchBox")   
+<div class="clear">
+</div>
 <div class="page forum">
-    @Html.Action("ForumBreadcrumb", new { forumId = Model.Id })    
-    <div class="clear">
-    </div>
     <div class="top">
         <div class="forum-info">
             <div class="forum-name">
@@ -42,7 +43,6 @@
                                 new { id = "watch-forum", @class = "watch-forum" })
                 }
             </div>
-            @Html.Partial("_SearchBox")
         </div>
     </div>
     <div class="clear">

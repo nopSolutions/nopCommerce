@@ -1,12 +1,6 @@
 ﻿@model ActiveDiscussionsModel
 @using Nop.Web.Extensions;
 @using Nop.Web.Models.Boards;
-@if (!Model.ViewAllLinkEnabled)
-{
-    Html.RenderPartial("_SearchBox");
-    <div class="clear">
-    </div>    
-}
 <div class="active-discussions">
     <div class="active-discussions-title">
         @T("Forum.ActiveDiscussions")

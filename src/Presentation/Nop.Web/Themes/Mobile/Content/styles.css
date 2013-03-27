@@ -618,8 +618,8 @@
 .profile-page .page-body{margin-top:15px;}
 .profile-page .profile-info-box{}
 .profile-page .profile-info-box .title{}
-.profile-page .profile-info-box .profile-stat{font-weight:700;padding:2px;}
-.profile-page .profile-info-box .profile-stat .profile-stat-value{font-weight:400;color:#555;}
+.profile-page .profile-info-box .profile-stats{font-weight:700;padding:2px;}
+.profile-page .profile-info-box .profile-stats .profile-stat-value{font-weight:400;color:#555;}
 .profile-page .profile-info-box .user-details{padding:10px;}
 .profile-page .profile-info-box .user-details .avatar{margin-bottom:5px;}
 .profile-page .profile-info-box .user-details .avatar .avatar-img{border:solid 2px #CEDBE1!important;}

@@ -31,31 +31,34 @@
                     <img src="@(Model.CustomerAvatarUrl)" class="avatar-img" alt="Avatar" />
                 </div>
             }
-            <div class="user-stats">
+            <ul class="user-stats">
                 @if (Model.IsCustomerForumModerator)
                 {
-                    <div class="status">
-                        @T("Forum.Status"): <span class="stat-value">@T("Forum.Moderator")</span>
-                    </div>
+                    <li class="status">
+                        <label>@T("Forum.Status"):</label>
+                        <span>@T("Forum.Moderator")</span>
+                    </li>
                 }
                 @if (Model.ShowCustomersPostCount)
                 {
-                    <div class="totalposts">
-                        @T("Forum.TotalPosts"): <span class="stat-value">
-                            @Model.ForumPostCount</span>
-                    </div>
+                    <li class="total-posts">
+                        <label>@T("Forum.TotalPosts"):</label>
+                        <span>@Model.ForumPostCount</span>
+                    </li>
                 }
                 @if (Model.ShowCustomersJoinDate && !Model.IsCustomerGuest)
                 {
-                    <div class="joined">
-                        @T("Forum.Joined"): <span class="stat-value">@Model.CustomerJoinDate.ToString("d")</span>
-                    </div>
+                    <li class="joined">
+                        <label>@T("Forum.Joined"):</label>
+                        <span>@Model.CustomerJoinDate.ToString("d")</span>
+                    </li>
                 }
                 @if (Model.ShowCustomersLocation && !Model.IsCustomerGuest & !String.IsNullOrEmpty(Model.CustomerLocation))
                 {
-                    <div class="location">
-                        @T("Forum.Location"): <span class="stat-value">@Model.CustomerLocation</span>
-                    </div>
+                    <li class="location">
+                        <label>@T("Forum.Location"):</label>
+                        <span>@Model.CustomerLocation</span>
+                    </li>
                 }
                 @if (Model.AllowPrivateMessages && !Model.IsCustomerGuest)
                 {
@@ -63,7 +66,7 @@
                         @Html.RouteLink(T("Forum.PrivateMessages.PM").Text, "SendPM", new { toCustomerId = Model.CustomerId }, new { @class = "pm-link-button" })
                     </div>
                 }
-            </div>
+            </ul>
         </div>
     </div>
     <div class="post-content">
