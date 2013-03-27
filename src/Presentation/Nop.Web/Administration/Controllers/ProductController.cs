@@ -237,6 +237,9 @@ namespace Nop.Admin.Controllers
                         model.AddSpecificationAttributeModel.AvailableOptions.Add(new SelectListItem() { Text = sao.Name, Value = sao.Id.ToString() });
                 }
             }
+
+            //default values
+            model.AddSpecificationAttributeModel.ShowOnProductPage = true;
         }
 
         [NonAction]
