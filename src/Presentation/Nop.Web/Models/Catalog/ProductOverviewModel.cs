@@ -30,10 +30,10 @@ namespace Nop.Web.Models.Catalog
         public partial class ProductPriceModel : BaseNopModel
         {
             public string OldPrice { get; set; }
-
             public string Price {get;set;}
 
             public bool DisableBuyButton { get; set; }
+            public bool DisableWishlistButton { get; set; }
 
             public bool AvailableForPreOrder { get; set; }
 

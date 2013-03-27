@@ -374,6 +374,7 @@ namespace Nop.Web.Controllers
                             {
                                 // no variants
                                 priceModel.DisableBuyButton = true;
+                                priceModel.DisableWishlistButton = true;
                                 priceModel.AvailableForPreOrder = false;
                             }
                             break;
@@ -382,10 +383,17 @@ namespace Nop.Web.Controllers
 
                                 //only one variant
                                 var productVariant = productVariants[0];
+                                //add to car button
                                 priceModel.DisableBuyButton = productVariant.DisableBuyButton || !_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart);
                                 if (!_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
                                 {
                                     priceModel.DisableBuyButton = true;
+                                }
+                                //add to wishlist button
+                                priceModel.DisableWishlistButton = productVariant.DisableWishlistButton || !_permissionService.Authorize(StandardPermissionProvider.EnableWishlist);
+                                if (!_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
+                                {
+                                    priceModel.DisableWishlistButton = true;
                                 }
                                 priceModel.AvailableForPreOrder = productVariant.AvailableForPreOrder;
                             }
@@ -394,6 +402,7 @@ namespace Nop.Web.Controllers
                             {
                                 //multiple variants
                                 priceModel.DisableBuyButton = true;
+                                priceModel.DisableWishlistButton = true;
                                 priceModel.AvailableForPreOrder = false;
                             }
                             break;
