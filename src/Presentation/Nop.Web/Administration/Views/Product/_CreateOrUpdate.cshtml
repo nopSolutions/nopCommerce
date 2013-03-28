@@ -123,15 +123,18 @@
                 @Html.ValidationMessageFor(model => model.ProductTemplateId)
             </td>
         </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.ShowOnHomePage):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.ShowOnHomePage)
-                @Html.ValidationMessageFor(model => model.ShowOnHomePage)
-            </td>
-        </tr>
+        @if (!Model.IsLoggedInAsVendor)
+        {
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.ShowOnHomePage):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => model.ShowOnHomePage)
+                    @Html.ValidationMessageFor(model => model.ShowOnHomePage)
+                </td>
+            </tr>
+        }
         <tr>
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.Published):
