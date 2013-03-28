@@ -711,8 +711,6 @@ namespace Nop.Admin.Controllers
                 if (_workContext.CurrentVendor != null)
                 {
                     model.VendorId = _workContext.CurrentVendor.Id;
-                    //cannot enable "show on home page"
-                    model.ShowOnHomePage = false;
                 }
 
                 //product
@@ -830,8 +828,6 @@ namespace Nop.Admin.Controllers
                 if (_workContext.CurrentVendor != null)
                 {
                     model.VendorId = _workContext.CurrentVendor.Id;
-                    //cannot enable "show on home page"
-                    model.ShowOnHomePage = false;
                 }
 
                 //product
