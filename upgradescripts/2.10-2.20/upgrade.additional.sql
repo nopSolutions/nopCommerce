@@ -83,8 +83,8 @@ GO
 --load products stored procedure
 IF EXISTS (
 		SELECT *
-		FROM dbo.sysobjects
-		WHERE id = OBJECT_ID(N'[dbo].[nop_splitstring_to_table]') AND xtype in (N'FN', N'IF', N'TF'))
+		FROM sys.objects
+		WHERE object_id = OBJECT_ID(N'[dbo].[nop_splitstring_to_table]') AND [type] in (N'FN', N'IF', N'TF'))
 DROP FUNCTION  [dbo].[nop_splitstring_to_table]
 GO
 CREATE FUNCTION [dbo].[nop_splitstring_to_table]
@@ -114,8 +114,8 @@ GO
 
 IF EXISTS (
 		SELECT *
-		FROM dbo.sysobjects
-		WHERE id = OBJECT_ID(N'[dbo].[nop_getnotnullnotempty]') AND xtype in (N'FN', N'IF', N'TF'))
+		FROM sys.objects
+		WHERE object_id = OBJECT_ID(N'[dbo].[nop_getnotnullnotempty]') AND [type] in (N'FN', N'IF', N'TF'))
 DROP FUNCTION  [dbo].[nop_getnotnullnotempty]
 GO
 CREATE FUNCTION [dbo].[nop_getnotnullnotempty]
@@ -139,8 +139,8 @@ GO
 
 IF EXISTS (
 		SELECT *
-		FROM dbo.sysobjects
-		WHERE id = OBJECT_ID(N'[dbo].[ProductLoadAllPaged]') AND OBJECTPROPERTY(id,N'IsProcedure') = 1)
+		FROM sys.objects
+		WHERE object_id = OBJECT_ID(N'[dbo].[ProductLoadAllPaged]') AND OBJECTPROPERTY(object_id,N'IsProcedure') = 1)
 DROP PROCEDURE [dbo].[ProductLoadAllPaged]
 GO
 CREATE PROCEDURE [dbo].[ProductLoadAllPaged]

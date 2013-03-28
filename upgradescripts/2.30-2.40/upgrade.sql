@@ -1065,8 +1065,8 @@ GO
 --Update stored procedure according to new special price properties
 IF EXISTS (
 		SELECT *
-		FROM dbo.sysobjects
-		WHERE id = OBJECT_ID(N'[dbo].[ProductLoadAllPaged]') AND OBJECTPROPERTY(id,N'IsProcedure') = 1)
+		FROM sys.objects
+		WHERE object_id = OBJECT_ID(N'[dbo].[ProductLoadAllPaged]') AND OBJECTPROPERTY(object_id,N'IsProcedure') = 1)
 DROP PROCEDURE [dbo].[ProductLoadAllPaged]
 GO
 CREATE PROCEDURE [dbo].[ProductLoadAllPaged]

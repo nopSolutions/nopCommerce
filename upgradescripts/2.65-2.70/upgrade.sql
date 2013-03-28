@@ -544,7 +544,7 @@ GO
 
 
 
-IF EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[TaxRate]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[TaxRate]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
 BEGIN
 	EXEC('ALTER TABLE [TaxRate] ALTER COLUMN [Percentage] decimal(18, 4) NOT NULL')
 END
@@ -584,7 +584,7 @@ END
 GO
 
 --more SQL indexes
-IF NOT EXISTS (SELECT 1 from sysindexes WHERE [NAME]=N'IX_ActivityLog_CreatedOnUtc' and id=object_id(N'[ActivityLog]'))
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_ActivityLog_CreatedOnUtc' and object_id=object_id(N'[ActivityLog]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_ActivityLog_CreatedOnUtc] ON [ActivityLog] ([CreatedOnUtc] ASC)
 END
@@ -605,7 +605,7 @@ BEGIN
 END
 GO
 
-IF NOT EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[UrlRecord]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[UrlRecord]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
 BEGIN
 CREATE TABLE [dbo].[UrlRecord](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
@@ -621,13 +621,13 @@ PRIMARY KEY CLUSTERED
 END
 GO
 --new indexes
-IF EXISTS (SELECT 1 from sysindexes WHERE [NAME]=N'IX_UrlRecord_Slug' and id=object_id(N'[UrlRecord]'))
+IF EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_UrlRecord_Slug' and object_id=object_id(N'[UrlRecord]'))
 BEGIN
-	--this drop is only for used of BETA version of 2.70
+	--this drop is only for users of BETA version of 2.70
 	DROP INDEX [IX_UrlRecord_Slug] ON [UrlRecord]
 END
 GO
-IF NOT EXISTS (SELECT 1 from sysindexes WHERE [NAME]=N'IX_UrlRecord_Slug' and id=object_id(N'[UrlRecord]'))
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_UrlRecord_Slug' and object_id=object_id(N'[UrlRecord]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_UrlRecord_Slug] ON [UrlRecord] ([Slug] ASC)
 END
@@ -636,8 +636,8 @@ GO
 
 IF EXISTS (
 		SELECT *
-		FROM sysobjects
-		WHERE id = OBJECT_ID(N'[temp_generate_sename]') AND OBJECTPROPERTY(id,N'IsProcedure') = 1)
+		FROM sys.objects
+		WHERE object_id = OBJECT_ID(N'[temp_generate_sename]') AND OBJECTPROPERTY(object_id,N'IsProcedure') = 1)
 DROP PROCEDURE [dbo].[temp_generate_sename]
 GO
 CREATE PROCEDURE [dbo].[temp_generate_sename]
@@ -742,7 +742,7 @@ END
 GO
 
 --update [sename] column for products
-IF EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Product]') and NAME='SeName')
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Product]') and NAME='SeName')
 BEGIN
 	DECLARE @sename_existing_entity_id int
 	DECLARE cur_sename_existing_entity CURSOR FOR
@@ -842,7 +842,7 @@ GO
 
 
 --update [sename] column for categories
-IF EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Category]') and NAME='SeName')
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Category]') and NAME='SeName')
 BEGIN
 	DECLARE @sename_existing_entity_id int
 	DECLARE cur_sename_existing_entity CURSOR FOR
@@ -942,7 +942,7 @@ GO
 
 
 --update [sename] column for categories
-IF EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Manufacturer]') and NAME='SeName')
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Manufacturer]') and NAME='SeName')
 BEGIN
 	DECLARE @sename_existing_entity_id int
 	DECLARE cur_sename_existing_entity CURSOR FOR
@@ -1040,8 +1040,8 @@ GO
 --drop temporary procedures & functions
 IF EXISTS (
 		SELECT *
-		FROM sysobjects
-		WHERE id = OBJECT_ID(N'[temp_generate_sename]') AND OBJECTPROPERTY(id,N'IsProcedure') = 1)
+		FROM sys.objects
+		WHERE object_id = OBJECT_ID(N'[temp_generate_sename]') AND OBJECTPROPERTY(object_id,N'IsProcedure') = 1)
 DROP PROCEDURE [temp_generate_sename]
 GO
 
@@ -1121,7 +1121,7 @@ GO
 
 
 --ACL for products
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Product]') and NAME='SubjectToAcl')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Product]') and NAME='SubjectToAcl')
 BEGIN
 	ALTER TABLE [Product]
 	ADD [SubjectToAcl] bit NULL
@@ -1137,7 +1137,7 @@ ALTER TABLE [Product] ALTER COLUMN [SubjectToAcl] bit NOT NULL
 GO
 
 
-IF NOT EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[AclRecord]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[AclRecord]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
 BEGIN
 CREATE TABLE [dbo].[AclRecord](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
@@ -1152,7 +1152,7 @@ PRIMARY KEY CLUSTERED
 END
 GO
 
-IF NOT EXISTS (SELECT 1 from sysindexes WHERE [NAME]=N'IX_AclRecord_EntityId_EntityName' and id=object_id(N'[AclRecord]'))
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_AclRecord_EntityId_EntityName' and object_id=object_id(N'[AclRecord]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_AclRecord_EntityId_EntityName] ON [AclRecord] ([EntityId] ASC, [EntityName] ASC)
 END
@@ -1163,8 +1163,8 @@ GO
 
 IF EXISTS (
 		SELECT *
-		FROM sysobjects
-		WHERE id = OBJECT_ID(N'[ProductLoadAllPaged]') AND OBJECTPROPERTY(id,N'IsProcedure') = 1)
+		FROM sys.objects
+		WHERE object_id = OBJECT_ID(N'[ProductLoadAllPaged]') AND OBJECTPROPERTY(object_id,N'IsProcedure') = 1)
 DROP PROCEDURE [ProductLoadAllPaged]
 GO
 CREATE PROCEDURE [ProductLoadAllPaged]
@@ -1746,7 +1746,7 @@ GO
 
 
 --ACL for categories
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Category]') and NAME='SubjectToAcl')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Category]') and NAME='SubjectToAcl')
 BEGIN
 	ALTER TABLE [Category]
 	ADD [SubjectToAcl] bit NULL
@@ -1857,10 +1857,10 @@ GO
 
 
 --shipping by weight plugin
-IF EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[ShippingByWeight]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[ShippingByWeight]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
 BEGIN
 	--new [AdditionalFixedCost] column
-	EXEC ('IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id(''[ShippingByWeight]'') and NAME=''AdditionalFixedCost'')
+	EXEC ('IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id(''[ShippingByWeight]'') and NAME=''AdditionalFixedCost'')
 	BEGIN
 		ALTER TABLE [ShippingByWeight]
 		ADD [AdditionalFixedCost] decimal(18,2) NULL
@@ -1871,14 +1871,14 @@ BEGIN
 	END')
 
 	--drop [UsePercentage] column
-	EXEC ('IF EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id(''[ShippingByWeight]'') and NAME=''UsePercentage'')
+	EXEC ('IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id(''[ShippingByWeight]'') and NAME=''UsePercentage'')
 	BEGIN
 		ALTER TABLE [ShippingByWeight]
 		DROP COLUMN [UsePercentage]
 	END')
 	
 	--rename ShippingChargePercentage to PercentageRateOfSubtotal
-	EXEC ('IF EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id(''[ShippingByWeight]'') and NAME=''ShippingChargePercentage'')
+	EXEC ('IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id(''[ShippingByWeight]'') and NAME=''ShippingChargePercentage'')
 	BEGIN
 		ALTER TABLE [ShippingByWeight]
 		ADD [PercentageRateOfSubtotal] decimal(18,2) NULL
@@ -1889,7 +1889,7 @@ BEGIN
 	END')
 	
 	--rename ShippingChargeAmount to RatePerWeightUnit
-	EXEC ('IF EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id(''[ShippingByWeight]'') and NAME=''ShippingChargeAmount'')
+	EXEC ('IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id(''[ShippingByWeight]'') and NAME=''ShippingChargeAmount'')
 	BEGIN
 		ALTER TABLE [ShippingByWeight]
 		ADD [RatePerWeightUnit] decimal(18,2) NULL
@@ -1901,7 +1901,7 @@ BEGIN
 	
 	
 	--new [LowerWeightLimit] column
-	EXEC ('IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id(''[ShippingByWeight]'') and NAME=''LowerWeightLimit'')
+	EXEC ('IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id(''[ShippingByWeight]'') and NAME=''LowerWeightLimit'')
 	BEGIN
 		ALTER TABLE [ShippingByWeight]
 		ADD [LowerWeightLimit] decimal(18,2) NULL
@@ -1938,7 +1938,7 @@ END
 GO
 
 --simplify DiscountRequirement table
-IF EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[DiscountRequirement]') and NAME='BillingCountryId')
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[DiscountRequirement]') and NAME='BillingCountryId')
 BEGIN
 	DECLARE @entity_id int
 	DECLARE cur_existing_entity CURSOR FOR
@@ -1978,7 +1978,7 @@ GO
 
 
 
-IF EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[DiscountRequirement]') and NAME='ShippingCountryId')
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[DiscountRequirement]') and NAME='ShippingCountryId')
 BEGIN
 	DECLARE @entity_id int
 	DECLARE cur_existing_entity CURSOR FOR
@@ -2016,7 +2016,7 @@ END
 GO
 
 
-IF EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[DiscountRequirement]') and NAME='RestrictedToCustomerRoleId')
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[DiscountRequirement]') and NAME='RestrictedToCustomerRoleId')
 BEGIN
 	DECLARE @entity_id int
 	DECLARE cur_existing_entity CURSOR FOR
@@ -2055,7 +2055,7 @@ END
 GO
 
 
-IF EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[DiscountRequirement]') and NAME='SpentAmount')
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[DiscountRequirement]') and NAME='SpentAmount')
 BEGIN
 	DECLARE @entity_id int
 	DECLARE cur_existing_entity CURSOR FOR
@@ -2095,7 +2095,7 @@ END
 GO
 
 
-IF EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[DiscountRequirement]') and NAME='RestrictedProductVariantIds')
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[DiscountRequirement]') and NAME='RestrictedProductVariantIds')
 BEGIN
 	DECLARE @entity_id int
 	DECLARE cur_existing_entity CURSOR FOR

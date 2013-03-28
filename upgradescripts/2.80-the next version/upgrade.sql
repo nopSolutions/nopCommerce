@@ -799,7 +799,7 @@ GO
 
 
 
-IF NOT EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[Store]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[Store]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
 BEGIN
 	CREATE TABLE [dbo].[Store](
 		[Id] [int] IDENTITY(1,1) NOT NULL,
@@ -857,7 +857,7 @@ BEGIN
 END
 GO
 
-IF NOT EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[StoreMapping]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[StoreMapping]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
 BEGIN
 CREATE TABLE [dbo].[StoreMapping](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
@@ -872,14 +872,14 @@ PRIMARY KEY CLUSTERED
 END
 GO
 
-IF NOT EXISTS (SELECT 1 from sysindexes WHERE [NAME]=N'IX_StoreMapping_EntityId_EntityName' and id=object_id(N'[StoreMapping]'))
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_StoreMapping_EntityId_EntityName' and object_id=object_id(N'[StoreMapping]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_StoreMapping_EntityId_EntityName] ON [StoreMapping] ([EntityId] ASC, [EntityName] ASC)
 END
 GO
 
 --Store mapping for manufacturers
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Manufacturer]') and NAME='LimitedToStores')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Manufacturer]') and NAME='LimitedToStores')
 BEGIN
 	ALTER TABLE [Manufacturer]
 	ADD [LimitedToStores] bit NULL
@@ -896,7 +896,7 @@ GO
 
 
 --Store mapping for categories
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Category]') and NAME='LimitedToStores')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Category]') and NAME='LimitedToStores')
 BEGIN
 	ALTER TABLE [Category]
 	ADD [LimitedToStores] bit NULL
@@ -914,7 +914,7 @@ GO
 
 
 --Store mapping for products
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Product]') and NAME='LimitedToStores')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Product]') and NAME='LimitedToStores')
 BEGIN
 	ALTER TABLE [Product]
 	ADD [LimitedToStores] bit NULL
@@ -931,8 +931,8 @@ GO
 
 IF EXISTS (
 		SELECT *
-		FROM sysobjects
-		WHERE id = OBJECT_ID(N'[ProductLoadAllPaged]') AND OBJECTPROPERTY(id,N'IsProcedure') = 1)
+		FROM sys.objects
+		WHERE object_id = OBJECT_ID(N'[ProductLoadAllPaged]') AND OBJECTPROPERTY(object_id,N'IsProcedure') = 1)
 DROP PROCEDURE [ProductLoadAllPaged]
 GO
 CREATE PROCEDURE [dbo].[ProductLoadAllPaged]
@@ -1525,7 +1525,7 @@ GO
 
 
 --Store mapping for languages
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Language]') and NAME='LimitedToStores')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Language]') and NAME='LimitedToStores')
 BEGIN
 	ALTER TABLE [Language]
 	ADD [LimitedToStores] bit NULL
@@ -1543,7 +1543,7 @@ GO
 
 
 --Store mapping for currencies
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Currency]') and NAME='LimitedToStores')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Currency]') and NAME='LimitedToStores')
 BEGIN
 	ALTER TABLE [Currency]
 	ADD [LimitedToStores] bit NULL
@@ -1561,10 +1561,10 @@ GO
 
 --drop some constraints
 IF EXISTS (SELECT 1
-           FROM   sysobjects
+           FROM   sys.objects
            WHERE  name = 'Customer_Currency'
-           AND parent_obj = Object_id('Customer')
-           AND Objectproperty(id,N'IsForeignKey') = 1)
+           AND parent_object_id = Object_id('Customer')
+           AND Objectproperty(object_id,N'IsForeignKey') = 1)
 BEGIN
 	ALTER TABLE dbo.[Customer]
 	DROP CONSTRAINT Customer_Currency
@@ -1578,10 +1578,10 @@ GO
 
 
 IF EXISTS (SELECT 1
-           FROM   sysobjects
+           FROM   sys.objects
            WHERE  name = 'Customer_Language'
-           AND parent_obj = Object_id('Customer')
-           AND Objectproperty(id,N'IsForeignKey') = 1)
+           AND parent_object_id = Object_id('Customer')
+           AND Objectproperty(object_id,N'IsForeignKey') = 1)
 BEGIN
 	ALTER TABLE dbo.[Customer]
 	DROP CONSTRAINT Customer_Language
@@ -1593,10 +1593,10 @@ END
 GO
 
 IF EXISTS (SELECT 1
-           FROM   sysobjects
+           FROM   sys.objects
            WHERE  name = 'Customer_Affiliate'
-           AND parent_obj = Object_id('Customer')
-           AND Objectproperty(id,N'IsForeignKey') = 1)
+           AND parent_object_id = Object_id('Customer')
+           AND Objectproperty(object_id,N'IsForeignKey') = 1)
 BEGIN
 	ALTER TABLE dbo.[Customer]
 	DROP CONSTRAINT Customer_Affiliate
@@ -1604,10 +1604,10 @@ END
 GO
 
 IF EXISTS (SELECT 1
-           FROM   sysobjects
+           FROM   sys.objects
            WHERE  name = 'Affiliate_AffiliatedCustomers'
-           AND parent_obj = Object_id('Customer')
-           AND Objectproperty(id,N'IsForeignKey') = 1)
+           AND parent_object_id = Object_id('Customer')
+           AND Objectproperty(object_id,N'IsForeignKey') = 1)
 BEGIN
 	ALTER TABLE dbo.[Customer]
 	DROP CONSTRAINT Affiliate_AffiliatedCustomers
@@ -1623,10 +1623,10 @@ ALTER TABLE [Customer] ALTER COLUMN [AffiliateId] int NOT NULL
 GO
 
 IF EXISTS (SELECT 1
-           FROM   sysobjects
+           FROM   sys.objects
            WHERE  name = 'Order_Affiliate'
-           AND parent_obj = Object_id('Order')
-           AND Objectproperty(id,N'IsForeignKey') = 1)
+           AND parent_object_id = Object_id('Order')
+           AND Objectproperty(object_id,N'IsForeignKey') = 1)
 BEGIN
 	ALTER TABLE dbo.[Order]
 	DROP CONSTRAINT Order_Affiliate
@@ -1634,10 +1634,10 @@ END
 GO
 
 IF EXISTS (SELECT 1
-           FROM   sysobjects
+           FROM   sys.objects
            WHERE  name = 'Affiliate_AffiliatedOrders'
-           AND parent_obj = Object_id('Order')
-           AND Objectproperty(id,N'IsForeignKey') = 1)
+           AND parent_object_id = Object_id('Order')
+           AND Objectproperty(object_id,N'IsForeignKey') = 1)
 BEGIN
 	ALTER TABLE dbo.[Order]
 	DROP CONSTRAINT Affiliate_AffiliatedOrders
@@ -1654,7 +1654,7 @@ GO
 
 
 --Store mapping to shopping cart items
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[ShoppingCartItem]') and NAME='StoreId')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[ShoppingCartItem]') and NAME='StoreId')
 BEGIN
 	ALTER TABLE [ShoppingCartItem]
 	ADD [StoreId] bit NULL
@@ -1672,10 +1672,10 @@ ALTER TABLE [ShoppingCartItem] ALTER COLUMN [StoreId] int NOT NULL
 GO
 
 IF NOT EXISTS (SELECT 1
-           FROM   sysobjects
+           FROM   sys.objects
            WHERE  name = 'ShoppingCartItem_Store'
-           AND parent_obj = Object_id('ShoppingCartItem')
-           AND Objectproperty(id,N'IsForeignKey') = 1)
+           AND parent_object_id = Object_id('ShoppingCartItem')
+           AND Objectproperty(object_id,N'IsForeignKey') = 1)
 BEGIN
 	ALTER TABLE [dbo].[ShoppingCartItem] WITH CHECK ADD CONSTRAINT [ShoppingCartItem_Store] FOREIGN KEY([StoreId])
 	REFERENCES [dbo].[Store] ([Id])
@@ -1685,7 +1685,7 @@ GO
 
 
 --Store mapping to orders
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Order]') and NAME='StoreId')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='StoreId')
 BEGIN
 	ALTER TABLE [Order]
 	ADD [StoreId] bit NULL
@@ -1703,7 +1703,7 @@ ALTER TABLE [Order] ALTER COLUMN [StoreId] int NOT NULL
 GO
 
 --Store mapping to return requests
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[ReturnRequest]') and NAME='StoreId')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[ReturnRequest]') and NAME='StoreId')
 BEGIN
 	ALTER TABLE [ReturnRequest]
 	ADD [StoreId] bit NULL
@@ -1724,7 +1724,7 @@ DELETE FROM [ScheduleTask]
 WHERE [Type] like N'Nop.Plugin.Feed.Froogle.StaticFileGenerationTask, Nop.Plugin.Feed.Froogle'
 
 --Store mapping to message templates
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[MessageTemplate]') and NAME='LimitedToStores')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[MessageTemplate]') and NAME='LimitedToStores')
 BEGIN
 	ALTER TABLE [MessageTemplate]
 	ADD [LimitedToStores] bit NULL
@@ -1741,7 +1741,7 @@ GO
 
 
 --Store mapping for topics
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Topic]') and NAME='LimitedToStores')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Topic]') and NAME='LimitedToStores')
 BEGIN
 	ALTER TABLE [Topic]
 	ADD [LimitedToStores] bit NULL
@@ -1760,7 +1760,7 @@ GO
 
 
 --Store mapping for news
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[News]') and NAME='LimitedToStores')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[News]') and NAME='LimitedToStores')
 BEGIN
 	ALTER TABLE [News]
 	ADD [LimitedToStores] bit NULL
@@ -1777,7 +1777,7 @@ GO
 
 
 --Store mapping to BackInStockSubscription
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[BackInStockSubscription]') and NAME='StoreId')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[BackInStockSubscription]') and NAME='StoreId')
 BEGIN
 	ALTER TABLE [BackInStockSubscription]
 	ADD [StoreId] bit NULL
@@ -1795,10 +1795,10 @@ ALTER TABLE [BackInStockSubscription] ALTER COLUMN [StoreId] int NOT NULL
 GO
 
 IF NOT EXISTS (SELECT 1
-           FROM   sysobjects
+           FROM   sys.objects
            WHERE  name = 'BackInStockSubscription_Store'
-           AND parent_obj = Object_id('BackInStockSubscription')
-           AND Objectproperty(id,N'IsForeignKey') = 1)
+           AND parent_object_id = Object_id('BackInStockSubscription')
+           AND Objectproperty(object_id,N'IsForeignKey') = 1)
 BEGIN
 	ALTER TABLE [dbo].[BackInStockSubscription] WITH CHECK ADD CONSTRAINT [BackInStockSubscription_Store] FOREIGN KEY([StoreId])
 	REFERENCES [dbo].[Store] ([Id])
@@ -1808,7 +1808,7 @@ GO
 
 
 --Store mapping to Forums_PrivateMessage
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Forums_PrivateMessage]') and NAME='StoreId')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Forums_PrivateMessage]') and NAME='StoreId')
 BEGIN
 	ALTER TABLE [Forums_PrivateMessage]
 	ADD [StoreId] bit NULL
@@ -1826,10 +1826,10 @@ ALTER TABLE [Forums_PrivateMessage] ALTER COLUMN [StoreId] int NOT NULL
 GO
 
 IF NOT EXISTS (SELECT 1
-           FROM   sysobjects
+           FROM   sys.objects
            WHERE  name = 'Forums_PrivateMessage_Store'
-           AND parent_obj = Object_id('Forums_PrivateMessage')
-           AND Objectproperty(id,N'IsForeignKey') = 1)
+           AND parent_object_id = Object_id('Forums_PrivateMessage')
+           AND Objectproperty(object_id,N'IsForeignKey') = 1)
 BEGIN
 	ALTER TABLE [dbo].[Forums_PrivateMessage] WITH CHECK ADD CONSTRAINT [Forums_PrivateMessage_Store] FOREIGN KEY([StoreId])
 	REFERENCES [dbo].[Store] ([Id])
@@ -1841,7 +1841,7 @@ GO
 
 
 --GenericAttributes cuold be limited to some specific store name
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[GenericAttribute]') and NAME='StoreId')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[GenericAttribute]') and NAME='StoreId')
 BEGIN
 	ALTER TABLE [GenericAttribute]
 	ADD [StoreId] bit NULL
@@ -1877,77 +1877,77 @@ WHERE [KeyGroup] =N'Customer' and [Key]=N'OfferedShippingOptions' and [StoreId] 
 GO
 
 --Moved several properties from [Customer] to [GenericAtrribute]
-IF EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Customer]') and NAME='TaxDisplayTypeId')
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Customer]') and NAME='TaxDisplayTypeId')
 BEGIN
 	ALTER TABLE [Customer]
 	DROP COLUMN [TaxDisplayTypeId]
 END
 GO
 
-IF EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Customer]') and NAME='SelectedPaymentMethodSystemName')
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Customer]') and NAME='SelectedPaymentMethodSystemName')
 BEGIN
 	ALTER TABLE [Customer]
 	DROP COLUMN [SelectedPaymentMethodSystemName]
 END
 GO
 
-IF EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Customer]') and NAME='UseRewardPointsDuringCheckout')
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Customer]') and NAME='UseRewardPointsDuringCheckout')
 BEGIN
 	ALTER TABLE [Customer]
 	DROP COLUMN [UseRewardPointsDuringCheckout]
 END
 GO
 
-IF EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Customer]') and NAME='CurrencyId')
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Customer]') and NAME='CurrencyId')
 BEGIN
 	ALTER TABLE [Customer]
 	DROP COLUMN [CurrencyId]
 END
 GO
 
-IF EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Customer]') and NAME='LanguageId')
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Customer]') and NAME='LanguageId')
 BEGIN
 	ALTER TABLE [Customer]
 	DROP COLUMN [LanguageId]
 END
 GO
 
-IF EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Customer]') and NAME='VatNumber')
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Customer]') and NAME='VatNumber')
 BEGIN
 	ALTER TABLE [Customer]
 	DROP COLUMN [VatNumber]
 END
 GO
 
-IF EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Customer]') and NAME='VatNumberStatusId')
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Customer]') and NAME='VatNumberStatusId')
 BEGIN
 	ALTER TABLE [Customer]
 	DROP COLUMN [VatNumberStatusId]
 END
 GO
 
-IF EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Customer]') and NAME='TimeZoneId')
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Customer]') and NAME='TimeZoneId')
 BEGIN
 	ALTER TABLE [Customer]
 	DROP COLUMN [TimeZoneId]
 END
 GO
 
-IF EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Customer]') and NAME='DiscountCouponCode')
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Customer]') and NAME='DiscountCouponCode')
 BEGIN
 	ALTER TABLE [Customer]
 	DROP COLUMN [DiscountCouponCode]
 END
 GO
 
-IF EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Customer]') and NAME='GiftCardCouponCodes')
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Customer]') and NAME='GiftCardCouponCodes')
 BEGIN
 	ALTER TABLE [Customer]
 	DROP COLUMN [GiftCardCouponCodes]
 END
 GO
 
-IF EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Customer]') and NAME='CheckoutAttributes')
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Customer]') and NAME='CheckoutAttributes')
 BEGIN
 	ALTER TABLE [Customer]
 	DROP COLUMN [CheckoutAttributes]
@@ -1956,7 +1956,7 @@ GO
 
 
 --Store mapping to Setting
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Setting]') and NAME='StoreId')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Setting]') and NAME='StoreId')
 BEGIN
 	ALTER TABLE [Setting]
 	ADD [StoreId] bit NULL
@@ -1986,20 +1986,20 @@ END
 GO
 
 --move records from CustomerContent to NewsComment
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[NewsComment]') and NAME='CreatedOnUtc')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[NewsComment]') and NAME='CreatedOnUtc')
 BEGIN
 	ALTER TABLE [NewsComment]
 	ADD [CreatedOnUtc] datetime NULL
 END
 GO
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[NewsComment]') and NAME='CustomerId')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[NewsComment]') and NAME='CustomerId')
 BEGIN
 	ALTER TABLE [NewsComment]
 	ADD [CustomerId] int NULL
 END
 GO
 
-IF EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[CustomerContent]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[CustomerContent]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
 BEGIN
 	DECLARE @ExistingNewsCommentID int
 	DECLARE cur_existingcomment CURSOR FOR
@@ -2039,10 +2039,10 @@ ALTER TABLE [NewsComment] ALTER COLUMN [CreatedOnUtc] datetime NOT NULL
 GO
 
 IF NOT EXISTS (SELECT 1
-           FROM   sysobjects
+           FROM   sys.objects
            WHERE  name = 'NewsComment_Customer'
-           AND parent_obj = Object_id('NewsComment')
-           AND Objectproperty(id,N'IsForeignKey') = 1)
+           AND parent_object_id = Object_id('NewsComment')
+           AND Objectproperty(object_id,N'IsForeignKey') = 1)
 BEGIN
 	ALTER TABLE [dbo].[NewsComment] WITH CHECK ADD CONSTRAINT [NewsComment_Customer] FOREIGN KEY([CustomerId])
 	REFERENCES [dbo].[Customer] ([Id])
@@ -2052,20 +2052,20 @@ GO
 
 
 --move records from CustomerContent to BlogComment
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[BlogComment]') and NAME='CreatedOnUtc')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[BlogComment]') and NAME='CreatedOnUtc')
 BEGIN
 	ALTER TABLE [BlogComment]
 	ADD [CreatedOnUtc] datetime NULL
 END
 GO
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[BlogComment]') and NAME='CustomerId')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[BlogComment]') and NAME='CustomerId')
 BEGIN
 	ALTER TABLE [BlogComment]
 	ADD [CustomerId] int NULL
 END
 GO
 
-IF EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[CustomerContent]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[CustomerContent]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
 BEGIN
 	DECLARE @ExistingBlogCommentID int
 	DECLARE cur_existingcomment CURSOR FOR
@@ -2105,10 +2105,10 @@ ALTER TABLE [BlogComment] ALTER COLUMN [CreatedOnUtc] datetime NOT NULL
 GO
 
 IF NOT EXISTS (SELECT 1
-           FROM   sysobjects
+           FROM   sys.objects
            WHERE  name = 'BlogComment_Customer'
-           AND parent_obj = Object_id('BlogComment')
-           AND Objectproperty(id,N'IsForeignKey') = 1)
+           AND parent_object_id = Object_id('BlogComment')
+           AND Objectproperty(object_id,N'IsForeignKey') = 1)
 BEGIN
 	ALTER TABLE [dbo].[BlogComment] WITH CHECK ADD CONSTRAINT [BlogComment_Customer] FOREIGN KEY([CustomerId])
 	REFERENCES [dbo].[Customer] ([Id])
@@ -2118,26 +2118,26 @@ GO
 
 
 --move records from CustomerContent to ProductReview
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[ProductReview]') and NAME='CreatedOnUtc')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[ProductReview]') and NAME='CreatedOnUtc')
 BEGIN
 	ALTER TABLE [ProductReview]
 	ADD [CreatedOnUtc] datetime NULL
 END
 GO
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[ProductReview]') and NAME='IsApproved')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[ProductReview]') and NAME='IsApproved')
 BEGIN
 	ALTER TABLE [ProductReview]
 	ADD [IsApproved] bit NULL
 END
 GO
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[ProductReview]') and NAME='CustomerId')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[ProductReview]') and NAME='CustomerId')
 BEGIN
 	ALTER TABLE [ProductReview]
 	ADD [CustomerId] int NULL
 END
 GO
 
-IF EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[CustomerContent]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[CustomerContent]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
 BEGIN
 	DECLARE @ExistingProductReviewID int
 	DECLARE cur_existingcomment CURSOR FOR
@@ -2184,10 +2184,10 @@ ALTER TABLE [ProductReview] ALTER COLUMN [CreatedOnUtc] datetime NOT NULL
 GO
 
 IF NOT EXISTS (SELECT 1
-           FROM   sysobjects
+           FROM   sys.objects
            WHERE  name = 'ProductReview_Customer'
-           AND parent_obj = Object_id('ProductReview')
-           AND Objectproperty(id,N'IsForeignKey') = 1)
+           AND parent_object_id = Object_id('ProductReview')
+           AND Objectproperty(object_id,N'IsForeignKey') = 1)
 BEGIN
 	ALTER TABLE [dbo].[ProductReview] WITH CHECK ADD CONSTRAINT [ProductReview_Customer] FOREIGN KEY([CustomerId])
 	REFERENCES [dbo].[Customer] ([Id])
@@ -2198,14 +2198,14 @@ GO
 
 
 --move records from CustomerContent to ProductReviewHelpfulness
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[ProductReviewHelpfulness]') and NAME='CustomerId')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[ProductReviewHelpfulness]') and NAME='CustomerId')
 BEGIN
 	ALTER TABLE [ProductReviewHelpfulness]
 	ADD [CustomerId] int NULL
 END
 GO
 
-IF EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[CustomerContent]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[CustomerContent]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
 BEGIN
 	DECLARE @ExistingProductReviewHelpfulnessID int
 	DECLARE cur_existingcomment CURSOR FOR
@@ -2240,21 +2240,21 @@ GO
 
 
 --move records from CustomerContent to PollVotingRecord
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[PollVotingRecord]') and NAME='CustomerId')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[PollVotingRecord]') and NAME='CustomerId')
 BEGIN
 	ALTER TABLE [PollVotingRecord]
 	ADD [CustomerId] int NULL
 END
 GO
 
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[PollVotingRecord]') and NAME='CreatedOnUtc')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[PollVotingRecord]') and NAME='CreatedOnUtc')
 BEGIN
 	ALTER TABLE [PollVotingRecord]
 	ADD [CreatedOnUtc] datetime NULL
 END
 GO
 
-IF EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[CustomerContent]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[CustomerContent]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
 BEGIN
 	DECLARE @ExistingPollVotingRecordID int
 	DECLARE cur_existingcomment CURSOR FOR
@@ -2299,10 +2299,10 @@ ALTER TABLE [PollVotingRecord] ALTER COLUMN [CreatedOnUtc] datetime NOT NULL
 GO
 
 IF NOT EXISTS (SELECT 1
-           FROM   sysobjects
+           FROM   sys.objects
            WHERE  name = 'PollVotingRecord_Customer'
-           AND parent_obj = Object_id('PollVotingRecord')
-           AND Objectproperty(id,N'IsForeignKey') = 1)
+           AND parent_object_id = Object_id('PollVotingRecord')
+           AND Objectproperty(object_id,N'IsForeignKey') = 1)
 BEGIN
 	ALTER TABLE [dbo].[PollVotingRecord] WITH CHECK ADD CONSTRAINT [PollVotingRecord_Customer] FOREIGN KEY([CustomerId])
 	REFERENCES [dbo].[Customer] ([Id])
@@ -2312,10 +2312,10 @@ GO
 
 --remove CustomerContent table 
 IF EXISTS (SELECT 1
-           FROM   sysobjects
+           FROM   sys.objects
            WHERE  name = 'BlogComment_TypeConstraint_From_CustomerContent_To_BlogComment'
-           AND parent_obj = Object_id('BlogComment')
-           AND Objectproperty(id,N'IsForeignKey') = 1)
+           AND parent_object_id = Object_id('BlogComment')
+           AND Objectproperty(object_id,N'IsForeignKey') = 1)
 BEGIN
 	ALTER TABLE dbo.[BlogComment]
 	DROP CONSTRAINT BlogComment_TypeConstraint_From_CustomerContent_To_BlogComment
@@ -2323,10 +2323,10 @@ END
 GO
 
 IF EXISTS (SELECT 1
-           FROM   sysobjects
+           FROM   sys.objects
            WHERE  name = 'ProductReview_TypeConstraint_From_CustomerContent_To_ProductReview'
-           AND parent_obj = Object_id('ProductReview')
-           AND Objectproperty(id,N'IsForeignKey') = 1)
+           AND parent_object_id = Object_id('ProductReview')
+           AND Objectproperty(object_id,N'IsForeignKey') = 1)
 BEGIN
 	ALTER TABLE dbo.[ProductReview]
 	DROP CONSTRAINT ProductReview_TypeConstraint_From_CustomerContent_To_ProductReview
@@ -2334,10 +2334,10 @@ END
 GO
 
 IF EXISTS (SELECT 1
-           FROM   sysobjects
+           FROM   sys.objects
            WHERE  name = 'ProductReviewHelpfulness_TypeConstraint_From_CustomerContent_To_ProductReviewHelpfulness'
-           AND parent_obj = Object_id('ProductReviewHelpfulness')
-           AND Objectproperty(id,N'IsForeignKey') = 1)
+           AND parent_object_id = Object_id('ProductReviewHelpfulness')
+           AND Objectproperty(object_id,N'IsForeignKey') = 1)
 BEGIN
 	ALTER TABLE dbo.[ProductReviewHelpfulness]
 	DROP CONSTRAINT ProductReviewHelpfulness_TypeConstraint_From_CustomerContent_To_ProductReviewHelpfulness
@@ -2345,10 +2345,10 @@ END
 GO
 
 IF EXISTS (SELECT 1
-           FROM   sysobjects
+           FROM   sys.objects
            WHERE  name = 'NewsComment_TypeConstraint_From_CustomerContent_To_NewsComment'
-           AND parent_obj = Object_id('NewsComment')
-           AND Objectproperty(id,N'IsForeignKey') = 1)
+           AND parent_object_id = Object_id('NewsComment')
+           AND Objectproperty(object_id,N'IsForeignKey') = 1)
 BEGIN
 	ALTER TABLE dbo.[NewsComment]
 	DROP CONSTRAINT NewsComment_TypeConstraint_From_CustomerContent_To_NewsComment
@@ -2356,10 +2356,10 @@ END
 GO
 
 IF EXISTS (SELECT 1
-           FROM   sysobjects
+           FROM   sys.objects
            WHERE  name = 'PollVotingRecord_TypeConstraint_From_CustomerContent_To_PollVotingRecord'
-           AND parent_obj = Object_id('PollVotingRecord')
-           AND Objectproperty(id,N'IsForeignKey') = 1)
+           AND parent_object_id = Object_id('PollVotingRecord')
+           AND Objectproperty(object_id,N'IsForeignKey') = 1)
 BEGIN
 	ALTER TABLE dbo.[PollVotingRecord]
 	DROP CONSTRAINT PollVotingRecord_TypeConstraint_From_CustomerContent_To_PollVotingRecord
@@ -2367,17 +2367,17 @@ END
 GO
 
 IF EXISTS (SELECT 1
-           FROM   sysobjects
+           FROM   sys.objects
            WHERE  name = 'CustomerContent_Customer'
-           AND parent_obj = Object_id('CustomerContent')
-           AND Objectproperty(id,N'IsForeignKey') = 1)
+           AND parent_object_id = Object_id('CustomerContent')
+           AND Objectproperty(object_id,N'IsForeignKey') = 1)
 BEGIN
 	ALTER TABLE dbo.[CustomerContent]
 	DROP CONSTRAINT CustomerContent_Customer
 END
 GO
 
-IF EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[CustomerContent]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[CustomerContent]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
 BEGIN
 	EXEC('DROP TABLE [CustomerContent]')
 END
@@ -2386,56 +2386,56 @@ GO
 --now we should add IDENTITY to the primary keys of these tables (moved from CustomerContent)
 --1. Product reviews
 IF EXISTS (SELECT 1
-           FROM   sysobjects
+           FROM   sys.objects
            WHERE  name = 'ProductReview_Customer'
-           AND parent_obj = Object_id('ProductReview')
-           AND Objectproperty(id,N'IsForeignKey') = 1)
+           AND parent_object_id = Object_id('ProductReview')
+           AND Objectproperty(object_id,N'IsForeignKey') = 1)
 BEGIN
 	ALTER TABLE dbo.[ProductReview]
 	DROP CONSTRAINT ProductReview_Customer
 END
 GO
 IF EXISTS (SELECT 1
-           FROM   sysobjects
+           FROM   sys.objects
            WHERE  name = 'ProductReview_Product1'
-           AND parent_obj = Object_id('ProductReview')
-           AND Objectproperty(id,N'IsForeignKey') = 1)
+           AND parent_object_id = Object_id('ProductReview')
+           AND Objectproperty(object_id,N'IsForeignKey') = 1)
 BEGIN
 	ALTER TABLE dbo.[ProductReview]
 	DROP CONSTRAINT ProductReview_Product1
 END
 GO
 IF EXISTS (SELECT 1
-           FROM   sysobjects
+           FROM   sys.objects
            WHERE  name = 'ProductReview_Product'
-           AND parent_obj = Object_id('ProductReview')
-           AND Objectproperty(id,N'IsForeignKey') = 1)
+           AND parent_object_id = Object_id('ProductReview')
+           AND Objectproperty(object_id,N'IsForeignKey') = 1)
 BEGIN
 	ALTER TABLE dbo.[ProductReview]
 	DROP CONSTRAINT ProductReview_Product
 END
 GO
 IF EXISTS (SELECT 1
-           FROM   sysobjects
+           FROM   sys.objects
            WHERE  name = 'ProductReviewHelpfulness_ProductReview1'
-           AND parent_obj = Object_id('ProductReviewHelpfulness')
-           AND Objectproperty(id,N'IsForeignKey') = 1)
+           AND parent_object_id = Object_id('ProductReviewHelpfulness')
+           AND Objectproperty(object_id,N'IsForeignKey') = 1)
 BEGIN
 	ALTER TABLE dbo.[ProductReviewHelpfulness]
 	DROP CONSTRAINT ProductReviewHelpfulness_ProductReview1
 END
 GO
 IF EXISTS (SELECT 1
-           FROM   sysobjects
+           FROM   sys.objects
            WHERE  name = 'ProductReviewHelpfulness_ProductReview'
-           AND parent_obj = Object_id('ProductReviewHelpfulness')
-           AND Objectproperty(id,N'IsForeignKey') = 1)
+           AND parent_object_id = Object_id('ProductReviewHelpfulness')
+           AND Objectproperty(object_id,N'IsForeignKey') = 1)
 BEGIN
 	ALTER TABLE dbo.[ProductReviewHelpfulness]
 	DROP CONSTRAINT ProductReviewHelpfulness_ProductReview
 END
 GO
-IF NOT EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[Tmp_ProductReview]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[Tmp_ProductReview]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
 BEGIN
 CREATE TABLE [dbo].[Tmp_ProductReview](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
@@ -2486,36 +2486,36 @@ GO
 
 --2. News comment
 IF EXISTS (SELECT 1
-           FROM   sysobjects
+           FROM   sys.objects
            WHERE  name = 'NewsComment_Customer'
-           AND parent_obj = Object_id('NewsComment')
-           AND Objectproperty(id,N'IsForeignKey') = 1)
+           AND parent_object_id = Object_id('NewsComment')
+           AND Objectproperty(object_id,N'IsForeignKey') = 1)
 BEGIN
 	ALTER TABLE dbo.[NewsComment]
 	DROP CONSTRAINT NewsComment_Customer
 END
 GO
 IF EXISTS (SELECT 1
-           FROM   sysobjects
+           FROM   sys.objects
            WHERE  name = 'NewsComment_NewsItem1'
-           AND parent_obj = Object_id('NewsComment')
-           AND Objectproperty(id,N'IsForeignKey') = 1)
+           AND parent_object_id = Object_id('NewsComment')
+           AND Objectproperty(object_id,N'IsForeignKey') = 1)
 BEGIN
 	ALTER TABLE dbo.[NewsComment]
 	DROP CONSTRAINT NewsComment_NewsItem1
 END
 GO
 IF EXISTS (SELECT 1
-           FROM   sysobjects
+           FROM   sys.objects
            WHERE  name = 'NewsComment_NewsItem'
-           AND parent_obj = Object_id('NewsComment')
-           AND Objectproperty(id,N'IsForeignKey') = 1)
+           AND parent_object_id = Object_id('NewsComment')
+           AND Objectproperty(object_id,N'IsForeignKey') = 1)
 BEGIN
 	ALTER TABLE dbo.[NewsComment]
 	DROP CONSTRAINT NewsComment_NewsItem
 END
 GO
-IF NOT EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[Tmp_NewsComment]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[Tmp_NewsComment]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
 BEGIN
 CREATE TABLE [dbo].[Tmp_NewsComment](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
@@ -2555,36 +2555,36 @@ GO
 
 --3. Blog comment
 IF EXISTS (SELECT 1
-           FROM   sysobjects
+           FROM   sys.objects
            WHERE  name = 'BlogComment_Customer'
-           AND parent_obj = Object_id('BlogComment')
-           AND Objectproperty(id,N'IsForeignKey') = 1)
+           AND parent_object_id = Object_id('BlogComment')
+           AND Objectproperty(object_id,N'IsForeignKey') = 1)
 BEGIN
 	ALTER TABLE dbo.[BlogComment]
 	DROP CONSTRAINT BlogComment_Customer
 END
 GO
 IF EXISTS (SELECT 1
-           FROM   sysobjects
+           FROM   sys.objects
            WHERE  name = 'BlogComment_BlogPost1'
-           AND parent_obj = Object_id('BlogComment')
-           AND Objectproperty(id,N'IsForeignKey') = 1)
+           AND parent_object_id = Object_id('BlogComment')
+           AND Objectproperty(object_id,N'IsForeignKey') = 1)
 BEGIN
 	ALTER TABLE dbo.[BlogComment]
 	DROP CONSTRAINT BlogComment_BlogPost1
 END
 GO
 IF EXISTS (SELECT 1
-           FROM   sysobjects
+           FROM   sys.objects
            WHERE  name = 'BlogComment_BlogPost'
-           AND parent_obj = Object_id('BlogComment')
-           AND Objectproperty(id,N'IsForeignKey') = 1)
+           AND parent_object_id = Object_id('BlogComment')
+           AND Objectproperty(object_id,N'IsForeignKey') = 1)
 BEGIN
 	ALTER TABLE dbo.[BlogComment]
 	DROP CONSTRAINT BlogComment_BlogPost
 END
 GO
-IF NOT EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[Tmp_BlogComment]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[Tmp_BlogComment]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
 BEGIN
 CREATE TABLE [dbo].[Tmp_BlogComment](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
@@ -2624,26 +2624,26 @@ GO
 
 --4. Product review helpfulness
 IF EXISTS (SELECT 1
-           FROM   sysobjects
+           FROM   sys.objects
            WHERE  name = 'ProductReviewHelpfulness_ProductReview'
-           AND parent_obj = Object_id('ProductReviewHelpfulness')
-           AND Objectproperty(id,N'IsForeignKey') = 1)
+           AND parent_object_id = Object_id('ProductReviewHelpfulness')
+           AND Objectproperty(object_id,N'IsForeignKey') = 1)
 BEGIN
 	ALTER TABLE dbo.[ProductReviewHelpfulness]
 	DROP CONSTRAINT ProductReviewHelpfulness_ProductReview
 END
 GO
 IF EXISTS (SELECT 1
-           FROM   sysobjects
+           FROM   sys.objects
            WHERE  name = 'ProductReviewHelpfulness_ProductReview1'
-           AND parent_obj = Object_id('ProductReviewHelpfulness')
-           AND Objectproperty(id,N'IsForeignKey') = 1)
+           AND parent_object_id = Object_id('ProductReviewHelpfulness')
+           AND Objectproperty(object_id,N'IsForeignKey') = 1)
 BEGIN
 	ALTER TABLE dbo.[ProductReviewHelpfulness]
 	DROP CONSTRAINT ProductReviewHelpfulness_ProductReview1
 END
 GO
-IF NOT EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[Tmp_ProductReviewHelpfulness]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[Tmp_ProductReviewHelpfulness]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
 BEGIN
 CREATE TABLE [dbo].[Tmp_ProductReviewHelpfulness](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
@@ -2678,36 +2678,36 @@ GO
 
 --5. Poll voting record
 IF EXISTS (SELECT 1
-           FROM   sysobjects
+           FROM   sys.objects
            WHERE  name = 'PollVotingRecord_Customer'
-           AND parent_obj = Object_id('PollVotingRecord')
-           AND Objectproperty(id,N'IsForeignKey') = 1)
+           AND parent_object_id = Object_id('PollVotingRecord')
+           AND Objectproperty(object_id,N'IsForeignKey') = 1)
 BEGIN
 	ALTER TABLE dbo.[PollVotingRecord]
 	DROP CONSTRAINT PollVotingRecord_Customer
 END
 GO
 IF EXISTS (SELECT 1
-           FROM   sysobjects
+           FROM   sys.objects
            WHERE  name = 'PollVotingRecord_PollAnswer1'
-           AND parent_obj = Object_id('PollVotingRecord')
-           AND Objectproperty(id,N'IsForeignKey') = 1)
+           AND parent_object_id = Object_id('PollVotingRecord')
+           AND Objectproperty(object_id,N'IsForeignKey') = 1)
 BEGIN
 	ALTER TABLE dbo.[PollVotingRecord]
 	DROP CONSTRAINT PollVotingRecord_PollAnswer1
 END
 GO
 IF EXISTS (SELECT 1
-           FROM   sysobjects
+           FROM   sys.objects
            WHERE  name = 'PollVotingRecord_PollAnswer'
-           AND parent_obj = Object_id('PollVotingRecord')
-           AND Objectproperty(id,N'IsForeignKey') = 1)
+           AND parent_object_id = Object_id('PollVotingRecord')
+           AND Objectproperty(object_id,N'IsForeignKey') = 1)
 BEGIN
 	ALTER TABLE dbo.[PollVotingRecord]
 	DROP CONSTRAINT PollVotingRecord_PollAnswer
 END
 GO
-IF NOT EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[Tmp_PollVotingRecord]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[Tmp_PollVotingRecord]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
 BEGIN
 CREATE TABLE [dbo].[Tmp_PollVotingRecord](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
@@ -2744,7 +2744,7 @@ GO
 
 
 --drop [ApprovedCommentCount] and [NotApprovedCommentCount] columns
-IF EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[BlogPost]') and NAME='ApprovedCommentCount')
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[BlogPost]') and NAME='ApprovedCommentCount')
 BEGIN
 	ALTER TABLE [BlogPost]
 	ADD [CommentCount] int NULL
@@ -2760,7 +2760,7 @@ END
 GO
 
 --drop [ApprovedCommentCount] and [NotApprovedCommentCount] columns
-IF EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[News]') and NAME='ApprovedCommentCount')
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[News]') and NAME='ApprovedCommentCount')
 BEGIN
 	ALTER TABLE [News]
 	ADD [CommentCount] int NULL
@@ -2777,21 +2777,21 @@ GO
 
 
 --SEO settings for blog
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[BlogPost]') and NAME='MetaKeywords')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[BlogPost]') and NAME='MetaKeywords')
 BEGIN
 	ALTER TABLE [BlogPost]
 	ADD [MetaKeywords] nvarchar(400) NULL
 END
 GO
 
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[BlogPost]') and NAME='MetaTitle')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[BlogPost]') and NAME='MetaTitle')
 BEGIN
 	ALTER TABLE [BlogPost]
 	ADD [MetaTitle] nvarchar(400) NULL
 END
 GO
 
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[BlogPost]') and NAME='MetaDescription')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[BlogPost]') and NAME='MetaDescription')
 BEGIN
 	ALTER TABLE [BlogPost]
 	ADD [MetaDescription] nvarchar(MAX) NULL
@@ -2800,21 +2800,21 @@ GO
 
 
 --SEO settings for news
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[News]') and NAME='MetaKeywords')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[News]') and NAME='MetaKeywords')
 BEGIN
 	ALTER TABLE [News]
 	ADD [MetaKeywords] nvarchar(400) NULL
 END
 GO
 
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[News]') and NAME='MetaTitle')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[News]') and NAME='MetaTitle')
 BEGIN
 	ALTER TABLE [News]
 	ADD [MetaTitle] nvarchar(400) NULL
 END
 GO
 
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[News]') and NAME='MetaDescription')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[News]') and NAME='MetaDescription')
 BEGIN
 	ALTER TABLE [News]
 	ADD [MetaDescription] nvarchar(MAX) NULL
@@ -2830,7 +2830,7 @@ GO
 
 
 --Store mapping for blog posts
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[BlogPost]') and NAME='LimitedToStores')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[BlogPost]') and NAME='LimitedToStores')
 BEGIN
 	ALTER TABLE [BlogPost]
 	ADD [LimitedToStores] bit NULL
@@ -2848,7 +2848,7 @@ GO
 
 
 --vendor support
-IF NOT EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[Vendor]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[Vendor]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
 BEGIN
 	CREATE TABLE [dbo].[Vendor](
 		[Id] [int] IDENTITY(1,1) NOT NULL,
@@ -2891,7 +2891,7 @@ END
 GO
 
 --Product-vendor mapping
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Product]') and NAME='VendorId')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Product]') and NAME='VendorId')
 BEGIN
 	ALTER TABLE [Product]
 	ADD [VendorId] int NULL
@@ -2908,8 +2908,8 @@ GO
 
 IF EXISTS (
 		SELECT *
-		FROM sysobjects
-		WHERE id = OBJECT_ID(N'[ProductLoadAllPaged]') AND OBJECTPROPERTY(id,N'IsProcedure') = 1)
+		FROM sys.objects
+		WHERE object_id = OBJECT_ID(N'[ProductLoadAllPaged]') AND OBJECTPROPERTY(object_id,N'IsProcedure') = 1)
 DROP PROCEDURE [ProductLoadAllPaged]
 GO
 CREATE PROCEDURE [dbo].[ProductLoadAllPaged]
@@ -3509,7 +3509,7 @@ END
 GO
 
 --Customer-vendor mapping (managers)
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Customer]') and NAME='VendorId')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Customer]') and NAME='VendorId')
 BEGIN
 	ALTER TABLE [Customer]
 	ADD [VendorId] int NULL

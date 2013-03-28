@@ -778,8 +778,8 @@ GO
 --Update stored procedure according to the sort options
 IF EXISTS (
 		SELECT *
-		FROM dbo.sysobjects
-		WHERE id = OBJECT_ID(N'[dbo].[ProductLoadAllPaged]') AND OBJECTPROPERTY(id,N'IsProcedure') = 1)
+		FROM sys.objects
+		WHERE object_id = OBJECT_ID(N'[dbo].[ProductLoadAllPaged]') AND OBJECTPROPERTY(object_id,N'IsProcedure') = 1)
 DROP PROCEDURE [dbo].[ProductLoadAllPaged]
 GO
 CREATE PROCEDURE [dbo].[ProductLoadAllPaged]
@@ -1028,7 +1028,7 @@ END
 GO
 
 --more SQL indexes
-IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_Product_Deleted_and_Published' and id=object_id(N'[dbo].[Product]'))
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_Product_Deleted_and_Published' and object_id=object_id(N'[dbo].[Product]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_Product_Deleted_and_Published] ON [dbo].[Product] 
 	(
@@ -1038,7 +1038,7 @@ BEGIN
 END
 GO
 
-IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_Product_Published' and id=object_id(N'[dbo].[Product]'))
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_Product_Published' and object_id=object_id(N'[dbo].[Product]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_Product_Published] ON [dbo].[Product] 
 	(
@@ -1047,7 +1047,7 @@ BEGIN
 END
 GO
 
-IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_Product_ShowOnHomepage' and id=object_id(N'[dbo].[Product]'))
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_Product_ShowOnHomepage' and object_id=object_id(N'[dbo].[Product]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_Product_ShowOnHomepage] ON [dbo].[Product] 
 	(
@@ -1056,7 +1056,7 @@ BEGIN
 END
 GO
 
-IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_ProductVariant_ProductId_2' and id=object_id(N'[dbo].[ProductVariant]'))
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_ProductVariant_ProductId_2' and object_id=object_id(N'[dbo].[ProductVariant]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_ProductVariant_ProductId_2] ON [dbo].[ProductVariant] 
 	(
@@ -1065,7 +1065,7 @@ BEGIN
 END
 GO
 
-IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_PCM_Product_and_Category' and id=object_id(N'[dbo].[Product_Category_Mapping]'))
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_PCM_Product_and_Category' and object_id=object_id(N'[dbo].[Product_Category_Mapping]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_PCM_Product_and_Category] ON [dbo].[Product_Category_Mapping] 
 	(
@@ -1075,7 +1075,7 @@ BEGIN
 END
 GO
 
-IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_PMM_Product_and_Manufacturer' and id=object_id(N'[dbo].[Product_Manufacturer_Mapping]'))
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_PMM_Product_and_Manufacturer' and object_id=object_id(N'[dbo].[Product_Manufacturer_Mapping]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_PMM_Product_and_Manufacturer] ON [dbo].[Product_Manufacturer_Mapping] 
 	(
@@ -1090,8 +1090,8 @@ GO
 --New fast [ProductLoadAllPaged] stored procedure
 IF EXISTS (
 		SELECT *
-		FROM dbo.sysobjects
-		WHERE id = OBJECT_ID(N'[dbo].[ProductLoadAllPaged]') AND OBJECTPROPERTY(id,N'IsProcedure') = 1)
+		FROM sys.objects
+		WHERE object_id = OBJECT_ID(N'[dbo].[ProductLoadAllPaged]') AND OBJECTPROPERTY(object_id,N'IsProcedure') = 1)
 DROP PROCEDURE [dbo].[ProductLoadAllPaged]
 GO
 CREATE PROCEDURE [dbo].[ProductLoadAllPaged]
@@ -1470,8 +1470,8 @@ GO
 --New [ProductLoadAllPaged] stored procedure (allow searching in several categories)
 IF EXISTS (
 		SELECT *
-		FROM dbo.sysobjects
-		WHERE id = OBJECT_ID(N'[dbo].[ProductLoadAllPaged]') AND OBJECTPROPERTY(id,N'IsProcedure') = 1)
+		FROM sys.objects
+		WHERE object_id = OBJECT_ID(N'[dbo].[ProductLoadAllPaged]') AND OBJECTPROPERTY(object_id,N'IsProcedure') = 1)
 DROP PROCEDURE [dbo].[ProductLoadAllPaged]
 GO
 CREATE PROCEDURE [dbo].[ProductLoadAllPaged]
@@ -1898,7 +1898,7 @@ GO
 
 
 --more SQL indexes
-IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_PSAM_AllowFiltering' and id=object_id(N'[dbo].[Product_SpecificationAttribute_Mapping]'))
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_PSAM_AllowFiltering' and object_id=object_id(N'[dbo].[Product_SpecificationAttribute_Mapping]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_PSAM_AllowFiltering] ON [dbo].[Product_SpecificationAttribute_Mapping] 
 	(
@@ -1908,7 +1908,7 @@ BEGIN
 END
 GO
 
-IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_PSAM_SpecificationAttributeOptionId_AllowFiltering' and id=object_id(N'[dbo].[Product_SpecificationAttribute_Mapping]'))
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_PSAM_SpecificationAttributeOptionId_AllowFiltering' and object_id=object_id(N'[dbo].[Product_SpecificationAttribute_Mapping]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_PSAM_SpecificationAttributeOptionId_AllowFiltering] ON [dbo].[Product_SpecificationAttribute_Mapping] 
 	(
@@ -1923,7 +1923,7 @@ GO
 
 
 --Add 'Guid' column to [Download] table
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Download]') and NAME='DownloadGuid')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[dbo].[Download]') and NAME='DownloadGuid')
 BEGIN
 	ALTER TABLE [dbo].[Download]
 	ADD [DownloadGuid] uniqueidentifier NULL
@@ -1958,8 +1958,8 @@ GO
 --Update stored procedure according to the new search parameters (return filterable specs)
 IF EXISTS (
 		SELECT *
-		FROM dbo.sysobjects
-		WHERE id = OBJECT_ID(N'[dbo].[ProductLoadAllPaged]') AND OBJECTPROPERTY(id,N'IsProcedure') = 1)
+		FROM sys.objects
+		WHERE object_id = OBJECT_ID(N'[dbo].[ProductLoadAllPaged]') AND OBJECTPROPERTY(object_id,N'IsProcedure') = 1)
 DROP PROCEDURE [dbo].[ProductLoadAllPaged]
 GO
 CREATE PROCEDURE [dbo].[ProductLoadAllPaged]
@@ -2346,19 +2346,19 @@ GO
 
 
 --Add new columns to [ScheduleTask] table
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[ScheduleTask]') and NAME='LastStartUtc')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[dbo].[ScheduleTask]') and NAME='LastStartUtc')
 BEGIN
 	ALTER TABLE [dbo].[ScheduleTask]
 	ADD [LastStartUtc] datetime NULL
 END
 GO
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[ScheduleTask]') and NAME='LastEndUtc')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[dbo].[ScheduleTask]') and NAME='LastEndUtc')
 BEGIN
 	ALTER TABLE [dbo].[ScheduleTask]
 	ADD [LastEndUtc] datetime NULL
 END
 GO
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[ScheduleTask]') and NAME='LastSuccessUtc')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[dbo].[ScheduleTask]') and NAME='LastSuccessUtc')
 BEGIN
 	ALTER TABLE [dbo].[ScheduleTask]
 	ADD [LastSuccessUtc] datetime NULL
@@ -2383,7 +2383,7 @@ GO
 
 
 --new shipment functionality
-IF NOT EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[dbo].[Shipment]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Shipment]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
 BEGIN
 CREATE TABLE [dbo].[Shipment](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
@@ -2400,10 +2400,10 @@ END
 GO
 
 IF EXISTS (SELECT 1
-           FROM   sysobjects
+           FROM   sys.objects
            WHERE  name = 'Shipment_Order'
-           AND parent_obj = Object_id('Shipment')
-           AND Objectproperty(id,N'IsForeignKey') = 1)
+           AND parent_object_id = Object_id('Shipment')
+           AND Objectproperty(object_id,N'IsForeignKey') = 1)
 ALTER TABLE dbo.Shipment
 DROP CONSTRAINT Shipment_Order
 GO
@@ -2412,7 +2412,7 @@ REFERENCES [dbo].[Order] ([Id])
 ON DELETE CASCADE
 GO
 
-IF NOT EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[dbo].[Shipment_OrderProductVariant]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Shipment_OrderProductVariant]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
 BEGIN
 CREATE TABLE [dbo].[Shipment_OrderProductVariant](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
@@ -2428,10 +2428,10 @@ END
 GO
 
 IF EXISTS (SELECT 1
-           FROM   sysobjects
+           FROM   sys.objects
            WHERE  name = 'ShipmentOrderProductVariant_Shipment'
-           AND parent_obj = Object_id('Shipment_OrderProductVariant')
-           AND Objectproperty(id,N'IsForeignKey') = 1)
+           AND parent_object_id = Object_id('Shipment_OrderProductVariant')
+           AND Objectproperty(object_id,N'IsForeignKey') = 1)
 ALTER TABLE dbo.Shipment_OrderProductVariant
 DROP CONSTRAINT ShipmentOrderProductVariant_Shipment
 GO
@@ -2468,9 +2468,9 @@ WHERE [Name] = N'OrderDelivered.CustomerNotification'
 GO
 
 --create shipments for the previous orders
-IF (EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Order]') and NAME='ShippedDateUtc')
-AND EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Order]') and NAME='DeliveryDateUtc')
-AND EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Order]') and NAME='TrackingNumber'))
+IF (EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[dbo].[Order]') and NAME='ShippedDateUtc')
+AND EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[dbo].[Order]') and NAME='DeliveryDateUtc')
+AND EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[dbo].[Order]') and NAME='TrackingNumber'))
 BEGIN
 	EXEC('
 	DECLARE @OrderId int
@@ -2550,19 +2550,19 @@ END
 GO
 
 --drop old column
-IF EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Order]') and NAME='ShippedDateUtc')
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[dbo].[Order]') and NAME='ShippedDateUtc')
 BEGIN
 	ALTER TABLE [dbo].[Order] DROP COLUMN [ShippedDateUtc]
 END
 GO
 
-IF EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Order]') and NAME='DeliveryDateUtc')
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[dbo].[Order]') and NAME='DeliveryDateUtc')
 BEGIN
 	ALTER TABLE [dbo].[Order] DROP COLUMN [DeliveryDateUtc]
 END
 GO
 
-IF EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Order]') and NAME='TrackingNumber')
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[dbo].[Order]') and NAME='TrackingNumber')
 BEGIN
 	ALTER TABLE [dbo].[Order] DROP COLUMN [TrackingNumber]
 END
@@ -2570,7 +2570,7 @@ GO
 
 
 --"pre-order" support
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[ProductVariant]') and NAME='AvailableForPreOrder')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[dbo].[ProductVariant]') and NAME='AvailableForPreOrder')
 BEGIN
 	ALTER TABLE [dbo].[ProductVariant]
 	ADD [AvailableForPreOrder] bit NULL

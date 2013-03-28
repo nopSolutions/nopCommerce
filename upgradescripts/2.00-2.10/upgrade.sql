@@ -494,7 +494,7 @@ GO
 
 
 --Widgets
-IF NOT EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[dbo].[Widget]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Widget]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
 BEGIN
 CREATE TABLE [dbo].[Widget](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
@@ -564,7 +564,7 @@ GO
 
 
 -- ExternalAuthenticationRecord (OpenId, OAuth, etc)
-IF NOT EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[dbo].[ExternalAuthenticationRecord]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ExternalAuthenticationRecord]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
 BEGIN
 CREATE TABLE [dbo].[ExternalAuthenticationRecord](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
@@ -584,10 +584,10 @@ GO
 
 
 IF EXISTS (SELECT 1
-           FROM   sysobjects
+           FROM   sys.objects
            WHERE  name = 'ExternalAuthenticationRecord_Customer'
-           AND parent_obj = Object_id('ExternalAuthenticationRecord')
-           AND Objectproperty(id,N'IsForeignKey') = 1)
+           AND parent_object_id = Object_id('ExternalAuthenticationRecord')
+           AND Objectproperty(object_id,N'IsForeignKey') = 1)
 ALTER TABLE dbo.ExternalAuthenticationRecord
 DROP CONSTRAINT ExternalAuthenticationRecord_Customer
 GO
@@ -625,7 +625,7 @@ ALTER TABLE [dbo].[CustomerAttribute] ALTER COLUMN [Value] nvarchar(4000) NOT NU
 GO
 
 --Add one more column to [ExternalAuthenticationRecord] table
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[ExternalAuthenticationRecord]') and NAME='Email')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[dbo].[ExternalAuthenticationRecord]') and NAME='Email')
 BEGIN
 	ALTER TABLE [dbo].[ExternalAuthenticationRecord] 
 	ADD [Email] nvarchar(MAX) NULL
@@ -649,7 +649,7 @@ WHERE [name] = N'ordersettings.returnrequestactions'
 GO
 
 --SEO friendly language URLs
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Language]') and NAME='UniqueSeoCode')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[dbo].[Language]') and NAME='UniqueSeoCode')
 BEGIN
 	ALTER TABLE [dbo].[Language] 
 	ADD [UniqueSeoCode] [nvarchar](2) NULL
@@ -662,7 +662,7 @@ GO
 
 
 --performance optimization (indexes)
-IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_LocaleStringResource' and id=object_id(N'[dbo].[LocaleStringResource]'))
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_LocaleStringResource' and object_id=object_id(N'[dbo].[LocaleStringResource]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_LocaleStringResource] ON [dbo].[LocaleStringResource] 
 	(
@@ -672,7 +672,7 @@ BEGIN
 END
 GO
 
-IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_ProductVariant_ProductId' and id=object_id(N'[dbo].[ProductVariant]'))
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_ProductVariant_ProductId' and object_id=object_id(N'[dbo].[ProductVariant]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_ProductVariant_ProductId]
 	ON [dbo].[ProductVariant] ([ProductId])
@@ -680,7 +680,7 @@ BEGIN
 END
 GO
 
-IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_Country_DisplayOrder' and id=object_id(N'[dbo].[Country]'))
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_Country_DisplayOrder' and object_id=object_id(N'[dbo].[Country]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_Country_DisplayOrder] 
 	ON [dbo].[Country] 
@@ -690,14 +690,14 @@ BEGIN
 END
 GO
 
-IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_StateProvince_CountryId' and id=object_id(N'[dbo].[StateProvince]'))
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_StateProvince_CountryId' and object_id=object_id(N'[dbo].[StateProvince]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_StateProvince_CountryId] ON [dbo].[StateProvince] ([CountryId])
 	INCLUDE ([DisplayOrder])
 END
 GO
 
-IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_Currency_DisplayOrder' and id=object_id(N'[dbo].[Currency]'))
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_Currency_DisplayOrder' and object_id=object_id(N'[dbo].[Currency]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_Currency_DisplayOrder] ON [dbo].[Currency] 
 	(
@@ -706,7 +706,7 @@ BEGIN
 END
 GO
 
-IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_Log_CreatedOnUtc' and id=object_id(N'[dbo].[Log]'))
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_Log_CreatedOnUtc' and object_id=object_id(N'[dbo].[Log]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_Log_CreatedOnUtc] ON [dbo].[Log] 
 	(
@@ -718,7 +718,7 @@ GO
 --[Email] column of [Customer] can have up to 1000 chars
 ALTER TABLE [dbo].[Customer] ALTER COLUMN [Email] nvarchar(1000) NULL
 GO
-IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_Customer_Email' and id=object_id(N'[dbo].[Customer]'))
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_Customer_Email' and object_id=object_id(N'[dbo].[Customer]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_Customer_Email] ON [dbo].[Customer] 
 	(
@@ -730,7 +730,7 @@ GO
 --[Username] column of [Customer] can have up to 1000 chars
 ALTER TABLE [dbo].[Customer] ALTER COLUMN [Username] nvarchar(1000) NULL
 GO
-IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_Customer_Username' and id=object_id(N'[dbo].[Customer]'))
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_Customer_Username' and object_id=object_id(N'[dbo].[Customer]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_Customer_Username] ON [dbo].[Customer] 
 	(
@@ -739,7 +739,7 @@ BEGIN
 END
 GO
 
-IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_Customer_CustomerGuid' and id=object_id(N'[dbo].[Customer]'))
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_Customer_CustomerGuid' and object_id=object_id(N'[dbo].[Customer]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_Customer_CustomerGuid] ON [dbo].[Customer] 
 	(
@@ -748,7 +748,7 @@ BEGIN
 END
 GO
 
-IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_QueuedEmail_CreatedOnUtc' and id=object_id(N'[dbo].[QueuedEmail]'))
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_QueuedEmail_CreatedOnUtc' and object_id=object_id(N'[dbo].[QueuedEmail]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_QueuedEmail_CreatedOnUtc] ON [dbo].[QueuedEmail] 
 	(
@@ -758,7 +758,7 @@ END
 GO
 
 
-IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_Order_CustomerId' and id=object_id(N'[dbo].[Order]'))
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_Order_CustomerId' and object_id=object_id(N'[dbo].[Order]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_Order_CustomerId] ON [dbo].[Order] 
 	(
@@ -767,7 +767,7 @@ BEGIN
 END
 GO
 
-IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_Language_DisplayOrder' and id=object_id(N'[dbo].[Language]'))
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_Language_DisplayOrder' and object_id=object_id(N'[dbo].[Language]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_Language_DisplayOrder] ON [dbo].[Language] 
 	(
@@ -776,7 +776,7 @@ BEGIN
 END
 GO
 
-IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_CustomerAttribute_CustomerId' and id=object_id(N'[dbo].[CustomerAttribute]'))
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_CustomerAttribute_CustomerId' and object_id=object_id(N'[dbo].[CustomerAttribute]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_CustomerAttribute_CustomerId] ON [dbo].[CustomerAttribute] 
 	(
@@ -785,7 +785,7 @@ BEGIN
 END
 GO
 
-IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_BlogPost_LanguageId' and id=object_id(N'[dbo].[BlogPost]'))
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_BlogPost_LanguageId' and object_id=object_id(N'[dbo].[BlogPost]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_BlogPost_LanguageId] ON [dbo].[BlogPost] 
 	(
@@ -794,7 +794,7 @@ BEGIN
 END
 GO
 
-IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_BlogComment_BlogPostId' and id=object_id(N'[dbo].[BlogComment]'))
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_BlogComment_BlogPostId' and object_id=object_id(N'[dbo].[BlogComment]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_BlogComment_BlogPostId] ON [dbo].[BlogComment] 
 	(
@@ -803,7 +803,7 @@ BEGIN
 END
 GO
 
-IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_News_LanguageId' and id=object_id(N'[dbo].[News]'))
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_News_LanguageId' and object_id=object_id(N'[dbo].[News]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_News_LanguageId] ON [dbo].[News] 
 	(
@@ -811,7 +811,7 @@ BEGIN
 	)
 END
 GO
-IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_NewsComment_NewsItemId' and id=object_id(N'[dbo].[NewsComment]'))
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_NewsComment_NewsItemId' and object_id=object_id(N'[dbo].[NewsComment]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_NewsComment_NewsItemId] ON [dbo].[NewsComment] 
 	(
@@ -820,7 +820,7 @@ BEGIN
 END
 GO
 
-IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_PollAnswer_PollId' and id=object_id(N'[dbo].[PollAnswer]'))
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_PollAnswer_PollId' and object_id=object_id(N'[dbo].[PollAnswer]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_PollAnswer_PollId] ON [dbo].[PollAnswer] 
 	(
@@ -829,7 +829,7 @@ BEGIN
 END
 GO
 
-IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_ProductReview_ProductId' and id=object_id(N'[dbo].[ProductReview]'))
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_ProductReview_ProductId' and object_id=object_id(N'[dbo].[ProductReview]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_ProductReview_ProductId] ON [dbo].[ProductReview] 
 	(
@@ -838,7 +838,7 @@ BEGIN
 END
 GO
 
-IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_OrderProductVariant_OrderId' and id=object_id(N'[dbo].[OrderProductVariant]'))
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_OrderProductVariant_OrderId' and object_id=object_id(N'[dbo].[OrderProductVariant]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_OrderProductVariant_OrderId] ON [dbo].[OrderProductVariant] 
 	(
@@ -847,7 +847,7 @@ BEGIN
 END
 GO
 
-IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_OrderNote_OrderId' and id=object_id(N'[dbo].[OrderNote]'))
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_OrderNote_OrderId' and object_id=object_id(N'[dbo].[OrderNote]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_OrderNote_OrderId] ON [dbo].[OrderNote] 
 	(
@@ -856,7 +856,7 @@ BEGIN
 END
 GO
 
-IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_TierPrice_ProductVariantId' and id=object_id(N'[dbo].[TierPrice]'))
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_TierPrice_ProductVariantId' and object_id=object_id(N'[dbo].[TierPrice]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_TierPrice_ProductVariantId] ON [dbo].[TierPrice] 
 	(
@@ -865,7 +865,7 @@ BEGIN
 END
 GO
 
-IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_ShoppingCartItem_ShoppingCartTypeId_CustomerId' and id=object_id(N'[dbo].[ShoppingCartItem]'))
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_ShoppingCartItem_ShoppingCartTypeId_CustomerId' and object_id=object_id(N'[dbo].[ShoppingCartItem]'))
 BEGIN
 CREATE NONCLUSTERED INDEX [IX_ShoppingCartItem_ShoppingCartTypeId_CustomerId] ON [dbo].[ShoppingCartItem] 
 (
@@ -875,7 +875,7 @@ CREATE NONCLUSTERED INDEX [IX_ShoppingCartItem_ShoppingCartTypeId_CustomerId] ON
 END
 GO
 
-IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_RelatedProduct_ProductId1' and id=object_id(N'[dbo].[RelatedProduct]'))
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_RelatedProduct_ProductId1' and object_id=object_id(N'[dbo].[RelatedProduct]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_RelatedProduct_ProductId1] ON [dbo].[RelatedProduct] 
 	(
@@ -885,7 +885,7 @@ END
 GO
 
 
-IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_ProductVariant_DisplayOrder' and id=object_id(N'[dbo].[ProductVariant]'))
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_ProductVariant_DisplayOrder' and object_id=object_id(N'[dbo].[ProductVariant]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_ProductVariant_DisplayOrder] ON [dbo].[ProductVariant] 
 	(
@@ -894,7 +894,7 @@ BEGIN
 END
 GO
 
-IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_ProductVariantAttributeValue_ProductVariantAttributeId' and id=object_id(N'[dbo].[ProductVariantAttributeValue]'))
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_ProductVariantAttributeValue_ProductVariantAttributeId' and object_id=object_id(N'[dbo].[ProductVariantAttributeValue]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_ProductVariantAttributeValue_ProductVariantAttributeId] ON [dbo].[ProductVariantAttributeValue] 
 	(
@@ -903,7 +903,7 @@ BEGIN
 END
 GO
 
-IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_ProductVariant_ProductAttribute_Mapping_ProductVariantId' and id=object_id(N'[dbo].[ProductVariant_ProductAttribute_Mapping]'))
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_ProductVariant_ProductAttribute_Mapping_ProductVariantId' and object_id=object_id(N'[dbo].[ProductVariant_ProductAttribute_Mapping]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_ProductVariant_ProductAttribute_Mapping_ProductVariantId] ON [dbo].[ProductVariant_ProductAttribute_Mapping] 
 	(
@@ -912,7 +912,7 @@ BEGIN
 END
 GO
 
-IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_Manufacturer_DisplayOrder' and id=object_id(N'[dbo].[Manufacturer]'))
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_Manufacturer_DisplayOrder' and object_id=object_id(N'[dbo].[Manufacturer]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_Manufacturer_DisplayOrder] ON [dbo].[Manufacturer] 
 	(
@@ -921,7 +921,7 @@ BEGIN
 END
 GO
 
-IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_Category_DisplayOrder' and id=object_id(N'[dbo].[Category]'))
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_Category_DisplayOrder' and object_id=object_id(N'[dbo].[Category]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_Category_DisplayOrder] ON [dbo].[Category] 
 	(
@@ -930,7 +930,7 @@ BEGIN
 END
 GO
 
-IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_Category_ParentCategoryId' and id=object_id(N'[dbo].[Category]'))
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_Category_ParentCategoryId' and object_id=object_id(N'[dbo].[Category]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_Category_ParentCategoryId] ON [dbo].[Category] 
 	(
@@ -938,7 +938,7 @@ BEGIN
 	)
 END
 GO
-IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_Forums_Group_DisplayOrder' and id=object_id(N'[dbo].[Forums_Group]'))
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_Forums_Group_DisplayOrder' and object_id=object_id(N'[dbo].[Forums_Group]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_Forums_Group_DisplayOrder] ON [dbo].[Forums_Group] 
 	(
@@ -946,7 +946,7 @@ BEGIN
 	)
 END
 GO
-IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_Forums_Forum_DisplayOrder' and id=object_id(N'[dbo].[Forums_Forum]'))
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_Forums_Forum_DisplayOrder' and object_id=object_id(N'[dbo].[Forums_Forum]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_Forums_Forum_DisplayOrder] ON [dbo].[Forums_Forum] 
 	(
@@ -954,7 +954,7 @@ BEGIN
 	)
 END
 GO
-IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_Forums_Forum_ForumGroupId' and id=object_id(N'[dbo].[Forums_Forum]'))
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_Forums_Forum_ForumGroupId' and object_id=object_id(N'[dbo].[Forums_Forum]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_Forums_Forum_ForumGroupId] ON [dbo].[Forums_Forum] 
 	(
@@ -962,7 +962,7 @@ BEGIN
 	)
 END
 GO
-IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_Forums_Topic_ForumId' and id=object_id(N'[dbo].[Forums_Topic]'))
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_Forums_Topic_ForumId' and object_id=object_id(N'[dbo].[Forums_Topic]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_Forums_Topic_ForumId] ON [dbo].[Forums_Topic] 
 	(
@@ -970,7 +970,7 @@ BEGIN
 	)
 END
 GO
-IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_Forums_Post_TopicId' and id=object_id(N'[dbo].[Forums_Post]'))
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_Forums_Post_TopicId' and object_id=object_id(N'[dbo].[Forums_Post]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_Forums_Post_TopicId] ON [dbo].[Forums_Post] 
 	(
@@ -978,7 +978,7 @@ BEGIN
 	)
 END
 GO
-IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_Forums_Post_CustomerId' and id=object_id(N'[dbo].[Forums_Post]'))
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_Forums_Post_CustomerId' and object_id=object_id(N'[dbo].[Forums_Post]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_Forums_Post_CustomerId] ON [dbo].[Forums_Post] 
 	(
@@ -986,7 +986,7 @@ BEGIN
 	)
 END
 GO
-IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_Forums_Subscription_ForumId' and id=object_id(N'[dbo].[Forums_Subscription]'))
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_Forums_Subscription_ForumId' and object_id=object_id(N'[dbo].[Forums_Subscription]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_Forums_Subscription_ForumId] ON [dbo].[Forums_Subscription] 
 	(
@@ -994,7 +994,7 @@ BEGIN
 	)
 END
 GO
-IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_Forums_Subscription_TopicId' and id=object_id(N'[dbo].[Forums_Subscription]'))
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_Forums_Subscription_TopicId' and object_id=object_id(N'[dbo].[Forums_Subscription]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_Forums_Subscription_TopicId] ON [dbo].[Forums_Subscription] 
 	(
@@ -1004,7 +1004,7 @@ END
 GO
 
 --Allow store owner to disable "Add to wishlist" button for a certain product variant
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[ProductVariant]') and NAME='DisableWishlistButton')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[dbo].[ProductVariant]') and NAME='DisableWishlistButton')
 BEGIN
 	ALTER TABLE [dbo].[ProductVariant] 
 	ADD [DisableWishlistButton] [bit] NULL
@@ -1018,7 +1018,7 @@ GO
 
 
 --Product templates
-IF NOT EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[dbo].[ProductTemplate]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ProductTemplate]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
 BEGIN
 CREATE TABLE [dbo].[ProductTemplate](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
@@ -1053,7 +1053,7 @@ BEGIN
 END
 GO
 
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Product]') and NAME='ProductTemplateId')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[dbo].[Product]') and NAME='ProductTemplateId')
 BEGIN
 	ALTER TABLE [dbo].[Product] 
 	ADD [ProductTemplateId] int NULL

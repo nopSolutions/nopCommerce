@@ -235,8 +235,8 @@ GO
 --Full-text issue fixed
 IF EXISTS (
 		SELECT *
-		FROM sysobjects
-		WHERE id = OBJECT_ID(N'[ProductLoadAllPaged]') AND OBJECTPROPERTY(id,N'IsProcedure') = 1)
+		FROM sys.objects
+		WHERE object_id = OBJECT_ID(N'[ProductLoadAllPaged]') AND OBJECTPROPERTY(object_id,N'IsProcedure') = 1)
 DROP PROCEDURE [ProductLoadAllPaged]
 GO
 CREATE PROCEDURE [dbo].[ProductLoadAllPaged]
@@ -818,7 +818,7 @@ GO
 
 
 --URL records enhancements
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[UrlRecord]') and NAME='IsActive')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[UrlRecord]') and NAME='IsActive')
 BEGIN
 	ALTER TABLE [UrlRecord]
 	ADD [IsActive] bit NULL
@@ -834,7 +834,7 @@ ALTER TABLE [UrlRecord] ALTER COLUMN [IsActive] bit NOT NULL
 GO
 
 --ACL on manufactures
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Manufacturer]') and NAME='SubjectToAcl')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Manufacturer]') and NAME='SubjectToAcl')
 BEGIN
 	ALTER TABLE [Manufacturer]
 	ADD [SubjectToAcl] bit NULL
@@ -860,7 +860,7 @@ GO
 
 
 --custom specification values
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Product_SpecificationAttribute_Mapping]') and NAME='CustomValue')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Product_SpecificationAttribute_Mapping]') and NAME='CustomValue')
 BEGIN
 	ALTER TABLE [Product_SpecificationAttribute_Mapping]
 	ADD [CustomValue] nvarchar(4000) NULL
@@ -871,8 +871,8 @@ GO
 
 IF EXISTS (
 		SELECT *
-		FROM sysobjects
-		WHERE id = OBJECT_ID(N'[temp_generate_sename]') AND OBJECTPROPERTY(id,N'IsProcedure') = 1)
+		FROM sys.objects
+		WHERE object_id = OBJECT_ID(N'[temp_generate_sename]') AND OBJECTPROPERTY(object_id,N'IsProcedure') = 1)
 DROP PROCEDURE [dbo].[temp_generate_sename]
 GO
 CREATE PROCEDURE [dbo].[temp_generate_sename]
@@ -1043,27 +1043,27 @@ GO
 --drop temporary procedures & functions
 IF EXISTS (
 		SELECT *
-		FROM sysobjects
-		WHERE id = OBJECT_ID(N'[temp_generate_sename]') AND OBJECTPROPERTY(id,N'IsProcedure') = 1)
+		FROM sys.objects
+		WHERE object_id = OBJECT_ID(N'[temp_generate_sename]') AND OBJECTPROPERTY(object_id,N'IsProcedure') = 1)
 DROP PROCEDURE [temp_generate_sename]
 GO
 
 --new attribute combination properties
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[ProductVariantAttributeCombination]') and NAME='Sku')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[ProductVariantAttributeCombination]') and NAME='Sku')
 BEGIN
 	ALTER TABLE [ProductVariantAttributeCombination]
 	ADD [Sku] nvarchar(400) NULL
 END
 GO
 
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[ProductVariantAttributeCombination]') and NAME='ManufacturerPartNumber')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[ProductVariantAttributeCombination]') and NAME='ManufacturerPartNumber')
 BEGIN
 	ALTER TABLE [ProductVariantAttributeCombination]
 	ADD [ManufacturerPartNumber] nvarchar(400) NULL
 END
 GO
 
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[ProductVariantAttributeCombination]') and NAME='Gtin')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[ProductVariantAttributeCombination]') and NAME='Gtin')
 BEGIN
 	ALTER TABLE [ProductVariantAttributeCombination]
 	ADD [Gtin] nvarchar(400) NULL
@@ -1081,14 +1081,14 @@ GO
 
 
 --color squares attribute type
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[ProductVariantAttributeValue]') and NAME='ColorSquaresRgb')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[ProductVariantAttributeValue]') and NAME='ColorSquaresRgb')
 BEGIN
 	ALTER TABLE [ProductVariantAttributeValue]
 	ADD [ColorSquaresRgb] nvarchar(100) NULL
 END
 GO
 
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[CheckoutAttributeValue]') and NAME='ColorSquaresRgb')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[CheckoutAttributeValue]') and NAME='ColorSquaresRgb')
 BEGIN
 	ALTER TABLE [CheckoutAttributeValue]
 	ADD [ColorSquaresRgb] nvarchar(100) NULL

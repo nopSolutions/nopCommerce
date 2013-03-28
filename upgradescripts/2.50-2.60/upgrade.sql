@@ -937,8 +937,8 @@ GO
 --Update stored procedure according to the new search parameters (return filterable specs)
 IF EXISTS (
 		SELECT *
-		FROM sysobjects
-		WHERE id = OBJECT_ID(N'[ProductLoadAllPaged]') AND OBJECTPROPERTY(id,N'IsProcedure') = 1)
+		FROM sys.objects
+		WHERE object_id = OBJECT_ID(N'[ProductLoadAllPaged]') AND OBJECTPROPERTY(object_id,N'IsProcedure') = 1)
 DROP PROCEDURE [ProductLoadAllPaged]
 GO
 CREATE PROCEDURE [ProductLoadAllPaged]
@@ -1325,7 +1325,7 @@ GO
 
 
 
-IF  EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'[nop_splitstring_to_table]') AND xtype in (N'FN', N'IF', N'TF'))
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[nop_splitstring_to_table]') AND [type] in (N'FN', N'IF', N'TF'))
 DROP FUNCTION [nop_splitstring_to_table]
 GO
 CREATE FUNCTION [dbo].[nop_splitstring_to_table]
@@ -1355,26 +1355,26 @@ GO
 
 
 --Add 'StartDateUtc' and 'EndDateUtc' columns to [News] table
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[News]') and NAME='StartDateUtc')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[News]') and NAME='StartDateUtc')
 BEGIN
 	ALTER TABLE [News]
 	ADD [StartDateUtc] datetime NULL
 END
 GO
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[News]') and NAME='EndDateUtc')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[News]') and NAME='EndDateUtc')
 BEGIN
 	ALTER TABLE [News]
 	ADD [EndDateUtc] datetime NULL
 END
 GO
 --Add 'StartDateUtc' and 'EndDateUtc' columns to [BlogPost] table
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[BlogPost]') and NAME='StartDateUtc')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[BlogPost]') and NAME='StartDateUtc')
 BEGIN
 	ALTER TABLE [BlogPost]
 	ADD [StartDateUtc] datetime NULL
 END
 GO
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[BlogPost]') and NAME='EndDateUtc')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[BlogPost]') and NAME='EndDateUtc')
 BEGIN
 	ALTER TABLE [BlogPost]
 	ADD [EndDateUtc] datetime NULL
@@ -1417,7 +1417,7 @@ END
 GO
 
 --Add 'CreatedOnUtc' column to [Shipment] table
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Shipment]') and NAME='CreatedOnUtc')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Shipment]') and NAME='CreatedOnUtc')
 BEGIN
 	ALTER TABLE [Shipment]
 	ADD [CreatedOnUtc] datetime NULL
@@ -1435,13 +1435,13 @@ GO
 
 
 --Store comment count in [News] entity/table
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[News]') and NAME='ApprovedCommentCount')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[News]') and NAME='ApprovedCommentCount')
 BEGIN
 	ALTER TABLE [News]
 	ADD [ApprovedCommentCount] int NULL
 END
 GO
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[News]') and NAME='NotApprovedCommentCount')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[News]') and NAME='NotApprovedCommentCount')
 BEGIN
 	ALTER TABLE [News]
 	ADD [NotApprovedCommentCount] int NULL
@@ -1494,13 +1494,13 @@ GO
 
 
 --Store comment count in [BlogPost] entity/table
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[BlogPost]') and NAME='ApprovedCommentCount')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[BlogPost]') and NAME='ApprovedCommentCount')
 BEGIN
 	ALTER TABLE [BlogPost]
 	ADD [ApprovedCommentCount] int NULL
 END
 GO
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[BlogPost]') and NAME='NotApprovedCommentCount')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[BlogPost]') and NAME='NotApprovedCommentCount')
 BEGIN
 	ALTER TABLE [BlogPost]
 	ADD [NotApprovedCommentCount] int NULL
@@ -1552,7 +1552,7 @@ GO
 
 
 --Store a value indicating whether we have tier prices in [ProductVariant] entity/table
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[ProductVariant]') and NAME='HasTierPrices')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[ProductVariant]') and NAME='HasTierPrices')
 BEGIN
 	ALTER TABLE [ProductVariant]
 	ADD [HasTierPrices] bit NULL
@@ -1607,7 +1607,7 @@ GO
 
 
 --Store a value indicating whether we have discounts applied in [ProductVariant] entity/table
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[ProductVariant]') and NAME='HasDiscountsApplied')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[ProductVariant]') and NAME='HasDiscountsApplied')
 BEGIN
 	ALTER TABLE [ProductVariant]
 	ADD [HasDiscountsApplied] bit NULL
@@ -1655,7 +1655,7 @@ GO
 
 
 --Store a value indicating whether we have discounts applied in [ProductVariant] entity/table
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[ProductVariant]') and NAME='HasDiscountsApplied')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[ProductVariant]') and NAME='HasDiscountsApplied')
 BEGIN
 	ALTER TABLE [ProductVariant]
 	ADD [HasDiscountsApplied] bit NULL
@@ -1698,7 +1698,7 @@ EXEC('
 GO
 
 --Store a value indicating whether we have discounts applied in [Category] entity/table
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Category]') and NAME='HasDiscountsApplied')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Category]') and NAME='HasDiscountsApplied')
 BEGIN
 	ALTER TABLE [Category]
 	ADD [HasDiscountsApplied] bit NULL
@@ -1767,7 +1767,7 @@ WHERE [Zip] = N'*'
 GO
 
 --new generic attribute implementation
-IF NOT EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[GenericAttribute]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[GenericAttribute]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
 BEGIN
 CREATE TABLE [dbo].[GenericAttribute](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
@@ -1783,7 +1783,7 @@ PRIMARY KEY CLUSTERED
 END
 GO
 
-IF EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[CustomerAttribute]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[CustomerAttribute]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
 BEGIN
 	--move customer attributes to the new generic attributes
 	EXEC('
@@ -1825,7 +1825,7 @@ GO
 
 
 --more SQL indexes
-IF NOT EXISTS (SELECT 1 from sysindexes WHERE [NAME]=N'IX_GenericAttribute_EntityId_and_KeyGroup' and id=object_id(N'[GenericAttribute]'))
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_GenericAttribute_EntityId_and_KeyGroup' and object_id=object_id(N'[GenericAttribute]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_GenericAttribute_EntityId_and_KeyGroup] ON [GenericAttribute] 
 	(
@@ -1986,7 +1986,7 @@ END
 GO
 
 --new widget implementation
-IF EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[Widget]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[Widget]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
 BEGIN
 	DROP TABLE [Widget]
 END
@@ -2016,8 +2016,8 @@ GO
 
 IF EXISTS (
 		SELECT *
-		FROM sysobjects
-		WHERE id = OBJECT_ID(N'[ProductLoadAllPaged]') AND OBJECTPROPERTY(id,N'IsProcedure') = 1)
+		FROM sys.objects
+		WHERE object_id = OBJECT_ID(N'[ProductLoadAllPaged]') AND OBJECTPROPERTY(object_id,N'IsProcedure') = 1)
 DROP PROCEDURE [ProductLoadAllPaged]
 GO
 CREATE PROCEDURE [ProductLoadAllPaged]
@@ -2543,8 +2543,8 @@ GO
 
 IF EXISTS (
 		SELECT *
-		FROM sysobjects
-		WHERE id = OBJECT_ID(N'[nop_getprimarykey_indexname]') AND xtype in (N'FN', N'IF', N'TF'))
+		FROM sys.objects
+		WHERE object_id = OBJECT_ID(N'[nop_getprimarykey_indexname]') AND [type] in (N'FN', N'IF', N'TF'))
 DROP FUNCTION  [nop_getprimarykey_indexname]
 GO
 CREATE FUNCTION [dbo].[nop_getprimarykey_indexname]
@@ -2567,8 +2567,8 @@ GO
 
 IF EXISTS (
 		SELECT *
-		FROM sysobjects
-		WHERE id = OBJECT_ID(N'[FullText_IsSupported]') AND OBJECTPROPERTY(id,N'IsProcedure') = 1)
+		FROM sys.objects
+		WHERE object_id = OBJECT_ID(N'[FullText_IsSupported]') AND OBJECTPROPERTY(object_id,N'IsProcedure') = 1)
 DROP PROCEDURE [FullText_IsSupported]
 GO
 CREATE PROCEDURE [FullText_IsSupported]
@@ -2588,8 +2588,8 @@ GO
 
 IF EXISTS (
 		SELECT *
-		FROM sysobjects
-		WHERE id = OBJECT_ID(N'[FullText_Enable]') AND OBJECTPROPERTY(id,N'IsProcedure') = 1)
+		FROM sys.objects
+		WHERE object_id = OBJECT_ID(N'[FullText_Enable]') AND OBJECTPROPERTY(object_id,N'IsProcedure') = 1)
 DROP PROCEDURE [FullText_Enable]
 GO
 CREATE PROCEDURE [FullText_Enable]
@@ -2624,8 +2624,8 @@ GO
 
 IF EXISTS (
 		SELECT *
-		FROM sysobjects
-		WHERE id = OBJECT_ID(N'[FullText_Disable]') AND OBJECTPROPERTY(id,N'IsProcedure') = 1)
+		FROM sys.objects
+		WHERE object_id = OBJECT_ID(N'[FullText_Disable]') AND OBJECTPROPERTY(object_id,N'IsProcedure') = 1)
 DROP PROCEDURE [FullText_Disable]
 GO
 CREATE PROCEDURE [FullText_Disable]
@@ -2665,8 +2665,8 @@ GO
 --language pack import
 IF EXISTS (
 		SELECT *
-		FROM sysobjects
-		WHERE id = OBJECT_ID(N'[LanguagePackImport]') AND OBJECTPROPERTY(id,N'IsProcedure') = 1)
+		FROM sys.objects
+		WHERE object_id = OBJECT_ID(N'[LanguagePackImport]') AND OBJECTPROPERTY(object_id,N'IsProcedure') = 1)
 DROP PROCEDURE [LanguagePackImport]
 GO
 CREATE PROCEDURE [LanguagePackImport]
@@ -2733,14 +2733,14 @@ GO
 
 
 --Add 'Weight' column to [Shipment] and [OrderProductVariant] tables
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Shipment]') and NAME='TotalWeight')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Shipment]') and NAME='TotalWeight')
 BEGIN
 	ALTER TABLE [Shipment]
 	ADD [TotalWeight] decimal(18, 4) NULL
 END
 GO
 
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[OrderProductVariant]') and NAME='ItemWeight')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[OrderProductVariant]') and NAME='ItemWeight')
 BEGIN
 	ALTER TABLE [OrderProductVariant]
 	ADD [ItemWeight] decimal(18, 4) NULL
@@ -2772,7 +2772,7 @@ GO
 
 
 --Add 'AllowGuestsToVote' column to [Poll] table
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Poll]') and NAME='AllowGuestsToVote')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Poll]') and NAME='AllowGuestsToVote')
 BEGIN
 	ALTER TABLE [Poll]
 	ADD [AllowGuestsToVote] bit NULL
@@ -2806,7 +2806,7 @@ BEGIN
 END
 GO
 
-IF EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Order]') and NAME='OrderWeight')
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='OrderWeight')
 BEGIN
 	ALTER TABLE [Order]
 	DROP COLUMN [OrderWeight]
@@ -2815,7 +2815,7 @@ GO
 
 
 --Add 'AllowedQuantities' column to [ProductVariant] table
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[ProductVariant]') and NAME='AllowedQuantities')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[ProductVariant]') and NAME='AllowedQuantities')
 BEGIN
 	ALTER TABLE [ProductVariant]
 	ADD [AllowedQuantities] nvarchar(1000) NULL
@@ -2843,16 +2843,16 @@ BEGIN
 END
 GO
 
-IF (EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[ShippingByWeight]') and OBJECTPROPERTY(id, N'IsUserTable') = 1))
-	AND (NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[ShippingByWeight]') and NAME='StateProvinceId'))
+IF (EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[ShippingByWeight]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1))
+	AND (NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[ShippingByWeight]') and NAME='StateProvinceId'))
 BEGIN
 	EXEC ('ALTER TABLE [ShippingByWeight]
 	ADD [StateProvinceId] int NULL')
 END
 GO
 
-IF (EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[ShippingByWeight]') and OBJECTPROPERTY(id, N'IsUserTable') = 1))
-	AND (EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[ShippingByWeight]') and NAME='StateProvinceId'))
+IF (EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[ShippingByWeight]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1))
+	AND (EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[ShippingByWeight]') and NAME='StateProvinceId'))
 BEGIN
 	EXEC ('UPDATE [ShippingByWeight]
 	SET [StateProvinceId] = 0
@@ -2860,15 +2860,15 @@ BEGIN
 END
 GO
 
-IF (EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[ShippingByWeight]') and OBJECTPROPERTY(id, N'IsUserTable') = 1))
-	AND (EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[ShippingByWeight]') and NAME='StateProvinceId'))
+IF (EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[ShippingByWeight]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1))
+	AND (EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[ShippingByWeight]') and NAME='StateProvinceId'))
 BEGIN
 	EXEC('ALTER TABLE [ShippingByWeight] ALTER COLUMN [StateProvinceId] int NOT NULL')
 END
 GO
 
-IF (EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[ShippingByWeight]') and OBJECTPROPERTY(id, N'IsUserTable') = 1))
-	AND (NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[ShippingByWeight]') and NAME='Zip'))
+IF (EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[ShippingByWeight]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1))
+	AND (NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[ShippingByWeight]') and NAME='Zip'))
 BEGIN
 	EXEC ('ALTER TABLE [ShippingByWeight]
 	ADD [Zip] nvarchar(400) NULL')

@@ -487,7 +487,7 @@ GO
 
 
 --Category templates
-IF NOT EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[dbo].[CategoryTemplate]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[CategoryTemplate]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
 BEGIN
 CREATE TABLE [dbo].[CategoryTemplate](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
@@ -513,7 +513,7 @@ END
 GO
 
 
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Category]') and NAME='CategoryTemplateId')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[dbo].[Category]') and NAME='CategoryTemplateId')
 BEGIN
 	ALTER TABLE [dbo].[Category] 
 	ADD [CategoryTemplateId] int NULL
@@ -532,7 +532,7 @@ GO
 
 
 --Manufacturer templates
-IF NOT EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[dbo].[ManufacturerTemplate]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ManufacturerTemplate]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
 BEGIN
 CREATE TABLE [dbo].[ManufacturerTemplate](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
@@ -558,7 +558,7 @@ END
 GO
 
 
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Manufacturer]') and NAME='ManufacturerTemplateId')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[dbo].[Manufacturer]') and NAME='ManufacturerTemplateId')
 BEGIN
 	ALTER TABLE [dbo].[Manufacturer] 
 	ADD [ManufacturerTemplateId] int NULL
@@ -575,7 +575,7 @@ GO
 
 
 --new 'RewardPointsWereAdded' or 'Order' entity
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Order]') and NAME='RewardPointsWereAdded')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[dbo].[Order]') and NAME='RewardPointsWereAdded')
 BEGIN
 	ALTER TABLE [dbo].[Order] 
 	ADD [RewardPointsWereAdded] bit NULL
@@ -593,7 +593,7 @@ GO
 
 
 --Products can require that other products are added to the cart
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[ProductVariant]') and NAME='RequireOtherProducts')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[dbo].[ProductVariant]') and NAME='RequireOtherProducts')
 BEGIN
 	ALTER TABLE [dbo].[ProductVariant] 
 	ADD [RequireOtherProducts] bit NULL
@@ -608,7 +608,7 @@ GO
 ALTER TABLE [dbo].[ProductVariant] ALTER COLUMN [RequireOtherProducts] bit NOT NULL
 GO
 
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[ProductVariant]') and NAME='RequiredProductVariantIds')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[dbo].[ProductVariant]') and NAME='RequiredProductVariantIds')
 BEGIN
 	ALTER TABLE [dbo].[ProductVariant] 
 	ADD [RequiredProductVariantIds] nvarchar(1000) NULL
@@ -616,7 +616,7 @@ END
 GO
 
 
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[ProductVariant]') and NAME='AutomaticallyAddRequiredProductVariants')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[dbo].[ProductVariant]') and NAME='AutomaticallyAddRequiredProductVariants')
 BEGIN
 	ALTER TABLE [dbo].[ProductVariant] 
 	ADD [AutomaticallyAddRequiredProductVariants] bit NULL
@@ -633,10 +633,10 @@ GO
 
 --email accounts and queued emails issue fix
 IF EXISTS (SELECT 1
-           FROM   sysobjects
+           FROM   sys.objects
            WHERE  name = 'QueuedEmail_EmailAccount'
-           AND parent_obj = Object_id('QueuedEmail')
-           AND Objectproperty(id,N'IsForeignKey') = 1)
+           AND parent_object_id = Object_id('QueuedEmail')
+           AND Objectproperty(object_id,N'IsForeignKey') = 1)
 ALTER TABLE dbo.QueuedEmail
 DROP CONSTRAINT QueuedEmail_EmailAccount
 GO
@@ -676,7 +676,7 @@ GO
 
 
 --SEO friendly image name.
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Picture]') and NAME='SeoFilename')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[dbo].[Picture]') and NAME='SeoFilename')
 BEGIN
 	ALTER TABLE [dbo].[Picture] 
 	ADD [SeoFilename] nvarchar(300) NULL
@@ -694,7 +694,7 @@ END
 GO
 
 --RTL support
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Language]') and NAME='Rtl')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[dbo].[Language]') and NAME='Rtl')
 BEGIN
 	ALTER TABLE [dbo].[Language] 
 	ADD [Rtl] bit NULL

@@ -432,10 +432,10 @@ GO
 
 --customer can't be deleted until it has associated log records
 IF EXISTS (SELECT 1
-           FROM   sysobjects
+           FROM   sys.objects
            WHERE  name = 'Log_Customer'
-           AND parent_obj = Object_id('Log')
-           AND Objectproperty(id,N'IsForeignKey') = 1)
+           AND parent_object_id = Object_id('Log')
+           AND Objectproperty(object_id,N'IsForeignKey') = 1)
 ALTER TABLE dbo.[Log]
 DROP CONSTRAINT Log_Customer
 GO
@@ -475,7 +475,7 @@ GO
 
 
 --Add fields to Category
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Category]') and NAME='AllowCustomersToSelectPageSize')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[dbo].[Category]') and NAME='AllowCustomersToSelectPageSize')
 BEGIN
 	ALTER TABLE [dbo].[Category]
 	ADD [AllowCustomersToSelectPageSize] bit NULL
@@ -490,7 +490,7 @@ GO
 ALTER TABLE [dbo].[Category] ALTER COLUMN [AllowCustomersToSelectPageSize] bit NOT NULL
 GO
 
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Category]') and NAME='PageSizeOptions')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[dbo].[Category]') and NAME='PageSizeOptions')
 BEGIN
 	ALTER TABLE [dbo].[Category]
 	ADD [PageSizeOptions] nvarchar(200) NULL
@@ -503,7 +503,7 @@ WHERE [PageSizeOptions] IS NULL
 GO
 
 --Add fields to Manufacturer
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Manufacturer]') and NAME='AllowCustomersToSelectPageSize')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[dbo].[Manufacturer]') and NAME='AllowCustomersToSelectPageSize')
 BEGIN
 	ALTER TABLE [dbo].[Manufacturer]
 	ADD [AllowCustomersToSelectPageSize] bit NULL
@@ -518,7 +518,7 @@ GO
 ALTER TABLE [dbo].[Manufacturer] ALTER COLUMN [AllowCustomersToSelectPageSize] bit NOT NULL
 GO
 
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Manufacturer]') and NAME='PageSizeOptions')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[dbo].[Manufacturer]') and NAME='PageSizeOptions')
 BEGIN
 	ALTER TABLE [dbo].[Manufacturer]
 	ADD [PageSizeOptions] nvarchar(200) NULL
@@ -531,19 +531,19 @@ WHERE [PageSizeOptions] IS NULL
 GO
 
 --Add special price support
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[ProductVariant]') and NAME='SpecialPrice')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[dbo].[ProductVariant]') and NAME='SpecialPrice')
 BEGIN
 	ALTER TABLE [dbo].[ProductVariant]
 	ADD [SpecialPrice] decimal(18, 4) NULL
 END
 GO
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[ProductVariant]') and NAME='SpecialPriceStartDateTimeUtc')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[dbo].[ProductVariant]') and NAME='SpecialPriceStartDateTimeUtc')
 BEGIN
 	ALTER TABLE [dbo].[ProductVariant]
 	ADD [SpecialPriceStartDateTimeUtc] datetime NULL
 END
 GO
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[ProductVariant]') and NAME='SpecialPriceEndDateTimeUtc')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[dbo].[ProductVariant]') and NAME='SpecialPriceEndDateTimeUtc')
 BEGIN
 	ALTER TABLE [dbo].[ProductVariant]
 	ADD [SpecialPriceEndDateTimeUtc] datetime NULL
@@ -552,8 +552,8 @@ GO
 --Update stored procedure according to new special price properties
 IF EXISTS (
 		SELECT *
-		FROM dbo.sysobjects
-		WHERE id = OBJECT_ID(N'[dbo].[ProductLoadAllPaged]') AND OBJECTPROPERTY(id,N'IsProcedure') = 1)
+		FROM sys.objects
+		WHERE object_id = OBJECT_ID(N'[dbo].[ProductLoadAllPaged]') AND OBJECTPROPERTY(object_id,N'IsProcedure') = 1)
 DROP PROCEDURE [dbo].[ProductLoadAllPaged]
 GO
 CREATE PROCEDURE [dbo].[ProductLoadAllPaged]
@@ -803,7 +803,7 @@ GO
 
 
 --scheduled tasks are stored into database now
-IF NOT EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[dbo].[ScheduleTask]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ScheduleTask]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
 BEGIN
 CREATE TABLE [dbo].[ScheduleTask](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
@@ -860,7 +860,7 @@ GO
 
 
 --back in stock notification subscriptions
-IF NOT EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[dbo].[BackInStockSubscription]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[BackInStockSubscription]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
 BEGIN
 CREATE TABLE [dbo].[BackInStockSubscription](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
@@ -875,10 +875,10 @@ PRIMARY KEY CLUSTERED
 END
 GO
 IF EXISTS (SELECT 1
-           FROM   sysobjects
+           FROM   sys.objects
            WHERE  name = 'BackInStockSubscription_ProductVariant'
-           AND parent_obj = Object_id('BackInStockSubscription')
-           AND Objectproperty(id,N'IsForeignKey') = 1)
+           AND parent_object_id = Object_id('BackInStockSubscription')
+           AND Objectproperty(object_id,N'IsForeignKey') = 1)
 ALTER TABLE dbo.BackInStockSubscription
 DROP CONSTRAINT BackInStockSubscription_ProductVariant
 GO
@@ -887,10 +887,10 @@ REFERENCES [dbo].[ProductVariant] ([Id])
 ON DELETE CASCADE
 GO
 IF EXISTS (SELECT 1
-           FROM   sysobjects
+           FROM   sys.objects
            WHERE  name = 'BackInStockSubscription_Customer'
-           AND parent_obj = Object_id('BackInStockSubscription')
-           AND Objectproperty(id,N'IsForeignKey') = 1)
+           AND parent_object_id = Object_id('BackInStockSubscription')
+           AND Objectproperty(object_id,N'IsForeignKey') = 1)
 ALTER TABLE dbo.BackInStockSubscription
 DROP CONSTRAINT BackInStockSubscription_Customer
 GO
@@ -898,7 +898,7 @@ ALTER TABLE [dbo].[BackInStockSubscription]  WITH CHECK ADD  CONSTRAINT [BackInS
 REFERENCES [dbo].[Customer] ([Id])
 ON DELETE CASCADE
 GO
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[ProductVariant]') and NAME='AllowBackInStockSubscriptions')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[dbo].[ProductVariant]') and NAME='AllowBackInStockSubscriptions')
 BEGIN
 	ALTER TABLE [dbo].[ProductVariant]
 	ADD [AllowBackInStockSubscriptions] bit NULL
@@ -1079,7 +1079,7 @@ END
 GO
 
 --new GTIN property of product variants
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[ProductVariant]') and NAME='Gtin')
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[dbo].[ProductVariant]') and NAME='Gtin')
 BEGIN
 	ALTER TABLE [dbo].[ProductVariant]
 	ADD [Gtin] nvarchar(400) NULL

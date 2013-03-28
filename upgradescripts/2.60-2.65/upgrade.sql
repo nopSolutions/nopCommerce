@@ -135,8 +135,8 @@ GO
 
 IF EXISTS (
 		SELECT *
-		FROM sysobjects
-		WHERE id = OBJECT_ID(N'[ProductLoadAllPaged]') AND OBJECTPROPERTY(id,N'IsProcedure') = 1)
+		FROM sys.objects
+		WHERE object_id = OBJECT_ID(N'[ProductLoadAllPaged]') AND OBJECTPROPERTY(object_id,N'IsProcedure') = 1)
 DROP PROCEDURE [ProductLoadAllPaged]
 GO
 CREATE PROCEDURE [ProductLoadAllPaged]
@@ -693,8 +693,8 @@ GO
 
 IF EXISTS (
 		SELECT *
-		FROM sysobjects
-		WHERE id = OBJECT_ID(N'[FullText_Disable]') AND OBJECTPROPERTY(id,N'IsProcedure') = 1)
+		FROM sys.objects
+		WHERE object_id = OBJECT_ID(N'[FullText_Disable]') AND OBJECTPROPERTY(object_id,N'IsProcedure') = 1)
 DROP PROCEDURE [FullText_Disable]
 GO
 CREATE PROCEDURE [FullText_Disable]
@@ -731,8 +731,8 @@ GO
 
 IF EXISTS (
 		SELECT *
-		FROM sysobjects
-		WHERE id = OBJECT_ID(N'[FullText_Enable]') AND OBJECTPROPERTY(id,N'IsProcedure') = 1)
+		FROM sys.objects
+		WHERE object_id = OBJECT_ID(N'[FullText_Enable]') AND OBJECTPROPERTY(object_id,N'IsProcedure') = 1)
 DROP PROCEDURE [FullText_Enable]
 GO
 CREATE PROCEDURE [FullText_Enable]
@@ -797,7 +797,7 @@ END
 GO
 
 --indexes
-IF NOT EXISTS (SELECT 1 from sysindexes WHERE [NAME]=N'IX_ProductTag_Name' and id=object_id(N'[ProductTag]'))
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_ProductTag_Name' and object_id=object_id(N'[ProductTag]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_ProductTag_Name] ON [ProductTag] ([Name] ASC)
 END
