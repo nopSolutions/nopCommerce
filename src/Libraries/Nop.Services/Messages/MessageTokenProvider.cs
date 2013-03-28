@@ -742,6 +742,9 @@ namespace Nop.Services.Messages
         public virtual void AddBackInStockTokens(IList<Token> tokens, BackInStockSubscription subscription)
         {
             tokens.Add(new Token("BackInStockSubscription.ProductName", subscription.ProductVariant.FullProductName));
+            //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
+            var productUrl = string.Format("{0}{1}", _webHelper.GetStoreLocation(false), subscription.ProductVariant.Product.GetSeName());
+            tokens.Add(new Token("BackInStockSubscription.ProductUrl", productUrl, true));
 
             //event notification
             _eventPublisher.EntityTokensAdded(subscription, tokens);
@@ -855,6 +858,7 @@ namespace Nop.Services.Messages
                 "%PrivateMessage.Subject%", 
                 "%PrivateMessage.Text%",
                 "%BackInStockSubscription.ProductName%",
+                "%BackInStockSubscription.ProductUrl%",
             };
             return allowedTokens.ToArray();
         }

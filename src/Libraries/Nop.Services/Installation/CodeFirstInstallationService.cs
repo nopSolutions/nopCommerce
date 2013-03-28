@@ -4169,7 +4169,7 @@ namespace Nop.Services.Installation
                                        {
                                            Name = "Customer.BackInStock",
                                            Subject = "%Store.Name%. Back in stock notification",
-                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />Hello %Customer.FullName%, <br />Product \"%BackInStockSubscription.ProductName%\" is in stock.</p>",
+                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />Hello %Customer.FullName%, <br />Product <a target=\"_blank\" href=\"%BackInStockSubscription.ProductUrl%\">%BackInStockSubscription.ProductName%</a> is in stock.</p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
