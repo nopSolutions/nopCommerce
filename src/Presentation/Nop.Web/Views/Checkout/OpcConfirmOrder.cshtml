@@ -1,28 +1,28 @@
 ﻿@model CheckoutConfirmModel
-@using Nop.Core.Domain.Orders;
 @using Nop.Web.Models.Checkout;
-@using Nop.Web.Models.Common;
 <div class="checkout-data">
     @Html.Widget("op_checkout_confirm_top")
-    <div>
-        @if (!String.IsNullOrEmpty(Model.MinOrderTotalWarning))
+    <div class="section confirm-order">
+        <div>
+            @if (!String.IsNullOrEmpty(Model.MinOrderTotalWarning))
+            {
+                <span class="min-order-warning">@Model.MinOrderTotalWarning</span>
+            }
+        </div>
+        @if (Model.Warnings.Count > 0)
         {
-            @Model.MinOrderTotalWarning
+            <div class="clear">
+            </div>
+            <div class="message-error">
+                <ul>
+                    @foreach (var warning in Model.Warnings)
+                    {
+                        <li>@warning</li>
+                    }
+                </ul>
+            </div>
         }
     </div>
-    @if (Model.Warnings.Count > 0)
-    {
-        <div class="clear">
-        </div>
-        <div class="message-error">
-            <ul>
-                @for (int i = 0; i < Model.Warnings.Count; i++)
-                {
-                    <li>@Model.Warnings[i]</li>
-                }
-            </ul>
-        </div>
-    }
     @Html.Widget("op_checkout_confirm_bottom")
     <div class="clear">
     </div>

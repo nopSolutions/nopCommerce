@@ -1,7 +1,5 @@
 ﻿@model CheckoutConfirmModel
-@using Nop.Core.Domain.Orders;
 @using Nop.Web.Models.Checkout;
-@using Nop.Web.Models.Common;
 @{
     Layout = "~/Views/Shared/_ColumnsOne.cshtml";
 
@@ -18,45 +16,43 @@
     <div class="clear">
     </div>
     <div class="page-body checkout-data">
-        @using (Html.BeginRouteForm("CheckoutConfirm", FormMethod.Post, new { id = "confirm-order-form" }))
-        {
-            @Html.Widget("checkout_confirm_top")
-            
-            <script type="text/javascript">
-                $(document).ready(function () {
-                    $('#confirm-order-form').submit(function () {
-                        $('input[type=submit]', this).attr('disabled', 'disabled');
+        @Html.Widget("checkout_confirm_top")
+        <div class="section confirm-order">
+            @using (Html.BeginRouteForm("CheckoutConfirm", FormMethod.Post, new { id = "confirm-order-form" }))
+            {
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $('#confirm-order-form').submit(function () {
+                            $('input[type=submit]', this).attr('disabled', 'disabled');
+                        });
                     });
-                });
-            </script>
-            
-            <div class="confirm-order">
-                <div class="select-button">
-                    @if (!String.IsNullOrEmpty(Model.MinOrderTotalWarning))
-                    {
-                        @Model.MinOrderTotalWarning
-                    }
-                    else
-                    {
-                        <input type="submit" name="nextstep" value="@T("Checkout.ConfirmButton")" class="button-1 confirm-order-next-step-button" />
-                    }
-                </div>
-                @if (Model.Warnings.Count > 0)
+                </script>
+                if (!String.IsNullOrEmpty(Model.MinOrderTotalWarning))
                 {
-                    <div class="clear">
-                    </div>
-                    <div class="message-error">
-                        <ul>
-                            @for (int i = 0; i < Model.Warnings.Count; i++)
-                            {
-                                <li>@Model.Warnings[i]</li>
-                            }
-                        </ul>
-                    </div>
+                <span class="min-order-warning">@Model.MinOrderTotalWarning</span>
                 }
-            </div>  
-            @Html.Widget("checkout_confirm_bottom")
-        }
+                else
+                {
+                <div class="buttons">
+                    <input type="submit" name="nextstep" value="@T("Checkout.ConfirmButton")" class="button-1 confirm-order-next-step-button" />
+                </div>
+                }
+                if (Model.Warnings.Count > 0)
+                {
+                <div class="clear">
+                </div>
+                <div class="message-error">
+                    <ul>
+                        @foreach (var warning in Model.Warnings)
+                        {
+                            <li>@warning</li>
+                        }
+                    </ul>
+                </div>
+                }
+            }
+        </div>
+        @Html.Widget("checkout_confirm_bottom")
         <div class="clear">
         </div>
         <div class="order-summary-body">

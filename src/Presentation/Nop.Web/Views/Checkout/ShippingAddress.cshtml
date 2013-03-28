@@ -1,7 +1,5 @@
 ﻿@model CheckoutShippingAddressModel
-@using Nop.Core.Domain.Orders;
 @using Nop.Web.Models.Checkout;
-@using Nop.Web.Models.Common;
 @{
     Layout = "~/Views/Shared/_ColumnsOne.cshtml";
 
@@ -21,59 +19,60 @@
         @Html.Widget("checkout_shipping_address_top")
         @if (Model.ExistingAddresses.Count > 0)
         {
-            <div>
-                <div class="select-address-title">
-                    @T("Checkout.SelectShippingAddress")
+            <div class="section select-shipping-address">
+                <div class="title">
+                    <strong>@T("Checkout.SelectShippingAddress")</strong>
                 </div>
                 <div class="clear">
                 </div>
                 <div class="address-grid">
-                    @(Html.DataList(Model.ExistingAddresses, 3,
-                    @<div class="item-box">
+
+                    @foreach (var item in Model.ExistingAddresses)
+                    {
                         <div class="address-item">
                             <div class="select-button">
-                                <input type="button" value="@T("Checkout.ShipToThisAddress")" class="button-1 select-shipping-address-button"  onclick="setLocation('@Url.RouteUrl("CheckoutSelectShippingAddress", new { addressId = item.Id })')" />
+                                <input type="button" value="@T("Checkout.ShipToThisAddress")" class="button-1 select-shipping-address-button"  onclick=" setLocation('@Url.RouteUrl("CheckoutSelectShippingAddress", new { addressId = item.Id })') " />
                             </div>
-                            <div class="address-box">
-                                <div class="name">
+                            <ul class="address-box">
+                                <li class="name">
                                     <strong>@item.FirstName @item.LastName</strong>
-                                </div>
-                                <div class="email">@T("Address.Fields.Email"): @item.Email</div>
+                                </li>
+                                <li class="email">@T("Address.Fields.Email"): @item.Email</li>
                                 @if (item.PhoneEnabled)
                                 {
-                                    <div class="phone">
+                                    <li class="phone">
                                         @T("Address.Fields.PhoneNumber"):
-                                         @item.PhoneNumber
-                                    </div>
+                                            @item.PhoneNumber
+                                    </li>
                                 }
                                 @if (item.FaxEnabled)
                                 {
-                                    <div class="fax">
+                                    <li class="fax">
                                         @T("Address.Fields.FaxNumber"):
-                                         @item.FaxNumber
-                                    </div>
+                                            @item.FaxNumber
+                                    </li>
                                 }
                                 @if (item.CompanyEnabled && !String.IsNullOrEmpty(item.Company))
                                 {
-                                    <div class="company">
+                                    <li class="company">
                                         @item.Company
-                                    </div>
+                                    </li>
                                 }
                                 @if (item.StreetAddressEnabled)
                                 {
-                                    <div class="address1">
+                                    <li class="address1">
                                         @item.Address1
-                                    </div>
+                                    </li>
                                 }
                                 @if (item.StreetAddress2Enabled && !String.IsNullOrEmpty(item.Address2))
                                 {
-                                    <div class="address2">
+                                    <li class="address2">
                                         @item.Address2
-                                    </div>
+                                    </li>
                                 }
                                 @if (item.CityEnabled || item.StateProvinceEnabled || item.ZipPostalCodeEnabled)
                                 {
-                                    <div class="city-state-zip">
+                                    <li class="city-state-zip">
                                         @if (item.CityEnabled)
                                         {
                                             @item.City
@@ -90,65 +89,66 @@
                                         {
                                             @item.ZipPostalCode
                                         }
-                                    </div>
+                                    </li>
                                 }
                                 @if (item.CountryEnabled && !String.IsNullOrEmpty(item.CountryName))
                                 {
-                                    <div class="country">
+                                    <li class="country">
                                         @item.CountryName
-                                    </div>
+                                    </li>
                                 }
-                            </div>
+                            </ul>
                         </div>
-                    </div>
-                    ))
+                    }
                 </div>
             </div>
             <div class="clear">
             </div>
         }
         @Html.Widget("checkout_shipping_address_middle")
-        <div class="enter-address-title">
-            @if (Model.ExistingAddresses.Count > 0)
-            {
-                @T("Checkout.OrEnterNewAddress")
-            }
-            else
-            {
-                @T("Checkout.EnterShippingAddress")
-            }
-        </div>
-        <div class="clear">
-        </div>
-        <div class="enter-address">
-            @using (Html.BeginRouteForm("CheckoutShippingAddress", FormMethod.Post))
-            {
-                <div class="enter-address-body">
-                    @{
-                var dataDictAddress = new ViewDataDictionary();
-                //Merge ModelState (required for validation)
-                dataDictAddress.ModelState.Merge(ViewData.ModelState);
-                dataDictAddress.TemplateInfo.HtmlFieldPrefix = "NewAddress";
-                        @Html.Partial("_CreateOrUpdateAddress", Model.NewAddress, dataDictAddress)              
-                    }
-                </div>
-                <div class="clear">
-                </div>
-                <div class="buttons">
-                    <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" class="button-1 new-address-next-step-button" />
-                </div>
-            }
+        <div class="section new-shipping-address">
+            <div class="title">
+                @if (Model.ExistingAddresses.Count > 0)
+                {
+                    <strong>@T("Checkout.OrEnterNewAddress")</strong>
+                }
+                else
+                {
+                    <strong>@T("Checkout.EnterShippingAddress")</strong>
+                }
+            </div>
+            <div class="clear">
+            </div>
+            <div class="enter-address">
+                @using (Html.BeginRouteForm("CheckoutShippingAddress", FormMethod.Post))
+                {
+                    <div class="enter-address-body">
+                        @{
+                    var dataDictAddress = new ViewDataDictionary();
+                    //Merge ModelState (required for validation)
+                    dataDictAddress.ModelState.Merge(ViewData.ModelState);
+                    dataDictAddress.TemplateInfo.HtmlFieldPrefix = "NewAddress";
+                            @Html.Partial("_CreateOrUpdateAddress", Model.NewAddress, dataDictAddress)              
+                        }
+                    </div>
+                    <div class="clear">
+                    </div>
+                    <div class="buttons">
+                        <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" class="button-1 new-address-next-step-button" />
+                    </div>
+                }
+            </div>
         </div>
         @Html.Widget("checkout_shipping_address_bottom")
-    </div>
-    <div class="clear">
-    </div>
-    <div class="order-summary-title">
-        @T("Checkout.OrderSummary")
-    </div>
-    <div class="clear">
-    </div>
-    <div class="order-summary-body">
-        @Html.Action("OrderSummary", "ShoppingCart")
+        <div class="clear">
+        </div>
+        <div class="section order-summary-body">
+            <div class="title">
+                <strong>@T("Checkout.OrderSummary")</strong>
+            </div>
+            <div class="clear">
+            </div>
+            @Html.Action("OrderSummary", "ShoppingCart")
+        </div>
     </div>
 </div>

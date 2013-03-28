@@ -1,7 +1,5 @@
 ﻿@model CheckoutCompletedModel
-@using Nop.Core.Domain.Orders;
 @using Nop.Web.Models.Checkout;
-@using Nop.Web.Models.Common;
 @{
     Layout = "~/Views/Shared/_ColumnsOne.cshtml";
 
@@ -18,24 +16,23 @@
     <div class="clear">
     </div>
     <div class="page-body checkout-data">
-        <div class="order-completed">
-            @Html.Widget("checkout_completed_top")
-            <div class="body">
-                <strong>
-                    @T("Checkout.YourOrderHasBeenSuccessfullyProcessed")</strong>
-                <p>
+        @Html.Widget("checkout_completed_top")
+        <div class="section order-completed">
+            <div class="title">
+                <strong>@T("Checkout.YourOrderHasBeenSuccessfullyProcessed")</strong>
+            </div>
+            <ul class="details">
+                <li>
                     @T("Checkout.OrderNumber"): @Model.OrderId
-                </p>
-                <p>
-                    <a href="@Url.RouteUrl("OrderDetails", new { orderID = Model.OrderId})">@T("Checkout.PlacedOrderDetails")</a>
-                </p>
-            </div>
-            <div class="clear">
-            </div>
-            <div class="select-button">
+                </li>
+                <li>
+                    <a href="@Url.RouteUrl("OrderDetails", new { orderID = Model.OrderId })">@T("Checkout.PlacedOrderDetails")</a>
+                </li>
+            </ul>
+            <div class="buttons">
                 <input type="button" value="@T("Checkout.Continue")" class="button-2 order-completed-continue-button" onclick="setLocation('@Url.RouteUrl("HomePage")')" />
             </div>
-            @Html.Widget("checkout_completed_bottom")
         </div>
+        @Html.Widget("checkout_completed_bottom")
     </div>
 </div>

@@ -12,16 +12,16 @@ var Accordion = {
     init: function (elem, clickableEntity, checkAllow) {
         this.checkAllow = checkAllow || false;
         this.disallowAccessToNextSections = false;
-        this.sections = $('#' + elem + ' .section');
+        this.sections = $('#' + elem + ' .tab-section');
         this.currentSectionId = false;
-        var headers = $('#' + elem + ' .section ' + clickableEntity);
+        var headers = $('#' + elem + ' .tab-section ' + clickableEntity);
         headers.click(function () {
             Accordion.headerClicked($(this));
         });
     },
 
     headerClicked: function (section) {
-        Accordion.openSection(section.parent('.section'));
+        Accordion.openSection(section.parent('.tab-section'));
     },
 
     openSection: function (section) {
@@ -42,7 +42,7 @@ var Accordion = {
                 var pastCurrentSection = false;
                 for (var i = 0; i < this.sections.length; i++) {
                     if (pastCurrentSection) {
-                        $(this.sections[i]).removeClass('allow')
+                        $(this.sections[i]).removeClass('allow');
                     }
                     if ($(this.sections[i]).attr('id') == section.attr('id')) {
                         pastCurrentSection = true;
@@ -64,7 +64,7 @@ var Accordion = {
             var nextIndex = parseInt(section) + 1;
             if (this.sections[section].id == this.currentSectionId && this.sections[nextIndex]) {
                 if (setAllow) {
-                    $(this.sections[nextIndex]).addClass('allow')
+                    $(this.sections[nextIndex]).addClass('allow');
                 }
                 this.openSection(this.sections[nextIndex]);
                 return;
@@ -86,7 +86,7 @@ var Accordion = {
             }
             if (this.sections[section].id == this.currentSectionId && this.sections[prevIndex]) {
                 if (setAllow) {
-                    $(this.sections[prevIndex]).addClass('allow')
+                    $(this.sections[prevIndex]).addClass('allow');
                 }
                 this.openSection(this.sections[prevIndex]);
                 return;

@@ -65,7 +65,7 @@
             </div>
             <div class="buttons">
                 <input type="submit" value="@T("Forum.Submit")" class="button-2 submit-topic-button" />
-                <input type="button" class="button-2 cancel-topic-button" value="@T("Forum.Cancel")" onclick="setLocation('@Url.RouteUrl("ForumSlug", new { id = Model.ForumId, slug = Model.ForumSeName })    ')" />
+                <input type="button" class="button-2 cancel-topic-button" value="@T("Forum.Cancel")" onclick="setLocation('@Url.RouteUrl("ForumSlug", new { id = Model.ForumId, slug = Model.ForumSeName })')" />
             </div>
         }
     </div>

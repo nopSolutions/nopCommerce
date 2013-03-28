@@ -1,54 +1,52 @@
 ﻿@model CheckoutShippingAddressModel
-@using Nop.Core.Domain.Orders;
 @using Nop.Web.Models.Checkout;
-@using Nop.Web.Models.Common;
 <div class="checkout-data">
-    <div class="enter-address">
-        <div class="enter-address-body">
-            @Html.Widget("op_checkout_shipping_address_top")
-            @if (Model.ExistingAddresses.Count > 0)
-            {
-                <div>
-                    <label for="shipping-address-select">@T("Checkout.SelectShippingAddressOrEnterNewOne")</label>
-                    <div>
-                        <select name="shipping_address_id" id="shipping-address-select" class="address-select"
-                            title="" onchange="Shipping.newAddress(!this.value)">
-                            @foreach (var address in Model.ExistingAddresses)
-                            {
-                                var addressLine = "";
-                                addressLine += address.FirstName;
-                                addressLine += " " + address.LastName;
-                                if (address.StreetAddressEnabled && !String.IsNullOrEmpty(address.Address1))
-                                {
-                                    addressLine += ", " + address.Address1;
-                                }
-                                if (address.CityEnabled && !String.IsNullOrEmpty(address.City))
-                                {
-                                    addressLine += ", " + address.City;
-                                }
-                                if (address.StateProvinceEnabled && !String.IsNullOrEmpty(address.StateProvinceName))
-                                {
-                                    addressLine += ", " + address.StateProvinceName;
-                                }
-                                if (address.ZipPostalCodeEnabled && !String.IsNullOrEmpty(address.ZipPostalCode))
-                                {
-                                    addressLine += " " + address.ZipPostalCode;
-                                }
-                                if (address.CountryEnabled && !String.IsNullOrWhiteSpace(address.CountryName))
-                                {
-                                    addressLine += ", " + address.CountryName;
-                                }
-                                <option value="@(address.Id)">@(addressLine)</option>
-                            }
-                            <option value="" selected="@Model.NewAddressPreselected">@T("Checkout.NewAddress")</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="clear">
-                </div>
-            }
-            @Html.Widget("op_checkout_shipping_address_middle")
-            <div id="shipping-new-address-form">
+    @Html.Widget("op_checkout_shipping_address_top")
+    @if (Model.ExistingAddresses.Count > 0)
+    {
+        <div class="section select-shipping-address">
+            <label for="shipping-address-select">@T("Checkout.SelectShippingAddressOrEnterNewOne")</label>
+            <div>
+                <select name="shipping_address_id" id="shipping-address-select" class="address-select"
+                    title="" onchange="Shipping.newAddress(!this.value)">
+                    @foreach (var address in Model.ExistingAddresses)
+                    {
+                        var addressLine = "";
+                        addressLine += address.FirstName;
+                        addressLine += " " + address.LastName;
+                        if (address.StreetAddressEnabled && !String.IsNullOrEmpty(address.Address1))
+                        {
+                            addressLine += ", " + address.Address1;
+                        }
+                        if (address.CityEnabled && !String.IsNullOrEmpty(address.City))
+                        {
+                            addressLine += ", " + address.City;
+                        }
+                        if (address.StateProvinceEnabled && !String.IsNullOrEmpty(address.StateProvinceName))
+                        {
+                            addressLine += ", " + address.StateProvinceName;
+                        }
+                        if (address.ZipPostalCodeEnabled && !String.IsNullOrEmpty(address.ZipPostalCode))
+                        {
+                            addressLine += " " + address.ZipPostalCode;
+                        }
+                        if (address.CountryEnabled && !String.IsNullOrWhiteSpace(address.CountryName))
+                        {
+                            addressLine += ", " + address.CountryName;
+                        }
+                        <option value="@(address.Id)">@(addressLine)</option>
+                    }
+                    <option value="" selected="@Model.NewAddressPreselected">@T("Checkout.NewAddress")</option>
+                </select>
+            </div>
+        </div>
+        <div class="clear">
+        </div>
+    }
+    @Html.Widget("op_checkout_shipping_address_middle")
+    <div class="section new-shipping-address" id="shipping-new-address-form">
+        <div class="enter-address">
+            <div class="enter-address-body">
                 @{
                     var dataDictAddress = new ViewDataDictionary();
                     //Merge ModelState (required for validation)
@@ -57,7 +55,7 @@
                     @Html.Partial("_CreateOrUpdateAddress", Model.NewAddress, dataDictAddress)              
                 }
             </div>
-            @Html.Widget("op_checkout_shipping_address_bottom")
         </div>
     </div>
+    @Html.Widget("op_checkout_shipping_address_bottom")
 </div>

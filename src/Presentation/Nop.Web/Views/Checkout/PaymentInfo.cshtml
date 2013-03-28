@@ -1,7 +1,5 @@
 ﻿@model CheckoutPaymentInfoModel
-@using Nop.Core.Domain.Orders;
 @using Nop.Web.Models.Checkout;
-@using Nop.Web.Models.Common;
 @{
     Layout = "~/Views/Shared/_ColumnsOne.cshtml";
 
@@ -18,35 +16,34 @@
     <div class="clear">
     </div>
     <div class="page-body checkout-data">
-        @using (Html.BeginRouteForm("CheckoutPaymentInfo", FormMethod.Post))
-        {
-            @Html.Widget("checkout_payment_info_top")
-            <div class="payment-info">
-                <div class="body">
+        @Html.Widget("checkout_payment_info_top")
+        <div class="section payment-info">
+            @using (Html.BeginRouteForm("CheckoutPaymentInfo", FormMethod.Post))
+            {
+                <div class="info">
                     @Html.Action(Model.PaymentInfoActionName, Model.PaymentInfoControllerName, Model.PaymentInfoRouteValues)
                 </div>
                 <div class="clear">
                 </div>
-                <div class="select-button">
+                <div class="buttons">
                     <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" class="button-1 payment-info-next-step-button" />
                 </div>
+                <div class="clear">
+                </div>
+                <div class="message-error">
+                    @Html.ValidationSummary(false)
+                </div>
+            }
+        </div>
+        @Html.Widget("checkout_payment_info_bottom")
+        <div class="clear">
+        </div>
+        <div class="section order-summary-body">
+            <div class="title">
+                <strong>@T("Checkout.OrderSummary")</strong>
             </div>
-            
             <div class="clear">
             </div>
-            <div class="message-error">
-                @Html.ValidationSummary(false)
-            </div>
-            @Html.Widget("checkout_payment_info_bottom")
-        }
-        <div class="clear">
-        </div>
-        <div class="order-summary-title">
-            @T("Checkout.OrderSummary")
-        </div>
-        <div class="clear">
-        </div>
-        <div class="order-summary-body">
             @Html.Action("OrderSummary", "ShoppingCart")
         </div>
     </div>

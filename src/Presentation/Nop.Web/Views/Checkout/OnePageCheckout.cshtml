@@ -21,7 +21,7 @@
     </div>
     <div class="page-body checkout-data">
         <ol class="opc" id="checkout-steps">
-            <li id="opc-billing" class="section allow">
+            <li id="opc-billing" class="tab-section allow">
                 <div class="step-title">
                     <span class="number">1</span>
                     <h2>@T("Checkout.BillingAddress")</h2>
@@ -47,7 +47,7 @@
             </li>
             @if (Model.ShippingRequired)
             {
-                <li id="opc-shipping" class="section">
+                <li id="opc-shipping" class="tab-section">
                     <div class="step-title">
                         <span class="number">2</span>
                         <h2>@T("Checkout.ShippingAddress")</h2>
@@ -72,7 +72,7 @@
                         </div>
                     </div>
                 </li>
-                <li id="opc-shipping_method" class="section">
+                <li id="opc-shipping_method" class="tab-section">
                     <div class="step-title">
                         <span class="number">3</span>
                         <h2>@T("Checkout.ShippingMethod")</h2>
@@ -95,7 +95,7 @@
                     </div>
                 </li>
             }
-            <li id="opc-payment_method" class="section">
+            <li id="opc-payment_method" class="tab-section">
                 <div class="step-title">
                     <span class="number">@(Model.ShippingRequired ? "4" : "2")</span>
                     <h2>@T("Checkout.PaymentMethod")</h2>
@@ -117,7 +117,7 @@
                     </div>
                 </div>
             </li>
-            <li id="opc-payment_info" class="section">
+            <li id="opc-payment_info" class="tab-section">
                 <div class="step-title">
                     <span class="number">@(Model.ShippingRequired ? "5" : "3")</span>
                     <h2>@T("Checkout.PaymentInfo")</h2>
@@ -139,7 +139,7 @@
                     </div>
                 </div>
             </li>
-            <li id="opc-confirm_order" class="section">
+            <li id="opc-confirm_order" class="tab-section">
                 <div class="step-title">
                     <span class="number">@(Model.ShippingRequired ? "6" : "4")</span>
                     <h2>@T("Checkout.ConfirmOrder")</h2>
