@@ -105,18 +105,15 @@
                 @Html.ValidationMessageFor(model => model.AdminComment)
             </td>
         </tr>
-        @if (!Model.IsLoggedInAsVendor)
-        {
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.VendorId):
-                </td>
-                <td class="adminData">
-                    @Html.DropDownListFor(model => model.VendorId, Model.AvailableVendors)
-                    @Html.ValidationMessageFor(model => model.VendorId)
-                </td>
-            </tr>
-        }
+        <tr @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.VendorId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.VendorId, Model.AvailableVendors)
+                @Html.ValidationMessageFor(model => model.VendorId)
+            </td>
+        </tr>
         <tr>
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.ProductTemplateId):
@@ -126,18 +123,15 @@
                 @Html.ValidationMessageFor(model => model.ProductTemplateId)
             </td>
         </tr>
-        @if (!Model.IsLoggedInAsVendor)
-        {
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.ShowOnHomePage):
-                </td>
-                <td class="adminData">
-                    @Html.EditorFor(model => model.ShowOnHomePage)
-                    @Html.ValidationMessageFor(model => model.ShowOnHomePage)
-                </td>
+        <tr @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ShowOnHomePage):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ShowOnHomePage)
+                @Html.ValidationMessageFor(model => model.ShowOnHomePage)
+            </td>
             </tr>
-        }
         <tr>
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.Published):
@@ -308,9 +302,13 @@
                            columns.Bound(x => x.Category)
                                .Width(500)
                                .Centered();
-                           columns.Bound(x => x.IsFeaturedProduct)
-                               .Width(100)
-                               .Centered();
+                           if (!Model.IsLoggedInAsVendor)
+                           {
+                               //vendor cannot edit this field
+                               columns.Bound(x => x.IsFeaturedProduct)
+                                   .Width(100)
+                                   .Centered();
+                           }
                            columns.Bound(x => x.DisplayOrder)
                                .Width(100);
                            columns.Command(commands =>
@@ -368,9 +366,13 @@
                            columns.Bound(x => x.Manufacturer)
                                .Width(500)
                                .Centered();
-                           columns.Bound(x => x.IsFeaturedProduct)
-                               .Width(100)
-                               .Centered();
+                           if (!Model.IsLoggedInAsVendor)
+                           {
+                               //vendor cannot edit this field
+                               columns.Bound(x => x.IsFeaturedProduct)
+                                      .Width(100)
+                                      .Centered();
+                           }
                            columns.Bound(x => x.DisplayOrder)
                                .Width(100);
                            columns.Command(commands =>

@@ -1064,9 +1064,13 @@ namespace Nop.Admin.Controllers
                 {
                     ProductId = productId,
                     CategoryId = categoryId,
-                    IsFeaturedProduct = model.IsFeaturedProduct,
                     DisplayOrder = model.DisplayOrder
                 };
+                //a vendor cannot edit "IsFeaturedProduct" property
+                if (_workContext.CurrentVendor == null)
+                {
+                    productCategory.IsFeaturedProduct = model.IsFeaturedProduct;
+                }
                 _categoryService.InsertProductCategory(productCategory);
             }
             
@@ -1095,8 +1099,12 @@ namespace Nop.Admin.Controllers
 
             //use Category property (not CategoryId) because appropriate property is stored in it
             productCategory.CategoryId = Int32.Parse(model.Category);
-            productCategory.IsFeaturedProduct = model.IsFeaturedProduct;
             productCategory.DisplayOrder = model.DisplayOrder;
+            //a vendor cannot edit "IsFeaturedProduct" property
+            if (_workContext.CurrentVendor == null)
+            {
+                productCategory.IsFeaturedProduct = model.IsFeaturedProduct;
+            }
             _categoryService.UpdateProductCategory(productCategory);
 
             return ProductCategoryList(command, productCategory.ProductId);
@@ -1203,9 +1211,13 @@ namespace Nop.Admin.Controllers
                 {
                     ProductId = productId,
                     ManufacturerId = manufacturerId,
-                    IsFeaturedProduct = model.IsFeaturedProduct,
                     DisplayOrder = model.DisplayOrder
                 };
+                //a vendor cannot edit "IsFeaturedProduct" property
+                if (_workContext.CurrentVendor == null)
+                {
+                    productManufacturer.IsFeaturedProduct = model.IsFeaturedProduct;
+                }
                 _manufacturerService.InsertProductManufacturer(productManufacturer);
             }
             
@@ -1234,8 +1246,12 @@ namespace Nop.Admin.Controllers
 
             //use Manufacturer property (not ManufacturerId) because appropriate property is stored in it
             productManufacturer.ManufacturerId = Int32.Parse(model.Manufacturer);
-            productManufacturer.IsFeaturedProduct = model.IsFeaturedProduct;
             productManufacturer.DisplayOrder = model.DisplayOrder;
+            //a vendor cannot edit "IsFeaturedProduct" property
+            if (_workContext.CurrentVendor == null)
+            {
+                productManufacturer.IsFeaturedProduct = model.IsFeaturedProduct;
+            }
             _manufacturerService.UpdateProductManufacturer(productManufacturer);
 
             return ProductManufacturerList(command, productManufacturer.ProductId);
