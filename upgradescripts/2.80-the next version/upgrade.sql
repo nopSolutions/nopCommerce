@@ -3786,3 +3786,7 @@ BEGIN
 	VALUES (N'OrderPlaced.VendorNotification', null, N'%Store.Name%. Order placed', N'<p><a href="%Store.URL%">%Store.Name%</a> <br /><br />%Customer.FullName% (%Customer.Email%) has just placed on order. <br /><br />Order Number: %Order.OrderNumber%<br />Date Ordered: %Order.CreatedOn%</p>', 0, 0, 0)
 END
 GO
+
+DELETE FROM [Setting] 
+WHERE [name] = N'GoogleAnalyticsSettings.WidgetZone' 
+GO

@@ -55,9 +55,6 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
             model.EcommerceScript = googleAnalyticsSettings.EcommerceScript;
             model.EcommerceDetailScript = googleAnalyticsSettings.EcommerceDetailScript;
 
-            model.ZoneId = googleAnalyticsSettings.WidgetZone;
-            model.AvailableZones.Add(new SelectListItem() { Text = "<head> HTML tag", Value = "head_html_tag" });
-            model.AvailableZones.Add(new SelectListItem() { Text = "Before <body> end HTML tag", Value = "body_end_html_tag_before" });
             model.ActiveStoreScopeConfiguration = storeScope;
             if (storeScope > 0)
             {
@@ -82,9 +79,6 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
             googleAnalyticsSettings.TrackingScript = model.TrackingScript;
             googleAnalyticsSettings.EcommerceScript = model.EcommerceScript;
             googleAnalyticsSettings.EcommerceDetailScript = model.EcommerceDetailScript;
-            googleAnalyticsSettings.WidgetZone = model.ZoneId;
-
-            _settingService.SaveSetting(googleAnalyticsSettings, x => x.WidgetZone, 0, false);
 
             /* We do not clear cache after each setting update.
              * This behavior can increase performance because cached settings will not be cleared 

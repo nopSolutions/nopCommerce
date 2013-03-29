@@ -26,15 +26,6 @@
         </tr>
         <tr>
             <td class="adminTitle">
-                @Html.NopLabelFor(model => model.ZoneId):
-            </td>
-            <td class="adminData">
-                @Html.DropDownListFor(model => model.ZoneId, Model.AvailableZones)
-                @Html.ValidationMessageFor(model => model.ZoneId)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
                 @Html.OverrideStoreCheckboxFor(model => model.GoogleId_OverrideForStore, model => model.GoogleId, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.GoogleId):
             </td>
