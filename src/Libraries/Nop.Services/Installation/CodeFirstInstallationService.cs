@@ -4648,7 +4648,7 @@ namespace Nop.Services.Installation
                     AutoCompleteSearchThumbPictureSize = 20,
                     MaximumImageSize = 1280,
                     DefaultPictureZoomEnabled = false,
-                    DefaultImageQuality = 100,
+                    DefaultImageQuality = 80,
                     MultipleThumbDirectories = false
                 });
 
