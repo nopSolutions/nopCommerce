@@ -1,8 +1,8 @@
 ﻿@model ActiveDiscussionsModel
 @using Nop.Web.Extensions;
 @using Nop.Web.Models.Boards;
-<div class="active-discussions">
-    <div class="active-discussions-title">
+<div class="forums-table-section topics-group active-discussions">
+    <div class="forums-table-section-title">
         <strong>@T("Forum.ActiveDiscussions")</strong>
         <span>
             @if (Model.ActiveDiscussionsFeedEnabled)
@@ -16,30 +16,30 @@
 
         </span>
     </div>
-    <div class="active-discussionstopics">
+    <div class="forums-table-section-body">
         @if (Model.ForumTopics.Count > 0)
         {
-            <table class="topics">
+            <table>
                 <thead>
-                    <tr class="active-discussions-header">
-                        <td class="topic-name">
+                    <tr>
+                        <th class="topic-name">
                             @T("Forum.TopicTitle")
-                        </td>
-                        <td class="replies">
+                        </th>
+                        <th class="replies">
                             @T("Forum.Replies")
-                        </td>
-                        <td class="views">
+                        </th>
+                        <th class="views">
                             @T("Forum.Views")
-                        </td>
-                        <td class="last-post">
+                        </th>
+                        <th class="last-post">
                             @T("Forum.LatestPost")
-                        </td>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var topic in Model.ForumTopics)
                     {
-                        <tr class="topic">
+                        <tr>
                             <td class="topic-name">
                                 @Html.RouteLink(topic.Subject, "TopicSlug", new { id = topic.Id, slug = topic.SeName }, new { @class = "topic-title" })
                                 @if (topic.NumPosts > Model.PostsPageSize)

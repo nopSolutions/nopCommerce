@@ -1,49 +1,51 @@
 ﻿@model ForumGroupModel
 @using Nop.Web.Models.Boards;
-<div class="forum-group">
-    <div class="group-title">
+<div class="forums-table-section forum-group">
+    <div class="forums-table-section-title">
         @Html.RouteLink(Model.Name, "ForumGroupSlug", new { id = Model.Id, slug = Model.SeName })
     </div>
-    <table class="groups">
-        <thead>
-            <tr class="group-header">
-                <td class="forum-name" colspan="2">
-                    @T("Forum.Forum")
-                </td>
-                <td class="topics">
-                    @T("Forum.Topics")
-                </td>
-                <td class="posts">
-                    @T("Forum.Posts")
-                </td>
-                <td class="last-post">
-                    @T("Forum.LatestPost")
-                </td>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var forum in Model.Forums)
-            {
-                <tr class="forum">
-                    <td class="image">
-                        <div />
-                    </td>
-                    <td class="forum-name">
-                        <div class="forum-title">
-                            @Html.RouteLink(forum.Name, "ForumSlug", new { id = forum.Id, slug = forum.SeName })
-                        </div>
-                        <div class="forum-description">@forum.Description
-                        </div>
-                    </td>
-                    <td class="topics">@forum.NumTopics
-                    </td>
-                    <td class="posts">@forum.NumPosts
-                    </td>
-                    <td class="last-post">
-                        @Html.Action("LastPost", new { forumPostId = forum.LastPostId, showTopic = true })
-                    </td>
-                </tr>            
-            }
-        </tbody>
-    </table>
+    <div class="forums-table-section-body">
+        <table>
+            <thead>
+                <tr>
+                    <th class="forum-name" colspan="2">
+                        @T("Forum.Forum")
+                    </th>
+                    <th class="topics">
+                        @T("Forum.Topics")
+                    </th>
+                    <th class="posts">
+                        @T("Forum.Posts")
+                    </th>
+                    <th class="last-post">
+                        @T("Forum.LatestPost")
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var forum in Model.Forums)
+                {
+                    <tr>
+                        <td class="image">
+                            <div></div>
+                        </td>
+                        <td class="forum-name">
+                            <div class="forum-title">
+                                @Html.RouteLink(forum.Name, "ForumSlug", new { id = forum.Id, slug = forum.SeName })
+                            </div>
+                            <div class="forum-description">@forum.Description
+                            </div>
+                        </td>
+                        <td class="topics">@forum.NumTopics
+                        </td>
+                        <td class="posts">@forum.NumPosts
+                        </td>
+                        <td class="last-post">
+                            @Html.Action("LastPost", new { forumPostId = forum.LastPostId, showTopic = true })
+                        </td>
+                    </tr>            
+                }
+            </tbody>
+        </table>
+    </div>
 </div>

@@ -66,31 +66,31 @@
     </div>
     <div class="clear">
     </div>
-    <div class="topics-group">
+    <div class="forums-table-section topics-group">
         @if (Model.ForumTopics.Count > 0)
         {
-            <table class="topics">
+            <table>
                 <thead>
-                    <tr class="forum-header">
-                        <td class="topic-name" colspan="2">
+                    <tr>
+                        <th class="topic-name" colspan="2">
                             @T("Forum.TopicTitle")
-                        </td>
-                        <td class="replies">
+                        </th>
+                        <th class="replies">
                             @T("Forum.Replies")
-                        </td>
-                        <td class="views">
+                        </th>
+                        <th class="views">
                             @T("Forum.Views")
-                        </td>
-                        <td class="last-post">
+                        </th>
+                        <th class="last-post">
                             @T("Forum.LatestPost")
-                        </td>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var topic in @Model.ForumTopics)
                     {
-                        <tr class="topic">
-                            <td>
+                        <tr>
+                            <td class="image">
                                 @{
                         var topicType = "post";
                         var topicText = String.Empty;
@@ -118,7 +118,7 @@
                             <td class="topic-name">
                                 @if (!String.IsNullOrEmpty(topicText))
                                 {
-                                    <span class="topictype">@topicText</span>
+                                    <span class="topic-type">@topicText</span>
                                 }
                                 @Html.RouteLink(topic.Subject, "TopicSlug", new { id = topic.Id, slug = topic.SeName }, new { @class = "topic-title" })
                                 @if (topic.NumPosts > Model.PostsPageSize)
