@@ -3,74 +3,81 @@
 @using Nop.Web.Models.Boards;
 <div class="active-discussions">
     <div class="active-discussions-title">
-        @T("Forum.ActiveDiscussions")
-        @if (Model.ActiveDiscussionsFeedEnabled == true)
-        {
-            <a href="@Url.RouteUrl("ActiveDiscussionsRSS")" class="link-rss" title="@T("Forum.ActiveDiscussionsRSSLinkTitle")">@T("Forum.RSS")</a>
-        }
-        @if (Model.ViewAllLinkEnabled)
-        {        
-            <div class="view-all">
-                [@Html.RouteLink(T("Forum.ActiveDiscussions.ViewAll").Text, "ActiveDiscussions")]
-            </div>
-        }
+        <strong>@T("Forum.ActiveDiscussions")</strong>
+        <span>
+            @if (Model.ActiveDiscussionsFeedEnabled)
+            {
+                <a href="@Url.RouteUrl("ActiveDiscussionsRSS")" class="link-rss" title="@T("Forum.ActiveDiscussionsRSSLinkTitle")">@T("Forum.RSS")</a>
+            }
+            @if (Model.ViewAllLinkEnabled)
+            {        
+                @Html.RouteLink(T("Forum.ActiveDiscussions.ViewAll").Text, "ActiveDiscussions", null, new { @class = "view-all" })
+            }
+
+        </span>
     </div>
     <div class="active-discussionstopics">
-        <table class="topics">
-            @if (Model.ForumTopics.Count > 0)
-            {
-                <tr class="active-discussions-header">
-                    <td class="topic-name">
-                        @T("Forum.TopicTitle")
-                    </td>
-                    <td class="replies">
-                        @T("Forum.Replies")
-                    </td>
-                    <td class="views">
-                        @T("Forum.Views")
-                    </td>
-                    <td class="last-post">
-                        @T("Forum.LatestPost")
-                    </td>
-                </tr>
-            }
-            @foreach (var topic in Model.ForumTopics)
-            {
-                <tr class="topic">
-                    <td class="topic-name">
-                        @Html.RouteLink(topic.Subject, "TopicSlug", new { id = topic.Id, slug = topic.SeName }, new { @class = "topic-title" })
-                        @if (topic.NumPosts > Model.PostsPageSize)
-                        {
-                            <div class="topicspager">
-                                @Html.ForumTopicSmallPager(topic)
-                            </div>
-                        }
-                        <div class="topic-starter">
-                            @if (topic.CustomerId > 0)
-                            {
-                                var authorText = T("Forum.Author");
-                                if (topic.AllowViewingProfiles && !topic.IsCustomerGuest)
+        @if (Model.ForumTopics.Count > 0)
+        {
+            <table class="topics">
+                <thead>
+                    <tr class="active-discussions-header">
+                        <td class="topic-name">
+                            @T("Forum.TopicTitle")
+                        </td>
+                        <td class="replies">
+                            @T("Forum.Replies")
+                        </td>
+                        <td class="views">
+                            @T("Forum.Views")
+                        </td>
+                        <td class="last-post">
+                            @T("Forum.LatestPost")
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var topic in Model.ForumTopics)
+                    {
+                        <tr class="topic">
+                            <td class="topic-name">
+                                @Html.RouteLink(topic.Subject, "TopicSlug", new { id = topic.Id, slug = topic.SeName }, new { @class = "topic-title" })
+                                @if (topic.NumPosts > Model.PostsPageSize)
                                 {
-                                @T("Forum.Author")<text>:</text> @Html.RouteLink(topic.CustomerName, "CustomerProfile", new { Id = topic.CustomerId })
+                                    <div class="topicspager">
+                                        @Html.ForumTopicSmallPager(topic)
+                                    </div>
                                 }
-                                else
-                                {
-                                @T("Forum.Author")<text>:</text> @topic.CustomerName
-                                }
-                            }
-                        </div>
-                    </td>
-                    <td class="replies">
-                        @topic.NumReplies
-                    </td>
-                    <td class="views">
-                        @topic.Views
-                    </td>
-                    <td class="last-post">
-                        @Html.Action("LastPost", new { forumPostId = topic.LastPostId, showTopic = false })
-                    </td>
-                </tr>
-            }
-        </table>
+                                <div class="topic-starter">
+                                    @if (topic.CustomerId > 0)
+                                    {
+                                        var authorText = T("Forum.Author");
+                                        if (topic.AllowViewingProfiles && !topic.IsCustomerGuest)
+                                        {
+                                        @T("Forum.Author")<text>:</text>
+                                        @Html.RouteLink(topic.CustomerName, "CustomerProfile", new { Id = topic.CustomerId })
+                                        }
+                                        else
+                                        {
+                                        @T("Forum.Author")<text>:</text>
+                                        @topic.CustomerName
+                                        }
+                                    }
+                                </div>
+                            </td>
+                            <td class="replies">
+                                @topic.NumReplies
+                            </td>
+                            <td class="views">
+                                @topic.Views
+                            </td>
+                            <td class="last-post">
+                                @Html.Action("LastPost", new { forumPostId = topic.LastPostId, showTopic = false })
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
     </div>
 </div>
