@@ -5,8 +5,10 @@
     </div>
     <div class="header-links-wrapper">
         @Html.Action("HeaderLinks", "Common")
-        @Html.Action("SearchBox", "Catalog")
         @Html.Action("FlyoutShoppingCart", "ShoppingCart")
+    </div>
+    <div class="search-box">
+        @Html.Action("SearchBox", "Catalog")
     </div>
     <div class="header-selectors-wrapper">
         <div class="tax-display-type-selector">
