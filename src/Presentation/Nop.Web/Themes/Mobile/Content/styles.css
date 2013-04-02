@@ -469,7 +469,7 @@
 .product-tags-box .title{font-weight:700;font-size:1.1em;}
 .product-tags-box .product-tags-list{}
 .product-tags-box .product-tags-list a{text-decoration:underline;}
-.product-tags-box .product-tags-list .product-tags-wrapper{float:left;}
+.product-tags-box .product-tags-list li{float:left;list-style:none;}
 .tier-prices{text-align:center;margin-bottom:10px;}
 .tier-prices .prices-header{padding:3px;font-weight:700;}
 .tier-prices .prices-list table{width:100%;border-collapse:collapse;text-align:center;vertical-align:middle;background:#f3f3f3;}
