@@ -49,7 +49,7 @@
     </div>
     <div class="clear">
     </div>
-    <div class="pager">
+    <div class="pager upper">
         @{
             var pager = Html.Pager(new PagerModel()
             {
@@ -130,14 +130,13 @@
                                 <div class="topic-starter">
                                     @if (topic.CustomerId > 0)
                                     {
+                                        <label>@T("Forum.Author"):</label>
                                         if (topic.AllowViewingProfiles && !topic.IsCustomerGuest)
                                         {
-                                        @T("Forum.Author")<text>:</text>
                                         @Html.RouteLink(topic.CustomerName, "CustomerProfile", new { Id = topic.CustomerId })
                                         }
                                         else
                                         {
-                                        @T("Forum.Author")<text>:</text>
                                         @topic.CustomerName
                                         }
                                     }
@@ -160,7 +159,7 @@
     </div>
     <div class="clear">
     </div>
-    <div class="pager">
+    <div class="pager lower">
         @pager
     </div>
 </div>

@@ -13,13 +13,14 @@
     if (Model.CustomerId > 0)
     {
         <div class="author">
+            <label>@T("Forum.By"):</label>
             @if (Model.AllowViewingProfiles && !Model.IsCustomerGuest)
             {
-                @T("Forum.By")<text>:</text> @Html.RouteLink(Model.CustomerName, "CustomerProfile", new { Id = Model.CustomerId })
+                @Html.RouteLink(Model.CustomerName, "CustomerProfile", new { Id = Model.CustomerId })
             }
             else
             {
-                @T("Forum.By")<text>:</text> @Model.CustomerName
+                @Model.CustomerName
             }
         </div>
     }

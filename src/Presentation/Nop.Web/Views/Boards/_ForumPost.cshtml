@@ -60,13 +60,13 @@
                         <span>@Model.CustomerLocation</span>
                     </li>
                 }
+            </ul>
                 @if (Model.AllowPrivateMessages && !Model.IsCustomerGuest)
                 {
-                    <div class="send-pm-box">
-                        @Html.RouteLink(T("Forum.PrivateMessages.PM").Text, "SendPM", new { toCustomerId = Model.CustomerId }, new { @class = "pm-link-button" })
-                    </div>
+                <div class="send-pm-box">
+                    @Html.RouteLink(T("Forum.PrivateMessages.PM").Text, "SendPM", new { toCustomerId = Model.CustomerId }, new { @class = "pm-link-button" })
+                </div>
                 }
-            </ul>
         </div>
     </div>
     <div class="post-content">

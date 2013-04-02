@@ -50,7 +50,7 @@
                                 new { id = "watch-topic-top", @class = "watch-topic-link-button" })
             }
         </div>
-        <div class="pager">
+        <div class="pager upper">
             @{
                 var pager = Html.Pager(new PagerModel()
                 {
@@ -87,7 +87,7 @@
                             new { id = "watch-topic-bottom", @class = "watch-topic-link-button" })
         }
     </div>
-    <div class="pager">
+    <div class="pager lower">
         @pager
     </div>
 </div>

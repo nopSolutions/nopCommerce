@@ -29,7 +29,7 @@
         <div class="topic-options">
             <a href="@Url.RouteUrl("PostCreate", new { id = Model.Id })" data-role="button">@T("Forum.Reply")</a>
         </div>
-        <div class="pager">
+        <div class="pager upper">
             @{
                 var pager = Html.Pager(new PagerModel()
                                            {
@@ -83,7 +83,7 @@
             <input type="button" id="watch-topic" value="@Model.WatchTopicText" />
         }
     </div>
-    <div class="pager">
+    <div class="pager lower">
         @pager
     </div>
 </div>
