@@ -55,6 +55,11 @@ namespace Nop.Web.Controllers
 
         public ActionResult Index(int? id, int? page)
         {
+            if (!_customerSettings.AllowViewingProfiles)
+            {
+                return RedirectToRoute("HomePage");
+            }
+
             var customerId = 0;
             if (id.HasValue)
             {
@@ -62,7 +67,7 @@ namespace Nop.Web.Controllers
             }
 
             var customer = _customerService.GetCustomerById(customerId);
-            if (!_customerSettings.AllowViewingProfiles || (customer == null || customer.IsGuest()))
+            if (customer == null || customer.IsGuest())
             {
                 return RedirectToRoute("HomePage");
             }

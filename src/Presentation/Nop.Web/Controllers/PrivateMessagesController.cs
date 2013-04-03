@@ -56,19 +56,13 @@ namespace Nop.Web.Controllers
 
         #region Utilities
 
-        [NonAction]
-        private bool AllowPrivateMessages()
-        {
-            return _forumSettings.AllowPrivateMessages;
-        }
-
         #endregion
 
         #region Methods
 
         public ActionResult Index(int? page, string tab)
         {
-            if (!AllowPrivateMessages())
+            if (!_forumSettings.AllowPrivateMessages)
             {
                 return RedirectToRoute("HomePage");
             }
@@ -310,7 +304,7 @@ namespace Nop.Web.Controllers
 
         public ActionResult SendPM(int toCustomerId, int? replyToMessageId)
         {
-            if (!AllowPrivateMessages())
+            if (!_forumSettings.AllowPrivateMessages)
             {
                 return RedirectToRoute("HomePage");
             }
@@ -356,7 +350,7 @@ namespace Nop.Web.Controllers
         [HttpPost]
         public ActionResult SendPM(SendPrivateMessageModel model)
         {
-            if (!AllowPrivateMessages())
+            if (!_forumSettings.AllowPrivateMessages)
             {
                 return RedirectToRoute("HomePage");
             }
@@ -441,7 +435,7 @@ namespace Nop.Web.Controllers
 
         public ActionResult ViewPM(int privateMessageId)
         {
-            if (!AllowPrivateMessages())
+            if (!_forumSettings.AllowPrivateMessages)
             {
                 return RedirectToRoute("HomePage");
             }
@@ -490,7 +484,7 @@ namespace Nop.Web.Controllers
 
         public ActionResult DeletePM(int privateMessageId)
         {
-            if (!AllowPrivateMessages())
+            if (!_forumSettings.AllowPrivateMessages)
             {
                 return RedirectToRoute("HomePage");
             }
