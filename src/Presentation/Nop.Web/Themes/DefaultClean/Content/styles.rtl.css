@@ -77,9 +77,9 @@ ul.language-list li:hover{cursor:pointer;}
 .header-links a:hover{color:#AF0304;text-decoration:underline;}
 .header-links a.account{color:#AF0304;}
 .admin-header-links{padding:5px;margin-bottom:-15px; text-align:center;}
-.admin-header-links .administration a{font-weight:bold;}
-.admin-header-links .impersonation{display:block; color:#E44097; margin-bottom:10px;}
-.admin-header-links .impersonation a{color:#F93;font-weight:700;}
+.admin-header-links .administration{font-weight:bold;}
+.admin-header-links .impersonate{display:block; color:#E44097; margin-bottom:10px;}
+.admin-header-links .impersonate a{color:#F93;font-weight:700;}
 .header-menu{background:none repeat scroll 0 0 #404040;border-radius:4px;-o-border-radius:4px;-icab-border-radius:4px;-khtml-border-radius:4px;-moz-border-radius:4px;-webkit-border-radius:4px;-moz-border-radius:4px;height:32px;list-style:none outside none;margin:10px auto 0;padding:0 10px;}
 .header-menu a{color:#FFFFFF;font-size:1.1em;text-decoration:none;}
 .header-menu li{float:right;list-style:none outside none;padding:7px 8px;margin-left:10px;font-size:1.1em;line-height:17px;}

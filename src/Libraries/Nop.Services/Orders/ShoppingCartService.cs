@@ -13,7 +13,6 @@ using Nop.Services.Directory;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Security;
-using Nop.Services.Seo;
 using Nop.Services.Stores;
 
 namespace Nop.Services.Orders
