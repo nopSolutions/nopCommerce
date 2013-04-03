@@ -164,28 +164,28 @@
 
 
 /* ORDER DETAILS */
-.order-details{margin:0;padding:0;}
-.order-details .page-body{}
-.order-details .order-overview{text-align:left;padding-bottom:10px;}
-.order-details .order-details-box{text-align:left;padding:10px;height:auto;}
-.order-details .products-box,.order-details .shipments-box,.order-details .ordernotes-box{font-weight:normal;}
-.order-details .checkout-attributes{padding:10px;height:auto;}
-.order-details .products-box .product{}
-.order-details .products-box .sku{}
-.order-details .products-box .unitprice{}
-.order-details .products-box .qty{}
-.order-details .products-box .subtotal{}
+.order-details-page{margin:0;padding:0;}
+.order-details-page .page-body{}
+.order-details-page .order-overview{text-align:left;padding-bottom:10px;}
+.order-details-page .order-details-box{text-align:left;padding:10px;height:auto;}
+.order-details-page .products-box,.order-details-page .shipments-box,.order-details-page .ordernotes-box{font-weight:normal;}
+.order-details-page .checkout-attributes{padding:10px;height:auto;}
+.order-details-page .products-box .product{}
+.order-details-page .products-box .sku{}
+.order-details-page .products-box .unitprice{}
+.order-details-page .products-box .qty{}
+.order-details-page .products-box .subtotal{}
 
 
 /* SHIPMENTS */
-.shipment-details{margin:0;padding:0;}
-.shipment-details .page-body{}
-.shipment-details .overview{text-align:left;padding-bottom:10px;}
-.shipment-details .tracking-url{}
-.shipment-details .products-box,.shipment-details .shipment-status-events-box{font-weight:normal;}
-.shipment-details .products-box .product{}
-.shipment-details .products-box .sku{}
-.shipment-details .products-box .qty{}
+.shipment-details-page{margin:0;padding:0;}
+.shipment-details-page .page-body{}
+.shipment-details-page .overview{text-align:left;padding-bottom:10px;}
+.shipment-details-page .tracking-url{}
+.shipment-details-page .products-box,.shipment-details-page .shipment-status-events-box{font-weight:normal;}
+.shipment-details-page .products-box .product{}
+.shipment-details-page .products-box .sku{}
+.shipment-details-page .products-box .qty{}
 
 
 /* LOGIN */

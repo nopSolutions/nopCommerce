@@ -454,15 +454,15 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 
 
 /* SHIPMENTS */
-.shipment-details{}
-.shipment-details .page-title{}
-.shipment-details .title{padding:10px 10px 5px 0;font-weight:700;clear:both;font-size:12px;}
-.shipment-details .page-body{border:1px solid #d7d7d7;padding:10px;}
-.shipment-details .shipment-overview{overflow: hidden; margin-bottom:10px;}
-.shipment-details .shipment-overview ul{float:left;margin-right:20px;}
-.shipment-details .shipment-overview li{list-style:none;}
-.shipment-details .shipment-overview .title{margin-bottom:5px;}
-.shipment-details .tracking-url{color:#B80709;text-decoration:none;}
+.shipment-details-page{}
+.shipment-details-page .page-title{}
+.shipment-details-page .title{padding:10px 10px 5px 0;font-weight:700;clear:both;font-size:12px;}
+.shipment-details-page .page-body{border:1px solid #d7d7d7;padding:10px;}
+.shipment-details-page .shipment-overview{overflow: hidden; margin-bottom:10px;}
+.shipment-details-page .shipment-overview ul{float:left;margin-right:20px;}
+.shipment-details-page .shipment-overview li{list-style:none;}
+.shipment-details-page .shipment-overview .title{margin-bottom:5px;}
+.shipment-details-page .tracking-url{color:#B80709;text-decoration:none;}
 
 
 /* HOME PAGE */

@@ -154,7 +154,7 @@ namespace Nop.Web.Controllers
             }
 
 
-            //totals)
+            //totals
             switch (order.CustomerTaxDisplayType)
             {
                 case TaxDisplayType.ExcludingTax:
