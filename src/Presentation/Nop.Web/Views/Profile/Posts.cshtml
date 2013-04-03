@@ -1,45 +1,32 @@
 ﻿@model ProfilePostsModel
-@using Nop.Web;
 @using Nop.Web.Extensions;
 @using Nop.Web.Models.Profile;
 <div class="user-last-posts">
     @if (Model.Posts.Count > 0)
     {
-        <table class="posts-table">
-            <colgroup>
-                <col />
-            </colgroup>
-            <tbody>
-                @for (int i = 0; i < Model.Posts.Count; i++)
-                {
-                    var item = Model.Posts[i];
-                    <tr>
-                        <td class="a-left">
-                            <div class="topic">
-                                <div class="topic-title">
-                                    <span>@T("Profile.Topic")</span>:
-                                    @Html.RouteLink(item.ForumTopicTitle, "TopicSlug", new { id = item.ForumTopicId, slug = item.ForumTopicSlug })
-                                </div>
-                                <div class="topic-body">
-                                    <span>@Html.Raw(item.ForumPostText)</span>
-                                </div>
-                                <div class="topic-data">
-                                    <span>
-                                        @T("Profile.PostedOn")</span>: <span>@item.Posted</span>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+        foreach (var item in Model.Posts)
+        {
+        <div class="topic">
+            <div class="topic-title">
+                <label>@T("Profile.Topic"):</label>
+                @Html.RouteLink(item.ForumTopicTitle, "TopicSlug", new { id = item.ForumTopicId, slug = item.ForumTopicSlug })
+            </div>
+            <div class="topic-body">
+                <p>@Html.Raw(item.ForumPostText)</p>
+            </div>
+            <div class="topic-data">
+                <label>@T("Profile.PostedOn"):</label>
+                <span>@item.Posted</span>
+            </div>
+        </div>
+        }
     }
     else
     {
         @T("Profile.LatestPosts.NoPosts")
     }
     <div class="clear"></div>
-    <div class="pager lower">
+    <div class="pager">
         @Html.Pager(Model.PagerModel)
     </div>
     <div class="clear"></div>
