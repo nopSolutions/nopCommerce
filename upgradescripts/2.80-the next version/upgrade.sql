@@ -3790,3 +3790,11 @@ GO
 DELETE FROM [Setting] 
 WHERE [name] = N'GoogleAnalyticsSettings.WidgetZone' 
 GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'commonsettings.breadcrumbdelimiter')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'commonsettings.breadcrumbdelimiter', N'/', 0)
+END
+GO

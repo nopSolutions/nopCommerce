@@ -1,21 +1,26 @@
 ﻿@model ForumBreadcrumbModel
+@using Nop.Core.Domain.Common;
+@using Nop.Core.Infrastructure;
 @using Nop.Web.Models.Boards;
+@{
+    var breadcrumbDelimiter = EngineContext.Current.Resolve<CommonSettings>().BreadcrumbDelimiter;
+}
 <div class="breadcrumb forum-breadcrumb">
     <ul>
         <li><a href="@Url.RouteUrl("HomePage")" title="@T("Forum.Breadcrumb.HomeTitle")">@T("Forum.Home")</a>
-            <span class="delimiter">@Html.Raw(Model.Separator)</span></li>
+            <span class="delimiter">@breadcrumbDelimiter</span></li>
         <li>@Html.RouteLink(T("Forum.Forums").Text, "Boards", null, new { title = T("Forum.Breadcrumb.ForumHomeTitle") })
         </li>
         @if (Model.ForumGroupId > 0)
         {
-            <li><span class="delimiter">@Html.Raw(Model.Separator)</span>
+            <li><span class="delimiter">@breadcrumbDelimiter</span>
                 @Html.RouteLink(Model.ForumGroupName, "ForumGroupSlug",
             new { id = Model.ForumGroupId, slug = Model.ForumGroupSeName },
             new { title = String.Format("{0}: {1} ", T("Forum.Breadcrumb.ForumGroupTitle"), Model.ForumGroupName) })</li>        
         }
         @if (Model.ForumId > 0)
         {
-            <li><span class="delimiter">@Html.Raw(Model.Separator)</span>
+            <li><span class="delimiter">@breadcrumbDelimiter</span>
                 @Html.RouteLink(Model.ForumName, "ForumSlug",
              new { id = Model.ForumId, slug = Model.ForumSeName },
              new { title = String.Format("{0}: {1} ", T("Forum.Breadcrumb.ForumTitle"), Model.ForumName) })
@@ -23,7 +28,7 @@
         }
         @if (Model.ForumTopicId > 0)
         {
-            <li><span class="delimiter">@Html.Raw(Model.Separator)</span>
+            <li><span class="delimiter">@breadcrumbDelimiter</span>
                 @Html.RouteLink(Model.ForumTopicSubject, "TopicSlug",
             new { id = Model.ForumTopicId, slug = Model.ForumTopicSeName },
             new { title = String.Format("{0}: {1} ", T("Forum.Breadcrumb.TopicTitle"), Model.ForumTopicSubject) })

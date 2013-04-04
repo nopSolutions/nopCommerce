@@ -4500,6 +4500,7 @@ namespace Nop.Services.Installation
                     UseFullTextSearch = false,
                     FullTextMode = FulltextSearchMode.ExactMatch,
                     Log404Errors = true,
+                    BreadcrumbDelimiter = "/"
                 });
 
             settingService.SaveSetting(new SeoSettings()

@@ -1,5 +1,10 @@
 ﻿@model ProductDetailsModel.ProductBreadcrumbModel
+@using Nop.Core.Domain.Common;
+@using Nop.Core.Infrastructure;
 @using Nop.Web.Models.Catalog;
+@{
+    var breadcrumbDelimiter = EngineContext.Current.Resolve<CommonSettings>().BreadcrumbDelimiter;
+}
 <div class="breadcrumb">
     <ul>
         @Html.Widget("productbreadcrumb_before")
@@ -9,7 +14,7 @@
                     <span itemprop="title">@T("Products.Breadcrumb.Top")</span>
                 </a>
             </span>
-            <span class="delimiter">/</span>
+            <span class="delimiter">@breadcrumbDelimiter</span>
         </li>
         @foreach (var category in Model.CategoryBreadcrumb)
         {
@@ -19,7 +24,7 @@
                         <span itemprop="title">@category.Name</span>
                     </a>
                 </span>
-                <span class="delimiter">/</span>
+                <span class="delimiter">@breadcrumbDelimiter</span>
             </li>
         }
         <li>

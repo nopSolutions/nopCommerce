@@ -1637,7 +1637,6 @@ namespace Nop.Web.Controllers
         public ActionResult ForumBreadcrumb(int? forumGroupId, int? forumId, int? forumTopicId)
         {
             var model = new ForumBreadcrumbModel();
-            model.Separator = " / ";
 
             ForumTopic forumTopic = null;
             if (forumTopicId.HasValue)
