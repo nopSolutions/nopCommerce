@@ -1,6 +1,6 @@
 ﻿@model ProductDetailsModel.ProductVariantModel
 @using Nop.Web.Models.Catalog;
-<div class="product-variant-line">
+<div class="product-variant-line" data-productvariantid="@Model.Id">
     @if (!String.IsNullOrWhiteSpace(Model.PictureModel.ImageUrl))
     {
         <div class="variant-picture">
@@ -8,42 +8,44 @@
                                     title="@Model.PictureModel.Title" />
         </div>
     }
-    @if (!String.IsNullOrWhiteSpace(Model.Name))
-    {
-        <div class="variant-name">
-            @Model.Name
-        </div>
-    }
-    @if (!String.IsNullOrWhiteSpace(Model.Description))
-    {
-        <div class="variant-description">
-            @Html.Raw(Model.Description)
-        </div>
-    }
-    @Html.Partial("_DownloadSample", Model)
-    @Html.Action("ProductTierPrices", "Catalog", new { productVariantId = Model.Id })
-    @{
-        var dataDictAttributes = new ViewDataDictionary();
-        dataDictAttributes.TemplateInfo.HtmlFieldPrefix = string.Format("attributes_{0}", Model.Id);
-        @Html.Partial("_ProductAttributes", Model.ProductVariantAttributes, dataDictAttributes)                  
-    }
-    <!--product SKU, manufacturer part number, stock info-->
-    @Html.Partial("_ProductVariant_SKU_Man_Stock", Model)
-    <!--Back in stock subscription-->
-    @Html.Partial("_ProductVariantBackInStockSubscription", Model)
-    @{
-        var dataDictGiftCard = new ViewDataDictionary();
-        dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = string.Format("giftcard_{0}", Model.Id);
-        @Html.Partial("_GiftCardInfo", Model.GiftCard, dataDictGiftCard)
-    }
-    @{
-        var dataDictPrice = new ViewDataDictionary();
-        dataDictPrice.TemplateInfo.HtmlFieldPrefix = string.Format("price_{0}", Model.Id);
-        @Html.Partial("_ProductVariantPrice", Model.ProductVariantPrice, dataDictPrice)
-    }
-    @{
-        var dataDictAddToCart = new ViewDataDictionary();
-        dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", Model.Id);
-        @Html.Partial("_ProductVariantAddToCart", Model.AddToCart, dataDictAddToCart)
-    }
+    <div class="variant-overview">
+        @if (!String.IsNullOrWhiteSpace(Model.Name))
+        {
+            <div class="variant-name">
+                @Model.Name
+            </div>
+        }
+        @if (!String.IsNullOrWhiteSpace(Model.Description))
+        {
+            <div class="variant-description">
+                @Html.Raw(Model.Description)
+            </div>
+        }
+        @Html.Partial("_DownloadSample", Model)
+        @Html.Action("ProductTierPrices", "Catalog", new { productVariantId = Model.Id })
+        @{
+            var dataDictAttributes = new ViewDataDictionary();
+            dataDictAttributes.TemplateInfo.HtmlFieldPrefix = string.Format("attributes_{0}", Model.Id);
+            @Html.Partial("_ProductAttributes", Model.ProductVariantAttributes, dataDictAttributes)                  
+        }
+        <!--product SKU, manufacturer part number, stock info-->
+        @Html.Partial("_ProductVariant_SKU_Man_Stock", Model)
+        <!--Back in stock subscription-->
+        @Html.Partial("_ProductVariantBackInStockSubscription", Model)
+        @{
+            var dataDictGiftCard = new ViewDataDictionary();
+            dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = string.Format("giftcard_{0}", Model.Id);
+            @Html.Partial("_GiftCardInfo", Model.GiftCard, dataDictGiftCard)
+        }
+        @{
+            var dataDictPrice = new ViewDataDictionary();
+            dataDictPrice.TemplateInfo.HtmlFieldPrefix = string.Format("price_{0}", Model.Id);
+            @Html.Partial("_ProductVariantPrice", Model.ProductVariantPrice, dataDictPrice)
+        }
+        @{
+            var dataDictAddToCart = new ViewDataDictionary();
+            dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", Model.Id);
+            @Html.Partial("_ProductVariantAddToCart", Model.AddToCart, dataDictAddToCart)
+        }
+    </div>
 </div>

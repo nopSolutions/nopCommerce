@@ -28,14 +28,20 @@
         }
         @if (Model.ShoppingCartEnabled)
         {
-            <li id="topcartlink"><a href="@Url.RouteUrl("ShoppingCart")" class="ico-cart">@T("ShoppingCart")</a>
-                <a href="@Url.RouteUrl("ShoppingCart")" class="cart-qty">@T("ShoppingCart.HeaderQuantity", Model.ShoppingCartItems)</a>
+            <li id="topcartlink">
+                <a href="@Url.RouteUrl("ShoppingCart")" class="ico-cart">
+                    <label>@T("ShoppingCart")</label>
+                    <span class="cart-qty">@T("ShoppingCart.HeaderQuantity", Model.ShoppingCartItems)</span>
+                </a>
             </li>
         }
         @if (Model.WishlistEnabled)
         {
-            <li><a href="@Url.RouteUrl("Wishlist")" class="ico-wishlist">@T("Wishlist")</a>
-                <a href="@Url.RouteUrl("Wishlist")" class="wishlist-qty">@T("Wishlist.HeaderQuantity", Model.WishlistItems)</a>
+            <li>
+                <a href="@Url.RouteUrl("Wishlist")" class="ico-wishlist">
+                    <label>@T("Wishlist")</label>
+                    <span class="wishlist-qty">@T("Wishlist.HeaderQuantity", Model.WishlistItems)</span>
+                </a>
             </li>
         }
         @Html.Widget("header_links_after")

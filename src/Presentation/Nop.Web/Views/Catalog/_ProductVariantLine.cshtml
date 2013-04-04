@@ -1,6 +1,6 @@
 ﻿@model ProductDetailsModel.ProductVariantModel
 @using Nop.Web.Models.Catalog;
-<div class="product-variant-line">
+<div class="product-variant-line" data-productvariantid="@Model.Id">
     @if (!String.IsNullOrWhiteSpace(Model.PictureModel.ImageUrl))
     {
         <div class="variant-picture">
@@ -8,14 +8,14 @@
                                     title="@Model.PictureModel.Title" />
         </div>
     }
-    @if (!String.IsNullOrWhiteSpace(Model.Name))
-    {
-        <div class="variant-name">
-            @Model.Name
-        </div>
-    }
 
     <div class="variant-overview">
+        @if (!String.IsNullOrWhiteSpace(Model.Name))
+        {
+            <div class="variant-name">
+                @Model.Name
+            </div>
+        }
         @if (!String.IsNullOrWhiteSpace(Model.Description))
         {
             <div class="variant-description">

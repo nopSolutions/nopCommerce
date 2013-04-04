@@ -29,7 +29,7 @@
         @Html.Widget("productdetails_top")
         @using (Html.BeginRouteForm("Product", new { SeName = Model.SeName }, FormMethod.Post, new { id = "product-details-form" }))
         {
-            <div itemscope itemtype="http://schema.org/Product">
+            <div itemscope itemtype="http://schema.org/Product" data-productid="@Model.Id">
                 <div class="product-essential">
                     @Html.Widget("productdetails_before_pictures")
                     <!--product pictures-->
@@ -99,7 +99,7 @@
                 </div>
                 @Html.Widget("productdetails_before_collateral")
                 <div class="product-collateral">
-                    <div class="product-variant-line">
+                    <div class="product-variant-line" data-productvariantid="@defaultProductVariant.Id">
                         <!--product tier prices-->
                         @Html.Action("ProductTierPrices", "Catalog", new { productVariantId = defaultProductVariant.Id })
                         <div class="clear">
