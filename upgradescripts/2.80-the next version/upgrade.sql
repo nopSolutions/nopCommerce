@@ -3798,3 +3798,11 @@ BEGIN
 	VALUES (N'commonsettings.breadcrumbdelimiter', N'/', 0)
 END
 GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.compareproductsnumber')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'catalogsettings.compareproductsnumber', N'4', 0)
+END
+GO

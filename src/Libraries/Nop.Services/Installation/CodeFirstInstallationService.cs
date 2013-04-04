@@ -4546,6 +4546,7 @@ namespace Nop.Services.Installation
                     RecentlyAddedProductsNumber = 8,
                     RecentlyAddedProductsEnabled = true,
                     CompareProductsEnabled = true,
+                    CompareProductsNumber = 4,
                     ProductSearchAutoCompleteEnabled = true,
                     ProductSearchAutoCompleteNumberOfProducts = 10,
                     ProductSearchTermMinimumLength = 3,

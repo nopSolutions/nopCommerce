@@ -126,6 +126,11 @@ namespace Nop.Core.Domain.Catalog
         public bool CompareProductsEnabled { get; set; }
 
         /// <summary>
+        /// Gets or sets an allowed number of products to be compared
+        /// </summary>
+        public int CompareProductsNumber { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether autocomplete is enabled
         /// </summary>
         public bool ProductSearchAutoCompleteEnabled { get; set; }

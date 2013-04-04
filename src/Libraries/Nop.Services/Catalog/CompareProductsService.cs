@@ -23,6 +23,7 @@ namespace Nop.Services.Catalog
 
         private readonly HttpContextBase _httpContext;
         private readonly IProductService _productService;
+        private readonly CatalogSettings _catalogSettings;
 
         #endregion
 
@@ -33,10 +34,13 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="httpContext">HTTP context</param>
         /// <param name="productService">Product service</param>
-        public CompareProductsService(HttpContextBase httpContext, IProductService productService)
+        /// <param name="catalogSettings">Catalog settings</param>
+        public CompareProductsService(HttpContextBase httpContext, IProductService productService,
+            CatalogSettings catalogSettings)
         {
             this._httpContext = httpContext;
             this._productService = productService;
+            this._catalogSettings = catalogSettings;
         }
 
         #endregion
@@ -47,7 +51,7 @@ namespace Nop.Services.Catalog
         /// Gets a "compare products" identifier list
         /// </summary>
         /// <returns>"compare products" identifier list</returns>
-        protected List<int> GetComparedProductIds()
+        protected virtual List<int> GetComparedProductIds()
         {
             var productIds = new List<int>();
             HttpCookie compareCookie = _httpContext.Request.Cookies.Get(COMPARE_PRODUCTS_COOKIE_NAME);
@@ -101,7 +105,6 @@ namespace Nop.Services.Catalog
             return products;
         }
 
-
         /// <summary>
         /// Removes a product from a "compare products" list
         /// </summary>
@@ -143,12 +146,11 @@ namespace Nop.Services.Catalog
                 compareCookie.HttpOnly = true;
             }
             compareCookie.Values.Clear();
-            int maxProducts = 4;
             int i = 1;
             foreach (int newProductId in newProductIds)
             {
                 compareCookie.Values.Add("CompareProductIds", newProductId.ToString());
-                if (i == maxProducts)
+                if (i == _catalogSettings.CompareProductsNumber)
                     break;
                 i++;
             }
