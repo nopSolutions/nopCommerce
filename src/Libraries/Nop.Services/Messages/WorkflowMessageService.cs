@@ -932,7 +932,7 @@ namespace Nop.Services.Messages
                 throw new ArgumentNullException("privateMessage");
             }
 
-            var store = privateMessage.Store ?? _storeContext.CurrentStore;
+            var store = _storeService.GetStoreById(privateMessage.StoreId) ?? _storeContext.CurrentStore;
 
             var messageTemplate = GetLocalizedActiveMessageTemplate("Customer.NewPM", languageId, store.Id);
             if (messageTemplate == null )
@@ -1186,7 +1186,7 @@ namespace Nop.Services.Messages
             if (subscription == null)
                 throw new ArgumentNullException("subscription");
 
-            var store = subscription.Store ?? _storeContext.CurrentStore;
+            var store = _storeService.GetStoreById(subscription.StoreId) ?? _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
             var messageTemplate = GetLocalizedActiveMessageTemplate("Customer.BackInStock", languageId, store.Id);

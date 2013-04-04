@@ -18,10 +18,6 @@ namespace Nop.Data.Mapping.Orders
             this.Ignore(sci => sci.AdditionalShippingCharge);
             this.Ignore(sci => sci.IsTaxExempt);
 
-            this.HasRequired(sci => sci.Store)
-                .WithMany()
-                .HasForeignKey(sci => sci.StoreId);
-
             this.HasRequired(sci => sci.Customer)
                 .WithMany(c => c.ShoppingCartItems)
                 .HasForeignKey(sci => sci.CustomerId);

@@ -190,7 +190,6 @@ namespace Nop.Data.Tests.Customers
                     CreatedOnUtc = new DateTime(2010, 01, 01),
                     UpdatedOnUtc = new DateTime(2010, 01, 02),
                     ProductVariant = productVariant,
-                    Store = store
                 }
             );
 
