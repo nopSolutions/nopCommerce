@@ -4,8 +4,6 @@
 @using Nop.Web.Models.Boards;
 
 @Html.Action("ForumBreadcrumb", new { forumId = Model.ForumId, forumTopicId = Model.Id })
-<div class="clear">
-</div>
 <div class="page forum-edit-page">
     <div class="page-title">
         @if (Model.IsEdit)
@@ -25,8 +23,7 @@
             </div>
             @Html.HiddenFor(model => model.Id)
             @Html.HiddenFor(model => model.ForumId)
-            <div class="clear">
-            </div>
+            
             <div class="form-fields">
                 <div class="inputs">
                     <label>@T("Forum.ForumName"):</label>

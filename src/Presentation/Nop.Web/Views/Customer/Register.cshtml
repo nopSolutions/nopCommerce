@@ -43,17 +43,11 @@
         <div class="page-title">
             <h1>@T("Account.Register")</h1>
         </div>
-        <div class="clear">
-        </div>
         <div class="page-body">
             <div class="message-error">
                 @Html.ValidationSummary(true)
             </div>
-            <div class="clear">
-            </div>
             @Html.Partial("_ExternalAuthentication.AssociateMessage")
-            <div class="clear">
-            </div>
             <div class="fieldset">
                 <div class="title">
                     <strong>@T("Account.YourPersonalDetails")</strong>
@@ -320,8 +314,6 @@
                     }
                 </div>
             </div>
-            <div class="clear">
-            </div>
             @if (Model.AcceptPrivacyPolicyEnabled)
             {
                 <script type="text/javascript">
@@ -343,8 +335,6 @@
                     <input id="accept-privacy-policy" type="checkbox" name="accept-privacy-policy" />
                     <label for="accept-privacy-policy">@T("Account.Fields.AcceptPrivacyPolicy")</label>
                     <a class="read" href='@Url.RouteUrl("Topic", new { SystemName = "privacyinfo" })'>@T("Account.Fields.AcceptPrivacyPolicy.Read")</a>
-                </div>
-                <div class="clear">
                 </div>
             }
             <div class="buttons">

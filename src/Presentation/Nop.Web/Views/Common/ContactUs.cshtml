@@ -10,11 +10,7 @@
     <div class="page-title">
         <h1>@T("PageTitle.ContactUs")</h1>
     </div>
-    <div class="clear">
-    </div>
     @Html.Action("TopicBlock", "Topic", new { systemName = "ContactUs" })
-    <div class="clear">
-    </div>
     <div class="page-body">
         @Html.Widget("contactus_top")
         @if (Model.SuccessfullySent)
@@ -60,8 +56,6 @@
                     </div>
                     @Html.ValidationMessageFor(model => model.Enquiry)
                 </div>
-            </div>
-            <div class="clear">
             </div>
             <div class="buttons">
                 <input type="submit" name="send-email" class="button-1 contact-us-button" value="@T("ContactUs.Button")" />

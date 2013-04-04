@@ -45,16 +45,12 @@
     <div class="page-title">
         <h1>@T("Account.MyAccount") - @T("Account.CustomerInfo")</h1>
     </div>
-    <div class="clear">
-    </div>
     <div class="page-body">
         @using (Html.BeginForm())
         {
             @Html.AntiForgeryToken()
             <div class="message-error">
                 @Html.ValidationSummary(true)
-            </div>
-            <div class="clear">
             </div>
             <div class="fieldset">
                 <div class="title">
@@ -360,8 +356,6 @@
                 </div>
             </div>
                     }
-            <div class="clear">
-            </div>
             <div class="buttons">
                 <input type="submit" value="@T("Common.Save")" name="save-info-button" class="button-1 save-customer-info-button" />
             </div>

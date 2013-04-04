@@ -10,15 +10,11 @@
 }
 @section left {
     @Html.Action("BlogMonths", "Blog")
-    <div class="clear">
-    </div>
     @Html.Action("BlogTags", "Blog")
 }
 <div class="page blogpost-page">
     <div class="page-title">
         <h1>@Model.Title</h1>
-    </div>
-    <div class="clear">
     </div>
     <div class="page-body">
         <div class="post-date">
@@ -27,8 +23,6 @@
         @Html.Widget("blogpost_page_before_body")
         <div class="post-body">
             @Html.Raw(Model.Body)
-        </div>
-        <div class="clear">
         </div>
         @if (Model.Tags.Count > 0)
         {
@@ -50,8 +44,6 @@
         @Html.Widget("blogpost_page_before_comments")
         @if (Model.AllowComments)
         {
-            <div class="clear">
-            </div>
             <div class="fieldset new-comment">
                 <div class="title">
                     <strong>@T("Blog.Comments.LeaveYourComment")</strong>
@@ -81,8 +73,6 @@
                             </div>
                         }
                     </div>
-                    <div class="clear">
-                    </div>
                     <div class="buttons">
                         <input type="submit" name="add-comment" class="button-1 blog-post-add-comment-button" value="@T("Blog.Comments.SubmitButton")" />
                     </div>
@@ -90,13 +80,9 @@
             </div>
                 if (Model.Comments.Count > 0)
                 {
-            <div class="clear">
-            </div>
             <div class="comment-list">
                 <div class="title">
                     @T("Blog.Comments")
-                </div>
-                <div class="clear">
                 </div>
                 @foreach (var comment in Model.Comments)
                 {
@@ -129,8 +115,6 @@
                             </div>
                         </div>
                         @Html.Widget("blogpost_page_inside_comment")
-                    </div>
-                    <div class="clear">
                     </div>
                 }
             </div>

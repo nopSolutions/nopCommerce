@@ -7,8 +7,6 @@
         <div class="title">
             <strong>@T("Products.AlsoPurchased")</strong>
         </div>
-        <div class="clear">
-        </div>
         @foreach (var item in Model)
         {
             <div class="item-box">@Html.Partial("_ProductBox", item)</div>

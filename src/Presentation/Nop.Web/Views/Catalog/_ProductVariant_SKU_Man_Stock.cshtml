@@ -6,8 +6,6 @@
     <div class="sku">
         <span class="label">@T("Products.Sku"): </span><span class="value" itemprop="sku">@Model.Sku</span>
     </div>
-    <div class="clear">
-    </div>
 }
 @*Manufacturer part number*@
 @if (!String.IsNullOrWhiteSpace(Model.ManufacturerPartNumber) && Model.ShowManufacturerPartNumber)
@@ -15,16 +13,12 @@
     <div class="manufacturer-part-number">
         <span class="label">@T("Products.ManufacturerPartNumber"): </span><span class="value">@Model.ManufacturerPartNumber</span>
     </div>
-    <div class="clear">
-    </div>
 }
 @*GTIN*@
 @if (!String.IsNullOrWhiteSpace(Model.Gtin) && Model.ShowGtin)
 {
     <div class="gtin">
         <span class="label">@T("Products.GTIN"): </span><span class="value">@Model.Gtin</span>
-    </div>
-    <div class="clear">
     </div>
 }
 @*Stock availability*@

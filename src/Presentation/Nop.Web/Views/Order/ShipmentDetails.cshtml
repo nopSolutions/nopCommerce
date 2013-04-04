@@ -9,8 +9,6 @@
     <div class="page-title">
         <h1>@string.Format(T("Order.Shipments.Information").Text, Model.Id)</h1>
     </div>
-    <div class="clear">
-    </div>
     <div class="page-body">
 
         <div class="shipment-overview">
@@ -100,15 +98,11 @@
                 }
             </ul>
         </div>
-        <div class="clear">
-        </div>
         @if (Model.Items.Count > 0)
         {
             <div class="section products">
                 <div class="title">
                     <strong>@T("Order.Shipments.Product(s)")</strong>
-                </div>
-                <div class="clear">
                 </div>
                 <table class="data-table">
                     <colgroup>
@@ -162,18 +156,12 @@
                     </tbody>
                 </table>
             </div>
-            <div class="clear">
-            </div>
         }
-        <div class="clear">
-        </div>
         @if (Model.ShipmentStatusEvents.Count > 0)
         {
             <div class="section shipment-status-events">
                 <div class="title">
                     <strong>@T("Order.ShipmentStatusEvents")</strong>
-                </div>
-                <div class="clear">
                 </div>
                 <table class="data-table">
                     <colgroup>

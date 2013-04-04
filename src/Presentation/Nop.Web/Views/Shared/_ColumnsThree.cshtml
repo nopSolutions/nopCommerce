@@ -37,23 +37,11 @@
     else
     {
         @Html.Widget("left_side_column_before")
-        <div class="clear">
-        </div>
         @Html.Action("CategoryNavigation", "Catalog", new { currentCategoryId = currentCategoryId, currentProductId = currentProductId })
-        <div class="clear">
-        </div>
         @Html.Widget("left_side_column_after_category_navigation")
-        <div class="clear">
-        </div>
         @Html.Action("ManufacturerNavigation", "Catalog", new { currentManufacturerId = currentManufacturerId })
-        <div class="clear">
-        </div>
         @Html.Action("PopularProductTags", "Catalog")
-        <div class="clear">
-        </div>
         @Html.Action("PollBlock", "Poll", new { systemKeyword = "LeftColumnPoll" })
-        <div class="clear">
-        </div>
         @Html.Widget("left_side_column_after")
     }
 </div>
@@ -70,20 +58,10 @@
     else
     {
         @Html.Widget("right_side_column_before")
-        <div class="clear">
-        </div>
         @Html.Action("NewsletterBox", "Newsletter")
-        <div class="clear">
-        </div>
         @Html.Action("RecentlyViewedProductsBlock", "Catalog")        
-        <div class="clear">
-        </div>  
-        @Html.Action("InfoBlock", "Common")   
-        <div class="clear">
-        </div>   
+        @Html.Action("InfoBlock", "Common")    
         @Html.Action("PollBlock", "Poll", new { systemKeyword = "RightColumnPoll" })
-        <div class="clear">
-        </div>
         @Html.Widget("right_side_column_after")
     }
 </div>

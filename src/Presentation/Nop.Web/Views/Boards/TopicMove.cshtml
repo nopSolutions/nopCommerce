@@ -6,13 +6,9 @@
     Html.AddTitleParts(T("Forum.PageTitle.MoveTopic").Text);
 }
 @Html.Action("ForumBreadcrumb", new { forumTopicId = Model.Id })
-<div class="clear">
-</div>
 <div class="page move-topic-page">
     <div class="page-title">
         <h1>@T("Forum.MoveTopic")</h1>
-    </div>
-    <div class="clear">
     </div>
     <div class="page-body">
         @using (Html.BeginForm())

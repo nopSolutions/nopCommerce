@@ -8,12 +8,8 @@
 }
 <div class="page checkout-page">
     @Html.Action("CheckoutProgress", "Checkout", new { step = CheckoutProgressStep.Address })
-    <div class="clear">
-    </div>
     <div class="page-title">
         <h1>@T("Checkout.ShippingAddress")</h1>
-    </div>
-    <div class="clear">
     </div>
     <div class="page-body checkout-data">
         @Html.Widget("checkout_shipping_address_top")
@@ -22,8 +18,6 @@
             <div class="section select-shipping-address">
                 <div class="title">
                     <strong>@T("Checkout.SelectShippingAddress")</strong>
-                </div>
-                <div class="clear">
                 </div>
                 <div class="address-grid">
 
@@ -102,8 +96,6 @@
                     }
                 </div>
             </div>
-            <div class="clear">
-            </div>
         }
         @Html.Widget("checkout_shipping_address_middle")
         <div class="section new-shipping-address">
@@ -117,8 +109,6 @@
                     <strong>@T("Checkout.EnterShippingAddress")</strong>
                 }
             </div>
-            <div class="clear">
-            </div>
             <div class="enter-address">
                 @using (Html.BeginRouteForm("CheckoutShippingAddress", FormMethod.Post))
                 {
@@ -131,8 +121,6 @@
                             @Html.Partial("_CreateOrUpdateAddress", Model.NewAddress, dataDictAddress)              
                         }
                     </div>
-                    <div class="clear">
-                    </div>
                     <div class="buttons">
                         <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" class="button-1 new-address-next-step-button" />
                     </div>
@@ -140,13 +128,9 @@
             </div>
         </div>
         @Html.Widget("checkout_shipping_address_bottom")
-        <div class="clear">
-        </div>
         <div class="section order-summary-body">
             <div class="title">
                 <strong>@T("Checkout.OrderSummary")</strong>
-            </div>
-            <div class="clear">
             </div>
             @Html.Action("OrderSummary", "ShoppingCart")
         </div>

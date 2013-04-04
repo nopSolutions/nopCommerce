@@ -8,12 +8,8 @@
 }
 <div class="page checkout-page">
     @Html.Action("CheckoutProgress", "Checkout", new { step = CheckoutProgressStep.Shipping })
-    <div class="clear">
-    </div>
     <div class="page-title">
         <h1>@T("Checkout.SelectShippingMethod")</h1>
-    </div>
-    <div class="clear">
     </div>
     <div class="page-body checkout-data">
         @Html.Widget("checkout_shipping_method_top")
@@ -40,8 +36,6 @@
                         </li>
                     }
                 </ul>
-                <div class="clear">
-                </div>
                 <div class="buttons">
                     <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" class="button-1 shipping-method-next-step-button" />
                 </div>
@@ -60,13 +54,9 @@
             }
         </div>
         @Html.Widget("checkout_shipping_method_bottom")
-        <div class="clear">
-        </div>
         <div class="section order-summary-body">
             <div class="title">
                 <strong>@T("Checkout.OrderSummary")</strong>
-            </div>
-            <div class="clear">
             </div>
             @Html.Action("OrderSummary", "ShoppingCart")
         </div>

@@ -14,8 +14,6 @@
     <div class="page-title">
         <h1>@T("Account.MyAccount") - @T("Account.CustomerAddresses")</h1>
     </div>
-    <div class="clear">
-    </div>
     <div class="page-body">
         <div class="address-list">
             @if (Model.Addresses.Count > 0)
@@ -97,8 +95,6 @@
                     <div class="buttons">
                         <input type="button" class="button-2 edit-address-button" onclick="location.href='@(Url.RouteUrl("CustomerAddressEdit", new { addressId = address.Id }))'" value='@T("Common.Edit")' />
                         <input type="button" class="button-2 delete-address-button" onclick="if (confirm('@(T("Common.AreYouSure").Text)')) {location.href='@(Url.RouteUrl("CustomerAddressDelete", new { addressId = address.Id }))';}" value="@T("Common.Delete")" />
-                    </div>
-                    <div class="clear">
                     </div>
                 </div>
                 }

@@ -15,8 +15,6 @@
 </script>
 @Html.Action("ForumBreadcrumb", new { forumId = Model.Id })
 @Html.Partial("_SearchBox")
-<div class="clear">
-</div>
 <div class="page forum">
     <div class="top">
         <div class="forum-info">
@@ -47,8 +45,6 @@
             </div>
         </div>
     </div>
-    <div class="clear">
-    </div>
     <div class="pager upper">
         @{
             var pager = Html.Pager(new PagerModel()
@@ -63,8 +59,6 @@
             });
         }
         @pager
-    </div>
-    <div class="clear">
     </div>
     <div class="forums-table-section topics-group">
         @if (Model.ForumTopics.Count > 0)
@@ -156,8 +150,6 @@
                 </tbody>
             </table>
         }
-    </div>
-    <div class="clear">
     </div>
     <div class="pager lower">
         @pager

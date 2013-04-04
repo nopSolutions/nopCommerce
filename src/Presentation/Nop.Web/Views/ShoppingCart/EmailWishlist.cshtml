@@ -10,8 +10,6 @@
     <div class="page-title">
         <h1>@T("Wishlist.EmailAFriend.Title")</h1>
     </div>
-    <div class="clear">
-    </div>
     <div class="page-body">
         @if (Model.SuccessfullySent)
         {
@@ -52,8 +50,6 @@
                         @Html.ValidationMessageFor(model => model.PersonalMessage)
                     </div>
                 </div>
-            </div>
-            <div class="clear">
             </div>
             <div class="buttons">
                 <input type="submit" name="send-email" class="button-1 send-email-a-friend-button" value="@T("Wishlist.EmailAFriend.Button")" />

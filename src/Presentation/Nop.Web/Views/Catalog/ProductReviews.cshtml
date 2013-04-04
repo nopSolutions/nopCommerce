@@ -11,8 +11,6 @@
     <div class="page-title">
         <h1>@T("Reviews.ProductReviewsFor") <a href="@Url.RouteUrl("Product", new { SeName = Model.ProductSeName })">@Model.ProductName</a></h1>
     </div>
-    <div class="clear">
-    </div>
     <div class="page-body">
         @Html.Widget("productreviews_page_top")
         @if (Model.AddProductReview.SuccessfullyAdded)
@@ -65,11 +63,7 @@
                             <div class="captcha-box">
                                 @Html.Raw(Html.GenerateCaptcha())
                             </div>
-                            <div class="clear">
-                            </div>
                         }
-                    </div>
-                    <div class="clear">
                     </div>
                     <div class="buttons">
                         <input type="submit" name="add-review" class="button-1 write-product-review-button" value="@T("Reviews.SubmitButton")" />
@@ -79,8 +73,6 @@
         }
         @if (Model.Items.Count > 0)
         {
-            <div class="clear">
-            </div>
             <div class="product-review-list">
                 <div class="title">
                     <strong>@T("Reviews.ExistingReviews")</strong>
@@ -100,12 +92,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="clear">
-                        </div>
                         <div class="review-text">
                             @Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(review.ReviewText, false, true, false, false, false, false))
-                        </div>
-                        <div class="clear">
                         </div>
                         <div class="review-info">
                             <span class="user">

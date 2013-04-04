@@ -5,20 +5,10 @@
     <div class="page-body">
         @Html.Widget("home_page_top")
         @Html.Action("TopicBlock", "Topic", new { systemName = "HomePageText" })
-        <div class="clear">
-        </div>
         @Html.Action("HomepageCategories", "Catalog")
-        <div class="clear">
-        </div>
         @Html.Action("HomepageProducts", "Catalog")
-        <div class="clear">
-        </div>
         @Html.Action("HomepageBestSellers", "Catalog")
-        <div class="clear">
-        </div>
         @Html.Action("HomePageNews", "News")
-        <div class="clear">
-        </div>
         @Html.Action("HomePagePolls", "Poll")
         @Html.Widget("home_page_bottom")
     </div>

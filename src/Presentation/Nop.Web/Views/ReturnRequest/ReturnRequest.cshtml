@@ -10,8 +10,6 @@
     <div class="page-title">
         <h1>@string.Format(T("ReturnRequests.Title").Text, Model.OrderId)</h1>
     </div>
-    <div class="clear">
-    </div>
     <div class="page-body">
         @if (!String.IsNullOrEmpty(Model.Result))
         {
@@ -95,8 +93,6 @@
                         @Html.ValidationMessageFor(model => model.Comments)
                     </div>
                 </div>
-            </div>
-            <div class="clear">
             </div>
             <div class="buttons">
                 <input type="submit" name="submit-return-request" class="button-1 submit-return-request-button" value="@T("ReturnRequests.Submit")" />

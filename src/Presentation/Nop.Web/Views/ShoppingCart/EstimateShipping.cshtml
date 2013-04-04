@@ -60,8 +60,6 @@
                     <input type="submit" name="estimateshipping" value="@T("ShoppingCart.EstimateShipping.Button")" class="button-2 estimate-shipping-button" />
                 </div>
             </div>
-            <div class="clear">
-            </div>
             @if (Model.ShippingOptions.Count > 0)
             {
                 <ul class="shipping-results">
@@ -77,8 +75,6 @@
                         </li>
                     }
                 </ul>
-                <div class="clear">
-                </div>
             }
             @if (Model.Warnings.Count > 0)
             {

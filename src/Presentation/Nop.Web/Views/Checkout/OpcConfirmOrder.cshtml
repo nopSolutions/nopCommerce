@@ -11,8 +11,6 @@
         </div>
         @if (Model.Warnings.Count > 0)
         {
-            <div class="clear">
-            </div>
             <div class="message-error">
                 <ul>
                     @foreach (var warning in Model.Warnings)
@@ -24,8 +22,6 @@
         }
     </div>
     @Html.Widget("op_checkout_confirm_bottom")
-    <div class="clear">
-    </div>
     <div class="order-summary-body">
         @Html.Action("OrderSummary", "ShoppingCart", new { prepareAndDisplayOrderReviewData = true })
     </div>

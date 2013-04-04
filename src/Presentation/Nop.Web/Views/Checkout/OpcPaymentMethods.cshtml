@@ -9,8 +9,6 @@
                 @Html.EditorFor(model => model.UseRewardPoints)
                 @string.Format(T("Checkout.UseRewardPoints").Text, Model.RewardPointsBalance, Model.RewardPointsAmount)
             </div>
-            <div class="clear">
-            </div>
         }
         @if (Model.PaymentMethods.Count > 0)
         {

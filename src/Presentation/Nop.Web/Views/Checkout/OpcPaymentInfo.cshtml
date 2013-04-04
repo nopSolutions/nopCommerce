@@ -6,8 +6,6 @@
         <div class="info">
             @Html.Action(Model.PaymentInfoActionName, Model.PaymentInfoControllerName, Model.PaymentInfoRouteValues)
         </div>
-        <div class="clear">
-        </div>
         <div class="message-error">
             @Html.ValidationSummary(false)
         </div>
@@ -15,8 +13,6 @@
     @Html.Widget("op_checkout_payment_info_bottom")
     @if (Model.DisplayOrderTotals)
     {
-        <div class="clear">
-        </div>
         <div class="order-summary-body">
             @Html.Action("OrderSummary", "ShoppingCart")
         </div>

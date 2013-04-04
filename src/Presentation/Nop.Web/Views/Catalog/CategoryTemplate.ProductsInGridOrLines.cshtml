@@ -40,15 +40,11 @@
             }
         </ul>
     </div>
-    <div class="clear">
-    </div>
     @Html.Widget("categorydetails_after_breadcrumb")
 }
 <div class="page category-page">
     <div class="page-title">
         <h1>@Model.Name</h1>
-    </div>
-    <div class="clear">
     </div>
     <div class="page-body">
         @Html.Widget("categorydetails_top")
@@ -57,8 +53,6 @@
         {
             <div class="category-description">
                 @Html.Raw(Model.Description)
-            </div>
-            <div class="clear">
             </div>
         }
         @Html.Widget("categorydetails_before_subcategories")
@@ -83,8 +77,6 @@
                     </div>
                 }
             </div>
-            <div class="clear">
-            </div>
         }
         @Html.Widget("categorydetails_before_featured_products")
         @*featured products*@
@@ -102,8 +94,6 @@
                         </div>
                     }
                 </div>
-            </div>
-            <div class="clear">
             </div>
         }
         @Html.Widget("categorydetails_after_featured_products")
@@ -133,26 +123,18 @@
                 </div>
             }
         </div>
-        <div class="clear">
-        </div>
         @Html.Widget("categorydetails_before_filters")
         <div class="product-filters-wrapper">
             @*filtering*@
             @if (Model.PagingFilteringContext.PriceRangeFilter.Enabled)
             {
                 @Html.Partial("_FilterPriceBox", Model.PagingFilteringContext.PriceRangeFilter, new ViewDataDictionary())
-                <div class="clear">
-                </div>
             }
             @*filtering*@
             @if (Model.PagingFilteringContext.SpecificationFilter.Enabled)
             {
                 @Html.Partial("_FilterSpecsBox", Model.PagingFilteringContext.SpecificationFilter, new ViewDataDictionary())
-                <div class="clear">
-                </div>
             }
-        </div>
-        <div class="clear">
         </div>
         @Html.Widget("categorydetails_before_product_list")
         @*product list*@
@@ -183,8 +165,6 @@
             </div>
             }
         }
-        <div class="clear">
-        </div>
         <div class="pager">
             @Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber")
         </div>

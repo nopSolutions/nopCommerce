@@ -15,8 +15,6 @@
 </script>
 @Html.Action("ForumBreadcrumb", new { forumTopicId = Model.Id })
 @Html.Partial("_SearchBox")
-<div class="clear">
-</div>
 <div class="page forum-topic-page">
     <div class="title">
         <h2 class="topic-name">
@@ -35,8 +33,6 @@
                 @Html.RouteLink(T("Forum.MoveTopic").Text, "TopicMove", new { id = Model.Id }, new { @class = "move-topic-link-button" })
             }
         </div>
-    </div>
-    <div class="clear">
     </div>
     <div class="topic-header">
         <div class="topic-options">
@@ -65,8 +61,6 @@
             }
             @pager
         </div>
-    </div>
-    <div class="clear">
     </div>
     <div class="posts">
         @foreach (var post in @Model.ForumPostModels)

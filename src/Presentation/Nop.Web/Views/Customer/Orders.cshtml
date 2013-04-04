@@ -14,8 +14,6 @@
     <div class="page-title">
         <h1>@T("Account.MyAccount") - @T("Account.CustomerOrders")</h1>
     </div>
-    <div class="clear">
-    </div>
     <div class="page-body">
         @if (Model.RecurringOrders.Count > 0)
         {
@@ -25,8 +23,6 @@
             <div class="section recurring-payments">
                 <div class="title">
                     <strong>@T("Account.CustomerOrders.RecurringOrders")</strong>
-                </div>
-                <div class="clear">
                 </div>
                 <div class="recurring-payments-box">
                     <table class="data-table">
@@ -99,8 +95,6 @@
                 </div>
             </div>
             }
-            <div class="clear">
-            </div>
             if (Model.CancelRecurringPaymentErrors.Count > 0)
             {
             <div class="message-error">
@@ -110,8 +104,6 @@
                         <li>@Model.CancelRecurringPaymentErrors[i]</li>
                     }
                 </ul>
-            </div>
-            <div class="clear">
             </div>
             }
         }
@@ -140,8 +132,6 @@
                             <text>&nbsp;&nbsp;&nbsp;</text>
                         }
                         <input type="button" value="@T("Account.CustomerOrders.OrderDetails")" class="button-2 order-details-button" onclick="setLocation('@Url.RouteUrl("OrderDetails", new { orderId = order.Id })')" />
-                    </div>
-                    <div class="clear">
                     </div>
                 </div>
                 }

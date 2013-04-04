@@ -7,21 +7,15 @@
 }
 <div class="page forums-main">
     @Html.Action("TopicBlock", "Topic", new { systemName = "ForumWelcomeMessage" })
-    <div class="clear">
-    </div>
     <div class="forums-main-header">
         <div class="current-time">
             @Model.CurrentTime.ToString("F")
         </div>
         @Html.Partial("_SearchBox")
     </div>
-    <div class="clear">
-    </div>
     @foreach (var forumGroup in Model.ForumGroups)
     {
         Html.RenderPartial("_ForumGroup", forumGroup);
     }
-    <div class="clear">
-    </div>
     @Html.Action("ActiveDiscussionsSmall")
 </div>

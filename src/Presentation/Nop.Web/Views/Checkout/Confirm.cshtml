@@ -8,12 +8,8 @@
 }
 <div class="page checkout-page">
     @Html.Action("CheckoutProgress", "Checkout", new { step = CheckoutProgressStep.Confirm })
-    <div class="clear">
-    </div>
     <div class="page-title">
         <h1>@T("Checkout.ConfirmYourOrder")</h1>
-    </div>
-    <div class="clear">
     </div>
     <div class="page-body checkout-data">
         @Html.Widget("checkout_confirm_top")
@@ -39,8 +35,6 @@
                 }
                 if (Model.Warnings.Count > 0)
                 {
-                <div class="clear">
-                </div>
                 <div class="message-error">
                     <ul>
                         @foreach (var warning in Model.Warnings)
@@ -53,8 +47,6 @@
             }
         </div>
         @Html.Widget("checkout_confirm_bottom")
-        <div class="clear">
-        </div>
         <div class="order-summary-body">
             @Html.Action("OrderSummary", "ShoppingCart", new { prepareAndDisplayOrderReviewData = true })
         </div>

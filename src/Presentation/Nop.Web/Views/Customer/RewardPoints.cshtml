@@ -14,8 +14,6 @@
     <div class="page-title">
         <h1>@T("Account.MyAccount") - @T("Account.RewardPoints")</h1>
     </div>
-    <div class="clear">
-    </div>
     <div class="page-body">
         <div class="reward-points-overview">
             <div class="current-balance">@T("RewardPoints.CurrentBalance", Model.RewardPointsBalance, Model.RewardPointsAmount)</div>
@@ -24,13 +22,9 @@
                 <div class="min-balance">@T("RewardPoints.MinimumBalance", Model.MinimumRewardPointsBalance, Model.MinimumRewardPointsAmount)</div>
             }
         </div>
-        <div class="clear">
-        </div>
         <div class="reward-points-history">
             <div class="title">
                 <strong>@T("RewardPoints.History")</strong>
-            </div>
-            <div class="clear">
             </div>
             @if (Model.RewardPoints.Count > 0)
             {

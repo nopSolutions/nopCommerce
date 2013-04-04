@@ -38,7 +38,6 @@
             <div class="order-number">
                 <strong>@T("Order.Order#")@Model.Id</strong>
             </div>
-            <div class="clear"></div>
             <div class="order-details">
                 <span>@T("Order.OrderDate"): @Model.CreatedOn.ToString("D")</span>
                 <span>@T("Order.OrderStatus"): @Model.OrderStatus</span>
@@ -47,8 +46,6 @@
                 @T("Order.OrderTotal"): <strong>@Model.OrderTotal</strong>
             </div>
             @Html.Widget("orderdetails_page_overview")
-        </div>
-        <div class="clear">
         </div>
         <div class="order-details-area">
             <table>
@@ -258,16 +255,12 @@
                 </tbody>
             </table>
         </div>
-        <div class="clear">
-        </div>
         @Html.Widget("orderdetails_page_beforeproducts")
         @if (Model.Items.Count > 0)
         {
             <div class="section products">
                 <div class="title">
                     <strong>@T("Order.Product(s)")</strong>
-                </div>
-                <div class="clear">
                 </div>
                 <table class="data-table">
                     <colgroup>
@@ -341,14 +334,10 @@
                         }
                     </tbody>
                 </table>
-                <div class="clear">
-                </div>
                 @if (!String.IsNullOrEmpty(Model.CheckoutAttributeInfo))
                 {
                     <div class="checkout-attributes">
                         @Html.Raw(Model.CheckoutAttributeInfo)
-                    </div>
-                    <div class="clear">
                     </div>
                 }
                 @if (!Model.PrintMode)
@@ -365,8 +354,6 @@
                         }
                     </div>
                 }
-            </div>
-            <div class="clear">
             </div>
         }
         @Html.Widget("orderdetails_page_afterproducts")
@@ -515,8 +502,6 @@
                 </tbody>
             </table>
         </div>
-        <div class="clear">
-        </div>
         @if (!Model.PrintMode)
         {
             if (Model.Shipments.Count > 0)
@@ -524,8 +509,6 @@
             <div class="section shipments">
                 <div class="title">
                     <strong>@T("Order.Shipments")</strong>
-                </div>
-                <div class="clear">
                 </div>
                 <table class="data-table">
                     <colgroup>
@@ -594,8 +577,6 @@
             </div>
             }
         }
-        <div class="clear">
-        </div>
         @if (!Model.PrintMode)
         {
             if (Model.OrderNotes.Count > 0)
@@ -603,8 +584,6 @@
             <div class="section order-notes">
                 <div class="title">
                     <strong>@T("Order.Notes")</strong>
-                </div>
-                <div class="clear">
                 </div>
                 <table class="data-table">
                     <colgroup>

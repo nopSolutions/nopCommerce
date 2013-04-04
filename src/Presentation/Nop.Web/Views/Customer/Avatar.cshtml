@@ -16,13 +16,9 @@
         <div class="page-title">
             <h1>@T("Account.MyAccount") - @T("Account.Avatar")</h1>
         </div>
-        <div class="clear">
-        </div>
         <div class="page-body">
             <div class="message-error">
                 @Html.ValidationSummary(true)
-            </div>
-            <div class="clear">
             </div>
             <div class="fieldset">
                 @if (!String.IsNullOrEmpty(Model.AvatarUrl))
@@ -33,16 +29,12 @@
                 }
                 <input name="uploadedFile" type="file" />
             </div>
-            <div class="clear">
-            </div>
             <div class="buttons">
                 <input type="submit" name="upload-avatar" class="button-1 upload-avatar-button" value="@T("Common.Upload")" />
                 @if (!String.IsNullOrEmpty(Model.AvatarUrl))
                 {
                     <input type="submit" name="remove-avatar" class="button-2 remove-avatar-button" value="@T("Account.Avatar.RemoveAvatar")" />
                 }
-            </div>
-            <div class="clear">
             </div>
             <div class="info">
                 @T("Account.Avatar.UploadRules")

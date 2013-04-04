@@ -20,14 +20,8 @@
     <div class="page-title">
         <h1>@T("Account.Login.Welcome")</h1>
     </div>
-    <div class="clear">
-    </div>
     @Html.Partial("_ExternalAuthentication.AssociateMessage")
-    <div class="clear">
-    </div>
     @Html.Partial("_ExternalAuthentication.Errors")
-    <div class="clear">
-    </div>
     <div class="page-body">
         <div class="customer-blocks">
             @if (Model.CheckoutAsGuest)
@@ -111,12 +105,8 @@
                 </div>
             </div>
         </div>
-        <div class="clear">
-        </div>
         <div class="external-authentication">
             @Html.Action("ExternalMethods", "ExternalAuthentication")
-        </div>
-        <div class="clear">
         </div>
         @Html.Action("TopicBlock", "Topic", new { systemName = "LoginRegistrationInfo" })
     </div>

@@ -9,8 +9,6 @@
 }
 @section left {
     @Html.Action("BlogMonths", "Blog")
-    <div class="clear">
-    </div>
     @Html.Action("BlogTags", "Blog")
 }
 <div class="page blog-page">
@@ -34,8 +32,6 @@
             }
         </h1>
     </div>
-    <div class="clear">
-    </div>
     <div class="page-body">
         @Html.Widget("bloglist_page_before_posts")
         <div class="blogposts">
@@ -48,8 +44,6 @@
                     </div>
                     <div class="blog-body">
                         @Html.Raw(item.Body)
-                    </div>
-                    <div class="clear">
                     </div>
                     @if (item.Tags.Count > 0)
                     {
@@ -68,8 +62,6 @@
                             </ul>
                         </div>
                     }
-                    <div class="clear">
-                    </div>
                     @if (item.AllowComments)
                     {
                         <div class="blog-details">

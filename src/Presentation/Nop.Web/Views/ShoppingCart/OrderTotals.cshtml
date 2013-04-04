@@ -35,8 +35,6 @@
                         @T("ShoppingCart.Totals.Shipping"):</span>
                     @if (Model.RequiresShipping && !String.IsNullOrEmpty(Model.SelectedShippingMethod))
                     {
-                        <div class="clear">
-                        </div>
                         <span class="selected-shipping-method">
                             @String.Format("({0})", Model.SelectedShippingMethod)
                         </span>

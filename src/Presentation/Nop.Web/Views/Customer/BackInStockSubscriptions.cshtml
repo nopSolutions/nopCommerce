@@ -14,8 +14,6 @@
     <div class="page-title">
         <h1>@T("Account.MyAccount") - @T("Account.BackInStockSubscriptions")</h1>
     </div>
-    <div class="clear">
-    </div>
     <div class="page-body">
         @if (Model.Subscriptions.Count > 0)
         {
@@ -71,8 +69,6 @@
                 </table>
                 <div class="pager">
                     @Html.Pager(Model.PagerModel)
-                </div>
-                <div class="clear">
                 </div>
                 <div class="buttons">
                     <input type="submit" value="@T("Account.BackInStockSubscriptions.DeleteSelected")" class="button-2 delete-selected-biss-button" />

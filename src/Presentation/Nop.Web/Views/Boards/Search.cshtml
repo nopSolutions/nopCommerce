@@ -25,13 +25,9 @@
     }
 </script>
 @Html.Action("ForumBreadcrumb")
-<div class="clear">
-</div>
 <div class="page forum-search-page">
     <div class="page-title">
         <h1>@T("Forum.Search")</h1>
-    </div>
-    <div class="clear">
     </div>
     <div class="page-body">
         <div class="search-input">
@@ -65,8 +61,6 @@
         </div>
         <div class="search-error">
             @Model.Error
-        </div>
-        <div class="clear">
         </div>
         <div class="pager upper">
             @{
@@ -192,8 +186,6 @@
                     </table>
                 }
             </div>
-        </div>
-        <div class="clear">
         </div>
         <div class="pager lower">
             @pager

@@ -8,12 +8,8 @@
 }
 <div class="page checkout-page">
     @Html.Action("CheckoutProgress", "Checkout", new { step = CheckoutProgressStep.Payment })
-    <div class="clear">
-    </div>
     <div class="page-title">
         <h1>@T("Checkout.PaymentInfo")</h1>
-    </div>
-    <div class="clear">
     </div>
     <div class="page-body checkout-data">
         @Html.Widget("checkout_payment_info_top")
@@ -23,12 +19,8 @@
                 <div class="info">
                     @Html.Action(Model.PaymentInfoActionName, Model.PaymentInfoControllerName, Model.PaymentInfoRouteValues)
                 </div>
-                <div class="clear">
-                </div>
                 <div class="buttons">
                     <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" class="button-1 payment-info-next-step-button" />
-                </div>
-                <div class="clear">
                 </div>
                 <div class="message-error">
                     @Html.ValidationSummary(false)
@@ -36,13 +28,9 @@
             }
         </div>
         @Html.Widget("checkout_payment_info_bottom")
-        <div class="clear">
-        </div>
         <div class="section order-summary-body">
             <div class="title">
                 <strong>@T("Checkout.OrderSummary")</strong>
-            </div>
-            <div class="clear">
             </div>
             @Html.Action("OrderSummary", "ShoppingCart")
         </div>

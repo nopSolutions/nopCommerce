@@ -20,8 +20,6 @@
     <div class="page-title">
         <h1>@Model.Name</h1>
     </div>
-    <div class="clear">
-    </div>
     <div class="page-body">
         @Html.Widget("manufacturerdetails_top")
         @*description*@
@@ -29,8 +27,6 @@
         {
             <div class="manufacturer-description">
                 @Html.Raw(Model.Description)
-            </div>
-            <div class="clear">
             </div>
         }
         @Html.Widget("manufacturerdetails_before_featured_products")
@@ -49,8 +45,6 @@
                         </div>
                     }
                 </div>
-            </div>
-            <div class="clear">
             </div>
         }
         @Html.Widget("manufacturerdetails_after_featured_products")
@@ -80,15 +74,11 @@
                 </div>
             }
         </div>
-        <div class="clear">
-        </div>
         @Html.Widget("manufacturerdetails_before_filters")
         @*filtering*@
         @if (Model.PagingFilteringContext.PriceRangeFilter.Enabled)
         {
             @Html.Partial("_FilterPriceBox", Model.PagingFilteringContext.PriceRangeFilter, new ViewDataDictionary())
-            <div class="clear">
-            </div>
         }
         @Html.Widget("manufacturerdetails_before_product_list")
         @*product list*@
@@ -119,8 +109,6 @@
             </div>
             }
         }
-        <div class="clear">
-        </div>
         <div class="pager">
             @Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber")
         </div>

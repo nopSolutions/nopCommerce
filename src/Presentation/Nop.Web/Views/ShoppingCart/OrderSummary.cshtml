@@ -3,8 +3,6 @@
 <div class="order-summary-content">
     @Html.Widget("order_summary_content_before")
     @Html.Partial("_OrderReviewData", Model.OrderReviewData)
-    <div class="clear">
-    </div>
     @if (Model.Items.Count > 0)
     {
         if (Model.Warnings.Count > 0)
@@ -159,14 +157,10 @@
                 }
             </tbody>
         </table>
-        <div class="clear">
-        </div>
                 if (!String.IsNullOrEmpty(Model.CheckoutAttributeInfo))
                 {
         <div class="selected-checkout-attributes">
             @Html.Raw(Model.CheckoutAttributeInfo)
-        </div>
-        <div class="clear">
         </div>
                 }
         <div>
@@ -177,15 +171,9 @@
                     <input type="submit" name="continueshopping" value="@T("ShoppingCart.ContinueShopping")" class="button-2 continue-shopping-button" />
                     <input type="submit" name="startcheckout" value="startcheckout" id="startcheckout"
                         style="display: none;" />
-                </div>                    
-                <div class="clear">
                 </div>
                 @Html.Partial("_CheckoutAttributes", Model.CheckoutAttributes, new ViewDataDictionary())
-                <div class="clear">
-                </div>
             }
-        </div>
-        <div class="clear">
         </div>
         <div class="cart-footer">
             @Html.Widget("order_summary_cart_footer")
@@ -200,14 +188,10 @@
                 </div>
                 }
             }
-            <div class="clear">
-            </div>
             <div class="totals">
                 @Html.Action("OrderTotals", "ShoppingCart", new { isEditable = Model.IsEditable })
                 @if (Model.IsEditable)
                 {
-                    <div class="clear">
-                    </div>
                     if (Model.TermsOfServiceEnabled)
                     {
                     <div id="terms-of-service-warning-box" title="@T("Checkout.TermsOfService")" style="display:none;">
@@ -235,8 +219,6 @@
                         </script>
                     </div>
                     }
-                    <div class="clear">
-                    </div>
                     <div class="checkout-buttons">
                         @if (String.IsNullOrEmpty(Model.MinOrderSubtotalWarning))
                         {
@@ -280,8 +262,6 @@
                     </div>
                     @Html.Partial("EstimateShipping", Model.EstimateShipping)
                 }
-            </div>
-            <div class="clear">
             </div>
             @if (Model.IsEditable)
             {

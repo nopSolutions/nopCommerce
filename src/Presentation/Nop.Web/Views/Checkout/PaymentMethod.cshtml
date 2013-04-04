@@ -8,12 +8,8 @@
 }
 <div class="page checkout-page">
     @Html.Action("CheckoutProgress", "Checkout", new { step = CheckoutProgressStep.Payment })
-    <div class="clear">
-    </div>
     <div class="page-title">
         <h1>@T("Checkout.SelectPaymentMethod")</h1>
-    </div>
-    <div class="clear">
     </div>
     <div class="page-body checkout-data">
         @Html.Widget("checkout_payment_method_top")
@@ -25,8 +21,6 @@
                 <div class="use-reward-points">
                     @Html.EditorFor(model => model.UseRewardPoints)
                     @string.Format(T("Checkout.UseRewardPoints").Text, Model.RewardPointsBalance, Model.RewardPointsAmount)
-                </div>
-                <div class="clear">
                 </div>
                 }
                 if (Model.PaymentMethods.Count > 0)
@@ -49,8 +43,6 @@
                         </li>
                     }
                 </ul>
-                <div class="clear">
-                </div>
                 <div class="buttons">
                     <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" class="button-1 payment-method-next-step-button" />
                 </div>
@@ -64,13 +56,9 @@
             }
         </div>
         @Html.Widget("checkout_payment_method_bottom")
-        <div class="clear">
-        </div>
         <div class="section order-summary-body">
             <div class="title">
                 <strong>@T("Checkout.OrderSummary")</strong>
-            </div>
-            <div class="clear">
             </div>
             @Html.Action("OrderSummary", "ShoppingCart")
         </div>

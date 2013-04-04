@@ -36,20 +36,10 @@
     else
     {
         @Html.Widget("left_side_column_before")
-        <div class="clear">
-        </div>  
         @Html.Action("CategoryNavigation", "Catalog", new { currentCategoryId = currentCategoryId, currentProductId = currentProductId })
-        <div class="clear">
-        </div>
         @Html.Widget("left_side_column_after_category_navigation")
-        <div class="clear">
-        </div>
         @Html.Action("ManufacturerNavigation", "Catalog", new { currentManufacturerId = currentManufacturerId })        
-        <div class="clear">
-        </div>
         @Html.Action("NewsletterBox", "Newsletter")
-        <div class="clear">
-        </div>
         @Html.Widget("left_side_column_after")
     }
 </div>
