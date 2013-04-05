@@ -30,7 +30,7 @@
         {
             <li id="topcartlink">
                 <a href="@Url.RouteUrl("ShoppingCart")" class="ico-cart">
-                    <label>@T("ShoppingCart")</label>
+                    <span class="label">@T("ShoppingCart")</span>
                     <span class="cart-qty">@T("ShoppingCart.HeaderQuantity", Model.ShoppingCartItems)</span>
                 </a>
             </li>
@@ -39,7 +39,7 @@
         {
             <li>
                 <a href="@Url.RouteUrl("Wishlist")" class="ico-wishlist">
-                    <label>@T("Wishlist")</label>
+                    <span class="label">@T("Wishlist")</span>
                     <span class="wishlist-qty">@T("Wishlist.HeaderQuantity", Model.WishlistItems)</span>
                 </a>
             </li>
