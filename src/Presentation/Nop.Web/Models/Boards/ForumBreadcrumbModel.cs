@@ -13,7 +13,5 @@
         public int ForumTopicId { get; set; }
         public string ForumTopicSubject { get; set; }
         public string ForumTopicSeName { get; set; }
-
-        public string Separator { get; set; }
     }
 }

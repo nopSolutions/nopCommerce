@@ -1671,18 +1671,6 @@ GO
 ALTER TABLE [ShoppingCartItem] ALTER COLUMN [StoreId] int NOT NULL
 GO
 
-IF NOT EXISTS (SELECT 1
-           FROM   sys.objects
-           WHERE  name = 'ShoppingCartItem_Store'
-           AND parent_object_id = Object_id('ShoppingCartItem')
-           AND Objectproperty(object_id,N'IsForeignKey') = 1)
-BEGIN
-	ALTER TABLE [dbo].[ShoppingCartItem] WITH CHECK ADD CONSTRAINT [ShoppingCartItem_Store] FOREIGN KEY([StoreId])
-	REFERENCES [dbo].[Store] ([Id])
-	ON DELETE CASCADE
-END
-GO
-
 
 --Store mapping to orders
 IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='StoreId')
@@ -1794,19 +1782,6 @@ GO
 ALTER TABLE [BackInStockSubscription] ALTER COLUMN [StoreId] int NOT NULL
 GO
 
-IF NOT EXISTS (SELECT 1
-           FROM   sys.objects
-           WHERE  name = 'BackInStockSubscription_Store'
-           AND parent_object_id = Object_id('BackInStockSubscription')
-           AND Objectproperty(object_id,N'IsForeignKey') = 1)
-BEGIN
-	ALTER TABLE [dbo].[BackInStockSubscription] WITH CHECK ADD CONSTRAINT [BackInStockSubscription_Store] FOREIGN KEY([StoreId])
-	REFERENCES [dbo].[Store] ([Id])
-	ON DELETE CASCADE
-END
-GO
-
-
 --Store mapping to Forums_PrivateMessage
 IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Forums_PrivateMessage]') and NAME='StoreId')
 BEGIN
@@ -1824,20 +1799,6 @@ GO
 
 ALTER TABLE [Forums_PrivateMessage] ALTER COLUMN [StoreId] int NOT NULL
 GO
-
-IF NOT EXISTS (SELECT 1
-           FROM   sys.objects
-           WHERE  name = 'Forums_PrivateMessage_Store'
-           AND parent_object_id = Object_id('Forums_PrivateMessage')
-           AND Objectproperty(object_id,N'IsForeignKey') = 1)
-BEGIN
-	ALTER TABLE [dbo].[Forums_PrivateMessage] WITH CHECK ADD CONSTRAINT [Forums_PrivateMessage_Store] FOREIGN KEY([StoreId])
-	REFERENCES [dbo].[Store] ([Id])
-	ON DELETE CASCADE
-END
-GO
-
-
 
 
 --GenericAttributes cuold be limited to some specific store name
@@ -3789,4 +3750,20 @@ GO
 
 DELETE FROM [Setting] 
 WHERE [name] = N'GoogleAnalyticsSettings.WidgetZone' 
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'commonsettings.breadcrumbdelimiter')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'commonsettings.breadcrumbdelimiter', N'/', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.compareproductsnumber')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'catalogsettings.compareproductsnumber', N'4', 0)
+END
 GO

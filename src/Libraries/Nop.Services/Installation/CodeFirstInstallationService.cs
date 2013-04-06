@@ -4500,6 +4500,7 @@ namespace Nop.Services.Installation
                     UseFullTextSearch = false,
                     FullTextMode = FulltextSearchMode.ExactMatch,
                     Log404Errors = true,
+                    BreadcrumbDelimiter = "/"
                 });
 
             settingService.SaveSetting(new SeoSettings()
@@ -4545,6 +4546,7 @@ namespace Nop.Services.Installation
                     RecentlyAddedProductsNumber = 8,
                     RecentlyAddedProductsEnabled = true,
                     CompareProductsEnabled = true,
+                    CompareProductsNumber = 4,
                     ProductSearchAutoCompleteEnabled = true,
                     ProductSearchAutoCompleteNumberOfProducts = 10,
                     ProductSearchTermMinimumLength = 3,

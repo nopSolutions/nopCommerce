@@ -10,6 +10,7 @@ using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Services.Security;
+using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
@@ -24,6 +25,7 @@ namespace Nop.Admin.Controllers
         private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IPriceFormatter _priceFormatter;
+        private readonly IStoreService _storeService;
         private readonly ITaxService _taxService;
         private readonly IPriceCalculationService _priceCalculationService;
         private readonly IPermissionService _permissionService;
@@ -34,12 +36,14 @@ namespace Nop.Admin.Controllers
 
         public ShoppingCartController(ICustomerService customerService,
             IDateTimeHelper dateTimeHelper, IPriceFormatter priceFormatter,
-            ITaxService taxService, IPriceCalculationService priceCalculationService,
+            IStoreService storeService, ITaxService taxService, 
+            IPriceCalculationService priceCalculationService,
             IPermissionService permissionService, ILocalizationService localizationService)
         {
             this._customerService = customerService;
             this._dateTimeHelper = dateTimeHelper;
             this._priceFormatter = priceFormatter;
+            this._storeService = storeService;
             this._taxService = taxService;
             this._priceCalculationService = priceCalculationService;
             this._permissionService = permissionService;
@@ -104,10 +108,11 @@ namespace Nop.Admin.Controllers
                 Data = cart.Select(sci =>
                 {
                     decimal taxRate;
+                    var store = _storeService.GetStoreById(sci.StoreId); 
                     var sciModel = new ShoppingCartItemModel()
                     {
                         Id = sci.Id,
-                        Store = sci.Store != null ? sci.Store.Name : "Unknown",
+                        Store = store != null ? store.Name : "Unknown",
                         ProductVariantId = sci.ProductVariantId,
                         Quantity = sci.Quantity,
                         FullProductName = sci.ProductVariant.FullProductName,
@@ -183,10 +188,11 @@ namespace Nop.Admin.Controllers
                 Data = cart.Select(sci =>
                 {
                     decimal taxRate;
+                    var store = _storeService.GetStoreById(sci.StoreId); 
                     var sciModel = new ShoppingCartItemModel()
                     {
                         Id = sci.Id,
-                        Store = sci.Store != null ? sci.Store.Name : "Unknown",
+                        Store = store != null ? store.Name : "Unknown",
                         ProductVariantId = sci.ProductVariantId,
                         Quantity = sci.Quantity,
                         FullProductName = sci.ProductVariant.FullProductName,

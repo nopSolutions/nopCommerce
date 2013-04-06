@@ -1,5 +1,4 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Nop.Core.Configuration;
 
 namespace Nop.Core.Domain.Catalog
@@ -125,6 +124,11 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether "Compare products" feature is enabled
         /// </summary>
         public bool CompareProductsEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets an allowed number of products to be compared
+        /// </summary>
+        public int CompareProductsNumber { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether autocomplete is enabled

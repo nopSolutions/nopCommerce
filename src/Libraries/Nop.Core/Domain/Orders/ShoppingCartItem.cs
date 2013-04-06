@@ -1,7 +1,6 @@
 using System;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Stores;
 
 namespace Nop.Core.Domain.Orders
 {
@@ -69,11 +68,6 @@ namespace Nop.Core.Domain.Orders
                 this.ShoppingCartTypeId = (int)value;
             }
         }
-
-        /// <summary>
-        /// Gets or sets the store
-        /// </summary>
-        public virtual Store Store { get; set; }
 
         /// <summary>
         /// Gets or sets the product variant

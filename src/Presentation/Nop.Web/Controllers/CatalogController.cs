@@ -2283,7 +2283,7 @@ namespace Nop.Web.Controllers
                     {
                         Customer = _workContext.CurrentCustomer,
                         ProductVariant = variant,
-                        Store = _storeContext.CurrentStore,
+                        StoreId = _storeContext.CurrentStore.Id,
                         CreatedOnUtc = DateTime.UtcNow
                     };
                     _backInStockSubscriptionService.InsertSubscription(subscription);

@@ -17,6 +17,7 @@ namespace Nop.Data.Tests.Orders
         {
             var sci = new ShoppingCartItem
             {
+                StoreId = 1,
                 ShoppingCartType = ShoppingCartType.ShoppingCart,
                 AttributesXml = "AttributesXml 1",
                 CustomerEnteredPrice = 1.1M,
@@ -25,12 +26,12 @@ namespace Nop.Data.Tests.Orders
                 UpdatedOnUtc = new DateTime(2010, 01, 02),
                 Customer = GetTestCustomer(),
                 ProductVariant = GetTestProductVariant(),
-                Store = GetTestStore()
             };
 
             var fromDb = SaveAndLoadEntity(sci);
             fromDb.ShouldNotBeNull();
-
+            
+            fromDb.StoreId.ShouldEqual(1);
             fromDb.ShoppingCartType.ShouldEqual(ShoppingCartType.ShoppingCart);
             fromDb.AttributesXml.ShouldEqual("AttributesXml 1");
             fromDb.CustomerEnteredPrice.ShouldEqual(1.1M);
@@ -42,18 +43,6 @@ namespace Nop.Data.Tests.Orders
 
             fromDb.ProductVariant.ShouldNotBeNull();
 
-            fromDb.Store.ShouldNotBeNull();
-
-        }
-
-        protected Store GetTestStore()
-        {
-            return new Store
-            {
-                Name = "Store 1",
-                Url = "http://www.test.com",
-                DisplayOrder = 1,
-            };
         }
 
         protected Customer GetTestCustomer()

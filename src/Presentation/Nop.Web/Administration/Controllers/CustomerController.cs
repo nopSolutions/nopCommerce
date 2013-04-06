@@ -1087,7 +1087,7 @@ namespace Nop.Admin.Controllers
 
                 var privateMessage = new PrivateMessage
                 {
-                    Store = _storeContext.CurrentStore,
+                    StoreId = _storeContext.CurrentStore.Id,
                     ToCustomerId = customer.Id,
                     FromCustomerId = _workContext.CurrentCustomer.Id,
                     Subject = model.SendPm.Subject,
@@ -1646,10 +1646,11 @@ namespace Nop.Admin.Controllers
                 Data = cart.Select(sci =>
                 {
                     decimal taxRate;
+                    var store = _storeService.GetStoreById(sci.StoreId); 
                     var sciModel = new ShoppingCartItemModel()
                     {
                         Id = sci.Id,
-                        Store = sci.Store != null ? sci.Store.Name : "Unknown",
+                        Store = store != null ? store.Name : "Unknown",
                         ProductVariantId = sci.ProductVariantId,
                         Quantity = sci.Quantity,
                         FullProductName = sci.ProductVariant.FullProductName,
