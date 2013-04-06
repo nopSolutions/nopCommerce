@@ -7,7 +7,6 @@
 .page{}
 .page-body{}
 .page-title{}
-.clear{border:medium none;clear:both;float:none;font-size:0;height:0;line-height:0;}
 .change-device{text-align:center;}
 .change-device a{text-decoration:none;}
 .currency-selector,.tax-display-type-selector,.language-selector{}
@@ -16,6 +15,8 @@
 .captcha-box{}
 .section-title{padding:10px;font-weight:700;clear:both;}
 .home-page-product-grid .title{font-size:.9em;font-weight:700;text-transform:uppercase;padding:7px 10px;color:#333;}
+.clearer{zoom:1;}
+.clearer:after{content:".";display:block;clear:both;height:0;font-size:0;line-height:0;visibility:hidden;}
 
 
 /* DATA TABLE */
@@ -48,7 +49,8 @@
 
 
 /* PAGER */
-.pager{text-align:center;}
+.pager{text-align:center;zoom:1;}
+.pager:after{content:".";display:block;clear:both;height:0;font-size:0;line-height:0;visibility:hidden;}
 .pager ul{float:left;}
 .pager li{float:left;list-style:none outside none;margin-left:5px;}
 .pager a,.pager span{display:inline-block;text-align:center;font-size:1em;padding:0px 5px;}
@@ -465,7 +467,8 @@
 .product-specs-box{margin:5px 0}
 .product-specs-box .title{font-weight:700;font-size:1.1em;}
 .product-specs-box .product-specs-list{}
-.product-tags-box{margin:5px 0}
+.product-tags-box{margin:5px 0;zoom:1;}
+.product-tags-box:after{content:".";display:block;clear:both;height:0;font-size:0;line-height:0;visibility:hidden;}
 .product-tags-box .title{font-weight:700;font-size:1.1em;}
 .product-tags-box .product-tags-list{}
 .product-tags-box .product-tags-list a{text-decoration:underline;}

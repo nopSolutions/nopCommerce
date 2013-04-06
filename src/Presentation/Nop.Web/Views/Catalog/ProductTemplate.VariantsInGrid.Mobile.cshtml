@@ -70,11 +70,7 @@
                     }
                 </div>
                 @Html.Action("ProductSpecifications", "Catalog", new { productId = Model.Id })
-                <div class="clear">
-                </div>
                 @Html.Action("ProductTags", "Catalog", new { productId = Model.Id })
-                <div class="clear">
-                </div>
                 @Html.Action("ProductsAlsoPurchased", "Catalog", new { productId = Model.Id })
                 @Html.Action("RelatedProducts", "Catalog", new { productId = Model.Id })
             </div>

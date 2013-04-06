@@ -21,8 +21,6 @@
             <a href="@Url.RouteUrl("TopicCreate", new { id = Model.Id })" class="newtopic" data-role="button">@T("Forum.NewTopic")</a>
         </div>
     </div>
-    <div class="clear">
-    </div>
     <div class="pager upper">
         @{
             var pager = Html.Pager(new PagerModel()
@@ -37,8 +35,6 @@
             });
         }
         @pager
-    </div>
-    <div class="clear">
     </div>
     <div class="topics">
         @if (Model.ForumTopics.Count > 0)
@@ -77,8 +73,6 @@
                 }
             </ul>
         }
-    </div>
-    <div class="clear">
     </div>
     <div class="forum-footer">
         <div class="forum-options">
