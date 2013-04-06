@@ -74,8 +74,6 @@
                     </div>
                     @Html.Widget("admin_header_after")
                 </div>
-                <div class="clear">
-                </div>
             }
             @if (IsSectionDefined("headermenu"))
             {
@@ -94,15 +92,7 @@
             else
             {
                 <div class="status-bar">
-                    <div class="help">
-                        @(EngineContext.Current.Resolve<Nop.Services.Helpers.IDateTimeHelper>().ConvertToUserTime(DateTime.Now).ToString("f"))
-                    </div>
-                    <div class="breadcrumb">
-                        <!-- SiteMapPath here-->
-                    @Html.Widget("admin_breadcrumb")
-                    </div>
-                </div>
-                <div class="clear">
+                    @(EngineContext.Current.Resolve<Nop.Services.Helpers.IDateTimeHelper>().ConvertToUserTime(DateTime.Now).ToString("f"))
                 </div>
             }
             <div class="content">

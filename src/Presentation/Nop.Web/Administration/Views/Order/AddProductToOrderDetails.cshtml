@@ -19,8 +19,6 @@
         <div class="options">
         </div>
     </div>
-    <div class="clear">
-    </div>
     <div>
         @if (Model.Warnings.Count > 0)
         {
@@ -32,8 +30,6 @@
                 }
             </div>
         }
-    </div>
-    <div class="clear">
     </div>
     <div>
         <table>
@@ -78,20 +74,14 @@
                 </td>
             </tr>
         </table>
-        <div class="clear">
-        </div>
         <div>
             @Html.Partial("_ProductAddAttributes", Model.ProductVariantAttributes)
-        </div>
-        <div class="clear">
         </div>
         @{
         var dataDictGiftCard = new ViewDataDictionary();
         dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = "giftcard";
             @Html.Partial("_ProductAddGiftCardInfo", Model.GiftCard, dataDictGiftCard)
         }
-        <div class="clear">
-        </div>
         <p>
             <strong>@T("Admin.Orders.Products.AddNew.Note2")</strong>
         </p>

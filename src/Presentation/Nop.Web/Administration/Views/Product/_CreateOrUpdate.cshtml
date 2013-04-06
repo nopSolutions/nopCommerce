@@ -273,9 +273,9 @@
         columns.Template((x) => Html.ActionLink(T("Admin.Common.Edit").ToString(), "Edit", "ProductVariant", new { id = x.Id }, new { })).Title(T("Admin.Common.Edit").ToString());
     })
     .Footer(false))
-    <div class="clear">
-    </div>
-    <a href="@Url.Action("Create", "ProductVariant", new { productId = Model.Id })" class="t-button">@T("Admin.Catalog.Products.Variants.AddNew")</a>
+    <div>
+        <a href="@Url.Action("Create", "ProductVariant", new { productId = Model.Id })" class="t-button">@T("Admin.Catalog.Products.Variants.AddNew")</a>
+     </div>
 }
 @helper TabCategories()
 {
