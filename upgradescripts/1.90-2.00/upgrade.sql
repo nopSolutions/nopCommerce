@@ -2359,6 +2359,11 @@ GO
 
 
 --DISCOUNTS
+--first delete already [Deleted] discounts
+DELETE FROM [Nop_Discount]
+WHERE [Deleted]=1
+GO
+--move discounts
 PRINT 'moving discounts'
 DECLARE @OriginalDiscountId int
 DECLARE cur_originaldiscount CURSOR FOR
