@@ -141,11 +141,14 @@ namespace Nop.Web.Framework
             builder.RegisterType<ProductAttributeService>().As<IProductAttributeService>().InstancePerHttpRequest();
             builder.RegisterType<ProductService>().As<IProductService>().InstancePerHttpRequest();
             builder.RegisterType<CopyProductService>().As<ICopyProductService>().InstancePerHttpRequest();
-            builder.RegisterType<ProductTagService>().As<IProductTagService>().InstancePerHttpRequest();
             builder.RegisterType<SpecificationAttributeService>().As<ISpecificationAttributeService>().InstancePerHttpRequest();
             builder.RegisterType<ProductTemplateService>().As<IProductTemplateService>().InstancePerHttpRequest();
             builder.RegisterType<CategoryTemplateService>().As<ICategoryTemplateService>().InstancePerHttpRequest();
             builder.RegisterType<ManufacturerTemplateService>().As<IManufacturerTemplateService>().InstancePerHttpRequest();
+            //pass MemoryCacheManager as cacheManager (cache settings between requests)
+            builder.RegisterType<ProductTagService>().As<IProductTagService>()
+                .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
+                .InstancePerHttpRequest();
 
             builder.RegisterType<AffiliateService>().As<IAffiliateService>().InstancePerHttpRequest();
             builder.RegisterType<VendorService>().As<IVendorService>().InstancePerHttpRequest();

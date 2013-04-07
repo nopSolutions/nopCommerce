@@ -55,7 +55,6 @@ namespace Nop.Services.Catalog
         private readonly IRepository<ProductReview> _productReviewRepository;
         private readonly IProductAttributeService _productAttributeService;
         private readonly IProductAttributeParser _productAttributeParser;
-        private readonly IProductTagService _productTagService;
         private readonly ILanguageService _languageService;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IDataProvider _dataProvider;
@@ -85,9 +84,9 @@ namespace Nop.Services.Catalog
         /// <param name="storeMappingRepository">Store mapping repository</param>
         /// <param name="productPictureRepository">Product picture repository</param>
         /// <param name="productSpecificationAttributeRepository">Product specification attribute repository</param>
+        /// <param name="productReviewRepository">Product review repository</param>
         /// <param name="productAttributeService">Product attribute service</param>
         /// <param name="productAttributeParser">Product attribute parser service</param>
-        /// <param name="productTagService">Product tag service</param>
         /// <param name="languageService">Language service</param>
         /// <param name="workflowMessageService">Workflow message service</param>
         /// <param name="dataProvider">Data provider</param>
@@ -111,7 +110,6 @@ namespace Nop.Services.Catalog
             IRepository<ProductReview>  productReviewRepository,
             IProductAttributeService productAttributeService,
             IProductAttributeParser productAttributeParser,
-            IProductTagService productTagService,
             ILanguageService languageService,
             IWorkflowMessageService workflowMessageService,
             IDataProvider dataProvider, IDbContext dbContext,
@@ -133,7 +131,6 @@ namespace Nop.Services.Catalog
             this._productReviewRepository = productReviewRepository;
             this._productAttributeService = productAttributeService;
             this._productAttributeParser = productAttributeParser;
-            this._productTagService = productTagService;
             this._languageService = languageService;
             this._workflowMessageService = workflowMessageService;
             this._dataProvider = dataProvider;
