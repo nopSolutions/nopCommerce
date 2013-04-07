@@ -260,17 +260,7 @@ namespace Nop.Admin.Controllers
                 model.ProductVariantAttributes.Add(pvaModel);
             }
         }
-
-        [NonAction]
-        protected void UpdateProductTagTotals(ProductVariant variant)
-        {
-            //we do not use variant.Product property because it's null when creating a new product variant
-            var product = _productService.GetProductById(variant.ProductId);
-            var productTags = product.ProductTags;
-            foreach (var productTag in productTags)
-                _productTagService.UpdateProductTagTotals(productTag);
-        }
-
+        
         [NonAction]
         private void PrepareCopyProductVariantModel(ProductVariantModel model, ProductVariant productVariant)
         {
@@ -355,8 +345,6 @@ namespace Nop.Admin.Controllers
                 _productService.UpdateHasDiscountsApplied(variant);
                 //update picture seo file name
                 UpdatePictureSeoNames(variant);
-                //update product tag totals
-                UpdateProductTagTotals(variant);
 
                 //activity log
                 _customerActivityService.InsertActivity("AddNewProductVariant", _localizationService.GetResource("ActivityLog.AddNewProductVariant"), variant.Name);
@@ -466,8 +454,6 @@ namespace Nop.Admin.Controllers
                 }
                 //update picture seo file name
                 UpdatePictureSeoNames(variant);
-                //update product tag totals
-                UpdateProductTagTotals(variant);
                 //back in stock notifications
                 if (variant.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
                     variant.BackorderMode == BackorderMode.NoBackorders &&
@@ -518,8 +504,6 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("List", "Product");
 
             _productService.DeleteProductVariant(variant);
-            //update product tag totals
-            UpdateProductTagTotals(variant);
 
             //activity log
             _customerActivityService.InsertActivity("DeleteProductVariant", _localizationService.GetResource("ActivityLog.DeleteProductVariant"), variant.Name);

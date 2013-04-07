@@ -14,7 +14,7 @@ namespace Nop.Data.Mapping.Catalog
             this.Property(p => p.MetaTitle).HasMaxLength(400);
 
             this.HasMany(p => p.ProductTags)
-                .WithMany()
+                .WithMany(pt => pt.Products)
                 .Map(m => m.ToTable("Product_ProductTag_Mapping"));
         }
     }

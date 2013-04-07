@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Stores;
 using Nop.Services.Events;
 
 namespace Nop.Services.Catalog
@@ -12,10 +14,28 @@ namespace Nop.Services.Catalog
     /// </summary>
     public partial class ProductTagService : IProductTagService
     {
+        #region Constants
+
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : store ID
+        /// </remarks>
+        private const string PRODUCTTAG_COUNT_KEY = "Nop.producttag.count-{0}";
+
+        /// <summary>
+        /// Key pattern to clear cache
+        /// </summary>
+        private const string PRODUCTTAG_PATTERN_KEY = "Nop.producttag.";
+
+        #endregion
+
         #region Fields
 
         private readonly IRepository<ProductTag> _productTagRepository;
-        private readonly IRepository<Product> _productRepository;
+        private readonly IRepository<StoreMapping> _storeMappingRepository;
+        private readonly ICacheManager _cacheManager;
         private readonly IEventPublisher _eventPublisher;
 
         #endregion
@@ -26,16 +46,54 @@ namespace Nop.Services.Catalog
         /// Ctor
         /// </summary>
         /// <param name="productTagRepository">Product tag repository</param>
+        /// <param name="storeMappingRepository">Store mapping repository</param>
+        /// <param name="cacheManager">Cache manager</param>
         /// <param name="eventPublisher">Event published</param>
         public ProductTagService(IRepository<ProductTag> productTagRepository,
-            IRepository<Product> productRepository,
+            IRepository<StoreMapping> storeMappingRepository,
+            ICacheManager cacheManager,
             IEventPublisher eventPublisher)
         {
             this._productTagRepository = productTagRepository;
-            this._productRepository = productRepository;
+            this._storeMappingRepository = storeMappingRepository;
+            this._cacheManager = cacheManager;
             this._eventPublisher = eventPublisher;
         }
 
+        #endregion
+        
+        #region Utilities
+
+        /// <summary>
+        /// Get product count for each of existing product tag
+        /// </summary>
+        /// <param name="storeId">Store identifier</param>
+        /// <returns>Dictionary of "product tag ID : product count"</returns>
+        private Dictionary<int, int> GetProductCount(int storeId)
+        {
+            string key = string.Format(PRODUCTTAG_COUNT_KEY, storeId);
+            return _cacheManager.Get(key, () =>
+            {
+
+                var query = from pt in _productTagRepository.Table
+                            select new 
+                            { 
+                                Id = pt.Id, 
+                                ProductCount = pt.Products
+                                    //published and not deleted product/variants
+                                    .Count(p => !p.Deleted && 
+                                        p.Published &&
+                                        p.ProductVariants.Any(pv => !pv.Deleted && pv.Published))
+                                    //UNDOEN filter by store identifier if specified ( > 0 )
+                            };
+
+                var dictionary = new Dictionary<int, int>();
+                foreach (var item in query)
+                    dictionary.Add(item.Id, item.ProductCount);
+                
+                return dictionary;
+            });
+        }
         #endregion
 
         #region Methods
@@ -51,6 +109,9 @@ namespace Nop.Services.Catalog
 
             _productTagRepository.Delete(productTag);
 
+            //cache
+            _cacheManager.RemoveByPattern(PRODUCTTAG_PATTERN_KEY);
+
             //event notification
             _eventPublisher.EntityDeleted(productTag);
         }
@@ -58,14 +119,10 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Gets all product tags
         /// </summary>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product tags</returns>
-        public virtual IList<ProductTag> GetAllProductTags(bool showHidden = false)
+        public virtual IList<ProductTag> GetAllProductTags()
         {
             var query = _productTagRepository.Table;
-            if (!showHidden)
-                query = query.Where(pt => pt.ProductCount > 0);
-            query = query.OrderByDescending(pt => pt.ProductCount);
             var productTags = query.ToList();
             return productTags;
         }
@@ -109,6 +166,9 @@ namespace Nop.Services.Catalog
 
             _productTagRepository.Insert(productTag);
 
+            //cache
+            _cacheManager.RemoveByPattern(PRODUCTTAG_PATTERN_KEY);
+
             //event notification
             _eventPublisher.EntityInserted(productTag);
         }
@@ -124,32 +184,28 @@ namespace Nop.Services.Catalog
 
             _productTagRepository.Update(productTag);
 
+            //cache
+            _cacheManager.RemoveByPattern(PRODUCTTAG_PATTERN_KEY);
+
             //event notification
             _eventPublisher.EntityUpdated(productTag);
         }
 
         /// <summary>
-        /// Updates the product tag
+        /// Get number of products
         /// </summary>
-        /// <param name="productTag">Product tag</param>
-        public virtual void UpdateProductTagTotals(ProductTag productTag)
+        /// <param name="productTagId">Product tag identifier</param>
+        /// <param name="storeId">Store identifier</param>
+        /// <returns>Number of products</returns>
+        public virtual int GetProductCount(int productTagId, int storeId)
         {
-            if (productTag == null)
-                throw new ArgumentNullException("productTag");
-
-            var query = from p in _productRepository.Table
-                        where !p.Deleted && 
-                        p.Published && 
-                        p.ProductTags.Any(pt => pt.Id == productTag.Id) &&
-                        p.ProductVariants.Any(pv => !pv.Deleted && pv.Published)
-                        select p.Id;
-            int newTotal = query.Count();
-
-            //we do not delete product tasg with 0 product count
-            productTag.ProductCount = newTotal;
-            UpdateProductTag(productTag);
+            var dictionary = GetProductCount(storeId);
+            if (dictionary.ContainsKey(productTagId))
+                return dictionary[productTagId];
+            else
+                return 0;
         }
-        
+
         #endregion
     }
 }

@@ -2313,7 +2313,8 @@ namespace Nop.Web.Controllers
             var cacheModel = _cacheManager.Get(cacheKey, () =>
                 {
                     var model = product.ProductTags
-                        .OrderByDescending(x => x.ProductCount)
+                        //filter by store
+                        .Where(x => _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id) > 0)
                         .Select(x =>
                                     {
                                         var ptModel = new ProductTagModel()
@@ -2321,7 +2322,7 @@ namespace Nop.Web.Controllers
                                             Id = x.Id,
                                             Name = x.GetLocalized(y => y.Name),
                                             SeName = x.GetSeName(),
-                                            ProductCount = x.ProductCount
+                                            ProductCount = _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id)
                                         };
                                         return ptModel;
                                     })
@@ -2341,7 +2342,14 @@ namespace Nop.Web.Controllers
                 var model = new PopularProductTagsModel();
 
                 //get all tags
-                var allTags = _productTagService.GetAllProductTags();
+                var allTags = _productTagService
+                    .GetAllProductTags()
+                    //filter by current store
+                    .Where(x => _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id) > 0)
+                    //order by product count
+                    .OrderByDescending(x => _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id))
+                    .ToList();
+
                 var tags = allTags
                     .Take(_catalogSettings.NumberOfProductTags)
                     .ToList();
@@ -2356,7 +2364,7 @@ namespace Nop.Web.Controllers
                         Id = tag.Id,
                         Name = tag.GetLocalized(y => y.Name),
                         SeName = tag.GetSeName(),
-                        ProductCount = tag.ProductCount
+                        ProductCount = _productTagService.GetProductCount(tag.Id, _storeContext.CurrentStore.Id)
                     });
                 return model;
             });
@@ -2507,7 +2515,10 @@ namespace Nop.Web.Controllers
         public ActionResult ProductTagsAll()
         {
             var model = new PopularProductTagsModel();
-            model.Tags = _productTagService.GetAllProductTags()
+            model.Tags = _productTagService
+                .GetAllProductTags()
+                //filter by current store
+                .Where(x => _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id) > 0)
                 //sort by name
                 .OrderBy(x => x.GetLocalized(y => y.Name))
                 .Select(x =>
@@ -2517,7 +2528,7 @@ namespace Nop.Web.Controllers
                                     Id = x.Id,
                                     Name = x.GetLocalized(y => y.Name),
                                     SeName = x.GetSeName(),
-                                    ProductCount = x.ProductCount
+                                    ProductCount = _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id)
                                 };
                                 return ptModel;
                             })

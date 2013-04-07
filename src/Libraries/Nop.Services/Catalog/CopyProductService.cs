@@ -439,12 +439,7 @@ namespace Nop.Services.Catalog
                 {
                     productCopy.ProductTags.Add(productTag);
                 }
-                //ensure product is saved before updating totals
                 _productService.UpdateProduct(product);
-                foreach (var productTag in product.ProductTags)
-                {
-                    _productTagService.UpdateProductTagTotals(productTag);
-                }
 
                 // product pictures
                 if (copyImages)

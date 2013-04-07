@@ -3767,3 +3767,11 @@ BEGIN
 	VALUES (N'catalogsettings.compareproductsnumber', N'4', 0)
 END
 GO
+
+--do not store product tag count
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[ProductTag]') and NAME='ProductCount')
+BEGIN
+	ALTER TABLE [ProductTag]
+	DROP COLUMN [ProductCount]
+END
+GO

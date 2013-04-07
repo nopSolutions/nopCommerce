@@ -243,7 +243,6 @@ namespace Nop.Data.Tests.Catalog
                     new ProductTag
                     {
                         Name = "Tag name 1",
-                        ProductCount = 1
                     }
                 );
             var fromDb = SaveAndLoadEntity(product);

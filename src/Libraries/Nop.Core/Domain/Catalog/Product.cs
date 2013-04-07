@@ -180,7 +180,7 @@ namespace Nop.Core.Domain.Catalog
         }
 
         /// <summary>
-        /// Gets or sets the product specification attribute
+        /// Gets or sets the product tags
         /// </summary>
         public virtual ICollection<ProductTag> ProductTags
         {

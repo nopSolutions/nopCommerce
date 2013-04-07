@@ -169,14 +169,6 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected void UpdateProductTagTotals(Product product)
-        {
-            var productTags = product.ProductTags;
-            foreach (var productTag in productTags)
-                _productTagService.UpdateProductTagTotals(productTag);
-        }
-
-        [NonAction]
         private void PrepareVendorsModel(ProductModel model)
         {
             if (model == null)
@@ -522,7 +514,7 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentNullException("product");
 
             //product tags
-            var existingProductTags = product.ProductTags.OrderByDescending(pt => pt.ProductCount).ToList();
+            var existingProductTags = product.ProductTags.ToList();
             var productTagsToRemove = new List<ProductTag>();
             foreach (var existingProductTag in existingProductTags)
             {
@@ -543,9 +535,7 @@ namespace Nop.Admin.Controllers
             foreach (var productTag in productTagsToRemove)
             {
                 product.ProductTags.Remove(productTag);
-                //ensure product is saved before updating totals
                 _productService.UpdateProduct(product);
-                _productTagService.UpdateProductTagTotals(productTag);
             }
             foreach (string productTagName in productTags)
             {
@@ -556,8 +546,7 @@ namespace Nop.Admin.Controllers
                     //add new product tag
                     productTag = new ProductTag()
                     {
-                        Name = productTagName,
-                        ProductCount = 0
+                        Name = productTagName
                     };
                     _productTagService.InsertProductTag(productTag);
                 }
@@ -568,11 +557,8 @@ namespace Nop.Admin.Controllers
                 if (!product.ProductTagExists(productTag.Id))
                 {
                     product.ProductTags.Add(productTag);
-                    //ensure product is saved before updating totals
                     _productService.UpdateProduct(product);
                 }
-                //update product tag totals 
-                _productTagService.UpdateProductTagTotals(productTag);
             }
         }
 
@@ -888,8 +874,6 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("List");
 
             _productService.DeleteProduct(product);
-            //update product tag totals
-            UpdateProductTagTotals(product);
 
             //activity log
             _customerActivityService.InsertActivity("DeleteProduct", _localizationService.GetResource("ActivityLog.DeleteProduct"), product.Name);
@@ -921,8 +905,6 @@ namespace Nop.Admin.Controllers
                         continue;
 
                     _productService.DeleteProduct(product);
-                    //update product tag totals
-                    UpdateProductTagTotals(product);
                 }
             }
 
@@ -1954,14 +1936,16 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductTags))
                 return AccessDeniedView();
 
-            var tags = _productTagService.GetAllProductTags(true)
+            var tags = _productTagService.GetAllProductTags()
+                //order by product count
+                .OrderByDescending(x => _productTagService.GetProductCount(x.Id, 0))
                 .Select(x =>
                 {
                     return new ProductTagModel()
                     {
                         Id = x.Id,
                         Name = x.Name,
-                        ProductCount = x.ProductCount
+                        ProductCount = _productTagService.GetProductCount(x.Id, 0)
                     };
                 })
                 .ForCommand(command);
@@ -2006,7 +1990,7 @@ namespace Nop.Admin.Controllers
             {
                 Id = productTag.Id,
                 Name = productTag.Name,
-                ProductCount = productTag.ProductCount
+                ProductCount = _productTagService.GetProductCount(productTag.Id, 0)
             };
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>

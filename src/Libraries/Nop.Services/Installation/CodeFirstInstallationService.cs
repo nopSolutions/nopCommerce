@@ -9765,17 +9765,10 @@ namespace Nop.Services.Installation
                 productTag = new ProductTag()
                 {
                     Name = tag,
-                    ProductCount = 1,
                 };
-                product.ProductTags.Add(productTag);
-                _productRepository.Update(product);
             }
-            else
-            {
-                productTag.ProductCount++;
-                product.ProductTags.Add(productTag);
-                _productRepository.Update(product);
-            }
+            product.ProductTags.Add(productTag);
+            _productRepository.Update(product);
         }
 
         #endregion

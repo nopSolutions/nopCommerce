@@ -17,9 +17,8 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Gets all product tags
         /// </summary>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product tags</returns>
-        IList<ProductTag> GetAllProductTags(bool showHidden = false);
+        IList<ProductTag> GetAllProductTags();
 
         /// <summary>
         /// Gets product tag
@@ -48,9 +47,11 @@ namespace Nop.Services.Catalog
         void UpdateProductTag(ProductTag productTag);
 
         /// <summary>
-        /// Updates the product tag
+        /// Get number of products
         /// </summary>
-        /// <param name="productTag">Product tag</param>
-        void UpdateProductTagTotals(ProductTag productTag);
+        /// <param name="productTagId">Product tag identifier</param>
+        /// <param name="storeId">Store identifier</param>
+        /// <returns>Number of products</returns>
+        int GetProductCount(int productTagId, int storeId);
     }
 }

@@ -1115,7 +1115,6 @@ namespace Nop.Services.Catalog
                         productVariant.StockQuantity = newStockQuantity;
                         productVariant.DisableBuyButton = newDisableBuyButton;
                         productVariant.DisableWishlistButton = newDisableWishlistButton;
-                        bool isPublishedChanged = productVariant.Published != newPublished;
                         productVariant.Published = newPublished;
                         UpdateProductVariant(productVariant);
 
@@ -1141,15 +1140,6 @@ namespace Nop.Services.Catalog
                                 product.Published = false;
                                 UpdateProduct(product);
                             }
-                        }
-
-                        //update product tag totals (if published flag has been changed)
-                        if (isPublishedChanged)
-                        {
-                            var product = productVariant.Product;
-                            var productTags = product.ProductTags;
-                            foreach (var productTag in productTags)
-                                _productTagService.UpdateProductTagTotals(productTag);
                         }
                     }
                     break;
