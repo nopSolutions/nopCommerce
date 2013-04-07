@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Stores;
+using Nop.Data;
 using Nop.Services.Events;
 
 namespace Nop.Services.Catalog
@@ -34,7 +37,9 @@ namespace Nop.Services.Catalog
         #region Fields
 
         private readonly IRepository<ProductTag> _productTagRepository;
-        private readonly IRepository<StoreMapping> _storeMappingRepository;
+        private readonly IDataProvider _dataProvider;
+        private readonly IDbContext _dbContext;
+        private readonly CommonSettings _commonSettings;
         private readonly ICacheManager _cacheManager;
         private readonly IEventPublisher _eventPublisher;
 
@@ -46,18 +51,34 @@ namespace Nop.Services.Catalog
         /// Ctor
         /// </summary>
         /// <param name="productTagRepository">Product tag repository</param>
-        /// <param name="storeMappingRepository">Store mapping repository</param>
+        /// <param name="dataProvider">Data provider</param>
+        /// <param name="dbContext">Database Context</param>
+        /// <param name="commonSettings">Common settings</param>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="eventPublisher">Event published</param>
         public ProductTagService(IRepository<ProductTag> productTagRepository,
-            IRepository<StoreMapping> storeMappingRepository,
+            IDataProvider dataProvider, 
+            IDbContext dbContext,
+            CommonSettings commonSettings,
             ICacheManager cacheManager,
             IEventPublisher eventPublisher)
         {
             this._productTagRepository = productTagRepository;
-            this._storeMappingRepository = storeMappingRepository;
+            this._dataProvider = dataProvider;
+            this._dbContext = dbContext;
+            this._commonSettings = commonSettings;
             this._cacheManager = cacheManager;
             this._eventPublisher = eventPublisher;
+        }
+
+        #endregion
+
+        #region Nested classes
+
+        private class ProductTagWithCount
+        {
+            public int ProductTagId { get; set; }
+            public int ProductCount { get; set; }
         }
 
         #endregion
@@ -75,25 +96,59 @@ namespace Nop.Services.Catalog
             return _cacheManager.Get(key, () =>
             {
 
-                var query = from pt in _productTagRepository.Table
-                            select new 
-                            { 
-                                Id = pt.Id, 
-                                ProductCount = pt.Products
-                                    //published and not deleted product/variants
-                                    .Count(p => !p.Deleted && 
-                                        p.Published &&
-                                        p.ProductVariants.Any(pv => !pv.Deleted && pv.Published))
-                                    //UNDOEN filter by store identifier if specified ( > 0 )
-                            };
+                if (_commonSettings.UseStoredProceduresIfSupported && _dataProvider.StoredProceduredSupported)
+                {
+                    //stored procedures are enabled and supported by the database. 
+                    //It's much faster than the LINQ implementation below 
 
-                var dictionary = new Dictionary<int, int>();
-                foreach (var item in query)
-                    dictionary.Add(item.Id, item.ProductCount);
-                
-                return dictionary;
+                    #region Use stored procedure
+
+                    //prepare parameters
+                    var pStoreId = _dataProvider.GetParameter();
+                    pStoreId.ParameterName = "StoreId";
+                    pStoreId.Value = storeId;
+                    pStoreId.DbType = DbType.Int32;
+
+
+                    //invoke stored procedure
+                    var result = _dbContext.SqlQuery<ProductTagWithCount>(
+                        "Exec ProductTagCountLoadAll @StoreId",
+                        pStoreId);
+
+                    var dictionary = new Dictionary<int, int>();
+                    foreach (var item in result)
+                        dictionary.Add(item.ProductTagId, item.ProductCount);
+                    return dictionary;
+
+                    #endregion
+                }
+                else
+                {
+                    //stored procedures aren't supported. Use LINQ
+                    #region Search products
+                    var query = from pt in _productTagRepository.Table
+                                select new
+                                {
+                                    Id = pt.Id,
+                                    ProductCount = pt.Products
+                                        //published and not deleted product/variants
+                                        .Count(p => !p.Deleted &&
+                                            p.Published &&
+                                            p.ProductVariants.Any(pv => !pv.Deleted && pv.Published))
+                                    //UNDOEN filter by store identifier if specified ( > 0 )
+                                };
+
+                    var dictionary = new Dictionary<int, int>();
+                    foreach (var item in query)
+                        dictionary.Add(item.Id, item.ProductCount);
+                    return dictionary;
+
+                    #endregion
+
+                }
             });
         }
+
         #endregion
 
         #region Methods
