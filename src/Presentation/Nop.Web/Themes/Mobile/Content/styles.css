@@ -548,11 +548,11 @@
 .forum .forum-header{}
 .forum .forum-header .forum-options,.forum-footer .forum-options{}
 .forum .forum-header .forum-options a,.forum-footer .forum-options a{}
-.forum .top .forum-info{}
-.forum .top .forum-info .forum-name{font-weight:700;font-size:1.2em;}
-.forum .top .forum-info .forum-description{color:#555;}
-.forum .top .actions{}
-.forum .top .actions .newtopic{}
+.forum .forum-top .forum-info{}
+.forum .forum-top .forum-info .forum-name{font-weight:700;font-size:1.2em;}
+.forum .forum-top .forum-info .forum-description{color:#555;}
+.forum .forum-top .actions{}
+.forum .forum-top .actions .newtopic{}
 .forum .topics{}
 .forum .topics .topic{vertical-align:middle;padding-left:3px;min-height:40px;}
 .forum .topics .topic a{text-decoration:none;}
