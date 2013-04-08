@@ -20,10 +20,6 @@ namespace Nop.Admin.Models.Forums
         [AllowHtml]
         public string Name { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.Forums.ForumGroup.Fields.Description")]
-        [AllowHtml]
-        public string Description { get; set; }
-
         [NopResourceDisplayName("Admin.ContentManagement.Forums.ForumGroup.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
 

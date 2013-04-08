@@ -122,7 +122,6 @@ namespace Nop.Web.Controllers
                 Id = forumGroup.Id,
                 Name = forumGroup.Name,
                 SeName = forumGroup.GetSeName(),
-                Description = forumGroup.Description,
             };
             var forums = _forumService.GetAllForumsByGroupId(forumGroup.Id);
             foreach (var forum in forums)

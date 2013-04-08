@@ -19,7 +19,6 @@ namespace Nop.Data.Tests.Forums
             var forumGroup = new ForumGroup
             {
                 Name = "Forum Group 1",
-                Description = "Forum Group 1 Description",
                 DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
@@ -28,7 +27,6 @@ namespace Nop.Data.Tests.Forums
             var forumGroupFromDb = SaveAndLoadEntity(forumGroup);
             forumGroupFromDb.ShouldNotBeNull();
             forumGroupFromDb.Name.ShouldEqual("Forum Group 1");
-            forumGroupFromDb.Description.ShouldEqual("Forum Group 1 Description");
             forumGroupFromDb.DisplayOrder.ShouldEqual(1);
 
             var forum = new Forum
@@ -100,7 +98,6 @@ namespace Nop.Data.Tests.Forums
             var forumGroup = new ForumGroup
             {
                 Name = "Forum Group 1",
-                Description = "Forum Group 1 Description",
                 DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
@@ -109,7 +106,6 @@ namespace Nop.Data.Tests.Forums
             var forumGroupFromDb = SaveAndLoadEntity(forumGroup);
             forumGroupFromDb.ShouldNotBeNull();
             forumGroupFromDb.Name.ShouldEqual("Forum Group 1");
-            forumGroupFromDb.Description.ShouldEqual("Forum Group 1 Description");
             forumGroupFromDb.DisplayOrder.ShouldEqual(1);
 
             var forum = new Forum

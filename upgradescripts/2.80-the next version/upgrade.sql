@@ -665,13 +665,10 @@ set @resources='
   <LocaleResource Name="Admin.Telerik.EditorLocalization.WebAddress">
 	<Value>Web address</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Telerik.EditorLocalization.">
+  <LocaleResource Name="Admin.ContentManagement.Forums.ForumGroup.Fields.Description">
 	<Value></Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Telerik.">
-	<Value></Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Telerik.">
+  <LocaleResource Name="Admin.ContentManagement.Forums.ForumGroup.Fields.Description.Hint">
 	<Value></Value>
   </LocaleResource>
 </Language>
@@ -3806,5 +3803,13 @@ BEGIN
 			)))
 	GROUP BY pt.Id
 	ORDER BY pt.Id
+END
+GO
+
+--forum group do not need description
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Forums_Group]') and NAME='Description')
+BEGIN
+	ALTER TABLE [Forums_Group]
+	DROP COLUMN [Description]
 END
 GO

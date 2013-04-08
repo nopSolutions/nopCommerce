@@ -1,7 +1,5 @@
 ﻿@model ForumGroupModel
 
-@using Telerik.Web.Mvc.UI;
-
 @Html.ValidationSummary(true)
 @Html.HiddenFor(model => model.Id)
 <table class="adminContent">
@@ -12,15 +10,6 @@
         <td class="adminData">
             @Html.EditorFor(model => model.Name)
             @Html.ValidationMessageFor(model => model.Name)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.Description):
-        </td>
-        <td class="adminData">
-            @Html.TextAreaFor(model => model.Description)
-            @Html.ValidationMessageFor(model => model.Description)
         </td>
     </tr>
     <tr>

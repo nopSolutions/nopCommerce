@@ -9075,7 +9075,6 @@ namespace Nop.Services.Installation
             var forumGroup = new ForumGroup()
             {
                 Name = "General",
-                Description = "",
                 DisplayOrder = 5,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,

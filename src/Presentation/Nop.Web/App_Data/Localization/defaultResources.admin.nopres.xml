@@ -6275,14 +6275,6 @@
                                                     </LocaleResource>
                                                 </Children>
                                             </LocaleResource>
-                                            <LocaleResource Name="Description">
-                                                <Value>Description</Value>
-                                                <Children>
-                                                    <LocaleResource Name="Hint">
-                                                        <Value>The description of the forum group. This is the description that the customer will see.</Value>
-                                                    </LocaleResource>
-                                                </Children>
-                                            </LocaleResource>
                                             <LocaleResource Name="DisplayOrder">
                                                 <Value>Display Order</Value>
                                                 <Children>

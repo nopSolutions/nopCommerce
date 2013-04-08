@@ -16,7 +16,6 @@ namespace Nop.Data.Tests.Forums
                 ForumGroup = new ForumGroup
                 {
                     Name = "Forum Group 1",
-                    Description = "Forum Group 1 Description",
                     DisplayOrder = 1,
                     CreatedOnUtc = DateTime.UtcNow,
                     UpdatedOnUtc = DateTime.UtcNow,
