@@ -2124,13 +2124,17 @@ namespace Nop.Web.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult RecentlyViewedProductsBlock(int? productThumbPictureSize)
+        public ActionResult RecentlyViewedProductsBlock(int? productThumbPictureSize, bool? preparePriceModel)
         {
             var model = new List<ProductOverviewModel>();
             if (_catalogSettings.RecentlyViewedProductsEnabled)
             {
+                var preparePictureModel = productThumbPictureSize.HasValue;
                 var products = _recentlyViewedProductsService.GetRecentlyViewedProducts(_catalogSettings.RecentlyViewedProductsNumber);
-                model.AddRange(PrepareProductOverviewModels(products, false, false, productThumbPictureSize));
+                model.AddRange(PrepareProductOverviewModels(products, 
+                    preparePriceModel.HasValue ? preparePriceModel.Value : false, 
+                    preparePictureModel, 
+                    productThumbPictureSize));
             }
             return PartialView(model);
         }
