@@ -947,10 +947,7 @@ namespace Nop.Web.Controllers
             //validation
             if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
                 return new HttpUnauthorizedResult();
-
-            //model
-            var model = new CheckoutCompletedModel();
-
+            
             Order order = null;
             if (orderId.HasValue)
             {
@@ -968,7 +965,12 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("HomePage");
             }
 
-            model.OrderId = order.Id;
+            //model
+            var model = new CheckoutCompletedModel()
+            {
+                OrderId = order.Id,
+                OnePageCheckoutEnabled = UseOnePageCheckout()
+            };
 
             return View(model);
         }
