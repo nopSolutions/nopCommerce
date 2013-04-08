@@ -671,6 +671,12 @@ set @resources='
   <LocaleResource Name="Admin.ContentManagement.Forums.ForumGroup.Fields.Description.Hint">
 	<Value></Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.MaximumShoppingCartItems">
+	<Value>The maximum number of distinct products allowed in the cart is {0}.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.MaximumWishlistItems">
+	<Value>The maximum number of distinct products allowed in the wishlist is {0}.</Value>
+  </LocaleResource>
 </Language>
 '
 

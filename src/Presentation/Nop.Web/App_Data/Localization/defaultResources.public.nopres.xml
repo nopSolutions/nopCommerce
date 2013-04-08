@@ -3877,6 +3877,12 @@
             <LocaleResource Name="MinimumQuantity">
                 <Value>The minimum quantity allowed for purchase is {0}.</Value>
             </LocaleResource>
+            <LocaleResource Name="MaximumShoppingCartItems">
+              <Value>The maximum number of distinct products allowed in the cart is {0}.</Value>
+            </LocaleResource>
+            <LocaleResource Name="MaximumWishlistItems">
+              <Value>The maximum number of distinct products allowed in the wishlist is {0}.</Value>
+            </LocaleResource>
             <LocaleResource Name="Mini">
                 <Children>
                     <LocaleResource Name="NoItems">

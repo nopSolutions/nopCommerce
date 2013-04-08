@@ -851,13 +851,19 @@ namespace Nop.Services.Orders
                         case ShoppingCartType.ShoppingCart:
                             {
                                 if (cart.Count >= _shoppingCartSettings.MaximumShoppingCartItems)
+                                {
+                                    warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.MaximumShoppingCartItems"), _shoppingCartSettings.MaximumShoppingCartItems));
                                     return warnings;
+                                }
                             }
                             break;
                         case ShoppingCartType.Wishlist:
                             {
                                 if (cart.Count >= _shoppingCartSettings.MaximumWishlistItems)
+                                {
+                                    warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.MaximumWishlistItems"), _shoppingCartSettings.MaximumWishlistItems));
                                     return warnings;
+                                }
                             }
                             break;
                         default:
