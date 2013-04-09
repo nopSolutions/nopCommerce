@@ -1783,9 +1783,10 @@ namespace Nop.Services.Orders
             //Adjust inventory
             foreach (var opv in order.OrderProductVariants)
                 _productService.AdjustInventory(opv.ProductVariant, false, opv.Quantity, opv.AttributesXml);
+
+            _eventPublisher.PublishOrderCancelled(order);
+
         }
-
-
 
         /// <summary>
         /// Gets a value indicating whether order can be marked as authorized
