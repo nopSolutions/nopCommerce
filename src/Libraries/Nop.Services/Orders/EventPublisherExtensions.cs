@@ -23,5 +23,14 @@ namespace Nop.Services.Orders
         {
             eventPublisher.Publish(new OrderPlacedEvent(order));
         }
+        /// <summary>
+        /// Publishes the order cancelled event.
+        /// </summary>
+        /// <param name="eventPublisher">The event publisher.</param>
+        /// <param name="order">The order.</param>
+        public static void PublishOrderCancelled(this IEventPublisher eventPublisher, Order order)
+        {
+            eventPublisher.Publish(new OrderCancelledEvent(order));
+        }
     }
 }

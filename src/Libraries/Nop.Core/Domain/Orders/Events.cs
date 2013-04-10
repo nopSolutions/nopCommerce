@@ -29,4 +29,19 @@ namespace Nop.Core.Domain.Orders
             get { return _order; }
         }
     }
+
+    public class OrderCancelledEvent
+    {
+        private readonly Order _order;
+
+        public OrderCancelledEvent(Order order)
+        {
+            this._order = order;
+        }
+
+        public Order Order
+        {
+            get { return _order; }
+        }
+    }
 }
