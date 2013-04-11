@@ -528,11 +528,11 @@
 
 
 /* FORUM MAIN */
-.forums-main{}
+.forums-main-page{}
+.forums-main-page .forums-main-header{}
+.forums-main-page .forums-main-header .forum-search-box{}
+.forums-main-page .active-discussions{margin-top:50px;}
 .forum-group a{text-decoration:none;}
-.forums-main .forums-main-header{}
-.forums-main .forums-main-header .forum-search-box{}
-.forums-main .active-discussions{margin-top:50px;}
 .forum-group-page .forum-search-box{}
 .forum-group{}
 .forum-group .group-title{font-size:1.1em;font-weight:700;padding-bottom:5px;}

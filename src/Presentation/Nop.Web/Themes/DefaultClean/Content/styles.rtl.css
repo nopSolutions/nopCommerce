@@ -1074,9 +1074,9 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 
 
 /* FORUM MAIN AND COMMON */
-.forums-main{}
-.forums-main .forums-main-header{border-bottom:solid 1px #f3f3f3;height:50px;margin-bottom:10px;}
-.forums-main .forums-main-header .current-time{padding-top:20px;font-size:.9em;color:#555;float:right;}
+.forums-main-page{}
+.forums-main-page .forums-main-header{border-bottom:solid 1px #f3f3f3;height:50px;margin-bottom:10px;}
+.forums-main-page .forums-main-header .current-time{padding-top:20px;font-size:.9em;color:#555;float:right;}
 .forum-search-box{font-size:.9em;float:left;text-align:left;padding:5px 0;margin-bottom:5px;}
 .forums-table-section{background:url(images/forum-footer-bg.gif) repeat-x center bottom;margin-bottom:30px;}
 .forums-table-section-title{font-size:1.1em;margin-bottom:5px;}
