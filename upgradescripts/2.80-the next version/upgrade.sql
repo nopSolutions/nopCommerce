@@ -677,6 +677,9 @@ set @resources='
   <LocaleResource Name="ShoppingCart.MaximumWishlistItems">
 	<Value>The maximum number of distinct products allowed in the wishlist is {0}.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.CannotBeInVendoRoleWithoutVendorAssociated">
+	<Value>A customer in the Vendors role should have a vendor account associated.</Value>
+  </LocaleResource>
 </Language>
 '
 

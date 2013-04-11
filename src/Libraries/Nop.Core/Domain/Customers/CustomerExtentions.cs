@@ -110,7 +110,17 @@ namespace Nop.Core.Domain.Customers
         {
             return IsInCustomerRole(customer, SystemCustomerRoleNames.Guests, onlyActiveCustomerRoles);
         }
-        
+
+        /// <summary>
+        /// Gets a value indicating whether customer is vendor
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="onlyActiveCustomerRoles">A value indicating whether we should look only in active customer roles</param>
+        /// <returns>Result</returns>
+        public static bool IsVendor(this Customer customer, bool onlyActiveCustomerRoles = true)
+        {
+            return IsInCustomerRole(customer, SystemCustomerRoleNames.Vendors, onlyActiveCustomerRoles);
+        }
         #endregion
 
         #region Addresses

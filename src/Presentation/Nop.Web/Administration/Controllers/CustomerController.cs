@@ -511,6 +511,27 @@ namespace Nop.Admin.Controllers
                     _customerService.UpdateCustomer(customer);
                 }
 
+                //ensure that a customer with a vendor associated is not in "Administrators" role
+                //otherwise, he won't be have access to the other functionality in admin area
+                if (customer.IsAdmin() && customer.VendorId > 0)
+                {
+                    customer.VendorId = 0;
+                    _customerService.UpdateCustomer(customer);
+                    ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.AdminCouldNotbeVendor"));
+                }
+
+                //ensure that a customer in the Vendors role has a vendor account associated.
+                //otherwise, he will have access to ALL products
+                if (customer.IsVendor() && customer.VendorId == 0)
+                {
+                    var vendorRole = customer
+                        .CustomerRoles
+                        .FirstOrDefault(x => x.SystemName == SystemCustomerRoleNames.Vendors);
+                    customer.CustomerRoles.Remove(vendorRole);
+                    _customerService.UpdateCustomer(customer);
+                    ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.CannotBeInVendoRoleWithoutVendorAssociated"));
+                }
+
                 //activity log
                 _customerActivityService.InsertActivity("AddNewCustomer", _localizationService.GetResource("ActivityLog.AddNewCustomer"), customer.Id);
 
@@ -819,6 +840,19 @@ namespace Nop.Admin.Controllers
                         _customerService.UpdateCustomer(customer);
                         ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.AdminCouldNotbeVendor"));
                     }
+
+                    //ensure that a customer in the Vendors role has a vendor account associated.
+                    //otherwise, he will have access to ALL products
+                    if (customer.IsVendor() && customer.VendorId == 0)
+                    {
+                        var vendorRole = customer
+                            .CustomerRoles
+                            .FirstOrDefault(x => x.SystemName == SystemCustomerRoleNames.Vendors);
+                        customer.CustomerRoles.Remove(vendorRole);
+                        _customerService.UpdateCustomer(customer);
+                        ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.CannotBeInVendoRoleWithoutVendorAssociated"));
+                    }
+
 
                     //activity log
                     _customerActivityService.InsertActivity("EditCustomer", _localizationService.GetResource("ActivityLog.EditCustomer"), customer.Id);

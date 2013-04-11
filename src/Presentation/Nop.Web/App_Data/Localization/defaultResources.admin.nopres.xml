@@ -7225,6 +7225,9 @@
                             <LocaleResource Name="BackToList">
                                 <Value>back to customer list</Value>
                             </LocaleResource>
+                            <LocaleResource Name="CannotBeInVendoRoleWithoutVendorAssociated">
+                                <Value>A customer in the Vendors role should have a vendor account associated.</Value>
+                            </LocaleResource>
                             <LocaleResource Name="CurrentShoppingCart">
                                 <Value>Current shopping cart</Value>
                             </LocaleResource>
