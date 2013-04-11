@@ -36,7 +36,7 @@
             <a href="#" onclick="setLocation('@Url.RouteUrl("ClearCompareList")')">@T("Products.Compare.Clear")</a>
             <table class="compare-products-table">
                 <tbody>
-                    <tr>
+                    <tr class="overview">
                         <td>
                             &nbsp;
                         </td>
@@ -92,7 +92,7 @@
                     }
                     @foreach (var specificationAttribute in specificationAttributes)
                     {
-                        <tr>
+                        <tr class="specification">
                             <td>@specificationAttribute.SpecificationAttributeName
                             </td>
                             @foreach (var product in Model.Products)
