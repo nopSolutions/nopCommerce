@@ -9043,6 +9043,9 @@
                                     <LocaleResource Name="All">
                                         <Value>Print packaging slips (all)</Value>
                                     </LocaleResource>
+                                    <LocaleResource Name="NoShipments">
+                                        <Value>No shipments selected</Value>
+                                    </LocaleResource>
                                     <LocaleResource Name="Selected">
                                         <Value>Print packaging slips (selected)</Value>
                                     </LocaleResource>

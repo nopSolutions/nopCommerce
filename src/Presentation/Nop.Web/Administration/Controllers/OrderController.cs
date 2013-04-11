@@ -2455,6 +2455,13 @@ namespace Nop.Admin.Controllers
 
             var shipments = _shipmentService.GetAllShipments(vendorId, null, null, 0, int.MaxValue).ToList();
 
+            //ensure that we at least one shipment selected
+            if (shipments.Count == 0)
+            {
+                ErrorNotification(_localizationService.GetResource("Admin.Orders.Shipments.PrintPackagingSlip.NoShipments"));
+                return RedirectToAction("ShipmentList");
+            }
+
             byte[] bytes = null;
             using (var stream = new MemoryStream())
             {
@@ -2482,6 +2489,13 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null)
             {
                 shipments = shipments.Where(s => HasAccessToShipment(s)).ToList();
+            }
+
+            //ensure that we at least one shipment selected
+            if (shipments.Count == 0)
+            {
+                ErrorNotification(_localizationService.GetResource("Admin.Orders.Shipments.PrintPackagingSlip.NoShipments"));
+                return RedirectToAction("ShipmentList");
             }
 
             byte[] bytes = null;

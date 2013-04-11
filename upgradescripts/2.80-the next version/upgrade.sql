@@ -680,6 +680,9 @@ set @resources='
   <LocaleResource Name="Admin.Customers.Customers.CannotBeInVendoRoleWithoutVendorAssociated">
 	<Value>A customer in the Vendors role should have a vendor account associated.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.PrintPackagingSlip.NoShipments">
+	<Value>No shipments selected</Value>
+  </LocaleResource>
 </Language>
 '
 
