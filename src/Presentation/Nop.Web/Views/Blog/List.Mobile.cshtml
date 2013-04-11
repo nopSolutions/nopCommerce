@@ -29,15 +29,15 @@
     </div>
     <div class="page-body">
         @Html.Widget("mobile_bloglist_page_before_posts")
-        <div class="blogposts">
+        <div class="blog-posts">
             @foreach (var item in Model.BlogPosts)
             {
                 <div class="post">
-                    <a class="blog-title" href="@Url.RouteUrl("BlogPost", new { SeName = item.SeName })">
-                        @item.Title</a><span class="blog-date">-
+                    <a class="post-title" href="@Url.RouteUrl("BlogPost", new { SeName = item.SeName })">
+                        @item.Title</a><span class="post-date">-
                             @item.CreatedOn.ToString("D")
                         </span>
-                    <div class="blog-body">
+                    <div class="post-body">
                         @Html.Raw(item.Body)
                     </div>
                     <div class="tags">
