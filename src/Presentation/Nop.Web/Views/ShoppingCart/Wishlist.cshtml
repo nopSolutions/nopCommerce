@@ -106,25 +106,25 @@
                             <tr class="cart-item-row">
                                 @if (Model.IsEditable)
                                 {
-                                    <td>
+                                    <td class="remove-from-cart">
                                         <input type="checkbox" name="removefromcart" value="@(item.Id)" />
                                     </td>
                                 }
                                 @if (Model.DisplayAddToCart)
                                 {
-                                    <td>
+                                    <td class="add-to-cart">
                                         <input type="checkbox" name="addtocart" value="@(item.Id)" />
                                     </td>
                                 }
                                 @if (Model.ShowSku)
                                 {
-                                    <td class="nobr">
+                                    <td class="sku nobr">
                                         @item.Sku
                                     </td>
                                 }
                                 @if (Model.ShowProductImages)
                                 {
-                                    <td class="productpicture">
+                                    <td class="product-picture">
                                         <img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" />
                                     </td>
                                 }
@@ -154,10 +154,10 @@
                                         </div>
                                     }
                                 </td>
-                                <td class="nobr">
+                                <td class="unit-price nobr">
                                     <span class="product-unit-price">@item.UnitPrice</span>
                                 </td>
-                                <td class="nobr">
+                                <td class="qty nobr">
                                     @if (Model.IsEditable)
                                     {
                                         if (item.AllowedQuantities.Count > 0)
@@ -179,7 +179,7 @@
                                         <span>@item.Quantity</span>
                                     }
                                 </td>
-                                <td class="nobr end">
+                                <td class="subtotal nobr end">
                                     <span class="product-subtotal">@item.SubTotal</span>
                                     @if (!String.IsNullOrEmpty(item.Discount))
                                     {
