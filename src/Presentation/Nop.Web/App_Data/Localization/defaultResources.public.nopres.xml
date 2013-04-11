@@ -1249,6 +1249,9 @@
             <LocaleResource Name="Cancel">
                 <Value>Cancel</Value>
             </LocaleResource>
+            <LocaleResource Name="Close">
+              <Value>Close</Value>
+            </LocaleResource>
             <LocaleResource Name="Config">
                 <Value>Config</Value>
             </LocaleResource>

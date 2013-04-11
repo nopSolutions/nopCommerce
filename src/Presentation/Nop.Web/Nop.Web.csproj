@@ -1179,7 +1179,7 @@
     <Content Include="Content\Images\flags\za.png" />
     <Content Include="Content\Images\flags\zm.png" />
     <Content Include="Content\Images\flags\zw.png" />
-    <Content Include="Content\Images\ico-close-notification-bar.png" />
+    <Content Include="Themes\DefaultClean\Content\images\ico-close-notification-bar.png" />
     <Content Include="Themes\Mobile\Content\images\icons-18-black.png" />
     <Content Include="Themes\Mobile\Content\images\icons-18-white.png" />
     <Content Include="Themes\Mobile\Content\images\icons-36-black.png" />

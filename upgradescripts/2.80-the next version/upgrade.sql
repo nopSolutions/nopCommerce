@@ -683,6 +683,9 @@ set @resources='
   <LocaleResource Name="Admin.Orders.Shipments.PrintPackagingSlip.NoShipments">
 	<Value>No shipments selected</Value>
   </LocaleResource>
+  <LocaleResource Name="Common.Close">
+	<Value>Close</Value>
+  </LocaleResource>
 </Language>
 '
 
