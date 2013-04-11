@@ -443,7 +443,10 @@ namespace Nop.Admin.Controllers
                     newCustomerRoles.Add(customerRole);
             var customerRolesError = ValidateCustomerRoles(newCustomerRoles);
             if (!String.IsNullOrEmpty(customerRolesError))
+            {
                 ModelState.AddModelError("", customerRolesError);
+                ErrorNotification(customerRolesError, false);
+            }
             bool allowManagingCustomerRoles = _permissionService.Authorize(StandardPermissionProvider.ManageCustomerRoles);
             
             if (ModelState.IsValid)
@@ -722,7 +725,10 @@ namespace Nop.Admin.Controllers
                     newCustomerRoles.Add(customerRole);
             var customerRolesError = ValidateCustomerRoles(newCustomerRoles);
             if (!String.IsNullOrEmpty(customerRolesError))
+            {
                 ModelState.AddModelError("", customerRolesError);
+                ErrorNotification(customerRolesError, false);
+            }
             bool allowManagingCustomerRoles = _permissionService.Authorize(StandardPermissionProvider.ManageCustomerRoles);
             
             if (ModelState.IsValid)
