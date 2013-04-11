@@ -1335,7 +1335,6 @@
     <Content Include="Themes\DefaultClean\Content\images\ajax_loader_small.gif" />
     <Content Include="Themes\DefaultClean\Content\images\bbeditor-button-bg.gif" />
     <Content Include="Themes\DefaultClean\Content\images\download-sample-bg.gif" />
-    <Content Include="Themes\DefaultClean\Content\images\cart-header-bg.gif" />
     <Content Include="Themes\DefaultClean\Content\images\closelabel.gif" />
     <Content Include="Themes\DefaultClean\Content\images\forum-footer-bg.gif" />
     <Content Include="Themes\DefaultClean\Content\images\forum-header-bg.gif" />

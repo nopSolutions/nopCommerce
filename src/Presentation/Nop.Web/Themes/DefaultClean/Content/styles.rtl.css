@@ -299,7 +299,7 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 .wishlist-content .cart{margin-bottom:10px;}
 .order-summary-content .cart td,.wishlist-content .cart td{padding:10px;}
 .order-summary-content .cart .cart-header-row,.wishlist-content .cart .cart-header-row{font-weight:700;}
-.order-summary-content .cart .cart-header-row th,.wishlist-content .cart .cart-header-row th{background:url(images/cart-header-bg.gif) repeat-x 50%;color:#FFF;border-left:solid 1px #6a6a6a;height:20px;padding:2px 8px;vertical-align:middle;white-space:nowrap;}
+.order-summary-content .cart .cart-header-row th,.wishlist-content .cart .cart-header-row th{background:none repeat scroll 0 0 #404040;color:#FFF;border-left:solid 1px #6a6a6a;height:20px;padding:2px 8px;vertical-align:middle;white-space:nowrap;}
 .order-summary-content .cart .cart-header-row th.picture,.wishlist-content .cart .cart-header-row th.picture{border:none;}
 .order-summary-content .cart .cart-header-row th.end,.wishlist-content .cart .cart-header-row th.end{text-align:left;padding-left:5px;}
 .order-summary-content .cart .cart-item-row,.wishlist-content .cart .cart-item-row{}
