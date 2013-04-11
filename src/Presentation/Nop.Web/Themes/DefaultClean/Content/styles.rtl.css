@@ -1108,18 +1108,18 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 
 
 /* FORUM PAGE */
-.forum{clear:both;}
-.forum .forum-header{}
-.forum .forum-top{zoom:1;}
-.forum .forum-top:after{content:".";display:block;clear:both;height:0;font-size:0;line-height:0;visibility:hidden;}
-.forum .forum-top .forum-info{float:right;}
-.forum .forum-top .forum-info .forum-name{font-weight:700;font-size:1.2em;line-height:25px;}
-.forum .forum-top .forum-info .forum-description{color:#555;}
-.forum .forum-top .rss .link-rss{float:left;margin:10px 0 0 10px;background-image:url(images/ico-rss.gif);background-repeat:no-repeat;display:block;height:14px;width:14px;text-indent:-9999px;}
-.forum .forum-top .actions{float:left;text-align:left;margin-top:10px;}
-.forum .forum-top .actions .newtopic{background:url(images/ico-forum-post-add.gif) no-repeat right;padding:0 10px 3px 20px;}
-.forum .forum-top .actions .watch-forum{background:url(images/ico-forum-watch.gif) no-repeat right;padding-left:20px;}
-.forum .pager ul{float:right;margin:5px 0;}
+.forum-page{clear:both;}
+.forum-page .forum-header{}
+.forum-page .forum-top{zoom:1;}
+.forum-page .forum-top:after{content:".";display:block;clear:both;height:0;font-size:0;line-height:0;visibility:hidden;}
+.forum-page .forum-top .forum-info{float:right;}
+.forum-page .forum-top .forum-info .forum-name{font-weight:700;font-size:1.2em;line-height:25px;}
+.forum-page .forum-top .forum-info .forum-description{color:#555;}
+.forum-page .forum-top .rss .link-rss{float:left;margin:10px 0 0 10px;background-image:url(images/ico-rss.gif);background-repeat:no-repeat;display:block;height:14px;width:14px;text-indent:-9999px;}
+.forum-page .forum-top .actions{float:left;text-align:left;margin-top:10px;}
+.forum-page .forum-top .actions .newtopic{background:url(images/ico-forum-post-add.gif) no-repeat right;padding:0 10px 3px 20px;}
+.forum-page .forum-top .actions .watch-forum{background:url(images/ico-forum-watch.gif) no-repeat right;padding-left:20px;}
+.forum-page .pager ul{float:right;margin:5px 0;}
 .active-discussions-page{clear:both;}
 .forum-group-page{clear:both;}
 .forum-breadcrumb{clear:both;}

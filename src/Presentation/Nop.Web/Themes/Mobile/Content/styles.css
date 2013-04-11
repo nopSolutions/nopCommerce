@@ -532,9 +532,9 @@
 .forums-main-page .forums-main-header{}
 .forums-main-page .forums-main-header .forum-search-box{}
 .forums-main-page .active-discussions{margin-top:50px;}
-.forum-group a{text-decoration:none;}
 .forum-group-page .forum-search-box{}
 .forum-group{}
+.forum-group a{text-decoration:none;}
 .forum-group .group-title{font-size:1.1em;font-weight:700;padding-bottom:5px;}
 .forum-group .group-title a{color:#555;}
 .forum-group .forum{vertical-align:middle;padding-left:3px;min-height:40px;}
@@ -544,22 +544,22 @@
 
 
 /* FORUM PAGE */
-.forum{}
-.forum .forum-header{}
-.forum .forum-header .forum-options,.forum-footer .forum-options{}
-.forum .forum-header .forum-options a,.forum-footer .forum-options a{}
-.forum .forum-top .forum-info{}
-.forum .forum-top .forum-info .forum-name{font-weight:700;font-size:1.2em;}
-.forum .forum-top .forum-info .forum-description{color:#555;}
-.forum .forum-top .actions{}
-.forum .forum-top .actions .newtopic{}
-.forum .topics{}
-.forum .topics .topic{vertical-align:middle;padding-left:3px;min-height:40px;}
-.forum .topics .topic a{text-decoration:none;}
-.forum .topics .topic .topic-name{font-weight:700;color:#555;float:left;margin:11px 0 0 7px;}
-.forum .topics .topic .replies{font-size:.8em;color:#555;float:right;margin:11px 0 0 7px;}
-.forum .topics .topic .post{float:left;width:36px;height:36px;background:url(images/ico-forum-post.gif) no-repeat 40% 40%;}
-.forum .topics .topic .post-annoucement,.forum .topics .topic .poststicky{float:left;width:36px;height:36px;background:url(images/ico-forum-post-high.gif) no-repeat 40% 40%;}
+.forum-page{}
+.forum-page .forum-header{}
+.forum-page .forum-header .forum-options,.forum-footer .forum-options{}
+.forum-page .forum-header .forum-options a,.forum-footer .forum-options a{}
+.forum-page .forum-top .forum-info{}
+.forum-page .forum-top .forum-info .forum-name{font-weight:700;font-size:1.2em;}
+.forum-page .forum-top .forum-info .forum-description{color:#555;}
+.forum-page .forum-top .actions{}
+.forum-page .forum-top .actions .newtopic{}
+.forum-page .topics{}
+.forum-page .topics .topic{vertical-align:middle;padding-left:3px;min-height:40px;}
+.forum-page .topics .topic a{text-decoration:none;}
+.forum-page .topics .topic .topic-name{font-weight:700;color:#555;float:left;margin:11px 0 0 7px;}
+.forum-page .topics .topic .replies{font-size:.8em;color:#555;float:right;margin:11px 0 0 7px;}
+.forum-page .topics .topic .post{float:left;width:36px;height:36px;background:url(images/ico-forum-post.gif) no-repeat 40% 40%;}
+.forum-page .topics .topic .post-annoucement,.forum .topics .topic .poststicky{float:left;width:36px;height:36px;background:url(images/ico-forum-post-high.gif) no-repeat 40% 40%;}
 
 
 
