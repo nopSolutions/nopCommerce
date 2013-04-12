@@ -603,7 +603,7 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 .external-auth-errors{text-align:center;border:solid 1px #d3d3d3;vertical-align:top;width:100%;color:Red;}
 .external-auth-errors ul{padding:0px;}
 .external-auth-errors ul li{list-style:none;}
-.external-auth-association{text-align:center;border:solid 1px #d3d3d3;vertical-align:top;width:100%;}
+.external-auth-association{text-align:center;border:solid 1px #d3d3d3;vertical-align:top;width:100%;margin-bottom:20px;}
 .external-auth-association .identifier{}
 .external-auth-association .remove{color:#B80709;}
 
