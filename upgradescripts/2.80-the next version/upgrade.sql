@@ -636,7 +636,7 @@ set @resources='
 	<Value>Choose a vendor associated to this customer account. When associated this customer will be able to login to the chosen vendor portal and manage his products and orders.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Fields.Vendor.None">
-	<Value>No vendor</Value>
+	<Value>Not a vendor</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Fields.AssociatedCustomerEmails">
 	<Value>Customers</Value>

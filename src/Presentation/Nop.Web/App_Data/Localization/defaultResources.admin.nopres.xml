@@ -7295,7 +7295,7 @@
                                                   <Value>Choose a vendor associated to this customer account. When associated this customer will be able to login to the chosen vendor portal and manage his products and orders.</Value>
                                               </LocaleResource>
                                               <LocaleResource Name="None">
-                                                  <Value>No vendor</Value>
+                                                  <Value>Not a vendor</Value>
                                               </LocaleResource>
                                           </Children>
                                       </LocaleResource>
