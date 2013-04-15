@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Web;
 using System.Web.Routing;
 using Nop.Core;
-using Nop.Core.Domain;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
@@ -15,14 +15,12 @@ using Nop.Core.Domain.Payments;
 using Nop.Core.Plugins;
 using Nop.Plugin.Payments.PayPalDirect.Controllers;
 using Nop.Plugin.Payments.PayPalDirect.PayPalSvc;
-using Nop.Services.Catalog;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
-using Nop.Services.Tax;
 
 namespace Nop.Plugin.Payments.PayPalDirect
 {
@@ -125,6 +123,8 @@ namespace Nop.Plugin.Payments.PayPalDirect
             var result = new ProcessPaymentResult();
 
             var customer = _customerService.GetCustomerById(processPaymentRequest.CustomerId);
+            if (customer == null)
+                throw new Exception("Customer cannot be loaded");
 
             var req = new DoDirectPaymentReq();
             req.DoDirectPaymentRequest = new DoDirectPaymentRequestType();
@@ -176,9 +176,10 @@ namespace Nop.Plugin.Payments.PayPalDirect
             //if (_paypalDirectPaymentSettings.PassProductNamesAndTotals)
             //{
             //    //individual items
-            //    var cart = processPaymentRequest.Customer.ShoppingCartItems
-            //        .Where(x=>x.ShoppingCartType == ShoppingCartType.ShoppingCart)
-            //        .ToList();
+                //var cart = customer.ShoppingCartItems
+                //    .Where(x=>x.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                //    .Where(x=>x.StoreId == processPaymentRequest.StoreId)
+                //    .ToList();
             //    var cartItems = new PaymentDetailsItemType[cart.Count];
             //    for (int i = 0; i < cart.Count; i++)
             //    {

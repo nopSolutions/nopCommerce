@@ -817,9 +817,7 @@ namespace Nop.Services.Orders
                 #region Payment workflow
 
                 //skip payment workflow if order total equals zero
-                bool skipPaymentWorkflow = false;
-                if (orderTotal.Value == decimal.Zero)
-                    skipPaymentWorkflow = true;
+                bool skipPaymentWorkflow = orderTotal.Value == decimal.Zero;
 
                 //payment workflow
                 IPaymentMethod paymentMethod = null;
