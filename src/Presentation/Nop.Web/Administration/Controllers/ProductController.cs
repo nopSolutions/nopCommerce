@@ -2048,7 +2048,7 @@ namespace Nop.Admin.Controllers
                 byte[] bytes = null;
                 using (var stream = new MemoryStream())
                 {
-                    _pdfService.PrintProductsToPdf(stream, products, _workContext.WorkingLanguage);
+                    _pdfService.PrintProductsToPdf(stream, products);
                     bytes = stream.ToArray();
                 }
                 return File(bytes, "application/pdf", "pdfcatalog.pdf");

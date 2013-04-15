@@ -34,6 +34,8 @@ namespace Nop.Services.Common
         #region Fields
 
         private readonly ILocalizationService _localizationService;
+        private readonly ILanguageService _languageService;
+        private readonly IWorkContext _workContext;
         private readonly IOrderService _orderService;
         private readonly IPaymentService _paymentService;
         private readonly IDateTimeHelper _dateTimeHelper;
@@ -58,7 +60,10 @@ namespace Nop.Services.Common
 
         #region Ctor
 
-        public PdfService(ILocalizationService localizationService, IOrderService orderService,
+        public PdfService(ILocalizationService localizationService, 
+            ILanguageService languageService,
+            IWorkContext workContext,
+            IOrderService orderService,
             IPaymentService paymentService,
             IDateTimeHelper dateTimeHelper, IPriceFormatter priceFormatter,
             ICurrencyService currencyService, IMeasureService measureService,
@@ -67,9 +72,11 @@ namespace Nop.Services.Common
             IStoreContext storeContext, IWebHelper webHelper, 
             CatalogSettings catalogSettings, CurrencySettings currencySettings,
             MeasureSettings measureSettings, PdfSettings pdfSettings, TaxSettings taxSettings,
-            StoreInformationSettings storeInformationSettings, AddressSettings addressSettings)
+            AddressSettings addressSettings)
         {
             this._localizationService = localizationService;
+            this._languageService = languageService;
+            this._workContext = workContext;
             this._orderService = orderService;
             this._paymentService = paymentService;
             this._dateTimeHelper = dateTimeHelper;
@@ -114,8 +121,8 @@ namespace Nop.Services.Common
         /// </summary>
         /// <param name="stream">Stream</param>
         /// <param name="orders">Orders</param>
-        /// <param name="lang">Language</param>
-        public virtual void PrintOrdersToPdf(Stream stream, IList<Order> orders, Language lang)
+        /// <param name="languageId">Language identifier; 0 to use a language used when placing an order</param>
+        public virtual void PrintOrdersToPdf(Stream stream, IList<Order> orders, int languageId = 0)
         {
             if (stream == null)
                 throw new ArgumentNullException("stream");
@@ -123,9 +130,9 @@ namespace Nop.Services.Common
             if (orders == null)
                 throw new ArgumentNullException("orders");
 
+            var lang = _languageService.GetLanguageById(languageId);
             if (lang == null)
-                throw new ArgumentNullException("lang");
-
+                throw new ArgumentException(string.Format("Cannot load language. ID={0}", languageId));
 
             var pageSize = PageSize.A4;
 
@@ -152,6 +159,13 @@ namespace Nop.Services.Common
 
             foreach (var order in orders)
             {
+                if (languageId == 0)
+                {
+                    lang = _languageService.GetLanguageById(order.CustomerLanguageId);
+                    if (lang == null || !lang.Published)
+                        lang = _workContext.WorkingLanguage;
+                }
+
                 #region Header
 
                 //logo
@@ -680,15 +694,19 @@ namespace Nop.Services.Common
         /// </summary>
         /// <param name="stream">Stream</param>
         /// <param name="shipments">Shipments</param>
-        /// <param name="lang">Language</param>
-        public virtual void PrintPackagingSlipsToPdf(Stream stream, IList<Shipment> shipments, Language lang)
+        /// <param name="languageId">Language identifier; 0 to use a language used when placing an order</param>
+        public virtual void PrintPackagingSlipsToPdf(Stream stream, IList<Shipment> shipments, int languageId = 0)
         {
             if (stream == null)
                 throw new ArgumentNullException("stream");
 
             if (shipments == null)
                 throw new ArgumentNullException("shipments");
-            
+
+            var lang = _languageService.GetLanguageById(languageId);
+            if (lang == null)
+                throw new ArgumentException(string.Format("Cannot load language. ID={0}", languageId));
+
             var pageSize = PageSize.A4;
 
             if (_pdfSettings.LetterPageSizeEnabled)
@@ -714,6 +732,15 @@ namespace Nop.Services.Common
             foreach (var shipment in shipments)
             {
                 var order = shipment.Order;
+
+                if (languageId == 0)
+                {
+                    lang = _languageService.GetLanguageById(order.CustomerLanguageId);
+                    if (lang == null || !lang.Published)
+                        lang = _workContext.WorkingLanguage;
+                }
+
+
                 if (order.ShippingAddress != null)
                 {
                     doc.Add(new Paragraph(String.Format(_localizationService.GetResource("PDFPackagingSlip.Shipment", lang.Id), shipment.Id), titleFont));
@@ -814,8 +841,7 @@ namespace Nop.Services.Common
         /// </summary>
         /// <param name="stream">Stream</param>
         /// <param name="products">Products</param>
-        /// <param name="lang">Language</param>
-        public virtual void PrintProductsToPdf(Stream stream, IList<Product> products, Language lang)
+        public virtual void PrintProductsToPdf(Stream stream, IList<Product> products)
         {
             if (stream == null)
                 throw new ArgumentNullException("stream");
@@ -823,8 +849,7 @@ namespace Nop.Services.Common
             if (products == null)
                 throw new ArgumentNullException("products");
 
-            if (lang == null)
-                throw new ArgumentNullException("lang");
+            var lang = _workContext.WorkingLanguage;
 
             var pageSize = PageSize.A4;
 

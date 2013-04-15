@@ -1238,7 +1238,7 @@ namespace Nop.Admin.Controllers
             byte[] bytes = null;
             using (var stream = new MemoryStream())
             {
-                _pdfService.PrintOrdersToPdf(stream, orders, _workContext.WorkingLanguage);
+                _pdfService.PrintOrdersToPdf(stream, orders, _workContext.WorkingLanguage.Id);
                 bytes = stream.ToArray();
             }
             return File(bytes, "application/pdf", string.Format("order_{0}.pdf", order.Id));
@@ -2437,7 +2437,7 @@ namespace Nop.Admin.Controllers
             byte[] bytes = null;
             using (var stream = new MemoryStream())
             {
-                _pdfService.PrintPackagingSlipsToPdf(stream, shipments, _workContext.WorkingLanguage);
+                _pdfService.PrintPackagingSlipsToPdf(stream, shipments, _workContext.WorkingLanguage.Id);
                 bytes = stream.ToArray();
             }
             return File(bytes, "application/pdf", string.Format("packagingslip_{0}.pdf", shipment.Id));
@@ -2465,7 +2465,7 @@ namespace Nop.Admin.Controllers
             byte[] bytes = null;
             using (var stream = new MemoryStream())
             {
-                _pdfService.PrintPackagingSlipsToPdf(stream, shipments, _workContext.WorkingLanguage);
+                _pdfService.PrintPackagingSlipsToPdf(stream, shipments, _workContext.WorkingLanguage.Id);
                 bytes = stream.ToArray();
             }
             return File(bytes, "application/pdf", "packagingslips.pdf");
@@ -2501,7 +2501,7 @@ namespace Nop.Admin.Controllers
             byte[] bytes = null;
             using (var stream = new MemoryStream())
             {
-                _pdfService.PrintPackagingSlipsToPdf(stream, shipments, _workContext.WorkingLanguage);
+                _pdfService.PrintPackagingSlipsToPdf(stream, shipments, _workContext.WorkingLanguage.Id);
                 bytes = stream.ToArray();
             }
             return File(bytes, "application/pdf", "packagingslips.pdf");
