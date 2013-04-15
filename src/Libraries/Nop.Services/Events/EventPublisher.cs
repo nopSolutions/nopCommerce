@@ -65,6 +65,9 @@ namespace Nop.Services.Events
             if (providerType == null)
                 throw new ArgumentNullException("providerType");
 
+            if (PluginManager.ReferencedPlugins == null)
+                return null;
+
             foreach (var plugin in PluginManager.ReferencedPlugins)
             {
                 if (plugin.ReferencedAssembly == null)
