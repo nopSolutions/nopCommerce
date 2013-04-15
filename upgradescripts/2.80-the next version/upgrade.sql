@@ -692,6 +692,9 @@ set @resources='
   <LocaleResource Name="Admin.Orders.Fields.UsedDiscounts.Hint">
 	<Value>A list of used discounts</Value>
   </LocaleResource>
+  <LocaleResource Name="RewardPoints.Message.EarnedForRegistration">
+	<Value>Registered as customer</Value>
+  </LocaleResource>
 </Language>
 '
 

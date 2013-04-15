@@ -3691,6 +3691,9 @@
                     <LocaleResource Name="EarnedForOrder">
                         <Value>Earned promotion for order #{0}</Value>
                     </LocaleResource>
+                    <LocaleResource Name="EarnedForRegistration">
+                        <Value>Registered as customer</Value>
+                    </LocaleResource>
                     <LocaleResource Name="ReducedForOrder">
                         <Value>Reduced promotion for order #{0}</Value>
                     </LocaleResource>
