@@ -8664,6 +8664,14 @@
                                     </LocaleResource>
                                 </Children>
                             </LocaleResource>
+                            <LocaleResource Name="UsedDiscounts">
+                                <Value>Used discounts</Value>
+                                <Children>
+                                    <LocaleResource Name="Hint">
+                                        <Value>A list of used discounts</Value>
+                                    </LocaleResource>
+                                </Children>
+                            </LocaleResource>
                             <LocaleResource Name="VatNumber">
                                 <Value>VAT number</Value>
                                 <Children>

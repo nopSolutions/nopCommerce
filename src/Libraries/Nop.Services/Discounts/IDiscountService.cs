@@ -99,13 +99,14 @@ namespace Nop.Services.Discounts
         /// <summary>
         /// Gets all discount usage history records
         /// </summary>
-        /// <param name="discountId">Discount identifier</param>
-        /// <param name="customerId">Customer identifier</param>
+        /// <param name="discountId">Discount identifier; null to load all records</param>
+        /// <param name="customerId">Customer identifier; null to load all records</param>
+        /// <param name="orderId">Order identifier; null to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Discount usage history records</returns>
-        IPagedList<DiscountUsageHistory> GetAllDiscountUsageHistory(int? discountId, 
-            int? customerId, int pageIndex, int pageSize);
+        IPagedList<DiscountUsageHistory> GetAllDiscountUsageHistory(int? discountId,
+            int? customerId, int? orderId, int pageIndex, int pageSize);
 
         /// <summary>
         /// Insert discount usage history record

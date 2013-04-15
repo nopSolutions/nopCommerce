@@ -686,6 +686,12 @@ set @resources='
   <LocaleResource Name="Common.Close">
 	<Value>Close</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.UsedDiscounts">
+	<Value>Used discounts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.UsedDiscounts.Hint">
+	<Value>A list of used discounts</Value>
+  </LocaleResource>
 </Language>
 '
 

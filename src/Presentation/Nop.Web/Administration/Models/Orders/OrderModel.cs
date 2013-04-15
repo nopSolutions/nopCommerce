@@ -19,6 +19,7 @@ namespace Nop.Admin.Models.Orders
             TaxRates = new List<TaxRate>();
             GiftCards = new List<GiftCard>();
             Items = new List<OrderProductVariantModel>();
+            UsedDiscounts = new List<UsedDiscountModel>();
         }
 
         public bool IsLoggedInAsVendor { get; set; }
@@ -45,6 +46,10 @@ namespace Nop.Admin.Models.Orders
 
         [NopResourceDisplayName("Admin.Orders.Fields.Affiliate")]
         public int? AffiliateId { get; set; }
+
+        //Used discounts
+        [NopResourceDisplayName("Admin.Orders.Fields.UsedDiscounts")]
+        public IList<UsedDiscountModel> UsedDiscounts { get; set; }
 
         //totals
         public bool AllowCustomersToSelectTaxDisplayType { get; set; }
@@ -419,6 +424,12 @@ namespace Nop.Admin.Models.Orders
                 public GiftCardType GiftCardType { get; set; }
             }
             #endregion
+        }
+
+        public partial class UsedDiscountModel:BaseNopModel
+        {
+            public int DiscountId { get; set; }
+            public string DiscountName { get; set; }
         }
 
         #endregion

@@ -334,6 +334,25 @@
             </td>
         </tr>
         }
+        if (Model.UsedDiscounts.Count > 0)
+        {
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.UsedDiscounts):
+            </td>
+            <td class="adminData">
+                @for (int i = 0; i < Model.UsedDiscounts.Count; i++)
+                {
+                    var discount = Model.UsedDiscounts[i];
+                    <a href="@Url.Action("Edit", "Discount", new { id = discount.DiscountId })">@discount.DiscountName</a>
+                    if (i != Model.UsedDiscounts.Count - 1)
+                    {
+                        <text>,</text>
+                    }
+                }
+            </td>
+        </tr>
+        }
         <tr id="trEditOrderTotals">
             <td colspan="2">
                 <table style="border: solid 1px black; padding: 5px;">

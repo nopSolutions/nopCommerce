@@ -17,6 +17,7 @@ using Nop.Core.Domain.Tax;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Directory;
+using Nop.Services.Discounts;
 using Nop.Services.ExportImport;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
@@ -45,6 +46,7 @@ namespace Nop.Admin.Controllers
         private readonly IOrderProcessingService _orderProcessingService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IPriceFormatter _priceFormatter;
+        private readonly IDiscountService _discountService;
         private readonly ILocalizationService _localizationService;
         private readonly IWorkContext _workContext;
         private readonly ICurrencyService _currencyService;
@@ -84,7 +86,8 @@ namespace Nop.Admin.Controllers
 
         public OrderController(IOrderService orderService, 
             IOrderReportService orderReportService, IOrderProcessingService orderProcessingService,
-            IDateTimeHelper dateTimeHelper, IPriceFormatter priceFormatter, ILocalizationService localizationService,
+            IDateTimeHelper dateTimeHelper, IPriceFormatter priceFormatter,
+            IDiscountService discountService, ILocalizationService localizationService,
             IWorkContext workContext, ICurrencyService currencyService,
             IEncryptionService encryptionService, IPaymentService paymentService,
             IMeasureService measureService, IPdfService pdfService,
@@ -105,6 +108,7 @@ namespace Nop.Admin.Controllers
             this._orderProcessingService = orderProcessingService;
             this._dateTimeHelper = dateTimeHelper;
             this._priceFormatter = priceFormatter;
+            this._discountService = discountService;
             this._localizationService = localizationService;
             this._workContext = workContext;
             this._currencyService = currencyService;
@@ -309,6 +313,16 @@ namespace Nop.Admin.Controllers
             if (order.RefundedAmount > decimal.Zero)
                 model.RefundedAmount = _priceFormatter.FormatPrice(order.RefundedAmount, true, false);
 
+            //used discounts
+            var duh = _discountService.GetAllDiscountUsageHistory(null, null, order.Id, 0, int.MaxValue);
+            foreach (var d in duh)
+            {
+                model.UsedDiscounts.Add(new OrderModel.UsedDiscountModel()
+                {
+                    DiscountId = d.DiscountId,
+                    DiscountName = d.Discount.Name
+                });
+            }
 
             #endregion
 

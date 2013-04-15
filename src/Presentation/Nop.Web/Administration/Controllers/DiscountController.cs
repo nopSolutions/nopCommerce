@@ -385,7 +385,7 @@ namespace Nop.Admin.Controllers
             if (discount == null)
                 throw new ArgumentException("No discount found with the specified id");
 
-            var duh = _discountService.GetAllDiscountUsageHistory(discount.Id, null, command.Page - 1, command.PageSize);
+            var duh = _discountService.GetAllDiscountUsageHistory(discount.Id, null, null, command.Page - 1, command.PageSize);
             
             var model = new GridModel<DiscountModel.DiscountUsageHistoryModel>
             {

@@ -102,7 +102,7 @@ namespace Nop.Services.Discounts
                     }
                 case DiscountLimitationType.NTimesOnly:
                     {
-                        var totalDuh = GetAllDiscountUsageHistory(discount.Id, null, 0, 1).TotalCount;
+                        var totalDuh = GetAllDiscountUsageHistory(discount.Id, null, null, 0, 1).TotalCount;
                         return totalDuh < discount.LimitationTimes;
                     }
                 case DiscountLimitationType.NTimesPerCustomer:
@@ -110,7 +110,7 @@ namespace Nop.Services.Discounts
                         if (customer != null && !customer.IsGuest())
                         {
                             //registered customer
-                            var totalDuh = GetAllDiscountUsageHistory(discount.Id, customer.Id, 0, 1).TotalCount;
+                            var totalDuh = GetAllDiscountUsageHistory(discount.Id, customer.Id, null, 0, 1).TotalCount;
                             return totalDuh < discount.LimitationTimes;
                         }
                         else
@@ -389,19 +389,22 @@ namespace Nop.Services.Discounts
         /// <summary>
         /// Gets all discount usage history records
         /// </summary>
-        /// <param name="discountId">Discount identifier</param>
-        /// <param name="customerId">Customer identifier</param>
+        /// <param name="discountId">Discount identifier; null to load all records</param>
+        /// <param name="customerId">Customer identifier; null to load all records</param>
+        /// <param name="orderId">Order identifier; null to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Discount usage history records</returns>
         public virtual IPagedList<DiscountUsageHistory> GetAllDiscountUsageHistory(int? discountId,
-            int? customerId, int pageIndex, int pageSize)
+            int? customerId, int? orderId, int pageIndex, int pageSize)
         {
             var query = _discountUsageHistoryRepository.Table;
             if (discountId.HasValue && discountId.Value > 0)
                 query = query.Where(duh => duh.DiscountId == discountId.Value);
             if (customerId.HasValue && customerId.Value > 0)
                 query = query.Where(duh => duh.Order != null && duh.Order.CustomerId == customerId.Value);
+            if (orderId.HasValue && orderId.Value > 0)
+                query = query.Where(duh => duh.OrderId == orderId.Value);
             query = query.OrderByDescending(c => c.CreatedOnUtc);
             return new PagedList<DiscountUsageHistory>(query, pageIndex, pageSize);
         }
