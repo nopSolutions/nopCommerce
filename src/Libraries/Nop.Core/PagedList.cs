@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Nop.Core
@@ -7,6 +8,7 @@ namespace Nop.Core
     /// Paged list
     /// </summary>
     /// <typeparam name="T">T</typeparam>
+    [Serializable]
     public class PagedList<T> : List<T>, IPagedList<T> 
     {
         /// <summary>

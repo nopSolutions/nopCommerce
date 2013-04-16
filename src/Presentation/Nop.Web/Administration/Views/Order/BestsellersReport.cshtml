@@ -1,6 +1,8 @@
 ﻿@model BestsellersReportModel
 @using Telerik.Web.Mvc.UI
 @{
+    var gridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSize;
+    
     //page title
     ViewBag.Title = T("Admin.SalesReport.Bestsellers").Text;
 }
@@ -81,6 +83,7 @@
                                 .Centered()
                                 .Title(T("Admin.Common.View").Text);
                         })
+                        .Pageable(settings => settings.PageSize(gridPageSize).Position(GridPagerPosition.Both))
                         .DataBinding(dataBinding => dataBinding.Ajax().Select("BestsellersReportList", "Order"))
                         .EnableCustomBinding(true))
             </td>

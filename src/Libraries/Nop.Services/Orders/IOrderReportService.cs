@@ -49,16 +49,19 @@ namespace Nop.Services.Orders
         /// <param name="ps">Order payment status; null to load all records</param>
         /// <param name="ss">Shipping status; null to load all records</param>
         /// <param name="billingCountryId">Billing country identifier; 0 to load all records</param>
-        /// <param name="recordsToReturn">Records to return</param>
         /// <param name="orderBy">1 - order by quantity, 2 - order by total amount</param>
         /// <param name="groupBy">1 - group by product variants, 2 - group by products</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Result</returns>
-        IList<BestsellersReportLine> BestSellersReport(int storeId = 0, int vendorId = 0,
+        IPagedList<BestsellersReportLine> BestSellersReport(int storeId = 0, int vendorId = 0,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
-            int billingCountryId = 0, int recordsToReturn = 5, 
-            int orderBy = 1, int groupBy = 1, bool showHidden = false);
+            int billingCountryId = 0,
+            int orderBy = 1, int groupBy = 1,
+            int pageIndex = 0, int pageSize = 2147483647,
+            bool showHidden = false);
         
         /// <summary>
         /// Gets a list of products purchased by other customers who purchased the above

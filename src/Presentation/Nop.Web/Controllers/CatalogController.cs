@@ -2193,8 +2193,8 @@ namespace Nop.Web.Controllers
                 () =>
                     //group by products (not product variants)
                     _orderReportService.BestSellersReport(storeId: _storeContext.CurrentStore.Id,
-                    recordsToReturn: _catalogSettings.NumberOfBestsellersOnHomepage,
-                    groupBy: 2));
+                    groupBy: 2,
+                    pageSize: _catalogSettings.NumberOfBestsellersOnHomepage));
 
 
             //load products

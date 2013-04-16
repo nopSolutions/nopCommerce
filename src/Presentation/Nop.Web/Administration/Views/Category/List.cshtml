@@ -58,9 +58,9 @@
                             .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
                             .Title(T("Admin.Common.Edit").Text);
                     })
-                                                .Pageable(settings => settings.Total(Model.Categories.Total).PageSize(gridPageSize).Position(GridPagerPosition.Both))
-                                                .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "Category"))
-                                                .EnableCustomBinding(true))
+                    .Pageable(settings => settings.Total(Model.Categories.Total).PageSize(gridPageSize).Position(GridPagerPosition.Both))
+                    .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "Category"))
+                    .EnableCustomBinding(true))
         </td>
     </tr>
 </table>

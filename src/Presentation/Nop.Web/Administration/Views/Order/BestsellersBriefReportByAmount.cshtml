@@ -1,4 +1,6 @@
-﻿@model IList<BestsellersReportLineModel>
+﻿@{
+    var gridPageSize = 5;
+}
 @using Telerik.Web.Mvc.UI
 <table class="adminContent">
     <tr>
@@ -17,6 +19,7 @@
                                 .Centered()
                                 .Title(T("Admin.Common.View").Text);
                         })
+                        .Pageable(settings => settings.PageSize(gridPageSize).Position(GridPagerPosition.Both))
                         .DataBinding(dataBinding => dataBinding.Ajax().Select("BestsellersBriefReportByAmountList", "Order"))
                         .EnableCustomBinding(true))
         </td>

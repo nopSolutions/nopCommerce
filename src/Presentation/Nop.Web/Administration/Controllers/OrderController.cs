@@ -2628,7 +2628,8 @@ namespace Nop.Admin.Controllers
         #region Reports
 
         [NonAction]
-        protected IList<BestsellersReportLineModel> GetBestsellersBriefReportModel(int recordsToReturn, int orderBy)
+        protected GridModel<BestsellersReportLineModel> GetBestsellersBriefReportModel(int pageIndex,
+            int pageSize, int orderBy)
         {
             //a vendor should have access only to his products
             int vendorId = 0;
@@ -2636,35 +2637,37 @@ namespace Nop.Admin.Controllers
                 vendorId = _workContext.CurrentVendor.Id;
 
             //group by product variants (not products)
-            var report = _orderReportService.BestSellersReport(
+            var items = _orderReportService.BestSellersReport(
                 vendorId : vendorId,
-                recordsToReturn: recordsToReturn,
                 orderBy: orderBy,
+                pageIndex: pageIndex,
+                pageSize: pageSize,
                 showHidden: true);
-
-            var model = report.Select(x =>
+            var gridModel = new GridModel<BestsellersReportLineModel>
             {
-                var m = new BestsellersReportLineModel()
+                Data = items.Select(x =>
                 {
-                    ProductVariantId = x.EntityId,
-                    TotalAmount = _priceFormatter.FormatPrice(x.TotalAmount, true, false),
-                    TotalQuantity = x.TotalQuantity,
-                };
-                var productVariant = _productService.GetProductVariantById(x.EntityId);
-                if (productVariant != null)
-                    m.ProductVariantFullName = productVariant.Product.Name + " " + productVariant.Name;
-                return m;
-            }).ToList();
-
-            return model;
+                    var m = new BestsellersReportLineModel()
+                    {
+                        ProductVariantId = x.EntityId,
+                        TotalAmount = _priceFormatter.FormatPrice(x.TotalAmount, true, false),
+                        TotalQuantity = x.TotalQuantity,
+                    };
+                    var productVariant = _productService.GetProductVariantById(x.EntityId);
+                    if (productVariant != null)
+                        m.ProductVariantFullName = productVariant.FullProductName;
+                    return m;
+                }),
+                Total = items.TotalCount
+            };
+            return gridModel;
         }
         public ActionResult BestsellersBriefReportByQuantity()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return Content("");
 
-            var model = GetBestsellersBriefReportModel(5, 1);
-            return PartialView(model);
+            return PartialView();
         }
         [GridAction(EnableCustomBinding = true)]
         public ActionResult BestsellersBriefReportByQuantityList(GridCommand command)
@@ -2672,12 +2675,8 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return Content("");
 
-            var model = GetBestsellersBriefReportModel(5, 1);
-            var gridModel = new GridModel<BestsellersReportLineModel>
-            {
-                Data = model,
-                Total = model.Count
-            };
+            var gridModel = GetBestsellersBriefReportModel(command.Page - 1,
+                command.PageSize, 1);
             return new JsonResult
             {
                 Data = gridModel
@@ -2688,8 +2687,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return Content("");
 
-            var model = GetBestsellersBriefReportModel(5, 2);
-            return PartialView(model);
+            return PartialView();
         }
         [GridAction(EnableCustomBinding = true)]
         public ActionResult BestsellersBriefReportByAmountList(GridCommand command)
@@ -2697,18 +2695,13 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return Content("");
 
-            var model = GetBestsellersBriefReportModel(5, 2);
-            var gridModel = new GridModel<BestsellersReportLineModel>
-            {
-                Data = model,
-                Total = model.Count
-            };
+            var gridModel = GetBestsellersBriefReportModel(command.Page - 1,
+                command.PageSize, 2);
             return new JsonResult
             {
                 Data = gridModel
             };
         }
-
 
 
 
@@ -2759,9 +2752,6 @@ namespace Nop.Admin.Controllers
             OrderStatus? orderStatus = model.OrderStatusId > 0 ? (OrderStatus?)(model.OrderStatusId) : null;
             PaymentStatus? paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
 
-
-            //return first 100 records
-
             //group by product variants (not products)
             var items = _orderReportService.BestSellersReport(
                 createdFromUtc: startDateValue,
@@ -2769,9 +2759,10 @@ namespace Nop.Admin.Controllers
                 os: orderStatus,
                 ps: paymentStatus,
                 billingCountryId: model.BillingCountryId,
-                recordsToReturn: 100,
                 orderBy: 2,
                 vendorId: vendorId,
+                pageIndex: command.Page - 1,
+                pageSize: command.PageSize,
                 showHidden: true);
             var gridModel = new GridModel<BestsellersReportLineModel>
             {
@@ -2785,10 +2776,10 @@ namespace Nop.Admin.Controllers
                     };
                     var productVariant = _productService.GetProductVariantById(x.EntityId);
                     if (productVariant != null)
-                        m.ProductVariantFullName = productVariant.Product.Name + " " + productVariant.Name;
+                        m.ProductVariantFullName = productVariant.FullProductName;
                     return m;
                 }),
-                Total = items.Count
+                Total = items.TotalCount
             };
             return new JsonResult
             {

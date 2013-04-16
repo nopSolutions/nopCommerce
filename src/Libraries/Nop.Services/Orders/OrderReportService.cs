@@ -202,16 +202,19 @@ namespace Nop.Services.Orders
         /// <param name="ps">Order payment status; null to load all records</param>
         /// <param name="ss">Shipping status; null to load all records</param>
         /// <param name="billingCountryId">Billing country identifier; 0 to load all records</param>
-        /// <param name="recordsToReturn">Records to return</param>
         /// <param name="orderBy">1 - order by quantity, 2 - order by total amount</param>
         /// <param name="groupBy">1 - group by product variants, 2 - group by products</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Result</returns>
-        public virtual IList<BestsellersReportLine> BestSellersReport(int storeId = 0, int vendorId = 0,
+        public virtual IPagedList<BestsellersReportLine> BestSellersReport(int storeId = 0, int vendorId = 0,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
-            int billingCountryId = 0, int recordsToReturn = 5,
-            int orderBy = 1, int groupBy = 1, bool showHidden = false)
+            int billingCountryId = 0,
+            int orderBy = 1, int groupBy = 1,
+            int pageIndex = 0, int pageSize = 2147483647, 
+            bool showHidden = false)
         {
             int? orderStatusId = null;
             if (os.HasValue)
@@ -224,7 +227,6 @@ namespace Nop.Services.Orders
             int? shippingStatusId = null;
             if (ss.HasValue)
                 shippingStatusId = (int)ss.Value;
-
 
             var query1 = from opv in _opvRepository.Table
                          join o in _orderRepository.Table on opv.OrderId equals o.Id
@@ -245,28 +247,28 @@ namespace Nop.Services.Orders
                          (showHidden || pv.Published)
                          select opv;
 
-            var query2 = groupBy == 1 ?
+            IQueryable<BestsellersReportLine> query2 = groupBy == 1 ?
                 //group by product variants
                 from opv in query1
                 group opv by opv.ProductVariantId into g
-                select new
-                {
-                    EntityId = g.Key,
-                    TotalAmount = g.Sum(x => x.PriceExclTax),
-                    TotalQuantity = g.Sum(x => x.Quantity),
-                }
+                select new BestsellersReportLine()
+                           {
+                               EntityId = g.Key,
+                               TotalAmount = g.Sum(x => x.PriceExclTax),
+                               TotalQuantity = g.Sum(x => x.Quantity),
+                           }
                 :
                 //group by products
                 from opv in query1
                 group opv by opv.ProductVariant.ProductId into g
-                select new
+                select new BestsellersReportLine()
                 {
                     EntityId = g.Key,
                     TotalAmount = g.Sum(x => x.PriceExclTax),
                     TotalQuantity = g.Sum(x => x.Quantity),
                 }
                 ;
-            
+
             switch (orderBy)
             {
                 case 1:
@@ -283,20 +285,7 @@ namespace Nop.Services.Orders
                     throw new ArgumentException("Wrong orderBy parameter", "orderBy");
             }
 
-            if (recordsToReturn != 0 && recordsToReturn != int.MaxValue)
-                query2 = query2.Take(recordsToReturn);
-
-            var result = query2.ToList().Select(x =>
-            {
-                var reportLine = new BestsellersReportLine()
-                {
-                    EntityId = x.EntityId,
-                    TotalAmount = x.TotalAmount,
-                    TotalQuantity = x.TotalQuantity
-                };
-                return reportLine;
-            }).ToList();
-
+            var result = new PagedList<BestsellersReportLine>(query2, pageIndex, pageSize);
             return result;
         }
 
