@@ -33,7 +33,7 @@
     <div class="page-body">
         @if (Model.Products.Count > 0)
         {
-            <a href="#" onclick="setLocation('@Url.RouteUrl("ClearCompareList")')">@T("Products.Compare.Clear")</a>
+            <a href="#" onclick="setLocation('@Url.RouteUrl("ClearCompareList")')" class="clear-list">@T("Products.Compare.Clear")</a>
             <table class="compare-products-table">
                 <tbody>
                     <tr class="overview">
