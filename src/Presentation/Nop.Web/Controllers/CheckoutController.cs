@@ -981,6 +981,7 @@ namespace Nop.Web.Controllers
             var model = new CheckoutProgressModel() {CheckoutProgressStep = step};
             return PartialView(model);
         }
+
         #endregion
 
         #region Methods (one page checkout)

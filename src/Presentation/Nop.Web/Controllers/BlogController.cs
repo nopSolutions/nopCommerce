@@ -318,7 +318,6 @@ namespace Nop.Web.Controllers
         }
 
         [ChildActionOnly]
-        //[OutputCache(Duration = 120, VaryByCustom = "WorkingLanguage")]
         public ActionResult BlogTags()
         {
             if (!_blogSettings.Enabled)
@@ -350,7 +349,6 @@ namespace Nop.Web.Controllers
         }
 
         [ChildActionOnly]
-        //[OutputCache(Duration = 120, VaryByCustom = "WorkingLanguage")]
         public ActionResult BlogMonths()
         {
             if (!_blogSettings.Enabled)

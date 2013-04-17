@@ -1977,7 +1977,6 @@ namespace Nop.Web.Controllers
         }
 
         [ChildActionOnly]
-        //[OutputCache(Duration = 120, VaryByCustom = "WorkingLanguage")]
         public ActionResult ProductSpecifications(int productId)
         {
             var product = _productService.GetProductById(productId);

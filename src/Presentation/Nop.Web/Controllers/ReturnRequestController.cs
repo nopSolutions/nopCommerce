@@ -141,7 +141,7 @@ namespace Nop.Web.Controllers
 
         #endregion
         
-        #region Return requests
+        #region Methods
 
         [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult ReturnRequest(int orderId)
