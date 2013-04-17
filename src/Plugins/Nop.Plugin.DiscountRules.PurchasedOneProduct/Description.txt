@@ -1,8 +1,0 @@
-﻿Group: Discount requirements
-FriendlyName: Customer had previously purchased one of these product variants
-SystemName: DiscountRequirement.PurchasedOneProduct
-Version: 1.08
-SupportedVersions: 3.00
-Author: nopCommerce team
-DisplayOrder: 1
-FileName: Nop.Plugin.DiscountRules.PurchasedOneProduct.dll

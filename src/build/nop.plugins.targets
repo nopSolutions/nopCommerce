@@ -55,9 +55,6 @@
     <Target Name="Plugins-CopyDiscounts">
         <MSBuild Projects ="$(MSBuildProjectFullPath)"
                         Targets="Plugin-CopyToWeb"
-                        Properties="PluginProjectName=Nop.Plugin.DiscountRules.BillingCountry"/>
-        <MSBuild Projects ="$(MSBuildProjectFullPath)"
-                        Targets="Plugin-CopyToWeb"
                         Properties="
                         PluginProjectName=Nop.Plugin.DiscountRules.CustomerRoles"/>
         <MSBuild Projects ="$(MSBuildProjectFullPath)"
@@ -72,22 +69,6 @@
                         Targets="Plugin-CopyToWeb"
                         Properties="
                         PluginProjectName=Nop.Plugin.DiscountRules.HasOneProduct"/>
-        <MSBuild Projects ="$(MSBuildProjectFullPath)"
-                        Targets="Plugin-CopyToWeb"
-                        Properties="
-                        PluginProjectName=Nop.Plugin.DiscountRules.PurchasedAllProducts"/>
-        <MSBuild Projects ="$(MSBuildProjectFullPath)"
-                        Targets="Plugin-CopyToWeb"
-                        Properties="
-                        PluginProjectName=Nop.Plugin.DiscountRules.PurchasedOneProduct"/>
-        <MSBuild Projects ="$(MSBuildProjectFullPath)"
-                        Targets="Plugin-CopyToWeb"
-                        Properties="
-                        PluginProjectName=Nop.Plugin.DiscountRules.ShippingCountry"/>
-        <MSBuild Projects ="$(MSBuildProjectFullPath)"
-                        Targets="Plugin-CopyToWeb"
-                        Properties="
-                        PluginProjectName=Nop.Plugin.DiscountRules.Store"/>
     </Target>
 
     <!--Exchange rate plugins-->
