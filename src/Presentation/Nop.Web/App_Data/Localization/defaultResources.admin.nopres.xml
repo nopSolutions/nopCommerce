@@ -3722,7 +3722,7 @@
                                             <LocaleResource Name="Value">
                                                 <Value>Value</Value>
                                             </LocaleResource>
-                                            <LocaleResource Name="Store">
+                                            <LocaleResource Name="StoreName">
                                                 <Value>Store</Value>
                                                   <Children>
                                                       <LocaleResource Name="AllStores">
