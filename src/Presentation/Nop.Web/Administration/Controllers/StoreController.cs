@@ -3,6 +3,7 @@ using System.Linq;
 using System.Web.Mvc;
 using Nop.Admin.Models.Stores;
 using Nop.Core.Domain.Stores;
+using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Services.Stores;
@@ -15,14 +16,17 @@ namespace Nop.Admin.Controllers
     public partial class StoreController : BaseNopController
     {
         private readonly IStoreService _storeService;
+        private readonly ISettingService _settingService;
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
 
         public StoreController(IStoreService storeService,
+            ISettingService settingService,
             ILocalizationService localizationService,
             IPermissionService permissionService)
         {
             this._storeService = storeService;
+            this._settingService = settingService;
             this._localizationService = localizationService;
             this._permissionService = permissionService;
         }
@@ -144,6 +148,27 @@ namespace Nop.Admin.Controllers
             try
             {
                 _storeService.DeleteStore(store);
+
+                //when we delete a store we should also ensure that all "per store" settings will also be deleted
+                var settingsToDelete = _settingService
+                    .GetAllSettings()
+                    .Where(s => s.StoreId == id)
+                    .ToList();
+                foreach (var setting in settingsToDelete)
+                    _settingService.DeleteSetting(setting);
+                //when we had two stores and now have only one store, we also should delete all "per store" settings
+                var allStores = _storeService.GetAllStores();
+                if (allStores.Count == 1)
+                {
+                    settingsToDelete = _settingService
+                        .GetAllSettings()
+                        .Where(s => s.StoreId == allStores[0].Id)
+                        .ToList();
+                    foreach (var setting in settingsToDelete)
+                        _settingService.DeleteSetting(setting);
+                }
+
+
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Stores.Deleted"));
                 return RedirectToAction("List");
             }

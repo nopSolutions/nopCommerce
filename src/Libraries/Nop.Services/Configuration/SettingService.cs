@@ -8,7 +8,6 @@ using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Data;
 using Nop.Core.Domain.Configuration;
-using Nop.Core.Infrastructure;
 using Nop.Services.Events;
 
 namespace Nop.Services.Configuration
@@ -115,6 +114,7 @@ namespace Nop.Services.Configuration
                 return dictionary;
             });
         }
+
         #endregion
 
         #region Methods
