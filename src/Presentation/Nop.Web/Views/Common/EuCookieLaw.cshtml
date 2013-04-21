@@ -1,0 +1,51 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+        $("#dialog-eu-cookie-law").dialog({
+            resizable: true,
+            height: 250,
+            width: 500,
+            modal: true,
+            //little hack to disable X ("close") button. just uncomment the two lines below. but in this case all X button will be hidden for all dialogs
+            //closeOnEscape: false,
+            //open: function (event, ui) { $(".ui-dialog-titlebar-close").hide(); },
+            buttons: {
+                @T("EUCookieLaw.OK"): function () {
+                    $.ajax({
+                        cache: false,
+                        type: 'POST',
+                        url: '@Url.RouteUrl("EuCookieLawAccept")',
+                        dataType: 'json',
+                        success: function (data) {
+                            $("#dialog-eu-cookie-law").dialog("close");
+                        },
+                        failure: function () {
+                            alert('Cannot store value');
+                        }
+                    });
+                },
+                @T("EUCookieLaw.Cancel"): function () {
+                    alert('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("EUCookieLaw.CannotBrowse").Text))');
+                }
+            }
+        });
+    });
+    
+    function toggleEuCookiePrivacyInfo() {
+        $('#eu-cookie-law-privacyinfo').toggle();
+        if ($('#eu-cookie-law-privacyinfo').css('display') == 'none') {
+            $('#eu-cookie-privacyinfo-tag').html('@T("Common.Show")');
+        }
+        else {
+            $('#eu-cookie-privacyinfo-tag').html('@T("Common.Hide")');
+        }
+    }
+
+</script>
+<div id="dialog-eu-cookie-law" title="@T("EUCookieLaw.Title")" style="display:none;" class="eu-cookie-law">
+    <div>
+        @T("EUCookieLaw.Description") (<a id="eu-cookie-privacyinfo-tag" href="javascript:toggleEuCookiePrivacyInfo();" class="eu-cookie-privacyinfo-tag">@T("Common.Show")</a>)
+    </div>
+    <div id="eu-cookie-law-privacyinfo" style="display: none;">
+        @Html.Action("TopicBlock", "Topic", new { systemName = "privacyinfo" })
+    </div>
+</div>

@@ -180,6 +180,16 @@
                 @Html.ValidationMessageFor(model => model.StoreInformationSettings.DefaultStoreThemeForMobileDevices)
             </td>
         </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.DisplayEuCookieLawWarning_OverrideForStore, model => model.StoreInformationSettings.DisplayEuCookieLawWarning, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.StoreInformationSettings.DisplayEuCookieLawWarning):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.StoreInformationSettings.DisplayEuCookieLawWarning)
+                @Html.ValidationMessageFor(model => model.StoreInformationSettings.DisplayEuCookieLawWarning)
+            </td>
+        </tr>
     </table>
 }
 @helper TabSEOSettings()

@@ -1740,6 +1740,8 @@
     <Content Include="Views\Common\AdminHeaderLinks.cshtml" />
     <Content Include="Views\Common\PageNotFound.cshtml" />
     <Content Include="Views\Common\PageNotFound.Mobile.cshtml" />
+    <Content Include="Views\Common\EuCookieLaw.Mobile.cshtml" />
+    <Content Include="Views\Common\EuCookieLaw.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

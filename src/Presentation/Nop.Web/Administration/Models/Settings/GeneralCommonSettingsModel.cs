@@ -68,6 +68,10 @@ namespace Nop.Admin.Models.Settings
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.AllowCustomerToSelectTheme")]
             public bool AllowCustomerToSelectTheme { get; set; }
             public bool AllowCustomerToSelectTheme_OverrideForStore { get; set; }
+
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisplayEuCookieLawWarning")]
+            public bool DisplayEuCookieLawWarning { get; set; }
+            public bool DisplayEuCookieLawWarning_OverrideForStore { get; set; }
         }
 
         public partial class SeoSettingsModel : BaseNopModel

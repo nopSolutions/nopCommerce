@@ -635,6 +635,10 @@ namespace Nop.Web.Infrastructure
                             new { controller = "Common", action = "TaxTypeSelected" },
                             new { customertaxtype = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
+            routes.MapRoute("EuCookieLawAccept",
+                            "eucookielawaccept",
+                            new { controller = "Common", action = "EuCookieLawAccept" },
+                            new[] { "Nop.Web.Controllers" });
             routes.MapLocalizedRoute("PollVote",
                             "poll/vote",
                             new { controller = "Poll", action = "Vote" },
