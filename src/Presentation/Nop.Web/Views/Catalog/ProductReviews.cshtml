@@ -28,11 +28,6 @@
                 @using (Html.BeginForm())
                 {
                     <div class="message-error">@Html.ValidationSummary(true)</div>
-                    var result = TempData["nop.blog.addcomment.result"] as string;
-                    if (!String.IsNullOrEmpty(result))
-                    {
-                    <div class="result">@result</div>
-                    }
                     <div class="form-fields">
                         <div class="inputs">
                             @Html.LabelFor(model => model.AddProductReview.Title, new { }, ":")
