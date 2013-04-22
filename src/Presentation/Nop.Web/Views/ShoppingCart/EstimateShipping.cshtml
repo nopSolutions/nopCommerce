@@ -46,7 +46,7 @@
                 <div class="inputs">
                     @Html.LabelFor(model => model.StateProvinceId, new { }, ":")
                 @Html.DropDownListFor(model => model.StateProvinceId, Model.AvailableStates, new { @class = "state-input" })
-                    <span id="estimate-shipping-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait...")"</span>
+                    <span id="estimate-shipping-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
                     @Html.ValidationMessageFor(model => model.StateProvinceId)
 
                 </div>
