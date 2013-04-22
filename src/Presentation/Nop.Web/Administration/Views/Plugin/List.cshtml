@@ -16,11 +16,11 @@
     </div>
     <script type="text/javascript">
         $(document).ready(function () {
-            $("#plugins-grid a.install").click(function (e) {
+            $("#plugins-grid").on("click", ".install-plugin-link", function (e) {
                 showThrobber('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Admin.Configuration.Plugins.Fields.Install.Progress").Text))');
             });
 
-            $("#plugins-grid a.uninstall").click(function (e) {
+            $("#plugins-grid").on("click", ".uninstall-plugin-link", function (e) {
                 showThrobber('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Admin.Configuration.Plugins.Fields.Uninstall.Progress").Text))');
             });
         });
@@ -64,7 +64,7 @@
                             .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= Installed #>.gif' />")
                             .Centered();
                         columns.Bound(x => x.SystemName)
-                            .ClientTemplate("<# if (Installed)  { #> <a href=\"" + @Url.Content("~/Admin/Plugin/Uninstall/") + "?systemName=<#= SystemName #>\" class=\"uninstall\">" + T("Admin.Configuration.Plugins.Fields.Uninstall").Text + "</a> <# } else { #> <a href=\"" + @Url.Content("~/Admin/Plugin/Install/") + "?systemName=<#= SystemName #>\" class=\"install\">" + T("Admin.Configuration.Plugins.Fields.Install").Text + "</a> <# } #>")
+                            .ClientTemplate("<# if (Installed)  { #> <a href=\"" + @Url.Content("~/Admin/Plugin/Uninstall/") + "?systemName=<#= SystemName #>\" class=\"uninstall-plugin-link\">" + T("Admin.Configuration.Plugins.Fields.Uninstall").Text + "</a> <# } else { #> <a href=\"" + @Url.Content("~/Admin/Plugin/Install/") + "?systemName=<#= SystemName #>\" class=\"install-plugin-link\">" + T("Admin.Configuration.Plugins.Fields.Install").Text + "</a> <# } #>")
                             .Centered()
                             .HeaderTemplate(T("Admin.Configuration.Plugins.Fields.Installation").Text);
                         columns.Bound(x => x.ConfigurationUrl)
