@@ -43,7 +43,7 @@
                 <script type="text/javascript">
                     $(document).ready(function () {
                         $("#restart-application").click(function (e) {
-                            showThrobber('@T("Admin.Header.RestartApplication.Progress")');
+                            showThrobber('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Admin.Header.RestartApplication.Progress").Text))');
                         });
                     });
                 </script>

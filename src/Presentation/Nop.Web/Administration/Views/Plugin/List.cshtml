@@ -17,11 +17,11 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $("#plugins-grid a.install").click(function (e) {
-                showThrobber('@T("Admin.Configuration.Plugins.Fields.Install.Progress")');
+                showThrobber('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Admin.Configuration.Plugins.Fields.Install.Progress").Text))');
             });
 
             $("#plugins-grid a.uninstall").click(function (e) {
-                showThrobber('@T("Admin.Configuration.Plugins.Fields.Uninstall.Progress")');
+                showThrobber('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Admin.Configuration.Plugins.Fields.Uninstall.Progress").Text))');
             });
         });
     </script>    
