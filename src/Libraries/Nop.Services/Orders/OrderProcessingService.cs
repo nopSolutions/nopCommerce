@@ -1403,20 +1403,27 @@ namespace Nop.Services.Orders
             if (order == null)
                 throw new ArgumentNullException("order");
 
-            //reward points
-            ReduceRewardPoints(order);
-
-            //cancel recurring payments
-            var recurringPayments = _orderService.SearchRecurringPayments(0, 0, order.Id, null, 0 , int.MaxValue);
-            foreach (var rp in recurringPayments)
+            //check whether the order wasn't cancelled before
+            // if it already was cancelled, then there's no need to make the following adjustments
+            //(such as reward poitns, inventory, recurring payments)
+            //they already was done when cancelling the order
+            if (order.OrderStatus != OrderStatus.Cancelled)
             {
-                //use errors?
-                var errors = CancelRecurringPayment(rp);
-            }
+                //reward points
+                ReduceRewardPoints(order);
 
-            //Adjust inventory
-            foreach (var opv in order.OrderProductVariants)
-                _productService.AdjustInventory(opv.ProductVariant, false, opv.Quantity, opv.AttributesXml);
+                //cancel recurring payments
+                var recurringPayments = _orderService.SearchRecurringPayments(0, 0, order.Id, null, 0, int.MaxValue);
+                foreach (var rp in recurringPayments)
+                {
+                    //use errors?
+                    var errors = CancelRecurringPayment(rp);
+                }
+
+                //Adjust inventory
+                foreach (var opv in order.OrderProductVariants)
+                    _productService.AdjustInventory(opv.ProductVariant, false, opv.Quantity, opv.AttributesXml);
+            }
 
             //add a note
             order.OrderNotes.Add(new OrderNote()
