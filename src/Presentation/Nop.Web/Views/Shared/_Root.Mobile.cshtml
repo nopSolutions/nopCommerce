@@ -6,9 +6,9 @@
     <div data-role="header" data-position="inline">
         @*do not use @Html.Partial("Header")
             use sections right here so they can be overriden in the views*@
-        @if (IsSectionDefined("top-left-button"))
+        @if (IsSectionDefined("topleftbutton"))
         {
-            @RenderSection("top-left-button")
+            @RenderSection("topleftbutton")
         }
         else
         {
@@ -16,9 +16,9 @@
         }
         @*title*@
         <h1>@Html.NopTitle(false)</h1>
-        @if (IsSectionDefined("top-right-button"))
+        @if (IsSectionDefined("toprightbutton"))
         {
-            @RenderSection("top-right-button")
+            @RenderSection("toprightbutton")
         }
         else
         {
