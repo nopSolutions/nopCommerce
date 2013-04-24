@@ -74,8 +74,8 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
             return View("Nop.Plugin.ExternalAuth.Facebook.Views.ExternalAuthFacebook.PublicInfo");
         }
 
-
-        public ActionResult Login(string returnUrl)
+        [NonAction]
+        private ActionResult LoginInternal(string returnUrl, bool verifyResponse)
         {
             var processor = _openAuthenticationService.LoadExternalAuthenticationMethodBySystemName("ExternalAuth.Facebook");
             if (processor == null ||
@@ -85,7 +85,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
             var viewModel = new LoginModel();
             TryUpdateModel(viewModel);
 
-            var result = _oAuthProviderFacebookAuthorizer.Authorize(returnUrl);
+            var result = _oAuthProviderFacebookAuthorizer.Authorize(returnUrl, verifyResponse);
             switch (result.AuthenticationStatus)
             {
                 case OpenAuthenticationStatus.Error:
@@ -119,6 +119,16 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
 
             if (result.Result != null) return result.Result;
             return HttpContext.Request.IsAuthenticated ? new RedirectResult(!string.IsNullOrEmpty(returnUrl) ? returnUrl : "~/") : new RedirectResult(Url.LogOn(returnUrl));
+        }
+        
+        public ActionResult Login(string returnUrl)
+        {
+            return LoginInternal(returnUrl, false);
+        }
+
+        public ActionResult LoginCallback(string returnUrl)
+        {
+            return LoginInternal(returnUrl, true);
         }
     }
 }

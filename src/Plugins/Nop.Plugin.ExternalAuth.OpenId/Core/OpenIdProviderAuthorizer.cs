@@ -19,15 +19,21 @@ namespace Nop.Plugin.ExternalAuth.OpenId.Core
             _authorizer = authorizer;
         }
 
-        public AuthorizeState Authorize(string returnUrl)
+        /// <summary>
+        /// Authorize response
+        /// </summary>
+        /// <param name="returnUrl">Return URL</param>
+        /// <param name="verifyResponse">true - Verify response;false - request authentication;null - determine automatically</param>
+        /// <returns>Authorize state</returns>
+        public AuthorizeState Authorize(string returnUrl, bool? verifyResponse = null)
         {
-            if (IsOpenIdCallback)
-                return TranslateResponseState(returnUrl);
+            if (verifyResponse.HasValue ? verifyResponse.Value : IsOpenIdCallback)
+                return VerifyAuthentication(returnUrl);
 
-            return GenerateRequestState(returnUrl);
+            return RequestAuthentication(returnUrl);
         }
 
-        private AuthorizeState TranslateResponseState(string returnUrl)
+        private AuthorizeState VerifyAuthentication(string returnUrl)
         {
             switch (_openIdRelyingPartyService.Response.Status)
             {
@@ -49,7 +55,7 @@ namespace Nop.Plugin.ExternalAuth.OpenId.Core
             return new AuthorizeState(returnUrl, OpenAuthenticationStatus.Unknown);
         }
 
-        private AuthorizeState GenerateRequestState(string returnUrl)
+        private AuthorizeState RequestAuthentication(string returnUrl)
         {
             var identifier = new OpenIdIdentifier(EnternalIdentifier);
             if (!identifier.IsValid)

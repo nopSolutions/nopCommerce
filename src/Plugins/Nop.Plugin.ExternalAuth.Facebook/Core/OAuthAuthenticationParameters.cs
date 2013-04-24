@@ -1,5 +1,3 @@
-//Contributor:  Nicholas Mayne
-
 using System;
 using System.Collections.Generic;
 using Nop.Services.Authentication.External;

@@ -13,6 +13,12 @@ namespace Nop.Plugin.ExternalAuth.Facebook
                  new { controller = "ExternalAuthFacebook", action = "Login" },
                  new[] { "Nop.Plugin.ExternalAuth.Facebook.Controllers" }
             );
+
+            routes.MapRoute("Plugin.ExternalAuth.Facebook.LoginCallback",
+                 "Plugins/ExternalAuthFacebook/LoginCallback",
+                 new { controller = "ExternalAuthFacebook", action = "LoginCallback" },
+                 new[] { "Nop.Plugin.ExternalAuth.Facebook.Controllers" }
+            );
         }
         public int Priority
         {

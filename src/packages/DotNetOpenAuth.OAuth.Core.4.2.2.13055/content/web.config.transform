@@ -1,0 +1,7 @@
+<configuration>
+	<configSections>
+		<sectionGroup name="dotNetOpenAuth" type="DotNetOpenAuth.Configuration.DotNetOpenAuthSection, DotNetOpenAuth.Core">
+			<section name="oauth" type="DotNetOpenAuth.Configuration.OAuthElement, DotNetOpenAuth.OAuth" requirePermission="false" allowLocation="true" />
+		</sectionGroup>
+	</configSections>
+</configuration>

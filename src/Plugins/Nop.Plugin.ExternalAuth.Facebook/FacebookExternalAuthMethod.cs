@@ -93,6 +93,5 @@ namespace Nop.Plugin.ExternalAuth.Facebook
         }
 
         #endregion
-        
     }
 }
