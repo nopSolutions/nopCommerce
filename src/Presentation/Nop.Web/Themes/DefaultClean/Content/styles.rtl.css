@@ -246,7 +246,7 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 
 
 /* MINI-SHOPPING CART */
-.flyout-cart{display:none;position:absolute;float:right;top:27px;left:0px;width:300px;min-height:50px;background:#FFF;z-index:99999;}
+.flyout-cart{display:none;position:absolute;float:right;top:27px;left:0px;width:300px;min-height:50px;z-index:99999;}
 .flyout-cart.active{display:block;}
 .mini-shopping-cart{padding:5px 10px 10px;margin:0;border:1px solid #C1C1C1;background:none repeat scroll 0 0 #F6F6F4;font-size:11px;}
 .mini-shopping-cart a{font-weight:700;text-decoration:none;}
