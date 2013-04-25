@@ -733,6 +733,13 @@
             </summary>
             <param name="ws">The string of white space characters.</param>
         </member>
+        <member name="M:Newtonsoft.Json.JsonWriter.SetWriteState(Newtonsoft.Json.JsonToken,System.Object)">
+            <summary>
+            Sets the state of the JsonWriter,
+            </summary>
+            <param name="token">The JsonToken being written.</param>
+            <param name="value">The value being written.</param>
+        </member>
         <member name="P:Newtonsoft.Json.JsonWriter.CloseOutput">
             <summary>
             Gets or sets a value indicating whether the underlying stream or
