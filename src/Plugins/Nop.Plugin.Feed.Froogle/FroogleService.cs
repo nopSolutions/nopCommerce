@@ -246,9 +246,9 @@ namespace Nop.Plugin.Feed.Froogle
                             googleProductCategory = _froogleSettings.DefaultGoogleCategory;
                         if (String.IsNullOrEmpty(googleProductCategory))
                             throw new NopException("Default Google category is not set");
-                        writer.WriteElementString("g", "google_product_category", googleBaseNamespace,
-                                                  HttpUtility.HtmlEncode(googleProductCategory));
-
+                        writer.WriteStartElement("g", "google_product_category", googleBaseNamespace);
+                        writer.WriteCData(googleProductCategory);
+                        writer.WriteFullEndElement(); // g:google_product_category
 
                         //product type [product_type] - Your category of the item
                         var defaultProductCategory = _categoryService.GetProductCategoriesByProductId(product.Id).FirstOrDefault();
@@ -264,8 +264,11 @@ namespace Nop.Plugin.Feed.Froogle
                                     yourProductCategory = yourProductCategory + " > ";
                             }
                             if (!String.IsNullOrEmpty((yourProductCategory)))
-                                writer.WriteElementString("g", "product_type", googleBaseNamespace,
-                                                          HttpUtility.HtmlEncode(yourProductCategory));
+                            {
+                                writer.WriteStartElement("g", "product_type", googleBaseNamespace);
+                                writer.WriteCData(yourProductCategory);
+                                writer.WriteFullEndElement(); // g:product_type
+                            }
                         }
 
                         //link [link] - URL directly linking to your item's page on your website
