@@ -234,7 +234,10 @@ namespace Nop.Services.Tax
             //active tax provider
             var activeTaxProvider = LoadActiveTaxProvider();
             if (activeTaxProvider == null)
-                throw new NopException("Active tax provider cannot be loaded. Please select at least one in admin area.");
+            {
+                //throw new NopException("Active tax provider cannot be loaded. Please select at least one in admin area.");
+                return decimal.Zero;
+            }
 
             //get tax rate
             var calculateTaxResult = activeTaxProvider.GetTaxRate(calculateTaxRequest);
