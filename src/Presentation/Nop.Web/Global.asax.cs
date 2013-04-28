@@ -13,7 +13,6 @@ using Nop.Core.Data;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Common;
 using Nop.Core.Infrastructure;
-using Nop.Core.Infrastructure.DependencyManagement;
 using Nop.Services.Logging;
 using Nop.Services.Tasks;
 using Nop.Web.Framework;
@@ -114,6 +113,11 @@ namespace Nop.Web
 
         protected void Application_BeginRequest(object sender, EventArgs e)
         {
+            //ignore static resources
+            var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+            if (webHelper.IsStaticResource(this.Request))
+                return;
+
             EnsureDatabaseIsInstalled();
 
             if (DataSettingsHelper.DatabaseIsInstalled() && 
@@ -125,6 +129,11 @@ namespace Nop.Web
 
         protected void Application_EndRequest(object sender, EventArgs e)
         {
+            //ignore static resources
+            var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+            if (webHelper.IsStaticResource(this.Request))
+                return;
+
             if (DataSettingsHelper.DatabaseIsInstalled() &&
                 EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerInPublicStore)
             {
@@ -193,6 +202,7 @@ namespace Nop.Web
             if (!DataSettingsHelper.DatabaseIsInstalled())
                 return;
 
+            //ignore static resources
             var webHelper = EngineContext.Current.Resolve<IWebHelper>();
             if (webHelper.IsStaticResource(this.Request))
                 return;
