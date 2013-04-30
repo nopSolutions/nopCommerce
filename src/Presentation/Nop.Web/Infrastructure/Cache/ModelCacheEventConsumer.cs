@@ -4,6 +4,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Media;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Polls;
@@ -72,6 +73,10 @@ namespace Nop.Web.Infrastructure.Cache
         IConsumer<EntityInserted<Order>>,
         IConsumer<EntityUpdated<Order>>,
         IConsumer<EntityDeleted<Order>>,
+        //Picture
+        IConsumer<EntityInserted<Picture>>,
+        IConsumer<EntityUpdated<Picture>>,
+        IConsumer<EntityDeleted<Picture>>,
         //Product picture mapping
         IConsumer<EntityInserted<ProductPicture>>,
         IConsumer<EntityUpdated<ProductPicture>>,
@@ -453,7 +458,6 @@ namespace Nop.Web.Infrastructure.Cache
         {
             _cacheManager.RemoveByPattern(MANUFACTURER_NAVIGATION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_MANUFACTURERS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(MANUFACTURER_PICTURE_PATTERN_KEY);
         }
         public void HandleEvent(EntityDeleted<Manufacturer> eventMessage)
         {
@@ -485,7 +489,6 @@ namespace Nop.Web.Infrastructure.Cache
         {
             _cacheManager.RemoveByPattern(PRODUCT_BREADCRUMB_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(CATEGORY_PICTURE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_CHILD_IDENTIFIERS_PATTERN_KEY);
         }
         public void HandleEvent(EntityDeleted<Category> eventMessage)
@@ -622,7 +625,31 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTS_ALSO_PURCHASED_IDS_PATTERN_KEY);
         }
-        
+
+
+        //Pictures
+        public void HandleEvent(EntityInserted<Picture> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(PRODUCT_DEFAULTPICTURE_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(CATEGORY_PICTURE_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(MANUFACTURER_PICTURE_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(CART_PICTURE_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityUpdated<Picture> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(PRODUCT_DEFAULTPICTURE_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(CATEGORY_PICTURE_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(MANUFACTURER_PICTURE_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(CART_PICTURE_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityDeleted<Picture> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(PRODUCT_DEFAULTPICTURE_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(CATEGORY_PICTURE_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(MANUFACTURER_PICTURE_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(CART_PICTURE_PATTERN_KEY);
+        }
+
         //Product picture mappings
         public void HandleEvent(EntityInserted<ProductPicture> eventMessage)
         {
