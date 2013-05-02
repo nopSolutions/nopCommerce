@@ -855,7 +855,11 @@ namespace Nop.Services.ExportImport
                 
                 xmlWriter.WriteElementString("OrderId", null, order.Id.ToString());
                 xmlWriter.WriteElementString("OrderGuid", null, order.OrderGuid.ToString());
+                xmlWriter.WriteElementString("StoreId", null, order.StoreId.ToString());
                 xmlWriter.WriteElementString("CustomerId", null, order.CustomerId.ToString());
+                xmlWriter.WriteElementString("OrderStatusId", null, order.OrderStatusId.ToString());
+                xmlWriter.WriteElementString("PaymentStatusId", null, order.PaymentStatusId.ToString());
+                xmlWriter.WriteElementString("ShippingStatusId", null, order.ShippingStatusId.ToString());
                 xmlWriter.WriteElementString("CustomerLanguageId", null, order.CustomerLanguageId.ToString());
                 xmlWriter.WriteElementString("CustomerTaxDisplayTypeId", null, order.CustomerTaxDisplayTypeId.ToString());
                 xmlWriter.WriteElementString("CustomerIp", null, order.CustomerIp);
@@ -875,7 +879,6 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("CurrencyRate", null, order.CurrencyRate.ToString());
                 xmlWriter.WriteElementString("CustomerCurrencyCode", null, order.CustomerCurrencyCode);
                 xmlWriter.WriteElementString("AffiliateId", null, order.AffiliateId.ToString());
-                xmlWriter.WriteElementString("OrderStatusId", null, order.OrderStatusId.ToString());
                 xmlWriter.WriteElementString("AllowStoringCreditCardNumber", null, order.AllowStoringCreditCardNumber.ToString());
                 xmlWriter.WriteElementString("CardType", null, order.CardType);
                 xmlWriter.WriteElementString("CardName", null, order.CardName);
@@ -892,9 +895,7 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("CaptureTransactionResult", null, order.CaptureTransactionResult);
                 xmlWriter.WriteElementString("SubscriptionTransactionId", null, order.SubscriptionTransactionId);
                 xmlWriter.WriteElementString("PurchaseOrderNumber", null, order.PurchaseOrderNumber);
-                xmlWriter.WriteElementString("PaymentStatusId", null, order.PaymentStatusId.ToString());
                 xmlWriter.WriteElementString("PaidDateUtc", null, (order.PaidDateUtc == null) ? string.Empty : order.PaidDateUtc.Value.ToString());
-                xmlWriter.WriteElementString("ShippingStatusId", null, order.ShippingStatusId.ToString());
                 xmlWriter.WriteElementString("ShippingMethod", null, order.ShippingMethod);
                 xmlWriter.WriteElementString("ShippingRateComputationMethodSystemName", null, order.ShippingRateComputationMethodSystemName);
                 xmlWriter.WriteElementString("VatNumber", null, order.VatNumber);
@@ -987,8 +988,12 @@ namespace Nop.Services.ExportImport
                     {
                         //order properties
                         "OrderId",
+                        "StoreId",
                         "OrderGuid",
                         "CustomerId",
+                        "OrderStatusId",
+                        "PaymentStatusId",
+                        "ShippingStatusId",
                         "OrderSubtotalInclTax",
                         "OrderSubtotalExclTax",
                         "OrderSubTotalDiscountInclTax",
@@ -1005,11 +1010,8 @@ namespace Nop.Services.ExportImport
                         "CurrencyRate",
                         "CustomerCurrencyCode",
                         "AffiliateId",
-                        "OrderStatusId",
                         "PaymentMethodSystemName",
                         "PurchaseOrderNumber",
-                        "PaymentStatusId",
-                        "ShippingStatusId",
                         "ShippingMethod",
                         "ShippingRateComputationMethodSystemName",
                         "VatNumber",
@@ -1059,10 +1061,22 @@ namespace Nop.Services.ExportImport
                         worksheet.Cells[row, col].Value = order.Id;
                         col++;
 
+                        worksheet.Cells[row, col].Value = order.StoreId;
+                        col++;
+
                         worksheet.Cells[row, col].Value = order.OrderGuid;
                         col++;
 
                         worksheet.Cells[row, col].Value = order.CustomerId;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = order.OrderStatusId;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = order.PaymentStatusId;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = order.ShippingStatusId;
                         col++;
 
                         worksheet.Cells[row, col].Value = order.OrderSubtotalInclTax;
@@ -1113,19 +1127,10 @@ namespace Nop.Services.ExportImport
                         worksheet.Cells[row, col].Value = order.AffiliateId;
                         col++;
 
-                        worksheet.Cells[row, col].Value = order.OrderStatusId;
-                        col++;
-
                         worksheet.Cells[row, col].Value = order.PaymentMethodSystemName;
                         col++;
 
                         worksheet.Cells[row, col].Value = order.PurchaseOrderNumber;
-                        col++;
-
-                        worksheet.Cells[row, col].Value =order.PaymentStatusId;
-                        col++;
-
-                        worksheet.Cells[row, col].Value = order.ShippingStatusId;
                         col++;
 
                         worksheet.Cells[row, col].Value = order.ShippingMethod;
