@@ -260,7 +260,7 @@ namespace Nop.Services.Messages
 
                 var body = messageTemplate.GetLocalized(x => x.Body, lang.Id, false, false);
                 if (!String.IsNullOrEmpty(body))
-                    _localizedEntityService.SaveLocalizedValue(mtCopy, x => x.Body, subject, lang.Id);
+                    _localizedEntityService.SaveLocalizedValue(mtCopy, x => x.Body, body, lang.Id);
 
                 var emailAccountId = messageTemplate.GetLocalized(x => x.EmailAccountId, lang.Id, false, false);
                 if (emailAccountId > 0)
