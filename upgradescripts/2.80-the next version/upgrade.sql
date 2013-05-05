@@ -1657,7 +1657,7 @@ GO
 IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[ShoppingCartItem]') and NAME='StoreId')
 BEGIN
 	ALTER TABLE [ShoppingCartItem]
-	ADD [StoreId] bit NULL
+	ADD [StoreId] int NULL
 END
 GO
 
@@ -1676,7 +1676,7 @@ GO
 IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='StoreId')
 BEGIN
 	ALTER TABLE [Order]
-	ADD [StoreId] bit NULL
+	ADD [StoreId] int NULL
 END
 GO
 
@@ -1694,7 +1694,7 @@ GO
 IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[ReturnRequest]') and NAME='StoreId')
 BEGIN
 	ALTER TABLE [ReturnRequest]
-	ADD [StoreId] bit NULL
+	ADD [StoreId] int NULL
 END
 GO
 
@@ -1768,7 +1768,7 @@ GO
 IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[BackInStockSubscription]') and NAME='StoreId')
 BEGIN
 	ALTER TABLE [BackInStockSubscription]
-	ADD [StoreId] bit NULL
+	ADD [StoreId] int NULL
 END
 GO
 
@@ -1786,7 +1786,7 @@ GO
 IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Forums_PrivateMessage]') and NAME='StoreId')
 BEGIN
 	ALTER TABLE [Forums_PrivateMessage]
-	ADD [StoreId] bit NULL
+	ADD [StoreId] int NULL
 END
 GO
 
@@ -1805,7 +1805,7 @@ GO
 IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[GenericAttribute]') and NAME='StoreId')
 BEGIN
 	ALTER TABLE [GenericAttribute]
-	ADD [StoreId] bit NULL
+	ADD [StoreId] int NULL
 END
 GO
 
@@ -1920,7 +1920,7 @@ GO
 IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Setting]') and NAME='StoreId')
 BEGIN
 	ALTER TABLE [Setting]
-	ADD [StoreId] bit NULL
+	ADD [StoreId] int NULL
 END
 GO
 
