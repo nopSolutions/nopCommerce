@@ -545,7 +545,8 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 .sub-category-grid .sub-category-item,.manufacturer-grid .manufacturer-item{text-align:center;margin:10px;width:145px;height:180px;border:1px solid #eee;}
 .sub-category-grid .sub-category-item .title,.manufacturer-grid .manufacturer-item .title{text-align:center;font-weight:700;font-size:.9em;display:block;overflow:hidden;height:1.8em;padding:5px;}
 .sub-category-grid .sub-category-item .picture,.manufacturer-grid .manufacturer-item .picture{text-align:center;padding:10px 0;}
-.product-selectors{margin-bottom:10px;}
+.product-selectors{margin-bottom:10px;zoom:1;}
+.product-selectors:after{content:".";display:block;clear:both;height:0;font-size:0;line-height:0;visibility:hidden;}
 .product-sorting{margin:0 auto 10px;float:right;}
 .product-viewmode{margin:0 auto 10px;float:left;}
 .product-page-size{width:165px;margin:0 auto;text-align:center;}
