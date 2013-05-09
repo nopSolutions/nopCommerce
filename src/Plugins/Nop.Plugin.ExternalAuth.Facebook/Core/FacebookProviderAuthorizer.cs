@@ -133,6 +133,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Core
             var args = new Dictionary<string, string>();
             args.Add("client_id", _facebookExternalAuthSettings.ClientKeyIdentifier);
             args.Add("redirect_uri", GenerateLocalCallbackUri().AbsoluteUri);
+            args.Add("scope", "email");
             AppendQueryArgs(builder, args);
             return builder.Uri;
 
