@@ -23,7 +23,21 @@ namespace Nop.Services.Directory
         /// <summary>
         /// Key for caching
         /// </summary>
+        /// <remarks>
+        /// {0} : dimension ID
+        /// </remarks>
+        private const string MEASUREDIMENSIONS_BY_ID_KEY = "Nop.measuredimension.id-{0}";
+        /// <summary>
+        /// Key for caching
+        /// </summary>
         private const string MEASUREWEIGHTS_ALL_KEY = "Nop.measureweight.all";
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : weight ID
+        /// </remarks>
+        private const string MEASUREWEIGHTS_BY_ID_KEY = "Nop.measureweight.id-{0}";
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
@@ -101,8 +115,9 @@ namespace Nop.Services.Directory
         {
             if (measureDimensionId == 0)
                 return null;
-
-            return _measureDimensionRepository.GetById(measureDimensionId);
+            
+            string key = string.Format(MEASUREDIMENSIONS_BY_ID_KEY, measureDimensionId);
+            return _cacheManager.Get(key, () => { return _measureDimensionRepository.GetById(measureDimensionId); });
         }
 
         /// <summary>
@@ -268,8 +283,9 @@ namespace Nop.Services.Directory
         {
             if (measureWeightId == 0)
                 return null;
-
-            return _measureWeightRepository.GetById(measureWeightId);
+            
+            string key = string.Format(MEASUREWEIGHTS_BY_ID_KEY, measureWeightId);
+            return _cacheManager.Get(key, () => { return _measureWeightRepository.GetById(measureWeightId); });
         }
 
         /// <summary>

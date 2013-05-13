@@ -20,6 +20,13 @@ namespace Nop.Services.Stores
         /// </summary>
         private const string STORES_ALL_KEY = "Nop.stores.all";
         /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : store ID
+        /// </remarks>
+        private const string STORES_BY_ID_KEY = "Nop.stores.id-{0}";
+        /// <summary>
         /// Key pattern to clear cache
         /// </summary>
         private const string STORES_PATTERN_KEY = "Nop.stores.";
@@ -102,8 +109,9 @@ namespace Nop.Services.Stores
         {
             if (storeId == 0)
                 return null;
-
-            return _storeRepository.GetById(storeId);
+            
+            string key = string.Format(STORES_BY_ID_KEY, storeId);
+            return _cacheManager.Get(key, () => { return _storeRepository.GetById(storeId); });
         }
 
         /// <summary>

@@ -21,6 +21,13 @@ namespace Nop.Services.Localization
         /// Key for caching
         /// </summary>
         /// <remarks>
+        /// {0} : language ID
+        /// </remarks>
+        private const string LANGUAGES_BY_ID_KEY = "Nop.language.id-{0}";
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
         /// {0} : show hidden records?
         /// {1} : store ID
         /// </remarks>
@@ -154,8 +161,9 @@ namespace Nop.Services.Localization
         {
             if (languageId == 0)
                 return null;
-
-            return _languageRepository.GetById(languageId);
+            
+            string key = string.Format(LANGUAGES_BY_ID_KEY, languageId);
+            return _cacheManager.Get(key, () => { return _languageRepository.GetById(languageId); });
         }
 
         /// <summary>

@@ -17,7 +17,13 @@ namespace Nop.Services.Catalog
     public partial class CategoryService : ICategoryService
     {
         #region Constants
-
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : category ID
+        /// </remarks>
+        private const string CATEGORIES_BY_ID_KEY = "Nop.category.id-{0}";
         /// <summary>
         /// Key for caching
         /// </summary>
@@ -270,8 +276,9 @@ namespace Nop.Services.Catalog
         {
             if (categoryId == 0)
                 return null;
-
-           return _categoryRepository.GetById(categoryId);
+            
+            string key = string.Format(CATEGORIES_BY_ID_KEY, categoryId);
+            return _cacheManager.Get(key, () => { return _categoryRepository.GetById(categoryId); });
         }
 
         /// <summary>

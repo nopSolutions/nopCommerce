@@ -17,7 +17,13 @@ namespace Nop.Services.Catalog
     public partial class ManufacturerService : IManufacturerService
     {
         #region Constants
-
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : manufacturer ID
+        /// </remarks>
+        private const string MANUFACTURERS_BY_ID_KEY = "Nop.manufacturer.id-{0}";
         /// <summary>
         /// Key for caching
         /// </summary>
@@ -40,6 +46,10 @@ namespace Nop.Services.Catalog
         /// {3} : store ID
         /// </remarks>
         private const string PRODUCTMANUFACTURERS_ALLBYPRODUCTID_KEY = "Nop.productmanufacturer.allbyproductid-{0}-{1}-{2}-{3}";
+        /// <summary>
+        /// Key pattern to clear cache
+        /// </summary>
+        private const string MANUFACTURERS_PATTERN_KEY = "Nop.manufacturer.";
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
@@ -193,8 +203,9 @@ namespace Nop.Services.Catalog
         {
             if (manufacturerId == 0)
                 return null;
-
-            return _manufacturerRepository.GetById(manufacturerId);
+            
+            string key = string.Format(MANUFACTURERS_BY_ID_KEY, manufacturerId);
+            return _cacheManager.Get(key, () => { return _manufacturerRepository.GetById(manufacturerId); });
         }
 
         /// <summary>
@@ -209,6 +220,7 @@ namespace Nop.Services.Catalog
             _manufacturerRepository.Insert(manufacturer);
 
             //cache
+            _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTMANUFACTURERS_PATTERN_KEY);
 
             //event notification
@@ -227,6 +239,7 @@ namespace Nop.Services.Catalog
             _manufacturerRepository.Update(manufacturer);
 
             //cache
+            _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTMANUFACTURERS_PATTERN_KEY);
 
             //event notification
@@ -245,6 +258,7 @@ namespace Nop.Services.Catalog
             _productManufacturerRepository.Delete(productManufacturer);
 
             //cache
+            _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTMANUFACTURERS_PATTERN_KEY);
 
             //event notification
@@ -414,6 +428,7 @@ namespace Nop.Services.Catalog
             _productManufacturerRepository.Insert(productManufacturer);
 
             //cache
+            _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTMANUFACTURERS_PATTERN_KEY);
 
             //event notification
@@ -432,6 +447,7 @@ namespace Nop.Services.Catalog
             _productManufacturerRepository.Update(productManufacturer);
 
             //cache
+            _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTMANUFACTURERS_PATTERN_KEY);
 
             //event notification

@@ -22,6 +22,13 @@ namespace Nop.Services.Catalog
         /// Key for caching
         /// </summary>
         /// <remarks>
+        /// {0} : product attribute ID
+        /// </remarks>
+        private const string PRODUCTATTRIBUTES_BY_ID_KEY = "Nop.productattribute.id-{0}";
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
         /// {0} : product variant ID
         /// </remarks>
         private const string PRODUCTVARIANTATTRIBUTES_ALL_KEY = "Nop.productvariantattribute.all-{0}";
@@ -31,7 +38,21 @@ namespace Nop.Services.Catalog
         /// <remarks>
         /// {0} : product variant attribute ID
         /// </remarks>
+        private const string PRODUCTVARIANTATTRIBUTES_BY_ID_KEY = "Nop.productvariantattribute.id-{0}";
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : product variant attribute ID
+        /// </remarks>
         private const string PRODUCTVARIANTATTRIBUTEVALUES_ALL_KEY = "Nop.productvariantattributevalue.all-{0}";
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : product variant attribute value ID
+        /// </remarks>
+        private const string PRODUCTVARIANTATTRIBUTEVALUES_BY_ID_KEY = "Nop.productvariantattributevalue.id-{0}";
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
@@ -138,7 +159,8 @@ namespace Nop.Services.Catalog
             if (productAttributeId == 0)
                 return null;
 
-            return _productAttributeRepository.GetById(productAttributeId);
+            string key = string.Format(PRODUCTATTRIBUTES_BY_ID_KEY, productAttributeId);
+            return _cacheManager.Get(key, () => { return _productAttributeRepository.GetById(productAttributeId); });
         }
 
         /// <summary>
@@ -231,8 +253,9 @@ namespace Nop.Services.Catalog
         {
             if (productVariantAttributeId == 0)
                 return null;
-
-            return _productVariantAttributeRepository.GetById(productVariantAttributeId);
+            
+            string key = string.Format(PRODUCTVARIANTATTRIBUTES_BY_ID_KEY, productVariantAttributeId);
+            return _cacheManager.Get(key, () => { return _productVariantAttributeRepository.GetById(productVariantAttributeId); });
         }
 
         /// <summary>
@@ -324,8 +347,9 @@ namespace Nop.Services.Catalog
         {
             if (productVariantAttributeValueId == 0)
                 return null;
-
-            return _productVariantAttributeValueRepository.GetById(productVariantAttributeValueId);
+            
+           string key = string.Format(PRODUCTVARIANTATTRIBUTEVALUES_BY_ID_KEY, productVariantAttributeValueId);
+           return _cacheManager.Get(key, () => { return _productVariantAttributeValueRepository.GetById(productVariantAttributeValueId); });
         }
 
         /// <summary>

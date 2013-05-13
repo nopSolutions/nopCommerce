@@ -25,7 +25,13 @@ namespace Nop.Services.Catalog
     public partial class ProductService : IProductService
     {
         #region Constants
-
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : product ID
+        /// </remarks>
+        private const string PRODUCTS_BY_ID_KEY = "Nop.product.id-{0}";
         /// <summary>
         /// Key for caching
         /// </summary>
@@ -34,6 +40,17 @@ namespace Nop.Services.Catalog
         /// {1} : show hidden records?
         /// </remarks>
         private const string PRODUCTVARIANTS_ALL_KEY = "Nop.productvariant.all-{0}-{1}";
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : product variant ID
+        /// </remarks>
+        private const string PRODUCTVARIANTS_BY_ID_KEY = "Nop.productvariant.id-{0}";
+        /// <summary>
+        /// Key pattern to clear cache
+        /// </summary>
+        private const string PRODUCTS_PATTERN_KEY = "Nop.product.";
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
@@ -191,8 +208,9 @@ namespace Nop.Services.Catalog
         {
             if (productId == 0)
                 return null;
-
-            return _productRepository.GetById(productId);
+            
+            string key = string.Format(PRODUCTS_BY_ID_KEY, productId);
+            return _cacheManager.Get(key, () => { return _productRepository.GetById(productId); });
         }
 
         /// <summary>
@@ -233,6 +251,7 @@ namespace Nop.Services.Catalog
             _productRepository.Insert(product);
 
             //clear cache
+            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
             
             //event notification
@@ -252,6 +271,7 @@ namespace Nop.Services.Catalog
             _productRepository.Update(product);
 
             //cache
+            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
 
             //event notification
@@ -910,8 +930,9 @@ namespace Nop.Services.Catalog
         {
             if (productVariantId == 0)
                 return null;
-
-            return _productVariantRepository.GetById(productVariantId);
+            
+            string key = string.Format(PRODUCTVARIANTS_BY_ID_KEY, productVariantId);
+            return _cacheManager.Get(key, () => { return _productVariantRepository.GetById(productVariantId); });
         }
         
         /// <summary>
@@ -982,6 +1003,7 @@ namespace Nop.Services.Catalog
 
             _productVariantRepository.Insert(productVariant);
 
+            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
 
             //event notification
@@ -999,6 +1021,7 @@ namespace Nop.Services.Catalog
 
             _productVariantRepository.Update(productVariant);
 
+            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
 
             //event notification
@@ -1502,6 +1525,7 @@ namespace Nop.Services.Catalog
 
             _tierPriceRepository.Delete(tierPrice);
 
+            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
 
             //event notification
@@ -1532,6 +1556,7 @@ namespace Nop.Services.Catalog
 
             _tierPriceRepository.Insert(tierPrice);
 
+            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
 
             //event notification
@@ -1549,6 +1574,7 @@ namespace Nop.Services.Catalog
 
             _tierPriceRepository.Update(tierPrice);
 
+            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
 
             //event notification
@@ -1684,6 +1710,8 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("productReview");
 
             _productReviewRepository.Delete(productReview);
+
+            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
         }
 
         #endregion

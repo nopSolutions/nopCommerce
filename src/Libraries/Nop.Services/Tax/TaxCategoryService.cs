@@ -20,6 +20,13 @@ namespace Nop.Services.Tax
         /// </summary>
         private const string TAXCATEGORIES_ALL_KEY = "Nop.taxcategory.all";
         /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : tax category ID
+        /// </remarks>
+        private const string TAXCATEGORIES_BY_ID_KEY = "Nop.taxcategory.id-{0}";
+        /// <summary>
         /// Key pattern to clear cache
         /// </summary>
         private const string TAXCATEGORIES_PATTERN_KEY = "Nop.taxcategory.";
@@ -98,8 +105,9 @@ namespace Nop.Services.Tax
         {
             if (taxCategoryId == 0)
                 return null;
-
-            return _taxCategoryRepository.GetById(taxCategoryId);
+            
+            string key = string.Format(TAXCATEGORIES_BY_ID_KEY, taxCategoryId);
+            return _cacheManager.Get(key, () => { return _taxCategoryRepository.GetById(taxCategoryId); });
         }
 
         /// <summary>

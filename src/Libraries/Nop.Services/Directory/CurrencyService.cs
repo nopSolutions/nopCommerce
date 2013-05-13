@@ -18,7 +18,13 @@ namespace Nop.Services.Directory
     public partial class CurrencyService : ICurrencyService
     {
         #region Constants
-
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : currency ID
+        /// </remarks>
+        private const string CURRENCIES_BY_ID_KEY = "Nop.currency.id-{0}";
         /// <summary>
         /// Key for caching
         /// </summary>
@@ -114,8 +120,9 @@ namespace Nop.Services.Directory
         {
             if (currencyId == 0)
                 return null;
-
-            return _currencyRepository.GetById(currencyId);
+            
+            string key = string.Format(CURRENCIES_BY_ID_KEY, currencyId);
+            return _cacheManager.Get(key, () => _currencyRepository.GetById(currencyId));
         }
 
         /// <summary>

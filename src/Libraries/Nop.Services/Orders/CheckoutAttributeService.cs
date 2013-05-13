@@ -25,7 +25,21 @@ namespace Nop.Services.Orders
         /// <remarks>
         /// {0} : checkout attribute ID
         /// </remarks>
+        private const string CHECKOUTATTRIBUTES_BY_ID_KEY = "Nop.checkoutattribute.id-{0}";
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : checkout attribute ID
+        /// </remarks>
         private const string CHECKOUTATTRIBUTEVALUES_ALL_KEY = "Nop.checkoutattributevalue.all-{0}";
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : checkout attribute value ID
+        /// </remarks>
+        private const string CHECKOUTATTRIBUTEVALUES_BY_ID_KEY = "Nop.checkoutattributevalue.id-{0}";
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
@@ -114,8 +128,9 @@ namespace Nop.Services.Orders
         {
             if (checkoutAttributeId == 0)
                 return null;
-
-            return _checkoutAttributeRepository.GetById(checkoutAttributeId);
+            
+            string key = string.Format(CHECKOUTATTRIBUTES_BY_ID_KEY, checkoutAttributeId);
+            return _cacheManager.Get(key, () => { return _checkoutAttributeRepository.GetById(checkoutAttributeId); });
         }
 
         /// <summary>
@@ -204,8 +219,9 @@ namespace Nop.Services.Orders
         {
             if (checkoutAttributeValueId == 0)
                 return null;
-
-            return _checkoutAttributeValueRepository.GetById(checkoutAttributeValueId);
+            
+            string key = string.Format(CHECKOUTATTRIBUTEVALUES_BY_ID_KEY, checkoutAttributeValueId);
+            return _cacheManager.Get(key, () => { return _checkoutAttributeValueRepository.GetById(checkoutAttributeValueId); });
         }
 
         /// <summary>
