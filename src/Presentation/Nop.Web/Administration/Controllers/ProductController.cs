@@ -1768,9 +1768,9 @@ namespace Nop.Admin.Controllers
                     return Content("This is not your product");
                 }
             }
-
+            var pictureId = productPicture.PictureId;
             _productService.DeleteProductPicture(productPicture);
-            var picture = _pictureService.GetPictureById(productId);
+            var picture = _pictureService.GetPictureById(pictureId);
             _pictureService.DeletePicture(picture);
             
             return ProductPictureList(command, productId);
