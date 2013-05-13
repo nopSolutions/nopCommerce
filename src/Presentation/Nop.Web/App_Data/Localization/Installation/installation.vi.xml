@@ -1,0 +1,140 @@
+﻿<Language Name="Tiếng Việt" IsDefault="false" IsRightToLeft="false">
+  <LocaleResource Name="AdminEmail">
+    <Value>Email quản trị viên</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminEmailRequired">
+    <Value>Hãy nhập email quản trị viên</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPassword">
+    <Value>Mật khẩu tài khoản quản trị viên</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPasswordRequired">
+    <Value>Hãy nhập mật khẩu tài khoản của quản trị viên</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureDirectoryPermissions">
+    <Value>Tài khoản '{0}' chưa được cấp quyền Thay đổi trên thư mục '{1}'. Hãy cấu hình các quyền truy cập này.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureFilePermissions">
+    <Value>Tài khoản '{0}' chưa được cấp quyền Thay đổi trên tập tin '{1}'. Hãy cấu hình các quyền truy cập này.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPassword">
+    <Value>Nhập lại mật khẩu</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPasswordRequired">
+    <Value>Hãy nhập lại mật khẩu</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionString">
+    <Value>Chuỗi kết nối</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringRequired">
+    <Value>Bắt buộc nhập chuỗi kết nối SQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringValues">
+    <Value>Nhập các giá trị kết nối SQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringWrongFormat">
+    <Value>Định dạng chuỗi kết nối SQL không đúng</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateDatabaseIfDoesNotExist">
+    <Value>Tạo cơ sở dữ liệu nếu không tồn tại</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateSampleData">
+    <Value>Tạo dữ liệu mẫu</Value>
+  </LocaleResource>  
+  <LocaleResource Name="CustomCollation">
+    <Value>Chỉ định SQL Server collation tùy chỉnh</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>Có lỗi trong quá trình tạo cơ sở dữ liệu: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseInformation">
+    <Value>Thông tin cơ sở dữ liệu</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseName">
+    <Value>Tên cơ sở dữ liệu</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNameRequired">
+    <Value>Bắt buộc nhập tên cơ sở dữ liệu</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNotExists">
+    <Value>Cơ sở dữ liệu không tồn tại hoặc bạn không có quyền kết nối tới</Value>
+  </LocaleResource>
+  <LocaleResource Name="DataProviderRequired">
+    <Value>Chọn bộ cấp dữ liệu</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation1">
+    <Value>Nếu bạn muốn tìm hiểu thêm về cách sử dụng nopCommerce, hãy ghé thăm</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation2">
+    <Value>mục tài liệu trên trang nopCommerce.com</Value>
+  </LocaleResource>
+  <LocaleResource Name="Example">
+    <Value>Ví dụ</Value>
+  </LocaleResource>
+  <LocaleResource Name="Install">
+    <Value>Cài đặt</Value>
+  </LocaleResource>
+  <LocaleResource Name="Installing">
+    <Value>Đang cài đặt trang web...</Value>
+  </LocaleResource>
+  <LocaleResource Name="PasswordsDoNotMatch">
+    <Value>Các mật khẩu không khớp nhau</Value>
+  </LocaleResource>
+  <LocaleResource Name="RawConnectionString">
+    <Value>Nhập chuỗi kết nối thô (nâng cao)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Recommended">
+    <Value>[Nên dùng]</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallation">
+    <Value>Khởi động lại cài đặt</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallationTooltip">
+    <Value>Bấm để khởi động lại quá trinh cài đặt (xóa tất cả các giá trị bộ nhớ tạm)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SetupFailed">
+    <Value>Cài đặt không thành công: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlAuthentication">
+    <Value>Sử dụng tài khoản SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlCompact">
+    <Value>Sử dụng lưu trữ dữ liệu tích hợp (SQL Server Compact)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerName">
+    <Value>Tên máy chủ SQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerNameRequired">
+    <Value>Bắt buộc nhập tên máy chủ SQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerPassword">
+    <Value>Mật khẩu SQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerPasswordRequired">
+    <Value>Bắt buộc nhập mật khẩu SQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerUsername">
+    <Value>Người dùng SQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerUsernameRequired">
+    <Value>Bắt buộc nhập người dùng SQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlStandard">
+    <Value>Sử dụng cơ sở dữ liệu SQL Server (hoặc SQL Express)</Value>
+  </LocaleResource>
+  <LocaleResource Name="WebsiteInformation">
+    <Value>Thông tin website</Value>
+  </LocaleResource>
+  <LocaleResource Name="Title">
+    <Value>Cài đặt website</Value>
+  </LocaleResource>
+    <LocaleResource Name="Tooltip1">
+    <Value>nopCommerce là giải pháp thương mại điện tử hàng đầu cho cửa hàng trực tuyến bằng ASP.NET. Trình cài đặt này sẽ hướng dẫn bạn từng bước cấu hình nopCommerce</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip2">
+    <Value>Để hoàn thành cài đặt, bạn phải cung cấp một số thông tin liên quan đến máy chủ cơ sở dữ liệu ("chuỗi kết nối"). Hãy liên hệ với nhà cung cấp dịch vụ Internet của bạn nếu cần thiết. Nếu bạn đang cài đặt trên máy tính hoặc trên máy chủ, có thể bạn sẽ cần hỏi thông tin từ Quản trị viên Hệ thống của mình.</Value>
+  </LocaleResource>
+  <LocaleResource Name="WindowsAuthentication">
+    <Value>Sử dụng xác thực tích hợp với Windows</Value>
+  </LocaleResource>
+</Language>
