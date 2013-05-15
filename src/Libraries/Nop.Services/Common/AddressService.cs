@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Common;
 using Nop.Services.Directory;
@@ -12,6 +13,21 @@ namespace Nop.Services.Common
     /// </summary>
     public partial class AddressService : IAddressService
     {
+        #region Constants
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : address ID
+        /// </remarks>
+        private const string ADDRESSES_BY_ID_KEY = "Nop.address.id-{0}";
+        /// <summary>
+        /// Key pattern to clear cache
+        /// </summary>
+        private const string ADDRESSES_PATTERN_KEY = "Nop.address.";
+
+        #endregion
+
         #region Fields
 
         private readonly IRepository<Address> _addressRepository;
@@ -19,6 +35,7 @@ namespace Nop.Services.Common
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IEventPublisher _eventPublisher;
         private readonly AddressSettings _addressSettings;
+        private readonly ICacheManager _cacheManager;
 
         #endregion
 
@@ -27,15 +44,17 @@ namespace Nop.Services.Common
         /// <summary>
         /// Ctor
         /// </summary>
+        /// <param name="cacheManager">Cache manager</param>
         /// <param name="addressRepository">Address repository</param>
         /// <param name="countryService">Country service</param>
         /// <param name="stateProvinceService">State/province service</param>
         /// <param name="eventPublisher">Event publisher</param>
         /// <param name="addressSettings">Address settings</param>
-        public AddressService(IRepository<Address> addressRepository,
+        public AddressService(ICacheManager cacheManager, IRepository<Address> addressRepository,
             ICountryService countryService, IStateProvinceService stateProvinceService,
             IEventPublisher eventPublisher, AddressSettings addressSettings)
         {
+            this._cacheManager = cacheManager;
             this._addressRepository = addressRepository;
             this._countryService = countryService;
             this._stateProvinceService = stateProvinceService;
@@ -57,6 +76,9 @@ namespace Nop.Services.Common
                 throw new ArgumentNullException("address");
 
             _addressRepository.Delete(address);
+
+            //cache
+            _cacheManager.RemoveByPattern(ADDRESSES_PATTERN_KEY);
 
             //event notification
             _eventPublisher.EntityDeleted(address);
@@ -104,7 +126,8 @@ namespace Nop.Services.Common
             if (addressId == 0)
                 return null;
 
-            return _addressRepository.GetById(addressId);
+            string key = string.Format(ADDRESSES_BY_ID_KEY, addressId);
+            return _cacheManager.Get(key, () => { return _addressRepository.GetById(addressId); });
         }
 
         /// <summary>
@@ -126,6 +149,9 @@ namespace Nop.Services.Common
 
             _addressRepository.Insert(address);
 
+            //cache
+            _cacheManager.RemoveByPattern(ADDRESSES_PATTERN_KEY);
+
             //event notification
             _eventPublisher.EntityInserted(address);
         }
@@ -146,6 +172,9 @@ namespace Nop.Services.Common
                 address.StateProvinceId = null;
 
             _addressRepository.Update(address);
+
+            //cache
+            _cacheManager.RemoveByPattern(ADDRESSES_PATTERN_KEY);
 
             //event notification
             _eventPublisher.EntityUpdated(address);
