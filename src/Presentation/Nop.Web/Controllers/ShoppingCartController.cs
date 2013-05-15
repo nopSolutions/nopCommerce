@@ -186,7 +186,7 @@ namespace Nop.Web.Controllers
             if (productVariant == null)
                 throw new ArgumentNullException("productVariant");
 
-            var pictureCacheKey = string.Format(ModelCacheEventConsumer.CART_PICTURE_MODEL_KEY, productVariant.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured());
+            var pictureCacheKey = string.Format(ModelCacheEventConsumer.CART_PICTURE_MODEL_KEY, productVariant.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
             var model = _cacheManager.Get(pictureCacheKey, () =>
             {
                 //first try to load product variant piture
