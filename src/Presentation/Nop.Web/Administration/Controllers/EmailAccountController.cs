@@ -217,20 +217,30 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        [HttpPost]
-        public ActionResult Delete(int id)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
-                return AccessDeniedView();
+	    [HttpPost]
+	    public ActionResult Delete(int id)
+	    {
+	        if (!_permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
+	            return AccessDeniedView();
 
-            var emailAccount = _emailAccountService.GetEmailAccountById(id);
-            if (emailAccount == null)
-                //No email account found with the specified id
+	        var emailAccount = _emailAccountService.GetEmailAccountById(id);
+	        if (emailAccount == null)
+	            //No email account found with the specified id
+	            return RedirectToAction("List");
+
+	        try
+	        {
+	            _emailAccountService.DeleteEmailAccount(emailAccount);
+
+	            SuccessNotification(_localizationService.GetResource("Admin.Configuration.EmailAccounts.Deleted"));
+
                 return RedirectToAction("List");
-
-            SuccessNotification(_localizationService.GetResource("Admin.Configuration.EmailAccounts.Deleted"));
-            _emailAccountService.DeleteEmailAccount(emailAccount);
-            return RedirectToAction("List");
-        }
+	        }
+	        catch (Exception exc)
+	        {
+	            ErrorNotification(exc);
+	            return RedirectToAction("Edit", new {id = emailAccount.Id});
+	        }
+	    }
 	}
 }
