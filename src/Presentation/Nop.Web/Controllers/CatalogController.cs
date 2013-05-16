@@ -1011,17 +1011,36 @@ namespace Nop.Web.Controllers
 
 
             //featured products
-            //Question: should we use '_catalogSettings.ShowProductsFromSubcategories' setting for displaying featured products?
-            if (!_catalogSettings.IgnoreFeaturedProducts && _categoryService.GetTotalNumberOfFeaturedProducts(categoryId) > 0)
+            if (!_catalogSettings.IgnoreFeaturedProducts)
             {
-                //We use the fast GetTotalNumberOfFeaturedProducts before invoking of the slow SearchProducts
-                //to ensure that we have at least one featured product
+                IPagedList<Product> featuredProducts = null;
 
-                var featuredProducts = _productService.SearchProducts(
-                    categoryIds: new List<int>() { category.Id },
-                        storeId: _storeContext.CurrentStore.Id, 
-                        featuredProducts: true);
-                model.FeaturedProducts = PrepareProductOverviewModels(featuredProducts).ToList();
+                //We cache whether we have featured products
+                var customerRolesIds = _workContext.CurrentCustomer.CustomerRoles
+                    .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
+                string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_HAS_FEATURED_PRODUCTS_KEY, categoryId,
+                    string.Join(",", customerRolesIds), _storeContext.CurrentStore.Id);
+                var hasFeaturedProductsCache = _cacheManager.Get<bool?>(cacheKey);
+                if (!hasFeaturedProductsCache.HasValue)
+                {
+                    featuredProducts = _productService.SearchProducts(
+                       categoryIds: new List<int>() { category.Id },
+                       storeId: _storeContext.CurrentStore.Id,
+                       featuredProducts: true);
+                    hasFeaturedProductsCache = featuredProducts.TotalCount > 0;
+                    _cacheManager.Set(cacheKey, hasFeaturedProductsCache, 60);
+                }
+                if (hasFeaturedProductsCache.Value && featuredProducts == null)
+                {
+                    featuredProducts = _productService.SearchProducts(
+                       categoryIds: new List<int>() { category.Id },
+                       storeId: _storeContext.CurrentStore.Id,
+                       featuredProducts: true);
+                }
+                if (featuredProducts != null)
+                {
+                    model.FeaturedProducts = PrepareProductOverviewModels(featuredProducts).ToList();
+                }
             }
 
 
@@ -1309,19 +1328,39 @@ namespace Nop.Web.Controllers
                     maxPriceConverted = _currencyService.ConvertToPrimaryStoreCurrency(selectedPriceRange.To.Value, _workContext.WorkingCurrency);
             }
 
-            
 
 
             //featured products
-            if (!_catalogSettings.IgnoreFeaturedProducts && _manufacturerService.GetTotalNumberOfFeaturedProducts(manufacturerId) > 0)
+            if (!_catalogSettings.IgnoreFeaturedProducts)
             {
-                //We use the fast GetTotalNumberOfFeaturedProducts before invoking of the slow SearchProducts
-                //to ensure that we have at least one featured product
-                var featuredProducts = _productService.SearchProducts(
-                    manufacturerId: manufacturer.Id,
-                    storeId: _storeContext.CurrentStore.Id,
-                    featuredProducts: true);
-                model.FeaturedProducts = PrepareProductOverviewModels(featuredProducts).ToList();
+                IPagedList<Product> featuredProducts = null;
+
+                //We cache whether we have featured products
+                var customerRolesIds = _workContext.CurrentCustomer.CustomerRoles
+                    .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
+                string cacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_HAS_FEATURED_PRODUCTS_KEY, manufacturerId,
+                    string.Join(",", customerRolesIds), _storeContext.CurrentStore.Id);
+                var hasFeaturedProductsCache = _cacheManager.Get<bool?>(cacheKey);
+                if (!hasFeaturedProductsCache.HasValue)
+                {
+                    featuredProducts = _productService.SearchProducts(
+                       manufacturerId: manufacturer.Id,
+                       storeId: _storeContext.CurrentStore.Id,
+                       featuredProducts: true);
+                    hasFeaturedProductsCache = featuredProducts.TotalCount > 0;
+                    _cacheManager.Set(cacheKey, hasFeaturedProductsCache, 60);
+                }
+                if (hasFeaturedProductsCache.Value && featuredProducts == null)
+                {
+                    featuredProducts = _productService.SearchProducts(
+                       manufacturerId: manufacturer.Id,
+                       storeId: _storeContext.CurrentStore.Id,
+                       featuredProducts: true);
+                }
+                if (featuredProducts != null)
+                {
+                    model.FeaturedProducts = PrepareProductOverviewModels(featuredProducts).ToList();
+                }
             }
 
 
