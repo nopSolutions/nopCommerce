@@ -5,8 +5,17 @@ declare @resources xml
 --a resource will be delete if its value is empty
 set @resources='
 <Language>
-  <LocaleResource Name="">
-    <Value></Value>
+  <LocaleResource Name="Plugins.ExternalAuth.Facebook.ClientKeyIdentifier">
+    <Value>App ID/API Key</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.ExternalAuth.Facebook.ClientKeyIdentifier.Hint">
+    <Value>Enter your app ID/API key here. You can find it on your FaceBook application page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.ExternalAuth.Facebook.ClientSecret">
+    <Value>App Secret</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.ExternalAuth.Facebook.ClientSecret.Hint">
+    <Value>Enter your app secret here. You can find it on your FaceBook application page.</Value>
   </LocaleResource>
 </Language>
 '
