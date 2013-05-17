@@ -1,7 +1,9 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Web.Mvc;
 
 namespace Nop.Web.Framework.Controllers
 {
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)] 
     public class ParameterBasedOnFormNameAndValueAttribute : FilterAttribute, IActionFilter
     {
         private readonly string _name;

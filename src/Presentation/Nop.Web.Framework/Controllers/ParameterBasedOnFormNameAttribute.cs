@@ -1,10 +1,12 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Web.Mvc;
 
 namespace Nop.Web.Framework.Controllers
 {
     /// <summary>
     /// If form name exists, then specified "actionParameterName" will be set to "true"
     /// </summary>
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)] 
     public class ParameterBasedOnFormNameAttribute : FilterAttribute, IActionFilter
     {
         private readonly string _name;
