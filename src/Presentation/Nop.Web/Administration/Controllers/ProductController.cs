@@ -14,6 +14,7 @@ using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Directory;
 using Nop.Services.ExportImport;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Media;
@@ -66,6 +67,7 @@ namespace Nop.Admin.Controllers
         private readonly MeasureSettings _measureSettings;
         private readonly PdfSettings _pdfSettings;
         private readonly AdminAreaSettings _adminAreaSettings;
+        private readonly IDateTimeHelper _dateTimeHelper;
 
         #endregion
 
@@ -87,7 +89,8 @@ namespace Nop.Admin.Controllers
              IVendorService vendorService,
             ICurrencyService currencyService, CurrencySettings currencySettings,
             IMeasureService measureService, MeasureSettings measureSettings,
-            PdfSettings pdfSettings, AdminAreaSettings adminAreaSettings)
+            PdfSettings pdfSettings, AdminAreaSettings adminAreaSettings,
+            IDateTimeHelper dateTimeHelper)
         {
             this._productService = productService;
             this._productTemplateService = productTemplateService;
@@ -119,6 +122,7 @@ namespace Nop.Admin.Controllers
             this._measureSettings = measureSettings;
             this._pdfSettings = pdfSettings;
             this._adminAreaSettings = adminAreaSettings;
+            this._dateTimeHelper = dateTimeHelper;
         }
 
         #endregion 
@@ -768,6 +772,8 @@ namespace Nop.Admin.Controllers
 
             var model = product.ToModel();
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(product.CreatedOnUtc, DateTimeKind.Utc);
+            model.UpdatedOn = _dateTimeHelper.ConvertToUserTime(product.UpdatedOnUtc, DateTimeKind.Utc);
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
                 {
                     locale.Name = product.GetLocalized(x => x.Name, languageId, false, false);
@@ -843,6 +849,8 @@ namespace Nop.Admin.Controllers
 
             //If we got this far, something failed, redisplay form
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(product.CreatedOnUtc, DateTimeKind.Utc);
+            model.UpdatedOn = _dateTimeHelper.ConvertToUserTime(product.UpdatedOnUtc, DateTimeKind.Utc);
             PrepareTags(model, product);
             PrepareCopyProductModel(model, product);
             PrepareVariantsModel(model, product);

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using FluentValidation.Attributes;
@@ -80,6 +81,11 @@ namespace Nop.Admin.Models.Catalog
         
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.Published")]
         public bool Published { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.CreatedOn")]
+        public DateTime? CreatedOn { get; set; }
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.UpdatedOn")]
+        public DateTime? UpdatedOn { get; set; }
         
 
 

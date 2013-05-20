@@ -1455,6 +1455,22 @@
                                             </LocaleResource>
                                         </Children>
                                     </LocaleResource>
+                                    <LocaleResource Name="CreatedOn">
+                                        <Value>Created on</Value>
+                                        <Children>
+                                            <LocaleResource Name="Hint">
+                                                <Value>Date and time when this product was created.</Value>
+                                            </LocaleResource>
+                                        </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="UpdatedOn">
+                                      <Value>Updated on</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Date and time when this product was updated.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
                                     <LocaleResource Name="LimitedToStores">
                                       <Value>Limited to stores</Value>
                                       <Children>

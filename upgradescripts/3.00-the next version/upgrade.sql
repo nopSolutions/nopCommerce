@@ -17,6 +17,18 @@ set @resources='
   <LocaleResource Name="Plugins.ExternalAuth.Facebook.ClientSecret.Hint">
     <Value>Enter your app secret here. You can find it on your FaceBook application page.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.CreatedOn">
+    <Value>Created on</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.CreatedOn.Hint">
+    <Value>Date and time when this product was created.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.UpdatedOn">
+    <Value>Updated on</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.UpdatedOn.Hint">
+    <Value>Date and time when this product was updated.</Value>
+  </LocaleResource>
 </Language>
 '
 

@@ -131,15 +131,6 @@
                 @Html.EditorFor(model => model.ShowOnHomePage)
                 @Html.ValidationMessageFor(model => model.ShowOnHomePage)
             </td>
-            </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Published):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.Published)
-                @Html.ValidationMessageFor(model => model.Published)
-            </td>
         </tr>
         <tr>
             <td class="adminTitle">
@@ -159,6 +150,37 @@
                 @Html.ValidationMessageFor(model => model.ProductTags)
             </td>
         </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Published):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Published)
+                @Html.ValidationMessageFor(model => model.Published)
+            </td>
+        </tr>
+        @if (Model.CreatedOn.HasValue)
+        {
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.CreatedOn):
+                </td>
+                <td class="adminData">
+                    @Model.CreatedOn.Value.ToString("F")
+                </td>
+            </tr>
+        }
+        @if (Model.UpdatedOn.HasValue)
+        {
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.UpdatedOn):
+                </td>
+                <td class="adminData">
+                    @Model.UpdatedOn.Value.ToString("F")
+                </td>
+            </tr>
+        }
     </table>
 }
 @helper TabFirstVariantInfo()
