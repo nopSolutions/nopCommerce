@@ -76,25 +76,6 @@ function checkOverridenStoreValue(obj, selector) {
     };
 }
 
-
-
-$(document).ready(function () {
-    //Setup the ajax indicator
-    //TODO We'll not be able to load ajax-loading.gif when site is run in virtual directory. Fix it by creating CSS style
-    $('body').append('<div id="ajaxBusy"><p><img src="/administration/content/images/ajax-loading.gif"></p></div>');
-    $('#ajaxBusy').css({
-        display: "none",
-        margin: "0px",
-        paddingLeft: "0px",
-        paddingRight: "0px",
-        paddingTop: "0px",
-        paddingBottom: "0px",
-        position: "absolute",
-        right: "3px",
-        top: "3px",
-        width: "auto"
-    });
-});
 // Ajax activity indicator bound to ajax start/stop document events
 $(document).ajaxStart(function () {
     $('#ajaxBusy').show();
