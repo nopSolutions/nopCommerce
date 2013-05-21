@@ -29,6 +29,12 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Fields.UpdatedOn.Hint">
     <Value>Date and time when this product was updated.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.PageShareCode">
+    <Value>Share button code</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.PageShareCode.Hint">
+    <Value>A page share button code. By default, we''re using AddThis service.</Value>
+  </LocaleResource>
 </Language>
 '
 

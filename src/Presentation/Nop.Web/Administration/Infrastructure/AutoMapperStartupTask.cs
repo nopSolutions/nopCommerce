@@ -630,6 +630,7 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.ShowCategoryProductNumberIncludingSubcategories_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.CategoryBreadcrumbEnabled_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.ShowShareButton_OverrideForStore, mo => mo.Ignore())
+                .ForMember(dest => dest.PageShareCode_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.ProductReviewsMustBeApproved_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.AllowAnonymousUsersToReviewProduct_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.NotifyStoreOwnerAboutNewProductReviews_OverrideForStore, mo => mo.Ignore())
@@ -661,7 +662,6 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             Mapper.CreateMap<CatalogSettingsModel, CatalogSettings>()
                 .ForMember(dest => dest.DefaultViewMode, mo => mo.Ignore())
-                .ForMember(dest => dest.PageShareCode, mo => mo.Ignore())
                 .ForMember(dest => dest.DefaultProductRatingValue, mo => mo.Ignore())
                 .ForMember(dest => dest.ProductSearchTermMinimumLength, mo => mo.Ignore())
                 .ForMember(dest => dest.IncludeFeaturedProductsInNormalLists, mo => mo.Ignore())

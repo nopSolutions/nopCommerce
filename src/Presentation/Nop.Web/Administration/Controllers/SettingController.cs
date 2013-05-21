@@ -864,6 +864,7 @@ namespace Nop.Admin.Controllers
                 model.ShowCategoryProductNumberIncludingSubcategories_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ShowCategoryProductNumberIncludingSubcategories, storeScope);
                 model.CategoryBreadcrumbEnabled_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.CategoryBreadcrumbEnabled, storeScope);
                 model.ShowShareButton_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ShowShareButton, storeScope);
+                model.PageShareCode_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.PageShareCode, storeScope);
                 model.ProductReviewsMustBeApproved_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ProductReviewsMustBeApproved, storeScope);
                 model.AllowAnonymousUsersToReviewProduct_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.AllowAnonymousUsersToReviewProduct, storeScope);
                 model.NotifyStoreOwnerAboutNewProductReviews_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.NotifyStoreOwnerAboutNewProductReviews, storeScope);
@@ -959,7 +960,12 @@ namespace Nop.Admin.Controllers
                 _settingService.SaveSetting(catalogSettings, x => x.ShowShareButton, storeScope, false);
             else if (storeScope > 0)
                 _settingService.DeleteSetting(catalogSettings, x => x.ShowShareButton, storeScope);
-            
+
+            if (model.PageShareCode_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(catalogSettings, x => x.PageShareCode, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(catalogSettings, x => x.PageShareCode, storeScope);
+
             if (model.ProductReviewsMustBeApproved_OverrideForStore || storeScope == 0)
                 _settingService.SaveSetting(catalogSettings, x => x.ProductReviewsMustBeApproved, storeScope, false);
             else if (storeScope > 0)

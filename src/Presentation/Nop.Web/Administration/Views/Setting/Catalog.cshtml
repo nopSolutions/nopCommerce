@@ -19,6 +19,7 @@
         $(document).ready(function () {
 
             $("#@Html.FieldIdFor(model => model.ShowCategoryProductNumber)").click(toggleShowCategoryProductNumberIncludingSubcategories);
+            $("#@Html.FieldIdFor(model => model.ShowShareButton)").click(togglePageShareCode);
             $("#@Html.FieldIdFor(model => model.EmailAFriendEnabled)").click(toggleEmailAFriend);
             $("#@Html.FieldIdFor(model => model.RecentlyViewedProductsEnabled)").click(toggleRecentlyViewedProducts);
             $("#@Html.FieldIdFor(model => model.RecentlyAddedProductsEnabled)").click(toggleRecentlyAddedProducts);
@@ -43,6 +44,15 @@
             }
             else {
                 $('#pnlShowCategoryProductNumberIncludingSubcategories').hide();
+            }
+        }
+
+        function togglePageShareCode() {
+            if ($('#@Html.FieldIdFor(model => model.ShowShareButton)').is(':checked')) {
+                $('#pnlPageShareCode').show();
+            }
+            else {
+                $('#pnlPageShareCode').hide();
             }
         }
 
@@ -214,6 +224,16 @@
             <td class="adminData">
                 @Html.EditorFor(model => model.ShowShareButton)
                 @Html.ValidationMessageFor(model => model.ShowShareButton)
+            </td>
+        </tr>
+        <tr id="pnlPageShareCode">
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.PageShareCode_OverrideForStore, model => model.PageShareCode, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.PageShareCode):
+            </td>
+            <td class="adminData">
+                @Html.TextAreaFor(model => model.PageShareCode, new { style = "Width: 500px; Height: 150px;" })
+                @Html.ValidationMessageFor(model => model.PageShareCode)
             </td>
         </tr>
         <tr>

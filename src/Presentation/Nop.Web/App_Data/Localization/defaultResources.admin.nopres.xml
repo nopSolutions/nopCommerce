@@ -3886,6 +3886,14 @@
                                             </LocaleResource>
                                         </Children>
                                     </LocaleResource>
+                                    <LocaleResource Name="PageShareCode">
+                                      <Value>Share button code</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>A page share button code. By default, we're using AddThis service.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
                                     <LocaleResource Name="ProductReviewsMustBeApproved">
                                         <Value>Product reviews must be approved</Value>
                                         <Children>
