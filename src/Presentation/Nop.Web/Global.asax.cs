@@ -118,6 +118,11 @@ namespace Nop.Web
             if (webHelper.IsStaticResource(this.Request))
                 return;
 
+            //keep alive page requested (we ignore it to prevent creating a guest customer records)
+            string keepAliveUrl = string.Format("{0}keepalive/index", webHelper.GetStoreLocation());
+            if (webHelper.GetThisPageUrl(false).StartsWith(keepAliveUrl, StringComparison.InvariantCultureIgnoreCase))
+                return;
+
             EnsureDatabaseIsInstalled();
 
             if (DataSettingsHelper.DatabaseIsInstalled() && 
@@ -208,7 +213,7 @@ namespace Nop.Web
                 return;
 
             //keep alive page requested (we ignore it to prevent creating a guest customer records)
-            string keepAliveUrl = string.Format("{0}keepalive", webHelper.GetStoreLocation());
+            string keepAliveUrl = string.Format("{0}keepalive/index", webHelper.GetStoreLocation());
             if (webHelper.GetThisPageUrl(false).StartsWith(keepAliveUrl, StringComparison.InvariantCultureIgnoreCase))
                 return;
 
