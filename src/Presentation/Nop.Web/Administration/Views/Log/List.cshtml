@@ -15,7 +15,7 @@
         </div>
         <div class="options">
             <input type="button" id="delete-selected" class="t-button" value="@T("Admin.System.Log.DeleteSelected")" />
-            <input type="submit" name="clearall" class="t-button" value="@T("Admin.System.Log.ClearLog")" />
+            <input type="submit" name="clearall" class="t-button" value="@T("Admin.System.Log.ClearLog")" onclick="return confirm('@T("Admin.Common.AreYouSure")'); " />
         </div>
     </div>
     <table width="100%">
