@@ -23,7 +23,10 @@ namespace Nop.Admin.Models.Catalog
         public string Name { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.DisplayOrder")]
-        public int DisplayOrder {get;set;}
+        public int DisplayOrder { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.NumberOfAssociatedProducts")]
+        public int NumberOfAssociatedProducts { get; set; }
         
         public IList<SpecificationAttributeOptionLocalizedModel> Locales { get; set; }
 

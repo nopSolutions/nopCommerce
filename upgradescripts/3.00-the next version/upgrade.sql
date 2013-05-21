@@ -35,6 +35,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.PageShareCode.Hint">
     <Value>A page share button code. By default, we''re using AddThis service.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.NumberOfAssociatedProducts">
+    <Value>Number of associated products</Value>
+  </LocaleResource>
 </Language>
 '
 

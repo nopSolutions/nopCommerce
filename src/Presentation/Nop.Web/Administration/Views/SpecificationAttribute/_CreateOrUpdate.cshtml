@@ -78,6 +78,10 @@
                                 columns.Bound(x => x.DisplayOrder)
                                     .Width(100)
                                     .Centered();
+                                columns.Bound(x => x.NumberOfAssociatedProducts)
+                                    .Width(100)
+                                    .ReadOnly()
+                                    .Centered();
                                 columns.Bound(x => x.Id)
                                     .Width(50)
                                     .Centered()

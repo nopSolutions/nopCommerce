@@ -546,6 +546,9 @@
                                                             </LocaleResource>
                                                         </Children>
                                                     </LocaleResource>
+                                                    <LocaleResource Name="NumberOfAssociatedProducts">
+                                                      <Value>Number of associated products</Value>
+                                                    </LocaleResource>
                                                 </Children>
                                             </LocaleResource>
                                             <LocaleResource Name="SaveBeforeEdit">

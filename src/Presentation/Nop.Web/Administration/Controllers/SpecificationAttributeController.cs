@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Nop.Admin.Models.Catalog;
@@ -23,15 +24,18 @@ namespace Nop.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IPermissionService _permissionService;
+        private readonly IProductService _productService;
 
         #endregion Fields
 
         #region Constructors
 
         public SpecificationAttributeController(ISpecificationAttributeService specificationAttributeService,
-            ILanguageService languageService, ILocalizedEntityService localizedEntityService,
-            ILocalizationService localizationService, ICustomerActivityService customerActivityService,
-            IPermissionService permissionService)
+            ILanguageService languageService, 
+            ILocalizedEntityService localizedEntityService,
+            ILocalizationService localizationService, 
+            ICustomerActivityService customerActivityService,
+            IPermissionService permissionService, IProductService productService)
         {
             this._specificationAttributeService = specificationAttributeService;
             this._languageService = languageService;
@@ -39,6 +43,7 @@ namespace Nop.Admin.Controllers
             this._localizationService = localizationService;
             this._customerActivityService = customerActivityService;
             this._permissionService = permissionService;
+            this._productService = productService;
         }
 
         #endregion
@@ -234,6 +239,8 @@ namespace Nop.Admin.Controllers
                 Data = options.Select(x => 
                     {
                         var model = x.ToModel();
+                        //in order to save performance to do not check whether a product isn't deleted
+                        model.NumberOfAssociatedProducts = x.ProductSpecificationAttributes.Count;
                         //locales
                         //AddLocales(_languageService, model.Locales, (locale, languageId) =>
                         //{
