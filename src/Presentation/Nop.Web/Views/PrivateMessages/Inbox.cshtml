@@ -29,16 +29,16 @@
             </colgroup>
             <thead>
                 <tr>
-                    <th class="a-center">
+                    <th class="a-center select-boxes">
                         <input type="checkbox" id="select-all-inbox" />
                     </th>
-                    <th class="a-center">
+                    <th class="a-center from">
                         @T("PrivateMessages.Inbox.FromColumn")
                     </th>
-                    <th class="a-center">
+                    <th class="a-center subject">
                         @T("PrivateMessages.Inbox.SubjectColumn")
                     </th>
-                    <th class="a-center">
+                    <th class="a-center date">
                         @T("PrivateMessages.Inbox.DateColumn")
                     </th>
                 </tr>
@@ -48,10 +48,10 @@
                 {
                     var item = Model.Messages[i];
                     <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
-                        <td class="a-center">
+                        <td class="a-center select-boxes">
                             <input type="checkbox" name="pm@(item.Id)" class="rowcheckbox" />
                         </td>
-                        <td class="a-left">
+                        <td class="a-left from">
                             @if (item.AllowViewingFromProfile)
                             {
                                 @Html.RouteLink(item.CustomerFromName, "CustomerProfile", new { Id = item.FromCustomerId })
@@ -61,10 +61,10 @@
                                 @item.CustomerFromName
                             }
                         </td>
-                        <td class="a-left">
+                        <td class="a-left subject">
                             @Html.RouteLink(item.Subject, "ViewPM", new { privateMessageId = item.Id }, new { @class = (item.IsRead) ? "pm-read" : "pm-unread" })
                         </td>
-                        <td class="a-left">
+                        <td class="a-left date">
                             @item.CreatedOn
                         </td>
                     </tr>

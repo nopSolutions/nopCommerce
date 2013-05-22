@@ -33,13 +33,13 @@
                     </colgroup>
                     <thead>
                         <tr>
-                            <th class="a-center">
+                            <th class="a-center name">
                                 @T("ReturnRequests.Products.Name")
                             </th>
-                            <th class="a-center">
+                            <th class="a-center price">
                                 @T("ReturnRequests.Products.Price")
                             </th>
-                            <th class="a-center">
+                            <th class="a-center quantity">
                                 @T("ReturnRequests.Products.Quantity")
                             </th>
                         </tr>
@@ -48,7 +48,7 @@
                         @foreach (var item in Model.Items)
                         {   
                             <tr>
-                                <td class="a-left">
+                                <td class="a-left name">
                                     <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })" title="View details">@item.ProductName</a>
                                     @if (!String.IsNullOrEmpty(item.AttributeInfo))
                                     {
@@ -57,10 +57,10 @@
                                         </div>
                                     }
                                 </td>
-                                <td class="a-left">
+                                <td class="a-left price">
                                     @item.UnitPrice
                                 </td>
-                                <td class="a-left">
+                                <td class="a-left quantity">
                                     <select name="quantity@(item.Id)">
                                         @for (int i = 0; i <= item.Quantity; i++)
                                         {

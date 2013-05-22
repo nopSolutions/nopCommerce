@@ -145,13 +145,13 @@
                     </colgroup>
                     <thead>
                         <tr>
-                            <th class="a-center">
+                            <th class="a-center auth-method-name">
                                 @T("Account.AssociatedExternalAuth.AuthMethodName")
                             </th>
-                            <th class="a-center">
+                            <th class="a-center email">
                                 @T("Account.AssociatedExternalAuth.Email")
                             </th>
-                            <th class="a-center">
+                            <th class="a-center external-id">
                                 @T("Account.AssociatedExternalAuth.ExternalIdentifier")
                             </th>
                         </tr>
@@ -160,13 +160,13 @@
                         @foreach (var item in Model.AssociatedExternalAuthRecords)
                         {
                             <tr>
-                                <td class="a-left">
+                                <td class="a-left auth-method-name">
                                     @item.AuthMethodName
                                 </td>
-                                <td class="a-left">
+                                <td class="a-left email">
                                     @item.Email
                                 </td>
-                                <td class="a-left">
+                                <td class="a-left external-id">
                                     @CommonHelper.EnsureMaximumLength(item.ExternalIdentifier, 40, "...")
                                 </td>
                             </tr>

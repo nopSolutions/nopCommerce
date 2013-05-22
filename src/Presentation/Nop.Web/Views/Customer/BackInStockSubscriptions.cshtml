@@ -44,10 +44,10 @@
                     </colgroup>
                     <thead>
                         <tr>
-                            <th class="a-center">
+                            <th class="a-center select-boxes">
                                 <input type="checkbox" id="selectall" />
                             </th>
-                            <th class="a-center">
+                            <th class="a-center product">
                                 @T("Account.BackInStockSubscriptions.ProductColumn")
                             </th>
                         </tr>
@@ -57,10 +57,10 @@
                         {
                             var item = Model.Subscriptions[i];
                             <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
-                                <td class="a-center">
+                                <td class="a-center select-boxes">
                                     <input type="checkbox" name="biss@(item.Id)" class="rowcheckbox" />
                                 </td>
-                                <td class="a-left">
+                                <td class="a-left product">
                                     @Html.RouteLink(item.ProductName, "Product", new { SeName = item.SeName })
                                 </td>
                             </tr>

@@ -117,14 +117,14 @@
                         <tr>
                             @if (Model.ShowSku)
                             {
-                                <th class="a-center">
+                                <th class="a-center sku">
                                     @T("Order.Shipments.Product(s).SKU")
                                 </th>
                             }
-                            <th class="a-center">
+                            <th class="a-center name">
                                 @T("Order.Shipments.Product(s).Name")
                             </th>
-                            <th class="a-center">
+                            <th class="a-center quantity">
                                 @T("Order.Shipments.Product(s).Quantity")
                             </th>
                         </tr>
@@ -135,11 +135,11 @@
                             <tr>
                                 @if (Model.ShowSku)
                                 {
-                                    <td class="a-left">
+                                    <td class="a-left sku">
                                         @item.Sku
                                     </td>
                                 }
-                                <td class="a-left">
+                                <td class="a-left name">
                                     <em><a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })" title="View details">@item.ProductName</a></em>
                                     @if (!String.IsNullOrEmpty(item.AttributeInfo))
                                     {
@@ -148,7 +148,7 @@
                                         </div>
                                     }
                                 </td>
-                                <td class="a-center">
+                                <td class="a-center quantity">
                                     @item.QuantityShipped
                                 </td>
                             </tr>
@@ -172,16 +172,16 @@
                     </colgroup>
                     <thead>
                         <tr>
-                            <th class="a-center">
+                            <th class="a-center event">
                                 @T("Order.ShipmentStatusEvents.Event")
                             </th>
-                            <th class="a-center">
+                            <th class="a-center location">
                                 @T("Order.ShipmentStatusEvents.Location")
                             </th>
-                            <th class="a-center">
+                            <th class="a-center country">
                                 @T("Order.ShipmentStatusEvents.Country")
                             </th>
-                            <th class="a-center">
+                            <th class="a-center date">
                                 @T("Order.ShipmentStatusEvents.Date")
                             </th>
                         </tr>
@@ -190,16 +190,16 @@
                         @foreach (var item in Model.ShipmentStatusEvents)
                         {
                             <tr>
-                                <td class="a-left">
+                                <td class="a-left event">
                                     @item.EventName
                                 </td>
-                                <td class="a-left">
+                                <td class="a-left location">
                                     @item.Location
                                 </td>
-                                <td class="a-left">
+                                <td class="a-left country">
                                     @item.Country
                                 </td>
-                                <td class="a-left">
+                                <td class="a-left date">
                                     @if (item.Date.HasValue)
                                     {
                                         @item.Date.Value.ToString("D")

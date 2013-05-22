@@ -16,10 +16,10 @@
                 {
                     var item = Model[i];
                     <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
-                        <td class="a-left specname">
+                        <td class="a-left spec-name">
                             @item.SpecificationAttributeName
                         </td>
-                        <td class="a-left specvalue">
+                        <td class="a-left spec-value">
                             @item.SpecificationAttributeOption
                         </td>
                     </tr>

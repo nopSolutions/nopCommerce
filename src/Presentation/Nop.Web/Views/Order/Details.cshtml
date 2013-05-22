@@ -277,20 +277,20 @@
                         <tr>
                             @if (Model.ShowSku)
                             {
-                                <th class="a-center">
+                                <th class="a-center sku">
                                     @T("Order.Product(s).SKU")
                                 </th>
                             }
-                            <th class="a-center">
+                            <th class="a-center name">
                                 @T("Order.Product(s).Name")
                             </th>
-                            <th class="a-center">
+                            <th class="a-center price">
                                 @T("Order.Product(s).Price")
                             </th>
-                            <th class="a-center">
+                            <th class="a-center quantity">
                                 @T("Order.Product(s).Quantity")
                             </th>
-                            <th class="a-center">
+                            <th class="a-center total">
                                 @T("Order.Product(s).Total")
                             </th>
                         </tr>
@@ -301,11 +301,11 @@
                             <tr>
                                 @if (Model.ShowSku)
                                 {
-                                    <td class="a-left">
+                                    <td class="a-left sku">
                                         @item.Sku
                                     </td>
                                 }
-                                <td class="a-left">
+                                <td class="a-left name">
                                     @if (!Model.PrintMode)
                                     {
                                         <em><a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })" title="View details">@item.ProductName</a></em>
@@ -321,13 +321,13 @@
                                         </div>
                                     }
                                 </td>
-                                <td class="a-right">
+                                <td class="a-right price">
                                     @item.UnitPrice
                                 </td>
-                                <td class="a-center">
+                                <td class="a-center quantity">
                                     @item.Quantity
                                 </td>
-                                <td class="a-right">
+                                <td class="a-right total">
                                     @item.SubTotal
                                 </td>
                             </tr>
@@ -520,19 +520,19 @@
                     </colgroup>
                     <thead>
                         <tr>
-                            <th class="a-center">
+                            <th class="a-center id">
                                 @T("Order.Shipments.ID")
                             </th>
-                            <th class="a-center">
+                            <th class="a-center tracking-number">
                                 @T("Order.Shipments.TrackingNumber")
                             </th>
-                            <th class="a-center">
+                            <th class="a-center shipped-date">
                                 @T("Order.Shipments.ShippedDate")
                             </th>
-                            <th class="a-center">
+                            <th class="a-center delivery-date">
                                 @T("Order.Shipments.DeliveryDate")
                             </th>
-                            <th class="a-center">
+                            <th class="a-center details">
                                 @T("Order.Shipments.ViewDetails")
                             </th>
                         </tr>
@@ -541,13 +541,13 @@
                         @foreach (var item in Model.Shipments)
                         {
                             <tr>
-                                <td class="a-left">
+                                <td class="a-left id">
                                     @item.Id.ToString()
                                 </td>
-                                <td class="a-left">
+                                <td class="a-left tracking-number">
                                     @item.TrackingNumber
                                 </td>
-                                <td class="a-left">
+                                <td class="a-left shipped-date">
                                     @if (item.ShippedDate.HasValue)
                                     {
                                         @item.ShippedDate.Value.ToString("D")
@@ -557,7 +557,7 @@
                                         @T("Order.Shipments.ShippedDate.NotYet")
                                     }
                                 </td>
-                                <td class="a-left">
+                                <td class="a-left delivery-date">
                                     @if (item.DeliveryDate.HasValue)
                                     {
                                         @item.DeliveryDate.Value.ToString("D")
@@ -567,7 +567,7 @@
                                         @T("Order.Shipments.DeliveryDate.NotYet")
                                     }
                                 </td>
-                                <td class="a-center">
+                                <td class="a-center details">
                                     <a href="@Url.RouteUrl("ShipmentDetails", new { shipmentId = item.Id })" title="@T("Order.Shipments.ViewDetails")">@T("Order.Shipments.ViewDetails")</a>
                                 </td>
                             </tr>
@@ -592,10 +592,10 @@
                     </colgroup>
                     <thead>
                         <tr>
-                            <th class="a-center">
+                            <th class="a-center createdon">
                                 @T("Order.Notes.CreatedOn")
                             </th>
-                            <th class="a-center">
+                            <th class="a-center note">
                                 @T("Order.Notes.Note")
                             </th>
                         </tr>
@@ -604,10 +604,10 @@
                         @foreach (var item in Model.OrderNotes)
                         {
                             <tr>
-                                <td class="a-left">
+                                <td class="a-left createdon">
                                     @item.CreatedOn.ToString()
                                 </td>
-                                <td class="a-left">
+                                <td class="a-left note">
                                     @Html.Raw(item.Note)
                                 </td>
                             </tr>

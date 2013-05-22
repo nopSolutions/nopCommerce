@@ -37,16 +37,16 @@
                     </colgroup>
                     <thead>
                         <tr>
-                            <th class="a-center">
+                            <th class="a-center date">
                                 @T("RewardPoints.Fields.Date")
                             </th>
-                            <th class="a-center">
+                            <th class="a-center points">
                                 @T("RewardPoints.Fields.Points")
                             </th>
-                            <th class="a-center">
+                            <th class="a-center points-balance">
                                 @T("RewardPoints.Fields.PointsBalance")
                             </th>
-                            <th class="a-center">
+                            <th class="a-center message">
                                 @T("RewardPoints.Fields.Message")
                             </th>
                         </tr>
@@ -56,16 +56,16 @@
                         {
                             var item = Model.RewardPoints[i];
                             <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
-                                <td class="a-center">
+                                <td class="a-center date">
                                     @item.CreatedOn
                                 </td>
-                                <td class="a-center">
+                                <td class="a-center points">
                                     @item.Points
                                 </td>
-                                <td class="a-center">
+                                <td class="a-center points-balance">
                                     @item.PointsBalance
                                 </td>
-                                <td class="a-left">
+                                <td class="a-left message">
                                     @item.Message
                                 </td>
                             </tr>

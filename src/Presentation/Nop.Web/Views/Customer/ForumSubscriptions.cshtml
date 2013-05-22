@@ -44,10 +44,10 @@
                     </colgroup>
                     <thead>
                         <tr>
-                            <th class="a-center">
+                            <th class="a-center select-boxes">
                                 <input type="checkbox" id="selectall" />
                             </th>
-                            <th class="a-center">
+                            <th class="a-center info">
                                 @T("Account.ForumSubscriptions.InfoColumn")
                             </th>
                         </tr>
@@ -57,10 +57,10 @@
                         {
                             var item = Model.ForumSubscriptions[i];
                             <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
-                                <td class="a-center">
+                                <td class="a-center select-boxes">
                                     <input type="checkbox" name="fs@(item.Id)" class="rowcheckbox" />
                                 </td>
-                                <td class="a-left">
+                                <td class="a-left info">
                                     @if (item.TopicSubscription)
                                     {
                                         @Html.RouteLink(item.Title, "TopicSlug", new { Id = item.ForumTopicId, slug = item.Slug })
