@@ -270,7 +270,18 @@ namespace Nop.Web.Framework.UI.Paging
 				routeValues[key] = value;
 			}
 
-			routeValues[pageQueryName] = pageNumber;
+            if (pageNumber > 1)
+            {
+                routeValues[pageQueryName] = pageNumber;
+            }
+            else
+            {
+                //SEO. we do not render pageindex query string parameter for the first page
+                if (routeValues.ContainsKey(pageQueryName))
+                {
+                    routeValues.Remove(pageQueryName);
+                }
+            }
 
 			var url = UrlHelper.GenerateUrl(null, null, null, routeValues, RouteTable.Routes, viewContext.RequestContext, true);
 			return url;
