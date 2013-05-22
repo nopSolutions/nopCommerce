@@ -19,7 +19,7 @@
                     <li>
                         <div class="item">
                             <div>
-                                @T("DownloadableProducts.Fields.Order"): <a class="link" href="@Url.RouteUrl("OrderDetails", new { orderId = item.OrderId })">@item.OrderId</a>
+                                @T("DownloadableProducts.Fields.Order"): <a href="@Url.RouteUrl("OrderDetails", new { orderId = item.OrderId })">@item.OrderId</a>
                             </div>
                             <div>
                                 @T("DownloadableProducts.Fields.Date"): @item.CreatedOn.ToString("d")
@@ -37,7 +37,7 @@
                                 @if (item.DownloadId > 0)
                                 {
                                     <div>
-                                        <a data-ajax="false" class="link" href="@Url.RouteUrl("GetDownload", new { opvId = item.OrderProductVariantGuid })">@T("DownloadableProducts.Fields.Download")</a>
+                                        <a data-ajax="false" href="@Url.RouteUrl("GetDownload", new { opvId = item.OrderProductVariantGuid })">@T("DownloadableProducts.Fields.Download")</a>
                                     </div>
                                 }
                                 else
@@ -49,7 +49,7 @@
                                 @if (item.LicenseId > 0)
                                 {
                                     <div>
-                                        <a class="link" href="@Url.RouteUrl("GetLicense", new { opvId = item.OrderProductVariantGuid })">@T("DownloadableProducts.Fields.DownloadLicense")</a>
+                                        <a href="@Url.RouteUrl("GetLicense", new { opvId = item.OrderProductVariantGuid })">@T("DownloadableProducts.Fields.DownloadLicense")</a>
                                     </div>
                                 }
                             </div>
