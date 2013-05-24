@@ -31,7 +31,6 @@ namespace Nop.Admin.Controllers
         private readonly IUrlRecordService _urlRecordService;
         private readonly IStoreService _storeService;
         private readonly IStoreMappingService _storeMappingService;
-        private readonly AdminAreaSettings _adminAreaSettings;
 
         #endregion
 
@@ -41,8 +40,7 @@ namespace Nop.Admin.Controllers
             IDateTimeHelper dateTimeHelper, 
             ILocalizationService localizationService, IPermissionService permissionService,
             IUrlRecordService urlRecordService,
-            IStoreService storeService, IStoreMappingService storeMappingService,
-            AdminAreaSettings adminAreaSettings)
+            IStoreService storeService, IStoreMappingService storeMappingService)
         {
             this._blogService = blogService;
             this._languageService = languageService;
@@ -52,7 +50,6 @@ namespace Nop.Admin.Controllers
             this._urlRecordService = urlRecordService;
             this._storeService = storeService;
             this._storeMappingService = storeMappingService;
-            this._adminAreaSettings = adminAreaSettings;
 		}
 
 		#endregion 
