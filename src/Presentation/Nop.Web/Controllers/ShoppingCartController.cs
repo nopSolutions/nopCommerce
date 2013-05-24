@@ -1648,7 +1648,7 @@ namespace Nop.Web.Controllers
         
         [ValidateInput(false)]
         [HttpPost, ActionName("Cart")]
-        [FormValueRequired("startcheckout")]
+        [FormValueRequired("checkout")]
         public ActionResult StartCheckout(FormCollection form)
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems

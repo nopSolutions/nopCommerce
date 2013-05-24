@@ -119,9 +119,7 @@
             {
                 <div class="common-buttons">
                     <input type="submit" name="continueshopping" value="@T("ShoppingCart.ContinueShopping")" />
-                    <div style="display: none;">
-                        <input type="submit" name="startcheckout" value="startcheckout" id="startcheckout" />
-                    </div>
+
                 </div>
                 @Html.Partial("_CheckoutAttributes", Model.CheckoutAttributes, new ViewDataDictionary())
             }
@@ -179,13 +177,11 @@
                                         }
                                                 </text>
                                         }
-                                        if (termOfServiceOk) {
-                                            $('#startcheckout').trigger("click");
-                                        }
+                                        return termOfServiceOk;
                                     });
                                 });
                             </script>
-                            <input type="submit" name="checkout" value="@T("Checkout.Button")" id="checkout" />
+                            <button type="submit"  id="checkout" name="checkout" value="checkout">@T("Checkout.Button")</button>
                         }
                     </div>
                 }

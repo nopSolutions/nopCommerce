@@ -169,8 +169,6 @@
                 <div class="common-buttons">
                     <input type="submit" name="updatecart" value="@T("ShoppingCart.UpdateCart")" class="button-2 update-cart-button" />
                     <input type="submit" name="continueshopping" value="@T("ShoppingCart.ContinueShopping")" class="button-2 continue-shopping-button" />
-                    <input type="submit" name="startcheckout" value="startcheckout" id="startcheckout"
-                        style="display: none;" />
                 </div>
                 @Html.Partial("_CheckoutAttributes", Model.CheckoutAttributes, new ViewDataDictionary())
             }
@@ -239,13 +237,11 @@
                                         }
                                                 </text>
                                         }
-                                        if (termOfServiceOk) {
-                                            $('#startcheckout').trigger("click");
-                                        }
+                                        return termOfServiceOk;
                                     });
                                 });
                             </script>
-                            <button type="button" id="checkout" name="checkout" class="button-1 checkout-button">
+                            <button type="submit" id="checkout" name="checkout" value="checkout" class="button-1 checkout-button">
                                 <span>@T("Checkout.Button")</span>
                             </button>
                         }
