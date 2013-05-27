@@ -8,6 +8,8 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Stores;
 using Nop.Services.Events;
+using Nop.Services.Security;
+using Nop.Services.Stores;
 
 namespace Nop.Services.Catalog
 {
@@ -78,6 +80,8 @@ namespace Nop.Services.Catalog
         private readonly IStoreContext _storeContext;
         private readonly IEventPublisher _eventPublisher;
         private readonly ICacheManager _cacheManager;
+        private readonly IStoreMappingService _storeMappingService;
+        private readonly IAclService _aclService;
 
         #endregion
         
@@ -95,6 +99,8 @@ namespace Nop.Services.Catalog
         /// <param name="workContext">Work context</param>
         /// <param name="storeContext">Store context</param>
         /// <param name="eventPublisher">Event publisher</param>
+        /// <param name="storeMappingService">Store mapping service</param>
+        /// <param name="aclService">ACL service</param>
         public CategoryService(ICacheManager cacheManager,
             IRepository<Category> categoryRepository,
             IRepository<ProductCategory> productCategoryRepository,
@@ -103,7 +109,9 @@ namespace Nop.Services.Catalog
             IRepository<StoreMapping> storeMappingRepository,
             IWorkContext workContext,
             IStoreContext storeContext,
-            IEventPublisher eventPublisher)
+            IEventPublisher eventPublisher,
+            IStoreMappingService storeMappingService,
+            IAclService aclService)
         {
             this._cacheManager = cacheManager;
             this._categoryRepository = categoryRepository;
@@ -113,7 +121,9 @@ namespace Nop.Services.Catalog
             this._storeMappingRepository = storeMappingRepository;
             this._workContext = workContext;
             this._storeContext = storeContext;
-            _eventPublisher = eventPublisher;
+            this._eventPublisher = eventPublisher;
+            this._storeMappingService = storeMappingService;
+            this._aclService = aclService;
         }
 
         #endregion
@@ -425,9 +435,9 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Gets a product category mapping collection
         /// </summary>
-        /// <param name="productId">Product identifier</param>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Product category mapping collection</returns>
+        /// <param name="productId"> Product identifier</param>
+        /// <param name="showHidden"> A value indicating whether to show hidden records</param>
+        /// <returns> Product category mapping collection</returns>
         public virtual IList<ProductCategory> GetProductCategoriesByProductId(int productId, bool showHidden = false)
         {
             if (productId == 0)
@@ -444,38 +454,61 @@ namespace Nop.Services.Catalog
                             orderby pc.DisplayOrder
                             select pc;
 
+                //we can uncomment the code below
+                //it works just fine and meets our standards
+                //but it's quite slow
+                //and it can really slow down the system with discounts assigned to categories assigned
+                //that's why filter by ACL and stores in memory
+                //if (!showHidden)
+                //{
+                //    //ACL (access control list)
+                //    var allowedCustomerRolesIds = _workContext.CurrentCustomer.CustomerRoles
+                //        .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
+                //    query = from pc in query
+                //            join c in _categoryRepository.Table on pc.CategoryId equals c.Id
+                //            join acl in _aclRepository.Table on c.Id equals acl.EntityId into c_acl
+                //            from acl in c_acl.DefaultIfEmpty()
+                //            where !c.SubjectToAcl || (acl.EntityName == "Category" && allowedCustomerRolesIds.Contains(acl.CustomerRoleId))
+                //            select pc;
+
+                //    //Store mapping
+                //    var currentStoreId = _storeContext.CurrentStore.Id;
+                //    query = from pc in query
+                //            join c in _categoryRepository.Table on pc.CategoryId equals c.Id
+                //            join sm in _storeMappingRepository.Table on c.Id equals sm.EntityId into c_sm
+                //            from sm in c_sm.DefaultIfEmpty()
+                //            where !c.LimitedToStores || (sm.EntityName == "Category" && currentStoreId == sm.StoreId)
+                //            select pc;
+
+                //    //only distinct categories (group by ID)
+                //    query = from pc in query
+                //            group pc by pc.Id
+                //            into pcGroup
+                //            orderby pcGroup.Key
+                //            select pcGroup.FirstOrDefault();
+                //    query = query.OrderBy(pc => pc.DisplayOrder);
+                //}
+                //var productCategories = query.ToList();
+                //return productCategories;
+
+                var allProductCategories = query.ToList();
+                var result = new List<ProductCategory>();
                 if (!showHidden)
                 {
-                    //ACL (access control list)
-                    var allowedCustomerRolesIds = _workContext.CurrentCustomer.CustomerRoles
-                        .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
-                    query = from pc in query
-                            join c in _categoryRepository.Table on pc.CategoryId equals c.Id
-                            join acl in _aclRepository.Table on c.Id equals acl.EntityId into c_acl
-                            from acl in c_acl.DefaultIfEmpty()
-                            where !c.SubjectToAcl || (acl.EntityName == "Category" && allowedCustomerRolesIds.Contains(acl.CustomerRoleId))
-                            select pc;
-
-                    //Store mapping
-                    var currentStoreId = _storeContext.CurrentStore.Id;
-                    query = from pc in query
-                            join c in _categoryRepository.Table on pc.CategoryId equals c.Id
-                            join sm in _storeMappingRepository.Table on c.Id equals sm.EntityId into c_sm
-                            from sm in c_sm.DefaultIfEmpty()
-                            where !c.LimitedToStores || (sm.EntityName == "Category" && currentStoreId == sm.StoreId)
-                            select pc;
-
-                    //only distinct categories (group by ID)
-                    query = from pc in query
-                            group pc by pc.Id
-                            into pcGroup
-                            orderby pcGroup.Key
-                            select pcGroup.FirstOrDefault();
-                    query = query.OrderBy(pc => pc.DisplayOrder);
+                    foreach (var pc in allProductCategories)
+                    {
+                        //ACL (access control list) and store mapping
+                        var category = pc.Category;
+                        if (_aclService.Authorize(category) && _storeMappingService.Authorize(category))
+                            result.Add(pc);
+                    }
                 }
-                
-                var productCategories = query.ToList();
-                return productCategories;
+                else
+                {
+                    //no filtering
+                    result.AddRange(allProductCategories);
+                }
+                return result;
             });
         }
 
