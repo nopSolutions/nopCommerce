@@ -106,7 +106,7 @@ namespace Nop.Web.Framework.UI.Paging
         {
             return ToHtmlString();
         }
-		public string ToHtmlString()
+		public virtual string ToHtmlString()
 		{
             if (model.TotalItems == 0) 
 				return null;
