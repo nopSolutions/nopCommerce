@@ -121,6 +121,11 @@ namespace Nop.Web.Models.Catalog
 
             public partial class ProductVariantPriceModel : BaseNopModel
             {
+                /// <summary>
+                /// The currency (in 3-letter ISO 4217 format) of the offer price 
+                /// </summary>
+                public string CurrencyCode { get; set; }
+
                 public string OldPrice { get; set; }
 
                 public string Price { get; set; }

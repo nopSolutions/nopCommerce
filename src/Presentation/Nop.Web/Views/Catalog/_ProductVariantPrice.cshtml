@@ -79,5 +79,9 @@
                 </span>
             </div>
          }
+         if (!String.IsNullOrEmpty(Model.CurrencyCode))
+         {
+            <meta itemprop="priceCurrency" content="@Model.CurrencyCode" />
+         }
     }
 </div>

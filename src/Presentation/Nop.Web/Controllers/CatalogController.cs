@@ -667,6 +667,9 @@ namespace Nop.Web.Controllers
 
                         model.ProductVariantPrice.PriceValue = finalPriceWithoutDiscount;
                         model.ProductVariantPrice.PriceWithDiscountValue = finalPriceWithDiscount;
+
+                        //currency code
+                        model.ProductVariantPrice.CurrencyCode = _workContext.WorkingCurrency.CurrencyCode;
                     }
                 }
             }
