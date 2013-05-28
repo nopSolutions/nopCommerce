@@ -49,7 +49,6 @@ namespace Nop.Services.Messages
         private readonly IPaymentService _paymentService;
         private readonly IProductAttributeParser _productAttributeParser;
 
-        private readonly StoreInformationSettings _storeSettings;
         private readonly MessageTemplatesSettings _templatesSettings;
         private readonly EmailAccountSettings _emailAccountSettings;
         private readonly CatalogSettings _catalogSettings;
@@ -68,7 +67,7 @@ namespace Nop.Services.Messages
             IWorkContext workContext, IDownloadService downloadService,
             IOrderService orderService, IPaymentService paymentService,
             IProductAttributeParser productAttributeParser,
-            StoreInformationSettings storeSettings, MessageTemplatesSettings templatesSettings,
+            MessageTemplatesSettings templatesSettings,
             EmailAccountSettings emailAccountSettings, CatalogSettings catalogSettings,
             TaxSettings taxSettings, IEventPublisher eventPublisher)
         {
@@ -85,7 +84,6 @@ namespace Nop.Services.Messages
             this._paymentService = paymentService;
             this._productAttributeParser = productAttributeParser;
 
-            this._storeSettings = storeSettings;
             this._templatesSettings = templatesSettings;
             this._emailAccountSettings = emailAccountSettings;
             this._catalogSettings = catalogSettings;
