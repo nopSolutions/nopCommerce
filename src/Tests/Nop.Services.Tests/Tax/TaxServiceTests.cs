@@ -110,23 +110,23 @@ namespace Nop.Services.Tests.Tax
 
         protected decimal GetFixedTestTaxRate()
         {
-            //10 is a fixed tax rate returned from FixedRateTestTaxProvider. Perhaps, it should be configured in some other way 
+            //10 is a fixed tax rate returned from FixedRateTestTaxProvider. Perhaps, it should be configured some other way 
             return 10;
         }
 
-        [Test]
-        public void Can_get_tax_rate_for_productVariant()
-        {
-            _taxSettings.TaxBasedOn = TaxBasedOn.BillingAddress;
+        //[Test]
+        //public void Can_get_tax_rate_for_productVariant()
+        //{
+        //    _taxSettings.TaxBasedOn = TaxBasedOn.BillingAddress;
 
-            var customer = new Customer();
-            customer.BillingAddress = new Address();
-            var productVariant = new ProductVariant();
+        //    var customer = new Customer();
+        //    customer.BillingAddress = new Address();
+        //    var productVariant = new ProductVariant();
 
-            _taxService.GetTaxRate(productVariant, customer).ShouldEqual(GetFixedTestTaxRate());
-            productVariant.IsTaxExempt = true;
-            _taxService.GetTaxRate(productVariant, customer).ShouldEqual(0);
-        }
+        //    _taxService.GetTaxRate(productVariant, customer).ShouldEqual(GetFixedTestTaxRate());
+        //    productVariant.IsTaxExempt = true;
+        //    _taxService.GetTaxRate(productVariant, customer).ShouldEqual(0);
+        //}
 
         [Test]
         public void Can_get_productPrice_priceIncludesTax_includingTax()

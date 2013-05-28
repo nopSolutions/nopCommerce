@@ -58,7 +58,7 @@ namespace Nop.Services.Tax
         /// <param name="taxCategoryId">Tax category identifier</param>
         /// <param name="customer">Customer</param>
         /// <returns>Package for tax calculation</returns>
-        protected CalculateTaxRequest CreateCalculateTaxRequest(ProductVariant productVariant, 
+        protected virtual CalculateTaxRequest CreateCalculateTaxRequest(ProductVariant productVariant, 
             int taxCategoryId, Customer customer)
         {
             var calculateTaxRequest = new CalculateTaxRequest();
@@ -123,7 +123,7 @@ namespace Nop.Services.Tax
         /// <param name="percent">Percent</param>
         /// <param name="increase">Increase</param>
         /// <returns>New price</returns>
-        protected decimal CalculatePrice(decimal price, decimal percent, bool increase)
+        protected virtual decimal CalculatePrice(decimal price, decimal percent, bool increase)
         {
             decimal result = decimal.Zero;
             if (percent == decimal.Zero)
@@ -139,54 +139,14 @@ namespace Nop.Services.Tax
             }
             return result;
         }
-
-        #endregion
-
-        #region Methods
-
-        /// <summary>
-        /// Load active tax provider
-        /// </summary>
-        /// <returns>Active tax provider</returns>
-        public virtual ITaxProvider LoadActiveTaxProvider()
-        {
-            var taxProvider = LoadTaxProviderBySystemName(_taxSettings.ActiveTaxProviderSystemName);
-            if (taxProvider == null)
-                taxProvider = LoadAllTaxProviders().FirstOrDefault();
-            return taxProvider;
-        }
-
-        /// <summary>
-        /// Load tax provider by system name
-        /// </summary>
-        /// <param name="systemName">System name</param>
-        /// <returns>Found tax provider</returns>
-        public virtual ITaxProvider LoadTaxProviderBySystemName(string systemName)
-        {
-            var descriptor = _pluginFinder.GetPluginDescriptorBySystemName<ITaxProvider>(systemName);
-            if (descriptor != null)
-                return descriptor.Instance<ITaxProvider>();
-
-            return null;
-        }
-
-        /// <summary>
-        /// Load all tax providers
-        /// </summary>
-        /// <returns>Tax providers</returns>
-        public virtual IList<ITaxProvider> LoadAllTaxProviders()
-        {
-            return _pluginFinder.GetPlugins<ITaxProvider>().ToList();
-        }
-
-
+        
         /// <summary>
         /// Gets tax rate
         /// </summary>
         /// <param name="productVariant">Product variant</param>
         /// <param name="customer">Customer</param>
         /// <returns>Tax rate</returns>
-        public virtual decimal GetTaxRate(ProductVariant productVariant, Customer customer)
+        protected virtual decimal GetTaxRate(ProductVariant productVariant, Customer customer)
         {
             return GetTaxRate(productVariant, 0, customer);
         }
@@ -197,7 +157,7 @@ namespace Nop.Services.Tax
         /// <param name="taxCategoryId">Tax category identifier</param>
         /// <param name="customer">Customer</param>
         /// <returns>Tax rate</returns>
-        public virtual decimal GetTaxRate(int taxCategoryId, Customer customer)
+        protected virtual decimal GetTaxRate(int taxCategoryId, Customer customer)
         {
             return GetTaxRate(null, taxCategoryId, customer);
         }
@@ -209,7 +169,7 @@ namespace Nop.Services.Tax
         /// <param name="taxCategoryId">Tax category identifier</param>
         /// <param name="customer">Customer</param>
         /// <returns>Tax rate</returns>
-        public virtual decimal GetTaxRate(ProductVariant productVariant, int taxCategoryId, 
+        protected virtual decimal GetTaxRate(ProductVariant productVariant, int taxCategoryId, 
             Customer customer)
         {
             //tax exempt
@@ -252,6 +212,46 @@ namespace Nop.Services.Tax
                 return decimal.Zero;
         }
         
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Load active tax provider
+        /// </summary>
+        /// <returns>Active tax provider</returns>
+        public virtual ITaxProvider LoadActiveTaxProvider()
+        {
+            var taxProvider = LoadTaxProviderBySystemName(_taxSettings.ActiveTaxProviderSystemName);
+            if (taxProvider == null)
+                taxProvider = LoadAllTaxProviders().FirstOrDefault();
+            return taxProvider;
+        }
+
+        /// <summary>
+        /// Load tax provider by system name
+        /// </summary>
+        /// <param name="systemName">System name</param>
+        /// <returns>Found tax provider</returns>
+        public virtual ITaxProvider LoadTaxProviderBySystemName(string systemName)
+        {
+            var descriptor = _pluginFinder.GetPluginDescriptorBySystemName<ITaxProvider>(systemName);
+            if (descriptor != null)
+                return descriptor.Instance<ITaxProvider>();
+
+            return null;
+        }
+
+        /// <summary>
+        /// Load all tax providers
+        /// </summary>
+        /// <returns>Tax providers</returns>
+        public virtual IList<ITaxProvider> LoadAllTaxProviders()
+        {
+            return _pluginFinder.GetPlugins<ITaxProvider>().ToList();
+        }
+
 
 
         /// <summary>

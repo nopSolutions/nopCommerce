@@ -35,33 +35,6 @@ namespace Nop.Services.Tax
 
 
 
-        /// <summary>
-        /// Gets tax rate
-        /// </summary>
-        /// <param name="productVariant">Product variant</param>
-        /// <param name="customer">Customer</param>
-        /// <returns>Tax rate</returns>
-        decimal GetTaxRate(ProductVariant productVariant, Customer customer);
-
-        /// <summary>
-        /// Gets tax rate
-        /// </summary>
-        /// <param name="taxCategoryId">Tax category identifier</param>
-        /// <param name="customer">Customer</param>
-        /// <returns>Tax rate</returns>
-        decimal GetTaxRate(int taxCategoryId, Customer customer);
-        
-        /// <summary>
-        /// Gets tax rate
-        /// </summary>
-        /// <param name="productVariant">Product variant</param>
-        /// <param name="taxCategoryId">Tax category identifier</param>
-        /// <param name="customer">Customer</param>
-        /// <returns>Tax rate</returns>
-        decimal GetTaxRate(ProductVariant productVariant, int taxCategoryId, 
-            Customer customer);
-        
-
 
 
         /// <summary>
