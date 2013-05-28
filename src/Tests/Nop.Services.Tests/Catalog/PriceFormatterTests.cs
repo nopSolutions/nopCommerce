@@ -130,7 +130,7 @@ namespace Nop.Services.Tests.Catalog
                 LanguageCulture = "en-US"
             };
             _priceFormatter.FormatPrice(1234.5M, false, usd_currency, language, false, false).ShouldEqual("$1,234.50");
-            _priceFormatter.FormatPrice(1234.5M, false, rub_currency, language, false, false).ShouldEqual("1 234,50 р.");
+            _priceFormatter.FormatPrice(1234.5M, false, rub_currency, language, false, false).ShouldEqual("1 234,50р.");
         }
 
         [Test]
