@@ -25,7 +25,7 @@
                                 @T("DownloadableProducts.Fields.Date"): @item.CreatedOn.ToString("d")
                             </div>
                             <div>
-                                @T("DownloadableProducts.Fields.Product"): <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })" title="View details">@item.ProductName</a>
+                                @T("DownloadableProducts.Fields.Product"): <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a>
                                 @if (!String.IsNullOrEmpty(item.ProductAttributes))
                                 {
                                     <div class="attributes">

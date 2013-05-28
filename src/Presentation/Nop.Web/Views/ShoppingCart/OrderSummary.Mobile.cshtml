@@ -28,7 +28,7 @@
                     <li>
                         <div class="cart-item-row">
                             <div class="product">
-                                <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })" title="View details">@item.ProductName</a>
+                                <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a>
                                 @if (!String.IsNullOrEmpty(item.AttributeInfo))
                                 {
                                     <div class="attributes">

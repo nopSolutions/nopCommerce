@@ -23,7 +23,7 @@
                 </div>
                 <ul class="details">
                     <li class="product">
-                        @T("Account.CustomerReturnRequests.Item") <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })" title="View details">@item.ProductName</a>
+                        @T("Account.CustomerReturnRequests.Item") <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a>
                         x @item.Quantity
                     </li>
                     <li class="reason">
