@@ -3886,6 +3886,11 @@
             </LocaleResource>
             <LocaleResource Name="HeaderQuantity">
                 <Value>({0})</Value>
+                <Children>
+                  <LocaleResource Name="Mobile">
+                    <Value>({0})</Value>
+                  </LocaleResource>
+                </Children>
             </LocaleResource>
             <LocaleResource Name="ItemTotal">
                 <Value>Total</Value>
@@ -4105,6 +4110,11 @@
             </LocaleResource>
             <LocaleResource Name="HeaderQuantity">
                 <Value>({0})</Value>
+                <Children>
+                  <LocaleResource Name="Mobile">
+                    <Value>({0})</Value>
+                  </LocaleResource>
+                </Children>
             </LocaleResource>
             <LocaleResource Name="EmailAFriend">
                 <Value>Email a friend</Value>

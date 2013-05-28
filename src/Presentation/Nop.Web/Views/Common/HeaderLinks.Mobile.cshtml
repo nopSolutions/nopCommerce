@@ -20,12 +20,12 @@
         @if (Model.ShoppingCartEnabled)
         {
             <li><a href="@Url.RouteUrl("ShoppingCart")" class="ico-cart" data-role="button">@T("ShoppingCart")
-                @T("ShoppingCart.HeaderQuantity", Model.ShoppingCartItems)</a></li>
+                @T("ShoppingCart.HeaderQuantity.Mobile", Model.ShoppingCartItems)</a></li>
         }
         @if (Model.WishlistEnabled)
         {
             <li><a href="@Url.RouteUrl("Wishlist")" class="ico-wishlist" data-role="button">@T("Wishlist")
-                @T("Wishlist.HeaderQuantity", Model.WishlistItems)</a></li>
+                @T("Wishlist.HeaderQuantity.Mobile", Model.WishlistItems)</a></li>
         }
     </ul>
 </div>

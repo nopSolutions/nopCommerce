@@ -38,6 +38,12 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.NumberOfAssociatedProducts">
     <Value>Number of associated products</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.HeaderQuantity.Mobile">
+    <Value>({0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="Wishlist.HeaderQuantity.Mobile">
+    <Value>({0})</Value>
+  </LocaleResource>
 </Language>
 '
 
