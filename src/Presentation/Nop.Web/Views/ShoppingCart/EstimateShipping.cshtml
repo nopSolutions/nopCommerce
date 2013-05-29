@@ -39,22 +39,17 @@
             <div class="shipping-options">
                 <div class="inputs">
                     @Html.LabelFor(model => model.CountryId, new { }, ":")
-                @Html.DropDownListFor(model => model.CountryId, Model.AvailableCountries, new { @class = "country-input" })
-                    @Html.ValidationMessageFor(model => model.CountryId)
-
+                    @Html.DropDownListFor(model => model.CountryId, Model.AvailableCountries, new { @class = "country-input" })
+                    <span class="required">*</span>
                 </div>
                 <div class="inputs">
                     @Html.LabelFor(model => model.StateProvinceId, new { }, ":")
-                @Html.DropDownListFor(model => model.StateProvinceId, Model.AvailableStates, new { @class = "state-input" })
+                    @Html.DropDownListFor(model => model.StateProvinceId, Model.AvailableStates, new { @class = "state-input" })
                     <span id="estimate-shipping-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
-                    @Html.ValidationMessageFor(model => model.StateProvinceId)
-
                 </div>
                 <div class="inputs">
                     @Html.LabelFor(model => model.ZipPostalCode, new { }, ":")
-                @Html.TextBoxFor(model => model.ZipPostalCode, new { @class = "zip-input" })
-                    @Html.ValidationMessageFor(model => model.ZipPostalCode)
-
+                    @Html.TextBoxFor(model => model.ZipPostalCode, new { @class = "zip-input" })
                 </div>
                 <div class="inputs">
                     <input type="submit" name="estimateshipping" value="@T("ShoppingCart.EstimateShipping.Button")" class="button-2 estimate-shipping-button" />
