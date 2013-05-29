@@ -160,3 +160,12 @@ BEGIN
 	CREATE NONCLUSTERED INDEX [IX_Product_SubjectToAcl] ON [Product] ([SubjectToAcl] ASC)
 END
 GO
+
+
+--recaptcha theme name
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'captchasettings.recaptchatheme')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'captchasettings.recaptchatheme', N'', 0)
+END
+GO

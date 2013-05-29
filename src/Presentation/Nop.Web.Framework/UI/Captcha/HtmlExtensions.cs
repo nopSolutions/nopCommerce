@@ -10,10 +10,12 @@ namespace Nop.Web.Framework.UI.Captcha
         public static string GenerateCaptcha(this HtmlHelper helper)
         {
             var captchaSettings = EngineContext.Current.Resolve<CaptchaSettings>();
+
+            var theme = !string.IsNullOrEmpty(captchaSettings.ReCaptchaTheme) ? captchaSettings.ReCaptchaTheme : "white";
             var captchaControl = new Recaptcha.RecaptchaControl
             {
                 ID = "recaptcha",
-                Theme = "blackglass",
+                Theme = theme,
                 PublicKey = captchaSettings.ReCaptchaPublicKey,
                 PrivateKey = captchaSettings.ReCaptchaPrivateKey
             };
