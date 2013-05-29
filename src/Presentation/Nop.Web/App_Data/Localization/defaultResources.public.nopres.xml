@@ -3284,6 +3284,9 @@
                     <LocaleResource Name="List">
                         <Value>Compare products list</Value>
                     </LocaleResource>
+                    <LocaleResource Name="NoItems">
+                        <Value>You have no items to compare.</Value>
+                    </LocaleResource>
                     <LocaleResource Name="Price">
                         <Value>Price</Value>
                     </LocaleResource>

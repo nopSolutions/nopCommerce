@@ -44,6 +44,9 @@ set @resources='
   <LocaleResource Name="Wishlist.HeaderQuantity.Mobile">
     <Value>({0})</Value>
   </LocaleResource>
+  <LocaleResource Name="Products.Compare.NoItems">
+    <Value>You have no items to compare.</Value>
+  </LocaleResource>
 </Language>
 '
 
