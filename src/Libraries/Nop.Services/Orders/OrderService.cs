@@ -195,13 +195,21 @@ namespace Nop.Services.Orders
             query = query.Where(o => !o.Deleted);
             query = query.OrderByDescending(o => o.CreatedOnUtc);
 
-            var orders = query.ToList();
             
-            //filter by GUID. Filter in BLL because EF doesn't support casting of GUID to string
+           
             if (!String.IsNullOrEmpty(orderGuid))
+            {
+                //filter by GUID. Filter in BLL because EF doesn't support casting of GUID to string
+                var orders = query.ToList();
                 orders = orders.FindAll(o => o.OrderGuid.ToString().ToLowerInvariant().Contains(orderGuid.ToLowerInvariant()));
+                return new PagedList<Order>(orders, pageIndex, pageSize);
+            }
+            else
+            {
+                //database layer paging
+                return new PagedList<Order>(query, pageIndex, pageSize);
+            }  
 
-            return new PagedList<Order>(orders, pageIndex, pageSize);
         }
 
         /// <summary>
