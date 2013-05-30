@@ -47,6 +47,7 @@ namespace Nop.Admin.Controllers
         #region Fields
 
         private readonly ICustomerService _customerService;
+        private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ICustomerRegistrationService _customerRegistrationService;
         private readonly ICustomerReportService _customerReportService;
@@ -84,6 +85,7 @@ namespace Nop.Admin.Controllers
         #region Constructors
 
         public CustomerController(ICustomerService customerService,
+            INewsLetterSubscriptionService newsLetterSubscriptionService,
             IGenericAttributeService genericAttributeService,
             ICustomerRegistrationService customerRegistrationService,
             ICustomerReportService customerReportService, IDateTimeHelper dateTimeHelper,
@@ -106,6 +108,7 @@ namespace Nop.Admin.Controllers
             AddressSettings addressSettings, IStoreService storeService)
         {
             this._customerService = customerService;
+            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
             this._genericAttributeService = genericAttributeService;
             this._customerRegistrationService = customerRegistrationService;
             this._customerReportService = customerReportService;
@@ -1022,6 +1025,11 @@ namespace Nop.Admin.Controllers
             try
             {
                 _customerService.DeleteCustomer(customer);
+
+                //remove newsletter subscription (if exists)
+                var subscription = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmail(customer.Email);
+                if (subscription != null)
+                    _newsLetterSubscriptionService.DeleteNewsLetterSubscription(subscription);
 
                 //activity log
                 _customerActivityService.InsertActivity("DeleteCustomer", _localizationService.GetResource("ActivityLog.DeleteCustomer"), customer.Id);
