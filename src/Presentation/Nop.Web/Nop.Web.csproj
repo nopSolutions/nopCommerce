@@ -1213,9 +1213,7 @@
     <Content Include="Scripts\jquery.mobile-1.2.0.min.js" />
     <Content Include="Themes\DefaultClean\Content\images\bullet-left.gif" />
     <Content Include="Themes\DefaultClean\Content\images\bullet-right.gif" />
-    <Content Include="Themes\DefaultClean\Content\styles.rtl.css">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Themes\DefaultClean\Content\styles.rtl.css" />
     <Content Include="Themes\DefaultClean\Content\ie6.css" />
     <Content Include="Themes\DefaultClean\Content\ie7.css" />
     <Content Include="Themes\DefaultClean\Content\images\ico-rss.gif" />
@@ -1359,20 +1357,14 @@
     <Content Include="Themes\DefaultClean\Content\images\progress-step-inactive.gif" />
     <Content Include="Themes\DefaultClean\Content\images\star-x-active.gif" />
     <Content Include="Themes\DefaultClean\Content\images\star-x-inactive.gif" />
-    <Content Include="Themes\DefaultClean\Content\styles.css">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Themes\DefaultClean\Content\styles.css" />
     <Content Include="Themes\Mobile\Content\images\ico-forum-post-high.gif" />
     <Content Include="Themes\Mobile\Content\images\ico-forum-post.gif" />
     <Content Include="Themes\Mobile\Content\images\ico-forum.gif" />
     <Content Include="Themes\Mobile\Content\images\star-x-active.gif" />
     <Content Include="Themes\Mobile\Content\images\star-x-inactive.gif" />
-    <Content Include="Themes\Mobile\Content\styles.css">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Themes\print.css">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Themes\Mobile\Content\styles.css" />
+    <Content Include="Themes\print.css" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
