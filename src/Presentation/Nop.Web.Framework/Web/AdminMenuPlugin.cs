@@ -5,7 +5,16 @@ namespace Nop.Web.Framework.Web
 {
     public interface IAdminMenuPlugin : IPlugin
     {
-        void BuildMenuItem();
+        /// <summary>
+        /// Authenticate a user (can he see this plugin menu item?)
+        /// </summary>
+        /// <returns></returns>
+        bool Authenticate();
+
+        /// <summary>
+        /// Build menu item
+        /// </summary>
+        /// <param name="menuItemBuilder">Menu item builder</param>
         void BuildMenuItem(MenuItemBuilder menuItemBuilder);
     }
 }

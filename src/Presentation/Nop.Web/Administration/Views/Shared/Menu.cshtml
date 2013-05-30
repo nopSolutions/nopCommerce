@@ -2,12 +2,20 @@
 @using Nop.Web.Framework.Web;
 @using Nop.Services.Security;
 @{
+    //load and register sitemap
     if (!Telerik.Web.Mvc.SiteMapManager.SiteMaps.ContainsKey("admin"))
     {
         Telerik.Web.Mvc.SiteMapManager.SiteMaps.Register<Telerik.Web.Mvc.XmlSiteMap>("admin", sitemap =>
             sitemap.LoadFrom("~/Administration/sitemap.config"));
     }
-    var adminMenuPlugins = EngineContext.Current.Resolve<Nop.Core.Plugins.IPluginFinder>().GetPlugins<IAdminMenuPlugin>();
+    
+    //menu plugin
+    var adminMenuPlugins = EngineContext.Current.Resolve<Nop.Core.Plugins.IPluginFinder>()
+        .GetPlugins<IAdminMenuPlugin>()
+        .Where(x => x.Authenticate())
+        .ToList();
+        
+    //permission service
     var permissionService = EngineContext.Current.Resolve<IPermissionService>();
 }
 @{
@@ -51,8 +59,6 @@
     {
         if (adminMenuPlugins.Any())
         {
-            if (permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
-            {
                 x.Add().Text(T("Admin.Plugins").ToHtmlString()).Items(y =>
                 {
                     foreach (var adminMenuPlugin in adminMenuPlugins)
@@ -60,7 +66,6 @@
                         adminMenuPlugin.BuildMenuItem(y.Add());
                     }
                 });
-            }
         }
     })
     .OpenOnClick(false)
