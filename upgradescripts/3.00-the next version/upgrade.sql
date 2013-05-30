@@ -47,6 +47,12 @@ set @resources='
   <LocaleResource Name="Products.Compare.NoItems">
     <Value>You have no items to compare.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.HideAdminMenuItemsBasedOnPermissions">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.HideAdminMenuItemsBasedOnPermissions.Hint">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -771,4 +777,10 @@ BEGIN
 	
 	DROP TABLE #PageIndex
 END
+GO
+
+
+--removme obsolete setting
+DELETE FROM [Setting]
+WHERE [name] = N'SecuritySettings.HideAdminMenuItemsBasedOnPermissions'
 GO

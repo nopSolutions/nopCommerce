@@ -4774,7 +4774,6 @@ namespace Nop.Services.Installation
                     ForceSslForAllPages = false,
                     EncryptionKey = "273ece6f97dd844d",
                     AdminAreaAllowedIpAddresses = null,
-                    HideAdminMenuItemsBasedOnPermissions = true,
                 });
 
             settingService.SaveSetting(new ShippingSettings()

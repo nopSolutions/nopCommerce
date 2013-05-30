@@ -120,10 +120,6 @@ namespace Nop.Admin.Models.Settings
             [AllowHtml]
             public string AdminAreaAllowedIpAddresses { get; set; }
 
-            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.HideAdminMenuItemsBasedOnPermissions")]
-            public bool HideAdminMenuItemsBasedOnPermissions { get; set; }
-
-
 
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaEnabled")]
