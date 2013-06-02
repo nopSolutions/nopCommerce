@@ -7,9 +7,9 @@ Manually:
 
 
 Automatic:
-1. nopCommerce package with source code contains two .bat files for deploying that will deploy everything correctly for you to a "\Deployable\" folder.”. The first file is src\Prepare.bat. This file will build the project in release mode and move the plugins to the correct directory. The second file is src\Deploy.bat. This file will do what Prepare.bat does, but will also move all the websites and files to src\Deployable\Nop_2.X.
+1. nopCommerce package with source code contains two .bat files for deploying that will deploy everything correctly for you to a "\Deployable\" folder.”. The first file is src\Prepare.bat. This file will build the project in release mode and move the plugins to the correct directory. The second file is src\Deploy.bat. This file will do what Prepare.bat does, but will also move all the websites and files to src\Deployable\Nop_{Version}.
 Note: Before running the files make sure you build the project in Visual Studio.
-2. Select all the files in src\Deployable\Nop_2.X directory and upload them to your web server.
+2. Select all the files in src\Deployable\Nop_{Version} directory and upload them to your web server.
 Note: If you're getting an error, try to compile the solution in Visual Studio before running the .bat files
 
 
