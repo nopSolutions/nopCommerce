@@ -53,6 +53,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.HideAdminMenuItemsBasedOnPermissions.Hint">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Products.Breadcrumb.Top">
+    <Value>Home</Value>
+  </LocaleResource>
+  <LocaleResource Name="Categories.Breadcrumb.Top">
+    <Value>Home</Value>
+  </LocaleResource>
 </Language>
 '
 

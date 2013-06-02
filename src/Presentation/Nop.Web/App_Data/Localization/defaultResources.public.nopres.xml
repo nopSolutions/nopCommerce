@@ -1055,7 +1055,7 @@
             <LocaleResource Name="Breadcrumb">
                 <Children>
                     <LocaleResource Name="Top">
-                        <Value>Top</Value>
+                        <Value>Home</Value>
                     </LocaleResource>
                 </Children>
             </LocaleResource>
@@ -3262,7 +3262,7 @@
             <LocaleResource Name="Breadcrumb">
                 <Children>
                     <LocaleResource Name="Top">
-                        <Value>Top</Value>
+                        <Value>Home</Value>
                     </LocaleResource>
                 </Children>
             </LocaleResource>
