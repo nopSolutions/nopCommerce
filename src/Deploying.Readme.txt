@@ -15,5 +15,5 @@ Note: If you're getting an error, try to compile the solution in Visual Studio b
 
 
 
-Notes for HP laptop users: 
-If you have an HP laptop and get the following error: "the OutputPath property is not set for project Nop.Web.csproj", please check to make sure that you have specified a valid combination of configuration and Platform for this project: Configuration='Release' and Platform='MCD'. Then remove the Platform environment setting from you machine: From the Start menu, start typing environment variable, then select Edit the system environment variables. Click the Environment Variables button at the bottom of the resulting dialog, find Platform under System variables, and press Delete. 
+Notes for HP (Hewlett Packard) users: 
+HP machines come preloaded with a registry key that will interfere when running the deploy batch file. If you have an HP laptop and get the following error: "the OutputPath property is not set for project Nop.Web.csproj", then using regedit.exe navigate to HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment. Delete the complete key (Key and value) Platform (your value is MCD). Restart your computer. 
