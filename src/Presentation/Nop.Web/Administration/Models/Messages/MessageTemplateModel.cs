@@ -53,6 +53,9 @@ namespace Nop.Admin.Models.Messages
         [NopResourceDisplayName("Admin.ContentManagement.MessageTemplates.Fields.AvailableStores")]
         public List<StoreModel> AvailableStores { get; set; }
         public int[] SelectedStoreIds { get; set; }
+        //comma-separated list of stores used on the list page
+        [NopResourceDisplayName("Admin.ContentManagement.MessageTemplates.Fields.LimitedToStores")]
+        public string ListOfStores { get; set; }
 
 
 

@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
 using Nop.Admin.Models.Messages;
 using Nop.Core.Domain.Messages;
+using Nop.Core.Domain.Stores;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Security;
@@ -177,7 +179,22 @@ namespace Nop.Admin.Controllers
             var messageTemplates = _messageTemplateService.GetAllMessageTemplates(model.SearchStoreId);
             var gridModel = new GridModel<MessageTemplateModel>
             {
-                Data = messageTemplates.Select(x => x.ToModel()),
+                Data = messageTemplates.Select(x =>
+                {
+                    var templateModel = x.ToModel();
+                    PrepareStoresMappingModel(templateModel, x, false);
+                    var stores = _storeService
+                            .GetAllStores()
+                            .Where(s => !x.LimitedToStores || templateModel.SelectedStoreIds.Contains(s.Id))
+                            .ToList();
+                    for (int i = 0; i < stores.Count; i++)
+                    {
+                        templateModel.ListOfStores += stores[i].Name;
+                        if (i != stores.Count - 1)
+                            templateModel.ListOfStores += ", ";
+                    }
+                    return templateModel;
+                }),
                 Total = messageTemplates.Count
             };
             return new JsonResult
