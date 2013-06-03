@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web.Routing;
+using Nop.Core;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Plugins;
 using Nop.Plugin.Shipping.ByWeight.Data;
@@ -17,6 +18,7 @@ namespace Nop.Plugin.Shipping.ByWeight
         #region Fields
 
         private readonly IShippingService _shippingService;
+        private readonly IStoreContext _storeContext;
         private readonly IShippingByWeightService _shippingByWeightService;
         private readonly IPriceCalculationService _priceCalculationService;
         private readonly ShippingByWeightSettings _shippingByWeightSettings;
@@ -27,6 +29,7 @@ namespace Nop.Plugin.Shipping.ByWeight
 
         #region Ctor
         public ByWeightShippingComputationMethod(IShippingService shippingService,
+            IStoreContext storeContext,
             IShippingByWeightService shippingByWeightService,
             IPriceCalculationService priceCalculationService, 
             ShippingByWeightSettings shippingByWeightSettings,
@@ -34,6 +37,7 @@ namespace Nop.Plugin.Shipping.ByWeight
             ISettingService settingService)
         {
             this._shippingService = shippingService;
+            this._storeContext = storeContext;
             this._shippingByWeightService = shippingByWeightService;
             this._priceCalculationService = priceCalculationService;
             this._shippingByWeightSettings = shippingByWeightSettings;
@@ -45,10 +49,10 @@ namespace Nop.Plugin.Shipping.ByWeight
         #region Utilities
         
         private decimal? GetRate(decimal subTotal, decimal weight, int shippingMethodId,
-            int countryId, int stateProvinceId, string zip)
+            int storeId, int countryId, int stateProvinceId, string zip)
         {
-            var shippingByWeightRecord = _shippingByWeightService.FindRecord(shippingMethodId, 
-                countryId, stateProvinceId, zip, weight);
+            var shippingByWeightRecord = _shippingByWeightService.FindRecord(shippingMethodId,
+                storeId, countryId, stateProvinceId, zip, weight);
             if (shippingByWeightRecord == null)
             {
                 if (_shippingByWeightSettings.LimitMethodsToCreated)
@@ -104,7 +108,8 @@ namespace Nop.Plugin.Shipping.ByWeight
                 response.AddError("Shipping address is not set");
                 return response;
             }
-            
+
+            var storeId = _storeContext.CurrentStore.Id;
             int countryId = getShippingOptionRequest.ShippingAddress.CountryId.HasValue ? getShippingOptionRequest.ShippingAddress.CountryId.Value : 0;
             int stateProvinceId = getShippingOptionRequest.ShippingAddress.StateProvinceId.HasValue ? getShippingOptionRequest.ShippingAddress.StateProvinceId.Value : 0;
             string zip = getShippingOptionRequest.ShippingAddress.ZipPostalCode;
@@ -120,7 +125,7 @@ namespace Nop.Plugin.Shipping.ByWeight
             var shippingMethods = _shippingService.GetAllShippingMethods(countryId);
             foreach (var shippingMethod in shippingMethods)
             {
-                decimal? rate = GetRate(subTotal, weight, shippingMethod.Id, countryId, stateProvinceId, zip);
+                decimal? rate = GetRate(subTotal, weight, shippingMethod.Id, storeId, countryId, stateProvinceId, zip);
                 if (rate.HasValue)
                 {
                     var shippingOption = new ShippingOption();
@@ -175,6 +180,8 @@ namespace Nop.Plugin.Shipping.ByWeight
             _objectContext.Install();
 
             //locales
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.Store", "Store");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.Store.Hint", "If an asterisk is selected, then this shipping rate will apply to all stores.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.Country", "Country");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.Country.Hint", "If an asterisk is selected, then this shipping rate will apply to all customers, regardless of the country.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.StateProvince", "State / province");
@@ -217,6 +224,8 @@ namespace Nop.Plugin.Shipping.ByWeight
             _objectContext.Uninstall();
 
             //locales
+            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.Store");
+            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.Store.Hint");  
             this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.Country");
             this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.Country.Hint");
             this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.StateProvince");

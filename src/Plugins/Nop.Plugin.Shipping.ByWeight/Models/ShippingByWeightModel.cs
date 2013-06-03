@@ -12,7 +12,13 @@ namespace Nop.Plugin.Shipping.ByWeight.Models
             AvailableCountries = new List<SelectListItem>();
             AvailableStates = new List<SelectListItem>();
             AvailableShippingMethods = new List<SelectListItem>();
+            AvailableStores = new List<SelectListItem>();
         }
+
+        [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.Store")]
+        public int StoreId { get; set; }
+        [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.Store")]
+        public string StoreName { get; set; }
 
         [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.Country")]
         public int CountryId { get; set; }
@@ -60,5 +66,6 @@ namespace Nop.Plugin.Shipping.ByWeight.Models
         public IList<SelectListItem> AvailableCountries { get; set; }
         public IList<SelectListItem> AvailableStates { get; set; }
         public IList<SelectListItem> AvailableShippingMethods { get; set; }
+        public IList<SelectListItem> AvailableStores { get; set; }
     }
 }

@@ -34,9 +34,10 @@
                       .DataKeys(keys => keys.Add(x => x.Id).RouteKey("Id"))
                       .Columns(columns =>
                       {
+                          columns.Bound(x => x.StoreName).ReadOnly();
                           columns.Bound(x => x.CountryName).ReadOnly();
                           columns.Bound(x => x.StateProvinceName).ReadOnly();
-                          columns.Bound(x => x.Zip);
+                          columns.Bound(x => x.Zip).ReadOnly();
                           columns.Bound(x => x.ShippingMethodName).ReadOnly();
                           columns.Bound(x => x.DataHtml)
                               .Encoded(false);

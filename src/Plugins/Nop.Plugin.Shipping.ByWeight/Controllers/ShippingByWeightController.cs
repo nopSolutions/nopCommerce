@@ -14,6 +14,7 @@ using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Services.Shipping;
+using Nop.Services.Stores;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
 
@@ -23,6 +24,7 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
     public class ShippingByWeightController : Controller
     {
         private readonly IShippingService _shippingService;
+        private readonly IStoreService _storeService;
         private readonly ICountryService _countryService;
         private readonly IStateProvinceService _stateProvinceService;
         private readonly ShippingByWeightSettings _shippingByWeightSettings;
@@ -37,7 +39,7 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
         private readonly MeasureSettings _measureSettings;
 
         public ShippingByWeightController(IShippingService shippingService,
-            ICountryService countryService, IStateProvinceService stateProvinceService,
+            IStoreService storeService, ICountryService countryService, IStateProvinceService stateProvinceService,
             ShippingByWeightSettings shippingByWeightSettings,
             IShippingByWeightService shippingByWeightService, ISettingService settingService,
             ILocalizationService localizationService, IPermissionService permissionService,
@@ -45,6 +47,7 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
             IMeasureService measureService, MeasureSettings measureSettings)
         {
             this._shippingService = shippingService;
+            this._storeService = storeService;
             this._countryService = countryService;
             this._stateProvinceService = stateProvinceService;
             this._shippingByWeightSettings = shippingByWeightSettings;
@@ -102,6 +105,7 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
                     var m = new ShippingByWeightModel()
                     {
                         Id = x.Id,
+                        StoreId = x.StoreId,
                         ShippingMethodId = x.ShippingMethodId,
                         CountryId = x.CountryId,
                         From = x.From,
@@ -111,12 +115,19 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
                         RatePerWeightUnit = x.RatePerWeightUnit,
                         LowerWeightLimit = x.LowerWeightLimit,
                     };
+                    //shipping method
                     var shippingMethod = _shippingService.GetShippingMethodById(x.ShippingMethodId);
                     m.ShippingMethodName = (shippingMethod != null) ? shippingMethod.Name : "Unavailable";
+                    //store
+                    var store = _storeService.GetStoreById(x.StoreId);
+                    m.StoreName = (store != null) ? store.Name : "*";
+                    //country
                     var c = _countryService.GetCountryById(x.CountryId);
                     m.CountryName = (c != null) ? c.Name : "*";
+                    //state
                     var s = _stateProvinceService.GetStateProvinceById(x.StateProvinceId);
                     m.StateProvinceName = (s != null) ? s.Name : "*";
+                    //zip
                     m.Zip = (!String.IsNullOrEmpty(x.Zip)) ? x.Zip : "*";
 
 
@@ -179,6 +190,10 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
             if (shippingMethods.Count == 0)
                 return Content("No shipping methods can be loaded");
 
+            //stores
+            model.AvailableStores.Add(new SelectListItem() { Text = "*", Value = "0" });
+            foreach (var store in _storeService.GetAllStores())
+                model.AvailableStores.Add(new SelectListItem() { Text = store.Name, Value = store.Id.ToString() });
             //shipping methods
             foreach (var sm in shippingMethods)
                 model.AvailableShippingMethods.Add(new SelectListItem() { Text = sm.Name, Value = sm.Id.ToString() });
@@ -200,6 +215,7 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
 
             var sbw = new ShippingByWeightRecord()
             {
+                StoreId = model.StoreId,
                 CountryId = model.CountryId,
                 StateProvinceId = model.StateProvinceId,
                 Zip = model.Zip == "*" ? null : model.Zip,
@@ -233,6 +249,7 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
             var model = new ShippingByWeightModel()
             {
                 Id = sbw.Id,
+                StoreId = sbw.StoreId,
                 CountryId = sbw.CountryId,
                 StateProvinceId = sbw.StateProvinceId,
                 Zip = sbw.Zip,
@@ -251,9 +268,14 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
             if (shippingMethods.Count == 0)
                 return Content("No shipping methods can be loaded");
 
+            var selectedStore = _storeService.GetStoreById(sbw.StoreId);
             var selectedShippingMethod = _shippingService.GetShippingMethodById(sbw.ShippingMethodId);
             var selectedCountry = _countryService.GetCountryById(sbw.CountryId);
             var selectedState = _stateProvinceService.GetStateProvinceById(sbw.StateProvinceId);
+            //stores
+            model.AvailableStores.Add(new SelectListItem() { Text = "*", Value = "0" });
+            foreach (var store in _storeService.GetAllStores())
+                model.AvailableStores.Add(new SelectListItem() { Text = store.Name, Value = store.Id.ToString(), Selected = (selectedStore != null && store.Id == selectedStore.Id) });
             //shipping methods
             foreach (var sm in shippingMethods)
                 model.AvailableShippingMethods.Add(new SelectListItem() { Text = sm.Name, Value = sm.Id.ToString(), Selected = (selectedShippingMethod != null && sm.Id == selectedShippingMethod.Id) });
@@ -281,6 +303,7 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
                 //No record found with the specified id
                 return RedirectToAction("Configure");
 
+            sbw.StoreId = model.StoreId;
             sbw.CountryId = model.CountryId;
             sbw.StateProvinceId = model.StateProvinceId;
             sbw.Zip = model.Zip == "*" ? null : model.Zip;

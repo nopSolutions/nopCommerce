@@ -52,7 +52,7 @@ namespace Nop.Plugin.Shipping.ByWeight.Services
             return _cacheManager.Get(key, () =>
             {
                 var query = from sbw in _sbwRepository.Table
-                            orderby sbw.CountryId, sbw.StateProvinceId, sbw.Zip, sbw.ShippingMethodId, sbw.From
+                            orderby sbw.StoreId, sbw.CountryId, sbw.StateProvinceId, sbw.Zip, sbw.ShippingMethodId, sbw.From
                             select sbw;
 
                 var records = new PagedList<ShippingByWeightRecord>(query, pageIndex, pageSize);
@@ -61,7 +61,7 @@ namespace Nop.Plugin.Shipping.ByWeight.Services
         }
 
         public virtual ShippingByWeightRecord FindRecord(int shippingMethodId,
-            int countryId, int stateProvinceId, string zip, decimal weight)
+            int storeId, int countryId, int stateProvinceId, string zip, decimal weight)
         {
             if (zip == null)
                 zip = string.Empty;
@@ -71,14 +71,24 @@ namespace Nop.Plugin.Shipping.ByWeight.Services
             var existingRates = GetAll()
                 .Where(sbw => sbw.ShippingMethodId == shippingMethodId && weight >= sbw.From && weight <= sbw.To)
                 .ToList();
-            
+
+            //filter by store
+            var matchedByStore = new List<ShippingByWeightRecord>();
+            foreach (var sbw in existingRates)
+                if (storeId == sbw.StoreId)
+                    matchedByStore.Add(sbw);
+            if (matchedByStore.Count == 0)
+                foreach (var sbw in existingRates)
+                    if (sbw.StoreId == 0)
+                        matchedByStore.Add(sbw);
+
             //filter by country
             var matchedByCountry = new List<ShippingByWeightRecord>();
-            foreach (var sbw in existingRates)
+            foreach (var sbw in matchedByStore)
                 if (countryId == sbw.CountryId)
                     matchedByCountry.Add(sbw);
             if (matchedByCountry.Count == 0)
-                foreach (var sbw in existingRates)
+                foreach (var sbw in matchedByStore)
                     if (sbw.CountryId == 0)
                         matchedByCountry.Add(sbw);
 

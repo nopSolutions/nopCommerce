@@ -8,6 +8,11 @@ namespace Nop.Plugin.Shipping.ByWeight.Domain
     public partial class ShippingByWeightRecord : BaseEntity
     {
         /// <summary>
+        /// Gets or sets the store identifier
+        /// </summary>
+        public int StoreId { get; set; }
+
+        /// <summary>
         /// Gets or sets the country identifier
         /// </summary>
         public int CountryId { get; set; }
