@@ -11,6 +11,7 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
+using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Plugins;
 using Nop.Services.Affiliates;
@@ -83,14 +84,18 @@ namespace Nop.Services.Tests.Orders
         IAffiliateService _affiliateService;
         IVendorService _vendorService;
 
+        Store _store;
+
         [SetUp]
         public new void SetUp()
         {
             _workContext = null;
-            _storeContext = null;
+
+            _store = new Store() { Id = 1 };
+            _storeContext = MockRepository.GenerateMock<IStoreContext>();
+            _storeContext.Expect(x => x.CurrentStore).Return(_store);
 
             var pluginFinder = new PluginFinder();
-            var cacheManager = new NopNullCache();
 
             _shoppingCartSettings = new ShoppingCartSettings();
             _catalogSettings = new CatalogSettings();
@@ -99,8 +104,9 @@ namespace Nop.Services.Tests.Orders
             _discountService = MockRepository.GenerateMock<IDiscountService>();
             _categoryService = MockRepository.GenerateMock<ICategoryService>();
             _productAttributeParser = MockRepository.GenerateMock<IProductAttributeParser>();
-            _priceCalcService = new PriceCalculationService(_workContext, _discountService,
-                _categoryService, _productAttributeParser, _shoppingCartSettings, _catalogSettings);
+            _priceCalcService = new PriceCalculationService(_workContext, _storeContext,
+                _discountService, _categoryService, 
+                _productAttributeParser, _shoppingCartSettings, _catalogSettings);
 
             _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
             _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));

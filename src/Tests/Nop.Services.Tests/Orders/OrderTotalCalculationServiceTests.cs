@@ -77,8 +77,9 @@ namespace Nop.Services.Tests.Orders
             _shoppingCartSettings = new ShoppingCartSettings();
             _catalogSettings = new CatalogSettings();
 
-            _priceCalcService = new PriceCalculationService(_workContext, _discountService,
-                _categoryService, _productAttributeParser, _shoppingCartSettings, _catalogSettings);
+            _priceCalcService = new PriceCalculationService(_workContext, _storeContext,
+                _discountService, _categoryService, _productAttributeParser, 
+                _shoppingCartSettings, _catalogSettings);
 
             _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
             _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));

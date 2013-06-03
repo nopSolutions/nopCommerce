@@ -13,14 +13,16 @@ namespace Nop.Data.Tests.Catalog
         public void Can_save_and_load_tierPrice()
         {
             var tierPrice = new TierPrice
-                      {
-                          Quantity = 1,
-                          Price = 2.1M,
-                          ProductVariant = GetTestProductVariant(),
-                      };
+            {
+                StoreId = 7,
+                Quantity = 1,
+                Price = 2.1M,
+                ProductVariant = GetTestProductVariant(),
+           };
 
             var fromDb = SaveAndLoadEntity(tierPrice);
             fromDb.ShouldNotBeNull();
+            fromDb.StoreId.ShouldEqual(7);
             fromDb.Quantity.ShouldEqual(1);
             fromDb.Price.ShouldEqual(2.1M);
 

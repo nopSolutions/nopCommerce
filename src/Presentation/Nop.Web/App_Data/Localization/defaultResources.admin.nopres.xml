@@ -2462,6 +2462,14 @@
                                         <Children>
                                             <LocaleResource Name="Fields">
                                                 <Children>
+                                                    <LocaleResource Name="Store">
+                                                        <Value>Store</Value>
+                                                        <Children>
+                                                            <LocaleResource Name="All">
+                                                                <Value>All stores</Value>
+                                                            </LocaleResource>
+                                                        </Children>
+                                                    </LocaleResource>
                                                     <LocaleResource Name="CustomerRole">
                                                         <Value>Customer role</Value>
                                                         <Children>

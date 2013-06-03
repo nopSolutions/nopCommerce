@@ -332,6 +332,7 @@ namespace Nop.Services.Catalog
                     new TierPrice()
                     {
                         ProductVariantId = productVariantCopy.Id,
+                        StoreId = tierPrice.StoreId,
                         CustomerRoleId = tierPrice.CustomerRoleId,
                         Quantity = tierPrice.Quantity,
                         Price = tierPrice.Price

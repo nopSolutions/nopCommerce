@@ -326,6 +326,7 @@ namespace Nop.Services.ExportImport
                         foreach (var tierPrice in tierPrices)
                         {
                             xmlWriter.WriteElementString("TierPriceId", null, tierPrice.Id.ToString());
+                            xmlWriter.WriteElementString("StoreId", null, tierPrice.StoreId.ToString());
                             xmlWriter.WriteElementString("CustomerRoleId", null, tierPrice.CustomerRoleId.HasValue ? tierPrice.CustomerRoleId.ToString() : "0");
                             xmlWriter.WriteElementString("Quantity", null, tierPrice.Quantity.ToString());
                             xmlWriter.WriteElementString("Price", null, tierPrice.Price.ToString());

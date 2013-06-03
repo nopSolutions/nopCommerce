@@ -249,6 +249,12 @@ namespace Nop.Admin.Models.Catalog
             [UIHint("TierPriceCustomer")]
             public string CustomerRole { get; set; }
 
+
+            public int StoreId { get; set; }
+            [NopResourceDisplayName("Admin.Catalog.Products.Variants.TierPrices.Fields.Store")]
+            [UIHint("TierPriceStore")]
+            public string Store { get; set; }
+
             [NopResourceDisplayName("Admin.Catalog.Products.Variants.TierPrices.Fields.Quantity")]
             public int Quantity { get; set; }
 

@@ -59,6 +59,12 @@ set @resources='
   <LocaleResource Name="Categories.Breadcrumb.Top">
     <Value>Home</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Variants.TierPrices.Fields.Store">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Variants.TierPrices.Fields.Store.All">
+    <Value>All stores</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -786,7 +792,23 @@ END
 GO
 
 
---removme obsolete setting
+--remove obsolete setting
 DELETE FROM [Setting]
 WHERE [name] = N'SecuritySettings.HideAdminMenuItemsBasedOnPermissions'
+GO
+
+--new column 
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[TierPrice]') and NAME='StoreId')
+BEGIN
+	ALTER TABLE [TierPrice]
+	ADD [StoreId] int NULL
+END
+GO
+
+UPDATE [TierPrice]
+SET [StoreId] = 0
+WHERE [StoreId] IS NULL
+GO
+
+ALTER TABLE [TierPrice] ALTER COLUMN [StoreId] int NOT NULL
 GO
