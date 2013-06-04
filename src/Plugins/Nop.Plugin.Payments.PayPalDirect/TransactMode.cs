@@ -8,7 +8,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
         /// <summary>
         /// Authorize
         /// </summary>
-        Authorize = 1,
+        Authorize = 0,
         /// <summary>
         /// Authorize and capture
         /// </summary>

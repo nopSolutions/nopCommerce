@@ -4,6 +4,7 @@
 @model ConfigurationModel
 @using Nop.Plugin.Payments.PayPalStandard.Models;
 @using Nop.Web.Framework;
+@Html.Action("StoreScopeConfiguration", "Setting", new { area = "Admin" })
 
 <script type="text/javascript">
 	$(document).ready(function () {
@@ -92,6 +93,7 @@
     </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.UseSandbox_OverrideForStore, model => model.UseSandbox, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.UseSandbox):
             </td>
             <td class="adminData">
@@ -101,6 +103,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.BusinessEmail_OverrideForStore, model => model.BusinessEmail, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.BusinessEmail):
             </td>
             <td class="adminData">
@@ -110,6 +113,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.PdtToken_OverrideForStore, model => model.PdtToken, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.PdtToken):
             </td>
             <td class="adminData">
@@ -119,6 +123,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.PdtValidateOrderTotal_OverrideForStore, model => model.PdtValidateOrderTotal, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.PdtValidateOrderTotal):
             </td>
             <td class="adminData">
@@ -128,6 +133,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.AdditionalFee_OverrideForStore, model => model.AdditionalFee, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.AdditionalFee):
             </td>
             <td class="adminData">
@@ -137,6 +143,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.AdditionalFeePercentage_OverrideForStore, model => model.AdditionalFeePercentage, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.AdditionalFeePercentage):
             </td>
             <td class="adminData">
@@ -146,6 +153,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.PassProductNamesAndTotals_OverrideForStore, model => model.PassProductNamesAndTotals, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.PassProductNamesAndTotals):
             </td>
             <td class="adminData">
@@ -155,6 +163,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.EnableIpn_OverrideForStore, model => model.EnableIpn, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.EnableIpn):
             </td>
             <td class="adminData">
@@ -164,6 +173,7 @@
         </tr>
 		  <tr id="pnlIpnUrl">
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.IpnUrl_OverrideForStore, model => model.IpnUrl, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.IpnUrl):
                 <br />
                 <i>@T("Plugins.Payments.PayPalStandard.Fields.EnableIpn.Hint2")</i>

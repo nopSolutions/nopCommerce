@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using Nop.Core;
 using Nop.Plugin.Payments.AuthorizeNet.Models;
 using Nop.Plugin.Payments.AuthorizeNet.Validators;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Payments;
+using Nop.Services.Stores;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 
@@ -14,31 +16,50 @@ namespace Nop.Plugin.Payments.AuthorizeNet.Controllers
 {
     public class PaymentAuthorizeNetController : BaseNopPaymentController
     {
+        private readonly IWorkContext _workContext;
+        private readonly IStoreService _storeService;
         private readonly ISettingService _settingService;
         private readonly ILocalizationService _localizationService;
-        private readonly AuthorizeNetPaymentSettings _authorizeNetPaymentSettings;
 
-        public PaymentAuthorizeNetController(ISettingService settingService, 
-            ILocalizationService localizationService, AuthorizeNetPaymentSettings authorizeNetPaymentSettings)
+        public PaymentAuthorizeNetController(IWorkContext workContext,
+            IStoreService storeService, 
+            ISettingService settingService, 
+            ILocalizationService localizationService)
         {
+            this._workContext = workContext;
+            this._storeService = storeService;
             this._settingService = settingService;
             this._localizationService = localizationService;
-            this._authorizeNetPaymentSettings = authorizeNetPaymentSettings;
         }
         
         [AdminAuthorize]
         [ChildActionOnly]
         public ActionResult Configure()
         {
+            //load settings for a chosen store scope
+            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var authorizeNetPaymentSettings = _settingService.LoadSetting<AuthorizeNetPaymentSettings>(storeScope);
+
             var model = new ConfigurationModel();
-            model.UseSandbox = _authorizeNetPaymentSettings.UseSandbox;
-            model.TransactModeId = Convert.ToInt32(_authorizeNetPaymentSettings.TransactMode);
-            model.TransactionKey = _authorizeNetPaymentSettings.TransactionKey;
-            model.LoginId = _authorizeNetPaymentSettings.LoginId;
-            model.AdditionalFee = _authorizeNetPaymentSettings.AdditionalFee;
-            model.AdditionalFeePercentage = _authorizeNetPaymentSettings.AdditionalFeePercentage;
-            model.TransactModeValues = _authorizeNetPaymentSettings.TransactMode.ToSelectList();
-            
+            model.UseSandbox = authorizeNetPaymentSettings.UseSandbox;
+            model.TransactModeId = Convert.ToInt32(authorizeNetPaymentSettings.TransactMode);
+            model.TransactionKey = authorizeNetPaymentSettings.TransactionKey;
+            model.LoginId = authorizeNetPaymentSettings.LoginId;
+            model.AdditionalFee = authorizeNetPaymentSettings.AdditionalFee;
+            model.AdditionalFeePercentage = authorizeNetPaymentSettings.AdditionalFeePercentage;
+            model.TransactModeValues = authorizeNetPaymentSettings.TransactMode.ToSelectList();
+
+            model.ActiveStoreScopeConfiguration = storeScope;
+            if (storeScope > 0)
+            {
+                model.UseSandbox_OverrideForStore = _settingService.SettingExists(authorizeNetPaymentSettings, x => x.UseSandbox, storeScope);
+                model.TransactModeId_OverrideForStore = _settingService.SettingExists(authorizeNetPaymentSettings, x => x.TransactMode, storeScope);
+                model.TransactionKey_OverrideForStore = _settingService.SettingExists(authorizeNetPaymentSettings, x => x.TransactionKey, storeScope);
+                model.LoginId_OverrideForStore = _settingService.SettingExists(authorizeNetPaymentSettings, x => x.LoginId, storeScope);
+                model.AdditionalFee_OverrideForStore = _settingService.SettingExists(authorizeNetPaymentSettings, x => x.AdditionalFee, storeScope);
+                model.AdditionalFeePercentage_OverrideForStore = _settingService.SettingExists(authorizeNetPaymentSettings, x => x.AdditionalFeePercentage, storeScope);
+            }
+
             return View("Nop.Plugin.Payments.AuthorizeNet.Views.PaymentAuthorizeNet.Configure", model);
         }
 
@@ -50,18 +71,55 @@ namespace Nop.Plugin.Payments.AuthorizeNet.Controllers
             if (!ModelState.IsValid)
                 return Configure();
 
-            //save settings
-            _authorizeNetPaymentSettings.UseSandbox = model.UseSandbox;
-            _authorizeNetPaymentSettings.TransactMode = (TransactMode)model.TransactModeId;
-            _authorizeNetPaymentSettings.TransactionKey = model.TransactionKey;
-            _authorizeNetPaymentSettings.LoginId = model.LoginId;
-            _authorizeNetPaymentSettings.AdditionalFee = model.AdditionalFee;
-            _authorizeNetPaymentSettings.AdditionalFeePercentage = model.AdditionalFeePercentage;
-            _settingService.SaveSetting(_authorizeNetPaymentSettings);
-            
-            model.TransactModeValues = _authorizeNetPaymentSettings.TransactMode.ToSelectList();
+            //load settings for a chosen store scope
+            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var authorizeNetPaymentSettings = _settingService.LoadSetting<AuthorizeNetPaymentSettings>(storeScope);
 
-            return View("Nop.Plugin.Payments.AuthorizeNet.Views.PaymentAuthorizeNet.Configure", model);
+            //save settings
+            authorizeNetPaymentSettings.UseSandbox = model.UseSandbox;
+            authorizeNetPaymentSettings.TransactMode = (TransactMode)model.TransactModeId;
+            authorizeNetPaymentSettings.TransactionKey = model.TransactionKey;
+            authorizeNetPaymentSettings.LoginId = model.LoginId;
+            authorizeNetPaymentSettings.AdditionalFee = model.AdditionalFee;
+            authorizeNetPaymentSettings.AdditionalFeePercentage = model.AdditionalFeePercentage;
+
+            /* We do not clear cache after each setting update.
+             * This behavior can increase performance because cached settings will not be cleared 
+             * and loaded from database after each update */
+            if (model.UseSandbox_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(authorizeNetPaymentSettings, x => x.UseSandbox, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(authorizeNetPaymentSettings, x => x.UseSandbox, storeScope);
+
+            if (model.TransactModeId_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(authorizeNetPaymentSettings, x => x.TransactMode, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(authorizeNetPaymentSettings, x => x.TransactMode, storeScope);
+
+            if (model.TransactionKey_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(authorizeNetPaymentSettings, x => x.TransactionKey, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(authorizeNetPaymentSettings, x => x.TransactionKey, storeScope);
+
+            if (model.LoginId_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(authorizeNetPaymentSettings, x => x.LoginId, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(authorizeNetPaymentSettings, x => x.LoginId, storeScope);
+
+            if (model.AdditionalFee_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(authorizeNetPaymentSettings, x => x.AdditionalFee, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(authorizeNetPaymentSettings, x => x.AdditionalFee, storeScope);
+
+            if (model.AdditionalFeePercentage_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(authorizeNetPaymentSettings, x => x.AdditionalFeePercentage, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(authorizeNetPaymentSettings, x => x.AdditionalFeePercentage, storeScope);
+
+            //now clear settings cache
+            _settingService.ClearCache();
+
+            return Configure();
         }
 
         [ChildActionOnly]

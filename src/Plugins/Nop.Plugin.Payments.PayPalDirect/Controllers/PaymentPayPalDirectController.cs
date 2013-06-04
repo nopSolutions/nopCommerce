@@ -14,6 +14,7 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
+using Nop.Services.Stores;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 
@@ -21,27 +22,33 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
 {
     public class PaymentPayPalDirectController : BaseNopPaymentController
     {
+        private readonly IWorkContext _workContext;
+        private readonly IStoreService _storeService;
         private readonly ISettingService _settingService;
         private readonly IPaymentService _paymentService;
         private readonly IOrderService _orderService;
         private readonly IOrderProcessingService _orderProcessingService;
         private readonly ILogger _logger;
-        private readonly PayPalDirectPaymentSettings _paypalDirectPaymentSettings;
         private readonly PaymentSettings _paymentSettings;
         private readonly ILocalizationService _localizationService;
 
-        public PaymentPayPalDirectController(ISettingService settingService, 
-            IPaymentService paymentService, IOrderService orderService, 
+        public PaymentPayPalDirectController(IWorkContext workContext,
+            IStoreService storeService, 
+            ISettingService settingService, 
+            IPaymentService paymentService, 
+            IOrderService orderService, 
             IOrderProcessingService orderProcessingService, 
-            ILogger logger, PayPalDirectPaymentSettings paypalDirectPaymentSettings,
-            PaymentSettings paymentSettings, ILocalizationService localizationService)
+            ILogger logger,
+            PaymentSettings paymentSettings, 
+            ILocalizationService localizationService)
         {
+            this._workContext = workContext;
+            this._storeService = storeService;
             this._settingService = settingService;
             this._paymentService = paymentService;
             this._orderService = orderService;
             this._orderProcessingService = orderProcessingService;
             this._logger = logger;
-            this._paypalDirectPaymentSettings = paypalDirectPaymentSettings;
             this._paymentSettings = paymentSettings;
             this._localizationService = localizationService;
         }
@@ -50,15 +57,31 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
         [ChildActionOnly]
         public ActionResult Configure()
         {
+            //load settings for a chosen store scope
+            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var payPalDirectPaymentSettings = _settingService.LoadSetting<PayPalDirectPaymentSettings>(storeScope);
+
             var model = new ConfigurationModel();
-            model.UseSandbox = _paypalDirectPaymentSettings.UseSandbox;
-            model.TransactModeId = Convert.ToInt32(_paypalDirectPaymentSettings.TransactMode);
-            model.ApiAccountName = _paypalDirectPaymentSettings.ApiAccountName;
-            model.ApiAccountPassword = _paypalDirectPaymentSettings.ApiAccountPassword;
-            model.Signature = _paypalDirectPaymentSettings.Signature;
-            model.AdditionalFee = _paypalDirectPaymentSettings.AdditionalFee;
-            model.AdditionalFeePercentage = _paypalDirectPaymentSettings.AdditionalFeePercentage;
-            model.TransactModeValues = _paypalDirectPaymentSettings.TransactMode.ToSelectList();
+            model.UseSandbox = payPalDirectPaymentSettings.UseSandbox;
+            model.TransactModeId = Convert.ToInt32(payPalDirectPaymentSettings.TransactMode);
+            model.ApiAccountName = payPalDirectPaymentSettings.ApiAccountName;
+            model.ApiAccountPassword = payPalDirectPaymentSettings.ApiAccountPassword;
+            model.Signature = payPalDirectPaymentSettings.Signature;
+            model.AdditionalFee = payPalDirectPaymentSettings.AdditionalFee;
+            model.AdditionalFeePercentage = payPalDirectPaymentSettings.AdditionalFeePercentage;
+            model.TransactModeValues = payPalDirectPaymentSettings.TransactMode.ToSelectList();
+
+            model.ActiveStoreScopeConfiguration = storeScope;
+            if (storeScope > 0)
+            {
+                model.UseSandbox_OverrideForStore = _settingService.SettingExists(payPalDirectPaymentSettings, x => x.UseSandbox, storeScope);
+                model.TransactModeId_OverrideForStore = _settingService.SettingExists(payPalDirectPaymentSettings, x => x.TransactMode, storeScope);
+                model.ApiAccountName_OverrideForStore = _settingService.SettingExists(payPalDirectPaymentSettings, x => x.ApiAccountName, storeScope);
+                model.ApiAccountPassword_OverrideForStore = _settingService.SettingExists(payPalDirectPaymentSettings, x => x.ApiAccountPassword, storeScope);
+                model.Signature_OverrideForStore = _settingService.SettingExists(payPalDirectPaymentSettings, x => x.Signature, storeScope);
+                model.AdditionalFee_OverrideForStore = _settingService.SettingExists(payPalDirectPaymentSettings, x => x.AdditionalFee, storeScope);
+                model.AdditionalFeePercentage_OverrideForStore = _settingService.SettingExists(payPalDirectPaymentSettings, x => x.AdditionalFeePercentage, storeScope);
+            }
 
             return View("Nop.Plugin.Payments.PayPalDirect.Views.PaymentPayPalDirect.Configure", model);
         }
@@ -71,19 +94,61 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
             if (!ModelState.IsValid)
                 return Configure();
 
+            //load settings for a chosen store scope
+            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var payPalDirectPaymentSettings = _settingService.LoadSetting<PayPalDirectPaymentSettings>(storeScope);
+
             //save settings
-            _paypalDirectPaymentSettings.UseSandbox = model.UseSandbox;
-            _paypalDirectPaymentSettings.TransactMode = (TransactMode)model.TransactModeId;
-            _paypalDirectPaymentSettings.ApiAccountName = model.ApiAccountName;
-            _paypalDirectPaymentSettings.ApiAccountPassword = model.ApiAccountPassword;
-            _paypalDirectPaymentSettings.Signature = model.Signature;
-            _paypalDirectPaymentSettings.AdditionalFee = model.AdditionalFee;
-            _paypalDirectPaymentSettings.AdditionalFeePercentage = model.AdditionalFeePercentage;
-            _settingService.SaveSetting(_paypalDirectPaymentSettings);
+            payPalDirectPaymentSettings.UseSandbox = model.UseSandbox;
+            payPalDirectPaymentSettings.TransactMode = (TransactMode)model.TransactModeId;
+            payPalDirectPaymentSettings.ApiAccountName = model.ApiAccountName;
+            payPalDirectPaymentSettings.ApiAccountPassword = model.ApiAccountPassword;
+            payPalDirectPaymentSettings.Signature = model.Signature;
+            payPalDirectPaymentSettings.AdditionalFee = model.AdditionalFee;
+            payPalDirectPaymentSettings.AdditionalFeePercentage = model.AdditionalFeePercentage;
 
-            model.TransactModeValues = _paypalDirectPaymentSettings.TransactMode.ToSelectList();
+            /* We do not clear cache after each setting update.
+             * This behavior can increase performance because cached settings will not be cleared 
+             * and loaded from database after each update */
+            if (model.UseSandbox_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(payPalDirectPaymentSettings, x => x.UseSandbox, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(payPalDirectPaymentSettings, x => x.UseSandbox, storeScope);
 
-            return View("Nop.Plugin.Payments.PayPalDirect.Views.PaymentPayPalDirect.Configure", model);
+            if (model.TransactModeId_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(payPalDirectPaymentSettings, x => x.TransactMode, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(payPalDirectPaymentSettings, x => x.TransactMode, storeScope);
+
+            if (model.ApiAccountName_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(payPalDirectPaymentSettings, x => x.ApiAccountName, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(payPalDirectPaymentSettings, x => x.ApiAccountName, storeScope);
+
+            if (model.ApiAccountPassword_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(payPalDirectPaymentSettings, x => x.ApiAccountPassword, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(payPalDirectPaymentSettings, x => x.ApiAccountPassword, storeScope);
+
+            if (model.Signature_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(payPalDirectPaymentSettings, x => x.Signature, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(payPalDirectPaymentSettings, x => x.Signature, storeScope);
+
+            if (model.AdditionalFee_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(payPalDirectPaymentSettings, x => x.AdditionalFee, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(payPalDirectPaymentSettings, x => x.AdditionalFee, storeScope);
+
+            if (model.AdditionalFeePercentage_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(payPalDirectPaymentSettings, x => x.AdditionalFeePercentage, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(payPalDirectPaymentSettings, x => x.AdditionalFeePercentage, storeScope);
+
+            //now clear settings cache
+            _settingService.ClearCache();
+
+            return Configure();
         }
 
         [ChildActionOnly]

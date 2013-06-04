@@ -4,6 +4,7 @@
 @model ConfigurationModel
 @using Nop.Plugin.Payments.PayPalDirect.Models;
 @using Nop.Web.Framework;
+@Html.Action("StoreScopeConfiguration", "Setting", new { area = "Admin" })
 @using (Html.BeginForm())
 {
     <table class="adminContent">
@@ -53,7 +54,8 @@
         </tr>
         <tr>
             <td class="adminTitle">
-                @Html.NopLabelFor(model => model.TransactModeValues):
+               @Html.OverrideStoreCheckboxFor(model => model.TransactModeId_OverrideForStore, model => model.TransactModeId, Model.ActiveStoreScopeConfiguration)
+               @Html.NopLabelFor(model => model.TransactModeValues):
             </td>
             <td class="adminData">
                 @Html.DropDownList("TransactModeId", Model.TransactModeValues)
@@ -61,6 +63,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.UseSandbox_OverrideForStore, model => model.UseSandbox, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.UseSandbox):
             </td>
             <td class="adminData">
@@ -70,6 +73,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ApiAccountName_OverrideForStore, model => model.ApiAccountName, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ApiAccountName):
             </td>
             <td class="adminData">
@@ -79,6 +83,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ApiAccountPassword_OverrideForStore, model => model.ApiAccountPassword, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ApiAccountPassword):
             </td>
             <td class="adminData">
@@ -88,6 +93,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.Signature_OverrideForStore, model => model.Signature, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.Signature):
             </td>
             <td class="adminData">
@@ -97,6 +103,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.AdditionalFee_OverrideForStore, model => model.AdditionalFee, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.AdditionalFee):
             </td>
             <td class="adminData">
@@ -106,6 +113,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.AdditionalFeePercentage_OverrideForStore, model => model.AdditionalFeePercentage, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.AdditionalFeePercentage):
             </td>
             <td class="adminData">

@@ -1,32 +1,53 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
+using Nop.Core;
 using Nop.Plugin.Payments.CheckMoneyOrder.Models;
 using Nop.Services.Configuration;
 using Nop.Services.Payments;
+using Nop.Services.Stores;
 using Nop.Web.Framework.Controllers;
 
 namespace Nop.Plugin.Payments.CheckMoneyOrder.Controllers
 {
     public class PaymentCheckMoneyOrderController : BaseNopPaymentController
     {
+        private readonly IWorkContext _workContext;
+        private readonly IStoreService _storeService;
+        private readonly IStoreContext _storeContext;
         private readonly ISettingService _settingService;
-        private readonly CheckMoneyOrderPaymentSettings _checkMoneyOrderPaymentSettings;
 
-        public PaymentCheckMoneyOrderController(ISettingService settingService,  CheckMoneyOrderPaymentSettings checkMoneyOrderPaymentSettings)
+        public PaymentCheckMoneyOrderController(IWorkContext workContext,
+            IStoreService storeService,
+            ISettingService settingService,
+            IStoreContext storeContext)
         {
+            this._workContext = workContext;
+            this._storeService = storeService;
             this._settingService = settingService;
-            this._checkMoneyOrderPaymentSettings = checkMoneyOrderPaymentSettings;
+            this._storeContext = storeContext;
         }
         
         [AdminAuthorize]
         [ChildActionOnly]
         public ActionResult Configure()
         {
+            //load settings for a chosen store scope
+            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var checkMoneyOrderPaymentSettings = _settingService.LoadSetting<CheckMoneyOrderPaymentSettings>(storeScope);
+
             var model = new ConfigurationModel();
-            model.DescriptionText = _checkMoneyOrderPaymentSettings.DescriptionText;
-            model.AdditionalFee = _checkMoneyOrderPaymentSettings.AdditionalFee;
-            model.AdditionalFeePercentage = _checkMoneyOrderPaymentSettings.AdditionalFeePercentage;
-            
+            model.DescriptionText = checkMoneyOrderPaymentSettings.DescriptionText;
+            model.AdditionalFee = checkMoneyOrderPaymentSettings.AdditionalFee;
+            model.AdditionalFeePercentage = checkMoneyOrderPaymentSettings.AdditionalFeePercentage;
+
+            model.ActiveStoreScopeConfiguration = storeScope;
+            if (storeScope > 0)
+            {
+                model.DescriptionText_OverrideForStore = _settingService.SettingExists(checkMoneyOrderPaymentSettings, x => x.DescriptionText, storeScope);
+                model.AdditionalFee_OverrideForStore = _settingService.SettingExists(checkMoneyOrderPaymentSettings, x => x.AdditionalFee, storeScope);
+                model.AdditionalFeePercentage_OverrideForStore = _settingService.SettingExists(checkMoneyOrderPaymentSettings, x => x.AdditionalFeePercentage, storeScope);
+            }
+
             return View("Nop.Plugin.Payments.CheckMoneyOrder.Views.PaymentCheckMoneyOrder.Configure", model);
         }
 
@@ -37,22 +58,48 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Controllers
         {
             if (!ModelState.IsValid)
                 return Configure();
-            
+
+            //load settings for a chosen store scope
+            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var checkMoneyOrderPaymentSettings = _settingService.LoadSetting<CheckMoneyOrderPaymentSettings>(storeScope);
+
             //save settings
-            _checkMoneyOrderPaymentSettings.DescriptionText = model.DescriptionText;
-            _checkMoneyOrderPaymentSettings.AdditionalFee = model.AdditionalFee;
-            _checkMoneyOrderPaymentSettings.AdditionalFeePercentage = model.AdditionalFeePercentage;
-            _settingService.SaveSetting(_checkMoneyOrderPaymentSettings);
-            
-            return View("Nop.Plugin.Payments.CheckMoneyOrder.Views.PaymentCheckMoneyOrder.Configure", model);
+            checkMoneyOrderPaymentSettings.DescriptionText = model.DescriptionText;
+            checkMoneyOrderPaymentSettings.AdditionalFee = model.AdditionalFee;
+            checkMoneyOrderPaymentSettings.AdditionalFeePercentage = model.AdditionalFeePercentage;
+
+            /* We do not clear cache after each setting update.
+             * This behavior can increase performance because cached settings will not be cleared 
+             * and loaded from database after each update */
+            if (model.DescriptionText_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(checkMoneyOrderPaymentSettings, x => x.DescriptionText, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(checkMoneyOrderPaymentSettings, x => x.DescriptionText, storeScope);
+
+            if (model.AdditionalFee_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(checkMoneyOrderPaymentSettings, x => x.AdditionalFee, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(checkMoneyOrderPaymentSettings, x => x.AdditionalFee, storeScope);
+
+            if (model.AdditionalFeePercentage_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(checkMoneyOrderPaymentSettings, x => x.AdditionalFeePercentage, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(checkMoneyOrderPaymentSettings, x => x.AdditionalFeePercentage, storeScope);
+
+            //now clear settings cache
+            _settingService.ClearCache();
+
+            return Configure();
         }
 
         [ChildActionOnly]
         public ActionResult PaymentInfo()
         {
+            var checkMoneyOrderPaymentSettings = _settingService.LoadSetting<CheckMoneyOrderPaymentSettings>(_storeContext.CurrentStore.Id);
+
             var model = new PaymentInfoModel()
             {
-                DescriptionText = _checkMoneyOrderPaymentSettings.DescriptionText
+                DescriptionText = checkMoneyOrderPaymentSettings.DescriptionText
             };
 
             return View("Nop.Plugin.Payments.CheckMoneyOrder.Views.PaymentCheckMoneyOrder.PaymentInfo", model);

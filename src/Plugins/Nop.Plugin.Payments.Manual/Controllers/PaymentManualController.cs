@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using Nop.Core;
 using Nop.Plugin.Payments.Manual.Models;
 using Nop.Plugin.Payments.Manual.Validators;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Payments;
+using Nop.Services.Stores;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 
@@ -14,28 +16,44 @@ namespace Nop.Plugin.Payments.Manual.Controllers
 {
     public class PaymentManualController : BaseNopPaymentController
     {
+        private readonly IWorkContext _workContext;
+        private readonly IStoreService _storeService;
         private readonly ISettingService _settingService;
         private readonly ILocalizationService _localizationService;
-        private readonly ManualPaymentSettings _manualPaymentSettings;
 
-        public PaymentManualController(ISettingService settingService, 
-            ILocalizationService localizationService, ManualPaymentSettings manualPaymentSettings)
+        public PaymentManualController(IWorkContext workContext,
+            IStoreService storeService, 
+            ISettingService settingService, 
+            ILocalizationService localizationService)
         {
+            this._workContext = workContext;
+            this._storeService = storeService;
             this._settingService = settingService;
             this._localizationService = localizationService;
-            this._manualPaymentSettings = manualPaymentSettings;
         }
         
         [AdminAuthorize]
         [ChildActionOnly]
         public ActionResult Configure()
         {
+            //load settings for a chosen store scope
+            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var manualPaymentSettings = _settingService.LoadSetting<ManualPaymentSettings>(storeScope);
+
             var model = new ConfigurationModel();
-            model.TransactModeId = Convert.ToInt32(_manualPaymentSettings.TransactMode);
-            model.AdditionalFee = _manualPaymentSettings.AdditionalFee;
-            model.AdditionalFeePercentage = _manualPaymentSettings.AdditionalFeePercentage;
-            model.TransactModeValues = _manualPaymentSettings.TransactMode.ToSelectList();
-            
+            model.TransactModeId = Convert.ToInt32(manualPaymentSettings.TransactMode);
+            model.AdditionalFee = manualPaymentSettings.AdditionalFee;
+            model.AdditionalFeePercentage = manualPaymentSettings.AdditionalFeePercentage;
+            model.TransactModeValues = manualPaymentSettings.TransactMode.ToSelectList();
+
+            model.ActiveStoreScopeConfiguration = storeScope;
+            if (storeScope > 0)
+            {
+                model.TransactModeId_OverrideForStore = _settingService.SettingExists(manualPaymentSettings, x => x.TransactMode, storeScope);
+                model.AdditionalFee_OverrideForStore = _settingService.SettingExists(manualPaymentSettings, x => x.AdditionalFee, storeScope);
+                model.AdditionalFeePercentage_OverrideForStore = _settingService.SettingExists(manualPaymentSettings, x => x.AdditionalFeePercentage, storeScope);
+            }
+
             return View("Nop.Plugin.Payments.Manual.Views.PaymentManual.Configure", model);
         }
 
@@ -46,16 +64,39 @@ namespace Nop.Plugin.Payments.Manual.Controllers
         {
             if (!ModelState.IsValid)
                 return Configure();
-            
-            //save settings
-            _manualPaymentSettings.TransactMode = (TransactMode)model.TransactModeId;
-            _manualPaymentSettings.AdditionalFee = model.AdditionalFee;
-            _manualPaymentSettings.AdditionalFeePercentage = model.AdditionalFeePercentage;
-            _settingService.SaveSetting(_manualPaymentSettings);
-            
-            model.TransactModeValues = _manualPaymentSettings.TransactMode.ToSelectList();
 
-            return View("Nop.Plugin.Payments.Manual.Views.PaymentManual.Configure", model);
+            //load settings for a chosen store scope
+            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var manualPaymentSettings = _settingService.LoadSetting<ManualPaymentSettings>(storeScope);
+
+            //save settings
+            manualPaymentSettings.TransactMode = (TransactMode)model.TransactModeId;
+            manualPaymentSettings.AdditionalFee = model.AdditionalFee;
+            manualPaymentSettings.AdditionalFeePercentage = model.AdditionalFeePercentage;
+
+            /* We do not clear cache after each setting update.
+             * This behavior can increase performance because cached settings will not be cleared 
+             * and loaded from database after each update */
+
+            if (model.TransactModeId_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(manualPaymentSettings, x => x.TransactMode, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(manualPaymentSettings, x => x.TransactMode, storeScope);
+
+            if (model.AdditionalFee_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(manualPaymentSettings, x => x.AdditionalFee, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(manualPaymentSettings, x => x.AdditionalFee, storeScope);
+
+            if (model.AdditionalFeePercentage_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(manualPaymentSettings, x => x.AdditionalFeePercentage, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(manualPaymentSettings, x => x.AdditionalFeePercentage, storeScope);
+
+            //now clear settings cache
+            _settingService.ClearCache();
+
+            return Configure();
         }
 
         [ChildActionOnly]

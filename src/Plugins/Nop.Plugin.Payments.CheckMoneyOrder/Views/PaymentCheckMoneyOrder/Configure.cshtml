@@ -3,11 +3,13 @@
 }
 @model Nop.Plugin.Payments.CheckMoneyOrder.Models.ConfigurationModel
 @using Nop.Web.Framework;
+@Html.Action("StoreScopeConfiguration", "Setting", new { area = "Admin" })
 @using (Html.BeginForm())
 {
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.DescriptionText_OverrideForStore, model => model.DescriptionText, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.DescriptionText):
             </td>
             <td class="adminData">
@@ -17,6 +19,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.AdditionalFee_OverrideForStore, model => model.AdditionalFee, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.AdditionalFee):
             </td>
             <td class="adminData">
@@ -26,6 +29,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.AdditionalFeePercentage_OverrideForStore, model => model.AdditionalFeePercentage, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.AdditionalFeePercentage):
             </td>
             <td class="adminData">
