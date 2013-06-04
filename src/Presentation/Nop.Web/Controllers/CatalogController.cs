@@ -2174,6 +2174,11 @@ namespace Nop.Web.Controllers
             {
                 var preparePictureModel = productThumbPictureSize.HasValue;
                 var products = _recentlyViewedProductsService.GetRecentlyViewedProducts(_catalogSettings.RecentlyViewedProductsNumber);
+                
+                //ACL and store mapping
+                products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
+
+                //prepare model
                 model.AddRange(PrepareProductOverviewModels(products, 
                     preparePriceModel.HasValue ? preparePriceModel.Value : false, 
                     preparePictureModel, 
@@ -2867,7 +2872,13 @@ namespace Nop.Web.Controllers
                 IncludeShortDescriptionInCompareProducts = _catalogSettings.IncludeShortDescriptionInCompareProducts,
                 IncludeFullDescriptionInCompareProducts = _catalogSettings.IncludeFullDescriptionInCompareProducts,
             };
+
             var products = _compareProductsService.GetComparedProducts();
+
+            //ACL and store mapping
+            products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
+
+            //prepare model
             PrepareProductOverviewModels(products, prepareSpecificationAttributes: true)
                 .ToList()
                 .ForEach(model.Products.Add);
