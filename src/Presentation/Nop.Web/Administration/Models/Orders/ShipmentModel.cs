@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
 
@@ -18,12 +19,16 @@ namespace Nop.Admin.Models.Orders
         public string TotalWeight { get; set; }
         [NopResourceDisplayName("Admin.Orders.Shipments.TrackingNumber")]
         public string TrackingNumber { get; set; }
+
         [NopResourceDisplayName("Admin.Orders.Shipments.ShippedDate")]
         public string ShippedDate { get; set; }
         public bool CanShip { get; set; }
+        public DateTime? ShippedDateUtc { get; set; }
+
         [NopResourceDisplayName("Admin.Orders.Shipments.DeliveryDate")]
         public string DeliveryDate { get; set; }
         public bool CanDeliver { get; set; }
+        public DateTime? DeliveryDateUtc { get; set; }
 
         public List<ShipmentOrderProductVariantModel> Products { get; set; }
 

@@ -71,6 +71,12 @@ set @resources='
   <LocaleResource Name="Plugins.Shipping.ByWeight.Fields.Store.Hint">
     <Value>If an asterisk is selected, then this shipping rate will apply to all stores.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.ShippedDate.EnterUtc">
+    <Value>Date and time should entered in Coordinated Universal Time (UTC)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.DeliveryDate.EnterUtc">
+    <Value>Date and time should entered in Coordinated Universal Time (UTC)</Value>
+  </LocaleResource>
 </Language>
 '
 

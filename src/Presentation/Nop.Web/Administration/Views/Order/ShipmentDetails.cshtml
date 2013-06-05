@@ -1,14 +1,50 @@
 ﻿@model ShipmentModel
-@using Telerik.Web.Mvc.UI;
-@using Nop.Core.Domain.Tax;
-@using Nop.Core.Domain.Catalog;
 @{    
     //page title
     ViewBag.Title = T("Admin.Orders.Shipments.ViewDetails").Text;
 }
 @using (Html.BeginForm())
 {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            toggleShippedDate(false);
+            toggleDeliveryDate(false);
+        });
 
+        function toggleShippedDate(editmode) {
+            if (editmode) {
+                $('#lblShippedDate').hide();
+                $('#divShippedDate').show();
+                $('#btnEditShippedDate').hide();
+                $('#btnSaveShippedDate').show();
+                $('#btnCancelShippedDate').show();
+            }
+            else {
+                $('#lblShippedDate').show();
+                $('#divShippedDate').hide();
+                $('#btnEditShippedDate').show();
+                $('#btnSaveShippedDate').hide();
+                $('#btnCancelShippedDate').hide();
+            }
+        }
+
+        function toggleDeliveryDate(editmode) {
+            if (editmode) {
+                $('#lblDeliveryDate').hide();
+                $('#divDeliveryDate').show();
+                $('#btnEditDeliveryDate').hide();
+                $('#btnSaveDeliveryDate').show();
+                $('#btnCancelDeliveryDate').show();
+            }
+            else {
+                $('#lblDeliveryDate').show();
+                $('#divDeliveryDate').hide();
+                $('#btnEditDeliveryDate').show();
+                $('#btnSaveDeliveryDate').hide();
+                $('#btnCancelDeliveryDate').hide();
+            }
+        }
+    </script>
     <div class="section-header">
         <div class="title">
             <img src="@Url.Content("~/Administration/Content/images/ico-sales.png")" alt="" />
@@ -21,7 +57,7 @@
             }
             <span id="shipment-delete" class="t-button">@T("Admin.Common.Delete")</span>
         </div>
-    </div>    
+    </div>
     @Html.ValidationSummary(false)
     <table class="adminContent">
         <tr>
@@ -46,10 +82,17 @@
                 @Html.NopLabelFor(model => model.ShippedDate):
             </td>
             <td class="adminData">
-                @Model.ShippedDate
+                <span id="lblShippedDate">@Model.ShippedDate</span>
                 @if (Model.CanShip)
                 {
                     <input type="submit" name="setasshipped" value="@T("Admin.Orders.Shipments.ShippedDate.Button")" id="setasshipped" class="adminButton" />
+                }
+                @if (Model.ShippedDateUtc.HasValue)
+                {
+                    <div id="divShippedDate" style="display: inline-block;">@Html.EditorFor(model => model.ShippedDateUtc) &nbsp;@T("Admin.Orders.Shipments.ShippedDate.EnterUtc")</div>
+                    <input type="submit" value="@T("Admin.Common.Edit")" onclick=" toggleShippedDate(true);return false; " id="btnEditShippedDate" class="adminButton" />
+                    <input type="submit" value="@T("Admin.Common.Save")" id="btnSaveShippedDate" name="saveshippeddate" class="adminButton" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
+                    <input type="submit" value="@T("Admin.Common.Cancel")" onclick=" toggleShippedDate(false);return false; " id="btnCancelShippedDate" class="adminButton" />
                 }
             </td>
         </tr>
@@ -58,10 +101,17 @@
                 @Html.NopLabelFor(model => model.DeliveryDate):
             </td>
             <td class="adminData">
-                @Model.DeliveryDate
+                <span id="lblDeliveryDate">@Model.DeliveryDate</span>
                 @if (Model.CanDeliver)
                 {
                     <input type="submit" name="setasdelivered" value="@T("Admin.Orders.Shipments.DeliveryDate.Button")" id="setasdelivered" class="adminButton" />
+                }
+                @if (Model.DeliveryDateUtc.HasValue)
+                {
+                    <div id="divDeliveryDate" style="display: inline-block;">@Html.EditorFor(model => model.DeliveryDateUtc) &nbsp;@T("Admin.Orders.Shipments.DeliveryDate.EnterUtc")</div>
+                    <input type="submit" value="@T("Admin.Common.Edit")" onclick=" toggleDeliveryDate(true);return false; " id="btnEditDeliveryDate" class="adminButton" />
+                    <input type="submit" value="@T("Admin.Common.Save")" id="btnSaveDeliveryDate" name="savedeliverydate" class="adminButton" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
+                    <input type="submit" value="@T("Admin.Common.Cancel")" onclick=" toggleDeliveryDate(false);return false; " id="btnCancelDeliveryDate" class="adminButton" />
                 }
             </td>
         </tr>

@@ -598,8 +598,10 @@ namespace Nop.Admin.Controllers
                 TrackingNumber = shipment.TrackingNumber,
                 TotalWeight = shipment.TotalWeight.HasValue ? string.Format("{0:F2} [{1}]", shipment.TotalWeight, baseWeightIn) : "",
                 ShippedDate = shipment.ShippedDateUtc.HasValue ? _dateTimeHelper.ConvertToUserTime(shipment.ShippedDateUtc.Value, DateTimeKind.Utc).ToString() : _localizationService.GetResource("Admin.Orders.Shipments.ShippedDate.NotYet"),
+                ShippedDateUtc = shipment.ShippedDateUtc,
                 CanShip = !shipment.ShippedDateUtc.HasValue,
                 DeliveryDate = shipment.DeliveryDateUtc.HasValue ? _dateTimeHelper.ConvertToUserTime(shipment.DeliveryDateUtc.Value, DateTimeKind.Utc).ToString() : _localizationService.GetResource("Admin.Orders.Shipments.DeliveryDate.NotYet"),
+                DeliveryDateUtc = shipment.DeliveryDateUtc,
                 CanDeliver = shipment.ShippedDateUtc.HasValue && !shipment.DeliveryDateUtc.HasValue,
                 DisplayPdfPackagingSlip = _pdfSettings.Enabled,
             };
@@ -2403,6 +2405,40 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost, ActionName("ShipmentDetails")]
+        [FormValueRequired("saveshippeddate")]
+        public ActionResult EditShippedDate(ShipmentModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
+            var shipment = _shipmentService.GetShipmentById(model.Id);
+            if (shipment == null)
+                //No shipment found with the specified id
+                return RedirectToAction("List");
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && !HasAccessToShipment(shipment))
+                return RedirectToAction("List");
+
+            try
+            {
+                if (!model.ShippedDateUtc.HasValue)
+                {
+                    throw new Exception("Enter shipped date");
+                }
+                shipment.ShippedDateUtc = model.ShippedDateUtc;
+                _shipmentService.UpdateShipment(shipment);
+                return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
+            }
+            catch (Exception exc)
+            {
+                //error
+                ErrorNotification(exc, true);
+                return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
+            }
+        }
+
+        [HttpPost, ActionName("ShipmentDetails")]
         [FormValueRequired("setasdelivered")]
         public ActionResult SetAsDelivered(int id)
         {
@@ -2430,7 +2466,42 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
             }
         }
-        
+
+
+        [HttpPost, ActionName("ShipmentDetails")]
+        [FormValueRequired("savedeliverydate")]
+        public ActionResult EditDeliveryDate(ShipmentModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
+            var shipment = _shipmentService.GetShipmentById(model.Id);
+            if (shipment == null)
+                //No shipment found with the specified id
+                return RedirectToAction("List");
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && !HasAccessToShipment(shipment))
+                return RedirectToAction("List");
+
+            try
+            {
+                if (!model.DeliveryDateUtc.HasValue)
+                {
+                    throw new Exception("Enter delivery date");
+                }
+                shipment.DeliveryDateUtc = model.DeliveryDateUtc;
+                _shipmentService.UpdateShipment(shipment);
+                return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
+            }
+            catch (Exception exc)
+            {
+                //error
+                ErrorNotification(exc, true);
+                return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
+            }
+        }
+
         public ActionResult PdfPackagingSlip(int shipmentId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))

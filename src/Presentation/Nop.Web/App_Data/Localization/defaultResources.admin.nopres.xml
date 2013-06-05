@@ -9042,6 +9042,9 @@
                                     <LocaleResource Name="Button">
                                         <Value>Set as delivered</Value>
                                     </LocaleResource>
+                                    <LocaleResource Name="EnterUtc">
+                                        <Value>Date and time should entered in Coordinated Universal Time (UTC)</Value>
+                                    </LocaleResource>
                                     <LocaleResource Name="Hint">
                                         <Value>The date this shipment was delivered.</Value>
                                     </LocaleResource>
@@ -9125,6 +9128,9 @@
                                 <Children>
                                     <LocaleResource Name="Button">
                                         <Value>Set as shipped</Value>
+                                    </LocaleResource>
+                                    <LocaleResource Name="EnterUtc">
+                                        <Value>Date and time should entered in Coordinated Universal Time (UTC)</Value>
                                     </LocaleResource>
                                     <LocaleResource Name="Hint">
                                         <Value>The date this shipment was shipped.</Value>
