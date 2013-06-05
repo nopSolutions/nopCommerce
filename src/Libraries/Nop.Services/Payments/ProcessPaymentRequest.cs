@@ -75,11 +75,6 @@ namespace Nop.Services.Payments
         public string CreditCardCvv2 { get; set; }
 
         /// <summary>
-        /// Gets or sets a google order number (required for Google Checkout)
-        /// </summary>
-        public string GoogleOrderNumber { get; set; }
-
-        /// <summary>
         /// Gets or sets a purchase order number (required for Purchase Order payment method)
         /// </summary>
         public string PurchaseOrderNumber { get; set; }

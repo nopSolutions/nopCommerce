@@ -295,8 +295,8 @@ namespace Nop.Plugin.Payments.GoogleCheckout
                     StoreId = _storeContext.CurrentStore.Id,
                     PaymentMethodSystemName = "Payments.GoogleCheckout",
                     CustomerId = customer.Id,
-                    GoogleOrderNumber = googleOrderNumber
                 };
+                paymentInfo.CustomValues.Add("GoogleOrderNumber", googleOrderNumber);
                 //TODO set customer language and currency
                 //paymentInfo.CustomerLanguage = IoC.Resolve<ILanguageService>().GetLanguageById(CustomerLanguageID);
                 //paymentInfo.CustomerCurrency = IoC.Resolve<ICurrencyService>().GetCurrencyById(CustomerCurrencyID);
@@ -429,9 +429,12 @@ namespace Nop.Plugin.Payments.GoogleCheckout
         /// <returns>Process payment result</returns>
         public ProcessPaymentResult ProcessPayment(ProcessPaymentRequest processPaymentRequest)
         {
+            var googleOrderNumber = processPaymentRequest.CustomValues.ContainsKey("GoogleOrderNumber") 
+                ? processPaymentRequest.CustomValues["GoogleOrderNumber"] as string
+                : "";
             var result = new ProcessPaymentResult();
             result.NewPaymentStatus = PaymentStatus.Pending;
-            result.AuthorizationTransactionId = processPaymentRequest.GoogleOrderNumber;
+            result.AuthorizationTransactionId = googleOrderNumber;
             return result;
         }
 
