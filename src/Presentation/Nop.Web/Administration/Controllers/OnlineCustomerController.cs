@@ -55,26 +55,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
-            var customers = _customerService.GetOnlineCustomers(DateTime.UtcNow.AddMinutes(-_customerSettings.OnlineCustomerMinutes),
-                null, 0, _adminAreaSettings.GridPageSize);
-
-            var model = new GridModel<OnlineCustomerModel>
-            {
-                Data = customers.Select(x =>
-                {
-                    return new OnlineCustomerModel()
-                    {
-                        Id = x.Id,
-                        CustomerInfo = x.IsRegistered() ? x.Email : _localizationService.GetResource("Admin.Customers.Guest"),
-                        LastIpAddress = x.LastIpAddress,
-                        Location = _geoCountryLookup.LookupCountryName(x.LastIpAddress),
-                        LastActivityDate = _dateTimeHelper.ConvertToUserTime(x.LastActivityDateUtc, DateTimeKind.Utc),
-                        LastVisitedPage = x.GetAttribute<string>(SystemCustomerAttributeNames.LastVisitedPage)
-                    };
-                }),
-                Total = customers.TotalCount
-            };
-            return View(model);
+            return View();
         }
 
         [HttpPost, GridAction(EnableCustomBinding = true)]

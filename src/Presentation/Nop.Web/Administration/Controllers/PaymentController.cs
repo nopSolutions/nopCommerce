@@ -49,20 +49,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
                 return AccessDeniedView();
 
-            var paymentMethodsModel = new List<PaymentMethodModel>();
-            var paymentMethods = _paymentService.LoadAllPaymentMethods();
-            foreach (var paymentMethod in paymentMethods)
-            {
-                var tmp1 = paymentMethod.ToModel();
-                tmp1.IsActive = paymentMethod.IsPaymentMethodActive(_paymentSettings);
-                paymentMethodsModel.Add(tmp1);
-            }
-            var gridModel = new GridModel<PaymentMethodModel>
-            {
-                Data = paymentMethodsModel,
-                Total = paymentMethodsModel.Count()
-            };
-            return View(gridModel);
+            return View();
         }
 
         [HttpPost, GridAction(EnableCustomBinding = true)]

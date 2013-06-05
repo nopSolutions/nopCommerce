@@ -6,8 +6,6 @@ namespace Nop.Admin.Models.Messages
 {
     public partial class NewsLetterSubscriptionListModel : BaseNopModel
     {
-        public GridModel<NewsLetterSubscriptionModel> NewsLetterSubscriptions { get; set; }
-
         [NopResourceDisplayName("Admin.Customers.Customers.List.SearchEmail")]
         public string SearchEmail { get; set; }
     }

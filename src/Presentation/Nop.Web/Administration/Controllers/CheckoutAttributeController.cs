@@ -122,18 +122,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
-            var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes();
-            var gridModel = new GridModel<CheckoutAttributeModel>
-            {
-                Data = checkoutAttributes.Select(x => 
-                {
-                    var caModel = x.ToModel();
-                    caModel.AttributeControlTypeName = x.AttributeControlType.GetLocalizedEnum(_localizationService, _workContext);
-                    return caModel;
-                }),
-                Total = checkoutAttributes.Count()
-            };
-            return View(gridModel);
+            return View();
         }
 
         [HttpPost, GridAction(EnableCustomBinding = true)]

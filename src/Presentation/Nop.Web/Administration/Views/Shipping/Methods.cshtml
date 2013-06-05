@@ -1,6 +1,4 @@
-﻿@model Telerik.Web.Mvc.GridModel<ShippingMethodModel>
-@using Telerik.Web.Mvc.UI;
-@using System.Linq;
+﻿@using Telerik.Web.Mvc.UI;
 @{    
     //page title
     ViewBag.Title = T("Admin.Configuration.Shipping.Methods").Text;
@@ -17,7 +15,7 @@
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid(Model.Data)
+            @(Html.Telerik().Grid<ShippingMethodModel>()
                     .Name("shippingmethod-grid")
                     .DataKeys(x =>
                     {

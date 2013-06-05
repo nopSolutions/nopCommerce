@@ -55,22 +55,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
 
-            var polls = _pollService.GetPolls(0, false, 0, _adminAreaSettings.GridPageSize, true);
-            var gridModel = new GridModel<PollModel>
-            {
-                Data = polls.Select(x =>
-                {
-                    var m = x.ToModel();
-                    if (x.StartDateUtc.HasValue)
-                        m.StartDate = _dateTimeHelper.ConvertToUserTime(x.StartDateUtc.Value, DateTimeKind.Utc);
-                    if (x.EndDateUtc.HasValue)
-                        m.EndDate = _dateTimeHelper.ConvertToUserTime(x.EndDateUtc.Value, DateTimeKind.Utc);
-                    m.LanguageName = x.Language.Name;
-                    return m;
-                }),
-                Total = polls.TotalCount
-            };
-            return View(gridModel);
+            return View();
         }
 
         [HttpPost, GridAction(EnableCustomBinding = true)]

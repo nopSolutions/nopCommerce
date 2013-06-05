@@ -300,6 +300,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
 
+            //TODO do not use ViewBag, create a model
 			ViewBag.AllLanguages = _languageService.GetAllLanguages(true)
                 .Select(x => new SelectListItem
                 {
@@ -311,25 +312,7 @@ namespace Nop.Admin.Controllers
 		    ViewBag.LanguageId = languageId;
 		    ViewBag.LanguageName = language.Name;
 
-		    var resources = _localizationService
-                .GetAllResourceValues(languageId)
-                .OrderBy(x => x.Key)
-                .ToList();
-			var gridModel = new GridModel<LanguageResourceModel>
-			{
-                Data = resources
-                    .Take(_adminAreaSettings.GridPageSize)
-                    .Select(x => new LanguageResourceModel()
-                    {
-                        LanguageId = languageId,
-                        LanguageName = language.Name,
-                        Id = x.Value.Key,
-                        Name = x.Key,
-                        Value = x.Value.Value,
-                    }),
-				Total = resources.Count
-			};
-			return View(gridModel);
+			return View();
 		}
 
 		[HttpPost, GridAction(EnableCustomBinding = true)]

@@ -1,5 +1,4 @@
-﻿@model Telerik.Web.Mvc.GridModel<CampaignModel>
-@using Telerik.Web.Mvc.UI
+﻿@using Telerik.Web.Mvc.UI
 @{
     //page title
     ViewBag.Title = T("Admin.Promotions.Campaigns").Text;
@@ -16,7 +15,7 @@
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<CampaignModel>(Model.Data)
+            @(Html.Telerik().Grid<CampaignModel>()
                     .Name("campaigns-grid")
                     .Columns(columns =>
                     {

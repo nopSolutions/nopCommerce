@@ -1,6 +1,4 @@
-﻿@model Telerik.Web.Mvc.GridModel<ScheduleTaskModel>
-@using Telerik.Web.Mvc.UI;
-@using System.Linq;
+﻿@using Telerik.Web.Mvc.UI;
 @{
     //page title
     ViewBag.Title = T("Admin.System.ScheduleTasks").Text;
@@ -19,7 +17,7 @@
     </tr>
     <tr>
         <td>
-            @(Html.Telerik().Grid(Model.Data)
+            @(Html.Telerik().Grid<ScheduleTaskModel>()
                     .Name("schedule-tasks-grid")
                     .DataKeys(x =>
                     {

@@ -2,14 +2,11 @@
 using System.Web.Mvc;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
-using Telerik.Web.Mvc;
 
 namespace Nop.Admin.Models.Customers
 {
     public partial class CustomerListModel : BaseNopModel
     {
-        public GridModel<CustomerModel> Customers { get; set; }
-
         [NopResourceDisplayName("Admin.Customers.Customers.List.CustomerRoles")]
         [AllowHtml]
         public List<CustomerRoleModel> AvailableCustomerRoles { get; set; }

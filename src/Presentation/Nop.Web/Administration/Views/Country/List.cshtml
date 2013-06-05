@@ -1,5 +1,4 @@
-﻿@model Telerik.Web.Mvc.GridModel<CountryModel>
-@using Telerik.Web.Mvc.UI
+﻿@using Telerik.Web.Mvc.UI
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Countries").Text;
@@ -18,7 +17,6 @@
         <td>
             @(Html.Telerik().Grid<CountryModel>()
                     .Name("countries-grid")
-                    .BindTo(Model.Data)
                     .Columns(columns =>
                     {
                         columns.Bound(x => x.Name)

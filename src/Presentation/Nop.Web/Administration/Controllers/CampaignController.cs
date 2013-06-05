@@ -68,18 +68,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
                 return AccessDeniedView();
 
-            var campaigns = _campaignService.GetAllCampaigns();
-            var gridModel = new GridModel<CampaignModel>
-            {
-                Data = campaigns.Select(x =>
-                {
-                    var model = x.ToModel();
-                    model.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
-                    return model;
-                }),
-                Total = campaigns.Count
-            };
-            return View(gridModel);
+            return View();
 		}
 
         [HttpPost, GridAction(EnableCustomBinding = true)]

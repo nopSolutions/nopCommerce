@@ -50,13 +50,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomerRoles))
                 return AccessDeniedView();
             
-			var customerRoles = _customerService.GetAllCustomerRoles(true);
-			var gridModel = new GridModel<CustomerRoleModel>
-			{
-                Data = customerRoles.Select(x => x.ToModel()),
-                Total = customerRoles.Count()
-			};
-			return View(gridModel);
+			return View();
 		}
 
 		[HttpPost, GridAction(EnableCustomBinding = true)]

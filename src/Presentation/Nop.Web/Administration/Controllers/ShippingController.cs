@@ -84,20 +84,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
-            var shippingProvidersModel = new List<ShippingRateComputationMethodModel>();
-            var shippingProviders = _shippingService.LoadAllShippingRateComputationMethods();
-            foreach (var shippingProvider in shippingProviders)
-            {
-                var tmp1 = shippingProvider.ToModel();
-                tmp1.IsActive = shippingProvider.IsShippingRateComputationMethodActive(_shippingSettings);
-                shippingProvidersModel.Add(tmp1);
-            }
-            var gridModel = new GridModel<ShippingRateComputationMethodModel>
-            {
-                Data = shippingProvidersModel,
-                Total = shippingProvidersModel.Count()
-            };
-            return View(gridModel);
+            return View();
         }
 
         [HttpPost, GridAction(EnableCustomBinding = true)]
@@ -190,15 +177,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
-            var shippingMethodsModel = _shippingService.GetAllShippingMethods()
-                .Select(x => x.ToModel())
-                .ToList();
-            var model = new GridModel<ShippingMethodModel>
-            {
-                Data = shippingMethodsModel,
-                Total = shippingMethodsModel.Count
-            };
-            return View(model);
+            return View();
         }
 
         [HttpPost, GridAction(EnableCustomBinding = true)]

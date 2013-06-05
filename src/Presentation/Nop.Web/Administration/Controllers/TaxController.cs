@@ -123,15 +123,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
                 return AccessDeniedView();
 
-            var categoriesModel = _taxCategoryService.GetAllTaxCategories()
-                .Select(x => x.ToModel())
-                .ToList();
-            var model = new GridModel<TaxCategoryModel>
-            {
-                Data = categoriesModel,
-                Total = categoriesModel.Count
-            };
-            return View(model);
+            return View();
         }
 
         [HttpPost, GridAction(EnableCustomBinding = true)]

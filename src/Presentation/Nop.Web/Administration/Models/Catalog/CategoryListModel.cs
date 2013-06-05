@@ -10,7 +10,5 @@ namespace Nop.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Categories.List.SearchCategoryName")]
         [AllowHtml]
         public string SearchCategoryName { get; set; }
-
-        public GridModel<CategoryModel> Categories { get; set; }
     }
 }

@@ -1,6 +1,4 @@
-﻿@model Telerik.Web.Mvc.GridModel<TaxCategoryModel>
-@using Telerik.Web.Mvc.UI;
-@using System.Linq;
+﻿@using Telerik.Web.Mvc.UI;
 @{    
     //page title
     ViewBag.Title = T("Admin.Configuration.Tax.Categories").Text;
@@ -14,7 +12,7 @@
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid(Model.Data)
+            @(Html.Telerik().Grid<TaxCategoryModel>()
                     .Name("taxcategory-grid")
                     .DataKeys(x =>
                     {

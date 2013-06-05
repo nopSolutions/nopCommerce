@@ -127,7 +127,6 @@ namespace Nop.Admin.Models.Catalog
                 AvailableStores = new List<SelectListItem>();
                 AvailableVendors = new List<SelectListItem>();
             }
-            public GridModel<ProductModel> Products { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
             [AllowHtml]

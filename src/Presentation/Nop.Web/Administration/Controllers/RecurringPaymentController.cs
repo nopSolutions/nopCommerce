@@ -123,8 +123,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageRecurringPayments))
                 return AccessDeniedView();
 
-            var gridModel = new GridModel<RecurringPaymentModel>();
-            return View(gridModel);
+            return View();
         }
 
         [HttpPost, GridAction(EnableCustomBinding = true)]

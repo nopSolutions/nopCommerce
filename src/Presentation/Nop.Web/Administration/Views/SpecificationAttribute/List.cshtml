@@ -1,5 +1,4 @@
-﻿@model Telerik.Web.Mvc.GridModel<SpecificationAttributeModel>
-@using Telerik.Web.Mvc.UI
+﻿@using Telerik.Web.Mvc.UI
 @{    
     //page title
     ViewBag.Title = T("Admin.Catalog.Attributes.SpecificationAttributes").Text;
@@ -16,7 +15,7 @@
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<SpecificationAttributeModel>(Model.Data)
+            @(Html.Telerik().Grid<SpecificationAttributeModel>()
                     .Name("specificationattributes-grid")
                     .Columns(columns =>
                     {
@@ -32,8 +31,8 @@
                             .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
                             .Title(T("Admin.Common.Edit").Text);
                     })
-                            .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "SpecificationAttribute"))
-                            .EnableCustomBinding(true))
+                    .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "SpecificationAttribute"))
+                    .EnableCustomBinding(true))
         </td>
     </tr>
 </table>

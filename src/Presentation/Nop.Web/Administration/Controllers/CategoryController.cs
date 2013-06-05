@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Nop.Admin.Models.Catalog;
-using Nop.Admin.Models.Stores;
-using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Services.Customers; 
@@ -49,7 +47,6 @@ namespace Nop.Admin.Controllers
         private readonly IExportManager _exportManager;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IVendorService _vendorService;
-        private readonly AdminAreaSettings _adminAreaSettings;
         private readonly CatalogSettings _catalogSettings;
 
         #endregion
@@ -59,12 +56,19 @@ namespace Nop.Admin.Controllers
         public CategoryController(ICategoryService categoryService, ICategoryTemplateService categoryTemplateService,
             IManufacturerService manufacturerService, IProductService productService, 
             ICustomerService customerService,
-            IUrlRecordService urlRecordService, IPictureService pictureService, ILanguageService languageService,
-            ILocalizationService localizationService, ILocalizedEntityService localizedEntityService,
-            IDiscountService discountService, IPermissionService permissionService,
-            IAclService aclService, IStoreService storeService, IStoreMappingService storeMappingService,
-            IExportManager exportManager, IVendorService vendorService, 
-            ICustomerActivityService customerActivityService, AdminAreaSettings adminAreaSettings,
+            IUrlRecordService urlRecordService, 
+            IPictureService pictureService, 
+            ILanguageService languageService,
+            ILocalizationService localizationService, 
+            ILocalizedEntityService localizedEntityService,
+            IDiscountService discountService,
+            IPermissionService permissionService,
+            IAclService aclService, 
+            IStoreService storeService,
+            IStoreMappingService storeMappingService,
+            IExportManager exportManager, 
+            IVendorService vendorService, 
+            ICustomerActivityService customerActivityService,
             CatalogSettings catalogSettings)
         {
             this._categoryService = categoryService;
@@ -85,7 +89,6 @@ namespace Nop.Admin.Controllers
             this._storeMappingService = storeMappingService;
             this._exportManager = exportManager;
             this._customerActivityService = customerActivityService;
-            this._adminAreaSettings = adminAreaSettings;
             this._catalogSettings = catalogSettings;
         }
 
@@ -276,17 +279,6 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var model = new CategoryListModel();
-            var categories = _categoryService.GetAllCategories(null, 0, _adminAreaSettings.GridPageSize, true);
-            model.Categories = new GridModel<CategoryModel>
-            {
-                Data = categories.Select(x =>
-                {
-                    var categoryModel = x.ToModel();
-                    categoryModel.Breadcrumb = x.GetCategoryBreadCrumb(_categoryService);
-                    return categoryModel;
-                }),
-                Total = categories.TotalCount
-            };
             return View(model);
         }
 
@@ -760,18 +752,8 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
-
-            var products = _productService.SearchProducts(
-                pageSize: _adminAreaSettings.GridPageSize,
-                showHidden: true
-                );
-
+            
             var model = new CategoryModel.AddCategoryProductModel();
-            model.Products = new GridModel<ProductModel>
-            {
-                Data = products.Select(x => x.ToModel()),
-                Total = products.TotalCount
-            };
             //categories
             model.AvailableCategories.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var c in _categoryService.GetAllCategories(showHidden: true))
@@ -853,7 +835,6 @@ namespace Nop.Admin.Controllers
             ViewBag.RefreshPage = true;
             ViewBag.btnId = btnId;
             ViewBag.formId = formId;
-            model.Products = new GridModel<ProductModel>();
             return View(model);
         }
 

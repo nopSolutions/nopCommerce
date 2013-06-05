@@ -50,20 +50,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageExternalAuthenticationMethods))
                 return AccessDeniedView();
 
-            var methodsModel = new List<AuthenticationMethodModel>();
-            var methods = _openAuthenticationService.LoadAllExternalAuthenticationMethods();
-            foreach (var method in methods)
-            {
-                var tmp1 = method.ToModel();
-                tmp1.IsActive = method.IsMethodActive(_externalAuthenticationSettings);
-                methodsModel.Add(tmp1);
-            }
-            var gridModel = new GridModel<AuthenticationMethodModel>
-            {
-                Data = methodsModel,
-                Total = methodsModel.Count()
-            };
-            return View(gridModel);
+            return View();
         }
 
         [HttpPost, GridAction(EnableCustomBinding = true)]

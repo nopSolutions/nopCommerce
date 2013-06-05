@@ -308,7 +308,6 @@ namespace Nop.Admin.Models.Orders
                 AvailableCategories = new List<SelectListItem>();
                 AvailableManufacturers = new List<SelectListItem>();
             }
-            public GridModel<ProductVariantModel> ProductVariants { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
             [AllowHtml]

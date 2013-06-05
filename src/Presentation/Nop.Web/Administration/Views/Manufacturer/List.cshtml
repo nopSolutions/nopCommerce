@@ -35,7 +35,7 @@
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<ManufacturerModel>(Model.Manufacturers.Data)
+            @(Html.Telerik().Grid<ManufacturerModel>()
                     .Name("manufacturers-grid")
                     .ClientEvents(events => events
                         .OnDataBinding("onDataBinding"))
@@ -59,9 +59,9 @@
                             .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
                             .Title(T("Admin.Common.Edit").Text);
                     })
-                                                .Pageable(settings => settings.Total(Model.Manufacturers.Total).PageSize(gridPageSize).Position(GridPagerPosition.Both))
-                                                .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "Manufacturer"))
-                                                .EnableCustomBinding(true))
+                    .Pageable(settings => settings.PageSize(gridPageSize).Position(GridPagerPosition.Both))
+                    .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "Manufacturer"))
+                    .EnableCustomBinding(true))
         </td>
     </tr>
 </table>

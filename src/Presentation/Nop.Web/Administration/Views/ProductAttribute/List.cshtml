@@ -1,5 +1,4 @@
-﻿@model Telerik.Web.Mvc.GridModel<ProductAttributeModel>
-@using Telerik.Web.Mvc.UI
+﻿@using Telerik.Web.Mvc.UI
 @{  
     //page title
     ViewBag.Title = T("Admin.Catalog.Attributes.ProductAttributes").Text;
@@ -16,7 +15,7 @@
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<ProductAttributeModel>(Model.Data)
+            @(Html.Telerik().Grid<ProductAttributeModel>()
                     .Name("productattributes-grid")
                     .Columns(columns =>
                     {

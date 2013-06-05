@@ -34,7 +34,7 @@
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<CategoryModel>(Model.Categories.Data)
+            @(Html.Telerik().Grid<CategoryModel>()
                     .Name("categories-grid")
                     .ClientEvents(events => events
                         .OnDataBinding("onDataBinding"))
@@ -58,7 +58,7 @@
                             .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
                             .Title(T("Admin.Common.Edit").Text);
                     })
-                    .Pageable(settings => settings.Total(Model.Categories.Total).PageSize(gridPageSize).Position(GridPagerPosition.Both))
+                    .Pageable(settings => settings.PageSize(gridPageSize).Position(GridPagerPosition.Both))
                     .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "Category"))
                     .EnableCustomBinding(true))
         </td>

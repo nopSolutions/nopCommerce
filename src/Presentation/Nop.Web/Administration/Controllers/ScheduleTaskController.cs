@@ -73,15 +73,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageScheduleTasks))
                 return AccessDeniedView();
 
-            var models = _scheduleTaskService.GetAllTasks(true)
-                .Select(PrepareScheduleTaskModel)
-                .ToList();
-            var model = new GridModel<ScheduleTaskModel>
-			{
-                Data = models,
-                Total = models.Count
-			};
-            return View(model);
+            return View();
 		}
 
 		[HttpPost, GridAction(EnableCustomBinding = true)]

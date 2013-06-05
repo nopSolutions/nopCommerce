@@ -36,7 +36,7 @@
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<NewsLetterSubscriptionModel>(Model.NewsLetterSubscriptions.Data)
+            @(Html.Telerik().Grid<NewsLetterSubscriptionModel>()
                         .Name("newsLetterSubscriptions-grid")
                         .DataKeys(x =>
                         {
@@ -63,14 +63,14 @@
                             }).Width(180);
 
                         })
-                                                    .Pageable(settings => settings.Total(Model.NewsLetterSubscriptions.Total).PageSize(gridPageSize).Position(GridPagerPosition.Both))
-                                                    .DataBinding(dataBinding => dataBinding.Ajax()
-                                                        .Select("SubscriptionList", "NewsLetterSubscription")
-                                                        .Update("SubscriptionUpdate", "NewsLetterSubscription")
-                                                        .Delete("SubscriptionDelete", "NewsLetterSubscription"))
-                                                        .ClientEvents(events => events.OnDataBinding("onDataBinding"))
-                                                        .ClientEvents(x => x.OnError("grid_onError"))
-                                                    .EnableCustomBinding(true))
+                        .Pageable(settings => settings.PageSize(gridPageSize).Position(GridPagerPosition.Both))
+                        .DataBinding(dataBinding => dataBinding.Ajax()
+                            .Select("SubscriptionList", "NewsLetterSubscription")
+                            .Update("SubscriptionUpdate", "NewsLetterSubscription")
+                            .Delete("SubscriptionDelete", "NewsLetterSubscription"))
+                            .ClientEvents(events => events.OnDataBinding("onDataBinding"))
+                            .ClientEvents(x => x.OnError("grid_onError"))
+                        .EnableCustomBinding(true))
         </td>
     </tr>
 </table>

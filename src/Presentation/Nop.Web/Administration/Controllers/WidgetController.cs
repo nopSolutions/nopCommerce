@@ -54,20 +54,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageWidgets))
                 return AccessDeniedView();
 
-            var widgetsModel = new List<WidgetModel>();
-            var widgets = _widgetService.LoadAllWidgets();
-            foreach (var widget in widgets)
-            {
-                var tmp1 = widget.ToModel();
-                tmp1.IsActive = widget.IsWidgetActive(_widgetSettings);
-                widgetsModel.Add(tmp1);
-            }
-            var gridModel = new GridModel<WidgetModel>
-            {
-                Data = widgetsModel,
-                Total = widgetsModel.Count()
-            };
-            return View(gridModel);
+            return View();
         }
 
         [HttpPost, GridAction(EnableCustomBinding = true)]

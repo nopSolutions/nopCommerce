@@ -43,26 +43,7 @@ namespace Nop.Plugin.Tax.FixedRate.Controllers
         [ChildActionOnly]
         public ActionResult Configure()
         {
-            var taxCategories = _taxCategoryService.GetAllTaxCategories();
-            if (taxCategories.Count == 0)
-                return Content("No tax categories can be loaded");
-
-            var tmp = new List<FixedTaxRateModel>();
-            foreach (var taxCategory in taxCategories)
-                tmp.Add(new FixedTaxRateModel()
-                {
-                    TaxCategoryId = taxCategory.Id,
-                    TaxCategoryName = taxCategory.Name,
-                    Rate = GetTaxRate(taxCategory.Id)
-                });
-
-            var gridModel = new GridModel<FixedTaxRateModel>
-            {
-                Data = tmp,
-                Total = tmp.Count
-            };
-
-            return View("Nop.Plugin.Tax.FixedRate.Views.TaxFixedRate.Configure", gridModel);
+            return View("Nop.Plugin.Tax.FixedRate.Views.TaxFixedRate.Configure");
         }
 
         [HttpPost, GridAction(EnableCustomBinding = true)]
@@ -103,25 +84,7 @@ namespace Nop.Plugin.Tax.FixedRate.Controllers
 
             _settingService.SetSetting(string.Format("Tax.TaxProvider.FixedRate.TaxCategoryId{0}", taxCategoryId), rate);
 
-            var tmp = new List<FixedTaxRateModel>();
-            foreach (var taxCategory in _taxCategoryService.GetAllTaxCategories())
-                tmp.Add(new FixedTaxRateModel()
-                {
-                    TaxCategoryId = taxCategory.Id,
-                    TaxCategoryName = taxCategory.Name,
-                    Rate = GetTaxRate(taxCategory.Id)
-                });
-
-            var tmp2 = tmp.ForCommand(command);
-            var gridModel = new GridModel<FixedTaxRateModel>
-            {
-                Data = tmp2,
-                Total = tmp2.Count()
-            };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return Configure(command);
         }
 
         [NonAction]

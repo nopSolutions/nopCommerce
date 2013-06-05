@@ -1,13 +1,12 @@
 ﻿@{
     Layout = "";
 }
-@model Telerik.Web.Mvc.GridModel<Nop.Plugin.Tax.FixedRate.Models.FixedTaxRateModel>
+@using Nop.Plugin.Tax.FixedRate.Models;
 @using Telerik.Web.Mvc.UI;
-@using System.Linq;
 <table class="adminContent">
     <tr>
         <td>
-                    @(Html.Telerik().Grid(Model.Data)
+            @(Html.Telerik().Grid<FixedTaxRateModel>()
                     .Name("Grid")
                     .DataKeys(keys => keys.Add(x => x.TaxCategoryId).RouteKey("TaxCategoryId"))
                     .Columns(columns =>

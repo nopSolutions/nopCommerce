@@ -70,7 +70,6 @@ namespace Nop.Admin.Controllers
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IPriceCalculationService _priceCalculationService;
         private readonly IPermissionService _permissionService;
-        private readonly AdminAreaSettings _adminAreaSettings;
         private readonly IQueuedEmailService _queuedEmailService;
         private readonly EmailAccountSettings _emailAccountSettings;
         private readonly IEmailAccountService _emailAccountService;
@@ -88,24 +87,34 @@ namespace Nop.Admin.Controllers
             INewsLetterSubscriptionService newsLetterSubscriptionService,
             IGenericAttributeService genericAttributeService,
             ICustomerRegistrationService customerRegistrationService,
-            ICustomerReportService customerReportService, IDateTimeHelper dateTimeHelper,
-            ILocalizationService localizationService, DateTimeSettings dateTimeSettings,
-            TaxSettings taxSettings, RewardPointsSettings rewardPointsSettings,
-            ICountryService countryService, IStateProvinceService stateProvinceService, 
+            ICustomerReportService customerReportService, 
+            IDateTimeHelper dateTimeHelper,
+            ILocalizationService localizationService, 
+            DateTimeSettings dateTimeSettings,
+            TaxSettings taxSettings, 
+            RewardPointsSettings rewardPointsSettings,
+            ICountryService countryService, 
+            IStateProvinceService stateProvinceService, 
             IAddressService addressService,
-            CustomerSettings customerSettings, ITaxService taxService, 
-            IWorkContext workContext, IVendorService vendorService,
+            CustomerSettings customerSettings,
+            ITaxService taxService, 
+            IWorkContext workContext,
+            IVendorService vendorService,
             IStoreContext storeContext,
             IPriceFormatter priceFormatter,
             IOrderService orderService, 
             IExportManager exportManager,
             ICustomerActivityService customerActivityService,
             IPriceCalculationService priceCalculationService,
-            IPermissionService permissionService, AdminAreaSettings adminAreaSettings,
-            IQueuedEmailService queuedEmailService, EmailAccountSettings emailAccountSettings,
-            IEmailAccountService emailAccountService, ForumSettings forumSettings,
-            IForumService forumService, IOpenAuthenticationService openAuthenticationService,
-            AddressSettings addressSettings, IStoreService storeService)
+            IPermissionService permissionService, 
+            IQueuedEmailService queuedEmailService,
+            EmailAccountSettings emailAccountSettings,
+            IEmailAccountService emailAccountService, 
+            ForumSettings forumSettings,
+            IForumService forumService, 
+            IOpenAuthenticationService openAuthenticationService,
+            AddressSettings addressSettings, 
+            IStoreService storeService)
         {
             this._customerService = customerService;
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
@@ -131,7 +140,6 @@ namespace Nop.Admin.Controllers
             this._customerActivityService = customerActivityService;
             this._priceCalculationService = priceCalculationService;
             this._permissionService = permissionService;
-            this._adminAreaSettings = adminAreaSettings;
             this._queuedEmailService = queuedEmailService;
             this._emailAccountSettings = emailAccountSettings;
             this._emailAccountService = emailAccountService;
@@ -301,16 +309,6 @@ namespace Nop.Admin.Controllers
                 ZipPostalCodeEnabled = _customerSettings.ZipPostalCodeEnabled,
                 AvailableCustomerRoles = _customerService.GetAllCustomerRoles(true).Select(cr => cr.ToModel()).ToList(),
                 SearchCustomerRoleIds = defaultRoleIds,
-            };
-            var customers = _customerService.GetAllCustomers( 
-                customerRoleIds: defaultRoleIds, 
-                pageIndex: 0,
-                pageSize: _adminAreaSettings.GridPageSize);
-            //customer list
-            listModel.Customers = new GridModel<CustomerModel>
-            {
-                Data = customers.Select(PrepareCustomerModelForList),
-                Total = customers.TotalCount
             };
             return View(listModel);
         }

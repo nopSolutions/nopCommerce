@@ -43,26 +43,7 @@ namespace Nop.Plugin.Shipping.FixedRateShipping.Controllers
         [ChildActionOnly]
         public ActionResult Configure()
         {
-            var shippingMethods = _shippingService.GetAllShippingMethods();
-            if (shippingMethods.Count == 0)
-                return Content("No shipping methods can be loaded");
-
-            var tmp = new List<FixedShippingRateModel>();
-            foreach (var shippingMethod in shippingMethods)
-                tmp.Add(new FixedShippingRateModel()
-                {
-                    ShippingMethodId = shippingMethod.Id,
-                    ShippingMethodName = shippingMethod.Name,
-                    Rate = GetShippingRate(shippingMethod.Id)
-                });
-
-            var gridModel = new GridModel<FixedShippingRateModel>
-            {
-                Data = tmp,
-                Total = tmp.Count
-            };
-
-            return View("Nop.Plugin.Shipping.FixedRateShipping.Views.ShippingFixedRate.Configure", gridModel);
+            return View("Nop.Plugin.Shipping.FixedRateShipping.Views.ShippingFixedRate.Configure");
         }
 
         [HttpPost, GridAction(EnableCustomBinding = true)]
@@ -103,25 +84,7 @@ namespace Nop.Plugin.Shipping.FixedRateShipping.Controllers
 
             _settingService.SetSetting(string.Format("ShippingRateComputationMethod.FixedRate.Rate.ShippingMethodId{0}", shippingMethodId), rate);
 
-            var tmp = new List<FixedShippingRateModel>();
-            foreach (var shippingMethod in _shippingService.GetAllShippingMethods())
-                tmp.Add(new FixedShippingRateModel()
-                {
-                    ShippingMethodId = shippingMethod.Id,
-                    ShippingMethodName = shippingMethod.Name,
-                    Rate = GetShippingRate(shippingMethod.Id)
-                });
-
-            var tmp2 = tmp.ForCommand(command);
-            var gridModel = new GridModel<FixedShippingRateModel>
-            {
-                Data = tmp2,
-                Total = tmp2.Count()
-            };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return Configure(command);
         }
 
         [NonAction]

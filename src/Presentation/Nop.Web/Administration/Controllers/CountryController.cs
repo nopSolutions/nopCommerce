@@ -86,13 +86,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
 
-            var countries = _countryService.GetAllCountries(true);
-            var model = new GridModel<CountryModel>
-            {
-                Data = countries.Select(x => x.ToModel()),
-                Total = countries.Count
-            };
-            return View(model);
+            return View();
         }
 
         [HttpPost, GridAction(EnableCustomBinding = true)]

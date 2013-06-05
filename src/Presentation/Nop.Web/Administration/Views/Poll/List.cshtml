@@ -1,5 +1,4 @@
-﻿@model Telerik.Web.Mvc.GridModel<PollModel>
-@using Telerik.Web.Mvc.UI
+﻿@using Telerik.Web.Mvc.UI
 
 @{
     var gridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSize;
@@ -21,7 +20,6 @@
         <td>
             @(Html.Telerik().Grid<PollModel>()
                     .Name("polls-grid")
-                    .BindTo(Model.Data)
                     .Columns(columns =>
                     {
                         columns.Bound(x => x.Name)
@@ -55,7 +53,7 @@
                             .Centered()
                             .HeaderTemplate(T("Admin.Common.Edit").Text);
                     })
-                    .Pageable(settings => settings.Total(Model.Total).PageSize(gridPageSize).Position(GridPagerPosition.Both))
+                    .Pageable(settings => settings.PageSize(gridPageSize).Position(GridPagerPosition.Both))
                     .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "Poll"))
                     .EnableCustomBinding(true))
         </td>

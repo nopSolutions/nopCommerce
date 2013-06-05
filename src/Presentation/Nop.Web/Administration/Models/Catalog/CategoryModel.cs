@@ -9,7 +9,6 @@ using Nop.Core.Domain.Discounts;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Mvc;
-using Telerik.Web.Mvc;
 using Telerik.Web.Mvc.UI;
 
 namespace Nop.Admin.Models.Catalog
@@ -145,7 +144,6 @@ namespace Nop.Admin.Models.Catalog
                 AvailableStores = new List<SelectListItem>();
                 AvailableVendors = new List<SelectListItem>();
             }
-            public GridModel<ProductModel> Products { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
             [AllowHtml]

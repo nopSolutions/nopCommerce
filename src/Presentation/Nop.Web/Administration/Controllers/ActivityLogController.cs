@@ -53,24 +53,6 @@ namespace Nop.Admin.Controllers
             return View(gridModel);
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult ListTypes(GridCommand command)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
-                return AccessDeniedView();
-
-            var activityLogTypeModel = _customerActivityService.GetAllActivityTypes().Select(x => x.ToModel());
-            var gridModel = new GridModel<ActivityLogTypeModel>
-            {
-                Data = activityLogTypeModel,
-                Total = activityLogTypeModel.Count()
-            };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
-        }
-
         [HttpPost]
         public ActionResult SaveTypes(FormCollection formCollection)
         {

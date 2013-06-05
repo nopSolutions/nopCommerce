@@ -1,6 +1,4 @@
-﻿@model Telerik.Web.Mvc.GridModel<LanguageResourceModel>
-@using Telerik.Web.Mvc.UI;
-@using System.Linq;
+﻿@using Telerik.Web.Mvc.UI;
 @{
     var gridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSize;
     //page title
@@ -38,7 +36,7 @@
     </tr>
     <tr>
         <td>
-            @(Html.Telerik().Grid(Model.Data)
+            @(Html.Telerik().Grid<LanguageResourceModel>()
                     .Name("resources-grid")
                     .DataKeys(x =>
                     {
@@ -66,7 +64,7 @@
                         x.Mode(GridEditMode.InLine);
                     })
                     .Filterable()
-                    .Pageable(settings => settings.PageSize(gridPageSize).Total(Model.Total).Position(GridPagerPosition.Both))
+                    .Pageable(settings => settings.PageSize(gridPageSize).Position(GridPagerPosition.Both))
                     .DataBinding(dataBinding =>
                     {
                         dataBinding.Ajax().Select("Resources", "Language")

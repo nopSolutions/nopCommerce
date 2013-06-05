@@ -1,5 +1,4 @@
-﻿@model Telerik.Web.Mvc.GridModel<CheckoutAttributeModel>
-@using Telerik.Web.Mvc.UI
+﻿@using Telerik.Web.Mvc.UI
 
 @{
     //page title
@@ -17,7 +16,7 @@
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<CheckoutAttributeModel>(Model.Data)
+            @(Html.Telerik().Grid<CheckoutAttributeModel>()
                     .Name("checkoutattributes-grid")
                     .Columns(columns =>
                     {
@@ -42,8 +41,8 @@
                             .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
                             .Title(T("Admin.Common.Edit").Text);
                     })
-                            .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "CheckoutAttribute"))
-                            .EnableCustomBinding(true))
+                    .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "CheckoutAttribute"))
+                    .EnableCustomBinding(true))
         </td>
     </tr>
 </table>

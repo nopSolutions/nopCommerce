@@ -76,13 +76,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
-            var productAttributes = _productAttributeService.GetAllProductAttributes();
-            var gridModel = new GridModel<ProductAttributeModel>
-            {
-                Data = productAttributes.Select(x => x.ToModel()),
-                Total = productAttributes.Count()
-            };
-            return View(gridModel);
+            return View();
         }
 
         [HttpPost, GridAction(EnableCustomBinding = true)]

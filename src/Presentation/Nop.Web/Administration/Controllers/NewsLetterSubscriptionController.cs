@@ -5,7 +5,6 @@ using System.Text;
 using System.Web.Mvc;
 using Nop.Admin.Models.Messages;
 using Nop.Core;
-using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
@@ -23,17 +22,16 @@ namespace Nop.Admin.Controllers
 		private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
-        private readonly AdminAreaSettings _adminAreaSettings;
 
 		public NewsLetterSubscriptionController(INewsLetterSubscriptionService newsLetterSubscriptionService,
-			IDateTimeHelper dateTimeHelper,ILocalizationService localizationService,
-            IPermissionService permissionService, AdminAreaSettings adminAreaSettings)
+			IDateTimeHelper dateTimeHelper,
+            ILocalizationService localizationService,
+            IPermissionService permissionService)
 		{
 			this._newsLetterSubscriptionService = newsLetterSubscriptionService;
 			this._dateTimeHelper = dateTimeHelper;
             this._localizationService = localizationService;
             this._permissionService = permissionService;
-            this._adminAreaSettings = adminAreaSettings;
 		}
 
 		public ActionResult Index()
@@ -46,19 +44,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNewsletterSubscribers))
                 return AccessDeniedView();
 
-            var newsletterSubscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(String.Empty, 0, _adminAreaSettings.GridPageSize, true);
-			var model = new NewsLetterSubscriptionListModel();
-
-			model.NewsLetterSubscriptions = new GridModel<NewsLetterSubscriptionModel>
-			{
-				Data = newsletterSubscriptions.Select(x => 
-				{
-					var m = x.ToModel();
-					m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
-					return m;
-				}),
-				Total = newsletterSubscriptions.TotalCount
-			};
+            var model = new NewsLetterSubscriptionListModel();
 			return View(model);
 		}
 

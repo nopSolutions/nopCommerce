@@ -1,5 +1,4 @@
-﻿@model Telerik.Web.Mvc.GridModel<CustomerRoleModel>
-@using Telerik.Web.Mvc.UI
+﻿@using Telerik.Web.Mvc.UI
 @{
     //page title
     ViewBag.Title = T("Admin.Customers.CustomerRoles").Text;
@@ -18,7 +17,6 @@
         <td>
             @(Html.Telerik().Grid<CustomerRoleModel>()
                     .Name("customerroles-grid")
-                    .BindTo(Model.Data)
                     .Columns(columns =>
                     {
                         columns.Bound(x => x.Name).Width(150);
