@@ -99,6 +99,17 @@ namespace Nop.Web.Infrastructure.Cache
         IConsumer<EntityDeleted<StateProvince>>
     {
         /// <summary>
+        /// Key for categories on the search page
+        /// </summary>
+        /// <remarks>
+        /// {0} : language id
+        /// {1} : roles of the current user
+        /// {2} : current store ID
+        /// </remarks>
+        public const string SEARCH_CATEGORIES_MODEL_KEY = "Nop.pres.search.categories-{0}-{1}-{2}";
+        public const string SEARCH_CATEGORIES_PATTERN_KEY = "Nop.pres.search.categories";
+
+        /// <summary>
         /// Key for ManufacturerNavigationModel caching
         /// </summary>
         /// <remarks>
@@ -155,7 +166,7 @@ namespace Nop.Web.Infrastructure.Cache
         /// </remarks>
         public const string CATEGORY_CHILD_IDENTIFIERS_MODEL_KEY = "Nop.pres.category.childidentifiers-{0}-{1}-{2}-{3}";
         public const string CATEGORY_CHILD_IDENTIFIERS_PATTERN_KEY = "Nop.pres.category.childidentifiers";
-        
+
         /// <summary>
         /// Key for ProductBreadcrumbModel caching
         /// </summary>
@@ -412,6 +423,7 @@ namespace Nop.Web.Infrastructure.Cache
         public void HandleEvent(EntityInserted<Language> eventMessage)
         {
             //clear all localizable models
+            _cacheManager.RemoveByPattern(SEARCH_CATEGORIES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(MANUFACTURER_NAVIGATION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(TOPIC_PATTERN_KEY);
@@ -425,6 +437,7 @@ namespace Nop.Web.Infrastructure.Cache
         public void HandleEvent(EntityUpdated<Language> eventMessage)
         {
             //clear all localizable models
+            _cacheManager.RemoveByPattern(SEARCH_CATEGORIES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(MANUFACTURER_NAVIGATION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(TOPIC_PATTERN_KEY);
@@ -438,6 +451,7 @@ namespace Nop.Web.Infrastructure.Cache
         public void HandleEvent(EntityDeleted<Language> eventMessage)
         {
             //clear all localizable models
+            _cacheManager.RemoveByPattern(SEARCH_CATEGORIES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(MANUFACTURER_NAVIGATION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(TOPIC_PATTERN_KEY);
@@ -511,17 +525,20 @@ namespace Nop.Web.Infrastructure.Cache
         //categories
          public void HandleEvent(EntityInserted<Category> eventMessage)
         {
+            _cacheManager.RemoveByPattern(SEARCH_CATEGORIES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_CHILD_IDENTIFIERS_PATTERN_KEY);
         }
         public void HandleEvent(EntityUpdated<Category> eventMessage)
         {
+            _cacheManager.RemoveByPattern(SEARCH_CATEGORIES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_BREADCRUMB_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_CHILD_IDENTIFIERS_PATTERN_KEY);
         }
         public void HandleEvent(EntityDeleted<Category> eventMessage)
         {
+            _cacheManager.RemoveByPattern(SEARCH_CATEGORIES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_BREADCRUMB_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_CHILD_IDENTIFIERS_PATTERN_KEY);

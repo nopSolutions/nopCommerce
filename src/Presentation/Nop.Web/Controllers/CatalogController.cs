@@ -2932,7 +2932,33 @@ namespace Nop.Web.Controllers
                 model.Q = "";
             model.Q = model.Q.Trim();
 
-            var categories = _categoryService.GetAllCategories();
+            var customerRolesIds = _workContext.CurrentCustomer.CustomerRoles
+                .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
+
+            string cacheKey = string.Format(ModelCacheEventConsumer.SEARCH_CATEGORIES_MODEL_KEY, _workContext.WorkingLanguage.Id, string.Join(",", customerRolesIds), _storeContext.CurrentStore.Id); 
+            var categories = _cacheManager.Get(cacheKey, () =>
+            {
+                var categoriesModel = new List<SearchPagingFilteringModel.CategoryModel>();
+                //all categories
+                foreach (var c in _categoryService.GetAllCategories())
+                {
+                    //generate full category name (breadcrumb)
+                    string categoryBreadcrumb= "";
+                    var breadcrumb = GetCategoryBreadCrumb(c);
+                    for (int i = 0; i <= breadcrumb.Count - 1; i++)
+                    {
+                        categoryBreadcrumb += breadcrumb[i].GetLocalized(x => x.Name);
+                        if (i != breadcrumb.Count - 1)
+                            categoryBreadcrumb += " >> ";
+                    }
+                    categoriesModel.Add(new SearchPagingFilteringModel.CategoryModel()
+                    {
+                        Id = c.Id,
+                        Breadcrumb = categoryBreadcrumb
+                    });
+                }
+                return categoriesModel;
+            });
             if (categories.Count > 0)
             {
                 //first empty entry
@@ -2944,20 +2970,10 @@ namespace Nop.Web.Controllers
                 //all other categories
                 foreach (var c in categories)
                 {
-                    //generate full category name (breadcrumb)
-                    string fullCategoryBreadcrumbName = "";
-                    var breadcrumb = GetCategoryBreadCrumb(c);
-                    for (int i = 0; i <= breadcrumb.Count - 1; i++)
-                    {
-                        fullCategoryBreadcrumbName += breadcrumb[i].GetLocalized(x => x.Name);
-                        if (i != breadcrumb.Count - 1)
-                            fullCategoryBreadcrumbName += " >> ";
-                    }
-                    
                     model.AvailableCategories.Add(new SelectListItem()
                     {
                         Value = c.Id.ToString(),
-                        Text = fullCategoryBreadcrumbName,
+                        Text = c.Breadcrumb,
                         Selected = model.Cid == c.Id
                     });
                 }
