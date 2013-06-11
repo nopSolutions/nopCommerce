@@ -506,10 +506,10 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.PrimaryStoreCurrencyCode, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             Mapper.CreateMap<GiftCardModel, GiftCard>()
-                .ForMember(dest => dest.PurchasedWithOrderProductVariantId, mo => mo.Ignore())
+                .ForMember(dest => dest.PurchasedWithOrderItemId, mo => mo.Ignore())
                 .ForMember(dest => dest.GiftCardType, mo => mo.Ignore())
                 .ForMember(dest => dest.GiftCardUsageHistory, mo => mo.Ignore())
-                .ForMember(dest => dest.PurchasedWithOrderProductVariant, mo => mo.Ignore())
+                .ForMember(dest => dest.PurchasedWithOrderItem, mo => mo.Ignore())
                 .ForMember(dest => dest.IsRecipientNotified, mo => mo.Ignore())
                 .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore());
             //stores

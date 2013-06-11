@@ -1072,7 +1072,7 @@ namespace Nop.Services.Orders
                                         var gc = new GiftCard()
                                         {
                                             GiftCardType = sc.ProductVariant.GiftCardType,
-                                            PurchasedWithOrderProductVariant = opv,
+                                            PurchasedWithOrderItem = opv,
                                             Amount = scUnitPriceExclTax,
                                             IsGiftCardActivated = false,
                                             GiftCardCouponCode = _giftCardService.GenerateGiftCardCode(),
@@ -1138,7 +1138,7 @@ namespace Nop.Services.Orders
                                         var gc = new GiftCard()
                                         {
                                             GiftCardType = opv.ProductVariant.GiftCardType,
-                                            PurchasedWithOrderProductVariant = newOpv,
+                                            PurchasedWithOrderItem = newOpv,
                                             Amount = opv.UnitPriceExclTax,
                                             IsGiftCardActivated = false,
                                             GiftCardCouponCode = _giftCardService.GenerateGiftCardCode(),

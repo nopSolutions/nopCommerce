@@ -859,3 +859,19 @@ BEGIN
 	EXEC sp_rename 'ShipmentOrderProductVariant_Shipment', 'ShipmentItem_Shipment';
 END
 GO
+
+--rename OrderProductVariant to OrderItem
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[GiftCard]') and NAME='PurchasedWithOrderProductVariantId')
+BEGIN
+	EXEC sp_rename 'GiftCard.PurchasedWithOrderProductVariantId', 'PurchasedWithOrderItemId', 'COLUMN';
+END
+GO
+IF EXISTS (SELECT 1
+           FROM sys.objects
+           WHERE name = 'GiftCard_PurchasedWithOrderProductVariant'
+           AND parent_object_id = Object_id('GiftCard')
+           AND Objectproperty(object_id,N'IsForeignKey') = 1)
+BEGIN
+	EXEC sp_rename 'GiftCard_PurchasedWithOrderProductVariant', 'GiftCard_PurchasedWithOrderItem';
+END
+GO

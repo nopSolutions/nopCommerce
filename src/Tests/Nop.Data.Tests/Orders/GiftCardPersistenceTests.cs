@@ -88,16 +88,16 @@ namespace Nop.Data.Tests.Orders
             {
                 GiftCardType = GiftCardType.Physical,
                 CreatedOnUtc = new DateTime(2010, 01, 01),
-                PurchasedWithOrderProductVariant = GetTestOrderProductVariant()
+                PurchasedWithOrderItem = GetTestOrderProductVariant()
             };
 
             var fromDb = SaveAndLoadEntity(giftCard);
             fromDb.ShouldNotBeNull();
 
 
-            fromDb.PurchasedWithOrderProductVariant.ShouldNotBeNull();
-            fromDb.PurchasedWithOrderProductVariant.ProductVariant.ShouldNotBeNull();
-            fromDb.PurchasedWithOrderProductVariant.ProductVariant.Name.ShouldEqual("Product variant name 1");
+            fromDb.PurchasedWithOrderItem.ShouldNotBeNull();
+            fromDb.PurchasedWithOrderItem.ProductVariant.ShouldNotBeNull();
+            fromDb.PurchasedWithOrderItem.ProductVariant.Name.ShouldEqual("Product variant name 1");
         }
 
         protected Customer GetTestCustomer()

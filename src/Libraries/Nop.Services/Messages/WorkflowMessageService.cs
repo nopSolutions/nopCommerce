@@ -971,8 +971,8 @@ namespace Nop.Services.Messages
                 throw new ArgumentNullException("giftCard");
 
             Store store = null;
-            var order = giftCard.PurchasedWithOrderProductVariant != null ? 
-                giftCard.PurchasedWithOrderProductVariant.Order : 
+            var order = giftCard.PurchasedWithOrderItem != null ?
+                giftCard.PurchasedWithOrderItem.Order : 
                 null;
             if (order != null)
                 store = _storeService.GetStoreById(order.StoreId);

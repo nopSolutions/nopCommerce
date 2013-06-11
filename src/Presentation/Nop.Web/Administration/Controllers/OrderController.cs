@@ -515,7 +515,7 @@ namespace Nop.Admin.Controllers
                 opvModel.ReturnRequestIds = _orderService.SearchReturnRequests(0, 0, opv.Id, null, 0, int.MaxValue)
                     .Select(rr => rr.Id).ToList();
                 //gift cards
-                opvModel.PurchasedGiftCardIds = _giftCardService.GetGiftCardsByPurchasedWithOrderProductVariantId(opv.Id)
+                opvModel.PurchasedGiftCardIds = _giftCardService.GetGiftCardsByPurchasedWithOrderItemId(opv.Id)
                     .Select(gc => gc.Id).ToList();
 
                 model.Items.Add(opvModel);
@@ -1900,7 +1900,7 @@ namespace Nop.Admin.Controllers
                         var gc = new GiftCard()
                         {
                             GiftCardType = productVariant.GiftCardType,
-                            PurchasedWithOrderProductVariant = opv,
+                            PurchasedWithOrderItem = opv,
                             Amount = unitPriceExclTax,
                             IsGiftCardActivated = false,
                             GiftCardCouponCode = _giftCardService.GenerateGiftCardCode(),
