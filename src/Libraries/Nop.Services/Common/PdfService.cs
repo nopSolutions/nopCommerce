@@ -789,10 +789,10 @@ namespace Nop.Services.Common
                     cell.HorizontalAlignment = Element.ALIGN_CENTER;
                     productsTable.AddCell(cell);
 
-                    foreach (var sopv in shipment.ShipmentOrderProductVariants)
+                    foreach (var si in shipment.ShipmentItems)
                     {
                         //product name
-                        var opv = _orderService.GetOrderProductVariantById(sopv.OrderProductVariantId);
+                        var opv = _orderService.GetOrderProductVariantById(si.OrderProductVariantId);
                         if (opv == null)
                             continue;
                         
@@ -816,7 +816,7 @@ namespace Nop.Services.Common
                         productsTable.AddCell(cell);
 
                         //qty
-                        cell = new PdfPCell(new Phrase(sopv.Quantity.ToString(), font));
+                        cell = new PdfPCell(new Phrase(si.Quantity.ToString(), font));
                         cell.HorizontalAlignment = Element.ALIGN_CENTER;
                         productsTable.AddCell(cell);
                     }

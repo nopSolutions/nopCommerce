@@ -418,11 +418,11 @@ namespace Nop.Services.Messages
             sb.AppendLine(string.Format("<th>{0}</th>", _localizationService.GetResource("Messages.Order.Product(s).Quantity", languageId)));
             sb.AppendLine("</tr>");
 
-            var table = shipment.ShipmentOrderProductVariants.ToList();
+            var table = shipment.ShipmentItems.ToList();
             for (int i = 0; i <= table.Count - 1; i++)
             {
-                var sopv = table[i];
-                var opv = _orderService.GetOrderProductVariantById(sopv.OrderProductVariantId);
+                var si = table[i];
+                var opv = _orderService.GetOrderProductVariantById(si.OrderProductVariantId);
                 if (opv == null)
                     continue;
 
@@ -458,7 +458,7 @@ namespace Nop.Services.Messages
                 }
                 sb.AppendLine("</td>");
 
-                sb.AppendLine(string.Format("<td style=\"padding: 0.6em 0.4em;text-align: center;\">{0}</td>", sopv.Quantity));
+                sb.AppendLine(string.Format("<td style=\"padding: 0.6em 0.4em;text-align: center;\">{0}</td>", si.Quantity));
 
                 sb.AppendLine("</tr>");
             }

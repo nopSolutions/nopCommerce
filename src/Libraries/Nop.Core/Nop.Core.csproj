@@ -107,7 +107,7 @@
     <Compile Include="Domain\Orders\Events.cs" />
     <Compile Include="Domain\Seo\ISlugSupported.cs" />
     <Compile Include="Domain\Seo\UrlRecord.cs" />
-    <Compile Include="Domain\Shipping\ShipmentOrderProductVariant.cs" />
+    <Compile Include="Domain\Shipping\ShipmentItem.cs" />
     <Compile Include="Domain\Shipping\Shipment.cs" />
     <Compile Include="Domain\Tasks\ScheduleTask.cs" />
     <Compile Include="Domain\Messages\Events.cs" />

@@ -17,7 +17,7 @@ namespace Nop.Services.Shipping
         #region Fields
 
         private readonly IRepository<Shipment> _shipmentRepository;
-        private readonly IRepository<ShipmentOrderProductVariant> _sopvRepository;
+        private readonly IRepository<ShipmentItem> _siRepository;
         private readonly IRepository<OrderProductVariant> _opvRepository;
         private readonly IEventPublisher _eventPublisher;
         
@@ -29,16 +29,16 @@ namespace Nop.Services.Shipping
         /// Ctor
         /// </summary>
         /// <param name="shipmentRepository">Shipment repository</param>
-        /// <param name="sopvRepository">Shipment order product variant repository</param>
+        /// <param name="siRepository">Shipment item repository</param>
         /// <param name="opvRepository">Order product variant repository</param>
         /// <param name="eventPublisher">Event published</param>
         public ShipmentService(IRepository<Shipment> shipmentRepository,
-            IRepository<ShipmentOrderProductVariant> sopvRepository,
+            IRepository<ShipmentItem> siRepository,
             IRepository<OrderProductVariant> opvRepository,
             IEventPublisher eventPublisher)
         {
             this._shipmentRepository = shipmentRepository;
-            this._sopvRepository = sopvRepository;
+            this._siRepository = siRepository;
             this._opvRepository = opvRepository;
             _eventPublisher = eventPublisher;
         }
@@ -88,7 +88,7 @@ namespace Nop.Services.Shipping
                                                       select opv.Id;
 
                 query = from s in query
-                        where queryVendorOrderProductVariants.Intersect(s.ShipmentOrderProductVariants.Select(sopv => sopv.OrderProductVariantId)).Any()
+                        where queryVendorOrderProductVariants.Intersect(s.ShipmentItems.Select(si => si.OrderProductVariantId)).Any()
                         select s;
             }
             query = query.OrderByDescending(s => s.CreatedOnUtc);
@@ -168,61 +168,61 @@ namespace Nop.Services.Shipping
 
         
         /// <summary>
-        /// Deletes a shipment order product variant
+        /// Deletes a shipment item
         /// </summary>
-        /// <param name="sopv">Shipment order product variant</param>
-        public virtual void DeleteShipmentOrderProductVariant(ShipmentOrderProductVariant sopv)
+        /// <param name="shipmentItem">Shipment item</param>
+        public virtual void DeleteShipmentItem(ShipmentItem shipmentItem)
         {
-            if (sopv == null)
-                throw new ArgumentNullException("sopv");
+            if (shipmentItem == null)
+                throw new ArgumentNullException("shipmentItem");
 
-            _sopvRepository.Delete(sopv);
+            _siRepository.Delete(shipmentItem);
 
             //event notification
-            _eventPublisher.EntityDeleted(sopv);
+            _eventPublisher.EntityDeleted(shipmentItem);
         }
 
         /// <summary>
-        /// Gets a shipment order product variant
+        /// Gets a shipment item
         /// </summary>
-        /// <param name="sopvId">Shipment order product variant identifier</param>
-        /// <returns>Shipment order product variant</returns>
-        public virtual ShipmentOrderProductVariant GetShipmentOrderProductVariantById(int sopvId)
+        /// <param name="shipmentItemId">Shipment item identifier</param>
+        /// <returns>Shipment item</returns>
+        public virtual ShipmentItem GetShipmentItemById(int shipmentItemId)
         {
-            if (sopvId == 0)
+            if (shipmentItemId == 0)
                 return null;
 
-            return _sopvRepository.GetById(sopvId);
+            return _siRepository.GetById(shipmentItemId);
         }
         
         /// <summary>
-        /// Inserts a shipment order product variant
+        /// Inserts a shipment item
         /// </summary>
-        /// <param name="sopv">Shipment order product variant</param>
-        public virtual void InsertShipmentOrderProductVariant(ShipmentOrderProductVariant sopv)
+        /// <param name="shipmentItem">Shipment item</param>
+        public virtual void InsertShipmentItem(ShipmentItem shipmentItem)
         {
-            if (sopv == null)
-                throw new ArgumentNullException("sopv");
+            if (shipmentItem == null)
+                throw new ArgumentNullException("shipmentItem");
 
-            _sopvRepository.Insert(sopv);
+            _siRepository.Insert(shipmentItem);
 
             //event notification
-            _eventPublisher.EntityInserted(sopv);
+            _eventPublisher.EntityInserted(shipmentItem);
         }
 
         /// <summary>
-        /// Updates the shipment order product variant
+        /// Updates the shipment item
         /// </summary>
-        /// <param name="sopv">Shipment order product variant</param>
-        public virtual void UpdateShipmentOrderProductVariant(ShipmentOrderProductVariant sopv)
+        /// <param name="shipmentItem">Shipment item</param>
+        public virtual void UpdateShipmentItem(ShipmentItem shipmentItem)
         {
-            if (sopv == null)
-                throw new ArgumentNullException("sopv");
+            if (shipmentItem == null)
+                throw new ArgumentNullException("shipmentItem");
 
-            _sopvRepository.Update(sopv);
+            _siRepository.Update(shipmentItem);
 
             //event notification
-            _eventPublisher.EntityUpdated(sopv);
+            _eventPublisher.EntityUpdated(shipmentItem);
         }
         #endregion
     }

@@ -842,3 +842,20 @@ BEGIN
 	END')
 END
 GO
+
+--rename ShipmentOrderProductVariant to ShipmentItem
+IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[Shipment_OrderProductVariant]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+BEGIN
+	EXEC sp_rename 'Shipment_OrderProductVariant', 'ShipmentItem';
+END
+GO
+
+IF EXISTS (SELECT 1
+           FROM sys.objects
+           WHERE name = 'ShipmentOrderProductVariant_Shipment'
+           AND parent_object_id = Object_id('ShipmentItem')
+           AND Objectproperty(object_id,N'IsForeignKey') = 1)
+BEGIN
+	EXEC sp_rename 'ShipmentOrderProductVariant_Shipment', 'ShipmentItem_Shipment';
+END
+GO

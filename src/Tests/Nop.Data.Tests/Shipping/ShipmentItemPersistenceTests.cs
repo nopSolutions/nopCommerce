@@ -10,19 +10,19 @@ using NUnit.Framework;
 namespace Nop.Data.Tests.Shipping
 {
     [TestFixture]
-    public class ShipmentOrderProductVariantPersistenceTests : PersistenceTest
+    public class ShipmentItemPersistenceTests : PersistenceTest
     {
         [Test]
-        public void Can_save_and_load_shipmentOrderProductVariant()
+        public void Can_save_and_load_shipmentItem()
         {
-            var sopv = new ShipmentOrderProductVariant()
+            var shipmentItem = new ShipmentItem()
             {
                 Shipment = GetTestShipment(),
                 OrderProductVariantId = 2,
                 Quantity = 3, 
             };
 
-            var fromDb = SaveAndLoadEntity(sopv);
+            var fromDb = SaveAndLoadEntity(shipmentItem);
             fromDb.ShouldNotBeNull();
             fromDb.Shipment.ShouldNotBeNull();
             fromDb.OrderProductVariantId.ShouldEqual(2);

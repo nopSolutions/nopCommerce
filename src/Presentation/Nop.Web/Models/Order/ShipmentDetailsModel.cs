@@ -9,7 +9,7 @@ namespace Nop.Web.Models.Order
         public ShipmentDetailsModel()
         {
             ShipmentStatusEvents = new List<ShipmentStatusEventModel>();
-            Items = new List<ShipmentOrderProductVariantModel>();
+            Items = new List<ShipmentItemModel>();
         }
 
         public string TrackingNumber { get; set; }
@@ -18,13 +18,13 @@ namespace Nop.Web.Models.Order
         public DateTime? DeliveryDate { get; set; }
         public IList<ShipmentStatusEventModel> ShipmentStatusEvents { get; set; }
         public bool ShowSku { get; set; }
-        public IList<ShipmentOrderProductVariantModel> Items { get; set; }
+        public IList<ShipmentItemModel> Items { get; set; }
 
         public OrderDetailsModel Order { get; set; }
 
 		#region Nested Classes
 
-        public partial class ShipmentOrderProductVariantModel : BaseNopEntityModel
+        public partial class ShipmentItemModel : BaseNopEntityModel
         {
             public string Sku { get; set; }
             public int ProductId { get; set; }

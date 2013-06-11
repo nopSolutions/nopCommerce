@@ -9,7 +9,7 @@ namespace Nop.Admin.Models.Orders
     {
         public ShipmentModel()
         {
-            this.Products = new List<ShipmentOrderProductVariantModel>();
+            this.Items = new List<ShipmentItemModel>();
         }
         [NopResourceDisplayName("Admin.Orders.Shipments.ID")]
         public override int Id { get; set; }
@@ -30,13 +30,13 @@ namespace Nop.Admin.Models.Orders
         public bool CanDeliver { get; set; }
         public DateTime? DeliveryDateUtc { get; set; }
 
-        public List<ShipmentOrderProductVariantModel> Products { get; set; }
+        public List<ShipmentItemModel> Items { get; set; }
 
         public bool DisplayPdfPackagingSlip { get; set; }
 
         #region Nested classes
 
-        public partial class ShipmentOrderProductVariantModel : BaseNopEntityModel
+        public partial class ShipmentItemModel : BaseNopEntityModel
         {
             public int OrderProductVariantId { get; set; }
             public int ProductVariantId { get; set; }

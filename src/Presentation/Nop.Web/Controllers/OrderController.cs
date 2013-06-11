@@ -377,29 +377,29 @@ namespace Nop.Web.Controllers
             
             //products in this shipment
             model.ShowSku = _catalogSettings.ShowProductSku;
-            foreach (var sopv in shipment.ShipmentOrderProductVariants)
+            foreach (var shipmentItem in shipment.ShipmentItems)
             {
-                var opv = _orderService.GetOrderProductVariantById(sopv.OrderProductVariantId);
+                var opv = _orderService.GetOrderProductVariantById(shipmentItem.OrderProductVariantId);
                 if (opv == null)
                     continue;
 
-                var sopvModel = new ShipmentDetailsModel.ShipmentOrderProductVariantModel()
+                var shipmentItemModel = new ShipmentDetailsModel.ShipmentItemModel()
                 {
-                    Id = sopv.Id,
+                    Id = shipmentItem.Id,
                     Sku = opv.ProductVariant.FormatSku(opv.AttributesXml, _productAttributeParser),
                     ProductId = opv.ProductVariant.ProductId,
                     ProductSeName = opv.ProductVariant.Product.GetSeName(),
                     AttributeInfo = opv.AttributeDescription,
                     QuantityOrdered = opv.Quantity,
-                    QuantityShipped = sopv.Quantity,
+                    QuantityShipped = shipmentItem.Quantity,
                 };
 
                 //product name//product name
                 if (!String.IsNullOrEmpty(opv.ProductVariant.GetLocalized(x => x.Name)))
-                    sopvModel.ProductName = string.Format("{0} ({1})", opv.ProductVariant.Product.GetLocalized(x => x.Name), opv.ProductVariant.GetLocalized(x => x.Name));
+                    shipmentItemModel.ProductName = string.Format("{0} ({1})", opv.ProductVariant.Product.GetLocalized(x => x.Name), opv.ProductVariant.GetLocalized(x => x.Name));
                 else
-                    sopvModel.ProductName = opv.ProductVariant.Product.GetLocalized(x => x.Name);
-                model.Items.Add(sopvModel);
+                    shipmentItemModel.ProductName = opv.ProductVariant.Product.GetLocalized(x => x.Name);
+                model.Items.Add(shipmentItemModel);
             }
 
             //order details model

@@ -2,9 +2,9 @@
 namespace Nop.Core.Domain.Shipping
 {
     /// <summary>
-    /// Represents a shipment order product variant
+    /// Represents a shipment item
     /// </summary>
-    public partial class ShipmentOrderProductVariant : BaseEntity
+    public partial class ShipmentItem : BaseEntity
     {
         /// <summary>
         /// Gets or sets the shipment identifier

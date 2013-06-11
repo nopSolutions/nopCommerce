@@ -37,7 +37,7 @@ namespace Nop.Data.Tests.Shipping
         }
 
         [Test]
-        public void Can_save_and_load_shipment_with_products()
+        public void Can_save_and_load_shipment_with_items()
         {
             var shipment = new Shipment
             {
@@ -47,7 +47,7 @@ namespace Nop.Data.Tests.Shipping
                 DeliveryDateUtc = new DateTime(2010, 01, 02),
                 CreatedOnUtc = new DateTime(2010, 01, 03),
             };
-            shipment.ShipmentOrderProductVariants.Add(new ShipmentOrderProductVariant()
+            shipment.ShipmentItems.Add(new ShipmentItem()
             {
                 OrderProductVariantId = 1,
                 Quantity = 2,
@@ -57,9 +57,9 @@ namespace Nop.Data.Tests.Shipping
             fromDb.ShouldNotBeNull();
 
 
-            fromDb.ShipmentOrderProductVariants.ShouldNotBeNull();
-            (fromDb.ShipmentOrderProductVariants.Count == 1).ShouldBeTrue();
-            fromDb.ShipmentOrderProductVariants.First().Quantity.ShouldEqual(2);
+            fromDb.ShipmentItems.ShouldNotBeNull();
+            (fromDb.ShipmentItems.Count == 1).ShouldBeTrue();
+            fromDb.ShipmentItems.First().Quantity.ShouldEqual(2);
         }
 
 

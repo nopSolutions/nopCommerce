@@ -82,7 +82,7 @@
     <Compile Include="Mapping\Seo\UrlRecordMap.cs" />
     <Compile Include="Mapping\Customers\ExternalAuthenticationRecordMap.cs" />
     <Compile Include="Mapping\Shipping\ShipmentMap.cs" />
-    <Compile Include="Mapping\Shipping\ShipmentOrderProductVariantMap.cs" />
+    <Compile Include="Mapping\Shipping\ShipmentItemMap.cs" />
     <Compile Include="Mapping\Tasks\ScheduleTaskMap.cs" />
     <Compile Include="SqlServerDataProvider.cs" />
     <Compile Include="SqlCeDataProvider.cs" />

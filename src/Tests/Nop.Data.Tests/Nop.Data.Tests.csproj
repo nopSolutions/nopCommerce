@@ -83,7 +83,7 @@
     <Compile Include="Logging\ActivityLogPersistenceTests.cs" />
     <Compile Include="Catalog\ProductTagPersistenceTests.cs" />
     <Compile Include="Polls\PollPersistenceTests.cs" />
-    <Compile Include="Shipping\ShipmentOrderProductVariantPersistenceTests.cs" />
+    <Compile Include="Shipping\ShipmentItemPersistenceTests.cs" />
     <Compile Include="Shipping\ShipmentPersistenceTests.cs" />
     <Compile Include="Tasks\ScheduleTaskPersistenceTests.cs" />
     <Compile Include="Topics\TopicPersistenceTests.cs" />
