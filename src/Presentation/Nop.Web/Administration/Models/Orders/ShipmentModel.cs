@@ -38,7 +38,7 @@ namespace Nop.Admin.Models.Orders
 
         public partial class ShipmentItemModel : BaseNopEntityModel
         {
-            public int OrderProductVariantId { get; set; }
+            public int OrderItemId { get; set; }
             public int ProductVariantId { get; set; }
             public string FullProductName { get; set; }
             public string Sku { get; set; }

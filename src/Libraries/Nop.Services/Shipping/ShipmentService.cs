@@ -18,7 +18,7 @@ namespace Nop.Services.Shipping
 
         private readonly IRepository<Shipment> _shipmentRepository;
         private readonly IRepository<ShipmentItem> _siRepository;
-        private readonly IRepository<OrderProductVariant> _opvRepository;
+        private readonly IRepository<OrderItem> _orderItemRepository;
         private readonly IEventPublisher _eventPublisher;
         
         #endregion
@@ -30,17 +30,17 @@ namespace Nop.Services.Shipping
         /// </summary>
         /// <param name="shipmentRepository">Shipment repository</param>
         /// <param name="siRepository">Shipment item repository</param>
-        /// <param name="opvRepository">Order product variant repository</param>
+        /// <param name="orderItemRepository">Order item repository</param>
         /// <param name="eventPublisher">Event published</param>
         public ShipmentService(IRepository<Shipment> shipmentRepository,
             IRepository<ShipmentItem> siRepository,
-            IRepository<OrderProductVariant> opvRepository,
+            IRepository<OrderItem> orderItemRepository,
             IEventPublisher eventPublisher)
         {
             this._shipmentRepository = shipmentRepository;
             this._siRepository = siRepository;
-            this._opvRepository = opvRepository;
-            _eventPublisher = eventPublisher;
+            this._orderItemRepository = orderItemRepository;
+            this._eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -83,12 +83,12 @@ namespace Nop.Services.Shipping
             query = query.Where(s => s.Order != null && !s.Order.Deleted);
             if (vendorId > 0)
             {
-                var queryVendorOrderProductVariants = from opv in _opvRepository.Table
-                                                      where opv.ProductVariant.Product.VendorId == vendorId
-                                                      select opv.Id;
+                var queryVendorOrderItems = from orderItem in _orderItemRepository.Table
+                                             where orderItem.ProductVariant.Product.VendorId == vendorId
+                                             select orderItem.Id;
 
                 query = from s in query
-                        where queryVendorOrderProductVariants.Intersect(s.ShipmentItems.Select(si => si.OrderProductVariantId)).Any()
+                        where queryVendorOrderItems.Intersect(s.ShipmentItems.Select(si => si.OrderItemId)).Any()
                         select s;
             }
             query = query.OrderByDescending(s => s.CreatedOnUtc);

@@ -200,7 +200,7 @@
     <Compile Include="Domain\Messages\NewsLetterSubscription.cs" />
     <Compile Include="Domain\Messages\QueuedEmail.cs" />
     <Compile Include="Domain\Orders\OrderNote.cs" />
-    <Compile Include="Domain\Orders\OrderProductVariant.cs" />
+    <Compile Include="Domain\Orders\OrderItem.cs" />
     <Compile Include="Domain\Orders\OrderStatus.cs" />
     <Compile Include="Domain\Orders\RecurringPayment.cs" />
     <Compile Include="Domain\Orders\RecurringPaymentHistory.cs" />

@@ -114,14 +114,14 @@ namespace Nop.Services.Media
         /// <summary>
         /// Gets a value indicating whether download is allowed
         /// </summary>
-        /// <param name="orderProductVariant">Order produvt variant to check</param>
+        /// <param name="orderItem">Order item to check</param>
         /// <returns>True if download is allowed; otherwise, false.</returns>
-        public virtual bool IsDownloadAllowed(OrderProductVariant orderProductVariant)
+        public virtual bool IsDownloadAllowed(OrderItem orderItem)
         {
-            if (orderProductVariant == null)
+            if (orderItem == null)
                 return false;
 
-            var order = orderProductVariant.Order;
+            var order = orderItem.Order;
             if (order == null || order.Deleted)
                 return false;
 
@@ -129,7 +129,7 @@ namespace Nop.Services.Media
             if (order.OrderStatus == OrderStatus.Cancelled)
                 return false;
 
-            var productVariant = orderProductVariant.ProductVariant;
+            var productVariant = orderItem.ProductVariant;
             if (productVariant == null || !productVariant.IsDownload)
                 return false;
 
@@ -157,7 +157,7 @@ namespace Nop.Services.Media
                     break;
                 case DownloadActivationType.Manually:
                     {
-                        if (orderProductVariant.IsDownloadActivated)
+                        if (orderItem.IsDownloadActivated)
                         {
                             //expiration date
                             if (productVariant.DownloadExpirationDays.HasValue)
@@ -184,16 +184,16 @@ namespace Nop.Services.Media
         /// <summary>
         /// Gets a value indicating whether license download is allowed
         /// </summary>
-        /// <param name="orderProductVariant">Order produvt variant to check</param>
+        /// <param name="orderItem">Order item to check</param>
         /// <returns>True if license download is allowed; otherwise, false.</returns>
-        public virtual bool IsLicenseDownloadAllowed(OrderProductVariant orderProductVariant)
+        public virtual bool IsLicenseDownloadAllowed(OrderItem orderItem)
         {
-            if (orderProductVariant == null)
+            if (orderItem == null)
                 return false;
 
-            return IsDownloadAllowed(orderProductVariant) &&
-                orderProductVariant.LicenseDownloadId.HasValue &&
-                orderProductVariant.LicenseDownloadId > 0;
+            return IsDownloadAllowed(orderItem) &&
+                orderItem.LicenseDownloadId.HasValue &&
+                orderItem.LicenseDownloadId > 0;
         }
 
         #endregion

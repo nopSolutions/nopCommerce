@@ -55,15 +55,15 @@ namespace Nop.Web.Controllers
             }
         }
 
-        public ActionResult GetDownload(Guid opvId, bool agree = false)
+        public ActionResult GetDownload(Guid orderItemId, bool agree = false)
         {
-            var orderProductVariant = _orderService.GetOrderProductVariantByGuid(opvId);
-            if (orderProductVariant == null)
+            var orderItem = _orderService.GetOrderItemByGuid(orderItemId);
+            if (orderItem == null)
                 return InvokeHttp404();
 
-            var order = orderProductVariant.Order;
-            var productVariant = orderProductVariant.ProductVariant;
-            if (!_downloadService.IsDownloadAllowed(orderProductVariant))
+            var order = orderItem.Order;
+            var productVariant = orderItem.ProductVariant;
+            if (!_downloadService.IsDownloadAllowed(orderItem))
                 return Content("Downloads are not allowed");
 
             if (_customerSettings.DownloadableProductsValidateUser)
@@ -82,18 +82,18 @@ namespace Nop.Web.Controllers
             if (productVariant.HasUserAgreement)
             {
                 if (!agree)
-                    return RedirectToRoute("DownloadUserAgreement", new { opvid = opvId });
+                    return RedirectToRoute("DownloadUserAgreement", new { orderItemId = orderItemId });
             }
 
 
-            if (!productVariant.UnlimitedDownloads && orderProductVariant.DownloadCount >= productVariant.MaxNumberOfDownloads)
+            if (!productVariant.UnlimitedDownloads && orderItem.DownloadCount >= productVariant.MaxNumberOfDownloads)
                 return Content(string.Format("You have reached maximum number of downloads {0}", productVariant.MaxNumberOfDownloads));
             
 
             if (download.UseDownloadUrl)
             {
                 //increase download
-                orderProductVariant.DownloadCount++;
+                orderItem.DownloadCount++;
                 _orderService.UpdateOrder(order);
 
                 //return result
@@ -105,7 +105,7 @@ namespace Nop.Web.Controllers
                     return Content("Download data is not available any more.");
 
                 //increase download
-                orderProductVariant.DownloadCount++;
+                orderItem.DownloadCount++;
                 _orderService.UpdateOrder(order);
 
                 //return result
@@ -115,15 +115,15 @@ namespace Nop.Web.Controllers
             }
         }
 
-        public ActionResult GetLicense(Guid opvId)
+        public ActionResult GetLicense(Guid orderItemId)
         {
-            var orderProductVariant = _orderService.GetOrderProductVariantByGuid(opvId);
-            if (orderProductVariant == null)
+            var orderItem = _orderService.GetOrderItemByGuid(orderItemId);
+            if (orderItem == null)
                 return InvokeHttp404();
 
-            var order = orderProductVariant.Order;
-            var productVariant = orderProductVariant.ProductVariant;
-            if (!_downloadService.IsLicenseDownloadAllowed(orderProductVariant))
+            var order = orderItem.Order;
+            var productVariant = orderItem.ProductVariant;
+            if (!_downloadService.IsLicenseDownloadAllowed(orderItem))
                 return Content("Downloads are not allowed");
 
             if (_customerSettings.DownloadableProductsValidateUser)
@@ -135,7 +135,7 @@ namespace Nop.Web.Controllers
                     return Content("This is not your order");
             }
 
-            var download = _downloadService.GetDownloadById(orderProductVariant.LicenseDownloadId.HasValue ? orderProductVariant.LicenseDownloadId.Value : 0);
+            var download = _downloadService.GetDownloadById(orderItem.LicenseDownloadId.HasValue ? orderItem.LicenseDownloadId.Value : 0);
             if (download == null)
                 return Content("Download is not available any more.");
             

@@ -44,16 +44,16 @@ namespace Nop.Services.Media
         /// <summary>
         /// Gets a value indicating whether download is allowed
         /// </summary>
-        /// <param name="orderProductVariant">Order produvt variant to check</param>
+        /// <param name="orderItem">Order item to check</param>
         /// <returns>True if download is allowed; otherwise, false.</returns>
-        bool IsDownloadAllowed(OrderProductVariant orderProductVariant);
+        bool IsDownloadAllowed(OrderItem orderItem);
 
         /// <summary>
         /// Gets a value indicating whether license download is allowed
         /// </summary>
-        /// <param name="orderProductVariant">Order produvt variant to check</param>
+        /// <param name="orderItem">Order item to check</param>
         /// <returns>True if license download is allowed; otherwise, false.</returns>
-        bool IsLicenseDownloadAllowed(OrderProductVariant orderProductVariant);
+        bool IsLicenseDownloadAllowed(OrderItem orderItem);
 
     }
 }

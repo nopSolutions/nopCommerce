@@ -9,31 +9,31 @@
             {
                 <script type="text/javascript">
                     $(document).ready(function() {
-                        toggleOpvEdit@(item.Id)(false);
+                        toggleOrderItemEdit@(item.Id)(false);
                         });
                 </script>
         
                 <script type="text/javascript">
-                    function toggleOpvEdit@(item.Id) (editMode) {
+                    function toggleOrderItemEdit@(item.Id) (editMode) {
                         if (editMode) {
                             $('#pnlEditPvUnitPrice@(item.Id)').show();
                                 $('#pnlEditPvQuantity@(item.Id)').show();
                                 $('#pnlEditPvDiscount@(item.Id)').show();
                                 $('#pnlEditPvPrice@(item.Id)').show();
-                                $('#btnEditOpv@(item.Id)').hide();
-                                $('#btnDeleteOpv@(item.Id)').hide();
-                                $('#btnSaveOpv@(item.Id)').show();
-                                $('#btnCancelOpv@(item.Id)').show();
+                                $('#btnEditOrderItem@(item.Id)').hide();
+                                $('#btnDeleteOrderItem@(item.Id)').hide();
+                                $('#btnSaveOrderItem@(item.Id)').show();
+                                $('#btnCancelOrderItem@(item.Id)').show();
                             }
                             else {
                                 $('#pnlEditPvUnitPrice@(item.Id)').hide();
                                 $('#pnlEditPvQuantity@(item.Id)').hide();
                                 $('#pnlEditPvDiscount@(item.Id)').hide();
                                 $('#pnlEditPvPrice@(item.Id)').hide();
-                                $('#btnEditOpv@(item.Id)').show();
-                                $('#btnDeleteOpv@(item.Id)').show();
-                                $('#btnSaveOpv@(item.Id)').hide();
-                                $('#btnCancelOpv@(item.Id)').hide();
+                                $('#btnEditOrderItem@(item.Id)').show();
+                                $('#btnDeleteOrderItem@(item.Id)').show();
+                                $('#btnSaveOrderItem@(item.Id)').hide();
+                                $('#btnCancelOrderItem@(item.Id)').hide();
                             }
                         }
                 </script>
@@ -171,7 +171,7 @@
                                                 <a href="@Url.Action("DownloadFile", "Download", new { downloadId = item.LicenseDownloadId.Value })">@T("Admin.Orders.Products.License.DownloadLicense")</a>
                                             }
                                             <br />
-                                            <input type="submit" id="pvlicensefile" name="pvlicensefile" value="@T("Admin.Orders.Products.License.UploadFile")" onclick="javascript:OpenWindow('@(Url.Action("UploadLicenseFilePopup", "Order", new { id = Model.Id, opvId = item.Id, btnId = "btnRefreshPage", formId = "order-form" }))', 500, 300, true); return false;" class="adminButton" />
+                                            <input type="submit" id="pvlicensefile" name="pvlicensefile" value="@T("Admin.Orders.Products.License.UploadFile")" onclick="javascript:OpenWindow('@(Url.Action("UploadLicenseFilePopup", "Order", new { id = Model.Id, orderItemId = item.Id, btnId = "btnRefreshPage", formId = "order-form" }))', 500, 300, true); return false;" class="adminButton" />
                                         </div>
                                     }
                                 </td>
@@ -330,10 +330,10 @@
                             @if (!Model.IsLoggedInAsVendor)
                             {
                                 <td align="center" style="width: 15%;">
-                                    <input type="submit" name="btnEditOpv@(item.Id)" value="@T("Admin.Common.Edit")" onclick="toggleOpvEdit@(item.Id)    (true);return false; " id="btnEditOpv@(item.Id)" class="adminButton" />
-                                    <input type="submit" name="btnDeleteOpv@(item.Id)" value="@T("Admin.Common.Delete")" id="btnDeleteOpv@(item.Id)" class="adminButton" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
-                                    <input type="submit" name="btnSaveOpv@(item.Id)" value="@T("Admin.Common.Save")" id="btnSaveOpv@(item.Id)" class="adminButton" style="display:none;" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
-                                    <input type="submit" name="btnCancelOpv@(item.Id)" value="@T("Admin.Common.Cancel")" onclick="toggleOpvEdit@(item.Id)    (false);return false; " id="btnCancelOpv@(item.Id)" class="adminButton" style="display:none;" />
+                                    <input type="submit" name="btnEditOrderItem@(item.Id)" value="@T("Admin.Common.Edit")" onclick="toggleOrderItemEdit@(item.Id)(true);return false; " id="btnEditOrderItem@(item.Id)" class="adminButton" />
+                                    <input type="submit" name="btnDeleteOrderItem@(item.Id)" value="@T("Admin.Common.Delete")" id="btnDeleteOrderItem@(item.Id)" class="adminButton" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
+                                    <input type="submit" name="btnSaveOrderItem@(item.Id)" value="@T("Admin.Common.Save")" id="btnSaveOrderItem@(item.Id)" class="adminButton" style="display:none;" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
+                                    <input type="submit" name="btnCancelOrderItem@(item.Id)" value="@T("Admin.Common.Cancel")" onclick="toggleOrderItemEdit@(item.Id)    (false);return false; " id="btnCancelOrderItem@(item.Id)" class="adminButton" style="display:none;" />
                                 </td>
                             }
                         </tr>

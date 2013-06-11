@@ -72,19 +72,19 @@ namespace Nop.Web.Infrastructure
                             new { productvariantid = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
             routes.MapRoute("GetDownload",
-                            "download/getdownload/{opvid}/{agree}",
+                            "download/getdownload/{orderItemId}/{agree}",
                             new { controller = "Download", action = "GetDownload", agree = UrlParameter.Optional },
-                            new { opvid = new GuidConstraint(false) },
+                            new { orderItemId = new GuidConstraint(false) },
                             new[] { "Nop.Web.Controllers" });
             routes.MapRoute("GetLicense",
-                            "download/getlicense/{opvid}/",
+                            "download/getlicense/{orderItemId}/",
                             new { controller = "Download", action = "GetLicense" },
-                            new { opvid = new GuidConstraint(false) },
+                            new { orderItemId = new GuidConstraint(false) },
                             new[] { "Nop.Web.Controllers" });
             routes.MapLocalizedRoute("DownloadUserAgreement",
-                            "customer/useragreement/{opvid}",
+                            "customer/useragreement/{orderItemId}",
                             new { controller = "Customer", action = "UserAgreement" },
-                            new { opvid = new GuidConstraint(false) },
+                            new { orderItemId = new GuidConstraint(false) },
                             new[] { "Nop.Web.Controllers" });
 
             //reviews

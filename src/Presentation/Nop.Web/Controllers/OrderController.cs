@@ -280,45 +280,45 @@ namespace Nop.Web.Controllers
 
             //purchased products
             model.ShowSku = _catalogSettings.ShowProductSku;
-            var orderProductVariants = _orderService.GetAllOrderProductVariants(order.Id, null, null, null, null, null, null);
-            foreach (var opv in orderProductVariants)
+            var orderItems = _orderService.GetAllOrderItems(order.Id, null, null, null, null, null, null);
+            foreach (var orderItem in orderItems)
             {
-                var opvModel = new OrderDetailsModel.OrderProductVariantModel()
+                var orderItemModel = new OrderDetailsModel.OrderItemModel()
                 {
-                    Id = opv.Id,
-                    Sku = opv.ProductVariant.FormatSku(opv.AttributesXml, _productAttributeParser),
-                    ProductId = opv.ProductVariant.ProductId,
-                    ProductSeName = opv.ProductVariant.Product.GetSeName(),
-                    Quantity = opv.Quantity,
-                    AttributeInfo = opv.AttributeDescription,
+                    Id = orderItem.Id,
+                    Sku = orderItem.ProductVariant.FormatSku(orderItem.AttributesXml, _productAttributeParser),
+                    ProductId = orderItem.ProductVariant.ProductId,
+                    ProductSeName = orderItem.ProductVariant.Product.GetSeName(),
+                    Quantity = orderItem.Quantity,
+                    AttributeInfo = orderItem.AttributeDescription,
                 };
 
                 //product name
-                if (!String.IsNullOrEmpty(opv.ProductVariant.GetLocalized(x => x.Name)))
-                    opvModel.ProductName = string.Format("{0} ({1})", opv.ProductVariant.Product.GetLocalized(x => x.Name), opv.ProductVariant.GetLocalized(x => x.Name));
+                if (!String.IsNullOrEmpty(orderItem.ProductVariant.GetLocalized(x => x.Name)))
+                    orderItemModel.ProductName = string.Format("{0} ({1})", orderItem.ProductVariant.Product.GetLocalized(x => x.Name), orderItem.ProductVariant.GetLocalized(x => x.Name));
                 else
-                    opvModel.ProductName = opv.ProductVariant.Product.GetLocalized(x => x.Name);
-                model.Items.Add(opvModel);
+                    orderItemModel.ProductName = orderItem.ProductVariant.Product.GetLocalized(x => x.Name);
+                model.Items.Add(orderItemModel);
 
                 //unit price, subtotal
                 switch (order.CustomerTaxDisplayType)
                 {
                     case TaxDisplayType.ExcludingTax:
                         {
-                            var opvUnitPriceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(opv.UnitPriceExclTax, order.CurrencyRate);
-                            opvModel.UnitPrice = _priceFormatter.FormatPrice(opvUnitPriceExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, _workContext.WorkingLanguage, false);
+                            var unitPriceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceExclTax, order.CurrencyRate);
+                            orderItemModel.UnitPrice = _priceFormatter.FormatPrice(unitPriceExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, _workContext.WorkingLanguage, false);
 
-                            var opvPriceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(opv.PriceExclTax, order.CurrencyRate);
-                            opvModel.SubTotal = _priceFormatter.FormatPrice(opvPriceExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, _workContext.WorkingLanguage, false);
+                            var priceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.PriceExclTax, order.CurrencyRate);
+                            orderItemModel.SubTotal = _priceFormatter.FormatPrice(priceExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, _workContext.WorkingLanguage, false);
                         }
                         break;
                     case TaxDisplayType.IncludingTax:
                         {
-                            var opvUnitPriceInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(opv.UnitPriceInclTax, order.CurrencyRate);
-                            opvModel.UnitPrice = _priceFormatter.FormatPrice(opvUnitPriceInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, _workContext.WorkingLanguage, true);
+                            var unitPriceInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceInclTax, order.CurrencyRate);
+                            orderItemModel.UnitPrice = _priceFormatter.FormatPrice(unitPriceInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, _workContext.WorkingLanguage, true);
 
-                            var opvPriceInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(opv.PriceInclTax, order.CurrencyRate);
-                            opvModel.SubTotal = _priceFormatter.FormatPrice(opvPriceInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, _workContext.WorkingLanguage, true);
+                            var priceInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.PriceInclTax, order.CurrencyRate);
+                            orderItemModel.SubTotal = _priceFormatter.FormatPrice(priceInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, _workContext.WorkingLanguage, true);
                         }
                         break;
                 }
@@ -379,26 +379,26 @@ namespace Nop.Web.Controllers
             model.ShowSku = _catalogSettings.ShowProductSku;
             foreach (var shipmentItem in shipment.ShipmentItems)
             {
-                var opv = _orderService.GetOrderProductVariantById(shipmentItem.OrderProductVariantId);
-                if (opv == null)
+                var orderItem = _orderService.GetOrderItemById(shipmentItem.OrderItemId);
+                if (orderItem == null)
                     continue;
 
                 var shipmentItemModel = new ShipmentDetailsModel.ShipmentItemModel()
                 {
                     Id = shipmentItem.Id,
-                    Sku = opv.ProductVariant.FormatSku(opv.AttributesXml, _productAttributeParser),
-                    ProductId = opv.ProductVariant.ProductId,
-                    ProductSeName = opv.ProductVariant.Product.GetSeName(),
-                    AttributeInfo = opv.AttributeDescription,
-                    QuantityOrdered = opv.Quantity,
+                    Sku = orderItem.ProductVariant.FormatSku(orderItem.AttributesXml, _productAttributeParser),
+                    ProductId = orderItem.ProductVariant.ProductId,
+                    ProductSeName = orderItem.ProductVariant.Product.GetSeName(),
+                    AttributeInfo = orderItem.AttributeDescription,
+                    QuantityOrdered = orderItem.Quantity,
                     QuantityShipped = shipmentItem.Quantity,
                 };
 
                 //product name//product name
-                if (!String.IsNullOrEmpty(opv.ProductVariant.GetLocalized(x => x.Name)))
-                    shipmentItemModel.ProductName = string.Format("{0} ({1})", opv.ProductVariant.Product.GetLocalized(x => x.Name), opv.ProductVariant.GetLocalized(x => x.Name));
+                if (!String.IsNullOrEmpty(orderItem.ProductVariant.GetLocalized(x => x.Name)))
+                    shipmentItemModel.ProductName = string.Format("{0} ({1})", orderItem.ProductVariant.Product.GetLocalized(x => x.Name), orderItem.ProductVariant.GetLocalized(x => x.Name));
                 else
-                    shipmentItemModel.ProductName = opv.ProductVariant.Product.GetLocalized(x => x.Name);
+                    shipmentItemModel.ProductName = orderItem.ProductVariant.Product.GetLocalized(x => x.Name);
                 model.Items.Add(shipmentItemModel);
             }
 

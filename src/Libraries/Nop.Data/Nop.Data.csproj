@@ -123,7 +123,7 @@
     <Compile Include="Mapping\Orders\ReturnRequestMap.cs" />
     <Compile Include="Mapping\Orders\RecurringPaymentHistoryMap.cs" />
     <Compile Include="Mapping\Orders\RecurringPaymentMap.cs" />
-    <Compile Include="Mapping\Orders\OrderProductVariantMap.cs" />
+    <Compile Include="Mapping\Orders\OrderItemMap.cs" />
     <Compile Include="Mapping\Orders\OrderNoteMap.cs" />
     <Compile Include="Mapping\Orders\GiftCardMap.cs" />
     <Compile Include="Mapping\Orders\GiftCardUsageHistoryMap.cs" />

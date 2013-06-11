@@ -18,14 +18,14 @@ namespace Nop.Data.Tests.Shipping
             var shipmentItem = new ShipmentItem()
             {
                 Shipment = GetTestShipment(),
-                OrderProductVariantId = 2,
+                OrderItemId = 2,
                 Quantity = 3, 
             };
 
             var fromDb = SaveAndLoadEntity(shipmentItem);
             fromDb.ShouldNotBeNull();
             fromDb.Shipment.ShouldNotBeNull();
-            fromDb.OrderProductVariantId.ShouldEqual(2);
+            fromDb.OrderItemId.ShouldEqual(2);
             fromDb.Quantity.ShouldEqual(3);
         }
 

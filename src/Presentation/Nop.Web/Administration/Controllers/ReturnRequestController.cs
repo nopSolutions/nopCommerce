@@ -68,14 +68,14 @@ namespace Nop.Admin.Controllers
             if (returnRequest == null)
                 throw new ArgumentNullException("returnRequest");
 
-            var opv = _orderService.GetOrderProductVariantById(returnRequest.OrderProductVariantId);
-            if (opv == null)
+            var orderItem = _orderService.GetOrderItemById(returnRequest.OrderItemId);
+            if (orderItem == null)
                 return false;
 
             model.Id = returnRequest.Id;
-            model.ProductVariantId = opv.ProductVariantId;
-            model.ProductName = opv.ProductVariant.FullProductName;
-            model.OrderId = opv.OrderId;
+            model.ProductVariantId = orderItem.ProductVariantId;
+            model.ProductName = orderItem.ProductVariant.FullProductName;
+            model.OrderId = orderItem.OrderId;
             model.CustomerId = returnRequest.CustomerId;
             var customer = returnRequest.Customer;
             model.CustomerInfo = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
@@ -201,8 +201,8 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("List");
 
             //var customer = returnRequest.Customer;
-            var opv = _orderService.GetOrderProductVariantById(returnRequest.OrderProductVariantId);
-            int queuedEmailId = _workflowMessageService.SendReturnRequestStatusChangedCustomerNotification(returnRequest, opv, _localizationSettings.DefaultAdminLanguageId);
+            var orderItem = _orderService.GetOrderItemById(returnRequest.OrderItemId);
+            int queuedEmailId = _workflowMessageService.SendReturnRequestStatusChangedCustomerNotification(returnRequest, orderItem, _localizationSettings.DefaultAdminLanguageId);
             if (queuedEmailId > 0)
                 SuccessNotification(_localizationService.GetResource("Admin.ReturnRequests.Notified"));
             return RedirectToAction("Edit", returnRequest.Id);

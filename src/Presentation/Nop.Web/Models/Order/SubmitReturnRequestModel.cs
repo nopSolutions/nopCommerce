@@ -9,14 +9,14 @@ namespace Nop.Web.Models.Order
     {
         public SubmitReturnRequestModel()
         {
-            Items = new List<OrderProductVariantModel>();
+            Items = new List<OrderItemModel>();
             AvailableReturnReasons = new List<SelectListItem>();
             AvailableReturnActions= new List<SelectListItem>();
         }
 
         public int OrderId { get; set; }
         
-        public IList<OrderProductVariantModel> Items { get; set; }
+        public IList<OrderItemModel> Items { get; set; }
         
         [AllowHtml]
         [NopResourceDisplayName("ReturnRequests.ReturnReason")]
@@ -36,7 +36,7 @@ namespace Nop.Web.Models.Order
         
         #region Nested classes
 
-        public partial class OrderProductVariantModel : BaseNopEntityModel
+        public partial class OrderItemModel : BaseNopEntityModel
         {
             public int ProductId { get; set; }
 

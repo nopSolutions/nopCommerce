@@ -158,22 +158,22 @@ namespace Nop.Admin.Controllers
                 return true;
 
             var vendorId = _workContext.CurrentVendor.Id;
-            var hasVendorProducts = order.OrderProductVariants.Any(opv => opv.ProductVariant.Product.VendorId == vendorId);
+            var hasVendorProducts = order.OrderItems.Any(orderItem => orderItem.ProductVariant.Product.VendorId == vendorId);
             return hasVendorProducts;
         }
 
         [NonAction]
-        protected bool HasAccessToOrderProductVariant(OrderProductVariant opv)
+        protected bool HasAccessToOrderItem(OrderItem orderItem)
         {
-            if (opv == null)
-                throw new ArgumentNullException("opv");
+            if (orderItem == null)
+                throw new ArgumentNullException("orderItem");
 
             if (_workContext.CurrentVendor == null)
                 //not a vendor; has access
                 return true;
 
             var vendorId = _workContext.CurrentVendor.Id;
-            return opv.ProductVariant.Product.VendorId == vendorId;
+            return orderItem.ProductVariant.Product.VendorId == vendorId;
         }
 
         [NonAction]
@@ -190,10 +190,10 @@ namespace Nop.Admin.Controllers
             var vendorId = _workContext.CurrentVendor.Id;
             foreach (var shipmentItem in shipment.ShipmentItems)
             {
-                var opv = _orderService.GetOrderProductVariantById(shipmentItem.OrderProductVariantId);
-                if (opv != null)
+                var orderItem = _orderService.GetOrderItemById(shipmentItem.OrderItemId);
+                if (orderItem != null)
                 {
-                    if (opv.ProductVariant.Product.VendorId == vendorId)
+                    if (orderItem.ProductVariant.Product.VendorId == vendorId)
                     {
                         hasVendorProducts = true;
                         break;
@@ -461,64 +461,64 @@ namespace Nop.Admin.Controllers
             #region Products
             model.CheckoutAttributeInfo = order.CheckoutAttributeDescription;
             bool hasDownloadableItems = false;
-            var products = order.OrderProductVariants;
+            var products = order.OrderItems;
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
             {
                 products = products
-                    .Where(opv => opv.ProductVariant.Product.VendorId == _workContext.CurrentVendor.Id)
+                    .Where(orderItem => orderItem.ProductVariant.Product.VendorId == _workContext.CurrentVendor.Id)
                     .ToList();
             }
-            foreach (var opv in products)
+            foreach (var orderItem in products)
             {
-                if (opv.ProductVariant != null && opv.ProductVariant.IsDownload)
+                if (orderItem.ProductVariant != null && orderItem.ProductVariant.IsDownload)
                     hasDownloadableItems = true;
 
-                var opvModel = new OrderModel.OrderProductVariantModel()
+                var orderItemModel = new OrderModel.OrderItemModel()
                 {
-                    Id = opv.Id,
-                    ProductVariantId = opv.ProductVariantId,
-                    FullProductName = opv.ProductVariant.FullProductName,
-                    Sku = opv.ProductVariant.FormatSku(opv.AttributesXml, _productAttributeParser),
-                    Quantity = opv.Quantity,
-                    IsDownload = opv.ProductVariant.IsDownload,
-                    DownloadCount = opv.DownloadCount,
-                    DownloadActivationType = opv.ProductVariant.DownloadActivationType,
-                    IsDownloadActivated = opv.IsDownloadActivated,
-                    LicenseDownloadId = opv.LicenseDownloadId
+                    Id = orderItem.Id,
+                    ProductVariantId = orderItem.ProductVariantId,
+                    FullProductName = orderItem.ProductVariant.FullProductName,
+                    Sku = orderItem.ProductVariant.FormatSku(orderItem.AttributesXml, _productAttributeParser),
+                    Quantity = orderItem.Quantity,
+                    IsDownload = orderItem.ProductVariant.IsDownload,
+                    DownloadCount = orderItem.DownloadCount,
+                    DownloadActivationType = orderItem.ProductVariant.DownloadActivationType,
+                    IsDownloadActivated = orderItem.IsDownloadActivated,
+                    LicenseDownloadId = orderItem.LicenseDownloadId
                 };
                 //vendor
-                var vendor = _vendorService.GetVendorById(opv.ProductVariant.Product.VendorId);
-                opvModel.VendorName = vendor != null ? vendor.Name : "";
+                var vendor = _vendorService.GetVendorById(orderItem.ProductVariant.Product.VendorId);
+                orderItemModel.VendorName = vendor != null ? vendor.Name : "";
 
                 //unit price
-                opvModel.UnitPriceInclTaxValue = opv.UnitPriceInclTax;
-                opvModel.UnitPriceExclTaxValue = opv.UnitPriceExclTax;
-                opvModel.UnitPriceInclTax = _priceFormatter.FormatPrice(opv.UnitPriceInclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, true, true);
-                opvModel.UnitPriceExclTax = _priceFormatter.FormatPrice(opv.UnitPriceExclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, false, true);
+                orderItemModel.UnitPriceInclTaxValue = orderItem.UnitPriceInclTax;
+                orderItemModel.UnitPriceExclTaxValue = orderItem.UnitPriceExclTax;
+                orderItemModel.UnitPriceInclTax = _priceFormatter.FormatPrice(orderItem.UnitPriceInclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, true, true);
+                orderItemModel.UnitPriceExclTax = _priceFormatter.FormatPrice(orderItem.UnitPriceExclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, false, true);
                 //discounts
-                opvModel.DiscountInclTaxValue = opv.DiscountAmountInclTax;
-                opvModel.DiscountExclTaxValue = opv.DiscountAmountExclTax;
-                opvModel.DiscountInclTax = _priceFormatter.FormatPrice(opv.DiscountAmountInclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, true, true);
-                opvModel.DiscountExclTax = _priceFormatter.FormatPrice(opv.DiscountAmountExclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, false, true);
+                orderItemModel.DiscountInclTaxValue = orderItem.DiscountAmountInclTax;
+                orderItemModel.DiscountExclTaxValue = orderItem.DiscountAmountExclTax;
+                orderItemModel.DiscountInclTax = _priceFormatter.FormatPrice(orderItem.DiscountAmountInclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, true, true);
+                orderItemModel.DiscountExclTax = _priceFormatter.FormatPrice(orderItem.DiscountAmountExclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, false, true);
                 //subtotal
-                opvModel.SubTotalInclTaxValue = opv.PriceInclTax;
-                opvModel.SubTotalExclTaxValue = opv.PriceExclTax;
-                opvModel.SubTotalInclTax = _priceFormatter.FormatPrice(opv.PriceInclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, true, true);
-                opvModel.SubTotalExclTax = _priceFormatter.FormatPrice(opv.PriceExclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, false, true);
+                orderItemModel.SubTotalInclTaxValue = orderItem.PriceInclTax;
+                orderItemModel.SubTotalExclTaxValue = orderItem.PriceExclTax;
+                orderItemModel.SubTotalInclTax = _priceFormatter.FormatPrice(orderItem.PriceInclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, true, true);
+                orderItemModel.SubTotalExclTax = _priceFormatter.FormatPrice(orderItem.PriceExclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, false, true);
 
-                opvModel.AttributeInfo = opv.AttributeDescription;
-                if (opv.ProductVariant.IsRecurring)
-                    opvModel.RecurringInfo = string.Format(_localizationService.GetResource("Admin.Orders.Products.RecurringPeriod"), opv.ProductVariant.RecurringCycleLength, opv.ProductVariant.RecurringCyclePeriod.GetLocalizedEnum(_localizationService, _workContext));
+                orderItemModel.AttributeInfo = orderItem.AttributeDescription;
+                if (orderItem.ProductVariant.IsRecurring)
+                    orderItemModel.RecurringInfo = string.Format(_localizationService.GetResource("Admin.Orders.Products.RecurringPeriod"), orderItem.ProductVariant.RecurringCycleLength, orderItem.ProductVariant.RecurringCyclePeriod.GetLocalizedEnum(_localizationService, _workContext));
 
                 //return requests
-                opvModel.ReturnRequestIds = _orderService.SearchReturnRequests(0, 0, opv.Id, null, 0, int.MaxValue)
+                orderItemModel.ReturnRequestIds = _orderService.SearchReturnRequests(0, 0, orderItem.Id, null, 0, int.MaxValue)
                     .Select(rr => rr.Id).ToList();
                 //gift cards
-                opvModel.PurchasedGiftCardIds = _giftCardService.GetGiftCardsByPurchasedWithOrderItemId(opv.Id)
+                orderItemModel.PurchasedGiftCardIds = _giftCardService.GetGiftCardsByPurchasedWithOrderItemId(orderItem.Id)
                     .Select(gc => gc.Id).ToList();
 
-                model.Items.Add(opvModel);
+                model.Items.Add(orderItemModel);
             }
             model.HasDownloadableProducts = hasDownloadableItems;
             #endregion
@@ -610,26 +610,26 @@ namespace Nop.Admin.Controllers
             {
                 foreach (var shipmentItem in shipment.ShipmentItems)
                 {
-                    var opv = _orderService.GetOrderProductVariantById(shipmentItem.OrderProductVariantId);
-                    if (opv == null)
+                    var orderItem = _orderService.GetOrderItemById(shipmentItem.OrderItemId);
+                    if (orderItem == null)
                         continue;
 
                     //quantities
                     var qtyInThisShipment = shipmentItem.Quantity;
-                    var maxQtyToAdd = opv.GetTotalNumberOfItemsCanBeAddedToShipment();
-                    var qtyOrdered = opv.Quantity;
-                    var qtyInAllShipments = opv.GetTotalNumberOfItemsInAllShipment();
+                    var maxQtyToAdd = orderItem.GetTotalNumberOfItemsCanBeAddedToShipment();
+                    var qtyOrdered = orderItem.Quantity;
+                    var qtyInAllShipments = orderItem.GetTotalNumberOfItemsInAllShipment();
 
                     var shipmentItemModel = new ShipmentModel.ShipmentItemModel()
                     {
                         Id = shipmentItem.Id,
-                        OrderProductVariantId = opv.Id,
-                        ProductVariantId = opv.ProductVariantId,
-                        FullProductName = opv.ProductVariant.FullProductName,
-                        Sku = opv.ProductVariant.FormatSku(opv.AttributesXml, _productAttributeParser),
-                        AttributeInfo = opv.AttributeDescription,
-                        ItemWeight = opv.ItemWeight.HasValue ? string.Format("{0:F2} [{1}]", opv.ItemWeight, baseWeightIn) : "",
-                        ItemDimensions = string.Format("{0:F2} x {1:F2} x {2:F2} [{3}]", opv.ProductVariant.Length, opv.ProductVariant.Width, opv.ProductVariant.Height, baseDimensionIn),
+                        OrderItemId = orderItem.Id,
+                        ProductVariantId = orderItem.ProductVariantId,
+                        FullProductName = orderItem.ProductVariant.FullProductName,
+                        Sku = orderItem.ProductVariant.FormatSku(orderItem.AttributesXml, _productAttributeParser),
+                        AttributeInfo = orderItem.AttributeDescription,
+                        ItemWeight = orderItem.ItemWeight.HasValue ? string.Format("{0:F2} [{1}]", orderItem.ItemWeight, baseWeightIn) : "",
+                        ItemDimensions = string.Format("{0:F2} x {1:F2} x {2:F2} [{3}]", orderItem.ProductVariant.Length, orderItem.ProductVariant.Width, orderItem.ProductVariant.Height, baseDimensionIn),
                         QuantityOrdered = qtyOrdered,
                         QuantityInThisShipment = qtyInThisShipment,
                         QuantityInAllShipments = qtyInAllShipments,
@@ -1334,9 +1334,9 @@ namespace Nop.Admin.Controllers
         }
         
         [HttpPost, ActionName("Edit")]
-        [FormValueRequired(FormValueRequirement.StartsWith, "btnSaveOpv")]
+        [FormValueRequired(FormValueRequirement.StartsWith, "btnSaveOrderItem")]
         [ValidateInput(false)]
-        public ActionResult EditOrderProductVariant(int id, FormCollection form)
+        public ActionResult EditOrderItem(int id, FormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -1352,48 +1352,48 @@ namespace Nop.Admin.Controllers
 
             ViewData["selectedTab"] = "products";
 
-            //get order product variant identifier
-            int opvId = 0;
+            //get order item identifier
+            int orderItemId = 0;
             foreach (var formValue in form.AllKeys)
-                if (formValue.StartsWith("btnSaveOpv", StringComparison.InvariantCultureIgnoreCase))
-                    opvId = Convert.ToInt32(formValue.Substring("btnSaveOpv".Length));
+                if (formValue.StartsWith("btnSaveOrderItem", StringComparison.InvariantCultureIgnoreCase))
+                    orderItemId = Convert.ToInt32(formValue.Substring("btnSaveOrderItem".Length));
 
-            var orderProductVariant = order.OrderProductVariants.FirstOrDefault(x => x.Id == opvId);
-            if (orderProductVariant == null)
-                throw new ArgumentException("No order product variant found with the specified id");
+            var orderItem = order.OrderItems.FirstOrDefault(x => x.Id == orderItemId);
+            if (orderItem == null)
+                throw new ArgumentException("No order item found with the specified id");
 
 
             decimal unitPriceInclTax, unitPriceExclTax, discountInclTax, discountExclTax,priceInclTax,priceExclTax;
             int quantity;
-            if (!decimal.TryParse(form["pvUnitPriceInclTax" + opvId], out unitPriceInclTax))
-                unitPriceInclTax =orderProductVariant.UnitPriceInclTax;
-            if (!decimal.TryParse(form["pvUnitPriceExclTax" + opvId], out unitPriceExclTax))
-                unitPriceExclTax = orderProductVariant.UnitPriceExclTax;
-            if (!int.TryParse(form["pvQuantity" + opvId], out quantity))
-                quantity = orderProductVariant.Quantity;
-            if (!decimal.TryParse(form["pvDiscountInclTax" + opvId], out discountInclTax))
-                discountInclTax = orderProductVariant.DiscountAmountInclTax;
-            if (!decimal.TryParse(form["pvDiscountExclTax" + opvId], out discountExclTax))
-                discountExclTax = orderProductVariant.DiscountAmountExclTax;
-            if (!decimal.TryParse(form["pvPriceInclTax" + opvId], out priceInclTax))
-                priceInclTax = orderProductVariant.PriceInclTax;
-            if (!decimal.TryParse(form["pvPriceExclTax" + opvId], out priceExclTax))
-                priceExclTax = orderProductVariant.PriceExclTax;
+            if (!decimal.TryParse(form["pvUnitPriceInclTax" + orderItemId], out unitPriceInclTax))
+                unitPriceInclTax = orderItem.UnitPriceInclTax;
+            if (!decimal.TryParse(form["pvUnitPriceExclTax" + orderItemId], out unitPriceExclTax))
+                unitPriceExclTax = orderItem.UnitPriceExclTax;
+            if (!int.TryParse(form["pvQuantity" + orderItemId], out quantity))
+                quantity = orderItem.Quantity;
+            if (!decimal.TryParse(form["pvDiscountInclTax" + orderItemId], out discountInclTax))
+                discountInclTax = orderItem.DiscountAmountInclTax;
+            if (!decimal.TryParse(form["pvDiscountExclTax" + orderItemId], out discountExclTax))
+                discountExclTax = orderItem.DiscountAmountExclTax;
+            if (!decimal.TryParse(form["pvPriceInclTax" + orderItemId], out priceInclTax))
+                priceInclTax = orderItem.PriceInclTax;
+            if (!decimal.TryParse(form["pvPriceExclTax" + orderItemId], out priceExclTax))
+                priceExclTax = orderItem.PriceExclTax;
 
             if (quantity > 0)
             {
-                orderProductVariant.UnitPriceInclTax = unitPriceInclTax;
-                orderProductVariant.UnitPriceExclTax = unitPriceExclTax;
-                orderProductVariant.Quantity = quantity;
-                orderProductVariant.DiscountAmountInclTax = discountInclTax;
-                orderProductVariant.DiscountAmountExclTax = discountExclTax;
-                orderProductVariant.PriceInclTax = priceInclTax;
-                orderProductVariant.PriceExclTax = priceExclTax;
+                orderItem.UnitPriceInclTax = unitPriceInclTax;
+                orderItem.UnitPriceExclTax = unitPriceExclTax;
+                orderItem.Quantity = quantity;
+                orderItem.DiscountAmountInclTax = discountInclTax;
+                orderItem.DiscountAmountExclTax = discountExclTax;
+                orderItem.PriceInclTax = priceInclTax;
+                orderItem.PriceExclTax = priceExclTax;
                 _orderService.UpdateOrder(order);
             }
             else
             {
-                _orderService.DeleteOrderProductVariant(orderProductVariant);
+                _orderService.DeleteOrderItem(orderItem);
             }
 
             var model = new OrderModel();
@@ -1402,9 +1402,9 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost, ActionName("Edit")]
-        [FormValueRequired(FormValueRequirement.StartsWith, "btnDeleteOpv")]
+        [FormValueRequired(FormValueRequirement.StartsWith, "btnDeleteOrderItem")]
         [ValidateInput(false)]
-        public ActionResult DeleteOrderProductVariant(int id, FormCollection form)
+        public ActionResult DeleteOrderItem(int id, FormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -1420,17 +1420,17 @@ namespace Nop.Admin.Controllers
 
             ViewData["selectedTab"] = "products";
 
-            //get order product variant identifier
-            int opvId = 0;
+            //get order item identifier
+            int orderItemId = 0;
             foreach (var formValue in form.AllKeys)
-                if (formValue.StartsWith("btnDeleteOpv", StringComparison.InvariantCultureIgnoreCase))
-                    opvId = Convert.ToInt32(formValue.Substring("btnDeleteOpv".Length));
+                if (formValue.StartsWith("btnDeleteOrderItem", StringComparison.InvariantCultureIgnoreCase))
+                    orderItemId = Convert.ToInt32(formValue.Substring("btnDeleteOrderItem".Length));
 
-            var orderProductVariant = order.OrderProductVariants.FirstOrDefault(x => x.Id == opvId);
-            if (orderProductVariant == null)
-                throw new ArgumentException("No order product variant found with the specified id");
+            var orderItem = order.OrderItems.FirstOrDefault(x => x.Id == orderItemId);
+            if (orderItem == null)
+                throw new ArgumentException("No order item found with the specified id");
 
-            _orderService.DeleteOrderProductVariant(orderProductVariant);
+            _orderService.DeleteOrderItem(orderItem);
 
             var model = new OrderModel();
             PrepareOrderDetailsModel(model, order);
@@ -1452,21 +1452,21 @@ namespace Nop.Admin.Controllers
 
             ViewData["selectedTab"] = "products";
 
-            //get order product variant identifier
-            int opvId = 0;
+            //get order item identifier
+            int orderItemId = 0;
             foreach (var formValue in form.AllKeys)
                 if (formValue.StartsWith("btnResetDownloadCount", StringComparison.InvariantCultureIgnoreCase))
-                    opvId = Convert.ToInt32(formValue.Substring("btnResetDownloadCount".Length));
+                    orderItemId = Convert.ToInt32(formValue.Substring("btnResetDownloadCount".Length));
 
-            var orderProductVariant = order.OrderProductVariants.FirstOrDefault(x => x.Id == opvId);
-            if (orderProductVariant == null)
-                throw new ArgumentException("No order product variant found with the specified id");
+            var orderItem = order.OrderItems.FirstOrDefault(x => x.Id == orderItemId);
+            if (orderItem == null)
+                throw new ArgumentException("No order item found with the specified id");
 
             //ensure a vendor has access only to his products 
-            if (_workContext.CurrentVendor != null && !HasAccessToOrderProductVariant(orderProductVariant))
+            if (_workContext.CurrentVendor != null && !HasAccessToOrderItem(orderItem))
                 return RedirectToAction("List");
 
-            orderProductVariant.DownloadCount = 0;
+            orderItem.DownloadCount = 0;
             _orderService.UpdateOrder(order);
 
             var model = new OrderModel();
@@ -1477,7 +1477,7 @@ namespace Nop.Admin.Controllers
         [HttpPost, ActionName("Edit")]
         [FormValueRequired(FormValueRequirement.StartsWith, "btnPvActivateDownload")]
         [ValidateInput(false)]
-        public ActionResult ActivateDownloadOrderProductVariant(int id, FormCollection form)
+        public ActionResult ActivateDownloadItem(int id, FormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -1489,21 +1489,21 @@ namespace Nop.Admin.Controllers
 
             ViewData["selectedTab"] = "products";
 
-            //get order product variant identifier
-            int opvId = 0;
+            //get order item identifier
+            int orderItemId = 0;
             foreach (var formValue in form.AllKeys)
                 if (formValue.StartsWith("btnPvActivateDownload", StringComparison.InvariantCultureIgnoreCase))
-                    opvId = Convert.ToInt32(formValue.Substring("btnPvActivateDownload".Length));
+                    orderItemId = Convert.ToInt32(formValue.Substring("btnPvActivateDownload".Length));
 
-            var orderProductVariant = order.OrderProductVariants.FirstOrDefault(x => x.Id == opvId);
-            if (orderProductVariant == null)
-                throw new ArgumentException("No order product variant found with the specified id");
+            var orderItem = order.OrderItems.FirstOrDefault(x => x.Id == orderItemId);
+            if (orderItem == null)
+                throw new ArgumentException("No order item found with the specified id");
 
             //ensure a vendor has access only to his products 
-            if (_workContext.CurrentVendor != null && !HasAccessToOrderProductVariant(orderProductVariant))
+            if (_workContext.CurrentVendor != null && !HasAccessToOrderItem(orderItem))
                 return RedirectToAction("List");
 
-            orderProductVariant.IsDownloadActivated = !orderProductVariant.IsDownloadActivated;
+            orderItem.IsDownloadActivated = !orderItem.IsDownloadActivated;
             _orderService.UpdateOrder(order);
 
             var model = new OrderModel();
@@ -1511,7 +1511,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        public ActionResult UploadLicenseFilePopup(int id, int opvId)
+        public ActionResult UploadLicenseFilePopup(int id, int orderItemId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -1521,22 +1521,22 @@ namespace Nop.Admin.Controllers
                 //No order found with the specified id
                 return RedirectToAction("List");
 
-            var orderProductVariant = order.OrderProductVariants.FirstOrDefault(x => x.Id == opvId);
-            if (orderProductVariant == null)
-                throw new ArgumentException("No order product variant found with the specified id");
-            
-            if (!orderProductVariant.ProductVariant.IsDownload)
+            var orderItem = order.OrderItems.FirstOrDefault(x => x.Id == orderItemId);
+            if (orderItem == null)
+                throw new ArgumentException("No order item found with the specified id");
+
+            if (!orderItem.ProductVariant.IsDownload)
                 throw new ArgumentException("Product variant is not downloadable");
 
             //ensure a vendor has access only to his products 
-            if (_workContext.CurrentVendor != null && !HasAccessToOrderProductVariant(orderProductVariant))
+            if (_workContext.CurrentVendor != null && !HasAccessToOrderItem(orderItem))
                 return RedirectToAction("List");
 
             var model = new OrderModel.UploadLicenseModel()
             {
-                LicenseDownloadId = orderProductVariant.LicenseDownloadId.HasValue ? orderProductVariant.LicenseDownloadId.Value : 0,
+                LicenseDownloadId = orderItem.LicenseDownloadId.HasValue ? orderItem.LicenseDownloadId.Value : 0,
                 OrderId = order.Id,
-                OrderProductVariantId = orderProductVariant.Id
+                OrderItemId = orderItem.Id
             };
 
             return View(model);
@@ -1554,19 +1554,19 @@ namespace Nop.Admin.Controllers
                 //No order found with the specified id
                 return RedirectToAction("List");
 
-            var orderProductVariant = order.OrderProductVariants.FirstOrDefault(x => x.Id == model.OrderProductVariantId);
-            if (orderProductVariant == null)
-                throw new ArgumentException("No order product variant found with the specified id");
+            var orderItem = order.OrderItems.FirstOrDefault(x => x.Id == model.OrderItemId);
+            if (orderItem == null)
+                throw new ArgumentException("No order item found with the specified id");
 
             //ensure a vendor has access only to his products 
-            if (_workContext.CurrentVendor != null && !HasAccessToOrderProductVariant(orderProductVariant))
+            if (_workContext.CurrentVendor != null && !HasAccessToOrderItem(orderItem))
                 return RedirectToAction("List");
 
             //attach license
             if (model.LicenseDownloadId > 0)
-                orderProductVariant.LicenseDownloadId = model.LicenseDownloadId;
+                orderItem.LicenseDownloadId = model.LicenseDownloadId;
             else
-                orderProductVariant.LicenseDownloadId = null;
+                orderItem.LicenseDownloadId = null;
             _orderService.UpdateOrder(order);
 
             //success
@@ -1589,16 +1589,16 @@ namespace Nop.Admin.Controllers
                 //No order found with the specified id
                 return RedirectToAction("List");
 
-            var orderProductVariant = order.OrderProductVariants.FirstOrDefault(x => x.Id == model.OrderProductVariantId);
-            if (orderProductVariant == null)
-                throw new ArgumentException("No order product variant found with the specified id");
+            var orderItem = order.OrderItems.FirstOrDefault(x => x.Id == model.OrderItemId);
+            if (orderItem == null)
+                throw new ArgumentException("No order item found with the specified id");
 
             //ensure a vendor has access only to his products 
-            if (_workContext.CurrentVendor != null && !HasAccessToOrderProductVariant(orderProductVariant))
+            if (_workContext.CurrentVendor != null && !HasAccessToOrderItem(orderItem))
                 return RedirectToAction("List");
 
             //attach license
-            orderProductVariant.LicenseDownloadId = null;
+            orderItem.LicenseDownloadId = null;
             _orderService.UpdateOrder(order);
 
             //success
@@ -1871,9 +1871,9 @@ namespace Nop.Admin.Controllers
                 string attributeDescription = _productAttributeFormatter.FormatAttributes(productVariant, attributes, order.Customer);
 
                 //save item
-                var opv = new OrderProductVariant()
+                var orderItem = new OrderItem()
                 {
-                    OrderProductVariantGuid = Guid.NewGuid(),
+                    OrderItemGuid = Guid.NewGuid(),
                     Order = order,
                     ProductVariantId = productVariant.Id,
                     UnitPriceInclTax = unitPriceInclTax,
@@ -1889,18 +1889,18 @@ namespace Nop.Admin.Controllers
                     IsDownloadActivated = false,
                     LicenseDownloadId = 0
                 };
-                order.OrderProductVariants.Add(opv);
+                order.OrderItems.Add(orderItem);
                 _orderService.UpdateOrder(order);
 
                 //gift cards
                 if (productVariant.IsGiftCard)
                 {
-                    for (int i = 0; i < opv.Quantity; i++)
+                    for (int i = 0; i < orderItem.Quantity; i++)
                     {
                         var gc = new GiftCard()
                         {
                             GiftCardType = productVariant.GiftCardType,
-                            PurchasedWithOrderItem = opv,
+                            PurchasedWithOrderItem = orderItem,
                             Amount = unitPriceExclTax,
                             IsGiftCardActivated = false,
                             GiftCardCouponCode = _giftCardService.GenerateGiftCardCode(),
@@ -2170,24 +2170,24 @@ namespace Nop.Admin.Controllers
             var baseDimension = _measureService.GetMeasureDimensionById(_measureSettings.BaseDimensionId);
             var baseDimensionIn = baseDimension != null ? baseDimension.Name : "";
 
-            var orderProductVariants = order.OrderProductVariants;
+            var orderItems = order.OrderItems;
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
             {
-                orderProductVariants = orderProductVariants.Where(opv => HasAccessToOrderProductVariant(opv)).ToList();
+                orderItems = orderItems.Where(orderItem => HasAccessToOrderItem(orderItem)).ToList();
             }
 
-            foreach (var opv in orderProductVariants)
+            foreach (var orderItem in orderItems)
             {
                 //we can ship only shippable products
-                if (!opv.ProductVariant.IsShipEnabled)
+                if (!orderItem.ProductVariant.IsShipEnabled)
                     continue;
 
                 //quantities
                 var qtyInThisShipment = 0;
-                var maxQtyToAdd = opv.GetTotalNumberOfItemsCanBeAddedToShipment();
-                var qtyOrdered = opv.Quantity;
-                var qtyInAllShipments = opv.GetTotalNumberOfItemsInAllShipment();
+                var maxQtyToAdd = orderItem.GetTotalNumberOfItemsCanBeAddedToShipment();
+                var qtyOrdered = orderItem.Quantity;
+                var qtyInAllShipments = orderItem.GetTotalNumberOfItemsInAllShipment();
 
                 //ensure that this product variant can be added to a shipment
                 if (maxQtyToAdd <= 0)
@@ -2195,13 +2195,13 @@ namespace Nop.Admin.Controllers
 
                 var shipmentItemModel = new ShipmentModel.ShipmentItemModel()
                 {
-                    OrderProductVariantId = opv.Id,
-                    ProductVariantId = opv.ProductVariantId,
-                    FullProductName = opv.ProductVariant.FullProductName,
-                    Sku = opv.ProductVariant.FormatSku(opv.AttributesXml, _productAttributeParser),
-                    AttributeInfo = opv.AttributeDescription,
-                    ItemWeight = opv.ItemWeight.HasValue ? string.Format("{0:F2} [{1}]", opv.ItemWeight, baseWeightIn) : "",
-                    ItemDimensions = string.Format("{0:F2} x {1:F2} x {2:F2} [{3}]", opv.ProductVariant.Length, opv.ProductVariant.Width, opv.ProductVariant.Height, baseDimensionIn),
+                    OrderItemId = orderItem.Id,
+                    ProductVariantId = orderItem.ProductVariantId,
+                    FullProductName = orderItem.ProductVariant.FullProductName,
+                    Sku = orderItem.ProductVariant.FormatSku(orderItem.AttributesXml, _productAttributeParser),
+                    AttributeInfo = orderItem.AttributeDescription,
+                    ItemWeight = orderItem.ItemWeight.HasValue ? string.Format("{0:F2} [{1}]", orderItem.ItemWeight, baseWeightIn) : "",
+                    ItemDimensions = string.Format("{0:F2} x {1:F2} x {2:F2} [{3}]", orderItem.ProductVariant.Length, orderItem.ProductVariant.Width, orderItem.ProductVariant.Height, baseDimensionIn),
                     QuantityOrdered = qtyOrdered,
                     QuantityInThisShipment = qtyInThisShipment,
                     QuantityInAllShipments = qtyInAllShipments,
@@ -2230,29 +2230,29 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null && !HasAccessToOrder(order))
                 return RedirectToAction("List");
 
-            var orderProductVariants = order.OrderProductVariants;
+            var orderItems = order.OrderItems;
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
             {
-                orderProductVariants = orderProductVariants.Where(opv => HasAccessToOrderProductVariant(opv)).ToList();
+                orderItems = orderItems.Where(orderItem => HasAccessToOrderItem(orderItem)).ToList();
             }
 
             Shipment shipment = null;
             decimal? totalWeight = null;
-            foreach (var opv in orderProductVariants)
+            foreach (var orderItem in orderItems)
             {
                 //is shippable
-                if (!opv.ProductVariant.IsShipEnabled)
+                if (!orderItem.ProductVariant.IsShipEnabled)
                     continue;
                 
                 //ensure that this product variant can be shipped (have at least one item to ship)
-                var maxQtyToAdd = opv.GetTotalNumberOfItemsCanBeAddedToShipment();
+                var maxQtyToAdd = orderItem.GetTotalNumberOfItemsCanBeAddedToShipment();
                 if (maxQtyToAdd <= 0)
                     continue;
 
                 int qtyToAdd = 0; //parse quantity
                 foreach (string formKey in form.AllKeys)
-                    if (formKey.Equals(string.Format("qtyToAdd{0}", opv.Id), StringComparison.InvariantCultureIgnoreCase))
+                    if (formKey.Equals(string.Format("qtyToAdd{0}", orderItem.Id), StringComparison.InvariantCultureIgnoreCase))
                     {
                         int.TryParse(form[formKey], out qtyToAdd);
                         break;
@@ -2266,12 +2266,12 @@ namespace Nop.Admin.Controllers
                 
                 //ok. we have at least one item. let's create a shipment (if it does not exist)
 
-                var opvTotalWeight = opv.ItemWeight.HasValue ? opv.ItemWeight * qtyToAdd : null;
-                if (opvTotalWeight.HasValue)
+                var orderItemTotalWeight = orderItem.ItemWeight.HasValue ? orderItem.ItemWeight * qtyToAdd : null;
+                if (orderItemTotalWeight.HasValue)
                 {
                     if (!totalWeight.HasValue)
                         totalWeight = 0;
-                    totalWeight += opvTotalWeight.Value;
+                    totalWeight += orderItemTotalWeight.Value;
                 }
                 if (shipment == null)
                 {
@@ -2289,7 +2289,7 @@ namespace Nop.Admin.Controllers
                 //create a shipment item
                 var shipmentItem = new ShipmentItem()
                 {
-                    OrderProductVariantId = opv.Id,
+                    OrderItemId = orderItem.Id,
                     Quantity = qtyToAdd,
                 };
                 shipment.ShipmentItems.Add(shipmentItem);

@@ -20,7 +20,7 @@ namespace Nop.Services.Orders
         #region Fields
 
         private readonly IRepository<Order> _orderRepository;
-        private readonly IRepository<OrderProductVariant> _opvRepository;
+        private readonly IRepository<OrderItem> _orderItemRepository;
         private readonly IRepository<OrderNote> _orderNoteRepository;
         private readonly IRepository<ProductVariant> _pvRepository;
         private readonly IRepository<RecurringPayment> _recurringPaymentRepository;
@@ -36,7 +36,7 @@ namespace Nop.Services.Orders
         /// Ctor
         /// </summary>
         /// <param name="orderRepository">Order repository</param>
-        /// <param name="opvRepository">Order product variant repository</param>
+        /// <param name="orderItemRepository">Order item repository</param>
         /// <param name="orderNoteRepository">Order note repository</param>
         /// <param name="pvRepository">Product variant repository</param>
         /// <param name="recurringPaymentRepository">Recurring payment repository</param>
@@ -44,7 +44,7 @@ namespace Nop.Services.Orders
         /// <param name="returnRequestRepository">Return request repository</param>
         /// <param name="eventPublisher">Event published</param>
         public OrderService(IRepository<Order> orderRepository,
-            IRepository<OrderProductVariant> opvRepository,
+            IRepository<OrderItem> orderItemRepository,
             IRepository<OrderNote> orderNoteRepository,
             IRepository<ProductVariant> pvRepository,
             IRepository<RecurringPayment> recurringPaymentRepository,
@@ -52,14 +52,14 @@ namespace Nop.Services.Orders
             IRepository<ReturnRequest> returnRequestRepository,
             IEventPublisher eventPublisher)
         {
-            _orderRepository = orderRepository;
-            _opvRepository = opvRepository;
-            _orderNoteRepository = orderNoteRepository;
-            _pvRepository = pvRepository;
-            _recurringPaymentRepository = recurringPaymentRepository;
-            _customerRepository = customerRepository;
-            _returnRequestRepository = returnRequestRepository;
-            _eventPublisher = eventPublisher;
+            this._orderRepository = orderRepository;
+            this._orderItemRepository = orderItemRepository;
+            this._orderNoteRepository = orderNoteRepository;
+            this._pvRepository = pvRepository;
+            this._recurringPaymentRepository = recurringPaymentRepository;
+            this._customerRepository = customerRepository;
+            this._returnRequestRepository = returnRequestRepository;
+            this._eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -177,8 +177,8 @@ namespace Nop.Services.Orders
             if (vendorId > 0)
             {
                 query = query
-                    .Where(o => o.OrderProductVariants
-                    .Any(opv => opv.ProductVariant.Product.VendorId == vendorId));
+                    .Where(o => o.OrderItems
+                    .Any(orderItem => orderItem.ProductVariant.Product.VendorId == vendorId));
             }
             if (createdFromUtc.HasValue)
                 query = query.Where(o => createdFromUtc.Value <= o.CreatedOnUtc);
@@ -298,40 +298,40 @@ namespace Nop.Services.Orders
         
         #endregion
         
-        #region Orders product variants
+        #region Orders items
 
         /// <summary>
-        /// Gets an order product variant
+        /// Gets an order item
         /// </summary>
-        /// <param name="orderProductVariantId">Order product variant identifier</param>
-        /// <returns>Order product variant</returns>
-        public virtual OrderProductVariant GetOrderProductVariantById(int orderProductVariantId)
+        /// <param name="orderItemId">Order item identifier</param>
+        /// <returns>Order item</returns>
+        public virtual OrderItem GetOrderItemById(int orderItemId)
         {
-            if (orderProductVariantId == 0)
+            if (orderItemId == 0)
                 return null;
 
-            return _opvRepository.GetById(orderProductVariantId);
+            return _orderItemRepository.GetById(orderItemId);
         }
 
         /// <summary>
-        /// Gets an order product variant
+        /// Gets an item
         /// </summary>
-        /// <param name="orderProductVariantGuid">Order product variant identifier</param>
-        /// <returns>Order product variant</returns>
-        public virtual OrderProductVariant GetOrderProductVariantByGuid(Guid orderProductVariantGuid)
+        /// <param name="orderItemGuid">Order identifier</param>
+        /// <returns>Order item</returns>
+        public virtual OrderItem GetOrderItemByGuid(Guid orderItemGuid)
         {
-            if (orderProductVariantGuid == Guid.Empty)
+            if (orderItemGuid == Guid.Empty)
                 return null;
-            
-            var query = from opv in _opvRepository.Table
-                        where opv.OrderProductVariantGuid == orderProductVariantGuid
-                        select opv;
-            var orderProductVariant = query.FirstOrDefault();
-            return orderProductVariant;
+
+            var query = from orderItem in _orderItemRepository.Table
+                        where orderItem.OrderItemGuid == orderItemGuid
+                        select orderItem;
+            var item = query.FirstOrDefault();
+            return item;
         }
         
         /// <summary>
-        /// Gets all order product variants
+        /// Gets all order items
         /// </summary>
         /// <param name="orderId">Order identifier; null to load all records</param>
         /// <param name="customerId">Customer identifier; null to load all records</param>
@@ -342,7 +342,7 @@ namespace Nop.Services.Orders
         /// <param name="ss">Order shippment status; null to load all records</param>
         /// <param name="loadDownloableProductsOnly">Value indicating whether to load downloadable products only</param>
         /// <returns>Order collection</returns>
-        public virtual IList<OrderProductVariant> GetAllOrderProductVariants(int? orderId,
+        public virtual IList<OrderItem> GetAllOrderItems(int? orderId,
             int? customerId, DateTime? createdFromUtc, DateTime? createdToUtc, 
             OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss,
             bool loadDownloableProductsOnly)
@@ -358,11 +358,11 @@ namespace Nop.Services.Orders
             int? shippingStatusId = null;
             if (ss.HasValue)
                 shippingStatusId = (int)ss.Value;
-            
 
-            var query = from opv in _opvRepository.Table
-                        join o in _orderRepository.Table on opv.OrderId equals o.Id
-                        join pv in _pvRepository.Table on opv.ProductVariantId equals pv.Id
+
+            var query = from orderItem in _orderItemRepository.Table
+                        join o in _orderRepository.Table on orderItem.OrderId equals o.Id
+                        join pv in _pvRepository.Table on orderItem.ProductVariantId equals pv.Id
                         where (!orderId.HasValue || orderId.Value == 0 || orderId == o.Id) &&
                         (!customerId.HasValue || customerId.Value == 0 || customerId == o.CustomerId) &&
                         (!createdFromUtc.HasValue || createdFromUtc.Value <= o.CreatedOnUtc) &&
@@ -372,26 +372,26 @@ namespace Nop.Services.Orders
                         (!shippingStatusId.HasValue || shippingStatusId.Value == o.ShippingStatusId) &&
                         (!loadDownloableProductsOnly || pv.IsDownload) &&
                         !o.Deleted
-                        orderby o.CreatedOnUtc descending, opv.Id
-                        select opv;
+                        orderby o.CreatedOnUtc descending, orderItem.Id
+                        select orderItem;
 
-            var orderProductVariants = query.ToList();
-            return orderProductVariants;
+            var orderItems = query.ToList();
+            return orderItems;
         }
 
         /// <summary>
-        /// Delete an order product variant
+        /// Delete an order item
         /// </summary>
-        /// <param name="orderProductVariant">The order product variant</param>
-        public virtual void DeleteOrderProductVariant(OrderProductVariant orderProductVariant)
+        /// <param name="orderItem">The order item</param>
+        public virtual void DeleteOrderItem(OrderItem orderItem)
         {
-            if (orderProductVariant == null)
-                throw new ArgumentNullException("orderProductVariant");
+            if (orderItem == null)
+                throw new ArgumentNullException("orderItem");
 
-            _opvRepository.Delete(orderProductVariant);
+            _orderItemRepository.Delete(orderItem);
 
             //event notification
-            _eventPublisher.EntityDeleted(orderProductVariant);
+            _eventPublisher.EntityDeleted(orderItem);
         }
 
         #endregion
@@ -532,13 +532,13 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="storeId">Store identifier; 0 to load all entries</param>
         /// <param name="customerId">Customer identifier; null to load all entries</param>
-        /// <param name="orderProductVariantId">Order product variant identifier; 0 to load all entries</param>
+        /// <param name="orderItemId">Order item identifier; 0 to load all entries</param>
         /// <param name="rs">Return request status; null to load all entries</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Return requests</returns>
         public virtual IPagedList<ReturnRequest> SearchReturnRequests(int storeId, int customerId,
-            int orderProductVariantId, ReturnRequestStatus? rs, int pageIndex, int pageSize)
+            int orderItemId, ReturnRequestStatus? rs, int pageIndex, int pageSize)
         {
             var query = _returnRequestRepository.Table;
             if (storeId > 0)
@@ -550,8 +550,8 @@ namespace Nop.Services.Orders
                 int returnStatusId = (int)rs.Value;
                 query = query.Where(rr => rr.ReturnRequestStatusId == returnStatusId);
             }
-            if (orderProductVariantId > 0)
-                query = query.Where(rr => rr.OrderProductVariantId == orderProductVariantId);
+            if (orderItemId > 0)
+                query = query.Where(rr => rr.OrderItemId == orderItemId);
 
             query = query.OrderByDescending(rr => rr.CreatedOnUtc).ThenByDescending(rr=>rr.Id);
 

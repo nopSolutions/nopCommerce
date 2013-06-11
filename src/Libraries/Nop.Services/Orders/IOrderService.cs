@@ -99,24 +99,24 @@ namespace Nop.Services.Orders
         
         #endregion
 
-        #region Orders product variants
+        #region Orders items
         
         /// <summary>
-        /// Gets an order product variant
+        /// Gets an order item
         /// </summary>
-        /// <param name="orderProductVariantId">Order product variant identifier</param>
-        /// <returns>Order product variant</returns>
-        OrderProductVariant GetOrderProductVariantById(int orderProductVariantId);
+        /// <param name="orderItemId">Order item identifier</param>
+        /// <returns>Order item</returns>
+        OrderItem GetOrderItemById(int orderItemId);
 
         /// <summary>
-        /// Gets an order product variant
+        /// Gets an order item
         /// </summary>
-        /// <param name="orderProductVariantGuid">Order product variant identifier</param>
-        /// <returns>Order product variant</returns>
-        OrderProductVariant GetOrderProductVariantByGuid(Guid orderProductVariantGuid);
+        /// <param name="orderItemGuid">Order item identifier</param>
+        /// <returns>Order item</returns>
+        OrderItem GetOrderItemByGuid(Guid orderItemGuid);
 
         /// <summary>
-        /// Gets all order product variants
+        /// Gets all order items
         /// </summary>
         /// <param name="orderId">Order identifier; null to load all records</param>
         /// <param name="customerId">Customer identifier; null to load all records</param>
@@ -126,17 +126,17 @@ namespace Nop.Services.Orders
         /// <param name="ps">Order payment status; null to load all records</param>
         /// <param name="ss">Order shippment status; null to load all records</param>
         /// <param name="loadDownloableProductsOnly">Value indicating whether to load downloadable products only</param>
-        /// <returns>Order collection</returns>
-        IList<OrderProductVariant> GetAllOrderProductVariants(int? orderId,
+        /// <returns>Order items</returns>
+        IList<OrderItem> GetAllOrderItems(int? orderId,
            int? customerId, DateTime? createdFromUtc, DateTime? createdToUtc, 
            OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss,
            bool loadDownloableProductsOnly = false);
 
         /// <summary>
-        /// Delete an order product variant
+        /// Delete an order item
         /// </summary>
-        /// <param name="orderProductVariant">The order product variant</param>
-        void DeleteOrderProductVariant(OrderProductVariant orderProductVariant);
+        /// <param name="orderItem">The order item</param>
+        void DeleteOrderItem(OrderItem orderItem);
 
         #endregion
 
@@ -204,13 +204,13 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="storeId">Store identifier; 0 to load all entries</param>
         /// <param name="customerId">Customer identifier; 0 to load all entries</param>
-        /// <param name="orderProductVariantId">Order product variant identifier; 0 to load all entries</param>
+        /// <param name="orderItemId">Order item identifier; 0 to load all entries</param>
         /// <param name="rs">Return request status; null to load all entries</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Return requests</returns>
         IPagedList<ReturnRequest> SearchReturnRequests(int storeId, int customerId,
-            int orderProductVariantId, ReturnRequestStatus? rs, int pageIndex, int pageSize);
+            int orderItemId, ReturnRequestStatus? rs, int pageIndex, int pageSize);
         
         #endregion
     }

@@ -15,7 +15,7 @@ namespace Nop.Data.Mapping.Orders
             this.Ignore(gc => gc.GiftCardType);
 
             this.HasOptional(gc => gc.PurchasedWithOrderItem)
-                .WithMany(opv => opv.AssociatedGiftCards)
+                .WithMany(orderItem => orderItem.AssociatedGiftCards)
                 .HasForeignKey(gc => gc.PurchasedWithOrderItemId);
         }
     }

@@ -30,7 +30,7 @@
     }
 
     @Html.HiddenFor(model => model.OrderId)
-    @Html.HiddenFor(model => model.OrderProductVariantId)
+    @Html.HiddenFor(model => model.OrderItemId)
     @Html.EditorFor(model => model.LicenseDownloadId)
     <input type="submit" name="uploadlicense" value="@T("Admin.Common.Save")" id="uploadlicense" class="adminButton" />
     if (Model.LicenseDownloadId > 0)

@@ -194,7 +194,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
 
                 //get the items in the cart
                 decimal cartTotal = decimal.Zero;
-                var cartItems = postProcessPaymentRequest.Order.OrderProductVariants;
+                var cartItems = postProcessPaymentRequest.Order.OrderItems;
                 int x = 1;
                 foreach (var item in cartItems)
                 {

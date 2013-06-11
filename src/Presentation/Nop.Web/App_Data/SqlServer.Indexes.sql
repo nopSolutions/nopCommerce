@@ -55,7 +55,7 @@ GO
 CREATE NONCLUSTERED INDEX [IX_ProductReview_ProductId] ON [ProductReview] ([ProductId] ASC)
 GO
 
-CREATE NONCLUSTERED INDEX [IX_OrderProductVariant_OrderId] ON [OrderProductVariant] ([OrderId] ASC)
+CREATE NONCLUSTERED INDEX [IX_OrderItem_OrderId] ON [OrderItem] ([OrderId] ASC)
 GO
 
 CREATE NONCLUSTERED INDEX [IX_OrderNote_OrderId] ON [OrderNote] ([OrderId] ASC)

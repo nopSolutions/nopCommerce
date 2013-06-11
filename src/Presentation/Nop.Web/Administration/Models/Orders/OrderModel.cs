@@ -18,7 +18,7 @@ namespace Nop.Admin.Models.Orders
         {
             TaxRates = new List<TaxRate>();
             GiftCards = new List<GiftCard>();
-            Items = new List<OrderProductVariantModel>();
+            Items = new List<OrderItemModel>();
             UsedDiscounts = new List<UsedDiscountModel>();
         }
 
@@ -180,7 +180,7 @@ namespace Nop.Admin.Models.Orders
 
         //items
         public bool HasDownloadableProducts { get; set; }
-        public IList<OrderProductVariantModel> Items { get; set; }
+        public IList<OrderItemModel> Items { get; set; }
 
         //creation date
         [NopResourceDisplayName("Admin.Orders.Fields.CreatedOn")]
@@ -224,9 +224,9 @@ namespace Nop.Admin.Models.Orders
 
         #region Nested Classes
 
-        public partial class OrderProductVariantModel : BaseNopEntityModel
+        public partial class OrderItemModel : BaseNopEntityModel
         {
-            public OrderProductVariantModel()
+            public OrderItemModel()
             {
                 ReturnRequestIds = new List<int>();
                 PurchasedGiftCardIds = new List<int>();
@@ -294,7 +294,7 @@ namespace Nop.Admin.Models.Orders
         {
             public int OrderId { get; set; }
 
-            public int OrderProductVariantId { get; set; }
+            public int OrderItemId { get; set; }
 
             [UIHint("Download")]
             public int LicenseDownloadId { get; set; }

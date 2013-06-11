@@ -261,7 +261,7 @@ namespace Nop.Data.Tests.Orders
         }
 
         [Test]
-        public void Can_save_and_load_order_with_orderProductVariants()
+        public void Can_save_and_load_order_with_orderItems()
         {
             var order = new Order
             {
@@ -270,9 +270,9 @@ namespace Nop.Data.Tests.Orders
                 BillingAddress = GetTestBillingAddress(),
                 CreatedOnUtc = new DateTime(2010, 01, 01)
             };
-            order.OrderProductVariants.Add
+            order.OrderItems.Add
                 (
-                    new OrderProductVariant()
+                    new OrderItem()
                     {
                         ProductVariant = GetTestProductVariant(),
                         Quantity = 1
@@ -281,9 +281,9 @@ namespace Nop.Data.Tests.Orders
             var fromDb = SaveAndLoadEntity(order);
             fromDb.ShouldNotBeNull();
 
-            fromDb.OrderProductVariants.ShouldNotBeNull();
-            fromDb.OrderProductVariants.Count.ShouldEqual(1);
-            fromDb.OrderProductVariants.First().Quantity.ShouldEqual(1);
+            fromDb.OrderItems.ShouldNotBeNull();
+            fromDb.OrderItems.Count.ShouldEqual(1);
+            fromDb.OrderItems.First().Quantity.ShouldEqual(1);
         }
         
         [Test]

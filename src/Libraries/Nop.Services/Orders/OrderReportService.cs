@@ -21,7 +21,7 @@ namespace Nop.Services.Orders
         #region Fields
 
         private readonly IRepository<Order> _orderRepository;
-        private readonly IRepository<OrderProductVariant> _opvRepository;
+        private readonly IRepository<OrderItem> _orderItemRepository;
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<ProductVariant> _productVariantRepository;
 
@@ -36,19 +36,19 @@ namespace Nop.Services.Orders
         /// Ctor
         /// </summary>
         /// <param name="orderRepository">Order repository</param>
-        /// <param name="opvRepository">Order product variant repository</param>
+        /// <param name="orderItemRepository">Order item repository</param>
         /// <param name="productRepository">Product repository</param>
         /// <param name="productVariantRepository">Product variant repository</param>
         /// <param name="dateTimeHelper">Datetime helper</param>
         /// <param name="productService">Product service</param>
         public OrderReportService(IRepository<Order> orderRepository,
-            IRepository<OrderProductVariant> opvRepository,
+            IRepository<OrderItem> orderItemRepository,
             IRepository<Product> productRepository,
             IRepository<ProductVariant> productVariantRepository,
             IDateTimeHelper dateTimeHelper, IProductService productService)
         {
             this._orderRepository = orderRepository;
-            this._opvRepository = opvRepository;
+            this._orderItemRepository = orderItemRepository;
             this._productRepository = productRepository;
             this._productVariantRepository = productVariantRepository;
             this._dateTimeHelper = dateTimeHelper;
@@ -95,8 +95,8 @@ namespace Nop.Services.Orders
             if (vendorId > 0)
             {
                 query = query
-                    .Where(o => o.OrderProductVariants
-                    .Any(opv => opv.ProductVariant.Product.VendorId == vendorId));
+                    .Where(o => o.OrderItems
+                    .Any(orderItem => orderItem.ProductVariant.Product.VendorId == vendorId));
             }
             if (ignoreCancelledOrders)
             {
@@ -228,9 +228,9 @@ namespace Nop.Services.Orders
             if (ss.HasValue)
                 shippingStatusId = (int)ss.Value;
 
-            var query1 = from opv in _opvRepository.Table
-                         join o in _orderRepository.Table on opv.OrderId equals o.Id
-                         join pv in _productVariantRepository.Table on opv.ProductVariantId equals pv.Id
+            var query1 = from orderItem in _orderItemRepository.Table
+                         join o in _orderRepository.Table on orderItem.OrderId equals o.Id
+                         join pv in _productVariantRepository.Table on orderItem.ProductVariantId equals pv.Id
                          join p in _productRepository.Table on pv.ProductId equals p.Id
                          where (storeId == 0 || storeId == o.StoreId) &&
                          (!createdFromUtc.HasValue || createdFromUtc.Value <= o.CreatedOnUtc) &&
@@ -245,12 +245,12 @@ namespace Nop.Services.Orders
                          (billingCountryId == 0 || o.BillingAddress.CountryId == billingCountryId) &&
                          (showHidden || p.Published) &&
                          (showHidden || pv.Published)
-                         select opv;
+                         select orderItem;
 
             IQueryable<BestsellersReportLine> query2 = groupBy == 1 ?
                 //group by product variants
-                from opv in query1
-                group opv by opv.ProductVariantId into g
+                from orderItem in query1
+                group orderItem by orderItem.ProductVariantId into g
                 select new BestsellersReportLine()
                            {
                                EntityId = g.Key,
@@ -259,8 +259,8 @@ namespace Nop.Services.Orders
                            }
                 :
                 //group by products
-                from opv in query1
-                group opv by opv.ProductVariant.ProductId into g
+                from orderItem in query1
+                group orderItem by orderItem.ProductVariant.ProductId into g
                 select new BestsellersReportLine()
                 {
                     EntityId = g.Key,
@@ -304,31 +304,31 @@ namespace Nop.Services.Orders
                 throw new ArgumentException("Product ID is not specified");
 
             //this inner query should retrieve all orders that have contained the productID
-            var query1 = (from opv in _opvRepository.Table
-                          join pv in _productVariantRepository.Table on opv.ProductVariantId equals pv.Id
+            var query1 = (from orderItem in _orderItemRepository.Table
+                          join pv in _productVariantRepository.Table on orderItem.ProductVariantId equals pv.Id
                           join p in _productRepository.Table on pv.ProductId equals p.Id
                           where p.Id == productId
-                          select opv.OrderId).Distinct();
+                          select orderItem.OrderId).Distinct();
 
-            var query2 = from opv in _opvRepository.Table
-                         join pv in _productVariantRepository.Table on opv.ProductVariantId equals pv.Id
+            var query2 = from orderItem in _orderItemRepository.Table
+                         join pv in _productVariantRepository.Table on orderItem.ProductVariantId equals pv.Id
                          join p in _productRepository.Table on pv.ProductId equals p.Id
-                         where (query1.Contains(opv.OrderId)) &&
+                         where (query1.Contains(orderItem.OrderId)) &&
                          (p.Id != productId) &&
                          (showHidden || p.Published) &&
-                         (!opv.Order.Deleted) &&
-                         (storeId == 0 || opv.Order.StoreId == storeId) &&
+                         (!orderItem.Order.Deleted) &&
+                         (storeId == 0 || orderItem.Order.StoreId == storeId) &&
                          (!p.Deleted) &&
                          (showHidden || pv.Published) &&
                          (showHidden || !pv.Deleted)
-                         select new { opv, p };
+                         select new { orderItem, p };
 
-            var query3 = from opv_p in query2
-                         group opv_p by opv_p.p.Id into g
+            var query3 = from orderItem_p in query2
+                         group orderItem_p by orderItem_p.p.Id into g
                          select new
                          {
                              ProductId = g.Key,
-                             ProductsPurchased = g.Sum(x => x.opv.Quantity),
+                             ProductsPurchased = g.Sum(x => x.orderItem.Quantity),
                          };
             query3 = query3.OrderByDescending(x => x.ProductsPurchased);
 
@@ -358,12 +358,12 @@ namespace Nop.Services.Orders
             int pageIndex, int pageSize, bool showHidden = false)
         {
             //this inner query should retrieve all purchased order product varint identifiers
-            var query1 = (from opv in _opvRepository.Table
-                          join o in _orderRepository.Table on opv.OrderId equals o.Id
+            var query1 = (from orderItem in _orderItemRepository.Table
+                          join o in _orderRepository.Table on orderItem.OrderId equals o.Id
                           where (!createdFromUtc.HasValue || createdFromUtc.Value <= o.CreatedOnUtc) &&
                                 (!createdToUtc.HasValue || createdToUtc.Value >= o.CreatedOnUtc) &&
                                 (!o.Deleted)
-                          select opv.ProductVariantId).Distinct();
+                          select orderItem.ProductVariantId).Distinct();
 
             var query2 = from pv in _productVariantRepository.Table
                          join p in _productRepository.Table on pv.ProductId equals p.Id
@@ -420,9 +420,9 @@ namespace Nop.Services.Orders
                 shippingStatusId = (int)ss.Value;
             //We cannot use String.IsNullOrEmpty(billingEmail) in SQL Compact
             bool dontSearchEmail = String.IsNullOrEmpty(billingEmail);
-            var query = from opv in _opvRepository.Table
-                        join o in _orderRepository.Table on opv.OrderId equals o.Id
-                        join pv in _productVariantRepository.Table on opv.ProductVariantId equals pv.Id
+            var query = from orderItem in _orderItemRepository.Table
+                        join o in _orderRepository.Table on orderItem.OrderId equals o.Id
+                        join pv in _productVariantRepository.Table on orderItem.ProductVariantId equals pv.Id
                         join p in _productRepository.Table on pv.ProductId equals p.Id
                         where (storeId == 0 || storeId == o.StoreId) && 
                               (!startTimeUtc.HasValue || startTimeUtc.Value <= o.CreatedOnUtc) &&
@@ -431,14 +431,14 @@ namespace Nop.Services.Orders
                               (!paymentStatusId.HasValue || paymentStatusId == o.PaymentStatusId) &&
                               (!shippingStatusId.HasValue || shippingStatusId == o.ShippingStatusId) &&
                               (!o.Deleted) &&
-                              (vendorId == 0 || opv.ProductVariant.Product.VendorId == vendorId) &&
+                              (vendorId == 0 || orderItem.ProductVariant.Product.VendorId == vendorId) &&
                               //we do not ignore deleted products when calculating order reports
                               //(!p.Deleted) &&
                               //(!pv.Deleted) &&
                               (dontSearchEmail || (o.BillingAddress != null && !String.IsNullOrEmpty(o.BillingAddress.Email) && o.BillingAddress.Email.Contains(billingEmail)))
-                        select new { opv, pv };
-            
-            var productCost = Convert.ToDecimal(query.Sum(o => (decimal?) o.pv.ProductCost * o.opv.Quantity));
+                        select new { orderItem, pv };
+
+            var productCost = Convert.ToDecimal(query.Sum(o => (decimal?)o.pv.ProductCost * o.orderItem.Quantity));
 
             var reportSummary = GetOrderAverageReportLine(storeId, vendorId, os, ps, ss, startTimeUtc, endTimeUtc, billingEmail);
             var profit = reportSummary.SumOrders - reportSummary.SumTax - productCost;

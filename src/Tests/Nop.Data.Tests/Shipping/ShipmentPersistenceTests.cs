@@ -49,7 +49,7 @@ namespace Nop.Data.Tests.Shipping
             };
             shipment.ShipmentItems.Add(new ShipmentItem()
             {
-                OrderProductVariantId = 1,
+                OrderItemId = 1,
                 Quantity = 2,
             });
 

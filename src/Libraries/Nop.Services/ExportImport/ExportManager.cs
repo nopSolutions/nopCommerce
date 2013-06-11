@@ -904,33 +904,33 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("CreatedOnUtc", null, order.CreatedOnUtc.ToString());
 
                 //products
-                var orderProductVariants = order.OrderProductVariants;
-                if (orderProductVariants.Count > 0)
+                var orderItems = order.OrderItems;
+                if (orderItems.Count > 0)
                 {
-                    xmlWriter.WriteStartElement("OrderProductVariants");
-                    foreach (var orderProductVariant in orderProductVariants)
+                    xmlWriter.WriteStartElement("OrderItems");
+                    foreach (var orderItem in orderItems)
                     {
-                        xmlWriter.WriteStartElement("OrderProductVariant");
-                        xmlWriter.WriteElementString("OrderProductVariantId", null, orderProductVariant.Id.ToString());
-                        xmlWriter.WriteElementString("ProductVariantId", null, orderProductVariant.ProductVariantId.ToString());
+                        xmlWriter.WriteStartElement("OrderItem");
+                        xmlWriter.WriteElementString("Id", null, orderItem.Id.ToString());
+                        xmlWriter.WriteElementString("ProductVariantId", null, orderItem.ProductVariantId.ToString());
 
-                        var productVariant = orderProductVariant.ProductVariant;
+                        var productVariant = orderItem.ProductVariant;
                         if (productVariant != null)
                             xmlWriter.WriteElementString("ProductVariantName", null, productVariant.FullProductName);
 
 
-                        xmlWriter.WriteElementString("UnitPriceInclTax", null, orderProductVariant.UnitPriceInclTax.ToString());
-                        xmlWriter.WriteElementString("UnitPriceExclTax", null, orderProductVariant.UnitPriceExclTax.ToString());
-                        xmlWriter.WriteElementString("PriceInclTax", null, orderProductVariant.PriceInclTax.ToString());
-                        xmlWriter.WriteElementString("PriceExclTax", null, orderProductVariant.PriceExclTax.ToString());
-                        xmlWriter.WriteElementString("AttributeDescription", null, orderProductVariant.AttributeDescription);
-                        xmlWriter.WriteElementString("AttributesXml", null, orderProductVariant.AttributesXml);
-                        xmlWriter.WriteElementString("Quantity", null, orderProductVariant.Quantity.ToString());
-                        xmlWriter.WriteElementString("DiscountAmountInclTax", null, orderProductVariant.DiscountAmountInclTax.ToString());
-                        xmlWriter.WriteElementString("DiscountAmountExclTax", null, orderProductVariant.DiscountAmountExclTax.ToString());
-                        xmlWriter.WriteElementString("DownloadCount", null, orderProductVariant.DownloadCount.ToString());
-                        xmlWriter.WriteElementString("IsDownloadActivated", null, orderProductVariant.IsDownloadActivated.ToString());
-                        xmlWriter.WriteElementString("LicenseDownloadId", null, orderProductVariant.LicenseDownloadId.ToString());
+                        xmlWriter.WriteElementString("UnitPriceInclTax", null, orderItem.UnitPriceInclTax.ToString());
+                        xmlWriter.WriteElementString("UnitPriceExclTax", null, orderItem.UnitPriceExclTax.ToString());
+                        xmlWriter.WriteElementString("PriceInclTax", null, orderItem.PriceInclTax.ToString());
+                        xmlWriter.WriteElementString("PriceExclTax", null, orderItem.PriceExclTax.ToString());
+                        xmlWriter.WriteElementString("AttributeDescription", null, orderItem.AttributeDescription);
+                        xmlWriter.WriteElementString("AttributesXml", null, orderItem.AttributesXml);
+                        xmlWriter.WriteElementString("Quantity", null, orderItem.Quantity.ToString());
+                        xmlWriter.WriteElementString("DiscountAmountInclTax", null, orderItem.DiscountAmountInclTax.ToString());
+                        xmlWriter.WriteElementString("DiscountAmountExclTax", null, orderItem.DiscountAmountExclTax.ToString());
+                        xmlWriter.WriteElementString("DownloadCount", null, orderItem.DownloadCount.ToString());
+                        xmlWriter.WriteElementString("IsDownloadActivated", null, orderItem.IsDownloadActivated.ToString());
+                        xmlWriter.WriteElementString("LicenseDownloadId", null, orderItem.LicenseDownloadId.ToString());
                         xmlWriter.WriteEndElement();
                     }
                     xmlWriter.WriteEndElement();

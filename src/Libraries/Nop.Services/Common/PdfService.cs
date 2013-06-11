@@ -298,7 +298,7 @@ namespace Nop.Services.Common
                 doc.Add(new Paragraph(" "));
 
 
-                var orderProductVariants = _orderService.GetAllOrderProductVariants(order.Id, null, null, null, null, null, null);
+                var orderItems = _orderService.GetAllOrderItems(order.Id, null, null, null, null, null, null);
 
                 var productsTable = new PdfPTable(_catalogSettings.ShowProductSku ? 5 : 4);
                 productsTable.WidthPercentage = 100f;
@@ -337,10 +337,10 @@ namespace Nop.Services.Common
                 cell.HorizontalAlignment = Element.ALIGN_CENTER;
                 productsTable.AddCell(cell);
 
-                for (int i = 0; i < orderProductVariants.Count; i++)
+                for (int i = 0; i < orderItems.Count; i++)
                 {
-                    var orderProductVariant = orderProductVariants[i];
-                    var pv = orderProductVariant.ProductVariant;
+                    var orderItem = orderItems[i];
+                    var pv = orderItem.ProductVariant;
 
                     //product name
                     string name = "";
@@ -351,14 +351,14 @@ namespace Nop.Services.Common
                     cell = new PdfPCell();
                     cell.AddElement(new Paragraph(name, font));
                     cell.HorizontalAlignment = Element.ALIGN_LEFT;
-                    var attributesParagraph = new Paragraph(HtmlHelper.ConvertHtmlToPlainText(orderProductVariant.AttributeDescription, true, true), attributesFont);
+                    var attributesParagraph = new Paragraph(HtmlHelper.ConvertHtmlToPlainText(orderItem.AttributeDescription, true, true), attributesFont);
                     cell.AddElement(attributesParagraph);
                     productsTable.AddCell(cell);
 
                     //SKU
                     if (_catalogSettings.ShowProductSku)
                     {
-                        var sku = pv.FormatSku(orderProductVariant.AttributesXml, _productAttributeParser);
+                        var sku = pv.FormatSku(orderItem.AttributesXml, _productAttributeParser);
                         cell = new PdfPCell(new Phrase(sku ?? String.Empty, font));
                         cell.HorizontalAlignment = Element.ALIGN_CENTER;
                         productsTable.AddCell(cell);
@@ -370,14 +370,14 @@ namespace Nop.Services.Common
                     {
                         case TaxDisplayType.ExcludingTax:
                             {
-                                var opvUnitPriceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderProductVariant.UnitPriceExclTax, order.CurrencyRate);
-                                unitPrice = _priceFormatter.FormatPrice(opvUnitPriceExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, false);
+                                var unitPriceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceExclTax, order.CurrencyRate);
+                                unitPrice = _priceFormatter.FormatPrice(unitPriceExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, false);
                             }
                             break;
                         case TaxDisplayType.IncludingTax:
                             {
-                                var opvUnitPriceInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderProductVariant.UnitPriceInclTax, order.CurrencyRate);
-                                unitPrice = _priceFormatter.FormatPrice(opvUnitPriceInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, true);
+                                var unitPriceInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceInclTax, order.CurrencyRate);
+                                unitPrice = _priceFormatter.FormatPrice(unitPriceInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, true);
                             }
                             break;
                     }
@@ -386,7 +386,7 @@ namespace Nop.Services.Common
                     productsTable.AddCell(cell);
 
                     //qty
-                    cell = new PdfPCell(new Phrase(orderProductVariant.Quantity.ToString(), font));
+                    cell = new PdfPCell(new Phrase(orderItem.Quantity.ToString(), font));
                     cell.HorizontalAlignment = Element.ALIGN_LEFT;
                     productsTable.AddCell(cell);
 
@@ -396,14 +396,14 @@ namespace Nop.Services.Common
                     {
                         case TaxDisplayType.ExcludingTax:
                             {
-                                var opvPriceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderProductVariant.PriceExclTax, order.CurrencyRate);
-                                subTotal = _priceFormatter.FormatPrice(opvPriceExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, false);
+                                var priceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.PriceExclTax, order.CurrencyRate);
+                                subTotal = _priceFormatter.FormatPrice(priceExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, false);
                             }
                             break;
                         case TaxDisplayType.IncludingTax:
                             {
-                                var opvPriceInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderProductVariant.PriceInclTax, order.CurrencyRate);
-                                subTotal = _priceFormatter.FormatPrice(opvPriceInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, true);
+                                var priceInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.PriceInclTax, order.CurrencyRate);
+                                subTotal = _priceFormatter.FormatPrice(priceInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, true);
                             }
                             break;
                     }
@@ -792,11 +792,11 @@ namespace Nop.Services.Common
                     foreach (var si in shipment.ShipmentItems)
                     {
                         //product name
-                        var opv = _orderService.GetOrderProductVariantById(si.OrderProductVariantId);
-                        if (opv == null)
+                        var orderItem = _orderService.GetOrderItemById(si.OrderItemId);
+                        if (orderItem == null)
                             continue;
-                        
-                        var pv = opv.ProductVariant;
+
+                        var pv = orderItem.ProductVariant;
                         string name = "";
                         if (!String.IsNullOrEmpty(pv.GetLocalized(x => x.Name, lang.Id)))
                             name = string.Format("{0} ({1})", pv.Product.GetLocalized(x => x.Name, lang.Id), pv.GetLocalized(x => x.Name, lang.Id));
@@ -805,12 +805,12 @@ namespace Nop.Services.Common
                         cell = new PdfPCell();
                         cell.AddElement(new Paragraph(name, font));
                         cell.HorizontalAlignment = Element.ALIGN_LEFT;
-                        var attributesParagraph = new Paragraph(HtmlHelper.ConvertHtmlToPlainText(opv.AttributeDescription, true, true), attributesFont);
+                        var attributesParagraph = new Paragraph(HtmlHelper.ConvertHtmlToPlainText(orderItem.AttributeDescription, true, true), attributesFont);
                         cell.AddElement(attributesParagraph);
                         productsTable.AddCell(cell);
 
                         //SKU
-                        var sku = pv.FormatSku(opv.AttributesXml, _productAttributeParser);
+                        var sku = pv.FormatSku(orderItem.AttributesXml, _productAttributeParser);
                         cell = new PdfPCell(new Phrase(sku ?? String.Empty, font));
                         cell.HorizontalAlignment = Element.ALIGN_CENTER;
                         productsTable.AddCell(cell);

@@ -12,9 +12,9 @@ namespace Nop.Core.Domain.Shipping
         public int ShipmentId { get; set; }
 
         /// <summary>
-        /// Gets or sets the order product variant identifier
+        /// Gets or sets the order item identifier
         /// </summary>
-        public int OrderProductVariantId { get; set; }
+        public int OrderItemId { get; set; }
 
         /// <summary>
         /// Gets or sets the quantity

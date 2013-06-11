@@ -11,12 +11,12 @@ using NUnit.Framework;
 namespace Nop.Data.Tests.Orders
 {
     [TestFixture]
-    public class OrderProductVariantPersistenceTests : PersistenceTest
+    public class OrderItemPersistenceTests : PersistenceTest
     {
         [Test]
-        public void Can_save_and_load_orderProductVariant()
+        public void Can_save_and_load_orderItem()
         {
-            var opv = new OrderProductVariant()
+            var orderItem = new OrderItem()
             {
                 Order = GetTestOrder(),
                 ProductVariant = GetTestProductVariant(),
@@ -35,7 +35,7 @@ namespace Nop.Data.Tests.Orders
                 ItemWeight = 9.87M
             };
 
-            var fromDb = SaveAndLoadEntity(opv);
+            var fromDb = SaveAndLoadEntity(orderItem);
             fromDb.ShouldNotBeNull();
             fromDb.Order.ShouldNotBeNull();
             fromDb.ProductVariant.ShouldNotBeNull();
@@ -56,16 +56,16 @@ namespace Nop.Data.Tests.Orders
         }
 
         [Test]
-        public void Can_save_and_load_orderProductVariant_with_giftCard()
+        public void Can_save_and_load_orderItem_with_giftCard()
         {
-            var opv = new OrderProductVariant()
+            var orderItem = new OrderItem()
             {
                 Order = GetTestOrder(),
                 ProductVariant = GetTestProductVariant(),
             };
-            opv.AssociatedGiftCards.Add(GetTestGiftCard());
+            orderItem.AssociatedGiftCards.Add(GetTestGiftCard());
 
-            var fromDb = SaveAndLoadEntity(opv);
+            var fromDb = SaveAndLoadEntity(orderItem);
             fromDb.ShouldNotBeNull();
 
             fromDb.AssociatedGiftCards.ShouldNotBeNull();

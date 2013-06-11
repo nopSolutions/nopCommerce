@@ -98,7 +98,7 @@
     <Compile Include="Orders\ReturnRequestPersistenceTests.cs" />
     <Compile Include="Orders\RecurringPaymentHistoryPersistenceTests.cs" />
     <Compile Include="Orders\RecurringPaymentPersistenceTests.cs" />
-    <Compile Include="Orders\OrderProductVariantPersistenceTests.cs" />
+    <Compile Include="Orders\OrderItemPersistenceTests.cs" />
     <Compile Include="Orders\OrderNotePersistenceTests.cs" />
     <Compile Include="Media\DownloadPersistenceTests.cs" />
     <Compile Include="Messages\EmailAccountPersistenceTests.cs" />

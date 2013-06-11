@@ -5,16 +5,16 @@ using Nop.Core.Domain.Catalog;
 namespace Nop.Core.Domain.Orders
 {
     /// <summary>
-    /// Represents an order product variant
+    /// Represents an order item
     /// </summary>
-    public partial class OrderProductVariant : BaseEntity
+    public partial class OrderItem : BaseEntity
     {
         private ICollection<GiftCard> _associatedGiftCards;
 
         /// <summary>
-        /// Gets or sets the order product variant identifier
+        /// Gets or sets the order item identifier
         /// </summary>
-        public Guid OrderProductVariantGuid { get; set; }
+        public Guid OrderItemGuid { get; set; }
 
         /// <summary>
         /// Gets or sets the order identifier
