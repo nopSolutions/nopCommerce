@@ -1,4 +1,5 @@
 ﻿using System;
+using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Plugins;
 using Nop.Services.Events;
@@ -11,13 +12,17 @@ namespace Nop.Plugin.SMS.Verizon
         private readonly VerizonSettings _verizonSettings;
         private readonly IPluginFinder _pluginFinder;
         private readonly IOrderService _orderService;
+        private readonly IStoreContext _storeContext;
 
         public OrderPlacedEventConsumer(VerizonSettings verizonSettings,
-            IPluginFinder pluginFinder, IOrderService orderService)
+            IPluginFinder pluginFinder, 
+            IOrderService orderService,
+            IStoreContext storeContext)
         {
             this._verizonSettings = verizonSettings;
             this._pluginFinder = pluginFinder;
             this._orderService = orderService;
+            this._storeContext = storeContext;
         }
 
         /// <summary>
@@ -32,6 +37,8 @@ namespace Nop.Plugin.SMS.Verizon
 
             var pluginDescriptor = _pluginFinder.GetPluginDescriptorBySystemName("Mobile.SMS.Verizon");
             if (pluginDescriptor == null)
+                return;
+            if (!_pluginFinder.AuthenticateStore(pluginDescriptor, _storeContext.CurrentStore.Id))
                 return;
 
             var plugin = pluginDescriptor.Instance() as VerizonSmsProvider;

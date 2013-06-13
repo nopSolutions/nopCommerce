@@ -361,6 +361,9 @@ namespace Nop.Services.Discounts
                 var requirementRule = LoadDiscountRequirementRuleBySystemName(req.DiscountRequirementRuleSystemName);
                 if (requirementRule == null)
                     continue;
+                if (!_pluginFinder.AuthenticateStore(requirementRule.PluginDescriptor, _storeContext.CurrentStore.Id))
+                    continue;
+
                 var request = new CheckDiscountRequirementRequest()
                 {
                     DiscountRequirement = req,

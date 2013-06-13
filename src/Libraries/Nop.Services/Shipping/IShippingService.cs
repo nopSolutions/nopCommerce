@@ -13,8 +13,9 @@ namespace Nop.Services.Shipping
         /// <summary>
         /// Load active shipping rate computation methods
         /// </summary>
+        /// <param name="storeId">Load records allows only in specified store; pass 0 to load all records</param>
         /// <returns>Shipping rate computation methods</returns>
-        IList<IShippingRateComputationMethod> LoadActiveShippingRateComputationMethods();
+        IList<IShippingRateComputationMethod> LoadActiveShippingRateComputationMethods(int storeId = 0);
 
         /// <summary>
         /// Load shipping rate computation method by system name
@@ -26,8 +27,9 @@ namespace Nop.Services.Shipping
         /// <summary>
         /// Load all shipping rate computation methods
         /// </summary>
+        /// <param name="storeId">Load records allows only in specified store; pass 0 to load all records</param>
         /// <returns>Shipping rate computation methods</returns>
-        IList<IShippingRateComputationMethod> LoadAllShippingRateComputationMethods();
+        IList<IShippingRateComputationMethod> LoadAllShippingRateComputationMethods(int storeId = 0);
 
 
 
@@ -103,8 +105,9 @@ namespace Nop.Services.Shipping
         /// <param name="cart">Shopping cart</param>
         /// <param name="shippingAddress">Shipping address</param>
         /// <param name="allowedShippingRateComputationMethodSystemName">Filter by shipping rate computation method identifier; null to load shipping options of all shipping rate computation methods</param>
+        /// <param name="storeId">Load records allows only in specified store; pass 0 to load all records</param>
         /// <returns>Shipping options</returns>
         GetShippingOptionResponse GetShippingOptions(IList<ShoppingCartItem> cart, Address shippingAddress,
-            string allowedShippingRateComputationMethodSystemName = "");
+            string allowedShippingRateComputationMethodSystemName = "", int storeId = 0);
     }
 }

@@ -39,10 +39,11 @@ namespace Nop.Services.Cms
         /// <summary>
         /// Load active widgets
         /// </summary>
+        /// <param name="storeId">Load records allows only in specified store; pass 0 to load all records</param>
         /// <returns>Widgets</returns>
-        public virtual IList<IWidgetPlugin> LoadActiveWidgets()
+        public virtual IList<IWidgetPlugin> LoadActiveWidgets(int storeId = 0)
         {
-            return LoadAllWidgets()
+            return LoadAllWidgets(storeId)
                    .Where(x => _widgetSettings.ActiveWidgetSystemNames.Contains(x.PluginDescriptor.SystemName, StringComparer.InvariantCultureIgnoreCase))
                    .ToList();
         }
@@ -51,13 +52,14 @@ namespace Nop.Services.Cms
         /// Load active widgets
         /// </summary>
         /// <param name="widgetZone">Widget zone</param>
+        /// <param name="storeId">Load records allows only in specified store; pass 0 to load all records</param>
         /// <returns>Widgets</returns>
-        public virtual IList<IWidgetPlugin> LoadActiveWidgetsByWidgetZone(string  widgetZone)
+        public virtual IList<IWidgetPlugin> LoadActiveWidgetsByWidgetZone(string  widgetZone, int storeId = 0)
         {
             if (String.IsNullOrWhiteSpace(widgetZone))
                 return new List<IWidgetPlugin>();
 
-            return LoadActiveWidgets()
+            return LoadActiveWidgets(storeId)
                    .Where(x => x.GetWidgetZones().Contains(widgetZone, StringComparer.InvariantCultureIgnoreCase))
                    .ToList();
         }
@@ -79,10 +81,11 @@ namespace Nop.Services.Cms
         /// <summary>
         /// Load all widgets
         /// </summary>
+        /// <param name="storeId">Load records allows only in specified store; pass 0 to load all records</param>
         /// <returns>Widgets</returns>
-        public virtual IList<IWidgetPlugin> LoadAllWidgets()
+        public virtual IList<IWidgetPlugin> LoadAllWidgets(int storeId = 0)
         {
-            return _pluginFinder.GetPlugins<IWidgetPlugin>().ToList();
+            return _pluginFinder.GetPlugins<IWidgetPlugin>(storeId: storeId).ToList();
         }
         
         #endregion

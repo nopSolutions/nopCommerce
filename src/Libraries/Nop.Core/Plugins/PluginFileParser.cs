@@ -114,6 +114,22 @@ namespace Nop.Core.Plugins
                     case "FileName":
                         descriptor.PluginFileName = value;
                         break;
+                    case "LimitedToStores":
+                        {
+                            //parse list of store IDs
+                            foreach (var str1 in value.Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries)
+                                                      .Select(x => x.Trim()))
+                            {
+                                int storeId = 0;
+                                if (int.TryParse(str1, out storeId))
+                                {
+                                    descriptor.LimitedToStores.Add(storeId);
+                                }
+                            }
+                        }
+                        break;
+                    default:
+                        break;;
                 }
             }
 
@@ -146,6 +162,17 @@ namespace Nop.Core.Plugins
             keyValues.Add(new KeyValuePair<string, string>("Author", plugin.Author));
             keyValues.Add(new KeyValuePair<string, string>("DisplayOrder", plugin.DisplayOrder.ToString()));
             keyValues.Add(new KeyValuePair<string, string>("FileName", plugin.PluginFileName));
+            if (plugin.LimitedToStores.Count > 0)
+            {
+                var storeList = "";
+                for (int i = 0; i < plugin.LimitedToStores.Count; i++)
+                {
+                    storeList += plugin.LimitedToStores[i];
+                    if (i != plugin.LimitedToStores.Count - 1)
+                        storeList += ",";
+                }
+                keyValues.Add(new KeyValuePair<string, string>("LimitedToStores", storeList));
+            }
 
             var sb = new StringBuilder();
             for (int i = 0; i < keyValues.Count; i++)

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
 using FluentValidation.Attributes;
+using Nop.Admin.Models.Stores;
 using Nop.Admin.Validators.Plugins;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Localization;
@@ -49,6 +50,14 @@ namespace Nop.Admin.Models.Plugins
         public bool IsEnabled { get; set; }
 
         public IList<PluginLocalizedModel> Locales { get; set; }
+
+
+        //Store mapping
+        [NopResourceDisplayName("Admin.Configuration.Plugins.Fields.LimitedToStores")]
+        public bool LimitedToStores { get; set; }
+        [NopResourceDisplayName("Admin.Configuration.Plugins.Fields.AvailableStores")]
+        public List<StoreModel> AvailableStores { get; set; }
+        public int[] SelectedStoreIds { get; set; }
     }
     public partial class PluginLocalizedModel : ILocalizedModelLocal
     {

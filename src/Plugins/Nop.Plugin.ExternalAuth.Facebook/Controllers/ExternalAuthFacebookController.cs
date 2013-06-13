@@ -1,6 +1,7 @@
 ﻿using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Plugins;
 using Nop.Plugin.ExternalAuth.Facebook.Core;
 using Nop.Plugin.ExternalAuth.Facebook.Models;
 using Nop.Services.Authentication.External;
@@ -19,13 +20,17 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
         private readonly IOpenAuthenticationService _openAuthenticationService;
         private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
         private readonly IPermissionService _permissionService;
+        private readonly IStoreContext _storeContext;
+        private readonly IPluginFinder _pluginFinder;
 
         public ExternalAuthFacebookController(ISettingService settingService,
             FacebookExternalAuthSettings facebookExternalAuthSettings,
             IOAuthProviderFacebookAuthorizer oAuthProviderFacebookAuthorizer,
             IOpenAuthenticationService openAuthenticationService,
             ExternalAuthenticationSettings externalAuthenticationSettings,
-            IPermissionService permissionService)
+            IPermissionService permissionService,
+            IStoreContext storeContext,
+            IPluginFinder pluginFinder)
         {
             this._settingService = settingService;
             this._facebookExternalAuthSettings = facebookExternalAuthSettings;
@@ -33,6 +38,8 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
             this._openAuthenticationService = openAuthenticationService;
             this._externalAuthenticationSettings = externalAuthenticationSettings;
             this._permissionService = permissionService;
+            this._storeContext = storeContext;
+            this._pluginFinder = pluginFinder;
         }
         
         [AdminAuthorize]
@@ -79,7 +86,9 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
         {
             var processor = _openAuthenticationService.LoadExternalAuthenticationMethodBySystemName("ExternalAuth.Facebook");
             if (processor == null ||
-                !processor.IsMethodActive(_externalAuthenticationSettings) || !processor.PluginDescriptor.Installed)
+                !processor.IsMethodActive(_externalAuthenticationSettings) ||
+                !processor.PluginDescriptor.Installed ||
+                !_pluginFinder.AuthenticateStore(processor.PluginDescriptor, _storeContext.CurrentStore.Id))
                 throw new NopException("Facebook module cannot be loaded");
 
             var viewModel = new LoginModel();

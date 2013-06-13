@@ -44,10 +44,11 @@ namespace Nop.Services.Payments
         /// Load active payment methods
         /// </summary>
         /// <param name="filterByCustomerId">Filter payment methods by customer; null to load all records</param>
+        /// <param name="storeId">Load records allows only in specified store; pass 0 to load all records</param>
         /// <returns>Payment methods</returns>
-        public virtual IList<IPaymentMethod> LoadActivePaymentMethods(int? filterByCustomerId = null)
+        public virtual IList<IPaymentMethod> LoadActivePaymentMethods(int? filterByCustomerId = null, int storeId = 0)
         {
-            return LoadAllPaymentMethods()
+            return LoadAllPaymentMethods(storeId)
                    .Where(provider => _paymentSettings.ActivePaymentMethodSystemNames.Contains(provider.PluginDescriptor.SystemName, StringComparer.InvariantCultureIgnoreCase))
                    .ToList();
         }
@@ -69,10 +70,11 @@ namespace Nop.Services.Payments
         /// <summary>
         /// Load all payment providers
         /// </summary>
+        /// <param name="storeId">Load records allows only in specified store; pass 0 to load all records</param>
         /// <returns>Payment providers</returns>
-        public virtual IList<IPaymentMethod> LoadAllPaymentMethods()
+        public virtual IList<IPaymentMethod> LoadAllPaymentMethods(int storeId = 0)
         {
-            return _pluginFinder.GetPlugins<IPaymentMethod>().ToList();
+            return _pluginFinder.GetPlugins<IPaymentMethod>(storeId: storeId).ToList();
         }
 
 

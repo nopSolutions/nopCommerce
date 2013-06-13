@@ -3704,7 +3704,26 @@
                                             </LocaleResource>
                                         </Children>
                                     </LocaleResource>
+                                    <LocaleResource Name="LimitedToStores">
+                                      <Value>Limited to stores</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Determines whether the plugin is available only at certain stores.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="AvailableStores">
+                                      <Value>Stores</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Select stores for which the plugin will be used.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
                                 </Children>
+                            </LocaleResource>
+                            <LocaleResource Name="Info">
+                              <Value>Plugin Info</Value>
                             </LocaleResource>
                             <LocaleResource Name="Installed">
                                 <Value>The plugin has been installed.</Value>
@@ -3721,6 +3740,9 @@
                             </LocaleResource>
                             <LocaleResource Name="ReloadList">
                                 <Value>Reload list of plugins</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="Stores">
+                              <Value>Stores</Value>
                             </LocaleResource>
                             <LocaleResource Name="Uninstalled">
                                 <Value>The plugin has been uninstalled.</Value>

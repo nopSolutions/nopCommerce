@@ -4,7 +4,6 @@ using System.Linq;
 using System.Web.Mvc;
 using Nop.Admin.Models.Catalog;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Common;
 using Nop.Services.Customers; 
 using Nop.Core.Domain.Discounts;
 using Nop.Services.Catalog;

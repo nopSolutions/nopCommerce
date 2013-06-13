@@ -514,7 +514,7 @@ namespace Nop.Web.Controllers
             #region Button payment methods
 
             var boundPaymentMethods = _paymentService
-                .LoadActivePaymentMethods(_workContext.CurrentCustomer.Id)
+                .LoadActivePaymentMethods(_workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id)
                 .Where(pm => pm.PaymentMethodType == PaymentMethodType.Button)
                 .ToList();
             foreach (var pm in boundPaymentMethods)
@@ -1795,7 +1795,8 @@ namespace Nop.Web.Controllers
                     StateProvince = shippingModel.StateProvinceId.HasValue ? _stateProvinceService.GetStateProvinceById(shippingModel.StateProvinceId.Value) : null,
                     ZipPostalCode = shippingModel.ZipPostalCode,
                 };
-                GetShippingOptionResponse getShippingOptionResponse = _shippingService.GetShippingOptions(cart, address);
+                GetShippingOptionResponse getShippingOptionResponse = _shippingService
+                    .GetShippingOptions(cart, address, "", _storeContext.CurrentStore.Id);
                 if (!getShippingOptionResponse.Success)
                 {
                     foreach (var error in getShippingOptionResponse.Errors)

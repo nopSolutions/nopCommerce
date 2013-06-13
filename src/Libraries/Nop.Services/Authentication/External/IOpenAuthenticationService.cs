@@ -10,8 +10,9 @@ namespace Nop.Services.Authentication.External
         /// <summary>
         /// Load active external authentication methods
         /// </summary>
+        /// <param name="storeId">Load records allows only in specified store; pass 0 to load all records</param>
         /// <returns>Payment methods</returns>
-        IList<IExternalAuthenticationMethod> LoadActiveExternalAuthenticationMethods();
+        IList<IExternalAuthenticationMethod> LoadActiveExternalAuthenticationMethods(int storeId = 0);
 
         /// <summary>
         /// Load external authentication method by system name
@@ -23,8 +24,9 @@ namespace Nop.Services.Authentication.External
         /// <summary>
         /// Load all external authentication methods
         /// </summary>
+        /// <param name="storeId">Load records allows only in specified store; pass 0 to load all records</param>
         /// <returns>External authentication methods</returns>
-        IList<IExternalAuthenticationMethod> LoadAllExternalAuthenticationMethods();
+        IList<IExternalAuthenticationMethod> LoadAllExternalAuthenticationMethods(int storeId = 0);
 
 
         bool AccountExists(OpenAuthenticationParameters parameters);

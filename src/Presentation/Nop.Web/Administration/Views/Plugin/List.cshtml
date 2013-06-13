@@ -73,7 +73,7 @@
                             .Centered();
                         columns.Bound(x => x.SystemName)
                             .Centered()
-                            .ClientTemplate("<a href=\"" + "javascript:OpenWindow('" + @Url.Content("~/Admin/Plugin/EditPopup") + "?systemName=<#= SystemName #>&btnId=btnRefresh&formId=plugins-form', 800, 250, true);\" >" + T("Admin.Common.Edit").Text + "</a>")
+                            .ClientTemplate("<a href=\"" + "javascript:OpenWindow('" + @Url.Content("~/Admin/Plugin/EditPopup") + "?systemName=<#= SystemName #>&btnId=btnRefresh&formId=plugins-form', 800, 300, true);\" >" + T("Admin.Common.Edit").Text + "</a>")
                             .Title(T("Admin.Common.Edit").Text);
                     })
                     .DataBinding(dataBinding =>

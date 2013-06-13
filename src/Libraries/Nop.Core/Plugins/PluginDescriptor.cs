@@ -11,6 +11,7 @@ namespace Nop.Core.Plugins
         public PluginDescriptor()
         {
             this.SupportedVersions = new List<string>();
+            this.LimitedToStores = new List<int>();
         }
 
 
@@ -76,6 +77,11 @@ namespace Nop.Core.Plugins
         /// Gets or sets the display order
         /// </summary>
         public virtual int DisplayOrder { get; set; }
+
+        /// <summary>
+        /// Gets or sets the list of store identifiers in which this plugin is available. If empty, then this plugin is available in all stores
+        /// </summary>
+        public virtual IList<int> LimitedToStores { get; set; }
 
         /// <summary>
         /// Gets or sets the value indicating whether plugin is installed

@@ -77,6 +77,24 @@ set @resources='
   <LocaleResource Name="Admin.Orders.Shipments.DeliveryDate.EnterUtc">
     <Value>Date and time should entered in Coordinated Universal Time (UTC)</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Fields.LimitedToStores">
+    <Value>Limited to stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Fields.LimitedToStores.Hint">
+    <Value>Determines whether the plugin is available only at certain stores.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Fields.AvailableStores">
+    <Value>Stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Fields.AvailableStores.Hint">
+    <Value>Select stores for which the plugin will be used.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Stores">
+    <Value>Stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Info">
+    <Value>Plugin Info</Value>
+  </LocaleResource>
 </Language>
 '
 

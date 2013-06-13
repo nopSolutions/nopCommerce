@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Nop.Core;
 using Nop.Services.Cms;
 using Nop.Web.Models.Cms;
 
@@ -11,14 +12,17 @@ namespace Nop.Web.Controllers
 		#region Fields
 
         private readonly IWidgetService _widgetService;
+        private readonly IStoreContext _storeContext;
 
         #endregion
 
 		#region Constructors
 
-        public WidgetController(IWidgetService widgetService)
+        public WidgetController(IWidgetService widgetService, 
+            IStoreContext storeContext)
         {
             this._widgetService = widgetService;
+            this._storeContext = storeContext;
         }
 
         #endregion
@@ -31,7 +35,7 @@ namespace Nop.Web.Controllers
             //model
             var model = new List<RenderWidgetModel>();
 
-            var widgets = _widgetService.LoadActiveWidgetsByWidgetZone(widgetZone);
+            var widgets = _widgetService.LoadActiveWidgetsByWidgetZone(widgetZone, _storeContext.CurrentStore.Id);
             foreach (var widget in widgets)
             {
                 var widgetModel = new RenderWidgetModel();

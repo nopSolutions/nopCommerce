@@ -10,7 +10,17 @@
         window.close();
     </script>
 }
-@(Html.LocalizedEditor<PluginModel, PluginLocalizedModel>("plugin-localized",
+@Html.Telerik().TabStrip().Name("plugin-edit").Items(x =>
+{
+    x.Add().Text(T("Admin.Configuration.Plugins.Info").Text).Content(TabInfo().ToHtmlString()).Selected(true);
+    x.Add().Text(T("Admin.Configuration.Plugins.Stores").Text).Content(TabStores().ToHtmlString());
+
+    //generate an event
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "plugin-edit"));
+})
+@helper TabInfo()
+{
+    @(Html.LocalizedEditor<PluginModel, PluginLocalizedModel>("plugin-localized",
 @<table class="adminContent">
     <tr>
         <td class="adminTitle">
@@ -26,7 +36,7 @@
             @Html.HiddenFor(model => model.Locales[item].LanguageId)
         </td>
     </tr>
-</table>
+    </table>
 ,
 @<table class="adminContent">
     <tr>
@@ -38,28 +48,82 @@
             @Html.ValidationMessageFor(model => model.FriendlyName)
         </td>
     </tr>
-</table>
+    </table>
 ))
-<table class="adminContent">
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.DisplayOrder):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.DisplayOrder)
-            @Html.ValidationMessageFor(model => model.DisplayOrder)
-        </td>
-    </tr>
-    @if (Model.CanChangeEnabled)
-    {
+    <table class="adminContent">
         <tr>
             <td class="adminTitle">
-                @Html.NopLabelFor(model => model.IsEnabled):
+                @Html.NopLabelFor(model => model.DisplayOrder):
             </td>
             <td class="adminData">
-                @Html.EditorFor(model => model.IsEnabled)
-                @Html.ValidationMessageFor(model => model.IsEnabled)
+                @Html.EditorFor(model => model.DisplayOrder)
+                @Html.ValidationMessageFor(model => model.DisplayOrder)
             </td>
         </tr>
-    }
-</table>
+        @if (Model.CanChangeEnabled)
+        {
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.IsEnabled):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => model.IsEnabled)
+                    @Html.ValidationMessageFor(model => model.IsEnabled)
+                </td>
+            </tr>
+        }
+    </table>
+
+}
+@helper TabStores()
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#@Html.FieldIdFor(model => model.LimitedToStores)").click(toggleStoreMapping);
+        
+            toggleStoreMapping();
+        });
+
+
+        function toggleStoreMapping() {
+            if ($('#@Html.FieldIdFor(model => model.LimitedToStores)').is(':checked')) {
+                $('#pnl-available-stores').show();
+            }
+            else {
+                $('#pnl-available-stores').hide();
+            }
+        }
+
+    </script>
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.LimitedToStores):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.LimitedToStores)
+                @Html.ValidationMessageFor(model => model.LimitedToStores)
+            </td>
+        </tr>
+        <tr id="pnl-available-stores">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AvailableStores):
+            </td>
+            <td class="adminData">
+                @if (Model.AvailableStores != null && Model.AvailableStores.Count > 0)
+                {
+                    foreach (var store in Model.AvailableStores)
+                    {
+                    <div>
+                        <input type="checkbox" name="SelectedStoreIds" value="@store.Id" checked="@(Model.SelectedStoreIds != null && Model.SelectedStoreIds.Contains(store.Id))" />@store.Name
+                    </div>
+                    }
+                }
+                else
+                {
+                    <div>No stores defined</div>
+                }</td>
+        </tr>
+    </table>
+}

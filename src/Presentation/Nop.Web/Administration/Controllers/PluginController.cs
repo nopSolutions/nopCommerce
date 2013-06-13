@@ -14,6 +14,7 @@ using Nop.Services.Messages;
 using Nop.Services.Payments;
 using Nop.Services.Security;
 using Nop.Services.Shipping;
+using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
@@ -36,6 +37,7 @@ namespace Nop.Admin.Controllers
         private readonly IPermissionService _permissionService;
         private readonly ILanguageService _languageService;
 	    private readonly ISettingService _settingService;
+	    private readonly IStoreService _storeService;
         private readonly PaymentSettings _paymentSettings;
         private readonly ShippingSettings _shippingSettings;
         private readonly TaxSettings _taxSettings;
@@ -46,11 +48,16 @@ namespace Nop.Admin.Controllers
 		#region Constructors
 
         public PluginController(IPluginFinder pluginFinder,
-            ILocalizationService localizationService, IWebHelper webHelper,
-            IPermissionService permissionService, ILanguageService languageService,
-            ISettingService settingService,
-            PaymentSettings paymentSettings,ShippingSettings shippingSettings,
-            TaxSettings taxSettings, ExternalAuthenticationSettings externalAuthenticationSettings, 
+            ILocalizationService localizationService,
+            IWebHelper webHelper,
+            IPermissionService permissionService, 
+            ILanguageService languageService,
+            ISettingService settingService, 
+            IStoreService storeService,
+            PaymentSettings paymentSettings,
+            ShippingSettings shippingSettings,
+            TaxSettings taxSettings, 
+            ExternalAuthenticationSettings externalAuthenticationSettings, 
             WidgetSettings widgetSettings)
 		{
             this._pluginFinder = pluginFinder;
@@ -59,6 +66,7 @@ namespace Nop.Admin.Controllers
             this._permissionService = permissionService;
             this._languageService = languageService;
             this._settingService = settingService;
+            this._storeService = storeService;
             this._paymentSettings = paymentSettings;
             this._shippingSettings = shippingSettings;
             this._taxSettings = taxSettings;
@@ -80,6 +88,16 @@ namespace Nop.Admin.Controllers
             {
                 locale.FriendlyName = pluginDescriptor.Instance().GetLocalizedFriendlyName(_localizationService, languageId, false);
             });
+            //stores
+            pluginModel.AvailableStores = _storeService
+                .GetAllStores()
+                .Select(s => s.ToModel())
+                .ToList();
+            pluginModel.SelectedStoreIds = pluginDescriptor.LimitedToStores.ToArray();
+            pluginModel.LimitedToStores = pluginDescriptor.LimitedToStores.Count > 0;
+
+
+            //configuration URLs
 
             if (pluginDescriptor.Installed)
             {
@@ -328,9 +346,14 @@ namespace Nop.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                //we allow editing of 'friendly name' and 'display order'
+                //we allow editing of 'friendly name', 'display order', store mappings
                 pluginDescriptor.FriendlyName = model.FriendlyName;
                 pluginDescriptor.DisplayOrder = model.DisplayOrder;
+                pluginDescriptor.LimitedToStores.Clear();
+                if (model.LimitedToStores && model.SelectedStoreIds != null)
+                {
+                    pluginDescriptor.LimitedToStores = model.SelectedStoreIds.ToList();
+                }
                 PluginFileParser.SavePluginDescriptionFile(pluginDescriptor);
                 //reset plugin cache
                 _pluginFinder.ReloadPlugins();

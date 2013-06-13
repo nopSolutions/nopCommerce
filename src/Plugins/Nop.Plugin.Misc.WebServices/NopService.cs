@@ -41,6 +41,7 @@ namespace Nop.Plugin.Misc.WebServices
         private readonly IAuthenticationService _authenticationService;
         private readonly IWorkContext _workContext;
         private readonly IPluginFinder _pluginFinder;
+        private readonly IStoreContext _storeContext;
         
         #endregion 
 
@@ -60,6 +61,7 @@ namespace Nop.Plugin.Misc.WebServices
             _authenticationService = EngineContext.Current.Resolve<IAuthenticationService>();
             _workContext = EngineContext.Current.Resolve<IWorkContext>();
             _pluginFinder = EngineContext.Current.Resolve<IPluginFinder>();
+            _storeContext = EngineContext.Current.Resolve<IStoreContext>();
         }
 
         #endregion 
@@ -72,6 +74,8 @@ namespace Nop.Plugin.Misc.WebServices
             var pluginDescriptor = _pluginFinder.GetPluginDescriptorBySystemName("Misc.WebServices");
             if (pluginDescriptor == null)
                 throw new ApplicationException("Web services plugin cannot be loaded");
+            if (!_pluginFinder.AuthenticateStore(pluginDescriptor, _storeContext.CurrentStore.Id))
+                throw new ApplicationException("Web services plugin is not available in this store");
 
             if (!_customerRegistrationService.ValidateCustomer(usernameOrEmail, userPassword))
                     throw new ApplicationException("Not allowed");

@@ -373,6 +373,9 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.ConfigurationUrl, mo => mo.Ignore())
                 .ForMember(dest => dest.CanChangeEnabled, mo => mo.Ignore())
                 .ForMember(dest => dest.IsEnabled, mo => mo.Ignore())
+                .ForMember(dest => dest.LimitedToStores, mo => mo.Ignore())
+                .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
+                .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore())
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             //newsLetter subscriptions
