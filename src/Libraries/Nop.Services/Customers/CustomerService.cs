@@ -575,9 +575,10 @@ namespace Nop.Services.Customers
         /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
         /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
         /// <param name="onlyWithoutShoppingCart">A value indicating whether to delete customers only without shopping cart</param>
+        /// <param name="maxNumberOfRecordsToDelete">Maximum number of customer records to delete</param>
         /// <returns>Number of deleted customers</returns>
         public virtual int DeleteGuestCustomers(DateTime? createdFromUtc, 
-            DateTime? createdToUtc, bool onlyWithoutShoppingCart)
+            DateTime? createdToUtc, bool onlyWithoutShoppingCart, int maxNumberOfRecordsToDelete)
         {
             var guestRole = GetCustomerRoleBySystemName(SystemCustomerRoleNames.Guests);
             if (guestRole == null)
@@ -649,7 +650,7 @@ namespace Nop.Services.Customers
                     orderby cGroup.Key
                     select cGroup.FirstOrDefault();
             query = query.OrderBy(c => c.Id);
-            var customers = query.ToList();
+            var customers = new PagedList<Customer>(query, 0, maxNumberOfRecordsToDelete);
 
 
             int numberOfDeletedCustomers = 0;

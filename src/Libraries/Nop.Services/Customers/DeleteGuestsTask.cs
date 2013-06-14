@@ -22,7 +22,8 @@ namespace Nop.Services.Customers
         {
             //60*24 = 1 day
             var olderThanMinutes = 1440; //TODO move to settings
-            _customerService.DeleteGuestCustomers(null, DateTime.UtcNow.AddMinutes(-olderThanMinutes), true);
+            //Do not delete more than 1000 records per time. This way the system is not slowed down
+            _customerService.DeleteGuestCustomers(null, DateTime.UtcNow.AddMinutes(-olderThanMinutes), true, 1000);
         }
     }
 }
