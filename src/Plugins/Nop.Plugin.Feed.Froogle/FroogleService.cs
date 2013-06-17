@@ -4,17 +4,13 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Routing;
 using System.Xml;
 using Nop.Core;
-using Nop.Core.Domain;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
-using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Stores;
-using Nop.Core.Domain.Tasks;
 using Nop.Core.Plugins;
 using Nop.Plugin.Feed.Froogle.Data;
 using Nop.Plugin.Feed.Froogle.Services;
@@ -25,7 +21,6 @@ using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Seo;
-using Nop.Services.Tasks;
 
 namespace Nop.Plugin.Feed.Froogle
 {
@@ -198,258 +193,249 @@ namespace Nop.Plugin.Feed.Froogle
                 var products = _productService.SearchProducts(storeId: store.Id);
                 foreach (var product in products)
                 {
-                    var productVariants = _productService.GetProductVariantsByProductId(product.Id);
+                    writer.WriteStartElement("item");
 
-                    foreach (var productVariant in productVariants)
+                    #region Basic Product Information
+
+                    //id [id]- An identifier of the item
+                    writer.WriteElementString("g", "id", googleBaseNamespace, product.Id.ToString());
+
+                    //title [title] - Title of the item
+                    writer.WriteStartElement("title");
+                    var title = product.Name;
+                    //title should be not longer than 70 characters
+                    if (title.Length > 70)
+                        title = title.Substring(0, 70);
+                    writer.WriteCData(title);
+                    writer.WriteEndElement(); // title
+
+                    //description [description] - Description of the item
+                    writer.WriteStartElement("description");
+                    string description = product.FullDescription;
+                    if (String.IsNullOrEmpty(description))
+                        description = product.ShortDescription;
+                    if (String.IsNullOrEmpty(description))
+                        description = product.Name;
+                    if (String.IsNullOrEmpty(description))
+                        description = product.Name; //description is required
+                    //resolving character encoding issues in your data feed
+                    description = StripInvalidChars(description, true);
+                    writer.WriteCData(description);
+                    writer.WriteEndElement(); // description
+
+
+
+                    //google product category [google_product_category] - Google's category of the item
+                    //the category of the product according to Google’s product taxonomy. http://www.google.com/support/merchants/bin/answer.py?answer=160081
+                    string googleProductCategory = "";
+                    var googleProduct = _googleService.GetByProductId(product.Id);
+                    if (googleProduct != null)
+                        googleProductCategory = googleProduct.Taxonomy;
+                    if (String.IsNullOrEmpty(googleProductCategory))
+                        googleProductCategory = _froogleSettings.DefaultGoogleCategory;
+                    if (String.IsNullOrEmpty(googleProductCategory))
+                        throw new NopException("Default Google category is not set");
+                    writer.WriteStartElement("g", "google_product_category", googleBaseNamespace);
+                    writer.WriteCData(googleProductCategory);
+                    writer.WriteFullEndElement(); // g:google_product_category
+
+                    //product type [product_type] - Your category of the item
+                    var defaultProductCategory = _categoryService.GetProductCategoriesByProductId(product.Id).FirstOrDefault();
+                    if (defaultProductCategory != null)
                     {
-                        writer.WriteStartElement("item");
-
-                        #region Basic Product Information
-
-                        //id [id]- An identifier of the item
-                        writer.WriteElementString("g", "id", googleBaseNamespace, productVariant.Id.ToString());
-
-                        //title [title] - Title of the item
-                        writer.WriteStartElement("title");
-                        var title = productVariant.FullProductName;
-                        //title should be not longer than 70 characters
-                        if (title.Length > 70)
-                            title = title.Substring(0, 70);
-                        writer.WriteCData(title);
-                        writer.WriteEndElement(); // title
-
-                        //description [description] - Description of the item
-                        writer.WriteStartElement("description");
-                        string description = productVariant.Description;
-                        if (String.IsNullOrEmpty(description))
-                            description = product.FullDescription;
-                        if (String.IsNullOrEmpty(description))
-                            description = product.ShortDescription;
-                        if (String.IsNullOrEmpty(description))
-                            description = product.Name;
-                        if (String.IsNullOrEmpty(description))
-                            description = productVariant.FullProductName; //description is required
-                        //resolving character encoding issues in your data feed
-                        description = StripInvalidChars(description, true);
-                        writer.WriteCData(description);
-                        writer.WriteEndElement(); // description
-
-
-
-                        //google product category [google_product_category] - Google's category of the item
-                        //the category of the product according to Google’s product taxonomy. http://www.google.com/support/merchants/bin/answer.py?answer=160081
-                        string googleProductCategory = "";
-                        var googleProduct = _googleService.GetByProductVariantId(productVariant.Id);
-                        if (googleProduct != null)
-                            googleProductCategory = googleProduct.Taxonomy;
-                        if (String.IsNullOrEmpty(googleProductCategory))
-                            googleProductCategory = _froogleSettings.DefaultGoogleCategory;
-                        if (String.IsNullOrEmpty(googleProductCategory))
-                            throw new NopException("Default Google category is not set");
-                        writer.WriteStartElement("g", "google_product_category", googleBaseNamespace);
-                        writer.WriteCData(googleProductCategory);
-                        writer.WriteFullEndElement(); // g:google_product_category
-
-                        //product type [product_type] - Your category of the item
-                        var defaultProductCategory = _categoryService.GetProductCategoriesByProductId(product.Id).FirstOrDefault();
-                        if (defaultProductCategory != null)
+                        var categoryBreadCrumb = GetCategoryBreadCrumb(defaultProductCategory.Category);
+                        string yourProductCategory = "";
+                        for (int i = 0; i < categoryBreadCrumb.Count; i++)
                         {
-                            var categoryBreadCrumb = GetCategoryBreadCrumb(defaultProductCategory.Category);
-                            string yourProductCategory = "";
-                            for (int i = 0; i < categoryBreadCrumb.Count; i++)
-                            {
-                                var cat = categoryBreadCrumb[i];
-                                yourProductCategory = yourProductCategory + cat.Name;
-                                if (i != categoryBreadCrumb.Count - 1)
-                                    yourProductCategory = yourProductCategory + " > ";
-                            }
-                            if (!String.IsNullOrEmpty((yourProductCategory)))
-                            {
-                                writer.WriteStartElement("g", "product_type", googleBaseNamespace);
-                                writer.WriteCData(yourProductCategory);
-                                writer.WriteFullEndElement(); // g:product_type
-                            }
+                            var cat = categoryBreadCrumb[i];
+                            yourProductCategory = yourProductCategory + cat.Name;
+                            if (i != categoryBreadCrumb.Count - 1)
+                                yourProductCategory = yourProductCategory + " > ";
                         }
-
-                        //link [link] - URL directly linking to your item's page on your website
-                        var productUrl = string.Format("{0}{1}", store.Url, product.GetSeName(_workContext.WorkingLanguage.Id));
-                        writer.WriteElementString("link", productUrl);
-
-                        //image link [image_link] - URL of an image of the item
-                        string imageUrl;
-                        var picture = _pictureService.GetPictureById(productVariant.PictureId);
-                        if (picture == null)
-                            picture = _pictureService.GetPicturesByProductId(product.Id, 1).FirstOrDefault();
-
-                        if (picture != null)
-                            imageUrl = _pictureService.GetPictureUrl(picture, _froogleSettings.ProductPictureSize, storeLocation: store.Url);
-                        else
-                            imageUrl = _pictureService.GetDefaultPictureUrl(_froogleSettings.ProductPictureSize, storeLocation: store.Url);
-
-                        writer.WriteElementString("g", "image_link", googleBaseNamespace, imageUrl);
-
-                        //condition [condition] - Condition or state of the item
-                        writer.WriteElementString("g", "condition", googleBaseNamespace, "new");
-
-                        #endregion
-
-                        #region Availability & Price
-
-                        //availability [availability] - Availability status of the item
-                        string availability = "in stock"; //in stock by default
-                        if (productVariant.ManageInventoryMethod == ManageInventoryMethod.ManageStock
-                            && productVariant.StockQuantity <= 0)
+                        if (!String.IsNullOrEmpty((yourProductCategory)))
                         {
-                            switch (productVariant.BackorderMode)
-                            {
-                                case BackorderMode.NoBackorders:
-                                    {
-                                        availability = "out of stock";
-                                    }
-                                    break;
-                                case BackorderMode.AllowQtyBelow0:
-                                case BackorderMode.AllowQtyBelow0AndNotifyCustomer:
-                                    {
-                                        availability = "available for order";
-                                        //availability = "preorder";
-                                    }
-                                    break;
-                                default:
-                                    break;
-                            }
+                            writer.WriteStartElement("g", "product_type", googleBaseNamespace);
+                            writer.WriteCData(yourProductCategory);
+                            writer.WriteFullEndElement(); // g:product_type
                         }
-                        writer.WriteElementString("g", "availability", googleBaseNamespace, availability);
+                    }
 
-                        //price [price] - Price of the item
-                        var currency = GetUsedCurrency();
-                        decimal price = _currencyService.ConvertFromPrimaryStoreCurrency(productVariant.Price, currency);
-                        writer.WriteElementString("g", "price", googleBaseNamespace,
-                                                  price.ToString(new CultureInfo("en-US", false).NumberFormat) + " " +
-                                                  currency.CurrencyCode);
+                    //link [link] - URL directly linking to your item's page on your website
+                    var productUrl = string.Format("{0}{1}", store.Url, product.GetSeName(_workContext.WorkingLanguage.Id));
+                    writer.WriteElementString("link", productUrl);
 
-                        #endregion
+                    //image link [image_link] - URL of an image of the item
+                    string imageUrl;
+                    var picture = _pictureService.GetPicturesByProductId(product.Id, 1).FirstOrDefault();
 
-                        #region Unique Product Identifiers
+                    if (picture != null)
+                        imageUrl = _pictureService.GetPictureUrl(picture, _froogleSettings.ProductPictureSize, storeLocation: store.Url);
+                    else
+                        imageUrl = _pictureService.GetDefaultPictureUrl(_froogleSettings.ProductPictureSize, storeLocation: store.Url);
 
-                        /* Unique product identifiers such as UPC, EAN, JAN or ISBN allow us to show your listing on the appropriate product page. If you don't provide the required unique product identifiers, your store may not appear on product pages, and all your items may be removed from Product Search.
+                    writer.WriteElementString("g", "image_link", googleBaseNamespace, imageUrl);
+
+                    //condition [condition] - Condition or state of the item
+                    writer.WriteElementString("g", "condition", googleBaseNamespace, "new");
+
+                    #endregion
+
+                    #region Availability & Price
+
+                    //availability [availability] - Availability status of the item
+                    string availability = "in stock"; //in stock by default
+                    if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock
+                        && product.StockQuantity <= 0)
+                    {
+                        switch (product.BackorderMode)
+                        {
+                            case BackorderMode.NoBackorders:
+                                {
+                                    availability = "out of stock";
+                                }
+                                break;
+                            case BackorderMode.AllowQtyBelow0:
+                            case BackorderMode.AllowQtyBelow0AndNotifyCustomer:
+                                {
+                                    availability = "available for order";
+                                    //availability = "preorder";
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    writer.WriteElementString("g", "availability", googleBaseNamespace, availability);
+
+                    //price [price] - Price of the item
+                    var currency = GetUsedCurrency();
+                    decimal price = _currencyService.ConvertFromPrimaryStoreCurrency(product.Price, currency);
+                    writer.WriteElementString("g", "price", googleBaseNamespace,
+                                              price.ToString(new CultureInfo("en-US", false).NumberFormat) + " " +
+                                              currency.CurrencyCode);
+
+                    #endregion
+
+                    #region Unique Product Identifiers
+
+                    /* Unique product identifiers such as UPC, EAN, JAN or ISBN allow us to show your listing on the appropriate product page. If you don't provide the required unique product identifiers, your store may not appear on product pages, and all your items may be removed from Product Search.
                          * We require unique product identifiers for all products - except for custom made goods. For apparel, you must submit the 'brand' attribute. For media (such as books, movies, music and video games), you must submit the 'gtin' attribute. In all cases, we recommend you submit all three attributes.
                          * You need to submit at least two attributes of 'brand', 'gtin' and 'mpn', but we recommend that you submit all three if available. For media (such as books, movies, music and video games), you must submit the 'gtin' attribute, but we recommend that you include 'brand' and 'mpn' if available.
                         */
 
-                        //GTIN [gtin] - GTIN
-                        var gtin = productVariant.Gtin;
-                        if (!String.IsNullOrEmpty(gtin))
-                        {
-                            writer.WriteStartElement("g", "gtin", googleBaseNamespace);
-                            writer.WriteCData(gtin);
-                            writer.WriteFullEndElement(); // g:gtin
-                        }
+                    //GTIN [gtin] - GTIN
+                    var gtin = product.Gtin;
+                    if (!String.IsNullOrEmpty(gtin))
+                    {
+                        writer.WriteStartElement("g", "gtin", googleBaseNamespace);
+                        writer.WriteCData(gtin);
+                        writer.WriteFullEndElement(); // g:gtin
+                    }
 
-                        //brand [brand] - Brand of the item
-                        var defaultManufacturer =
-                            _manufacturerService.GetProductManufacturersByProductId((product.Id)).FirstOrDefault();
-                        if (defaultManufacturer != null)
-                        {
-                            writer.WriteStartElement("g", "brand", googleBaseNamespace);
-                            writer.WriteCData(defaultManufacturer.Manufacturer.Name);
-                            writer.WriteFullEndElement(); // g:brand
-                        }
+                    //brand [brand] - Brand of the item
+                    var defaultManufacturer =
+                        _manufacturerService.GetProductManufacturersByProductId((product.Id)).FirstOrDefault();
+                    if (defaultManufacturer != null)
+                    {
+                        writer.WriteStartElement("g", "brand", googleBaseNamespace);
+                        writer.WriteCData(defaultManufacturer.Manufacturer.Name);
+                        writer.WriteFullEndElement(); // g:brand
+                    }
 
 
-                        //mpn [mpn] - Manufacturer Part Number (MPN) of the item
-                        var mpn = productVariant.ManufacturerPartNumber;
-                        if (!String.IsNullOrEmpty(mpn))
-                        {
-                            writer.WriteStartElement("g", "mpn", googleBaseNamespace);
-                            writer.WriteCData(mpn);
-                            writer.WriteFullEndElement(); // g:mpn
-                        }
+                    //mpn [mpn] - Manufacturer Part Number (MPN) of the item
+                    var mpn = product.ManufacturerPartNumber;
+                    if (!String.IsNullOrEmpty(mpn))
+                    {
+                        writer.WriteStartElement("g", "mpn", googleBaseNamespace);
+                        writer.WriteCData(mpn);
+                        writer.WriteFullEndElement(); // g:mpn
+                    }
 
-                        #endregion
+                    #endregion
 
-                        #region Apparel Products
+                    #region Apparel Products
 
-                        /* Apparel includes all products that fall under 'Apparel & Accessories' (including all sub-categories)
+                    /* Apparel includes all products that fall under 'Apparel & Accessories' (including all sub-categories)
                          * in Google’s product taxonomy.
                         */
 
-                        //gender [gender] - Gender of the item
-                        if (googleProduct != null && !String.IsNullOrEmpty(googleProduct.Gender))
-                        {
-                            writer.WriteStartElement("g", "gender", googleBaseNamespace);
-                            writer.WriteCData(googleProduct.Gender);
-                            writer.WriteFullEndElement(); // g:gender
-                        }
-
-                        //age group [age_group] - Target age group of the item
-                        if (googleProduct != null && !String.IsNullOrEmpty(googleProduct.AgeGroup))
-                        {
-                            writer.WriteStartElement("g", "age_group", googleBaseNamespace);
-                            writer.WriteCData(googleProduct.AgeGroup);
-                            writer.WriteFullEndElement(); // g:age_group
-                        }
-
-                        //color [color] - Color of the item
-                        if (googleProduct != null && !String.IsNullOrEmpty(googleProduct.Color))
-                        {
-                            writer.WriteStartElement("g", "color", googleBaseNamespace);
-                            writer.WriteCData(googleProduct.Color);
-                            writer.WriteFullEndElement(); // g:color
-                        }
-
-                        //size [size] - Size of the item
-                        if (googleProduct != null && !String.IsNullOrEmpty(googleProduct.Size))
-                        {
-                            writer.WriteStartElement("g", "size", googleBaseNamespace);
-                            writer.WriteCData(googleProduct.Size);
-                            writer.WriteFullEndElement(); // g:size
-                        }
-                        
-                        #endregion
-
-                        #region Tax & Shipping
-                        
-                        //tax [tax]
-                        //The tax attribute is an item-level override for merchant-level tax settings as defined in your Google Merchant Center account. This attribute is only accepted in the US, if your feed targets a country outside of the US, please do not use this attribute.
-                        //IMPORTANT NOTE: Set tax in your Google Merchant Center account settings
-
-                        //IMPORTANT NOTE: Set shipping in your Google Merchant Center account settings
-                        
-                        //shipping weight [shipping_weight] - Weight of the item for shipping
-                        //We accept only the following units of weight: lb, oz, g, kg.
-                        if (_froogleSettings.PassShippingInfo)
-                        {
-                            var weightName = "kg";
-                            var shippingWeight = productVariant.Weight;
-                            switch (_measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).SystemKeyword)
-                            {
-                                case "ounce":
-                                    weightName = "oz";
-                                    break;
-                                case "lb":
-                                    weightName = "lb";
-                                    break;
-                                case "grams":
-                                    weightName = "g";
-                                    break;
-                                case "kg":
-                                    weightName = "kg";
-                                    break;
-                                default:
-                                    //unknown weight 
-                                    weightName = "kg";
-                                    break;
-                            }
-                            writer.WriteElementString("g", "shipping_weight", googleBaseNamespace, string.Format(CultureInfo.InvariantCulture, "{0} {1}", shippingWeight.ToString(new CultureInfo("en-US", false).NumberFormat), weightName));
-                        }
-
-                        #endregion
-                        
-                        writer.WriteElementString("g", "expiration_date", googleBaseNamespace, DateTime.Now.AddDays(28).ToString("yyyy-MM-dd"));
-                        
-
-                        writer.WriteEndElement(); // item
+                    //gender [gender] - Gender of the item
+                    if (googleProduct != null && !String.IsNullOrEmpty(googleProduct.Gender))
+                    {
+                        writer.WriteStartElement("g", "gender", googleBaseNamespace);
+                        writer.WriteCData(googleProduct.Gender);
+                        writer.WriteFullEndElement(); // g:gender
                     }
+
+                    //age group [age_group] - Target age group of the item
+                    if (googleProduct != null && !String.IsNullOrEmpty(googleProduct.AgeGroup))
+                    {
+                        writer.WriteStartElement("g", "age_group", googleBaseNamespace);
+                        writer.WriteCData(googleProduct.AgeGroup);
+                        writer.WriteFullEndElement(); // g:age_group
+                    }
+
+                    //color [color] - Color of the item
+                    if (googleProduct != null && !String.IsNullOrEmpty(googleProduct.Color))
+                    {
+                        writer.WriteStartElement("g", "color", googleBaseNamespace);
+                        writer.WriteCData(googleProduct.Color);
+                        writer.WriteFullEndElement(); // g:color
+                    }
+
+                    //size [size] - Size of the item
+                    if (googleProduct != null && !String.IsNullOrEmpty(googleProduct.Size))
+                    {
+                        writer.WriteStartElement("g", "size", googleBaseNamespace);
+                        writer.WriteCData(googleProduct.Size);
+                        writer.WriteFullEndElement(); // g:size
+                    }
+
+                    #endregion
+
+                    #region Tax & Shipping
+
+                    //tax [tax]
+                    //The tax attribute is an item-level override for merchant-level tax settings as defined in your Google Merchant Center account. This attribute is only accepted in the US, if your feed targets a country outside of the US, please do not use this attribute.
+                    //IMPORTANT NOTE: Set tax in your Google Merchant Center account settings
+
+                    //IMPORTANT NOTE: Set shipping in your Google Merchant Center account settings
+
+                    //shipping weight [shipping_weight] - Weight of the item for shipping
+                    //We accept only the following units of weight: lb, oz, g, kg.
+                    if (_froogleSettings.PassShippingInfo)
+                    {
+                        var weightName = "kg";
+                        var shippingWeight = product.Weight;
+                        switch (_measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).SystemKeyword)
+                        {
+                            case "ounce":
+                                weightName = "oz";
+                                break;
+                            case "lb":
+                                weightName = "lb";
+                                break;
+                            case "grams":
+                                weightName = "g";
+                                break;
+                            case "kg":
+                                weightName = "kg";
+                                break;
+                            default:
+                                //unknown weight 
+                                weightName = "kg";
+                                break;
+                        }
+                        writer.WriteElementString("g", "shipping_weight", googleBaseNamespace, string.Format(CultureInfo.InvariantCulture, "{0} {1}", shippingWeight.ToString(new CultureInfo("en-US", false).NumberFormat), weightName));
+                    }
+
+                    #endregion
+
+                    writer.WriteElementString("g", "expiration_date", googleBaseNamespace, DateTime.Now.AddDays(28).ToString("yyyy-MM-dd"));
+
+
+                    writer.WriteEndElement(); // item
                 }
 
                 writer.WriteEndElement(); // channel

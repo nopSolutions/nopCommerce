@@ -234,7 +234,7 @@ namespace Nop.Plugin.Shipping.CanadaPost
 
             foreach (var sci in getShippingOptionRequest.Items)
             {
-                var pv = sci.ProductVariant;
+                var product = sci.Product;
 
                 var item = new Item();
                 item.Quantity = sci.Quantity;
@@ -247,13 +247,13 @@ namespace Nop.Plugin.Shipping.CanadaPost
                     item.Weight = 0.01M;
 
                 //Canada Post uses centimeters                
-                item.Length = Convert.ToInt32(Math.Ceiling(_measureService.ConvertFromPrimaryMeasureDimension(pv.Length, usedMeasureDimension) * 100));
+                item.Length = Convert.ToInt32(Math.Ceiling(_measureService.ConvertFromPrimaryMeasureDimension(product.Length, usedMeasureDimension) * 100));
                 if (item.Length == decimal.Zero)
                     item.Length = 1;
-                item.Width = Convert.ToInt32(Math.Ceiling(_measureService.ConvertFromPrimaryMeasureDimension(pv.Width, usedMeasureDimension) * 100));
+                item.Width = Convert.ToInt32(Math.Ceiling(_measureService.ConvertFromPrimaryMeasureDimension(product.Width, usedMeasureDimension) * 100));
                 if (item.Width == decimal.Zero)
                     item.Width = 1;
-                item.Height = Convert.ToInt32(Math.Ceiling(_measureService.ConvertFromPrimaryMeasureDimension(pv.Height, usedMeasureDimension) * 100));
+                item.Height = Convert.ToInt32(Math.Ceiling(_measureService.ConvertFromPrimaryMeasureDimension(product.Height, usedMeasureDimension) * 100));
                 if (item.Height == decimal.Zero)
                     item.Height = 1;
                 result.Add(item);

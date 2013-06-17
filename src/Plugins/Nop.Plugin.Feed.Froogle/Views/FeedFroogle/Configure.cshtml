@@ -131,7 +131,7 @@
                     .Name("froogleproducts-grid")
                     .DataKeys(keys =>
                     {
-                        keys.Add(x => x.ProductVariantId).RouteKey("ProductVariantId");
+                        keys.Add(x => x.ProductId).RouteKey("ProductId");
                     })
                     .DataBinding(dataBinding =>
                     {
@@ -141,8 +141,8 @@
                     })
                     .Columns(columns =>
                     {
-                        columns.Bound(x => x.ProductVariantId).ReadOnly().Visible(false);
-                        columns.Bound(x => x.FullProductVariantName).ReadOnly();
+                        columns.Bound(x => x.ProductId).ReadOnly().Visible(false);
+                        columns.Bound(x => x.ProductName).ReadOnly();
                         columns.Bound(x => x.GoogleCategory).Visible(false);
                         columns.Bound(x => x.Gender).Visible(false);
                         columns.Bound(x => x.AgeGroup).Visible(false);
@@ -150,7 +150,7 @@
                         columns.Bound(x => x.GoogleSize).Visible(false);
                     })
                     .ClientRowTemplate(grid => "<div class='product-info'>" +
-                            "<#= FullProductVariantName #>" +
+                            "<#= ProductName #>" +
                             "</div>" +
                             "<div class='google-info'>" +
                             "<dl>" +

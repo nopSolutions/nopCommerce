@@ -237,13 +237,13 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
                     string analyticsEcommerceDetailScript = googleAnalyticsSettings.EcommerceDetailScript;
                     //get category
                     string categ = "";
-                    var defaultProductCategory = _categoryService.GetProductCategoriesByProductId(item.ProductVariant.ProductId).FirstOrDefault();
+                    var defaultProductCategory = _categoryService.GetProductCategoriesByProductId(item.ProductId).FirstOrDefault();
                     if (defaultProductCategory != null)
                         categ = defaultProductCategory.Category.Name;
                     analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{ORDERID}", item.OrderId.ToString());
                     //The SKU code is a required parameter for every item that is added to the transaction
-                    analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{PRODUCTSKU}", FixIllegalJavaScriptChars(item.ProductVariant.FormatSku(item.AttributesXml, _productAttributeParser)));
-                    analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{PRODUCTNAME}", FixIllegalJavaScriptChars(item.ProductVariant.FullProductName));
+                    analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{PRODUCTSKU}", FixIllegalJavaScriptChars(item.Product.FormatSku(item.AttributesXml, _productAttributeParser)));
+                    analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{PRODUCTNAME}", FixIllegalJavaScriptChars(item.Product.Name));
                     analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{CATEGORYNAME}", FixIllegalJavaScriptChars(categ));
                     analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{UNITPRICE}", item.UnitPriceInclTax.ToString("0.00", usCulture));
                     analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{QUANTITY}", item.Quantity.ToString());

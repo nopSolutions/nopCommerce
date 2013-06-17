@@ -64,13 +64,13 @@ namespace Nop.Plugin.Feed.Froogle.Services
             return _gpRepository.GetById(googleProductRecordId);
         }
 
-        public virtual GoogleProductRecord GetByProductVariantId(int productVariantId)
+        public virtual GoogleProductRecord GetByProductId(int productId)
         {
-            if (productVariantId == 0)
+            if (productId == 0)
                 return null;
 
             var query = from gp in _gpRepository.Table
-                        where gp.ProductVariantId == productVariantId
+                        where gp.ProductId == productId
                         orderby gp.Id
                         select gp;
             var record = query.FirstOrDefault();
