@@ -56,7 +56,7 @@ namespace Nop.Services.Tests.Catalog
             pva1_1 = new ProductVariantAttribute
             {
                 Id = 11,
-                ProductVariantId = 1,
+                ProductId = 1,
                 TextPrompt = "Select color:",
                 IsRequired = true,
                 AttributeControlType = AttributeControlType.DropdownList,
@@ -92,7 +92,7 @@ namespace Nop.Services.Tests.Catalog
             pva2_1 = new ProductVariantAttribute
             {
                 Id = 21,
-                ProductVariantId = 1,
+                ProductId = 1,
                 TextPrompt = "Select at least one option:",
                 IsRequired = true,
                 AttributeControlType = AttributeControlType.Checkboxes,
@@ -128,7 +128,7 @@ namespace Nop.Services.Tests.Catalog
             pva3_1 = new ProductVariantAttribute
             {
                 Id = 31,
-                ProductVariantId = 1,
+                ProductId = 1,
                 TextPrompt = "Enter custom text:",
                 IsRequired = true,
                 AttributeControlType = AttributeControlType.TextBox,
@@ -258,13 +258,13 @@ namespace Nop.Services.Tests.Catalog
                 "recipientName 1", "recipientEmail@gmail.com",
                 "senderName 1", "senderEmail@gmail.com", "custom message");
 
-            var productVariant = new ProductVariant()
+            var product = new Product()
             {
                 IsGiftCard = true,
                 GiftCardType = GiftCardType.Virtual,
             };
             var customer = new Customer();
-            string formattedAttributes = _productAttributeFormatter.FormatAttributes(productVariant,
+            string formattedAttributes = _productAttributeFormatter.FormatAttributes(product,
                 attributes, customer, "<br />", false, false, true, true);
             formattedAttributes.ShouldEqual("From: senderName 1 <senderEmail@gmail.com><br />For: recipientName 1 <recipientEmail@gmail.com>");
         }
@@ -276,13 +276,13 @@ namespace Nop.Services.Tests.Catalog
                 "recipientName 1", "recipientEmail@gmail.com",
                 "senderName 1", "senderEmail@gmail.com", "custom message");
 
-            var productVariant = new ProductVariant()
+            var product = new Product()
             {
                 IsGiftCard = true,
                 GiftCardType = GiftCardType.Physical,
             };
             var customer = new Customer();
-            string formattedAttributes = _productAttributeFormatter.FormatAttributes(productVariant,
+            string formattedAttributes = _productAttributeFormatter.FormatAttributes(product,
                 attributes, customer, "<br />", false, false, true, true);
             formattedAttributes.ShouldEqual("From: senderName 1<br />For: recipientName 1");
         }
@@ -304,13 +304,13 @@ namespace Nop.Services.Tests.Catalog
                 "recipientName 1", "recipientEmail@gmail.com",
                 "senderName 1", "senderEmail@gmail.com", "custom message");
 
-            var productVariant = new ProductVariant()
+            var product = new Product()
             {
                 IsGiftCard = true,
                 GiftCardType = GiftCardType.Virtual,
             };
             var customer = new Customer();
-            string formattedAttributes = _productAttributeFormatter.FormatAttributes(productVariant,
+            string formattedAttributes = _productAttributeFormatter.FormatAttributes(product,
                 attributes, customer, "<br />", false, false, true, true);
             formattedAttributes.ShouldEqual("Color: Green<br />Some custom option: Option 1<br />Some custom option: Option 2<br />Color: Some custom text goes here<br />From: senderName 1 <senderEmail@gmail.com><br />For: recipientName 1 <recipientEmail@gmail.com>");
         }

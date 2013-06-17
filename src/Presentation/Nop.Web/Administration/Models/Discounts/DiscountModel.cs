@@ -15,7 +15,7 @@ namespace Nop.Admin.Models.Discounts
         public DiscountModel()
         {
             AppliedToCategoryModels = new List<AppliedToCategoryModel>();
-            AppliedToProductVariantModels = new List<AppliedToProductVariantModel>();
+            AppliedToProductModels = new List<AppliedToProductModel>();
             AvailableDiscountRequirementRules = new List<SelectListItem>();
             DiscountRequirementMetaInfos = new List<DiscountRequirementMetaInfo>();
         }
@@ -63,7 +63,7 @@ namespace Nop.Admin.Models.Discounts
         public IList<AppliedToCategoryModel> AppliedToCategoryModels { get; set; }
 
         [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.AppliedToProductVariants")]
-        public IList<AppliedToProductVariantModel> AppliedToProductVariantModels { get; set; }
+        public IList<AppliedToProductModel> AppliedToProductModels { get; set; }
 
 
         [NopResourceDisplayName("Admin.Promotions.Discounts.Requirements.DiscountRequirementType")]
@@ -101,11 +101,11 @@ namespace Nop.Admin.Models.Discounts
             public string Name { get; set; }
         }
 
-        public partial class AppliedToProductVariantModel : BaseNopModel
+        public partial class AppliedToProductModel : BaseNopModel
         {
-            public int ProductVariantId { get; set; }
+            public int ProductId { get; set; }
 
-            public string FullProductName { get; set; }
+            public string ProductName { get; set; }
         }
         #endregion
     }

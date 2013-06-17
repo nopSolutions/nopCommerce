@@ -102,16 +102,16 @@ namespace Nop.Admin.Controllers
                 }
 
                 //applied to product variants
-                foreach (var pv in discount.AppliedToProductVariants)
+                foreach (var product in discount.AppliedToProducts)
                 {
-                    if (pv != null && !pv.Deleted)
+                    if (product != null && !product.Deleted)
                     {
-                        var appliedToProductVariantModel = new DiscountModel.AppliedToProductVariantModel()
+                        var appliedToProductModel = new DiscountModel.AppliedToProductModel()
                         {
-                            ProductVariantId = pv.Id,
-                            FullProductName = pv.FullProductName
+                            ProductId = product.Id,
+                            ProductName = product.Name
                         };
-                        model.AppliedToProductVariantModels.Add(appliedToProductVariantModel);
+                        model.AppliedToProductModels.Add(appliedToProductModel);
                     }
                 }
 
@@ -253,8 +253,8 @@ namespace Nop.Admin.Controllers
                     && discount.DiscountType != DiscountType.AssignedToSkus)
                 {
                     //applied to product variants
-                    var productVariants = discount.AppliedToProductVariants.ToList();
-                    discount.AppliedToProductVariants.Clear();
+                    var productVariants = discount.AppliedToProducts.ToList();
+                    discount.AppliedToProducts.Clear();
                     _discountService.UpdateDiscount(discount);
                     //update "HasDiscountsApplied" property
                     foreach (var pv in productVariants)
@@ -288,7 +288,7 @@ namespace Nop.Admin.Controllers
             //applied to categories
             var categories = discount.AppliedToCategories.ToList();
             //applied to product variants
-            var productVariants = discount.AppliedToProductVariants.ToList();
+            var productVariants = discount.AppliedToProducts.ToList();
 
             _discountService.DeleteDiscount(discount);
             

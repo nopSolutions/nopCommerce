@@ -17,12 +17,12 @@ namespace Nop.Services.Tests.Catalog
         [Test]
         public void Can_parse_allowed_quantities()
         {
-            var pv = new ProductVariant()
+            var product = new Product()
             {
                 AllowedQuantities = "1, 5,4,10,sdf"
             };
 
-            var result = pv.ParseAllowedQuatities();
+            var result = product.ParseAllowedQuatities();
             result.Length.ShouldEqual(4);
             result[0].ShouldEqual(1);
             result[1].ShouldEqual(5);

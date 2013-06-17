@@ -108,25 +108,6 @@ namespace Nop.Admin
 
         #endregion
 
-        #region Product variants
-
-        public static ProductVariantModel ToModel(this ProductVariant entity)
-        {
-            return Mapper.Map<ProductVariant, ProductVariantModel>(entity);
-        }
-
-        public static ProductVariant ToEntity(this ProductVariantModel model)
-        {
-            return Mapper.Map<ProductVariantModel, ProductVariant>(model);
-        }
-
-        public static ProductVariant ToEntity(this ProductVariantModel model, ProductVariant destination)
-        {
-            return Mapper.Map(model, destination);
-        }
-
-        #endregion
-
         #region Product attributes
 
         public static ProductAttributeModel ToModel(this ProductAttribute entity)

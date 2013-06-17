@@ -73,8 +73,8 @@ namespace Nop.Admin.Controllers
                 return false;
 
             model.Id = returnRequest.Id;
-            model.ProductVariantId = orderItem.ProductVariantId;
-            model.ProductName = orderItem.ProductVariant.FullProductName;
+            model.ProductId = orderItem.ProductId;
+            model.ProductName = orderItem.Product.Name;
             model.OrderId = orderItem.OrderId;
             model.CustomerId = returnRequest.CustomerId;
             var customer = returnRequest.Customer;

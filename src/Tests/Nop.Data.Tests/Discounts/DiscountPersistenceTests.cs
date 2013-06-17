@@ -93,13 +93,13 @@ namespace Nop.Data.Tests.Discounts
                 DiscountLimitation = DiscountLimitationType.Unlimited,
                 LimitationTimes = 3
             };
-            discount.AppliedToProductVariants.Add(GetTestProductVariant());
+            discount.AppliedToProducts.Add(GetTestProduct());
             var fromDb = SaveAndLoadEntity(discount);
             fromDb.ShouldNotBeNull();
 
-            fromDb.AppliedToProductVariants.ShouldNotBeNull();
-            (fromDb.AppliedToProductVariants.Count == 1).ShouldBeTrue();
-            fromDb.AppliedToProductVariants.First().Name.ShouldEqual("Product variant name 1");
+            fromDb.AppliedToProducts.ShouldNotBeNull();
+            (fromDb.AppliedToProducts.Count == 1).ShouldBeTrue();
+            fromDb.AppliedToProducts.First().Name.ShouldEqual("Product variant name 1");
 
 
         }
@@ -132,21 +132,13 @@ namespace Nop.Data.Tests.Discounts
 
         }
 
-        protected ProductVariant GetTestProductVariant()
+        protected Product GetTestProduct()
         {
-            return new ProductVariant
+            return new Product
             {
-                Name = "Product variant name 1",
+                Name = "Product name 1",
                 CreatedOnUtc = new DateTime(2010, 01, 03),
                 UpdatedOnUtc = new DateTime(2010, 01, 04),
-                Product = new Product()
-                {
-                    Name = "Name 1",
-                    Published = true,
-                    Deleted = false,
-                    CreatedOnUtc = new DateTime(2010, 01, 01),
-                    UpdatedOnUtc = new DateTime(2010, 01, 02)
-                }
             };
         }
 

@@ -99,10 +99,10 @@
     }
 
     function onRowSelected(e) {
-        productVariantID = e.row.cells[0].innerHTML;
+        productID = e.row.cells[0].innerHTML;
         //load "product variant details page" block
-        var productDetailsActionUrl = '@Html.Raw(Url.Action("AddProductToOrderDetails", "Order", new { orderId = Model.OrderId, productVariantId = "productvariantidplaceholder" }))';
-        productDetailsActionUrl = productDetailsActionUrl.replace("productvariantidplaceholder", productVariantID);
+        var productDetailsActionUrl = '@Html.Raw(Url.Action("AddProductToOrderDetails", "Order", new { orderId = Model.OrderId, productId = "productidplaceholder" }))';
+        productDetailsActionUrl = productDetailsActionUrl.replace("productidplaceholder", productID);
         setLocation(productDetailsActionUrl);
     }
 </script>

@@ -1,4 +1,4 @@
-﻿@model ProductVariantModel.ProductVariantAttributeValueListModel
+﻿@model ProductModel.ProductVariantAttributeValueListModel
 
 @using Telerik.Web.Mvc.UI;
 @{    
@@ -11,7 +11,7 @@
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" alt="" />
         @string.Format(T("Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes.Values.EditAttributeDetails").Text, Model.ProductVariantAttributeName, Model.ProductVariantName)
-        @Html.ActionLink("(" + T("Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes.Values.BackToProductVariant") + ")", "Edit", "ProductVariant", new { Id = Model.ProductVariantId }, null)
+        @Html.ActionLink("(" + T("Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes.Values.BackToProductVariant") + ")", "Edit", "Product", new { Id = Model.ProductId }, null)
     </div>
     <div class="options">
     </div>
@@ -63,14 +63,14 @@
                             })
                             .DataBinding(dataBinding =>
                                 dataBinding.Ajax()
-                                .Select("ProductAttributeValueList", "ProductVariant", new { productVariantAttributeId = Model.ProductVariantAttributeId })
-                                .Delete("ProductAttributeValueDelete", "ProductVariant"))
+                                .Select("ProductAttributeValueList", "Product", new { productVariantAttributeId = Model.ProductVariantAttributeId })
+                                .Delete("ProductAttributeValueDelete", "Product"))
                             .EnableCustomBinding(true))
         </td>
     </tr>
     <tr>
         <td width="100%">
-            <input type="submit" id="btnAddNewValue" name="btnAddNewValue" value="@T("Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes.Values.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ProductAttributeValueCreatePopup", "ProductVariant", new { productAttributeAttributeId = Model.ProductVariantAttributeId, btnId = "btnRefresh", formId = "productvariantattribute-form" }))', 800, 350, true); return false;" class="t-button" />
+            <input type="submit" id="btnAddNewValue" name="btnAddNewValue" value="@T("Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes.Values.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ProductAttributeValueCreatePopup", "Product", new { productAttributeAttributeId = Model.ProductVariantAttributeId, btnId = "btnRefresh", formId = "productvariantattribute-form" }))', 800, 350, true); return false;" class="t-button" />
             <input type="submit" id="btnRefresh" name="btnRefresh" style="display: none" />
             <script type="text/javascript">
                 $(document).ready(function () {

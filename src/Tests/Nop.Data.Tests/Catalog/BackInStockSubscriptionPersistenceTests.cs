@@ -15,20 +15,7 @@ namespace Nop.Data.Tests.Catalog
         {
             var backInStockSubscription = new BackInStockSubscription()
                                      {
-                                         ProductVariant = new ProductVariant
-                                         {
-                                             Name = "Product variant name 1",
-                                             CreatedOnUtc = new DateTime(2010, 01, 03),
-                                             UpdatedOnUtc = new DateTime(2010, 01, 04),
-                                             Product = new Product()
-                                             {
-                                                 Name = "Name 1",
-                                                 Published = true,
-                                                 Deleted = false,
-                                                 CreatedOnUtc = new DateTime(2010, 01, 01),
-                                                 UpdatedOnUtc = new DateTime(2010, 01, 02)
-                                             }
-                                         },
+                                         Product = GetTestProduct(),
                                          Customer = new Customer
                                          {
                                              CustomerGuid = Guid.NewGuid(),
@@ -44,12 +31,21 @@ namespace Nop.Data.Tests.Catalog
             var fromDb = SaveAndLoadEntity(backInStockSubscription);
             fromDb.ShouldNotBeNull();
 
-            fromDb.ProductVariant.ShouldNotBeNull();
-            fromDb.ProductVariant.Name.ShouldEqual("Product variant name 1");
+            fromDb.Product.ShouldNotBeNull();
 
             fromDb.Customer.ShouldNotBeNull();
 
             fromDb.CreatedOnUtc.ShouldEqual(new DateTime(2010, 01, 02));
+        }
+
+        protected Product GetTestProduct()
+        {
+            return new Product
+            {
+                Name = "Product name 1",
+                CreatedOnUtc = new DateTime(2010, 01, 03),
+                UpdatedOnUtc = new DateTime(2010, 01, 04),
+            };
         }
     }
 }

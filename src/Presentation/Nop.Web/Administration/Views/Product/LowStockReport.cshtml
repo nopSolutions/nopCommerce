@@ -20,7 +20,7 @@
     <table class="adminContent">
         <tr>
             <td>
-                @(Html.Telerik().Grid<ProductVariantModel>()
+                @(Html.Telerik().Grid<ProductModel>()
                     .Name("productvariants-grid")
                     .Columns(columns =>
                     {
@@ -43,7 +43,7 @@
                             .Title(T("Admin.Common.Edit").Text);
                     })
                     .Pageable(settings => settings.PageSize(gridPageSize).Position(GridPagerPosition.Both))
-                    .DataBinding(dataBinding => dataBinding.Ajax().Select("LowStockReportList", "ProductVariant"))
+                    .DataBinding(dataBinding => dataBinding.Ajax().Select("LowStockReportList", "Product"))
                     .EnableCustomBinding(true))
             </td>
         </tr>

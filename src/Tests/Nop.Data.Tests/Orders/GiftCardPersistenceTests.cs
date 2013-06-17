@@ -96,8 +96,8 @@ namespace Nop.Data.Tests.Orders
 
 
             fromDb.PurchasedWithOrderItem.ShouldNotBeNull();
-            fromDb.PurchasedWithOrderItem.ProductVariant.ShouldNotBeNull();
-            fromDb.PurchasedWithOrderItem.ProductVariant.Name.ShouldEqual("Product variant name 1");
+            fromDb.PurchasedWithOrderItem.Product.ShouldNotBeNull();
+            fromDb.PurchasedWithOrderItem.Product.Name.ShouldEqual("Product name 1");
         }
 
         protected Customer GetTestCustomer()
@@ -118,25 +118,17 @@ namespace Nop.Data.Tests.Orders
             return new OrderItem()
             {
                 Order = GetTestOrder(),
-                ProductVariant = GetTestProductVariant(),
+                Product = GetTestProduct(),
             };
         }
 
-        protected ProductVariant GetTestProductVariant()
+        protected Product GetTestProduct()
         {
-            return new ProductVariant
+            return new Product
             {
-                Name = "Product variant name 1",
-                Sku = "sku 1",
-                Description = "description",
+                Name = "Product name 1",
                 CreatedOnUtc = new DateTime(2010, 01, 03),
                 UpdatedOnUtc = new DateTime(2010, 01, 04),
-                Product = new Product()
-                {
-                    Name = "Name 1",
-                    CreatedOnUtc = new DateTime(2010, 01, 01),
-                    UpdatedOnUtc = new DateTime(2010, 01, 02)
-                }
             };
         }
 

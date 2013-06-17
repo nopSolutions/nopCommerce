@@ -54,7 +54,7 @@
         <tr>
             <td>
                 @(Html.Telerik().Grid<BulkEditProductVariantModel>()
-        .Name("productvariants-grid")
+        .Name("products-grid")
         .DataKeys(keys =>
         {
             keys.Add(pv => pv.Id);
@@ -65,8 +65,8 @@
         })
         .DataBinding(dataBinding =>
             dataBinding.Ajax()
-                .Select("BulkEditSelect", "ProductVariant")
-                .Update("BulkEditSave", "ProductVariant")
+                .Select("BulkEditSelect", "Product")
+                .Update("BulkEditSave", "Product")
         )
         .Columns(columns =>
         {
@@ -95,7 +95,7 @@
 
     $(document).ready(function () {
         $('#search-products').click(function () {
-            var grid = $('#productvariants-grid').data('tGrid');
+            var grid = $('#products-grid').data('tGrid');
             grid.currentPage = 1; //new search. Set page size to 1
             grid.ajaxRequest();
             return false;

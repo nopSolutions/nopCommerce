@@ -612,7 +612,7 @@ namespace Nop.Services.Orders
                 var product = sci.Product;
                 if (product == null)
                 {
-                    warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.CannotLoadProductVariant"), sci.ProductId));
+                    warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.CannotLoadProduct"), sci.ProductId));
                     return warnings;
                 }
 

@@ -33,9 +33,9 @@
                             .Name("cartitems-grid-<#= CustomerId #>")
                             .Columns(columns =>
                             {
-                                columns.Bound(sci => sci.FullProductName)
-                                .Template(sci => Html.ActionLink(sci.FullProductName, "Edit", "ProductVariant", new { id = sci.ProductVariantId }, new { }))
-                                .ClientTemplate("<a href=\""+ @Url.Content("~/Admin/ProductVariant/Edit/") + "<#= ProductVariantId #>\"><#= FullProductName #></a>");
+                                columns.Bound(sci => sci.ProductName)
+                                .Template(sci => Html.ActionLink(sci.ProductName, "Edit", "Product", new { id = sci.ProductId }, new { }))
+                                .ClientTemplate("<a href=\""+ @Url.Content("~/Admin/Product/Edit/") + "<#= ProductId #>\"><#= ProductName #></a>");
                                 columns.Bound(sci => sci.Quantity).Width(100);
                                 columns.Bound(sci => sci.UnitPrice).Width(100);
                                 columns.Bound(sci => sci.Total).Width(100);

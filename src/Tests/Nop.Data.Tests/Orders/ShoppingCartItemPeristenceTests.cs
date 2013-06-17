@@ -25,7 +25,7 @@ namespace Nop.Data.Tests.Orders
                 CreatedOnUtc = new DateTime(2010, 01, 01),
                 UpdatedOnUtc = new DateTime(2010, 01, 02),
                 Customer = GetTestCustomer(),
-                ProductVariant = GetTestProductVariant(),
+                Product = GetTestProduct(),
             };
 
             var fromDb = SaveAndLoadEntity(sci);
@@ -41,7 +41,7 @@ namespace Nop.Data.Tests.Orders
 
             fromDb.Customer.ShouldNotBeNull();
 
-            fromDb.ProductVariant.ShouldNotBeNull();
+            fromDb.Product.ShouldNotBeNull();
 
         }
 
@@ -59,21 +59,13 @@ namespace Nop.Data.Tests.Orders
             };
         }
 
-        protected ProductVariant GetTestProductVariant()
+        protected Product GetTestProduct()
         {
-            return new ProductVariant
+            return new Product
             {
-                Name = "Product variant name 1",
+                Name = "Product name 1",
                 CreatedOnUtc = new DateTime(2010, 01, 03),
                 UpdatedOnUtc = new DateTime(2010, 01, 04),
-                Product = new Product()
-                {
-                    Name = "Name 1",
-                    Published = true,
-                    Deleted = false,
-                    CreatedOnUtc = new DateTime(2010, 01, 01),
-                    UpdatedOnUtc = new DateTime(2010, 01, 02)
-                }
             };
         }
     }

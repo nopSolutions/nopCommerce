@@ -109,6 +109,9 @@
                                 .ClientTemplate("<img alt='<#= Id #>' src='<#= PictureThumbnailUrl #>' />");
                         }
                         columns.Bound(x => x.Name);
+                        columns.Bound(x => x.Sku);
+                        columns.Bound(x => x.Price);
+                        columns.Bound(x => x.StockQuantity);
                         columns.Bound(x => x.Published)
                             .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= Published #>.gif' />")
                             .Centered()
@@ -120,28 +123,6 @@
                             .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
                             .Title(T("Admin.Common.Edit").Text);
                     })
-                    .DetailView(details => details.ClientTemplate(
-                        Html.Telerik().Grid<ProductVariantModel>()
-                        .Name("variants-grid-<#= Id #>")
-                        .Columns(columns =>
-                        {
-                            columns.Bound(pv => pv.Name)
-                                .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/ProductVariant/Edit/") + "<#= Id #>\"><#= Name #></a>");
-                            columns.Bound(pv => pv.Sku).Width(100);
-                            columns.Bound(pv => pv.Price).Width(100);
-                            columns.Bound(pv => pv.StockQuantity).Width(100);
-                            columns.Bound(pv => pv.Published)
-                                .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= Published #>.gif' />")
-                                .Centered()
-                                .Width(100);
-                        })
-                         .DataBinding(dataBinding => dataBinding.Ajax()
-                             .Select("GetVariants", "Product", new
-                             {
-                                 productId = "<#= Id #>"
-                             }))
-                             .ToHtmlString()
-                     ))
                      .Pageable(settings => settings.PageSize(gridPageSize).Position(GridPagerPosition.Both))
                      .DataBinding(dataBinding => dataBinding.Ajax().Select("ProductList", "Product"))
                      .ClientEvents(events => events.OnDataBinding("onDataBinding").OnDataBound("onDataBound"))

@@ -170,7 +170,6 @@
     <Compile Include="Controllers\LogController.cs" />
     <Compile Include="Controllers\PictureController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
-    <Compile Include="Controllers\ProductVariantController.cs" />
     <Compile Include="Controllers\QueuedEmailController.cs" />
     <Compile Include="HtmlExtensions.cs" />
     <Compile Include="Infrastructure\RouteProvider.cs" />
@@ -181,7 +180,6 @@
     <Compile Include="Models\Catalog\BulkEditProductVariantModel.cs" />
     <Compile Include="Models\Catalog\BulkEditListModel.cs" />
     <Compile Include="Models\Catalog\CategoryListModel.cs" />
-    <Compile Include="Models\Catalog\CopyProductVariantModel.cs" />
     <Compile Include="Models\Catalog\ManufacturerListModel.cs" />
     <Compile Include="Models\Catalog\ProductReviewListModel.cs" />
     <Compile Include="Models\Catalog\ManufacturerModel.cs" />
@@ -291,7 +289,6 @@
     <Compile Include="Models\Localization\LanguageResourceModel.cs" />
     <Compile Include="Models\Logging\LogModel.cs" />
     <Compile Include="Models\Catalog\ProductModel.cs" />
-    <Compile Include="Models\Catalog\ProductVariantModel.cs" />
     <Compile Include="Models\Messages\QueuedEmailModel.cs" />
     <Compile Include="Models\Settings\TaxSettingsModel.cs" />
     <Compile Include="Models\Cms\WidgetModel.cs" />
@@ -329,7 +326,6 @@
     <Compile Include="Validators\Catalog\SpecificationAttributeOptionValidator.cs" />
     <Compile Include="Validators\Catalog\SpecificationAttributeValidator.cs" />
     <Compile Include="Validators\Catalog\ProductAttributeValidator.cs" />
-    <Compile Include="Validators\Catalog\ProductVariantValidator.cs" />
     <Compile Include="Validators\Customers\CustomerRoleValidator.cs" />
     <Compile Include="Validators\Customers\CustomerValidator.cs" />
     <Compile Include="Validators\Forums\ForumGroupValidator.cs" />
@@ -474,12 +470,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Product\Edit.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\ProductVariant\Edit.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\ProductVariant\_CreateOrUpdate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\QueuedEmail\List.cshtml" />
@@ -627,28 +617,25 @@
     <Content Include="Views\Category\ProductAddPopup.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\ProductVariant\Create.cshtml" />
+    <Content Include="Views\Product\EditorTemplates\TierPriceCustomer.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\ProductVariant\EditorTemplates\TierPriceCustomer.cshtml" />
+    <Content Include="Views\Product\EditorTemplates\ProductAttribute.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\ProductVariant\EditorTemplates\ProductAttribute.cshtml" />
+    <Content Include="Views\Product\EditorTemplates\AttributeControlType.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\ProductVariant\EditorTemplates\AttributeControlType.cshtml" />
+    <Content Include="Views\Product\EditAttributeValues.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\ProductVariant\EditAttributeValues.cshtml" />
+    <Content Include="Views\Product\ProductAttributeValueCreatePopup.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\ProductVariant\ProductAttributeValueCreatePopup.cshtml" />
+    <Content Include="Views\Product\ProductAttributeValueEditPopup.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\ProductVariant\ProductAttributeValueEditPopup.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\ProductVariant\_CreateOrUpdateProductAttributeValue.cshtml" />
+    <Content Include="Views\Product\_CreateOrUpdateProductAttributeValue.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shared\EditorTemplates\Download.cshtml" />
@@ -666,9 +653,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shared\EditorTemplates\DateTimeNullable.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Shared\_ProductVariantInfo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\CheckoutAttribute\_CreateOrUpdate.cshtml" />
@@ -882,7 +866,7 @@
     <Content Include="Views\Product\ProductTags.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\ProductVariant\LowStockReport.cshtml" />
+    <Content Include="Views\Product\LowStockReport.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Order\BestsellersReport.cshtml" />
@@ -933,10 +917,10 @@
     <Content Include="Views\Common\LanguageSelector.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\ProductVariant\_ProductAttributes.cshtml" />
+    <Content Include="Views\Product\_ProductAttributes.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\ProductVariant\AddAttributeCombinationPopup.cshtml" />
+    <Content Include="Views\Product\AddAttributeCombinationPopup.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Security\Permissions.cshtml" />
@@ -993,7 +977,7 @@
     <Content Include="Views\ShoppingCart\CurrentWishlists.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\ProductVariant\BulkEdit.cshtml" />
+    <Content Include="Views\Product\BulkEdit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Country\StateEditPopup.cshtml" />
@@ -1122,7 +1106,7 @@
     <Content Include="Views\Order\_OrderDetails.Products.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\ProductVariant\EditorTemplates\TierPriceStore.cshtml" />
+    <Content Include="Views\Product\EditorTemplates\TierPriceStore.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

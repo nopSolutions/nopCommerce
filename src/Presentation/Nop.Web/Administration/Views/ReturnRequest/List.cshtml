@@ -25,8 +25,8 @@
                             .Width(50);
                         columns.Bound(x => x.ProductName)
                             .Width(200)
-                            .Template(x => Html.ActionLink(x.ProductName, "Edit", "ProductVariant", new { id = x.ProductVariantId }, new { }))
-                            .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/ProductVariant/Edit/") + "<#= ProductVariantId #>\"><#= ProductName #></a>");
+                            .Template(x => Html.ActionLink(x.ProductName, "Edit", "Product", new { id = x.ProductId }, new { }))
+                            .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/Product/Edit/") + "<#= ProductId #>\"><#= ProductName #></a>");
                         columns.Bound(x => x.Quantity)
                             .Width(50)
                             .Centered();

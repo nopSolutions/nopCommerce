@@ -19,7 +19,7 @@ namespace Nop.Data.Tests.Orders
             var orderItem = new OrderItem()
             {
                 Order = GetTestOrder(),
-                ProductVariant = GetTestProductVariant(),
+                Product= GetTestProduct(),
                 Quantity = 1, 
                 UnitPriceInclTax= 1.1M,
                 UnitPriceExclTax = 2.1M,
@@ -38,7 +38,7 @@ namespace Nop.Data.Tests.Orders
             var fromDb = SaveAndLoadEntity(orderItem);
             fromDb.ShouldNotBeNull();
             fromDb.Order.ShouldNotBeNull();
-            fromDb.ProductVariant.ShouldNotBeNull();
+            fromDb.Product.ShouldNotBeNull();
             fromDb.UnitPriceInclTax.ShouldEqual(1.1M);
             fromDb.UnitPriceExclTax.ShouldEqual(2.1M);
             fromDb.PriceInclTax.ShouldEqual(3.1M);
@@ -61,7 +61,7 @@ namespace Nop.Data.Tests.Orders
             var orderItem = new OrderItem()
             {
                 Order = GetTestOrder(),
-                ProductVariant = GetTestProductVariant(),
+                Product = GetTestProduct(),
             };
             orderItem.AssociatedGiftCards.Add(GetTestGiftCard());
 
@@ -82,21 +82,13 @@ namespace Nop.Data.Tests.Orders
             };
         }
 
-        protected ProductVariant GetTestProductVariant()
+        protected Product GetTestProduct()
         {
-            return new ProductVariant
+            return new Product
             {
-                Name = "Product variant name 1",
-                Sku = "sku 1",
-                Description = "description",
+                Name = "Product name 1",
                 CreatedOnUtc = new DateTime(2010, 01, 03),
                 UpdatedOnUtc = new DateTime(2010, 01, 04),
-                Product = new Product()
-                {
-                    Name = "Name 1",
-                    CreatedOnUtc = new DateTime(2010, 01, 01),
-                    UpdatedOnUtc = new DateTime(2010, 01, 02)
-                }
             };
         }
 

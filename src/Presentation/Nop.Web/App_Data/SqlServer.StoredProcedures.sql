@@ -199,7 +199,7 @@ BEGIN
 		--SKU
 		SET @sql = @sql + '
 		UNION
-		SELECT p.ProductId
+		SELECT p.Id
 		FROM Product p with (NOLOCK)
 		WHERE '
 		IF @UseFullTextSearch = 1

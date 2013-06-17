@@ -1,5 +1,4 @@
 ﻿using System;
-using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
@@ -74,24 +73,6 @@ namespace Nop.Data.Tests.Orders
                 },
                 Deleted = true,
                 CreatedOnUtc = new DateTime(2010, 01, 01)
-            };
-        }
-
-        protected ProductVariant GetTestProductVariant()
-        {
-            return new ProductVariant
-            {
-                Name = "Product variant name 1",
-                Sku = "sku 1",
-                Description = "description",
-                CreatedOnUtc = new DateTime(2010, 01, 03),
-                UpdatedOnUtc = new DateTime(2010, 01, 04),
-                Product = new Product()
-                {
-                    Name = "Name 1",
-                    CreatedOnUtc = new DateTime(2010, 01, 01),
-                    UpdatedOnUtc = new DateTime(2010, 01, 02)
-                }
             };
         }
 

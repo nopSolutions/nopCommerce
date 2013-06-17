@@ -96,7 +96,7 @@ namespace Nop.Services.Tests.Shipping
             {
                 AttributesXml = "",
                 Quantity = 3,
-                ProductVariant = new ProductVariant()
+                Product = new Product()
                 {
                     Weight = 1.5M,
                     Height = 2.5M,
@@ -114,7 +114,7 @@ namespace Nop.Services.Tests.Shipping
             {
                 AttributesXml = "",
                 Quantity = 3,
-                ProductVariant = new ProductVariant()
+                Product = new Product()
                 {
                     Weight = 1.5M,
                     Height = 2.5M,
@@ -126,7 +126,7 @@ namespace Nop.Services.Tests.Shipping
             {
                 AttributesXml = "",
                 Quantity = 4,
-                ProductVariant = new ProductVariant()
+                Product = new Product()
                 {
                     Weight = 11.5M,
                     Height = 12.5M,

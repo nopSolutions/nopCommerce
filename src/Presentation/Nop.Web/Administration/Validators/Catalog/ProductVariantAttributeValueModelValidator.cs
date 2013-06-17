@@ -4,7 +4,7 @@ using Nop.Services.Localization;
 
 namespace Nop.Admin.Validators.Catalog
 {
-    public class ProductVariantAttributeValueModelValidator : AbstractValidator<ProductVariantModel.ProductVariantAttributeValueModel>
+    public class ProductVariantAttributeValueModelValidator : AbstractValidator<ProductModel.ProductVariantAttributeValueModel>
     {
         public ProductVariantAttributeValueModelValidator(ILocalizationService localizationService)
         {

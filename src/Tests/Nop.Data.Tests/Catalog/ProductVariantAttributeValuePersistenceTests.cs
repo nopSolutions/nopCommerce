@@ -25,20 +25,7 @@ namespace Nop.Data.Tests.Catalog
                     IsRequired = true,
                     AttributeControlType = AttributeControlType.DropdownList,
                     DisplayOrder = 1,
-                    ProductVariant = new ProductVariant()
-                    {
-                        Name = "Product variant name 1",
-                        CreatedOnUtc = new DateTime(2010, 01, 03),
-                        UpdatedOnUtc = new DateTime(2010, 01, 04),
-                        Product = new Product()
-                        {
-                            Name = "Name 1",
-                            Published = true,
-                            Deleted = false,
-                            CreatedOnUtc = new DateTime(2010, 01, 01),
-                            UpdatedOnUtc = new DateTime(2010, 01, 02),
-                        }
-                    },
+                    Product = GetTestProduct(),
                     ProductAttribute = new ProductAttribute()
                     {
                         Name = "Name 1",
@@ -58,6 +45,16 @@ namespace Nop.Data.Tests.Catalog
 
             fromDb.ProductVariantAttribute.ShouldNotBeNull();
             fromDb.ProductVariantAttribute.TextPrompt.ShouldEqual("TextPrompt 1");
+        }
+
+        protected Product GetTestProduct()
+        {
+            return new Product
+            {
+                Name = "Product name 1",
+                CreatedOnUtc = new DateTime(2010, 01, 03),
+                UpdatedOnUtc = new DateTime(2010, 01, 04),
+            };
         }
     }
 }
