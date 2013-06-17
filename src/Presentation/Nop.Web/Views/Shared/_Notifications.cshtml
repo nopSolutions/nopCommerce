@@ -22,34 +22,25 @@
         errorMessages.AddRange(ViewData[string.Format("nop.notifications.{0}", NotifyType.Error)] as IList<string>);
     }
 }
-@*TODO use "displayPopupNotification" java-script function*@
-@if (successMessages.Count > 0)
+@foreach (var message in successMessages)
 {
     <script type="text/javascript">
         $(document).ready(function () {
-            $("#dialog-notifications-success").dialog({ modal: true });
+            displayPopupNotification('@Html.Raw(HttpUtility.JavaScriptStringEncode(message))', 'success', false);
         });
     </script>
 }
-@if (errorMessages.Count > 0)
+@foreach (var message in errorMessages)
 {
     <script type="text/javascript">
         $(document).ready(function () {
-            $("#dialog-notifications-error").dialog({ modal: true });
+            displayPopupNotification('@Html.Raw(HttpUtility.JavaScriptStringEncode(message))', 'error', false);
         });
     </script>
 }
 <div id="dialog-notifications-success" title="@T("Common.Notification")" style="display:none;">
-    @foreach (var message in successMessages)
-    {
-        <p>@message</p>
-    }
 </div>
 <div id="dialog-notifications-error" title="@T("Common.Error")" style="display:none;">
-    @foreach (var message in errorMessages)
-    {
-        <p>@message</p>
-    }
 </div>
 <div id="bar-notification" class="bar-notification">
     <span class="close" title="@T("Common.Close")">&nbsp;</span>
