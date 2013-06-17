@@ -3,14 +3,14 @@
 @using Telerik.Web.Mvc.UI;
 @{    
     //page title
-    ViewBag.Title = string.Format(T("Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes.Values.EditAttributeDetails").Text, Model.ProductVariantAttributeName, Model.ProductVariantName);
+    ViewBag.Title = string.Format(T("Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes.Values.EditAttributeDetails").Text, Model.ProductVariantAttributeName, Model.ProductName);
 }
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "productvariantattribute-form" }))
 {
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" alt="" />
-        @string.Format(T("Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes.Values.EditAttributeDetails").Text, Model.ProductVariantAttributeName, Model.ProductVariantName)
+        @string.Format(T("Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes.Values.EditAttributeDetails").Text, Model.ProductVariantAttributeName, Model.ProductName)
         @Html.ActionLink("(" + T("Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes.Values.BackToProductVariant") + ")", "Edit", "Product", new { Id = Model.ProductId }, null)
     </div>
     <div class="options">
