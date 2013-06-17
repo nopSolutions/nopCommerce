@@ -54,17 +54,17 @@ namespace Nop.Services.Shipping
                 decimal maxProductHeight = 0;
                 foreach (var shoppingCartItem in request.Items)
                 {
-                    var productVariant = shoppingCartItem.ProductVariant;
-                    if (productVariant != null)
+                    var product= shoppingCartItem.Product;
+                    if (product != null)
                     {
-                        totalVolume += shoppingCartItem.Quantity * productVariant.Height * productVariant.Width * productVariant.Length;
+                        totalVolume += shoppingCartItem.Quantity * product.Height * product.Width * product.Length;
 
-                        if (productVariant.Width > maxProductWidth)
-                            maxProductWidth = productVariant.Width;
-                        if (productVariant.Length > maxProductLength)
-                            maxProductLength = productVariant.Length;
-                        if (productVariant.Height > maxProductHeight)
-                            maxProductHeight = productVariant.Height;
+                        if (product.Width > maxProductWidth)
+                            maxProductWidth = product.Width;
+                        if (product.Length > maxProductLength)
+                            maxProductLength = product.Length;
+                        if (product.Height > maxProductHeight)
+                            maxProductHeight = product.Height;
                     }
                 }
                 decimal dimension = Convert.ToDecimal(Math.Pow(Convert.ToDouble(totalVolume), (double)(1.0 / 3.0)));
@@ -86,12 +86,12 @@ namespace Nop.Services.Shipping
                 width = length = height = decimal.Zero;
                 foreach (var shoppingCartItem in request.Items)
                 {
-                    var productVariant = shoppingCartItem.ProductVariant;
-                    if (productVariant != null)
+                    var product = shoppingCartItem.Product;
+                    if (product != null)
                     {
-                        width += productVariant.Width * shoppingCartItem.Quantity;
-                        length += productVariant.Length * shoppingCartItem.Quantity;
-                        height += productVariant.Height * shoppingCartItem.Quantity;
+                        width += product.Width * shoppingCartItem.Quantity;
+                        length += product.Length * shoppingCartItem.Quantity;
+                        height += product.Height * shoppingCartItem.Quantity;
                     }
                 }
             }

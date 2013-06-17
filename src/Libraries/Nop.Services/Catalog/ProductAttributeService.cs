@@ -29,7 +29,7 @@ namespace Nop.Services.Catalog
         /// Key for caching
         /// </summary>
         /// <remarks>
-        /// {0} : product variant ID
+        /// {0} : product ID
         /// </remarks>
         private const string PRODUCTVARIANTATTRIBUTES_ALL_KEY = "Nop.productvariantattribute.all-{0}";
         /// <summary>
@@ -227,17 +227,17 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Gets product variant attribute mappings by product identifier
         /// </summary>
-        /// <param name="productVariantId">The product variant identifier</param>
+        /// <param name="productVariantId">The product identifier</param>
         /// <returns>Product variant attribute mapping collection</returns>
-        public virtual IList<ProductVariantAttribute> GetProductVariantAttributesByProductVariantId(int productVariantId)
+        public virtual IList<ProductVariantAttribute> GetProductVariantAttributesByProductId(int productId)
         {
-            string key = string.Format(PRODUCTVARIANTATTRIBUTES_ALL_KEY, productVariantId);
+            string key = string.Format(PRODUCTVARIANTATTRIBUTES_ALL_KEY, productId);
 
             return _cacheManager.Get(key, () =>
             {
                 var query = from pva in _productVariantAttributeRepository.Table
                             orderby pva.DisplayOrder
-                            where pva.ProductVariantId == productVariantId
+                            where pva.ProductId == productId
                             select pva;
                 var productVariantAttributes = query.ToList();
                 return productVariantAttributes;
@@ -414,14 +414,14 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productVariantId">Product variant identifier</param>
         /// <returns>Product variant attribute combination collection</returns>
-        public virtual IList<ProductVariantAttributeCombination> GetAllProductVariantAttributeCombinations(int productVariantId)
+        public virtual IList<ProductVariantAttributeCombination> GetAllProductVariantAttributeCombinations(int productId)
         {
-            if (productVariantId == 0)
+            if (productId == 0)
                 return new List<ProductVariantAttributeCombination>();
 
             var query = from pvac in _productVariantAttributeCombinationRepository.Table
                         orderby pvac.Id
-                        where pvac.ProductVariantId == productVariantId
+                        where pvac.ProductId == productId
                         select pvac;
             var combinations = query.ToList();
             return combinations;

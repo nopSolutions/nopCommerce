@@ -59,10 +59,10 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Finds a product variant attribute combination by attributes stored in XML 
         /// </summary>
-        /// <param name="productVariant">Product variant</param>
+        /// <param name="product">Product</param>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Found product variant attribute combination</returns>
-        ProductVariantAttributeCombination FindProductVariantAttributeCombination(ProductVariant productVariant,
+        ProductVariantAttributeCombination FindProductVariantAttributeCombination(Product product,
             string attributesXml);
 
         #endregion

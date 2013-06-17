@@ -5469,13 +5469,6 @@ namespace Nop.Services.Installation
                 ProductTemplateId = productTemplateSingleVariant.Id,
                 //SeName = "5-virtual-gift-card",
                 AllowCustomerReviews = true,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(product5GiftCard);
-            product5GiftCard.ProductVariants.Add(new ProductVariant()
-            {
                 Price = 5M,
                 IsGiftCard = true,
                 GiftCardType = GiftCardType.Virtual,
@@ -5486,10 +5479,10 @@ namespace Nop.Services.Installation
                 NotifyAdminForQuantityBelow = 1,
                 AllowBackInStockSubscriptions = false,
                 Published = true,
-                DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            });
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(product5GiftCard);
             product5GiftCard.ProductCategories.Add(new ProductCategory()
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Gift Cards"),
@@ -5512,14 +5505,6 @@ namespace Nop.Services.Installation
                 ProductTemplateId = productTemplateSingleVariant.Id,
                 //SeName = "25-virtual-gift-card",
                 AllowCustomerReviews = true,
-                Published = true,
-                ShowOnHomePage = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(product25GiftCard);
-            product25GiftCard.ProductVariants.Add(new ProductVariant()
-            {
                 Price = 25M,
                 IsGiftCard = true,
                 GiftCardType = GiftCardType.Virtual,
@@ -5530,10 +5515,11 @@ namespace Nop.Services.Installation
                 NotifyAdminForQuantityBelow = 1,
                 AllowBackInStockSubscriptions = false,
                 Published = true,
-                DisplayOrder = 1,
+                ShowOnHomePage = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            });
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(product25GiftCard);
             product25GiftCard.ProductCategories.Add(new ProductCategory()
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Gift Cards"),
@@ -5558,13 +5544,6 @@ namespace Nop.Services.Installation
                 ProductTemplateId = productTemplateSingleVariant.Id,
                 //SeName = "50-physical-gift-card",
                 AllowCustomerReviews = true,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(product50GiftCard);
-            product50GiftCard.ProductVariants.Add(new ProductVariant()
-            {
                 Price = 50M,
                 IsGiftCard = true,
                 GiftCardType = GiftCardType.Physical,
@@ -5580,10 +5559,10 @@ namespace Nop.Services.Installation
                 NotifyAdminForQuantityBelow = 1,
                 AllowBackInStockSubscriptions = false,
                 Published = true,
-                DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            });
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(product50GiftCard);
             product50GiftCard.ProductCategories.Add(new ProductCategory()
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Gift Cards"),
@@ -5608,13 +5587,6 @@ namespace Nop.Services.Installation
                 ProductTemplateId = productTemplateSingleVariant.Id,
                 //SeName = "100-physical-gift-card",
                 AllowCustomerReviews = true,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(product100GiftCard);
-            product100GiftCard.ProductVariants.Add(new ProductVariant()
-            {
                 Price = 100M,
                 IsGiftCard = true,
                 GiftCardType = GiftCardType.Physical,
@@ -5630,10 +5602,10 @@ namespace Nop.Services.Installation
                 NotifyAdminForQuantityBelow = 1,
                 AllowBackInStockSubscriptions = false,
                 Published = true,
-                DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            });
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(product100GiftCard);
             product100GiftCard.ProductCategories.Add(new ProductCategory()
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Gift Cards"),
@@ -5659,12 +5631,6 @@ namespace Nop.Services.Installation
                 //SeName = "50s-rockabilly-polka-dot-top-jr-plus-size",
                 AllowCustomerReviews = true,
                 Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(productRockabillyPolka);
-            productRockabillyPolka.ProductVariants.Add(new ProductVariant()
-            {
                 Price = 15M,
                 IsShipEnabled = true,
                 Weight = 1,
@@ -5681,11 +5647,10 @@ namespace Nop.Services.Installation
                 BackorderMode = BackorderMode.NoBackorders,
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
-                Published = true,
-                DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            });
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productRockabillyPolka);
             var pvaRockabillyPolka1 = new ProductVariantAttribute()
             {
                 ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Size"),
@@ -5722,7 +5687,7 @@ namespace Nop.Services.Installation
                 Name = "5X",
                 DisplayOrder = 6,
             });
-            productRockabillyPolka.ProductVariants.FirstOrDefault().ProductVariantAttributes.Add(pvaRockabillyPolka1);
+            productRockabillyPolka.ProductVariantAttributes.Add(pvaRockabillyPolka1);
             productRockabillyPolka.ProductCategories.Add(new ProductCategory()
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Shirts"),
@@ -5747,13 +5712,6 @@ namespace Nop.Services.Installation
                 ProductTemplateId = productTemplateSingleVariant.Id,
                 //SeName = "acer-aspire-one-89-mini-notebook-case-black",
                 AllowCustomerReviews = true,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(productAcerAspireOne);
-            productAcerAspireOne.ProductVariants.Add(new ProductVariant()
-            {
                 Price = 21.6M,
                 IsShipEnabled = true,
                 Weight = 2,
@@ -5771,26 +5729,26 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
-                DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            });
-            productAcerAspireOne.ProductVariants.FirstOrDefault().TierPrices.Add(new TierPrice()
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productAcerAspireOne);
+            productAcerAspireOne.TierPrices.Add(new TierPrice()
             {
                 Quantity = 2,
                 Price = 19
             });
-            productAcerAspireOne.ProductVariants.FirstOrDefault().TierPrices.Add(new TierPrice()
+            productAcerAspireOne.TierPrices.Add(new TierPrice()
             {
                 Quantity = 5,
                 Price = 17
             });
-            productAcerAspireOne.ProductVariants.FirstOrDefault().TierPrices.Add(new TierPrice()
+            productAcerAspireOne.TierPrices.Add(new TierPrice()
             {
                 Quantity = 10,
                 Price = 15
             });
-            productAcerAspireOne.ProductVariants.FirstOrDefault().HasTierPrices = true;
+            productAcerAspireOne.HasTierPrices = true;
 
             productAcerAspireOne.ProductCategories.Add(new ProductCategory()
             {
@@ -5821,13 +5779,6 @@ namespace Nop.Services.Installation
                 ProductTemplateId = productTemplateInGrid.Id,
                 //SeName = "adidas-womens-supernova-csh-7-running-shoe",
                 AllowCustomerReviews = true,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(productAdidasShoe);
-            productAdidasShoe.ProductVariants.Add(new ProductVariant()
-            {
                 Price = 40M,
                 IsShipEnabled = true,
                 Weight = 2,
@@ -5845,10 +5796,10 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
-                DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            });
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productAdidasShoe);
             var pvaAdidasShoe1 = new ProductVariantAttribute()
             {
                 ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Size"),
@@ -5875,7 +5826,7 @@ namespace Nop.Services.Installation
                 Name = "11",
                 DisplayOrder = 4,
             });
-            productAdidasShoe.ProductVariants.FirstOrDefault().ProductVariantAttributes.Add(pvaAdidasShoe1);
+            productAdidasShoe.ProductVariantAttributes.Add(pvaAdidasShoe1);
             var pvaAdidasShoe2 = new ProductVariantAttribute()
             {
                 ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Color"),
@@ -5892,7 +5843,7 @@ namespace Nop.Services.Installation
                 Name = "White/Black",
                 DisplayOrder = 2,
             });
-            productAdidasShoe.ProductVariants.FirstOrDefault().ProductVariantAttributes.Add(pvaAdidasShoe2);
+            productAdidasShoe.ProductVariantAttributes.Add(pvaAdidasShoe2);
             productAdidasShoe.ProductCategories.Add(new ProductCategory()
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Shoes"),
@@ -5922,13 +5873,6 @@ namespace Nop.Services.Installation
                 ProductTemplateId = productTemplateSingleVariant.Id,
                 //SeName = "adobe-photoshop-elements-7",
                 AllowCustomerReviews = true,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(productAdobePhotoshop);
-            productAdobePhotoshop.ProductVariants.Add(new ProductVariant()
-            {
                 Price = 75M,
                 IsShipEnabled = true,
                 Weight = 2,
@@ -5946,10 +5890,10 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
-                DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            });
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productAdobePhotoshop);
             productAdobePhotoshop.ProductCategories.Add(new ProductCategory()
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Software"),
@@ -5974,13 +5918,6 @@ namespace Nop.Services.Installation
                 ProductTemplateId = productTemplateSingleVariant.Id,
                 //SeName = "apc-back-ups-rs-800va-ups-800-va-ups-battery-lead-acid-br800blk",
                 AllowCustomerReviews = true,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(productApcUps);
-            productApcUps.ProductVariants.Add(new ProductVariant()
-            {
                 Price = 75M,
                 IsShipEnabled = true,
                 Weight = 2,
@@ -5998,10 +5935,10 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
-                DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            });
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productApcUps);
             productApcUps.ProductCategories.Add(new ProductCategory()
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Accessories"),
@@ -6026,13 +5963,6 @@ namespace Nop.Services.Installation
                 ProductTemplateId = productTemplateSingleVariant.Id,
                 //SeName = "arrow-mens-wrinkle-free-pinpoint-solid-long-sleeve",
                 AllowCustomerReviews = true,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(productArrow);
-            productArrow.ProductVariants.Add(new ProductVariant()
-            {
                 Price = 24M,
                 IsShipEnabled = true,
                 Weight = 4,
@@ -6050,26 +5980,26 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
-                DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            });
-            productArrow.ProductVariants.FirstOrDefault().TierPrices.Add(new TierPrice()
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productArrow);
+            productArrow.TierPrices.Add(new TierPrice()
             {
                 Quantity = 3,
                 Price = 21
             });
-            productArrow.ProductVariants.FirstOrDefault().TierPrices.Add(new TierPrice()
+            productArrow.TierPrices.Add(new TierPrice()
             {
                 Quantity = 7,
                 Price = 19
             });
-            productArrow.ProductVariants.FirstOrDefault().TierPrices.Add(new TierPrice()
+            productArrow.TierPrices.Add(new TierPrice()
             {
                 Quantity = 10,
                 Price = 16
             });
-            productArrow.ProductVariants.FirstOrDefault().HasTierPrices = true;
+            productArrow.HasTierPrices = true;
 
             productArrow.ProductCategories.Add(new ProductCategory()
             {
@@ -6095,13 +6025,6 @@ namespace Nop.Services.Installation
                 ProductTemplateId = productTemplateSingleVariant.Id,
                 //SeName = "asus-eee-pc-1000ha-10-inch-netbook",
                 AllowCustomerReviews = true,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(productAsusPc1000);
-            productAsusPc1000.ProductVariants.Add(new ProductVariant()
-            {
                 Price = 2600M,
                 IsShipEnabled = true,
                 Weight = 3,
@@ -6119,10 +6042,10 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
-                DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            });
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productAsusPc1000);
             productAsusPc1000.ProductCategories.Add(new ProductCategory()
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Notebooks"),
@@ -6180,13 +6103,6 @@ namespace Nop.Services.Installation
                 ProductTemplateId = productTemplateSingleVariant.Id,
                 //SeName = "asus-eee-pc-900ha-89-inch-netbook-black",
                 AllowCustomerReviews = true,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(productAsusPc900);
-            productAsusPc900.ProductVariants.Add(new ProductVariant()
-            {
                 Price = 1500M,
                 IsShipEnabled = true,
                 Weight = 7,
@@ -6204,10 +6120,10 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
-                DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            });
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productAsusPc900);
             productAsusPc900.ProductCategories.Add(new ProductCategory()
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Notebooks"),
@@ -6258,13 +6174,6 @@ namespace Nop.Services.Installation
                 ProductTemplateId = productTemplateSingleVariant.Id,
                 //SeName = "best-grilling-recipes",
                 AllowCustomerReviews = true,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(productBestGrillingRecipes);
-            productBestGrillingRecipes.ProductVariants.Add(new ProductVariant()
-            {
                 Price = 27M,
                 OldPrice = 30M,
                 IsShipEnabled = true,
@@ -6283,10 +6192,10 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
-                DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            });
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productBestGrillingRecipes);
             productBestGrillingRecipes.ProductCategories.Add(new ProductCategory()
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Books"),
@@ -6311,13 +6220,6 @@ namespace Nop.Services.Installation
                 ProductTemplateId = productTemplateSingleVariant.Id,
                 //SeName = "black-white-diamond-heart",
                 AllowCustomerReviews = true,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(productDiamondHeart);
-            productDiamondHeart.ProductVariants.Add(new ProductVariant()
-            {
                 Price = 130M,
                 IsShipEnabled = true,
                 Weight = 2,
@@ -6335,10 +6237,10 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
-                DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            });
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productDiamondHeart);
             productDiamondHeart.ProductCategories.Add(new ProductCategory()
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Jewelry"),
@@ -6363,13 +6265,6 @@ namespace Nop.Services.Installation
                 ProductTemplateId = productTemplateSingleVariant.Id,
                 //SeName = "blackberry-bold-9000-phone-black-att",
                 AllowCustomerReviews = true,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(productBlackBerry);
-            productBlackBerry.ProductVariants.Add(new ProductVariant()
-            {
                 Price = 245M,
                 IsShipEnabled = true,
                 Weight = 2,
@@ -6387,10 +6282,10 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
-                DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            });
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productBlackBerry);
             productBlackBerry.ProductCategories.Add(new ProductCategory()
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Cell phones"),
@@ -6414,14 +6309,6 @@ namespace Nop.Services.Installation
                 ProductTemplateId = productTemplateInGrid.Id,
                 //SeName = "build-your-own-computer",
                 AllowCustomerReviews = true,
-                Published = true,
-                ShowOnHomePage = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(productBuildComputer);
-            productBuildComputer.ProductVariants.Add(new ProductVariant()
-            {
                 Price = 1200M,
                 IsShipEnabled = true,
                 Weight = 2,
@@ -6439,10 +6326,11 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
-                DisplayOrder = 1,
+                ShowOnHomePage = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            });
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productBuildComputer);
             var pvaBuildComputer1 = new ProductVariantAttribute()
             {
                 ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Processor"),
@@ -6461,7 +6349,7 @@ namespace Nop.Services.Installation
                 PriceAdjustment = 15,
                 DisplayOrder = 2,
             });
-            productBuildComputer.ProductVariants.FirstOrDefault().ProductVariantAttributes.Add(pvaBuildComputer1);
+            productBuildComputer.ProductVariantAttributes.Add(pvaBuildComputer1);
             var pvaBuildComputer2 = new ProductVariantAttribute()
             {
                 ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "RAM"),
@@ -6485,7 +6373,7 @@ namespace Nop.Services.Installation
                 PriceAdjustment = 60,
                 DisplayOrder = 3,
             });
-            productBuildComputer.ProductVariants.FirstOrDefault().ProductVariantAttributes.Add(pvaBuildComputer2);
+            productBuildComputer.ProductVariantAttributes.Add(pvaBuildComputer2);
             var pvaBuildComputer3 = new ProductVariantAttribute()
             {
                 ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "HDD"),
@@ -6503,7 +6391,7 @@ namespace Nop.Services.Installation
                 PriceAdjustment = 100,
                 DisplayOrder = 2,
             });
-            productBuildComputer.ProductVariants.FirstOrDefault().ProductVariantAttributes.Add(pvaBuildComputer3);
+            productBuildComputer.ProductVariantAttributes.Add(pvaBuildComputer3);
             var pvaBuildComputer4 = new ProductVariantAttribute()
             {
                 ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "OS"),
@@ -6523,7 +6411,7 @@ namespace Nop.Services.Installation
                 PriceAdjustment = 60,
                 DisplayOrder = 2,
             });
-            productBuildComputer.ProductVariants.FirstOrDefault().ProductVariantAttributes.Add(pvaBuildComputer4);
+            productBuildComputer.ProductVariantAttributes.Add(pvaBuildComputer4);
             var pvaBuildComputer5 = new ProductVariantAttribute()
             {
                 ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Software"),
@@ -6548,7 +6436,7 @@ namespace Nop.Services.Installation
                 PriceAdjustment = 5,
                 DisplayOrder = 2,
             });
-            productBuildComputer.ProductVariants.FirstOrDefault().ProductVariantAttributes.Add(pvaBuildComputer5);
+            productBuildComputer.ProductVariantAttributes.Add(pvaBuildComputer5);
             productBuildComputer.ProductCategories.Add(new ProductCategory()
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Desktops"),
@@ -6584,14 +6472,6 @@ namespace Nop.Services.Installation
                 //SeName = "canon-digital-rebel-xsi-122-mp-digital-slr-camera",
                 AllowCustomerReviews = true,
                 Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(productCanonCamera);
-            productCanonCamera.ProductVariants.Add(new ProductVariant()
-            {
-                Name = "Black",
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CanonCamera_black.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Canon Digital Rebel XSi 12.2 MP Digital SLR Camera (Black)"), true).Id,
                 Price = 670M,
                 IsShipEnabled = true,
                 Weight = 2,
@@ -6608,36 +6488,10 @@ namespace Nop.Services.Installation
                 BackorderMode = BackorderMode.NoBackorders,
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
-                Published = true,
-                DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            });
-            productCanonCamera.ProductVariants.Add(new ProductVariant()
-            {
-                Name = "Silver",
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CanonCamera_silver.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Canon Digital Rebel XSi 12.2 MP Digital SLR Camera (Silver)"), true).Id,
-                Price = 630M,
-                IsShipEnabled = true,
-                Weight = 2,
-                Length = 2,
-                Width = 2,
-                Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
-                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
-                StockQuantity = 10000,
-                NotifyAdminForQuantityBelow = 1,
-                AllowBackInStockSubscriptions = false,
-                DisplayStockAvailability = true,
-                LowStockActivity = LowStockActivity.DisableBuyButton,
-                BackorderMode = BackorderMode.NoBackorders,
-                OrderMinimumQuantity = 1,
-                OrderMaximumQuantity = 10000,
-                Published = true,
-                DisplayOrder = 1,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            });
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productCanonCamera);
             productCanonCamera.ProductCategories.Add(new ProductCategory()
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Camera, photo"),
@@ -6667,13 +6521,6 @@ namespace Nop.Services.Installation
                 ProductTemplateId = productTemplateSingleVariant.Id,
                 //SeName = "canon-vixia-hf100-camcorder",
                 AllowCustomerReviews = true,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(productCanonCamcoder);
-            productCanonCamcoder.ProductVariants.Add(new ProductVariant()
-            {
                 Price = 530M,
                 IsShipEnabled = true,
                 Weight = 7,
@@ -6691,10 +6538,10 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
-                DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            });
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productCanonCamcoder);
             productCanonCamcoder.ProductCategories.Add(new ProductCategory()
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Camera, photo"),
@@ -6719,13 +6566,6 @@ namespace Nop.Services.Installation
                 ProductTemplateId = productTemplateSingleVariant.Id,
                 //SeName = "compaq-presario-sr1519x-pentium-4-desktop-pc-with-cdrw",
                 AllowCustomerReviews = true,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(productCompaq);
-            productCompaq.ProductVariants.Add(new ProductVariant()
-            {
                 Price = 500M,
                 IsShipEnabled = true,
                 Weight = 7,
@@ -6743,10 +6583,10 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
-                DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            });
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productCompaq);
             productCompaq.ProductCategories.Add(new ProductCategory()
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Desktops"),
@@ -6771,13 +6611,6 @@ namespace Nop.Services.Installation
                 ProductTemplateId = productTemplateSingleVariant.Id,
                 //SeName = "cooking-for-two",
                 AllowCustomerReviews = true,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(productCookingForTwo);
-            productCookingForTwo.ProductVariants.Add(new ProductVariant()
-            {
                 Price = 19M,
                 OldPrice = 27M,
                 IsShipEnabled = true,
@@ -6796,10 +6629,10 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
-                DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            });
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productCookingForTwo);
             productCookingForTwo.ProductCategories.Add(new ProductCategory()
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Books"),
@@ -6824,13 +6657,6 @@ namespace Nop.Services.Installation
                 ProductTemplateId = productTemplateSingleVariant.Id,
                 //SeName = "corel-paint-shop-pro-photo-x2",
                 AllowCustomerReviews = true,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(productCorel);
-            productCorel.ProductVariants.Add(new ProductVariant()
-            {
                 Price = 65M,
                 IsShipEnabled = true,
                 Weight = 2,
@@ -6848,10 +6674,10 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
-                DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            });
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productCorel);
             productCorel.ProductCategories.Add(new ProductCategory()
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Software"),
@@ -6876,13 +6702,6 @@ namespace Nop.Services.Installation
                 ProductTemplateId = productTemplateInGrid.Id,
                 //SeName = "custom-t-shirt",
                 AllowCustomerReviews = true,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(productCustomTShirt);
-            productCustomTShirt.ProductVariants.Add(new ProductVariant()
-            {
                 Price = 15M,
                 IsShipEnabled = true,
                 Weight = 4,
@@ -6900,11 +6719,11 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
-                DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            });
-            productCustomTShirt.ProductVariants.FirstOrDefault().ProductVariantAttributes.Add(new ProductVariantAttribute()
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productCustomTShirt);
+            productCustomTShirt.ProductVariantAttributes.Add(new ProductVariantAttribute()
             {
                 ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Custom Text"),
                 TextPrompt = "Enter your text:",
@@ -6936,13 +6755,6 @@ namespace Nop.Services.Installation
                 ProductTemplateId = productTemplateSingleVariant.Id,
                 //SeName = "diamond-pave-earrings",
                 AllowCustomerReviews = true,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(productDiamondEarrings);
-            productDiamondEarrings.ProductVariants.Add(new ProductVariant()
-            {
                 Price = 569M,
                 IsShipEnabled = true,
                 Weight = 2,
@@ -6960,10 +6772,10 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
-                DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            });
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productDiamondEarrings);
             productDiamondEarrings.ProductCategories.Add(new ProductCategory()
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Jewelry"),
@@ -6988,13 +6800,6 @@ namespace Nop.Services.Installation
                 ProductTemplateId = productTemplateSingleVariant.Id,
                 //SeName = "diamond-tennis-bracelet",
                 AllowCustomerReviews = true,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(productDiamondBracelet);
-            productDiamondBracelet.ProductVariants.Add(new ProductVariant()
-            {
                 Price = 360M,
                 IsShipEnabled = true,
                 Weight = 2,
@@ -7012,10 +6817,10 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
-                DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            });
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productDiamondBracelet);
             productDiamondBracelet.ProductCategories.Add(new ProductCategory()
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Jewelry"),
@@ -7045,13 +6850,6 @@ namespace Nop.Services.Installation
                 ProductTemplateId = productTemplateSingleVariant.Id,
                 //SeName = "eatingwell-in-season",
                 AllowCustomerReviews = true,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(productEatingWell);
-            productEatingWell.ProductVariants.Add(new ProductVariant()
-            {
                 Price = 51M,
                 OldPrice = 67M,
                 IsShipEnabled = true,
@@ -7070,10 +6868,10 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
-                DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            });
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productEatingWell);
             productEatingWell.ProductCategories.Add(new ProductCategory()
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Books"),
@@ -7097,14 +6895,6 @@ namespace Nop.Services.Installation
                 ProductTemplateId = productTemplateInGrid.Id,
                 //SeName = "etnies-mens-digit-sneaker",
                 AllowCustomerReviews = true,
-                Published = true,
-                ShowOnHomePage = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(productEtnies);
-            productEtnies.ProductVariants.Add(new ProductVariant()
-            {
                 Price = 17.56M,
                 IsShipEnabled = true,
                 Weight = 2,
@@ -7122,10 +6912,11 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
-                DisplayOrder = 1,
+                ShowOnHomePage = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            });
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productEtnies);
             var pvaEtnies1 = new ProductVariantAttribute()
             {
                 ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Size"),
@@ -7152,7 +6943,7 @@ namespace Nop.Services.Installation
                 Name = "11",
                 DisplayOrder = 4,
             });
-            productEtnies.ProductVariants.FirstOrDefault().ProductVariantAttributes.Add(pvaEtnies1);
+            productEtnies.ProductVariantAttributes.Add(pvaEtnies1);
             var pvaEtnies2 = new ProductVariantAttribute()
             {
                 ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Color"),
@@ -7178,7 +6969,7 @@ namespace Nop.Services.Installation
                 ColorSquaresRgb = "#1fcb1a",
                 DisplayOrder = 3,
             });
-            productEtnies.ProductVariants.FirstOrDefault().ProductVariantAttributes.Add(pvaEtnies2);
+            productEtnies.ProductVariantAttributes.Add(pvaEtnies2);
             productEtnies.ProductCategories.Add(new ProductCategory()
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Shoes"),
@@ -7203,13 +6994,6 @@ namespace Nop.Services.Installation
                 ProductTemplateId = productTemplateSingleVariant.Id,
                 //SeName = "genuine-leather-handbag-with-cell-phone-holder-many-pockets",
                 AllowCustomerReviews = true,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(productLeatherHandbag);
-            productLeatherHandbag.ProductVariants.Add(new ProductVariant()
-            {
                 Price = 35M,
                 IsShipEnabled = true,
                 Weight = 2,
@@ -7227,10 +7011,10 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
-                DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            });
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productLeatherHandbag);
             productLeatherHandbag.ProductCategories.Add(new ProductCategory()
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Apparel accessories"),
@@ -7260,13 +7044,6 @@ namespace Nop.Services.Installation
                 ProductTemplateId = productTemplateSingleVariant.Id,
                 //SeName = "hp-iq506-touchsmart-desktop-pc",
                 AllowCustomerReviews = true,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(productHp506);
-            productHp506.ProductVariants.Add(new ProductVariant()
-            {
                 Price = 1199M,
                 IsShipEnabled = true,
                 Weight = 7,
@@ -7284,10 +7061,10 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
-                DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            });
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productHp506);
             productHp506.ProductCategories.Add(new ProductCategory()
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Desktops"),
@@ -7317,13 +7094,6 @@ namespace Nop.Services.Installation
                 ProductTemplateId = productTemplateSingleVariant.Id,
                 //SeName = "hp-pavilion-artist-edition-dv2890nr-141-inch-laptop",
                 AllowCustomerReviews = true,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(productHpPavilion1);
-            productHpPavilion1.ProductVariants.Add(new ProductVariant()
-            {
                 Price = 1590M,
                 IsShipEnabled = true,
                 Weight = 7,
@@ -7341,10 +7111,10 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
-                DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            });
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productHpPavilion1);
             productHpPavilion1.ProductCategories.Add(new ProductCategory()
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Notebooks"),
@@ -7402,13 +7172,6 @@ namespace Nop.Services.Installation
                 ProductTemplateId = productTemplateSingleVariant.Id,
                 //SeName = "hp-pavilion-elite-m9150f-desktop-pc",
                 AllowCustomerReviews = true,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(productHpPavilion2);
-            productHpPavilion2.ProductVariants.Add(new ProductVariant()
-            {
                 Price = 1350M,
                 IsShipEnabled = true,
                 Weight = 7,
@@ -7426,10 +7189,10 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
-                DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            });
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productHpPavilion2);
             productHpPavilion2.ProductCategories.Add(new ProductCategory()
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Desktops"),
@@ -7464,13 +7227,6 @@ namespace Nop.Services.Installation
                 ProductTemplateId = productTemplateSingleVariant.Id,
                 //SeName = "hp-pavilion-g60-230us-160-inch-laptop",
                 AllowCustomerReviews = true,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(productHpPavilion3);
-            productHpPavilion3.ProductVariants.Add(new ProductVariant()
-            {
                 Price = 1460M,
                 IsShipEnabled = true,
                 Weight = 7,
@@ -7488,10 +7244,10 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
-                DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            });
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productHpPavilion3);
             productHpPavilion3.ProductCategories.Add(new ProductCategory()
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Notebooks"),
@@ -7549,13 +7305,6 @@ namespace Nop.Services.Installation
                 ProductTemplateId = productTemplateInGrid.Id,
                 //SeName = "indiana-jones-shapeable-wool-hat",
                 AllowCustomerReviews = true,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(productHat);
-            productHat.ProductVariants.Add(new ProductVariant()
-            {
                 Price = 30M,
                 IsShipEnabled = true,
                 Weight = 2,
@@ -7573,10 +7322,10 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
-                DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            });
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productHat);
             var pvaHat1 = new ProductVariantAttribute()
             {
                 ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Size"),
@@ -7603,7 +7352,7 @@ namespace Nop.Services.Installation
                 Name = "X-Large",
                 DisplayOrder = 4,
             });
-            productHat.ProductVariants.FirstOrDefault().ProductVariantAttributes.Add(pvaHat1);
+            productHat.ProductVariantAttributes.Add(pvaHat1);
             productHat.ProductCategories.Add(new ProductCategory()
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Apparel accessories"),
@@ -7628,13 +7377,6 @@ namespace Nop.Services.Installation
                 ProductTemplateId = productTemplateSingleVariant.Id,
                 //SeName = "kensington-33117-international-all-in-one-travel-plug-adapter",
                 AllowCustomerReviews = true,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(productKensington);
-            productKensington.ProductVariants.Add(new ProductVariant()
-            {
                 Price = 35M,
                 IsShipEnabled = true,
                 Weight = 7,
@@ -7652,10 +7394,10 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
-                DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            });
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productKensington);
             productKensington.ProductCategories.Add(new ProductCategory()
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Accessories"),
@@ -7680,13 +7422,6 @@ namespace Nop.Services.Installation
                 ProductTemplateId = productTemplateSingleVariant.Id,
                 //SeName = "levis-skinny-511-jeans",
                 AllowCustomerReviews = true,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(productLeviJeans);
-            productLeviJeans.ProductVariants.Add(new ProductVariant()
-            {
                 Price = 43.5M,
                 OldPrice = 55M,
                 IsShipEnabled = true,
@@ -7705,26 +7440,26 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
-                DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            });
-            productLeviJeans.ProductVariants.FirstOrDefault().TierPrices.Add(new TierPrice()
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productLeviJeans);
+            productLeviJeans.TierPrices.Add(new TierPrice()
             {
                 Quantity = 3,
                 Price = 40
             });
-            productLeviJeans.ProductVariants.FirstOrDefault().TierPrices.Add(new TierPrice()
+            productLeviJeans.TierPrices.Add(new TierPrice()
             {
                 Quantity = 6,
                 Price = 38
             });
-            productLeviJeans.ProductVariants.FirstOrDefault().TierPrices.Add(new TierPrice()
+            productLeviJeans.TierPrices.Add(new TierPrice()
             {
                 Quantity = 10,
                 Price = 35
             });
-            productLeviJeans.ProductVariants.FirstOrDefault().HasTierPrices = true;
+            productLeviJeans.HasTierPrices = true;
 
             productLeviJeans.ProductCategories.Add(new ProductCategory()
             {
@@ -7755,13 +7490,6 @@ namespace Nop.Services.Installation
                 ProductTemplateId = productTemplateSingleVariant.Id,
                 //SeName = "major-league-baseball-2k9",
                 AllowCustomerReviews = true,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(productBaseball);
-            productBaseball.ProductVariants.Add(new ProductVariant()
-            {
                 Price = 14.99M,
                 IsShipEnabled = true,
                 Weight = 7,
@@ -7779,10 +7507,10 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
-                DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            });
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productBaseball);
             productBaseball.ProductCategories.Add(new ProductCategory()
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Games"),
@@ -7807,13 +7535,6 @@ namespace Nop.Services.Installation
                 ProductTemplateId = productTemplateSingleVariant.Id,
                 //SeName = "medal-of-honor-limited-edition-xbox-360",
                 AllowCustomerReviews = true,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(productMedalOfHonor);
-            productMedalOfHonor.ProductVariants.Add(new ProductVariant()
-            {
                 Price = 37M,
                 IsShipEnabled = true,
                 Weight = 7,
@@ -7831,10 +7552,10 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
-                DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            });
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productMedalOfHonor);
             productMedalOfHonor.ProductCategories.Add(new ProductCategory()
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Games"),
@@ -7859,13 +7580,6 @@ namespace Nop.Services.Installation
                 ProductTemplateId = productTemplateInGrid.Id,
                 //SeName = "microsoft-bluetooth-notebook-mouse-5000-macwindows",
                 AllowCustomerReviews = true,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(productMouse);
-            productMouse.ProductVariants.Add(new ProductVariant()
-            {
                 Price = 37M,
                 IsShipEnabled = true,
                 Weight = 7,
@@ -7883,10 +7597,10 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
-                DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            });
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productMouse);
             productMouse.ProductCategories.Add(new ProductCategory()
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Accessories"),
@@ -7911,13 +7625,6 @@ namespace Nop.Services.Installation
                 ProductTemplateId = productTemplateSingleVariant.Id,
                 //SeName = "nike-golf-casual-belt",
                 AllowCustomerReviews = true,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(productGolfBelt);
-            productGolfBelt.ProductVariants.Add(new ProductVariant()
-            {
                 Price = 45M,
                 IsShipEnabled = true,
                 Weight = 7,
@@ -7935,10 +7642,10 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
-                DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            });
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productGolfBelt);
             productGolfBelt.ProductCategories.Add(new ProductCategory()
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Apparel accessories"),
@@ -7963,13 +7670,6 @@ namespace Nop.Services.Installation
                 ProductTemplateId = productTemplateSingleVariant.Id,
                 //SeName = "panasonic-hdc-sdt750k-high-definition-3d-camcorder",
                 AllowCustomerReviews = true,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(productPanasonic);
-            productPanasonic.ProductVariants.Add(new ProductVariant()
-            {
                 Price = 1300M,
                 IsShipEnabled = true,
                 Weight = 7,
@@ -7987,10 +7687,10 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
-                DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            });
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productPanasonic);
             productPanasonic.ProductCategories.Add(new ProductCategory()
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Camera, photo"),
@@ -8015,13 +7715,6 @@ namespace Nop.Services.Installation
                 ProductTemplateId = productTemplateSingleVariant.Id,
                 //SeName = "ray-ban-aviator-sunglasses-rb-3025",
                 AllowCustomerReviews = true,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(productSunglasses);
-            productSunglasses.ProductVariants.Add(new ProductVariant()
-            {
                 Price = 25M,
                 IsShipEnabled = true,
                 Weight = 7,
@@ -8039,10 +7732,10 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
-                DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            });
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productSunglasses);
             productSunglasses.ProductCategories.Add(new ProductCategory()
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Apparel accessories"),
@@ -8067,13 +7760,6 @@ namespace Nop.Services.Installation
                 ProductTemplateId = productTemplateSingleVariant.Id,
                 //SeName = "samsung-rugby-a837-phone-black-att",
                 AllowCustomerReviews = true,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(productSamsungPhone);
-            productSamsungPhone.ProductVariants.Add(new ProductVariant()
-            {
                 Price = 100M,
                 IsShipEnabled = true,
                 Weight = 7,
@@ -8091,10 +7777,10 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
-                DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            });
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productSamsungPhone);
             productSamsungPhone.ProductCategories.Add(new ProductCategory()
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Cell phones"),
@@ -8124,13 +7810,6 @@ namespace Nop.Services.Installation
                 ProductTemplateId = productTemplateSingleVariant.Id,
                 //SeName = "sony-dcr-sr85-1mp-60gb-hard-drive-handycam-camcorder",
                 AllowCustomerReviews = true,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(productSonyCamcoder);
-            productSonyCamcoder.ProductVariants.Add(new ProductVariant()
-            {
                 Price = 349M,
                 IsShipEnabled = true,
                 Weight = 7,
@@ -8148,10 +7827,10 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
-                DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            });
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productSonyCamcoder);
             productSonyCamcoder.ProductCategories.Add(new ProductCategory()
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Camera, photo"),
@@ -8176,13 +7855,6 @@ namespace Nop.Services.Installation
                 ProductTemplateId = productTemplateSingleVariant.Id,
                 //SeName = "the-best-skillet-recipes",
                 AllowCustomerReviews = true,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(productBestSkilletRecipes);
-            productBestSkilletRecipes.ProductVariants.Add(new ProductVariant()
-            {
                 Price = 24M,
                 OldPrice = 35M,
                 IsShipEnabled = true,
@@ -8201,10 +7873,10 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
-                DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            });
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productBestSkilletRecipes);
             productBestSkilletRecipes.ProductCategories.Add(new ProductCategory()
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Books"),
@@ -8229,13 +7901,6 @@ namespace Nop.Services.Installation
                 ProductTemplateId = productTemplateSingleVariant.Id,
                 //SeName = "toshiba-satellite-a305-s6908-154-inch-laptop",
                 AllowCustomerReviews = true,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(productSatellite);
-            productSatellite.ProductVariants.Add(new ProductVariant()
-            {
                 Price = 1360M,
                 IsShipEnabled = true,
                 Weight = 7,
@@ -8253,10 +7918,10 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
-                DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            });
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productSatellite);
             productSatellite.ProductCategories.Add(new ProductCategory()
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Notebooks"),
@@ -8309,13 +7974,6 @@ namespace Nop.Services.Installation
                 ProductTemplateId = productTemplateSingleVariant.Id,
                 //SeName = "v-blue-juniors-cuffed-denim-short-with-rhinestones",
                 AllowCustomerReviews = true,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(productDenimShort);
-            productDenimShort.ProductVariants.Add(new ProductVariant()
-            {
                 Price = 10M,
                 IsShipEnabled = true,
                 Weight = 2,
@@ -8333,10 +7991,10 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
-                DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            });
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productDenimShort);
             productDenimShort.ProductCategories.Add(new ProductCategory()
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Jeans"),
@@ -8361,13 +8019,6 @@ namespace Nop.Services.Installation
                 ProductTemplateId = productTemplateSingleVariant.Id,
                 //SeName = "vintage-style-three-stone-diamond-engagement-ring",
                 AllowCustomerReviews = true,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(productEngagementRing);
-            productEngagementRing.ProductVariants.Add(new ProductVariant()
-            {
                 Price = 2100M,
                 IsShipEnabled = true,
                 Weight = 2,
@@ -8385,10 +8036,10 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
-                DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            });
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productEngagementRing);
             productEngagementRing.ProductCategories.Add(new ProductCategory()
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Jewelry"),
@@ -8418,13 +8069,6 @@ namespace Nop.Services.Installation
                 ProductTemplateId = productTemplateSingleVariant.Id,
                 //SeName = "world-of-warcraft-wrath-of-the-lich-king-expansion-pack",
                 AllowCustomerReviews = true,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(productWoW);
-            productWoW.ProductVariants.Add(new ProductVariant()
-            {
                 Price = 29.5M,
                 IsShipEnabled = true,
                 Weight = 7,
@@ -8442,10 +8086,10 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
-                DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            });
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productWoW);
             productWoW.ProductCategories.Add(new ProductCategory()
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Games"),
@@ -8470,13 +8114,6 @@ namespace Nop.Services.Installation
                 ProductTemplateId = productTemplateSingleVariant.Id,
                 //SeName = "world-wide-soccer-manager-2009",
                 AllowCustomerReviews = true,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(productSoccer);
-            productSoccer.ProductVariants.Add(new ProductVariant()
-            {
                 Price = 25.99M,
                 IsShipEnabled = true,
                 Weight = 7,
@@ -8494,10 +8131,10 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
-                DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-            });
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productSoccer);
             productSoccer.ProductCategories.Add(new ProductCategory()
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Games"),
@@ -8514,19 +8151,6 @@ namespace Nop.Services.Installation
 
 
 
-            var productPokerFace = new Product()
-            {
-                Name = "Poker Face",
-                ShortDescription = "Poker Face by Lady GaGa",
-                FullDescription = "<p>Original Release Date: October 28, 2008</p><p>Release Date: October 28, 2008</p><p>Label: Streamline/Interscoope/KonLive/Cherrytree</p><p>Copyright: (C) 2008 Interscope Records</p>",
-                ProductTemplateId = productTemplateSingleVariant.Id,
-                //SeName = "poker-face",
-                AllowCustomerReviews = true,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(productPokerFace);
             var downloadPokerFace1 = new Download()
             {
                 DownloadGuid = Guid.NewGuid(),
@@ -8547,8 +8171,14 @@ namespace Nop.Services.Installation
                 IsNew = true,
             };
             downloadService.InsertDownload(downloadPokerFace2);
-            productPokerFace.ProductVariants.Add(new ProductVariant()
+            var productPokerFace = new Product()
             {
+                Name = "Poker Face",
+                ShortDescription = "Poker Face by Lady GaGa",
+                FullDescription = "<p>Original Release Date: October 28, 2008</p><p>Release Date: October 28, 2008</p><p>Label: Streamline/Interscoope/KonLive/Cherrytree</p><p>Copyright: (C) 2008 Interscope Records</p>",
+                ProductTemplateId = productTemplateSingleVariant.Id,
+                //SeName = "poker-face",
+                AllowCustomerReviews = true,
                 Price = 2.8M,
                 TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Downloadable Products").Id,
                 ManageInventoryMethod = ManageInventoryMethod.DontManageStock,
@@ -8560,10 +8190,6 @@ namespace Nop.Services.Installation
                 BackorderMode = BackorderMode.NoBackorders,
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
-                Published = true,
-                DisplayOrder = 1,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
                 IsDownload = true,
                 DownloadId = downloadPokerFace1.Id,
                 DownloadActivationType = DownloadActivationType.WhenOrderIsPaid,
@@ -8571,8 +8197,11 @@ namespace Nop.Services.Installation
                 HasUserAgreement = false,
                 HasSampleDownload = true,
                 SampleDownloadId = downloadPokerFace2.Id,
-
-            });
+                Published = true,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productPokerFace);
             productPokerFace.ProductCategories.Add(new ProductCategory()
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Digital downloads"),
@@ -8589,19 +8218,6 @@ namespace Nop.Services.Installation
 
 
 
-            var productSingleLadies = new Product()
-            {
-                Name = "Single Ladies (Put A Ring On It)",
-                ShortDescription = "Single Ladies (Put A Ring On It) by Beyonce",
-                FullDescription = "<p>Original Release Date: November 18, 2008</p><p>Label: Music World Music/Columbia</p><p>Copyright: (P) 2008 SONY BMG MUSIC ENTERTAINMENT</p><p>Song Length: 3:13 minutes</p>",
-                ProductTemplateId = productTemplateSingleVariant.Id,
-                //SeName = "single-ladies-put-a-ring-on-it",
-                AllowCustomerReviews = true,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(productSingleLadies);
             var downloadSingleLadies1 = new Download()
             {
                 DownloadGuid = Guid.NewGuid(),
@@ -8622,8 +8238,14 @@ namespace Nop.Services.Installation
                 IsNew = true,
             };
             downloadService.InsertDownload(downloadSingleLadies2);
-            productSingleLadies.ProductVariants.Add(new ProductVariant()
+            var productSingleLadies = new Product()
             {
+                Name = "Single Ladies (Put A Ring On It)",
+                ShortDescription = "Single Ladies (Put A Ring On It) by Beyonce",
+                FullDescription = "<p>Original Release Date: November 18, 2008</p><p>Label: Music World Music/Columbia</p><p>Copyright: (P) 2008 SONY BMG MUSIC ENTERTAINMENT</p><p>Song Length: 3:13 minutes</p>",
+                ProductTemplateId = productTemplateSingleVariant.Id,
+                //SeName = "single-ladies-put-a-ring-on-it",
+                AllowCustomerReviews = true,
                 Price = 3M,
                 TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Downloadable Products").Id,
                 ManageInventoryMethod = ManageInventoryMethod.DontManageStock,
@@ -8635,10 +8257,6 @@ namespace Nop.Services.Installation
                 BackorderMode = BackorderMode.NoBackorders,
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
-                Published = true,
-                DisplayOrder = 1,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
                 IsDownload = true,
                 DownloadId = downloadSingleLadies1.Id,
                 DownloadActivationType = DownloadActivationType.WhenOrderIsPaid,
@@ -8646,8 +8264,12 @@ namespace Nop.Services.Installation
                 HasUserAgreement = false,
                 HasSampleDownload = true,
                 SampleDownloadId = downloadSingleLadies2.Id,
+                Published = true,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productSingleLadies);
 
-            });
             productSingleLadies.ProductCategories.Add(new ProductCategory()
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Digital downloads"),
@@ -8664,19 +8286,6 @@ namespace Nop.Services.Installation
 
 
 
-            var productBattleOfLa = new Product()
-            {
-                Name = "The Battle Of Los Angeles",
-                ShortDescription = "The Battle Of Los Angeles by Rage Against The Machine",
-                FullDescription = "<p># Original Release Date: November 2, 1999<br /># Label: Epic<br /># Copyright: 1999 Sony Music Entertainment Inc. (c) 1999 Sony Music Entertainment Inc.</p>",
-                ProductTemplateId = productTemplateSingleVariant.Id,
-                //SeName = "the-battle-of-los-angeles",
-                AllowCustomerReviews = true,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(productBattleOfLa);
             var downloadBattleOfLa = new Download()
             {
                 DownloadGuid = Guid.NewGuid(),
@@ -8687,8 +8296,14 @@ namespace Nop.Services.Installation
                 IsNew = true,
             };
             downloadService.InsertDownload(downloadBattleOfLa);
-            productBattleOfLa.ProductVariants.Add(new ProductVariant()
+            var productBattleOfLa = new Product()
             {
+                Name = "The Battle Of Los Angeles",
+                ShortDescription = "The Battle Of Los Angeles by Rage Against The Machine",
+                FullDescription = "<p># Original Release Date: November 2, 1999<br /># Label: Epic<br /># Copyright: 1999 Sony Music Entertainment Inc. (c) 1999 Sony Music Entertainment Inc.</p>",
+                ProductTemplateId = productTemplateSingleVariant.Id,
+                //SeName = "the-battle-of-los-angeles",
+                AllowCustomerReviews = true,
                 Price = 3M,
                 TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Downloadable Products").Id,
                 ManageInventoryMethod = ManageInventoryMethod.DontManageStock,
@@ -8700,17 +8315,16 @@ namespace Nop.Services.Installation
                 BackorderMode = BackorderMode.NoBackorders,
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
-                Published = true,
-                DisplayOrder = 1,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
                 IsDownload = true,
                 DownloadId = downloadBattleOfLa.Id,
                 DownloadActivationType = DownloadActivationType.WhenOrderIsPaid,
                 UnlimitedDownloads = true,
                 HasUserAgreement = false,
-
-            });
+                Published = true,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productBattleOfLa);
             productBattleOfLa.ProductCategories.Add(new ProductCategory()
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Digital downloads"),

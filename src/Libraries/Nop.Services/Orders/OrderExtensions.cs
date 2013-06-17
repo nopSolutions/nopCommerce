@@ -176,7 +176,7 @@ namespace Nop.Services.Orders
             foreach (var orderItem in order.OrderItems)
             {
                 //we can ship only shippable products
-                if (!orderItem.ProductVariant.IsShipEnabled)
+                if (!orderItem.Product.IsShipEnabled)
                     continue;
 
                 var totalNumberOfItemsCanBeAddedToShipment = orderItem.GetTotalNumberOfItemsCanBeAddedToShipment();
@@ -201,7 +201,7 @@ namespace Nop.Services.Orders
             foreach (var orderItem in order.OrderItems)
             {
                 //we can ship only shippable products
-                if (!orderItem.ProductVariant.IsShipEnabled)
+                if (!orderItem.Product.IsShipEnabled)
                     continue;
 
                 var totalNumberOfNotYetShippedItems = orderItem.GetTotalNumberOfNotYetShippedItems();
@@ -226,7 +226,7 @@ namespace Nop.Services.Orders
             foreach (var orderItem in order.OrderItems)
             {
                 //we can ship only shippable products
-                if (!orderItem.ProductVariant.IsShipEnabled)
+                if (!orderItem.Product.IsShipEnabled)
                     continue;
 
                 var totalNumberOfShippedItems = orderItem.GetTotalNumberOfShippedItems();

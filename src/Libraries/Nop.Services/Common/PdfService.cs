@@ -340,14 +340,10 @@ namespace Nop.Services.Common
                 for (int i = 0; i < orderItems.Count; i++)
                 {
                     var orderItem = orderItems[i];
-                    var pv = orderItem.ProductVariant;
+                    var p = orderItem.Product;
 
                     //product name
-                    string name = "";
-                    if (!String.IsNullOrEmpty(pv.GetLocalized(x => x.Name, lang.Id)))
-                        name = string.Format("{0} ({1})", pv.Product.GetLocalized(x => x.Name, lang.Id), pv.GetLocalized(x => x.Name, lang.Id));
-                    else
-                        name = pv.Product.GetLocalized(x => x.Name, lang.Id);
+                    string name = p.GetLocalized(x => x.Name, lang.Id);
                     cell = new PdfPCell();
                     cell.AddElement(new Paragraph(name, font));
                     cell.HorizontalAlignment = Element.ALIGN_LEFT;
@@ -358,7 +354,7 @@ namespace Nop.Services.Common
                     //SKU
                     if (_catalogSettings.ShowProductSku)
                     {
-                        var sku = pv.FormatSku(orderItem.AttributesXml, _productAttributeParser);
+                        var sku = p.FormatSku(orderItem.AttributesXml, _productAttributeParser);
                         cell = new PdfPCell(new Phrase(sku ?? String.Empty, font));
                         cell.HorizontalAlignment = Element.ALIGN_CENTER;
                         productsTable.AddCell(cell);
@@ -796,12 +792,8 @@ namespace Nop.Services.Common
                         if (orderItem == null)
                             continue;
 
-                        var pv = orderItem.ProductVariant;
-                        string name = "";
-                        if (!String.IsNullOrEmpty(pv.GetLocalized(x => x.Name, lang.Id)))
-                            name = string.Format("{0} ({1})", pv.Product.GetLocalized(x => x.Name, lang.Id), pv.GetLocalized(x => x.Name, lang.Id));
-                        else
-                            name = pv.Product.GetLocalized(x => x.Name, lang.Id);
+                        var p = orderItem.Product;
+                        string name = p.GetLocalized(x => x.Name, lang.Id);
                         cell = new PdfPCell();
                         cell.AddElement(new Paragraph(name, font));
                         cell.HorizontalAlignment = Element.ALIGN_LEFT;
@@ -810,7 +802,7 @@ namespace Nop.Services.Common
                         productsTable.AddCell(cell);
 
                         //SKU
-                        var sku = pv.FormatSku(orderItem.AttributesXml, _productAttributeParser);
+                        var sku = p.FormatSku(orderItem.AttributesXml, _productAttributeParser);
                         cell = new PdfPCell(new Phrase(sku ?? String.Empty, font));
                         cell.HorizontalAlignment = Element.ALIGN_CENTER;
                         productsTable.AddCell(cell);
@@ -879,6 +871,17 @@ namespace Nop.Services.Common
                 doc.Add(new Paragraph(HtmlHelper.StripTags(HtmlHelper.ConvertHtmlToPlainText(productFullDescription)), font));
                 doc.Add(new Paragraph(" "));
 
+                doc.Add(new Paragraph(String.Format("{0}: {1} {2}", _localizationService.GetResource("PDFProductCatalog.Price", lang.Id), product.Price.ToString("0.00"), _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode), font));
+                doc.Add(new Paragraph(String.Format("{0}: {1}", _localizationService.GetResource("PDFProductCatalog.SKU", lang.Id), product.Sku), font));
+
+                if (product.IsShipEnabled && product.Weight > Decimal.Zero)
+                    doc.Add(new Paragraph(String.Format("{0}: {1} {2}", _localizationService.GetResource("PDFProductCatalog.Weight", lang.Id), product.Weight.ToString("0.00"), _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name), font));
+
+                if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
+                    doc.Add(new Paragraph(String.Format("{0}: {1}", _localizationService.GetResource("PDFProductCatalog.StockQuantity", lang.Id), product.StockQuantity), font));
+
+                doc.Add(new Paragraph(" "));
+
                 var pictures = _pictureService.GetPicturesByProductId(product.Id);
                 if (pictures.Count > 0)
                 {
@@ -913,46 +916,6 @@ namespace Nop.Services.Common
                     doc.Add(new Paragraph(" "));
                 }
 
-                int pvNum = 1;
-
-                foreach (var productVariant in _productService.GetProductVariantsByProductId(product.Id, true))
-                {
-                    string pvName = String.IsNullOrEmpty(productVariant.GetLocalized(x => x.Name, lang.Id)) ? _localizationService.GetResource("PDFProductCatalog.UnnamedProductVariant", lang.Id) : productVariant.GetLocalized(x => x.Name, lang.Id);
-
-                    doc.Add(new Paragraph(String.Format("{0}.{1}. {2}", productNumber, pvNum, pvName), font));
-                    doc.Add(new Paragraph(" "));
-
-                    string productVariantDescription = productVariant.GetLocalized(x => x.Description, lang.Id);
-                    if (!String.IsNullOrEmpty(productVariantDescription))
-                    {
-                        doc.Add(new Paragraph(HtmlHelper.StripTags(HtmlHelper.ConvertHtmlToPlainText(productVariantDescription)), font));
-                        doc.Add(new Paragraph(" "));
-                    }
-
-                    var pic = _pictureService.GetPictureById(productVariant.PictureId);
-                    if (pic != null)
-                    {
-                        var picBinary = _pictureService.LoadPictureBinary(pic);
-                        if (picBinary != null && picBinary.Length > 0)
-                        {
-                            var pictureLocalPath = _pictureService.GetThumbLocalPath(pic, 200, false);
-                            doc.Add(Image.GetInstance(pictureLocalPath));
-                        }
-                    }
-
-                    doc.Add(new Paragraph(String.Format("{0}: {1} {2}", _localizationService.GetResource("PDFProductCatalog.Price", lang.Id), productVariant.Price.ToString("0.00"), _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode), font));
-                    doc.Add(new Paragraph(String.Format("{0}: {1}", _localizationService.GetResource("PDFProductCatalog.SKU", lang.Id), productVariant.Sku), font));
-
-                    if (productVariant.IsShipEnabled && productVariant.Weight > Decimal.Zero)
-                        doc.Add(new Paragraph(String.Format("{0}: {1} {2}", _localizationService.GetResource("PDFProductCatalog.Weight", lang.Id), productVariant.Weight.ToString("0.00"), _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name), font));
-
-                    if (productVariant.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
-                        doc.Add(new Paragraph(String.Format("{0}: {1}", _localizationService.GetResource("PDFProductCatalog.StockQuantity", lang.Id), productVariant.StockQuantity), font));
-
-                    doc.Add(new Paragraph(" "));
-
-                    pvNum++;
-                }
 
                 productNumber++;
 

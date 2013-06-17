@@ -51,19 +51,19 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Formats attributes
         /// </summary>
-        /// <param name="productVariant">Product variant</param>
+        /// <param name="product">Product</param>
         /// <param name="attributes">Attributes</param>
         /// <returns>Attributes</returns>
-        public string FormatAttributes(ProductVariant productVariant, string attributes)
+        public string FormatAttributes(Product product, string attributes)
         {
             var customer = _workContext.CurrentCustomer;
-            return FormatAttributes(productVariant, attributes, customer);
+            return FormatAttributes(product, attributes, customer);
         }
         
         /// <summary>
         /// Formats attributes
         /// </summary>
-        /// <param name="productVariant">Product variant</param>
+        /// <param name="product">Product</param>
         /// <param name="attributes">Attributes</param>
         /// <param name="customer">Customer</param>
         /// <param name="serapator">Serapator</param>
@@ -73,7 +73,7 @@ namespace Nop.Services.Catalog
         /// <param name="renderGiftCardAttributes">A value indicating whether to render gift card attributes</param>
         /// <param name="allowHyperlinks">A value indicating whether to HTML hyperink tags could be rendered (if required)</param>
         /// <returns>Attributes</returns>
-        public string FormatAttributes(ProductVariant productVariant, string attributes,
+        public string FormatAttributes(Product product, string attributes,
             Customer customer, string serapator = "<br />", bool htmlEncode = true, bool renderPrices = true,
             bool renderProductAttributes = true, bool renderGiftCardAttributes = true,
             bool allowHyperlinks = true)
@@ -161,7 +161,7 @@ namespace Nop.Services.Catalog
                                     if (renderPrices)
                                     {
                                         decimal taxRate = decimal.Zero;
-                                        decimal priceAdjustmentBase = _taxService.GetProductPrice(productVariant, pvaValue.PriceAdjustment, customer, out taxRate);
+                                        decimal priceAdjustmentBase = _taxService.GetProductPrice(product, pvaValue.PriceAdjustment, customer, out taxRate);
                                         decimal priceAdjustment = _currencyService.ConvertFromPrimaryStoreCurrency(priceAdjustmentBase, _workContext.WorkingCurrency);
                                         if (priceAdjustmentBase > 0)
                                         {
@@ -194,7 +194,7 @@ namespace Nop.Services.Catalog
             //gift cards
             if (renderGiftCardAttributes)
             {
-                if (productVariant.IsGiftCard)
+                if (product.IsGiftCard)
                 {
                     string giftCardRecipientName = "";
                     string giftCardRecipientEmail = "";
@@ -205,11 +205,11 @@ namespace Nop.Services.Catalog
                         out giftCardSenderName, out giftCardSenderEmail, out giftCardMessage);
 
                     //sender
-                    var giftCardFrom = productVariant.GiftCardType == GiftCardType.Virtual ?
+                    var giftCardFrom = product.GiftCardType == GiftCardType.Virtual ?
                         string.Format(_localizationService.GetResource("GiftCardAttribute.From.Virtual"), giftCardSenderName, giftCardSenderEmail) :
                         string.Format(_localizationService.GetResource("GiftCardAttribute.From.Physical"), giftCardSenderName);
                     //recipient
-                    var giftCardFor = productVariant.GiftCardType == GiftCardType.Virtual ?
+                    var giftCardFor = product.GiftCardType == GiftCardType.Virtual ?
                         string.Format(_localizationService.GetResource("GiftCardAttribute.For.Virtual"), giftCardRecipientName, giftCardRecipientEmail) :
                         string.Format(_localizationService.GetResource("GiftCardAttribute.For.Physical"), giftCardRecipientName);
 

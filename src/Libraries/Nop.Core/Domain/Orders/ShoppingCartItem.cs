@@ -25,9 +25,9 @@ namespace Nop.Core.Domain.Orders
         public int CustomerId { get; set; }
 
         /// <summary>
-        /// Gets or sets the product variant identifier
+        /// Gets or sets the product identifier
         /// </summary>
-        public int ProductVariantId { get; set; }
+        public int ProductId { get; set; }
 
         /// <summary>
         /// Gets or sets the product variant attributes
@@ -70,9 +70,9 @@ namespace Nop.Core.Domain.Orders
         }
 
         /// <summary>
-        /// Gets or sets the product variant
+        /// Gets or sets the product
         /// </summary>
-        public virtual ProductVariant ProductVariant { get; set; }
+        public virtual Product Product { get; set; }
 
         /// <summary>
         /// Gets or sets the customer
@@ -86,9 +86,9 @@ namespace Nop.Core.Domain.Orders
         {
             get
             {
-                var productVariant = this.ProductVariant;
-                if (productVariant != null)
-                    return productVariant.IsFreeShipping;
+                var product = this.Product;
+                if (product != null)
+                    return product.IsFreeShipping;
                 return true;
             }
         }
@@ -100,9 +100,9 @@ namespace Nop.Core.Domain.Orders
         {
             get
             {
-                var productVariant = this.ProductVariant;
-                if (productVariant != null)
-                    return productVariant.IsShipEnabled;
+                var product = this.Product;
+                if (product != null)
+                    return product.IsShipEnabled;
                 return false;
             }
         }
@@ -115,9 +115,9 @@ namespace Nop.Core.Domain.Orders
             get
             {
                 decimal additionalShippingCharge = decimal.Zero;
-                var productVariant = this.ProductVariant;
-                if (productVariant != null)
-                    additionalShippingCharge = productVariant.AdditionalShippingCharge * Quantity;
+                var product = this.Product;
+                if (product != null)
+                    additionalShippingCharge = product.AdditionalShippingCharge * Quantity;
                 return additionalShippingCharge;
             }
         }
@@ -129,9 +129,9 @@ namespace Nop.Core.Domain.Orders
         {
             get
             {
-                var productVariant = this.ProductVariant;
-                if (productVariant != null)
-                    return productVariant.IsTaxExempt;
+                var product = this.Product;
+                if (product != null)
+                    return product.IsTaxExempt;
                 return false;
             }
         }

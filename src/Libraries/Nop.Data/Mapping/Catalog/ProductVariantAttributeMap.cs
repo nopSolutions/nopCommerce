@@ -11,9 +11,9 @@ namespace Nop.Data.Mapping.Catalog
             this.HasKey(pva => pva.Id);
             this.Ignore(pva => pva.AttributeControlType);
 
-            this.HasRequired(pva => pva.ProductVariant)
-                .WithMany(pv => pv.ProductVariantAttributes)
-                .HasForeignKey(pva => pva.ProductVariantId);
+            this.HasRequired(pva => pva.Product)
+                .WithMany(p => p.ProductVariantAttributes)
+                .HasForeignKey(pva => pva.ProductId);
             
             this.HasRequired(pva => pva.ProductAttribute)
                 .WithMany()

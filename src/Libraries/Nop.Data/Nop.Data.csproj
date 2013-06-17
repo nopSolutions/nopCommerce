@@ -153,7 +153,6 @@
     <Compile Include="Mapping\Catalog\ProductCategoryMap.cs" />
     <Compile Include="Mapping\Catalog\CategoryMap.cs" />
     <Compile Include="Mapping\Catalog\ProductMap.cs" />
-    <Compile Include="Mapping\Catalog\ProductVariantMap.cs" />
     <Compile Include="Mapping\Customers\CustomerMap.cs" />
     <Compile Include="Mapping\Logging\LogMap.cs" />
     <Compile Include="Mapping\Localization\LanguageMap.cs" />

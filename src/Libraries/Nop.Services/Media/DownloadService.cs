@@ -129,21 +129,21 @@ namespace Nop.Services.Media
             if (order.OrderStatus == OrderStatus.Cancelled)
                 return false;
 
-            var productVariant = orderItem.ProductVariant;
-            if (productVariant == null || !productVariant.IsDownload)
+            var product = orderItem.Product;
+            if (product == null || !product.IsDownload)
                 return false;
 
             //payment status
-            switch (productVariant.DownloadActivationType)
+            switch (product.DownloadActivationType)
             {
                 case DownloadActivationType.WhenOrderIsPaid:
                     {
                         if (order.PaymentStatus == PaymentStatus.Paid && order.PaidDateUtc.HasValue)
                         {
                             //expiration date
-                            if (productVariant.DownloadExpirationDays.HasValue)
+                            if (product.DownloadExpirationDays.HasValue)
                             {
-                                if (order.PaidDateUtc.Value.AddDays(productVariant.DownloadExpirationDays.Value) > DateTime.UtcNow)
+                                if (order.PaidDateUtc.Value.AddDays(product.DownloadExpirationDays.Value) > DateTime.UtcNow)
                                 {
                                     return true;
                                 }
@@ -160,9 +160,9 @@ namespace Nop.Services.Media
                         if (orderItem.IsDownloadActivated)
                         {
                             //expiration date
-                            if (productVariant.DownloadExpirationDays.HasValue)
+                            if (product.DownloadExpirationDays.HasValue)
                             {
-                                if (order.CreatedOnUtc.AddDays(productVariant.DownloadExpirationDays.Value) > DateTime.UtcNow)
+                                if (order.CreatedOnUtc.AddDays(product.DownloadExpirationDays.Value) > DateTime.UtcNow)
                                 {
                                     return true;
                                 }

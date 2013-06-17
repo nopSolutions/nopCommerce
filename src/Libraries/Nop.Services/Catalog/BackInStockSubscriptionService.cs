@@ -70,10 +70,9 @@ namespace Nop.Services.Catalog
         /// <param name="storeId">Store identifier; pass 0 to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Subscriptions</returns>
         public virtual IPagedList<BackInStockSubscription> GetAllSubscriptionsByCustomerId(int customerId,
-            int storeId, int pageIndex, int pageSize, bool showHidden = false)
+            int storeId, int pageIndex, int pageSize)
         {
             var query = _backInStockSubscriptionRepository.Table;
             //customer
@@ -82,12 +81,7 @@ namespace Nop.Services.Catalog
             if (storeId > 0)
                 query = query.Where(biss => biss.StoreId == storeId);
             //product
-            query = query.Where(biss => !biss.ProductVariant.Deleted);
-            if (!showHidden)
-                query = query.Where(biss => biss.ProductVariant.Published);
-            query = query.Where(biss => !biss.ProductVariant.Product.Deleted);
-            if (!showHidden)
-                query = query.Where(biss => biss.ProductVariant.Product.Published);
+            query = query.Where(biss => !biss.Product.Deleted);
             query = query.OrderByDescending(biss => biss.CreatedOnUtc);
 
             return new PagedList<BackInStockSubscription>(query, pageIndex, pageSize);
@@ -96,25 +90,22 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Gets all subscriptions
         /// </summary>
-        /// <param name="productVariantId">Product variant identifier</param>
+        /// <param name="productId">Product identifier</param>
         /// <param name="storeId">Store identifier; pass 0 to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Subscriptions</returns>
-        public virtual IPagedList<BackInStockSubscription> GetAllSubscriptionsByProductVariantId(int productVariantId,
-            int storeId, int pageIndex, int pageSize, bool showHidden = false)
+        public virtual IPagedList<BackInStockSubscription> GetAllSubscriptionsByProductId(int productId,
+            int storeId, int pageIndex, int pageSize)
         {
             var query = _backInStockSubscriptionRepository.Table;
             //product
-            query = query.Where(biss => biss.ProductVariantId == productVariantId);
+            query = query.Where(biss => biss.ProductId == productId);
             //store
             if (storeId > 0)
                 query = query.Where(biss => biss.StoreId == storeId);
             //customer
-            query = query.Where(biss => !biss.Customer.Deleted);
-            if (!showHidden)
-                query = query.Where(biss => biss.Customer.Active);
+            query = query.Where(biss => !biss.Customer.Deleted && biss.Customer.Active);
             query = query.OrderByDescending(biss => biss.CreatedOnUtc);
             return new PagedList<BackInStockSubscription>(query, pageIndex, pageSize);
         }
@@ -123,16 +114,17 @@ namespace Nop.Services.Catalog
         /// Gets all subscriptions
         /// </summary>
         /// <param name="customerId">Customer id</param>
-        /// <param name="productVariantId">Product variant identifier</param>
+        /// <param name="productId">Product identifier</param>
         /// <param name="storeId">Store identifier</param>
         /// <returns>Subscriptions</returns>
-        public virtual BackInStockSubscription FindSubscription(int customerId, int productVariantId, int storeId)
+        public virtual BackInStockSubscription FindSubscription(int customerId, int productId, int storeId)
         {
-            var query = _backInStockSubscriptionRepository.Table;
-            query = query.Where(biss => biss.CustomerId == customerId);
-            query = query.Where(biss => biss.ProductVariantId == productVariantId);
-            query = query.Where(biss => biss.StoreId == storeId);
-            query = query.OrderByDescending(biss => biss.CreatedOnUtc);
+            var query = from biss in _backInStockSubscriptionRepository.Table
+                        orderby biss.CreatedOnUtc descending
+                        where biss.CustomerId == customerId &&
+                              biss.ProductId == productId &&
+                              biss.StoreId == storeId
+                        select biss;
 
             var subscription = query.FirstOrDefault();
             return subscription;
@@ -185,15 +177,15 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Send notification to subscribers
         /// </summary>
-        /// <param name="productVariant"></param>
+        /// <param name="product">Product</param>
         /// <returns>Number of sent email</returns>
-        public virtual int SendNotificationsToSubscribers(ProductVariant productVariant)
+        public virtual int SendNotificationsToSubscribers(Product product)
         {
-            if (productVariant == null)
-                throw new ArgumentNullException("productVariant");
+            if (product == null)
+                throw new ArgumentNullException("product");
 
             int result = 0;
-            var subscriptions = GetAllSubscriptionsByProductVariantId(productVariant.Id, 0, 0, int.MaxValue);
+            var subscriptions = GetAllSubscriptionsByProductId(product.Id, 0, 0, int.MaxValue);
             foreach (var subscription in subscriptions)
             {
                 //ensure that customer is registered (simple and fast way)

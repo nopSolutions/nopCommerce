@@ -131,10 +131,8 @@ namespace Nop.Services.Catalog
                                 {
                                     Id = pt.Id,
                                     ProductCount = pt.Products
-                                        //published and not deleted product/variants
-                                        .Count(p => !p.Deleted &&
-                                            p.Published &&
-                                            p.ProductVariants.Any(pv => !pv.Deleted && pv.Published))
+                                        //published and not deleted products
+                                        .Count(p => !p.Deleted && p.Published)
                                     //UNDOEN filter by store identifier if specified ( > 0 )
                                 };
 

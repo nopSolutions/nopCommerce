@@ -22,9 +22,9 @@ namespace Nop.Core.Domain.Orders
         public int OrderId { get; set; }
 
         /// <summary>
-        /// Gets or sets the product variant identifier
+        /// Gets or sets the product identifier
         /// </summary>
-        public int ProductVariantId { get; set; }
+        public int ProductId { get; set; }
 
         /// <summary>
         /// Gets or sets the quantity
@@ -98,9 +98,9 @@ namespace Nop.Core.Domain.Orders
         public virtual Order Order { get; set; }
 
         /// <summary>
-        /// Gets the product variant
+        /// Gets the product
         /// </summary>
-        public virtual ProductVariant ProductVariant { get; set; }
+        public virtual Product Product { get; set; }
 
         /// <summary>
         /// Gets or sets the associated gift card

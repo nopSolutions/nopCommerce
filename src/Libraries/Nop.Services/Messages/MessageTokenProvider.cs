@@ -122,18 +122,13 @@ namespace Nop.Services.Messages
             for (int i = 0; i <= table.Count - 1; i++)
             {
                 var orderItem = table[i];
-                var productVariant = orderItem.ProductVariant;
-                if (productVariant == null)
+                var product = orderItem.Product;
+                if (product == null)
                     continue;
 
                 sb.AppendLine(string.Format("<tr style=\"background-color: {0};text-align: center;\">", _templatesSettings.Color2));
                 //product name
-                string productName = "";
-                //product name
-                if (!String.IsNullOrEmpty(orderItem.ProductVariant.GetLocalized(x => x.Name, languageId)))
-                    productName = string.Format("{0} ({1})", orderItem.ProductVariant.Product.GetLocalized(x => x.Name, languageId), orderItem.ProductVariant.GetLocalized(x => x.Name, languageId));
-                else
-                    productName = orderItem.ProductVariant.Product.GetLocalized(x => x.Name, languageId);
+                string productName = product.GetLocalized(x => x.Name, languageId);
 
                 sb.AppendLine("<td style=\"padding: 0.6em 0.4em;text-align: left;\">" + HttpUtility.HtmlEncode(productName));
                 //add download link
@@ -155,7 +150,7 @@ namespace Nop.Services.Messages
                 //sku
                 if (_catalogSettings.ShowProductSku)
                 {
-                    var sku = orderItem.ProductVariant.FormatSku(orderItem.AttributesXml, _productAttributeParser);
+                    var sku = product.FormatSku(orderItem.AttributesXml, _productAttributeParser);
                     if (!String.IsNullOrEmpty(sku))
                     {
                         sb.AppendLine("<br />");
@@ -426,18 +421,13 @@ namespace Nop.Services.Messages
                 if (orderItem == null)
                     continue;
 
-                var productVariant = orderItem.ProductVariant;
-                if (productVariant == null)
+                var product = orderItem.Product;
+                if (product == null)
                     continue;
 
                 sb.AppendLine(string.Format("<tr style=\"background-color: {0};text-align: center;\">", _templatesSettings.Color2));
                 //product name
-                string productName = "";
-                //product name
-                if (!String.IsNullOrEmpty(orderItem.ProductVariant.GetLocalized(x => x.Name, languageId)))
-                    productName = string.Format("{0} ({1})", orderItem.ProductVariant.Product.GetLocalized(x => x.Name, languageId), orderItem.ProductVariant.GetLocalized(x => x.Name, languageId));
-                else
-                    productName = orderItem.ProductVariant.Product.GetLocalized(x => x.Name, languageId);
+                string productName = product.GetLocalized(x => x.Name, languageId);
 
                 sb.AppendLine("<td style=\"padding: 0.6em 0.4em;text-align: left;\">" + HttpUtility.HtmlEncode(productName));
                 //attributes
@@ -449,7 +439,7 @@ namespace Nop.Services.Messages
                 //sku
                 if (_catalogSettings.ShowProductSku)
                 {
-                    var sku = orderItem.ProductVariant.FormatSku(orderItem.AttributesXml, _productAttributeParser);
+                    var sku = product.FormatSku(orderItem.AttributesXml, _productAttributeParser);
                     if (!String.IsNullOrEmpty(sku))
                     {
                         sb.AppendLine("<br />");
@@ -574,7 +564,7 @@ namespace Nop.Services.Messages
         {
             tokens.Add(new Token("ReturnRequest.ID", returnRequest.Id.ToString()));
             tokens.Add(new Token("ReturnRequest.Product.Quantity", returnRequest.Quantity.ToString()));
-            tokens.Add(new Token("ReturnRequest.Product.Name", orderItem.ProductVariant.FullProductName));
+            tokens.Add(new Token("ReturnRequest.Product.Name", orderItem.Product.Name));
             tokens.Add(new Token("ReturnRequest.Reason", returnRequest.ReasonForReturn));
             tokens.Add(new Token("ReturnRequest.RequestedAction", returnRequest.RequestedAction));
             tokens.Add(new Token("ReturnRequest.CustomerComment", HtmlHelper.FormatText(returnRequest.CustomerComments, false, true, false, false, false, false), true));
@@ -671,6 +661,7 @@ namespace Nop.Services.Messages
         {
             tokens.Add(new Token("Product.Name", product.Name));
             tokens.Add(new Token("Product.ShortDescription", product.ShortDescription, true));
+            tokens.Add(new Token("Product.StockQuantity", product.StockQuantity.ToString()));
 
             //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
             var productUrl = string.Format("{0}{1}", _webHelper.GetStoreLocation(false), product.GetSeName());
@@ -678,16 +669,6 @@ namespace Nop.Services.Messages
 
             //event notification
             _eventPublisher.EntityTokensAdded(product, tokens);
-        }
-
-        public virtual void AddProductVariantTokens(IList<Token> tokens, ProductVariant productVariant)
-        {
-            tokens.Add(new Token("ProductVariant.ID", productVariant.Id.ToString()));
-            tokens.Add(new Token("ProductVariant.FullProductName", productVariant.FullProductName));
-            tokens.Add(new Token("ProductVariant.StockQuantity", productVariant.StockQuantity.ToString()));
-
-            //event notification
-            _eventPublisher.EntityTokensAdded(productVariant, tokens);
         }
 
         public virtual void AddForumTopicTokens(IList<Token> tokens, ForumTopic forumTopic, 
@@ -739,9 +720,9 @@ namespace Nop.Services.Messages
 
         public virtual void AddBackInStockTokens(IList<Token> tokens, BackInStockSubscription subscription)
         {
-            tokens.Add(new Token("BackInStockSubscription.ProductName", subscription.ProductVariant.FullProductName));
+            tokens.Add(new Token("BackInStockSubscription.ProductName", subscription.Product.Name));
             //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
-            var productUrl = string.Format("{0}{1}", _webHelper.GetStoreLocation(false), subscription.ProductVariant.Product.GetSeName());
+            var productUrl = string.Format("{0}{1}", _webHelper.GetStoreLocation(false), subscription.Product.GetSeName());
             tokens.Add(new Token("BackInStockSubscription.ProductUrl", productUrl, true));
 
             //event notification

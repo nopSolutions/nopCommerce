@@ -572,7 +572,7 @@ namespace Nop.Services.Orders
                     foreach (var sci in cart)
                     {
                         var sciWarnings = _shoppingCartService.GetShoppingCartItemWarnings(customer, sci.ShoppingCartType,
-                            sci.ProductVariant, processPaymentRequest.StoreId, sci.AttributesXml,
+                            sci.Product, processPaymentRequest.StoreId, sci.AttributesXml,
                             sci.CustomerEnteredPrice, sci.Quantity, false);
                         if (sciWarnings.Count > 0)
                         {
@@ -1017,21 +1017,21 @@ namespace Nop.Services.Orders
                                 decimal taxRate = decimal.Zero;
                                 decimal scUnitPrice = _priceCalculationService.GetUnitPrice(sc, true);
                                 decimal scSubTotal = _priceCalculationService.GetSubTotal(sc, true);
-                                decimal scUnitPriceInclTax = _taxService.GetProductPrice(sc.ProductVariant, scUnitPrice, true, customer, out taxRate);
-                                decimal scUnitPriceExclTax = _taxService.GetProductPrice(sc.ProductVariant, scUnitPrice, false, customer, out taxRate);
-                                decimal scSubTotalInclTax = _taxService.GetProductPrice(sc.ProductVariant, scSubTotal, true, customer, out taxRate);
-                                decimal scSubTotalExclTax = _taxService.GetProductPrice(sc.ProductVariant, scSubTotal, false, customer, out taxRate);
+                                decimal scUnitPriceInclTax = _taxService.GetProductPrice(sc.Product, scUnitPrice, true, customer, out taxRate);
+                                decimal scUnitPriceExclTax = _taxService.GetProductPrice(sc.Product, scUnitPrice, false, customer, out taxRate);
+                                decimal scSubTotalInclTax = _taxService.GetProductPrice(sc.Product, scSubTotal, true, customer, out taxRate);
+                                decimal scSubTotalExclTax = _taxService.GetProductPrice(sc.Product, scSubTotal, false, customer, out taxRate);
 
                                 //discounts
                                 Discount scDiscount = null;
                                 decimal discountAmount = _priceCalculationService.GetDiscountAmount(sc, out scDiscount);
-                                decimal discountAmountInclTax = _taxService.GetProductPrice(sc.ProductVariant, discountAmount, true, customer, out taxRate);
-                                decimal discountAmountExclTax = _taxService.GetProductPrice(sc.ProductVariant, discountAmount, false, customer, out taxRate);
+                                decimal discountAmountInclTax = _taxService.GetProductPrice(sc.Product, discountAmount, true, customer, out taxRate);
+                                decimal discountAmountExclTax = _taxService.GetProductPrice(sc.Product, discountAmount, false, customer, out taxRate);
                                 if (scDiscount != null && !appliedDiscounts.ContainsDiscount(scDiscount))
                                     appliedDiscounts.Add(scDiscount);
 
                                 //attributes
-                                string attributeDescription = _productAttributeFormatter.FormatAttributes(sc.ProductVariant, sc.AttributesXml, customer);
+                                string attributeDescription = _productAttributeFormatter.FormatAttributes(sc.Product, sc.AttributesXml, customer);
 
                                 var itemWeight = _shippingService.GetShoppingCartItemWeight(sc);
 
@@ -1040,7 +1040,7 @@ namespace Nop.Services.Orders
                                 {
                                     OrderItemGuid = Guid.NewGuid(),
                                     Order = order,
-                                    ProductVariantId = sc.ProductVariantId,
+                                    ProductId = sc.ProductId,
                                     UnitPriceInclTax = scUnitPriceInclTax,
                                     UnitPriceExclTax = scUnitPriceExclTax,
                                     PriceInclTax = scSubTotalInclTax,
@@ -1059,7 +1059,7 @@ namespace Nop.Services.Orders
                                 _orderService.UpdateOrder(order);
 
                                 //gift cards
-                                if (sc.ProductVariant.IsGiftCard)
+                                if (sc.Product.IsGiftCard)
                                 {
                                     string giftCardRecipientName, giftCardRecipientEmail,
                                         giftCardSenderName, giftCardSenderEmail, giftCardMessage;
@@ -1071,7 +1071,7 @@ namespace Nop.Services.Orders
                                     {
                                         var gc = new GiftCard()
                                         {
-                                            GiftCardType = sc.ProductVariant.GiftCardType,
+                                            GiftCardType = sc.Product.GiftCardType,
                                             PurchasedWithOrderItem = orderItem,
                                             Amount = scUnitPriceExclTax,
                                             IsGiftCardActivated = false,
@@ -1089,7 +1089,7 @@ namespace Nop.Services.Orders
                                 }
 
                                 //inventory
-                                _productService.AdjustInventory(sc.ProductVariant, true, sc.Quantity, sc.AttributesXml);
+                                _productService.AdjustInventory(sc.Product, true, sc.Quantity, sc.AttributesXml);
                             }
 
                             //clear shopping cart
@@ -1106,7 +1106,7 @@ namespace Nop.Services.Orders
                                 {
                                     OrderItemGuid = Guid.NewGuid(),
                                     Order = order,
-                                    ProductVariantId = orderItem.ProductVariantId,
+                                    ProductId = orderItem.ProductId,
                                     UnitPriceInclTax = orderItem.UnitPriceInclTax,
                                     UnitPriceExclTax = orderItem.UnitPriceExclTax,
                                     PriceInclTax = orderItem.PriceInclTax,
@@ -1125,7 +1125,7 @@ namespace Nop.Services.Orders
                                 _orderService.UpdateOrder(order);
 
                                 //gift cards
-                                if (orderItem.ProductVariant.IsGiftCard)
+                                if (orderItem.Product.IsGiftCard)
                                 {
                                     string giftCardRecipientName, giftCardRecipientEmail,
                                         giftCardSenderName, giftCardSenderEmail, giftCardMessage;
@@ -1137,7 +1137,7 @@ namespace Nop.Services.Orders
                                     {
                                         var gc = new GiftCard()
                                         {
-                                            GiftCardType = orderItem.ProductVariant.GiftCardType,
+                                            GiftCardType = orderItem.Product.GiftCardType,
                                             PurchasedWithOrderItem = newOrderItem,
                                             Amount = orderItem.UnitPriceExclTax,
                                             IsGiftCardActivated = false,
@@ -1155,7 +1155,7 @@ namespace Nop.Services.Orders
                                 }
 
                                 //inventory
-                                _productService.AdjustInventory(orderItem.ProductVariant, true, orderItem.Quantity, orderItem.AttributesXml);
+                                _productService.AdjustInventory(orderItem.Product, true, orderItem.Quantity, orderItem.AttributesXml);
                             }
                         }
 
@@ -1304,7 +1304,7 @@ namespace Nop.Services.Orders
                         var vendors = new List<Vendor>();
                         foreach (var orderItem in order.OrderItems)
                         {
-                            var vendorId = orderItem.ProductVariant.Product.VendorId;
+                            var vendorId = orderItem.Product.VendorId;
                             //find existing
                             var vendor = vendors.FirstOrDefault(v => v.Id == vendorId);
                             if (vendor == null)
@@ -1422,7 +1422,7 @@ namespace Nop.Services.Orders
 
                 //Adjust inventory
                 foreach (var orderItem in order.OrderItems)
-                    _productService.AdjustInventory(orderItem.ProductVariant, false, orderItem.Quantity, orderItem.AttributesXml);
+                    _productService.AdjustInventory(orderItem.Product, false, orderItem.Quantity, orderItem.AttributesXml);
             }
 
             //add a note
@@ -1789,7 +1789,7 @@ namespace Nop.Services.Orders
 
             //Adjust inventory
             foreach (var orderItem in order.OrderItems)
-                _productService.AdjustInventory(orderItem.ProductVariant, false, orderItem.Quantity, orderItem.AttributesXml);
+                _productService.AdjustInventory(orderItem.Product, false, orderItem.Quantity, orderItem.AttributesXml);
 
             _eventPublisher.PublishOrderCancelled(order);
 
@@ -2508,7 +2508,7 @@ namespace Nop.Services.Orders
 
             foreach (var orderItem in order.OrderItems)
             {
-                _shoppingCartService.AddToCart(orderItem.Order.Customer, orderItem.ProductVariant,
+                _shoppingCartService.AddToCart(orderItem.Order.Customer, orderItem.Product,
                     ShoppingCartType.ShoppingCart, orderItem.Order.StoreId, orderItem.AttributesXml,
                     orderItem.UnitPriceExclTax, orderItem.Quantity, false);
             }

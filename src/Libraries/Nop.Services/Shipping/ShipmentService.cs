@@ -84,7 +84,7 @@ namespace Nop.Services.Shipping
             if (vendorId > 0)
             {
                 var queryVendorOrderItems = from orderItem in _orderItemRepository.Table
-                                             where orderItem.ProductVariant.Product.VendorId == vendorId
+                                             where orderItem.Product.VendorId == vendorId
                                              select orderItem.Id;
 
                 query = from s in query

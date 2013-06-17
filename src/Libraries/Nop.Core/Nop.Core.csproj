@@ -88,6 +88,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ComponentModel\WriteLockDisposable.cs" />
+    <Compile Include="Domain\Catalog\ProductType.cs" />
     <Compile Include="Domain\Vendors\Vendor.cs" />
     <Compile Include="IStoreContext.cs" />
     <Compile Include="Domain\Catalog\BackInStockSubscription.cs" />
@@ -309,7 +310,6 @@
     <Compile Include="Domain\Catalog\ProductManufacturer.cs" />
     <Compile Include="Domain\Catalog\ProductPicture.cs" />
     <Compile Include="Domain\Catalog\ProductSpecificationAttribute.cs" />
-    <Compile Include="Domain\Catalog\ProductVariant.cs" />
     <Compile Include="Domain\Catalog\ProductVariantAttribute.cs" />
     <Compile Include="Domain\Catalog\ProductVariantAttributeCombination.cs" />
     <Compile Include="Domain\Catalog\ProductVariantAttributeValue.cs" />

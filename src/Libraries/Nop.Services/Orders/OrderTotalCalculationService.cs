@@ -182,8 +182,8 @@ namespace Nop.Services.Orders
                 decimal taxRate = decimal.Zero;
                 decimal sciSubTotal = _priceCalculationService.GetSubTotal(shoppingCartItem, true);
 
-                decimal sciExclTax = _taxService.GetProductPrice(shoppingCartItem.ProductVariant, sciSubTotal, false, customer, out taxRate);
-                decimal sciInclTax = _taxService.GetProductPrice(shoppingCartItem.ProductVariant, sciSubTotal, true, customer, out taxRate);
+                decimal sciExclTax = _taxService.GetProductPrice(shoppingCartItem.Product, sciSubTotal, false, customer, out taxRate);
+                decimal sciInclTax = _taxService.GetProductPrice(shoppingCartItem.Product, sciSubTotal, true, customer, out taxRate);
                 subTotalExclTaxWithoutDiscount += sciExclTax;
                 subTotalInclTaxWithoutDiscount += sciInclTax;
                 
