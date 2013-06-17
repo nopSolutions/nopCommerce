@@ -24,6 +24,8 @@ namespace Nop.Admin.Models.Catalog
             AvailableProductTemplates = new List<SelectListItem>();
             AvailableVendors = new List<SelectListItem>();
             AvailableTaxCategories = new List<SelectListItem>();
+            AddPictureModel = new ProductPictureModel();
+            AddSpecificationAttributeModel = new AddProductSpecificationAttributeModel();
         }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.ID")]

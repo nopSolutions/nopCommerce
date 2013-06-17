@@ -169,7 +169,7 @@ namespace Nop.Admin.Controllers
 
         #endregion 
 
-        #region Utitilies
+        #region Utilities
 
         [NonAction]
         private void UpdateLocales(Product product, ProductModel model)
@@ -208,106 +208,36 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
+        private void UpdateLocales(ProductTag productTag, ProductTagModel model)
+        {
+            foreach (var localized in model.Locales)
+            {
+                _localizedEntityService.SaveLocalizedValue(productTag,
+                                                               x => x.Name,
+                                                               localized.Name,
+                                                               localized.LanguageId);
+            }
+        }
+
+        [NonAction]
+        protected void UpdateLocales(ProductVariantAttributeValue pvav, ProductModel.ProductVariantAttributeValueModel model)
+        {
+            foreach (var localized in model.Locales)
+            {
+                _localizedEntityService.SaveLocalizedValue(pvav,
+                                                               x => x.Name,
+                                                               localized.Name,
+                                                               localized.LanguageId);
+            }
+        }
+
+        [NonAction]
         private void UpdatePictureSeoNames(Product product)
         {
             foreach (var pp in product.ProductPictures)
                 _pictureService.SetSeoFilename(pp.PictureId, _pictureService.GetPictureSeName(product.Name));
         }
-
-        [NonAction]
-        private void PrepareVendorsModel(ProductModel model)
-        {
-            if (model == null)
-                throw new ArgumentNullException("model");
-
-            model.AvailableVendors.Add(new SelectListItem()
-            {
-                Text = _localizationService.GetResource("Admin.Catalog.Products.Fields.Vendor.None"), 
-                Value = "0"
-            });
-            var vendors = _vendorService.GetAllVendors(0, int.MaxValue, true);
-            foreach (var vendor in vendors)
-            {
-                model.AvailableVendors.Add(new SelectListItem()
-                {
-                    Text = vendor.Name,
-                    Value = vendor.Id.ToString()
-                });
-            }
-        }
-
-        [NonAction]
-        private void PrepareTemplatesModel(ProductModel model)
-        {
-            if (model == null)
-                throw new ArgumentNullException("model");
-
-            var templates = _productTemplateService.GetAllProductTemplates();
-            foreach (var template in templates)
-            {
-                model.AvailableProductTemplates.Add(new SelectListItem()
-                {
-                    Text =  template.Name,
-                    Value = template.Id.ToString()
-                });
-            }
-        }
-
-        [NonAction]
-        private void PrepareAddSpecificationAttributeModel(ProductModel model)
-        {
-            if (model == null)
-                throw new ArgumentNullException("model");
-
-            if (model.AddSpecificationAttributeModel == null)
-                model.AddSpecificationAttributeModel = new ProductModel.AddProductSpecificationAttributeModel();
-            
-            //attributes
-            var specificationAttributes = _specificationAttributeService.GetSpecificationAttributes();
-            for (int i = 0; i < specificationAttributes.Count; i++)
-            {
-                var sa = specificationAttributes[i];
-                model.AddSpecificationAttributeModel.AvailableAttributes.Add(new SelectListItem() { Text = sa.Name, Value = sa.Id.ToString() });
-                if (i == 0)
-                {
-                    //attribute options
-                    foreach (var sao in _specificationAttributeService.GetSpecificationAttributeOptionsBySpecificationAttribute(sa.Id))
-                        model.AddSpecificationAttributeModel.AvailableOptions.Add(new SelectListItem() { Text = sao.Name, Value = sao.Id.ToString() });
-                }
-            }
-
-            //default values
-            model.AddSpecificationAttributeModel.ShowOnProductPage = true;
-        }
-
-        [NonAction]
-        private void PrepareAddProductPictureModel(ProductModel model)
-        {
-            if (model == null)
-                throw new ArgumentNullException("model");
-
-            if (model.AddPictureModel == null)
-                model.AddPictureModel = new ProductModel.ProductPictureModel();
-        }
-
-        [NonAction]
-        private void PrepareCategoryMapping(ProductModel model)
-        {
-            if (model == null)
-                throw new ArgumentNullException("model");
-
-            model.NumberOfAvailableCategories = _categoryService.GetAllCategories(showHidden: true).Count;
-        }
-
-        [NonAction]
-        private void PrepareManufacturerMapping(ProductModel model)
-        {
-            if (model == null)
-                throw new ArgumentNullException("model");
-
-            model.NumberOfAvailableManufacturers = _manufacturerService.GetAllManufacturers(true).Count;
-        }
-
+        
         [NonAction]
         private void PrepareAclModel(ProductModel model, Product product, bool excludeProperties)
         {
@@ -401,77 +331,6 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected void UpdateAttributeValueLocales(ProductVariantAttributeValue pvav, ProductModel.ProductVariantAttributeValueModel model)
-        {
-            foreach (var localized in model.Locales)
-            {
-                _localizedEntityService.SaveLocalizedValue(pvav,
-                                                               x => x.Name,
-                                                               localized.Name,
-                                                               localized.LanguageId);
-            }
-        }
-
-        [NonAction]
-        protected void PrepareProductModel(ProductModel model, Product product, bool setPredefinedValues)
-        {
-            if (model == null)
-                throw new ArgumentNullException("model");
-
-            //tax categories
-            var taxCategories = _taxCategoryService.GetAllTaxCategories();
-            model.AvailableTaxCategories.Add(new SelectListItem() { Text = "---", Value = "0" });
-            foreach (var tc in taxCategories)
-                model.AvailableTaxCategories.Add(new SelectListItem() { Text = tc.Name, Value = tc.Id.ToString(), Selected = product != null && !setPredefinedValues && tc.Id == product.TaxCategoryId });
-
-            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
-            model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
-            model.BaseWeightIn = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name;
-            model.BaseDimensionIn = _measureService.GetMeasureDimensionById(_measureSettings.BaseDimensionId).Name;
-
-            if (setPredefinedValues)
-            {
-                model.MaximumCustomerEnteredPrice = 1000;
-                model.MaxNumberOfDownloads = 10;
-                model.RecurringCycleLength = 100;
-                model.RecurringTotalCycles = 10;
-                model.StockQuantity = 10000;
-                model.NotifyAdminForQuantityBelow = 1;
-                model.OrderMinimumQuantity = 1;
-                model.OrderMaximumQuantity = 10000;
-
-                model.UnlimitedDownloads = true;
-                model.IsShipEnabled = true;
-                model.AllowCustomerReviews = true;
-                model.Published = true;
-            }
-        }
-
-        [NonAction]
-        protected void PrepareDiscountModel(ProductModel model, Product product, bool excludeProperties)
-        {
-            if (model == null)
-                throw new ArgumentNullException("model");
-
-            var discounts = _discountService.GetAllDiscounts(DiscountType.AssignedToSkus, null, true);
-            model.AvailableDiscounts = discounts.ToList();
-
-            if (!excludeProperties)
-            {
-                model.SelectedDiscountIds = product.AppliedDiscounts.Select(d => d.Id).ToArray();
-            }
-        }
-
-        [NonAction]
-        protected void PrepareProductAttributesMapping(ProductModel model, Product product)
-        {
-            if (model == null)
-                throw new ArgumentNullException("model");
-
-            model.NumberOfAvailableProductAttributes = _productAttributeService.GetAllProductAttributes().Count;
-        }
-
-        [NonAction]
         protected void PrepareAddProductAttributeCombinationModel(AddProductVariantAttributeCombinationModel model, Product product)
         {
             if (model == null)
@@ -515,69 +374,6 @@ namespace Nop.Admin.Controllers
             }
         }
         
-        [NonAction]
-        private void PrepareProductPictureThumbnailModel(ProductModel model, Product product)
-        {
-            if (model == null)
-                throw new ArgumentNullException("model");
-
-            if (product != null)
-            {
-                if (_adminAreaSettings.DisplayProductPictures)
-                {
-                    var defaultProductPicture = _pictureService.GetPicturesByProductId(product.Id, 1).FirstOrDefault();
-                    model.PictureThumbnailUrl = _pictureService.GetPictureUrl(defaultProductPicture, 75, true);
-                }
-            }
-        }
-
-        [NonAction]
-        private void PrepareCopyProductModel(ProductModel model, Product product)
-        {
-            if (model == null)
-                throw new ArgumentNullException("model");
-
-            if (product != null)
-            {
-                model.CopyProductModel.Id = product.Id;
-                model.CopyProductModel.Name = "Copy of " + product.Name;
-                model.CopyProductModel.Published = true;
-                model.CopyProductModel.CopyImages = true;
-            }
-        }
-
-        [NonAction]
-        private void PrepareTags(ProductModel model, Product product)
-        {
-            if (model == null)
-                throw new ArgumentNullException("model");
-
-            if (product != null)
-            {
-                var result = new StringBuilder();
-                for (int i = 0; i < product.ProductTags.Count; i++)
-                {
-                    var pt = product.ProductTags.ToList()[i];
-                    result.Append(pt.Name);
-                    if (i != product.ProductTags.Count - 1)
-                        result.Append(", ");
-                }
-                model.ProductTags = result.ToString();
-            }
-        }
-
-        [NonAction]
-        private void UpdateLocales(ProductTag productTag, ProductTagModel model)
-        {
-            foreach (var localized in model.Locales)
-            {
-                _localizedEntityService.SaveLocalizedValue(productTag,
-                                                               x => x.Name,
-                                                               localized.Name,
-                                                               localized.LanguageId);
-            }
-        }
-
         [NonAction]
         private string[] ParseProductTags(string productTags)
         {
@@ -644,6 +440,132 @@ namespace Nop.Admin.Controllers
                     product.ProductTags.Add(productTag);
                     _productService.UpdateProduct(product);
                 }
+            }
+        }
+
+        [NonAction]
+        protected void PrepareProductModel(ProductModel model, Product product,
+            bool setPredefinedValues, bool excludeProperties)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
+            model.BaseWeightIn = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name;
+            model.BaseDimensionIn = _measureService.GetMeasureDimensionById(_measureSettings.BaseDimensionId).Name;
+            if (product != null)
+            {
+                model.CreatedOn = _dateTimeHelper.ConvertToUserTime(product.CreatedOnUtc, DateTimeKind.Utc);
+                model.UpdatedOn = _dateTimeHelper.ConvertToUserTime(product.UpdatedOnUtc, DateTimeKind.Utc);
+            }
+
+            model.NumberOfAvailableProductAttributes = _productAttributeService.GetAllProductAttributes().Count;
+            model.NumberOfAvailableManufacturers = _manufacturerService.GetAllManufacturers("",
+                pageIndex: 0,
+                pageSize: 1,
+                showHidden: true).TotalCount;
+            model.NumberOfAvailableCategories = _categoryService.GetAllCategories(
+                pageIndex: 0,
+                pageSize: 1,
+                showHidden: true).TotalCount;
+
+            //copy product
+            if (product != null)
+            {
+                model.CopyProductModel.Id = product.Id;
+                model.CopyProductModel.Name = "Copy of " + product.Name;
+                model.CopyProductModel.Published = true;
+                model.CopyProductModel.CopyImages = true;
+            }
+
+            //templates
+            var templates = _productTemplateService.GetAllProductTemplates();
+            foreach (var template in templates)
+            {
+                model.AvailableProductTemplates.Add(new SelectListItem()
+                {
+                    Text = template.Name,
+                    Value = template.Id.ToString()
+                });
+            }
+
+            //vendors
+            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+            model.AvailableVendors.Add(new SelectListItem()
+            {
+                Text = _localizationService.GetResource("Admin.Catalog.Products.Fields.Vendor.None"),
+                Value = "0"
+            });
+            var vendors = _vendorService.GetAllVendors(0, int.MaxValue, true);
+            foreach (var vendor in vendors)
+            {
+                model.AvailableVendors.Add(new SelectListItem()
+                {
+                    Text = vendor.Name,
+                    Value = vendor.Id.ToString()
+                });
+            }
+
+            //product tags
+            if (product != null)
+            {
+                var result = new StringBuilder();
+                for (int i = 0; i < product.ProductTags.Count; i++)
+                {
+                    var pt = product.ProductTags.ToList()[i];
+                    result.Append(pt.Name);
+                    if (i != product.ProductTags.Count - 1)
+                        result.Append(", ");
+                }
+                model.ProductTags = result.ToString();
+            }
+
+            //tax categories
+            var taxCategories = _taxCategoryService.GetAllTaxCategories();
+            model.AvailableTaxCategories.Add(new SelectListItem() { Text = "---", Value = "0" });
+            foreach (var tc in taxCategories)
+                model.AvailableTaxCategories.Add(new SelectListItem() { Text = tc.Name, Value = tc.Id.ToString(), Selected = product != null && !setPredefinedValues && tc.Id == product.TaxCategoryId });
+
+            //specification attributes
+            var specificationAttributes = _specificationAttributeService.GetSpecificationAttributes();
+            for (int i = 0; i < specificationAttributes.Count; i++)
+            {
+                var sa = specificationAttributes[i];
+                model.AddSpecificationAttributeModel.AvailableAttributes.Add(new SelectListItem() { Text = sa.Name, Value = sa.Id.ToString() });
+                if (i == 0)
+                {
+                    //attribute options
+                    foreach (var sao in _specificationAttributeService.GetSpecificationAttributeOptionsBySpecificationAttribute(sa.Id))
+                        model.AddSpecificationAttributeModel.AvailableOptions.Add(new SelectListItem() { Text = sao.Name, Value = sao.Id.ToString() });
+                }
+            }
+            //default specs values
+            model.AddSpecificationAttributeModel.ShowOnProductPage = true;
+
+            //discounts
+            var discounts = _discountService.GetAllDiscounts(DiscountType.AssignedToSkus, null, true);
+            model.AvailableDiscounts = discounts.ToList();
+            if (!excludeProperties)
+            {
+                model.SelectedDiscountIds = product.AppliedDiscounts.Select(d => d.Id).ToArray();
+            }
+
+            //default values
+            if (setPredefinedValues)
+            {
+                model.MaximumCustomerEnteredPrice = 1000;
+                model.MaxNumberOfDownloads = 10;
+                model.RecurringCycleLength = 100;
+                model.RecurringTotalCycles = 10;
+                model.StockQuantity = 10000;
+                model.NotifyAdminForQuantityBelow = 1;
+                model.OrderMinimumQuantity = 1;
+                model.OrderMaximumQuantity = 10000;
+
+                model.UnlimitedDownloads = true;
+                model.IsShipEnabled = true;
+                model.AllowCustomerReviews = true;
+                model.Published = true;
             }
         }
 
@@ -719,7 +641,11 @@ namespace Nop.Admin.Controllers
             gridModel.Data = products.Select(x =>
             {
                 var productModel = x.ToModel();
-                PrepareProductPictureThumbnailModel(productModel, x);
+                if (_adminAreaSettings.DisplayProductPictures)
+                {
+                    var defaultProductPicture = _pictureService.GetPicturesByProductId(x.Id, 1).FirstOrDefault();
+                    productModel.PictureThumbnailUrl = _pictureService.GetPictureUrl(defaultProductPicture, 75, true);
+                }
                 return productModel;
             });
             gridModel.Total = products.TotalCount;
@@ -749,18 +675,10 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var model = new ProductModel();
-            PrepareProductModel(model, null, true);
+            PrepareProductModel(model, null, true, true);
             AddLocales(_languageService, model.Locales);
-            PrepareVendorsModel(model);
-            PrepareTemplatesModel(model);
-            PrepareAddSpecificationAttributeModel(model);
-            PrepareAddProductPictureModel(model);
-            PrepareCategoryMapping(model);
-            PrepareManufacturerMapping(model);
             PrepareAclModel(model, null, false);
             PrepareStoresMappingModel(model, null, false);
-            PrepareProductAttributesMapping(model, null);
-            PrepareDiscountModel(model, null, true);
             return View(model);
         }
 
@@ -812,17 +730,9 @@ namespace Nop.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            PrepareProductModel(model, null, false);
-            PrepareVendorsModel(model);
-            PrepareTemplatesModel(model);
-            PrepareAddSpecificationAttributeModel(model);
-            PrepareAddProductPictureModel(model);
-            PrepareCategoryMapping(model);
-            PrepareManufacturerMapping(model);
+            PrepareProductModel(model, null, false, true);
             PrepareAclModel(model, null, true);
             PrepareStoresMappingModel(model, null, true);
-            PrepareProductAttributesMapping(model, null);
-            PrepareDiscountModel(model, null, true);
             return View(model);
         }
 
@@ -842,9 +752,7 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("List");
 
             var model = product.ToModel();
-            PrepareProductModel(model, product, false);
-            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(product.CreatedOnUtc, DateTimeKind.Utc);
-            model.UpdatedOn = _dateTimeHelper.ConvertToUserTime(product.UpdatedOnUtc, DateTimeKind.Utc);
+            PrepareProductModel(model, product, false, false);
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
                 {
                     locale.Name = product.GetLocalized(x => x.Name, languageId, false, false);
@@ -856,18 +764,8 @@ namespace Nop.Admin.Controllers
                     locale.SeName = product.GetSeName(languageId, false, false);
                 });
 
-            PrepareTags(model, product);
-            PrepareCopyProductModel(model, product);
-            PrepareVendorsModel(model);
-            PrepareTemplatesModel(model);
-            PrepareAddSpecificationAttributeModel(model);
-            PrepareAddProductPictureModel(model);
-            PrepareCategoryMapping(model);
-            PrepareManufacturerMapping(model);
             PrepareAclModel(model, product, false);
             PrepareStoresMappingModel(model, product, false);
-            PrepareProductAttributesMapping(model, product);
-            PrepareDiscountModel(model, product, false);
             return View(model);
         }
 
@@ -951,21 +849,9 @@ namespace Nop.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
-            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(product.CreatedOnUtc, DateTimeKind.Utc);
-            model.UpdatedOn = _dateTimeHelper.ConvertToUserTime(product.UpdatedOnUtc, DateTimeKind.Utc);
-            PrepareTags(model, product);
-            PrepareCopyProductModel(model, product);
-            PrepareVendorsModel(model);
-            PrepareTemplatesModel(model);
-            PrepareAddSpecificationAttributeModel(model);
-            PrepareAddProductPictureModel(model);
-            PrepareCategoryMapping(model);
-            PrepareManufacturerMapping(model);
+            PrepareProductModel(model, product, false, true);
             PrepareAclModel(model, product, true);
             PrepareStoresMappingModel(model, product, true);
-            PrepareProductAttributesMapping(model, product);
-            PrepareDiscountModel(model, product, true);
             return View(model);
         }
 
@@ -2867,7 +2753,7 @@ namespace Nop.Admin.Controllers
                 };
 
                 _productAttributeService.InsertProductVariantAttributeValue(pvav);
-                UpdateAttributeValueLocales(pvav, model);
+                UpdateLocales(pvav, model);
 
                 ViewBag.RefreshPage = true;
                 ViewBag.btnId = btnId;
@@ -2962,7 +2848,7 @@ namespace Nop.Admin.Controllers
                 pvav.DisplayOrder = model.DisplayOrder;
                 _productAttributeService.UpdateProductVariantAttributeValue(pvav);
 
-                UpdateAttributeValueLocales(pvav, model);
+                UpdateLocales(pvav, model);
 
                 ViewBag.RefreshPage = true;
                 ViewBag.btnId = btnId;
