@@ -43,10 +43,25 @@
                             </div>
                         }
                         @Html.Widget("productdetails_overview_top")
+                        <!--product SKU, manufacturer part number, stock info-->
+                        @Html.Partial("_SKU_Man_Stock", Model)
+                        <!--Back in stock subscription-->
+                        @Html.Partial("_ProductVariantBackInStockSubscription", Model)
                         <!--product manufacturers-->
                         @Html.Action("ProductManufacturers", "Catalog", new { productId = Model.Id })
                         <!--product reviews-->
                         @Html.Action("ProductReviewOverview", "Catalog", new { productId = Model.Id })
+                        <!--sample download-->
+                        @Html.Partial("_DownloadSample", Model)
+                        @{
+                            var dataDictPrice = new ViewDataDictionary();
+                            dataDictPrice.TemplateInfo.HtmlFieldPrefix = string.Format("price_{0}", Model.Id);
+                            @Html.Partial("_ProductVariantPrice", Model.ProductPrice, dataDictPrice)
+                            
+                            var dataDictAddToCart = new ViewDataDictionary();
+                            dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", Model.Id);
+                            @Html.Partial("_ProductVariantAddToCart", Model.AddToCart, dataDictAddToCart)                    
+                        }
                         @Html.Action("ProductEmailAFriendButton", "Catalog", new { productId = Model.Id })
                         @Html.Action("CompareProductsButton", "Catalog", new { productId = Model.Id })
                         @Html.Action("ShareButton", "Catalog")
@@ -61,15 +76,17 @@
                 </div>
                 @Html.Widget("productdetails_before_collateral")
                 <div class="product-collateral">
-                    <!--product variants-->
-                    <div class="product-variant-list">
-                        @foreach (var variant in Model.ProductVariantModels)
-                        {
-                            var dataDictVariant = new ViewDataDictionary();
-                            dataDictVariant.TemplateInfo.HtmlFieldPrefix = string.Format("variant_{0}", variant.Id);
-                            @Html.Partial("_ProductVariantLine", variant, dataDictVariant)
-                        }
-                    </div>
+                    @Html.Action("ProductTierPrices", "Catalog", new { productVariantId = Model.Id })
+                    @{
+                        var dataDictAttributes = new ViewDataDictionary();
+                        dataDictAttributes.TemplateInfo.HtmlFieldPrefix = string.Format("attributes_{0}", Model.Id);
+                        @Html.Partial("_ProductAttributes", Model.ProductVariantAttributes, dataDictAttributes)                  
+                    }
+                    @{
+                        var dataDictGiftCard = new ViewDataDictionary();
+                        dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = string.Format("giftcard_{0}", Model.Id);
+                        @Html.Partial("_GiftCardInfo", Model.GiftCard, dataDictGiftCard)
+                    }
                     @Html.Action("ProductSpecifications", "Catalog", new { productId = Model.Id })
                     @Html.Action("ProductTags", "Catalog", new { productId = Model.Id })
                     @Html.Action("ProductsAlsoPurchased", "Catalog", new { productId = Model.Id })

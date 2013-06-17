@@ -1,25 +1,20 @@
-﻿@model ProductDetailsModel.ProductVariantModel
+﻿@model ProductDetailsModel
 @using Nop.Web.Models.Catalog;
-<div class="product-variant-line" data-productvariantid="@Model.Id">
-    @if (!String.IsNullOrWhiteSpace(Model.PictureModel.ImageUrl))
+<div class="product-variant-line" data-productid="@Model.Id">
+    @*UNDONE revise product-variant logic*@
+    @*@if (!String.IsNullOrWhiteSpace(Model.PictureModel.ImageUrl))
     {
         <div class="variant-picture">
             <img alt="@Model.PictureModel.AlternateText" src="@Model.PictureModel.ImageUrl"
-                                    title="@Model.PictureModel.Title" />
+                 title="@Model.PictureModel.Title" />
         </div>
-    }
+    }*@
 
     <div class="variant-overview">
         @if (!String.IsNullOrWhiteSpace(Model.Name))
         {
             <div class="variant-name">
                 @Model.Name
-            </div>
-        }
-        @if (!String.IsNullOrWhiteSpace(Model.Description))
-        {
-            <div class="variant-description">
-                @Html.Raw(Model.Description)
             </div>
         }
         @Html.Partial("_DownloadSample", Model)
@@ -30,7 +25,7 @@
             @Html.Partial("_ProductAttributes", Model.ProductVariantAttributes, dataDictAttributes)                  
         }
         <!--product SKU, manufacturer part number, stock info-->
-        @Html.Partial("_ProductVariant_SKU_Man_Stock", Model)
+        @Html.Partial("_SKU_Man_Stock", Model)
         <!--Back in stock subscription-->
         @Html.Partial("_ProductVariantBackInStockSubscription", Model)
         @{
@@ -41,7 +36,7 @@
         @{
             var dataDictPrice = new ViewDataDictionary();
             dataDictPrice.TemplateInfo.HtmlFieldPrefix = string.Format("price_{0}", Model.Id);
-            @Html.Partial("_ProductVariantPrice", Model.ProductVariantPrice, dataDictPrice)
+            @Html.Partial("_ProductVariantPrice", Model.ProductPrice, dataDictPrice)
         }
         @{
             var dataDictAddToCart = new ViewDataDictionary();

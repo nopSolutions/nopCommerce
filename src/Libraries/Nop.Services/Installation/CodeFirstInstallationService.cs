@@ -9307,15 +9307,15 @@ namespace Nop.Services.Installation
                                {
                                    new ProductTemplate
                                        {
-                                           Name = "Variants in Grid",
-                                           ViewPath = "ProductTemplate.VariantsInGrid",
-                                           DisplayOrder = 1
+                                           Name = "Simple product",
+                                           ViewPath = "ProductTemplate.Simple",
+                                           DisplayOrder = 10
                                        },
                                    new ProductTemplate
                                        {
-                                           Name = "Single Product Variant",
-                                           ViewPath = "ProductTemplate.SingleVariant",
-                                           DisplayOrder = 10
+                                           Name = "Grouped product",
+                                           ViewPath = "ProductTemplate.Grouped",
+                                           DisplayOrder = 100
                                        },
                                };
             productTemplates.ForEach(pt => _productTemplateRepository.Insert(pt));

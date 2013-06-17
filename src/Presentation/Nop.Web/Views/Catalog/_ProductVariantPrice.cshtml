@@ -1,15 +1,15 @@
-﻿@model ProductDetailsModel.ProductVariantModel.ProductVariantPriceModel
+﻿@model ProductDetailsModel.ProductPriceModel
 @using Nop.Web.Models.Catalog;
 @using System.Globalization;
 @using System.Text.RegularExpressions;
 @{
     string pattern = "(?<val>(\\d+[\\s\\,\\.]?)+)";
-    string replacement = String.Format("<span class=\"price-val-for-dyn-upd-{0}\">${{val}}</span> ", Model.ProductVariantId);  
+    string replacement = String.Format("<span class=\"price-val-for-dyn-upd-{0}\">${{val}}</span> ", Model.ProductId);  
 }
 @if (Model.DynamicPriceUpdate)
 {
     <script type="text/javascript">
-        var priceValForDynUpd_@(Model.ProductVariantId) = @(((float)(Model.PriceValue != Model.PriceWithDiscountValue ? Model.PriceWithDiscountValue : Model.PriceValue)).ToString(new CultureInfo("en-US")));
+        var priceValForDynUpd_@(Model.ProductId) = @(((float)(Model.PriceValue != Model.PriceWithDiscountValue ? Model.PriceWithDiscountValue : Model.PriceValue)).ToString(new CultureInfo("en-US")));
     </script>
 }
 <div class="prices" itemprop="offers" itemscope itemtype="http://schema.org/Offer">

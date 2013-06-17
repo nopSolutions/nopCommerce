@@ -33,17 +33,17 @@ namespace Nop.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Subscriptions</returns>
-        IPagedList<BackInStockSubscription> GetAllSubscriptionsByProductId(int productVId,
+        IPagedList<BackInStockSubscription> GetAllSubscriptionsByProductId(int productId,
             int storeId, int pageIndex, int pageSize);
 
         /// <summary>
         /// Gets all subscriptions
         /// </summary>
         /// <param name="customerId">Customer id</param>
-        /// <param name="productVariantId">Product variant identifier</param>
+        /// <param name="productId">Product identifier</param>
         /// <param name="storeId">Store identifier</param>
         /// <returns>Subscriptions</returns>
-        BackInStockSubscription FindSubscription(int customerId, int productVariantId, int storeId);
+        BackInStockSubscription FindSubscription(int customerId, int productId, int storeId);
 
         /// <summary>
         /// Gets a subscription

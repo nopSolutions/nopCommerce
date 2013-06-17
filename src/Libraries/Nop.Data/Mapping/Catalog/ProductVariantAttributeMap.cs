@@ -7,7 +7,7 @@ namespace Nop.Data.Mapping.Catalog
     {
         public ProductVariantAttributeMap()
         {
-            this.ToTable("ProductVariant_ProductAttribute_Mapping");
+            this.ToTable("Product_ProductAttribute_Mapping");
             this.HasKey(pva => pva.Id);
             this.Ignore(pva => pva.AttributeControlType);
 

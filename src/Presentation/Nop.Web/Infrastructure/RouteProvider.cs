@@ -67,9 +67,9 @@ namespace Nop.Web.Infrastructure
                             new[] { "Nop.Web.Controllers" });
             //downloads
             routes.MapRoute("GetSampleDownload",
-                            "download/sample/{productvariantid}",
+                            "download/sample/{productid}",
                             new { controller = "Download", action = "Sample"},
-                            new { productvariantid = @"\d+" },
+                            new { productid = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
             routes.MapRoute("GetDownload",
                             "download/getdownload/{orderItemId}/{agree}",
@@ -99,9 +99,9 @@ namespace Nop.Web.Infrastructure
 
             //back in stock notifications
             routes.MapLocalizedRoute("BackInStockSubscribePopup",
-                            "backinstocksubscribe/{productVariantId}",
+                            "backinstocksubscribe/{productId}",
                             new { controller = "Catalog", action = "BackInStockSubscribePopup" },
-                            new { productVariantId = @"\d+" },
+                            new { productId = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
             routes.MapLocalizedRoute("DeleteBackInStockSubscription",
                             "backinstocksubscribe/delete/{subscriptionId}",
@@ -158,15 +158,15 @@ namespace Nop.Web.Infrastructure
                             new[] { "Nop.Web.Controllers" });
             //add product variant to cart (with attributes and options)
             routes.MapLocalizedRoute("AddProductVariantToCart",
-                            "addproductvarianttocart/{productVariantId}/{shoppingCartTypeId}",
+                            "addproductvarianttocart/{productId}/{shoppingCartTypeId}",
                             new { controller = "ShoppingCart", action = "AddProductVariantToCart" },
-                            new { productVariantId = @"\d+", shoppingCartTypeId = @"\d+" },
+                            new { productId = @"\d+", shoppingCartTypeId = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
             //product attributes with "upload file" type
             routes.MapLocalizedRoute("UploadFileProductAttribute",
-                            "uploadfileproductattribute/{productVariantId}/{productAttributeId}",
+                            "uploadfileproductattribute/{productId}/{productAttributeId}",
                             new { controller = "ShoppingCart", action = "UploadFileProductAttribute" },
-                            new { productVariantId = @"\d+", productAttributeId = @"\d+" },
+                            new { productId = @"\d+", productAttributeId = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
             
             //checkout

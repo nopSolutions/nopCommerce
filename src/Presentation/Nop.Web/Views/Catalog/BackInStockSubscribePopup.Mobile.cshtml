@@ -54,7 +54,7 @@
                             $.ajax({
                                 cache: false,
                                 type: 'POST',
-                                url: '@Url.RouteUrl("BackInStockSubscribePopup", new { productVariantId = Model.ProductVariantId })',
+                                url: '@Url.RouteUrl("BackInStockSubscribePopup", new { productId = Model.ProductId })',
                                 data: $(this.form).serialize(),
                                 dataType: 'json',
                                 complete: function (data) {

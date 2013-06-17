@@ -1386,8 +1386,8 @@
     <Content Include="Views\Customer\_ExternalAuthentication.AssociateMessage.cshtml" />
     <Content Include="Views\ExternalAuthentication\ExternalMethods.cshtml" />
     <Content Include="Views\Customer\_ExternalAuthentication.Errors.cshtml" />
-    <Content Include="Views\Catalog\ProductTemplate.VariantsInGrid.cshtml" />
-    <Content Include="Views\Catalog\ProductTemplate.SingleVariant.cshtml" />
+    <Content Include="Views\Catalog\ProductTemplate.Grouped.cshtml" />
+    <Content Include="Views\Catalog\ProductTemplate.Simple.cshtml" />
     <Content Include="Views\Catalog\_ProductDetailsPictures.cshtml" />
     <Content Include="browserCaps.config">
       <SubType>Designer</SubType>
@@ -1418,8 +1418,8 @@
     <Content Include="Views\Catalog\CategoryNavigation.Mobile.cshtml" />
     <Content Include="Views\Catalog\CategoryTemplate.ProductsInGridOrLines.Mobile.cshtml" />
     <Content Include="Views\Catalog\_ProductBox.Mobile.cshtml" />
-    <Content Include="Views\Catalog\ProductTemplate.VariantsInGrid.Mobile.cshtml" />
-    <Content Include="Views\Catalog\ProductTemplate.SingleVariant.Mobile.cshtml" />
+    <Content Include="Views\Catalog\ProductTemplate.Grouped.Mobile.cshtml" />
+    <Content Include="Views\Catalog\ProductTemplate.Simple.Mobile.cshtml" />
     <Content Include="Views\Catalog\ProductEmailAFriendButton.Mobile.cshtml" />
     <Content Include="Views\Catalog\ProductReviewOverview.Mobile.cshtml" />
     <Content Include="Views\Catalog\SearchBox.Mobile.cshtml" />
@@ -1612,7 +1612,7 @@
     <Content Include="Views\Catalog\_ProductVariantPrice.cshtml" />
     <Content Include="Views\Catalog\_ProductVariantAddToCart.cshtml" />
     <Content Include="Views\Catalog\_DownloadSample.cshtml" />
-    <Content Include="Views\Catalog\_ProductVariant_SKU_Man_Stock.cshtml" />
+    <Content Include="Views\Catalog\_SKU_Man_Stock.cshtml" />
     <Content Include="Views\Catalog\_ProductAttributes.cshtml" />
     <Content Include="Views\ShoppingCart\Cart.cshtml" />
     <Content Include="Views\Catalog\CrossSellProducts.cshtml" />
