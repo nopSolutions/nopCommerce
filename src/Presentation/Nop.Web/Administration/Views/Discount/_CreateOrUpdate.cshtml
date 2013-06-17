@@ -41,15 +41,15 @@
                 var selectedDiscountTypeId = $("#@Html.FieldIdFor(model => model.DiscountTypeId)").val();
                 if (selectedDiscountTypeId == @(((int)DiscountType.AssignedToCategories).ToString())) {
                     $('#pnlAppliedToCategories').show();
-                    $('#pnlAppliedToProductVariants').hide();
+                    $('#pnlAppliedToProducts').hide();
                 }
                 else if (selectedDiscountTypeId == @(((int)DiscountType.AssignedToSkus).ToString())) {
                     $('#pnlAppliedToCategories').hide();
-                    $('#pnlAppliedToProductVariants').show();
+                    $('#pnlAppliedToProducts').show();
                 }
                 else {
                     $('#pnlAppliedToCategories').hide();
-                    $('#pnlAppliedToProductVariants').hide();
+                    $('#pnlAppliedToProducts').hide();
                 }
             }
 
@@ -61,7 +61,6 @@
                 }
                 else {
                     $('#pnlLimitationTimes').hide();
-
                 }
             }
 
@@ -131,7 +130,7 @@
                 }
             </td>
         </tr>
-        <tr id="pnlAppliedToProductVariants">
+        <tr id="pnlAppliedToProducts">
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.AppliedToProductModels):
             </td>

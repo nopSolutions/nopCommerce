@@ -19,7 +19,7 @@
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<ProductVariantModel.ProductVariantAttributeValueModel>()
+            @(Html.Telerik().Grid<ProductModel.ProductVariantAttributeValueModel>()
                             .Name("pvav-grid")
                             .DataKeys(x =>
                             {
@@ -52,7 +52,7 @@
                                 columns.Bound(x => x.Id)
                                     .Width(50)
                                     .Centered()
-                                    .ClientTemplate("<input type='submit' value='" + @T("Admin.Common.Edit").Text + "' onclick=\"" + "javascript:OpenWindow('" + @Url.Content("~/Admin/ProductVariant/ProductAttributeValueEditPopup/") + "<#= Id #>?btnId=btnRefresh&formId=productvariantattribute-form', 800, 350, true); return false;\" class='t-button' />")
+                                    .ClientTemplate("<input type='submit' value='" + @T("Admin.Common.Edit").Text + "' onclick=\"" + "javascript:OpenWindow('" + @Url.Content("~/Admin/Product/ProductAttributeValueEditPopup/") + "<#= Id #>?btnId=btnRefresh&formId=productvariantattribute-form', 800, 350, true); return false;\" class='t-button' />")
                                     .Title(T("Admin.Common.Edit").Text);
                                 columns.Command(commands =>
                                 {

@@ -323,7 +323,7 @@ namespace Nop.Admin.Models.Orders
 
             #region Nested classes
             
-            public partial class ProductVariantLineModel : BaseNopEntityModel
+            public partial class ProductModel : BaseNopEntityModel
             {
                 [NopResourceDisplayName("Admin.Orders.Products.AddNew.Name")]
                 [AllowHtml]

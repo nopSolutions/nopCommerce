@@ -253,12 +253,12 @@ namespace Nop.Admin.Controllers
                     && discount.DiscountType != DiscountType.AssignedToSkus)
                 {
                     //applied to product variants
-                    var productVariants = discount.AppliedToProducts.ToList();
+                    var products = discount.AppliedToProducts.ToList();
                     discount.AppliedToProducts.Clear();
                     _discountService.UpdateDiscount(discount);
                     //update "HasDiscountsApplied" property
-                    foreach (var pv in productVariants)
-                        _productService.UpdateHasDiscountsApplied(pv);
+                    foreach (var p in products)
+                        _productService.UpdateHasDiscountsApplied(p);
                 }
 
                 //activity log
@@ -288,15 +288,15 @@ namespace Nop.Admin.Controllers
             //applied to categories
             var categories = discount.AppliedToCategories.ToList();
             //applied to product variants
-            var productVariants = discount.AppliedToProducts.ToList();
+            var products = discount.AppliedToProducts.ToList();
 
             _discountService.DeleteDiscount(discount);
             
             //update "HasDiscountsApplied" properties
             foreach (var category in categories)
                 _categoryService.UpdateHasDiscountsApplied(category);
-            foreach (var pv in productVariants)
-                _productService.UpdateHasDiscountsApplied(pv);
+            foreach (var p in products)
+                _productService.UpdateHasDiscountsApplied(p);
 
             //activity log
             _customerActivityService.InsertActivity("DeleteDiscount", _localizationService.GetResource("ActivityLog.DeleteDiscount"), discount.Name);

@@ -4,7 +4,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Catalog
 {
-    public partial class BulkEditProductVariantModel : BaseNopEntityModel
+    public partial class BulkEditProductModel : BaseNopEntityModel
     {
         [NopResourceDisplayName("Admin.Catalog.BulkEdit.Fields.Name")]
         [AllowHtml]

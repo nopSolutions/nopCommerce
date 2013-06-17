@@ -573,7 +573,7 @@ namespace Nop.Admin.Models.Catalog
         {
             public int ProductId { get; set; }
 
-            public string ProductVariantName { get; set; }
+            public string ProductName { get; set; }
 
             public int ProductVariantAttributeId { get; set; }
 

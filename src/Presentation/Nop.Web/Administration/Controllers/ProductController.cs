@@ -2356,7 +2356,7 @@ namespace Nop.Admin.Controllers
             var gridModel = new GridModel();
             gridModel.Data = products.Select(x =>
             {
-                var productVariantModel = new BulkEditProductVariantModel()
+                var productModel = new BulkEditProductModel()
                 {
                     Id = x.Id,
                     Name = x.Name,
@@ -2368,7 +2368,7 @@ namespace Nop.Admin.Controllers
                     Published = x.Published
                 };
 
-                return productVariantModel;
+                return productModel;
             });
             gridModel.Total = products.TotalCount;
             return new JsonResult
@@ -2379,40 +2379,40 @@ namespace Nop.Admin.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult BulkEditSave(GridCommand command,
-            [Bind(Prefix = "updated")]IEnumerable<BulkEditProductVariantModel> updatedProductVariants,
-            [Bind(Prefix = "deleted")]IEnumerable<BulkEditProductVariantModel> deletedProductVariants,
+            [Bind(Prefix = "updated")]IEnumerable<BulkEditProductModel> updatedProducts,
+            [Bind(Prefix = "deleted")]IEnumerable<BulkEditProductModel> deletedProducts,
             BulkEditListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            if (updatedProductVariants != null)
+            if (updatedProducts != null)
             {
-                foreach (var pvModel in updatedProductVariants)
+                foreach (var pModel in updatedProducts)
                 {
                     //update
-                    var product = _productService.GetProductById(pvModel.Id);
+                    var product = _productService.GetProductById(pModel.Id);
                     if (product != null)
                     {
                         //a vendor should have access only to his products
                         if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                             continue;
 
-                        product.Sku = pvModel.Sku;
-                        product.Price = pvModel.Price;
-                        product.OldPrice = pvModel.OldPrice;
-                        product.StockQuantity = pvModel.StockQuantity;
-                        product.Published = pvModel.Published;
+                        product.Sku = pModel.Sku;
+                        product.Price = pModel.Price;
+                        product.OldPrice = pModel.OldPrice;
+                        product.StockQuantity = pModel.StockQuantity;
+                        product.Published = pModel.Published;
                         _productService.UpdateProduct(product);
                     }
                 }
             }
-            if (deletedProductVariants != null)
+            if (deletedProducts != null)
             {
-                foreach (var pvModel in deletedProductVariants)
+                foreach (var pModel in deletedProducts)
                 {
                     //delete
-                    var product = _productService.GetProductById(pvModel.Id);
+                    var product = _productService.GetProductById(pModel.Id);
                     if (product != null)
                     {
                         //a vendor should have access only to his products
@@ -2737,7 +2737,7 @@ namespace Nop.Admin.Controllers
 
             var model = new ProductModel.ProductVariantAttributeValueListModel()
             {
-                ProductVariantName = product.Name,
+                ProductName = product.Name,
                 ProductId = pva.ProductId,
                 ProductVariantAttributeName = pva.ProductAttribute.Name,
                 ProductVariantAttributeId = pva.Id,

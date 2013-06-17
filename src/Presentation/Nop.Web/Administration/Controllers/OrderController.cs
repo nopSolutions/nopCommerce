@@ -1652,14 +1652,14 @@ namespace Nop.Admin.Controllers
                 showHidden: true);
             gridModel.Data = products.Select(x =>
             {
-                var productVariantModel = new OrderModel.AddOrderProductModel.ProductVariantLineModel()
+                var productModel = new OrderModel.AddOrderProductModel.ProductModel()
                 {
                     Id = x.Id,
                     Name =  x.Name,
                     Sku = x.Sku,
                 };
 
-                return productVariantModel;
+                return productModel;
             });
             gridModel.Total = products.TotalCount;
             return new JsonResult
