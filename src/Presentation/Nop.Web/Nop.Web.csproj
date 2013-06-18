@@ -932,6 +932,7 @@
     <Content Include="Scripts\2013.1.219\telerik.treeview.min.js" />
     <Content Include="Scripts\2013.1.219\telerik.upload.min.js" />
     <Content Include="Scripts\2013.1.219\telerik.window.min.js" />
+    <Content Include="Scripts\public.common.mobile.js" />
     <Content Include="Themes\Mobile\Content\images\ajax-loader.gif" />
     <Content Include="Content\Images\default-avatar.jpg" />
     <Content Include="Content\Images\flags\ad.png" />
