@@ -3,8 +3,13 @@
 */
 
 
-function setLocation(url) {
-    window.location.href = url;
+function displayAjaxLoading(display) {
+    if (display) {
+        $.mobile.showPageLoadingMsg();
+    }
+    else {
+        $.mobile.hidePageLoadingMsg();
+    }
 }
 
 function displayStandardAlertNotification(message) {
@@ -13,7 +18,10 @@ function displayStandardAlertNotification(message) {
         alertText = message;
     } else {
         for (var i = 0; i < message.length; i++) {
-            alertText = alertText + '\\n' + message[i];
+            alertText = alertText + message[i];
+            if (i != message.length - 1) {
+                alertText = alertText + '\r\n';
+            }
         }
     }
 

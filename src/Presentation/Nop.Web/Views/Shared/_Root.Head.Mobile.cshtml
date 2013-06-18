@@ -1,4 +1,5 @@
 ﻿@{
+    Html.AppendScriptParts("~/Scripts/public.ajaxcart.js");
     Html.AppendScriptParts("~/Scripts/public.common.mobile.js");
     Html.AppendScriptParts("~/Scripts/jquery.validate.unobtrusive.min.js");
     Html.AppendScriptParts("~/Scripts/jquery.validate.min.js");
@@ -32,6 +33,9 @@
     <!--Copyright (c) 2008-2013-->
 </head>
 <body>
+    <script type="text/javascript">
+        AjaxCart.init(true, '.header-cart-links .cart-qty', '.header-cart-links .wishlist-qty', '');
+    </script>
     @RenderBody()
     @Html.NopCssFiles(this.Url, ResourceLocation.Foot)
     @Html.NopScripts(this.Url, ResourceLocation.Foot)
