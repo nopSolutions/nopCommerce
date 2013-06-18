@@ -63,13 +63,12 @@
             <div class="product-collateral">
                 <div class="product-variant-list">
                     <!--product variants-->
-                    @*UNDONE revise product-variant logic*@
-                    @*@foreach (var variant in Model.ProductVariantModels)
+                    @foreach (var variant in Model.AssociatedProducts)
                     {
                         var dataDictVariant = new ViewDataDictionary();
                         dataDictVariant.TemplateInfo.HtmlFieldPrefix = string.Format("variant_{0}", variant.Id);
-                        @Html.Partial("_ProductVariantLine", variant, dataDictVariant)
-                    }*@
+                        @Html.Partial("_ProductTemplate.Grouped.AssociatedProduct", variant, dataDictVariant)
+                    }
                 </div>
                 @Html.Action("ProductSpecifications", "Catalog", new { productId = Model.Id })
                 @Html.Action("ProductTags", "Catalog", new { productId = Model.Id })

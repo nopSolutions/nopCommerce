@@ -904,21 +904,17 @@ namespace Nop.Web.Controllers
                     message = "No product found with the specified ID"
                 });
 
-            //UNDONE revise product-variant logic
-            //var productVariants = _productService.GetProductVariantsByProductId(productId);
-            //if (productVariants.Count != 1)
-            //{
-            //    //we can add a product to the cart only if it has exactly one child product
-            //    return Json(new
-            //    {
-            //        redirect = Url.RouteUrl("Product", new { SeName = product.GetSeName() }),
-            //    });
-            //}
+            //we can add a product to the cart only if it is a simple product
+            if (product.ProductType != ProductType.SimpleProduct)
+            {
+                //we can add a product to the cart only if it has exactly one child product
+                return Json(new
+                {
+                    redirect = Url.RouteUrl("Product", new { SeName = product.GetSeName() }),
+                });
+            }
 
-            //UNDONE revise product-variant logic
-            //get default child product
-            var productVariant = product;
-            if (productVariant.CustomerEntersPrice)
+            if (product.CustomerEntersPrice)
             {
                 //cannot be added to the cart (requires a customer to enter price)
                 return Json(new
@@ -927,7 +923,7 @@ namespace Nop.Web.Controllers
                 });
             }
 
-            var allowedQuantities = productVariant.ParseAllowedQuatities();
+            var allowedQuantities = product.ParseAllowedQuatities();
             if (allowedQuantities.Length > 0)
             {
                 //cannot be added to the cart (requires a customer to select a quantity from dropdownlist)
@@ -943,12 +939,12 @@ namespace Nop.Web.Controllers
                 .Where(sci => sci.ShoppingCartType == cartType)
                 .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
                 .ToList();
-            var shoppingCartItem = _shoppingCartService.FindShoppingCartItemInTheCart(cart, cartType, productVariant);
+            var shoppingCartItem = _shoppingCartService.FindShoppingCartItemInTheCart(cart, cartType, product);
             //if we already have the same product in the cart, then use the total quantity to validate
             var quantityToValidate = shoppingCartItem != null ? shoppingCartItem.Quantity + quantity : quantity;
             var addToCartWarnings = _shoppingCartService
                 .GetShoppingCartItemWarnings(_workContext.CurrentCustomer, cartType,
-                productVariant, _storeContext.CurrentStore.Id, string.Empty, 
+                product, _storeContext.CurrentStore.Id, string.Empty, 
                 decimal.Zero, quantityToValidate, false, true, false, false, false);
             if (addToCartWarnings.Count > 0)
             {
@@ -963,7 +959,7 @@ namespace Nop.Web.Controllers
 
             //now let's try adding product to the cart (now including product attribute validation, etc)
             addToCartWarnings = _shoppingCartService.AddToCart(_workContext.CurrentCustomer,
-                productVariant, cartType, _storeContext.CurrentStore.Id,
+                product, cartType, _storeContext.CurrentStore.Id,
                 string.Empty, decimal.Zero, quantity, true);
             if (addToCartWarnings.Count > 0)
             {
@@ -981,7 +977,7 @@ namespace Nop.Web.Controllers
                 case ShoppingCartType.Wishlist:
                     {
                         //activity log
-                        _customerActivityService.InsertActivity("PublicStore.AddToWishlist", _localizationService.GetResource("ActivityLog.PublicStore.AddToWishlist"), productVariant.Name);
+                        _customerActivityService.InsertActivity("PublicStore.AddToWishlist", _localizationService.GetResource("ActivityLog.PublicStore.AddToWishlist"), product.Name);
 
                         if (_shoppingCartSettings.DisplayWishlistAfterAddingProduct || forceredirection)
                         {
@@ -1012,7 +1008,7 @@ namespace Nop.Web.Controllers
                 default:
                     {
                         //activity log
-                        _customerActivityService.InsertActivity("PublicStore.AddToShoppingCart", _localizationService.GetResource("ActivityLog.PublicStore.AddToShoppingCart"), productVariant.Name);
+                        _customerActivityService.InsertActivity("PublicStore.AddToShoppingCart", _localizationService.GetResource("ActivityLog.PublicStore.AddToShoppingCart"), product.Name);
 
                         if (_shoppingCartSettings.DisplayCartAfterAddingProduct || forceredirection)
                         {

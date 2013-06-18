@@ -166,50 +166,6 @@ namespace Nop.Services.Catalog
         #region Methods
 
         /// <summary>
-        /// Gets a product with minimal price. If it's a simple product, then the same product will be returned. If it's a grouped product, then all child products will be a evaluated
-        /// </summary>
-        /// <param name="product">Product</param>
-        /// <param name="customer">The customer</param>
-        /// <param name="includeDiscounts">A value indicating whether include discounts or not for final price computation</param>
-        /// <param name="quantity">Quantity</param>
-        /// <param name="minPrice">Calcualted minimal price</param>
-        /// <returns>A product with minimal price</returns>
-        public virtual Product GetProductWithMinimalPrice(Product product,
-            Customer customer, bool includeDiscounts, int quantity, out decimal? minPrice)
-        {
-            if (product == null)
-                throw new ArgumentNullException("product");
-
-            minPrice = null;
-
-            switch (product.ProductType)
-            {
-                case ProductType.GroupedProduct:
-                    throw new NotImplementedException();
-                    break;
-                case ProductType.SimpleProduct:
-                default:
-                    {
-                        minPrice = GetFinalPrice(product, customer, decimal.Zero, includeDiscounts, quantity);
-                        return product;
-                    }
-                    break;
-            }
-
-            //Product minPriceProduct = null;
-            //foreach (var childProduct in childProducts)
-            //{
-            //    var finalPrice = GetFinalPrice(variant, customer, decimal.Zero, includeDiscounts, quantity);
-            //    if (!minPrice.HasValue || finalPrice < minPrice.Value)
-            //    {
-            //        minPriceProduct = childProduct;
-            //        minPrice = finalPrice;
-            //    }
-            //}
-            //return minPriceProduct;
-        }
-
-        /// <summary>
         /// Get variant special price (is valid)
         /// </summary>
         /// <param name="product">Product</param>

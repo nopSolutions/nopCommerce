@@ -19,7 +19,13 @@ namespace Nop.Web.Models.Catalog
             ProductPrice = new ProductPriceModel();
             AddToCart = new AddToCartModel();
             ProductVariantAttributes = new List<ProductVariantAttributeModel>();
+            AssociatedProducts = new List<ProductDetailsModel>();
         }
+
+        //picture(s)
+        public bool DefaultPictureZoomEnabled { get; set; }
+        public PictureModel DefaultPictureModel { get; set; }
+        public IList<PictureModel> PictureModels { get; set; }
 
         public string Name { get; set; }
         public string ShortDescription { get; set; }
@@ -29,11 +35,6 @@ namespace Nop.Web.Models.Catalog
         public string MetaDescription { get; set; }
         public string MetaTitle { get; set; }
         public string SeName { get; set; }
-
-        //picture(s)
-        public bool DefaultPictureZoomEnabled { get; set; }
-        public PictureModel DefaultPictureModel { get; set; }
-        public IList<PictureModel> PictureModels { get; set; }
 
         public bool ShowSku { get; set; }
         public string Sku { get; set; }
@@ -60,8 +61,10 @@ namespace Nop.Web.Models.Catalog
 
         public IList<ProductVariantAttributeModel> ProductVariantAttributes { get; set; }
 
-        //specification attributes
         public IList<ProductSpecificationModel> SpecificationAttributeModels { get; set; }
+
+        //a list of associated products. For example, "Grouped" products could have several child "simple" products
+        public IList<ProductDetailsModel> AssociatedProducts { get; set; }
 
 		#region Nested Classes
 

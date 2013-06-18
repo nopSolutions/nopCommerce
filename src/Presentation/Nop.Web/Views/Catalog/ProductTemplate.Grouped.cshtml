@@ -61,16 +61,15 @@
                 </div>
                 @Html.Widget("productdetails_before_collateral")
                 <div class="product-collateral">
-                    <!--product variants-->
-                    @*UNDONE revise product-variant logic*@
-                    @*<div class="product-variant-list">
-                        @foreach (var variant in Model.ProductVariantModels)
+                    <!--associated products-->
+                    <div class="product-variant-list">
+                        @foreach (var variant in Model.AssociatedProducts)
                         {
                             var dataDictVariant = new ViewDataDictionary();
                             dataDictVariant.TemplateInfo.HtmlFieldPrefix = string.Format("variant_{0}", variant.Id);
-                            @Html.Partial("_ProductVariantLine", variant, dataDictVariant)
+                            @Html.Partial("_ProductTemplate.Grouped.AssociatedProduct", variant, dataDictVariant)
                         }
-                    </div>*@
+                    </div>
                     @Html.Action("ProductSpecifications", "Catalog", new { productId = Model.Id })
                     @Html.Action("ProductTags", "Catalog", new { productId = Model.Id })
                     @Html.Action("ProductsAlsoPurchased", "Catalog", new { productId = Model.Id })

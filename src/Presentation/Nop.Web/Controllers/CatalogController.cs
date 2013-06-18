@@ -165,6 +165,54 @@ namespace Nop.Web.Controllers
 
         #region Utilities
 
+        /// <summary>
+        /// Gets a product with minimal price. If it's a simple product, then the same product will be returned. If it's a grouped product, then all associated products will be a evaluated
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="includeDiscounts">A value indicating whether include discounts or not for final price computation</param>
+        /// <param name="quantity">Quantity</param>
+        /// <param name="minPrice">Calcualted minimal price</param>
+        /// <returns>A product with minimal price</returns>
+        public virtual Product GetProductWithMinimalPrice(Product product,
+            bool includeDiscounts, int quantity, out decimal? minPrice)
+        {
+            if (product == null)
+                throw new ArgumentNullException("product");
+
+            minPrice = null;
+
+            switch (product.ProductType)
+            {
+                case ProductType.GroupedProduct:
+                    {
+                        Product minPriceProduct = null;
+                        var childProducts = _productService.SearchProducts(
+                            storeId: _storeContext.CurrentStore.Id,
+                            parentProductId: product.Id);
+                        foreach (var childProduct in childProducts)
+                        {
+                            var finalPrice = _priceCalculationService.GetFinalPrice(childProduct,
+                                _workContext.CurrentCustomer, decimal.Zero, includeDiscounts, quantity);
+                            if (!minPrice.HasValue || finalPrice < minPrice.Value)
+                            {
+                                minPriceProduct = childProduct;
+                                minPrice = finalPrice;
+                            }
+                        }
+                        return minPriceProduct;
+                    }
+                    break;
+                case ProductType.SimpleProduct:
+                default:
+                    {
+                        minPrice = _priceCalculationService.GetFinalPrice(product, 
+                            _workContext.CurrentCustomer, decimal.Zero, includeDiscounts, quantity);
+                        return product;
+                    }
+                    break;
+            }
+        }
+
         [NonAction]
         protected List<int> GetChildCategoryIds(int parentCategoryId, bool showHidden = false)
         {
@@ -291,11 +339,11 @@ namespace Nop.Web.Controllers
 
                                 if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
                                 {
-                                    //calculate for the maximum quantity (in case if we have tier prices)
                                     decimal? minimalPrice = null;
-                                    var productVariant = _priceCalculationService.GetProductWithMinimalPrice(product, _workContext.CurrentCustomer, true, int.MaxValue, out minimalPrice);
+                                    //calculate for the maximum quantity (in case if we have tier prices)
+                                    var productVariant = GetProductWithMinimalPrice(product, true, int.MaxValue, out minimalPrice);
 
-                                    if (!productVariant.CustomerEntersPrice)
+                                    if (productVariant != null && !productVariant.CustomerEntersPrice)
                                     {
                                         if (productVariant.CallForPrice)
                                         {
@@ -472,7 +520,7 @@ namespace Nop.Web.Controllers
         }
         
         [NonAction]
-        protected ProductDetailsModel PrepareProductDetailsPageModel(Product product)
+        protected ProductDetailsModel PrepareProductDetailsPageModel(Product product, bool isAssociatedProduct)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -732,6 +780,25 @@ namespace Nop.Web.Controllers
             }
 
             #endregion 
+
+            #region Associated products
+
+            if (product.ProductType == ProductType.GroupedProduct)
+            {
+                //ensure no circular references
+                if (!isAssociatedProduct)
+                {
+                    var associatedProducts = _productService.SearchProducts(
+                        storeId: _storeContext.CurrentStore.Id,
+                        orderBy: ProductSortingEnum.NameAsc,
+                        parentProductId: product.Id
+                        );
+                    foreach (var associatedProduct in associatedProducts)
+                        model.AssociatedProducts.Add(PrepareProductDetailsPageModel(associatedProduct, true));
+                }
+            }
+
+            #endregion
 
             return model;
         }
@@ -1475,7 +1542,7 @@ namespace Nop.Web.Controllers
                 return InvokeHttp404();
             
             //prepare the model
-            var model = PrepareProductDetailsPageModel(product);
+            var model = PrepareProductDetailsPageModel(product, false);
 
             //save as recently viewed
             _recentlyViewedProductsService.AddProductToRecentlyViewedList(product.Id);
@@ -1864,7 +1931,7 @@ namespace Nop.Web.Controllers
         //                    else
         //                    {
         //                        //redisplay the page with "Product has been added to the wishlist" notification message
-        //                        var model = PrepareProductDetailsPageModel(product);
+        //                        var model = PrepareProductDetailsPageModel(product, false);
         //                        this.SuccessNotification(_localizationService.GetResource("Products.ProductHasBeenAddedToTheWishlist"), false);
         //                        //set already entered values (quantity, customer entered price, gift card attributes, product attributes)
         //                        setEnteredValues(model);
@@ -1886,7 +1953,7 @@ namespace Nop.Web.Controllers
         //                    else
         //                    {
         //                        //redisplay the page with "Product has been added to the cart" notification message
-        //                        var model = PrepareProductDetailsPageModel(product);
+        //                        var model = PrepareProductDetailsPageModel(product, false);
         //                        this.SuccessNotification(_localizationService.GetResource("Products.ProductHasBeenAddedToTheCart"), false);
         //                        //set already entered values (quantity, customer entered price, gift card attributes, product attributes)
         //                        setEnteredValues(model);
@@ -1906,7 +1973,7 @@ namespace Nop.Web.Controllers
         //            ModelState.AddModelError("", error);
 
         //        //If we got this far, something failed, redisplay form
-        //        var model = PrepareProductDetailsPageModel(product);
+        //        var model = PrepareProductDetailsPageModel(product, false);
         //        //set already entered values (quantity, customer entered price, gift card attributes, product attributes
         //        setEnteredValues(model);
         //        return View(model.ProductTemplateViewPath, model);

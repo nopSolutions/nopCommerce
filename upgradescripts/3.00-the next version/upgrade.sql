@@ -2174,6 +2174,7 @@ CREATE PROCEDURE [dbo].[ProductLoadAllPaged]
 	@ManufacturerId		int = 0,
 	@StoreId			int = 0,
 	@VendorId			int = 0,
+	@ParentProductId	int = 0,
 	@ProductTagId		int = 0,
 	@FeaturedProducts	bit = null,	--0 featured only , 1 not featured only, null - load all products
 	@PriceMin			decimal(18, 4) = null,
@@ -2539,6 +2540,13 @@ BEGIN
 	BEGIN
 		SET @sql = @sql + '
 		AND p.VendorId = ' + CAST(@VendorId AS nvarchar(max))
+	END
+	
+	--filter by parent product identifer
+	IF @ParentProductId > 0
+	BEGIN
+		SET @sql = @sql + '
+		AND p.ParentProductId = ' + CAST(@ParentProductId AS nvarchar(max))
 	END
 	
 	--filter by product tag
