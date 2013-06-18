@@ -137,7 +137,7 @@ namespace Nop.Services.Orders
         /// <returns>Warnings</returns>
         IList<string> AddToCart(Customer customer, Product product,
             ShoppingCartType shoppingCartType, int storeId, string selectedAttributes,
-            decimal customerEnteredPrice, int quantity, bool automaticallyAddRequiredProductVariantsIfEnabled);
+            decimal customerEnteredPrice, int quantity, bool automaticallyAddRequiredProductsIfEnabled);
 
         /// <summary>
         /// Updates the shopping cart item

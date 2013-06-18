@@ -28,7 +28,7 @@ namespace Nop.Admin.Models.Catalog
             AddSpecificationAttributeModel = new AddProductSpecificationAttributeModel();
         }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.ID")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.ID")]
         public override int Id { get; set; }
 
         //picture thumbnail
@@ -87,189 +87,189 @@ namespace Nop.Admin.Models.Catalog
 
 
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.Sku")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.Sku")]
         [AllowHtml]
         public string Sku { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.ManufacturerPartNumber")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.ManufacturerPartNumber")]
         [AllowHtml]
         public string ManufacturerPartNumber { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.GTIN")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.GTIN")]
         [AllowHtml]
         public virtual string Gtin { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.IsGiftCard")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.IsGiftCard")]
         public bool IsGiftCard { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.GiftCardType")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.GiftCardType")]
         public int GiftCardTypeId { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.RequireOtherProducts")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.RequireOtherProducts")]
         public bool RequireOtherProducts { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.RequiredProductVariantIds")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.RequiredProductIds")]
         public string RequiredProductIds { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.AutomaticallyAddRequiredProductVariants")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.AutomaticallyAddRequiredProducts")]
         public bool AutomaticallyAddRequiredProducts { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.IsDownload")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.IsDownload")]
         public bool IsDownload { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.Download")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.Download")]
         [UIHint("Download")]
         public int DownloadId { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.UnlimitedDownloads")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.UnlimitedDownloads")]
         public bool UnlimitedDownloads { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.MaxNumberOfDownloads")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.MaxNumberOfDownloads")]
         public int MaxNumberOfDownloads { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.DownloadExpirationDays")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.DownloadExpirationDays")]
         public int? DownloadExpirationDays { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.DownloadActivationType")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.DownloadActivationType")]
         public int DownloadActivationTypeId { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.HasSampleDownload")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.HasSampleDownload")]
         public bool HasSampleDownload { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.SampleDownload")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.SampleDownload")]
         [UIHint("Download")]
         public int SampleDownloadId { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.HasUserAgreement")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.HasUserAgreement")]
         public bool HasUserAgreement { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.UserAgreementText")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.UserAgreementText")]
         [AllowHtml]
         public string UserAgreementText { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.IsRecurring")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.IsRecurring")]
         public bool IsRecurring { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.RecurringCycleLength")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.RecurringCycleLength")]
         public int RecurringCycleLength { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.RecurringCyclePeriod")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.RecurringCyclePeriod")]
         public int RecurringCyclePeriodId { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.RecurringTotalCycles")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.RecurringTotalCycles")]
         public int RecurringTotalCycles { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.IsShipEnabled")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.IsShipEnabled")]
         public bool IsShipEnabled { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.IsFreeShipping")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.IsFreeShipping")]
         public bool IsFreeShipping { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.AdditionalShippingCharge")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.AdditionalShippingCharge")]
         public decimal AdditionalShippingCharge { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.IsTaxExempt")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.IsTaxExempt")]
         public bool IsTaxExempt { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.TaxCategory")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.TaxCategory")]
         public int TaxCategoryId { get; set; }
         public IList<SelectListItem> AvailableTaxCategories { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.ManageInventoryMethod")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.ManageInventoryMethod")]
         public int ManageInventoryMethodId { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.StockQuantity")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.StockQuantity")]
         public int StockQuantity { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.DisplayStockAvailability")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.DisplayStockAvailability")]
         public bool DisplayStockAvailability { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.DisplayStockQuantity")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.DisplayStockQuantity")]
         public bool DisplayStockQuantity { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.MinStockQuantity")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.MinStockQuantity")]
         public int MinStockQuantity { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.LowStockActivity")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.LowStockActivity")]
         public int LowStockActivityId { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.NotifyAdminForQuantityBelow")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.NotifyAdminForQuantityBelow")]
         public int NotifyAdminForQuantityBelow { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.BackorderMode")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.BackorderMode")]
         public int BackorderModeId { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.AllowBackInStockSubscriptions")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.AllowBackInStockSubscriptions")]
         public bool AllowBackInStockSubscriptions { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.OrderMinimumQuantity")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.OrderMinimumQuantity")]
         public int OrderMinimumQuantity { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.OrderMaximumQuantity")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.OrderMaximumQuantity")]
         public int OrderMaximumQuantity { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.AllowedQuantities")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.AllowedQuantities")]
         public string AllowedQuantities { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.DisableBuyButton")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.DisableBuyButton")]
         public bool DisableBuyButton { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.DisableWishlistButton")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.DisableWishlistButton")]
         public bool DisableWishlistButton { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.AvailableForPreOrder")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.AvailableForPreOrder")]
         public bool AvailableForPreOrder { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.CallForPrice")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.CallForPrice")]
         public bool CallForPrice { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.Price")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.Price")]
         public decimal Price { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.OldPrice")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.OldPrice")]
         public decimal OldPrice { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.ProductCost")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.ProductCost")]
         public decimal ProductCost { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.SpecialPrice")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.SpecialPrice")]
         [UIHint("DecimalNullable")]
         public decimal? SpecialPrice { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.SpecialPriceStartDateTimeUtc")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.SpecialPriceStartDateTimeUtc")]
         [UIHint("DateTimeNullable")]
         public DateTime? SpecialPriceStartDateTimeUtc { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.SpecialPriceEndDateTimeUtc")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.SpecialPriceEndDateTimeUtc")]
         [UIHint("DateTimeNullable")]
         public DateTime? SpecialPriceEndDateTimeUtc { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.CustomerEntersPrice")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.CustomerEntersPrice")]
         public bool CustomerEntersPrice { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.MinimumCustomerEnteredPrice")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.MinimumCustomerEnteredPrice")]
         public decimal MinimumCustomerEnteredPrice { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.MaximumCustomerEnteredPrice")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.MaximumCustomerEnteredPrice")]
         public decimal MaximumCustomerEnteredPrice { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.Weight")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.Weight")]
         public decimal Weight { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.Length")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.Length")]
         public decimal Length { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.Width")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.Width")]
         public decimal Width { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.Height")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.Height")]
         public decimal Height { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.AvailableStartDateTime")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.AvailableStartDateTime")]
         [UIHint("DateTimeNullable")]
         public DateTime? AvailableStartDateTimeUtc { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.AvailableEndDateTime")]
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.AvailableEndDateTime")]
         [UIHint("DateTimeNullable")]
         public DateTime? AvailableEndDateTimeUtc { get; set; }
 
@@ -520,20 +520,20 @@ namespace Nop.Admin.Models.Catalog
             public int ProductId { get; set; }
 
             public int CustomerRoleId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.Variants.TierPrices.Fields.CustomerRole")]
+            [NopResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.CustomerRole")]
             [UIHint("TierPriceCustomer")]
             public string CustomerRole { get; set; }
 
 
             public int StoreId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.Variants.TierPrices.Fields.Store")]
+            [NopResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.Store")]
             [UIHint("TierPriceStore")]
             public string Store { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.Variants.TierPrices.Fields.Quantity")]
+            [NopResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.Quantity")]
             public int Quantity { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.Variants.TierPrices.Fields.Price")]
+            [NopResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.Price")]
             //we don't name it Price because Telerik has a small bug 
             //"if we have one more editor with the same name on a page, it doesn't allow editing"
             //in our case it's productVariant.Price1
@@ -545,23 +545,23 @@ namespace Nop.Admin.Models.Catalog
             public int ProductId { get; set; }
 
             public int ProductAttributeId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes.Fields.Attribute")]
+            [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Fields.Attribute")]
             [UIHint("ProductAttribute")]
             public string ProductAttribute { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes.Fields.TextPrompt")]
+            [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Fields.TextPrompt")]
             [AllowHtml]
             public string TextPrompt { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes.Fields.IsRequired")]
+            [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Fields.IsRequired")]
             public bool IsRequired { get; set; }
 
             public int AttributeControlTypeId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes.Fields.AttributeControlType")]
+            [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Fields.AttributeControlType")]
             [UIHint("AttributeControlType")]
             public string AttributeControlType { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes.Fields.DisplayOrder")]
+            [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Fields.DisplayOrder")]
             //we don't name it DisplayOrder because Telerik has a small bug 
             //"if we have one more editor with the same name on a page, it doesn't allow editing"
             //in our case it's category.DisplayOrder
@@ -592,25 +592,25 @@ namespace Nop.Admin.Models.Catalog
 
             public int ProductVariantAttributeId { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes.Values.Fields.Name")]
+            [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.Name")]
             [AllowHtml]
             public string Name { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes.Values.Fields.ColorSquaresRgb")]
+            [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.ColorSquaresRgb")]
             [AllowHtml]
             public string ColorSquaresRgb { get; set; }
             public bool DisplayColorSquaresRgb { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes.Values.Fields.PriceAdjustment")]
+            [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.PriceAdjustment")]
             public decimal PriceAdjustment { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes.Values.Fields.WeightAdjustment")]
+            [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.WeightAdjustment")]
             public decimal WeightAdjustment { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes.Values.Fields.IsPreSelected")]
+            [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.IsPreSelected")]
             public bool IsPreSelected { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes.Values.Fields.DisplayOrder")]
+            [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.DisplayOrder")]
             public int DisplayOrder { get; set; }
 
             public IList<ProductVariantAttributeValueLocalizedModel> Locales { get; set; }
@@ -620,7 +620,7 @@ namespace Nop.Admin.Models.Catalog
         {
             public int LanguageId { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes.Values.Fields.Name")]
+            [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.Name")]
             [AllowHtml]
             public string Name { get; set; }
         }
@@ -629,38 +629,38 @@ namespace Nop.Admin.Models.Catalog
         {
             public int ProductId { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.Variants.ProductVariantAttributes.AttributeCombinations.Fields.Attributes")]
+            [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.Attributes")]
             [AllowHtml]
             public string AttributesXml { get; set; }
 
             [AllowHtml]
             public string Warnings { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.Variants.ProductVariantAttributes.AttributeCombinations.Fields.StockQuantity")]
+            [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.StockQuantity")]
             //we don't name it StockQuantity because Telerik has a small bug 
             //"if we have one more editor with the same name on a page, it doesn't allow editing"
             //in our case it's productVariant.StockQuantity1
             public int StockQuantity1 { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.Variants.ProductVariantAttributes.AttributeCombinations.Fields.AllowOutOfStockOrders")]
+            [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.AllowOutOfStockOrders")]
             //we don't name it AllowOutOfStockOrders because Telerik has a small bug 
             //"if we have one more editor with the same name on a page, it doesn't allow editing"
             //in our case it's productVariant.AllowOutOfStockOrders1
             public bool AllowOutOfStockOrders1 { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.Variants.ProductVariantAttributes.AttributeCombinations.Fields.Sku")]
+            [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.Sku")]
             //we don't name it StockQuantity because Telerik has a small bug 
             //"if we have one more editor with the same name on a page, it doesn't allow editing"
             //in our case it's productVariant.Sku1
             public string Sku1 { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.Variants.ProductVariantAttributes.AttributeCombinations.Fields.ManufacturerPartNumber")]
+            [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.ManufacturerPartNumber")]
             //we don't name it StockQuantity because Telerik has a small bug 
             //"if we have one more editor with the same name on a page, it doesn't allow editing"
             //in our case it's productVariant.ManufacturerPartNumber1
             public string ManufacturerPartNumber1 { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.Variants.ProductVariantAttributes.AttributeCombinations.Fields.Gtin")]
+            [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.Gtin")]
             //we don't name it StockQuantity because Telerik has a small bug 
             //"if we have one more editor with the same name on a page, it doesn't allow editing"
             //in our case it's productVariant.Gtin1

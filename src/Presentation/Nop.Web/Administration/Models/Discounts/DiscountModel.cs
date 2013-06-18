@@ -62,7 +62,7 @@ namespace Nop.Admin.Models.Discounts
         [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.AppliedToCategories")]
         public IList<AppliedToCategoryModel> AppliedToCategoryModels { get; set; }
 
-        [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.AppliedToProductVariants")]
+        [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.AppliedToProducts")]
         public IList<AppliedToProductModel> AppliedToProductModels { get; set; }
 
 

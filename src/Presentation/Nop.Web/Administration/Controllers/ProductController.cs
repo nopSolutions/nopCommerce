@@ -2343,13 +2343,13 @@ namespace Nop.Admin.Controllers
                     }
                     else
                     {
-                        storeName = _localizationService.GetResource("Admin.Catalog.Products.Variants.TierPrices.Fields.Store.All");
+                        storeName = _localizationService.GetResource("Admin.Catalog.Products.TierPrices.Fields.Store.All");
                     }
                     return new ProductModel.TierPriceModel()
                     {
                         Id = x.Id,
                         Store = storeName,
-                        CustomerRole = x.CustomerRoleId.HasValue ? _customerService.GetCustomerRoleById(x.CustomerRoleId.Value).Name : _localizationService.GetResource("Admin.Catalog.Products.Variants.TierPrices.Fields.CustomerRole.AllRoles"),
+                        CustomerRole = x.CustomerRoleId.HasValue ? _customerService.GetCustomerRoleById(x.CustomerRoleId.Value).Name : _localizationService.GetResource("Admin.Catalog.Products.TierPrices.Fields.CustomerRole.All"),
                         ProductId = x.ProductId,
                         CustomerRoleId = x.CustomerRoleId.HasValue ? x.CustomerRoleId.Value : 0,
                         Quantity = x.Quantity,
@@ -2496,7 +2496,7 @@ namespace Nop.Admin.Controllers
                     if (x.ShouldHaveValues())
                     {
                         pvaModel.ViewEditUrl = Url.Action("EditAttributeValues", "Product", new { productVariantAttributeId = x.Id });
-                        pvaModel.ViewEditText = string.Format(_localizationService.GetResource("Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes.Values.ViewLink"), x.ProductVariantAttributeValues != null ? x.ProductVariantAttributeValues.Count : 0);
+                        pvaModel.ViewEditText = string.Format(_localizationService.GetResource("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.ViewLink"), x.ProductVariantAttributeValues != null ? x.ProductVariantAttributeValues.Count : 0);
                     }
                     return pvaModel;
                 })

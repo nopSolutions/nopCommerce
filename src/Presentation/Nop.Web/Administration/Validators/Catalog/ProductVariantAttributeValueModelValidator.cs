@@ -8,7 +8,7 @@ namespace Nop.Admin.Validators.Catalog
     {
         public ProductVariantAttributeValueModelValidator(ILocalizationService localizationService)
         {
-            RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes.Values.Fields.Name.Required"));
+            RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.Name.Required"));
         }
     }
 }

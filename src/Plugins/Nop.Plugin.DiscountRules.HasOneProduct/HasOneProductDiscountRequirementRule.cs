@@ -39,12 +39,12 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct
             if (request.Customer == null)
                 return false;
 
-            //we support three ways of specifying product variants:
-            //1. The comma-separated list of product variant identifiers (e.g. 77, 123, 156).
-            //2. The comma-separated list of product variant identifiers with quantities.
-            //      {Product variant ID}:{Quantity}. For example, 77:1, 123:2, 156:3
-            //3. The comma-separated list of product variant identifiers with quantity range.
-            //      {Product variant ID}:{Min quantity}-{Max quantity}. For example, 77:1-3, 123:2-5, 156:3-8
+            //we support three ways of specifying products:
+            //1. The comma-separated list of product identifiers (e.g. 77, 123, 156).
+            //2. The comma-separated list of product identifiers with quantities.
+            //      {Product ID}:{Quantity}. For example, 77:1, 123:2, 156:3
+            //3. The comma-separated list of product identifiers with quantity range.
+            //      {Product ID}:{Min quantity}-{Max quantity}. For example, 77:1-3, 123:2-5, 156:3-8
             var restrictedProducts = restrictedProductIds
                 .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(x => x.Trim())
@@ -52,9 +52,9 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct
             if (restrictedProducts.Count == 0)
                 return false;
             
-            //group products in the cart by product variant ID
-            //it could be the same product variant with distinct product attributes
-            //that's why we get the total quantity of this product variant
+            //group products in the cart by product ID
+            //it could be the same product with distinct product attributes
+            //that's why we get the total quantity of this product
             var cartQuery = from sci in request.Customer.ShoppingCartItems
                             where sci.ShoppingCartType == ShoppingCartType.ShoppingCart &&
                             sci.StoreId == request.Store.Id
@@ -158,16 +158,16 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct
         public override void Install()
         {
             //locales
-            this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.HasOneProduct.Fields.ProductVariants", "Restricted product variants");
-            this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.HasOneProduct.Fields.ProductVariants.Hint", "The comma-separated list of product variant identifiers (e.g. 77, 123, 156). You can find a product variant ID on its details page. You can also specify the comma-separated list of product variant identifiers with quantities ({Product variant ID}:{Quantity}. for example, 77:1, 123:2, 156:3). And you can also specify the comma-separated list of product variant identifiers with quantity range ({Product variant ID}:{Min quantity}-{Max quantity}. for example, 77:1-3, 123:2-5, 156:3-8).");
+            this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.HasOneProduct.Fields.Products", "Restricted product");
+            this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.HasOneProduct.Fields.Products.Hint", "The comma-separated list of product identifiers (e.g. 77, 123, 156). You can find a product ID on its details page. You can also specify the comma-separated list of product identifiers with quantities ({Product ID}:{Quantity}. for example, 77:1, 123:2, 156:3). And you can also specify the comma-separated list of product identifiers with quantity range ({Product ID}:{Min quantity}-{Max quantity}. for example, 77:1-3, 123:2-5, 156:3-8).");
             base.Install();
         }
 
         public override void Uninstall()
         {
             //locales
-            this.DeletePluginLocaleResource("Plugins.DiscountRules.HasOneProduct.Fields.ProductVariants");
-            this.DeletePluginLocaleResource("Plugins.DiscountRules.HasOneProduct.Fields.ProductVariants.Hint");
+            this.DeletePluginLocaleResource("Plugins.DiscountRules.HasOneProduct.Fields.Products");
+            this.DeletePluginLocaleResource("Plugins.DiscountRules.HasOneProduct.Fields.Products.Hint");
             base.Uninstall();
         }
     }
