@@ -51,8 +51,8 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Are attributes equal
         /// </summary>
-        /// <param name="attributes1">The attributes of the first product variant</param>
-        /// <param name="attributes2">The attributes of the second product variant</param>
+        /// <param name="attributes1">The attributes of the first product</param>
+        /// <param name="attributes2">The attributes of the second product</param>
         /// <returns>Result</returns>
         bool AreProductAttributesEqual(string attributes1, string attributes2);
 

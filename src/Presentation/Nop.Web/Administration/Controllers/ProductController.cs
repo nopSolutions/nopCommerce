@@ -2183,14 +2183,7 @@ namespace Nop.Admin.Controllers
             var allVariants = _productService.GetLowStockProducts(vendorId);
             var model = new GridModel<ProductModel>()
             {
-                Data = allVariants.PagedForCommand(command).Select(x =>
-                {
-                    var variantModel = x.ToModel();
-                    //UNDONE revise product-variant logic
-                    //Full product variant name
-                    variantModel.Name = x.Name;
-                    return variantModel;
-                }),
+                Data = allVariants.PagedForCommand(command).Select(x => x.ToModel()),
                 Total = allVariants.Count
             };
             return new JsonResult

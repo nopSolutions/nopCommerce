@@ -33,28 +33,9 @@ namespace Nop.Services.Catalog
         /// </remarks>
         private const string PRODUCTS_BY_ID_KEY = "Nop.product.id-{0}";
         /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : product ID
-        /// {1} : show hidden records?
-        /// </remarks>
-        private const string PRODUCTVARIANTS_ALL_KEY = "Nop.productvariant.all-{0}-{1}";
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : product variant ID
-        /// </remarks>
-        private const string PRODUCTVARIANTS_BY_ID_KEY = "Nop.productvariant.id-{0}";
-        /// <summary>
         /// Key pattern to clear cache
         /// </summary>
         private const string PRODUCTS_PATTERN_KEY = "Nop.product.";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string PRODUCTVARIANTS_PATTERN_KEY = "Nop.productvariant.";
         #endregion
 
         #region Fields
@@ -244,7 +225,6 @@ namespace Nop.Services.Catalog
 
             //clear cache
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
             
             //event notification
             _eventPublisher.EntityInserted(product);
@@ -264,7 +244,6 @@ namespace Nop.Services.Catalog
 
             //cache
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
 
             //event notification
             _eventPublisher.EntityUpdated(product);
@@ -888,7 +867,7 @@ namespace Nop.Services.Catalog
         /// <returns>Result</returns>
         public virtual IList<Product> GetLowStockProducts(int vendorId)
         {
-            //Track inventory for product variant
+            //Track inventory for product
             var query1 = from p in _productRepository.Table
                          orderby p.MinStockQuantity
                          where !p.Deleted &&
@@ -898,7 +877,7 @@ namespace Nop.Services.Catalog
                          select p;
             var products1 = query1.ToList();
 
-            //Track inventory for product variant by product attributes
+            //Track inventory for product by product attributes
             var query2 = from p in _productRepository.Table
                          from pvac in p.ProductVariantAttributeCombinations
                          where !p.Deleted &&
@@ -1292,7 +1271,6 @@ namespace Nop.Services.Catalog
             _tierPriceRepository.Delete(tierPrice);
 
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
 
             //event notification
             _eventPublisher.EntityDeleted(tierPrice);
@@ -1323,7 +1301,6 @@ namespace Nop.Services.Catalog
             _tierPriceRepository.Insert(tierPrice);
 
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
 
             //event notification
             _eventPublisher.EntityInserted(tierPrice);
@@ -1341,7 +1318,6 @@ namespace Nop.Services.Catalog
             _tierPriceRepository.Update(tierPrice);
 
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
 
             //event notification
             _eventPublisher.EntityUpdated(tierPrice);

@@ -210,10 +210,10 @@ namespace Nop.Services.Catalog
         }
 
         /// <summary>
-        /// Get product variant special price (is valid)
+        /// Get variant special price (is valid)
         /// </summary>
         /// <param name="product">Product</param>
-        /// <returns>Product variant special price</returns>
+        /// <returns>Special price</returns>
         public virtual decimal? GetSpecialPrice(Product product)
         {
             if (product == null)

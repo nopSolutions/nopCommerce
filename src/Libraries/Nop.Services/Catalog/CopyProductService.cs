@@ -80,7 +80,7 @@ namespace Nop.Services.Catalog
 
             Product productCopy = null;
 
-                //product variant download & sample download
+            //product download & sample download
             int downloadId = product.DownloadId;
             int sampleDownloadId = product.SampleDownloadId;
             if (product.IsDownload)
@@ -344,7 +344,7 @@ namespace Nop.Services.Catalog
                 }
 
 
-                // product variant <-> attributes mappings
+                // product <-> attributes mappings
                 var associatedAttributes = new Dictionary<int, int>();
                 var associatedAttributeValues = new Dictionary<int, int>();
                 foreach (var productVariantAttribute in _productAttributeService.GetProductVariantAttributesByProductId(product.Id))
@@ -444,7 +444,7 @@ namespace Nop.Services.Catalog
                     _productAttributeService.InsertProductVariantAttributeCombination(combinationCopy);
                 }
 
-                // product variant tier prices
+                //tier prices
                 foreach (var tierPrice in product.TierPrices)
                 {
                     _productService.InsertTierPrice(
@@ -458,7 +458,7 @@ namespace Nop.Services.Catalog
                         });
                 }
 
-                // product variant <-> discounts mapping
+                // product <-> discounts mapping
                 foreach (var discount in product.AppliedDiscounts)
                 {
                     productCopy.AppliedDiscounts.Add(discount);

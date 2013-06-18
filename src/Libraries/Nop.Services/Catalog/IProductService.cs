@@ -141,10 +141,6 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         void UpdateProductReviewTotals(Product product);
 
-        #endregion
-
-        #region Product variants
-        
         /// <summary>
         /// Get low stock products
         /// </summary>

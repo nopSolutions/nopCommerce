@@ -1560,6 +1560,16 @@
                     </LocaleResource>
                 </Children>
             </LocaleResource>
+            <LocaleResource Name="Nop.Core.Domain.Catalog.ProductType">
+              <Children>
+                <LocaleResource Name="SimpleProduct">
+                  <Value>Simple product</Value>
+                </LocaleResource>
+                <LocaleResource Name="GroupedProduct">
+                  <Value>Grouped product</Value>
+                </LocaleResource>
+              </Children>
+            </LocaleResource>
             <LocaleResource Name="Nop.Core.Domain.Catalog.RecurringProductCyclePeriod">
                 <Children>
                     <LocaleResource Name="Days">
@@ -1647,7 +1657,7 @@
                         <Value>Assigned to order total</Value>
                     </LocaleResource>
                     <LocaleResource Name="AssignedToSkus">
-                        <Value>Assigned to product variants (SKUs)</Value>
+                        <Value>Assigned to products</Value>
                     </LocaleResource>
                     <LocaleResource Name="AssignedToCategories">
                         <Value>Assigned to categories</Value>
@@ -2896,9 +2906,6 @@
             </LocaleResource>
             <LocaleResource Name="StockQuantity">
                 <Value>Stock quantity</Value>
-            </LocaleResource>
-            <LocaleResource Name="UnnamedProductVariant">
-                <Value>Unnamed product variant</Value>
             </LocaleResource>
             <LocaleResource Name="Weight">
                 <Value>Weight</Value>

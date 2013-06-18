@@ -1526,7 +1526,7 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentException("No order item found with the specified id");
 
             if (!orderItem.Product.IsDownload)
-                throw new ArgumentException("Product variant is not downloadable");
+                throw new ArgumentException("Product is not downloadable");
 
             //ensure a vendor has access only to his products 
             if (_workContext.CurrentVendor != null && !HasAccessToOrderItem(orderItem))
@@ -2192,7 +2192,7 @@ namespace Nop.Admin.Controllers
                 var qtyOrdered = orderItem.Quantity;
                 var qtyInAllShipments = orderItem.GetTotalNumberOfItemsInAllShipment();
 
-                //ensure that this product variant can be added to a shipment
+                //ensure that this product can be added to a shipment
                 if (maxQtyToAdd <= 0)
                     continue;
 
@@ -2248,7 +2248,7 @@ namespace Nop.Admin.Controllers
                 if (!orderItem.Product.IsShipEnabled)
                     continue;
                 
-                //ensure that this product variant can be shipped (have at least one item to ship)
+                //ensure that this product can be shipped (have at least one item to ship)
                 var maxQtyToAdd = orderItem.GetTotalNumberOfItemsCanBeAddedToShipment();
                 if (maxQtyToAdd <= 0)
                     continue;
@@ -2710,7 +2710,6 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null)
                 vendorId = _workContext.CurrentVendor.Id;
 
-            //group by product variants (not products)
             var items = _orderReportService.BestSellersReport(
                 vendorId : vendorId,
                 orderBy: orderBy,
@@ -2826,7 +2825,6 @@ namespace Nop.Admin.Controllers
             OrderStatus? orderStatus = model.OrderStatusId > 0 ? (OrderStatus?)(model.OrderStatusId) : null;
             PaymentStatus? paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
 
-            //group by product variants (not products)
             var items = _orderReportService.BestSellersReport(
                 createdFromUtc: startDateValue,
                 createdToUtc: endDateValue,

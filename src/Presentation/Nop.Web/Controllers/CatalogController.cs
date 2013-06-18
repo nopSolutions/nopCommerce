@@ -351,7 +351,7 @@ namespace Nop.Web.Controllers
                                         {
                                             //Actually it's not possible (we presume that minimalPrice always has a value)
                                             //We never should get here
-                                            Debug.WriteLine(string.Format("Cannot calculate minPrice for product variant #{0}", productVariant.Id));
+                                            Debug.WriteLine(string.Format("Cannot calculate minPrice for product #{0}", productVariant.Id));
                                         }
                                     }
                                 }
@@ -572,7 +572,7 @@ namespace Nop.Web.Controllers
 
 #endregion
 
-            #region Product variant price
+            #region Product price
 
             model.ProductPrice.ProductId = product.Id;
             model.ProductPrice.DynamicPriceUpdate = _catalogSettings.EnableDynamicPriceUpdate;
@@ -1486,7 +1486,7 @@ namespace Nop.Web.Controllers
             return View(model.ProductTemplateViewPath, model);
         }
 
-        //add product variant to cart using HTTP POST
+        //add product to cart using HTTP POST
         //currently we use this method only for mobile device version
         //desktop version uses AJAX version of this method (ShoppingCartController.AddProductVariantToCart)
         //[HttpPost, ActionName("Product")]
@@ -1711,7 +1711,7 @@ namespace Nop.Web.Controllers
             
         //    Action<ProductDetailsModel> setEnteredValues = (productModel) =>
         //        {
-        //            //find product variant model
+        //            //find product model
         //            var productVariantModel = productModel.ProductVariantModels
         //                .FirstOrDefault(x => x.Id == productVariant.Id);
         //            if (productVariantModel == null)
@@ -2220,7 +2220,6 @@ namespace Nop.Web.Controllers
             //load and cache report
             var report = _cacheManager.Get(string.Format(ModelCacheEventConsumer.HOMEPAGE_BESTSELLERS_IDS_KEY, _storeContext.CurrentStore.Id), 
                 () =>
-                    //group by products (not product variants)
                     _orderReportService.BestSellersReport(storeId: _storeContext.CurrentStore.Id,
                     pageSize: _catalogSettings.NumberOfBestsellersOnHomepage));
 

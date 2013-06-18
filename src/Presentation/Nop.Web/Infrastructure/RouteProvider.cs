@@ -150,13 +150,13 @@ namespace Nop.Web.Infrastructure
                             "emailwishlist",
                             new { controller = "ShoppingCart", action = "EmailWishlist" },
                             new[] { "Nop.Web.Controllers" });
-            //add product to cart (without any attributes and options)
+            //add product to cart (without any attributes and options). used on catalog pages.
             routes.MapLocalizedRoute("AddProductToCart",
                             "addproducttocart/{productId}/{shoppingCartTypeId}/{quantity}",
                             new { controller = "ShoppingCart", action = "AddProductToCart" },
                             new { productId = @"\d+", shoppingCartTypeId = @"\d+", quantity = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
-            //add product variant to cart (with attributes and options)
+            //add product to cart (with attributes and options). used on the product details pages.
             routes.MapLocalizedRoute("AddProductVariantToCart",
                             "addproductvarianttocart/{productId}/{shoppingCartTypeId}",
                             new { controller = "ShoppingCart", action = "AddProductVariantToCart" },

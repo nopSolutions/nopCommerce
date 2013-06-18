@@ -887,7 +887,7 @@ namespace Nop.Web.Controllers
 
         #region Shopping cart
         
-        //add product (not product variant) to cart using AJAX
+        //add product to cart using AJAX
         //currently we use this method on catalog pages (category/manufacturer/etc)
         [HttpPost]
         public ActionResult AddProductToCart(int productId, int shoppingCartTypeId,
@@ -908,15 +908,15 @@ namespace Nop.Web.Controllers
             //var productVariants = _productService.GetProductVariantsByProductId(productId);
             //if (productVariants.Count != 1)
             //{
-            //    //we can add a product to the cart only if it has exactly one product variant
+            //    //we can add a product to the cart only if it has exactly one child product
             //    return Json(new
             //    {
             //        redirect = Url.RouteUrl("Product", new { SeName = product.GetSeName() }),
             //    });
             //}
 
-            //get default product variant
             //UNDONE revise product-variant logic
+            //get default child product
             var productVariant = product;
             if (productVariant.CustomerEntersPrice)
             {
@@ -944,7 +944,7 @@ namespace Nop.Web.Controllers
                 .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
                 .ToList();
             var shoppingCartItem = _shoppingCartService.FindShoppingCartItemInTheCart(cart, cartType, productVariant);
-            //if we already have the same product variant in the cart, then use the total quantity to validate
+            //if we already have the same product in the cart, then use the total quantity to validate
             var quantityToValidate = shoppingCartItem != null ? shoppingCartItem.Quantity + quantity : quantity;
             var addToCartWarnings = _shoppingCartService
                 .GetShoppingCartItemWarnings(_workContext.CurrentCustomer, cartType,
@@ -1048,7 +1048,7 @@ namespace Nop.Web.Controllers
             }
         }
 
-        //add product variant to cart using AJAX
+        //add product to cart using AJAX
         //currently we use this method only for desktop version
         //mobile version uses HTTP POST version of this method (CatalogController.AddProductVariantToCart)
         [HttpPost]

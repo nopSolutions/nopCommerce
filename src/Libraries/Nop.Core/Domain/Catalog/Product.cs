@@ -146,7 +146,7 @@ namespace Nop.Core.Domain.Catalog
         public int GiftCardTypeId { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the product requires that other product variants are added to the cart (Product X requires Product Y)
+        /// Gets or sets a value indicating whether the product requires that other products are added to the cart (Product X requires Product Y)
         /// </summary>
         public bool RequireOtherProducts { get; set; }
 

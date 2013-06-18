@@ -570,7 +570,7 @@
                         </Children>
                     </LocaleResource>
                     <LocaleResource Name="BulkEdit">
-                        <Value>Bulk edit product variants</Value>
+                        <Value>Bulk edit products</Value>
                         <Children>
                             <LocaleResource Name="Fields">
                                 <Children>
@@ -890,11 +890,6 @@
                     </LocaleResource>
                     <LocaleResource Name="LowStockReport">
                         <Value>Low stock report</Value>
-                        <Children>
-                            <LocaleResource Name="Manage">
-                                <Value>Low stock product variant</Value>
-                            </LocaleResource>
-                        </Children>
                     </LocaleResource>
                     <LocaleResource Name="Manufacturers">
                         <Value>Manufacturers</Value>
@@ -1772,11 +1767,19 @@
                                       </LocaleResource>
                                     </Children>
                                   </LocaleResource>
+                                  <LocaleResource Name="ProductType">
+                                    <Value>Product type</Value>
+                                    <Children>
+                                      <LocaleResource Name="Hint">
+                                        <Value>Choose your product type.</Value>
+                                      </LocaleResource>
+                                    </Children>
+                                  </LocaleResource>
                                   <LocaleResource Name="ProductTemplate">
                                     <Value>Product template</Value>
                                     <Children>
                                       <LocaleResource Name="Hint">
-                                        <Value>Choose a product template. This template defines how this product (and its variants) will be displayed.</Value>
+                                        <Value>Choose a product template. This template defines how this product will be displayed in public store.</Value>
                                       </LocaleResource>
                                     </Children>
                                   </LocaleResource>
@@ -2119,7 +2122,7 @@
                                       <LocaleResource Name="AddNew">
                                         <Value>Add a new value</Value>
                                       </LocaleResource>
-                                      <LocaleResource Name="BackToProductVariant">
+                                      <LocaleResource Name="BackToProduct">
                                         <Value>back to product details</Value>
                                       </LocaleResource>
                                       <LocaleResource Name="EditValueDetails">
@@ -8778,7 +8781,7 @@
                                         <Value>Add product '{0}' to order #{1}</Value>
                                     </LocaleResource>
                                     <LocaleResource Name="Note1">
-                                        <Value>Click on interested product variant</Value>
+                                        <Value>Click on interested product</Value>
                                     </LocaleResource>
                                     <LocaleResource Name="Note2">
                                         <Value>Do not to forget to update order totals after adding this product.</Value>
@@ -9125,7 +9128,7 @@
                                         <Value>Discount type</Value>
                                         <Children>
                                             <LocaleResource Name="Hint">
-                                                <Value>The type of discount. Choose from applying to whole order or to individual product variants (SKU's).</Value>
+                                                <Value>The type of discount.</Value>
                                             </LocaleResource>
                                         </Children>
                                     </LocaleResource>

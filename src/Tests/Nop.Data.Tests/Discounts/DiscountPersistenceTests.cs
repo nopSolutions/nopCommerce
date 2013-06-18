@@ -99,7 +99,7 @@ namespace Nop.Data.Tests.Discounts
 
             fromDb.AppliedToProducts.ShouldNotBeNull();
             (fromDb.AppliedToProducts.Count == 1).ShouldBeTrue();
-            fromDb.AppliedToProducts.First().Name.ShouldEqual("Product variant name 1");
+            fromDb.AppliedToProducts.First().Name.ShouldEqual("Product name 1");
 
 
         }

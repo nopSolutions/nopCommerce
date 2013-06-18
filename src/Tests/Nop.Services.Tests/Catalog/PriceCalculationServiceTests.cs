@@ -75,7 +75,7 @@ namespace Nop.Services.Tests.Catalog
             var product = new Product
             {
                 Id = 1,
-                Name = "Product variant name 1",
+                Name = "Product name 1",
                 Price = 12.34M,
                 CustomerEntersPrice = false,
                 Published = true,
@@ -181,7 +181,7 @@ namespace Nop.Services.Tests.Catalog
             var product = new Product
             {
                 Id = 1,
-                Name = "Product variant name 1",
+                Name = "Product name 1",
                 Price = 12.34M,
                 CustomerEntersPrice = false,
                 Published = true,
@@ -330,7 +330,7 @@ namespace Nop.Services.Tests.Catalog
             var product = new Product
             {
                 Id = 1,
-                Name = "Product variant name 1",
+                Name = "Product name 1",
                 Price = 12.34M,
                 CustomerEntersPrice = true,
                 Published = true,

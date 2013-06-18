@@ -57,7 +57,7 @@
         .Name("products-grid")
         .DataKeys(keys =>
         {
-            keys.Add(pv => pv.Id);
+            keys.Add(p => p.Id);
         })
         .ToolBar(commands =>
         {
@@ -70,13 +70,13 @@
         )
         .Columns(columns =>
         {
-            columns.Bound(pv => pv.Name).ReadOnly().Width(300);
-            columns.Bound(pv => pv.Sku).Width(100);
-            columns.Bound(pv => pv.Price).Width(100);
-            columns.Bound(pv => pv.OldPrice).Width(100);
-            columns.Bound(pv => pv.ManageInventoryMethod).ReadOnly().Width(150);
-            columns.Bound(pv => pv.StockQuantity).Width(100);
-            columns.Bound(pv => pv.Published).Width(100);
+            columns.Bound(p => p.Name).ReadOnly().Width(300);
+            columns.Bound(p => p.Sku).Width(100);
+            columns.Bound(p => p.Price).Width(100);
+            columns.Bound(p => p.OldPrice).Width(100);
+            columns.Bound(p => p.ManageInventoryMethod).ReadOnly().Width(150);
+            columns.Bound(p => p.StockQuantity).Width(100);
+            columns.Bound(p => p.Published).Width(100);
             columns.Command(commands => commands.Delete().Text(T("Admin.Common.Delete").Text)).Title(T("Admin.Common.Delete").Text).Width(50);
             columns.Bound(x => x.Id)
                 .ReadOnly()

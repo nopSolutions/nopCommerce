@@ -466,10 +466,10 @@ namespace Nop.Plugin.Shipping.Fedex
                 foreach (var item in getShippingOptionRequest.Items)
                 {
                     var product = item.Product;
-                    int pvLength = ConvertFromPrimaryMeasureDimension(product.Length, usedMeasureDimension);
-                    int pvHeight = ConvertFromPrimaryMeasureDimension(product.Height, usedMeasureDimension);
-                    int pvWidth = ConvertFromPrimaryMeasureDimension(product.Width, usedMeasureDimension);
-                    totalVolume += item.Quantity * (pvHeight * pvWidth * pvLength);
+                    int productLength = ConvertFromPrimaryMeasureDimension(product.Length, usedMeasureDimension);
+                    int productHeight = ConvertFromPrimaryMeasureDimension(product.Height, usedMeasureDimension);
+                    int productWidth = ConvertFromPrimaryMeasureDimension(product.Width, usedMeasureDimension);
+                    totalVolume += item.Quantity * (productHeight * productWidth * productLength);
                 }
 
                 int dimension;

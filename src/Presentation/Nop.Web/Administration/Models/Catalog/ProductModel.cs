@@ -35,6 +35,9 @@ namespace Nop.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.PictureThumbnailUrl")]
         public string PictureThumbnailUrl { get; set; }
 
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.ProductType")]
+        public int ProductTypeId { get; set; }
+
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }

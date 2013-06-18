@@ -202,7 +202,6 @@ namespace Nop.Plugin.Payments.PayPalStandard
                     var priceExclTax = item.PriceExclTax;
                     //round
                     var unitPriceExclTaxRounded = Math.Round(unitPriceExclTax, 2);
-                    //get the product variant so we can get the name
                     builder.AppendFormat("&item_name_" + x + "={0}", HttpUtility.UrlEncode(item.Product.Name));
                     builder.AppendFormat("&amount_" + x + "={0}", unitPriceExclTaxRounded.ToString("0.00", CultureInfo.InvariantCulture));
                     builder.AppendFormat("&quantity_" + x + "={0}", item.Quantity);
