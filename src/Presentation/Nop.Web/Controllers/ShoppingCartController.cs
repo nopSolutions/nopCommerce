@@ -904,10 +904,9 @@ namespace Nop.Web.Controllers
                     message = "No product found with the specified ID"
                 });
 
-            //we can add a product to the cart only if it is a simple product
+            //we can add only simple products
             if (product.ProductType != ProductType.SimpleProduct)
             {
-                //we can add a product to the cart only if it has exactly one child product
                 return Json(new
                 {
                     redirect = Url.RouteUrl("Product", new { SeName = product.GetSeName() }),
@@ -1057,6 +1056,16 @@ namespace Nop.Web.Controllers
                 return Json(new
                 {
                     redirect = Url.RouteUrl("HomePage"),
+                });
+            }
+
+            //we can add only simple products
+            if (product.ProductType != ProductType.SimpleProduct)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = "Only simple products could be added to the cart"
                 });
             }
 

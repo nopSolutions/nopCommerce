@@ -282,6 +282,12 @@ namespace Nop.Services.Orders
             {
                 warnings.Add(_localizationService.GetResource("ShoppingCart.ProductUnpublished"));
             }
+
+            //we can add only simple products
+            if (product.ProductType != ProductType.SimpleProduct)
+            {
+                warnings.Add("This is not simple product");
+            }
             
             //ACL
             if (!_aclService.Authorize(product, customer))
