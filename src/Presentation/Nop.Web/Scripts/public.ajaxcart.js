@@ -23,7 +23,7 @@ var AjaxCart = {
         this.loadWaiting = display;
     },
 
-    addproducttocart: function (urladd) {
+    addproducttocart_catalog: function (urladd) {
         if (this.loadWaiting != false) {
             return;
         }
@@ -39,7 +39,7 @@ var AjaxCart = {
         });
     },
 
-    addproductvarianttocart: function (urladd, formselector) {
+    addproducttocart_details: function (urladd, formselector) {
         if (this.loadWaiting != false) {
             return;
         }

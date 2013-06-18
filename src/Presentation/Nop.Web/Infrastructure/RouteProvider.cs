@@ -151,15 +151,15 @@ namespace Nop.Web.Infrastructure
                             new { controller = "ShoppingCart", action = "EmailWishlist" },
                             new[] { "Nop.Web.Controllers" });
             //add product to cart (without any attributes and options). used on catalog pages.
-            routes.MapLocalizedRoute("AddProductToCart",
-                            "addproducttocart/{productId}/{shoppingCartTypeId}/{quantity}",
-                            new { controller = "ShoppingCart", action = "AddProductToCart" },
+            routes.MapLocalizedRoute("AddProductToCart-Catalog",
+                            "addproducttocart/catalog/{productId}/{shoppingCartTypeId}/{quantity}",
+                            new { controller = "ShoppingCart", action = "AddProductToCart_Catalog" },
                             new { productId = @"\d+", shoppingCartTypeId = @"\d+", quantity = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
             //add product to cart (with attributes and options). used on the product details pages.
-            routes.MapLocalizedRoute("AddProductVariantToCart",
-                            "addproductvarianttocart/{productId}/{shoppingCartTypeId}",
-                            new { controller = "ShoppingCart", action = "AddProductVariantToCart" },
+            routes.MapLocalizedRoute("AddProductToCart-Details",
+                            "addproducttocart/details/{productId}/{shoppingCartTypeId}",
+                            new { controller = "ShoppingCart", action = "AddProductToCart_Details" },
                             new { productId = @"\d+", shoppingCartTypeId = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
             //product attributes with "upload file" type

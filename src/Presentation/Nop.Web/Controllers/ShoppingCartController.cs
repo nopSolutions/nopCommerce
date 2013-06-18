@@ -890,7 +890,7 @@ namespace Nop.Web.Controllers
         //add product to cart using AJAX
         //currently we use this method on catalog pages (category/manufacturer/etc)
         [HttpPost]
-        public ActionResult AddProductToCart(int productId, int shoppingCartTypeId,
+        public ActionResult AddProductToCart_Catalog(int productId, int shoppingCartTypeId,
             int quantity, bool forceredirection = false)
         {
             var cartType = (ShoppingCartType)shoppingCartTypeId;
@@ -1048,7 +1048,7 @@ namespace Nop.Web.Controllers
         //mobile version uses HTTP POST version of this method (CatalogController.AddProductVariantToCart)
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult AddProductVariantToCart(int productId, int shoppingCartTypeId, FormCollection form)
+        public ActionResult AddProductToCart_Details(int productId, int shoppingCartTypeId, FormCollection form)
         {
             var product = _productService.GetProductById(productId);
             if (product == null)

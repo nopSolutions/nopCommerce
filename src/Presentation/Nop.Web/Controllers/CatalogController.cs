@@ -1548,7 +1548,7 @@ namespace Nop.Web.Controllers
 
         //add product to cart using HTTP POST
         //currently we use this method only for mobile device version
-        //desktop version uses AJAX version of this method (ShoppingCartController.AddProductVariantToCart)
+        //desktop version uses AJAX version of this method (ShoppingCartController.AddProductToCart_Details)
         //[HttpPost, ActionName("Product")]
         //[ValidateInput(false)]
         //public ActionResult AddProductVariantToCart(int productId, FormCollection form)
