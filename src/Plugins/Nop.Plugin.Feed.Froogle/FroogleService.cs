@@ -195,6 +195,11 @@ namespace Nop.Plugin.Feed.Froogle
                 {
                     writer.WriteStartElement("item");
 
+                    //UNDONE currently we support only simple products
+                    if (product.ProductType != ProductType.SimpleProduct)
+                        continue;
+
+
                     #region Basic Product Information
 
                     //id [id]- An identifier of the item
