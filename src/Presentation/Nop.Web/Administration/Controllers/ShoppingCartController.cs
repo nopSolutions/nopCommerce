@@ -113,11 +113,11 @@ namespace Nop.Admin.Controllers
                     {
                         Id = sci.Id,
                         Store = store != null ? store.Name : "Unknown",
-                        ProductVariantId = sci.ProductVariantId,
+                        ProductId = sci.ProductId,
                         Quantity = sci.Quantity,
-                        FullProductName = sci.ProductVariant.FullProductName,
-                        UnitPrice = _priceFormatter.FormatPrice(_taxService.GetProductPrice(sci.ProductVariant, _priceCalculationService.GetUnitPrice(sci, true), out taxRate)),
-                        Total = _priceFormatter.FormatPrice(_taxService.GetProductPrice(sci.ProductVariant, _priceCalculationService.GetSubTotal(sci, true), out taxRate)),
+                        ProductName = sci.Product.Name,
+                        UnitPrice = _priceFormatter.FormatPrice(_taxService.GetProductPrice(sci.Product, _priceCalculationService.GetUnitPrice(sci, true), out taxRate)),
+                        Total = _priceFormatter.FormatPrice(_taxService.GetProductPrice(sci.Product, _priceCalculationService.GetSubTotal(sci, true), out taxRate)),
                         UpdatedOn = _dateTimeHelper.ConvertToUserTime(sci.UpdatedOnUtc, DateTimeKind.Utc)
                     };
                     return sciModel;
@@ -193,11 +193,11 @@ namespace Nop.Admin.Controllers
                     {
                         Id = sci.Id,
                         Store = store != null ? store.Name : "Unknown",
-                        ProductVariantId = sci.ProductVariantId,
+                        ProductId = sci.ProductId,
                         Quantity = sci.Quantity,
-                        FullProductName = sci.ProductVariant.FullProductName,
-                        UnitPrice = _priceFormatter.FormatPrice(_taxService.GetProductPrice(sci.ProductVariant, _priceCalculationService.GetUnitPrice(sci, true), out taxRate)),
-                        Total = _priceFormatter.FormatPrice(_taxService.GetProductPrice(sci.ProductVariant, _priceCalculationService.GetSubTotal(sci, true), out taxRate)),
+                        ProductName = sci.Product.Name,
+                        UnitPrice = _priceFormatter.FormatPrice(_taxService.GetProductPrice(sci.Product, _priceCalculationService.GetUnitPrice(sci, true), out taxRate)),
+                        Total = _priceFormatter.FormatPrice(_taxService.GetProductPrice(sci.Product, _priceCalculationService.GetSubTotal(sci, true), out taxRate)),
                         UpdatedOn = _dateTimeHelper.ConvertToUserTime(sci.UpdatedOnUtc, DateTimeKind.Utc)
                     };
                     return sciModel;

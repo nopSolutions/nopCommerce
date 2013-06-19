@@ -158,7 +158,7 @@ namespace Nop.Admin.Controllers
                 return true;
 
             var vendorId = _workContext.CurrentVendor.Id;
-            var hasVendorProducts = order.OrderItems.Any(orderItem => orderItem.ProductVariant.Product.VendorId == vendorId);
+            var hasVendorProducts = order.OrderItems.Any(orderItem => orderItem.Product.VendorId == vendorId);
             return hasVendorProducts;
         }
 
@@ -173,7 +173,7 @@ namespace Nop.Admin.Controllers
                 return true;
 
             var vendorId = _workContext.CurrentVendor.Id;
-            return orderItem.ProductVariant.Product.VendorId == vendorId;
+            return orderItem.Product.VendorId == vendorId;
         }
 
         [NonAction]
@@ -193,7 +193,7 @@ namespace Nop.Admin.Controllers
                 var orderItem = _orderService.GetOrderItemById(shipmentItem.OrderItemId);
                 if (orderItem != null)
                 {
-                    if (orderItem.ProductVariant.Product.VendorId == vendorId)
+                    if (orderItem.Product.VendorId == vendorId)
                     {
                         hasVendorProducts = true;
                         break;
@@ -466,29 +466,29 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null)
             {
                 products = products
-                    .Where(orderItem => orderItem.ProductVariant.Product.VendorId == _workContext.CurrentVendor.Id)
+                    .Where(orderItem => orderItem.Product.VendorId == _workContext.CurrentVendor.Id)
                     .ToList();
             }
             foreach (var orderItem in products)
             {
-                if (orderItem.ProductVariant != null && orderItem.ProductVariant.IsDownload)
+                if (orderItem.Product.IsDownload)
                     hasDownloadableItems = true;
 
                 var orderItemModel = new OrderModel.OrderItemModel()
                 {
                     Id = orderItem.Id,
-                    ProductVariantId = orderItem.ProductVariantId,
-                    FullProductName = orderItem.ProductVariant.FullProductName,
-                    Sku = orderItem.ProductVariant.FormatSku(orderItem.AttributesXml, _productAttributeParser),
+                    ProductId = orderItem.ProductId,
+                    ProductName = orderItem.Product.Name,
+                    Sku = orderItem.Product.FormatSku(orderItem.AttributesXml, _productAttributeParser),
                     Quantity = orderItem.Quantity,
-                    IsDownload = orderItem.ProductVariant.IsDownload,
+                    IsDownload = orderItem.Product.IsDownload,
                     DownloadCount = orderItem.DownloadCount,
-                    DownloadActivationType = orderItem.ProductVariant.DownloadActivationType,
+                    DownloadActivationType = orderItem.Product.DownloadActivationType,
                     IsDownloadActivated = orderItem.IsDownloadActivated,
                     LicenseDownloadId = orderItem.LicenseDownloadId
                 };
                 //vendor
-                var vendor = _vendorService.GetVendorById(orderItem.ProductVariant.Product.VendorId);
+                var vendor = _vendorService.GetVendorById(orderItem.Product.VendorId);
                 orderItemModel.VendorName = vendor != null ? vendor.Name : "";
 
                 //unit price
@@ -508,8 +508,8 @@ namespace Nop.Admin.Controllers
                 orderItemModel.SubTotalExclTax = _priceFormatter.FormatPrice(orderItem.PriceExclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, false, true);
 
                 orderItemModel.AttributeInfo = orderItem.AttributeDescription;
-                if (orderItem.ProductVariant.IsRecurring)
-                    orderItemModel.RecurringInfo = string.Format(_localizationService.GetResource("Admin.Orders.Products.RecurringPeriod"), orderItem.ProductVariant.RecurringCycleLength, orderItem.ProductVariant.RecurringCyclePeriod.GetLocalizedEnum(_localizationService, _workContext));
+                if (orderItem.Product.IsRecurring)
+                    orderItemModel.RecurringInfo = string.Format(_localizationService.GetResource("Admin.Orders.Products.RecurringPeriod"), orderItem.Product.RecurringCycleLength, orderItem.Product.RecurringCyclePeriod.GetLocalizedEnum(_localizationService, _workContext));
 
                 //return requests
                 orderItemModel.ReturnRequestIds = _orderService.SearchReturnRequests(0, 0, orderItem.Id, null, 0, int.MaxValue)
@@ -525,15 +525,17 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected OrderModel.AddOrderProductModel.ProductDetailsModel PrepareAddProductToOrderModel(int orderId, int productVariantId)
+        protected OrderModel.AddOrderProductModel.ProductDetailsModel PrepareAddProductToOrderModel(int orderId, int productId)
         {
+            var product = _productService.GetProductById(productId);
+            if (product == null)
+                throw new ArgumentException("No product found with the specified id");
 
-            var productVariant = _productService.GetProductVariantById(productVariantId);
             var model = new OrderModel.AddOrderProductModel.ProductDetailsModel()
             {
-                ProductVariantId = productVariantId,
+                ProductId = productId,
                 OrderId = orderId,
-                Name = productVariant.FullProductName,
+                Name = product.Name,
                 UnitPriceExclTax = decimal.Zero,
                 UnitPriceInclTax = decimal.Zero,
                 Quantity = 1,
@@ -542,7 +544,7 @@ namespace Nop.Admin.Controllers
             };
 
             //attributes
-            var productVariantAttributes = _productAttributeService.GetProductVariantAttributesByProductVariantId(productVariant.Id);
+            var productVariantAttributes = _productAttributeService.GetProductVariantAttributesByProductId(product.Id);
             foreach (var attribute in productVariantAttributes)
             {
                 var pvaModel = new OrderModel.AddOrderProductModel.ProductVariantAttributeModel()
@@ -574,10 +576,10 @@ namespace Nop.Admin.Controllers
                 model.ProductVariantAttributes.Add(pvaModel);
             }
             //gift card
-            model.GiftCard.IsGiftCard = productVariant.IsGiftCard;
+            model.GiftCard.IsGiftCard = product.IsGiftCard;
             if (model.GiftCard.IsGiftCard)
             {
-                model.GiftCard.GiftCardType = productVariant.GiftCardType;
+                model.GiftCard.GiftCardType = product.GiftCardType;
             }
             return model;
         }
@@ -624,12 +626,12 @@ namespace Nop.Admin.Controllers
                     {
                         Id = shipmentItem.Id,
                         OrderItemId = orderItem.Id,
-                        ProductVariantId = orderItem.ProductVariantId,
-                        FullProductName = orderItem.ProductVariant.FullProductName,
-                        Sku = orderItem.ProductVariant.FormatSku(orderItem.AttributesXml, _productAttributeParser),
+                        ProductId = orderItem.ProductId,
+                        ProductName = orderItem.Product.Name,
+                        Sku = orderItem.Product.FormatSku(orderItem.AttributesXml, _productAttributeParser),
                         AttributeInfo = orderItem.AttributeDescription,
                         ItemWeight = orderItem.ItemWeight.HasValue ? string.Format("{0:F2} [{1}]", orderItem.ItemWeight, baseWeightIn) : "",
-                        ItemDimensions = string.Format("{0:F2} x {1:F2} x {2:F2} [{3}]", orderItem.ProductVariant.Length, orderItem.ProductVariant.Width, orderItem.ProductVariant.Height, baseDimensionIn),
+                        ItemDimensions = string.Format("{0:F2} x {1:F2} x {2:F2} [{3}]", orderItem.Product.Length, orderItem.Product.Width, orderItem.Product.Height, baseDimensionIn),
                         QuantityOrdered = qtyOrdered,
                         QuantityInThisShipment = qtyInThisShipment,
                         QuantityInAllShipments = qtyInAllShipments,
@@ -1525,8 +1527,8 @@ namespace Nop.Admin.Controllers
             if (orderItem == null)
                 throw new ArgumentException("No order item found with the specified id");
 
-            if (!orderItem.ProductVariant.IsDownload)
-                throw new ArgumentException("Product variant is not downloadable");
+            if (!orderItem.Product.IsDownload)
+                throw new ArgumentException("Product is not downloadable");
 
             //ensure a vendor has access only to his products 
             if (_workContext.CurrentVendor != null && !HasAccessToOrderItem(orderItem))
@@ -1644,28 +1646,31 @@ namespace Nop.Admin.Controllers
                 return Content("");
 
             var gridModel = new GridModel();
-            var productVariants = _productService.SearchProductVariants(model.SearchCategoryId,
-                model.SearchManufacturerId, 0, model.SearchProductName, false,
-                command.Page - 1, command.PageSize, true);
-            gridModel.Data = productVariants.Select(x =>
+            var products = _productService.SearchProducts(categoryIds: new List<int>() {model.SearchCategoryId},
+                manufacturerId: model.SearchManufacturerId,
+                keywords: model.SearchProductName, 
+                pageIndex: command.Page - 1, 
+                pageSize: command.PageSize,
+                showHidden: true);
+            gridModel.Data = products.Select(x =>
             {
-                var productVariantModel = new OrderModel.AddOrderProductModel.ProductVariantLineModel()
+                var productModel = new OrderModel.AddOrderProductModel.ProductModel()
                 {
                     Id = x.Id,
-                    Name =  x.FullProductName,
+                    Name =  x.Name,
                     Sku = x.Sku,
                 };
 
-                return productVariantModel;
+                return productModel;
             });
-            gridModel.Total = productVariants.TotalCount;
+            gridModel.Total = products.TotalCount;
             return new JsonResult
             {
                 Data = gridModel
             };
         }
 
-        public ActionResult AddProductToOrderDetails(int orderId, int productVariantId)
+        public ActionResult AddProductToOrderDetails(int orderId, int productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -1674,12 +1679,12 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null)
                 return RedirectToAction("Edit", "Order", new { id = orderId });
 
-            var model = PrepareAddProductToOrderModel(orderId, productVariantId);
+            var model = PrepareAddProductToOrderModel(orderId, productId);
             return View(model);
         }
 
         [HttpPost]
-        public ActionResult AddProductToOrderDetails(int orderId, int productVariantId, FormCollection form)
+        public ActionResult AddProductToOrderDetails(int orderId, int productId, FormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -1689,7 +1694,7 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("Edit", "Order", new { id = orderId });
 
             var order = _orderService.GetOrderById(orderId);
-            var productVariant = _productService.GetProductVariantById(productVariantId);
+            var product = _productService.GetProductById(productId);
             //save order item
 
             //basic properties
@@ -1711,7 +1716,7 @@ namespace Nop.Admin.Controllers
 
             #region Product attributes
             string selectedAttributes = string.Empty;
-            var productVariantAttributes = _productAttributeService.GetProductVariantAttributesByProductVariantId(productVariant.Id);
+            var productVariantAttributes = _productAttributeService.GetProductVariantAttributesByProductId(product.Id);
             foreach (var attribute in productVariantAttributes)
             {
                 string controlId = string.Format("product_attribute_{0}_{1}", attribute.ProductAttributeId, attribute.Id);
@@ -1823,7 +1828,7 @@ namespace Nop.Admin.Controllers
             string senderName = "";
             string senderEmail = "";
             string giftCardMessage = "";
-            if (productVariant.IsGiftCard)
+            if (product.IsGiftCard)
             {
                 foreach (string formKey in form.AllKeys)
                 {
@@ -1861,21 +1866,21 @@ namespace Nop.Admin.Controllers
             #endregion
 
             //warnings
-            warnings.AddRange(_shoppingCartService.GetShoppingCartItemAttributeWarnings(ShoppingCartType.ShoppingCart, productVariant, attributes));
-            warnings.AddRange(_shoppingCartService.GetShoppingCartItemGiftCardWarnings(ShoppingCartType.ShoppingCart, productVariant, attributes));
+            warnings.AddRange(_shoppingCartService.GetShoppingCartItemAttributeWarnings(ShoppingCartType.ShoppingCart, product, attributes));
+            warnings.AddRange(_shoppingCartService.GetShoppingCartItemGiftCardWarnings(ShoppingCartType.ShoppingCart, product, attributes));
             if (warnings.Count == 0)
             {
                 //no errors
 
                 //attributes
-                string attributeDescription = _productAttributeFormatter.FormatAttributes(productVariant, attributes, order.Customer);
+                string attributeDescription = _productAttributeFormatter.FormatAttributes(product, attributes, order.Customer);
 
                 //save item
                 var orderItem = new OrderItem()
                 {
                     OrderItemGuid = Guid.NewGuid(),
                     Order = order,
-                    ProductVariantId = productVariant.Id,
+                    ProductId = product.Id,
                     UnitPriceInclTax = unitPriceInclTax,
                     UnitPriceExclTax = unitPriceExclTax,
                     PriceInclTax = priceInclTax,
@@ -1893,13 +1898,13 @@ namespace Nop.Admin.Controllers
                 _orderService.UpdateOrder(order);
 
                 //gift cards
-                if (productVariant.IsGiftCard)
+                if (product.IsGiftCard)
                 {
                     for (int i = 0; i < orderItem.Quantity; i++)
                     {
                         var gc = new GiftCard()
                         {
-                            GiftCardType = productVariant.GiftCardType,
+                            GiftCardType = product.GiftCardType,
                             PurchasedWithOrderItem = orderItem,
                             Amount = unitPriceExclTax,
                             IsGiftCardActivated = false,
@@ -1922,7 +1927,7 @@ namespace Nop.Admin.Controllers
             else
             {
                 //errors
-                var model = PrepareAddProductToOrderModel(order.Id, productVariant.Id);
+                var model = PrepareAddProductToOrderModel(order.Id, product.Id);
                 model.Warnings.AddRange(warnings);
                 return View(model);
             }
@@ -2180,7 +2185,7 @@ namespace Nop.Admin.Controllers
             foreach (var orderItem in orderItems)
             {
                 //we can ship only shippable products
-                if (!orderItem.ProductVariant.IsShipEnabled)
+                if (!orderItem.Product.IsShipEnabled)
                     continue;
 
                 //quantities
@@ -2189,19 +2194,19 @@ namespace Nop.Admin.Controllers
                 var qtyOrdered = orderItem.Quantity;
                 var qtyInAllShipments = orderItem.GetTotalNumberOfItemsInAllShipment();
 
-                //ensure that this product variant can be added to a shipment
+                //ensure that this product can be added to a shipment
                 if (maxQtyToAdd <= 0)
                     continue;
 
                 var shipmentItemModel = new ShipmentModel.ShipmentItemModel()
                 {
                     OrderItemId = orderItem.Id,
-                    ProductVariantId = orderItem.ProductVariantId,
-                    FullProductName = orderItem.ProductVariant.FullProductName,
-                    Sku = orderItem.ProductVariant.FormatSku(orderItem.AttributesXml, _productAttributeParser),
+                    ProductId = orderItem.ProductId,
+                    ProductName = orderItem.Product.Name,
+                    Sku = orderItem.Product.FormatSku(orderItem.AttributesXml, _productAttributeParser),
                     AttributeInfo = orderItem.AttributeDescription,
                     ItemWeight = orderItem.ItemWeight.HasValue ? string.Format("{0:F2} [{1}]", orderItem.ItemWeight, baseWeightIn) : "",
-                    ItemDimensions = string.Format("{0:F2} x {1:F2} x {2:F2} [{3}]", orderItem.ProductVariant.Length, orderItem.ProductVariant.Width, orderItem.ProductVariant.Height, baseDimensionIn),
+                    ItemDimensions = string.Format("{0:F2} x {1:F2} x {2:F2} [{3}]", orderItem.Product.Length, orderItem.Product.Width, orderItem.Product.Height, baseDimensionIn),
                     QuantityOrdered = qtyOrdered,
                     QuantityInThisShipment = qtyInThisShipment,
                     QuantityInAllShipments = qtyInAllShipments,
@@ -2242,10 +2247,10 @@ namespace Nop.Admin.Controllers
             foreach (var orderItem in orderItems)
             {
                 //is shippable
-                if (!orderItem.ProductVariant.IsShipEnabled)
+                if (!orderItem.Product.IsShipEnabled)
                     continue;
                 
-                //ensure that this product variant can be shipped (have at least one item to ship)
+                //ensure that this product can be shipped (have at least one item to ship)
                 var maxQtyToAdd = orderItem.GetTotalNumberOfItemsCanBeAddedToShipment();
                 if (maxQtyToAdd <= 0)
                     continue;
@@ -2707,7 +2712,6 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null)
                 vendorId = _workContext.CurrentVendor.Id;
 
-            //group by product variants (not products)
             var items = _orderReportService.BestSellersReport(
                 vendorId : vendorId,
                 orderBy: orderBy,
@@ -2720,13 +2724,13 @@ namespace Nop.Admin.Controllers
                 {
                     var m = new BestsellersReportLineModel()
                     {
-                        ProductVariantId = x.EntityId,
+                        ProductId = x.ProductId,
                         TotalAmount = _priceFormatter.FormatPrice(x.TotalAmount, true, false),
                         TotalQuantity = x.TotalQuantity,
                     };
-                    var productVariant = _productService.GetProductVariantById(x.EntityId);
-                    if (productVariant != null)
-                        m.ProductVariantFullName = productVariant.FullProductName;
+                    var product = _productService.GetProductById(x.ProductId);
+                    if (product != null)
+                        m.ProductName = product.Name;
                     return m;
                 }),
                 Total = items.TotalCount
@@ -2823,7 +2827,6 @@ namespace Nop.Admin.Controllers
             OrderStatus? orderStatus = model.OrderStatusId > 0 ? (OrderStatus?)(model.OrderStatusId) : null;
             PaymentStatus? paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
 
-            //group by product variants (not products)
             var items = _orderReportService.BestSellersReport(
                 createdFromUtc: startDateValue,
                 createdToUtc: endDateValue,
@@ -2841,13 +2844,13 @@ namespace Nop.Admin.Controllers
                 {
                     var m = new BestsellersReportLineModel()
                     {
-                        ProductVariantId = x.EntityId,
+                        ProductId = x.ProductId,
                         TotalAmount = _priceFormatter.FormatPrice(x.TotalAmount, true, false),
                         TotalQuantity = x.TotalQuantity,
                     };
-                    var productVariant = _productService.GetProductVariantById(x.EntityId);
-                    if (productVariant != null)
-                        m.ProductVariantFullName = productVariant.FullProductName;
+                    var product = _productService.GetProductById(x.ProductId);
+                    if (product!= null)
+                        m.ProductName = product.Name;
                     return m;
                 }),
                 Total = items.TotalCount
@@ -2893,8 +2896,8 @@ namespace Nop.Admin.Controllers
                 Data = items.Select(x =>
                     new NeverSoldReportLineModel()
                     {
-                        ProductVariantId = x.Id,
-                        ProductVariantFullName = x.Product.Name + " " + x.Name,
+                        ProductId = x.Id,
+                        ProductName = x.Name,
                     }),
                 Total = items.TotalCount
             };

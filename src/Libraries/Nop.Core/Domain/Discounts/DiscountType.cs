@@ -10,11 +10,11 @@ namespace Nop.Core.Domain.Discounts
         /// </summary>
         AssignedToOrderTotal = 1,
         /// <summary>
-        /// Assigned to product variants (SKUs)
+        /// Assigned to products (SKUs)
         /// </summary>
         AssignedToSkus = 2,
         /// <summary>
-        /// Assigned to product variants (SKUs) mapped to a certain category
+        /// Assigned to categories (all products in a category)
         /// </summary>
         AssignedToCategories = 5,
         /// <summary>

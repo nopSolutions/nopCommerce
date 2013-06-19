@@ -701,9 +701,6 @@
             <LocaleResource Name="AddNewProductAttribute">
                 <Value>Added a new product attribute ('{0}')</Value>
             </LocaleResource>
-            <LocaleResource Name="AddNewProductVariant">
-                <Value>Added a new product variant ('{0}')</Value>
-            </LocaleResource>
             <LocaleResource Name="AddNewSetting">
                 <Value>Added a new setting ('{0}')</Value>
             </LocaleResource>
@@ -739,9 +736,6 @@
             </LocaleResource>
             <LocaleResource Name="DeleteProductAttribute">
                 <Value>Deleted a product attribute ('{0}')</Value>
-            </LocaleResource>
-            <LocaleResource Name="DeleteProductVariant">
-                <Value>Deleted a product variant ('{0}')</Value>
             </LocaleResource>
             <LocaleResource Name="DeleteReturnRequest">
                 <Value>Deleted a return request (ID = {0})</Value>
@@ -781,9 +775,6 @@
             </LocaleResource>
             <LocaleResource Name="EditProductAttribute">
                 <Value>Edited a product attribute ('{0}')</Value>
-            </LocaleResource>
-            <LocaleResource Name="EditProductVariant">
-                <Value>Edited a product variant ('{0}')</Value>
             </LocaleResource>
             <LocaleResource Name="EditReturnRequest">
                 <Value>Edited a return request (ID = {0})</Value>
@@ -1569,6 +1560,16 @@
                     </LocaleResource>
                 </Children>
             </LocaleResource>
+            <LocaleResource Name="Nop.Core.Domain.Catalog.ProductType">
+              <Children>
+                <LocaleResource Name="SimpleProduct">
+                  <Value>Simple product</Value>
+                </LocaleResource>
+                <LocaleResource Name="GroupedProduct">
+                  <Value>Grouped product</Value>
+                </LocaleResource>
+              </Children>
+            </LocaleResource>
             <LocaleResource Name="Nop.Core.Domain.Catalog.RecurringProductCyclePeriod">
                 <Children>
                     <LocaleResource Name="Days">
@@ -1656,7 +1657,7 @@
                         <Value>Assigned to order total</Value>
                     </LocaleResource>
                     <LocaleResource Name="AssignedToSkus">
-                        <Value>Assigned to product variants (SKUs)</Value>
+                        <Value>Assigned to products</Value>
                     </LocaleResource>
                     <LocaleResource Name="AssignedToCategories">
                         <Value>Assigned to categories</Value>
@@ -2906,9 +2907,6 @@
             <LocaleResource Name="StockQuantity">
                 <Value>Stock quantity</Value>
             </LocaleResource>
-            <LocaleResource Name="UnnamedProductVariant">
-                <Value>Unnamed product variant</Value>
-            </LocaleResource>
             <LocaleResource Name="Weight">
                 <Value>Weight</Value>
             </LocaleResource>
@@ -3802,9 +3800,6 @@
             </LocaleResource>
             <LocaleResource Name="CannotLoadProduct">
                 <Value>Product (Id={0}) cannot be loaded</Value>
-            </LocaleResource>
-            <LocaleResource Name="CannotLoadProductVariant">
-                <Value>Product variant (Id={0}) cannot be loaded</Value>
             </LocaleResource>
             <LocaleResource Name="CannotMixStandardAndAutoshipProducts">
                 <Value>Your cart has standard and auto-ship (recurring) items. Only one product type is allowed per order.</Value>

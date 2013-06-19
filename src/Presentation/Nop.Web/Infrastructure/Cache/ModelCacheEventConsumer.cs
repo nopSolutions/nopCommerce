@@ -48,10 +48,6 @@ namespace Nop.Web.Infrastructure.Cache
         //products
         IConsumer<EntityUpdated<Product>>,
         IConsumer<EntityDeleted<Product>>,
-        //product variants
-        IConsumer<EntityInserted<ProductVariant>>,
-        IConsumer<EntityUpdated<ProductVariant>>,
-        IConsumer<EntityDeleted<ProductVariant>>,
         //product tags
         IConsumer<EntityInserted<ProductTag>>,
         IConsumer<EntityUpdated<ProductTag>>,
@@ -326,7 +322,7 @@ namespace Nop.Web.Infrastructure.Cache
         /// Key for cart picture caching
         /// </summary>
         /// <remarks>
-        /// {0} : product variant id
+        /// {0} : product id
         /// {1} : picture size
         /// {2} : value indicating whether a default picture is displayed in case if no real picture exists
         /// {3} : language ID ("alt" and "title" can depend on localized product name)
@@ -578,25 +574,7 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTS_ALSO_PURCHASED_IDS_PATTERN_KEY);
         }
-
-        //product variants
-        public void HandleEvent(EntityInserted<ProductVariant> eventMessage)
-        {
-            //_cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY);
-        }
-        public void HandleEvent(EntityUpdated<ProductVariant> eventMessage)
-        {
-            //_cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTS_ALSO_PURCHASED_IDS_PATTERN_KEY);
-        }
-        public void HandleEvent(EntityDeleted<ProductVariant> eventMessage)
-        {
-            //_cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCTS_ALSO_PURCHASED_IDS_PATTERN_KEY);
-        }
-
+        
         //product tags
         public void HandleEvent(EntityInserted<ProductTag> eventMessage)
         {

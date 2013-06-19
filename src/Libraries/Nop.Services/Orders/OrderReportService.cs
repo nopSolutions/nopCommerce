@@ -23,7 +23,6 @@ namespace Nop.Services.Orders
         private readonly IRepository<Order> _orderRepository;
         private readonly IRepository<OrderItem> _orderItemRepository;
         private readonly IRepository<Product> _productRepository;
-        private readonly IRepository<ProductVariant> _productVariantRepository;
 
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IProductService _productService;
@@ -38,19 +37,16 @@ namespace Nop.Services.Orders
         /// <param name="orderRepository">Order repository</param>
         /// <param name="orderItemRepository">Order item repository</param>
         /// <param name="productRepository">Product repository</param>
-        /// <param name="productVariantRepository">Product variant repository</param>
         /// <param name="dateTimeHelper">Datetime helper</param>
         /// <param name="productService">Product service</param>
         public OrderReportService(IRepository<Order> orderRepository,
             IRepository<OrderItem> orderItemRepository,
             IRepository<Product> productRepository,
-            IRepository<ProductVariant> productVariantRepository,
             IDateTimeHelper dateTimeHelper, IProductService productService)
         {
             this._orderRepository = orderRepository;
             this._orderItemRepository = orderItemRepository;
             this._productRepository = productRepository;
-            this._productVariantRepository = productVariantRepository;
             this._dateTimeHelper = dateTimeHelper;
             this._productService = productService;
         }
@@ -96,7 +92,7 @@ namespace Nop.Services.Orders
             {
                 query = query
                     .Where(o => o.OrderItems
-                    .Any(orderItem => orderItem.ProductVariant.Product.VendorId == vendorId));
+                    .Any(orderItem => orderItem.Product.VendorId == vendorId));
             }
             if (ignoreCancelledOrders)
             {
@@ -203,7 +199,6 @@ namespace Nop.Services.Orders
         /// <param name="ss">Shipping status; null to load all records</param>
         /// <param name="billingCountryId">Billing country identifier; 0 to load all records</param>
         /// <param name="orderBy">1 - order by quantity, 2 - order by total amount</param>
-        /// <param name="groupBy">1 - group by product variants, 2 - group by products</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
@@ -212,7 +207,7 @@ namespace Nop.Services.Orders
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
             int billingCountryId = 0,
-            int orderBy = 1, int groupBy = 1,
+            int orderBy = 1,
             int pageIndex = 0, int pageSize = 2147483647, 
             bool showHidden = false)
         {
@@ -230,8 +225,7 @@ namespace Nop.Services.Orders
 
             var query1 = from orderItem in _orderItemRepository.Table
                          join o in _orderRepository.Table on orderItem.OrderId equals o.Id
-                         join pv in _productVariantRepository.Table on orderItem.ProductVariantId equals pv.Id
-                         join p in _productRepository.Table on pv.ProductId equals p.Id
+                         join p in _productRepository.Table on orderItem.ProductId equals p.Id
                          where (storeId == 0 || storeId == o.StoreId) &&
                          (!createdFromUtc.HasValue || createdFromUtc.Value <= o.CreatedOnUtc) &&
                          (!createdToUtc.HasValue || createdToUtc.Value >= o.CreatedOnUtc) &&
@@ -241,29 +235,17 @@ namespace Nop.Services.Orders
                          (!o.Deleted) &&
                          (!p.Deleted) &&
                          (vendorId == 0 || p.VendorId == vendorId) &&
-                         (!pv.Deleted) &&
                          (billingCountryId == 0 || o.BillingAddress.CountryId == billingCountryId) &&
-                         (showHidden || p.Published) &&
-                         (showHidden || pv.Published)
+                         (showHidden || p.Published)
                          select orderItem;
 
-            IQueryable<BestsellersReportLine> query2 = groupBy == 1 ?
-                //group by product variants
-                from orderItem in query1
-                group orderItem by orderItem.ProductVariantId into g
-                select new BestsellersReportLine()
-                           {
-                               EntityId = g.Key,
-                               TotalAmount = g.Sum(x => x.PriceExclTax),
-                               TotalQuantity = g.Sum(x => x.Quantity),
-                           }
-                :
+            IQueryable<BestsellersReportLine> query2 = 
                 //group by products
                 from orderItem in query1
-                group orderItem by orderItem.ProductVariant.ProductId into g
+                group orderItem by orderItem.ProductId into g
                 select new BestsellersReportLine()
                 {
-                    EntityId = g.Key,
+                    ProductId = g.Key,
                     TotalAmount = g.Sum(x => x.PriceExclTax),
                     TotalQuantity = g.Sum(x => x.Quantity),
                 }
@@ -296,7 +278,7 @@ namespace Nop.Services.Orders
         /// <param name="productId">Product identifier</param>
         /// <param name="recordsToReturn">Records to return</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Product collection</returns>
+        /// <returns>Products</returns>
         public virtual IList<Product> GetProductsAlsoPurchasedById(int storeId, int productId,
             int recordsToReturn = 5, bool showHidden = false)
         {
@@ -305,22 +287,19 @@ namespace Nop.Services.Orders
 
             //this inner query should retrieve all orders that have contained the productID
             var query1 = (from orderItem in _orderItemRepository.Table
-                          join pv in _productVariantRepository.Table on orderItem.ProductVariantId equals pv.Id
-                          join p in _productRepository.Table on pv.ProductId equals p.Id
+                          join p in _productRepository.Table on orderItem.ProductId equals p.Id
                           where p.Id == productId
                           select orderItem.OrderId).Distinct();
 
             var query2 = from orderItem in _orderItemRepository.Table
-                         join pv in _productVariantRepository.Table on orderItem.ProductVariantId equals pv.Id
-                         join p in _productRepository.Table on pv.ProductId equals p.Id
+                         join p in _productRepository.Table on orderItem.ProductId equals p.Id
                          where (query1.Contains(orderItem.OrderId)) &&
                          (p.Id != productId) &&
                          (showHidden || p.Published) &&
                          (!orderItem.Order.Deleted) &&
                          (storeId == 0 || orderItem.Order.StoreId == storeId) &&
                          (!p.Deleted) &&
-                         (showHidden || pv.Published) &&
-                         (showHidden || !pv.Deleted)
+                         (showHidden || p.Published)
                          select new { orderItem, p };
 
             var query3 = from orderItem_p in query2
@@ -344,7 +323,7 @@ namespace Nop.Services.Orders
         }
 
         /// <summary>
-        /// Gets a list of product variants that were never sold
+        /// Gets a list of products that were never sold
         /// </summary>
         /// <param name="vendorId">Vendor identifier</param>
         /// <param name="createdFromUtc">Order created date from (UTC); null to load all records</param>
@@ -352,8 +331,8 @@ namespace Nop.Services.Orders
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Product variants</returns>
-        public virtual IPagedList<ProductVariant> ProductsNeverSold(int vendorId,
+        /// <returns>Products</returns>
+        public virtual IPagedList<Product> ProductsNeverSold(int vendorId,
             DateTime? createdFromUtc, DateTime? createdToUtc, 
             int pageIndex, int pageSize, bool showHidden = false)
         {
@@ -363,31 +342,18 @@ namespace Nop.Services.Orders
                           where (!createdFromUtc.HasValue || createdFromUtc.Value <= o.CreatedOnUtc) &&
                                 (!createdToUtc.HasValue || createdToUtc.Value >= o.CreatedOnUtc) &&
                                 (!o.Deleted)
-                          select orderItem.ProductVariantId).Distinct();
+                          select orderItem.ProductId).Distinct();
 
-            var query2 = from pv in _productVariantRepository.Table
-                         join p in _productRepository.Table on pv.ProductId equals p.Id
-                         where (!query1.Contains(pv.Id)) &&
+            var query2 = from p in _productRepository.Table
+                         orderby p.Name
+                         where (!query1.Contains(p.Id)) &&
                                (!p.Deleted) &&
-                               (!pv.Deleted) &&
                                (vendorId == 0 || p.VendorId == vendorId) &&
-                               (showHidden || p.Published) &&
-                               (showHidden || pv.Published)
-                         select pv;
+                               (showHidden || p.Published)
+                         select p;
 
-            //only distinct products (group by ID)
-            //if we use standard Distinct() method, then all fields will be compared (low performance)
-            //it'll not work in SQL Server Compact when searching products by a keyword)
-            var query3 = from pv in query2
-                         group pv by pv.Id
-                         into pvGroup
-                         orderby pvGroup.Key
-                         select pvGroup.FirstOrDefault();
-
-            query3 = query3.OrderBy(x => x.Id);
-
-            var productVariants = new PagedList<ProductVariant>(query3, pageIndex, pageSize);
-            return productVariants;
+            var products = new PagedList<Product>(query2, pageIndex, pageSize);
+            return products;
         }
 
         /// <summary>
@@ -422,8 +388,7 @@ namespace Nop.Services.Orders
             bool dontSearchEmail = String.IsNullOrEmpty(billingEmail);
             var query = from orderItem in _orderItemRepository.Table
                         join o in _orderRepository.Table on orderItem.OrderId equals o.Id
-                        join pv in _productVariantRepository.Table on orderItem.ProductVariantId equals pv.Id
-                        join p in _productRepository.Table on pv.ProductId equals p.Id
+                        join p in _productRepository.Table on orderItem.ProductId equals p.Id
                         where (storeId == 0 || storeId == o.StoreId) && 
                               (!startTimeUtc.HasValue || startTimeUtc.Value <= o.CreatedOnUtc) &&
                               (!endTimeUtc.HasValue || endTimeUtc.Value >= o.CreatedOnUtc) &&
@@ -431,14 +396,14 @@ namespace Nop.Services.Orders
                               (!paymentStatusId.HasValue || paymentStatusId == o.PaymentStatusId) &&
                               (!shippingStatusId.HasValue || shippingStatusId == o.ShippingStatusId) &&
                               (!o.Deleted) &&
-                              (vendorId == 0 || orderItem.ProductVariant.Product.VendorId == vendorId) &&
+                              (vendorId == 0 || orderItem.Product.VendorId == vendorId) &&
                               //we do not ignore deleted products when calculating order reports
                               //(!p.Deleted) &&
                               //(!pv.Deleted) &&
                               (dontSearchEmail || (o.BillingAddress != null && !String.IsNullOrEmpty(o.BillingAddress.Email) && o.BillingAddress.Email.Contains(billingEmail)))
-                        select new { orderItem, pv };
+                        select new { orderItem, p };
 
-            var productCost = Convert.ToDecimal(query.Sum(o => (decimal?)o.pv.ProductCost * o.orderItem.Quantity));
+            var productCost = Convert.ToDecimal(query.Sum(o => (decimal?)o.p.ProductCost * o.orderItem.Quantity));
 
             var reportSummary = GetOrderAverageReportLine(storeId, vendorId, os, ps, ss, startTimeUtc, endTimeUtc, billingEmail);
             var profit = reportSummary.SumOrders - reportSummary.SumTax - productCost;

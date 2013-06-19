@@ -22,9 +22,9 @@ namespace Nop.Data.Mapping.Orders
                 .WithMany(c => c.ShoppingCartItems)
                 .HasForeignKey(sci => sci.CustomerId);
 
-            this.HasRequired(sci => sci.ProductVariant)
+            this.HasRequired(sci => sci.Product)
                 .WithMany()
-                .HasForeignKey(sci => sci.ProductVariantId);
+                .HasForeignKey(sci => sci.ProductId);
         }
     }
 }

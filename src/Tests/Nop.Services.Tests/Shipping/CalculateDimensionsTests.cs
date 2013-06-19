@@ -22,7 +22,7 @@ namespace Nop.Services.Tests.Shipping
             request.Items.Add(new ShoppingCartItem()
                                   {
                                       Quantity = 1,
-                                      ProductVariant = new ProductVariant()
+                                      Product = new Product()
                                                            {
                                                                Length = 0,
                                                                Width = 0,
@@ -44,7 +44,7 @@ namespace Nop.Services.Tests.Shipping
             request.Items.Add(new ShoppingCartItem()
                                   {
                                       Quantity = 1,
-                                      ProductVariant = new ProductVariant()
+                                      Product= new Product()
                                                            {
                                                                Length = 2,
                                                                Width = 2,
@@ -66,7 +66,7 @@ namespace Nop.Services.Tests.Shipping
             request.Items.Add(new ShoppingCartItem()
                                   {
                                       Quantity = 3,
-                                      ProductVariant = new ProductVariant()
+                                      Product = new Product()
                                                            {
                                                                Length = 2,
                                                                Width = 2,
@@ -88,7 +88,7 @@ namespace Nop.Services.Tests.Shipping
             request.Items.Add(new ShoppingCartItem()
                                   {
                                       Quantity = 3,
-                                      ProductVariant = new ProductVariant()
+                                      Product = new Product()
                                                            {
                                                                Length = 2,
                                                                Width = 2,
@@ -98,7 +98,7 @@ namespace Nop.Services.Tests.Shipping
             request.Items.Add(new ShoppingCartItem()
                                   {
                                       Quantity = 1,
-                                      ProductVariant = new ProductVariant()
+                                      Product = new Product()
                                                            {
                                                                Length = 3,
                                                                Width = 5,
@@ -123,7 +123,7 @@ namespace Nop.Services.Tests.Shipping
                 request.Items.Add(new ShoppingCartItem()
                 {
                     Quantity = 1,
-                    ProductVariant = new ProductVariant()
+                    Product = new Product()
                     {
                         Length = 1,
                         Width = 1,

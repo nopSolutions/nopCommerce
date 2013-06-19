@@ -6,15 +6,15 @@ namespace Nop.Core.Domain.Catalog
     public enum ManageInventoryMethod
     {
         /// <summary>
-        /// Don't track inventory for product variant
+        /// Don't track inventory for product
         /// </summary>
         DontManageStock = 0,
         /// <summary>
-        /// Track inventory for product variant
+        /// Track inventory for product
         /// </summary>
         ManageStock = 1,
         /// <summary>
-        /// Track inventory for product variant by product attributes
+        /// Track inventory for product by product attributes
         /// </summary>
         ManageStockByAttributes = 2,
     }

@@ -1,0 +1,82 @@
+﻿@model ProductDetailsModel
+@using Nop.Web.Models.Catalog;
+@{
+    Layout = "~/Views/Shared/_Root.cshtml";
+
+    //title
+    Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Name);
+}
+<div class="page product-details-page">
+    <div class="page-body">
+        @Html.Widget("mobile_productdetails_top")
+        @*we add enctype = "multipart/form-data" because "File upload" attribute control type requries it*@
+        @using (Html.BeginRouteForm("Product", new RouteValueDictionary() { { "SeName", Model.SeName } }, FormMethod.Post, new Dictionary<string, Object> { { "data-ajax", "false" }, { "enctype", "multipart/form-data" }, { "id", "product-details-form" } }))
+        {
+            <div class="product-essential" data-productid="@Model.Id">
+                <div class="overview">
+                    <h1 class="product-name">
+                        @Model.Name
+                    </h1>
+                    @if (!String.IsNullOrEmpty(Model.ShortDescription))
+                    {
+                        <div class="short-description">
+                            @Html.Raw(Model.ShortDescription)
+                        </div>
+                    }
+                    @Html.Widget("mobile_productdetails_before_pictures")
+                    @Html.Partial("_ProductDetailsPictures", Model)
+                    @Html.Widget("mobile_productdetails_after_pictures")
+                    @Html.Action("ProductManufacturers", "Catalog", new { productId = Model.Id })
+                    @Html.Action("ProductReviewOverview", "Catalog", new { productId = Model.Id })
+                    @Html.Action("ProductEmailAFriendButton", "Catalog", new { productId = Model.Id })
+                    @Html.Action("CompareProductsButton", "Catalog", new { productId = Model.Id })
+                </div>
+                @if (!String.IsNullOrEmpty(Model.FullDescription))
+                {
+                    <div class="full-description">
+                        @Html.Raw(Model.FullDescription)
+                    </div>
+                }
+            </div>
+            <div class="product-collateral">
+                <div class="product-variant-list">
+                    <div class="product-variant-line" data-productid="@Model.Id">
+                        <div class="variant-overview">
+                            @Html.Partial("_DownloadSample", Model)
+                            @Html.Action("ProductTierPrices", "Catalog", new { productId = Model.Id })
+                            @{
+                        var dataDictAttributes = new ViewDataDictionary();
+                        dataDictAttributes.TemplateInfo.HtmlFieldPrefix = string.Format("attributes_{0}", Model.Id);
+                                @Html.Partial("_ProductAttributes", Model.ProductVariantAttributes, dataDictAttributes)                  
+                            }
+                            <!--product SKU, manufacturer part number, stock info-->
+                            @Html.Partial("_SKU_Man_Stock", Model)
+                            <!--Back in stock subscription-->
+                            @Html.Partial("_BackInStockSubscription", Model)
+                            @{
+                        var dataDictGiftCard = new ViewDataDictionary();
+                        dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = string.Format("giftcard_{0}", Model.Id);
+                                @Html.Partial("_GiftCardInfo", Model.GiftCard, dataDictGiftCard)
+                            }
+                            @{
+                        var dataDictPrice = new ViewDataDictionary();
+                        dataDictPrice.TemplateInfo.HtmlFieldPrefix = string.Format("price_{0}", Model.Id);
+                                @Html.Partial("_ProductPrice", Model.ProductPrice, dataDictPrice)
+                            }
+                            @{
+                        var dataDictAddToCart = new ViewDataDictionary();
+                        dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", Model.Id);
+                                @Html.Partial("_AddToCart", Model.AddToCart, dataDictAddToCart)
+                            }
+                        </div>
+                    </div>
+                </div>
+                @Html.Action("ProductSpecifications", "Catalog", new { productId = Model.Id })
+                @Html.Action("ProductTags", "Catalog", new { productId = Model.Id })
+                @Html.Action("ProductsAlsoPurchased", "Catalog", new { productId = Model.Id })
+                @Html.Action("RelatedProducts", "Catalog", new { productId = Model.Id })
+            </div>
+        }
+        @Html.Widget("mobile_productdetails_bottom")
+    </div>
+</div>

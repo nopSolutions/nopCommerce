@@ -226,7 +226,7 @@ namespace Nop.Services.Shipping
             if (shoppingCartItem == null)
                 throw new ArgumentNullException("shoppingCartItem");
             decimal weight = decimal.Zero;
-            if (shoppingCartItem.ProductVariant != null)
+            if (shoppingCartItem.Product != null)
             {
                 decimal attributesTotalWeight = decimal.Zero;
 
@@ -236,7 +236,7 @@ namespace Nop.Services.Shipping
                     foreach (var pvaValue in pvaValues)
                         attributesTotalWeight += pvaValue.WeightAdjustment;
                 }
-                weight = shoppingCartItem.ProductVariant.Weight + attributesTotalWeight;
+                weight = shoppingCartItem.Product.Weight + attributesTotalWeight;
             }
             return weight;
         }

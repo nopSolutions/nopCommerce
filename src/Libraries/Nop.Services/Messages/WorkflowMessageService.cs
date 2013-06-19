@@ -1038,13 +1038,13 @@ namespace Nop.Services.Messages
         /// <summary>
         /// Sends a "quantity below" notification to a store owner
         /// </summary>
-        /// <param name="productVariant">Product variant</param>
+        /// <param name="product">Product</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendQuantityBelowStoreOwnerNotification(ProductVariant productVariant, int languageId)
+        public virtual int SendQuantityBelowStoreOwnerNotification(Product product, int languageId)
         {
-            if (productVariant == null)
-                throw new ArgumentNullException("productVariant");
+            if (product== null)
+                throw new ArgumentNullException("product");
 
             var store = _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
@@ -1055,7 +1055,7 @@ namespace Nop.Services.Messages
 
             var tokens = new List<Token>();
             _messageTokenProvider.AddStoreTokens(tokens, store);
-            _messageTokenProvider.AddProductVariantTokens(tokens, productVariant);
+            _messageTokenProvider.AddProductTokens(tokens, product);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);

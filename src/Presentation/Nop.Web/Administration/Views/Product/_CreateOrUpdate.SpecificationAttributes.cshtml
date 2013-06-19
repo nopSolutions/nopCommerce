@@ -1,0 +1,171 @@
+﻿@model ProductModel
+
+@using Telerik.Web.Mvc.UI;
+@if (Model.Id > 0)
+{
+
+    /*hide "add spec" table if no attributes are defined*/
+    if (Model.AddSpecificationAttributeModel.AvailableAttributes.Count > 0)
+    {
+    <div>
+        @(Html.Telerik().Grid<ProductSpecificationAttributeModel>()
+                    .Name("specificationattributes-grid")
+                    .DataKeys(x =>
+                    {
+                        x.Add(y => y.Id).RouteKey("psaId");
+                    })
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.SpecificationAttributeName).Width(200).ReadOnly();
+                        columns.Bound(x => x.SpecificationAttributeOptionName).Width(200).ReadOnly();
+                        columns.Bound(x => x.CustomValue).Width(200);
+                        columns.Bound(x => x.AllowFiltering).Width(100);
+                        columns.Bound(x => x.ShowOnProductPage).Width(100);
+                        columns.Bound(x => x.DisplayOrder).Width(100);
+                        columns.Command(commands =>
+                        {
+                            commands.Edit().Text(T("Admin.Common.Edit").Text);
+                            commands.Delete().Text(T("Admin.Common.Delete").Text);
+                        }).Width(180);
+
+                    })
+                    .Editable(x =>
+                    {
+                        x.Mode(GridEditMode.InLine);
+                    })
+                    .DataBinding(dataBinding =>
+                    {
+                        dataBinding.Ajax().Select("ProductSpecAttrList", "Product", new { productId = Model.Id })
+                            .Update("ProductSpecAttrUpdate", "Product")
+                            .Delete("ProductSpecAttrDelete", "Product");
+                    })
+                    .EnableCustomBinding(true))
+    </div>
+    <p>
+        <strong>@T("Admin.Catalog.Products.SpecificationAttributes.AddNew")</strong>
+    </p>
+    <script type="text/javascript">
+        $(function() {
+            $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeId)").change(function() {
+                var selectedItem = $(this).val();
+                var ddlSpecOptions = $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeOptionId)")
+                $.ajax({
+                    cache:false,
+                    type: "GET",
+                    url: "@(Url.Action("GetOptionsByAttributeId", "SpecificationAttribute"))",
+                    data: { "attributeId": selectedItem },
+                    success: function (data) {
+                        ddlSpecOptions.html('');
+                        $.each(data, function(id, option) {
+                            ddlSpecOptions.append($('<option></option>').val(option.id).html(option.name));
+                        });
+                    },
+                    error:function (xhr, ajaxOptions, thrownError){
+                        alert('Failed to retrieve specification options.');
+                    }  
+                });
+            });
+        });
+
+        $(document).ready(function () {
+            $('#addProductSpec').click(function () {
+                var specificationAttributeOptionId = $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeOptionId)").val();
+                var customValue = $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.CustomValue)").val();
+                var allowFiltering = $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.AllowFiltering)").is(':checked');
+                var showOnProductPage = $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.ShowOnProductPage)").is(':checked');
+                var displayOrder = $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.DisplayOrder)").val();
+
+                if (specificationAttributeOptionId === null) {
+                    alert('Select attribute option');
+                } else {
+                    $('#addProductSpec').attr('disabled', true);
+                    $.ajax({
+                        cache:false,
+                        type: "POST",
+                        url: "@(Url.Action("ProductSpecificationAttributeAdd", "Product"))",
+                        data: { "specificationAttributeOptionId": specificationAttributeOptionId, "customValue": customValue, "allowFiltering": allowFiltering, "showOnProductPage": showOnProductPage, "displayOrder": displayOrder, "productId": @(Model.Id) },
+                        success: function (data) {
+                            var specificationAttributesGrid = $("#specificationattributes-grid");
+                            specificationAttributesGrid.data('tGrid').ajaxRequest();
+                            $('#addProductSpec').attr('disabled', false);
+                        },
+                        error:function (xhr, ajaxOptions, thrownError){
+                            alert('Failed to add specification attribute.');
+                            $('#addProductSpec').attr('disabled', false);
+                        }  
+                    });
+                }
+            });
+        });
+    </script>
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeId, Model.AddSpecificationAttributeModel.AvailableAttributes)
+                @Html.ValidationMessageFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeId)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeOptionId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeOptionId, Model.AddSpecificationAttributeModel.AvailableOptions)
+                @Html.ValidationMessageFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeOptionId)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AddSpecificationAttributeModel.CustomValue):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AddSpecificationAttributeModel.CustomValue)
+                @Html.ValidationMessageFor(model => model.AddSpecificationAttributeModel.CustomValue)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AddSpecificationAttributeModel.AllowFiltering):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AddSpecificationAttributeModel.AllowFiltering)
+                @Html.ValidationMessageFor(model => model.AddSpecificationAttributeModel.AllowFiltering)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AddSpecificationAttributeModel.ShowOnProductPage):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AddSpecificationAttributeModel.ShowOnProductPage)
+                @Html.ValidationMessageFor(model => model.AddSpecificationAttributeModel.ShowOnProductPage)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AddSpecificationAttributeModel.DisplayOrder):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AddSpecificationAttributeModel.DisplayOrder)
+                @Html.ValidationMessageFor(model => model.AddSpecificationAttributeModel.DisplayOrder)
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" align="left">
+                <input type="button" id="addProductSpec" class="t-button" value="@T("Admin.Catalog.Products.SpecificationAttributes.AddButton")" />
+            </td>
+        </tr>
+    </table>
+    }
+    else
+    {
+    @T("Admin.Catalog.Products.SpecificationAttributes.NoAttributes")
+    }
+}
+else
+{
+    @T("Admin.Catalog.Products.SpecificationAttributes.SaveBeforeEdit")
+}

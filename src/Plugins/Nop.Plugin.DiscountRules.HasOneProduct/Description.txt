@@ -1,5 +1,5 @@
 ﻿Group: Discount requirements
-FriendlyName: Customer has one of these product variants in the cart
+FriendlyName: Customer has one of these products in the cart
 SystemName: DiscountRequirement.HasOneProduct
 Version: 1.11
 SupportedVersions: 3.00

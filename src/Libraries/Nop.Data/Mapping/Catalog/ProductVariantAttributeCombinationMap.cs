@@ -10,13 +10,13 @@ namespace Nop.Data.Mapping.Catalog
             this.ToTable("ProductVariantAttributeCombination");
             this.HasKey(pvac => pvac.Id);
 
-            this.Property(pv => pv.Sku).HasMaxLength(400);
-            this.Property(pv => pv.ManufacturerPartNumber).HasMaxLength(400);
-            this.Property(pv => pv.Gtin).HasMaxLength(400);
+            this.Property(pvac => pvac.Sku).HasMaxLength(400);
+            this.Property(pvac => pvac.ManufacturerPartNumber).HasMaxLength(400);
+            this.Property(pvac => pvac.Gtin).HasMaxLength(400);
 
-            this.HasRequired(pvac => pvac.ProductVariant)
-                .WithMany(pv => pv.ProductVariantAttributeCombinations)
-                .HasForeignKey(pvac => pvac.ProductVariantId);
+            this.HasRequired(pvac => pvac.Product)
+                .WithMany(p => p.ProductVariantAttributeCombinations)
+                .HasForeignKey(pvac => pvac.ProductId);
         }
     }
 }

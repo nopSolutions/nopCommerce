@@ -4,8 +4,8 @@ namespace Nop.Plugin.DiscountRules.HasAllProducts.Models
 {
     public class RequirementModel
     {
-        [NopResourceDisplayName("Plugins.DiscountRules.HasAllProducts.Fields.ProductVariants")]
-        public string ProductVariants { get; set; }
+        [NopResourceDisplayName("Plugins.DiscountRules.HasAllProducts.Fields.Products")]
+        public string Products { get; set; }
 
         public int DiscountId { get; set; }
 

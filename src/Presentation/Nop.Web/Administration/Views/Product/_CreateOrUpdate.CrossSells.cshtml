@@ -1,0 +1,57 @@
+﻿@model ProductModel
+
+@using Telerik.Web.Mvc.UI;
+@if (Model.Id > 0)
+{ 
+    <table class="adminContent">
+        <tr>
+            <td>
+                @(Html.Telerik().Grid<ProductModel.CrossSellProductModel>()
+                .Name("crosssellproducts-grid")
+                    .DataKeys(keys =>
+                    {
+                        keys.Add(x => x.Id);
+                    })
+                    .DataBinding(dataBinding =>
+                    {
+                        dataBinding.Ajax()
+                            .Select("CrossSellProductList", "Product", new { productId = Model.Id })
+                            .Delete("CrossSellProductDelete", "Product");
+                    })
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.Product2Name)
+                            .ReadOnly();
+                        columns.Command(commands =>
+                        {
+                            commands.Delete().Text(T("Admin.Common.Delete").Text);
+                        })
+                        .Title(T("Admin.Common.Delete").Text).Width(50);
+                    })
+                    .EnableCustomBinding(true))
+            </td>
+        </tr>
+        <tr>
+            <td width="100%">
+                <input type="submit" id="btnAddNewCrossSellProduct" name="btnAddNewCrossSellProduct" value="@T("Admin.Catalog.Products.CrossSells.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("CrossSellProductAddPopup", "Product", new { productId = Model.Id, btnId = "btnRefreshCrossSellProducts", formId = "product-form" }))    ', 800, 800, true); return false;" class="t-button" />
+                <input type="submit" id="btnRefreshCrossSellProducts" name="btnRefreshCrossSellProducts" style="display: none" />
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $('#btnRefreshCrossSellProducts').click(function () {
+                            //refresh grid
+                            var optionsGrid = $("#crosssellproducts-grid");
+                            optionsGrid.data('tGrid').ajaxRequest();
+
+                            //return false to don't reload a page
+                            return false;
+                        });
+                    });
+                </script>
+            </td>
+        </tr>
+    </table>
+}
+else
+{
+    @T("Admin.Catalog.Products.CrossSells.SaveBeforeEdit")
+}

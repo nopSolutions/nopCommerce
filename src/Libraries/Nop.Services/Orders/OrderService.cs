@@ -22,7 +22,7 @@ namespace Nop.Services.Orders
         private readonly IRepository<Order> _orderRepository;
         private readonly IRepository<OrderItem> _orderItemRepository;
         private readonly IRepository<OrderNote> _orderNoteRepository;
-        private readonly IRepository<ProductVariant> _pvRepository;
+        private readonly IRepository<Product> _productRepository;
         private readonly IRepository<RecurringPayment> _recurringPaymentRepository;
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<ReturnRequest> _returnRequestRepository;
@@ -38,7 +38,7 @@ namespace Nop.Services.Orders
         /// <param name="orderRepository">Order repository</param>
         /// <param name="orderItemRepository">Order item repository</param>
         /// <param name="orderNoteRepository">Order note repository</param>
-        /// <param name="pvRepository">Product variant repository</param>
+        /// <param name="productRepository">Product repository</param>
         /// <param name="recurringPaymentRepository">Recurring payment repository</param>
         /// <param name="customerRepository">Customer repository</param>
         /// <param name="returnRequestRepository">Return request repository</param>
@@ -46,7 +46,7 @@ namespace Nop.Services.Orders
         public OrderService(IRepository<Order> orderRepository,
             IRepository<OrderItem> orderItemRepository,
             IRepository<OrderNote> orderNoteRepository,
-            IRepository<ProductVariant> pvRepository,
+            IRepository<Product> productRepository,
             IRepository<RecurringPayment> recurringPaymentRepository,
             IRepository<Customer> customerRepository, 
             IRepository<ReturnRequest> returnRequestRepository,
@@ -55,7 +55,7 @@ namespace Nop.Services.Orders
             this._orderRepository = orderRepository;
             this._orderItemRepository = orderItemRepository;
             this._orderNoteRepository = orderNoteRepository;
-            this._pvRepository = pvRepository;
+            this._productRepository = productRepository;
             this._recurringPaymentRepository = recurringPaymentRepository;
             this._customerRepository = customerRepository;
             this._returnRequestRepository = returnRequestRepository;
@@ -178,7 +178,7 @@ namespace Nop.Services.Orders
             {
                 query = query
                     .Where(o => o.OrderItems
-                    .Any(orderItem => orderItem.ProductVariant.Product.VendorId == vendorId));
+                    .Any(orderItem => orderItem.Product.VendorId == vendorId));
             }
             if (createdFromUtc.HasValue)
                 query = query.Where(o => createdFromUtc.Value <= o.CreatedOnUtc);
@@ -362,7 +362,7 @@ namespace Nop.Services.Orders
 
             var query = from orderItem in _orderItemRepository.Table
                         join o in _orderRepository.Table on orderItem.OrderId equals o.Id
-                        join pv in _pvRepository.Table on orderItem.ProductVariantId equals pv.Id
+                        join p in _productRepository.Table on orderItem.ProductId equals p.Id
                         where (!orderId.HasValue || orderId.Value == 0 || orderId == o.Id) &&
                         (!customerId.HasValue || customerId.Value == 0 || customerId == o.CustomerId) &&
                         (!createdFromUtc.HasValue || createdFromUtc.Value <= o.CreatedOnUtc) &&
@@ -370,7 +370,7 @@ namespace Nop.Services.Orders
                         (!orderStatusId.HasValue || orderStatusId == o.OrderStatusId) &&
                         (!paymentStatusId.HasValue || paymentStatusId.Value == o.PaymentStatusId) &&
                         (!shippingStatusId.HasValue || shippingStatusId.Value == o.ShippingStatusId) &&
-                        (!loadDownloableProductsOnly || pv.IsDownload) &&
+                        (!loadDownloableProductsOnly || p.IsDownload) &&
                         !o.Deleted
                         orderby o.CreatedOnUtc descending, orderItem.Id
                         select orderItem;

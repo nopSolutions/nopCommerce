@@ -155,7 +155,7 @@
                             <tr>
                                 <td style="width: 70%;">
                                     <div style="padding-left: 10px; padding-right: 10px; text-align: left;">
-                                        <em><a href="@Url.Action("Edit", "ProductVariant", new { id = item.ProductVariantId })">@item.FullProductName</a></em>
+                                        <em><a href="@Url.Action("Edit", "Product", new { id = item.ProductId })">@item.ProductName</a></em>
                                         @if (!String.IsNullOrEmpty(item.AttributeInfo))
                                         {
                                             <br />

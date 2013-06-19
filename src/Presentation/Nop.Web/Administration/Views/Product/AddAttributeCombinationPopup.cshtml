@@ -1,0 +1,106 @@
+﻿@model AddProductVariantAttributeCombinationModel
+@{
+    Layout = "~/Administration/Views/Shared/_AdminPopupLayout.cshtml";
+}
+@{
+    //page title
+    ViewBag.Title = T("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.AddTitle").Text;
+}
+@*we add enctype = "multipart/form-data" because "File upload" attribute control type requries it*@
+@using (Html.BeginForm("AddAttributeCombinationPopup", "Product",
+    new RouteValueDictionary(new { productId = Model.ProductId, btnId = ViewBag.btnId, formId = ViewBag.formId }),
+    FormMethod.Post,
+    new Dictionary<string, Object> { { "enctype", "multipart/form-data" } }))
+{
+    @Html.ValidationSummary(false)
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" alt="" />
+            @T("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.AddTitle")
+        </div>
+        <div class="options">
+            
+        </div>
+    </div>
+    
+
+    if (ViewBag.RefreshPage == true)
+    {
+        <script type="text/javascript">
+        try {window.opener.document.forms['@(ViewBag.formId)'].@(ViewBag.btnId).click();}
+        catch (e){} 
+        window.close();
+        </script>
+    }
+    
+    <div style="border: 1px dashed #2F4F4F; padding: 15px; margin: 10px 0px 10px 0px;">
+        @Html.Partial("_ProductAttributes", Model.ProductVariantAttributes)
+        <br />
+        @if (Model.Warnings.Count > 0)
+        {
+        <div class="messageBox messageBoxError">
+            @foreach (var warning in Model.Warnings)
+            {
+                @warning
+                <br />
+            }
+        </div>
+        }
+    </div>
+    <div>
+        <table class="adminContent">
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.StockQuantity):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => model.StockQuantity)
+                    @Html.ValidationMessageFor(model => model.StockQuantity)
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.AllowOutOfStockOrders):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => model.AllowOutOfStockOrders)
+                    @Html.ValidationMessageFor(model => model.AllowOutOfStockOrders)
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.Sku):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => model.Sku)
+                    @Html.ValidationMessageFor(model => model.Sku)
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.ManufacturerPartNumber):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => model.ManufacturerPartNumber)
+                    @Html.ValidationMessageFor(model => model.ManufacturerPartNumber)
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.Gtin):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => model.Gtin)
+                    @Html.ValidationMessageFor(model => model.Gtin)
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" align="left">
+                    <input type="submit" id="add-attribute-combination" name="add-attribute-combination"
+                        class="t-button" value="@T("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.AddNew")" />
+                </td>
+            </tr>
+        </table>
+    </div>
+
+}

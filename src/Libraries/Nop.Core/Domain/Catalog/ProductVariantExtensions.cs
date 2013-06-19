@@ -6,17 +6,17 @@ namespace Nop.Core.Domain.Catalog
 {
     public static class ProductVariantExtensions
     {
-        public static int[] ParseRequiredProductVariantIds(this ProductVariant productVariant)
+        public static int[] ParseRequiredProductIds(this Product product)
         {
-            if (productVariant == null)
-                throw new ArgumentNullException("productVariant");
+            if (product == null)
+                throw new ArgumentNullException("product");
 
-            if (String.IsNullOrEmpty(productVariant.RequiredProductVariantIds))
+            if (String.IsNullOrEmpty(product.RequiredProductIds))
                 return new int[0];
 
             var ids = new List<int>();
 
-            foreach (var idStr in productVariant.RequiredProductVariantIds
+            foreach (var idStr in product.RequiredProductIds
                 .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(x => x.Trim()))
             {

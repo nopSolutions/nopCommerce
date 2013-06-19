@@ -21,7 +21,7 @@ namespace Nop.Admin.Models.Orders
         [NopResourceDisplayName("Admin.ReturnRequests.Fields.Customer")]
         public string CustomerInfo { get; set; }
 
-        public int ProductVariantId { get; set; }
+        public int ProductId { get; set; }
         [NopResourceDisplayName("Admin.ReturnRequests.Fields.Product")]
         public string ProductName { get; set; }
 

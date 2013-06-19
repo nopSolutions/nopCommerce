@@ -67,9 +67,9 @@ namespace Nop.Web.Infrastructure
                             new[] { "Nop.Web.Controllers" });
             //downloads
             routes.MapRoute("GetSampleDownload",
-                            "download/sample/{productvariantid}",
+                            "download/sample/{productid}",
                             new { controller = "Download", action = "Sample"},
-                            new { productvariantid = @"\d+" },
+                            new { productid = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
             routes.MapRoute("GetDownload",
                             "download/getdownload/{orderItemId}/{agree}",
@@ -99,9 +99,9 @@ namespace Nop.Web.Infrastructure
 
             //back in stock notifications
             routes.MapLocalizedRoute("BackInStockSubscribePopup",
-                            "backinstocksubscribe/{productVariantId}",
+                            "backinstocksubscribe/{productId}",
                             new { controller = "Catalog", action = "BackInStockSubscribePopup" },
-                            new { productVariantId = @"\d+" },
+                            new { productId = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
             routes.MapLocalizedRoute("DeleteBackInStockSubscription",
                             "backinstocksubscribe/delete/{subscriptionId}",
@@ -150,23 +150,23 @@ namespace Nop.Web.Infrastructure
                             "emailwishlist",
                             new { controller = "ShoppingCart", action = "EmailWishlist" },
                             new[] { "Nop.Web.Controllers" });
-            //add product to cart (without any attributes and options)
-            routes.MapLocalizedRoute("AddProductToCart",
-                            "addproducttocart/{productId}/{shoppingCartTypeId}/{quantity}",
-                            new { controller = "ShoppingCart", action = "AddProductToCart" },
+            //add product to cart (without any attributes and options). used on catalog pages.
+            routes.MapLocalizedRoute("AddProductToCart-Catalog",
+                            "addproducttocart/catalog/{productId}/{shoppingCartTypeId}/{quantity}",
+                            new { controller = "ShoppingCart", action = "AddProductToCart_Catalog" },
                             new { productId = @"\d+", shoppingCartTypeId = @"\d+", quantity = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
-            //add product variant to cart (with attributes and options)
-            routes.MapLocalizedRoute("AddProductVariantToCart",
-                            "addproductvarianttocart/{productVariantId}/{shoppingCartTypeId}",
-                            new { controller = "ShoppingCart", action = "AddProductVariantToCart" },
-                            new { productVariantId = @"\d+", shoppingCartTypeId = @"\d+" },
+            //add product to cart (with attributes and options). used on the product details pages.
+            routes.MapLocalizedRoute("AddProductToCart-Details",
+                            "addproducttocart/details/{productId}/{shoppingCartTypeId}",
+                            new { controller = "ShoppingCart", action = "AddProductToCart_Details" },
+                            new { productId = @"\d+", shoppingCartTypeId = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
             //product attributes with "upload file" type
             routes.MapLocalizedRoute("UploadFileProductAttribute",
-                            "uploadfileproductattribute/{productVariantId}/{productAttributeId}",
+                            "uploadfileproductattribute/{productId}/{productAttributeId}",
                             new { controller = "ShoppingCart", action = "UploadFileProductAttribute" },
-                            new { productVariantId = @"\d+", productAttributeId = @"\d+" },
+                            new { productId = @"\d+", productAttributeId = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
             
             //checkout

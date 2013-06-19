@@ -105,17 +105,12 @@ namespace Nop.Web.Controllers
                 var orderItemModel = new SubmitReturnRequestModel.OrderItemModel()
                 {
                     Id = orderItem.Id,
-                    ProductId = orderItem.ProductVariant.ProductId,
-                    ProductSeName = orderItem.ProductVariant.Product.GetSeName(),
+                    ProductId = orderItem.Product.Id,
+                    ProductName = orderItem.Product.GetLocalized(x => x.Name),
+                    ProductSeName = orderItem.Product.GetSeName(),
                     AttributeInfo = orderItem.AttributeDescription,
                     Quantity = orderItem.Quantity
                 };
-
-                //product name
-                if (!String.IsNullOrEmpty(orderItem.ProductVariant.GetLocalized(x => x.Name)))
-                    orderItemModel.ProductName = string.Format("{0} ({1})", orderItem.ProductVariant.Product.GetLocalized(x => x.Name), orderItem.ProductVariant.GetLocalized(x => x.Name));
-                else
-                    orderItemModel.ProductName = orderItem.ProductVariant.Product.GetLocalized(x => x.Name);
                 model.Items.Add(orderItemModel);
 
                 //unit price

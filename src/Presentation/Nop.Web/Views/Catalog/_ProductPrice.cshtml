@@ -1,0 +1,87 @@
+﻿@model ProductDetailsModel.ProductPriceModel
+@using Nop.Web.Models.Catalog;
+@using System.Globalization;
+@using System.Text.RegularExpressions;
+@{
+    string pattern = "(?<val>(\\d+[\\s\\,\\.]?)+)";
+    string replacement = String.Format("<span class=\"price-val-for-dyn-upd-{0}\">${{val}}</span> ", Model.ProductId);  
+}
+@if (Model.DynamicPriceUpdate)
+{
+    <script type="text/javascript">
+        var priceValForDynUpd_@(Model.ProductId) = @(((float)(Model.PriceValue != Model.PriceWithDiscountValue ? Model.PriceWithDiscountValue : Model.PriceValue)).ToString(new CultureInfo("en-US")));
+    </script>
+}
+<div class="prices" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+    @if (Model.CustomerEntersPrice)
+    {
+        @*display nothing*@
+    }
+    else if (Model.CallForPrice)
+    {
+        @*call for price*@
+        <div class="product-price call-for-price">
+            <span>@T("Products.CallForPrice")</span>
+        </div>
+    }
+    else
+    {
+        if (!String.IsNullOrWhiteSpace(Model.OldPrice))
+        {
+            @*old price*@
+            <div class="old-product-price">
+                <label>@T("Products.Price.OldPrice"):</label>
+                <span>@Model.OldPrice</span>
+            </div>
+        }
+
+
+
+        <div class="@if (String.IsNullOrWhiteSpace(Model.PriceWithDiscount))
+                    {<text>product-price</text>}
+                    else
+                    {<text>non-discounted-price</text>}">
+
+            @if (!String.IsNullOrWhiteSpace(Model.OldPrice) || !String.IsNullOrWhiteSpace(Model.PriceWithDiscount))
+            {
+                @*display "Price:" label if we have old price or discounted one*@
+                <label>@T("Products.Price"):</label>
+            }
+            
+            @*render price*@
+            <span @if (String.IsNullOrWhiteSpace(Model.PriceWithDiscount)) { <text>itemprop="price"</text> } >
+                @if (Model.DynamicPriceUpdate && !Model.HidePrices && String.IsNullOrWhiteSpace(Model.PriceWithDiscount))
+                {
+                    @Html.Raw(Regex.Replace(Model.Price, pattern, replacement))
+                }
+                else
+                {
+                    @Html.Raw(Model.Price)
+                }
+            </span>
+        </div>
+        
+        
+        if (!String.IsNullOrWhiteSpace(Model.PriceWithDiscount))
+        {
+            @*discounted price*@
+            <div class="product-price discounted-price">
+                <label>@T("Products.Price.WithDiscount"):</label>
+                <span itemprop="price">
+                    @if (Model.DynamicPriceUpdate && !Model.HidePrices)
+                    {
+                        @Html.Raw(Regex.Replace(Model.PriceWithDiscount, pattern, replacement))
+                    }
+                    else
+                    {
+                        @Html.Raw(Model.PriceWithDiscount)
+                    }
+                </span>
+            </div>
+         }
+         if (!String.IsNullOrEmpty(Model.CurrencyCode))
+         {
+            <meta itemprop="priceCurrency" content="@Model.CurrencyCode" />
+         }
+    }
+</div>

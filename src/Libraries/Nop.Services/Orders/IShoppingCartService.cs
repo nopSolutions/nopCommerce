@@ -28,72 +28,72 @@ namespace Nop.Services.Orders
         int DeleteExpiredShoppingCartItems(DateTime olderThanUtc);
 
         /// <summary>
-        /// Validates required product variants (product variants which require other variant to be added to the cart)
+        /// Validates required products (products which require other variant to be added to the cart)
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="shoppingCartType">Shopping cart type</param>
-        /// <param name="productVariant">Product variant</param>
+        /// <param name="product">Product</param>
         /// <param name="storeId">Store identifier</param>
-        /// <param name="automaticallyAddRequiredProductVariantsIfEnabled">Automatically add required product variants if enabled</param>
+        /// <param name="automaticallyAddRequiredProductsIfEnabled">Automatically add required products if enabled</param>
         /// <returns>Warnings</returns>
-        IList<string> GetRequiredProductVariantWarnings(Customer customer,
-            ShoppingCartType shoppingCartType, ProductVariant productVariant,
-            int storeId, bool automaticallyAddRequiredProductVariantsIfEnabled);
+        IList<string> GetRequiredProductWarnings(Customer customer,
+            ShoppingCartType shoppingCartType, Product product,
+            int storeId, bool automaticallyAddRequiredProductsIfEnabled);
 
         /// <summary>
-        /// Validates a product variant for standard properties
+        /// Validates a product for standard properties
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="shoppingCartType">Shopping cart type</param>
-        /// <param name="productVariant">Product variant</param>
+        /// <param name="product">Product</param>
         /// <param name="selectedAttributes">Selected attributes</param>
         /// <param name="customerEnteredPrice">Customer entered price</param>
         /// <param name="quantity">Quantity</param>
         /// <returns>Warnings</returns>
         IList<string> GetStandardWarnings(Customer customer, ShoppingCartType shoppingCartType,
-            ProductVariant productVariant, string selectedAttributes,
+            Product product, string selectedAttributes,
             decimal customerEnteredPrice, int quantity);
 
         /// <summary>
         /// Validates shopping cart item attributes
         /// </summary>
         /// <param name="shoppingCartType">Shopping cart type</param>
-        /// <param name="productVariant">Product variant</param>
+        /// <param name="product">Product</param>
         /// <param name="selectedAttributes">Selected attributes</param>
         /// <returns>Warnings</returns>
         IList<string> GetShoppingCartItemAttributeWarnings(ShoppingCartType shoppingCartType,
-            ProductVariant productVariant, string selectedAttributes);
+            Product product, string selectedAttributes);
         
         /// <summary>
         /// Validates shopping cart item (gift card)
         /// </summary>
         /// <param name="shoppingCartType">Shopping cart type</param>
-        /// <param name="productVariant">Product variant</param>
+        /// <param name="product">Product</param>
         /// <param name="selectedAttributes">Selected attributes</param>
         /// <returns>Warnings</returns>
         IList<string> GetShoppingCartItemGiftCardWarnings(ShoppingCartType shoppingCartType,
-            ProductVariant productVariant, string selectedAttributes);
+            Product product, string selectedAttributes);
         
         /// <summary>
         /// Validates shopping cart item
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="shoppingCartType">Shopping cart type</param>
-        /// <param name="productVariant">Product variant</param>
+        /// <param name="product">Product</param>
         /// <param name="storeId">Store identifier</param>
         /// <param name="selectedAttributes">Selected attributes</param>
         /// <param name="customerEnteredPrice">Customer entered price</param>
         /// <param name="quantity">Quantity</param>
-        /// <param name="automaticallyAddRequiredProductVariantsIfEnabled">Automatically add required product variants if enabled</param>
-        /// <param name="getStandardWarnings">A value indicating whether we should validate a product variant for standard properties</param>
+        /// <param name="automaticallyAddRequiredProductsIfEnabled">Automatically add required products if enabled</param>
+        /// <param name="getStandardWarnings">A value indicating whether we should validate a product for standard properties</param>
         /// <param name="getAttributesWarnings">A value indicating whether we should validate product attributes</param>
         /// <param name="getGiftCardWarnings">A value indicating whether we should validate gift card properties</param>
-        /// <param name="getRequiredProductVariantWarnings">A value indicating whether we should validate required product variants (product variants which require other variant to be added to the cart)</param>
+        /// <param name="getRequiredProductVariantWarnings">A value indicating whether we should validate required products (products which require other products to be added to the cart)</param>
         /// <returns>Warnings</returns>
         IList<string> GetShoppingCartItemWarnings(Customer customer, ShoppingCartType shoppingCartType,
-            ProductVariant productVariant, int storeId, 
+            Product product, int storeId, 
             string selectedAttributes, decimal customerEnteredPrice,
-            int quantity, bool automaticallyAddRequiredProductVariantsIfEnabled,
+            int quantity, bool automaticallyAddRequiredProductsIfEnabled,
             bool getStandardWarnings = true, bool getAttributesWarnings = true,
             bool getGiftCardWarnings = true, bool getRequiredProductVariantWarnings = true);
 
@@ -112,32 +112,32 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="shoppingCart">Shopping cart</param>
         /// <param name="shoppingCartType">Shopping cart type</param>
-        /// <param name="productVariant">Product variant</param>
+        /// <param name="product">Product</param>
         /// <param name="selectedAttributes">Selected attributes</param>
         /// <param name="customerEnteredPrice">Price entered by a customer</param>
         /// <returns>Found shopping cart item</returns>
         ShoppingCartItem FindShoppingCartItemInTheCart(IList<ShoppingCartItem> shoppingCart,
             ShoppingCartType shoppingCartType,
-            ProductVariant productVariant,
+            Product product,
             string selectedAttributes = "",
             decimal customerEnteredPrice = decimal.Zero);
 
 
         /// <summary>
-        /// Add a product variant to shopping cart
+        /// Add a product to shopping cart
         /// </summary>
         /// <param name="customer">Customer</param>
-        /// <param name="productVariant">Product variant</param>
+        /// <param name="product">Product</param>
         /// <param name="shoppingCartType">Shopping cart type</param>
         /// <param name="storeId">Store identifier</param>
         /// <param name="selectedAttributes">Selected attributes</param>
         /// <param name="customerEnteredPrice">The price enter by a customer</param>
         /// <param name="quantity">Quantity</param>
-        /// <param name="automaticallyAddRequiredProductVariantsIfEnabled">Automatically add required product variants if enabled</param>
+        /// <param name="automaticallyAddRequiredProductsIfEnabled">Automatically add required products if enabled</param>
         /// <returns>Warnings</returns>
-        IList<string> AddToCart(Customer customer, ProductVariant productVariant,
+        IList<string> AddToCart(Customer customer, Product product,
             ShoppingCartType shoppingCartType, int storeId, string selectedAttributes,
-            decimal customerEnteredPrice, int quantity, bool automaticallyAddRequiredProductVariantsIfEnabled);
+            decimal customerEnteredPrice, int quantity, bool automaticallyAddRequiredProductsIfEnabled);
 
         /// <summary>
         /// Updates the shopping cart item

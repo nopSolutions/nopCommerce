@@ -176,8 +176,7 @@ namespace Nop.Data.Tests.Customers
         public void Can_save_and_load_customer_with_shopping_cart()
         {
             var customer = GetTestCustomer();
-            var productVariant = GetTestProductVariant();
-            var store = GetTestStore();
+            var product = GetTestProduct();
 
             customer.ShoppingCartItems.Add
             (
@@ -189,7 +188,7 @@ namespace Nop.Data.Tests.Customers
                     Quantity = 2,
                     CreatedOnUtc = new DateTime(2010, 01, 01),
                     UpdatedOnUtc = new DateTime(2010, 01, 02),
-                    ProductVariant = productVariant,
+                    Product = product,
                 }
             );
 
@@ -250,21 +249,13 @@ namespace Nop.Data.Tests.Customers
             };
         }
 
-        protected ProductVariant GetTestProductVariant()
+        protected Product GetTestProduct()
         {
-            return new ProductVariant
+            return new Product
             {
-                Name = "Product variant name 1",
+                Name = "Product name 1",
                 CreatedOnUtc = new DateTime(2010, 01, 03),
                 UpdatedOnUtc = new DateTime(2010, 01, 04),
-                Product = new Product()
-                {
-                    Name = "Name 1",
-                    Published = true,
-                    Deleted = false,
-                    CreatedOnUtc = new DateTime(2010, 01, 01),
-                    UpdatedOnUtc = new DateTime(2010, 01, 02)
-                }
             };
         }
 

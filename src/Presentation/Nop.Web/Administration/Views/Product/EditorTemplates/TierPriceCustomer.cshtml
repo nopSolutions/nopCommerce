@@ -1,0 +1,27 @@
+﻿
+@using Telerik.Web.Mvc.UI;
+@using Nop.Services.Customers;
+
+@{    
+    var _customerService = EngineContext.Current.Resolve<ICustomerService>();
+    var allCustomerRoles = _customerService.GetAllCustomerRoles(true);
+
+
+    var customerRolesList = new List<SelectListItem>();
+    customerRolesList.Add(new SelectListItem()
+        {
+            Text = T("Admin.Catalog.Products.TierPrices.Fields.CustomerRole.All").Text,
+            Value = "0"
+        });
+    foreach (var cr in allCustomerRoles)
+    {
+        var item = new SelectListItem()
+        {
+            Text = cr.Name,
+            Value = cr.Id.ToString()
+        };
+        customerRolesList.Add(item);
+    }    
+}
+
+@Html.Telerik().DropDownList().Name("CustomerRole").BindTo(customerRolesList)

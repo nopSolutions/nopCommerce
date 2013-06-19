@@ -9,9 +9,9 @@ namespace Nop.Core.Domain.Orders
     public partial class BestsellersReportLine
     {
         /// <summary>
-        /// Gets or sets the product or product variant identifier
+        /// Gets or sets the product identifier
         /// </summary>
-        public int EntityId { get; set; }
+        public int ProductId { get; set; }
 
         /// <summary>
         /// Gets or sets the total amount

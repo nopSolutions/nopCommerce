@@ -370,10 +370,10 @@ namespace Nop.Plugin.Shipping.Fedex
             int i = 0;
             foreach (var sci in items)
             {
-                int length = ConvertFromPrimaryMeasureDimension(sci.ProductVariant.Length, usedMeasureDimension);
-                int height = ConvertFromPrimaryMeasureDimension(sci.ProductVariant.Height, usedMeasureDimension);
-                int width = ConvertFromPrimaryMeasureDimension(sci.ProductVariant.Width, usedMeasureDimension);
-                int weight = ConvertFromPrimaryMeasureWeight(sci.ProductVariant.Weight, usedMeasureWeight);
+                int length = ConvertFromPrimaryMeasureDimension(sci.Product.Length, usedMeasureDimension);
+                int height = ConvertFromPrimaryMeasureDimension(sci.Product.Height, usedMeasureDimension);
+                int width = ConvertFromPrimaryMeasureDimension(sci.Product.Width, usedMeasureDimension);
+                int weight = ConvertFromPrimaryMeasureWeight(sci.Product.Weight, usedMeasureWeight);
                 if (length < 1)
                     length = 1;
                 if (height < 1)
@@ -398,7 +398,7 @@ namespace Nop.Plugin.Shipping.Fedex
                     request.RequestedShipment.RequestedPackageLineItems[i].Dimensions.Units = RateServiceWebReference.LinearUnits.IN;
 
                     request.RequestedShipment.RequestedPackageLineItems[i].InsuredValue = new Money(); // insured value
-                    request.RequestedShipment.RequestedPackageLineItems[i].InsuredValue.Amount = sci.ProductVariant.Price;
+                    request.RequestedShipment.RequestedPackageLineItems[i].InsuredValue.Amount = sci.Product.Price;
                     request.RequestedShipment.RequestedPackageLineItems[i].InsuredValue.Currency = currencyCode;
 
                     i++;
@@ -455,21 +455,21 @@ namespace Nop.Plugin.Shipping.Fedex
             if (getShippingOptionRequest.Items.Count == 1 && getShippingOptionRequest.Items[0].Quantity == 1)
             {
                 totalPackagesDims = 1;
-                var pv = getShippingOptionRequest.Items[0].ProductVariant;
-                length = ConvertFromPrimaryMeasureDimension(pv.Length, usedMeasureDimension);
-                height = ConvertFromPrimaryMeasureDimension(pv.Height, usedMeasureDimension);
-                width = ConvertFromPrimaryMeasureDimension(pv.Width, usedMeasureDimension);
+                var product = getShippingOptionRequest.Items[0].Product;
+                length = ConvertFromPrimaryMeasureDimension(product.Length, usedMeasureDimension);
+                height = ConvertFromPrimaryMeasureDimension(product.Height, usedMeasureDimension);
+                width = ConvertFromPrimaryMeasureDimension(product.Width, usedMeasureDimension);
             }
             else
             {
                 decimal totalVolume = 0;
                 foreach (var item in getShippingOptionRequest.Items)
                 {
-                    var pv = item.ProductVariant;
-                    int pvLength = ConvertFromPrimaryMeasureDimension(pv.Length, usedMeasureDimension);
-                    int pvHeight = ConvertFromPrimaryMeasureDimension(pv.Height, usedMeasureDimension);
-                    int pvWidth = ConvertFromPrimaryMeasureDimension(pv.Width, usedMeasureDimension);
-                    totalVolume += item.Quantity * (pvHeight * pvWidth * pvLength);
+                    var product = item.Product;
+                    int productLength = ConvertFromPrimaryMeasureDimension(product.Length, usedMeasureDimension);
+                    int productHeight = ConvertFromPrimaryMeasureDimension(product.Height, usedMeasureDimension);
+                    int productWidth = ConvertFromPrimaryMeasureDimension(product.Width, usedMeasureDimension);
+                    totalVolume += item.Quantity * (productHeight * productWidth * productLength);
                 }
 
                 int dimension;

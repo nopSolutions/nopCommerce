@@ -1,7 +1,7 @@
 ﻿@model HeaderLinksModel
 @using Nop.Web.Models.Common;
 @Html.Widget("mobile_header_links_before")
-<div data-role="navbar">
+<div data-role="navbar" class="header-account-links">
     <ul>
         @if (Model.IsAuthenticated)
         {
@@ -15,17 +15,22 @@
         }
     </ul>
 </div>
-<div data-role="navbar">
+<div data-role="navbar" class="header-cart-links">
     <ul>
         @if (Model.ShoppingCartEnabled)
         {
-            <li><a href="@Url.RouteUrl("ShoppingCart")" class="ico-cart" data-role="button">@T("ShoppingCart")
-                @T("ShoppingCart.HeaderQuantity.Mobile", Model.ShoppingCartItems)</a></li>
+            <li><a href="@Url.RouteUrl("ShoppingCart")" class="ico-cart" data-role="button">
+                <span class="cart-label">@T("ShoppingCart")</span>
+                <span class="cart-qty">@T("ShoppingCart.HeaderQuantity.Mobile", Model.ShoppingCartItems)</span>
+            </a></li>
         }
         @if (Model.WishlistEnabled)
         {
-            <li><a href="@Url.RouteUrl("Wishlist")" class="ico-wishlist" data-role="button">@T("Wishlist")
-                @T("Wishlist.HeaderQuantity.Mobile", Model.WishlistItems)</a></li>
+            <li><a href="@Url.RouteUrl("Wishlist")" class="ico-wishlist" data-role="button">
+
+                <span class="cart-label">@T("Wishlist")</span>
+                <span class="wishlist-qty">@T("Wishlist.HeaderQuantity.Mobile", Model.WishlistItems)</span>
+            </a></li>
         }
     </ul>
 </div>

@@ -78,12 +78,12 @@
         </tr>
         <tr>
             <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.ProductVariantPictureSize_OverrideForStore, model => model.ProductVariantPictureSize, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.ProductVariantPictureSize):
+                @Html.OverrideStoreCheckboxFor(model => model.AssociatedProductPictureSize_OverrideForStore, model => model.AssociatedProductPictureSize, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.AssociatedProductPictureSize):
             </td>
             <td class="adminData">
-                @Html.EditorFor(model => model.ProductVariantPictureSize)
-                @Html.ValidationMessageFor(model => model.ProductVariantPictureSize)
+                @Html.EditorFor(model => model.AssociatedProductPictureSize)
+                @Html.ValidationMessageFor(model => model.AssociatedProductPictureSize)
             </td>
         </tr>
         <tr>

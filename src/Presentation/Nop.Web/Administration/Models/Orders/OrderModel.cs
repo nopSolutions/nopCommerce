@@ -231,9 +231,8 @@ namespace Nop.Admin.Models.Orders
                 ReturnRequestIds = new List<int>();
                 PurchasedGiftCardIds = new List<int>();
             }
-            public int ProductVariantId { get; set; }
-
-            public string FullProductName { get; set; }
+            public int ProductId { get; set; }
+            public string ProductName { get; set; }
             public string VendorName { get; set; }
             public string Sku { get; set; }
 
@@ -324,7 +323,7 @@ namespace Nop.Admin.Models.Orders
 
             #region Nested classes
             
-            public partial class ProductVariantLineModel : BaseNopEntityModel
+            public partial class ProductModel : BaseNopEntityModel
             {
                 [NopResourceDisplayName("Admin.Orders.Products.AddNew.Name")]
                 [AllowHtml]
@@ -344,7 +343,7 @@ namespace Nop.Admin.Models.Orders
                     Warnings = new List<string>();
                 }
 
-                public int ProductVariantId { get; set; }
+                public int ProductId { get; set; }
 
                 public int OrderId { get; set; }
 

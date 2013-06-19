@@ -1,0 +1,46 @@
+﻿@model ProductDetailsModel.AddToCartModel
+@using Nop.Core.Domain.Orders
+@using Nop.Web.Models.Catalog;
+<div class="add-to-cart">
+    @if (Model.CustomerEntersPrice)
+    {
+        <div class="customer-entered-price">
+            <div>
+                @Html.LabelFor(model => model.CustomerEnteredPrice, new { @class = "enter-price-label" })
+                @*round price*@
+                @Html.TextBox("CustomerEnteredPrice", Convert.ToInt32(Math.Ceiling(Model.CustomerEnteredPrice)), new { @class = "enter-price-input" })
+            </div>
+            <div class="price-range">
+                @Model.CustomerEnteredPriceRange
+            </div>
+        </div>
+    }
+    @if (!Model.DisableBuyButton || !Model.DisableWishlistButton)
+    {
+        <div>
+            @if (Model.AllowedQuantities.Count > 0)
+            {
+                <div data-role="fieldcontain">
+                    <fieldset data-role="controlgroup" data-type="horizontal" data-mini="true">
+                        @Html.LabelFor(model => model.EnteredQuantity, new { @class = "qty-label" })
+                        @Html.DropDownListFor(model => model.EnteredQuantity, Model.AllowedQuantities, new { @class = "qty-dropdown" })
+                    </fieldset>
+                </div>
+            }
+            else
+            {
+                @Html.LabelFor(model => model.EnteredQuantity, new { @class = "qty-label" })
+                @Html.TextBoxFor(model => model.EnteredQuantity, new { @class = "qty-input" })
+            }
+        </div>
+            if (!Model.DisableBuyButton)
+            {
+        <input type="button" value="@(Model.AvailableForPreOrder ? T("ShoppingCart.PreOrder") : T("ShoppingCart.AddToCart"))" onclick="AjaxCart.addproducttocart_details_mobile('@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.ProductId, shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart })', '#product-details-form', '@Url.RouteUrl("ShoppingCart")');return false;" />
+            }
+            if (!Model.DisableWishlistButton)
+            {
+        <input type="button" value="@T("ShoppingCart.AddToWishlist")" onclick="AjaxCart.addproducttocart_details_mobile('@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.ProductId, shoppingCartTypeId = (int)ShoppingCartType.Wishlist })', '#product-details-form', '@Url.RouteUrl("Wishlist")');return false;" />
+            }
+    }
+    @Html.Widget("mobile_productdetails_add_info")
+</div>

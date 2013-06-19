@@ -1,0 +1,21 @@
+﻿@{
+    Layout = "~/Administration/Views/Shared/_AdminPopupLayout.cshtml";
+}
+@model ProductModel.ProductVariantAttributeValueModel
+@{    
+    //page title
+    ViewBag.Title = T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.EditValueDetails").Text;
+}
+@using (Html.BeginForm())
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" alt="" />
+            @T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.EditValueDetails")
+        </div>
+        <div class="options">
+            <input type="submit" name="save" class="t-button" value="@T("Admin.Common.Save")" />
+        </div>
+    </div>
+    @Html.Partial("_CreateOrUpdateProductAttributeValue", Model)
+}

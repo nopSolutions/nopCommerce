@@ -184,18 +184,18 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return Content("Access denied");
 
-            var productVariants = _productService.SearchProductVariants(0, 0, 0, "", false,
-                command.Page - 1, command.PageSize, true);
-            var productVariantsModel = productVariants
+            var products = _productService.SearchProducts(pageIndex: command.Page - 1,
+                pageSize: command.PageSize, showHidden: true);
+            var productsModel = products
                 .Select(x =>
                             {
                                 var gModel = new FeedFroogleModel.GoogleProductModel()
                                 {
-                                    ProductVariantId = x.Id,
-                                    FullProductVariantName = x.FullProductName
+                                    ProductId = x.Id,
+                                    ProductName = x.Name
 
                                 };
-                                var googleProduct = _googleService.GetByProductVariantId(x.Id);
+                                var googleProduct = _googleService.GetByProductId(x.Id);
                                 if (googleProduct != null)
                                 {
                                     gModel.GoogleCategory = googleProduct.Taxonomy;
@@ -211,8 +211,8 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
 
             var model = new GridModel<FeedFroogleModel.GoogleProductModel>
             {
-                Data = productVariantsModel,
-                Total = productVariants.TotalCount
+                Data = productsModel,
+                Total = products.TotalCount
             };
 
             return new JsonResult
@@ -227,7 +227,7 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return Content("Access denied");
 
-            var googleProduct = _googleService.GetByProductVariantId(model.ProductVariantId);
+            var googleProduct = _googleService.GetByProductId(model.ProductId);
             if (googleProduct != null)
             {
 
@@ -243,7 +243,7 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
                 //insert
                 googleProduct = new GoogleProductRecord()
                 {
-                    ProductVariantId = model.ProductVariantId,
+                    ProductId = model.ProductId,
                     Taxonomy = model.GoogleCategory,
                     Gender = model.Gender,
                     AgeGroup = model.AgeGroup,

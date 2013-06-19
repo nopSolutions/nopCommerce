@@ -21,31 +21,29 @@ namespace Nop.Services.Catalog
         /// <param name="storeId">Store identifier; pass 0 to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Subscriptions</returns>
         IPagedList<BackInStockSubscription> GetAllSubscriptionsByCustomerId(int customerId,
-            int storeId, int pageIndex, int pageSize, bool showHidden = false);
+            int storeId, int pageIndex, int pageSize);
         
         /// <summary>
         /// Gets all subscriptions
         /// </summary>
-        /// <param name="productVariantId">Product variant identifier</param>
+        /// <param name="productId">Product identifier</param>
         /// <param name="storeId">Store identifier; pass 0 to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Subscriptions</returns>
-        IPagedList<BackInStockSubscription> GetAllSubscriptionsByProductVariantId(int productVariantId,
-            int storeId, int pageIndex, int pageSize, bool showHidden = false);
+        IPagedList<BackInStockSubscription> GetAllSubscriptionsByProductId(int productId,
+            int storeId, int pageIndex, int pageSize);
 
         /// <summary>
         /// Gets all subscriptions
         /// </summary>
         /// <param name="customerId">Customer id</param>
-        /// <param name="productVariantId">Product variant identifier</param>
+        /// <param name="productId">Product identifier</param>
         /// <param name="storeId">Store identifier</param>
         /// <returns>Subscriptions</returns>
-        BackInStockSubscription FindSubscription(int customerId, int productVariantId, int storeId);
+        BackInStockSubscription FindSubscription(int customerId, int productId, int storeId);
 
         /// <summary>
         /// Gets a subscription
@@ -69,8 +67,8 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Send notification to subscribers
         /// </summary>
-        /// <param name="productVariant"></param>
+        /// <param name="product">Product</param>
         /// <returns>Number of sent email</returns>
-        int SendNotificationsToSubscribers(ProductVariant productVariant);
+        int SendNotificationsToSubscribers(Product product);
     }
 }

@@ -16,20 +16,7 @@ namespace Nop.Data.Tests.Catalog
                            AttributesXml = "Some XML",
                            StockQuantity = 2,
                            AllowOutOfStockOrders = true,
-                           ProductVariant = new ProductVariant
-                                            {
-                                                Name = "Product variant name 1",
-                                                CreatedOnUtc = new DateTime(2010, 01, 03),
-                                                UpdatedOnUtc = new DateTime(2010, 01, 04),
-                                                Product = new Product()
-                                                          {
-                                                              Name = "Name 1",
-                                                              Published = true,
-                                                              Deleted = false,
-                                                              CreatedOnUtc = new DateTime(2010, 01, 01),
-                                                              UpdatedOnUtc = new DateTime(2010, 01, 02)
-                                                          }
-                                            }
+                           Product = GetTestProduct()
                        };
 
             var fromDb = SaveAndLoadEntity(pvac);
@@ -37,6 +24,16 @@ namespace Nop.Data.Tests.Catalog
             fromDb.AttributesXml.ShouldEqual("Some XML");
             fromDb.StockQuantity.ShouldEqual(2);
             fromDb.AllowOutOfStockOrders.ShouldEqual(true);
+        }
+
+        protected Product GetTestProduct()
+        {
+            return new Product
+            {
+                Name = "Product name 1",
+                CreatedOnUtc = new DateTime(2010, 01, 03),
+                UpdatedOnUtc = new DateTime(2010, 01, 04),
+            };
         }
     }
 }

@@ -932,6 +932,7 @@
     <Content Include="Scripts\2013.1.219\telerik.treeview.min.js" />
     <Content Include="Scripts\2013.1.219\telerik.upload.min.js" />
     <Content Include="Scripts\2013.1.219\telerik.window.min.js" />
+    <Content Include="Scripts\public.common.mobile.js" />
     <Content Include="Themes\Mobile\Content\images\ajax-loader.gif" />
     <Content Include="Content\Images\default-avatar.jpg" />
     <Content Include="Content\Images\flags\ad.png" />
@@ -1386,8 +1387,8 @@
     <Content Include="Views\Customer\_ExternalAuthentication.AssociateMessage.cshtml" />
     <Content Include="Views\ExternalAuthentication\ExternalMethods.cshtml" />
     <Content Include="Views\Customer\_ExternalAuthentication.Errors.cshtml" />
-    <Content Include="Views\Catalog\ProductTemplate.VariantsInGrid.cshtml" />
-    <Content Include="Views\Catalog\ProductTemplate.SingleVariant.cshtml" />
+    <Content Include="Views\Catalog\ProductTemplate.Grouped.cshtml" />
+    <Content Include="Views\Catalog\ProductTemplate.Simple.cshtml" />
     <Content Include="Views\Catalog\_ProductDetailsPictures.cshtml" />
     <Content Include="browserCaps.config">
       <SubType>Designer</SubType>
@@ -1403,7 +1404,7 @@
     <Content Include="Views\Shared\LanguageAttributes.cshtml" />
     <Content Include="Views\Customer\_CheckUsernameAvailability.cshtml" />
     <Content Include="Views\Boards\ActiveDiscussionsSmall.cshtml" />
-    <Content Include="Views\Catalog\_ProductVariantBackInStockSubscription.cshtml" />
+    <Content Include="Views\Catalog\_BackInStockSubscription.cshtml" />
     <Content Include="Views\Catalog\BackInStockSubscribePopup.cshtml" />
     <Content Include="Views\Customer\BackInStockSubscriptions.cshtml" />
     <Content Include="App_Data\Pdf\FreeSerif.ttf" />
@@ -1418,8 +1419,8 @@
     <Content Include="Views\Catalog\CategoryNavigation.Mobile.cshtml" />
     <Content Include="Views\Catalog\CategoryTemplate.ProductsInGridOrLines.Mobile.cshtml" />
     <Content Include="Views\Catalog\_ProductBox.Mobile.cshtml" />
-    <Content Include="Views\Catalog\ProductTemplate.VariantsInGrid.Mobile.cshtml" />
-    <Content Include="Views\Catalog\ProductTemplate.SingleVariant.Mobile.cshtml" />
+    <Content Include="Views\Catalog\ProductTemplate.Grouped.Mobile.cshtml" />
+    <Content Include="Views\Catalog\ProductTemplate.Simple.Mobile.cshtml" />
     <Content Include="Views\Catalog\ProductEmailAFriendButton.Mobile.cshtml" />
     <Content Include="Views\Catalog\ProductReviewOverview.Mobile.cshtml" />
     <Content Include="Views\Catalog\SearchBox.Mobile.cshtml" />
@@ -1428,11 +1429,10 @@
     <Content Include="Views\Catalog\ManufacturerTemplate.ProductsInGridOrLines.Mobile.cshtml" />
     <Content Include="Views\Catalog\ProductsByTag.Mobile.cshtml" />
     <Content Include="Views\Catalog\_ProductDetailsPictures.Mobile.cshtml" />
-    <Content Include="Views\Catalog\_ProductVariantLine.Mobile.cshtml" />
     <Content Include="Views\Catalog\_ProductAttributes.Mobile.cshtml" />
     <Content Include="Views\Catalog\_GiftCardInfo.Mobile.cshtml" />
-    <Content Include="Views\Catalog\_ProductVariantPrice.Mobile.cshtml" />
-    <Content Include="Views\Catalog\_ProductVariantAddToCart.Mobile.cshtml" />
+    <Content Include="Views\Catalog\_ProductPrice.Mobile.cshtml" />
+    <Content Include="Views\Catalog\_AddToCart.Mobile.cshtml" />
     <Content Include="Views\ShoppingCart\Cart.Mobile.cshtml" />
     <Content Include="Views\ShoppingCart\Wishlist.Mobile.cshtml" />
     <Content Include="Views\Catalog\ProductReviews.Mobile.cshtml" />
@@ -1515,7 +1515,7 @@
     <Content Include="Views\Boards\_CreateUpdatePost.Mobile.cshtml" />
     <Content Include="Views\Catalog\CompareProductsButton.Mobile.cshtml" />
     <Content Include="Views\Catalog\CompareProducts.Mobile.cshtml" />
-    <Content Include="Views\Catalog\_ProductVariantBackInStockSubscription.Mobile.cshtml" />
+    <Content Include="Views\Catalog\_BackInStockSubscription.Mobile.cshtml" />
     <Content Include="Views\Catalog\BackInStockSubscribePopup.Mobile.cshtml" />
     <Content Include="Views\Common\ConfigButton.Mobile.cshtml" />
     <Content Include="Views\Common\Config.Mobile.cshtml" />
@@ -1608,11 +1608,10 @@
     <Content Include="Views\Catalog\ProductSpecifications.cshtml" />
     <Content Include="Views\Catalog\ProductTierPrices.cshtml" />
     <Content Include="Views\Catalog\_GiftCardInfo.cshtml" />
-    <Content Include="Views\Catalog\_ProductVariantLine.cshtml" />
-    <Content Include="Views\Catalog\_ProductVariantPrice.cshtml" />
-    <Content Include="Views\Catalog\_ProductVariantAddToCart.cshtml" />
+    <Content Include="Views\Catalog\_ProductPrice.cshtml" />
+    <Content Include="Views\Catalog\_AddToCart.cshtml" />
     <Content Include="Views\Catalog\_DownloadSample.cshtml" />
-    <Content Include="Views\Catalog\_ProductVariant_SKU_Man_Stock.cshtml" />
+    <Content Include="Views\Catalog\_SKU_Man_Stock.cshtml" />
     <Content Include="Views\Catalog\_ProductAttributes.cshtml" />
     <Content Include="Views\ShoppingCart\Cart.cshtml" />
     <Content Include="Views\Catalog\CrossSellProducts.cshtml" />

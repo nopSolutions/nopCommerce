@@ -1,4 +1,4 @@
-﻿@model IList<ProductDetailsModel.ProductVariantModel.ProductVariantAttributeModel>
+﻿@model IList<ProductDetailsModel.ProductVariantAttributeModel>
 @using Nop.Web.Models.Catalog;
 @using Nop.Core.Domain.Catalog;
 @using Nop.Core.Infrastructure;
@@ -21,12 +21,12 @@
     {
         foreach (var attribute in Model)
         {
-            string controlId = string.Format("product_attribute_{0}_{1}_{2}", attribute.ProductVariantId, attribute.ProductAttributeId, attribute.Id);
+            string controlId = string.Format("product_attribute_{0}_{1}_{2}", attribute.ProductId, attribute.ProductAttributeId, attribute.Id);
 
-            adjustmentTableName = string.Format("adjustmentTable_{0}", attribute.ProductVariantId);
-            adjustmentFuncName = string.Format("adjustPrice_{0}", attribute.ProductVariantId);
-            priceVarName = string.Format("priceValForDynUpd_{0}", attribute.ProductVariantId);
-            priceVarClass = string.Format("price-val-for-dyn-upd-{0}", attribute.ProductVariantId);
+            adjustmentTableName = string.Format("adjustmentTable_{0}", attribute.ProductId);
+            adjustmentFuncName = string.Format("adjustPrice_{0}", attribute.ProductId);
+            priceVarName = string.Format("priceValForDynUpd_{0}", attribute.ProductId);
+            priceVarClass = string.Format("price-val-for-dyn-upd-{0}", attribute.ProductId);
 
             switch (attribute.AttributeControlType)
             {
@@ -121,7 +121,7 @@
         <dl>
             @foreach (var attribute in Model)
             {
-                string controlId = string.Format("product_attribute_{0}_{1}_{2}", attribute.ProductVariantId, attribute.ProductAttributeId, attribute.Id);
+                string controlId = string.Format("product_attribute_{0}_{1}_{2}", attribute.ProductId, attribute.ProductAttributeId, attribute.Id);
                 string textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
                 <dt><label class="text-prompt">
                     @textPrompt
@@ -213,7 +213,7 @@
                             $(function () {                   
                                 var @(controlId)uploader = new qq.FileUploader({
                                     element: document.getElementById('@(controlId)uploader'),
-                                    action: '@(Url.RouteUrl("UploadFileProductAttribute", new { productVariantId = attribute.ProductVariantId, productAttributeId = attribute.ProductAttributeId }))',
+                                    action: '@(Url.RouteUrl("UploadFileProductAttribute", new { productId = attribute.ProductId, productAttributeId = attribute.ProductAttributeId }))',
                                     onComplete: function(id, fileName, responseJSON){
                                         $("#@(controlId)").val(responseJSON.downloadGuid);
                                         if (responseJSON.message) {

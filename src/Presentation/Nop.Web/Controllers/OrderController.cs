@@ -286,18 +286,13 @@ namespace Nop.Web.Controllers
                 var orderItemModel = new OrderDetailsModel.OrderItemModel()
                 {
                     Id = orderItem.Id,
-                    Sku = orderItem.ProductVariant.FormatSku(orderItem.AttributesXml, _productAttributeParser),
-                    ProductId = orderItem.ProductVariant.ProductId,
-                    ProductSeName = orderItem.ProductVariant.Product.GetSeName(),
+                    Sku = orderItem.Product.FormatSku(orderItem.AttributesXml, _productAttributeParser),
+                    ProductId = orderItem.Product.Id,
+                    ProductName = orderItem.Product.GetLocalized(x => x.Name),
+                    ProductSeName = orderItem.Product.GetSeName(),
                     Quantity = orderItem.Quantity,
                     AttributeInfo = orderItem.AttributeDescription,
                 };
-
-                //product name
-                if (!String.IsNullOrEmpty(orderItem.ProductVariant.GetLocalized(x => x.Name)))
-                    orderItemModel.ProductName = string.Format("{0} ({1})", orderItem.ProductVariant.Product.GetLocalized(x => x.Name), orderItem.ProductVariant.GetLocalized(x => x.Name));
-                else
-                    orderItemModel.ProductName = orderItem.ProductVariant.Product.GetLocalized(x => x.Name);
                 model.Items.Add(orderItemModel);
 
                 //unit price, subtotal
@@ -386,19 +381,14 @@ namespace Nop.Web.Controllers
                 var shipmentItemModel = new ShipmentDetailsModel.ShipmentItemModel()
                 {
                     Id = shipmentItem.Id,
-                    Sku = orderItem.ProductVariant.FormatSku(orderItem.AttributesXml, _productAttributeParser),
-                    ProductId = orderItem.ProductVariant.ProductId,
-                    ProductSeName = orderItem.ProductVariant.Product.GetSeName(),
+                    Sku = orderItem.Product.FormatSku(orderItem.AttributesXml, _productAttributeParser),
+                    ProductId = orderItem.Product.Id,
+                    ProductName = orderItem.Product.GetLocalized(x => x.Name),
+                    ProductSeName = orderItem.Product.GetSeName(),
                     AttributeInfo = orderItem.AttributeDescription,
                     QuantityOrdered = orderItem.Quantity,
                     QuantityShipped = shipmentItem.Quantity,
                 };
-
-                //product name//product name
-                if (!String.IsNullOrEmpty(orderItem.ProductVariant.GetLocalized(x => x.Name)))
-                    shipmentItemModel.ProductName = string.Format("{0} ({1})", orderItem.ProductVariant.Product.GetLocalized(x => x.Name), orderItem.ProductVariant.GetLocalized(x => x.Name));
-                else
-                    shipmentItemModel.ProductName = orderItem.ProductVariant.Product.GetLocalized(x => x.Name);
                 model.Items.Add(shipmentItemModel);
             }
 

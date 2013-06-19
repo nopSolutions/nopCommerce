@@ -1284,14 +1284,15 @@ namespace Nop.Web.Controllers
                 var orderItem = _orderService.GetOrderItemById(returnRequest.OrderItemId);
                 if (orderItem != null)
                 {
-                    var pv = orderItem.ProductVariant;
+                    var product = orderItem.Product;
 
                     var itemModel = new CustomerReturnRequestsModel.ReturnRequestModel()
                     {
                         Id = returnRequest.Id,
                         ReturnRequestStatus = returnRequest.ReturnRequestStatus.GetLocalizedEnum(_localizationService, _workContext),
-                        ProductId = pv.ProductId,
-                        ProductSeName = pv.Product.GetSeName(),
+                        ProductId = product.Id,
+                        ProductName = product.GetLocalized(x => x.Name),
+                        ProductSeName = product.GetSeName(),
                         Quantity = returnRequest.Quantity,
                         ReturnAction = returnRequest.RequestedAction,
                         ReturnReason = returnRequest.ReasonForReturn,
@@ -1299,11 +1300,6 @@ namespace Nop.Web.Controllers
                         CreatedOn = _dateTimeHelper.ConvertToUserTime(returnRequest.CreatedOnUtc, DateTimeKind.Utc),
                     };
                     model.Items.Add(itemModel);
-
-                    if (!String.IsNullOrEmpty(pv.GetLocalized(x => x.Name)))
-                        itemModel.ProductName = string.Format("{0} ({1})", pv.Product.GetLocalized(x => x.Name), pv.GetLocalized(x => x.Name));
-                    else
-                        itemModel.ProductName = pv.Product.GetLocalized(x => x.Name);
                 }
             }
 
@@ -1334,20 +1330,15 @@ namespace Nop.Web.Controllers
                     OrderItemGuid = item.OrderItemGuid,
                     OrderId = item.OrderId,
                     CreatedOn = _dateTimeHelper.ConvertToUserTime(item.Order.CreatedOnUtc, DateTimeKind.Utc),
-                    ProductSeName = item.ProductVariant.Product.GetSeName(),
+                    ProductName = item.Product.GetLocalized(x => x.Name),
+                    ProductSeName = item.Product.GetSeName(),
                     ProductAttributes = item.AttributeDescription,
-                    ProductId = item.ProductVariant.ProductId
+                    ProductId = item.Id
                 };
                 model.Items.Add(itemModel);
 
-                //product name
-                if (!String.IsNullOrEmpty(item.ProductVariant.GetLocalized(x => x.Name)))
-                    itemModel.ProductName = string.Format("{0} ({1})", item.ProductVariant.Product.GetLocalized(x => x.Name), item.ProductVariant.GetLocalized(x => x.Name));
-                else
-                    itemModel.ProductName = item.ProductVariant.Product.GetLocalized(x => x.Name);
-
                 if (_downloadService.IsDownloadAllowed(item))
-                    itemModel.DownloadId = item.ProductVariant.DownloadId;
+                    itemModel.DownloadId = item.Product.DownloadId;
 
                 if (_downloadService.IsLicenseDownloadAllowed(item))
                     itemModel.LicenseId = item.LicenseDownloadId.HasValue ? item.LicenseDownloadId.Value : 0;
@@ -1363,12 +1354,12 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("HomePage");
 
 
-            var productVariant = orderItem.ProductVariant;
-            if (productVariant == null || !productVariant.HasUserAgreement)
+            var product = orderItem.Product;
+            if (product == null || !product.HasUserAgreement)
                 return RedirectToRoute("HomePage");
 
             var model = new UserAgreementModel();
-            model.UserAgreementText = productVariant.UserAgreementText;
+            model.UserAgreementText = product.UserAgreementText;
             model.OrderItemGuid = orderItemId;
             
             return View(model);
@@ -1818,24 +1809,17 @@ namespace Nop.Web.Controllers
 
             foreach (var subscription in list)
             {
-                var productVariant = subscription.ProductVariant;
+                var product = subscription.Product;
 
-                if (productVariant != null)
+                if (product != null)
                 {
                     var subscriptionModel = new BackInStockSubscriptionModel()
                     {
                         Id = subscription.Id,
-                        ProductId = productVariant.Product.Id,
-                        SeName = productVariant.Product.GetSeName(),
+                        ProductId = product.Id,
+                        ProductName = product.GetLocalized(x => x.Name),
+                        SeName = product.GetSeName(),
                     };
-                    //product name
-                    if (!String.IsNullOrEmpty(productVariant.GetLocalized(x => x.Name)))
-                        subscriptionModel.ProductName = string.Format("{0} ({1})",
-                                                                      productVariant.Product.GetLocalized(x => x.Name),
-                                                                      productVariant.GetLocalized(x => x.Name));
-                    else
-                        subscriptionModel.ProductName = productVariant.Product.GetLocalized(x => x.Name);
-
                     model.Subscriptions.Add(subscriptionModel);
                 }
             }

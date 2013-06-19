@@ -1,0 +1,32 @@
+﻿@model ProductDetailsModel
+@using Nop.Web.Models.Catalog;
+@if (Model.DisplayBackInStockSubscription)
+{
+    <div class="back-in-stock-subscription">
+        @if (Model.IsCurrentCustomerRegistered)
+        {
+            //use fancybox to how nice pop-up
+            Html.AddScriptParts("~/Scripts/jquery.fancybox-1.3.4.pack.js");
+            Html.AddCssFileParts("~/Content/fancybox/jquery.fancybox-1.3.4.css");
+            <input type="button" id="back-in-stock-subscribe-@Model.Id" class="button-1 subscribe-button" value="@T("BackInStockSubscriptions.NotifyMeWhenAvailable")" />
+            <script type="text/javascript">
+
+                $("#back-in-stock-subscribe-@Model.Id").fancybox({
+                    'href': '@Url.RouteUrl("BackInStockSubscribePopup", new { productId = Model.Id })',
+                    'speedIn': 600,
+                    'speedOut': 200,
+                    'width': 450,
+                    'height': 230,
+                    'type': 'iframe',
+                    'centerOnScroll': true
+                });
+                
+            </script>
+            
+        }
+        else
+        {
+            <a class="button-1 subscribe-button" href='@Url.RouteUrl("Login")'>@T("BackInStockSubscriptions.NotifyMeWhenAvailable")</a>
+        }
+    </div>
+}

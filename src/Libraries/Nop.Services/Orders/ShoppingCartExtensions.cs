@@ -48,8 +48,8 @@ namespace Nop.Services.Orders
         {
             foreach (ShoppingCartItem sci in shoppingCart)
             {
-                var productVariant = sci.ProductVariant;
-                if (productVariant != null && productVariant.IsRecurring)
+                var product = sci.Product;
+                if (product != null && product.IsRecurring)
                         return true;
             }
             return false;
@@ -78,46 +78,46 @@ namespace Nop.Services.Orders
 
             foreach (var sci in shoppingCart)
             {
-                var productVariant = sci.ProductVariant;
-                if (productVariant == null)
+                var product= sci.Product;
+                if (product == null)
                 {
-                    throw new NopException(string.Format("Product variant (Id={0}) cannot be loaded", sci.ProductVariantId));
+                    throw new NopException(string.Format("Product (Id={0}) cannot be loaded", sci.ProductId));
                 }
 
                 string conflictError = "Your cart has auto-ship (recurring) items with conflicting shipment schedules. Only one auto-ship schedule is allowed per order.";
-                if (productVariant.IsRecurring)
+                if (product.IsRecurring)
                 {
                     //cycle length
-                    if (_cycleLength.HasValue && _cycleLength.Value != productVariant.RecurringCycleLength)
+                    if (_cycleLength.HasValue && _cycleLength.Value != product.RecurringCycleLength)
                     {
                         error = conflictError;
                         return error;
                     }
                     else
                     {
-                        _cycleLength = productVariant.RecurringCycleLength;
+                        _cycleLength = product.RecurringCycleLength;
                     }
 
                     //cycle period
-                    if (_cyclePeriod.HasValue && _cyclePeriod.Value != productVariant.RecurringCyclePeriod)
+                    if (_cyclePeriod.HasValue && _cyclePeriod.Value != product.RecurringCyclePeriod)
                     {
                         error = conflictError;
                         return error;
                     }
                     else
                     {
-                        _cyclePeriod = productVariant.RecurringCyclePeriod;
+                        _cyclePeriod = product.RecurringCyclePeriod;
                     }
 
                     //total cycles
-                    if (_totalCycles.HasValue && _totalCycles.Value != productVariant.RecurringTotalCycles)
+                    if (_totalCycles.HasValue && _totalCycles.Value != product.RecurringTotalCycles)
                     {
                         error = conflictError;
                         return error;
                     }
                     else
                     {
-                        _totalCycles = productVariant.RecurringTotalCycles;
+                        _totalCycles = product.RecurringTotalCycles;
                     }
                 }
             }

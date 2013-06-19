@@ -134,7 +134,6 @@
     <Compile Include="Catalog\ProductPicturePersistenceTests.cs" />
     <Compile Include="Catalog\ProductManufacturerPersistenceTests.cs" />
     <Compile Include="Catalog\ProductCategoryPersistenceTests.cs" />
-    <Compile Include="Catalog\ProductVariantPersistenceTests.cs" />
     <Compile Include="Catalog\ProductPersistenceTests.cs" />
     <Compile Include="Media\PicturePersistenceTests.cs" />
     <Compile Include="Catalog\ManufacturerPersistenceTests.cs" />

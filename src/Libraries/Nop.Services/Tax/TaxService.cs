@@ -54,11 +54,11 @@ namespace Nop.Services.Tax
         /// <summary>
         /// Create request for tax calculation
         /// </summary>
-        /// <param name="productVariant">Product variant</param>
+        /// <param name="product">Product</param>
         /// <param name="taxCategoryId">Tax category identifier</param>
         /// <param name="customer">Customer</param>
         /// <returns>Package for tax calculation</returns>
-        protected virtual CalculateTaxRequest CreateCalculateTaxRequest(ProductVariant productVariant, 
+        protected virtual CalculateTaxRequest CreateCalculateTaxRequest(Product product, 
             int taxCategoryId, Customer customer)
         {
             var calculateTaxRequest = new CalculateTaxRequest();
@@ -69,8 +69,8 @@ namespace Nop.Services.Tax
             }
             else
             {
-                if (productVariant != null)
-                    calculateTaxRequest.TaxCategoryId = productVariant.TaxCategoryId;
+                if (product != null)
+                    calculateTaxRequest.TaxCategoryId = product.TaxCategoryId;
             }
 
             var basedOn = _taxSettings.TaxBasedOn;
@@ -143,12 +143,12 @@ namespace Nop.Services.Tax
         /// <summary>
         /// Gets tax rate
         /// </summary>
-        /// <param name="productVariant">Product variant</param>
+        /// <param name="product">Product</param>
         /// <param name="customer">Customer</param>
         /// <returns>Tax rate</returns>
-        protected virtual decimal GetTaxRate(ProductVariant productVariant, Customer customer)
+        protected virtual decimal GetTaxRate(Product product, Customer customer)
         {
-            return GetTaxRate(productVariant, 0, customer);
+            return GetTaxRate(product, 0, customer);
         }
 
         /// <summary>
@@ -165,21 +165,21 @@ namespace Nop.Services.Tax
         /// <summary>
         /// Gets tax rate
         /// </summary>
-        /// <param name="productVariant">Product variant</param>
+        /// <param name="product">Product</param>
         /// <param name="taxCategoryId">Tax category identifier</param>
         /// <param name="customer">Customer</param>
         /// <returns>Tax rate</returns>
-        protected virtual decimal GetTaxRate(ProductVariant productVariant, int taxCategoryId, 
+        protected virtual decimal GetTaxRate(Product product, int taxCategoryId, 
             Customer customer)
         {
             //tax exempt
-            if (IsTaxExempt(productVariant, customer))
+            if (IsTaxExempt(product, customer))
             {
                 return decimal.Zero;
             }
 
             //tax request
-            var calculateTaxRequest = CreateCalculateTaxRequest(productVariant, taxCategoryId, customer);
+            var calculateTaxRequest = CreateCalculateTaxRequest(product, taxCategoryId, customer);
 
             //make EU VAT exempt validation (the European Union Value Added Tax)
             if (_taxSettings.EuVatEnabled)
@@ -257,26 +257,26 @@ namespace Nop.Services.Tax
         /// <summary>
         /// Gets price
         /// </summary>
-        /// <param name="productVariant">Product variant</param>
+        /// <param name="product">Product</param>
         /// <param name="price">Price</param>
         /// <param name="taxRate">Tax rate</param>
         /// <returns>Price</returns>
-        public virtual decimal GetProductPrice(ProductVariant productVariant, decimal price, 
+        public virtual decimal GetProductPrice(Product product, decimal price, 
             out decimal taxRate)
         {
             var customer = _workContext.CurrentCustomer;
-            return GetProductPrice(productVariant, price, customer, out taxRate);
+            return GetProductPrice(product, price, customer, out taxRate);
         }
         
         /// <summary>
         /// Gets price
         /// </summary>
-        /// <param name="productVariant">Product variant</param>
+        /// <param name="product">Product</param>
         /// <param name="price">Price</param>
         /// <param name="customer">Customer</param>
         /// <param name="taxRate">Tax rate</param>
         /// <returns>Price</returns>
-        public virtual decimal GetProductPrice(ProductVariant productVariant, decimal price,
+        public virtual decimal GetProductPrice(Product product, decimal price,
             Customer customer, out decimal taxRate)
         {
             bool includingTax = false;
@@ -289,31 +289,31 @@ namespace Nop.Services.Tax
                     includingTax = true;
                     break;
             }
-            return GetProductPrice(productVariant, price, includingTax, customer, out taxRate);
+            return GetProductPrice(product, price, includingTax, customer, out taxRate);
         }
 
         /// <summary>
         /// Gets price
         /// </summary>
-        /// <param name="productVariant">Product variant</param>
+        /// <param name="product">Product</param>
         /// <param name="price">Price</param>
         /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
         /// <param name="customer">Customer</param>
         /// <param name="taxRate">Tax rate</param>
         /// <returns>Price</returns>
-        public virtual decimal GetProductPrice(ProductVariant productVariant, decimal price,
+        public virtual decimal GetProductPrice(Product product, decimal price,
             bool includingTax, Customer customer, out decimal taxRate)
         {
             bool priceIncludesTax = _taxSettings.PricesIncludeTax;
             int taxCategoryId = 0;
-            return GetProductPrice(productVariant, taxCategoryId, price, includingTax, 
+            return GetProductPrice(product, taxCategoryId, price, includingTax, 
                 customer, priceIncludesTax, out taxRate);
         }
         
         /// <summary>
         /// Gets price
         /// </summary>
-        /// <param name="productVariant">Product variant</param>
+        /// <param name="product">Product</param>
         /// <param name="taxCategoryId">Tax category identifier</param>
         /// <param name="price">Price</param>
         /// <param name="includingTax">A value indicating whether calculated price should include tax</param>
@@ -321,11 +321,11 @@ namespace Nop.Services.Tax
         /// <param name="priceIncludesTax">A value indicating whether price already includes tax</param>
         /// <param name="taxRate">Tax rate</param>
         /// <returns>Price</returns>
-        public virtual decimal GetProductPrice(ProductVariant productVariant, int taxCategoryId,
+        public virtual decimal GetProductPrice(Product product, int taxCategoryId,
             decimal price, bool includingTax, Customer customer,
             bool priceIncludesTax, out decimal taxRate)
         {
-            taxRate = GetTaxRate(productVariant, taxCategoryId, customer);
+            taxRate = GetTaxRate(product, taxCategoryId, customer);
             
             if (priceIncludesTax)
             {
@@ -690,12 +690,12 @@ namespace Nop.Services.Tax
 
 
         /// <summary>
-        /// Gets a value indicating whether tax exempt
+        /// Gets a value indicating whether a product is tax exempt
         /// </summary>
-        /// <param name="productVariant">Product variant</param>
+        /// <param name="product">Product</param>
         /// <param name="customer">Customer</param>
-        /// <returns>A value indicating whether tax exempt</returns>
-        public virtual bool IsTaxExempt(ProductVariant productVariant, Customer customer)
+        /// <returns>A value indicating whether a product is tax exempt</returns>
+        public virtual bool IsTaxExempt(Product product, Customer customer)
         {
             if (customer != null)
             {
@@ -706,12 +706,12 @@ namespace Nop.Services.Tax
                     return true;
             }
 
-            if (productVariant == null)
+            if (product == null)
             {
                 return false;
             }
 
-            if (productVariant.IsTaxExempt)
+            if (product.IsTaxExempt)
             {
                 return true;
             }

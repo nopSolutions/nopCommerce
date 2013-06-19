@@ -51,18 +51,18 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Are attributes equal
         /// </summary>
-        /// <param name="attributes1">The attributes of the first product variant</param>
-        /// <param name="attributes2">The attributes of the second product variant</param>
+        /// <param name="attributes1">The attributes of the first product</param>
+        /// <param name="attributes2">The attributes of the second product</param>
         /// <returns>Result</returns>
         bool AreProductAttributesEqual(string attributes1, string attributes2);
 
         /// <summary>
         /// Finds a product variant attribute combination by attributes stored in XML 
         /// </summary>
-        /// <param name="productVariant">Product variant</param>
+        /// <param name="product">Product</param>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Found product variant attribute combination</returns>
-        ProductVariantAttributeCombination FindProductVariantAttributeCombination(ProductVariant productVariant,
+        ProductVariantAttributeCombination FindProductVariantAttributeCombination(Product product,
             string attributesXml);
 
         #endregion

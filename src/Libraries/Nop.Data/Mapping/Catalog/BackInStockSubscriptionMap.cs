@@ -10,9 +10,9 @@ namespace Nop.Data.Mapping.Catalog
             this.ToTable("BackInStockSubscription");
             this.HasKey(x => x.Id);
 
-            this.HasRequired(x => x.ProductVariant)
+            this.HasRequired(x => x.Product)
                 .WithMany()
-                .HasForeignKey(x => x.ProductVariantId)
+                .HasForeignKey(x => x.ProductId)
                 .WillCascadeOnDelete(true);
             
             this.HasRequired(x => x.Customer)

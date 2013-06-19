@@ -11,9 +11,9 @@ namespace Nop.Data.Mapping.Catalog
             this.HasKey(tp => tp.Id);
             this.Property(tp => tp.Price).HasPrecision(18, 4);
 
-            this.HasRequired(tp => tp.ProductVariant)
-                .WithMany(pv => pv.TierPrices)
-                .HasForeignKey(tp => tp.ProductVariantId);
+            this.HasRequired(tp => tp.Product)
+                .WithMany(p => p.TierPrices)
+                .HasForeignKey(tp => tp.ProductId);
 
             this.HasOptional(tp => tp.CustomerRole)
                 .WithMany()

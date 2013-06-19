@@ -6,9 +6,9 @@ namespace Nop.Core.Domain.Catalog
     public partial class ProductVariantAttributeCombination : BaseEntity
     {
         /// <summary>
-        /// Gets or sets the product variant identifier
+        /// Gets or sets the product identifier
         /// </summary>
-        public int ProductVariantId { get; set; }
+        public int ProductId { get; set; }
 
         /// <summary>
         /// Gets or sets the attributes
@@ -41,9 +41,9 @@ namespace Nop.Core.Domain.Catalog
         public string Gtin { get; set; }
         
         /// <summary>
-        /// Gets the product variant
+        /// Gets the product
         /// </summary>
-        public virtual ProductVariant ProductVariant { get; set; }
+        public virtual Product Product { get; set; }
 
     }
 }

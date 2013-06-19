@@ -28,9 +28,9 @@ namespace Nop.Admin.Models.Settings
         public int ProductThumbPictureSizeOnProductDetailsPage { get; set; }
         public bool ProductThumbPictureSizeOnProductDetailsPage_OverrideForStore { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Settings.Media.ProductVariantPictureSize")]
-        public int ProductVariantPictureSize { get; set; }
-        public bool ProductVariantPictureSize_OverrideForStore { get; set; }
+        [NopResourceDisplayName("Admin.Configuration.Settings.Media.AssociatedProductPictureSize")]
+        public int AssociatedProductPictureSize { get; set; }
+        public bool AssociatedProductPictureSize_OverrideForStore { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Media.CategoryThumbPictureSize")]
         public int CategoryThumbPictureSize { get; set; }

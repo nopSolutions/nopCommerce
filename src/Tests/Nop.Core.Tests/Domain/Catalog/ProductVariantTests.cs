@@ -10,12 +10,12 @@ namespace Nop.Core.Tests.Domain.Catalog
         [Test]
         public void Can_parse_required_productvariant_ids()
         {
-            var productVariant = new ProductVariant
+            var productVariant = new Product
             {
-                RequiredProductVariantIds = "1, 4,7 ,a,"
+                RequiredProductIds = "1, 4,7 ,a,"
             };
 
-            var ids = productVariant.ParseRequiredProductVariantIds();
+            var ids = productVariant.ParseRequiredProductIds();
             ids.Length.ShouldEqual(3);
             ids[0].ShouldEqual(1);
             ids[1].ShouldEqual(4);

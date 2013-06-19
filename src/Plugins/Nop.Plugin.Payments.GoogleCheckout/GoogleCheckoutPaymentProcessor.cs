@@ -587,19 +587,15 @@ namespace Nop.Plugin.Payments.GoogleCheckout
             //items
             foreach (Core.Domain.Orders.ShoppingCartItem sci in cart)
             {
-                var productVariant = sci.ProductVariant;
-                if (productVariant != null)
+                var product = sci.Product;
+                if (product != null)
                 {
                     decimal taxRate = decimal.Zero;
-                    string description = _productAttributeFormatter.FormatAttributes(productVariant, 
+                    string description = _productAttributeFormatter.FormatAttributes(product, 
                         sci.AttributesXml, _workContext.CurrentCustomer,
                         ", ", false, true, true, true, false);
-                    string fullName = "";
-                    if (!String.IsNullOrEmpty(sci.ProductVariant.GetLocalized(x => x.Name)))
-                        fullName = string.Format("{0} ({1})", sci.ProductVariant.Product.GetLocalized(x => x.Name), sci.ProductVariant.GetLocalized(x => x.Name));
-                    else
-                        fullName = sci.ProductVariant.Product.GetLocalized(x => x.Name);
-                    decimal unitPrice = _taxService.GetProductPrice(sci.ProductVariant, _priceCalculationService.GetUnitPrice(sci, true), out taxRate);
+                    string fullName = sci.Product.GetLocalized(x => x.Name);
+                    decimal unitPrice = _taxService.GetProductPrice(sci.Product, _priceCalculationService.GetUnitPrice(sci, true), out taxRate);
                     req.AddItem(fullName, description, sci.Id.ToString(), unitPrice, sci.Quantity);
                 }
             }

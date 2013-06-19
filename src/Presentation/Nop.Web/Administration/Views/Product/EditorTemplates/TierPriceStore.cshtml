@@ -1,0 +1,26 @@
+﻿@using Telerik.Web.Mvc.UI;
+@using Nop.Services.Stores;
+
+@{    
+    var storeService = EngineContext.Current.Resolve<IStoreService>();
+    var allStores = storeService.GetAllStores();
+
+
+    var storeList = new List<SelectListItem>();
+    storeList.Add(new SelectListItem()
+        {
+            Text = T("Admin.Catalog.Products.TierPrices.Fields.Store.All").Text,
+            Value = "0"
+        });
+    foreach (var store in allStores)
+    {
+        var item = new SelectListItem()
+        {
+            Text = store.Name,
+            Value = store.Id.ToString()
+        };
+        storeList.Add(item);
+    }    
+}
+
+@Html.Telerik().DropDownList().Name("Store").BindTo(storeList)

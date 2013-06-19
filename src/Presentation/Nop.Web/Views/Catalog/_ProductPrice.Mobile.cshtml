@@ -1,0 +1,58 @@
+﻿@model ProductDetailsModel.ProductPriceModel
+@using Nop.Web.Models.Catalog;
+@using System.Globalization;
+<div class="prices">
+    @if (Model.CustomerEntersPrice)
+    {
+        @*display nothing*@
+    }
+    else if (Model.CallForPrice)
+    {
+        @*call for price*@
+        <div class="product-price call-for-price">
+            <span>@T("Products.CallForPrice")</span>
+        </div>
+    }
+    else
+    {
+        if (!String.IsNullOrWhiteSpace(Model.OldPrice))
+        {
+            @*old price*@
+            <div class="old-product-price">
+                <label>@T("Products.Price.OldPrice"):</label>
+                <span>@Model.OldPrice</span>
+            </div>
+        }
+
+
+
+        <div class="@if (String.IsNullOrWhiteSpace(Model.PriceWithDiscount))
+                    {<text>product-price</text>}
+                    else
+                    {<text>non-discounted-price</text>}">
+
+            @if (!String.IsNullOrWhiteSpace(Model.OldPrice) || !String.IsNullOrWhiteSpace(Model.PriceWithDiscount))
+            {
+                @*display "Price:" label if we have old price or discounted one*@
+                <label>@T("Products.Price"):</label>
+            }
+            
+            @*render price*@
+            <span>
+                @Html.Raw(Model.Price)
+            </span>
+        </div>
+        
+        
+        if (!String.IsNullOrWhiteSpace(Model.PriceWithDiscount))
+        {
+            @*discounted price*@
+            <div class="product-price discounted-price">
+                <label>@T("Products.Price.WithDiscount"):</label>
+                <span>
+                    @Html.Raw(Model.PriceWithDiscount)
+                </span>
+            </div>
+         }
+    }
+</div>

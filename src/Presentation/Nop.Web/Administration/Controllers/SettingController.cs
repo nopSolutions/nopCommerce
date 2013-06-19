@@ -1535,7 +1535,7 @@ namespace Nop.Admin.Controllers
                 model.ProductThumbPictureSize_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.ProductThumbPictureSize, storeScope);
                 model.ProductDetailsPictureSize_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.ProductDetailsPictureSize, storeScope);
                 model.ProductThumbPictureSizeOnProductDetailsPage_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.ProductThumbPictureSizeOnProductDetailsPage, storeScope);
-                model.ProductVariantPictureSize_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.ProductVariantPictureSize, storeScope);
+                model.AssociatedProductPictureSize_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.AssociatedProductPictureSize, storeScope);
                 model.CategoryThumbPictureSize_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.CategoryThumbPictureSize, storeScope);
                 model.ManufacturerThumbPictureSize_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.ManufacturerThumbPictureSize, storeScope);
                 model.CartThumbPictureSize_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.CartThumbPictureSize, storeScope);
@@ -1579,11 +1579,11 @@ namespace Nop.Admin.Controllers
                 _settingService.SaveSetting(mediaSettings, x => x.ProductThumbPictureSizeOnProductDetailsPage, storeScope, false);
             else if (storeScope > 0)
                 _settingService.DeleteSetting(mediaSettings, x => x.ProductThumbPictureSizeOnProductDetailsPage, storeScope);
-            
-            if (model.ProductVariantPictureSize_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(mediaSettings, x => x.ProductVariantPictureSize, storeScope, false);
+
+            if (model.AssociatedProductPictureSize_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(mediaSettings, x => x.AssociatedProductPictureSize, storeScope, false);
             else if (storeScope > 0)
-                _settingService.DeleteSetting(mediaSettings, x => x.ProductVariantPictureSize, storeScope);
+                _settingService.DeleteSetting(mediaSettings, x => x.AssociatedProductPictureSize, storeScope);
             
             if (model.CategoryThumbPictureSize_OverrideForStore || storeScope == 0)
                 _settingService.SaveSetting(mediaSettings, x => x.CategoryThumbPictureSize, storeScope, false);
