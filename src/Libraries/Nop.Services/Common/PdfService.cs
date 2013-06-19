@@ -871,17 +871,21 @@ namespace Nop.Services.Common
                 doc.Add(new Paragraph(HtmlHelper.StripTags(HtmlHelper.ConvertHtmlToPlainText(productFullDescription)), font));
                 doc.Add(new Paragraph(" "));
 
-                doc.Add(new Paragraph(String.Format("{0}: {1} {2}", _localizationService.GetResource("PDFProductCatalog.Price", lang.Id), product.Price.ToString("0.00"), _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode), font));
-                doc.Add(new Paragraph(String.Format("{0}: {1}", _localizationService.GetResource("PDFProductCatalog.SKU", lang.Id), product.Sku), font));
+                if (product.ProductType == ProductType.SimpleProduct)
+                {
+                    //simple product
+                    //render its properties such as price, weight, etc
+                    doc.Add(new Paragraph(String.Format("{0}: {1} {2}", _localizationService.GetResource("PDFProductCatalog.Price", lang.Id), product.Price.ToString("0.00"), _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode), font));
+                    doc.Add(new Paragraph(String.Format("{0}: {1}", _localizationService.GetResource("PDFProductCatalog.SKU", lang.Id), product.Sku), font));
 
-                if (product.IsShipEnabled && product.Weight > Decimal.Zero)
-                    doc.Add(new Paragraph(String.Format("{0}: {1} {2}", _localizationService.GetResource("PDFProductCatalog.Weight", lang.Id), product.Weight.ToString("0.00"), _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name), font));
+                    if (product.IsShipEnabled && product.Weight > Decimal.Zero)
+                        doc.Add(new Paragraph(String.Format("{0}: {1} {2}", _localizationService.GetResource("PDFProductCatalog.Weight", lang.Id), product.Weight.ToString("0.00"), _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name), font));
 
-                if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
-                    doc.Add(new Paragraph(String.Format("{0}: {1}", _localizationService.GetResource("PDFProductCatalog.StockQuantity", lang.Id), product.StockQuantity), font));
+                    if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
+                        doc.Add(new Paragraph(String.Format("{0}: {1}", _localizationService.GetResource("PDFProductCatalog.StockQuantity", lang.Id), product.StockQuantity), font));
 
-                doc.Add(new Paragraph(" "));
-
+                    doc.Add(new Paragraph(" "));
+                }
                 var pictures = _pictureService.GetPicturesByProductId(product.Id);
                 if (pictures.Count > 0)
                 {
@@ -914,6 +918,52 @@ namespace Nop.Services.Common
 
                     doc.Add(table);
                     doc.Add(new Paragraph(" "));
+                }
+
+
+                if (product.ProductType == ProductType.GroupedProduct)
+                {
+                    //grouped product. render its associated products
+                    int pvNum = 1;
+                    foreach (var associatedProduct in _productService.SearchProducts(parentProductId: product.Id,
+                        showHidden: true))
+                    {
+                        doc.Add(new Paragraph(String.Format("{0}-{1}. {2}", productNumber, pvNum, associatedProduct.GetLocalized(x => x.Name, lang.Id)), font));
+                        doc.Add(new Paragraph(" "));
+
+                        //uncomment to render associated product description
+                        //string apDescription = associatedProduct.GetLocalized(x => x.ShortDescription, lang.Id);
+                        //if (!String.IsNullOrEmpty(apDescription))
+                        //{
+                        //    doc.Add(new Paragraph(HtmlHelper.StripTags(HtmlHelper.ConvertHtmlToPlainText(apDescription)), font));
+                        //    doc.Add(new Paragraph(" "));
+                        //}
+
+                        //uncomment to render associated product picture
+                        //var apPicture = _pictureService.GetPicturesByProductId(associatedProduct.Id).FirstOrDefault();
+                        //if (apPicture != null)
+                        //{
+                        //    var picBinary = _pictureService.LoadPictureBinary(apPicture);
+                        //    if (picBinary != null && picBinary.Length > 0)
+                        //    {
+                        //        var pictureLocalPath = _pictureService.GetThumbLocalPath(apPicture, 200, false);
+                        //        doc.Add(Image.GetInstance(pictureLocalPath));
+                        //    }
+                        //}
+
+                        doc.Add(new Paragraph(String.Format("{0}: {1} {2}", _localizationService.GetResource("PDFProductCatalog.Price", lang.Id), associatedProduct.Price.ToString("0.00"), _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode), font));
+                        doc.Add(new Paragraph(String.Format("{0}: {1}", _localizationService.GetResource("PDFProductCatalog.SKU", lang.Id), associatedProduct.Sku), font));
+
+                        if (associatedProduct.IsShipEnabled && associatedProduct.Weight > Decimal.Zero)
+                            doc.Add(new Paragraph(String.Format("{0}: {1} {2}", _localizationService.GetResource("PDFProductCatalog.Weight", lang.Id), associatedProduct.Weight.ToString("0.00"), _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name), font));
+
+                        if (associatedProduct.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
+                            doc.Add(new Paragraph(String.Format("{0}: {1}", _localizationService.GetResource("PDFProductCatalog.StockQuantity", lang.Id), associatedProduct.StockQuantity), font));
+
+                        doc.Add(new Paragraph(" "));
+
+                        pvNum++;
+                    }
                 }
 
 
