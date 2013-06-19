@@ -1674,7 +1674,6 @@ namespace Nop.Web.Controllers
                 .GetRelatedProductsByProductId1(productId);
             foreach (var product in _productService.GetProductsByIds(relatedProducts.Select(x => x.ProductId2).ToArray()))
             {
-                //UNDONE revise product-variant logic
                 //ensure that a product has at least one available variant
                 //var variants = _productService.GetProductVariantsByProductId(product.Id);
                 //if (variants.Count == 0)
