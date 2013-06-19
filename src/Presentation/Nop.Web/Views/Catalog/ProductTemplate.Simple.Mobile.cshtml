@@ -41,13 +41,6 @@
             <div class="product-collateral">
                 <div class="product-variant-list">
                     <div class="product-variant-line" data-productid="@Model.Id">
-                        @if (!String.IsNullOrWhiteSpace(Model.DefaultPictureModel.ImageUrl))
-                        {
-                            <div class="variant-picture">
-                                <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl"
-                                                            title="@Model.DefaultPictureModel.Title" />
-                            </div>
-                        }
                         <div class="variant-overview">
                             @Html.Partial("_DownloadSample", Model)
                             @Html.Action("ProductTierPrices", "Catalog", new { productVariantId = Model.Id })
