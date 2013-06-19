@@ -68,7 +68,7 @@
                                 <!--product SKU, manufacturer part number, stock info-->
                                 @Html.Partial("_SKU_Man_Stock", variant)
                                 <!--Back in stock subscription-->
-                                @Html.Partial("_ProductVariantBackInStockSubscription", variant)
+                                @Html.Partial("_BackInStockSubscription", variant)
                                 @{
                                 var dataDictGiftCard = new ViewDataDictionary();
                                 dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = string.Format("giftcard_{0}", variant.Id);
@@ -77,12 +77,12 @@
                                 @{
                                 var dataDictPrice = new ViewDataDictionary();
                                 dataDictPrice.TemplateInfo.HtmlFieldPrefix = string.Format("price_{0}", variant.Id);
-                                    @Html.Partial("_ProductVariantPrice", variant.ProductPrice, dataDictPrice)
+                                    @Html.Partial("_ProductPrice", variant.ProductPrice, dataDictPrice)
                                 }
                                 @{
                                 var dataDictAddToCart = new ViewDataDictionary();
                                 dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", variant.Id);
-                                    @Html.Partial("_ProductVariantAddToCart", variant.AddToCart, dataDictAddToCart)
+                                    @Html.Partial("_AddToCart", variant.AddToCart, dataDictAddToCart)
                                 }
                             </div>
                         </div>

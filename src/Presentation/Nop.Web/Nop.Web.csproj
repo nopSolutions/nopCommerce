@@ -1404,7 +1404,7 @@
     <Content Include="Views\Shared\LanguageAttributes.cshtml" />
     <Content Include="Views\Customer\_CheckUsernameAvailability.cshtml" />
     <Content Include="Views\Boards\ActiveDiscussionsSmall.cshtml" />
-    <Content Include="Views\Catalog\_ProductVariantBackInStockSubscription.cshtml" />
+    <Content Include="Views\Catalog\_BackInStockSubscription.cshtml" />
     <Content Include="Views\Catalog\BackInStockSubscribePopup.cshtml" />
     <Content Include="Views\Customer\BackInStockSubscriptions.cshtml" />
     <Content Include="App_Data\Pdf\FreeSerif.ttf" />
@@ -1431,8 +1431,8 @@
     <Content Include="Views\Catalog\_ProductDetailsPictures.Mobile.cshtml" />
     <Content Include="Views\Catalog\_ProductAttributes.Mobile.cshtml" />
     <Content Include="Views\Catalog\_GiftCardInfo.Mobile.cshtml" />
-    <Content Include="Views\Catalog\_ProductVariantPrice.Mobile.cshtml" />
-    <Content Include="Views\Catalog\_ProductVariantAddToCart.Mobile.cshtml" />
+    <Content Include="Views\Catalog\_ProductPrice.Mobile.cshtml" />
+    <Content Include="Views\Catalog\_AddToCart.Mobile.cshtml" />
     <Content Include="Views\ShoppingCart\Cart.Mobile.cshtml" />
     <Content Include="Views\ShoppingCart\Wishlist.Mobile.cshtml" />
     <Content Include="Views\Catalog\ProductReviews.Mobile.cshtml" />
@@ -1515,7 +1515,7 @@
     <Content Include="Views\Boards\_CreateUpdatePost.Mobile.cshtml" />
     <Content Include="Views\Catalog\CompareProductsButton.Mobile.cshtml" />
     <Content Include="Views\Catalog\CompareProducts.Mobile.cshtml" />
-    <Content Include="Views\Catalog\_ProductVariantBackInStockSubscription.Mobile.cshtml" />
+    <Content Include="Views\Catalog\_BackInStockSubscription.Mobile.cshtml" />
     <Content Include="Views\Catalog\BackInStockSubscribePopup.Mobile.cshtml" />
     <Content Include="Views\Common\ConfigButton.Mobile.cshtml" />
     <Content Include="Views\Common\Config.Mobile.cshtml" />
@@ -1608,8 +1608,8 @@
     <Content Include="Views\Catalog\ProductSpecifications.cshtml" />
     <Content Include="Views\Catalog\ProductTierPrices.cshtml" />
     <Content Include="Views\Catalog\_GiftCardInfo.cshtml" />
-    <Content Include="Views\Catalog\_ProductVariantPrice.cshtml" />
-    <Content Include="Views\Catalog\_ProductVariantAddToCart.cshtml" />
+    <Content Include="Views\Catalog\_ProductPrice.cshtml" />
+    <Content Include="Views\Catalog\_AddToCart.cshtml" />
     <Content Include="Views\Catalog\_DownloadSample.cshtml" />
     <Content Include="Views\Catalog\_SKU_Man_Stock.cshtml" />
     <Content Include="Views\Catalog\_ProductAttributes.cshtml" />
