@@ -2722,11 +2722,11 @@ namespace Nop.Admin.Controllers
                 {
                     var m = new BestsellersReportLineModel()
                     {
-                        ProductId = x.EntityId,
+                        ProductId = x.ProductId,
                         TotalAmount = _priceFormatter.FormatPrice(x.TotalAmount, true, false),
                         TotalQuantity = x.TotalQuantity,
                     };
-                    var product = _productService.GetProductById(x.EntityId);
+                    var product = _productService.GetProductById(x.ProductId);
                     if (product != null)
                         m.ProductName = product.Name;
                     return m;
@@ -2842,11 +2842,11 @@ namespace Nop.Admin.Controllers
                 {
                     var m = new BestsellersReportLineModel()
                     {
-                        ProductId = x.EntityId,
+                        ProductId = x.ProductId,
                         TotalAmount = _priceFormatter.FormatPrice(x.TotalAmount, true, false),
                         TotalQuantity = x.TotalQuantity,
                     };
-                    var product = _productService.GetProductById(x.EntityId);
+                    var product = _productService.GetProductById(x.ProductId);
                     if (product!= null)
                         m.ProductName = product.Name;
                     return m;

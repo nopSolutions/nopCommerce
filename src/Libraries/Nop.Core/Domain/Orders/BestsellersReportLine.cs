@@ -11,7 +11,7 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets or sets the product identifier
         /// </summary>
-        public int EntityId { get; set; }
+        public int ProductId { get; set; }
 
         /// <summary>
         /// Gets or sets the total amount

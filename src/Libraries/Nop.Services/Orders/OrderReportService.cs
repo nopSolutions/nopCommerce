@@ -245,7 +245,7 @@ namespace Nop.Services.Orders
                 group orderItem by orderItem.ProductId into g
                 select new BestsellersReportLine()
                 {
-                    EntityId = g.Key,
+                    ProductId = g.Key,
                     TotalAmount = g.Sum(x => x.PriceExclTax),
                     TotalQuantity = g.Sum(x => x.Quantity),
                 }
