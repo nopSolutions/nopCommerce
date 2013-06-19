@@ -77,7 +77,7 @@ namespace Nop.Data.Tests.Discounts
         }
 
         [Test]
-        public void Can_save_and_load_discount_with_appliedProductVariants()
+        public void Can_save_and_load_discount_with_appliedProducts()
         {
             var discount = new Discount
             {

@@ -76,7 +76,7 @@
                 </div>
                 @Html.Widget("productdetails_before_collateral")
                 <div class="product-collateral">
-                    @Html.Action("ProductTierPrices", "Catalog", new { productVariantId = Model.Id })
+                    @Html.Action("ProductTierPrices", "Catalog", new { productId = Model.Id })
                     @{
                         var dataDictAttributes = new ViewDataDictionary();
                         dataDictAttributes.TemplateInfo.HtmlFieldPrefix = string.Format("attributes_{0}", Model.Id);

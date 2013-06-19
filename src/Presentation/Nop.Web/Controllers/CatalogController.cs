@@ -1656,7 +1656,6 @@ namespace Nop.Web.Controllers
                                 };
                                 decimal taxRate = decimal.Zero;
                                 decimal priceBase = _taxService.GetProductPrice(product, _priceCalculationService.GetFinalPrice(product, _workContext.CurrentCustomer, decimal.Zero, _catalogSettings.DisplayTierPricesWithDiscounts, tierPrice.Quantity), out taxRate);
-                                    //_taxService.GetProductPrice(variant, tierPrice.Price, out taxRate);
                                 decimal price = _currencyService.ConvertFromPrimaryStoreCurrency(priceBase, _workContext.WorkingCurrency);
                                 m.Price = _priceFormatter.FormatPrice(price, false, false);
                                 return m;
@@ -1674,10 +1673,6 @@ namespace Nop.Web.Controllers
                 .GetRelatedProductsByProductId1(productId);
             foreach (var product in _productService.GetProductsByIds(relatedProducts.Select(x => x.ProductId2).ToArray()))
             {
-                //ensure that a product has at least one available variant
-                //var variants = _productService.GetProductVariantsByProductId(product.Id);
-                //if (variants.Count == 0)
-                //    continue;
                 //ensure has ACL permission and appropriate store mapping
                 if (_aclService.Authorize(product) && _storeMappingService.Authorize(product))
                     products.Add(product);

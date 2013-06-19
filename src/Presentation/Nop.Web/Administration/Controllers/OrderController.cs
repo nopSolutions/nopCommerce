@@ -527,8 +527,10 @@ namespace Nop.Admin.Controllers
         [NonAction]
         protected OrderModel.AddOrderProductModel.ProductDetailsModel PrepareAddProductToOrderModel(int orderId, int productId)
         {
-
             var product = _productService.GetProductById(productId);
+            if (product == null)
+                throw new ArgumentException("No product found with the specified id");
+
             var model = new OrderModel.AddOrderProductModel.ProductDetailsModel()
             {
                 ProductId = productId,

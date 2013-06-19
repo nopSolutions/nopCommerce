@@ -43,7 +43,7 @@
                     <div class="product-variant-line" data-productid="@Model.Id">
                         <div class="variant-overview">
                             @Html.Partial("_DownloadSample", Model)
-                            @Html.Action("ProductTierPrices", "Catalog", new { productVariantId = Model.Id })
+                            @Html.Action("ProductTierPrices", "Catalog", new { productId = Model.Id })
                             @{
                         var dataDictAttributes = new ViewDataDictionary();
                         dataDictAttributes.TemplateInfo.HtmlFieldPrefix = string.Format("attributes_{0}", Model.Id);

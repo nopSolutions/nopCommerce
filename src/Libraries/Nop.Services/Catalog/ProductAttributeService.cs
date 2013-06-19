@@ -227,7 +227,7 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Gets product variant attribute mappings by product identifier
         /// </summary>
-        /// <param name="productVariantId">The product identifier</param>
+        /// <param name="productId">The product identifier</param>
         /// <returns>Product variant attribute mapping collection</returns>
         public virtual IList<ProductVariantAttribute> GetProductVariantAttributesByProductId(int productId)
         {
@@ -412,7 +412,7 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Gets all product variant attribute combinations
         /// </summary>
-        /// <param name="productVariantId">Product variant identifier</param>
+        /// <param name="productId">Product identifier</param>
         /// <returns>Product variant attribute combination collection</returns>
         public virtual IList<ProductVariantAttributeCombination> GetAllProductVariantAttributeCombinations(int productId)
         {

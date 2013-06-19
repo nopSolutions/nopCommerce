@@ -81,7 +81,7 @@
                                         </div>
                                     }
                                     @Html.Partial("_DownloadSample", variant)
-                                    @Html.Action("ProductTierPrices", "Catalog", new { productVariantId = variant.Id })
+                                    @Html.Action("ProductTierPrices", "Catalog", new { productId = variant.Id })
                                     @{
                                         var dataDictAttributes = new ViewDataDictionary();
                                         dataDictAttributes.TemplateInfo.HtmlFieldPrefix = string.Format("attributes_{0}", variant.Id);

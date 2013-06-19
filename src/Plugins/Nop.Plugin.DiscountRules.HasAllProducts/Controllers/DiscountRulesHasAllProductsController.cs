@@ -42,12 +42,12 @@ namespace Nop.Plugin.DiscountRules.HasAllProducts.Controllers
                     return Content("Failed to load requirement.");
             }
 
-            var restrictedProductVariantIds = _settingService.GetSettingByKey<string>(string.Format("DiscountRequirement.RestrictedProductVariantIds-{0}", discountRequirementId.HasValue ? discountRequirementId.Value : 0));
+            var restrictedProductIds = _settingService.GetSettingByKey<string>(string.Format("DiscountRequirement.RestrictedProductIds-{0}", discountRequirementId.HasValue ? discountRequirementId.Value : 0));
 
             var model = new RequirementModel();
             model.RequirementId = discountRequirementId.HasValue ? discountRequirementId.Value : 0;
             model.DiscountId = discountId;
-            model.ProductVariants = restrictedProductVariantIds;
+            model.Products = restrictedProductIds;
 
             //add a prefix
             ViewData.TemplateInfo.HtmlFieldPrefix = string.Format("DiscountRulesHasAllProducts{0}", discountRequirementId.HasValue ? discountRequirementId.Value.ToString() : "0");
@@ -56,7 +56,7 @@ namespace Nop.Plugin.DiscountRules.HasAllProducts.Controllers
         }
 
         [HttpPost]
-        public ActionResult Configure(int discountId, int? discountRequirementId, string variantIds)
+        public ActionResult Configure(int discountId, int? discountRequirementId, string productIds)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return Content("Access denied");
@@ -72,7 +72,7 @@ namespace Nop.Plugin.DiscountRules.HasAllProducts.Controllers
             if (discountRequirement != null)
             {
                 //update existing rule
-                _settingService.SetSetting(string.Format("DiscountRequirement.RestrictedProductVariantIds-{0}", discountRequirement.Id), variantIds);
+                _settingService.SetSetting(string.Format("DiscountRequirement.RestrictedProductIds-{0}", discountRequirement.Id), productIds);
             }
             else
             {
@@ -83,8 +83,8 @@ namespace Nop.Plugin.DiscountRules.HasAllProducts.Controllers
                 };
                 discount.DiscountRequirements.Add(discountRequirement);
                 _discountService.UpdateDiscount(discount);
-                
-                _settingService.SetSetting(string.Format("DiscountRequirement.RestrictedProductVariantIds-{0}", discountRequirement.Id), variantIds);
+
+                _settingService.SetSetting(string.Format("DiscountRequirement.RestrictedProductIds-{0}", discountRequirement.Id), productIds);
             }
             return Json(new { Result = true, NewRequirementId = discountRequirement.Id }, JsonRequestBehavior.AllowGet);
         }

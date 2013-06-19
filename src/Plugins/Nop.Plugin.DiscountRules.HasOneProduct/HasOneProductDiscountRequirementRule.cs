@@ -31,7 +31,7 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct
             if (request.DiscountRequirement == null)
                 throw new NopException("Discount requirement is not set");
 
-            var restrictedProductIds = _settingService.GetSettingByKey<string>(string.Format("DiscountRequirement.RestrictedProductVariantIds-{0}", request.DiscountRequirement.Id));
+            var restrictedProductIds = _settingService.GetSettingByKey<string>(string.Format("DiscountRequirement.RestrictedProductIds-{0}", request.DiscountRequirement.Id));
 
             if (String.IsNullOrWhiteSpace(restrictedProductIds))
                 return true;

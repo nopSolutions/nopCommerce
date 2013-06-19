@@ -900,7 +900,7 @@ namespace Nop.Services.ExportImport
                     {
                         xmlWriter.WriteStartElement("OrderItem");
                         xmlWriter.WriteElementString("Id", null, orderItem.Id.ToString());
-                        xmlWriter.WriteElementString("ProductVariantId", null, orderItem.ProductId.ToString());
+                        xmlWriter.WriteElementString("ProductId", null, orderItem.ProductId.ToString());
 
                         var product = orderItem.Product;
                         xmlWriter.WriteElementString("ProductName", null, product.Name);
