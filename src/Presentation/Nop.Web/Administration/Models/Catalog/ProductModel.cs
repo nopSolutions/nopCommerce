@@ -346,7 +346,7 @@ namespace Nop.Admin.Models.Catalog
         
         #region Nested classes
         
-        public partial class AddProductSpecificationAttributeModel : BaseNopEntityModel
+        public partial class AddProductSpecificationAttributeModel : BaseNopModel
         {
             public AddProductSpecificationAttributeModel()
             {
@@ -427,8 +427,6 @@ namespace Nop.Admin.Models.Catalog
 
         public partial class RelatedProductModel : BaseNopEntityModel
         {
-            public int ProductId1 { get; set; }
-
             public int ProductId2 { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Products.RelatedProducts.Fields.Product")]
@@ -514,8 +512,6 @@ namespace Nop.Admin.Models.Catalog
 
         public partial class CrossSellProductModel : BaseNopEntityModel
         {
-            public int ProductId1 { get; set; }
-
             public int ProductId2 { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Products.CrossSells.Fields.Product")]

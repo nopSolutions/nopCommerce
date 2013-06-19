@@ -1257,7 +1257,7 @@ namespace Nop.Admin.Controllers
                     return new ProductModel.RelatedProductModel()
                     {
                         Id = x.Id,
-                        ProductId1 = x.ProductId1,
+                        //ProductId1 = x.ProductId1,
                         ProductId2 = x.ProductId2,
                         Product2Name = _productService.GetProductById(x.ProductId2).Name,
                         DisplayOrder = x.DisplayOrder
@@ -1461,7 +1461,7 @@ namespace Nop.Admin.Controllers
                     return new ProductModel.CrossSellProductModel()
                     {
                         Id = x.Id,
-                        ProductId1 = x.ProductId1,
+                        //ProductId1 = x.ProductId1,
                         ProductId2 = x.ProductId2,
                         Product2Name = _productService.GetProductById(x.ProductId2).Name,
                     };

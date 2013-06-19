@@ -24,17 +24,14 @@
                     .Columns(columns =>
                     {
                         columns.Bound(x => x.Product2Name)
-                            .Width(500)
                             .ReadOnly();
                         columns.Bound(x => x.DisplayOrder)
-                            .Width(100)
                             .Centered();
                         columns.Command(commands =>
                         {
                             commands.Edit().Text(T("Admin.Common.Edit").Text);
                             commands.Delete().Text(T("Admin.Common.Delete").Text);
-                        })
-                        .Width(180);
+                        });
                     })
                     .EnableCustomBinding(true))
             </td>
