@@ -437,10 +437,49 @@ namespace Nop.Admin.Models.Catalog
             [NopResourceDisplayName("Admin.Catalog.Products.RelatedProducts.Fields.DisplayOrder")]
             public int DisplayOrder { get; set; }
         }
-
         public partial class AddRelatedProductModel : BaseNopModel
         {
             public AddRelatedProductModel()
+            {
+                AvailableCategories = new List<SelectListItem>();
+                AvailableManufacturers = new List<SelectListItem>();
+                AvailableStores = new List<SelectListItem>();
+                AvailableVendors = new List<SelectListItem>();
+            }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
+            [AllowHtml]
+            public string SearchProductName { get; set; }
+            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
+            public int SearchCategoryId { get; set; }
+            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
+            public int SearchManufacturerId { get; set; }
+            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchStore")]
+            public int SearchStoreId { get; set; }
+            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchVendor")]
+            public int SearchVendorId { get; set; }
+
+            public IList<SelectListItem> AvailableCategories { get; set; }
+            public IList<SelectListItem> AvailableManufacturers { get; set; }
+            public IList<SelectListItem> AvailableStores { get; set; }
+            public IList<SelectListItem> AvailableVendors { get; set; }
+
+            public int ProductId { get; set; }
+
+            public int[] SelectedProductIds { get; set; }
+
+            //vendor
+            public bool IsLoggedInAsVendor { get; set; }
+        }
+
+        public partial class AssociatedProductModel : BaseNopEntityModel
+        {
+            [NopResourceDisplayName("Admin.Catalog.Products.AssociatedProducts.Fields.Product")]
+            public string ProductName { get; set; }
+        }
+        public partial class AddAssociatedProductModel : BaseNopModel
+        {
+            public AddAssociatedProductModel()
             {
                 AvailableCategories = new List<SelectListItem>();
                 AvailableManufacturers = new List<SelectListItem>();
@@ -482,7 +521,6 @@ namespace Nop.Admin.Models.Catalog
             [NopResourceDisplayName("Admin.Catalog.Products.CrossSells.Fields.Product")]
             public string Product2Name { get; set; }
         }
-
         public partial class AddCrossSellProductModel : BaseNopModel
         {
             public AddCrossSellProductModel()
@@ -573,7 +611,6 @@ namespace Nop.Admin.Models.Catalog
             public string ViewEditUrl { get; set; }
             public string ViewEditText { get; set; }
         }
-
         public partial class ProductVariantAttributeValueListModel : BaseNopModel
         {
             public int ProductId { get; set; }
@@ -584,7 +621,6 @@ namespace Nop.Admin.Models.Catalog
 
             public string ProductVariantAttributeName { get; set; }
         }
-
         [Validator(typeof(ProductVariantAttributeValueModelValidator))]
         public partial class ProductVariantAttributeValueModel : BaseNopEntityModel, ILocalizedModel<ProductVariantAttributeValueLocalizedModel>
         {
@@ -618,7 +654,6 @@ namespace Nop.Admin.Models.Catalog
 
             public IList<ProductVariantAttributeValueLocalizedModel> Locales { get; set; }
         }
-
         public partial class ProductVariantAttributeValueLocalizedModel : ILocalizedModelLocal
         {
             public int LanguageId { get; set; }
@@ -627,7 +662,6 @@ namespace Nop.Admin.Models.Catalog
             [AllowHtml]
             public string Name { get; set; }
         }
-
         public partial class ProductVariantAttributeCombinationModel : BaseNopEntityModel
         {
             public int ProductId { get; set; }

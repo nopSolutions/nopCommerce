@@ -1234,6 +1234,30 @@
                             <LocaleResource Name="AddNew">
                                 <Value>Add a new product</Value>
                             </LocaleResource>
+                            <LocaleResource Name="AssociatedProducts">
+                                <Value>Associated products</Value>
+                                <Children>
+                                    <LocaleResource Name="AddNew">
+                                        <Value>Add new associated product</Value>
+                                    </LocaleResource>
+                                    <LocaleResource Name="Fields">
+                                        <Children>
+                                            <LocaleResource Name="Product">
+                                                <Value>Product</Value>
+                                            </LocaleResource>
+                                        </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="Note1">
+                                        <Value>Associated products are used only with "grouped" products.</Value>
+                                    </LocaleResource>
+                                    <LocaleResource Name="Note2">
+                                        <Value>A product could be associated to only one "grouped" product.</Value>
+                                    </LocaleResource>
+                                    <LocaleResource Name="SaveBeforeEdit">
+                                        <Value>You need to save the product before you can add associated products for this product page.</Value>
+                                    </LocaleResource>
+                                </Children>
+                            </LocaleResource>
                             <LocaleResource Name="BackToList">
                                 <Value>back to product list</Value>
                             </LocaleResource>

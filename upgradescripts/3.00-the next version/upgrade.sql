@@ -1310,6 +1310,24 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Media.AssociatedProductPictureSize.Hint">
     <Value>The default size (pixels) for associated product images (part of ''grouped'' products).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.AssociatedProducts">
+    <Value>Associated products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.AssociatedProducts.AddNew">
+    <Value>Add new associated product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.AssociatedProducts.Fields.Product">
+    <Value>Product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.AssociatedProducts.Note1">
+    <Value>Associated products are used only with "grouped" products.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.AssociatedProducts.Note2">
+    <Value>A product could be associated to only one "grouped" product.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.AssociatedProducts.SaveBeforeEdit">
+    <Value>You need to save the product before you can add associated products for this product page.</Value>
+  </LocaleResource>
 </Language>
 '
 

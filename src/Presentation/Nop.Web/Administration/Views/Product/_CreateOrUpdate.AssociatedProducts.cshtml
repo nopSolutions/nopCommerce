@@ -1,0 +1,69 @@
+﻿@model ProductModel
+
+@using Telerik.Web.Mvc.UI;
+@if (Model.Id > 0)
+{     
+    <table class="adminContent">
+        <tr>
+            <td>
+                <ul>
+                    <li>
+                        @T("Admin.Catalog.Products.AssociatedProducts.Note1")
+                    </li>
+                    <li>
+                        @T("Admin.Catalog.Products.AssociatedProducts.Note2")
+                    </li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @(Html.Telerik().Grid<ProductModel.AssociatedProductModel>()
+                .Name("associatedproducts-grid")
+                    .DataKeys(keys =>
+                    {
+                        keys.Add(x => x.Id);
+                    })
+                    .DataBinding(dataBinding =>
+                    {
+                        dataBinding.Ajax()
+                            .Select("AssociatedProductList", "Product", new { productId = Model.Id })
+                            .Delete("AssociatedProductDelete", "Product");
+                    })
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.ProductName)
+                            .ReadOnly();
+                        columns.Command(commands =>
+                        {
+                            commands.Delete().Text(T("Admin.Common.Delete").Text);
+                        })
+                        .Title(T("Admin.Common.Delete").Text).Width(50);
+                    })
+                    .EnableCustomBinding(true))
+            </td>
+        </tr>
+        <tr>
+            <td width="100%">
+                <input type="submit" id="btnAddNewAssociatedProduct" name="btnAddNewAssociatedProduct" value="@T("Admin.Catalog.Products.AssociatedProducts.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("AssociatedProductAddPopup", "Product", new { productId = Model.Id, btnId = "btnRefreshAssociatedProducts", formId = "product-form" }))    ', 800, 800, true); return false;" class="t-button" />
+                <input type="submit" id="btnRefreshAssociatedProducts" name="btnRefreshAssociatedProducts" style="display: none" />
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $('#btnRefreshAssociatedProducts').click(function () {
+                            //refresh grid
+                            var optionsGrid = $("#associatedproducts-grid");
+                            optionsGrid.data('tGrid').ajaxRequest();
+
+                            //return false to don't reload a page
+                            return false;
+                        });
+                    });
+                </script>
+            </td>
+        </tr>
+    </table>
+}
+else
+{
+    @T("Admin.Catalog.Products.AssociatedProducts.SaveBeforeEdit")
+}

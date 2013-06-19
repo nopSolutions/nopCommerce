@@ -8,17 +8,18 @@
 {
     x.Add().Text(T("Admin.Catalog.Products.Info").Text).Content(TabInfo().ToHtmlString()).Selected(true);
     x.Add().Text(T("Admin.Common.SEO").Text).Content(TabSeo().ToHtmlString());
+    x.Add().Text(T("Admin.Catalog.Products.Pictures").Text).Content(TabPictures().ToHtmlString());
     x.Add().Text(T("Admin.Catalog.Products.Categories").Text).Content(TabCategories().ToHtmlString());
     x.Add().Text(T("Admin.Catalog.Products.Manufacturers").Text).Content(TabManufacturers().ToHtmlString());
-    x.Add().Text(T("Admin.Catalog.Products.RelatedProducts").Text).Content(TabRelatedProducts().ToHtmlString());
-    x.Add().Text(T("Admin.Catalog.Products.CrossSells").Text).Content(TabCrossSells().ToHtmlString());
-    x.Add().Text(T("Admin.Catalog.Products.Pictures").Text).Content(TabPictures().ToHtmlString());
     x.Add().Text(T("Admin.Catalog.Products.SpecificationAttributes").Text).Content(TabSpecificationAttributes().ToHtmlString());
     x.Add().Text(T("Admin.Catalog.Products.ProductVariantAttributes").Text).Content(TabProductAttributes().ToHtmlString());
     x.Add().Text(T("Admin.Catalog.Products.TierPrices").Text).Content(TabTierPrices().ToHtmlString());
     x.Add().Text(T("Admin.Catalog.Products.Discounts").Text).Content(TabDiscounts().ToHtmlString());
     x.Add().Text(T("Admin.Catalog.Products.Acl").Text).Content(TabAcl().ToHtmlString());
     x.Add().Text(T("Admin.Catalog.Products.Stores").Text).Content(TabStores().ToHtmlString());
+    x.Add().Text(T("Admin.Catalog.Products.RelatedProducts").Text).Content(TabRelatedProducts().ToHtmlString());
+    x.Add().Text(T("Admin.Catalog.Products.CrossSells").Text).Content(TabCrossSells().ToHtmlString());
+    x.Add().Text(T("Admin.Catalog.Products.AssociatedProducts").Text).Content(TabAssociatedProducts().ToHtmlString());
 
     //generate an event
     EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "product-edit"));
@@ -39,19 +40,10 @@
 {
     @Html.Partial("_CreateOrUpdate.Manufacturers", Model)
 }
-@helper TabRelatedProducts()
-{
-    @Html.Partial("_CreateOrUpdate.RelatedProducts", Model)
-}
-@helper TabCrossSells()
-{
-    @Html.Partial("_CreateOrUpdate.CrossSells", Model)
-}
 @helper TabPictures()
 {
     @Html.Partial("_CreateOrUpdate.Pictures", Model)
 }
-
 @helper TabSpecificationAttributes()
 {
     @Html.Partial("_CreateOrUpdate.SpecificationAttributes", Model)
@@ -76,4 +68,16 @@
 @helper TabDiscounts()
 {
     @Html.Partial("_CreateOrUpdate.Discounts", Model)
+}
+@helper TabRelatedProducts()
+{
+    @Html.Partial("_CreateOrUpdate.RelatedProducts", Model)
+}
+@helper TabCrossSells()
+{
+    @Html.Partial("_CreateOrUpdate.CrossSells", Model)
+}
+@helper TabAssociatedProducts()
+{
+    @Html.Partial("_CreateOrUpdate.AssociatedProducts", Model)
 }
