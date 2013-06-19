@@ -281,10 +281,6 @@ namespace Nop.Web.Controllers
                             {
                                 #region Grouped product
 
-                                priceModel.DisableBuyButton = true;
-                                priceModel.DisableWishlistButton = true;
-                                priceModel.AvailableForPreOrder = false;
-
                                 var associatedProducts = _productService.SearchProducts(
                                     storeId: _storeContext.CurrentStore.Id,
                                     parentProductId: product.Id);
@@ -296,24 +292,31 @@ namespace Nop.Web.Controllers
                                             //no associated products
                                             priceModel.OldPrice = null;
                                             priceModel.Price = null;
+                                            priceModel.DisableBuyButton = true;
+                                            priceModel.DisableWishlistButton = true;
+                                            priceModel.AvailableForPreOrder = false;
                                         }
                                         break;
                                     default:
                                         {
+                                            //we have at least one associated product
+                                            priceModel.DisableBuyButton = true;
+                                            priceModel.DisableWishlistButton = true;
+                                            priceModel.AvailableForPreOrder = false;
 
                                             if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
                                             {
-                                                decimal? minimalPrice = null;
+                                                decimal? minPossiblePrice = null;
                                                 Product minPriceProduct = null;
                                                 foreach (var associatedProduct in associatedProducts)
                                                 {
                                                     //calculate for the maximum quantity (in case if we have tier prices)
                                                     var tmpPrice = _priceCalculationService.GetFinalPrice(associatedProduct,
                                                         _workContext.CurrentCustomer, decimal.Zero, true, int.MaxValue);
-                                                    if (!minimalPrice.HasValue || tmpPrice < minimalPrice.Value)
+                                                    if (!minPossiblePrice.HasValue || tmpPrice < minPossiblePrice.Value)
                                                     {
                                                         minPriceProduct = associatedProduct;
-                                                        minimalPrice = tmpPrice;
+                                                        minPossiblePrice = tmpPrice;
                                                     }
                                                 }
                                                 if (minPriceProduct != null && !minPriceProduct.CustomerEntersPrice)
@@ -323,11 +326,11 @@ namespace Nop.Web.Controllers
                                                         priceModel.OldPrice = null;
                                                         priceModel.Price = _localizationService.GetResource("Products.CallForPrice");
                                                     }
-                                                    else if (minimalPrice.HasValue)
+                                                    else if (minPossiblePrice.HasValue)
                                                     {
                                                         //calculate prices
                                                         decimal taxRate = decimal.Zero;
-                                                        decimal finalPriceBase = _taxService.GetProductPrice(minPriceProduct, minimalPrice.Value, out taxRate);
+                                                        decimal finalPriceBase = _taxService.GetProductPrice(minPriceProduct, minPossiblePrice.Value, out taxRate);
                                                         decimal finalPrice = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceBase, _workContext.WorkingCurrency);
 
                                                         priceModel.OldPrice = null;
@@ -361,25 +364,22 @@ namespace Nop.Web.Controllers
                                 #region Simple product
 
                                 //add to cart button
-                                priceModel.DisableBuyButton = product.DisableBuyButton || !_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart);
-                                if (!_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
-                                {
-                                    priceModel.DisableBuyButton = true;
-                                }
+                                priceModel.DisableBuyButton = product.DisableBuyButton || 
+                                    !_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart) ||
+                                    !_permissionService.Authorize(StandardPermissionProvider.DisplayPrices);
 
                                 //add to wishlist button
-                                priceModel.DisableWishlistButton = product.DisableWishlistButton || !_permissionService.Authorize(StandardPermissionProvider.EnableWishlist);
-                                if (!_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
-                                {
-                                    priceModel.DisableWishlistButton = true;
-                                }
+                                priceModel.DisableWishlistButton = product.DisableWishlistButton || 
+                                    !_permissionService.Authorize(StandardPermissionProvider.EnableWishlist) ||
+                                    !_permissionService.Authorize(StandardPermissionProvider.DisplayPrices);
+                                //pre-order
                                 priceModel.AvailableForPreOrder = product.AvailableForPreOrder;
 
                                 //prices
                                 if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
                                 {
                                     //calculate for the maximum quantity (in case if we have tier prices)
-                                    decimal minimalPrice = _priceCalculationService.GetFinalPrice(product,
+                                    decimal minPossiblePrice = _priceCalculationService.GetFinalPrice(product,
                                         _workContext.CurrentCustomer, decimal.Zero, true, int.MaxValue);
                                     if (!product.CustomerEntersPrice)
                                     {
@@ -394,7 +394,7 @@ namespace Nop.Web.Controllers
                                             //calculate prices
                                             decimal taxRate = decimal.Zero;
                                             decimal oldPriceBase = _taxService.GetProductPrice(product, product.OldPrice, out taxRate);
-                                            decimal finalPriceBase = _taxService.GetProductPrice(product, minimalPrice, out taxRate);
+                                            decimal finalPriceBase = _taxService.GetProductPrice(product, minPossiblePrice, out taxRate);
 
                                             decimal oldPrice = _currencyService.ConvertFromPrimaryStoreCurrency(oldPriceBase, _workContext.WorkingCurrency);
                                             decimal finalPrice = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceBase, _workContext.WorkingCurrency);
