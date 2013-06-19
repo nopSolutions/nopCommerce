@@ -14,7 +14,6 @@ namespace Nop.Web.Models.Catalog
         {
             DefaultPictureModel = new PictureModel();
             PictureModels = new List<PictureModel>();
-            SpecificationAttributeModels = new List<ProductSpecificationModel>();
             GiftCard = new GiftCardModel();
             ProductPrice = new ProductPriceModel();
             AddToCart = new AddToCartModel();
@@ -60,9 +59,7 @@ namespace Nop.Web.Models.Catalog
         public AddToCartModel AddToCart { get; set; }
 
         public IList<ProductVariantAttributeModel> ProductVariantAttributes { get; set; }
-
-        public IList<ProductSpecificationModel> SpecificationAttributeModels { get; set; }
-
+    
         //a list of associated products. For example, "Grouped" products could have several child "simple" products
         public IList<ProductDetailsModel> AssociatedProducts { get; set; }
 
