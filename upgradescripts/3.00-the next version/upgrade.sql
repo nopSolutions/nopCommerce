@@ -1298,6 +1298,18 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Fields.ProductTemplate.Hint">
     <Value>Choose a product template. This template defines how this product will be displayed in public store.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.ProductVariantPictureSize">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.ProductVariantPictureSize.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.AssociatedProductPictureSize">
+    <Value>Associated product image size</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.AssociatedProductPictureSize.Hint">
+    <Value>The default size (pixels) for associated product images (part of ''grouped'' products).</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -2736,5 +2748,17 @@ BEGIN
 		[pi].IndexId
 	
 	DROP TABLE #PageIndex
+END
+GO
+
+--remove obsolete setting
+DELETE FROM [Setting]
+WHERE [name] = N'MediaSettings.ProductVariantPictureSize'
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'mediasettings.associatedproductpicturesize')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'mediasettings.associatedproductpicturesize', N'125', 0)
 END
 GO

@@ -5060,11 +5060,11 @@
                                             </LocaleResource>
                                         </Children>
                                     </LocaleResource>
-                                    <LocaleResource Name="ProductVariantPictureSize">
-                                        <Value>Product variant detail image size</Value>
+                                    <LocaleResource Name="AssociatedProductPictureSize">
+                                        <Value>Associated product image size</Value>
                                         <Children>
                                             <LocaleResource Name="Hint">
-                                                <Value>The default size (pixels) for product variant images.</Value>
+                                                <Value>The default size (pixels) for associated product images (part of 'grouped' products).</Value>
                                             </LocaleResource>
                                         </Children>
                                     </LocaleResource>
