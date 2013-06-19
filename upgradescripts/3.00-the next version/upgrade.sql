@@ -2762,3 +2762,19 @@ BEGIN
 	VALUES (N'mediasettings.associatedproductpicturesize', N'125', 0)
 END
 GO
+
+--update some message template tokens
+UPDATE [MessageTemplate]
+SET [Subject] = REPLACE([Subject], 'ProductVariant.ID', 'Product.ID'),
+[Body] = REPLACE([Body], 'ProductVariant.ID', 'Product.ID')
+GO
+
+UPDATE [MessageTemplate]
+SET [Subject] = REPLACE([Subject], 'ProductVariant.FullProductName', 'Product.Name'),
+[Body] = REPLACE([Body], 'ProductVariant.FullProductName', 'Product.Name')
+GO
+
+UPDATE [MessageTemplate]
+SET [Subject] = REPLACE([Subject], 'ProductVariant.StockQuantity', 'Product.StockQuantity'),
+[Body] = REPLACE([Body], 'ProductVariant.StockQuantity', 'Product.StockQuantity')
+GO

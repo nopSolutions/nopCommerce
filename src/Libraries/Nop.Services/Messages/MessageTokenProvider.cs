@@ -659,6 +659,7 @@ namespace Nop.Services.Messages
 
         public virtual void AddProductTokens(IList<Token> tokens, Product product)
         {
+            tokens.Add(new Token("Product.ID", product.Id.ToString()));
             tokens.Add(new Token("Product.Name", product.Name));
             tokens.Add(new Token("Product.ShortDescription", product.ShortDescription, true));
             tokens.Add(new Token("Product.StockQuantity", product.StockQuantity.ToString()));
@@ -822,12 +823,11 @@ namespace Nop.Services.Messages
                 "%ProductReview.ProductName%", 
                 "%BlogComment.BlogPostTitle%", 
                 "%NewsComment.NewsTitle%",
+                "%Product.ID%", 
                 "%Product.Name%",
                 "%Product.ShortDescription%", 
                 "%Product.ProductURLForCustomer%",
-                "%ProductVariant.ID%", 
-                "%ProductVariant.FullProductName%", 
-                "%ProductVariant.StockQuantity%", 
+                "%Product.StockQuantity%", 
                 "%Forums.TopicURL%",
                 "%Forums.TopicName%", 
                 "%Forums.PostAuthor%",

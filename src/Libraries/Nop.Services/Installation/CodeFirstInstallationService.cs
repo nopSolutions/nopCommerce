@@ -4328,8 +4328,8 @@ namespace Nop.Services.Installation
                                    new MessageTemplate
                                        {
                                            Name = "QuantityBelow.StoreOwnerNotification",
-                                           Subject = "%Store.Name%. Quantity below notification. %ProductVariant.FullProductName%",
-                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />%ProductVariant.FullProductName% (ID: %ProductVariant.ID%) low quantity. <br /><br />Quantity: %ProductVariant.StockQuantity%<br /></p>",
+                                           Subject = "%Store.Name%. Quantity below notification. %Product.Name%",
+                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />%Product.Name% (ID: %Product.ID%) low quantity. <br /><br />Quantity: %Product.StockQuantity%<br /></p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
