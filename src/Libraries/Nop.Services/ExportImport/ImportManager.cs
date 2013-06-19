@@ -63,6 +63,8 @@ namespace Nop.Services.ExportImport
                 //the columns
                 var properties = new string[]
                 {
+                    "ProductTypeId",
+                    "ParentProductId",
                     "Name",
                     "ShortDescription",
                     "FullDescription",
@@ -151,6 +153,8 @@ namespace Nop.Services.ExportImport
                     if (allColumnsAreEmpty)
                         break;
 
+                    int productTypeId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "ProductTypeId")].Value);
+                    int parentProductId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "ParentProductId")].Value);
                     string name = worksheet.Cells[iRow, GetColumnIndex(properties, "Name")].Value as string;
                     string shortDescription = worksheet.Cells[iRow, GetColumnIndex(properties, "ShortDescription")].Value as string;
                     string fullDescription = worksheet.Cells[iRow, GetColumnIndex(properties, "FullDescription")].Value as string;
@@ -238,11 +242,13 @@ namespace Nop.Services.ExportImport
 
                     var product = _productService.GetProductBySku(sku);
                     bool newProduct = false;
-                    if (product != null)
+                    if (product == null)
                     {
                         product = new Product();
                         newProduct = true;
                     }
+                    product.ProductTypeId = productTypeId;
+                    product.ParentProductId = parentProductId;
                     product.Name = name;
                     product.ShortDescription = shortDescription;
                     product.FullDescription = fullDescription;
