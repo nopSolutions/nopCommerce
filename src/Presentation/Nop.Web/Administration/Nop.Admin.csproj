@@ -1108,6 +1108,33 @@
   <ItemGroup>
     <Content Include="Views\Product\EditorTemplates\TierPriceStore.cshtml" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Product\_CreateOrUpdate.Info.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Product\_CreateOrUpdate.Stores.cshtml" />
+    <Content Include="Views\Product\_CreateOrUpdate.SpecificationAttributes.cshtml" />
+    <Content Include="Views\Product\_CreateOrUpdate.Acl.cshtml" />
+    <Content Include="Views\Product\_CreateOrUpdate.ProductAttributes.cshtml" />
+    <Content Include="Views\Product\_CreateOrUpdate.TierPrices.cshtml" />
+    <Content Include="Views\Product\_CreateOrUpdate.Discounts.cshtml" />
+    <None Include="Views\Product\_CreateOrUpdate.SEO.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Product\_CreateOrUpdate.Categories.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Product\_CreateOrUpdate.Manufacturers.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Product\_CreateOrUpdate.RelatedProducts.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Product\_CreateOrUpdate.CrossSells.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Product\_CreateOrUpdate.Pictures.cshtml" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

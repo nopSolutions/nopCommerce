@@ -1,0 +1,64 @@
+﻿@model ProductModel
+
+@using Telerik.Web.Mvc.UI;
+
+@if (Model.Id > 0)
+    {
+        if (Model.NumberOfAvailableManufacturers > 0)
+        {
+    @(Html.Telerik().Grid<ProductModel.ProductManufacturerModel>()
+                    .Name("productmanufacturers-grid")
+                       .DataKeys(keys =>
+                       {
+                           keys.Add(x => x.Id);
+                       })
+                       .DataBinding(dataBinding =>
+                       {
+                           dataBinding.Ajax()
+                               .Select("ProductManufacturerList", "Product", new { productId = Model.Id })
+                               .Insert("ProductManufacturerInsert", "Product", new { productId = Model.Id })
+                               .Update("ProductManufacturerUpdate", "Product")
+                               .Delete("ProductManufacturerDelete", "Product");
+                       })
+                       .Columns(columns =>
+                       {
+                           columns.Bound(x => x.Manufacturer)
+                               .Width(500)
+                               .Centered();
+                           if (!Model.IsLoggedInAsVendor)
+                           {
+                               //vendor cannot edit this field
+                               columns.Bound(x => x.IsFeaturedProduct)
+                                      .Width(100)
+                                      .Centered();
+                           }
+                           columns.Bound(x => x.DisplayOrder)
+                               .Width(100);
+                           columns.Command(commands =>
+                           {
+                               commands.Edit().Text(T("Admin.Common.Edit").Text);
+                               commands.Delete().Text(T("Admin.Common.Delete").Text);
+                           })
+                           .Width(180);
+                       })
+                       .ToolBar(commands => commands.Insert())
+                       .ClientEvents(events => events.OnEdit("onProductManufacturerEdit"))
+                       .EnableCustomBinding(true))
+    
+    <script type="text/javascript">
+        function onProductManufacturerEdit(e) {
+            $(e.form).find('#Manufacturer').data('tDropDownList').select(function (dataItem) {
+                return dataItem.Value == e.dataItem['ManufacturerId'];
+            });
+        }
+    </script>
+        }
+        else
+        {
+    @T("Admin.Catalog.Products.Manufacturers.NoManufacturersAvailable")
+        }
+    }
+    else
+    {
+    @T("Admin.Catalog.Products.Manufacturers.SaveBeforeEdit")
+    }

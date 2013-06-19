@@ -1,0 +1,65 @@
+﻿@model ProductModel
+
+@using Telerik.Web.Mvc.UI;
+
+@if (Model.Id > 0)
+{
+    if (Model.NumberOfAvailableCategories > 0)
+    {
+    @(Html.Telerik().Grid<ProductModel.ProductCategoryModel>()
+                    .Name("productcategories-grid")
+                       .DataKeys(keys =>
+                       {
+                           keys.Add(x => x.Id);
+                       })
+                       .DataBinding(dataBinding =>
+                       {
+                           dataBinding.Ajax()
+                               .Select("ProductCategoryList", "Product", new { productId = Model.Id })
+                               .Insert("ProductCategoryInsert", "Product", new { productId = Model.Id })
+                               .Update("ProductCategoryUpdate", "Product")
+                               .Delete("ProductCategoryDelete", "Product");
+                       })
+                       .Columns(columns =>
+                       {
+                           columns.Bound(x => x.Category)
+                               .Width(500)
+                               .Centered();
+                           if (!Model.IsLoggedInAsVendor)
+                           {
+                               //vendor cannot edit this field
+                               columns.Bound(x => x.IsFeaturedProduct)
+                                   .Width(100)
+                                   .Centered();
+                           }
+                           columns.Bound(x => x.DisplayOrder)
+                               .Width(100);
+                           columns.Command(commands =>
+                           {
+                               commands.Edit().Text(T("Admin.Common.Edit").Text);
+                               commands.Delete().Text(T("Admin.Common.Delete").Text);
+                           })
+                           .Width(180);
+                       })
+                       .ToolBar(commands => commands.Insert())
+                       .ClientEvents(events => events.OnEdit("onProductCategoryEdit"))
+                       .EnableCustomBinding(true))
+    
+    <script type="text/javascript">
+        function onProductCategoryEdit(e) {
+            $(e.form).find('#Category').data('tDropDownList').select(function (dataItem) {
+                return dataItem.Value == e.dataItem['CategoryId'];
+            });
+        }
+    </script>
+    }
+    else
+    {
+    @T("Admin.Catalog.Products.Categories.NoCategoriesAvailable")
+    }
+}
+else
+{
+    @T("Admin.Catalog.Products.Categories.SaveBeforeEdit")
+}
+

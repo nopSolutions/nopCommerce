@@ -1,0 +1,102 @@
+﻿@model ProductModel
+
+@using Telerik.Web.Mvc.UI;
+
+@if (Model.Id > 0)
+{
+    <div>
+        @(Html.Telerik().Grid<ProductModel.ProductPictureModel>()
+                    .Name("productpictures-grid")
+                    .DataKeys(x =>
+                    {
+                        x.Add(y => y.Id).RouteKey("Id");
+                    })
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.PictureUrl)
+                            .ClientTemplate("<a href='<#= PictureUrl #>' target='_blank'><img alt='<#= PictureId #>' src='<#= PictureUrl #>' width='150' /><a/>")
+                            .ReadOnly();
+                        columns.Bound(x => x.DisplayOrder);
+                        columns.Command(commands =>
+                        {
+                            commands.Edit().Text(T("Admin.Common.Edit").Text);
+                            commands.Delete().Text(T("Admin.Common.Delete").Text);
+                        });
+
+                    })
+                    .Editable(x =>
+                    {
+                        x.Mode(GridEditMode.InLine);
+                    })
+                    .DataBinding(dataBinding =>
+                    {
+                        dataBinding.Ajax().Select("ProductPictureList", "Product", new { productId = Model.Id })
+                            .Update("ProductPictureUpdate", "Product")
+                            .Delete("ProductPictureDelete", "Product");
+                    })
+                    .EnableCustomBinding(true))
+    </div>
+    <p>
+        <strong>@T("Admin.Catalog.Products.Pictures.AddNew")</strong>
+    </p>
+    <script type="text/javascript">
+     
+        $(document).ready(function () {
+            $('#addProductPicture').click(function () {
+                var pictureId = $("#@Html.FieldIdFor(model => model.AddPictureModel.PictureId)").val();
+                var displayOrder = $("#@Html.FieldIdFor(model => model.AddPictureModel.DisplayOrder)").val();
+                
+                if (pictureId == 0) {
+                    alert('Upload picture first');
+                    return;
+                }
+
+                $('#addProductPicture').attr('disabled', true);
+                $.ajax({
+                    cache:false,
+                    type: "POST",
+                    url: "@(Url.Action("ProductPictureAdd", "Product"))",
+                    data: { "pictureId": pictureId, "displayOrder": displayOrder, "productId": @Model.Id },
+                    success: function (data) {
+                        var productpicturesGrid = $("#productpictures-grid");
+                        productpicturesGrid.data('tGrid').ajaxRequest();
+                        $('#addProductPicture').attr('disabled', false);
+                    },
+                    error:function (xhr, ajaxOptions, thrownError){
+                        alert('Failed to add product picture.');
+                        $('#addProductPicture').attr('disabled', false);
+                    }  
+                });
+            });
+        });
+    </script>        
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AddPictureModel.PictureId):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AddPictureModel.PictureId)
+                @Html.ValidationMessageFor(model => model.AddPictureModel.PictureId)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AddPictureModel.DisplayOrder):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AddPictureModel.DisplayOrder)
+                @Html.ValidationMessageFor(model => model.AddPictureModel.DisplayOrder)
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" align="left">
+                <input type="button" id="addProductPicture" class="t-button" value="@T("Admin.Catalog.Products.Pictures.AddButton")" />
+            </td>
+        </tr>
+    </table>
+}
+else
+{
+    @T("Admin.Catalog.Products.Pictures.SaveBeforeEdit")
+}

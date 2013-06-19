@@ -1,0 +1,157 @@
+﻿@model ProductModel
+
+@using Telerik.Web.Mvc.UI;
+@if (Model.Id > 0)
+{
+    if (Model.NumberOfAvailableProductAttributes > 0)
+    {
+    @Html.Telerik().TabStrip().Name("productvariantattribute-edit").Items(x =>
+{
+    x.Add().Text(T("Admin.Catalog.Products.ProductVariantAttributes.Attributes").Text).Content(TabAttributes().ToHtmlString()).Selected(true);
+    x.Add().Text(T("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations").Text).Content(TabAttributeCombinations().ToHtmlString());
+
+    //generate an event
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "productvariantattribute-edit"));
+})
+    }
+    else
+    {
+    @T("Admin.Catalog.Products.ProductVariantAttributes.NoAttributesAvailable")
+    }
+}
+else
+{
+    @T("Admin.Catalog.Products.ProductVariantAttributes.SaveBeforeEdit")
+}
+
+
+@helper TabAttributes()
+{
+    @(Html.Telerik().Grid<ProductModel.ProductVariantAttributeModel>()
+                .Name("productvariantattributes-grid")
+                .DataKeys(keys =>
+                {
+                    keys.Add(x => x.Id);
+                })
+                .DataBinding(dataBinding =>
+                {
+                    dataBinding.Ajax()
+                        .Select("ProductVariantAttributeList", "Product", new { productId = Model.Id })
+                        .Insert("ProductVariantAttributeInsert", "Product", new { productId = Model.Id })
+                        .Update("ProductVariantAttrbiuteUpdate", "Product")
+                        .Delete("ProductVariantAttributeDelete", "Product");
+                })
+                .Columns(columns =>
+                {
+                    columns.Bound(x => x.ProductAttribute)
+                        .Width(150)
+                        .Centered();
+                    columns.Bound(x => x.TextPrompt)
+                        .Width(150)
+                        .Centered();
+                    columns.Bound(x => x.IsRequired)
+                            .Template(
+                                @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.IsRequired.ToString().ToLowerInvariant() + ".gif")" />
+                            )
+                            .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= IsRequired #>.gif' />")
+                            .Centered()
+                            .Width(100);
+                    columns.Bound(x => x.AttributeControlType)
+                        .Width(150)
+                        .Centered();
+                    columns.Bound(x => x.DisplayOrder1)
+                        .Width(150)
+                        .Centered();
+                    columns.Bound(x => x.ViewEditUrl)
+                        .Width(200)
+                        .ClientTemplate("<a href=\"<#= ViewEditUrl #>\"><#= ViewEditText #></a>")
+                        .ReadOnly()
+                        .Title(T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values").Text);
+                    columns.Command(commands =>
+                    {
+                        commands.Edit().Text(T("Admin.Common.Edit").Text);
+                        commands.Delete().Text(T("Admin.Common.Delete").Text);
+                    })
+                    .Width(180);
+                })
+                .ToolBar(commands => commands.Insert())
+                .ClientEvents(events => events.OnEdit("onProductVariantAttributeEdit"))
+                .EnableCustomBinding(true))
+    
+    <script type="text/javascript">
+        function onProductVariantAttributeEdit(e) {
+            $(e.form).find('#ProductAttribute').data('tDropDownList').select(function (dataItem) {
+                return dataItem.Value == e.dataItem['ProductAttributeId'];
+            });
+
+            $(e.form).find('#AttributeControlType').data('tDropDownList').select(function (dataItem) {
+                return dataItem.Value == e.dataItem['AttributeControlTypeId'];
+            });
+        }
+    </script>
+}
+@helper TabAttributeCombinations()
+{
+    <div style="margin: 10px 0px 10px 0px;">
+        <strong>@T("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Description")</strong>
+    </div>
+    <div>
+        @(Html.Telerik().Grid<ProductModel.ProductVariantAttributeCombinationModel>()
+                .Name("attributecombinations-grid")
+                .DataKeys(keys =>
+                {
+                    keys.Add(x => x.Id);
+                })
+                .DataBinding(dataBinding =>
+                {
+                    dataBinding.Ajax()
+                        .Select("ProductVariantAttributeCombinationList", "Product", new { productId = Model.Id })
+                        .Update("ProductVariantAttrbiuteCombinationUpdate", "Product")
+                        .Delete("ProductVariantAttributeCombinationDelete", "Product");
+                })
+                .Columns(columns =>
+                {
+                    columns.Bound(x => x.AttributesXml)
+                        .ClientTemplate("<#= AttributesXml #><br /><span style=\"color: red\"><#= Warnings #></span>")
+                        .Encoded(false)
+                        .ReadOnly();
+                    columns.Bound(x => x.StockQuantity1)
+                        .Centered();
+                    columns.Bound(x => x.AllowOutOfStockOrders1)
+                            .Template(
+                                @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.AllowOutOfStockOrders1.ToString().ToLowerInvariant() + ".gif")" />
+                            )
+                            .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= AllowOutOfStockOrders1 #>.gif' />")
+                            .Centered();
+                    columns.Bound(x => x.Sku1)
+                        .Centered();
+                    columns.Bound(x => x.ManufacturerPartNumber1)
+                        .Centered();
+                    columns.Bound(x => x.Gtin1)
+                        .Centered();
+                    columns.Command(commands =>
+                    {
+                        commands.Edit().Text(T("Admin.Common.Edit").Text);
+                        commands.Delete().Text(T("Admin.Common.Delete").Text);
+                    })
+                    .Width(180);
+                })
+                .EnableCustomBinding(true))
+    </div>
+    <div>
+        <input type="submit" id="btnAddNewCombination" name="btnAddNewCombination" value="@T("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("AddAttributeCombinationPopup", "Product", new { productId = Model.Id, btnId = "btnRefreshCombinations", formId = "product-form" }))    ', 800, 550, true); return false;" class="t-button" />
+        <input type="submit" id="btnRefreshCombinations" name="btnRefreshCombinations" style="display: none" />
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#btnRefreshCombinations').click(function () {
+                    //refresh grid
+                    var optionsGrid = $("#attributecombinations-grid");
+                    optionsGrid.data('tGrid').ajaxRequest();
+
+                    //return false to don't reload a page
+                    return false;
+                });
+            });
+        </script>
+    </div>
+}

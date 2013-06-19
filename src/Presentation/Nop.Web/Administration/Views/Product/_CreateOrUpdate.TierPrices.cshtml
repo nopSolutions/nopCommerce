@@ -1,0 +1,52 @@
+﻿@model ProductModel
+
+@using Telerik.Web.Mvc.UI;
+@if (Model.Id > 0)
+{
+    @(Html.Telerik().Grid<ProductModel.TierPriceModel>()
+            .Name("tierprices-grid")
+                .DataKeys(keys =>
+                {
+                    keys.Add(x => x.Id);
+                })
+                .DataBinding(dataBinding =>
+                {
+                    dataBinding.Ajax()
+                        .Select("TierPriceList", "Product", new { productId = Model.Id })
+                        .Insert("TierPriceInsert", "Product", new { productId = Model.Id })
+                        .Update("TierPriceUpdate", "Product")
+                        .Delete("TierPriceDelete", "Product");
+                })
+                .Columns(columns =>
+                {
+                    columns.Bound(x => x.Store)
+                        .Centered();
+                    columns.Bound(x => x.CustomerRole)
+                        .Centered();
+                    columns.Bound(x => x.Quantity)
+                        .Centered();
+                    columns.Bound(x => x.Price1)
+                        .Format("{0:G29}");
+                    columns.Command(commands =>
+                    {
+                        commands.Edit().Text(T("Admin.Common.Edit").Text);
+                        commands.Delete().Text(T("Admin.Common.Delete").Text);
+                    })
+                    .Width(180);
+                })
+                .ToolBar(commands => commands.Insert())
+                .ClientEvents(events => events.OnEdit("onTierPriceEdit"))
+                .EnableCustomBinding(true))
+    
+    <script type="text/javascript">
+        function onTierPriceEdit(e) {
+            $(e.form).find('#CustomerRole').data('tDropDownList').select(function (dataItem) {
+                return dataItem.Value == e.dataItem['CustomerRoleId'];
+            });
+        }
+    </script>
+}
+else
+{
+    @T("Admin.Catalog.Products.TierPrices.SaveBeforeEdit")
+}
