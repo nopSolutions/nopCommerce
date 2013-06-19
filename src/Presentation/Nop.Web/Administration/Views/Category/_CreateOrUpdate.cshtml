@@ -14,7 +14,9 @@
     
     //generate an event
     EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "category-edit"));
-})/
+})
+@helper TabInfo()
+    { 
     @(Html.LocalizedEditor<CategoryModel, CategoryLocalizedModel>("category-info-localized",
                 @<table class="adminContent">
                     <tr>
