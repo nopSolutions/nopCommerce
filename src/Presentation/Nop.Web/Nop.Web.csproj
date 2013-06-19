@@ -1429,7 +1429,6 @@
     <Content Include="Views\Catalog\ManufacturerTemplate.ProductsInGridOrLines.Mobile.cshtml" />
     <Content Include="Views\Catalog\ProductsByTag.Mobile.cshtml" />
     <Content Include="Views\Catalog\_ProductDetailsPictures.Mobile.cshtml" />
-    <Content Include="Views\Catalog\_ProductTemplate.Grouped.AssociatedProduct.Mobile.cshtml" />
     <Content Include="Views\Catalog\_ProductAttributes.Mobile.cshtml" />
     <Content Include="Views\Catalog\_GiftCardInfo.Mobile.cshtml" />
     <Content Include="Views\Catalog\_ProductVariantPrice.Mobile.cshtml" />
@@ -1609,7 +1608,6 @@
     <Content Include="Views\Catalog\ProductSpecifications.cshtml" />
     <Content Include="Views\Catalog\ProductTierPrices.cshtml" />
     <Content Include="Views\Catalog\_GiftCardInfo.cshtml" />
-    <Content Include="Views\Catalog\_ProductTemplate.Grouped.AssociatedProduct.cshtml" />
     <Content Include="Views\Catalog\_ProductVariantPrice.cshtml" />
     <Content Include="Views\Catalog\_ProductVariantAddToCart.cshtml" />
     <Content Include="Views\Catalog\_DownloadSample.cshtml" />

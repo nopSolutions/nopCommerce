@@ -65,9 +65,49 @@
                     <div class="product-variant-list">
                         @foreach (var variant in Model.AssociatedProducts)
                         {
-                            var dataDictVariant = new ViewDataDictionary();
-                            dataDictVariant.TemplateInfo.HtmlFieldPrefix = string.Format("variant_{0}", variant.Id);
-                            @Html.Partial("_ProductTemplate.Grouped.AssociatedProduct", variant, dataDictVariant)
+                            <div class="product-variant-line" data-productid="@variant.Id">
+                                @if (!String.IsNullOrWhiteSpace(variant.DefaultPictureModel.ImageUrl))
+                                {
+                                    <div class="variant-picture">
+                                        <img alt="@variant.DefaultPictureModel.AlternateText" src="@variant.DefaultPictureModel.ImageUrl"
+                                             title="@variant.DefaultPictureModel.Title" />
+                                    </div>
+                                }
+                                <div class="variant-overview">
+                                    @if (!String.IsNullOrWhiteSpace(variant.Name))
+                                    {
+                                        <div class="variant-name">
+                                            @variant.Name
+                                        </div>
+                                    }
+                                    @Html.Partial("_DownloadSample", variant)
+                                    @Html.Action("ProductTierPrices", "Catalog", new { productVariantId = variant.Id })
+                                    @{
+                                        var dataDictAttributes = new ViewDataDictionary();
+                                        dataDictAttributes.TemplateInfo.HtmlFieldPrefix = string.Format("attributes_{0}", variant.Id);
+                                        @Html.Partial("_ProductAttributes", variant.ProductVariantAttributes, dataDictAttributes)                  
+                                    }
+                                    <!--product SKU, manufacturer part number, stock info-->
+                                    @Html.Partial("_SKU_Man_Stock", variant)
+                                    <!--Back in stock subscription-->
+                                    @Html.Partial("_ProductVariantBackInStockSubscription", variant)
+                                    @{
+                                        var dataDictGiftCard = new ViewDataDictionary();
+                                        dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = string.Format("giftcard_{0}", variant.Id);
+                                        @Html.Partial("_GiftCardInfo", variant.GiftCard, dataDictGiftCard)
+                                    }
+                                    @{
+                                        var dataDictPrice = new ViewDataDictionary();
+                                        dataDictPrice.TemplateInfo.HtmlFieldPrefix = string.Format("price_{0}", variant.Id);
+                                        @Html.Partial("_ProductVariantPrice", variant.ProductPrice, dataDictPrice)
+                                    }
+                                    @{
+                                        var dataDictAddToCart = new ViewDataDictionary();
+                                        dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", variant.Id);
+                                        @Html.Partial("_ProductVariantAddToCart", variant.AddToCart, dataDictAddToCart)
+                                    }
+                                </div>
+                            </div>
                         }
                     </div>
                     @Html.Action("ProductSpecifications", "Catalog", new { productId = Model.Id })
