@@ -6461,15 +6461,16 @@ namespace Nop.Services.Installation
 
 
 
-
-
+            
+            //this one is a grouped product with two associated ones
             var productCanonCamera = new Product()
             {
-                Name = "Canon Digital Rebel XSi 12.2 MP Digital SLR Camera",
+                ProductType = ProductType.GroupedProduct,
+                Name = "Canon Digital SLR Camera",
                 ShortDescription = "12.2-megapixel CMOS sensor captures enough detail for poster-size, photo-quality prints",
                 FullDescription = "<p>For stunning photography with point and shoot ease, look no further than Canon&rsquo;s EOS Rebel XSi. The EOS Rebel XSi brings staggering technological innovation to the masses. It features Canon&rsquo;s EOS Integrated Cleaning System, Live View Function, a powerful DIGIC III Image Processor, plus a new 12.2-megapixel CMOS sensor and is available in a kit with the new EF-S 18-55mm f/3.5-5.6 IS lens with Optical Image Stabilizer. The EOS Rebel XSi&rsquo;s refined, ergonomic design includes a new 3.0-inch LCD monitor, compatibility with SD and SDHC memory cards and new accessories that enhance every aspect of the photographic experience.</p>",
-                ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "canon-digital-rebel-xsi-122-mp-digital-slr-camera",
+                ProductTemplateId = productTemplateGrouped.Id,
+                //SeName = "canon-digital-slr-camera",
                 AllowCustomerReviews = true,
                 Published = true,
                 Price = 670M,
@@ -6508,6 +6509,74 @@ namespace Nop.Services.Installation
                 DisplayOrder = 2,
             });
             _productRepository.Insert(productCanonCamera);
+            var productCanonCamera_associated_1 = new Product()
+            {
+                ParentProductId = productCanonCamera.Id,
+                Name = "Canon Digital SLR Camera - Black",
+                ProductTemplateId = productTemplateSimple.Id,
+                //SeName = "canon-digital-slr-camera-black",
+                AllowCustomerReviews = true,
+                Published = true,
+                Price = 670M,
+                IsShipEnabled = true,
+                Weight = 2,
+                Length = 2,
+                Width = 2,
+                Height = 2,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+                StockQuantity = 10000,
+                NotifyAdminForQuantityBelow = 1,
+                AllowBackInStockSubscriptions = false,
+                DisplayStockAvailability = true,
+                LowStockActivity = LowStockActivity.DisableBuyButton,
+                BackorderMode = BackorderMode.NoBackorders,
+                OrderMinimumQuantity = 1,
+                OrderMaximumQuantity = 10000,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productCanonCamera_associated_1);
+            productCanonCamera_associated_1.ProductPictures.Add(new ProductPicture()
+            {
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CanonCamera_black.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Canon Digital Rebel XSi 12.2 MP Digital SLR Camera (Black)"), true),
+                DisplayOrder = 1,
+            });
+            _productRepository.Insert(productCanonCamera_associated_1);
+            var productCanonCamera_associated_2 = new Product()
+            {
+                ParentProductId = productCanonCamera.Id,
+                Name = "Canon Digital SLR Camera - Silver",
+                ProductTemplateId = productTemplateSimple.Id,
+                //SeName = "canon-digital-slr-camera-silver",
+                AllowCustomerReviews = true,
+                Published = true,
+                Price = 630M,
+                IsShipEnabled = true,
+                Weight = 2,
+                Length = 2,
+                Width = 2,
+                Height = 2,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+                StockQuantity = 10000,
+                NotifyAdminForQuantityBelow = 1,
+                AllowBackInStockSubscriptions = false,
+                DisplayStockAvailability = true,
+                LowStockActivity = LowStockActivity.DisableBuyButton,
+                BackorderMode = BackorderMode.NoBackorders,
+                OrderMinimumQuantity = 1,
+                OrderMaximumQuantity = 10000,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productCanonCamera_associated_2);
+            productCanonCamera_associated_2.ProductPictures.Add(new ProductPicture()
+            {
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CanonCamera_silver.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Canon Digital Rebel XSi 12.2 MP Digital SLR Camera (Silver)"), true),
+                DisplayOrder = 1,
+            });
+            _productRepository.Insert(productCanonCamera_associated_2);
 
 
 
