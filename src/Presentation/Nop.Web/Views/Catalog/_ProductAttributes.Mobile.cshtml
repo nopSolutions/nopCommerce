@@ -10,9 +10,10 @@
             {
                 string controlId = string.Format("product_attribute_{0}_{1}_{2}", attribute.ProductId, attribute.ProductAttributeId, attribute.Id);
                 string textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
-                <dt><label class="text-prompt">
-                    @textPrompt
-                </label>
+                <dt>
+                    <label class="text-prompt">
+                        @textPrompt
+                    </label>
                     @if (attribute.IsRequired)
                     {
                         <span class="required">*</span>
@@ -87,7 +88,37 @@
                             break;
                         case AttributeControlType.FileUpload:
                             {
-                        <input type="file" id="@(controlId)" name="@(controlId)"></input>
+                                //register CSS and JS
+                                Html.AddCssFileParts("~/Content/fileuploader/fileuploader.css");
+                                Html.AddScriptParts("~/Scripts/fileuploader.js");
+
+                                //ex. ['jpg', 'jpeg', 'png', 'gif'] or []
+                                var allowedFileExtensions = string.Join(", ", attribute.AllowedFileExtensions.Select(x => "'" + x.Trim() + "'").ToList());
+                            
+                        <input id="@(controlId)" name="@(controlId)" type="hidden" />
+                        <div id="@(controlId)uploader">
+                        </div>
+                        <script type="text/javascript">
+                            $(function () {
+                                var @(controlId)uploader = new qq.FileUploader({
+                                    element: document.getElementById('@(controlId)uploader'),
+                                    action: '@(Url.RouteUrl("UploadFileProductAttribute", new { productId = attribute.ProductId, productAttributeId = attribute.ProductAttributeId }))',
+                                    onComplete: function (id, fileName, responseJSON) {
+                                        $("#@(controlId)").val(responseJSON.downloadGuid);
+                                        if (responseJSON.message) {
+                                            alert(responseJSON.message);
+                                        }
+                                    },
+                                    allowedExtensions: [@Html.Raw(allowedFileExtensions)],
+                                    strings: {
+                                        upload: "@T("Common.FileUploader.Upload")",
+                                        drop: "@T("Common.FileUploader.DropFiles")",
+                                        cancel: "@T("Common.FileUploader.Cancel")",
+                                        failed: "@T("Common.FileUploader.Failed")"
+                                    }
+                                });
+                            });
+                        </script>
                             }
                             break;
                     }
