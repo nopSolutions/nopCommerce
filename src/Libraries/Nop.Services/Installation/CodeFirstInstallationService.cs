@@ -6539,7 +6539,7 @@ namespace Nop.Services.Installation
             allProducts.Add(productCanonCamera_associated_1);
             productCanonCamera_associated_1.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CanonCamera_black.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Canon Digital Rebel XSi 12.2 MP Digital SLR Camera (Black)"), true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CanonCamera_black.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Canon Digital SLR Camera - Black"), true),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productCanonCamera_associated_1);
@@ -6573,7 +6573,7 @@ namespace Nop.Services.Installation
             allProducts.Add(productCanonCamera_associated_2);
             productCanonCamera_associated_2.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CanonCamera_silver.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Canon Digital Rebel XSi 12.2 MP Digital SLR Camera (Silver)"), true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CanonCamera_silver.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Canon Digital SLR Camera - Silver"), true),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productCanonCamera_associated_2);
