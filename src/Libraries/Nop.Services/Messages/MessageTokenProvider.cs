@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using Nop.Core;
-using Nop.Core.Domain;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
@@ -471,6 +470,9 @@ namespace Nop.Services.Messages
             if (defaultEmailAccount == null)
                 defaultEmailAccount = _emailAccountService.GetAllEmailAccounts().FirstOrDefault();
             tokens.Add(new Token("Store.Email", defaultEmailAccount.Email));
+
+            //event notification
+            _eventPublisher.EntityTokensAdded(store, tokens);
         }
 
         public virtual void AddOrderTokens(IList<Token> tokens, Order order, int languageId)
