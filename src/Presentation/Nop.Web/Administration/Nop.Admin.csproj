@@ -1120,7 +1120,7 @@
     <Content Include="Views\Product\_CreateOrUpdate.Discounts.cshtml" />
     <Content Include="Views\Product\_CreateOrUpdate.AssociatedProducts.cshtml" />
     <Content Include="Views\Product\AssociatedProductAddPopup.cshtml" />
-    <None Include="Views\Product\_CreateOrUpdate.SEO.cshtml" />
+    <Content Include="Views\Product\_CreateOrUpdate.SEO.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Product\_CreateOrUpdate.Categories.cshtml" />
