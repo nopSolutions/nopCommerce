@@ -1,9 +1,11 @@
 ﻿@model ProductDetailsModel
+@using Nop.Core.Domain.Media
+@using Nop.Core.Infrastructure
 @using Nop.Web.Models.Catalog;
 @{
     Html.AddScriptParts("~/Scripts/slimbox2.js");
 
-    int productPerRow = 4;
+    int productPerRow = EngineContext.Current.Resolve<MediaSettings>().ProductThumbPerRowOnProductDetailsPage;
 }
 <div class="gallery">
     <div class="picture">

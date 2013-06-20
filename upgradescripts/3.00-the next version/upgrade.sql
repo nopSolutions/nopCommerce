@@ -2796,3 +2796,11 @@ UPDATE [MessageTemplate]
 SET [Subject] = REPLACE([Subject], 'ProductVariant.StockQuantity', 'Product.StockQuantity'),
 [Body] = REPLACE([Body], 'ProductVariant.StockQuantity', 'Product.StockQuantity')
 GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'mediasettings.ProductThumbPerRowOnProductDetailsPage')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'mediasettings.ProductThumbPerRowOnProductDetailsPage', N'4', 0)
+END
+GO
