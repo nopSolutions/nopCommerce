@@ -311,15 +311,6 @@
             @Html.ValidationMessageFor(model => model.VendorId)
         </td>
     </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.ProductTemplateId):
-        </td>
-        <td class="adminData">
-            @Html.DropDownListFor(model => model.ProductTemplateId, Model.AvailableProductTemplates)
-            @Html.ValidationMessageFor(model => model.ProductTemplateId)
-        </td>
-    </tr>
     <tr @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
         <td class="adminTitle">
             @Html.NopLabelFor(model => model.ShowOnHomePage):
