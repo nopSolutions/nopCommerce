@@ -22,7 +22,6 @@ namespace Nop.Services.Installation
 
         private readonly IRepository<Language> _languageRepository;
         private readonly IRepository<Customer> _customerRepository;
-        private readonly IDataProvider _dataProvider;
         private readonly IDbContext _dbContext;
         private readonly IWebHelper _webHelper;
 
@@ -32,13 +31,11 @@ namespace Nop.Services.Installation
 
         public SqlFileInstallationService(IRepository<Language> languageRepository,
             IRepository<Customer> customerRepository, 
-            IDataProvider dataProvider,
             IDbContext dbContext,
             IWebHelper webHelper)
         {
             this._languageRepository = languageRepository;
             this._customerRepository = customerRepository;
-            this._dataProvider = dataProvider;
             this._dbContext = dbContext;
             this._webHelper = webHelper;
         }
