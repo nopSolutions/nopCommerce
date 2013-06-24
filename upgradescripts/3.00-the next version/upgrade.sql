@@ -3386,6 +3386,8 @@ BEGIN
 		SET @ProductId = null -- clear cache (variable scope)
 		DECLARE @Name nvarchar(400)
 		SET @Name = null -- clear cache (variable scope)
+		DECLARE @Description nvarchar(MAX)
+		SET @Description = null -- clear cache (variable scope)
 		DECLARE @Sku nvarchar(400)
 		SET @Sku = null -- clear cache (variable scope)
 		DECLARE @ManufacturerPartNumber nvarchar(400)
@@ -3521,6 +3523,7 @@ BEGIN
 		SET @sql = 'SELECT 
 		@ProductId = [ProductId],
 		@Name = [Name],
+		@Description = [Description],
 		@Sku = [Sku],
 		@ManufacturerPartNumber = [ManufacturerPartNumber],
 		@Gtin = [Gtin],
@@ -3592,6 +3595,7 @@ BEGIN
 		EXEC sp_executesql @sql,
 		N'@ProductId int OUTPUT, 
 		@Name nvarchar(400) OUTPUT,
+		@Description nvarchar(MAX) OUTPUT,
 		@Sku nvarchar(400) OUTPUT, 
 		@ManufacturerPartNumber nvarchar(400) OUTPUT,
 		@Gtin nvarchar(400) OUTPUT,
@@ -3659,6 +3663,7 @@ BEGIN
 		@UpdatedOnUtc datetime OUTPUT',
 		@ProductId OUTPUT,
 		@Name OUTPUT,
+		@Description OUTPUT,
 		@Sku OUTPUT,
 		@ManufacturerPartNumber OUTPUT,
 		@Gtin OUTPUT,
@@ -3946,7 +3951,7 @@ BEGIN
 			END
 			
 			INSERT INTO [Product]
-			(Name, ProductTemplateId, VendorId, ShowOnHomePage, 
+			(Name, ShortDescription, ProductTemplateId, VendorId, ShowOnHomePage, 
 			AllowCustomerReviews, ApprovedRatingSum, NotApprovedRatingSum, ApprovedTotalReviews,
 			NotApprovedTotalReviews, SubjectToAcl, LimitedToStores, Published, Deleted, CreatedOnUtc, UpdatedOnUtc, 
 			IsGiftCard, GiftCardTypeId, RequireOtherProducts, AutomaticallyAddRequiredProducts, IsDownload, 
@@ -3962,7 +3967,7 @@ BEGIN
 			HasDiscountsApplied, Weight, Length, Width, Height,
 			AvailableStartDateTimeUtc, AvailableEndDateTimeUtc,
 			ProductTypeId, ParentProductId) 
-			VALUES (@AssociatedProductName, @SimpleProductTemplateId, 
+			VALUES (@AssociatedProductName, @Description, @SimpleProductTemplateId, 
 			@AssociatedProductVendorId, 0, 0, 0, 0, 
 			0, 0, 0, 0, @AssociatedProductPublished, 
 			@AssociatedProductDeleted, @CreatedOnUtc, @UpdatedOnUtc, @IsGiftCard, @GiftCardTypeId, @RequireOtherProducts, 

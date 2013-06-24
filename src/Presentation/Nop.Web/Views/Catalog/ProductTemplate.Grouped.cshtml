@@ -80,6 +80,12 @@
                                             @variant.Name
                                         </div>
                                     }
+                                    @if (!String.IsNullOrWhiteSpace(variant.ShortDescription))
+                                    {
+                                        <div class="variant-description">
+                                            @Html.Raw(variant.ShortDescription)
+                                        </div>
+                                    }
                                     @Html.Partial("_DownloadSample", variant)
                                     @Html.Action("ProductTierPrices", "Catalog", new { productId = variant.Id })
                                     @{
