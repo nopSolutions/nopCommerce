@@ -3926,7 +3926,6 @@ BEGIN
 			--append a product variant name
 			IF (len(@Name) > 0)
 			BEGIN
-				PRINT @Name
 				SET @AssociatedProductName = @AssociatedProductName + ' ' + @Name
 			END
 			
