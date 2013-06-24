@@ -3511,6 +3511,8 @@ BEGIN
 		SET @Width = null -- clear cache (variable scope)
 		DECLARE @Height decimal(18, 4)
 		SET @Height = null -- clear cache (variable scope)
+		DECLARE @PictureId int
+		SET @PictureId = null -- clear cache (variable scope)
 		DECLARE @AvailableStartDateTimeUtc datetime
 		SET @AvailableStartDateTimeUtc = null -- clear cache (variable scope)
 		DECLARE @AvailableEndDateTimeUtc datetime
@@ -3589,6 +3591,7 @@ BEGIN
 		@Length = [Length],
 		@Width = [Width],
 		@Height = [Height],
+		@PictureId = [PictureId],
 		@AvailableStartDateTimeUtc = [AvailableStartDateTimeUtc],
 		@AvailableEndDateTimeUtc = [AvailableEndDateTimeUtc],
 		@Published = [Published],
@@ -3661,6 +3664,7 @@ BEGIN
 		@Length decimal(18, 4) OUTPUT,
 		@Width decimal(18, 4) OUTPUT,
 		@Height decimal(18, 4) OUTPUT,
+		@PictureId int OUTPUT,
 		@AvailableStartDateTimeUtc datetime OUTPUT,
 		@AvailableEndDateTimeUtc datetime OUTPUT,
 		@Published bit OUTPUT,
@@ -3729,6 +3733,7 @@ BEGIN
 		@Length OUTPUT,
 		@Width OUTPUT,
 		@Height OUTPUT,
+		@PictureId OUTPUT,
 		@AvailableStartDateTimeUtc OUTPUT,
 		@AvailableEndDateTimeUtc OUTPUT,
 		@Published OUTPUT,
@@ -3995,6 +4000,13 @@ BEGIN
 			0 , @ProductId)
 			
 			SET @NewProductId = @@IDENTITY
+			
+			--product variant picture
+			IF (@PictureId > 0)
+			BEGIN
+				INSERT INTO [Product_Picture_Mapping] ([ProductId], [PictureId], [DisplayOrder])
+				VALUES (@NewProductId, @PictureId, 1)
+			END
 		END
 		
 		--back in stock subscriptions. move ProductVariantId to the new ProductId column
