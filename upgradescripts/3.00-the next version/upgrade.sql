@@ -2834,6 +2834,13 @@ BEGIN
 END
 GO
 
+--delete products without variants
+IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[ProductVariant]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+BEGIN
+	DELETE FROM [Product] WHERE [Id] NOT IN (SELECT [ProductId] FROM [ProductVariant])
+END
+GO
+
 --move records from Product to ProductVariant
 IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Product]') and NAME='ProductTypeId')
 BEGIN
