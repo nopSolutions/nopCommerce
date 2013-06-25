@@ -3,64 +3,89 @@
 @using Nop.Core.Domain.Catalog;
 <script type="text/javascript">
     $(document).ready(function () {
-
-        $("#@Html.FieldIdFor(model => model.RequireOtherProducts)").click(toggleRequireOtherProducts);
-            $("#@Html.FieldIdFor(model => model.IsGiftCard)").click(toggleGiftCard);
-            $("#@Html.FieldIdFor(model => model.CustomerEntersPrice)").click(toggleCustomerEntersPrice);
-            $("#@Html.FieldIdFor(model => model.IsDownload)").click(toggleDownloadableProduct);
-            $("#@Html.FieldIdFor(model => model.UnlimitedDownloads)").click(toggleDownloadableProduct);
-            $("#@Html.FieldIdFor(model => model.HasSampleDownload)").click(toggleDownloadableProduct);
-            $("#@Html.FieldIdFor(model => model.HasUserAgreement)").click(toggleDownloadableProduct);
-            $("#@Html.FieldIdFor(model => model.IsRecurring)").click(toggleRecurring);
-            $("#@Html.FieldIdFor(model => model.IsShipEnabled)").click(toggleShipping);
-            $("#@Html.FieldIdFor(model => model.IsTaxExempt)").click(toggleTax);
-            $("#@Html.FieldIdFor(model => model.ManageInventoryMethodId)").change(toggleManageStock);
-            $("#@Html.FieldIdFor(model => model.BackorderModeId)").change(toggleManageStock);
-            $("#@Html.FieldIdFor(model => model.DisplayStockAvailability)").click(toggleManageStock);
         
-            toggleRequireOtherProducts();
-            toggleGiftCard();
-            toggleCustomerEntersPrice();
-            toggleDownloadableProduct();
-            toggleRecurring();
-            toggleShipping();
-            toggleTax();
-            toggleManageStock();
-        });
+        $("#@Html.FieldIdFor(model => model.ProductTypeId)").change(toggleProductType);
+        $("#@Html.FieldIdFor(model => model.RequireOtherProducts)").click(toggleRequireOtherProducts);
+        $("#@Html.FieldIdFor(model => model.IsGiftCard)").click(toggleGiftCard);
+        $("#@Html.FieldIdFor(model => model.CustomerEntersPrice)").click(toggleCustomerEntersPrice);
+        $("#@Html.FieldIdFor(model => model.IsDownload)").click(toggleDownloadableProduct);
+        $("#@Html.FieldIdFor(model => model.UnlimitedDownloads)").click(toggleDownloadableProduct);
+        $("#@Html.FieldIdFor(model => model.HasSampleDownload)").click(toggleDownloadableProduct);
+        $("#@Html.FieldIdFor(model => model.HasUserAgreement)").click(toggleDownloadableProduct);
+        $("#@Html.FieldIdFor(model => model.IsRecurring)").click(toggleRecurring);
+        $("#@Html.FieldIdFor(model => model.IsShipEnabled)").click(toggleShipping);
+        $("#@Html.FieldIdFor(model => model.IsTaxExempt)").click(toggleTax);
+        $("#@Html.FieldIdFor(model => model.ManageInventoryMethodId)").change(toggleManageStock);
+        $("#@Html.FieldIdFor(model => model.BackorderModeId)").change(toggleManageStock);
+        $("#@Html.FieldIdFor(model => model.DisplayStockAvailability)").click(toggleManageStock);
+        
+        toggleProductType();
+        toggleRequireOtherProducts();
+        toggleGiftCard();
+        toggleCustomerEntersPrice();
+        toggleDownloadableProduct();
+        toggleRecurring();
+        toggleShipping();
+        toggleTax();
+        toggleManageStock();
+    });
 
-        function toggleRequireOtherProducts() {
-            if ($('#@Html.FieldIdFor(model => model.RequireOtherProducts)').is(':checked')) {
-                $('#pnlRequiredProductIds').show();
-                $('#pnlAutomaticallyAddRequiredProducts').show();
-            }
-            else {
-                $('#pnlRequiredProductIds').hide();
-                $('#pnlAutomaticallyAddRequiredProducts').hide();
-            }
+    function toggleProductType() {
+        var selectedProductTypeId = $("#@Html.FieldIdFor(model => model.ProductTypeId)").val();
+        if (selectedProductTypeId == @(((int)ProductType.SimpleProduct).ToString())) {
+            $('#group-prices').show();
+        $('#group-required-other-products').show();
+        $('#group-giftcard').show();
+        $('#group-downloads').show();
+        $('#group-recurring').show();
+        $('#group-shipping').show();
+        $('#group-tax').show();
+        $('#group-inventory').show();
+    } else if (selectedProductTypeId == @(((int)ProductType.GroupedProduct).ToString())) {
+        $('#group-prices').hide();
+        $('#group-required-other-products').hide();
+        $('#group-giftcard').hide();
+        $('#group-downloads').hide();
+        $('#group-recurring').hide();
+        $('#group-shipping').hide();
+        $('#group-tax').hide();
+        $('#group-inventory').hide();
+    }
+    }
+
+    function toggleRequireOtherProducts() {
+        if ($('#@Html.FieldIdFor(model => model.RequireOtherProducts)').is(':checked')) {
+            $('#pnlRequiredProductIds').show();
+            $('#pnlAutomaticallyAddRequiredProducts').show();
         }
-
-        function toggleGiftCard() {
-            if ($('#@Html.FieldIdFor(model => model.IsGiftCard)').is(':checked')) {
-                $('#pnlGiftCardType').show();
-            }
-            else {
-                $('#pnlGiftCardType').hide();
-            }
+        else {
+            $('#pnlRequiredProductIds').hide();
+            $('#pnlAutomaticallyAddRequiredProducts').hide();
         }
+    }
 
-        function toggleCustomerEntersPrice() {
-            if ($('#@Html.FieldIdFor(model => model.CustomerEntersPrice)').is(':checked')) {
-                $('#pnlMinimumCustomerEnteredPrice').show();
-                $('#pnlMaximumCustomerEnteredPrice').show();
-            }
-            else {
-                $('#pnlMinimumCustomerEnteredPrice').hide();
-                $('#pnlMaximumCustomerEnteredPrice').hide();
-            }
+    function toggleGiftCard() {
+        if ($('#@Html.FieldIdFor(model => model.IsGiftCard)').is(':checked')) {
+            $('#pnlGiftCardType').show();
         }
+        else {
+            $('#pnlGiftCardType').hide();
+        }
+    }
 
-        function toggleDownloadableProduct() {
-            if ($('#@Html.FieldIdFor(model => model.IsDownload)').is(':checked')) {
+    function toggleCustomerEntersPrice() {
+        if ($('#@Html.FieldIdFor(model => model.CustomerEntersPrice)').is(':checked')) {
+            $('#pnlMinimumCustomerEnteredPrice').show();
+            $('#pnlMaximumCustomerEnteredPrice').show();
+        }
+        else {
+            $('#pnlMinimumCustomerEnteredPrice').hide();
+            $('#pnlMaximumCustomerEnteredPrice').hide();
+        }
+    }
+
+    function toggleDownloadableProduct() {
+        if ($('#@Html.FieldIdFor(model => model.IsDownload)').is(':checked')) {
 
                 $('#pnlDownloadFile').show();
                 $('#pnlUnlimitedDownloads').show();
@@ -161,37 +186,40 @@
         $('#pnlDisplayStockAvailability').show();
 
         if ($('#@Html.FieldIdFor(model => model.DisplayStockAvailability)').is(':checked')) {
-                    $('#pnlDisplayStockQuantity').show();
-                } 
-                else {
-                    $('#pnlDisplayStockQuantity').hide();
-                }
+            $('#pnlDisplayStockQuantity').show();
+        } 
+        else {
+            $('#pnlDisplayStockQuantity').hide();
+        }
 
-                $('#pnlMinStockQuantity').show();
-                $('#pnlLowStockActivity').show();
-                $('#pnlNotifyForQuantityBelow').show();
-                $('#pnlBackorders').show();
-                var selectedBackorderModeId = $("#@Html.FieldIdFor(model => model.BackorderModeId)").val();
-                if (selectedBackorderModeId == @(((int)BackorderMode.NoBackorders).ToString())) {
-                    //no backorders
+        $('#pnlMinStockQuantity').show();
+        $('#pnlLowStockActivity').show();
+        $('#pnlNotifyForQuantityBelow').show();
+        $('#pnlBackorders').show();
+        var selectedBackorderModeId = $("#@Html.FieldIdFor(model => model.BackorderModeId)").val();
+        if (selectedBackorderModeId == @(((int)BackorderMode.NoBackorders).ToString())) {
+                //no backorders
                     $('#pnlAllowBackInStockSubscriptions').show();
-            }
-            else {
-            //backorders are enabled
+        }
+        else {
+        //backorders are enabled
                      $('#pnlAllowBackInStockSubscriptions').hide();
-            }
-            }
-            else {
-                $('#pnlStockQuantity').hide();
-                $('#pnlDisplayStockAvailability').hide();
-                $('#pnlDisplayStockQuantity').hide();
-                $('#pnlMinStockQuantity').hide();
-                $('#pnlLowStockActivity').hide();
-                $('#pnlNotifyForQuantityBelow').hide();
-                $('#pnlAllowBackInStockSubscriptions').hide();
-                $('#pnlBackorders').hide();
-            }
-            }
+        }
+        }
+        else {
+            $('#pnlStockQuantity').hide();
+            $('#pnlDisplayStockAvailability').hide();
+            $('#pnlDisplayStockQuantity').hide();
+            $('#pnlMinStockQuantity').hide();
+            $('#pnlLowStockActivity').hide();
+            $('#pnlNotifyForQuantityBelow').hide();
+            $('#pnlAllowBackInStockSubscriptions').hide();
+            $('#pnlBackorders').hide();
+        }
+        }
+        
+    
+
 </script>
 
 <table class="adminContent">
@@ -365,6 +393,8 @@
             @Html.ValidationMessageFor(model => model.Gtin)
         </td>
     </tr>
+</table>
+<table class="adminContent" id="group-prices">
     <tr class="adminSeparator">
         <td colspan="2">
             <hr />
@@ -487,6 +517,8 @@
             @Html.ValidationMessageFor(model => model.MaximumCustomerEnteredPrice)
         </td>
     </tr>
+</table>
+<table class="adminContent" id="group-required-other-products">
     <tr class="adminSeparator">
         <td colspan="2">
             <hr />
@@ -519,6 +551,8 @@
             @Html.ValidationMessageFor(model => model.AutomaticallyAddRequiredProducts)
         </td>
     </tr>
+</table>
+<table class="adminContent" id="group-giftcard">
     <tr class="adminSeparator">
         <td colspan="2">
             <hr />
@@ -542,6 +576,8 @@
             @Html.ValidationMessageFor(model => model.GiftCardTypeId)
         </td>
     </tr>
+</table>
+<table class="adminContent" id="group-downloads">
     <tr class="adminSeparator">
         <td colspan="2">
             <hr />
@@ -637,6 +673,8 @@
             @Html.ValidationMessageFor(model => model.SampleDownloadId)
         </td>
     </tr>
+</table>
+<table class="adminContent" id="group-recurring">
     <tr class="adminSeparator">
         <td colspan="2">
             <hr />
@@ -678,6 +716,8 @@
             @Html.ValidationMessageFor(model => model.RecurringTotalCycles)
         </td>
     </tr>
+</table>
+<table class="adminContent" id="group-shipping">
     <tr class="adminSeparator">
         <td colspan="2">
             <hr />
@@ -746,6 +786,8 @@
             @Html.ValidationMessageFor(model => model.Height)
         </td>
     </tr>
+</table>
+<table class="adminContent" id="group-tax">
     <tr class="adminSeparator">
         <td colspan="2">
             <hr />
@@ -769,6 +811,8 @@
             @Html.ValidationMessageFor(model => model.TaxCategoryId)
         </td>
     </tr>
+</table>
+<table class="adminContent" id="group-inventory">
     <tr class="adminSeparator">
         <td colspan="2">
             <hr />
@@ -882,6 +926,8 @@
             @Html.ValidationMessageFor(model => model.AllowedQuantities)
         </td>
     </tr>
+</table>
+<table class="adminContent">
     <tr class="adminSeparator">
         <td colspan="2">
             <hr />
