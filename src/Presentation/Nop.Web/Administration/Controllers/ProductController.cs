@@ -646,6 +646,7 @@ namespace Nop.Admin.Controllers
                     var defaultProductPicture = _pictureService.GetPicturesByProductId(x.Id, 1).FirstOrDefault();
                     productModel.PictureThumbnailUrl = _pictureService.GetPictureUrl(defaultProductPicture, 75, true);
                 }
+                productModel.ProductTypeName = x.ProductType.GetLocalizedEnum(_localizationService, _workContext);
                 return productModel;
             });
             gridModel.Total = products.TotalCount;

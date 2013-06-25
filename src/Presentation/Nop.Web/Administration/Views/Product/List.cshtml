@@ -112,6 +112,7 @@
                         columns.Bound(x => x.Sku);
                         columns.Bound(x => x.Price);
                         columns.Bound(x => x.StockQuantity);
+                        columns.Bound(x => x.ProductTypeName);
                         columns.Bound(x => x.Published)
                             .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= Published #>.gif' />")
                             .Centered()

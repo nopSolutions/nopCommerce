@@ -37,6 +37,8 @@ namespace Nop.Admin.Models.Catalog
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.ProductType")]
         public int ProductTypeId { get; set; }
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.ProductType")]
+        public string ProductTypeName { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.Name")]
         [AllowHtml]
