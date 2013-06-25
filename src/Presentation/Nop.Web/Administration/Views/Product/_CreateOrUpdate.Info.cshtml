@@ -487,24 +487,6 @@
             @Html.ValidationMessageFor(model => model.MaximumCustomerEnteredPrice)
         </td>
     </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.AvailableStartDateTimeUtc):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.AvailableStartDateTimeUtc)
-            @Html.ValidationMessageFor(model => model.AvailableStartDateTimeUtc)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.AvailableEndDateTimeUtc):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.AvailableEndDateTimeUtc)
-            @Html.ValidationMessageFor(model => model.AvailableEndDateTimeUtc)
-        </td>
-    </tr>
     <tr class="adminSeparator">
         <td colspan="2">
             <hr />
@@ -900,15 +882,29 @@
             @Html.ValidationMessageFor(model => model.AllowedQuantities)
         </td>
     </tr>
-
-
-
-
-
-
-
-
-
+    <tr class="adminSeparator">
+        <td colspan="2">
+            <hr />
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.AvailableStartDateTimeUtc):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.AvailableStartDateTimeUtc)
+            @Html.ValidationMessageFor(model => model.AvailableStartDateTimeUtc)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.AvailableEndDateTimeUtc):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.AvailableEndDateTimeUtc)
+            @Html.ValidationMessageFor(model => model.AvailableEndDateTimeUtc)
+        </td>
+    </tr>
     <tr>
         <td class="adminTitle">
             @Html.NopLabelFor(model => model.Published):
