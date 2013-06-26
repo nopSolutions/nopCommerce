@@ -246,6 +246,15 @@
     </tr>
     <tr>
         <td class="adminTitle">
+            @Html.NopLabelFor(model => model.VisibleIndividually):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.VisibleIndividually)
+            @Html.ValidationMessageFor(model => model.VisibleIndividually)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
             @Html.NopLabelFor(model => model.ProductTemplateId):
         </td>
         <td class="adminData">

@@ -36,6 +36,13 @@ namespace Nop.Core.Domain.Catalog
         public int ParentProductId { get; set; }
 
         /// <summary>
+        /// Gets or sets the values indicating whether this product is visible in catalog or search results.
+        /// It's used when this product is associated to some "grouped" one
+        /// This way associated products could be accessed/added/etc only from a grouped product details page
+        /// </summary>
+        public bool VisibleIndividually { get; set; }
+
+        /// <summary>
         /// Gets or sets the name
         /// </summary>
         public string Name { get; set; }

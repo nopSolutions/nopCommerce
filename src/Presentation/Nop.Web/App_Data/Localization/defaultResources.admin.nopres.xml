@@ -1978,6 +1978,14 @@
                                       </LocaleResource>
                                     </Children>
                                   </LocaleResource>
+                                  <LocaleResource Name="VisibleIndividually">
+                                    <Value>Visible individually</Value>
+                                    <Children>
+                                      <LocaleResource Name="Hint">
+                                        <Value>Check it if you want this product to be visible in catalog or search results. You can use this field (just uncheck) to hide associated products from catalog and make them accessible only from a parent "grouped" product details page.</Value>
+                                      </LocaleResource>
+                                    </Children>
+                                  </LocaleResource>
                                   <LocaleResource Name="Weight">
                                     <Value>Weight</Value>
                                     <Children>

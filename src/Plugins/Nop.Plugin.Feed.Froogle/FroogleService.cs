@@ -190,7 +190,8 @@ namespace Nop.Plugin.Feed.Froogle
                 writer.WriteElementString("link", "http://base.google.com/base/");
                 writer.WriteElementString("description", "Information about products");
 
-                var products = _productService.SearchProducts(storeId: store.Id);
+                var products = _productService.SearchProducts(storeId: store.Id,
+                visibleIndividuallyOnly: true);
                 foreach (var product in products)
                 {
                     writer.WriteStartElement("item");

@@ -94,6 +94,7 @@ namespace Nop.Services.Seo
         {
             var products = _productService.SearchProducts(
                 storeId: _storeContext.CurrentStore.Id,
+                visibleIndividuallyOnly: true,
                 orderBy: ProductSortingEnum.CreatedOn);
             foreach (var product in products)
             {

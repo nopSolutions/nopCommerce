@@ -70,6 +70,7 @@ CREATE PROCEDURE [dbo].[ProductLoadAllPaged]
 	@StoreId			int = 0,
 	@VendorId			int = 0,
 	@ParentProductId	int = 0,
+	@VisibleIndividuallyOnly bit = 0, 	--0 - load all products , 1 - "visible indivially" only
 	@ProductTagId		int = 0,
 	@FeaturedProducts	bit = null,	--0 featured only , 1 not featured only, null - load all products
 	@PriceMin			decimal(18, 4) = null,
@@ -78,10 +79,10 @@ CREATE PROCEDURE [dbo].[ProductLoadAllPaged]
 	@SearchDescriptions bit = 0, --a value indicating whether to search by a specified "keyword" in product descriptions
 	@SearchProductTags  bit = 0, --a value indicating whether to search by a specified "keyword" in product tags
 	@UseFullTextSearch  bit = 0,
-	@FullTextMode		int = 0, --0 using CONTAINS with <prefix_term>, 5 - using CONTAINS and OR with <prefix_term>, 10 - using CONTAINS and AND with <prefix_term>
+	@FullTextMode		int = 0, --0 - using CONTAINS with <prefix_term>, 5 - using CONTAINS and OR with <prefix_term>, 10 - using CONTAINS and AND with <prefix_term>
 	@FilteredSpecs		nvarchar(MAX) = null,	--filter by attributes (comma-separated list). e.g. 14,15,16
 	@LanguageId			int = 0,
-	@OrderBy			int = 0, --0 position, 5 - Name: A to Z, 6 - Name: Z to A, 10 - Price: Low to High, 11 - Price: High to Low, 15 - creation date
+	@OrderBy			int = 0, --0 - position, 5 - Name: A to Z, 6 - Name: Z to A, 10 - Price: Low to High, 11 - Price: High to Low, 15 - creation date
 	@AllowedCustomerRoleIds	nvarchar(MAX) = null,	--a list of customer role IDs (comma-separated list) for which a product should be shown (if a subjet to ACL)
 	@PageIndex			int = 0, 
 	@PageSize			int = 2147483644,
@@ -442,6 +443,13 @@ BEGIN
 	BEGIN
 		SET @sql = @sql + '
 		AND p.ParentProductId = ' + CAST(@ParentProductId AS nvarchar(max))
+	END
+	
+	--filter by parent product identifer
+	IF @VisibleIndividuallyOnly = 1
+	BEGIN
+		SET @sql = @sql + '
+		AND p.@VisibleIndividually = 1'
 	END
 	
 	--filter by product tag

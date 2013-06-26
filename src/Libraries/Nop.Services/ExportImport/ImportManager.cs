@@ -65,6 +65,7 @@ namespace Nop.Services.ExportImport
                 {
                     "ProductTypeId",
                     "ParentProductId",
+                    "VisibleIndividually",
                     "Name",
                     "ShortDescription",
                     "FullDescription",
@@ -155,6 +156,7 @@ namespace Nop.Services.ExportImport
 
                     int productTypeId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "ProductTypeId")].Value);
                     int parentProductId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "ParentProductId")].Value);
+                    bool visibleIndividually = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "VisibleIndividually")].Value);
                     string name = worksheet.Cells[iRow, GetColumnIndex(properties, "Name")].Value as string;
                     string shortDescription = worksheet.Cells[iRow, GetColumnIndex(properties, "ShortDescription")].Value as string;
                     string fullDescription = worksheet.Cells[iRow, GetColumnIndex(properties, "FullDescription")].Value as string;
@@ -249,6 +251,7 @@ namespace Nop.Services.ExportImport
                     }
                     product.ProductTypeId = productTypeId;
                     product.ParentProductId = parentProductId;
+                    product.VisibleIndividually = visibleIndividually;
                     product.Name = name;
                     product.ShortDescription = shortDescription;
                     product.FullDescription = fullDescription;

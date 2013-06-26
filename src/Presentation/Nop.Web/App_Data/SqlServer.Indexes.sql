@@ -121,6 +121,9 @@ GO
 CREATE NONCLUSTERED INDEX [IX_Product_ParentProductId] ON [Product] ([ParentProductId] ASC)
 GO
 
+CREATE NONCLUSTERED INDEX [IX_Product_VisibleIndividually] ON [Product] ([VisibleIndividually] ASC)
+GO
+
 CREATE NONCLUSTERED INDEX [IX_PCM_Product_and_Category] ON [Product_Category_Mapping] ([CategoryId] ASC, [ProductId] ASC)
 GO
 

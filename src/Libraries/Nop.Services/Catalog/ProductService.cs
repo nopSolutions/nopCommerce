@@ -259,6 +259,7 @@ namespace Nop.Services.Catalog
         /// <param name="storeId">Store identifier; 0 to load all records</param>
         /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
         /// <param name="parentProductId">Parent product identifier (used with grouped products); 0 to load all records</param>
+        /// <param name="visibleIndividuallyOnly">A values indicating whether to load only products marked as "visible individually"; "false" to load all records; "true" to load "visible individually" only</param>
         /// <param name="featuredProducts">A value indicating whether loaded products are marked as featured (relates only to categories and manufacturers). 0 to load featured products only, 1 to load not featured products only, null to load all products</param>
         /// <param name="priceMin">Minimum price; null to load all records</param>
         /// <param name="priceMax">Maximum price; null to load all records</param>
@@ -279,6 +280,7 @@ namespace Nop.Services.Catalog
             int storeId = 0,
             int vendorId = 0,
             int parentProductId = 0,
+            bool visibleIndividuallyOnly = false,
             bool? featuredProducts = null,
             decimal? priceMin = null,
             decimal? priceMax = null,
@@ -294,7 +296,7 @@ namespace Nop.Services.Catalog
             IList<int> filterableSpecificationAttributeOptionIds = null;
             return SearchProducts(out filterableSpecificationAttributeOptionIds, false,
                 pageIndex, pageSize, categoryIds, manufacturerId, 
-                storeId, vendorId, parentProductId, featuredProducts,
+                storeId, vendorId, parentProductId, visibleIndividuallyOnly, featuredProducts,
                 priceMin, priceMax, productTagId, keywords, searchDescriptions,
                 searchProductTags, languageId, filteredSpecs, orderBy, showHidden);
         }
@@ -311,6 +313,7 @@ namespace Nop.Services.Catalog
         /// <param name="storeId">Store identifier; 0 to load all records</param>
         /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
         /// <param name="parentProductId">Parent product identifier (used with grouped products); 0 to load all records</param>
+        /// <param name="visibleIndividuallyOnly">A values indicating whether to load only products marked as "visible individually"; "false" to load all records; "true" to load "visible individually" only</param>
         /// <param name="featuredProducts">A value indicating whether loaded products are marked as featured (relates only to categories and manufacturers). 0 to load featured products only, 1 to load not featured products only, null to load all products</param>
         /// <param name="priceMin">Minimum price; null to load all records</param>
         /// <param name="priceMax">Maximum price; null to load all records</param>
@@ -333,6 +336,7 @@ namespace Nop.Services.Catalog
             int storeId = 0,
             int vendorId = 0,
             int parentProductId = 0,
+            bool visibleIndividuallyOnly = false,
             bool? featuredProducts = null,
             decimal? priceMin = null,
             decimal? priceMax = null,
@@ -450,6 +454,11 @@ namespace Nop.Services.Catalog
                 pParentProductId.Value = parentProductId;
                 pParentProductId.DbType = DbType.Int32;
 
+                var pVisibleIndividuallyOnly = _dataProvider.GetParameter();
+                pVisibleIndividuallyOnly.ParameterName = "VisibleIndividuallyOnly";
+                pVisibleIndividuallyOnly.Value = visibleIndividuallyOnly;
+                pVisibleIndividuallyOnly.DbType = DbType.Int32;
+
                 var pProductTagId = _dataProvider.GetParameter();
                 pProductTagId.ParameterName = "ProductTagId";
                 pProductTagId.Value = productTagId;
@@ -554,6 +563,7 @@ namespace Nop.Services.Catalog
                     pStoreId,
                     pVendorId,
                     pParentProductId,
+                    pVisibleIndividuallyOnly,
                     pProductTagId,
                     pFeaturedProducts,
                     pPriceMin,
@@ -605,6 +615,10 @@ namespace Nop.Services.Catalog
                 if (parentProductId > 0)
                 {
                     query = query.Where(p => p.ParentProductId == parentProductId);
+                }
+                if (visibleIndividuallyOnly)
+                {
+                    query = query.Where(p => p.VisibleIndividually);
                 }
 
                 //The function 'CurrentUtcDateTime' is not supported by SQL Server Compact. 

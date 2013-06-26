@@ -229,7 +229,8 @@ namespace Nop.Web.Controllers
                         categoryIds.AddRange(GetChildCategoryIds(category.Id));
                     categoryModel.NumberOfProducts = _productService
                         .SearchProducts(categoryIds: categoryIds,
-                        storeId: _storeContext.CurrentStore.Id, 
+                        storeId: _storeContext.CurrentStore.Id,
+                        visibleIndividuallyOnly: true,
                         pageSize: 1)
                         .TotalCount;
                 }
@@ -283,6 +284,7 @@ namespace Nop.Web.Controllers
 
                                 var associatedProducts = _productService.SearchProducts(
                                     storeId: _storeContext.CurrentStore.Id,
+                                    visibleIndividuallyOnly: false,
                                     parentProductId: product.Id);
 
                                 switch (associatedProducts.Count)
@@ -773,6 +775,7 @@ namespace Nop.Web.Controllers
                 {
                     var associatedProducts = _productService.SearchProducts(
                         storeId: _storeContext.CurrentStore.Id,
+                        visibleIndividuallyOnly: false,
                         orderBy: ProductSortingEnum.NameAsc,
                         parentProductId: product.Id
                         );
@@ -1062,6 +1065,7 @@ namespace Nop.Web.Controllers
                     featuredProducts = _productService.SearchProducts(
                        categoryIds: new List<int>() { category.Id },
                        storeId: _storeContext.CurrentStore.Id,
+                       visibleIndividuallyOnly: true,
                        featuredProducts: true);
                     hasFeaturedProductsCache = featuredProducts.TotalCount > 0;
                     _cacheManager.Set(cacheKey, hasFeaturedProductsCache, 60);
@@ -1071,6 +1075,7 @@ namespace Nop.Web.Controllers
                     featuredProducts = _productService.SearchProducts(
                        categoryIds: new List<int>() { category.Id },
                        storeId: _storeContext.CurrentStore.Id,
+                       visibleIndividuallyOnly: true,
                        featuredProducts: true);
                 }
                 if (featuredProducts != null)
@@ -1093,6 +1098,7 @@ namespace Nop.Web.Controllers
             var products = _productService.SearchProducts(out filterableSpecificationAttributeOptionIds, true,
                 categoryIds: categoryIds,
                 storeId: _storeContext.CurrentStore.Id,
+                visibleIndividuallyOnly: true,
                 featuredProducts:_catalogSettings.IncludeFeaturedProductsInNormalLists ? null : (bool?)false,
                 priceMin:minPriceConverted, priceMax:maxPriceConverted,
                 filteredSpecs: alreadyFilteredSpecOptionIds,
@@ -1382,6 +1388,7 @@ namespace Nop.Web.Controllers
                     featuredProducts = _productService.SearchProducts(
                        manufacturerId: manufacturer.Id,
                        storeId: _storeContext.CurrentStore.Id,
+                       visibleIndividuallyOnly: true,
                        featuredProducts: true);
                     hasFeaturedProductsCache = featuredProducts.TotalCount > 0;
                     _cacheManager.Set(cacheKey, hasFeaturedProductsCache, 60);
@@ -1391,6 +1398,7 @@ namespace Nop.Web.Controllers
                     featuredProducts = _productService.SearchProducts(
                        manufacturerId: manufacturer.Id,
                        storeId: _storeContext.CurrentStore.Id,
+                       visibleIndividuallyOnly: true,
                        featuredProducts: true);
                 }
                 if (featuredProducts != null)
@@ -1406,6 +1414,7 @@ namespace Nop.Web.Controllers
             var products = _productService.SearchProducts(out filterableSpecificationAttributeOptionIds, true,
                 manufacturerId: manufacturer.Id,
                 storeId: _storeContext.CurrentStore.Id,
+                visibleIndividuallyOnly: true,
                 featuredProducts: _catalogSettings.IncludeFeaturedProductsInNormalLists ? null : (bool?)false,
                 priceMin: minPriceConverted, 
                 priceMax: maxPriceConverted,
@@ -1523,6 +1532,21 @@ namespace Nop.Web.Controllers
             //Store mapping
             if (!_storeMappingService.Authorize(product))
                 return InvokeHttp404();
+
+            //visible individually?
+            if (!product.VisibleIndividually)
+            {
+                //is this one an associated products?
+                var parentGroupedProduct = _productService.GetProductById(product.ParentProductId);
+                if (parentGroupedProduct != null)
+                {
+                    return RedirectToRoute("Product", new { SeName = parentGroupedProduct.GetSeName() });
+                }
+                else
+                {
+                    return RedirectToRoute("HomePage");
+                }
+            }
             
             //prepare the model
             var model = PrepareProductDetailsPageModel(product, false);
@@ -1792,6 +1816,7 @@ namespace Nop.Web.Controllers
             {
                 var products = _productService.SearchProducts(
                     storeId: _storeContext.CurrentStore.Id,
+                       visibleIndividuallyOnly: true,
                     orderBy:ProductSortingEnum.CreatedOn,
                     pageSize:_catalogSettings.RecentlyAddedProductsNumber);
                 model.AddRange(PrepareProductOverviewModels(products));
@@ -1815,6 +1840,7 @@ namespace Nop.Web.Controllers
 
             var products = _productService.SearchProducts(
                 storeId: _storeContext.CurrentStore.Id,
+                visibleIndividuallyOnly: true,
                 orderBy: ProductSortingEnum.CreatedOn,
                 pageSize: _catalogSettings.RecentlyAddedProductsNumber);
             foreach (var product in products)
@@ -2144,6 +2170,7 @@ namespace Nop.Web.Controllers
             var products = _productService.SearchProducts(
                 storeId: _storeContext.CurrentStore.Id,
                 productTagId: productTag.Id,
+                visibleIndividuallyOnly: true,
                 orderBy: (ProductSortingEnum)command.OrderBy,
                 pageIndex: command.PageNumber - 1,
                 pageSize: command.PageSize);
@@ -2645,6 +2672,7 @@ namespace Nop.Web.Controllers
                         categoryIds: categoryIds,
                         manufacturerId: manufacturerId,
                         storeId: _storeContext.CurrentStore.Id,
+                        visibleIndividuallyOnly: true,
                         priceMin: minPriceConverted,
                         priceMax: maxPriceConverted,
                         keywords:model.Q,
@@ -2698,6 +2726,7 @@ namespace Nop.Web.Controllers
                 storeId: _storeContext.CurrentStore.Id,
                 keywords: term,
                 languageId: _workContext.WorkingLanguage.Id,
+                visibleIndividuallyOnly: true,
                 pageSize: productNumber);
 
             var models =  PrepareProductOverviewModels(products, false, _catalogSettings.ShowProductImagesInSearchAutoComplete, _mediaSettings.AutoCompleteSearchThumbPictureSize).ToList();

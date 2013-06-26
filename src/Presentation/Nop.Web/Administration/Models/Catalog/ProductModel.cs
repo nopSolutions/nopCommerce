@@ -40,6 +40,13 @@ namespace Nop.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.ProductType")]
         public string ProductTypeName { get; set; }
 
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.VisibleIndividually")]
+        public bool VisibleIndividually { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.ProductTemplate")]
+        public int ProductTemplateId { get; set; }
+        public IList<SelectListItem> AvailableProductTemplates { get; set; }
+
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
@@ -55,10 +62,6 @@ namespace Nop.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.AdminComment")]
         [AllowHtml]
         public string AdminComment { get; set; }
-
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.ProductTemplate")]
-        public int ProductTemplateId { get; set; }
-        public IList<SelectListItem> AvailableProductTemplates { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.Vendor")]
         public int VendorId { get; set; }

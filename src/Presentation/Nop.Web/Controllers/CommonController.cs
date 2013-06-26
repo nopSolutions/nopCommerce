@@ -547,7 +547,9 @@ namespace Nop.Web.Controllers
             if (_commonSettings.SitemapIncludeProducts)
             {
                 //limit product to 200 until paging is supported on this page
-                var products = _productService.SearchProducts(storeId: _storeContext.CurrentStore.Id, pageSize: 200);
+                var products = _productService.SearchProducts(storeId: _storeContext.CurrentStore.Id, 
+                    visibleIndividuallyOnly: true,
+                    pageSize: 200);
                 model.Products = products.Select(product => new ProductOverviewModel()
                 {
                     Id = product.Id,
