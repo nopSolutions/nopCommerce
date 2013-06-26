@@ -16,6 +16,9 @@ namespace Nop.Data.Tests.Catalog
         {
             var product = new Product
             {
+                ProductType = ProductType.GroupedProduct,
+                ParentProductId = 2,
+                VisibleIndividually = true,
                 Name = "Name 1",
                 ShortDescription = "ShortDescription 1",
                 FullDescription = "FullDescription 1",
@@ -98,9 +101,12 @@ namespace Nop.Data.Tests.Catalog
                 CreatedOnUtc = new DateTime(2010, 01, 01),
                 UpdatedOnUtc = new DateTime(2010, 01, 02),
             };
-
+            
             var fromDb = SaveAndLoadEntity(product);
             fromDb.ShouldNotBeNull();
+            fromDb.ProductType.ShouldEqual(ProductType.GroupedProduct);
+            fromDb.ParentProductId.ShouldEqual(2);
+            fromDb.VisibleIndividually.ShouldEqual(true);
             fromDb.Name.ShouldEqual("Name 1");
             fromDb.ShortDescription.ShouldEqual("ShortDescription 1");
             fromDb.FullDescription.ShouldEqual("FullDescription 1");

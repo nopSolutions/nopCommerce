@@ -9,6 +9,9 @@ namespace Nop.Core.Domain.Media
         public int ProductThumbPictureSize { get; set; }
         public int ProductDetailsPictureSize { get; set; }
         public int ProductThumbPictureSizeOnProductDetailsPage { get; set; }
+        /// <summary>
+        /// A picture size of child associated product on the grouped product details page
+        /// </summary>
         public int ProductThumbPerRowOnProductDetailsPage { get; set; }
         public int AssociatedProductPictureSize { get; set; }
         public int CategoryThumbPictureSize { get; set; }
