@@ -5153,7 +5153,7 @@ BEGIN
 	IF @VisibleIndividuallyOnly = 1
 	BEGIN
 		SET @sql = @sql + '
-		AND p.@VisibleIndividually = 1'
+		AND p.VisibleIndividually = 1'
 	END
 	
 	--filter by product tag
