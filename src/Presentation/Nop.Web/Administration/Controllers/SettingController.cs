@@ -340,11 +340,6 @@ namespace Nop.Admin.Controllers
             else if (storeScope > 0)
                 _settingService.DeleteSetting(forumSettings, x => x.SignaturesEnabled, storeScope);
             
-            if (model.SignaturesEnabled_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(forumSettings, x => x.SignaturesEnabled, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(forumSettings, x => x.SignaturesEnabled, storeScope);
-            
             if (model.AllowPrivateMessages_OverrideForStore || storeScope == 0)
                 _settingService.SaveSetting(forumSettings, x => x.AllowPrivateMessages, storeScope, false);
             else if (storeScope > 0)
