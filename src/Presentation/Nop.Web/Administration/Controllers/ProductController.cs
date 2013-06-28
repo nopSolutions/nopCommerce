@@ -1664,6 +1664,7 @@ namespace Nop.Admin.Controllers
                     {
                         Id = x.Id,
                         ProductName = x.Name,
+                        DisplayOrder = x.DisplayOrder
                     };
                 })
                 .ToList();
@@ -1678,6 +1679,28 @@ namespace Nop.Admin.Controllers
             {
                 Data = model
             };
+        }
+
+        [GridAction(EnableCustomBinding = true)]
+        public ActionResult AssociatedProductUpdate(GridCommand command, ProductModel.AssociatedProductModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+                return AccessDeniedView();
+
+            var associatedProduct = _productService.GetProductById(model.Id);
+            if (associatedProduct == null)
+                throw new ArgumentException("No associated product found with the specified id");
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && associatedProduct.VendorId != _workContext.CurrentVendor.Id)
+            {
+                return Content("This is not your product");
+            }
+
+            associatedProduct.DisplayOrder = model.DisplayOrder;
+            _productService.UpdateProduct(associatedProduct);
+
+            return AssociatedProductList(command, associatedProduct.ParentProductId);
         }
 
         [GridAction(EnableCustomBinding = true)]

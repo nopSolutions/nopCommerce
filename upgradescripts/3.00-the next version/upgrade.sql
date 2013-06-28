@@ -1343,6 +1343,9 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.List.SearchProductType.Hint">
     <Value>Search by a product type.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.AssociatedProducts.Fields.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -4770,6 +4773,22 @@ BEGIN
 END
 GO
 
+--new [DisplayOrder] property
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Product]') and NAME='DisplayOrder')
+BEGIN
+	ALTER TABLE [Product]
+	ADD [DisplayOrder] int NULL
+END
+GO
+
+UPDATE [Product]
+SET [DisplayOrder] = 0
+GO
+ALTER TABLE [Product] ALTER COLUMN [DisplayOrder] int NOT NULL
+GO
+
+
+--updated stored procedure
 IF EXISTS (
 		SELECT *
 		FROM sys.objects
@@ -5295,6 +5314,13 @@ BEGIN
 			SET @sql_orderby = @sql_orderby + ' pmm.DisplayOrder ASC'
 		END
 		
+		--parent product specified (sort associated products)
+		IF @ParentProductId > 0
+		BEGIN
+			IF LEN(@sql_orderby) > 0 SET @sql_orderby = @sql_orderby + ', '
+			SET @sql_orderby = @sql_orderby + ' p.[DisplayOrder] ASC'
+		END
+		
 		--name
 		IF LEN(@sql_orderby) > 0 SET @sql_orderby = @sql_orderby + ', '
 		SET @sql_orderby = @sql_orderby + ' p.[Name] ASC'
@@ -5368,3 +5394,4 @@ UPDATE [Product]
 SET [ProductTypeId]=5
 WHERE [ProductTypeId]=0
 GO
+

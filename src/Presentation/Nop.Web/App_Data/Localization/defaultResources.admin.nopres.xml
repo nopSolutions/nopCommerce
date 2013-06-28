@@ -1245,6 +1245,9 @@
                                             <LocaleResource Name="Product">
                                                 <Value>Product</Value>
                                             </LocaleResource>
+                                            <LocaleResource Name="DisplayOrder">
+                                              <Value>Display order</Value>
+                                            </LocaleResource>
                                         </Children>
                                     </LocaleResource>
                                     <LocaleResource Name="Note1">

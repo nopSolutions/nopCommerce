@@ -776,7 +776,6 @@ namespace Nop.Web.Controllers
                     var associatedProducts = _productService.SearchProducts(
                         storeId: _storeContext.CurrentStore.Id,
                         visibleIndividuallyOnly: false,
-                        orderBy: ProductSortingEnum.NameAsc,
                         parentProductId: product.Id
                         );
                     foreach (var associatedProduct in associatedProducts)

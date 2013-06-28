@@ -802,18 +802,14 @@ namespace Nop.Services.Catalog
                     query =
                         query.OrderBy(p => p.ProductManufacturers.FirstOrDefault(pm => pm.ManufacturerId == manufacturerId).DisplayOrder);
                 }
-                //else if (orderBy == ProductSortingEnum.Position && relatedToProductId > 0)
-                //{
-                //    //sort by related product display order
-                //    query = from p in query
-                //            join rp in _relatedProductRepository.Table on p.Id equals rp.ProductId2
-                //            where (relatedToProductId == rp.ProductId1)
-                //            orderby rp.DisplayOrder
-                //            select p;
-                //}
+                else if (orderBy == ProductSortingEnum.Position && parentProductId > 0)
+                {
+                    //parent product specified (sort associated products)
+                    query = query.OrderBy(p => p.DisplayOrder);
+                }
                 else if (orderBy == ProductSortingEnum.Position)
                 {
-                    //sort by name (there's no any position if category or manufactur is not specified)
+                    //otherwise sort by name
                     query = query.OrderBy(p => p.Name);
                 }
                 else if (orderBy == ProductSortingEnum.NameAsc)

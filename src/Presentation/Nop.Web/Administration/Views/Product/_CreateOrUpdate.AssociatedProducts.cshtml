@@ -28,17 +28,20 @@
                     {
                         dataBinding.Ajax()
                             .Select("AssociatedProductList", "Product", new { productId = Model.Id })
+                            .Update("AssociatedProductUpdate", "Product")
                             .Delete("AssociatedProductDelete", "Product");
                     })
                     .Columns(columns =>
                     {
                         columns.Bound(x => x.ProductName)
                             .ReadOnly();
+                        columns.Bound(x => x.DisplayOrder)
+                            .Centered();
                         columns.Command(commands =>
                         {
+                            commands.Edit().Text(T("Admin.Common.Edit").Text);
                             commands.Delete().Text(T("Admin.Common.Delete").Text);
-                        })
-                        .Title(T("Admin.Common.Delete").Text).Width(50);
+                        });
                     })
                     .EnableCustomBinding(true))
             </td>

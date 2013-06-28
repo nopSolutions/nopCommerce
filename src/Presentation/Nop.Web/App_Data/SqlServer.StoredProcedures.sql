@@ -582,6 +582,13 @@ BEGIN
 			SET @sql_orderby = @sql_orderby + ' pmm.DisplayOrder ASC'
 		END
 		
+		--parent product specified (sort associated products)
+		IF @ParentProductId > 0
+		BEGIN
+			IF LEN(@sql_orderby) > 0 SET @sql_orderby = @sql_orderby + ', '
+			SET @sql_orderby = @sql_orderby + ' p.[DisplayOrder] ASC'
+		END
+		
 		--name
 		IF LEN(@sql_orderby) > 0 SET @sql_orderby = @sql_orderby + ', '
 		SET @sql_orderby = @sql_orderby + ' p.[Name] ASC'
