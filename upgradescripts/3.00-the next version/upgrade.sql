@@ -4777,6 +4777,7 @@ CREATE PROCEDURE [dbo].[ProductLoadAllPaged]
 	@StoreId			int = 0,
 	@VendorId			int = 0,
 	@ParentProductId	int = 0,
+	@ProductTypeId		int = null, --product type identifier, null - load all products
 	@VisibleIndividuallyOnly bit = 0, 	--0 - load all products , 1 - "visible indivially" only
 	@ProductTagId		int = 0,
 	@FeaturedProducts	bit = null,	--0 featured only , 1 not featured only, null - load all products
@@ -5150,6 +5151,13 @@ BEGIN
 	BEGIN
 		SET @sql = @sql + '
 		AND p.ParentProductId = ' + CAST(@ParentProductId AS nvarchar(max))
+	END
+	
+	--filter by parent product identifer
+	IF @ProductTypeId is not null
+	BEGIN
+		SET @sql = @sql + '
+		AND p.ProductTypeId = ' + CAST(@ProductTypeId AS nvarchar(max))
 	END
 	
 	--filter by parent product identifer
