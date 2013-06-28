@@ -5464,6 +5464,7 @@ namespace Nop.Services.Installation
             var allProducts = new List<Product>();
             var product5GiftCard = new Product()
             {
+                ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = true,
                 Name = "$5 Virtual Gift Card",
                 ShortDescription = "$5 Gift Card. Gift Cards must be redeemed through our site Web site toward the purchase of eligible products.",
@@ -5501,6 +5502,7 @@ namespace Nop.Services.Installation
 
             var product25GiftCard = new Product()
             {
+                ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = true,
                 Name = "$25 Virtual Gift Card",
                 ShortDescription = "$25 Gift Card. Gift Cards must be redeemed through our site Web site toward the purchase of eligible products.",
@@ -5541,6 +5543,7 @@ namespace Nop.Services.Installation
 
             var product50GiftCard = new Product()
             {
+                ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = true,
                 Name = "$50 Physical Gift Card",
                 ShortDescription = "$50 Gift Card. Gift Cards must be redeemed through our site Web site toward the purchase of eligible products.",
@@ -5585,6 +5588,7 @@ namespace Nop.Services.Installation
 
             var product100GiftCard = new Product()
             {
+                ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = true,
                 Name = "$100 Physical Gift Card",
                 ShortDescription = "$100 Gift Card. Gift Cards must be redeemed through our site Web site toward the purchase of eligible products.",
@@ -5629,6 +5633,7 @@ namespace Nop.Services.Installation
 
             var productRockabillyPolka = new Product()
             {
+                ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = true,
                 Name = "50's Rockabilly Polka Dot Top JR Plus Size",
                 ShortDescription = "",
@@ -5712,6 +5717,7 @@ namespace Nop.Services.Installation
 
             var productAcerAspireOne = new Product()
             {
+                ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = true,
                 Name = "Acer Aspire One 8.9\" Mini-Notebook Case - (Black)",
                 ShortDescription = "Acer Aspire One 8.9\" Mini-Notebook and 6 Cell Battery model (AOA150-1447)",
@@ -5780,6 +5786,7 @@ namespace Nop.Services.Installation
 
             var productAdidasShoe = new Product()
             {
+                ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = true,
                 Name = "adidas Women's Supernova CSH 7 Running Shoe",
                 ShortDescription = "Now there are even more reasons to love this training favorite. An improved last, new step-in sockliner and the smooth control of 3-D ForMotion™ deliver a natural, balanced touchdown that feels better than ever.",
@@ -5875,6 +5882,7 @@ namespace Nop.Services.Installation
 
             var productAdobePhotoshop = new Product()
             {
+                ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = true,
                 Name = "Adobe Photoshop Elements 7",
                 ShortDescription = "Easily find and view all your photos",
@@ -5921,6 +5929,7 @@ namespace Nop.Services.Installation
 
             var productApcUps = new Product()
             {
+                ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = true,
                 Name = "APC Back-UPS RS 800VA - UPS - 800 VA - UPS battery - lead acid ( BR800BLK )",
                 ShortDescription = "APC Back-UPS RS, 800VA/540W, Input 120V/Output 120V, Interface Port USB. ",
@@ -5967,6 +5976,7 @@ namespace Nop.Services.Installation
 
             var productArrow = new Product()
             {
+                ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = true,
                 Name = "Arrow Men's Wrinkle Free Pinpoint Solid Long Sleeve",
                 ShortDescription = "",
@@ -6030,6 +6040,7 @@ namespace Nop.Services.Installation
 
             var productAsusPc1000 = new Product()
             {
+                ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = true,
                 Name = "ASUS Eee PC 1000HA 10-Inch Netbook",
                 ShortDescription = "Super Hybrid Engine offers a choice of performance and power consumption modes for easy adjustments according to various needs",
@@ -6109,6 +6120,7 @@ namespace Nop.Services.Installation
 
             var productAsusPc900 = new Product()
             {
+                ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = true,
                 Name = "ASUS Eee PC 900HA 8.9-Inch Netbook Black",
                 ShortDescription = "High Speed Connectivity Anywhere with Wi-Fi 802.11b/g.",
@@ -6181,6 +6193,7 @@ namespace Nop.Services.Installation
 
             var productBestGrillingRecipes = new Product()
             {
+                ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = true,
                 Name = "Best Grilling Recipes",
                 ShortDescription = "More Than 100 Regional Favorites Tested and Perfected for the Outdoor Cook (Hardcover)",
@@ -6228,6 +6241,7 @@ namespace Nop.Services.Installation
 
             var productDiamondHeart = new Product()
             {
+                ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = true,
                 Name = "Black & White Diamond Heart",
                 ShortDescription = "Heart Pendant 1/4 Carat (ctw) in Sterling Silver",
@@ -6274,6 +6288,7 @@ namespace Nop.Services.Installation
 
             var productBlackBerry = new Product()
             {
+                ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = true,
                 Name = "BlackBerry Bold 9000 Phone, Black (AT&T)",
                 ShortDescription = "Global Blackberry messaging smartphone with quad-band GSM",
@@ -6319,6 +6334,7 @@ namespace Nop.Services.Installation
 
             var productBuildComputer = new Product()
             {
+                ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = true,
                 Name = "Build your own computer",
                 ShortDescription = "Build it",
@@ -6482,8 +6498,8 @@ namespace Nop.Services.Installation
             //this one is a grouped product with two associated ones
             var productCanonCamera = new Product()
             {
-                VisibleIndividually = true,
                 ProductType = ProductType.GroupedProduct,
+                VisibleIndividually = true,
                 Name = "Canon Digital SLR Camera",
                 ShortDescription = "12.2-megapixel CMOS sensor captures enough detail for poster-size, photo-quality prints",
                 FullDescription = "<p>For stunning photography with point and shoot ease, look no further than Canon&rsquo;s EOS Rebel XSi. The EOS Rebel XSi brings staggering technological innovation to the masses. It features Canon&rsquo;s EOS Integrated Cleaning System, Live View Function, a powerful DIGIC III Image Processor, plus a new 12.2-megapixel CMOS sensor and is available in a kit with the new EF-S 18-55mm f/3.5-5.6 IS lens with Optical Image Stabilizer. The EOS Rebel XSi&rsquo;s refined, ergonomic design includes a new 3.0-inch LCD monitor, compatibility with SD and SDHC memory cards and new accessories that enhance every aspect of the photographic experience.</p>",
@@ -6529,6 +6545,7 @@ namespace Nop.Services.Installation
             _productRepository.Insert(productCanonCamera);
             var productCanonCamera_associated_1 = new Product()
             {
+                ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = false, //hide this products
                 ParentProductId = productCanonCamera.Id,
                 Name = "Canon Digital SLR Camera - Black",
@@ -6564,6 +6581,7 @@ namespace Nop.Services.Installation
             _productRepository.Insert(productCanonCamera_associated_1);
             var productCanonCamera_associated_2 = new Product()
             {
+                ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = false, //hide this products
                 ParentProductId = productCanonCamera.Id,
                 Name = "Canon Digital SLR Camera - Silver",
@@ -6604,6 +6622,7 @@ namespace Nop.Services.Installation
 
             var productCanonCamcoder = new Product()
             {
+                ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = true,
                 Name = "Canon VIXIA HF100 Camcorder",
                 ShortDescription = "12x optical zoom; SuperRange Optical Image Stabilizer",
@@ -6650,6 +6669,7 @@ namespace Nop.Services.Installation
 
             var productCompaq = new Product()
             {
+                ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = true,
                 Name = "Compaq Presario SR1519X Pentium 4 Desktop PC with CDRW",
                 ShortDescription = "Compaq Presario Desktop PC",
@@ -6696,6 +6716,7 @@ namespace Nop.Services.Installation
 
             var productCookingForTwo = new Product()
             {
+                ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = true,
                 Name = "Cooking for Two",
                 ShortDescription = "More Than 200 Foolproof Recipes for Weeknights and Special Occasions (Hardcover)",
@@ -6743,6 +6764,7 @@ namespace Nop.Services.Installation
 
             var productCorel = new Product()
             {
+                ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = true,
                 Name = "Corel Paint Shop Pro Photo X2",
                 ShortDescription = "The ideal choice for any aspiring photographer's digital darkroom",
@@ -6789,6 +6811,7 @@ namespace Nop.Services.Installation
 
             var productCustomTShirt = new Product()
             {
+                ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = true,
                 Name = "Custom T-Shirt",
                 ShortDescription = "T-Shirt - Add Your Content",
@@ -6843,6 +6866,7 @@ namespace Nop.Services.Installation
 
             var productDiamondEarrings = new Product()
             {
+                ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = true,
                 Name = "Diamond Pave Earrings",
                 ShortDescription = "1/2 Carat (ctw) in White Gold",
@@ -6889,6 +6913,7 @@ namespace Nop.Services.Installation
 
             var productDiamondBracelet = new Product()
             {
+                ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = true,
                 Name = "Diamond Tennis Bracelet",
                 ShortDescription = "1.0 Carat (ctw) in White Gold",
@@ -6940,6 +6965,7 @@ namespace Nop.Services.Installation
 
             var productEatingWell = new Product()
             {
+                ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = true,
                 Name = "EatingWell in Season",
                 ShortDescription = "A Farmers' Market Cookbook (Hardcover)",
@@ -6986,6 +7012,7 @@ namespace Nop.Services.Installation
 
             var productEtnies = new Product()
             {
+                ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "etnies Men's Digit Sneaker",
                 ShortDescription = "This sleek shoe has all you need--from the padded tongue and collar and internal EVA midsole, to the STI Level 2 cushioning for impact absorption and stability.",
@@ -7086,6 +7113,7 @@ namespace Nop.Services.Installation
 
             var productLeatherHandbag = new Product()
             {
+                ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Genuine Leather Handbag with Cell Phone Holder & Many Pockets",
                 ShortDescription = "Classic Leather Handbag",
@@ -7137,6 +7165,7 @@ namespace Nop.Services.Installation
 
             var productHp506 = new Product()
             {
+                ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "HP IQ506 TouchSmart Desktop PC",
                 ShortDescription = "",
@@ -7188,6 +7217,7 @@ namespace Nop.Services.Installation
 
             var productHpPavilion1 = new Product()
             {
+                ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "HP Pavilion Artist Edition DV2890NR 14.1-inch Laptop",
                 ShortDescription = "Unique Asian-influenced HP imprint wraps the laptop both inside and out",
@@ -7267,6 +7297,7 @@ namespace Nop.Services.Installation
 
             var productHpPavilion2 = new Product()
             {
+                ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "HP Pavilion Elite M9150F Desktop PC",
                 ShortDescription = "Top-of-the-line multimedia desktop featuring 2.4 GHz Intel Core 2 Quad Processor Q6600 with four lightning fast execution cores",
@@ -7323,6 +7354,7 @@ namespace Nop.Services.Installation
 
             var productHpPavilion3 = new Product()
             {
+                ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "HP Pavilion G60-230US 16.0-Inch Laptop",
                 ShortDescription = "Streamlined multimedia laptop with 16-inch screen for basic computing, entertainment and online communication",
@@ -7402,6 +7434,7 @@ namespace Nop.Services.Installation
 
             var productHat = new Product()
             {
+                ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Indiana Jones® Shapeable Wool Hat",
                 ShortDescription = "Wear some adventure with the same hat Indiana Jones&reg; wears in his movies.",
@@ -7475,6 +7508,7 @@ namespace Nop.Services.Installation
 
             var productKensington = new Product()
             {
+                ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Kensington 33117 International All-in-One Travel Plug Adapter",
                 ShortDescription = "Includes plug adapters for use in more than 150 countries",
@@ -7521,6 +7555,7 @@ namespace Nop.Services.Installation
 
             var productLeviJeans = new Product()
             {
+                ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Levi's Skinny 511 Jeans",
                 ShortDescription = "Levi's Faded Black Skinny 511 Jeans ",
@@ -7590,6 +7625,7 @@ namespace Nop.Services.Installation
 
             var productBaseball = new Product()
             {
+                ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Major League Baseball 2K9",
                 ShortDescription = "Take charge of your franchise and enjoy the all-new MLB.com presentation style",
@@ -7636,6 +7672,7 @@ namespace Nop.Services.Installation
 
             var productMedalOfHonor = new Product()
             {
+                ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Medal of Honor - Limited Edition (Xbox 360)",
                 ShortDescription = "One of the great pioneers in military simulations returns to gaming as the Medal of Honor series depicts modern warfare for the first time, with a harrowing tour of duty in current day Afghanistan.",
@@ -7682,6 +7719,7 @@ namespace Nop.Services.Installation
 
             var productMouse = new Product()
             {
+                ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Microsoft Bluetooth Notebook Mouse 5000 Mac/Windows",
                 ShortDescription = "Enjoy reliable, transceiver-free wireless connection to your PC with Bluetooth Technology",
@@ -7728,6 +7766,7 @@ namespace Nop.Services.Installation
 
             var productGolfBelt = new Product()
             {
+                ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "NIKE Golf Casual Belt",
                 ShortDescription = "NIKE Golf Casual Belt is a great look for in the clubhouse after a round of golf.",
@@ -7774,6 +7813,7 @@ namespace Nop.Services.Installation
 
             var productPanasonic = new Product()
             {
+                ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Panasonic HDC-SDT750K, High Definition 3D Camcorder",
                 ShortDescription = "World's first 3D Shooting Camcorder",
@@ -7820,6 +7860,7 @@ namespace Nop.Services.Installation
 
             var productSunglasses = new Product()
             {
+                ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Ray Ban Aviator Sunglasses RB 3025",
                 ShortDescription = "Aviator sunglasses are one of the first widely popularized styles of modern day sunwear.",
@@ -7866,6 +7907,7 @@ namespace Nop.Services.Installation
 
             var productSamsungPhone = new Product()
             {
+                ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Samsung Rugby A837 Phone, Black (AT&T)",
                 ShortDescription = "Ruggedized 3G handset in black great for outdoor workforces",
@@ -7917,6 +7959,7 @@ namespace Nop.Services.Installation
 
             var productSonyCamcoder = new Product()
             {
+                ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Sony DCR-SR85 1MP 60GB Hard Drive Handycam Camcorder",
                 ShortDescription = "Capture video to hard disk drive; 60 GB storage",
@@ -7963,6 +8006,7 @@ namespace Nop.Services.Installation
 
             var productBestSkilletRecipes = new Product()
             {
+                ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "The Best Skillet Recipes",
                 ShortDescription = "What's the Best Way to Make Lasagna With Rich, Meaty Flavor, Chunks of Tomato, and Gooey Cheese, Without Ever Turning on the Oven or Boiling a Pot of (Hardcover)",
@@ -8010,6 +8054,7 @@ namespace Nop.Services.Installation
 
             var productSatellite = new Product()
             {
+                ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Toshiba Satellite A305-S6908 15.4-Inch Laptop",
                 ShortDescription = "Stylish, highly versatile laptop with 15.4-inch LCD, webcam integrated into bezel, and high-gloss finish",
@@ -8084,6 +8129,7 @@ namespace Nop.Services.Installation
 
             var productDenimShort = new Product()
             {
+                ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "V-Blue Juniors' Cuffed Denim Short with Rhinestones",
                 ShortDescription = "Superior construction and reinforced seams",
@@ -8130,6 +8176,7 @@ namespace Nop.Services.Installation
 
             var productEngagementRing = new Product()
             {
+                ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Vintage Style Three Stone Diamond Engagement Ring",
                 ShortDescription = "1.24 Carat (ctw) in 14K White Gold (Certified)",
@@ -8181,6 +8228,7 @@ namespace Nop.Services.Installation
 
             var productWoW = new Product()
             {
+                ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "World of Warcraft: Wrath of the Lich King Expansion Pack",
                 ShortDescription = "This expansion pack REQUIRES the original World of Warcraft game in order to run",
@@ -8227,6 +8275,7 @@ namespace Nop.Services.Installation
 
             var productSoccer = new Product()
             {
+                ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "World Wide Soccer Manager 2009",
                 ShortDescription = "Worldwide Soccer Manager 2009 from Sega for the PC or Mac is an in-depth soccer management game",
@@ -8293,6 +8342,7 @@ namespace Nop.Services.Installation
             downloadService.InsertDownload(downloadPokerFace2);
             var productPokerFace = new Product()
             {
+                ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Poker Face",
                 ShortDescription = "Poker Face by Lady GaGa",
@@ -8361,6 +8411,7 @@ namespace Nop.Services.Installation
             downloadService.InsertDownload(downloadSingleLadies2);
             var productSingleLadies = new Product()
             {
+                ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Single Ladies (Put A Ring On It)",
                 ShortDescription = "Single Ladies (Put A Ring On It) by Beyonce",
@@ -8420,6 +8471,7 @@ namespace Nop.Services.Installation
             downloadService.InsertDownload(downloadBattleOfLa);
             var productBattleOfLa = new Product()
             {
+                ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "The Battle Of Los Angeles",
                 ShortDescription = "The Battle Of Los Angeles by Rage Against The Machine",

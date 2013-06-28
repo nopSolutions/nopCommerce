@@ -40,7 +40,7 @@ namespace Nop.Admin.Controllers
     [AdminAuthorize]
     public partial class ProductController : BaseNopController
     {
-		#region Fields
+        #region Fields
 
         private readonly IProductService _productService;
         private readonly IProductTemplateService _productTemplateService;
@@ -613,6 +613,10 @@ namespace Nop.Admin.Controllers
             foreach (var v in _vendorService.GetAllVendors(0, int.MaxValue, true))
                 model.AvailableVendors.Add(new SelectListItem() { Text = v.Name, Value = v.Id.ToString() });
 
+            //product types
+            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
+            model.AvailableProductTypes.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0"});
+
             return View(model);
         }
 
@@ -628,17 +632,18 @@ namespace Nop.Admin.Controllers
                 model.SearchVendorId = _workContext.CurrentVendor.Id;
             }
 
-            var gridModel = new GridModel();
             var products = _productService.SearchProducts(
                 categoryIds: new List<int>() { model.SearchCategoryId },
                 manufacturerId: model.SearchManufacturerId,
                 storeId: model.SearchStoreId,
                 vendorId: model.SearchVendorId,
+                productType: model.SearchProductTypeId > 0 ? (ProductType?)model.SearchProductTypeId: null,
                 keywords: model.SearchProductName,
                 pageIndex: command.Page - 1,
                 pageSize: command.PageSize,
                 showHidden: true
-                );
+            );
+            var gridModel = new GridModel();
             gridModel.Data = products.Select(x =>
             {
                 var productModel = x.ToModel();
@@ -1361,6 +1366,10 @@ namespace Nop.Admin.Controllers
             foreach (var v in _vendorService.GetAllVendors(0, int.MaxValue, true))
                 model.AvailableVendors.Add(new SelectListItem() { Text = v.Name, Value = v.Id.ToString() });
 
+            //product types
+            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
+            model.AvailableProductTypes.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+
             return View(model);
         }
 
@@ -1381,6 +1390,7 @@ namespace Nop.Admin.Controllers
                 manufacturerId: model.SearchManufacturerId,
                 storeId: model.SearchStoreId,
                 vendorId: model.SearchVendorId,
+                productType: model.SearchProductTypeId > 0 ? (ProductType?)model.SearchProductTypeId : null,
                 keywords: model.SearchProductName,
                 pageIndex: command.Page - 1,
                 pageSize: command.PageSize,
@@ -1538,6 +1548,10 @@ namespace Nop.Admin.Controllers
             foreach (var v in _vendorService.GetAllVendors(0, int.MaxValue, true))
                 model.AvailableVendors.Add(new SelectListItem() { Text = v.Name, Value = v.Id.ToString() });
 
+            //product types
+            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
+            model.AvailableProductTypes.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+
             return View(model);
         }
 
@@ -1558,6 +1572,7 @@ namespace Nop.Admin.Controllers
                 manufacturerId: model.SearchManufacturerId,
                 storeId: model.SearchStoreId,
                 vendorId: model.SearchVendorId,
+                productType: model.SearchProductTypeId > 0 ? (ProductType?)model.SearchProductTypeId : null,
                 keywords: model.SearchProductName,
                 pageIndex: command.Page - 1,
                 pageSize: command.PageSize,
@@ -1716,6 +1731,10 @@ namespace Nop.Admin.Controllers
             foreach (var v in _vendorService.GetAllVendors(0, int.MaxValue, true))
                 model.AvailableVendors.Add(new SelectListItem() { Text = v.Name, Value = v.Id.ToString() });
 
+            //product types
+            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
+            model.AvailableProductTypes.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+
             return View(model);
         }
 
@@ -1736,6 +1755,7 @@ namespace Nop.Admin.Controllers
                 manufacturerId: model.SearchManufacturerId,
                 storeId: model.SearchStoreId,
                 vendorId: model.SearchVendorId,
+                productType: model.SearchProductTypeId > 0 ? (ProductType?)model.SearchProductTypeId : null,
                 keywords: model.SearchProductName,
                 pageIndex: command.Page - 1,
                 pageSize: command.PageSize,
@@ -2384,6 +2404,10 @@ namespace Nop.Admin.Controllers
             foreach (var m in _manufacturerService.GetAllManufacturers(true))
                 model.AvailableManufacturers.Add(new SelectListItem() { Text = m.Name, Value = m.Id.ToString() });
 
+            //product types
+            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
+            model.AvailableProductTypes.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+
             return View(model);
         }
         [HttpPost, GridAction(EnableCustomBinding = true)]
@@ -2399,7 +2423,8 @@ namespace Nop.Admin.Controllers
 
             var products = _productService.SearchProducts(categoryIds: new List<int>() { model.SearchCategoryId},
                 manufacturerId: model.SearchManufacturerId,
-                vendorId: vendorId, 
+                vendorId: vendorId,
+                productType: model.SearchProductTypeId > 0 ? (ProductType?)model.SearchProductTypeId : null,
                 keywords: model.SearchProductName,
                 pageIndex: command.Page - 1,
                 pageSize: command.PageSize,

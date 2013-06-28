@@ -4,7 +4,6 @@ using System.Linq;
 using System.Web.Mvc;
 using Nop.Admin.Models.Catalog;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Common;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.ExportImport;
@@ -15,6 +14,7 @@ using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Stores;
 using Nop.Services.Vendors;
+using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
 using Telerik.Web.Mvc;
@@ -576,6 +576,10 @@ namespace Nop.Admin.Controllers
             foreach (var v in _vendorService.GetAllVendors(0, int.MaxValue, true))
                 model.AvailableVendors.Add(new SelectListItem() { Text = v.Name, Value = v.Id.ToString() });
 
+            //product types
+            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
+            model.AvailableProductTypes.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+
             return View(model);
         }
 
@@ -591,6 +595,7 @@ namespace Nop.Admin.Controllers
                 manufacturerId: model.SearchManufacturerId,
                 storeId: model.SearchStoreId,
                 vendorId: model.SearchVendorId,
+                productType: model.SearchProductTypeId > 0 ? (ProductType?)model.SearchProductTypeId : null,
                 keywords: model.SearchProductName,
                 pageIndex: command.Page - 1,
                 pageSize: command.PageSize,

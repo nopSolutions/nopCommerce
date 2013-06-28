@@ -43,6 +43,14 @@
             </td>
         </tr>
         <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SearchProductTypeId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownList("SearchProductTypeId", Model.AvailableProductTypes)
+            </td>
+        </tr>
+        <tr>
             <td colspan="2">
                 <input type="button" id="search-products" class="t-button" value="@T("Admin.Common.Search")" />
             </td>
@@ -136,7 +144,8 @@
             var searchModel = {
                 SearchProductName: $('#@Html.FieldIdFor(model => model.SearchProductName)').val(),
                 SearchCategoryId: $('#SearchCategoryId').val(),
-                SearchManufacturerId: $('#SearchManufacturerId').val()
+                SearchManufacturerId: $('#SearchManufacturerId').val(),
+                SearchProductTypeId: $('#SearchProductTypeId').val()
             };
             e.data = searchModel;
         }
@@ -147,6 +156,7 @@
         e.values["SearchProductName"] = $('#@Html.FieldIdFor(model => model.SearchProductName)').val();
         e.values["SearchCategoryId"] = $('#SearchCategoryId').val();
         e.values["SearchManufacturerId"] = $('#SearchManufacturerId').val();
+        e.values["SearchProductTypeId"] = $('#SearchProductTypeId').val();
     }
 </script>
             </td>

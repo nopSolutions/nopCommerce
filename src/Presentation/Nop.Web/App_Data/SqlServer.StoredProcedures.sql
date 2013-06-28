@@ -446,7 +446,7 @@ BEGIN
 		AND p.ParentProductId = ' + CAST(@ParentProductId AS nvarchar(max))
 	END
 	
-	--filter by parent product identifer
+	--filter by product type
 	IF @ProductTypeId is not null
 	BEGIN
 		SET @sql = @sql + '

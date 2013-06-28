@@ -1337,6 +1337,12 @@ set @resources='
   <LocaleResource Name="Products.NoAssociatedProducts">
     <Value>This product is sold out</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.List.SearchProductType">
+    <Value>Product type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.List.SearchProductType.Hint">
+    <Value>Search by a product type.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -3772,7 +3778,7 @@ BEGIN
 		BEGIN
 			--simple product
 			UPDATE [Product] 
-			SET [ProductTypeId] = 0,
+			SET [ProductTypeId] = 5,
 			[ParentProductId] = 0,
 			[Sku] = @Sku,
 			[ManufacturerPartNumber] = @ManufacturerPartNumber,
@@ -3839,7 +3845,7 @@ BEGIN
 			
 			--product type
 			UPDATE [Product]
-			SET [ProductTypeId]=0
+			SET [ProductTypeId]=5
 			WHERE [Id]=@ProductId
 			
 			--product template
@@ -3868,7 +3874,7 @@ BEGIN
 		BEGIN
 			--grouped product
 			UPDATE [Product] 
-			SET [ProductTypeId] = 0,
+			SET [ProductTypeId] = 10,
 			[ParentProductId] = 0,
 			[Sku] = null,
 			[ManufacturerPartNumber] = null,
@@ -4006,7 +4012,7 @@ BEGIN
 			@Weight, @Length, @Width, @Height, 
 			@AvailableStartDateTimeUtc, @AvailableEndDateTimeUtc,
 			--simple product
-			0 , @ProductId)
+			5 , @ProductId)
 			
 			SET @NewProductId = @@IDENTITY
 			
@@ -5153,7 +5159,7 @@ BEGIN
 		AND p.ParentProductId = ' + CAST(@ParentProductId AS nvarchar(max))
 	END
 	
-	--filter by parent product identifer
+	--filter by product type
 	IF @ProductTypeId is not null
 	BEGIN
 		SET @sql = @sql + '
@@ -5355,4 +5361,10 @@ BEGIN
 	
 	DROP TABLE #PageIndex
 END
+GO
+
+--updated product type values
+UPDATE [Product]
+SET [ProductTypeId]=5
+WHERE [ProductTypeId]=0
 GO

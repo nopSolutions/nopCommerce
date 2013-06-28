@@ -8,7 +8,7 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Simple product
         /// </summary>
-        SimpleProduct = 0,
+        SimpleProduct = 5,
         /// <summary>
         /// Grouped product
         /// </summary>

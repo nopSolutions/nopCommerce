@@ -2052,14 +2052,22 @@
                                         </LocaleResource>
                                       </Children>
                                     </LocaleResource>
-                                  <LocaleResource Name="SearchVendor">
-                                    <Value>Vendor</Value>
-                                    <Children>
-                                      <LocaleResource Name="Hint">
-                                        <Value>Search by a specific vendor.</Value>
-                                      </LocaleResource>
-                                    </Children>
-                                  </LocaleResource>
+                                    <LocaleResource Name="SearchVendor">
+                                      <Value>Vendor</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Search by a specific vendor.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="SearchProductType">
+                                      <Value>Product type</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Search by a product type.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
                                 </Children>
                             </LocaleResource>
                             <LocaleResource Name="Manage">

@@ -143,6 +143,7 @@ namespace Nop.Admin.Models.Catalog
                 AvailableManufacturers = new List<SelectListItem>();
                 AvailableStores = new List<SelectListItem>();
                 AvailableVendors = new List<SelectListItem>();
+                AvailableProductTypes = new List<SelectListItem>();
             }
 
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
@@ -156,11 +157,14 @@ namespace Nop.Admin.Models.Catalog
             public int SearchStoreId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchVendor")]
             public int SearchVendorId { get; set; }
+            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductType")]
+            public int SearchProductTypeId { get; set; }
 
             public IList<SelectListItem> AvailableCategories { get; set; }
             public IList<SelectListItem> AvailableManufacturers { get; set; }
             public IList<SelectListItem> AvailableStores { get; set; }
             public IList<SelectListItem> AvailableVendors { get; set; }
+            public IList<SelectListItem> AvailableProductTypes { get; set; }
 
             public int CategoryId { get; set; }
 
