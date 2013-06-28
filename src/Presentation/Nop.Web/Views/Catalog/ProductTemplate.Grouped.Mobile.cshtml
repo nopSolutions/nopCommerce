@@ -40,7 +40,7 @@
             </div>
             <div class="product-collateral">
                 <div class="product-variant-list">
-                    <!--product variants-->
+                    <!--associated products-->
                     @foreach (var variant in Model.AssociatedProducts)
                     {
                         <div class="product-variant-line" data-productid="@variant.Id">
@@ -91,6 +91,12 @@
                                     @Html.Partial("_AddToCart", variant.AddToCart, dataDictAddToCart)
                                 }
                             </div>
+                        </div>
+                    }
+                    @if (Model.AssociatedProducts.Count == 0)
+                    {
+                        <div class="no-associated-products">
+                            @T("Products.NoAssociatedProducts")
                         </div>
                     }
                 </div>

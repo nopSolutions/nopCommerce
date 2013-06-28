@@ -916,6 +916,7 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 .product-details-page .product-variant-list .product-variant-line:after{content:".";display:block;clear:both;height:0;font-size:0;line-height:0;visibility:hidden;}
 .add-to-cart-button{padding:5px 10px;cursor:pointer;background:#7DB72F;background:-webkit-gradient(linear,left top,left bottom,from(#7DB72F),to(#4E7D0E));background:-moz-linear-gradient(top,#7DB72F,#4E7D0E);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#7DB72F',endColorstr='#4E7D0E');color:#fff;text-shadow:none;border-color:#999;border:0 none;font-weight:700;font-size:1.3em;margin-top:-5px;margin-right:35px;}
 .product-details-page .product-variant-list .add-to-cart-button{margin-top:15px;margin-right:0;display:block;}
+.product-details-page .no-associated-products{font-weight:bold;}
 .add-to-cart-button:hover{color:#fff;}
 .add-to-wishlist-button{display:block;margin-top:10px;}
 .product-details-page .variant-picture{clear:both;float:right;margin-bottom:15px;}

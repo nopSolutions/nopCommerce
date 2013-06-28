@@ -89,8 +89,8 @@
                                     @Html.Partial("_DownloadSample", variant)
                                     @Html.Action("ProductTierPrices", "Catalog", new { productId = variant.Id })
                                     @{
-                                        var dataDictAttributes = new ViewDataDictionary();
-                                        dataDictAttributes.TemplateInfo.HtmlFieldPrefix = string.Format("attributes_{0}", variant.Id);
+                                    var dataDictAttributes = new ViewDataDictionary();
+                                    dataDictAttributes.TemplateInfo.HtmlFieldPrefix = string.Format("attributes_{0}", variant.Id);
                                         @Html.Partial("_ProductAttributes", variant.ProductVariantAttributes, dataDictAttributes)                  
                                     }
                                     <!--product SKU, manufacturer part number, stock info-->
@@ -98,21 +98,27 @@
                                     <!--Back in stock subscription-->
                                     @Html.Partial("_BackInStockSubscription", variant)
                                     @{
-                                        var dataDictGiftCard = new ViewDataDictionary();
-                                        dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = string.Format("giftcard_{0}", variant.Id);
+                                    var dataDictGiftCard = new ViewDataDictionary();
+                                    dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = string.Format("giftcard_{0}", variant.Id);
                                         @Html.Partial("_GiftCardInfo", variant.GiftCard, dataDictGiftCard)
                                     }
                                     @{
-                                        var dataDictPrice = new ViewDataDictionary();
-                                        dataDictPrice.TemplateInfo.HtmlFieldPrefix = string.Format("price_{0}", variant.Id);
+                                    var dataDictPrice = new ViewDataDictionary();
+                                    dataDictPrice.TemplateInfo.HtmlFieldPrefix = string.Format("price_{0}", variant.Id);
                                         @Html.Partial("_ProductPrice", variant.ProductPrice, dataDictPrice)
                                     }
                                     @{
-                                        var dataDictAddToCart = new ViewDataDictionary();
-                                        dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", variant.Id);
+                                    var dataDictAddToCart = new ViewDataDictionary();
+                                    dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", variant.Id);
                                         @Html.Partial("_AddToCart", variant.AddToCart, dataDictAddToCart)
                                     }
                                 </div>
+                            </div>
+                        }
+                        @if (Model.AssociatedProducts.Count == 0)
+                        {
+                            <div class="no-associated-products">
+                                @T("Products.NoAssociatedProducts")
                             </div>
                         }
                     </div>

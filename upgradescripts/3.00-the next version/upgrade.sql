@@ -1334,6 +1334,9 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Fields.VisibleIndividually.Hint">
     <Value>Check it if you want this product to be visible in catalog or search results. You can use this field (just uncheck) to hide associated products from catalog and make them accessible only from a parent "grouped" product details page.</Value>
   </LocaleResource>
+  <LocaleResource Name="Products.NoAssociatedProducts">
+    <Value>This product is sold out</Value>
+  </LocaleResource>
 </Language>
 '
 

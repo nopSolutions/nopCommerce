@@ -3410,6 +3410,9 @@
                     </LocaleResource>
                 </Children>
             </LocaleResource>
+            <LocaleResource Name="NoAssociatedProducts">
+                <Value>This product is sold out</Value>
+            </LocaleResource>
             <LocaleResource Name="Price">
                 <Value>Price</Value>
                 <Children>

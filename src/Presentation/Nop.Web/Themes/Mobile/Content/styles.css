@@ -433,6 +433,7 @@
 .product-details-page .product-no-reviews{margin-top:20px;margin-bottom:20px;}
 .product-details-page .product-variant-list{}
 .product-details-page .product-variant-line{clear:both;margin-bottom:20px;padding-bottom:20px;margin-top:10px;border-bottom:solid 1px #d3d3d3;}
+.product-details-page .no-associated-products{font-weight:bold;}
 .product-details-page .variant-picture{margin-bottom:15px;}
 .product-details-page .variant-name{font-size:1.3em;margin-bottom:.3em;}
 .product-details-page .variant-description{clear:both;margin-bottom:.3em;}
