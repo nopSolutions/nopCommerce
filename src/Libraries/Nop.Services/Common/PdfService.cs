@@ -925,7 +925,7 @@ namespace Nop.Services.Common
                 {
                     //grouped product. render its associated products
                     int pvNum = 1;
-                    foreach (var associatedProduct in _productService.SearchProducts(parentProductId: product.Id,
+                    foreach (var associatedProduct in _productService.SearchProducts(parentGroupedProductId: product.Id,
                         showHidden: true))
                     {
                         doc.Add(new Paragraph(String.Format("{0}-{1}. {2}", productNumber, pvNum, associatedProduct.GetLocalized(x => x.Name, lang.Id)), font));

@@ -285,7 +285,7 @@ namespace Nop.Web.Controllers
                                 var associatedProducts = _productService.SearchProducts(
                                     storeId: _storeContext.CurrentStore.Id,
                                     visibleIndividuallyOnly: false,
-                                    parentProductId: product.Id);
+                                    parentGroupedProductId: product.Id);
 
                                 switch (associatedProducts.Count)
                                 {
@@ -776,7 +776,7 @@ namespace Nop.Web.Controllers
                     var associatedProducts = _productService.SearchProducts(
                         storeId: _storeContext.CurrentStore.Id,
                         visibleIndividuallyOnly: false,
-                        parentProductId: product.Id
+                        parentGroupedProductId: product.Id
                         );
                     foreach (var associatedProduct in associatedProducts)
                         model.AssociatedProducts.Add(PrepareProductDetailsPageModel(associatedProduct, true));
@@ -1536,7 +1536,7 @@ namespace Nop.Web.Controllers
             if (!product.VisibleIndividually)
             {
                 //is this one an associated products?
-                var parentGroupedProduct = _productService.GetProductById(product.ParentProductId);
+                var parentGroupedProduct = _productService.GetProductById(product.ParentGroupedProductId);
                 if (parentGroupedProduct != null)
                 {
                     return RedirectToRoute("Product", new { SeName = parentGroupedProduct.GetSeName() });

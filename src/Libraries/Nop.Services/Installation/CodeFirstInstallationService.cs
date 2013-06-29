@@ -6547,7 +6547,7 @@ namespace Nop.Services.Installation
             {
                 ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = false, //hide this products
-                ParentProductId = productCanonCamera.Id,
+                ParentGroupedProductId = productCanonCamera.Id,
                 Name = "Canon Digital SLR Camera - Black",
                 ProductTemplateId = productTemplateSimple.Id,
                 //SeName = "canon-digital-slr-camera-black",
@@ -6583,7 +6583,7 @@ namespace Nop.Services.Installation
             {
                 ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = false, //hide this products
-                ParentProductId = productCanonCamera.Id,
+                ParentGroupedProductId = productCanonCamera.Id,
                 Name = "Canon Digital SLR Camera - Silver",
                 ProductTemplateId = productTemplateSimple.Id,
                 //SeName = "canon-digital-slr-camera-silver",

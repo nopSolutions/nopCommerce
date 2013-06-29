@@ -258,7 +258,7 @@ namespace Nop.Services.Catalog
         /// <param name="manufacturerId">Manufacturer identifier; 0 to load all records</param>
         /// <param name="storeId">Store identifier; 0 to load all records</param>
         /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
-        /// <param name="parentProductId">Parent product identifier (used with grouped products); 0 to load all records</param>
+        /// <param name="parentGroupedProductId">Parent product identifier (used with grouped products); 0 to load all records</param>
         /// <param name="productType">Product type; 0 to load all records</param>
         /// <param name="visibleIndividuallyOnly">A values indicating whether to load only products marked as "visible individually"; "false" to load all records; "true" to load "visible individually" only</param>
         /// <param name="featuredProducts">A value indicating whether loaded products are marked as featured (relates only to categories and manufacturers). 0 to load featured products only, 1 to load not featured products only, null to load all products</param>
@@ -280,7 +280,7 @@ namespace Nop.Services.Catalog
             int manufacturerId = 0,
             int storeId = 0,
             int vendorId = 0,
-            int parentProductId = 0,
+            int parentGroupedProductId = 0,
             ProductType? productType = null,
             bool visibleIndividuallyOnly = false,
             bool? featuredProducts = null,
@@ -298,7 +298,7 @@ namespace Nop.Services.Catalog
             IList<int> filterableSpecificationAttributeOptionIds = null;
             return SearchProducts(out filterableSpecificationAttributeOptionIds, false,
                 pageIndex, pageSize, categoryIds, manufacturerId,
-                storeId, vendorId, parentProductId, productType, visibleIndividuallyOnly, featuredProducts,
+                storeId, vendorId, parentGroupedProductId, productType, visibleIndividuallyOnly, featuredProducts,
                 priceMin, priceMax, productTagId, keywords, searchDescriptions,
                 searchProductTags, languageId, filteredSpecs, orderBy, showHidden);
         }
@@ -314,7 +314,7 @@ namespace Nop.Services.Catalog
         /// <param name="manufacturerId">Manufacturer identifier; 0 to load all records</param>
         /// <param name="storeId">Store identifier; 0 to load all records</param>
         /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
-        /// <param name="parentProductId">Parent product identifier (used with grouped products); 0 to load all records</param>
+        /// <param name="parentGroupedProductId">Parent product identifier (used with grouped products); 0 to load all records</param>
         /// <param name="productType">Product type; 0 to load all records</param>
         /// <param name="visibleIndividuallyOnly">A values indicating whether to load only products marked as "visible individually"; "false" to load all records; "true" to load "visible individually" only</param>
         /// <param name="featuredProducts">A value indicating whether loaded products are marked as featured (relates only to categories and manufacturers). 0 to load featured products only, 1 to load not featured products only, null to load all products</param>
@@ -338,7 +338,7 @@ namespace Nop.Services.Catalog
             int manufacturerId = 0,
             int storeId = 0,
             int vendorId = 0,
-            int parentProductId = 0,
+            int parentGroupedProductId = 0,
             ProductType? productType = null,
             bool visibleIndividuallyOnly = false,
             bool? featuredProducts = null,
@@ -453,10 +453,10 @@ namespace Nop.Services.Catalog
                 pVendorId.Value = vendorId;
                 pVendorId.DbType = DbType.Int32;
 
-                var pParentProductId = _dataProvider.GetParameter();
-                pParentProductId.ParameterName = "ParentProductId";
-                pParentProductId.Value = parentProductId;
-                pParentProductId.DbType = DbType.Int32;
+                var pParentGroupedProductId = _dataProvider.GetParameter();
+                pParentGroupedProductId.ParameterName = "ParentGroupedProductId";
+                pParentGroupedProductId.Value = parentGroupedProductId;
+                pParentGroupedProductId.DbType = DbType.Int32;
 
                 var pProductTypeId = _dataProvider.GetParameter();
                 pProductTypeId.ParameterName = "ProductTypeId";
@@ -571,7 +571,7 @@ namespace Nop.Services.Catalog
                     pManufacturerId,
                     pStoreId,
                     pVendorId,
-                    pParentProductId,
+                    pParentGroupedProductId,
                     pProductTypeId,
                     pVisibleIndividuallyOnly,
                     pProductTagId,
@@ -622,9 +622,9 @@ namespace Nop.Services.Catalog
                 {
                     query = query.Where(p => p.Published);
                 }
-                if (parentProductId > 0)
+                if (parentGroupedProductId > 0)
                 {
-                    query = query.Where(p => p.ParentProductId == parentProductId);
+                    query = query.Where(p => p.ParentGroupedProductId == parentGroupedProductId);
                 }
                 if (visibleIndividuallyOnly)
                 {
@@ -802,9 +802,9 @@ namespace Nop.Services.Catalog
                     query =
                         query.OrderBy(p => p.ProductManufacturers.FirstOrDefault(pm => pm.ManufacturerId == manufacturerId).DisplayOrder);
                 }
-                else if (orderBy == ProductSortingEnum.Position && parentProductId > 0)
+                else if (orderBy == ProductSortingEnum.Position && parentGroupedProductId > 0)
                 {
-                    //parent product specified (sort associated products)
+                    //parent grouped product specified (sort associated products)
                     query = query.OrderBy(p => p.DisplayOrder);
                 }
                 else if (orderBy == ProductSortingEnum.Position)

@@ -1654,7 +1654,7 @@ namespace Nop.Admin.Controllers
                 vendorId = _workContext.CurrentVendor.Id;
             }
 
-            var associatedProducts = _productService.SearchProducts(parentProductId: productId, 
+            var associatedProducts = _productService.SearchProducts(parentGroupedProductId: productId, 
                 vendorId: vendorId,
                 showHidden: true);
             var associatedProductsModel = associatedProducts
@@ -1700,7 +1700,7 @@ namespace Nop.Admin.Controllers
             associatedProduct.DisplayOrder = model.DisplayOrder;
             _productService.UpdateProduct(associatedProduct);
 
-            return AssociatedProductList(command, associatedProduct.ParentProductId);
+            return AssociatedProductList(command, associatedProduct.ParentGroupedProductId);
         }
 
         [GridAction(EnableCustomBinding = true)]
@@ -1717,12 +1717,12 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return Content("This is not your product");
 
-            var originalParentProductId = product.ParentProductId;
+            var originalParentGroupedProductId = product.ParentGroupedProductId;
 
-            product.ParentProductId = 0;
+            product.ParentGroupedProductId = 0;
             _productService.UpdateProduct(product);
 
-            return AssociatedProductList(command, originalParentProductId);
+            return AssociatedProductList(command, originalParentGroupedProductId);
         }
 
         public ActionResult AssociatedProductAddPopup(int productId)
@@ -1811,7 +1811,7 @@ namespace Nop.Admin.Controllers
                         if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                             continue;
 
-                        product.ParentProductId = model.ProductId;
+                        product.ParentGroupedProductId = model.ProductId;
                         _productService.UpdateProduct(product);
                     }
                 }

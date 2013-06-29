@@ -64,7 +64,7 @@ namespace Nop.Services.ExportImport
                 var properties = new string[]
                 {
                     "ProductTypeId",
-                    "ParentProductId",
+                    "ParentGroupedProductId",
                     "VisibleIndividually",
                     "Name",
                     "ShortDescription",
@@ -155,7 +155,7 @@ namespace Nop.Services.ExportImport
                         break;
 
                     int productTypeId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "ProductTypeId")].Value);
-                    int parentProductId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "ParentProductId")].Value);
+                    int parentGroupedProductId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "ParentGroupedProductId")].Value);
                     bool visibleIndividually = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "VisibleIndividually")].Value);
                     string name = worksheet.Cells[iRow, GetColumnIndex(properties, "Name")].Value as string;
                     string shortDescription = worksheet.Cells[iRow, GetColumnIndex(properties, "ShortDescription")].Value as string;
@@ -250,7 +250,7 @@ namespace Nop.Services.ExportImport
                         newProduct = true;
                     }
                     product.ProductTypeId = productTypeId;
-                    product.ParentProductId = parentProductId;
+                    product.ParentGroupedProductId = parentGroupedProductId;
                     product.VisibleIndividually = visibleIndividually;
                     product.Name = name;
                     product.ShortDescription = shortDescription;
