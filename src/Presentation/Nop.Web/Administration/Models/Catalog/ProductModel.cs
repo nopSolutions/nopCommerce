@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using FluentValidation.Attributes;
 using Nop.Admin.Models.Customers;
+using Nop.Admin.Models.Discounts;
 using Nop.Admin.Models.Stores;
 using Nop.Admin.Validators.Catalog;
 using Nop.Core.Domain.Discounts;
@@ -335,7 +336,7 @@ namespace Nop.Admin.Models.Catalog
         public IList<ProductPictureModel> ProductPictureModels { get; set; }
 
         //discounts
-        public List<Discount> AvailableDiscounts { get; set; }
+        public List<DiscountModel> AvailableDiscounts { get; set; }
         public int[] SelectedDiscountIds { get; set; }
 
 

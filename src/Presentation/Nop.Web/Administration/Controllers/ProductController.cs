@@ -543,9 +543,11 @@ namespace Nop.Admin.Controllers
             model.AddSpecificationAttributeModel.ShowOnProductPage = true;
 
             //discounts
-            var discounts = _discountService.GetAllDiscounts(DiscountType.AssignedToSkus, null, true);
-            model.AvailableDiscounts = discounts.ToList();
-            if (!excludeProperties)
+            model.AvailableDiscounts = _discountService
+                .GetAllDiscounts(DiscountType.AssignedToSkus, null, true)
+                .Select(d => d.ToModel())
+                .ToList();
+            if (!excludeProperties && product != null)
             {
                 model.SelectedDiscountIds = product.AppliedDiscounts.Select(d => d.Id).ToArray();
             }

@@ -163,10 +163,12 @@ namespace Nop.Admin.Controllers
             if (model == null)
                 throw new ArgumentNullException("model");
 
-            var discounts = _discountService.GetAllDiscounts(DiscountType.AssignedToCategories, null, true);
-            model.AvailableDiscounts = discounts.ToList();
+            model.AvailableDiscounts = _discountService
+                .GetAllDiscounts(DiscountType.AssignedToCategories, null, true)
+                .Select(d => d.ToModel())
+                .ToList();
 
-            if (!excludeProperties)
+            if (!excludeProperties && category != null)
             {
                 model.SelectedDiscountIds = category.AppliedDiscounts.Select(d => d.Id).ToArray();
             }
