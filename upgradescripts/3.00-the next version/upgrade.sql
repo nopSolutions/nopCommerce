@@ -1346,6 +1346,12 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.AssociatedProducts.Fields.DisplayOrder">
     <Value>Display order</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.List.TrackingNumber">
+    <Value>Tracking number</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.List.TrackingNumber.Hint">
+    <Value>Search by a specific tracking number.</Value>
+  </LocaleResource>
 </Language>
 '
 

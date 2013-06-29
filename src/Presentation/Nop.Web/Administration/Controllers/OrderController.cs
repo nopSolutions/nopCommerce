@@ -2107,7 +2107,8 @@ namespace Nop.Admin.Controllers
                 vendorId = _workContext.CurrentVendor.Id;
 
             //load shipments
-            var shipments = _shipmentService.GetAllShipments(vendorId, startDateValue, endDateValue, 
+            var shipments = _shipmentService.GetAllShipments(vendorId, 
+                model.TrackingNumber, startDateValue, endDateValue, 
                 command.Page - 1, command.PageSize);
             var gridModel = new GridModel<ShipmentModel>
             {
@@ -2549,7 +2550,7 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null)
                 vendorId = _workContext.CurrentVendor.Id;
 
-            var shipments = _shipmentService.GetAllShipments(vendorId, null, null, 0, int.MaxValue).ToList();
+            var shipments = _shipmentService.GetAllShipments(vendorId,  null, null, null, 0, int.MaxValue).ToList();
 
             //ensure that we at least one shipment selected
             if (shipments.Count == 0)

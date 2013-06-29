@@ -42,6 +42,14 @@
             </td>
         </tr>
         <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.TrackingNumber):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => Model.TrackingNumber)
+            </td>
+        </tr>
+        <tr>
             <td colspan="2">
                 <input type="button" id="btnSearch" class="t-button" value="@T("Admin.Common.Search")" />
             </td>
@@ -143,7 +151,8 @@
         function onDataBinding(e) {
             var searchModel = {
                     StartDate: $('#@Html.FieldIdFor(model => model.StartDate)').val(),
-                    EndDate: $('#@Html.FieldIdFor(model => model.EndDate)').val()
+                    EndDate: $('#@Html.FieldIdFor(model => model.EndDate)').val(),
+                    TrackingNumber: $('#@Html.FieldIdFor(model => model.TrackingNumber)').val()
                     };
             e.data = searchModel;
         }

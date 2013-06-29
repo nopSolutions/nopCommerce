@@ -9027,6 +9027,14 @@
                                             </LocaleResource>
                                         </Children>
                                     </LocaleResource>
+                                    <LocaleResource Name="TrackingNumber">
+                                        <Value>Tracking number</Value>
+                                        <Children>
+                                            <LocaleResource Name="Hint">
+                                                <Value>Search by a specific tracking number.</Value>
+                                            </LocaleResource>
+                                        </Children>
+                                    </LocaleResource>
                                 </Children>
                             </LocaleResource>
                             <LocaleResource Name="NoProductsSelected">
