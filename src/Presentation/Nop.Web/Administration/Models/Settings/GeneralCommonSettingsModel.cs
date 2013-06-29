@@ -160,10 +160,6 @@ namespace Nop.Admin.Models.Settings
 
         public partial class PdfSettingsModel : BaseNopModel
         {
-            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.PdfEnabled")]
-            public bool Enabled { get; set; }
-            public bool Enabled_OverrideForStore { get; set; }
-
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.PdfLetterPageSizeEnabled")]
             public bool LetterPageSizeEnabled { get; set; }
             public bool LetterPageSizeEnabled_OverrideForStore { get; set; }

@@ -6,11 +6,6 @@ namespace Nop.Core.Domain.Common
     public class PdfSettings : ISettings
     {
         /// <summary>
-        /// Gets or sets a value indicating PDF is supported
-        /// </summary>
-        public bool Enabled { get; set; }
-
-        /// <summary>
         /// PDF logo picture identifier
         /// </summary>
         public int LogoPictureId { get; set; }

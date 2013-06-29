@@ -32,8 +32,6 @@ namespace Nop.Admin.Models.Orders
 
         public List<ShipmentItemModel> Items { get; set; }
 
-        public bool DisplayPdfPackagingSlip { get; set; }
-
         #region Nested classes
 
         public partial class ShipmentItemModel : BaseNopEntityModel

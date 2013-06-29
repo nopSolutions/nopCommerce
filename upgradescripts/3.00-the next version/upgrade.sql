@@ -1352,6 +1352,12 @@ set @resources='
   <LocaleResource Name="Admin.Orders.Shipments.List.TrackingNumber.Hint">
     <Value>Search by a specific tracking number.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.PdfEnabled">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.PdfEnabled.Hint">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -5413,4 +5419,8 @@ IF EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_Product_ParentProductId' 
 BEGIN
 	EXEC sp_rename 'Product.IX_Product_ParentProductId', 'IX_Product_ParentGroupedProductId', 'INDEX';
 END
+GO
+
+--deleted obsolete setting
+DELETE FROM [Setting] WHERE [name] = N'pdfsettings.enabled'
 GO

@@ -15,10 +15,7 @@
         </div>
         <div class="options">
             <a href="@Url.Action("Create")" class="t-button">@T("Admin.Common.AddNew")</a>
-            @if (Model.DisplayPdfDownloadCatalog)
-            {
-                <a href="@Url.Action("DownloadCatalogAsPdf")" class="t-button">@T("Admin.Catalog.Products.List.DownloadPDF")</a>
-            }
+            <a href="@Url.Action("DownloadCatalogAsPdf")" class="t-button">@T("Admin.Catalog.Products.List.DownloadPDF")</a>
             <a href="@Url.Action("ExportXmlAll")" class="t-button">@T("Admin.Common.ExportToXml.All")</a>
             <input type="button" id="exportxml-selected" class="t-button" value="@T("Admin.Common.ExportToXml.Selected")" />
             <a href="@Url.Action("ExportExcelAll")" class="t-button">@T("Admin.Common.ExportToExcel.All")</a>

@@ -17,11 +17,8 @@
             @T("Admin.Orders.Shipments.List")
         </div>
         <div class="options">
-            @if (Model.DisplayPdfPackagingSlip)
-            {
-                <a href="@Url.Action("PdfPackagingSlipAll")" class="t-button">@T("Admin.Orders.Shipments.PrintPackagingSlip.All")</a>
-                <input type="button" id="exportpackagingslips-selected" class="t-button" value="@T("Admin.Orders.Shipments.PrintPackagingSlip.Selected")" />
-            }
+            <a href="@Url.Action("PdfPackagingSlipAll")" class="t-button">@T("Admin.Orders.Shipments.PrintPackagingSlip.All")</a>
+            <input type="button" id="exportpackagingslips-selected" class="t-button" value="@T("Admin.Orders.Shipments.PrintPackagingSlip.Selected")" />
         </div>
     </div>
     <table width="100%">

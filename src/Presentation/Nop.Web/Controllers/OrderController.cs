@@ -106,7 +106,6 @@ namespace Nop.Web.Controllers
             model.OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext);
             model.IsReOrderAllowed = _orderSettings.IsReOrderAllowed;
             model.IsReturnRequestAllowed = _orderProcessingService.IsReturnRequestAllowed(order);
-            model.DisplayPdfInvoice = _pdfSettings.Enabled;
 
             //shipping info
             model.ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext);

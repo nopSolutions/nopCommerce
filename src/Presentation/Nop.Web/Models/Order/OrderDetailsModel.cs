@@ -20,7 +20,6 @@ namespace Nop.Web.Models.Order
         }
 
         public bool PrintMode { get; set; }
-        public bool DisplayPdfInvoice { get; set; }
 
         public DateTime CreatedOn { get; set; }
 

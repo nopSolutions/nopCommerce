@@ -1810,13 +1810,11 @@ namespace Nop.Admin.Controllers
 
             //PDF settings
             var pdfSettings = _settingService.LoadSetting<PdfSettings>(storeScope);
-            model.PdfSettings.Enabled = pdfSettings.Enabled;
             model.PdfSettings.LetterPageSizeEnabled = pdfSettings.LetterPageSizeEnabled;
             model.PdfSettings.LogoPictureId = pdfSettings.LogoPictureId;
             //override settings
             if (storeScope > 0)
             {
-                model.PdfSettings.Enabled_OverrideForStore = _settingService.SettingExists(pdfSettings, x => x.Enabled, storeScope);
                 model.PdfSettings.LetterPageSizeEnabled_OverrideForStore = _settingService.SettingExists(pdfSettings, x => x.LetterPageSizeEnabled, storeScope);
                 model.PdfSettings.LogoPictureId_OverrideForStore = _settingService.SettingExists(pdfSettings, x => x.LogoPictureId, storeScope);
             }
@@ -1991,16 +1989,11 @@ namespace Nop.Admin.Controllers
 
             //PDF settings
             var pdfSettings = _settingService.LoadSetting<PdfSettings>(storeScope);
-            pdfSettings.Enabled = model.PdfSettings.Enabled;
             pdfSettings.LetterPageSizeEnabled = model.PdfSettings.LetterPageSizeEnabled;
             pdfSettings.LogoPictureId = model.PdfSettings.LogoPictureId;
             /* We do not clear cache after each setting update.
              * This behavior can increase performance because cached settings will not be cleared 
              * and loaded from database after each update */
-            if (model.PdfSettings.Enabled_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(pdfSettings, x => x.Enabled, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(pdfSettings, x => x.Enabled, storeScope);
             
             if (model.PdfSettings.LetterPageSizeEnabled_OverrideForStore || storeScope == 0)
                 _settingService.SaveSetting(pdfSettings, x => x.LetterPageSizeEnabled, storeScope, false);

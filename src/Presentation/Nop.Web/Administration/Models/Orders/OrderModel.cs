@@ -197,9 +197,6 @@ namespace Nop.Admin.Models.Orders
         [AllowHtml]
         public string AddOrderNoteMessage { get; set; }
 
-        public bool DisplayPdfInvoice { get; set; }
-
-
         //refund info
         [NopResourceDisplayName("Admin.Orders.Fields.PartialRefund.AmountToRefund")]
         public decimal AmountToRefund { get; set; }

@@ -35,7 +35,6 @@ namespace Nop.Admin.Models.Catalog
         public string GoDirectlyToSku { get; set; }
 
         public bool DisplayProductPictures { get; set; }
-        public bool DisplayPdfDownloadCatalog { get; set; }
 
         public bool IsLoggedInAsVendor { get; set; }
 

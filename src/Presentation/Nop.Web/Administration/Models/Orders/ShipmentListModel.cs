@@ -19,7 +19,5 @@ namespace Nop.Admin.Models.Orders
         [NopResourceDisplayName("Admin.Orders.Shipments.List.TrackingNumber")]
         [AllowHtml]
         public string TrackingNumber { get; set; }
-
-        public bool DisplayPdfPackagingSlip { get; set; }
     }
 }

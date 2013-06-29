@@ -4481,7 +4481,6 @@ namespace Nop.Services.Installation
             var settingService = EngineContext.Current.Resolve<ISettingService>();
             settingService.SaveSetting(new PdfSettings()
                 {
-                    Enabled = true,
                     LetterPageSizeEnabled = false,
                     RenderOrderNotes = true,
                     FontFileName = "FreeSerif.ttf",

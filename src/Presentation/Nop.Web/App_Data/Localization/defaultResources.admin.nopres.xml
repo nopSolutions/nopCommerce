@@ -4792,14 +4792,6 @@
                                             </LocaleResource>
                                         </Children>
                                     </LocaleResource>
-                                    <LocaleResource Name="PdfEnabled">
-                                        <Value>Enabled</Value>
-                                        <Children>
-                                            <LocaleResource Name="Hint">
-                                                <Value>Check to enabled PDF.</Value>
-                                            </LocaleResource>
-                                        </Children>
-                                    </LocaleResource>
                                     <LocaleResource Name="PdfLetterPageSizeEnabled">
                                         <Value>Use Letter page size</Value>
                                         <Children>

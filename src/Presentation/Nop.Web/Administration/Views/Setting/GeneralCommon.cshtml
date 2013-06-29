@@ -408,16 +408,6 @@
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.PdfSettings.Enabled_OverrideForStore, model => model.PdfSettings.Enabled, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.PdfSettings.Enabled):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.PdfSettings.Enabled)
-                @Html.ValidationMessageFor(model => model.PdfSettings.Enabled)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
                 @Html.OverrideStoreCheckboxFor(model => model.PdfSettings.LetterPageSizeEnabled_OverrideForStore, model => model.PdfSettings.LetterPageSizeEnabled, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.PdfSettings.LetterPageSizeEnabled):
             </td>

@@ -51,10 +51,7 @@
             @T("Admin.Orders.Shipments.ViewDetails") - @Model.Id @Html.ActionLink("(" + T("Admin.Orders.Shipments.BackToOrder") + ")", "Edit", new { id = Model.OrderId })
         </div>
         <div class="options">
-            @if (Model.DisplayPdfPackagingSlip)
-            {
-                <a href="@Url.Action("PdfPackagingSlip", new { shipmentId = Model.Id })" class="t-button">@T("Admin.Orders.Shipments.PrintPackagingSlip")</a>
-            }
+            <a href="@Url.Action("PdfPackagingSlip", new { shipmentId = Model.Id })" class="t-button">@T("Admin.Orders.Shipments.PrintPackagingSlip")</a>
             <span id="shipment-delete" class="t-button">@T("Admin.Common.Delete")</span>
         </div>
     </div>

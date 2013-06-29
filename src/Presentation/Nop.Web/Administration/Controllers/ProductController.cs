@@ -591,7 +591,6 @@ namespace Nop.Admin.Controllers
 
             var model = new ProductListModel();
             model.DisplayProductPictures = _adminAreaSettings.DisplayProductPictures;
-            model.DisplayPdfDownloadCatalog = _pdfSettings.Enabled;
             //a vendor should have access only to his products
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
 

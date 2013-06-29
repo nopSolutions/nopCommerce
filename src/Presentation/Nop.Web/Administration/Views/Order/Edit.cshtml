@@ -12,7 +12,7 @@
             @T("Admin.Orders.EditOrderDetails") - @Model.Id @Html.ActionLink("(" + T("Admin.Orders.BackToList") + ")", "List")
         </div>
         <div class="options">
-            @if (Model.DisplayPdfInvoice && !Model.IsLoggedInAsVendor)
+            @if (!Model.IsLoggedInAsVendor)
             {
                 <a href="@Url.Action("PdfInvoice", new { orderId = Model.Id })" class="t-button">@T("Admin.Orders.PdfInvoice")</a>
             }

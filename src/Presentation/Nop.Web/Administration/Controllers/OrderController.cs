@@ -223,7 +223,6 @@ namespace Nop.Admin.Controllers
             model.CustomerIp = order.CustomerIp;
             model.VatNumber = order.VatNumber;
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc);
-            model.DisplayPdfInvoice = _pdfSettings.Enabled;
             model.AllowCustomersToSelectTaxDisplayType = _taxSettings.AllowCustomersToSelectTaxDisplayType;
             model.TaxDisplayType = _taxSettings.TaxDisplayType;
             model.AffiliateId = order.AffiliateId;
@@ -606,7 +605,6 @@ namespace Nop.Admin.Controllers
                 DeliveryDate = shipment.DeliveryDateUtc.HasValue ? _dateTimeHelper.ConvertToUserTime(shipment.DeliveryDateUtc.Value, DateTimeKind.Utc).ToString() : _localizationService.GetResource("Admin.Orders.Shipments.DeliveryDate.NotYet"),
                 DeliveryDateUtc = shipment.DeliveryDateUtc,
                 CanDeliver = shipment.ShippedDateUtc.HasValue && !shipment.DeliveryDateUtc.HasValue,
-                DisplayPdfPackagingSlip = _pdfSettings.Enabled,
             };
 
             if (prepareProducts)
@@ -2085,7 +2083,6 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var model = new ShipmentListModel();
-            model.DisplayPdfPackagingSlip = _pdfSettings.Enabled;
             return View(model);
 		}
 
