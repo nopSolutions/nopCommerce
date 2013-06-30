@@ -79,7 +79,7 @@ namespace Nop.Services.Seo
 
         private void WriteManufacturers()
         {
-            var manufacturers = _manufacturerService.GetAllManufacturers(false);
+            var manufacturers = _manufacturerService.GetAllManufacturers();
             foreach (var manufacturer in manufacturers)
             {
                 //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)

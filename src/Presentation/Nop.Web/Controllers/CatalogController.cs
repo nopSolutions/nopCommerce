@@ -1483,13 +1483,13 @@ namespace Nop.Web.Controllers
                 {
                     var currentManufacturer = _manufacturerService.GetManufacturerById(currentManufacturerId);
 
-                    var manufacturers = _manufacturerService.GetAllManufacturers();
+                    var manufacturers = _manufacturerService.GetAllManufacturers(pageSize: _catalogSettings.ManufacturersBlockItemsToDisplay);
                     var model = new ManufacturerNavigationModel()
                     {
-                        TotalManufacturers = manufacturers.Count
+                        TotalManufacturers = manufacturers.TotalCount
                     };
 
-                    foreach (var manufacturer in manufacturers.Take(_catalogSettings.ManufacturersBlockItemsToDisplay))
+                    foreach (var manufacturer in manufacturers)
                     {
                         var modelMan = new ManufacturerBriefInfoModel()
                         {

@@ -124,20 +124,16 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Gets all manufacturers
         /// </summary>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Manufacturer collection</returns>
-        public virtual IList<Manufacturer> GetAllManufacturers(bool showHidden = false)
-        {
-            return GetAllManufacturers(null, showHidden);
-        }
-
-        /// <summary>
-        /// Gets all manufacturers
-        /// </summary>
         /// <param name="manufacturerName">Manufacturer name</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Manufacturer collection</returns>
-        public virtual IList<Manufacturer> GetAllManufacturers(string manufacturerName, bool showHidden = false)
+        /// <returns>Manufacturers</returns>
+        public virtual IPagedList<Manufacturer> GetAllManufacturers(string manufacturerName = "",
+            int pageIndex = 0, 
+            //Int32.MaxValue
+            int pageSize = 2147483647, 
+            bool showHidden = false)
         {
             var query = _manufacturerRepository.Table;
             if (!showHidden)
@@ -146,7 +142,7 @@ namespace Nop.Services.Catalog
                 query = query.Where(m => m.Name.Contains(manufacturerName));
             query = query.Where(m => !m.Deleted);
             query = query.OrderBy(m => m.DisplayOrder);
-            
+
             if (!showHidden)
             {
                 //ACL (access control list)
@@ -169,29 +165,13 @@ namespace Nop.Services.Catalog
                 //only distinct manufacturers (group by ID)
                 query = from m in query
                         group m by m.Id
-                        into mGroup
-                        orderby mGroup.Key
-                        select mGroup.FirstOrDefault();
+                            into mGroup
+                            orderby mGroup.Key
+                            select mGroup.FirstOrDefault();
                 query = query.OrderBy(m => m.DisplayOrder);
             }
-            
-            var manufacturers = query.ToList();
-            return manufacturers;
-        }
-        
-        /// <summary>
-        /// Gets all manufacturers
-        /// </summary>
-        /// <param name="manufacturerName">Manufacturer name</param>
-        /// <param name="pageIndex">Page index</param>
-        /// <param name="pageSize">Page size</param>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Manufacturers</returns>
-        public virtual IPagedList<Manufacturer> GetAllManufacturers(string manufacturerName,
-            int pageIndex, int pageSize, bool showHidden = false)
-        {
-            var manufacturers = GetAllManufacturers(manufacturerName, showHidden);
-            return new PagedList<Manufacturer>(manufacturers, pageIndex, pageSize);
+
+            return new PagedList<Manufacturer>(query, pageIndex, pageSize);
         }
 
         /// <summary>

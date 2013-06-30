@@ -763,7 +763,7 @@ namespace Nop.Admin.Controllers
 
             //manufacturers
             model.AvailableManufacturers.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            foreach (var m in _manufacturerService.GetAllManufacturers(true))
+            foreach (var m in _manufacturerService.GetAllManufacturers(showHidden: true))
                 model.AvailableManufacturers.Add(new SelectListItem() { Text = m.Name, Value = m.Id.ToString() });
 
             //stores

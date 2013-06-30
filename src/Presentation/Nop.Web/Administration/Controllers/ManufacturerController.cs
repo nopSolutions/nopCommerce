@@ -469,7 +469,7 @@ namespace Nop.Admin.Controllers
 
             try
             {
-                var manufacturers = _manufacturerService.GetAllManufacturers(true);
+                var manufacturers = _manufacturerService.GetAllManufacturers(showHidden: true);
                 var xml = _exportManager.ExportManufacturersToXml(manufacturers);
                 return new XmlDownloadResult(xml, "manufacturers.xml");
             }
@@ -563,7 +563,7 @@ namespace Nop.Admin.Controllers
 
             //manufacturers
             model.AvailableManufacturers.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            foreach (var m in _manufacturerService.GetAllManufacturers(true))
+            foreach (var m in _manufacturerService.GetAllManufacturers(showHidden: true))
                 model.AvailableManufacturers.Add(new SelectListItem() { Text = m.Name, Value = m.Id.ToString() });
 
             //stores

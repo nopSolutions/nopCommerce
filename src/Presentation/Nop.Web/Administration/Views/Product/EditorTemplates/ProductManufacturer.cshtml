@@ -1,11 +1,10 @@
 ﻿
 @using Telerik.Web.Mvc.UI;
-@using Nop.Core.Domain.Catalog;
 @using Nop.Services.Catalog;
 
 @{    
     var _manufacturerService = EngineContext.Current.Resolve<IManufacturerService>();
-    var allManufacturers = _manufacturerService.GetAllManufacturers(true);
+    var allManufacturers = _manufacturerService.GetAllManufacturers(showHidden: true);
 
 
     var manufacturerList = new List<SelectListItem>();
