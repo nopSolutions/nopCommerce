@@ -208,6 +208,7 @@
             }
             if (typeof pictureUrl == 'string' && pictureUrl != '') {
                 $('#main-product-img-' + productId).attr("src", pictureUrl);
+                $('#main-product-img-lightbox-anchor-' + productId).attr("href", pictureUrl);
             }
         }
         // Picture attributes handlers

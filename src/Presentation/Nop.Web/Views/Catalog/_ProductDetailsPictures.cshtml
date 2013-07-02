@@ -11,7 +11,7 @@
     <div class="picture">
         @if (Model.DefaultPictureZoomEnabled)
         {
-            <a href="@Model.DefaultPictureModel.FullSizeImageUrl" data-gallery="lightbox-pd" title="@Model.Name">
+            <a href="@Model.DefaultPictureModel.FullSizeImageUrl" data-gallery="lightbox-pd" title="@Model.Name"  id="main-product-img-lightbox-anchor-@Model.Id">
                 <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" itemprop="image" id="main-product-img-@Model.Id" />
             </a>
         }
