@@ -42,7 +42,12 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the display order
         /// </summary>
         public int DisplayOrder { get; set; }
-        
+
+        /// <summary>
+        /// Gets or sets the picture (identifier) assiciated with this value
+        /// </summary>
+        public int PictureId { get; set; }
+
         /// <summary>
         /// Gets the product variant attribute
         /// </summary>

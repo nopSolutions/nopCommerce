@@ -2879,6 +2879,8 @@ namespace Nop.Admin.Controllers
                         WeightAdjustment = x.WeightAdjustment,
                         IsPreSelected = x.IsPreSelected,
                         DisplayOrder = x.DisplayOrder,
+                        PictureId = x.PictureId,
+                        PictureThumbnailUrl = _pictureService.GetPictureUrl(x.PictureId, 75, false)
                     };
                 }),
                 Total = values.Count()
@@ -2916,6 +2918,21 @@ namespace Nop.Admin.Controllers
 
             //locales
             AddLocales(_languageService, model.Locales);
+
+            //pictures
+            model.ProductPictureModels = _productService.GetProductPicturesByProductId(product.Id)
+                .Select(x =>
+                {
+                    return new ProductModel.ProductPictureModel()
+                    {
+                        Id = x.Id,
+                        ProductId = x.ProductId,
+                        PictureId = x.PictureId,
+                        PictureUrl = _pictureService.GetPictureUrl(x.PictureId),
+                        DisplayOrder = x.DisplayOrder
+                    };
+                })
+                .ToList();
             return View(model);
         }
 
@@ -2963,7 +2980,8 @@ namespace Nop.Admin.Controllers
                     PriceAdjustment = model.PriceAdjustment,
                     WeightAdjustment = model.WeightAdjustment,
                     IsPreSelected = model.IsPreSelected,
-                    DisplayOrder = model.DisplayOrder
+                    DisplayOrder = model.DisplayOrder,
+                    PictureId = model.PictureId,
                 };
 
                 _productAttributeService.InsertProductVariantAttributeValue(pvav);
@@ -2976,6 +2994,23 @@ namespace Nop.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
+
+
+            //pictures
+            model.ProductPictureModels = _productService.GetProductPicturesByProductId(product.Id)
+                .Select(x =>
+                {
+                    return new ProductModel.ProductPictureModel()
+                    {
+                        Id = x.Id,
+                        ProductId = x.ProductId,
+                        PictureId = x.PictureId,
+                        PictureUrl = _pictureService.GetPictureUrl(x.PictureId),
+                        DisplayOrder = x.DisplayOrder
+                    };
+                })
+                .ToList();
+
             return View(model);
         }
 
@@ -3007,13 +3042,28 @@ namespace Nop.Admin.Controllers
                 PriceAdjustment = pvav.PriceAdjustment,
                 WeightAdjustment = pvav.WeightAdjustment,
                 IsPreSelected = pvav.IsPreSelected,
-                DisplayOrder = pvav.DisplayOrder
+                DisplayOrder = pvav.DisplayOrder,
+                PictureId = pvav.PictureId
             };
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
                 locale.Name = pvav.GetLocalized(x => x.Name, languageId, false, false);
             });
+            //pictures
+            model.ProductPictureModels = _productService.GetProductPicturesByProductId(product.Id)
+                .Select(x =>
+                {
+                    return new ProductModel.ProductPictureModel()
+                    {
+                        Id = x.Id,
+                        ProductId = x.ProductId,
+                        PictureId = x.PictureId,
+                        PictureUrl = _pictureService.GetPictureUrl(x.PictureId),
+                        DisplayOrder = x.DisplayOrder
+                    };
+                })
+                .ToList();
 
             return View(model);
         }
@@ -3060,6 +3110,7 @@ namespace Nop.Admin.Controllers
                 pvav.WeightAdjustment = model.WeightAdjustment;
                 pvav.IsPreSelected = model.IsPreSelected;
                 pvav.DisplayOrder = model.DisplayOrder;
+                pvav.PictureId = model.PictureId;
                 _productAttributeService.UpdateProductVariantAttributeValue(pvav);
 
                 UpdateLocales(pvav, model);
@@ -3071,6 +3122,21 @@ namespace Nop.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
+
+            //pictures
+            model.ProductPictureModels = _productService.GetProductPicturesByProductId(product.Id)
+                .Select(x =>
+                {
+                    return new ProductModel.ProductPictureModel()
+                    {
+                        Id = x.Id,
+                        ProductId = x.ProductId,
+                        PictureId = x.PictureId,
+                        PictureUrl = _pictureService.GetPictureUrl(x.PictureId),
+                        DisplayOrder = x.DisplayOrder
+                    };
+                })
+                .ToList();
             return View(model);
         }
 

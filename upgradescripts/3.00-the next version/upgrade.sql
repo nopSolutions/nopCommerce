@@ -1358,6 +1358,15 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.PdfEnabled.Hint">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.Picture">
+    <Value>Picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.Picture.Hint">
+    <Value>Choose a picture associated to this attribute value.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.Picture.NoPicture">
+    <Value>No picture</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -5424,3 +5433,21 @@ GO
 --deleted obsolete setting
 DELETE FROM [Setting] WHERE [name] = N'pdfsettings.enabled'
 GO
+
+
+--pictures per attribute values
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[ProductVariantAttributeValue]') and NAME='PictureId')
+BEGIN
+	ALTER TABLE [ProductVariantAttributeValue]
+	ADD [PictureId] int NULL
+END
+GO
+
+UPDATE [ProductVariantAttributeValue]
+SET [PictureId] = 0
+WHERE [PictureId] IS NULL
+GO
+
+ALTER TABLE [ProductVariantAttributeValue] ALTER COLUMN [PictureId] int NOT NULL
+GO
+

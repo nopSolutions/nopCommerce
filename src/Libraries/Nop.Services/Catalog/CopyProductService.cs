@@ -254,6 +254,9 @@ namespace Nop.Services.Catalog
                 _productService.UpdateProduct(product);
 
                 // product pictures
+
+                //variant to store original and new picture identifiers
+                var originalNewPictureIdentifiers = new Dictionary<int, int>();
                 if (copyImages)
                 {
                     foreach (var productPicture in product.ProductPictures)
@@ -270,6 +273,7 @@ namespace Nop.Services.Catalog
                             PictureId = pictureCopy.Id,
                             DisplayOrder = productPicture.DisplayOrder
                         });
+                        originalNewPictureIdentifiers.Add(picture.Id, pictureCopy.Id);
                     }
                 }
 
@@ -368,6 +372,11 @@ namespace Nop.Services.Catalog
                     var productVariantAttributeValues = _productAttributeService.GetProductVariantAttributeValues(productVariantAttribute.Id);
                     foreach (var productVariantAttributeValue in productVariantAttributeValues)
                     {
+                        int pvavPictureId = 0;
+                        if (originalNewPictureIdentifiers.ContainsKey(productVariantAttributeValue.PictureId))
+                        {
+                            pvavPictureId = originalNewPictureIdentifiers[productVariantAttributeValue.PictureId];
+                        }
                         var pvavCopy = new ProductVariantAttributeValue()
                         {
                             ProductVariantAttributeId = productVariantAttributeCopy.Id,
@@ -376,7 +385,8 @@ namespace Nop.Services.Catalog
                             PriceAdjustment = productVariantAttributeValue.PriceAdjustment,
                             WeightAdjustment = productVariantAttributeValue.WeightAdjustment,
                             IsPreSelected = productVariantAttributeValue.IsPreSelected,
-                            DisplayOrder = productVariantAttributeValue.DisplayOrder
+                            DisplayOrder = productVariantAttributeValue.DisplayOrder,
+                            PictureId = pvavPictureId,
                         };
                         _productAttributeService.InsertProductVariantAttributeValue(pvavCopy);
 

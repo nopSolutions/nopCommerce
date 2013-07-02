@@ -2224,6 +2224,17 @@
                                               </LocaleResource>
                                             </Children>
                                           </LocaleResource>
+                                          <LocaleResource Name="Picture">
+                                            <Value>Picture</Value>
+                                            <Children>
+                                              <LocaleResource Name="Hint">
+                                                <Value>Choose a picture associated to this attribute value.</Value>
+                                              </LocaleResource>
+                                              <LocaleResource Name="NoPicture">
+                                                <Value>No picture</Value>
+                                              </LocaleResource>
+                                            </Children>
+                                          </LocaleResource>
                                         </Children>
                                       </LocaleResource>
                                       <LocaleResource Name="EditAttributeDetails">

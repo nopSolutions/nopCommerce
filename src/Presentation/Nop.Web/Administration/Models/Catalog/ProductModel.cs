@@ -642,6 +642,7 @@ namespace Nop.Admin.Models.Catalog
         {
             public ProductVariantAttributeValueModel()
             {
+                ProductPictureModels = new List<ProductPictureModel>();
                 Locales = new List<ProductVariantAttributeValueLocalizedModel>();
             }
 
@@ -650,7 +651,7 @@ namespace Nop.Admin.Models.Catalog
             [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.Name")]
             [AllowHtml]
             public string Name { get; set; }
-
+            
             [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.ColorSquaresRgb")]
             [AllowHtml]
             public string ColorSquaresRgb { get; set; }
@@ -668,6 +669,12 @@ namespace Nop.Admin.Models.Catalog
             [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.DisplayOrder")]
             public int DisplayOrder { get; set; }
 
+            [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.Picture")]
+            public int PictureId { get; set; }
+            [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.Picture")]
+            public string PictureThumbnailUrl { get; set; }
+
+            public IList<ProductPictureModel> ProductPictureModels { get; set; }
             public IList<ProductVariantAttributeValueLocalizedModel> Locales { get; set; }
         }
         public partial class ProductVariantAttributeValueLocalizedModel : ILocalizedModelLocal

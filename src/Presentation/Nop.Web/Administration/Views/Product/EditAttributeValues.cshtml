@@ -28,15 +28,12 @@
                             })
                             .Columns(columns =>
                             {
-                                columns.Bound(x => x.Name)
-                                    .Width(300);
+                                columns.Bound(x => x.Name);
                                 //TODO display localized values here
                                 columns.Bound(x => x.PriceAdjustment)
-                                    .Width(100)
                                     .Centered()
                                     .Format("{0:G29}");
                                 columns.Bound(x => x.WeightAdjustment)
-                                    .Width(100)
                                     .Centered()
                                     .Format("{0:G29}");
                                 columns.Bound(x => x.IsPreSelected)
@@ -44,15 +41,16 @@
                                         @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.IsPreSelected.ToString().ToLowerInvariant() + ".gif")" />
                                     )
                                     .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= IsPreSelected #>.gif' />")
+                                    .Centered();
+                                columns.Bound(x => x.PictureThumbnailUrl)
                                     .Centered()
-                                    .Width(100);
+                                    .ClientTemplate("<img  alt='' src='<#= PictureThumbnailUrl #>' />");
                                 columns.Bound(x => x.DisplayOrder)
-                                    .Width(100)
                                     .Centered();
                                 columns.Bound(x => x.Id)
                                     .Width(50)
                                     .Centered()
-                                    .ClientTemplate("<input type='submit' value='" + @T("Admin.Common.Edit").Text + "' onclick=\"" + "javascript:OpenWindow('" + @Url.Content("~/Admin/Product/ProductAttributeValueEditPopup/") + "<#= Id #>?btnId=btnRefresh&formId=productvariantattribute-form', 800, 350, true); return false;\" class='t-button' />")
+                                    .ClientTemplate("<input type='submit' value='" + @T("Admin.Common.Edit").Text + "' onclick=\"" + "javascript:OpenWindow('" + @Url.Content("~/Admin/Product/ProductAttributeValueEditPopup/") + "<#= Id #>?btnId=btnRefresh&formId=productvariantattribute-form', 800, 500, true); return false;\" class='t-button' />")
                                     .Title(T("Admin.Common.Edit").Text);
                                 columns.Command(commands =>
                                 {
@@ -70,7 +68,7 @@
     </tr>
     <tr>
         <td width="100%">
-            <input type="submit" id="btnAddNewValue" name="btnAddNewValue" value="@T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ProductAttributeValueCreatePopup", "Product", new { productAttributeAttributeId = Model.ProductVariantAttributeId, btnId = "btnRefresh", formId = "productvariantattribute-form" }))', 800, 350, true); return false;" class="t-button" />
+            <input type="submit" id="btnAddNewValue" name="btnAddNewValue" value="@T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ProductAttributeValueCreatePopup", "Product", new { productAttributeAttributeId = Model.ProductVariantAttributeId, btnId = "btnRefresh", formId = "productvariantattribute-form" }))', 800, 500, true); return false;" class="t-button" />
             <input type="submit" id="btnRefresh" name="btnRefresh" style="display: none" />
             <script type="text/javascript">
                 $(document).ready(function () {
