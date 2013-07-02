@@ -758,6 +758,14 @@ namespace Nop.Web.Controllers
 
                             pvaValueModel.PriceAdjustmentValue = priceAdjustment;
                         }
+
+                        //picture
+                        var pvavPicture = _pictureService.GetPictureById(pvaValue.PictureId);
+                        if (pvavPicture != null)
+                        {
+                            pvaValueModel.PictureUrl = _pictureService.GetPictureUrl(pvavPicture, defaultPictureSize, false);
+                            pvaValueModel.PictureId = pvavPicture.Id;
+                        }
                     }
                 }
 

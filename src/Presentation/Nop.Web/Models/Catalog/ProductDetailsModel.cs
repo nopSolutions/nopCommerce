@@ -215,6 +215,9 @@ namespace Nop.Web.Models.Catalog
             public decimal PriceAdjustmentValue { get; set; }
 
             public bool IsPreSelected { get; set; }
+
+            public int PictureId { get; set; }
+            public string PictureUrl { get; set; }
         }
 
 		#endregion

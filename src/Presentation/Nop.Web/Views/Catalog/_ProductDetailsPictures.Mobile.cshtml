@@ -5,7 +5,7 @@
     //we do not use Model.DefaultPictureModel in mobile version
     var defaultPicture = Model.PictureModels.FirstOrDefault();
     <div class="default-picture">
-        <img id="default-image" alt="@defaultPicture.AlternateText" src="@defaultPicture.FullSizeImageUrl" title="@defaultPicture.Title" />
+        <img id="default-image" alt="@defaultPicture.AlternateText" src="@defaultPicture.FullSizeImageUrl" title="@defaultPicture.Title" id="main-product-img-@Model.Id" />
     </div>
 }
 @if (Model.PictureModels.Count > 1)

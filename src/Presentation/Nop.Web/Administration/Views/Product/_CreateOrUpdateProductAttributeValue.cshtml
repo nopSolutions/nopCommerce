@@ -102,49 +102,46 @@
             @Html.ValidationMessageFor(model => model.DisplayOrder)
         </td>
     </tr>
-    @if (Model.ProductPictureModels.Count > 0)
-    {
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.PictureId):
-            </td>
-            <td class="adminData">
-                <ul style="list-style: none;">
-                    <li style="float: left; width: 110px;">
-                        <p style="float: left; padding-top: 20px;">
-                            <input type="radio" name="@Html.FieldNameFor(x => x.PictureId)" value="0" id="id_image_0"
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.PictureId):
+        </td>
+        <td class="adminData">
+            <ul style="list-style: none;">
+                <li style="float: left; width: 110px;">
+                    <p style="float: left; padding-top: 20px;">
+                        <input type="radio" name="@Html.FieldNameFor(x => x.PictureId)" value="0" id="id_image_0"
                                 @if (Model.PictureId == 0)
                                 {
                                     <text>checked="checked"</text>
                                 }>
-                        </p>
+                    </p>
+                    <p style="float: left; padding-top: 20px;">
+                        <label for="id_image_0">
+                            @T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.Picture.NoPicture")
+                        </label>
+                    </p>
+                </li>
+                @foreach (var picture in Model.ProductPictureModels)
+                {
+                    <li style="float: left; width: 110px;">
                         <p style="float: left; padding-top: 20px;">
-                            <label for="id_image_0">
-                                @T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.Picture.NoPicture")
-                            </label>
-                        </p>
-                    </li>
-                    @foreach (var picture in Model.ProductPictureModels)
-                    {
-                        <li style="float: left; width: 110px;">
-                            <p style="float: left; padding-top: 20px;">
-                                <input type="radio" name="@Html.FieldNameFor(x => x.PictureId)" value="@picture.PictureId" id="id_image_@picture.PictureId"
+                            <input type="radio" name="@Html.FieldNameFor(x => x.PictureId)" value="@picture.PictureId" id="id_image_@picture.PictureId"
                                 @if (picture.PictureId == Model.PictureId)
                                 {
                                     <text>checked="checked"</text>
                                 }>
-                            </p>
-                            <p style="float: left;">
-                                <label for="id_image_@picture.PictureId">
-                                    <img src="@picture.PictureUrl" alt="" title="" width="75">
-                                </label>
-                            </p>
-                        </li>
-                    }
-                </ul>
-                @Html.ValidationMessageFor(model => model.PictureId)
-            </td>
-        </tr>
-    }
+                        </p>
+                        <p style="float: left;">
+                            <label for="id_image_@picture.PictureId">
+                                <img src="@picture.PictureUrl" alt="" title="" width="75">
+                            </label>
+                        </p>
+                    </li>
+                }
+            </ul>
+            @Html.ValidationMessageFor(model => model.PictureId)
+        </td>
+    </tr>
 </table>
 

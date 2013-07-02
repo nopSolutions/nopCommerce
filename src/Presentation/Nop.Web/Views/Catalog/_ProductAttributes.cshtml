@@ -6,25 +6,23 @@
 @using System.Globalization;
 @using Nop.Services.Security;
 @{
+    //dynamic price update support
     var hidePrices = !EngineContext.Current.Resolve<IPermissionService>().Authorize(StandardPermissionProvider.DisplayPrices);
-
     var dynamicPriceUpdate = EngineContext.Current.Resolve<CatalogSettings>().EnableDynamicPriceUpdate;
-    var adjustmentTableScripts = new StringBuilder();
-    var attributeScripts = new StringBuilder();
-
-    string adjustmentTableName = "";
-    string adjustmentFuncName = "";
+    var priceAdjustmentTableScripts = new StringBuilder();
+    var priceAttributeScripts = new StringBuilder();
+    string priceAdjustmentTableName = "";
+    string priceAdjustmentFuncName = "";
     string priceVarName = "";
     string priceVarClass = "";
-
     if (dynamicPriceUpdate && !hidePrices)
     {
         foreach (var attribute in Model)
         {
             string controlId = string.Format("product_attribute_{0}_{1}_{2}", attribute.ProductId, attribute.ProductAttributeId, attribute.Id);
 
-            adjustmentTableName = string.Format("adjustmentTable_{0}", attribute.ProductId);
-            adjustmentFuncName = string.Format("adjustPrice_{0}", attribute.ProductId);
+            priceAdjustmentTableName = string.Format("priceAdjustmentTable_{0}", attribute.ProductId);
+            priceAdjustmentFuncName = string.Format("adjustPrice_{0}", attribute.ProductId);
             priceVarName = string.Format("priceValForDynUpd_{0}", attribute.ProductId);
             priceVarClass = string.Format("price-val-for-dyn-upd-{0}", attribute.ProductId);
 
@@ -32,18 +30,18 @@
             {
                 case AttributeControlType.DropdownList:
                     {
-                        adjustmentTableScripts.AppendFormat("{0}['{1}'] = new Array(", adjustmentTableName, controlId);
-                        attributeScripts.AppendFormat("$('#{0}').change(function(){{{1}();}});\n", controlId, adjustmentFuncName);
+                        priceAdjustmentTableScripts.AppendFormat("{0}['{1}'] = new Array(", priceAdjustmentTableName, controlId);
+                        priceAttributeScripts.AppendFormat("$('#{0}').change(function(){{{1}();}});\n", controlId, priceAdjustmentFuncName);
                         int numberOfJsArrayItems = 0;
                         if (!attribute.IsRequired)
                         {
-                            adjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0},", decimal.Zero);
+                            priceAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0},", decimal.Zero);
                             numberOfJsArrayItems++;
                         }
 
                         foreach (var pvaValue in attribute.Values)
                         {
-                            adjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0},", (float)pvaValue.PriceAdjustmentValue);
+                            priceAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0},", (float)pvaValue.PriceAdjustmentValue);
                             numberOfJsArrayItems++;
                         }
 
@@ -51,10 +49,10 @@
                         //so have a little hack here (we need at least two elements)
                         if (numberOfJsArrayItems == 1)
                         {
-                            adjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0},", decimal.Zero);
+                            priceAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0},", decimal.Zero);
                         }
-                        adjustmentTableScripts.Length -= 1;
-                        adjustmentTableScripts.Append(");\n");
+                        priceAdjustmentTableScripts.Length -= 1;
+                        priceAdjustmentTableScripts.Append(");\n");
                     }
                     break;
                 case AttributeControlType.RadioList:
@@ -62,8 +60,8 @@
                     {
                         foreach (var pvaValue in attribute.Values)
                         {
-                            adjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0}['{1}_{2}'] = {3};\n", adjustmentTableName, controlId, pvaValue.Id, (float)pvaValue.PriceAdjustmentValue);
-                            attributeScripts.AppendFormat("$('#{0}_{1}').click(function(){{{2}();}});\n", controlId, pvaValue.Id, adjustmentFuncName);
+                            priceAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0}['{1}_{2}'] = {3};\n", priceAdjustmentTableName, controlId, pvaValue.Id, (float)pvaValue.PriceAdjustmentValue);
+                            priceAttributeScripts.AppendFormat("$('#{0}_{1}').click(function(){{{2}();}});\n", controlId, pvaValue.Id, priceAdjustmentFuncName);
                         }
                     }
                     break;
@@ -71,8 +69,8 @@
                     {
                         foreach (var pvaValue in attribute.Values)
                         {
-                            adjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0}['{1}_{2}'] = {3};\n", adjustmentTableName, controlId, pvaValue.Id, (float)pvaValue.PriceAdjustmentValue);
-                            attributeScripts.AppendFormat("$('#{0}_{1}').click(function(){{{2}();}});\n", controlId, pvaValue.Id, adjustmentFuncName);
+                            priceAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0}['{1}_{2}'] = {3};\n", priceAdjustmentTableName, controlId, pvaValue.Id, (float)pvaValue.PriceAdjustmentValue);
+                            priceAttributeScripts.AppendFormat("$('#{0}_{1}').click(function(){{{2}();}});\n", controlId, pvaValue.Id, priceAdjustmentFuncName);
                         }
                     }
                     break;
@@ -82,38 +80,41 @@
 
         }
     }
+    
+    
 }
 @if (Model.Count > 0)
 {
+    //dynamic price update support
     if (dynamicPriceUpdate && !hidePrices)
     {
     <script type="text/javascript">
-    // Adjustment table
-    var @(adjustmentTableName) = new Array();
-    // Adjustment table initialize
-    @Html.Raw(adjustmentTableScripts.ToString())
-    // Adjustment function
-    function @(adjustmentFuncName)() {
-        var sum = 0;
-        for(var i in @(adjustmentTableName)) {
+        // Adjustment table
+        var @(priceAdjustmentTableName) = new Array();
+        // Adjustment table initialize
+    @Html.Raw(priceAdjustmentTableScripts.ToString())
+        // Adjustment function
+        function @(priceAdjustmentFuncName)() {
+            var sum = 0;
+            for(var i in @(priceAdjustmentTableName)) {
             var ctrl = $('#' + i);
             if((ctrl.is(':radio') && ctrl.is(':checked')) || (ctrl.is(':checkbox') && ctrl.is(':checked'))) {
-                sum += @(adjustmentTableName)[i];
+                sum += @(priceAdjustmentTableName)[i];
             }
             else if(ctrl.is('select')) {
                 var idx = $('#' + i + " option").index($('#' + i + " option:selected"));
                 if(idx != -1) {
-                    sum += @(adjustmentTableName)[i][idx];
+                    sum += @(priceAdjustmentTableName)[i][idx];
                 }
             }
-        }
-        var res = (@(priceVarName) + sum).toFixed(2);
+    }
+    var res = (@(priceVarName) + sum).toFixed(2);
         $(".@(priceVarClass)").text(res);
     }
     // Attributes handlers
     $(document).ready(function() {
-        @(adjustmentFuncName)();
-        @Html.Raw(attributeScripts.ToString())
+        @(priceAdjustmentFuncName)();
+        @Html.Raw(priceAttributeScripts.ToString())
     });
     </script>
     }
@@ -123,9 +124,10 @@
             {
                 string controlId = string.Format("product_attribute_{0}_{1}_{2}", attribute.ProductId, attribute.ProductAttributeId, attribute.Id);
                 string textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
-                <dt><label class="text-prompt">
-                    @textPrompt
-                </label>
+                <dt>
+                    <label class="text-prompt">
+                        @textPrompt
+                    </label>
                     @if (attribute.IsRequired)
                     {
                         <span class="required">*</span>
@@ -234,29 +236,29 @@
                             break;
                         case AttributeControlType.ColorSquares:
                             {
-                                <ul class="option-list color-squares" id="color-squares-@(attribute.Id)">
-                                    @foreach (var pvaValue in attribute.Values)
-                                    {
-                                        <li @(pvaValue.IsPreSelected ? @Html.Raw(" class=\"selected-value\"") : null)>
-                                            <label for="@(controlId)_@(pvaValue.Id)">
-                                                <span class="color-container" title="@pvaValue.Name @(!String.IsNullOrEmpty(pvaValue.PriceAdjustment) ? " [" + pvaValue.PriceAdjustment + "]" : null)">
-                                                    <span class="color" style="background-color:@(pvaValue.ColorSquaresRgb);">&nbsp;</span>
-                                                </span>
-                                                <input id="@(controlId)_@(pvaValue.Id)" type="radio" name="@(controlId)" value="@pvaValue.Id" checked="@pvaValue.IsPreSelected" />
-                                                @*uncomment below to display attribute value name*@
-                                                @*<span class="name">@pvaValue.Name @(!String.IsNullOrEmpty(pvaValue.PriceAdjustment) ? " [" + pvaValue.PriceAdjustment + "]" : null)</span>*@
-                                            </label>
-                                        </li>
-                                    }
-                                </ul>
-                                <script type="text/javascript">
-                                    $(document).ready(function() {
-                                        $('.attributes #color-squares-@(attribute.Id)').delegate('input', 'click', function(event) {
+                        <ul class="option-list color-squares" id="color-squares-@(attribute.Id)">
+                            @foreach (var pvaValue in attribute.Values)
+                            {
+                                <li @(pvaValue.IsPreSelected ? @Html.Raw(" class=\"selected-value\"") : null)>
+                                    <label for="@(controlId)_@(pvaValue.Id)">
+                                        <span class="color-container" title="@pvaValue.Name @(!String.IsNullOrEmpty(pvaValue.PriceAdjustment) ? " [" + pvaValue.PriceAdjustment + "]" : null)">
+                                            <span class="color" style="background-color:@(pvaValue.ColorSquaresRgb);">&nbsp;</span>
+                                        </span>
+                                        <input id="@(controlId)_@(pvaValue.Id)" type="radio" name="@(controlId)" value="@pvaValue.Id" checked="@pvaValue.IsPreSelected" />
+                                        @*uncomment below to display attribute value name*@
+                                        @*<span class="name">@pvaValue.Name @(!String.IsNullOrEmpty(pvaValue.PriceAdjustment) ? " [" + pvaValue.PriceAdjustment + "]" : null)</span>*@
+                                    </label>
+                                </li>
+                            }
+                        </ul>
+                        <script type="text/javascript">
+                            $(document).ready(function() {
+                                $('.attributes #color-squares-@(attribute.Id)').delegate('input', 'click', function(event) {
                                             $('.attributes #color-squares-@(attribute.Id)').find('li').removeClass('selected-value');
                                             $(this).closest('li').addClass('selected-value');
                                         });
-                                   });
-                                </script>
+                                    });
+                        </script>
                             }
                             break;
                     }
