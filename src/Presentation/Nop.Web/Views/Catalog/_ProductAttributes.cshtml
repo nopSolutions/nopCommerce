@@ -80,8 +80,75 @@
 
         }
     }
-    
-    
+
+
+
+    //attribute picture update
+    var pictureAdjustmentTableScripts = new StringBuilder();
+    var pictureAttributeScripts = new StringBuilder();
+    string pictureAdjustmentTableName = "";
+    string pictureAdjustmentFuncName = "";
+    foreach (var attribute in Model)
+    {
+        string controlId = string.Format("product_attribute_{0}_{1}_{2}", attribute.ProductId, attribute.ProductAttributeId, attribute.Id);
+
+        pictureAdjustmentTableName = string.Format("productAttributeValueAdjustmentTable_{0}", attribute.ProductId);
+        pictureAdjustmentFuncName = string.Format("adjustProductAttributeValuePicture_{0}", attribute.ProductId);
+
+        switch (attribute.AttributeControlType)
+        {
+            case AttributeControlType.DropdownList:
+                {
+                    pictureAdjustmentTableScripts.AppendFormat("{0}['{1}'] = new Array(", pictureAdjustmentTableName, controlId);
+                    pictureAttributeScripts.AppendFormat("$('#{0}').change(function(){{{1}('{2}',{3});}});\n", controlId, pictureAdjustmentFuncName, controlId, attribute.ProductId);
+
+                    int numberOfJsArrayItems = 0;
+                    if (!attribute.IsRequired)
+                    {
+                        pictureAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "'{0}',", "");
+                        numberOfJsArrayItems++;
+                    }
+
+                    foreach (var pvaValue in attribute.Values)
+                    {
+                        pictureAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "'{0}',", pvaValue.PictureUrl);
+                        numberOfJsArrayItems++;
+                    }
+
+                    //If you create an array with a single numeric parameter, that number is used for specifying the number of elements in this array.
+                    //so have a little hack here (we need at least two elements)
+                    if (numberOfJsArrayItems == 1)
+                    {
+                        pictureAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "'{0}',", "");
+                    }
+                    pictureAdjustmentTableScripts.Length -= 1;
+                    pictureAdjustmentTableScripts.Append(");\n");
+                }
+                break;
+            case AttributeControlType.RadioList:
+            case AttributeControlType.ColorSquares:
+                {
+                    foreach (var pvaValue in attribute.Values)
+                    {
+                        pictureAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0}['{1}_{2}'] = '{3}';\n", pictureAdjustmentTableName, controlId, pvaValue.Id, pvaValue.PictureUrl);
+                        pictureAttributeScripts.AppendFormat("$('#{0}_{1}').click(function(){{{2}('{3}_{4}',{5});}});\n", controlId, pvaValue.Id, pictureAdjustmentFuncName, controlId, pvaValue.Id, attribute.ProductId);
+                    }
+                }
+                break;
+            case AttributeControlType.Checkboxes:
+                {
+                    foreach (var pvaValue in attribute.Values)
+                    {
+                        pictureAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0}['{1}_{2}'] = '{3}';\n", pictureAdjustmentTableName, controlId, pvaValue.Id, pvaValue.PictureUrl);
+                        pictureAttributeScripts.AppendFormat("$('#{0}_{1}').click(function(){{{2}('{3}_{4}',{5});}});\n", controlId, pvaValue.Id, pictureAdjustmentFuncName, controlId, pvaValue.Id, attribute.ProductId);
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+
+    }
 }
 @if (Model.Count > 0)
 {
@@ -89,33 +156,64 @@
     if (dynamicPriceUpdate && !hidePrices)
     {
     <script type="text/javascript">
-        // Adjustment table
+        //Price adjustment table
         var @(priceAdjustmentTableName) = new Array();
-        // Adjustment table initialize
-    @Html.Raw(priceAdjustmentTableScripts.ToString())
-        // Adjustment function
+        //Price adjustment table initialize
+        @Html.Raw(priceAdjustmentTableScripts.ToString())
+        //Price adjustment function
         function @(priceAdjustmentFuncName)() {
             var sum = 0;
             for(var i in @(priceAdjustmentTableName)) {
-            var ctrl = $('#' + i);
+                var ctrl = $('#' + i);
+                if((ctrl.is(':radio') && ctrl.is(':checked')) || (ctrl.is(':checkbox') && ctrl.is(':checked'))) {
+                    sum += @(priceAdjustmentTableName)[i];
+                }
+                else if(ctrl.is('select')) {
+                    var idx = $('#' + i + " option").index($('#' + i + " option:selected"));
+                    if(idx != -1) {
+                        sum += @(priceAdjustmentTableName)[i][idx];
+                    }
+                }
+        }
+        var res = (@(priceVarName) + sum).toFixed(2);
+            $(".@(priceVarClass)").text(res);
+        }
+        //Price attributes handlers
+        $(document).ready(function() {
+            @(priceAdjustmentFuncName)();
+            @Html.Raw(priceAttributeScripts.ToString())
+        });
+    </script>
+    }
+    //attribute picture update
+    if (!String.IsNullOrEmpty(pictureAttributeScripts.ToString()))
+    {
+    <script type="text/javascript">
+            
+        //Picture adjustment table
+        var @(pictureAdjustmentTableName) = new Array();
+        //Picture adjustment table initialize
+        @Html.Raw(pictureAdjustmentTableScripts.ToString())
+        //Picture adjustment function
+        function @(pictureAdjustmentFuncName)(controlId, productId) {
+            var ctrl = $('#' + controlId);
+            var pictureUrl = '';
             if((ctrl.is(':radio') && ctrl.is(':checked')) || (ctrl.is(':checkbox') && ctrl.is(':checked'))) {
-                sum += @(priceAdjustmentTableName)[i];
-            }
-            else if(ctrl.is('select')) {
-                var idx = $('#' + i + " option").index($('#' + i + " option:selected"));
+                pictureUrl = @(pictureAdjustmentTableName)[controlId];
+            } else if(ctrl.is('select')) {
+                var idx = $('#' + controlId + " option").index($('#' + controlId + " option:selected"));
                 if(idx != -1) {
-                    sum += @(priceAdjustmentTableName)[i][idx];
+                    pictureUrl = @(pictureAdjustmentTableName)[controlId][idx];
                 }
             }
-    }
-    var res = (@(priceVarName) + sum).toFixed(2);
-        $(".@(priceVarClass)").text(res);
-    }
-    // Attributes handlers
-    $(document).ready(function() {
-        @(priceAdjustmentFuncName)();
-        @Html.Raw(priceAttributeScripts.ToString())
-    });
+            if (typeof pictureUrl == 'string' && pictureUrl != '') {
+                $('#main-product-img-' + productId).attr("src", pictureUrl);
+            }
+        }
+        // Picture attributes handlers
+        $(document).ready(function() {
+            @Html.Raw(pictureAttributeScripts.ToString())
+        });
     </script>
     }
     <div class="attributes">
@@ -254,10 +352,10 @@
                         <script type="text/javascript">
                             $(document).ready(function() {
                                 $('.attributes #color-squares-@(attribute.Id)').delegate('input', 'click', function(event) {
-                                            $('.attributes #color-squares-@(attribute.Id)').find('li').removeClass('selected-value');
-                                            $(this).closest('li').addClass('selected-value');
-                                        });
-                                    });
+                                    $('.attributes #color-squares-@(attribute.Id)').find('li').removeClass('selected-value');
+                                    $(this).closest('li').addClass('selected-value');
+                                });
+                            });
                         </script>
                             }
                             break;
