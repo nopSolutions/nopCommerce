@@ -1396,6 +1396,14 @@
                                       </LocaleResource>
                                     </Children>
                                   </LocaleResource>
+                                  <LocaleResource Name="AssociatedToProductName">
+                                    <Value>Associated to product</Value>
+                                    <Children>
+                                      <LocaleResource Name="Hint">
+                                        <Value>A "grouped" parent product which this one is associated to.</Value>
+                                      </LocaleResource>
+                                    </Children>
+                                  </LocaleResource>
                                   <LocaleResource Name="AvailableStores">
                                     <Value>Stores</Value>
                                     <Children>

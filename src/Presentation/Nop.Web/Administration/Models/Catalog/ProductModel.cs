@@ -41,6 +41,12 @@ namespace Nop.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.ProductType")]
         public string ProductTypeName { get; set; }
 
+
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.AssociatedToProductName")]
+        public int AssociatedToProductId { get; set; }
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.AssociatedToProductName")]
+        public string AssociatedToProductName { get; set; }
+
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.VisibleIndividually")]
         public bool VisibleIndividually { get; set; }
 

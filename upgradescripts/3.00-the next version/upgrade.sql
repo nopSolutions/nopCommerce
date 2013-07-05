@@ -1367,6 +1367,12 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.Picture.NoPicture">
     <Value>No picture</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.AssociatedToProductName">
+    <Value>Associated to product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.AssociatedToProductName.Hint">
+    <Value>A "grouped" parent product which this one is associated to.</Value>
+  </LocaleResource>
 </Language>
 '
 

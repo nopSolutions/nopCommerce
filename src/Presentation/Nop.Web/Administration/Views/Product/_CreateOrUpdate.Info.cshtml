@@ -253,6 +253,17 @@
             @Html.ValidationMessageFor(model => model.VisibleIndividually)
         </td>
     </tr>
+    @if (Model.Id > 0 && Model.AssociatedToProductId > 0)
+    {
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AssociatedToProductId):
+            </td>
+            <td class="adminData">
+                @Html.ActionLink(Model.AssociatedToProductName, "Edit", "Product", new { id = Model.AssociatedToProductId }, new {})
+            </td>
+        </tr>
+    }
     <tr>
         <td class="adminTitle">
             @Html.NopLabelFor(model => model.ProductTemplateId):
