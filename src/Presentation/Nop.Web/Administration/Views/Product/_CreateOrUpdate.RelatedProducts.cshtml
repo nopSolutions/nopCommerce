@@ -27,6 +27,10 @@
                             .ReadOnly();
                         columns.Bound(x => x.DisplayOrder)
                             .Centered();
+                        columns.Bound(x => x.Id)
+                            .Template(x => Html.ActionLink(T("Admin.Common.View").Text, "Edit", "Product", new { id = x.ProductId2 }, new { }))
+                            .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/Product/Edit/") + "<#= ProductId2 #>\">" + T("Admin.Common.View").Text + "</a>")
+                            .Title(T("Admin.Common.View").Text);
                         columns.Command(commands =>
                         {
                             commands.Edit().Text(T("Admin.Common.Edit").Text);
