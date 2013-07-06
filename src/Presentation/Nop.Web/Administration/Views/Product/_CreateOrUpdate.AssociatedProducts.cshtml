@@ -40,7 +40,8 @@
                         columns.Bound(x => x.Id)
                             .Template(x => Html.ActionLink(T("Admin.Common.View").Text, "Edit", "Product", new { id = x.Id }, new { }))
                             .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/Product/Edit/") + "<#= Id #>\">" + T("Admin.Common.View").Text + "</a>")
-                            .Title(T("Admin.Common.View").Text);
+                            .Title(T("Admin.Common.View").Text)
+                            .ReadOnly();
                         columns.Command(commands =>
                         {
                             commands.Edit().Text(T("Admin.Common.Edit").Text);
