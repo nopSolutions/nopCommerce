@@ -749,7 +749,8 @@ namespace Nop.Web.Controllers
                         if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
                         {
                             decimal taxRate = decimal.Zero;
-                            decimal priceAdjustmentBase = _taxService.GetProductPrice(product, pvaValue.PriceAdjustment, out taxRate);
+                            decimal pvaValuePriceAdjustment = _priceCalculationService.GetProductVariantAttributeValuePriceAdjustment(pvaValue);
+                            decimal priceAdjustmentBase = _taxService.GetProductPrice(product, pvaValuePriceAdjustment, out taxRate);
                             decimal priceAdjustment = _currencyService.ConvertFromPrimaryStoreCurrency(priceAdjustmentBase, _workContext.WorkingCurrency);
                             if (priceAdjustmentBase > decimal.Zero)
                                 pvaValueModel.PriceAdjustment = "+" + _priceFormatter.FormatPrice(priceAdjustment, false, false);

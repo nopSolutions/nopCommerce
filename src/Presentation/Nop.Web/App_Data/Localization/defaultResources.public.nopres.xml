@@ -1479,6 +1479,16 @@
                     </LocaleResource>
                 </Children>
             </LocaleResource>
+            <LocaleResource Name="Nop.Core.Domain.Catalog.AttributeValueType">
+              <Children>
+                <LocaleResource Name="Simple">
+                  <Value>Simple</Value>
+                </LocaleResource>
+                <LocaleResource Name="AssociatedToProduct">
+                  <Value>Associated to product</Value>
+                </LocaleResource>
+              </Children>
+            </LocaleResource>
             <LocaleResource Name="Nop.Core.Domain.Catalog.BackorderMode">
                 <Children>
                     <LocaleResource Name="NoBackorders">
@@ -3797,6 +3807,9 @@
             </LocaleResource>
             <LocaleResource Name="AllowedQuantities">
                 <Value>Allowed quantities for this product: {0}</Value>
+            </LocaleResource>
+            <LocaleResource Name="AssociatedAttributeWarning">
+              <Value>{0}. {1}. {2}</Value>
             </LocaleResource>
             <LocaleResource Name="BuyingDisabled">
                 <Value>Buying is disabled for this product</Value>

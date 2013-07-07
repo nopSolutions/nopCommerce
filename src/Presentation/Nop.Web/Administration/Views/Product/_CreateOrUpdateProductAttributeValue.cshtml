@@ -1,4 +1,5 @@
-﻿@model ProductModel.ProductVariantAttributeValueModel
+﻿@using Nop.Core.Domain.Catalog
+@model ProductModel.ProductVariantAttributeValueModel
 @{
     Html.AddScriptParts("~/Administration/Scripts/farbtastic.js");
     Html.AddCssFileParts("~/Administration/Content/farbtastic/farbtastic.css");
@@ -16,7 +17,47 @@
         window.close();
     </script>
 }
+<script type="text/javascript">
+    $(document).ready(function () {
+        
+        $("#@Html.FieldIdFor(model => model.AttributeValueTypeId)").change(toggleProductType);
+        
+        toggleProductType();
+    });
 
+    function toggleProductType() {
+        var selectedProductTypeId = $("#@Html.FieldIdFor(model => model.AttributeValueTypeId)").val();
+        if (selectedProductTypeId == @(((int)AttributeValueType.Simple).ToString())) {
+            $('#group-associated-product').hide();
+        $('#group-price-adjustment').show();
+        $('#group-weight-adjustment').show();
+    } else if (selectedProductTypeId == @(((int)AttributeValueType.AssociatedToProduct).ToString())) {
+        $('#group-associated-product').show();
+        $('#group-price-adjustment').hide();
+        $('#group-weight-adjustment').hide();
+    }
+    }
+</script>
+<table class="adminContent">
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.AttributeValueTypeId):
+        </td>
+        <td class="adminData">
+            @Html.DropDownListFor(model => model.AttributeValueTypeId, ((AttributeValueType)Model.AttributeValueTypeId).ToSelectList())
+            @Html.ValidationMessageFor(model => model.AttributeValueTypeId)
+        </td>
+    </tr>
+    <tr id="group-associated-product">
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.AssociatedProductId):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.AssociatedProductId)
+            @Html.ValidationMessageFor(model => model.AssociatedProductId)
+        </td>
+    </tr>
+</table>
 @(Html.LocalizedEditor<ProductModel.ProductVariantAttributeValueModel, ProductModel.ProductVariantAttributeValueLocalizedModel>("productattributevalue-localized",
 @<table class="adminContent">
     <tr>
@@ -46,7 +87,7 @@
         </td>
     </tr>
 </table>
-))
+      ))
 <table class="adminContent">
     @if (Model.DisplayColorSquaresRgb)
     {
@@ -66,7 +107,7 @@
             </td>
         </tr>
     }
-    <tr>
+    <tr id="group-price-adjustment">
         <td class="adminTitle">
             @Html.NopLabelFor(model => model.PriceAdjustment):
         </td>
@@ -75,7 +116,7 @@
             @Html.ValidationMessageFor(model => model.PriceAdjustment)
         </td>
     </tr>
-    <tr>
+    <tr id="group-weight-adjustment">
         <td class="adminTitle">
             @Html.NopLabelFor(model => model.WeightAdjustment):
         </td>

@@ -57,12 +57,15 @@ namespace Nop.Services.Orders
         /// <summary>
         /// Validates shopping cart item attributes
         /// </summary>
+        /// <param name="customer">Customer</param>
         /// <param name="shoppingCartType">Shopping cart type</param>
         /// <param name="product">Product</param>
         /// <param name="selectedAttributes">Selected attributes</param>
         /// <returns>Warnings</returns>
-        IList<string> GetShoppingCartItemAttributeWarnings(ShoppingCartType shoppingCartType,
-            Product product, string selectedAttributes);
+        IList<string> GetShoppingCartItemAttributeWarnings(Customer customer, 
+            ShoppingCartType shoppingCartType,
+            Product product, 
+            string selectedAttributes);
         
         /// <summary>
         /// Validates shopping cart item (gift card)

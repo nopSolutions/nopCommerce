@@ -156,6 +156,16 @@ namespace Nop.Services.Catalog
         /// <param name="appliedDiscount">Applied discount</param>
         /// <returns>Discount amount</returns>
         decimal GetDiscountAmount(ShoppingCartItem shoppingCartItem, out Discount appliedDiscount);
-        
+
+
+
+
+
+        /// <summary>
+        /// Get a price adjustment of a product variant attribute value
+        /// </summary>
+        /// <param name="pvav">Product variant attribute value</param>
+        /// <returns>price adjustment</returns>
+        decimal GetProductVariantAttributeValuePriceAdjustment(ProductVariantAttributeValue pvav);
     }
 }

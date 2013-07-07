@@ -34,6 +34,7 @@ namespace Nop.Services.Tests.Catalog
         ILocalizationService _localizationService;
         ITaxService _taxService;
         IPriceFormatter _priceFormatter;
+        IPriceCalculationService _priceCalculationService;
         IDownloadService _downloadService;
         IWebHelper _webHelper;
         IProductAttributeFormatter _productAttributeFormatter;
@@ -176,7 +177,7 @@ namespace Nop.Services.Tests.Catalog
 
             _productAttributeParser = new ProductAttributeParser(_productAttributeService);
 
-
+            _priceCalculationService = MockRepository.GenerateMock<IPriceCalculationService>();
 
 
             var workingLanguage = new Language();
@@ -201,7 +202,8 @@ namespace Nop.Services.Tests.Catalog
                 _taxService,
                 _priceFormatter,
                 _downloadService,
-                _webHelper);
+                _webHelper,
+                _priceCalculationService);
         }
         
         [Test]

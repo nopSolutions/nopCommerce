@@ -100,13 +100,16 @@ namespace Nop.Services.Tests.Orders
             _shoppingCartSettings = new ShoppingCartSettings();
             _catalogSettings = new CatalogSettings();
 
+            _productService = MockRepository.GenerateMock<IProductService>();
+
             //price calculation service
             _discountService = MockRepository.GenerateMock<IDiscountService>();
             _categoryService = MockRepository.GenerateMock<ICategoryService>();
             _productAttributeParser = MockRepository.GenerateMock<IProductAttributeParser>();
             _priceCalcService = new PriceCalculationService(_workContext, _storeContext,
                 _discountService, _categoryService, 
-                _productAttributeParser, _shoppingCartSettings, _catalogSettings);
+                _productAttributeParser,_productService,
+                _shoppingCartSettings, _catalogSettings);
 
             _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
             _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
@@ -121,6 +124,7 @@ namespace Nop.Services.Tests.Orders
             _logger = new NullLogger();
             _shippingService = new ShippingService(_shippingMethodRepository,
                 _logger,
+                _productService,
                 _productAttributeParser,
                 _checkoutAttributeParser,
                 _genericAttributeService,
@@ -155,7 +159,6 @@ namespace Nop.Services.Tests.Orders
             _orderService = MockRepository.GenerateMock<IOrderService>();
             _webHelper = MockRepository.GenerateMock<IWebHelper>();
             _languageService = MockRepository.GenerateMock<ILanguageService>();
-            _productService = MockRepository.GenerateMock<IProductService>();
             _priceFormatter= MockRepository.GenerateMock<IPriceFormatter>();
             _productAttributeFormatter= MockRepository.GenerateMock<IProductAttributeFormatter>();
             _shoppingCartService= MockRepository.GenerateMock<IShoppingCartService>();

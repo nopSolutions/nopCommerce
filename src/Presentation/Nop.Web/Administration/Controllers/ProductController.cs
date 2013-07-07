@@ -2883,10 +2883,15 @@ namespace Nop.Admin.Controllers
                     {
                         Id = x.Id,
                         ProductVariantAttributeId = x.ProductVariantAttributeId,
+                        AttributeValueTypeId = x.AttributeValueTypeId,
+                        AttributeValueTypeName = x.AttributeValueType.GetLocalizedEnum(_localizationService, _workContext),
+                        AssociatedProductId = x.AssociatedProductId,
                         Name = x.ProductVariantAttribute.AttributeControlType != AttributeControlType.ColorSquares ? x.Name : string.Format("{0} - {1}", x.Name, x.ColorSquaresRgb),
                         ColorSquaresRgb = x.ColorSquaresRgb,
                         PriceAdjustment = x.PriceAdjustment,
+                        PriceAdjustmentStr = x.AttributeValueType == AttributeValueType.Simple ? x.PriceAdjustment.ToString("G29") : "",
                         WeightAdjustment = x.WeightAdjustment,
+                        WeightAdjustmentStr = x.AttributeValueType == AttributeValueType.Simple ? x.WeightAdjustment.ToString("G29") : "",
                         IsPreSelected = x.IsPreSelected,
                         DisplayOrder = x.DisplayOrder,
                         PictureId = x.PictureId,
@@ -2943,6 +2948,7 @@ namespace Nop.Admin.Controllers
                     };
                 })
                 .ToList();
+
             return View(model);
         }
 
@@ -2985,6 +2991,8 @@ namespace Nop.Admin.Controllers
                 var pvav = new ProductVariantAttributeValue()
                 {
                     ProductVariantAttributeId = model.ProductVariantAttributeId,
+                    AttributeValueTypeId = model.AttributeValueTypeId,
+                    AssociatedProductId = model.AssociatedProductId,
                     Name = model.Name,
                     ColorSquaresRgb = model.ColorSquaresRgb,
                     PriceAdjustment = model.PriceAdjustment,
@@ -3046,6 +3054,9 @@ namespace Nop.Admin.Controllers
             var model = new ProductModel.ProductVariantAttributeValueModel()
             {
                 ProductVariantAttributeId = pvav.ProductVariantAttributeId,
+                AttributeValueTypeId = pvav.AttributeValueTypeId,
+                AttributeValueTypeName = pvav.AttributeValueType.GetLocalizedEnum(_localizationService, _workContext),
+                AssociatedProductId = pvav.AssociatedProductId,
                 Name = pvav.Name,
                 ColorSquaresRgb = pvav.ColorSquaresRgb,
                 DisplayColorSquaresRgb = pvav.ProductVariantAttribute.AttributeControlType == AttributeControlType.ColorSquares,
@@ -3114,6 +3125,8 @@ namespace Nop.Admin.Controllers
 
             if (ModelState.IsValid)
             {
+                pvav.AttributeValueTypeId = model.AttributeValueTypeId;
+                pvav.AssociatedProductId = model.AssociatedProductId;
                 pvav.Name = model.Name;
                 pvav.ColorSquaresRgb = model.ColorSquaresRgb;
                 pvav.PriceAdjustment = model.PriceAdjustment;
@@ -3209,8 +3222,8 @@ namespace Nop.Admin.Controllers
                         Gtin1 = x.Gtin
                     };
                     //warnings
-                    var warnings = _shoppingCartService.GetShoppingCartItemAttributeWarnings(ShoppingCartType.ShoppingCart,
-                            x.Product, x.AttributesXml);
+                    var warnings = _shoppingCartService.GetShoppingCartItemAttributeWarnings(_workContext.CurrentCustomer,
+                        ShoppingCartType.ShoppingCart, x.Product, x.AttributesXml);
                     for (int i = 0; i < warnings.Count; i++)
                     {
                         pvacModel.Warnings += warnings[i];
@@ -3439,8 +3452,8 @@ namespace Nop.Admin.Controllers
 
             #endregion
 
-            warnings.AddRange(_shoppingCartService.GetShoppingCartItemAttributeWarnings(ShoppingCartType.ShoppingCart,
-                product, attributes));
+            warnings.AddRange(_shoppingCartService.GetShoppingCartItemAttributeWarnings(_workContext.CurrentCustomer,
+                ShoppingCartType.ShoppingCart, product, attributes));
             if (warnings.Count == 0)
             {
                 //save combination

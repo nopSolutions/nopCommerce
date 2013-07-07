@@ -5669,31 +5669,37 @@ namespace Nop.Services.Installation
             };
             pvaRockabillyPolka1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
             {
+                AttributeValueType = AttributeValueType.Simple,
                 Name = "Small",
                 DisplayOrder = 1,
             });
             pvaRockabillyPolka1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
             {
+                AttributeValueType = AttributeValueType.Simple,
                 Name = "1X",
                 DisplayOrder = 2,
             });
             pvaRockabillyPolka1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
             {
+                AttributeValueType = AttributeValueType.Simple,
                 Name = "2X",
                 DisplayOrder = 3,
             });
             pvaRockabillyPolka1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
             {
+                AttributeValueType = AttributeValueType.Simple,
                 Name = "3X",
                 DisplayOrder = 4,
             });
             pvaRockabillyPolka1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
             {
+                AttributeValueType = AttributeValueType.Simple,
                 Name = "4X",
                 DisplayOrder = 5,
             });
             pvaRockabillyPolka1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
             {
+                AttributeValueType = AttributeValueType.Simple,
                 Name = "5X",
                 DisplayOrder = 6,
             });
@@ -5822,21 +5828,25 @@ namespace Nop.Services.Installation
             };
             pvaAdidasShoe1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
             {
+                AttributeValueType = AttributeValueType.Simple,
                 Name = "8",
                 DisplayOrder = 1,
             });
             pvaAdidasShoe1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
             {
+                AttributeValueType = AttributeValueType.Simple,
                 Name = "9",
                 DisplayOrder = 2,
             });
             pvaAdidasShoe1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
             {
+                AttributeValueType = AttributeValueType.Simple,
                 Name = "10",
                 DisplayOrder = 3,
             });
             pvaAdidasShoe1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
             {
+                AttributeValueType = AttributeValueType.Simple,
                 Name = "11",
                 DisplayOrder = 4,
             });
@@ -5849,11 +5859,13 @@ namespace Nop.Services.Installation
             };
             pvaAdidasShoe2.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
             {
+                AttributeValueType = AttributeValueType.Simple,
                 Name = "White/Blue",
                 DisplayOrder = 1,
             });
             pvaAdidasShoe2.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
             {
+                AttributeValueType = AttributeValueType.Simple,
                 Name = "White/Black",
                 DisplayOrder = 2,
             });
@@ -6371,11 +6383,13 @@ namespace Nop.Services.Installation
             };
             pvaBuildComputer1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
             {
+                AttributeValueType = AttributeValueType.Simple,
                 Name = "2.2 GHz Intel Pentium Dual-Core E2200",
                 DisplayOrder = 1,
             });
             pvaBuildComputer1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
             {
+                AttributeValueType = AttributeValueType.Simple,
                 Name = "2.5 GHz Intel Pentium Dual-Core E2200",
                 IsPreSelected = true,
                 PriceAdjustment = 15,
@@ -6390,17 +6404,20 @@ namespace Nop.Services.Installation
             };
             pvaBuildComputer2.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
             {
+                AttributeValueType = AttributeValueType.Simple,
                 Name = "2 GB",
                 DisplayOrder = 1,
             });
             pvaBuildComputer2.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
             {
+                AttributeValueType = AttributeValueType.Simple,
                 Name = "4GB",
                 PriceAdjustment = 20,
                 DisplayOrder = 2,
             });
             pvaBuildComputer2.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
             {
+                AttributeValueType = AttributeValueType.Simple,
                 Name = "8GB",
                 PriceAdjustment = 60,
                 DisplayOrder = 3,
@@ -6414,11 +6431,13 @@ namespace Nop.Services.Installation
             };
             pvaBuildComputer3.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
             {
+                AttributeValueType = AttributeValueType.Simple,
                 Name = "320 GB",
                 DisplayOrder = 1,
             });
             pvaBuildComputer3.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
             {
+                AttributeValueType = AttributeValueType.Simple,
                 Name = "400 GB",
                 PriceAdjustment = 100,
                 DisplayOrder = 2,
@@ -6432,6 +6451,7 @@ namespace Nop.Services.Installation
             };
             pvaBuildComputer4.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
             {
+                AttributeValueType = AttributeValueType.Simple,
                 Name = "Vista Home",
                 PriceAdjustment = 50,
                 IsPreSelected = true,
@@ -6439,6 +6459,7 @@ namespace Nop.Services.Installation
             });
             pvaBuildComputer4.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
             {
+                AttributeValueType = AttributeValueType.Simple,
                 Name = "Vista Premium",
                 PriceAdjustment = 60,
                 DisplayOrder = 2,
@@ -6451,6 +6472,7 @@ namespace Nop.Services.Installation
             };
             pvaBuildComputer5.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
             {
+                AttributeValueType = AttributeValueType.Simple,
                 Name = "Microsoft Office",
                 PriceAdjustment = 50,
                 IsPreSelected = true,
@@ -6458,12 +6480,14 @@ namespace Nop.Services.Installation
             });
             pvaBuildComputer5.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
             {
+                AttributeValueType = AttributeValueType.Simple,
                 Name = "Acrobat Reader",
                 PriceAdjustment = 10,
                 DisplayOrder = 2,
             });
             pvaBuildComputer5.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
             {
+                AttributeValueType = AttributeValueType.Simple,
                 Name = "Total Commander",
                 PriceAdjustment = 5,
                 DisplayOrder = 2,
@@ -7049,21 +7073,25 @@ namespace Nop.Services.Installation
             };
             pvaEtnies1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
             {
+                AttributeValueType = AttributeValueType.Simple,
                 Name = "8",
                 DisplayOrder = 1,
             });
             pvaEtnies1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
             {
+                AttributeValueType = AttributeValueType.Simple,
                 Name = "9",
                 DisplayOrder = 2,
             });
             pvaEtnies1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
             {
+                AttributeValueType = AttributeValueType.Simple,
                 Name = "10",
                 DisplayOrder = 3,
             });
             pvaEtnies1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
             {
+                AttributeValueType = AttributeValueType.Simple,
                 Name = "11",
                 DisplayOrder = 4,
             });
@@ -7076,6 +7104,7 @@ namespace Nop.Services.Installation
             };
             pvaEtnies2.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
             {
+                AttributeValueType = AttributeValueType.Simple,
                 Name = "White",
                 IsPreSelected = true,
                 ColorSquaresRgb = "#FFFFFF",
@@ -7083,12 +7112,14 @@ namespace Nop.Services.Installation
             });
             pvaEtnies2.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
             {
+                AttributeValueType = AttributeValueType.Simple,
                 Name = "Black",
                 ColorSquaresRgb = "#000000",
                 DisplayOrder = 2,
             });
             pvaEtnies2.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
             {
+                AttributeValueType = AttributeValueType.Simple,
                 Name = "Green",
                 ColorSquaresRgb = "#1fcb1a",
                 DisplayOrder = 3,
@@ -7470,21 +7501,25 @@ namespace Nop.Services.Installation
             };
             pvaHat1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
             {
+                AttributeValueType = AttributeValueType.Simple,
                 Name = "Small",
                 DisplayOrder = 1,
             });
             pvaHat1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
             {
+                AttributeValueType = AttributeValueType.Simple,
                 Name = "Medium",
                 DisplayOrder = 2,
             });
             pvaHat1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
             {
+                AttributeValueType = AttributeValueType.Simple,
                 Name = "Large",
                 DisplayOrder = 3,
             });
             pvaHat1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
             {
+                AttributeValueType = AttributeValueType.Simple,
                 Name = "X-Large",
                 DisplayOrder = 4,
             });

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Data;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
@@ -26,6 +27,7 @@ namespace Nop.Services.Shipping
 
         private readonly IRepository<ShippingMethod> _shippingMethodRepository;
         private readonly ILogger _logger;
+        private readonly IProductService _productService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
         private readonly IGenericAttributeService _genericAttributeService;
@@ -44,6 +46,7 @@ namespace Nop.Services.Shipping
         /// </summary>
         /// <param name="shippingMethodRepository">Shipping method repository</param>
         /// <param name="logger">Logger</param>
+        /// <param name="productService">Product service</param>
         /// <param name="productAttributeParser">Product attribute parser</param>
         /// <param name="checkoutAttributeParser">Checkout attribute parser</param>
         /// <param name="genericAttributeService">Generic attribute service</param>
@@ -54,6 +57,7 @@ namespace Nop.Services.Shipping
         /// <param name="shoppingCartSettings">Shopping cart settings</param>
         public ShippingService(IRepository<ShippingMethod> shippingMethodRepository,
             ILogger logger,
+            IProductService productService,
             IProductAttributeParser productAttributeParser,
             ICheckoutAttributeParser checkoutAttributeParser,
             IGenericAttributeService genericAttributeService,
@@ -65,6 +69,7 @@ namespace Nop.Services.Shipping
         {
             this._shippingMethodRepository = shippingMethodRepository;
             this._logger = logger;
+            this._productService = productService;
             this._productAttributeParser = productAttributeParser;
             this._checkoutAttributeParser = checkoutAttributeParser;
             this._genericAttributeService = genericAttributeService;
@@ -234,7 +239,27 @@ namespace Nop.Services.Shipping
                 {
                     var pvaValues = _productAttributeParser.ParseProductVariantAttributeValues(shoppingCartItem.AttributesXml);
                     foreach (var pvaValue in pvaValues)
-                        attributesTotalWeight += pvaValue.WeightAdjustment;
+                    {
+                        switch (pvaValue.AttributeValueType)
+                        {
+                            case AttributeValueType.Simple:
+                                {
+                                    //simple attribute
+                                    attributesTotalWeight += pvaValue.WeightAdjustment;
+                                }
+                                break;
+                            case AttributeValueType.AssociatedToProduct:
+                                {
+                                    //bundled product
+                                    var associatedProduct = _productService.GetProductById(pvaValue.AssociatedProductId);
+                                    if (associatedProduct != null)
+                                    {
+                                        attributesTotalWeight += associatedProduct.Weight;
+                                    }
+                                }
+                                break;
+                        }
+                    }
                 }
                 weight = shoppingCartItem.Product.Weight + attributesTotalWeight;
             }

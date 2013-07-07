@@ -2181,6 +2181,22 @@
                                       </LocaleResource>
                                       <LocaleResource Name="Fields">
                                         <Children>
+                                          <LocaleResource Name="AttributeValueType">
+                                            <Value>Attribute value type</Value>
+                                            <Children>
+                                              <LocaleResource Name="Hint">
+                                                <Value>Choose your attribute value type.</Value>
+                                              </LocaleResource>
+                                            </Children>
+                                          </LocaleResource>
+                                          <LocaleResource Name="Name">
+                                            <Value>Associated product</Value>
+                                            <Children>
+                                              <LocaleResource Name="Hint">
+                                                <Value>Associated product.</Value>
+                                              </LocaleResource>
+                                            </Children>
+                                          </LocaleResource>
                                           <LocaleResource Name="Name">
                                             <Value>Name</Value>
                                             <Children>

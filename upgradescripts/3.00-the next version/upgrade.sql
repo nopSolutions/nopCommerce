@@ -420,7 +420,7 @@ set @resources='
     <Value>Control type</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductVariantAttributes.Attributes.Fields.DisplayOrder">
-    <Value>Display order></Value>
+    <Value>Display order</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values">
     <Value>Values</Value>
@@ -1271,10 +1271,10 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Fields.ProductType.Hint">
     <Value>Choose your product type.</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.ProductType.Nop.Core.Domain.Catalog.ProductType.SimpleProduct">
+  <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.ProductType.SimpleProduct">
     <Value>Simple product</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.ProductType.Nop.Core.Domain.Catalog.ProductType.GroupedProduct">
+  <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.ProductType.GroupedProduct">
     <Value>Grouped product</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.BulkEdit">
@@ -1372,6 +1372,27 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.AssociatedToProductName.Hint">
     <Value>A "grouped" parent product which this one is associated to.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.AttributeValueType">
+    <Value>Attribute value type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.AttributeValueType.Hint">
+    <Value>Choose your attribute value type.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.AssociatedProduct">
+    <Value>Associated product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.AssociatedProduct.Hint">
+    <Value>Associated product.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.AttributeValueType.Simple">
+    <Value>Simple</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.AttributeValueType.AssociatedToProduct">
+    <Value>Associated to product</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.AssociatedAttributeWarning">
+    <Value>{0}, {1}: {2}</Value>
   </LocaleResource>
 </Language>
 '
@@ -5486,3 +5507,35 @@ GO
 ALTER TABLE [ProductVariantAttributeValue] ALTER COLUMN [PictureId] int NOT NULL
 GO
 
+--bundled products
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[ProductVariantAttributeValue]') and NAME='AttributeValueTypeId')
+BEGIN
+	ALTER TABLE [ProductVariantAttributeValue]
+	ADD [AttributeValueTypeId] int NULL
+END
+GO
+
+UPDATE [ProductVariantAttributeValue]
+SET [AttributeValueTypeId] = 0
+WHERE [AttributeValueTypeId] IS NULL
+GO
+
+ALTER TABLE [ProductVariantAttributeValue]
+ALTER COLUMN [AttributeValueTypeId] int NOT NULL
+GO
+
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[ProductVariantAttributeValue]') and NAME='AssociatedProductId')
+BEGIN
+	ALTER TABLE [ProductVariantAttributeValue]
+	ADD [AssociatedProductId] int NULL
+END
+GO
+
+UPDATE [ProductVariantAttributeValue]
+SET [AssociatedProductId] = 0
+WHERE [AssociatedProductId] IS NULL
+GO
+
+ALTER TABLE [ProductVariantAttributeValue]
+ALTER COLUMN [AssociatedProductId] int NOT NULL
+GO

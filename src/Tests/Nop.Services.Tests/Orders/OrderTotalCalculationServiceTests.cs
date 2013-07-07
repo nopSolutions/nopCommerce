@@ -55,6 +55,7 @@ namespace Nop.Services.Tests.Orders
         CatalogSettings _catalogSettings;
         IEventPublisher _eventPublisher;
         Store _store;
+        IProductService _productService;
 
         [SetUp]
         public new void SetUp()
@@ -64,7 +65,8 @@ namespace Nop.Services.Tests.Orders
             _store = new Store() { Id = 1 };
             _storeContext = MockRepository.GenerateMock<IStoreContext>();
             _storeContext.Expect(x => x.CurrentStore).Return(_store);
-            
+
+            _productService = MockRepository.GenerateMock<IProductService>();
 
             var pluginFinder = new PluginFinder();
             var cacheManager = new NopNullCache();
@@ -78,8 +80,8 @@ namespace Nop.Services.Tests.Orders
             _catalogSettings = new CatalogSettings();
 
             _priceCalcService = new PriceCalculationService(_workContext, _storeContext,
-                _discountService, _categoryService, _productAttributeParser, 
-                _shoppingCartSettings, _catalogSettings);
+                _discountService, _categoryService, _productAttributeParser,
+                _productService, _shoppingCartSettings, _catalogSettings);
 
             _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
             _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
@@ -94,6 +96,7 @@ namespace Nop.Services.Tests.Orders
             _logger = new NullLogger();
             _shippingService = new ShippingService(_shippingMethodRepository,
                 _logger,
+                _productService,
                 _productAttributeParser,
                 _checkoutAttributeParser,
                 _genericAttributeService,

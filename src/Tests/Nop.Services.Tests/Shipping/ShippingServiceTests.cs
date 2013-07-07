@@ -4,7 +4,6 @@ using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
-using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -32,6 +31,7 @@ namespace Nop.Services.Tests.Shipping
         IGenericAttributeService _genericAttributeService;
         IShippingService _shippingService;
         ShoppingCartSettings _shoppingCartSettings;
+        IProductService _productService;
 
         [SetUp]
         public new void SetUp()
@@ -48,6 +48,7 @@ namespace Nop.Services.Tests.Shipping
             var cacheManager = new NopNullCache();
 
             var pluginFinder = new PluginFinder();
+            _productService = MockRepository.GenerateMock<IProductService>();
 
             _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
             _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
@@ -58,6 +59,7 @@ namespace Nop.Services.Tests.Shipping
             _shoppingCartSettings = new ShoppingCartSettings();
             _shippingService = new ShippingService(_shippingMethodRepository, 
                 _logger,
+                _productService,
                 _productAttributeParser,
                 _checkoutAttributeParser,
                 _genericAttributeService,

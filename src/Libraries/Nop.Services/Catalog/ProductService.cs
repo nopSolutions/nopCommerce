@@ -1045,6 +1045,22 @@ namespace Nop.Services.Catalog
                     break;
             }
 
+
+            //bundled products
+            var pvaValues = _productAttributeParser.ParseProductVariantAttributeValues(attributesXml);
+            foreach (var pvaValue in pvaValues)
+            {
+                if (pvaValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
+                {
+                    //associated product (bundle)
+                    var associatedProduct = GetProductById(pvaValue.AssociatedProductId);
+                    if (associatedProduct != null)
+                    {
+                        AdjustInventory(associatedProduct, decrease, quantity, "");
+                    }
+                }
+            }
+
             //TODO send back in stock notifications?
             //if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
             //    product.BackorderMode == BackorderMode.NoBackorders &&

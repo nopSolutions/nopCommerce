@@ -22,6 +22,7 @@ namespace Nop.Services.Tests.Catalog
         IDiscountService _discountService;
         ICategoryService _categoryService;
         IProductAttributeParser _productAttributeParser;
+        IProductService _productService;
         IPriceCalculationService _priceCalcService;
         ShoppingCartSettings _shoppingCartSettings;
         CatalogSettings _catalogSettings;
@@ -38,16 +39,23 @@ namespace Nop.Services.Tests.Catalog
             _storeContext.Expect(x => x.CurrentStore).Return(_store);
 
             _discountService = MockRepository.GenerateMock<IDiscountService>();
-
             _categoryService = MockRepository.GenerateMock<ICategoryService>();
+            _productService = MockRepository.GenerateMock<IProductService>();
+
 
             _productAttributeParser = MockRepository.GenerateMock<IProductAttributeParser>();
 
             _shoppingCartSettings = new ShoppingCartSettings();
             _catalogSettings = new CatalogSettings();
 
-            _priceCalcService = new PriceCalculationService(_workContext, _storeContext, _discountService,
-                _categoryService, _productAttributeParser, _shoppingCartSettings, _catalogSettings);
+            _priceCalcService = new PriceCalculationService(_workContext,
+                _storeContext, 
+                _discountService,
+                _categoryService,
+                _productAttributeParser,
+                _productService, 
+                _shoppingCartSettings, 
+                _catalogSettings);
         }
 
         [Test]

@@ -26,6 +26,7 @@ namespace Nop.Services.Catalog
         private readonly IPriceFormatter _priceFormatter;
         private readonly IDownloadService _downloadService;
         private readonly IWebHelper _webHelper;
+        private readonly IPriceCalculationService _priceCalculationService;
 
         public ProductAttributeFormatter(IWorkContext workContext,
             IProductAttributeService productAttributeService,
@@ -35,7 +36,8 @@ namespace Nop.Services.Catalog
             ITaxService taxService,
             IPriceFormatter priceFormatter,
             IDownloadService downloadService,
-            IWebHelper webHelper)
+            IWebHelper webHelper,
+            IPriceCalculationService priceCalculationService)
         {
             this._workContext = workContext;
             this._productAttributeService = productAttributeService;
@@ -46,6 +48,7 @@ namespace Nop.Services.Catalog
             this._priceFormatter = priceFormatter;
             this._downloadService = downloadService;
             this._webHelper = webHelper;
+            this._priceCalculationService = priceCalculationService;
         }
 
         /// <summary>
@@ -161,7 +164,8 @@ namespace Nop.Services.Catalog
                                     if (renderPrices)
                                     {
                                         decimal taxRate = decimal.Zero;
-                                        decimal priceAdjustmentBase = _taxService.GetProductPrice(product, pvaValue.PriceAdjustment, customer, out taxRate);
+                                        decimal pvaValuePriceAdjustment = _priceCalculationService.GetProductVariantAttributeValuePriceAdjustment(pvaValue);
+                                        decimal priceAdjustmentBase = _taxService.GetProductPrice(product, pvaValuePriceAdjustment, customer, out taxRate);
                                         decimal priceAdjustment = _currencyService.ConvertFromPrimaryStoreCurrency(priceAdjustmentBase, _workContext.WorkingCurrency);
                                         if (priceAdjustmentBase > 0)
                                         {

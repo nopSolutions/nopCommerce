@@ -380,6 +380,8 @@ namespace Nop.Services.Catalog
                         var pvavCopy = new ProductVariantAttributeValue()
                         {
                             ProductVariantAttributeId = productVariantAttributeCopy.Id,
+                            AttributeValueTypeId = productVariantAttributeValue.AttributeValueTypeId,
+                            AssociatedProductId = productVariantAttributeValue.AssociatedProductId,
                             Name = productVariantAttributeValue.Name,
                             ColorSquaresRgb = productVariantAttributeValue.ColorSquaresRgb,
                             PriceAdjustment = productVariantAttributeValue.PriceAdjustment,

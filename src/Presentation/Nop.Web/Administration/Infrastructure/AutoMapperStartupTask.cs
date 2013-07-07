@@ -199,6 +199,8 @@ namespace Nop.Admin.Infrastructure
             //products
             Mapper.CreateMap<Product, ProductModel>()
                 .ForMember(dest => dest.ProductTypeName, mo => mo.Ignore())
+                .ForMember(dest => dest.AssociatedToProductId, mo => mo.Ignore())
+                .ForMember(dest => dest.AssociatedToProductName, mo => mo.Ignore())
                 .ForMember(dest => dest.CreatedOn, mo => mo.Ignore())
                 .ForMember(dest => dest.UpdatedOn, mo => mo.Ignore())
                 .ForMember(dest => dest.ProductTags, mo => mo.Ignore())

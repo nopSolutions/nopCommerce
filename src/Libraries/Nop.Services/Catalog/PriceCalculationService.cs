@@ -22,6 +22,7 @@ namespace Nop.Services.Catalog
         private readonly IDiscountService _discountService;
         private readonly ICategoryService _categoryService;
         private readonly IProductAttributeParser _productAttributeParser;
+        private readonly IProductService _productService;
         private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly CatalogSettings _catalogSettings;
 
@@ -34,6 +35,7 @@ namespace Nop.Services.Catalog
             IDiscountService discountService, 
             ICategoryService categoryService,
             IProductAttributeParser productAttributeParser, 
+            IProductService productService,
             ShoppingCartSettings shoppingCartSettings, 
             CatalogSettings catalogSettings)
         {
@@ -42,6 +44,7 @@ namespace Nop.Services.Catalog
             this._discountService = discountService;
             this._categoryService = categoryService;
             this._productAttributeParser = productAttributeParser;
+            this._productService = productService;
             this._shoppingCartSettings = shoppingCartSettings;
             this._catalogSettings = catalogSettings;
         }
@@ -255,6 +258,9 @@ namespace Nop.Services.Catalog
             bool includeDiscounts, 
             int quantity)
         {
+            if (product == null)
+                throw new ArgumentNullException("product");
+
             //initial price
             decimal result = product.Price;
 
@@ -358,6 +364,9 @@ namespace Nop.Services.Catalog
             int quantity,
             out Discount appliedDiscount)
         {
+            if (product == null)
+                throw new ArgumentNullException("product");
+
             appliedDiscount = null;
             decimal appliedDiscountAmount = decimal.Zero;
 
@@ -384,6 +393,9 @@ namespace Nop.Services.Catalog
         /// <returns>Shopping cart item sub total</returns>
         public virtual decimal GetSubTotal(ShoppingCartItem shoppingCartItem, bool includeDiscounts)
         {
+            if (shoppingCartItem == null)
+                throw new ArgumentNullException("shoppingCartItem");
+
             return GetUnitPrice(shoppingCartItem, includeDiscounts) * shoppingCartItem.Quantity;
         }
 
@@ -395,6 +407,9 @@ namespace Nop.Services.Catalog
         /// <returns>Shopping cart unit price (one item)</returns>
         public virtual decimal GetUnitPrice(ShoppingCartItem shoppingCartItem, bool includeDiscounts)
         {
+            if (shoppingCartItem == null)
+                throw new ArgumentNullException("shoppingCartItem");
+
             var customer = shoppingCartItem.Customer;
             decimal finalPrice = decimal.Zero;
             var product = shoppingCartItem.Product;
@@ -407,7 +422,7 @@ namespace Nop.Services.Catalog
                 {
                     foreach (var pvaValue in pvaValues)
                     {
-                        attributesTotalPrice += pvaValue.PriceAdjustment;
+                        attributesTotalPrice += GetProductVariantAttributeValuePriceAdjustment(pvaValue);
                     }
                 }
 
@@ -452,6 +467,9 @@ namespace Nop.Services.Catalog
         /// <returns>Discount amount</returns>
         public virtual decimal GetDiscountAmount(ShoppingCartItem shoppingCartItem, out Discount appliedDiscount)
         {
+            if (shoppingCartItem == null)
+                throw new ArgumentNullException("shoppingCartItem");
+
             var customer = shoppingCartItem.Customer;
             appliedDiscount = null;
             decimal totalDiscountAmount = decimal.Zero;
@@ -463,7 +481,7 @@ namespace Nop.Services.Catalog
                 var pvaValues = _productAttributeParser.ParseProductVariantAttributeValues(shoppingCartItem.AttributesXml);
                 foreach (var pvaValue in pvaValues)
                 {
-                    attributesTotalPrice += pvaValue.PriceAdjustment;
+                    attributesTotalPrice += GetProductVariantAttributeValuePriceAdjustment(pvaValue);
                 }
 
                 decimal productDiscountAmount = GetDiscountAmount(product, customer, attributesTotalPrice, shoppingCartItem.Quantity, out appliedDiscount);
@@ -474,7 +492,45 @@ namespace Nop.Services.Catalog
                 totalDiscountAmount = Math.Round(totalDiscountAmount, 2);
             return totalDiscountAmount;
         }
-        
+
+
+
+
+
+        /// <summary>
+        /// Get a price adjustment of a product variant attribute value
+        /// </summary>
+        /// <param name="pvav">Product variant attribute value</param>
+        /// <returns>price adjustment</returns>
+        public virtual decimal GetProductVariantAttributeValuePriceAdjustment(ProductVariantAttributeValue pvav)
+        {
+            if (pvav == null)
+                throw new ArgumentNullException("pvav");
+
+
+            switch (pvav.AttributeValueType)
+            {
+                case AttributeValueType.Simple:
+                    {
+                        //simple attribute
+                        return pvav.PriceAdjustment;
+                    }
+                    break;
+                case AttributeValueType.AssociatedToProduct:
+                    {
+                        //bundled product
+                        var associatedProduct = _productService.GetProductById(pvav.AssociatedProductId);
+                        if (associatedProduct != null)
+                        {
+                            var productPrice = GetFinalPrice(associatedProduct, true);
+                            return productPrice;
+                        }
+                    }
+                    break;
+            }
+
+            return decimal.Zero;
+        }
         #endregion
     }
 }

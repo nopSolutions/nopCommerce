@@ -28,14 +28,13 @@
                             })
                             .Columns(columns =>
                             {
+                                columns.Bound(x => x.AttributeValueTypeName);
                                 columns.Bound(x => x.Name);
                                 //TODO display localized values here
-                                columns.Bound(x => x.PriceAdjustment)
-                                    .Centered()
-                                    .Format("{0:G29}");
-                                columns.Bound(x => x.WeightAdjustment)
-                                    .Centered()
-                                    .Format("{0:G29}");
+                                columns.Bound(x => x.PriceAdjustmentStr)
+                                    .Centered();
+                                columns.Bound(x => x.WeightAdjustmentStr)
+                                    .Centered();
                                 columns.Bound(x => x.IsPreSelected)
                                     .Template(
                                         @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.IsPreSelected.ToString().ToLowerInvariant() + ".gif")" />

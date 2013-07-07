@@ -654,6 +654,14 @@ namespace Nop.Admin.Models.Catalog
 
             public int ProductVariantAttributeId { get; set; }
 
+            [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.AttributeValueType")]
+            public int AttributeValueTypeId { get; set; }
+            [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.AttributeValueType")]
+            public string AttributeValueTypeName { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.AssociatedProduct")]
+            public int AssociatedProductId { get; set; }
+
             [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.Name")]
             [AllowHtml]
             public string Name { get; set; }
@@ -665,9 +673,15 @@ namespace Nop.Admin.Models.Catalog
 
             [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.PriceAdjustment")]
             public decimal PriceAdjustment { get; set; }
+            [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.PriceAdjustment")]
+            //used only on the values list page
+            public string PriceAdjustmentStr { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.WeightAdjustment")]
             public decimal WeightAdjustment { get; set; }
+            [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.WeightAdjustment")]
+            //used only on the values list page
+            public string WeightAdjustmentStr { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.IsPreSelected")]
             public bool IsPreSelected { get; set; }

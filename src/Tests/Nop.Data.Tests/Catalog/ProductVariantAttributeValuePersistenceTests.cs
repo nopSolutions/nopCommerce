@@ -13,6 +13,8 @@ namespace Nop.Data.Tests.Catalog
         {
             var pvav = new ProductVariantAttributeValue
             {
+                AttributeValueType = AttributeValueType.AssociatedToProduct,
+                AssociatedProductId = 10,
                 Name = "Name 1",
                 ColorSquaresRgb = "12FF33",
                 PriceAdjustment = 1.1M,
@@ -36,6 +38,8 @@ namespace Nop.Data.Tests.Catalog
 
             var fromDb = SaveAndLoadEntity(pvav);
             fromDb.ShouldNotBeNull();
+            fromDb.AttributeValueType.ShouldEqual(AttributeValueType.AssociatedToProduct);
+            fromDb.AssociatedProductId.ShouldEqual(10);
             fromDb.Name.ShouldEqual("Name 1");
             fromDb.ColorSquaresRgb.ShouldEqual("12FF33");
             fromDb.PriceAdjustment.ShouldEqual(1.1M);

@@ -424,19 +424,22 @@ namespace Nop.Services.Orders
         /// <summary>
         /// Validates shopping cart item attributes
         /// </summary>
+        /// <param name="customer">Customer</param>
         /// <param name="shoppingCartType">Shopping cart type</param>
         /// <param name="product">Product</param>
         /// <param name="selectedAttributes">Selected attributes</param>
         /// <returns>Warnings</returns>
-        public virtual IList<string> GetShoppingCartItemAttributeWarnings(ShoppingCartType shoppingCartType,
-            Product product, string selectedAttributes)
+        public virtual IList<string> GetShoppingCartItemAttributeWarnings(Customer customer, 
+            ShoppingCartType shoppingCartType,
+            Product product, 
+            string selectedAttributes)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
 
             var warnings = new List<string>();
 
-            //selected attributes
+            //ensure it's our attributes
             var pva1Collection = _productAttributeParser.ParseProductVariantAttributes(selectedAttributes);
             foreach (var pva1 in pva1Collection)
             {
@@ -454,7 +457,7 @@ namespace Nop.Services.Orders
                 }
             }
 
-            //existing product attributes
+            //validate required product attributes (whether they're chosen/selected/entered)
             var pva2Collection = product.ProductVariantAttributes;
             foreach (var pva2 in pva2Collection)
             {
@@ -481,13 +484,40 @@ namespace Nop.Services.Orders
                     //if not found
                     if (!found)
                     {
-                        if (!string.IsNullOrEmpty(pva2.TextPrompt))
+                        var notFoundWarning = !string.IsNullOrEmpty(pva2.TextPrompt) ?
+                            pva2.TextPrompt : 
+                            string.Format(_localizationService.GetResource("ShoppingCart.SelectAttribute"), pva2.ProductAttribute.GetLocalized(a => a.Name));
+                        
+                        warnings.Add(notFoundWarning);
+                    }
+                }
+            }
+
+            if (warnings.Count == 0)
+            {
+                //validate bundled products
+                var pvaValues = _productAttributeParser.ParseProductVariantAttributeValues(selectedAttributes);
+                foreach (var pvaValue in pvaValues)
+                {
+                    if (pvaValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
+                    {
+                        //associated product (bundle)
+                        var associatedProduct = _productService.GetProductById(pvaValue.AssociatedProductId);
+                        if (associatedProduct != null)
                         {
-                            warnings.Add(pva2.TextPrompt);
+                            var associatedProductWarnings = GetShoppingCartItemWarnings(customer,
+                                shoppingCartType, associatedProduct, _storeContext.CurrentStore.Id,
+                                "", decimal.Zero, 1, false, true, true, true, true);
+                            foreach (var associatedProductWarning in associatedProductWarnings)
+                            {
+                                var paName = pvaValue.ProductVariantAttribute.ProductAttribute.GetLocalized(a => a.Name);
+                                var pvavName = pvaValue.GetLocalized(a => a.Name);
+                                warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.AssociatedAttributeWarning"), paName, pvavName, associatedProductWarning));
+                            }
                         }
                         else
                         {
-                            warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.SelectAttribute"), pva2.ProductAttribute.GetLocalized(a => a.Name)));
+                            warnings.Add(string.Format("Associated product cannot be loaded - {0}", pvaValue.AssociatedProductId));
                         }
                     }
                 }
@@ -582,7 +612,7 @@ namespace Nop.Services.Orders
 
             //selected attributes
             if (getAttributesWarnings)
-                warnings.AddRange(GetShoppingCartItemAttributeWarnings(shoppingCartType, product, selectedAttributes));
+                warnings.AddRange(GetShoppingCartItemAttributeWarnings(customer, shoppingCartType, product, selectedAttributes));
 
             //gift cards
             if (getGiftCardWarnings)
