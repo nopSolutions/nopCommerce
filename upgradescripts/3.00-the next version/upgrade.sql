@@ -4357,12 +4357,12 @@ END
 GO
 IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Product]') and NAME='ParentProductId')
 BEGIN
-	UPDATE [Product]
+	exec ('UPDATE [Product]
 	SET [ParentProductId] = 0
-	WHERE [ParentProductId] is null
+	WHERE [ParentProductId] is null')
 	
-	ALTER TABLE [Product]
-	ALTER COLUMN [ParentProductId] int NOT NULL
+	exec ('ALTER TABLE [Product]
+	ALTER COLUMN [ParentProductId] int NOT NULL')
 END
 GO
 
@@ -4571,7 +4571,10 @@ END
 GO
 IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_Product_ParentProductId' and object_id=object_id(N'[Product]'))
 BEGIN
-	CREATE NONCLUSTERED INDEX [IX_Product_ParentProductId] ON [Product] ([ParentProductId] ASC)
+	IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Product]') and NAME='ParentProductId')
+	BEGIN
+		CREATE NONCLUSTERED INDEX [IX_Product_ParentProductId] ON [Product] ([ParentProductId] ASC)
+	END
 END
 GO
 
@@ -4801,13 +4804,19 @@ BEGIN
 END
 GO
 
-UPDATE [Product]
-SET [VisibleIndividually] = 0
-WHERE [VisibleIndividually] IS NULL AND [ParentProductId] > 0
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Product]') and NAME='ParentProductId')
+BEGIN
+	EXEC('UPDATE [Product]
+	SET [VisibleIndividually] = 0
+	WHERE [VisibleIndividually] IS NULL AND [ParentProductId] > 0')
+END
 GO
-UPDATE [Product]
-SET [VisibleIndividually] = 1
-WHERE [VisibleIndividually] IS NULL AND [ParentProductId] = 0
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Product]') and NAME='ParentProductId')
+BEGIN
+	EXEC('UPDATE [Product]
+	SET [VisibleIndividually] = 1
+	WHERE [VisibleIndividually] IS NULL AND [ParentProductId] = 0')
+END
 GO
 
 ALTER TABLE [Product] ALTER COLUMN [VisibleIndividually] bit NOT NULL
