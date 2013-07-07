@@ -2895,8 +2895,11 @@ END
 GO
 IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Product]') and NAME='ParentProductId')
 BEGIN
-	ALTER TABLE [Product]
-	ADD [ParentProductId] int NULL
+	IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Product]') and NAME='ParentGroupedProductId')
+	BEGIN
+		ALTER TABLE [Product]
+		ADD [ParentProductId] int NULL
+	END
 END
 GO
 IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Product]') and NAME='SKU')
@@ -4342,8 +4345,25 @@ GO
 
 
 --new Product columns. Set "NOT NULL" where required
-ALTER TABLE [Product]
-ALTER COLUMN [ParentProductId] int NOT NULL
+IF EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_Product_ParentProductId' and object_id=object_id(N'[Product]'))
+BEGIN
+	DROP INDEX [IX_Product_ParentProductId] ON [Product]
+END
+GO
+IF EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_Product_ParentGroupedProductId' and object_id=object_id(N'[Product]'))
+BEGIN
+	DROP INDEX [IX_Product_ParentGroupedProductId] ON [Product]
+END
+GO
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Product]') and NAME='ParentProductId')
+BEGIN
+	UPDATE [Product]
+	SET [ParentProductId] = 0
+	WHERE [ParentProductId] is null
+	
+	ALTER TABLE [Product]
+	ALTER COLUMN [ParentProductId] int NOT NULL
+END
 GO
 
 ALTER TABLE [Product]
