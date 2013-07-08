@@ -5545,3 +5545,10 @@ GO
 ALTER TABLE [ProductVariantAttributeValue]
 ALTER COLUMN [AssociatedProductId] int NOT NULL
 GO
+
+--more indexes
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_UrlRecord_Custom_1' and object_id=object_id(N'[UrlRecord]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_UrlRecord_Custom_1] ON [UrlRecord] ([EntityId] ASC, [EntityName] ASC, [LanguageId] ASC, [IsActive] ASC)
+END
+GO
