@@ -2880,6 +2880,10 @@ namespace Nop.Admin.Controllers
                 Data = values.Select(x =>
                 {
                     var associatedProduct = _productService.GetProductById(x.AssociatedProductId);
+                    var pictureThumbnailUrl = _pictureService.GetPictureUrl(x.PictureId, 75, false);
+                    //little hack here. Grid is rendered wrong way with <inmg> without "src" attribute
+                    if (String.IsNullOrEmpty(pictureThumbnailUrl))
+                        pictureThumbnailUrl = _pictureService.GetPictureUrl(null, 1, true);
                     return new ProductModel.ProductVariantAttributeValueModel()
                     {
                         Id = x.Id,
@@ -2897,7 +2901,7 @@ namespace Nop.Admin.Controllers
                         IsPreSelected = x.IsPreSelected,
                         DisplayOrder = x.DisplayOrder,
                         PictureId = x.PictureId,
-                        PictureThumbnailUrl = _pictureService.GetPictureUrl(x.PictureId, 75, false)
+                        PictureThumbnailUrl = pictureThumbnailUrl
                     };
                 }),
                 Total = values.Count()
