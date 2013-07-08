@@ -490,8 +490,14 @@
                     <input type="submit" name="togglefulltext" value="@(Model.FullTextSettings.Enabled ? T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Disable").Text : T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Enable").Text)" class="adminButton" />
                 </td>
             </tr>
-                    if (Model.FullTextSettings.Enabled)
-                    {
+            if (Model.FullTextSettings.Enabled)
+            {
+                <td colspan="2">
+                    @T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.NoiseWords")
+                </td>
+            }
+            if (Model.FullTextSettings.Enabled)
+                {
             <tr>
                 <td class="adminTitle">
                     @Html.NopLabelFor(model => model.FullTextSettings.SearchMode):
@@ -501,7 +507,7 @@
                     @Html.ValidationMessageFor(model => model.FullTextSettings.SearchMode)
                 </td>
             </tr>
-                    }
+                }
         }
     </table>
 }
