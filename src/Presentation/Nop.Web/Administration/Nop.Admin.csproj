@@ -1137,6 +1137,9 @@
   <ItemGroup>
     <Content Include="Views\Product\_CreateOrUpdate.Pictures.cshtml" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Product\AssociateProductToAttributeValuePopup.cshtml" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

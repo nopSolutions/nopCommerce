@@ -2189,9 +2189,12 @@
                                               </LocaleResource>
                                             </Children>
                                           </LocaleResource>
-                                          <LocaleResource Name="Name">
+                                          <LocaleResource Name="AssociatedProduct">
                                             <Value>Associated product</Value>
                                             <Children>
+                                              <LocaleResource Name="AddNew">
+                                                <Value>Associate a product</Value>
+                                              </LocaleResource>
                                               <LocaleResource Name="Hint">
                                                 <Value>Associated product.</Value>
                                               </LocaleResource>
@@ -2615,6 +2618,9 @@
                     </LocaleResource>
                     <LocaleResource Name="Search">
                         <Value>Search</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Select">
+                      <Value>Select</Value>
                     </LocaleResource>
                     <LocaleResource Name="SEO">
                         <Value>SEO</Value>

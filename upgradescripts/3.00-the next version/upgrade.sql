@@ -1394,6 +1394,12 @@ set @resources='
   <LocaleResource Name="ShoppingCart.AssociatedAttributeWarning">
     <Value>{0}, {1}: {2}</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.AssociatedProduct.AddNew">
+    <Value>Associate a product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.Select">
+    <Value>Select</Value>
+  </LocaleResource>
 </Language>
 '
 

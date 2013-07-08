@@ -233,8 +233,8 @@ namespace Nop.Services.Shipping
             decimal weight = decimal.Zero;
             if (shoppingCartItem.Product != null)
             {
+                //attribute weight
                 decimal attributesTotalWeight = decimal.Zero;
-
                 if (!String.IsNullOrEmpty(shoppingCartItem.AttributesXml))
                 {
                     var pvaValues = _productAttributeParser.ParseProductVariantAttributeValues(shoppingCartItem.AttributesXml);
@@ -261,6 +261,7 @@ namespace Nop.Services.Shipping
                         }
                     }
                 }
+
                 weight = shoppingCartItem.Product.Weight + attributesTotalWeight;
             }
             return weight;
