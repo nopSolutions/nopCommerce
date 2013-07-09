@@ -103,7 +103,8 @@ namespace Nop.Admin.Controllers
             DateTime? createdToFromValue = (model.CreatedOnTo == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.CreatedOnTo.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
-            var productReviews = _productService.GetAllProductReviews(0, null, createdOnFromValue, createdToFromValue);
+            var productReviews = _productService.GetAllProductReviews(0, null, 
+                createdOnFromValue, createdToFromValue, model.SearchText);
             var gridModel = new GridModel<ProductReviewModel>
             {
                 Data = productReviews.PagedForCommand(command).Select(x =>

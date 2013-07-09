@@ -1467,9 +1467,11 @@ namespace Nop.Services.Catalog
         /// <param name="approved">A value indicating whether to content is approved; null to load all records</param> 
         /// <param name="fromUtc">Item creation from; null to load all records</param>
         /// <param name="toUtc">Item item creation to; null to load all records</param>
+        /// <param name="message">Search title or review text; null to load all records</param>
         /// <returns>Reviews</returns>
         public virtual IList<ProductReview> GetAllProductReviews(int customerId, bool? approved,
-            DateTime? fromUtc = null, DateTime? toUtc = null)
+            DateTime? fromUtc = null, DateTime? toUtc = null,
+            string message = null)
         {
             var query = _productReviewRepository.Table;
             if (approved.HasValue)
@@ -1480,6 +1482,9 @@ namespace Nop.Services.Catalog
                 query = query.Where(c => fromUtc.Value <= c.CreatedOnUtc);
             if (toUtc.HasValue)
                 query = query.Where(c => toUtc.Value >= c.CreatedOnUtc);
+            if (!String.IsNullOrEmpty(message))
+                query = query.Where(c => c.Title.Contains(message) || c.ReviewText.Contains(message));
+
             query = query.OrderBy(c => c.CreatedOnUtc);
             var content = query.ToList();
             return content;

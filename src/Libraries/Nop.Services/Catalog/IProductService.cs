@@ -340,7 +340,7 @@ namespace Nop.Services.Catalog
         #endregion
 
         #region Product reviews
-        
+
         /// <summary>
         /// Gets all product reviews
         /// </summary>
@@ -348,9 +348,11 @@ namespace Nop.Services.Catalog
         /// <param name="approved">A value indicating whether to content is approved; null to load all records</param> 
         /// <param name="fromUtc">Item creation from; null to load all records</param>
         /// <param name="toUtc">Item item creation to; null to load all records</param>
+        /// <param name="message">Search title or review text; null to load all records</param>
         /// <returns>Reviews</returns>
         IList<ProductReview> GetAllProductReviews(int customerId, bool? approved,
-            DateTime? fromUtc = null, DateTime? toUtc = null);
+            DateTime? fromUtc = null, DateTime? toUtc = null,
+            string message = null);
 
         /// <summary>
         /// Gets product review

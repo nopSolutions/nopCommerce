@@ -34,6 +34,14 @@
             </td>
         </tr>
         <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SearchText):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => Model.SearchText)
+            </td>
+        </tr>
+        <tr>
             <td colspan="2">
                 <input type="button" id="btnSearch" class="t-button" value="@T("Admin.Common.Search")" />
             </td>
@@ -198,7 +206,8 @@
         function onDataBinding(e) {
             var searchModel = {
                 CreatedOnFrom: $('#@Html.FieldIdFor(model => model.CreatedOnFrom)').val(),
-                CreatedOnTo: $('#@Html.FieldIdFor(model => model.CreatedOnTo)').val()
+                CreatedOnTo: $('#@Html.FieldIdFor(model => model.CreatedOnTo)').val(),
+                SearchText: $('#@Html.FieldIdFor(model => model.SearchText)').val()
             };
             e.data = searchModel;
         }

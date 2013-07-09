@@ -1215,6 +1215,14 @@
                                             </LocaleResource>
                                         </Children>
                                     </LocaleResource>
+                                    <LocaleResource Name="SearchText">
+                                        <Value>Message</Value>
+                                        <Children>
+                                            <LocaleResource Name="Hint">
+                                                <Value>Search in title and review text.</Value>
+                                            </LocaleResource>
+                                        </Children>
+                                    </LocaleResource>
                                 </Children>
                             </LocaleResource>
                             <LocaleResource Name="Deleted">

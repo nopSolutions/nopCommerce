@@ -11,7 +11,7 @@ namespace Nop.Web.Framework.Seo
     /// <summary>
     /// Provides properties and methods for defining a SEO friendly route, and for getting information about the route.
     /// </summary>
-    public class GenericPathRoute : LocalizedRoute
+    public partial class GenericPathRoute : LocalizedRoute
     {
         #region Constructors
 
