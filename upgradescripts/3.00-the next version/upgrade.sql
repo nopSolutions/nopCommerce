@@ -1412,6 +1412,9 @@ set @resources='
   <LocaleResource Name="Admin.Telerik.EditorLocalization.OpenInNewWindow">
     <Value>Open link in new window</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Currencies.Fields.DisplayLocale.Select">
+    <Value>Select locale</Value>
+  </LocaleResource>
 </Language>
 '
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Web;
@@ -184,11 +185,23 @@ namespace Nop.Web.Controllers
             {
                 var result = _currencyService
                     .GetAllCurrencies(storeId: _storeContext.CurrentStore.Id)
-                    .Select(x => new CurrencyModel()
-                    {
-                        Id = x.Id,
-                        Name = x.GetLocalized(y => y.Name),
-                    })
+                    .Select(x =>
+                                {
+                                    //currency char
+                                    var currencySymbol = "";
+                                    if (!string.IsNullOrEmpty(x.DisplayLocale))
+                                        currencySymbol = new RegionInfo(x.DisplayLocale).CurrencySymbol;
+                                    else
+                                        currencySymbol = x.CurrencyCode;
+                                    //model
+                                    var currencyModel = new CurrencyModel()
+                                    {
+                                        Id = x.Id,
+                                        Name = x.GetLocalized(y => y.Name),
+                                        CurrencySymbol = currencySymbol
+                                    };
+                                    return currencyModel;
+                                })
                     .ToList();
                 return result;
             });

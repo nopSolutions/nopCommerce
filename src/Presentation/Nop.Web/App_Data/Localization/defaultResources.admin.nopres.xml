@@ -3000,6 +3000,9 @@
                                             <LocaleResource Name="Hint">
                                                 <Value>The currency specific culture code.</Value>
                                             </LocaleResource>
+                                            <LocaleResource Name="Select">
+                                              <Value>Select locale</Value>
+                                            </LocaleResource>
                                             <LocaleResource Name="Validation">
                                                 <Value>Currency culture must be valid.</Value>
                                             </LocaleResource>
