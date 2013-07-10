@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>SqlServerCompact</id>
+    <version>4.0.8854.1</version>
+    <title>Microsoft SQL Server Compact Edition</title>
+    <authors>Microsoft</authors>
+    <owners>Microsoft</owners>
+    <licenseUrl>http://www.microsoft.com/web/webpi/eula/SQLCE_SP1_EULA_ENU.rtf</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Legacy package, SqlServerCompact is now included in the 'Microsoft.SqlServer.Compact' package.</description>
+    <summary>Legacy package, SqlServerCompact is now included in the 'Microsoft.SqlServer.Compact' package.</summary>
+    <dependencies>
+      <dependency id="Microsoft.SqlServer.Compact" version="4.0.8854.1" />
+    </dependencies>
+  </metadata>
+</package>
