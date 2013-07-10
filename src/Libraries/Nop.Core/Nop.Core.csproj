@@ -214,7 +214,6 @@
     <Compile Include="Domain\Security\SecuritySettings.cs" />
     <Compile Include="Domain\Shipping\ShippingStatus.cs" />
     <Compile Include="Domain\StoreInformationSettings.cs" />
-    <Compile Include="GenericComparer.cs" />
     <Compile Include="Data\IRepository.cs" />
     <Compile Include="Infrastructure\IStartupTask.cs" />
     <Compile Include="IPersistentCollection.cs" />
