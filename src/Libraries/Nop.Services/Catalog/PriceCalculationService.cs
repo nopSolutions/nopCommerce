@@ -507,13 +507,13 @@ namespace Nop.Services.Catalog
             if (pvav == null)
                 throw new ArgumentNullException("pvav");
 
-
+            var adjustment = decimal.Zero;
             switch (pvav.AttributeValueType)
             {
                 case AttributeValueType.Simple:
                     {
                         //simple attribute
-                        return pvav.PriceAdjustment;
+                        adjustment = pvav.PriceAdjustment;
                     }
                     break;
                 case AttributeValueType.AssociatedToProduct:
@@ -522,14 +522,15 @@ namespace Nop.Services.Catalog
                         var associatedProduct = _productService.GetProductById(pvav.AssociatedProductId);
                         if (associatedProduct != null)
                         {
-                            var productPrice = GetFinalPrice(associatedProduct, true);
-                            return productPrice;
+                            adjustment = GetFinalPrice(associatedProduct, true);
                         }
                     }
                     break;
+                default:
+                    break;
             }
 
-            return decimal.Zero;
+            return adjustment;
         }
         #endregion
     }
