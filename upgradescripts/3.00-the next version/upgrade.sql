@@ -1409,6 +1409,9 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.ProductReviews.List.SearchText.Hint">
     <Value>Search in title and review text.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.EditorLocalization.OpenInNewWindow">
+    <Value>Open link in new window</Value>
+  </LocaleResource>
 </Language>
 '
 

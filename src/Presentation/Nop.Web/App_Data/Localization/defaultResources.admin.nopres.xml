@@ -10654,6 +10654,9 @@
                             <LocaleResource Name="JustifyRight">
                                 <Value>Align text right</Value>
                             </LocaleResource>
+                            <LocaleResource Name="OpenInNewWindow">
+                              <Value>Open link in new window</Value>
+                            </LocaleResource>
                             <LocaleResource Name="Or">
                                 <Value>or</Value>
                             </LocaleResource>

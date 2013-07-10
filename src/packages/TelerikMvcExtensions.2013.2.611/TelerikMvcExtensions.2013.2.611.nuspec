@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>TelerikMvcExtensions</id>
+    <version>2013.2.611</version>
+    <authors>Telerik</authors>
+    <owners>Telerik</owners>
+    <projectUrl>http://www.telerik.com/products/aspnet-mvc/getting-started/mvc-kendo-faq.aspx</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Version 2013.2.611 is the last release of Telerik Extensions for ASP.NET MVC. More info is available at http://www.telerik.com/products/aspnet-mvc/getting-started/mvc-kendo-faq.aspx.</description>
+    <summary>Imprtant: version 2013.2.611 is the last release of Telerik MVC Extensions.</summary>
+    <language>en-US</language>
+  </metadata>
+</package>
