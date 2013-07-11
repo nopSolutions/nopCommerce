@@ -77,7 +77,7 @@ namespace Nop.Plugin.Misc.WebServices
             if (!_pluginFinder.AuthenticateStore(pluginDescriptor, _storeContext.CurrentStore.Id))
                 throw new ApplicationException("Web services plugin is not available in this store");
 
-            if (!_customerRegistrationService.ValidateCustomer(usernameOrEmail, userPassword))
+            if (_customerRegistrationService.ValidateCustomer(usernameOrEmail, userPassword)!= CustomerLoginResults.Successful)
                     throw new ApplicationException("Not allowed");
             
             var customer = _customerSettings.UsernamesEnabled ? _customerService.GetCustomerByUsername(usernameOrEmail) : _customerService.GetCustomerByEmail(usernameOrEmail);

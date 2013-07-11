@@ -90,6 +90,7 @@
     <Compile Include="ComponentModel\WriteLockDisposable.cs" />
     <Compile Include="Domain\Catalog\AttributeValueType.cs" />
     <Compile Include="Domain\Catalog\ProductType.cs" />
+    <Compile Include="Domain\Customers\CustomerLoginResults.cs" />
     <Compile Include="Domain\Vendors\Vendor.cs" />
     <Compile Include="IStoreContext.cs" />
     <Compile Include="Domain\Catalog\BackInStockSubscription.cs" />
