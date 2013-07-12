@@ -89,7 +89,7 @@ namespace Nop.Web
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
             //StackExchange profiler
-            if (databaseInstalled && EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerInPublicStore)
+            if (CanPerformProfilingAction())
             {
                 GlobalFilters.Filters.Add(new ProfilingActionFilter());
             }
@@ -125,8 +125,7 @@ namespace Nop.Web
 
             EnsureDatabaseIsInstalled();
 
-            if (DataSettingsHelper.DatabaseIsInstalled() && 
-                EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerInPublicStore)
+            if (CanPerformProfilingAction())
             {
                 MiniProfiler.Start();
             }
@@ -139,8 +138,7 @@ namespace Nop.Web
             if (webHelper.IsStaticResource(this.Request))
                 return;
 
-            if (DataSettingsHelper.DatabaseIsInstalled() &&
-                EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerInPublicStore)
+            if (CanPerformProfilingAction())
             {
                 //stop as early as you can, even earlier with MvcMiniProfiler.MiniProfiler.Stop(discardResults: true);
                 MiniProfiler.Stop();
@@ -270,6 +268,18 @@ namespace Nop.Web
             {
                 //don't throw new exception if occurs
             }
+        }
+
+        protected bool CanPerformProfilingAction()
+        {
+            //will not run in medium trust
+            if (CommonHelper.GetTrustLevel() < AspNetHostingPermissionLevel.High)
+                return false;
+
+            if (!DataSettingsHelper.DatabaseIsInstalled())
+                return false;
+
+            return EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerInPublicStore;
         }
     }
 }
