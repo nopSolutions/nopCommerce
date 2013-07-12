@@ -429,7 +429,6 @@ namespace Nop.Web.Controllers
                             else
                                 return RedirectToRoute("HomePage");
                         }
-                        break;
                     case CustomerLoginResults.CustomerNotExist:
                         ModelState.AddModelError("", _localizationService.GetResource("Account.Login.WrongCredentials.CustomerNotExist"));
                         break;
