@@ -44,6 +44,7 @@ namespace Nop.Admin.Controllers
         private readonly IOrderService _orderService;
         private readonly IOrderReportService _orderReportService;
         private readonly IOrderProcessingService _orderProcessingService;
+	    private readonly IPriceCalculationService _priceCalculationService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IDiscountService _discountService;
@@ -85,27 +86,48 @@ namespace Nop.Admin.Controllers
         #region Ctor
 
         public OrderController(IOrderService orderService, 
-            IOrderReportService orderReportService, IOrderProcessingService orderProcessingService,
-            IDateTimeHelper dateTimeHelper, IPriceFormatter priceFormatter,
-            IDiscountService discountService, ILocalizationService localizationService,
-            IWorkContext workContext, ICurrencyService currencyService,
-            IEncryptionService encryptionService, IPaymentService paymentService,
-            IMeasureService measureService, IPdfService pdfService,
-            IAddressService addressService, ICountryService countryService,
-            IStateProvinceService stateProvinceService, IProductService productService,
-            IExportManager exportManager, IPermissionService permissionService,
+            IOrderReportService orderReportService, 
+            IOrderProcessingService orderProcessingService,
+            IPriceCalculationService priceCalculationService,
+            IDateTimeHelper dateTimeHelper,
+            IPriceFormatter priceFormatter,
+            IDiscountService discountService,
+            ILocalizationService localizationService,
+            IWorkContext workContext,
+            ICurrencyService currencyService,
+            IEncryptionService encryptionService,
+            IPaymentService paymentService,
+            IMeasureService measureService,
+            IPdfService pdfService,
+            IAddressService addressService,
+            ICountryService countryService,
+            IStateProvinceService stateProvinceService,
+            IProductService productService,
+            IExportManager exportManager,
+            IPermissionService permissionService,
             IWorkflowMessageService workflowMessageService,
-            ICategoryService categoryService, IManufacturerService manufacturerService,
-            IProductAttributeService productAttributeService, IProductAttributeParser productAttributeParser,
-            IProductAttributeFormatter productAttributeFormatter, IShoppingCartService shoppingCartService,
-            IGiftCardService giftCardService, IDownloadService downloadService,
-            IShipmentService shipmentService, IStoreService storeService, IVendorService vendorService,
-            CatalogSettings catalogSettings, CurrencySettings currencySettings, TaxSettings taxSettings,
-            MeasureSettings measureSettings, PdfSettings pdfSettings, AddressSettings addressSettings)
+            ICategoryService categoryService, 
+            IManufacturerService manufacturerService,
+            IProductAttributeService productAttributeService, 
+            IProductAttributeParser productAttributeParser,
+            IProductAttributeFormatter productAttributeFormatter, 
+            IShoppingCartService shoppingCartService,
+            IGiftCardService giftCardService, 
+            IDownloadService downloadService,
+            IShipmentService shipmentService, 
+            IStoreService storeService, 
+            IVendorService vendorService,
+            CatalogSettings catalogSettings, 
+            CurrencySettings currencySettings, 
+            TaxSettings taxSettings,
+            MeasureSettings measureSettings, 
+            PdfSettings pdfSettings, 
+            AddressSettings addressSettings)
 		{
             this._orderService = orderService;
             this._orderReportService = orderReportService;
             this._orderProcessingService = orderProcessingService;
+            this._priceCalculationService = priceCalculationService;
             this._dateTimeHelper = dateTimeHelper;
             this._priceFormatter = priceFormatter;
             this._discountService = discountService;
@@ -1889,6 +1911,7 @@ namespace Nop.Admin.Controllers
                     UnitPriceExclTax = unitPriceExclTax,
                     PriceInclTax = priceInclTax,
                     PriceExclTax = priceExclTax,
+                    OriginalProductCost = _priceCalculationService.GetProductCost(product, attributes),
                     AttributeDescription = attributeDescription,
                     AttributesXml = attributes,
                     Quantity = quantity,

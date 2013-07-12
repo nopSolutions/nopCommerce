@@ -62,6 +62,11 @@ namespace Nop.Core.Domain.Orders
         public decimal DiscountAmountExclTax { get; set; }
 
         /// <summary>
+        /// Gets or sets the original cost of this order item (when an order was placed), qty 1
+        /// </summary>
+        public decimal OriginalProductCost { get; set; }
+
+        /// <summary>
         /// Gets or sets the attribute description
         /// </summary>
         public string AttributeDescription { get; set; }

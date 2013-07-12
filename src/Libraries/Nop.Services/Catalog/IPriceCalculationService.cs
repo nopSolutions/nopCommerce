@@ -138,6 +138,14 @@ namespace Nop.Services.Catalog
         /// <param name="includeDiscounts">A value indicating whether include discounts or not for price computation</param>
         /// <returns>Shopping cart unit price (one item)</returns>
         decimal GetUnitPrice(ShoppingCartItem shoppingCartItem, bool includeDiscounts);
+
+        /// <summary>
+        /// Gets the product cost (one item)
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="attributesXml">Shopping cart item attributes in XML</param>
+        /// <returns>Product cost (one item)</returns>
+        decimal GetProductCost(Product product, string attributesXml);
         
 
 

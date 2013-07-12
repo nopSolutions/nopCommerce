@@ -388,7 +388,6 @@ namespace Nop.Services.Orders
             bool dontSearchEmail = String.IsNullOrEmpty(billingEmail);
             var query = from orderItem in _orderItemRepository.Table
                         join o in _orderRepository.Table on orderItem.OrderId equals o.Id
-                        join p in _productRepository.Table on orderItem.ProductId equals p.Id
                         where (storeId == 0 || storeId == o.StoreId) && 
                               (!startTimeUtc.HasValue || startTimeUtc.Value <= o.CreatedOnUtc) &&
                               (!endTimeUtc.HasValue || endTimeUtc.Value >= o.CreatedOnUtc) &&
@@ -401,9 +400,9 @@ namespace Nop.Services.Orders
                               //(!p.Deleted) &&
                               //(!pv.Deleted) &&
                               (dontSearchEmail || (o.BillingAddress != null && !String.IsNullOrEmpty(o.BillingAddress.Email) && o.BillingAddress.Email.Contains(billingEmail)))
-                        select new { orderItem, p };
+                        select orderItem;
 
-            var productCost = Convert.ToDecimal(query.Sum(o => (decimal?)o.p.ProductCost * o.orderItem.Quantity));
+            var productCost = Convert.ToDecimal(query.Sum(orderItem => (decimal?)orderItem.OriginalProductCost * orderItem.Quantity));
 
             var reportSummary = GetOrderAverageReportLine(storeId, vendorId, os, ps, ss, startTimeUtc, endTimeUtc, billingEmail);
             var profit = reportSummary.SumOrders - reportSummary.SumTax - productCost;

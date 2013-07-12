@@ -27,6 +27,7 @@ namespace Nop.Data.Tests.Orders
                 PriceExclTax = 4.1M,
                 DiscountAmountInclTax = 5.1M,
                 DiscountAmountExclTax = 6.1M,
+                OriginalProductCost = 7.1M,
                 AttributeDescription= "AttributeDescription1",
                 AttributesXml= "AttributesXml1",
                 DownloadCount= 7,
@@ -45,6 +46,7 @@ namespace Nop.Data.Tests.Orders
             fromDb.PriceExclTax.ShouldEqual(4.1M);
             fromDb.DiscountAmountInclTax.ShouldEqual(5.1M);
             fromDb.DiscountAmountExclTax.ShouldEqual(6.1M);
+            fromDb.OriginalProductCost.ShouldEqual(7.1M);
             fromDb.AttributeDescription.ShouldEqual("AttributeDescription1");
             fromDb.AttributesXml.ShouldEqual("AttributesXml1");
             fromDb.DownloadCount.ShouldEqual(7);

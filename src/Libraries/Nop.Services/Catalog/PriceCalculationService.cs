@@ -445,7 +445,46 @@ namespace Nop.Services.Catalog
 
             return finalPrice;
         }
-        
+
+        /// <summary>
+        /// Gets the product cost (one item)
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="attributesXml">Shopping cart item attributes in XML</param>
+        /// <returns>Product cost (one item)</returns>
+        public virtual decimal GetProductCost(Product product, string attributesXml)
+        {
+            if (product == null)
+                throw new ArgumentNullException("product");
+
+            decimal cost = product.ProductCost;
+            var pvaValues = _productAttributeParser.ParseProductVariantAttributeValues(attributesXml);
+            foreach (var pvaValue in pvaValues)
+            {
+                switch (pvaValue.AttributeValueType)
+                {
+                    case AttributeValueType.Simple:
+                        {
+                            //simple attribute
+                            //cost += pvaValue.AttributeCost;
+                        }
+                        break;
+                    case AttributeValueType.AssociatedToProduct:
+                        {
+                            //bundled product
+                            var associatedProduct = _productService.GetProductById(pvaValue.AssociatedProductId);
+                            if (associatedProduct != null)
+                                cost += associatedProduct.ProductCost;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            return cost;
+        }
+
 
 
         /// <summary>
@@ -532,6 +571,7 @@ namespace Nop.Services.Catalog
 
             return adjustment;
         }
+
         #endregion
     }
 }

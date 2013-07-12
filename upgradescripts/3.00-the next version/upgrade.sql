@@ -5579,3 +5579,45 @@ BEGIN
 	CREATE NONCLUSTERED INDEX [IX_UrlRecord_Custom_1] ON [UrlRecord] ([EntityId] ASC, [EntityName] ASC, [LanguageId] ASC, [IsActive] ASC)
 END
 GO
+
+--new column 
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[OrderItem]') and NAME='OriginalProductCost')
+BEGIN
+	ALTER TABLE [OrderItem]
+	ADD [OriginalProductCost] decimal(18,4) NULL
+	
+	--set values based on products
+	UPDATE [OrderItem]
+	SET [OrderItem].[OriginalProductCost] = p.[ProductCost]
+	FROM [OrderItem] oi INNER JOIN [Product] p ON oi.[ProductId] = p.[Id]
+    
+	UPDATE [OrderItem]
+	SET [OriginalProductCost] = 0
+	WHERE [OriginalProductCost] IS NULL
+
+	ALTER TABLE [OrderItem] ALTER COLUMN [OriginalProductCost] decimal(18,4) NOT NULL
+END
+GO
+
+--new column 
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[OrderItem]') and NAME='OriginalProductCost')
+BEGIN
+	ALTER TABLE [OrderItem]
+	ADD [OriginalProductCost] decimal(18,4) NULL
+END
+GO
+
+
+--set values based on products
+UPDATE [OrderItem]
+SET [OrderItem].[OriginalProductCost] = p.[ProductCost]
+FROM [OrderItem] oi INNER JOIN [Product] p ON oi.[ProductId] = p.[Id]
+GO
+
+UPDATE [OrderItem]
+SET [OriginalProductCost] = 0
+WHERE [OriginalProductCost] IS NULL
+GO
+
+ALTER TABLE [OrderItem] ALTER COLUMN [OriginalProductCost] decimal(18,4) NOT NULL
+GO

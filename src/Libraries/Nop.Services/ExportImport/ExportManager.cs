@@ -916,11 +916,12 @@ namespace Nop.Services.ExportImport
                         xmlWriter.WriteElementString("UnitPriceExclTax", null, orderItem.UnitPriceExclTax.ToString());
                         xmlWriter.WriteElementString("PriceInclTax", null, orderItem.PriceInclTax.ToString());
                         xmlWriter.WriteElementString("PriceExclTax", null, orderItem.PriceExclTax.ToString());
+                        xmlWriter.WriteElementString("DiscountAmountInclTax", null, orderItem.DiscountAmountInclTax.ToString());
+                        xmlWriter.WriteElementString("DiscountAmountExclTax", null, orderItem.DiscountAmountExclTax.ToString());
+                        xmlWriter.WriteElementString("OriginalProductCost", null, orderItem.OriginalProductCost.ToString());
                         xmlWriter.WriteElementString("AttributeDescription", null, orderItem.AttributeDescription);
                         xmlWriter.WriteElementString("AttributesXml", null, orderItem.AttributesXml);
                         xmlWriter.WriteElementString("Quantity", null, orderItem.Quantity.ToString());
-                        xmlWriter.WriteElementString("DiscountAmountInclTax", null, orderItem.DiscountAmountInclTax.ToString());
-                        xmlWriter.WriteElementString("DiscountAmountExclTax", null, orderItem.DiscountAmountExclTax.ToString());
                         xmlWriter.WriteElementString("DownloadCount", null, orderItem.DownloadCount.ToString());
                         xmlWriter.WriteElementString("IsDownloadActivated", null, orderItem.IsDownloadActivated.ToString());
                         xmlWriter.WriteElementString("LicenseDownloadId", null, orderItem.LicenseDownloadId.ToString());
