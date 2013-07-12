@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
-<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>Autofac.Mvc4</id>
-    <version>3.0.0</version>
+    <version>3.1.0</version>
     <title>Autofac ASP.NET MVC4 Integration</title>
     <authors>Autofac Contributors</authors>
     <owners>Autofac Contributors</owners>
@@ -14,10 +14,7 @@
     <summary>Provides an IControllerFactory implementation and other integration points for System.Web.Mvc.</summary>
     <language>en-US</language>
     <dependencies>
-      <dependency id="Autofac" version="3.0.0" />
+      <dependency id="Autofac" version="3.1.0" />
     </dependencies>
-    <references>
-      <reference file="Autofac.Integration.Mvc.dll" />
-    </references>
   </metadata>
 </package>
