@@ -47,6 +47,14 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SearchIncludeSubCategories):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => Model.SearchIncludeSubCategories)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.NopLabelFor(model => model.SearchManufacturerId):
             </td>
             <td class="adminData">
@@ -223,6 +231,7 @@
             var searchModel = {
                 SearchProductName: $('#@Html.FieldIdFor(model => model.SearchProductName)').val(),
                 SearchCategoryId: $('#SearchCategoryId').val(),
+                SearchIncludeSubCategories: $('#@Html.FieldIdFor(model => model.SearchIncludeSubCategories)').is(':checked'),
                 SearchManufacturerId: $('#SearchManufacturerId').val(),
                 SearchStoreId: $('#SearchStoreId').val(),
                 SearchVendorId: $('#SearchVendorId').val(),

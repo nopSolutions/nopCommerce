@@ -2055,6 +2055,14 @@
                                             </LocaleResource>
                                         </Children>
                                     </LocaleResource>
+                                    <LocaleResource Name="SearchIncludeSubCategories">
+                                        <Value>Automatically search sub categories</Value>
+                                        <Children>
+                                            <LocaleResource Name="Hint">
+                                                <Value>Check to search in sub categories.</Value>
+                                            </LocaleResource>
+                                        </Children>
+                                    </LocaleResource>
                                     <LocaleResource Name="SearchManufacturer">
                                         <Value>Manufacturer</Value>
                                         <Children>

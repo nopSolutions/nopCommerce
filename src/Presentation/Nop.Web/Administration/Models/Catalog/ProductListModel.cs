@@ -21,6 +21,8 @@ namespace Nop.Admin.Models.Catalog
         public string SearchProductName { get; set; }
         [NopResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
         public int SearchCategoryId { get; set; }
+        [NopResourceDisplayName("Admin.Catalog.Products.List.SearchIncludeSubCategories")]
+        public bool SearchIncludeSubCategories { get; set; }
         [NopResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
         public int SearchManufacturerId { get; set; }
         [NopResourceDisplayName("Admin.Catalog.Products.List.SearchStore")]

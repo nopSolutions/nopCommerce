@@ -582,6 +582,19 @@ namespace Nop.Admin.Controllers
             }
         }
 
+        [NonAction]
+        protected List<int> GetChildCategoryIds(int parentCategoryId)
+        {
+            var categoriesIds = new List<int>();
+            var categories = _categoryService.GetAllCategoriesByParentCategoryId(parentCategoryId, true);
+            foreach (var category in categories)
+            {
+                categoriesIds.Add(category.Id);
+                categoriesIds.AddRange(GetChildCategoryIds(category.Id));
+            }
+            return categoriesIds;
+        }
+
         #endregion
 
         #region Methods
@@ -643,8 +656,13 @@ namespace Nop.Admin.Controllers
                 model.SearchVendorId = _workContext.CurrentVendor.Id;
             }
 
+            var categoryIds = new List<int>() { model.SearchCategoryId };
+            //include subcategories
+            if (model.SearchIncludeSubCategories && model.SearchCategoryId > 0)
+                categoryIds.AddRange(GetChildCategoryIds(model.SearchCategoryId));
+
             var products = _productService.SearchProducts(
-                categoryIds: new List<int>() { model.SearchCategoryId },
+                categoryIds: categoryIds,
                 manufacturerId: model.SearchManufacturerId,
                 storeId: model.SearchStoreId,
                 vendorId: model.SearchVendorId,

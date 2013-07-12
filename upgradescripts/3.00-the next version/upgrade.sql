@@ -1427,6 +1427,12 @@ set @resources='
   <LocaleResource Name="Account.Login.WrongCredentials.NotRegistered">
     <Value>Account is not registered</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.List.SearchIncludeSubCategories">
+    <Value>Automatically search sub categories</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.List.SearchIncludeSubCategories.Hint">
+    <Value>Check to search in sub categories.</Value>
+  </LocaleResource>
 </Language>
 '
 
