@@ -13,7 +13,7 @@ namespace Nop.Services.Customers
         /// <param name="usernameOrEmail">Username or email</param>
         /// <param name="password">Password</param>
         /// <returns>Result</returns>
-        bool ValidateCustomer(string usernameOrEmail, string password);
+        CustomerLoginResults ValidateCustomer(string usernameOrEmail, string password);
 
         /// <summary>
         /// Register customer

@@ -408,8 +408,8 @@ namespace Nop.Web.Controllers
                 {
                     model.Username = model.Username.Trim();
                 }
-
-                if (_customerRegistrationService.ValidateCustomer(_customerSettings.UsernamesEnabled ? model.Username : model.Email, model.Password))
+                var loginResults = _customerRegistrationService.ValidateCustomer(_customerSettings.UsernamesEnabled ? model.Username : model.Email, model.Password);
+                if (loginResults == CustomerLoginResults.Successful)
                 {
                     var customer = _customerSettings.UsernamesEnabled ? _customerService.GetCustomerByUsername(model.Username) : _customerService.GetCustomerByEmail(model.Email);
 
@@ -429,7 +429,28 @@ namespace Nop.Web.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("", _localizationService.GetResource("Account.Login.WrongCredentials"));
+                    switch (loginResults)
+                    {
+                        case CustomerLoginResults.CustomerNotExist:
+                            ModelState.AddModelError("", _localizationService.GetResource("Account.Login.WrongCredentials.CustomerNotExist"));
+                            break;
+                        case CustomerLoginResults.Deleted:
+                            ModelState.AddModelError("", _localizationService.GetResource("Account.Login.WrongCredentials.Deleted"));
+                            break;
+                        case CustomerLoginResults.NotActive:
+                            ModelState.AddModelError("", _localizationService.GetResource("Account.Login.WrongCredentials.NotActive"));
+                            break;
+                        case CustomerLoginResults.WrongPassword:
+                            ModelState.AddModelError("", _localizationService.GetResource("Account.Login.WrongCredentials.WrongPassword"));
+                            break;
+                        case CustomerLoginResults.NotRegistered:
+                            ModelState.AddModelError("", _localizationService.GetResource("Account.Login.WrongCredentials.WrongPassword.NotRegistered"));
+                            break;
+                        
+                        default:
+                            ModelState.AddModelError("", _localizationService.GetResource("Account.Login.WrongCredentials"));
+                            break;
+                    }
                 }
             }
 

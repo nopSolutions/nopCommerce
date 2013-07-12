@@ -157,32 +157,32 @@ namespace Nop.Services.Tests.Customers
         [Test]
         public void Ensure_only_registered_customers_can_login()
         {
-            bool result = _customerRegistrationService.ValidateCustomer("registered@test.com", "password");
-            result.ShouldBeTrue();
+            var result = _customerRegistrationService.ValidateCustomer("registered@test.com", "password");
+            result.ShouldBeTheSameAs( CustomerLoginResults.Successful);
 
             result = _customerRegistrationService.ValidateCustomer("notregistered@test.com", "password");
-            result.ShouldBeFalse();
+            result.ShouldBeTheSameAs(CustomerLoginResults.NotRegistered);
         }
 
         [Test]
         public void Can_validate_a_hashed_password() 
         {
-            bool result = _customerRegistrationService.ValidateCustomer("a@b.com", "password");
-            result.ShouldBeTrue();
+            var result = _customerRegistrationService.ValidateCustomer("a@b.com", "password");
+            result.ShouldBeTheSameAs(CustomerLoginResults.Successful);
         }
 
         [Test]
         public void Can_validate_a_clear_password() 
         {
-            bool result = _customerRegistrationService.ValidateCustomer("test@test.com", "password");
-            result.ShouldBeTrue();
+            var result = _customerRegistrationService.ValidateCustomer("test@test.com", "password");
+            result.ShouldBeTheSameAs(CustomerLoginResults.Successful); ;
         }
 
         [Test]
         public void Can_validate_an_encrypted_password() 
         {
-            bool result = _customerRegistrationService.ValidateCustomer("user@test.com", "password");
-            result.ShouldBeTrue();
+            var result = _customerRegistrationService.ValidateCustomer("user@test.com", "password");
+            result.ShouldBeTheSameAs(CustomerLoginResults.Successful);
         }
 
         //private CustomerRegistrationRequest CreateCustomerRegistrationRequest(Customer customer) 

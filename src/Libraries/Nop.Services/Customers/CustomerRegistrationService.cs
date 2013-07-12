@@ -59,7 +59,7 @@ namespace Nop.Services.Customers
         /// <param name="usernameOrEmail">Username or email</param>
         /// <param name="password">Password</param>
         /// <returns>Result</returns>
-        public virtual bool ValidateCustomer(string usernameOrEmail, string password)
+        public virtual CustomerLoginResults ValidateCustomer(string usernameOrEmail, string password)
         {
             Customer customer = null;
             if (_customerSettings.UsernamesEnabled)
@@ -67,12 +67,15 @@ namespace Nop.Services.Customers
             else
                 customer = _customerService.GetCustomerByEmail(usernameOrEmail);
 
-            if (customer == null || customer.Deleted || !customer.Active)
-                return false;
-
+            if (customer == null)
+                return CustomerLoginResults.CustomerNotExist;
+            if (customer.Deleted)
+                return CustomerLoginResults.Deleted;
+            if (!customer.Active)
+                return CustomerLoginResults.NotActive;
             //only registered can login
             if (!customer.IsRegistered())
-                return false;
+                return CustomerLoginResults.NotRegistered;
 
             string pwd = "";
             switch (customer.PasswordFormat)
@@ -95,14 +98,10 @@ namespace Nop.Services.Customers
             {
                 customer.LastLoginDateUtc = DateTime.UtcNow;
                 _customerService.UpdateCustomer(customer);
+                return CustomerLoginResults.Successful;
             }
-            //else
-            //{
-            //    customer.FailedPasswordAttemptCount++;
-            //    UpdateCustomer(customer);
-            //}
-
-            return isValid;
+            else
+                return CustomerLoginResults.WrongPassword;
         }
 
         /// <summary>
