@@ -508,6 +508,20 @@
                     </LocaleResource>
                     <LocaleResource Name="WrongCredentials">
                         <Value>The credentials provided are incorrect</Value>
+                        <Children>
+                            <LocaleResource Name="CustomerNotExist">
+                                <Value>No customer account found</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="Deleted">
+                                <Value>Customer is deleted</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="NotActive">
+                                <Value>Account is not active</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="NotRegistered">
+                                <Value>Account is not registered</Value>
+                            </LocaleResource>
+                        </Children>
                     </LocaleResource>
                     <LocaleResource Name="Fields">
                         <Children>

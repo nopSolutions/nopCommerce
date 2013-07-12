@@ -1415,6 +1415,18 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Currencies.Fields.DisplayLocale.Select">
     <Value>Select locale</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.Login.WrongCredentials.CustomerNotExist">
+    <Value>No customer account found</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Login.WrongCredentials.Deleted">
+    <Value>Customer is deleted</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Login.WrongCredentials.NotActive">
+    <Value>Account is not active</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Login.WrongCredentials.NotRegistered">
+    <Value>Account is not registered</Value>
+  </LocaleResource>
 </Language>
 '
 
