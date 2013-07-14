@@ -3096,6 +3096,10 @@ namespace Nop.Admin.Controllers
                 DisplayOrder = pvav.DisplayOrder,
                 PictureId = pvav.PictureId
             };
+            if (model.DisplayColorSquaresRgb && String.IsNullOrEmpty(model.ColorSquaresRgb))
+            {
+                model.ColorSquaresRgb = "#000000";
+            }
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
