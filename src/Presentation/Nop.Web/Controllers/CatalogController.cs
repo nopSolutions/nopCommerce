@@ -465,7 +465,7 @@ namespace Nop.Web.Controllers
                     var defaultProductPictureCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_DEFAULTPICTURE_MODEL_KEY, product.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
                     model.DefaultPictureModel = _cacheManager.Get(defaultProductPictureCacheKey, () =>
                     {
-                        var picture = product.GetDefaultProductPicture(_pictureService);
+                        var picture = _pictureService.GetPicturesByProductId(product.Id, 1).FirstOrDefault();
                         var pictureModel = new PictureModel()
                         {
                             ImageUrl = _pictureService.GetPictureUrl(picture, pictureSize),

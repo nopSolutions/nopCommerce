@@ -46,24 +46,6 @@ namespace Nop.Services.Catalog
         }
 
         /// <summary>
-        /// Get a default picture of a product 
-        /// </summary>
-        /// <param name="source">Source</param>
-        /// <param name="pictureService">Picture service</param>
-        /// <returns>Product picture</returns>
-        public static Picture GetDefaultProductPicture(this Product source, IPictureService pictureService)
-        {
-            if (source == null)
-                throw new ArgumentNullException("source");
-
-            if (pictureService == null)
-                throw new ArgumentNullException("pictureService");
-
-            var picture = pictureService.GetPicturesByProductId(source.Id, 1).FirstOrDefault();
-            return picture;
-        }
-
-        /// <summary>
         /// Formats the stock availability/quantity message
         /// </summary>
         /// <param name="product">Product</param>
