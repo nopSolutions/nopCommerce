@@ -53,6 +53,19 @@
                         @Html.Action("ProductReviewOverview", "Catalog", new { productId = Model.Id })
                         <!--sample download-->
                         @Html.Partial("_DownloadSample", Model)
+                        <!--attributes-->
+                        @{
+                            var dataDictAttributes = new ViewDataDictionary();
+                            dataDictAttributes.TemplateInfo.HtmlFieldPrefix = string.Format("attributes_{0}", Model.Id);
+                            @Html.Partial("_ProductAttributes", Model.ProductVariantAttributes, dataDictAttributes)                  
+                        }
+                        <!--gift card-->
+                        @{
+                            var dataDictGiftCard = new ViewDataDictionary();
+                            dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = string.Format("giftcard_{0}", Model.Id);
+                            @Html.Partial("_GiftCardInfo", Model.GiftCard, dataDictGiftCard)
+                        }
+                        <!--price & add to cart-->
                         @{
                             var dataDictPrice = new ViewDataDictionary();
                             dataDictPrice.TemplateInfo.HtmlFieldPrefix = string.Format("price_{0}", Model.Id);
@@ -77,16 +90,6 @@
                 @Html.Widget("productdetails_before_collateral")
                 <div class="product-collateral">
                     @Html.Action("ProductTierPrices", "Catalog", new { productId = Model.Id })
-                    @{
-                        var dataDictAttributes = new ViewDataDictionary();
-                        dataDictAttributes.TemplateInfo.HtmlFieldPrefix = string.Format("attributes_{0}", Model.Id);
-                        @Html.Partial("_ProductAttributes", Model.ProductVariantAttributes, dataDictAttributes)                  
-                    }
-                    @{
-                        var dataDictGiftCard = new ViewDataDictionary();
-                        dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = string.Format("giftcard_{0}", Model.Id);
-                        @Html.Partial("_GiftCardInfo", Model.GiftCard, dataDictGiftCard)
-                    }
                     @Html.Action("ProductSpecifications", "Catalog", new { productId = Model.Id })
                     @Html.Action("ProductTags", "Catalog", new { productId = Model.Id })
                     @Html.Action("ProductsAlsoPurchased", "Catalog", new { productId = Model.Id })
