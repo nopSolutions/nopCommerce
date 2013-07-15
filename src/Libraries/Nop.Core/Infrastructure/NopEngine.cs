@@ -68,12 +68,16 @@ namespace Nop.Core.Infrastructure
         /// <param name="config">Config</param>
         public void Initialize(NopConfig config)
         {
-            bool databaseInstalled = DataSettingsHelper.DatabaseIsInstalled();
-            if (databaseInstalled)
-            {
-                //startup tasks
-                RunStartupTasks();
-            }
+            //bool databaseInstalled = DataSettingsHelper.DatabaseIsInstalled();
+            //if (databaseInstalled)
+            //{
+            //    //startup tasks
+            //    RunStartupTasks();
+            //}
+
+
+            //startup tasks
+            RunStartupTasks();
         }
 
         public T Resolve<T>() where T : class

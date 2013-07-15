@@ -43,10 +43,6 @@ namespace Nop.Plugin.Tax.CountryStateZip.Data
         /// </summary>
         public void Install()
         {
-            //It's required to set initializer to null (for SQL Server Compact).
-            //otherwise, you'll get something like "The model backing the 'your context name' context has changed since the database was created. Consider using Code First Migrations to update the database"
-            Database.SetInitializer<TaxRateObjectContext>(null);
-
             //create the table
             var dbScript = CreateDatabaseScript();
             Database.ExecuteSqlCommand(dbScript);
@@ -59,9 +55,7 @@ namespace Nop.Plugin.Tax.CountryStateZip.Data
         public void Uninstall()
         {
             //drop the table
-            var dbScript = "DROP TABLE TaxRate";
-            Database.ExecuteSqlCommand(dbScript);
-            SaveChanges();
+            this.DropPluginTable("TaxRate");
         }
 
         public IList<TEntity> ExecuteStoredProcedureList<TEntity>(string commandText, params object[] parameters) where TEntity : BaseEntity, new()

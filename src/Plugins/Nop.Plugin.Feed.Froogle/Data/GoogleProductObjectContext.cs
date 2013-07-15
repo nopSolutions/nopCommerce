@@ -44,10 +44,6 @@ namespace Nop.Plugin.Feed.Froogle.Data
         /// </summary>
         public void Install()
         {
-            //It's required to set initializer to null (for SQL Server Compact).
-            //otherwise, you'll get something like "The model backing the 'your context name' context has changed since the database was created. Consider using Code First Migrations to update the database"
-            Database.SetInitializer<GoogleProductObjectContext>(null);
-
             //create the table
             var dbScript = CreateDatabaseScript();
             Database.ExecuteSqlCommand(dbScript);
@@ -60,28 +56,7 @@ namespace Nop.Plugin.Feed.Froogle.Data
         public void Uninstall()
         {
             //drop the table
-
-            //It's required to set initializer to null (for SQL Server Compact).
-            //otherwise, you'll get something like "The model backing the 'your context name' context has changed since the database was created. Consider using Code First Migrations to update the database"
-            Database.SetInitializer<GoogleProductObjectContext>(null);
-            string tableName = "GoogleProduct";
-            if (Database.SqlQuery<int>("SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = {0}", tableName).Any<int>())
-            {
-                var dbScript = "DROP TABLE [" + tableName + "]";
-                Database.ExecuteSqlCommand(dbScript);
-            }
-            SaveChanges();
-            //old way of dropping the table
-            //try
-            //{
-            //    //we place it in try-catch here because previous versions of Froogle didn't have any tables
-            //    var dbScript = "DROP TABLE GoogleProduct";
-            //    Database.ExecuteSqlCommand(dbScript);
-            //    SaveChanges();
-            //}
-            //catch
-            //{
-            //}
+            this.DropPluginTable("GoogleProduct");
         }
 
 

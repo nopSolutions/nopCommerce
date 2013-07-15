@@ -215,41 +215,6 @@ namespace Nop.Core
             //TypeDescriptor.AddAttributes(typeof(List<int>), new TypeConverterAttribute(typeof(GenericListTypeConverter<int>)));
             //so we do it manually here
 
-            #region Old code (doesn't work in meidum trust)
-
-            //            namespace Nop.Core
-            //{
-            //    public class TypeDescriptorRegistrationStartUpTask : IStartupTask
-            //    {
-            //        public void Execute()
-            //        {
-            //            //List<int>
-            //            TypeDescriptor.AddAttributes(typeof(List<int>), 
-            //                new TypeConverterAttribute(typeof(GenericListTypeConverter<int>)));
-
-            //            //List<decimal>
-            //            TypeDescriptor.AddAttributes(typeof(List<decimal>),
-            //                new TypeConverterAttribute(typeof(GenericListTypeConverter<decimal>)));
-
-            //            //List<string>
-            //            TypeDescriptor.AddAttributes(typeof(List<string>),
-            //                new TypeConverterAttribute(typeof(GenericListTypeConverter<string>)));
-
-            //            //ShippingOption
-            //            TypeDescriptor.AddAttributes(typeof(ShippingOption),
-            //                new TypeConverterAttribute(typeof(ShippingOptionTypeConverter)));
-            //        }
-
-            //        public int Order
-            //        {
-            //            get { return 1; }
-            //        }
-            //    }
-            //}
-
-
-            #endregion
-
             if (type == typeof(List<int>))
                 return new GenericListTypeConverter<int>();
             if (type == typeof(List<decimal>))
