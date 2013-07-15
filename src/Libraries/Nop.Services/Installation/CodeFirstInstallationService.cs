@@ -1416,7 +1416,7 @@ namespace Nop.Services.Installation
                                     },
                                     new Country
                                     {
-	                                    Name = "Croatia (local Name: Hrvatska)",
+	                                    Name = "Croatia",
 	                                    AllowsBilling = true,
 	                                    AllowsShipping = true,
 	                                    TwoLetterIsoCode = "HR",

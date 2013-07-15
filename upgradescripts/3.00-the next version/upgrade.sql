@@ -5627,3 +5627,9 @@ GO
 
 ALTER TABLE [OrderItem] ALTER COLUMN [OriginalProductCost] decimal(18,4) NOT NULL
 GO
+
+--rename a country
+UPDATE [Country]
+SET [Name] = N'Croatia'
+WHERE [Name] = N'Croatia (local Name: Hrvatska)'
+GO
