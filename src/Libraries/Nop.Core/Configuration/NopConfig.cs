@@ -36,6 +36,14 @@ namespace Nop.Core.Configuration
                     config.EngineType = attribute.Value;
             }
 
+            var startupNode = section.SelectSingleNode("Startup");
+            if (startupNode != null && startupNode.Attributes != null)
+            {
+                var attribute = startupNode.Attributes["IgnoreStartupTasks"];
+                if (attribute != null)
+                    config.IgnoreStartupTasks = Convert.ToBoolean(attribute.Value);
+            }
+
             var themeNode = section.SelectSingleNode("Themes");
             if (themeNode != null && themeNode.Attributes != null)
             {
@@ -61,5 +69,10 @@ namespace Nop.Core.Configuration
         /// Specifices where the themes will be stored (~/Themes/)
         /// </summary>
         public string ThemeBasePath { get; private set; }
+
+        /// <summary>
+        /// Indicates whether we should ignore startup tasks
+        /// </summary>
+        public bool IgnoreStartupTasks { get; private set; }
     }
 }

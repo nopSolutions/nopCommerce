@@ -77,7 +77,10 @@ namespace Nop.Core.Infrastructure
 
 
             //startup tasks
-            RunStartupTasks();
+            if (!config.IgnoreStartupTasks)
+            {
+                RunStartupTasks();
+            }
         }
 
         public T Resolve<T>() where T : class
