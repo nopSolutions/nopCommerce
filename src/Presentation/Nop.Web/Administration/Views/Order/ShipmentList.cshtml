@@ -83,6 +83,23 @@
                                 .Centered()
                                 .HeaderTemplate(T("Admin.Common.View").Text);
                         })
+                        .DetailView(details => details.ClientTemplate(
+                            Html.Telerik().Grid<ShipmentModel.ShipmentItemModel>()
+                            .Name("shipment-items-grid-<#= Id #>")
+                            .Columns(columns =>
+                            {
+                                columns.Bound(si => si.ProductName);
+                                columns.Bound(si => si.QuantityInThisShipment);
+                                columns.Bound(si => si.ItemWeight);
+                                columns.Bound(si => si.ItemDimensions);
+                            })
+                            .DataBinding(dataBinding => dataBinding.Ajax()
+                                 .Select("ShipmentsItemsByShipmentId", "Order", new
+                                 {
+                                     shipmentId = "<#= Id #>"
+                                 }))
+                            .ToHtmlString()
+                         ))
                         .Pageable(settings => settings.PageSize(gridPageSize).Position(GridPagerPosition.Both))
                         .DataBinding(dataBinding => dataBinding.Ajax().Select("ShipmentListSelect", "Order"))
                         .EnableCustomBinding(true))

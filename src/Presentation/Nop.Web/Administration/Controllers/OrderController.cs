@@ -2177,6 +2177,42 @@ namespace Nop.Admin.Controllers
             };
         }
 
+        [HttpPost, GridAction(EnableCustomBinding = true)]
+        public ActionResult ShipmentsItemsByShipmentId(int shipmentId, GridCommand command)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
+            var shipment = _shipmentService.GetShipmentById(shipmentId);
+            if (shipment == null)
+                throw new ArgumentException("No shipment found with the specified id");
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && !HasAccessToShipment(shipment))
+                return Content("");
+
+            var order = _orderService.GetOrderById(shipment.OrderId);
+            if (order == null)
+                throw new ArgumentException("No order found with the specified id");
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && !HasAccessToOrder(order))
+                return Content("");
+
+            //shipments
+            var shipmentModel = PrepareShipmentModel(shipment, true);
+            var model = new GridModel<ShipmentModel.ShipmentItemModel>
+            {
+                Data = shipmentModel.Items,
+                Total = shipmentModel.Items.Count
+            };
+
+            return new JsonResult
+            {
+                Data = model
+            };
+        }
+
         public ActionResult AddShipment(int orderId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))

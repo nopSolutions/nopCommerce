@@ -38,16 +38,20 @@ namespace Nop.Admin.Models.Orders
         {
             public int OrderItemId { get; set; }
             public int ProductId { get; set; }
+            [NopResourceDisplayName("Admin.Orders.Shipments.Products.ProductName")]
             public string ProductName { get; set; }
             public string Sku { get; set; }
             public string AttributeInfo { get; set; }
-            
+
             //weight of one item (product)
+            [NopResourceDisplayName("Admin.Orders.Shipments.Products.ItemWeight")]
             public string ItemWeight { get; set; }
+            [NopResourceDisplayName("Admin.Orders.Shipments.Products.ItemDimensions")]
             public string ItemDimensions { get; set; }
 
             public int QuantityToAdd { get; set; }
             public int QuantityOrdered { get; set; }
+            [NopResourceDisplayName("Admin.Orders.Shipments.Products.QtyShipped")]
             public int QuantityInThisShipment { get; set; }
             public int QuantityInAllShipments { get; set; }
         }
