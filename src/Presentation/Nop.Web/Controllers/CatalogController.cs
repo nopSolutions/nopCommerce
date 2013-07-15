@@ -2685,6 +2685,7 @@ namespace Nop.Web.Controllers
                         priceMax: maxPriceConverted,
                         keywords:model.Q,
                         searchDescriptions: searchInDescriptions,
+                        searchSku: searchInDescriptions,
                         searchProductTags: searchInProductTags,
                         languageId:_workContext.WorkingLanguage.Id,
                         pageIndex: command.PageNumber - 1,
@@ -2733,6 +2734,7 @@ namespace Nop.Web.Controllers
             var products = _productService.SearchProducts(
                 storeId: _storeContext.CurrentStore.Id,
                 keywords: term,
+                searchSku: false,
                 languageId: _workContext.WorkingLanguage.Id,
                 visibleIndividuallyOnly: true,
                 pageSize: productNumber);

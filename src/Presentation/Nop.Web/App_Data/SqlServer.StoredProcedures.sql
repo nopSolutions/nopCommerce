@@ -78,6 +78,7 @@ CREATE PROCEDURE [dbo].[ProductLoadAllPaged]
 	@PriceMax			decimal(18, 4) = null,
 	@Keywords			nvarchar(4000) = null,
 	@SearchDescriptions bit = 0, --a value indicating whether to search by a specified "keyword" in product descriptions
+	@SearchSku			bit = 0, --a value indicating whether to search by a specified "keyword" in product SKU
 	@SearchProductTags  bit = 0, --a value indicating whether to search by a specified "keyword" in product tags
 	@UseFullTextSearch  bit = 0,
 	@FullTextMode		int = 0, --0 - using CONTAINS with <prefix_term>, 5 - using CONTAINS and OR with <prefix_term>, 10 - using CONTAINS and AND with <prefix_term>
@@ -198,19 +199,6 @@ BEGIN
 			SET @sql = @sql + 'PATINDEX(@Keywords, p.[Name]) > 0 '
 
 
-
-		--SKU
-		SET @sql = @sql + '
-		UNION
-		SELECT p.Id
-		FROM Product p with (NOLOCK)
-		WHERE '
-		IF @UseFullTextSearch = 1
-			SET @sql = @sql + 'CONTAINS(p.[Sku], @Keywords) '
-		ELSE
-			SET @sql = @sql + 'PATINDEX(@Keywords, p.[Sku]) > 0 '
-
-
 		--localized product name
 		SET @sql = @sql + '
 		UNION
@@ -283,7 +271,19 @@ BEGIN
 				SET @sql = @sql + ' AND PATINDEX(@Keywords, lp.[LocaleValue]) > 0 '
 		END
 
-
+		--SKU
+		IF @SearchSku = 1
+		BEGIN
+			SET @sql = @sql + '
+			UNION
+			SELECT p.Id
+			FROM Product p with (NOLOCK)
+			WHERE '
+			IF @UseFullTextSearch = 1
+				SET @sql = @sql + 'CONTAINS(p.[Sku], @Keywords) '
+			ELSE
+				SET @sql = @sql + 'PATINDEX(@Keywords, p.[Sku]) > 0 '
+		END
 
 		IF @SearchProductTags = 1
 		BEGIN
