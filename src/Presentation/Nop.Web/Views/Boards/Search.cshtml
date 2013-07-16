@@ -30,9 +30,9 @@
         <h1>@T("Forum.Search")</h1>
     </div>
     <div class="page-body">
-        <div class="search-input">
-            @using (Html.BeginRouteForm("Search", FormMethod.Get))
-            {
+        @using (Html.BeginRouteForm("Search", FormMethod.Get))
+        {
+            <div class="search-input">
                 <div class="basic-search">
                     <div>
                         @Html.TextBox("searchterms", null, new { @class = "forum-search-text" })
@@ -57,8 +57,8 @@
                         @Html.DropDownList("limitDays", new SelectList(Model.LimitList, "Value", "Text", Model.LimitDaysSelected))
                     </div>
                 </div>
+            </div>
             }
-        </div>
         <div class="search-error">
             @Model.Error
         </div>
