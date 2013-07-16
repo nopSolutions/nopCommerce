@@ -233,6 +233,10 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 .block-category-navigation ul.sublist{margin:0px 7px 0px 0px;}
 .block-category-navigation ul.sublist .inactive a:hover{color:#5C5B5B;font-weight:400;}
 .block-manufacturer-navigation .listbox .view-all a{color:#5C5B5B;font-weight:700;}
+.block-recently-viewed-products li{background:none;min-height:35px;clear:both;border-bottom:1px solid #e5e5e5;}
+.block-recently-viewed-products li.last{border-bottom:none;}
+.block-recently-viewed-products .product-picture{float:right;height:40px;width:40px;margin:0;}
+.block-recently-viewed-products .product-name{}
 .block-account-navigation a.active{font-weight:700;text-decoration:none;}
 .block-account-navigation a{white-space:nowrap;}
 .block-account-navigation a.inactive{font-weight:400;text-decoration:none;}
