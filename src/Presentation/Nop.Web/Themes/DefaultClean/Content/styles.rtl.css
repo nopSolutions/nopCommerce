@@ -295,6 +295,7 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 .order-summary-content .deals{display:inline;float:right;margin:0 0 0 10px;width:280px;}
 .order-summary-content .shipping{display:inline;float:right;margin:0 0 0 10px;width:280px;}
 .order-summary-content .coupon-box,.order-summary-content .giftcard-box{padding:10px;font-size:11px;color:#555;margin:0 0 10px;border:1px solid #EEE;}
+.order-summary-content .coupon-box .message,.order-summary-content .giftcard-box .message{font-family:Verdana,Arial,sans-serif;font-size:10px;font-weight:700;color:red;}
 .order-summary-content .coupon-box .current-code{padding:10px 0px 0px 0px;}
 .order-summary-content .coupon-box .discount-coupon-code,.order-summary-content .giftcard-box .gift-card-coupon-code{width:auto;}
 .order-summary-content .coupon-box .hint,.order-summary-content .giftcard-box .hint{padding-top:5px;}
