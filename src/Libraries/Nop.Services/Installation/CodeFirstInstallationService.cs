@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using Nop.Core;
-using Nop.Core.Configuration;
 using Nop.Core.Data;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Blogs;
@@ -5443,13 +5442,18 @@ namespace Nop.Services.Installation
             }
         }
 
-        protected virtual void InstallProducts()
+        protected virtual void InstallProducts(string defaultUserEmail)
         {
             var productTemplateSimple =
                 _productTemplateRepository.Table.FirstOrDefault(pt => pt.Name == "Simple product");
             var productTemplateGrouped =
                 _productTemplateRepository.Table.FirstOrDefault(pt => pt.Name == "Grouped product");
-            
+
+            //default customer/user
+            var defaultCustomer = _customerRepository.Table.FirstOrDefault(x => x.Email == defaultUserEmail);
+            if (defaultCustomer == null)
+                throw new Exception("Cannot load default customer");
+
             //pictures
             var pictureService = EngineContext.Current.Resolve<IPictureService>();
             var sampleImagesPath = _webHelper.MapPath("~/content/samples/");
@@ -8922,8 +8926,40 @@ namespace Nop.Services.Installation
             AddProductTag(productSoccer, "game");
             AddProductTag(productSoccer, "cool");
             AddProductTag(productSoccer, "computer");
-        }
 
+            //reviews
+            var random = new Random();
+            foreach (var product in allProducts)
+            {
+                if (product.ProductType != ProductType.SimpleProduct)
+                    continue;
+
+                //only 3 of 4 products will have reviews
+                if (random.Next(4) == 3)
+                    continue;
+
+                //rating from 4 to 5
+                var rating = random.Next(4, 6);
+                product.ProductReviews.Add(new ProductReview()
+                {
+                    CustomerId = defaultCustomer.Id,
+                    ProductId = product.Id,
+                    IsApproved = true,
+                    Title = "Some sample review",
+                    ReviewText = string.Format("This sample review is for the {0}. I've been waiting for this product to be available. It is priced just right.", product.Name),
+                    //random (4 or 5)
+                    Rating = rating,
+                    HelpfulYesTotal = 0,
+                    HelpfulNoTotal = 0,
+                    CreatedOnUtc = DateTime.UtcNow
+                });
+                product.ApprovedRatingSum = rating;
+                product.ApprovedTotalReviews = product.ProductReviews.Count;
+
+                _productRepository.Update(product);
+            }
+        }
+        
         protected virtual void InstallForums()
         {
             var forumGroup = new ForumGroup()
@@ -9639,7 +9675,7 @@ namespace Nop.Services.Installation
                 InstallProductAttributes();
                 InstallCategories();
                 InstallManufacturers();
-                InstallProducts();
+                InstallProducts(defaultUserEmail);
                 InstallForums();
                 InstallDiscounts();
                 InstallBlogPosts();
