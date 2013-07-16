@@ -1439,6 +1439,12 @@ set @resources='
   <LocaleResource Name="ShoppingCart.ConflictingShipmentSchedules">
     <Value>Your cart has auto-ship (recurring) items with conflicting shipment schedules. Only one auto-ship schedule is allowed per order.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.ForceSslForAllPages">
+    <Value>Force SSL for all site pages</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.ForceSslForAllPages.Hint">
+    <Value>By default not all site pages are SSL protected. Check to force SSL for the entire site. This setting is useful only when you have SSL enabled on your store details pages.</Value>
+  </LocaleResource>
 </Language>
 '
 

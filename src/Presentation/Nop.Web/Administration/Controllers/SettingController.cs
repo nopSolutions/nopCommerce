@@ -1796,6 +1796,7 @@ namespace Nop.Admin.Controllers
                     if (i != securitySettings.AdminAreaAllowedIpAddresses.Count - 1)
                         model.SecuritySettings.AdminAreaAllowedIpAddresses += ",";
                 }
+            model.SecuritySettings.ForceSslForAllPages = securitySettings.ForceSslForAllPages;
             model.SecuritySettings.CaptchaEnabled = captchaSettings.Enabled;
             model.SecuritySettings.CaptchaShowOnLoginPage = captchaSettings.ShowOnLoginPage;
             model.SecuritySettings.CaptchaShowOnRegistrationPage = captchaSettings.ShowOnRegistrationPage;
@@ -1967,6 +1968,7 @@ namespace Nop.Admin.Controllers
                 foreach (string s in model.SecuritySettings.AdminAreaAllowedIpAddresses.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                     if (!String.IsNullOrWhiteSpace(s))
                         securitySettings.AdminAreaAllowedIpAddresses.Add(s.Trim());
+            securitySettings.ForceSslForAllPages = model.SecuritySettings.ForceSslForAllPages;
             _settingService.SaveSetting(securitySettings);
             captchaSettings.Enabled = model.SecuritySettings.CaptchaEnabled;
             captchaSettings.ShowOnLoginPage = model.SecuritySettings.CaptchaShowOnLoginPage;

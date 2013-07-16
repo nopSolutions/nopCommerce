@@ -120,6 +120,9 @@ namespace Nop.Admin.Models.Settings
             [AllowHtml]
             public string AdminAreaAllowedIpAddresses { get; set; }
 
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.ForceSslForAllPages")]
+            public bool ForceSslForAllPages { get; set; }
+
 
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaEnabled")]

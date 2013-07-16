@@ -291,6 +291,15 @@
             </td>
         </tr>
         <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SecuritySettings.ForceSslForAllPages):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SecuritySettings.ForceSslForAllPages)
+                @Html.ValidationMessageFor(model => model.SecuritySettings.ForceSslForAllPages)
+            </td>
+        </tr>
+        <tr>
             <td colspan="2">
                 <hr />
                 <br />
