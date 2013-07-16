@@ -936,6 +936,8 @@
     <Content Include="Scripts\2013.2.611\telerik.upload.min.js" />
     <Content Include="Scripts\2013.2.611\telerik.window.min.js" />
     <Content Include="Scripts\public.common.mobile.js" />
+    <Content Include="Themes\DefaultClean\Content\images\star-x-active.png" />
+    <Content Include="Themes\DefaultClean\Content\images\star-x-inactive.png" />
     <Content Include="Themes\Mobile\Content\images\ajax-loader.gif" />
     <Content Include="Content\Images\default-avatar.jpg" />
     <Content Include="Content\Images\flags\ad.png" />
@@ -1205,6 +1207,8 @@
     <Content Include="Content\jquery-ui-themes\smoothness\images\ui-icons_cd0a0a_256x240.png" />
     <Content Include="Content\jquery-ui-themes\smoothness\jquery-ui-1.10.0.custom.css" />
     <Content Include="Content\jquery-ui-themes\smoothness\jquery-ui-1.10.0.custom.min.css" />
+    <Content Include="Themes\Mobile\Content\images\star-x-active.png" />
+    <Content Include="Themes\Mobile\Content\images\star-x-inactive.png" />
     <Content Include="Themes\Mobile\Content\jquery.mobile-1.2.0.css" />
     <Content Include="Themes\Mobile\Content\jquery.mobile-1.2.0.min.css" />
     <Content Include="Themes\Mobile\Content\jquery.mobile.structure-1.2.0.css" />
@@ -1359,14 +1363,10 @@
     <Content Include="Themes\DefaultClean\Content\images\prevlabel.gif" />
     <Content Include="Themes\DefaultClean\Content\images\progress-step-active.gif" />
     <Content Include="Themes\DefaultClean\Content\images\progress-step-inactive.gif" />
-    <Content Include="Themes\DefaultClean\Content\images\star-x-active.gif" />
-    <Content Include="Themes\DefaultClean\Content\images\star-x-inactive.gif" />
     <Content Include="Themes\DefaultClean\Content\styles.css" />
     <Content Include="Themes\Mobile\Content\images\ico-forum-post-high.gif" />
     <Content Include="Themes\Mobile\Content\images\ico-forum-post.gif" />
     <Content Include="Themes\Mobile\Content\images\ico-forum.gif" />
-    <Content Include="Themes\Mobile\Content\images\star-x-active.gif" />
-    <Content Include="Themes\Mobile\Content\images\star-x-inactive.gif" />
     <Content Include="Themes\Mobile\Content\styles.css" />
     <Content Include="Themes\print.css" />
     <Content Include="Web.config">

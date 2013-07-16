@@ -904,9 +904,9 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 .product-details-page .compare-products{margin:10px 0 10px 0px;float:right;}
 .product-details-page .product-share-button{margin-top:10px;margin-bottom:10px;clear:both;}
 .product-details-page .product-reviews-overview{margin-top:20px;margin-bottom:20px;}
-.product-details-page .product-reviews-overview .product-review-box{margin-left:5px;width:auto;height:13px;}
-.product-details-page .product-review-box .rating{height:13px;width:55px;background:url(images/star-x-inactive.gif) 0 0 repeat-x;}
-.product-details-page .product-review-box .rating div{height:12px;background:url(images/star-x-active.gif) 0 0 repeat-x;}
+.product-details-page .product-reviews-overview .product-review-box{margin-left:5px;}
+.rating{height:16px;width:80px;background:url(images/star-x-inactive.png) 0 0 repeat-x;}
+.rating div{float:left;height:16px;background:url(images/star-x-active.png) 0 0 repeat-x;}
 .product-details-page .product-reviews-overview .product-review-links .separator{margin:0 2px;}
 .product-details-page .product-reviews-overview .product-review-links{margin:0;}
 .product-details-page .product-no-reviews{margin-top:20px;margin-bottom:20px;}
@@ -1004,8 +1004,7 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 .product-review-list .product-review-item{border:solid 1px #d3d3d3;margin:10px 0 0;padding:10px 10px 20px;clear:both;}
 .product-review-list .product-review-item .review-item-head{clear:both;}
 .product-review-list .product-review-item .review-title{font-weight:700;float:right;margin-bottom:5px;}
-.product-review-list .product-review-item .rating{float:left;margin-left:5px;height:13px;width:55px;background:url(images/star-x-inactive.gif) 0 0 repeat-x;}
-.product-review-list .product-review-item .rating div{height:12px;background:url(images/star-x-active.gif) 0 0 repeat-x;}
+.product-review-list .product-review-item .rating{float:left;margin-left:5px;}
 .product-review-list .product-review-item .review-text{float:right;margin-bottom:5px;clear:both;}
 .product-review-list .product-review-item .review-info{float:right;margin-bottom:5px;clear:both;}
 .product-review-list .product-review-item .review-info .separator{margin:0 2px;}

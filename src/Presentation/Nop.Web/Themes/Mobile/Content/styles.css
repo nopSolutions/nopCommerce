@@ -426,9 +426,9 @@
 .product-details-page .full-description{border-top:solid 1px #d3d3d3;clear:both;margin-bottom:.3em;}
 .product-details-page .back-in-stock-subscription{}
 .product-details-page .product-reviews-overview{margin-top:20px;margin-bottom:20px;}
-.product-details-page .product-reviews-overview .product-review-box{margin-right:5px;width:69px;height:13px;}
-.product-details-page .product-review-box .rating{height:13px;width:55px;background:url(images/star-x-inactive.gif) 0 0 repeat-x;}
-.product-details-page .product-review-box .rating div{height:12px;background:url(images/star-x-active.gif) 0 0 repeat-x;}
+.product-details-page .product-reviews-overview .product-review-box{margin-right:5px;}
+.rating{height:16px;width:80px;background:url(images/star-x-inactive.png) 0 0 repeat-x;}
+.rating div{height:16px;background:url(images/star-x-active.png) 0 0 repeat-x;}
 .product-details-page .product-reviews-overview .product-review-links{margin:0;}
 .product-details-page .product-no-reviews{margin-top:20px;margin-bottom:20px;}
 .product-details-page .product-variant-list{}
@@ -497,9 +497,7 @@
 .product-review-list .title{font-weight:700;font-size:1.1em;color:#3a3a3a;}
 .product-review-list .product-review-item{font-weight:normal;}
 .product-review-list .product-review-item .review-title{font-weight:700;float:left;margin-bottom:5px;}
-.product-review-list .product-review-item .product-review-box{float:right;margin-right:5px;width:69px;height:13px;}
-.product-review-list .product-review-item .product-review-box .rating{height:13px;width:55px;background:url(images/star-x-inactive.gif) 0 0 repeat-x;}
-.product-review-list .product-review-item .product-review-box .rating div{height:12px;background:url(images/star-x-active.gif) 0 0 repeat-x;}
+.product-review-list .product-review-item .product-review-box{float:right;margin-right:5px;}
 .product-review-list .product-review-item .review-text{margin-bottom:5px;clear:both;}
 .product-review-list .product-review-item .review-info{margin-bottom:5px;}
 .product-review-list .product-review-item .review-info .separator{margin:0 2px;}
