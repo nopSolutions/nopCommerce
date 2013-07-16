@@ -1202,6 +1202,7 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 /* PROFILE PAGE */
 .profile-page{}
 .profile-page .page-title{background:url(images/forum-header-bg.gif) repeat-x 50%;color:#FFF;border:solid 1px #6a6a6a;height:28px;line-height:28px;font-weight:700;padding-left:3px;}
+.profile-page .page-title h1{font-weight:bold;font-size:12px;padding:0px;}
 .profile-page .page-body{margin-top:15px;}
 .profile-page .profile-info-box{background:url(images/forum-footer-bg.gif) repeat-x bottom;}
 .profile-page .profile-info-box,.profile-page .user-last-posts{font-size:12px;}
