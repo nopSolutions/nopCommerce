@@ -289,6 +289,7 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 .wishlist-page .share-info .share-label{font-weight:700;}
 .wishlist-page .share-info a.share-link{color:#B80709;text-decoration:none;}
 .order-summary-content,.wishlist-content{margin:0;padding:0;font-size:11px;color:#555;}
+.order-summary-content .message-error,.wishlist-content .message-error{margin:5px 0;}
 .order-summary-content .totals{float:left;padding:23px 5px 0;width:320px;}
 .order-summary-content .cart-collaterals{padding:20px 0 10px;width:580px;}
 .order-summary-content .deals{display:inline;float:right;margin:0 0 0 10px;width:280px;}

@@ -846,7 +846,8 @@ namespace Nop.Services.Orders
                         int recurringCycleLength = 0;
                         RecurringProductCyclePeriod recurringCyclePeriod;
                         int recurringTotalCycles = 0;
-                        string recurringCyclesError = cart.GetRecurringCycleInfo(out recurringCycleLength, out recurringCyclePeriod, out recurringTotalCycles);
+                        string recurringCyclesError = cart.GetRecurringCycleInfo(_localizationService,
+                            out recurringCycleLength, out recurringCyclePeriod, out recurringTotalCycles);
                         if (!string.IsNullOrEmpty(recurringCyclesError))
                             throw new NopException(recurringCyclesError);
                         processPaymentRequest.RecurringCycleLength = recurringCycleLength;

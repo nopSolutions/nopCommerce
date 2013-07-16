@@ -1436,6 +1436,9 @@ set @resources='
   <LocaleResource Name="Reviews.TotalReviews">
     <Value>{0} review(s)</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.ConflictingShipmentSchedules">
+    <Value>Your cart has auto-ship (recurring) items with conflicting shipment schedules. Only one auto-ship schedule is allowed per order.</Value>
+  </LocaleResource>
 </Language>
 '
 

@@ -3,6 +3,7 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
+using Nop.Services.Localization;
 
 namespace Nop.Services.Orders
 {
@@ -59,11 +60,13 @@ namespace Nop.Services.Orders
         /// Get a recurring cycle information
         /// </summary>
         /// <param name="shoppingCart">Shopping cart</param>
+        /// <param name="localizationService">Localization service</param>
         /// <param name="cycleLength">Cycle length</param>
         /// <param name="cyclePeriod">Cycle period</param>
         /// <param name="totalCycles">Total cycles</param>
         /// <returns>Error (if exists); otherwise, empty string</returns>
         public static string GetRecurringCycleInfo(this IList<ShoppingCartItem> shoppingCart,
+            ILocalizationService localizationService,
             out int cycleLength, out RecurringProductCyclePeriod cyclePeriod, out int totalCycles)
         {
             string error = "";
@@ -84,7 +87,7 @@ namespace Nop.Services.Orders
                     throw new NopException(string.Format("Product (Id={0}) cannot be loaded", sci.ProductId));
                 }
 
-                string conflictError = "Your cart has auto-ship (recurring) items with conflicting shipment schedules. Only one auto-ship schedule is allowed per order.";
+                string conflictError = localizationService.GetResource("ShoppingCart.ConflictingShipmentSchedules");
                 if (product.IsRecurring)
                 {
                     //cycle length
@@ -122,11 +125,7 @@ namespace Nop.Services.Orders
                 }
             }
 
-            if (!_cycleLength.HasValue || !_cyclePeriod.HasValue || !_totalCycles.HasValue)
-            {
-                error = "No recurring products";
-            }
-            else
+            if (_cycleLength.HasValue && _cyclePeriod.HasValue && _totalCycles.HasValue)
             {
                 cycleLength = _cycleLength.Value;
                 cyclePeriod = _cyclePeriod.Value;

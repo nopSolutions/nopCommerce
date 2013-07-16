@@ -3837,14 +3837,14 @@
             <LocaleResource Name="CannotMixStandardAndAutoshipProducts">
                 <Value>Your cart has standard and auto-ship (recurring) items. Only one product type is allowed per order.</Value>
             </LocaleResource>
-            <LocaleResource Name="QuantityShouldPositive">
-                <Value>Quantity should be positive</Value>
-            </LocaleResource>
             <LocaleResource Name="CartIsEmpty">
                 <Value>Your Shopping Cart is empty!</Value>
             </LocaleResource>
             <LocaleResource Name="ContinueShopping">
                 <Value>Continue shopping</Value>
+            </LocaleResource>
+            <LocaleResource Name="ConflictingShipmentSchedules">
+              <Value>Your cart has auto-ship (recurring) items with conflicting shipment schedules. Only one auto-ship schedule is allowed per order.</Value>
             </LocaleResource>
             <LocaleResource Name="CrossSells">
                 <Value>Based on your selection, you may be interested in the following items</Value>
@@ -3989,6 +3989,9 @@
             </LocaleResource>
             <LocaleResource Name="QuantityExceedsStock">
                 <Value>Your quantity exceeds stock on hand. The maximum quantity that can be added is {0}.</Value>
+            </LocaleResource>
+            <LocaleResource Name="QuantityShouldPositive">
+              <Value>Quantity should be positive</Value>
             </LocaleResource>
             <LocaleResource Name="RecipientEmailError">
                 <Value>Enter valid recipient email</Value>
