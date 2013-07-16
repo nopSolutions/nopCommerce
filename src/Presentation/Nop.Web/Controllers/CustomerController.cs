@@ -512,6 +512,8 @@ namespace Nop.Web.Controllers
 
                 }
             }
+            //enable newsletter by default
+            model.Newsletter = true;
 
             return View(model);
         }
