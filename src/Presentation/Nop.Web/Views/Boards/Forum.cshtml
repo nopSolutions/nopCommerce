@@ -26,9 +26,7 @@
             </div>
             @if (Model.ForumFeedsEnabled)
             {
-                <div class="rss">
-                    <a href="@Url.RouteUrl("ForumRSS", new { id = Model.Id })" class="link-rss" title="@T("Forum.ForumRSSLinkTitle")">@T("Forum.RSS")</a>
-                </div>
+                <a href="@Url.RouteUrl("ForumRSS", new { id = Model.Id })" class="link-rss" title="@T("Forum.ForumRSSLinkTitle")">@T("Forum.RSS")</a>
             }
         </div>
         <div class="actions">
