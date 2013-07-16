@@ -908,8 +908,7 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 .rating div{float:left;height:16px;background:url(images/star-x-active.png) 0 0 repeat-x;}
 .product-details-page .product-reviews-overview .product-review-links .separator{margin:0 2px;}
 .product-details-page .product-reviews-overview .product-review-links{margin:0;}
-.product-details-page .product-no-reviews{margin-top:20px;margin-bottom:20px;}
-.product-details-page .product-no-reviews a{text-decoration:underline;}
+.product-details-page .product-reviews-overview .product-no-reviews a{text-decoration:underline;}
 .product-details-page .product-variant-list{/*float: left;clear: none;*/clear:both;padding:10px 0;border:0;margin-bottom:20px;margin-top:10px;}
 .product-details-page .product-variant-list .product-variant-line{border:1px solid #EEEEEE;padding:20px;margin:10px 0;zoom:1;}
 .product-details-page .product-variant-list .product-variant-line:after{content:".";display:block;clear:both;height:0;font-size:0;line-height:0;visibility:hidden;}
