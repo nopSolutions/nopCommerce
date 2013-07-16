@@ -3215,6 +3215,18 @@ namespace Nop.Services.Installation
                                     },
                                     new Country
                                     {
+	                                    Name = "Montenegro",
+	                                    AllowsBilling = true,
+	                                    AllowsShipping = true,
+	                                    TwoLetterIsoCode = "ME",
+	                                    ThreeLetterIsoCode = "MNE",
+	                                    NumericIsoCode = 499,
+	                                    SubjectToVat = false,
+	                                    DisplayOrder = 100,
+	                                    Published = true
+                                    },
+                                    new Country
+                                    {
 	                                    Name = "Montserrat",
 	                                    AllowsBilling = true,
 	                                    AllowsShipping = true,
