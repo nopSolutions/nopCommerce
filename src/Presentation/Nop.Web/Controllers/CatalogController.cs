@@ -482,9 +482,11 @@ namespace Nop.Web.Controllers
                 //specs
                 if (prepareSpecificationAttributes)
                 {
-                    //specs for comparing
                     model.SpecificationAttributeModels = PrepareProductSpecificationModel(product);
                 }
+
+                //reviews
+                model.ReviewOverviewModel = PrepareProductReviewOverviewModel(product);
 
                 models.Add(model);
             }
@@ -798,6 +800,22 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
+        protected ProductReviewOverviewModel PrepareProductReviewOverviewModel(Product product)
+        {
+            if (product == null)
+                throw new ArgumentNullException("product");
+
+            var model = new ProductReviewOverviewModel()
+            {
+                ProductId = product.Id,
+                RatingSum = product.ApprovedRatingSum,
+                TotalReviews = product.ApprovedTotalReviews,
+                AllowCustomerReviews = product.AllowCustomerReviews
+            };
+            return model;
+        }
+        
+        [NonAction]
         protected void PrepareProductReviewsModel(ProductReviewsModel model, Product product)
         {
             if (product == null)
@@ -836,7 +854,7 @@ namespace Nop.Web.Controllers
             model.AddProductReview.CanCurrentCustomerLeaveReview = _catalogSettings.AllowAnonymousUsersToReviewProduct || !_workContext.CurrentCustomer.IsGuest();
             model.AddProductReview.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnProductReviewPage;
         }
-        
+
         #endregion
 
         #region Categories
@@ -1640,13 +1658,7 @@ namespace Nop.Web.Controllers
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
-            var model = new ProductReviewOverviewModel()
-            {
-                ProductId = product.Id,
-                RatingSum = product.ApprovedRatingSum,
-                TotalReviews = product.ApprovedTotalReviews,
-                AllowCustomerReviews = product.AllowCustomerReviews
-            };
+            var model = PrepareProductReviewOverviewModel(product);
             return PartialView(model);
         }
 

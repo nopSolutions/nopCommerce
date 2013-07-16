@@ -491,10 +491,11 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 .product-grid:after{content:".";display:block;clear:both;height:0;font-size:0;line-height:0;visibility:hidden;}
 .product-grid .item-box{float:right;padding:5px;text-align:center;vertical-align:text-top;}
 .product-grid .item-box:hover{background:#F9F9F9;}
-.product-grid .product-item{text-align:right;margin:0;padding:0;width:155px;height:250px;}
+.product-grid .product-item{text-align:right;margin:0;padding:0;width:155px;height:270px;}
 .product-grid .product-item .product-title{font-weight:normal;font-size:12px;padding:0;}
 .product-grid .product-item .product-title a{display:block;height:auto;line-height:1.3em;overflow:hidden;padding:4px 0 8px 10px;}
 .product-grid .product-item .details{}
+.product-grid .product-item .product-rating-box{}
 .product-grid .product-item .picture{background:none repeat scroll 0 0 #FFFFFF;text-align:center;border:1px solid #F0F0F0;height:140px;overflow:hidden;}
 .product-grid .product-item .picture img{margin:5px;}
 .product-grid .product-item .description{display:none;margin:5px 5px 0 5px;text-align:center;padding:10px 5px;border-top:solid 1px #e3e3e3;color:#555;height:50px;}
@@ -517,6 +518,7 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 .product-list .product-item .product-title{font-weight:700;font-size:12px;padding-right:10px;margin-top:10px;}
 .product-list .product-item .product-title a{font-weight:700;display:block;height:auto;line-height:1.3em;overflow:hidden;padding:4px 0 8px 10px;}
 .product-list .product-item .details{}
+.product-list .product-item .product-rating-box{padding:0 10px 0 0;margin:0px 140px 0 100px;}
 .product-list .product-item .picture{float:right;margin:10px;}
 .product-list .product-item .description{padding:0 10px 0 0;margin:0px 140px 0 100px;text-align:right;color:#555;}
 .product-list .product-item .add-info{float:left;text-align:left;position:absolute;top:40px;left:10px;}

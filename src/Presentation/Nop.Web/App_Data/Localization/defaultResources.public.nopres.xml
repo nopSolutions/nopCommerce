@@ -3704,6 +3704,9 @@
             <LocaleResource Name="SuccessfullyAdded">
                 <Value>Product review is successfully added.</Value>
             </LocaleResource>
+            <LocaleResource Name="TotalReviews">
+                <Value>{0} review(s)</Value>
+            </LocaleResource>
             <LocaleResource Name="Write">
                 <Value>Write your own review</Value>
             </LocaleResource>

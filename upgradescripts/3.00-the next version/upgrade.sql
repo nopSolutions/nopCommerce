@@ -1433,6 +1433,9 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.List.SearchIncludeSubCategories.Hint">
     <Value>Check to search in sub categories.</Value>
   </LocaleResource>
+  <LocaleResource Name="Reviews.TotalReviews">
+    <Value>{0} review(s)</Value>
+  </LocaleResource>
 </Language>
 '
 
