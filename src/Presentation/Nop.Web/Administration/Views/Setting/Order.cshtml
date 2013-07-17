@@ -95,6 +95,16 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.DisableOrderCompletedPage_OverrideForStore, model => model.DisableOrderCompletedPage, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.DisableOrderCompletedPage):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.DisableOrderCompletedPage)
+                @Html.ValidationMessageFor(model => model.DisableOrderCompletedPage)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.NopLabelFor(model => model.GiftCards_Activated_OrderStatusId):
             </td>
             <td class="adminData">

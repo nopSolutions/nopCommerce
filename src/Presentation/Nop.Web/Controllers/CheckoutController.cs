@@ -435,6 +435,12 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("HomePage");
             }
 
+            //disable "order completed" page?
+            if (_orderSettings.DisableOrderCompletedPage)
+            {
+                return RedirectToRoute("OrderDetails", new {orderId = order.Id});
+            }
+
             //model
             var model = new CheckoutCompletedModel()
             {

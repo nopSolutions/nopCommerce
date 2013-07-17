@@ -5334,6 +5334,14 @@
                                             </LocaleResource>
                                         </Children>
                                     </LocaleResource>
+                                    <LocaleResource Name="DisableOrderCompletedPage">
+                                        <Value>Disable "Order completed" page</Value>
+                                        <Children>
+                                            <LocaleResource Name="Hint">
+                                                <Value>When disabled, customers will be automatically redirected to the order details page.</Value>
+                                            </LocaleResource>
+                                        </Children>
+                                    </LocaleResource>
                                     <LocaleResource Name="ReturnRequestsDescription1">
                                         <Value>The returns system will allow your customers to request a return on items they've purchased. These are also known as RMA requests.</Value>
                                     </LocaleResource>

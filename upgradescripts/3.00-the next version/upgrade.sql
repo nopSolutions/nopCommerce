@@ -1445,6 +1445,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.ForceSslForAllPages.Hint">
     <Value>By default not all site pages are SSL protected. Check to force SSL for the entire site. This setting is useful only when you have SSL enabled on your store details pages.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.DisableOrderCompletedPage">
+    <Value>Disable "Order completed" page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.DisableOrderCompletedPage.Hint">
+    <Value>When disabled, customers will be automatically redirected to the order details page.</Value>
+  </LocaleResource>
 </Language>
 '
 

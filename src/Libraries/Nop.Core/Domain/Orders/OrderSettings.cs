@@ -39,6 +39,11 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets a value indicating whether order totals should be displayed on 'Payment info' tab of 'One-page checkout' page
         /// </summary>
         public bool OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether "Order completed" page should be skipped
+        /// </summary>
+        public bool DisableOrderCompletedPage { get; set; }
         
         /// <summary>
         /// Gets or sets a value indicating whether "Return requests" are allowed
@@ -74,6 +79,5 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets an order placement interval in seconds (prevent 2 orders being placed within an X seconds time frame).
         /// </summary>
         public int MinimumOrderPlacementInterval { get; set; }
-
     }
 }
