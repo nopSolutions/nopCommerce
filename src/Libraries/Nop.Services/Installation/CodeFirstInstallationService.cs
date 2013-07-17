@@ -4609,7 +4609,7 @@ namespace Nop.Services.Installation
                     DefaultCategoryPageSizeOptions = "4, 2, 8, 12",
                     DefaultManufacturerPageSizeOptions = "4, 2, 8, 12",
                     ProductsByTagAllowCustomersToSelectPageSize = true,
-                    ProductsByTagPageSizeOptions = "4, 2, 8, 12",
+                    ProductsByTagPageSizeOptions = "8, 4, 12",
                     MaximumBackInStockSubscriptions = 200,
                     FileUploadMaximumSizeBytes = 1024 * 200, //200KB
                     ManufacturersBlockItemsToDisplay = 5,
@@ -7076,7 +7076,6 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
-                ShowOnHomePage = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
@@ -7287,6 +7286,7 @@ namespace Nop.Services.Installation
                 BackorderMode = BackorderMode.NoBackorders,
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
+                ShowOnHomePage = true,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
