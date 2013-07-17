@@ -369,7 +369,7 @@ namespace Nop.Web.Controllers
 
         #endregion
 
-        #region Methods (multistep checkout)
+        #region Methods (common)
 
         public ActionResult Index()
         {
@@ -412,6 +412,42 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("CheckoutBillingAddress");
         }
 
+        public ActionResult Completed(int? orderId)
+        {
+            //validation
+            if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
+                return new HttpUnauthorizedResult();
+
+            Order order = null;
+            if (orderId.HasValue)
+            {
+                //load order by identifier (if provided)
+                order = _orderService.GetOrderById(orderId.Value);
+            }
+            if (order == null)
+            {
+                order = _orderService.SearchOrders(_storeContext.CurrentStore.Id, 0, _workContext.CurrentCustomer.Id,
+                    null, null, null, null, null, null, null, 0, 1)
+                    .FirstOrDefault();
+            }
+            if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
+            {
+                return RedirectToRoute("HomePage");
+            }
+
+            //model
+            var model = new CheckoutCompletedModel()
+            {
+                OrderId = order.Id,
+                OnePageCheckoutEnabled = UseOnePageCheckout()
+            };
+
+            return View(model);
+        }
+
+        #endregion
+
+        #region Methods (multistep checkout)
 
         public ActionResult BillingAddress()
         {
@@ -949,39 +985,6 @@ namespace Nop.Web.Controllers
         }
 
 
-        public ActionResult Completed(int? orderId)
-        {
-            //validation
-            if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
-                return new HttpUnauthorizedResult();
-            
-            Order order = null;
-            if (orderId.HasValue)
-            {
-                //load order by identifier (if provided)
-                order = _orderService.GetOrderById(orderId.Value);
-            }
-            if (order == null)
-            {
-                order = _orderService.SearchOrders(_storeContext.CurrentStore.Id, 0, _workContext.CurrentCustomer.Id,
-                    null, null, null, null, null, null, null, 0, 1)
-                    .FirstOrDefault();
-            }
-            if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
-            {
-                return RedirectToRoute("HomePage");
-            }
-
-            //model
-            var model = new CheckoutCompletedModel()
-            {
-                OrderId = order.Id,
-                OnePageCheckoutEnabled = UseOnePageCheckout()
-            };
-
-            return View(model);
-        }
-        
         [ChildActionOnly]
         public ActionResult CheckoutProgress(CheckoutProgressStep step)
         {
