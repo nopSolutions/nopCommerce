@@ -1451,6 +1451,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Order.DisableOrderCompletedPage.Hint">
     <Value>When disabled, customers will be automatically redirected to the order details page.</Value>
   </LocaleResource>
+  <LocaleResource Name="Checkout.Continue">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.ThankYou.Continue">
+    <Value>Continue</Value>
+  </LocaleResource>
 </Language>
 '
 

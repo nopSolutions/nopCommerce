@@ -1109,9 +1109,6 @@
             <LocaleResource Name="ConfirmYourOrder">
                 <Value>Confirm your order</Value>
             </LocaleResource>
-            <LocaleResource Name="Continue">
-                <Value>Continue</Value>
-            </LocaleResource>
             <LocaleResource Name="EnterBillingAddress">
                 <Value>Enter billing address</Value>
             </LocaleResource>
@@ -1228,6 +1225,11 @@
             </LocaleResource>
             <LocaleResource Name="ThankYou">
                 <Value>Thank you</Value>
+                <Children>
+                  <LocaleResource Name="Continue">
+                    <Value>Continue</Value>
+                  </LocaleResource>
+                </Children>
             </LocaleResource>
             <LocaleResource Name="UseRewardPoints">
                 <Value>Use my reward points, {0} reward points ({1}) available</Value>
