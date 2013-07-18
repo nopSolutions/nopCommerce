@@ -10424,7 +10424,7 @@
                                 <Value>Last success date</Value>
                             </LocaleResource>
                             <LocaleResource Name="RestartApplication">
-                                <Value>Restart application</Value>
+                                <Value>Do not forgot to restart the application once a task has been modified.</Value>
                             </LocaleResource>
                         </Children>
                     </LocaleResource>

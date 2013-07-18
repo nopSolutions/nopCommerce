@@ -50,7 +50,7 @@ namespace Nop.Services.Tasks
 
             //sometimes a task period could be set to several hours (or even days).
             //in this case a probability that it'll be run is quite small (an application could be restarted)
-            //we should manually run the tasks which weren't run for a long time\
+            //we should manually run the tasks which weren't run for a long time
             var notRunTasks = scheduleTasks
                 .Where(x => x.Seconds >= _notRunTasksInterval)
                 .Where(x => !x.LastStartUtc.HasValue || x.LastStartUtc.Value.AddSeconds(_notRunTasksInterval) < DateTime.UtcNow)
