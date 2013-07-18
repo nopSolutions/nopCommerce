@@ -25,7 +25,7 @@ namespace Nop.Services.Tests.ExportImport
     {
         ICategoryService _categoryService;
         IManufacturerService _manufacturerService;
-        IProductService _productService;
+        IProductAttributeService _productAttributeService;
         IPictureService _pictureService;
         INewsLetterSubscriptionService _newsLetterSubscriptionService;
         IExportManager _exportManager;
@@ -35,12 +35,12 @@ namespace Nop.Services.Tests.ExportImport
         {
             _categoryService = MockRepository.GenerateMock<ICategoryService>();
             _manufacturerService = MockRepository.GenerateMock<IManufacturerService>();
-            _productService = MockRepository.GenerateMock<IProductService>();
+            _productAttributeService = MockRepository.GenerateMock<IProductAttributeService>();
             _pictureService = MockRepository.GenerateMock<IPictureService>();
             _newsLetterSubscriptionService = MockRepository.GenerateMock<INewsLetterSubscriptionService>();
 
             _exportManager = new ExportManager(_categoryService,
-                _manufacturerService, _productService, _pictureService, _newsLetterSubscriptionService);
+                _manufacturerService, _productAttributeService, _pictureService, _newsLetterSubscriptionService);
         }
 
         //[Test]

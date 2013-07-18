@@ -30,7 +30,7 @@ namespace Nop.Services.ExportImport
 
         private readonly ICategoryService _categoryService;
         private readonly IManufacturerService _manufacturerService;
-        private readonly IProductService _productService;
+        private readonly IProductAttributeService _productAttributeService;
         private readonly IPictureService _pictureService;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
 
@@ -40,13 +40,13 @@ namespace Nop.Services.ExportImport
 
         public ExportManager(ICategoryService categoryService,
             IManufacturerService manufacturerService,
-            IProductService productService,
+            IProductAttributeService productAttributeService,
             IPictureService pictureService,
             INewsLetterSubscriptionService newsLetterSubscriptionService)
         {
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
-            this._productService = productService;
+            this._productAttributeService = productAttributeService;
             this._pictureService = pictureService;
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
         }
@@ -320,7 +320,7 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteEndElement();
 
                 xmlWriter.WriteStartElement("ProductAttributes");
-                var productVariantAttributes = product.ProductVariantAttributes;
+                var productVariantAttributes = _productAttributeService.GetProductVariantAttributesByProductId(product.Id);
                 foreach (var productVariantAttribute in productVariantAttributes)
                 {
                     xmlWriter.WriteStartElement("ProductVariantAttribute");

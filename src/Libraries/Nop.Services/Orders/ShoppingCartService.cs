@@ -41,6 +41,8 @@ namespace Nop.Services.Orders
         private readonly IAclService _aclService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IGenericAttributeService _genericAttributeService;
+        private readonly IProductAttributeService _productAttributeService;
+
         #endregion
 
         #region Ctor
@@ -65,6 +67,7 @@ namespace Nop.Services.Orders
         /// <param name="aclService">ACL service</param>
         /// <param name="storeMappingService">Store mapping service</param>
         /// <param name="genericAttributeService">Generic attribute service</param>
+        /// <param name="productAttributeService">Product attribute service</param>
         public ShoppingCartService(IRepository<ShoppingCartItem> sciRepository,
             IWorkContext workContext, IStoreContext storeContext,
             ICurrencyService currencyService,
@@ -79,7 +82,8 @@ namespace Nop.Services.Orders
             IPermissionService permissionService, 
             IAclService aclService,
             IStoreMappingService storeMappingService,
-            IGenericAttributeService genericAttributeService)
+            IGenericAttributeService genericAttributeService,
+            IProductAttributeService productAttributeService)
         {
             this._sciRepository = sciRepository;
             this._workContext = workContext;
@@ -97,7 +101,8 @@ namespace Nop.Services.Orders
             this._permissionService = permissionService;
             this._aclService = aclService;
             this._storeMappingService = storeMappingService;
-            this._genericAttributeService= genericAttributeService;
+            this._genericAttributeService = genericAttributeService;
+            this._productAttributeService = productAttributeService;
         }
 
         #endregion
@@ -458,7 +463,7 @@ namespace Nop.Services.Orders
             }
 
             //validate required product attributes (whether they're chosen/selected/entered)
-            var pva2Collection = product.ProductVariantAttributes;
+            var pva2Collection = _productAttributeService.GetProductVariantAttributesByProductId(product.Id);
             foreach (var pva2 in pva2Collection)
             {
                 if (pva2.IsRequired)
