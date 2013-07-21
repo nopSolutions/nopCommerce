@@ -3618,6 +3618,52 @@ namespace Nop.Admin.Controllers
                 return View(model);
             }
         }
+        
+        [HttpPost]
+        public ActionResult GenerateAllAttributeCombinations(int productId)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+                return AccessDeniedView();
+
+            var product = _productService.GetProductById(productId);
+            if (product == null)
+                throw new ArgumentException("No product found with the specified id");
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
+                return Content("This is not your product");
+
+            var allAttributesXml = _productAttributeParser.GenerateAllCombinations(product);
+            foreach (var attributesXml in allAttributesXml)
+            {
+                var existingCombination = _productAttributeParser.FindProductVariantAttributeCombination(product, attributesXml);
+
+                //already exists?
+                if (existingCombination != null)
+                    continue;
+
+                //new one
+                var warnings = new List<string>();
+                warnings.AddRange(_shoppingCartService.GetShoppingCartItemAttributeWarnings(_workContext.CurrentCustomer,
+                    ShoppingCartType.ShoppingCart, product, attributesXml));
+                if (warnings.Count != 0)
+                    continue;
+
+                //save combination
+                var combination = new ProductVariantAttributeCombination()
+                {
+                    ProductId = product.Id,
+                    AttributesXml = attributesXml,
+                    StockQuantity = 10000,
+                    AllowOutOfStockOrders = false,
+                    Sku = null,
+                    ManufacturerPartNumber = null,
+                    Gtin = null
+                };
+                _productAttributeService.InsertProductVariantAttributeCombination(combination);
+            }
+            return Json(new { Success = true });
+        }
 
         #endregion
 

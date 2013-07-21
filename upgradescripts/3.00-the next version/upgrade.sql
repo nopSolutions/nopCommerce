@@ -1457,6 +1457,9 @@ set @resources='
   <LocaleResource Name="Checkout.ThankYou.Continue">
     <Value>Continue</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.GenerateAll">
+    <Value>Generate all possible combinations</Value>
+  </LocaleResource>
 </Language>
 '
 

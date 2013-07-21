@@ -2349,6 +2349,9 @@
                                       </LocaleResource>
                                     </Children>
                                   </LocaleResource>
+                                  <LocaleResource Name="GenerateAll">
+                                    <Value>Generate all possible combinations</Value>
+                                  </LocaleResource>
                                 </Children>
                               </LocaleResource>
                               <LocaleResource Name="NoAttributesAvailable">

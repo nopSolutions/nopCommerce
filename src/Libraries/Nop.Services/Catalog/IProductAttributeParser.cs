@@ -65,6 +65,13 @@ namespace Nop.Services.Catalog
         ProductVariantAttributeCombination FindProductVariantAttributeCombination(Product product,
             string attributesXml);
 
+        /// <summary>
+        /// Generate all combinations
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <returns>Attribute combinations in XML format</returns>
+        IList<string> GenerateAllCombinations(Product product);
+
         #endregion
 
         #region Gift card attributes

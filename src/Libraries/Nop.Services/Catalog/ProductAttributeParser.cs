@@ -322,6 +322,139 @@ namespace Nop.Services.Catalog
             return null;
         }
 
+        /// <summary>
+        /// Generate all combinations
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <returns>Attribute combinations in XML format</returns>
+        public virtual IList<string> GenerateAllCombinations(Product product)
+        {
+            if (product == null)
+                throw new ArgumentNullException("product");
+
+            //let's get all possible
+            var allProductVariantAttributes = _productAttributeService.GetProductVariantAttributesByProductId(product.Id);
+            var allPossibleAttributeCombinations = new List<List<ProductVariantAttribute>>();
+            for (int counter = 0; counter < (1 << allProductVariantAttributes.Count); ++counter)
+            {
+                var combination = new List<ProductVariantAttribute>();
+                for (int i = 0; i < allProductVariantAttributes.Count; ++i)
+                {
+                    if ((counter & (1 << i)) == 0)
+                    {
+                        combination.Add(allProductVariantAttributes[i]);
+                    }
+                }
+
+                allPossibleAttributeCombinations.Add(combination);
+            }
+
+            var allAttributesXml = new List<string>();
+            foreach (var combination in allPossibleAttributeCombinations)
+            {
+                var attributesXml = new List<string>();
+                foreach (var pva in combination)
+                {
+                    if (!pva.ShouldHaveValues())
+                        continue;
+
+                    var pvaValues = _productAttributeService.GetProductVariantAttributeValues(pva.Id);
+                    if (pvaValues.Count == 0)
+                        continue;
+
+                    //checkboxes could have several values ticked
+                    var allPossibleCheckboxCombinations = new List<List<ProductVariantAttributeValue>>();
+                    if (pva.AttributeControlType == AttributeControlType.Checkboxes)
+                    {
+                        for (int counter = 0; counter < (1 << pvaValues.Count); ++counter)
+                        {
+                            var checkboxCombination = new List<ProductVariantAttributeValue>();
+                            for (int i = 0; i < pvaValues.Count; ++i)
+                            {
+                                if ((counter & (1 << i)) == 0)
+                                {
+                                    checkboxCombination.Add(pvaValues[i]);
+                                }
+                            }
+
+                            allPossibleCheckboxCombinations.Add(checkboxCombination);
+                        }
+                    }
+
+                    if (attributesXml.Count == 0)
+                    {
+                        //first set of values
+                        if (pva.AttributeControlType == AttributeControlType.Checkboxes)
+                        {
+                            //checkboxes could have several values ticked
+                            foreach (var checkboxCombination in allPossibleCheckboxCombinations)
+                            {
+                                var tmp1 = "";
+                                foreach (var checkboxValue in checkboxCombination)
+                                {
+                                    tmp1 = AddProductAttribute(tmp1, pva, checkboxValue.Id.ToString());
+                                }
+                                if (!String.IsNullOrEmpty(tmp1))
+                                {
+                                    attributesXml.Add(tmp1);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            //other attribute types (dropdownlist, radiobutton, color squares)
+                            foreach (var pvaValue in pvaValues)
+                            {
+                                var tmp1 = AddProductAttribute("", pva, pvaValue.Id.ToString());
+                                attributesXml.Add(tmp1);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        //next values. let's "append" them to already generated attribute combinations in XML format
+                        var attributesXmlTmp = new List<string>();
+                        if (pva.AttributeControlType == AttributeControlType.Checkboxes)
+                        {
+                            //checkboxes could have several values ticked
+                            foreach (var str1 in attributesXml)
+                            {
+                                foreach (var checkboxCombination in allPossibleCheckboxCombinations)
+                                {
+                                    var tmp1 = str1;
+                                    foreach (var checkboxValue in checkboxCombination)
+                                    {
+                                        tmp1 = AddProductAttribute(tmp1, pva, checkboxValue.Id.ToString());
+                                    }
+                                    if (!String.IsNullOrEmpty(tmp1))
+                                    {
+                                        attributesXmlTmp.Add(tmp1);
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            //other attribute types (dropdownlist, radiobutton, color squares)
+                            foreach (var pvaValue in pvaValues)
+                            {
+                                foreach (var str1 in attributesXml)
+                                {
+                                    var tmp1 = AddProductAttribute(str1, pva, pvaValue.Id.ToString());
+                                    attributesXmlTmp.Add(tmp1);
+                                }
+                            }
+                        }
+                        attributesXml.Clear();
+                        attributesXml.AddRange(attributesXmlTmp);
+                    }
+                }
+                allAttributesXml.AddRange(attributesXml);
+            }
+
+            return allAttributesXml;
+        }
+
         #endregion
 
         #region Gift card attributes
