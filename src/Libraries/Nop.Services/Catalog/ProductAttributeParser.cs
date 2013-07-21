@@ -11,12 +11,20 @@ namespace Nop.Services.Catalog
     /// </summary>
     public partial class ProductAttributeParser : IProductAttributeParser
     {
+        #region Fields
+
         private readonly IProductAttributeService _productAttributeService;
+
+        #endregion
+
+        #region Ctor
 
         public ProductAttributeParser(IProductAttributeService productAttributeService)
         {
             this._productAttributeService = productAttributeService;
         }
+
+        #endregion
 
         #region Product attributes
 
@@ -231,31 +239,33 @@ namespace Nop.Services.Catalog
             bool attributesEqual = true;
             if (ParseProductVariantAttributeIds(attributes1).Count == ParseProductVariantAttributeIds(attributes2).Count)
             {
-                var pva1Collection = ParseProductVariantAttributes(attributes2);
-                var pva2Collection = ParseProductVariantAttributes(attributes1);
+                var pva1Collection = ParseProductVariantAttributes(attributes1);
+                var pva2Collection = ParseProductVariantAttributes(attributes2);
                 foreach (var pva1 in pva1Collection)
                 {
+                    bool hasAttribute = false;
                     foreach (var pva2 in pva2Collection)
                     {
                         if (pva1.Id == pva2.Id)
                         {
-                            var pvaValues1Str = ParseValues(attributes2, pva1.Id);
-                            var pvaValues2Str = ParseValues(attributes1, pva2.Id);
+                            hasAttribute = true;
+                            var pvaValues1Str = ParseValues(attributes1, pva1.Id);
+                            var pvaValues2Str = ParseValues(attributes2, pva2.Id);
                             if (pvaValues1Str.Count == pvaValues2Str.Count)
                             {
                                 foreach (string str1 in pvaValues1Str)
                                 {
-                                    bool hasAttribute = false;
+                                    bool hasValue = false;
                                     foreach (string str2 in pvaValues2Str)
                                     {
                                         if (str1.Trim().ToLower() == str2.Trim().ToLower())
                                         {
-                                            hasAttribute = true;
+                                            hasValue = true;
                                             break;
                                         }
                                     }
 
-                                    if (!hasAttribute)
+                                    if (!hasValue)
                                     {
                                         attributesEqual = false;
                                         break;
@@ -268,6 +278,12 @@ namespace Nop.Services.Catalog
                                 break;
                             }
                         }
+                    }
+
+                    if (hasAttribute == false)
+                    {
+                        attributesEqual = false;
+                        break;
                     }
                 }
             }
