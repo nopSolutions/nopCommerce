@@ -157,9 +157,10 @@ namespace Nop.Services.Directory
                 if (storeId > 0)
                 {
                     query = from c in query
-                            join sm in _storeMappingRepository.Table on c.Id equals sm.EntityId into c_sm
+                            join sm in _storeMappingRepository.Table
+                            on new { c1 = c.Id, c2 = "Currency" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into c_sm
                             from sm in c_sm.DefaultIfEmpty()
-                            where !c.LimitedToStores || (sm.EntityName == "Currency" && storeId == sm.StoreId)
+                            where !c.LimitedToStores || storeId == sm.StoreId
                             select c;
 
                     //only distinct languages (group by ID)

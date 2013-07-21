@@ -720,9 +720,10 @@ namespace Nop.Services.Catalog
                 {
                     //ACL (access control list)
                     query = from p in query
-                            join acl in _aclRepository.Table on p.Id equals acl.EntityId into p_acl
+                            join acl in _aclRepository.Table
+                            on new { c1 = p.Id, c2 = "Product" } equals new { c1 = acl.EntityId, c2 = acl.EntityName } into p_acl
                             from acl in p_acl.DefaultIfEmpty()
-                            where !p.SubjectToAcl || (acl.EntityName == "Product" && allowedCustomerRolesIds.Contains(acl.CustomerRoleId))
+                            where !p.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
                             select p;
                 }
 
@@ -730,9 +731,10 @@ namespace Nop.Services.Catalog
                 {
                     //Store mapping
                     query = from p in query
-                            join sm in _storeMappingRepository.Table on p.Id equals sm.EntityId into p_sm
+                            join sm in _storeMappingRepository.Table
+                            on new { c1 = p.Id, c2 = "Product" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into p_sm
                             from sm in p_sm.DefaultIfEmpty()
-                            where !p.LimitedToStores || (sm.EntityName == "Product" && storeId == sm.StoreId)
+                            where !p.LimitedToStores || storeId == sm.StoreId
                             select p;
                 }
                 

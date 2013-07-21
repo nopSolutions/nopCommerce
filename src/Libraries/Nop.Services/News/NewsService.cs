@@ -97,9 +97,10 @@ namespace Nop.Services.News
             if (storeId > 0)
             {
                 query = from n in query
-                        join sm in _storeMappingRepository.Table on n.Id equals sm.EntityId into n_sm
+                        join sm in _storeMappingRepository.Table
+                        on new { c1 = n.Id, c2 = "NewsItem" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into n_sm
                         from sm in n_sm.DefaultIfEmpty()
-                        where !n.LimitedToStores || (sm.EntityName == "NewsItem" && storeId == sm.StoreId)
+                        where !n.LimitedToStores || storeId == sm.StoreId
                         select n;
 
                 //only distinct items (group by ID)

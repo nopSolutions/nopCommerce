@@ -176,17 +176,19 @@ namespace Nop.Services.Catalog
                 var allowedCustomerRolesIds = _workContext.CurrentCustomer.CustomerRoles
                     .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
                 query = from c in query
-                        join acl in _aclRepository.Table on c.Id equals acl.EntityId into c_acl
+                        join acl in _aclRepository.Table
+                        on new { c1 = c.Id, c2 = "Category" } equals new { c1 = acl.EntityId, c2 = acl.EntityName } into c_acl
                         from acl in c_acl.DefaultIfEmpty()
-                        where !c.SubjectToAcl || (acl.EntityName == "Category" && allowedCustomerRolesIds.Contains(acl.CustomerRoleId))
+                        where !c.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
                         select c;
 
                 //Store mapping
                 var currentStoreId = _storeContext.CurrentStore.Id;
                 query = from c in query
-                        join sm in _storeMappingRepository.Table on c.Id equals sm.EntityId into c_sm
+                        join sm in _storeMappingRepository.Table
+                        on new { c1 = c.Id, c2 = "Category" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into c_sm
                         from sm in c_sm.DefaultIfEmpty()
-                        where !c.LimitedToStores || (sm.EntityName == "Category" && currentStoreId == sm.StoreId)
+                        where !c.LimitedToStores || currentStoreId == sm.StoreId
                         select c;
 
                 //only distinct categories (group by ID)
@@ -232,17 +234,19 @@ namespace Nop.Services.Catalog
                     var allowedCustomerRolesIds = _workContext.CurrentCustomer.CustomerRoles
                         .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
                     query = from c in query
-                            join acl in _aclRepository.Table on c.Id equals acl.EntityId into c_acl
+                            join acl in _aclRepository.Table
+                            on new { c1 = c.Id, c2 = "Category" } equals new { c1 = acl.EntityId, c2 = acl.EntityName } into c_acl
                             from acl in c_acl.DefaultIfEmpty()
-                            where !c.SubjectToAcl || (acl.EntityName == "Category" && allowedCustomerRolesIds.Contains(acl.CustomerRoleId))
+                            where !c.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
                             select c;
 
                     //Store mapping
                     var currentStoreId = _storeContext.CurrentStore.Id;
                     query = from c in query
-                            join sm in _storeMappingRepository.Table on c.Id equals sm.EntityId into c_sm
+                            join sm in _storeMappingRepository.Table
+                            on new { c1 = c.Id, c2 = "Category" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into c_sm
                             from sm in c_sm.DefaultIfEmpty()
-                            where !c.LimitedToStores || (sm.EntityName == "Category" && currentStoreId == sm.StoreId)
+                            where !c.LimitedToStores || currentStoreId == sm.StoreId
                             select c;
 
                     //only distinct categories (group by ID)
@@ -404,18 +408,20 @@ namespace Nop.Services.Catalog
                         .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
                     query = from pc in query
                             join c in _categoryRepository.Table on pc.CategoryId equals c.Id
-                            join acl in _aclRepository.Table on c.Id equals acl.EntityId into c_acl
+                            join acl in _aclRepository.Table
+                            on new { c1 = c.Id, c2 = "Category" } equals new { c1 = acl.EntityId, c2 = acl.EntityName } into c_acl
                             from acl in c_acl.DefaultIfEmpty()
-                            where !c.SubjectToAcl || (acl.EntityName == "Category" && allowedCustomerRolesIds.Contains(acl.CustomerRoleId))
+                            where !c.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
                             select pc;
 
                     //Store mapping
                     var currentStoreId = _storeContext.CurrentStore.Id;
                     query = from pc in query
                             join c in _categoryRepository.Table on pc.CategoryId equals c.Id
-                            join sm in _storeMappingRepository.Table on c.Id equals sm.EntityId into c_sm
+                            join sm in _storeMappingRepository.Table
+                            on new { c1 = c.Id, c2 = "Category" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into c_sm
                             from sm in c_sm.DefaultIfEmpty()
-                            where !c.LimitedToStores || (sm.EntityName == "Category" && currentStoreId == sm.StoreId)
+                            where !c.LimitedToStores || currentStoreId == sm.StoreId
                             select pc;
 
                     //only distinct categories (group by ID)
@@ -453,43 +459,6 @@ namespace Nop.Services.Catalog
                                   (showHidden || c.Published)
                             orderby pc.DisplayOrder
                             select pc;
-
-                //we can uncomment the code below
-                //it works just fine and meets our standards
-                //but it's quite slow
-                //and it can really slow down the system with discounts assigned to categories assigned
-                //that's why filter by ACL and stores in memory
-                //if (!showHidden)
-                //{
-                //    //ACL (access control list)
-                //    var allowedCustomerRolesIds = _workContext.CurrentCustomer.CustomerRoles
-                //        .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
-                //    query = from pc in query
-                //            join c in _categoryRepository.Table on pc.CategoryId equals c.Id
-                //            join acl in _aclRepository.Table on c.Id equals acl.EntityId into c_acl
-                //            from acl in c_acl.DefaultIfEmpty()
-                //            where !c.SubjectToAcl || (acl.EntityName == "Category" && allowedCustomerRolesIds.Contains(acl.CustomerRoleId))
-                //            select pc;
-
-                //    //Store mapping
-                //    var currentStoreId = _storeContext.CurrentStore.Id;
-                //    query = from pc in query
-                //            join c in _categoryRepository.Table on pc.CategoryId equals c.Id
-                //            join sm in _storeMappingRepository.Table on c.Id equals sm.EntityId into c_sm
-                //            from sm in c_sm.DefaultIfEmpty()
-                //            where !c.LimitedToStores || (sm.EntityName == "Category" && currentStoreId == sm.StoreId)
-                //            select pc;
-
-                //    //only distinct categories (group by ID)
-                //    query = from pc in query
-                //            group pc by pc.Id
-                //            into pcGroup
-                //            orderby pcGroup.Key
-                //            select pcGroup.FirstOrDefault();
-                //    query = query.OrderBy(pc => pc.DisplayOrder);
-                //}
-                //var productCategories = query.ToList();
-                //return productCategories;
 
                 var allProductCategories = query.ToList();
                 var result = new List<ProductCategory>();

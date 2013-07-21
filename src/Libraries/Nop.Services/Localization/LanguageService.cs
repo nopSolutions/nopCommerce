@@ -132,9 +132,10 @@ namespace Nop.Services.Localization
                 if (storeId > 0)
                 {
                     query = from l in query
-                            join sm in _storeMappingRepository.Table on l.Id equals sm.EntityId into l_sm
+                            join sm in _storeMappingRepository.Table
+                            on new { c1 = l.Id, c2 = "Language" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into l_sm
                             from sm in l_sm.DefaultIfEmpty()
-                            where !l.LimitedToStores || (sm.EntityName == "Language" && storeId == sm.StoreId)
+                            where !l.LimitedToStores || storeId == sm.StoreId
                             select l;
 
                     //only distinct languages (group by ID)

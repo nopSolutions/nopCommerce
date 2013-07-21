@@ -168,9 +168,10 @@ namespace Nop.Services.Messages
                 if (storeId > 0)
                 {
                     query = from t in query
-                            join sm in _storeMappingRepository.Table on t.Id equals sm.EntityId into t_sm
+                            join sm in _storeMappingRepository.Table
+                            on new { c1 = t.Id, c2 = "MessageTemplate" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into t_sm
                             from sm in t_sm.DefaultIfEmpty()
-                            where !t.LimitedToStores || (sm.EntityName == "MessageTemplate" && storeId == sm.StoreId)
+                            where !t.LimitedToStores || storeId == sm.StoreId
                             select t;
 
                     //only distinct items (group by ID)
@@ -204,9 +205,10 @@ namespace Nop.Services.Messages
                 if (storeId > 0)
                 {
                     query = from t in query
-                            join sm in _storeMappingRepository.Table on t.Id equals sm.EntityId into t_sm
+                            join sm in _storeMappingRepository.Table
+                            on new { c1 = t.Id, c2 = "MessageTemplate" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into t_sm
                             from sm in t_sm.DefaultIfEmpty()
-                            where !t.LimitedToStores || (sm.EntityName == "MessageTemplate" && storeId == sm.StoreId)
+                            where !t.LimitedToStores || storeId == sm.StoreId
                             select t;
 
                     //only distinct items (group by ID)
