@@ -142,10 +142,14 @@ namespace Nop.Services.Messages
 
             foreach (var subscription in subscriptions)
             {
+                var customer = _customerService.GetCustomerByEmail(subscription.Email);
+                //ignore deleted or inactive customers when sending newsletter campaigns
+                if (customer != null && (!customer.Active || customer.Deleted))
+                    continue;
+
                 var tokens = new List<Token>();
                 _messageTokenProvider.AddStoreTokens(tokens, _storeContext.CurrentStore);
                 _messageTokenProvider.AddNewsLetterSubscriptionTokens(tokens, subscription);
-                var customer = _customerService.GetCustomerByEmail(subscription.Email);
                 if (customer != null)
                     _messageTokenProvider.AddCustomerTokens(tokens, customer);
 
