@@ -15,12 +15,12 @@ namespace Nop.Plugin.Shipping.USPS.Domain
         private string[] _domesticServices = {
                                                 "NONE (disable all domestic services)",
                                                 "First-Class",
-                                                "Express Mail Sunday/Holiday Guarantee",
-                                                "Express Mail Flat-Rate Envelope Sunday/Holiday Guarantee",
-                                                "Express Mail Hold For Pickup",
-                                                "Express Mail Flat Rate Envelope Hold For Pickup",
-                                                "Express Mail",
-                                                "Express Mail Flat Rate Envelope",
+                                                "Priority Mail Express Sunday/Holiday Guarantee",
+                                                "Priority Mail Express Flat-Rate Envelope Sunday/Holiday Guarantee",
+                                                "Priority Mail Express Hold For Pickup",
+                                                "Priority Mail Express Flat Rate Envelope Hold For Pickup",
+                                                "Priority Mail Express",
+                                                "Priority Mail Express Flat Rate Envelope",
                                                 "Priority Mail",
                                                 "Priority Mail Flat Rate Envelope",
                                                 "Priority Mail Small Flat Rate Box",
@@ -41,13 +41,13 @@ namespace Nop.Plugin.Shipping.USPS.Domain
                                                     "Global Express Guaranteed Non-Document Rectangular",
                                                     "Global Express Guaranteed Non-Document Non-Rectangular",
                                                     "USPS GXG Envelopes",
-                                                    "Express Mail International Flat Rate Envelope",
+                                                    "Priority Mail Express International Flat Rate Envelope",
                                                     "Priority Mail International",
                                                     "Priority Mail International Large Flat Rate Box",
                                                     "Priority Mail International Medium Flat Rate Box",
                                                     "Priority Mail International Small Flat Rate Box",
                                                     "First-Class Mail International Large Envelope",
-                                                    "Express Mail International",
+                                                    "Priority Mail Express International",
                                                     "Priority Mail International Flat Rate Envelope",
                                                     "First-Class Package International Service"
                                                     };
@@ -90,22 +90,22 @@ namespace Nop.Plugin.Shipping.USPS.Domain
                 case "First-Class":
                     serviceId = "0";
                     break;
-                case "Express Mail Sunday/Holiday Guarantee":
+                case "Priority Mail Express Sunday/Holiday Guarantee":
                     serviceId = "23";
                     break;
-                case "Express Mail Flat-Rate Envelope Sunday/Holiday Guarantee":
+                case "Priority Mail Express Flat-Rate Envelope Sunday/Holiday Guarantee":
                     serviceId = "25";
                     break;
-                case "Express Mail Hold For Pickup":
+                case "Priority Mail Express Hold For Pickup":
                     serviceId = "2";
                     break;
-                case "Express Mail Flat Rate Envelope Hold For Pickup":
+                case "Priority Mail Express Flat Rate Envelope Hold For Pickup":
                     serviceId = "27";
                     break;
-                case "Express Mail":
+                case "Priority Mail Express":
                     serviceId = "3";
                     break;
-                case "Express Mail Flat Rate Envelope":
+                case "Priority Mail Express Flat Rate Envelope":
                     serviceId = "13";
                     break;
                 case "Priority Mail":
@@ -166,7 +166,7 @@ namespace Nop.Plugin.Shipping.USPS.Domain
                 case "USPS GXG Envelopes":
                     serviceId = "12";
                     break;
-                case "Express Mail International Flat Rate Envelope":
+                case "Priority Mail Express International Flat Rate Envelope":
                     serviceId = "10";
                     break;
                 case "Priority Mail International":
@@ -184,7 +184,7 @@ namespace Nop.Plugin.Shipping.USPS.Domain
                 case "First-Class Mail International Large Envelope":
                     serviceId = "14";
                     break;
-                case "Express Mail International":
+                case "Priority Mail Express International":
                     serviceId = "1";
                     break;
                 case "Priority Mail International Flat Rate Envelope":

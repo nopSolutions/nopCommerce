@@ -12,12 +12,11 @@ namespace Nop.Plugin.Shipping.USPS.Domain
         /// <summary>
         /// String array field instance.
         /// </summary>
-        /// V3 USPS Service must be Express, Express SH, Express Commercial, Express SH Commercial, First Class, Priority, Priority Commercial, Parcel, Library, BPM, Media, ALL or ONLINE;
         /// Comment out the services not needed. 
-        string[] _elements = {  // "Express", 
-                                    // "Express SH",
-                                    // "Express Commercial",
-                                    // "Express SH Commercial",
+        string[] _elements = {      // "Priority Express", 
+                                    // "Priority Express SH",
+                                    // "Priority Express Commercial",
+                                    // "Priority Express SH Commercial",
                                     // "First Class",                       /* 13 oz limit */
                                     // "Priority",
                                     // "Priority Commercial",
