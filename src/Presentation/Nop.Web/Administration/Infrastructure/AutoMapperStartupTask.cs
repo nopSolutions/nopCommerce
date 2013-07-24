@@ -696,6 +696,7 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.OnePageCheckoutEnabled_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.ReturnRequestsEnabled_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.NumberOfDaysReturnRequestAvailable_OverrideForStore, mo => mo.Ignore())
+                .ForMember(dest => dest.DisableOrderCompletedPage_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             Mapper.CreateMap<OrderSettingsModel, OrderSettings>()
                 .ForMember(dest => dest.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab, mo => mo.Ignore())
