@@ -1,7 +1,7 @@
 ﻿Group: ExternalAuth methods
 FriendlyName: OpenID
 SystemName: ExternalAuth.OpenId
-Version: 1.18
+Version: 1.19
 SupportedVersions: 3.10
 Author: nopCommerce team
 DisplayOrder: 1

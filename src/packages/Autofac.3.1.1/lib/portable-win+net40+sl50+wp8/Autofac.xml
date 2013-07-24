@@ -5873,6 +5873,18 @@
             <exception cref="T:Autofac.Core.Registration.ComponentNotRegisteredException"/>
             <exception cref="T:Autofac.Core.DependencyResolutionException"/>
         </member>
+        <member name="M:Autofac.ResolutionExtensions.ResolveService(Autofac.IComponentContext,Autofac.Core.Service)">
+            <summary>
+            Retrieve a service from the context.
+            </summary>
+            <param name="context">The context from which to resolve the service.</param>
+            <param name="service">The service to resolve.</param>
+            <returns>
+            The component instance that provides the service.
+            </returns>
+            <exception cref="T:Autofac.Core.Registration.ComponentNotRegisteredException"/>
+            <exception cref="T:Autofac.Core.DependencyResolutionException"/>
+        </member>
         <member name="M:Autofac.ResolutionExtensions.ResolveService(Autofac.IComponentContext,Autofac.Core.Service,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})">
             <summary>
             Retrieve a service from the context.
