@@ -37,7 +37,7 @@
                     <li>@T("Admin.Configuration.Plugins.Description.Step5")</li>
                 </ol>
                 <p>
-                    You can download more nopCommerce plugins on our <a href="http://www.nopcommerce.com/extensions.aspx" target="_blank">extensions directory</a>
+                    You can download more nopCommerce plugins on our <a href="http://www.nopcommerce.com/extensions-and-themes.aspx" target="_blank">extensions directory</a>
                 </p>
             </td>
         </tr>
@@ -58,23 +58,16 @@
                                 " <br />" + T("Admin.Configuration.Plugins.Fields.Author").Text + ": <#= Author #>" +
                                 " <br />" + T("Admin.Configuration.Plugins.Fields.SystemName").Text + ": <#= SystemName #>" +
                                 " <br />" + T("Admin.Configuration.Plugins.Fields.DisplayOrder").Text + ": <#= DisplayOrder #>" +
-                                " <br />" + "<# if (CanChangeEnabled)  { #>" + T("Admin.Configuration.Plugins.Fields.IsEnabled").Text + ": <img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= IsEnabled #>.gif' />" +
-                                    "<# } #>");
+                                " <br />" + T("Admin.Configuration.Plugins.Fields.Installed").Text + ": <img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= Installed #>.gif' />" +
+                                "<# if (CanChangeEnabled)  { #><br />" + T("Admin.Configuration.Plugins.Fields.IsEnabled").Text + ": <img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= IsEnabled #>.gif' /><# } #>" +
+                                //allow configuration only when a plugin has a configuration URL specified
+                                " <br />" + "<# if (ConfigurationUrl && ConfigurationUrl.length > 0)  { #> <a class=\"plugin-button plugin-button-configure\" href=\"<#= ConfigurationUrl #>\">" + T("Admin.Configuration.Plugins.Fields.Configure").Text + "</a>&nbsp;&nbsp;&nbsp;<# } else { #>  <# } #>" +
+                                "<a class=\"plugin-button plugin-button-edit\" href=\"" + "javascript:OpenWindow('" + @Url.Content("~/Admin/Plugin/EditPopup") + "?systemName=<#= SystemName #>&btnId=btnRefresh&formId=plugins-form', 800, 300, true);\" >" + T("Admin.Common.Edit").Text + "</a>")
+                             .Title(T("Admin.Configuration.Plugins.Info").Text);
                         columns.Bound(x => x.Installed)
-                            .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= Installed #>.gif' />")
-                            .Centered();
-                        columns.Bound(x => x.SystemName)
-                            .ClientTemplate("<# if (Installed)  { #> <a href=\"" + @Url.Content("~/Admin/Plugin/Uninstall/") + "?systemName=<#= SystemName #>\" class=\"uninstall-plugin-link\">" + T("Admin.Configuration.Plugins.Fields.Uninstall").Text + "</a> <# } else { #> <a href=\"" + @Url.Content("~/Admin/Plugin/Install/") + "?systemName=<#= SystemName #>\" class=\"install-plugin-link\">" + T("Admin.Configuration.Plugins.Fields.Install").Text + "</a> <# } #>")
+                            .ClientTemplate("<# if (Installed)  { #> <a href=\"" + @Url.Content("~/Admin/Plugin/Uninstall/") + "?systemName=<#= SystemName #>\" class=\"plugin-button uninstall-plugin-link\">" + T("Admin.Configuration.Plugins.Fields.Uninstall").Text + "</a> <# } else { #> <a href=\"" + @Url.Content("~/Admin/Plugin/Install/") + "?systemName=<#= SystemName #>\" class=\"plugin-button install-plugin-link\">" + T("Admin.Configuration.Plugins.Fields.Install").Text + "</a> <# } #>")
                             .Centered()
-                            .HeaderTemplate(T("Admin.Configuration.Plugins.Fields.Installation").Text);
-                        columns.Bound(x => x.ConfigurationUrl)
-                            //allow configuration only when a plugin has a configuration URL specified
-                            .ClientTemplate("<# if (ConfigurationUrl && ConfigurationUrl.length > 0)  { #> <a href=\"<#= ConfigurationUrl #>\">" + T("Admin.Configuration.Plugins.Fields.Configure").Text + "</a> <# } else { #>  <# } #>")
-                            .Centered();
-                        columns.Bound(x => x.SystemName)
-                            .Centered()
-                            .ClientTemplate("<a href=\"" + "javascript:OpenWindow('" + @Url.Content("~/Admin/Plugin/EditPopup") + "?systemName=<#= SystemName #>&btnId=btnRefresh&formId=plugins-form', 800, 300, true);\" >" + T("Admin.Common.Edit").Text + "</a>")
-                            .Title(T("Admin.Common.Edit").Text);
+                            .Title(T("Admin.Configuration.Plugins.Fields.Installation").Text);
                     })
                     .DataBinding(dataBinding =>
                         dataBinding.Ajax()
