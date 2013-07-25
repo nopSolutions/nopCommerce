@@ -194,13 +194,11 @@ namespace Nop.Plugin.Feed.Froogle
                 visibleIndividuallyOnly: true);
                 foreach (var product in products)
                 {
-                    writer.WriteStartElement("item");
-
                     //UNDONE currently we support only simple products
                     if (product.ProductType != ProductType.SimpleProduct)
                         continue;
-
-
+                    writer.WriteStartElement("item");
+                    
                     #region Basic Product Information
 
                     //id [id]- An identifier of the item
