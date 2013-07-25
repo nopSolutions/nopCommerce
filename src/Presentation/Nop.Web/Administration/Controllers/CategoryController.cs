@@ -297,7 +297,7 @@ namespace Nop.Admin.Controllers
                 Data = categories.Select(x =>
                 {
                     var categoryModel = x.ToModel();
-                    categoryModel.Breadcrumb = x.GetCategoryBreadCrumb(_categoryService);
+                    categoryModel.Breadcrumb = x.GetFormattedBreadCrumb(_categoryService);
                     return categoryModel;
                 }),
                 Total = categories.TotalCount
@@ -318,7 +318,7 @@ namespace Nop.Admin.Controllers
                 selectList.Add(new SelectListItem()
                     {
                          Value = c.Id.ToString(),
-                         Text = c.GetCategoryBreadCrumb(_categoryService),
+                         Text = c.GetFormattedBreadCrumb(_categoryService),
                          Selected = c.Id == selectedId
                     });
 
@@ -496,7 +496,7 @@ namespace Nop.Admin.Controllers
             {
                 var parentCategory = _categoryService.GetCategoryById(model.ParentCategoryId);
                 if (parentCategory != null && !parentCategory.Deleted)
-                    model.ParentCategories.Add(new DropDownItem { Text = parentCategory.GetCategoryBreadCrumb(_categoryService), Value = parentCategory.Id.ToString() });
+                    model.ParentCategories.Add(new DropDownItem { Text = parentCategory.GetFormattedBreadCrumb(_categoryService), Value = parentCategory.Id.ToString() });
                 else
                     model.ParentCategoryId = 0;
             }
@@ -526,7 +526,7 @@ namespace Nop.Admin.Controllers
             {
                 var parentCategory = _categoryService.GetCategoryById(model.ParentCategoryId);
                 if (parentCategory != null && !parentCategory.Deleted)
-                    model.ParentCategories.Add(new DropDownItem { Text = parentCategory.GetCategoryBreadCrumb(_categoryService), Value = parentCategory.Id.ToString() });
+                    model.ParentCategories.Add(new DropDownItem { Text = parentCategory.GetFormattedBreadCrumb(_categoryService), Value = parentCategory.Id.ToString() });
                 else
                     model.ParentCategoryId = 0;
             }
@@ -623,7 +623,7 @@ namespace Nop.Admin.Controllers
             {
                 var parentCategory = _categoryService.GetCategoryById(model.ParentCategoryId);
                 if (parentCategory != null && !parentCategory.Deleted)
-                    model.ParentCategories.Add(new DropDownItem { Text = parentCategory.GetCategoryBreadCrumb(_categoryService), Value = parentCategory.Id.ToString() });
+                    model.ParentCategories.Add(new DropDownItem { Text = parentCategory.GetFormattedBreadCrumb(_categoryService), Value = parentCategory.Id.ToString() });
                 else
                     model.ParentCategoryId = 0;
             }
@@ -759,7 +759,7 @@ namespace Nop.Admin.Controllers
             //categories
             model.AvailableCategories.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var c in _categoryService.GetAllCategories(showHidden: true))
-                model.AvailableCategories.Add(new SelectListItem() { Text = c.GetCategoryNameWithPrefix(_categoryService), Value = c.Id.ToString() });
+                model.AvailableCategories.Add(new SelectListItem() { Text = c.GetFormattedBreadCrumb(_categoryService), Value = c.Id.ToString() });
 
             //manufacturers
             model.AvailableManufacturers.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });

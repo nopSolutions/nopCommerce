@@ -122,25 +122,7 @@ namespace Nop.Plugin.Feed.Froogle
                 currency = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
             return currency;
         }
-
-        private IList<Category> GetCategoryBreadCrumb(Category category)
-        {
-            if (category == null)
-                throw new ArgumentNullException("category");
-
-            var breadCrumb = new List<Category>();
-
-            while (category != null && //category is not null
-                !category.Deleted && //category is not deleted
-                category.Published) //category is published
-            {
-                breadCrumb.Add(category);
-                category = _categoryService.GetCategoryById(category.ParentCategoryId);
-            }
-            breadCrumb.Reverse();
-            return breadCrumb;
-        }
-
+        
         #endregion
 
         #region Methods
@@ -272,19 +254,11 @@ namespace Nop.Plugin.Feed.Froogle
                         var defaultProductCategory = _categoryService.GetProductCategoriesByProductId(product.Id).FirstOrDefault();
                         if (defaultProductCategory != null)
                         {
-                            var categoryBreadCrumb = GetCategoryBreadCrumb(defaultProductCategory.Category);
-                            string yourProductCategory = "";
-                            for (int i = 0; i < categoryBreadCrumb.Count; i++)
-                            {
-                                var cat = categoryBreadCrumb[i];
-                                yourProductCategory = yourProductCategory + cat.Name;
-                                if (i != categoryBreadCrumb.Count - 1)
-                                    yourProductCategory = yourProductCategory + " > ";
-                            }
-                            if (!String.IsNullOrEmpty((yourProductCategory)))
+                            var category = defaultProductCategory.Category.GetFormattedBreadCrumb(_categoryService, separator: ">");
+                            if (!String.IsNullOrEmpty((category)))
                             {
                                 writer.WriteStartElement("g", "product_type", googleBaseNamespace);
-                                writer.WriteCData(yourProductCategory);
+                                writer.WriteCData(category);
                                 writer.WriteFullEndElement(); // g:product_type
                             }
                         }

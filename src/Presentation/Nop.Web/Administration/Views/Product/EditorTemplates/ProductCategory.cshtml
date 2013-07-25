@@ -10,7 +10,7 @@
     var categoryList = new List<SelectListItem>();
     foreach (var c in allCategories)
     {
-        var name = c.GetCategoryBreadCrumb(_categoryService);
+        var name = c.GetFormattedBreadCrumb(_categoryService);
         if (name != null)
         {
             //Telerik has an issue when quotes are used. That'why we manually remove all quotes

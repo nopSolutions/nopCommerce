@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Catalog;
+using Nop.Services.Security;
+using Nop.Services.Stores;
 
 namespace Nop.Services.Catalog
 {
@@ -56,35 +58,67 @@ namespace Nop.Services.Catalog
             return null;
         }
 
-        public static string GetCategoryNameWithPrefix(this Category category, ICategoryService categoryService)
+        public static string GetFormattedBreadCrumb(this Category category,
+            ICategoryService categoryService,
+            string separator = ">>")
         {
+            if (category == null)
+                throw new ArgumentNullException("category");
+
             string result = string.Empty;
 
-            while (category != null)
+            //used to prevent circular references
+            var alreadyProcessedCategoryIds = new List<int>() { };
+
+            while (category != null &&  //not null
+                !category.Deleted &&  //not deleted
+                !alreadyProcessedCategoryIds.Contains(category.Id)) //prevent circular references
             {
                 if (String.IsNullOrEmpty(result))
+                {
                     result = category.Name;
+                }
                 else
-                    result = "--" + result;
+                {
+                    result = string.Format("{0} {1} {2}", category.Name, separator, result);
+                }
+
+                alreadyProcessedCategoryIds.Add(category.Id);
+
                 category = categoryService.GetCategoryById(category.ParentCategoryId);
+
             }
             return result;
         }
 
-        public static string GetCategoryBreadCrumb(this Category category, ICategoryService categoryService)
+        public static IList<Category> GetCategoryBreadCrumb(this Category category,
+            ICategoryService categoryService,
+            IAclService aclService,
+            IStoreMappingService storeMappingService,
+            bool showHidden = false)
         {
-            string result = string.Empty;
+            if (category == null)
+                throw new ArgumentNullException("category");
 
-            while (category != null && !category.Deleted)
+            var result = new List<Category>();
+
+            //used to prevent circular references
+            var alreadyProcessedCategoryIds = new List<int>() { };
+
+            while (category != null && //not null
+                !category.Deleted && //not deleted
+                (showHidden || category.Published) && //published
+                (showHidden || aclService.Authorize(category)) && //ACL
+                (showHidden || storeMappingService.Authorize(category)) && //Store mapping
+                !alreadyProcessedCategoryIds.Contains(category.Id)) //prevent circular references
             {
-                if (String.IsNullOrEmpty(result))
-                    result = category.Name;
-                else
-                    result = category.Name + " >> " + result;
+                result.Add(category);
+
+                alreadyProcessedCategoryIds.Add(category.Id);
 
                 category = categoryService.GetCategoryById(category.ParentCategoryId);
-
             }
+            result.Reverse();
             return result;
         }
 

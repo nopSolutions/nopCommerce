@@ -185,27 +185,6 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        protected IList<Category> GetCategoryBreadCrumb(Category category)
-        {
-            if (category == null)
-                throw new ArgumentNullException("category");
-
-            var breadCrumb = new List<Category>();
-            
-            while (category != null && //category is not null
-                !category.Deleted && //category is not deleted
-                category.Published && //category is published
-                _aclService.Authorize(category) && //ACL
-                _storeMappingService.Authorize(category)) //Store mapping
-            {
-                breadCrumb.Add(category);
-                category = _categoryService.GetCategoryById(category.ParentCategoryId);
-            }
-            breadCrumb.Reverse();
-            return breadCrumb;
-        }
-
-        [NonAction]
         protected IList<CategoryNavigationModel.CategoryModel> PrepareCategoryNavigationModel(int rootCategoryId,
             IList<int> breadCrumbIds)
         {
@@ -1026,7 +1005,7 @@ namespace Nop.Web.Controllers
             model.DisplayCategoryBreadcrumb = _catalogSettings.CategoryBreadcrumbEnabled;
             if (model.DisplayCategoryBreadcrumb)
             {
-                foreach (var catBr in GetCategoryBreadCrumb(category))
+                foreach (var catBr in category.GetCategoryBreadCrumb(_categoryService, _aclService, _storeMappingService))
                 {
                     model.CategoryBreadcrumb.Add(new CategoryModel()
                     {
@@ -1180,7 +1159,9 @@ namespace Nop.Web.Controllers
             var cachedModel = _cacheManager.Get(cacheKey, () =>
                 {
                     var breadCrumb = activeCategory != null ?
-                        GetCategoryBreadCrumb(activeCategory).Select(x => x.Id).ToList()
+                        activeCategory.GetCategoryBreadCrumb(_categoryService, _aclService, _storeMappingService)
+                        .Select(x => x.Id)
+                        .ToList()
                         : new List<int>();
                     return new CategoryNavigationModel()
                     {
@@ -1613,7 +1594,7 @@ namespace Nop.Web.Controllers
                     var category = productCategories[0].Category;
                     if (category != null)
                     {
-                        foreach (var catBr in GetCategoryBreadCrumb(category))
+                        foreach (var catBr in category.GetCategoryBreadCrumb(_categoryService, _aclService, _storeMappingService))
                         {
                             model.CategoryBreadcrumb.Add(new CategoryModel()
                             {
@@ -2582,7 +2563,7 @@ namespace Nop.Web.Controllers
                 {
                     //generate full category name (breadcrumb)
                     string categoryBreadcrumb= "";
-                    var breadcrumb = GetCategoryBreadCrumb(c);
+                    var breadcrumb = c.GetCategoryBreadCrumb(_categoryService, _aclService, _storeMappingService);
                     for (int i = 0; i <= breadcrumb.Count - 1; i++)
                     {
                         categoryBreadcrumb += breadcrumb[i].GetLocalized(x => x.Name);
