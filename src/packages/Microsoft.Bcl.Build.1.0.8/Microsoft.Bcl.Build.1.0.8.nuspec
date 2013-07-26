@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>Microsoft.Bcl.Build</id>
-    <version>1.0.7</version>
+    <version>1.0.8</version>
     <title>Microsoft BCL Build Components</title>
     <authors>Microsoft</authors>
     <owners>Microsoft</owners>
