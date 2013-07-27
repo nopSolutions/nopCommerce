@@ -197,10 +197,7 @@ namespace Nop.Plugin.Feed.Froogle
                             }
                             break;
                         default:
-                            {
-                                continue;
-                            }
-                            break;
+                            continue;
                     }
                     foreach (var product in productsToProcess)
                     {
