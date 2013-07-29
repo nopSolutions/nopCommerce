@@ -1,9 +1,7 @@
-# Ignore file for Visual Studio 2010/2012
-
 # use glob syntax
 syntax: glob
 
-# Ignore Visual Studio 2008 files
+# Ignore Visual Studio 2008-2012 files
 *.vsp
 *.obj
 *.exe
