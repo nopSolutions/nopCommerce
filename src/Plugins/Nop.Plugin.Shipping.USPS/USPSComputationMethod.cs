@@ -559,7 +559,9 @@ namespace Nop.Plugin.Shipping.USPS
                         char reg = (char)174; // registered sign "\u00AE"
                         string tm = "\u2122"; // trademark sign
                         serviceCode = serviceCode.Replace("&lt;sup&gt;&amp;reg;&lt;/sup&gt;", reg.ToString());
+                        serviceCode = serviceCode.Replace("&lt;sup&gt;&#174;&lt;/sup&gt;", reg.ToString());
                         serviceCode = serviceCode.Replace("&lt;sup&gt;&amp;trade;&lt;/sup&gt;", tm);
+                        serviceCode = serviceCode.Replace("&lt;sup&gt;&#8482;&lt;/sup&gt;", tm);
 
                         ShippingOption shippingOption = shippingOptions.Find((s) => s.Name == serviceCode);
                         if (shippingOption == null)
