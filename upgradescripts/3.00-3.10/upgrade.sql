@@ -5620,16 +5620,18 @@ BEGIN
 	ADD [OriginalProductCost] decimal(18,4) NULL
 	
 	--set values based on products
-	UPDATE [OrderItem]
+	EXEC('UPDATE [OrderItem]
 	SET [OrderItem].[OriginalProductCost] = p.[ProductCost]
-	FROM [OrderItem] oi INNER JOIN [Product] p ON oi.[ProductId] = p.[Id]
-    
-	UPDATE [OrderItem]
-	SET [OriginalProductCost] = 0
-	WHERE [OriginalProductCost] IS NULL
-
-	ALTER TABLE [OrderItem] ALTER COLUMN [OriginalProductCost] decimal(18,4) NOT NULL
+	FROM [OrderItem] oi INNER JOIN [Product] p ON oi.[ProductId] = p.[Id]')
 END
+GO
+    
+UPDATE [OrderItem]
+SET [OriginalProductCost] = 0
+WHERE [OriginalProductCost] IS NULL
+GO
+
+ALTER TABLE [OrderItem] ALTER COLUMN [OriginalProductCost] decimal(18,4) NOT NULL
 GO
 
 --new column 
