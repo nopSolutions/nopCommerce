@@ -50,7 +50,6 @@ namespace Nop.Web.Controllers
         private readonly ICategoryTemplateService _categoryTemplateService;
         private readonly IManufacturerTemplateService _manufacturerTemplateService;
         private readonly IProductAttributeService _productAttributeService;
-        private readonly IProductAttributeParser _productAttributeParser;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
         private readonly ITaxService _taxService;
@@ -62,7 +61,6 @@ namespace Nop.Web.Controllers
         private readonly IWebHelper _webHelper;
         private readonly ISpecificationAttributeService _specificationAttributeService;
         private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IShoppingCartService _shoppingCartService;
         private readonly IRecentlyViewedProductsService _recentlyViewedProductsService;
         private readonly ICompareProductsService _compareProductsService;
         private readonly IWorkflowMessageService _workflowMessageService;
@@ -73,7 +71,6 @@ namespace Nop.Web.Controllers
         private readonly IAclService _aclService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IPermissionService _permissionService;
-        private readonly IDownloadService _downloadService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IEventPublisher _eventPublisher;
 
@@ -94,20 +91,20 @@ namespace Nop.Web.Controllers
             IProductTemplateService productTemplateService,
             ICategoryTemplateService categoryTemplateService,
             IManufacturerTemplateService manufacturerTemplateService,
-            IProductAttributeService productAttributeService, IProductAttributeParser productAttributeParser, 
+            IProductAttributeService productAttributeService,
             IWorkContext workContext, IStoreContext storeContext,
             ITaxService taxService, ICurrencyService currencyService,
             IPictureService pictureService, ILocalizationService localizationService,
             IPriceCalculationService priceCalculationService, IPriceFormatter priceFormatter,
             IWebHelper webHelper, ISpecificationAttributeService specificationAttributeService,
             IDateTimeHelper dateTimeHelper,
-            IShoppingCartService shoppingCartService,
-            IRecentlyViewedProductsService recentlyViewedProductsService, ICompareProductsService compareProductsService,
+            IRecentlyViewedProductsService recentlyViewedProductsService,
+            ICompareProductsService compareProductsService,
             IWorkflowMessageService workflowMessageService, IProductTagService productTagService,
             IOrderReportService orderReportService, IGenericAttributeService genericAttributeService,
             IBackInStockSubscriptionService backInStockSubscriptionService, IAclService aclService,
             IStoreMappingService storeMappingService,
-            IPermissionService permissionService, IDownloadService downloadService,
+            IPermissionService permissionService, 
             ICustomerActivityService customerActivityService,
             IEventPublisher eventPublisher,
             MediaSettings mediaSettings, CatalogSettings catalogSettings,
@@ -123,7 +120,6 @@ namespace Nop.Web.Controllers
             this._categoryTemplateService = categoryTemplateService;
             this._manufacturerTemplateService = manufacturerTemplateService;
             this._productAttributeService = productAttributeService;
-            this._productAttributeParser = productAttributeParser;
             this._workContext = workContext;
             this._storeContext = storeContext;
             this._taxService = taxService;
@@ -135,7 +131,6 @@ namespace Nop.Web.Controllers
             this._webHelper = webHelper;
             this._specificationAttributeService = specificationAttributeService;
             this._dateTimeHelper = dateTimeHelper;
-            this._shoppingCartService = shoppingCartService;
             this._recentlyViewedProductsService = recentlyViewedProductsService;
             this._compareProductsService = compareProductsService;
             this._workflowMessageService = workflowMessageService;
@@ -146,7 +141,6 @@ namespace Nop.Web.Controllers
             this._aclService = aclService;
             this._storeMappingService = storeMappingService;
             this._permissionService = permissionService;
-            this._downloadService = downloadService;
             this._customerActivityService = customerActivityService;
             this._eventPublisher = eventPublisher;
 
