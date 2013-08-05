@@ -7,8 +7,6 @@
 
 	<PropertyGroup>
 		<RootFolder>$(MSBuildProjectDirectory)\..</RootFolder>
-		<Version Condition="'$(Version)' == ''">3.10</Version>
-		<DeployPrefix>nop_$(Version)</DeployPrefix>
 		<DeployFolder>$(RootFolder)\Deployable</DeployFolder>
         	<PluginsFolder>$(RootFolder)\Plugins</PluginsFolder>
         	<WebFolder>$(RootFolder)\Presentation\Nop.Web</WebFolder>
@@ -38,56 +36,55 @@
         <!--Lets delete the old deployed files-->
         <RemoveDir Directories="$(DeployFolder)" />
         <MakeDir Directories="$(DeployFolder)" />
-        <MakeDir Directories="$(DeployFolder)\$(DeployPrefix)" />
         <!--Ensure \Plugins\bin\ directory is created-->
-	<MakeDir Directories="$(DeployFolder)\$(DeployPrefix)\Plugins\bin\" />
+	<MakeDir Directories="$(DeployFolder)\Plugins\bin\" />
 
 
         <!--Lets publish Nop.Web-->
         <MSBuild Projects="$(RootFolder)\Presentation\Nop.Web\Nop.Web.csproj"
            Targets="ResolveReferences;_CopyWebApplication"
-           Properties="WebProjectOutputDir=$(DeployFolder)\$(DeployPrefix)\;
-           OutDir=$(DeployFolder)\$(DeployPrefix)\bin\;Configuration=$(Configuration)" />
+           Properties="WebProjectOutputDir=$(DeployFolder)\;
+           OutDir=$(DeployFolder)\bin\;Configuration=$(Configuration)" />
         
 
         <!--Lets copy the plugins to the deployed directory-->
         <MSBuild Projects ="$(MSBuildProjectFullPath)"
                         Targets="Plugins-CopyToWeb"
                         Properties="
-                        PluginOutput=$(DeployFolder)\$(DeployPrefix)\Plugins\"/>
+                        PluginOutput=$(DeployFolder)\Plugins\"/>
         
 
         <!--Now lets publish Nop.Admin-->
         <MSBuild Projects="$(RootFolder)\Presentation\Nop.Web\Administration\Nop.Admin.csproj"
            Targets="ResolveReferences;_CopyWebApplication"
-           Properties="WebProjectOutputDir=$(DeployFolder)\$(DeployPrefix)\Administration\;
-           OutDir=$(DeployFolder)\$(DeployPrefix)\Administration\bin\;Configuration=$(Configuration)" />
+           Properties="WebProjectOutputDir=$(DeployFolder)\Administration\;
+           OutDir=$(DeployFolder)\Administration\bin\;Configuration=$(Configuration)" />
 
 
         <!--Now lets move the Nop.Admin/bin/ to the root bin/-->
-        <CreateItem Include="$(DeployFolder)\$(DeployPrefix)\Administration\bin\*.dll">
+        <CreateItem Include="$(DeployFolder)\Administration\bin\*.dll">
             <Output TaskParameter="Include" ItemName="CompileOutput" />
         </CreateItem>
         <Copy SourceFiles="@(CompileOutput)"
-                DestinationFolder="$(DeployFolder)\$(DeployPrefix)\bin\" />
+                DestinationFolder="$(DeployFolder)\bin\" />
 
 
         <!--Lets delete the bin in Nop.Admin-->
-        <RemoveDir Directories="$(DeployFolder)\$(DeployPrefix)\Administration\bin\" />
+        <RemoveDir Directories="$(DeployFolder)\Administration\bin\" />
         
         <!--Lets delete the packages.config files-->
-        <Delete Files="$(DeployFolder)\$(DeployPrefix)\Administration\packages.config;
-                 $(DeployFolder)\$(DeployPrefix)\packages.config"/>
+        <Delete Files="$(DeployFolder)\Administration\packages.config;
+                 $(DeployFolder)\packages.config"/>
 
 
 
         <!--Lets copy \Contents\Images\uploaded\ directory-->
-        <RemoveDir Directories="$(DeployFolder)\$(DeployPrefix)\Content\Images\uploaded\" />
+        <RemoveDir Directories="$(DeployFolder)\Content\Images\uploaded\" />
         <CreateItem Include="$(RootFolder)\Presentation\Nop.Web\Content\Images\uploaded\**\*.*">
             <Output TaskParameter="Include" ItemName="uploadedImages" />
         </CreateItem>
         <Copy SourceFiles="@(uploadedImages)"
-                DestinationFolder="$(DeployFolder)\$(DeployPrefix)\Content\Images\uploaded\%(RecursiveDir)"
+                DestinationFolder="$(DeployFolder)\Content\Images\uploaded\%(RecursiveDir)"
 		SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
 
 
@@ -97,10 +94,10 @@
             <Output TaskParameter="Include" ItemName="sqlServerCompact" />
         </CreateItem>
         <Copy SourceFiles="@(sqlServerCompact)"
-                DestinationFolder="$(DeployFolder)\$(DeployPrefix)\bin\%(RecursiveDir)"
+                DestinationFolder="$(DeployFolder)\bin\%(RecursiveDir)"
 		SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
 
 	<!--Transform root web.config file-->
-	<TransformXml Condition="Exists('$(WebFolder)\Web.$(Configuration).config')" Source="$(WebFolder)\Web.config" Transform="$(WebFolder)\Web.$(Configuration).config" Destination="$(DeployFolder)\$(DeployPrefix)\Web.config" />
+	<TransformXml Condition="Exists('$(WebFolder)\Web.$(Configuration).config')" Source="$(WebFolder)\Web.config" Transform="$(WebFolder)\Web.$(Configuration).config" Destination="$(DeployFolder)\Web.config" />
     </Target>
 </Project>
