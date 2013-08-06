@@ -335,6 +335,7 @@ namespace Nop.Services.Catalog
                     {
                         ProductId = productCopy.Id,
                         SpecificationAttributeOptionId = productSpecificationAttribute.SpecificationAttributeOptionId,
+                        CustomValue = productSpecificationAttribute.CustomValue,
                         AllowFiltering = productSpecificationAttribute.AllowFiltering,
                         ShowOnProductPage = productSpecificationAttribute.ShowOnProductPage,
                         DisplayOrder = productSpecificationAttribute.DisplayOrder
