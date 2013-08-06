@@ -73,6 +73,7 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
                     Selected = country.Id == _upsSettings.DefaultShippedFromCountryId
                 });
             }
+            model.DefaultShippedFromCountryId = _upsSettings.DefaultShippedFromCountryId;
             model.DefaultShippedFromZipPostalCode = _upsSettings.DefaultShippedFromZipPostalCode;
 
             var services = new UPSServices();
