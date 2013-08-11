@@ -1998,15 +1998,16 @@ namespace Nop.Web.Controllers
 
         [ValidateInput(false)]
         [HttpPost, ActionName("Cart")]
-        [FormValueRequired("removegiftcard")]
-        public ActionResult RemoveGiftardCode(int giftCardId)
+        [FormValueRequired(FormValueRequirement.StartsWith, "removegiftcard-")]
+        public ActionResult RemoveGiftardCode(FormCollection form)
         {
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
-                .ToList();
             var model = new ShoppingCartModel();
 
+            //get gift card identifier
+            int giftCardId = 0;
+            foreach (var formValue in form.AllKeys)
+                if (formValue.StartsWith("removegiftcard-", StringComparison.InvariantCultureIgnoreCase))
+                    giftCardId = Convert.ToInt32(formValue.Substring("removegiftcard-".Length));
             var gc = _giftCardService.GetGiftCardById(giftCardId);
             if (gc != null)
             {
@@ -2014,6 +2015,10 @@ namespace Nop.Web.Controllers
                 _customerService.UpdateCustomer(_workContext.CurrentCustomer);
             }
 
+            var cart = _workContext.CurrentCustomer.ShoppingCartItems
+                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
+                .ToList();
             PrepareShoppingCartModel(model, cart);
             return View(model);
         }

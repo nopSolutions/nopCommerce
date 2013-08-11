@@ -130,12 +130,10 @@
                             @string.Format(T("ShoppingCart.Totals.GiftCardInfo").Text, gc.CouponCode)
                             @if (Model.IsEditable)
                             {
-
-                                /*empty value (little hack for FormValueExistsAttribute)*/
-                                <input type="submit" name="removegiftcard" value=" " title="@T("Common.Remove")" class="remove-gift-card-button" />
+                                //little hack here with empty "value" element
+                                <input type="submit" name="removegiftcard-@gc.Id" value=" " title="@T("Common.Remove")" class="remove-gift-card-button" />
                             }
                             : </span>
-                        <input type="hidden" name="giftcardid" value="@gc.Id" />
                     </td>
                     <td class="cart-total-right">
                         <span class="nobr"><span class="product-price">@gc.Amount</span> </span>
