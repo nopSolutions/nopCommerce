@@ -2106,6 +2106,13 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var model = new ShipmentListModel();
+            //countries
+            model.AvailableCountries.Add(new SelectListItem() { Text = "*", Value = "0" });
+            foreach (var c in _countryService.GetAllCountries(true))
+                model.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString() });
+            //states
+            model.AvailableStates.Add(new SelectListItem() { Text = "*", Value = "0" });
+
             return View(model);
 		}
 
@@ -2127,8 +2134,9 @@ namespace Nop.Admin.Controllers
                 vendorId = _workContext.CurrentVendor.Id;
 
             //load shipments
-            var shipments = _shipmentService.GetAllShipments(vendorId, 
-                model.TrackingNumber, startDateValue, endDateValue, 
+            var shipments = _shipmentService.GetAllShipments(vendorId,
+                model.CountryId, model.StateProvinceId, model.City, model.TrackingNumber, 
+                startDateValue, endDateValue, 
                 command.Page - 1, command.PageSize);
             var gridModel = new GridModel<ShipmentModel>
             {
@@ -2606,7 +2614,8 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null)
                 vendorId = _workContext.CurrentVendor.Id;
 
-            var shipments = _shipmentService.GetAllShipments(vendorId,  null, null, null, 0, int.MaxValue).ToList();
+            var shipments = _shipmentService.GetAllShipments(vendorId,
+                0, 0, null, null, null, null, 0, int.MaxValue).ToList();
 
             //ensure that we at least one shipment selected
             if (shipments.Count == 0)

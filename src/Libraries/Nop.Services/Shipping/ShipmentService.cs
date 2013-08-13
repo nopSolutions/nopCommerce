@@ -67,18 +67,31 @@ namespace Nop.Services.Shipping
         /// </summary>
         /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
         /// <param name="trackingNumber">Search by tracking number</param>
+        /// <param name="shippingCountryId">Shipping country identifier; 0 to load all records</param>
+        /// <param name="shippingStateId">Shipping state identifier; 0 to load all records</param>
+        /// <param name="shippingCity">Shipping city; null to load all records</param>
         /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
         /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Customer collection</returns>
-        public virtual IPagedList<Shipment> GetAllShipments(int vendorId, string trackingNumber,
+        public virtual IPagedList<Shipment> GetAllShipments(int vendorId,
+            int shippingCountryId,
+            int shippingStateId,
+            string shippingCity,
+            string trackingNumber,
             DateTime? createdFromUtc, DateTime? createdToUtc, 
             int pageIndex, int pageSize)
         {
             var query = _shipmentRepository.Table;
             if (!String.IsNullOrEmpty(trackingNumber))
                 query = query.Where(s => s.TrackingNumber.Contains(trackingNumber));
+            if (shippingCountryId > 0)
+                query = query.Where(s => s.Order.ShippingAddress.CountryId == shippingCountryId);
+            if (shippingStateId > 0)
+                query = query.Where(s => s.Order.ShippingAddress.StateProvinceId == shippingStateId);
+            if (!String.IsNullOrWhiteSpace(shippingCity))
+                query = query.Where(s => s.Order.ShippingAddress.City.Contains(shippingCity));
             if (createdFromUtc.HasValue)
                 query = query.Where(s => createdFromUtc.Value <= s.CreatedOnUtc);
             if (createdToUtc.HasValue)

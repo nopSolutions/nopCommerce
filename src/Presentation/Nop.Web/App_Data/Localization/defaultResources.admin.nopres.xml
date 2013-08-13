@@ -9109,6 +9109,30 @@
                                             </LocaleResource>
                                         </Children>
                                     </LocaleResource>
+                                    <LocaleResource Name="Country">
+                                        <Value>Country</Value>
+                                        <Children>
+                                            <LocaleResource Name="Hint">
+                                                <Value>Search by a specific country.</Value>
+                                            </LocaleResource>
+                                        </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="StateProvince">
+                                        <Value>State / province</Value>
+                                        <Children>
+                                            <LocaleResource Name="Hint">
+                                                <Value>Search by a specific state.</Value>
+                                            </LocaleResource>
+                                        </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="City">
+                                        <Value>City</Value>
+                                        <Children>
+                                            <LocaleResource Name="Hint">
+                                                <Value>Search by a specific city.</Value>
+                                            </LocaleResource>
+                                        </Children>
+                                    </LocaleResource>
                                 </Children>
                             </LocaleResource>
                             <LocaleResource Name="NoProductsSelected">

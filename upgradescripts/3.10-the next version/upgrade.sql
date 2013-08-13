@@ -5,8 +5,23 @@ declare @resources xml
 --a resource will be delete if its value is empty
 set @resources='
 <Language>
-  <LocaleResource Name="">
-    <Value></Value>
+  <LocaleResource Name="Admin.Orders.Shipments.List.Country">
+    <Value>Country</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.List.Country.Hint">
+    <Value>Search by a specific country.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.List.StateProvince">
+    <Value>State / province</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.List.StateProvince.Hint">
+    <Value>Search by a specific state.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.List.City">
+    <Value>City</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.List.City.Hint">
+    <Value>Search by a specific city.</Value>
   </LocaleResource>
 </Language>
 '

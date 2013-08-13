@@ -47,6 +47,30 @@
             </td>
         </tr>
         <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CountryId):
+            </td>
+            <td class="adminData">
+               @Html.DropDownListFor(model => model.CountryId, Model.AvailableCountries)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.StateProvinceId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.StateProvinceId, Model.AvailableStates)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.City):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => Model.City)
+            </td>
+        </tr>
+        <tr>
             <td colspan="2">
                 <input type="button" id="btnSearch" class="t-button" value="@T("Admin.Common.Search")" />
             </td>
@@ -113,6 +137,40 @@
 
         $(document).ready(function () {
 
+            //load states when changing a country dropdownlist
+            $("#@Html.FieldIdFor(model => model.CountryId)").change(function () {
+                var selectedItem = $(this).val();
+                var ddlStates = $("#@Html.FieldIdFor(model => model.StateProvinceId)");
+                $.ajax({
+                    cache: false,
+                    type: "GET",
+                    url: "@(Url.Action("GetStatesByCountryId", "Country"))",
+                    data: { "countryId": selectedItem, "addAsterisk": "true" },
+                    success: function (data) {
+                        ddlStates.html('');
+                        $.each(data, function (id, option) {
+                            ddlStates.append($('<option></option>').val(option.id).html(option.name));
+                        });
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert('Failed to retrieve states.');
+                    }
+                });
+            });
+
+            $("#@Html.FieldIdFor(model => model.TrackingNumber)").keydown(function (event) {
+                if (event.keyCode == 13) {
+                    $("#btnSearch").click();
+                    return false;
+                }
+            });
+            $("#@Html.FieldIdFor(model => model.City)").keydown(function (event) {
+                if (event.keyCode == 13) {
+                    $("#btnSearch").click();
+                    return false;
+                }
+            });
+            
             //search button
             $('#btnSearch').click(function () {
                 //search
@@ -166,7 +224,10 @@
             var searchModel = {
                     StartDate: $('#@Html.FieldIdFor(model => model.StartDate)').val(),
                     EndDate: $('#@Html.FieldIdFor(model => model.EndDate)').val(),
-                    TrackingNumber: $('#@Html.FieldIdFor(model => model.TrackingNumber)').val()
+                    TrackingNumber: $('#@Html.FieldIdFor(model => model.TrackingNumber)').val(),
+                    CountryId: $('#@Html.FieldIdFor(model => model.CountryId)').val(),
+                    StateProvinceId: $('#@Html.FieldIdFor(model => model.StateProvinceId)').val(),
+                    City: $('#@Html.FieldIdFor(model => model.City)').val()
                     };
             e.data = searchModel;
         }
