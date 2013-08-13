@@ -36,6 +36,7 @@ using Nop.Services.Logging;
 using Nop.Web.Framework.Events;
 using Nop.Services.Events;
 using Nop.Services.Stores;
+using System.Xml.Linq;
 
 namespace Nop.Web.Controllers
 {
@@ -1844,7 +1845,18 @@ namespace Nop.Web.Controllers
             foreach (var product in products)
             {
                 string productUrl = Url.RouteUrl("Product", new { SeName = product.GetSeName() }, "http");
-                items.Add(new SyndicationItem(product.GetLocalized(x => x.Name), product.GetLocalized(x => x.ShortDescription), new Uri(productUrl), String.Format("RecentlyAddedProduct:{0}", product.Id), product.CreatedOnUtc));
+                string productName = product.GetLocalized(x => x.Name);
+                string productDescription = product.GetLocalized(x => x.ShortDescription);
+                var item = new SyndicationItem(productName, productDescription, new Uri(productUrl), String.Format("RecentlyAddedProduct:{0}", product.Id), product.CreatedOnUtc);
+                items.Add(item);
+                //uncomment below if you want to add RSS enclosure for pictures
+                //var picture = _pictureService.GetPicturesByProductId(product.Id, 1).FirstOrDefault();
+                //if (picture != null)
+                //{
+                //    var imageUrl = _pictureService.GetPictureUrl(picture, _mediaSettings.ProductDetailsPictureSize);
+                //    item.ElementExtensions.Add(new XElement("enclosure", new XAttribute("type", "image/jpeg"), new XAttribute("url", imageUrl)).CreateReader());
+                //}
+
             }
             feed.Items = items;
             return new RssActionResult() { Feed = feed };
