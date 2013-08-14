@@ -88,6 +88,9 @@
     var pictureAttributeScripts = new StringBuilder();
     string pictureAdjustmentTableName = "";
     string pictureAdjustmentFuncName = "";
+    string pictureDefaultSizePrefix = "defaultsize";
+    string pictureFullSizePrefix = "fullsize";
+    var pictureSizes = new string[] { pictureDefaultSizePrefix, pictureFullSizePrefix };
     foreach (var attribute in Model)
     {
         string controlId = string.Format("product_attribute_{0}_{1}_{2}", attribute.ProductId, attribute.ProductAttributeId, attribute.Id);
@@ -99,30 +102,41 @@
         {
             case AttributeControlType.DropdownList:
                 {
-                    pictureAdjustmentTableScripts.AppendFormat("{0}['{1}'] = new Array(", pictureAdjustmentTableName, controlId);
                     pictureAttributeScripts.AppendFormat("$('#{0}').change(function(){{{1}('{2}',{3});}});\n", controlId, pictureAdjustmentFuncName, controlId, attribute.ProductId);
 
-                    int numberOfJsArrayItems = 0;
-                    if (!attribute.IsRequired)
+                    foreach (var pictureSize in pictureSizes)
                     {
-                        pictureAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "'{0}',", "");
-                        numberOfJsArrayItems++;
+                        pictureAdjustmentTableScripts.AppendFormat("{0}['{1}_{2}'] = new Array(", pictureAdjustmentTableName, controlId, pictureSize);
+                        int numberOfJsArrayItems = 0;
+                        if (!attribute.IsRequired)
+                        {
+                            pictureAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "'{0}',", "");
+                            numberOfJsArrayItems++;
+                        }
+                        foreach (var pvaValue in attribute.Values)
+                        {
+                            var pictureUrl = pvaValue.PictureUrl;
+                            if (pictureSize == pictureDefaultSizePrefix)
+                            {
+                                pictureUrl = pvaValue.PictureUrl;
+                            } 
+                            else if (pictureSize == pictureFullSizePrefix)
+                            {
+                                pictureUrl = pvaValue.FullSizePictureUrl;
+                            }
+                            
+                            pictureAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "'{0}',", pictureUrl);
+                            numberOfJsArrayItems++;
+                        }
+                        //If you create an array with a single numeric parameter, that number is used for specifying the number of elements in this array.
+                        //so have a little hack here (we need at least two elements)
+                        if (numberOfJsArrayItems == 1)
+                        {
+                            pictureAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "'{0}',", "");
+                        }
+                        pictureAdjustmentTableScripts.Length -= 1;
+                        pictureAdjustmentTableScripts.Append(");\n");
                     }
-
-                    foreach (var pvaValue in attribute.Values)
-                    {
-                        pictureAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "'{0}',", pvaValue.PictureUrl);
-                        numberOfJsArrayItems++;
-                    }
-
-                    //If you create an array with a single numeric parameter, that number is used for specifying the number of elements in this array.
-                    //so have a little hack here (we need at least two elements)
-                    if (numberOfJsArrayItems == 1)
-                    {
-                        pictureAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "'{0}',", "");
-                    }
-                    pictureAdjustmentTableScripts.Length -= 1;
-                    pictureAdjustmentTableScripts.Append(");\n");
                 }
                 break;
             case AttributeControlType.RadioList:
@@ -130,8 +144,20 @@
                 {
                     foreach (var pvaValue in attribute.Values)
                     {
-                        pictureAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0}['{1}_{2}'] = '{3}';\n", pictureAdjustmentTableName, controlId, pvaValue.Id, pvaValue.PictureUrl);
                         pictureAttributeScripts.AppendFormat("$('#{0}_{1}').click(function(){{{2}('{3}_{4}',{5});}});\n", controlId, pvaValue.Id, pictureAdjustmentFuncName, controlId, pvaValue.Id, attribute.ProductId);
+                        foreach (var pictureSize in pictureSizes)
+                        {
+                            var pictureUrl = pvaValue.PictureUrl;
+                            if (pictureSize == pictureDefaultSizePrefix)
+                            {
+                                pictureUrl = pvaValue.PictureUrl;
+                            }
+                            else if (pictureSize == pictureFullSizePrefix)
+                            {
+                                pictureUrl = pvaValue.FullSizePictureUrl;
+                            }
+                            pictureAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0}['{1}_{2}_{3}'] = '{4}';\n", pictureAdjustmentTableName, controlId, pvaValue.Id, pictureSize, pictureUrl);
+                        }
                     }
                 }
                 break;
@@ -139,8 +165,20 @@
                 {
                     foreach (var pvaValue in attribute.Values)
                     {
-                        pictureAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0}['{1}_{2}'] = '{3}';\n", pictureAdjustmentTableName, controlId, pvaValue.Id, pvaValue.PictureUrl);
                         pictureAttributeScripts.AppendFormat("$('#{0}_{1}').click(function(){{{2}('{3}_{4}',{5});}});\n", controlId, pvaValue.Id, pictureAdjustmentFuncName, controlId, pvaValue.Id, attribute.ProductId);
+                        foreach (var pictureSize in pictureSizes)
+                        {
+                            var pictureUrl = pvaValue.PictureUrl;
+                            if (pictureSize == pictureDefaultSizePrefix)
+                            {
+                                pictureUrl = pvaValue.PictureUrl;
+                            }
+                            else if (pictureSize == pictureFullSizePrefix)
+                            {
+                                pictureUrl = pvaValue.FullSizePictureUrl;
+                            }
+                            pictureAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0}['{1}_{2}_{3}'] = '{4}';\n", pictureAdjustmentTableName, controlId, pvaValue.Id, pictureSize, pictureUrl);
+                        }
                     }
                 }
                 break;
@@ -197,18 +235,23 @@
         //Picture adjustment function
         function @(pictureAdjustmentFuncName)(controlId, productId) {
             var ctrl = $('#' + controlId);
-            var pictureUrl = '';
+            var pictureDefaultSizeUrl = '';
+            var pictureFullSizeUrl = '';
             if((ctrl.is(':radio') && ctrl.is(':checked')) || (ctrl.is(':checkbox') && ctrl.is(':checked'))) {
-                pictureUrl = @(pictureAdjustmentTableName)[controlId];
+                pictureDefaultSizeUrl = @(pictureAdjustmentTableName)[controlId + '_@(pictureDefaultSizePrefix)'];
+                pictureFullSizeUrl = @(pictureAdjustmentTableName)[controlId + '_@(pictureFullSizePrefix)'];
             } else if(ctrl.is('select')) {
                 var idx = $('#' + controlId + " option").index($('#' + controlId + " option:selected"));
                 if(idx != -1) {
-                    pictureUrl = @(pictureAdjustmentTableName)[controlId][idx];
+                    pictureDefaultSizeUrl = @(pictureAdjustmentTableName)[controlId + '_@(pictureDefaultSizePrefix)'][idx];
+                    pictureFullSizeUrl = @(pictureAdjustmentTableName)[controlId + '_@(pictureFullSizePrefix)'][idx];
                 }
             }
-            if (typeof pictureUrl == 'string' && pictureUrl != '') {
-                $('#main-product-img-' + productId).attr("src", pictureUrl);
-                $('#main-product-img-lightbox-anchor-' + productId).attr("href", pictureUrl);
+            if (typeof pictureDefaultSizeUrl == 'string' && pictureDefaultSizeUrl != '') {
+                $('#main-product-img-' + productId).attr("src", pictureDefaultSizeUrl);
+            }
+            if (typeof pictureFullSizeUrl == 'string' && pictureFullSizeUrl != '') {
+                $('#main-product-img-lightbox-anchor-' + productId).attr("href", pictureFullSizeUrl);
             }
         }
         // Picture attributes handlers

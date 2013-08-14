@@ -738,7 +738,8 @@ namespace Nop.Web.Controllers
                         var pvavPicture = _pictureService.GetPictureById(pvaValue.PictureId);
                         if (pvavPicture != null)
                         {
-                            pvaValueModel.PictureUrl = _pictureService.GetPictureUrl(pvavPicture, defaultPictureSize, false);
+                            pvaValueModel.PictureUrl = _pictureService.GetPictureUrl(pvavPicture, defaultPictureSize);
+                            pvaValueModel.FullSizePictureUrl = _pictureService.GetPictureUrl(pvavPicture);
                             pvaValueModel.PictureId = pvavPicture.Id;
                         }
                     }

@@ -218,6 +218,7 @@ namespace Nop.Web.Models.Catalog
 
             public int PictureId { get; set; }
             public string PictureUrl { get; set; }
+            public string FullSizePictureUrl { get; set; }
         }
 
 		#endregion
