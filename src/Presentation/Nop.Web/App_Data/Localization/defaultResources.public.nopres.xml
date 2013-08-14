@@ -2387,9 +2387,19 @@
                 <Children>
                     <LocaleResource Name="ImageAlternateTextFormat">
                         <Value>Picture of {0}</Value>
+                        <Children>
+                            <LocaleResource Name="Details">
+                                <Value>Picture of {0}</Value>
+                            </LocaleResource>
+                        </Children>
                     </LocaleResource>
                     <LocaleResource Name="ImageLinkTitleFormat">
                         <Value>Show details for {0}</Value>
+                        <Children>
+                            <LocaleResource Name="Details">
+                                <Value>Picture of {0}</Value>
+                            </LocaleResource>
+                        </Children>
                     </LocaleResource>
                 </Children>
             </LocaleResource>

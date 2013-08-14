@@ -23,6 +23,12 @@ set @resources='
   <LocaleResource Name="Admin.Orders.Shipments.List.City.Hint">
     <Value>Search by a specific city.</Value>
   </LocaleResource>
+  <LocaleResource Name="Media.Product.ImageLinkTitleFormat.Details">
+    <Value>Picture of {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Media.Product.ImageAlternateTextFormat.Details">
+    <Value>Picture of {0}</Value>
+  </LocaleResource>
 </Language>
 '
 
