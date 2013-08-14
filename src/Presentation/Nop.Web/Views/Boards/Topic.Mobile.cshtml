@@ -11,22 +11,20 @@
     <div class="page-title">
         <h2>@Model.Subject</h2>
     </div>
-    <div class="manage">
-        @if (Model.IsCustomerAllowedToEditTopic)
-        {
-            <a href="@Url.RouteUrl("TopicEdit", new { id = Model.Id })" data-inline="true" data-role="button">@T("Forum.EditTopic")</a>   
-        }
-        @if (Model.IsCustomerAllowedToDeleteTopic)
-        {
-            <a href="@Url.RouteUrl("TopicDelete", new { id = Model.Id })" data-inline="true" data-role="button">@T("Forum.DeleteTopic")</a>
-        }
-        @if (Model.IsCustomerAllowedToMoveTopic)
-        {
-            <a href="@Url.RouteUrl("TopicMove", new { id = Model.Id })" data-inline="true" data-role="button">@T("Forum.MoveTopic")</a>
-        }
-    </div>
     <div class="topic-header">
         <div class="topic-options">
+            @if (Model.IsCustomerAllowedToEditTopic)
+            {
+                <a href="@Url.RouteUrl("TopicEdit", new { id = Model.Id })" data-inline="true" data-role="button">@T("Forum.EditTopic")</a>   
+            }
+            @if (Model.IsCustomerAllowedToDeleteTopic)
+            {
+                <a href="@Url.RouteUrl("TopicDelete", new { id = Model.Id })" data-inline="true" data-role="button">@T("Forum.DeleteTopic")</a>
+            }
+            @if (Model.IsCustomerAllowedToMoveTopic)
+            {
+                <a href="@Url.RouteUrl("TopicMove", new { id = Model.Id })" data-inline="true" data-role="button">@T("Forum.MoveTopic")</a>
+            }
             <a href="@Url.RouteUrl("PostCreate", new { id = Model.Id })" data-role="button">@T("Forum.Reply")</a>
         </div>
         <div class="pager upper">

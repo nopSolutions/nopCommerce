@@ -1157,8 +1157,6 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 .forum-topic-page{background:url(images/forum-footer-bg.gif) repeat-x bottom;clear:both;}
 .forum-topic-page .title{background:url(images/forum-header-bg.gif) repeat-x 50%;color:#FFF;border:solid 1px #6a6a6a;height:28px;line-height:28px;font-weight:700;padding-left:3px;}
 .forum-topic-page .title .topic-name{float:left;font-size:12px;}
-.forum-topic-page .title .manage{float:right;text-align:right;}
-.forum-topic-page .title .manage a{color:#F3F3F3;}
 .forum-topic-page .posts{}
 .topic-header{padding:5px;background:#F3F3F3;border-bottom:solid 1px #6a6a6a;height:16px;}
 .topic-header .topic-options,.topic-footer .topic-options{float:right;text-align:right;}

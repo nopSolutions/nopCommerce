@@ -19,7 +19,9 @@
     <div class="title">
         <h2 class="topic-name">
             <span>@Model.Subject</span></h2>
-        <div class="manage">
+    </div>
+    <div class="topic-header">
+        <div class="topic-options">
             @if (Model.IsCustomerAllowedToEditTopic)
             {
                 @Html.RouteLink(T("Forum.EditTopic").Text, "TopicEdit", new { id = Model.Id }, new { @class = "edit-topic-link-button" })
@@ -32,10 +34,6 @@
             {
                 @Html.RouteLink(T("Forum.MoveTopic").Text, "TopicMove", new { id = Model.Id }, new { @class = "move-topic-link-button" })
             }
-        </div>
-    </div>
-    <div class="topic-header">
-        <div class="topic-options">
             @Html.RouteLink(T("Forum.Reply").Text, "PostCreate", new { id = Model.Id }, new { @class = "reply-topic-link-button" })
             @if (Model.IsCustomerAllowedToSubscribe)
             {
