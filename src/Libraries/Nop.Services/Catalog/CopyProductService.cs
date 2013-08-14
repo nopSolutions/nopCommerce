@@ -68,8 +68,10 @@ namespace Nop.Services.Catalog
         /// <param name="newName">The name of product duplicate</param>
         /// <param name="isPublished">A value indicating whether the product duplicate should be published</param>
         /// <param name="copyImages">A value indicating whether the product images should be copied</param>
+        /// <param name="copyAssociatedProducts">A value indicating whether the copy associated products</param>
         /// <returns>Product copy</returns>
-        public virtual Product CopyProduct(Product product, string newName, bool isPublished, bool copyImages)
+        public virtual Product CopyProduct(Product product, string newName,
+            bool isPublished = true, bool copyImages = true, bool copyAssociatedProducts = true)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -405,6 +407,7 @@ namespace Nop.Services.Catalog
                         }
                     }
                 }
+                //attribute combinations
                 foreach (var combination in _productAttributeService.GetAllProductVariantAttributeCombinations(product.Id))
                 {
                     //generate new AttributesXml according to new value IDs
@@ -485,7 +488,19 @@ namespace Nop.Services.Catalog
                 _productService.UpdateHasTierPricesProperty(productCopy);
                 _productService.UpdateHasDiscountsApplied(productCopy);
 
-                
+
+            //associated products
+            if (copyAssociatedProducts)
+            {
+                var associatedProducts = _productService.SearchProducts(parentGroupedProductId: product.Id, showHidden: true);
+                foreach (var associatedProduct in associatedProducts)
+                {
+                    var associatedProductCopy = CopyProduct(associatedProduct, string.Format("Copy of {0}", associatedProduct.Name),
+                        isPublished, copyImages, false);
+                    associatedProductCopy.ParentGroupedProductId = productCopy.Id;
+                    _productService.UpdateProduct(productCopy);
+                }
+            }
 
             return productCopy;
         }
