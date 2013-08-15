@@ -159,19 +159,19 @@ namespace Nop.Web.Controllers
         #region Utilities
 
         [NonAction]
-        protected List<int> GetChildCategoryIds(int parentCategoryId, bool showHidden = false)
+        protected List<int> GetChildCategoryIds(int parentCategoryId)
         {
             var customerRolesIds = _workContext.CurrentCustomer.CustomerRoles
                 .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
-            string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_CHILD_IDENTIFIERS_MODEL_KEY, parentCategoryId, showHidden, string.Join(",", customerRolesIds), _storeContext.CurrentStore.Id);
+            string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_CHILD_IDENTIFIERS_MODEL_KEY, parentCategoryId, string.Join(",", customerRolesIds), _storeContext.CurrentStore.Id);
             return _cacheManager.Get(cacheKey, () =>
             { 
                 var categoriesIds = new List<int>();
-                var categories = _categoryService.GetAllCategoriesByParentCategoryId(parentCategoryId, showHidden);
+                var categories = _categoryService.GetAllCategoriesByParentCategoryId(parentCategoryId);
                 foreach (var category in categories)
                 {
                     categoriesIds.Add(category.Id);
-                    categoriesIds.AddRange(GetChildCategoryIds(category.Id, showHidden));
+                    categoriesIds.AddRange(GetChildCategoryIds(category.Id));
                 }
                 return categoriesIds;
             });
