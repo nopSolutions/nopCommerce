@@ -2867,12 +2867,22 @@ namespace Nop.Admin.Controllers
             model.AvailablePaymentStatuses = PaymentStatus.Pending.ToSelectList(false).ToList();
             model.AvailablePaymentStatuses.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
 
+            //categories
+            model.AvailableCategories.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var c in _categoryService.GetAllCategories(showHidden: true))
+                model.AvailableCategories.Add(new SelectListItem() { Text = c.GetFormattedBreadCrumb(_categoryService), Value = c.Id.ToString() });
+
+            //manufacturers
+            model.AvailableManufacturers.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var m in _manufacturerService.GetAllManufacturers(showHidden: true))
+                model.AvailableManufacturers.Add(new SelectListItem() { Text = m.Name, Value = m.Id.ToString() });
+
             //billing countries
             foreach (var c in _countryService.GetAllCountriesForBilling())
             {
                 model.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString() });
             }
-            model.AvailableCountries.Insert(0, new SelectListItem() { Text = "*", Value = "0" });
+            model.AvailableCountries.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
 
             //vendor
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
@@ -2907,6 +2917,8 @@ namespace Nop.Admin.Controllers
                 billingCountryId: model.BillingCountryId,
                 orderBy: 2,
                 vendorId: vendorId,
+                categoryId: model.CategoryId,
+                manufacturerId: model.ManufacturerId,
                 pageIndex: command.Page - 1,
                 pageSize: command.PageSize,
                 showHidden: true);

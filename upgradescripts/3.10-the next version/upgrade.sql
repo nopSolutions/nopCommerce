@@ -29,6 +29,18 @@ set @resources='
   <LocaleResource Name="Media.Product.ImageAlternateTextFormat.Details">
     <Value>Picture of {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Bestsellers.Category">
+    <Value>Category</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Bestsellers.Category.Hint">
+    <Value>Search in a specific category.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Bestsellers.Manufacturer">
+    <Value>Manufacturer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Bestsellers.Manufacturer.Hint">
+    <Value>Search in a specific manufacturer.</Value>
+  </LocaleResource>
 </Language>
 '
 

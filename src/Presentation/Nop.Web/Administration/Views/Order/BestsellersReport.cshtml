@@ -51,6 +51,22 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CategoryId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownList("CategoryId", Model.AvailableCategories)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ManufacturerId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownList("ManufacturerId", Model.AvailableManufacturers)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.NopLabelFor(model => model.BillingCountryId):
             </td>
             <td class="adminData">
@@ -107,9 +123,11 @@
             var searchModel = {
                 StartDate: $('#@Html.FieldIdFor(model => model.StartDate)').val(),
                 EndDate: $('#@Html.FieldIdFor(model => model.EndDate)').val(),
-                BillingCountryId: $('#BillingCountryId').val(),
-                OrderStatusId: $('#@Html.FieldIdFor(model => model.OrderStatusId)').val(),
-                PaymentStatusId: $('#@Html.FieldIdFor(model => model.PaymentStatusId)').val()
+                OrderStatusId: $('#OrderStatusId').val(),
+                PaymentStatusId: $('#PaymentStatusId').val(),
+                CategoryId: $('#CategoryId').val(),
+                ManufacturerId: $('#ManufacturerId').val(),
+            BillingCountryId: $('#BillingCountryId').val()
             };
             e.data = searchModel;
         }

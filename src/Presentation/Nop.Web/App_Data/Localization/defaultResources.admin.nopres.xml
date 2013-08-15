@@ -9859,6 +9859,22 @@
                                     </LocaleResource>
                                 </Children>
                             </LocaleResource>
+                            <LocaleResource Name="Category">
+                                <Value>Category</Value>
+                                <Children>
+                                    <LocaleResource Name="Hint">
+                                        <Value>Search in a specific category.</Value>
+                                    </LocaleResource>
+                                </Children>
+                            </LocaleResource>
+                            <LocaleResource Name="Manufacturer">
+                                <Value>Manufacturer</Value>
+                                <Children>
+                                    <LocaleResource Name="Hint">
+                                        <Value>Search in a specific manufacturer.</Value>
+                                    </LocaleResource>
+                                </Children>
+                            </LocaleResource>
                             <LocaleResource Name="BillingCountry">
                                 <Value>Billing country</Value>
                                 <Children>

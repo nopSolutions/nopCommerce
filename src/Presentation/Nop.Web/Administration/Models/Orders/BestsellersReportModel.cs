@@ -13,6 +13,8 @@ namespace Nop.Admin.Models.Orders
         {
             AvailableOrderStatuses = new List<SelectListItem>();
             AvailablePaymentStatuses = new List<SelectListItem>();
+            AvailableCategories = new List<SelectListItem>();
+            AvailableManufacturers = new List<SelectListItem>();
             AvailableCountries = new List<SelectListItem>();
         }
 
@@ -24,19 +26,24 @@ namespace Nop.Admin.Models.Orders
         [UIHint("DateNullable")]
         public DateTime? EndDate { get; set; }
 
-        [NopResourceDisplayName("Admin.SalesReport.Bestsellers.BillingCountry")]
-        public int BillingCountryId { get; set; }
 
         [NopResourceDisplayName("Admin.SalesReport.Bestsellers.OrderStatus")]
         public int OrderStatusId { get; set; }
         [NopResourceDisplayName("Admin.SalesReport.Bestsellers.PaymentStatus")]
         public int PaymentStatusId { get; set; }
+        [NopResourceDisplayName("Admin.SalesReport.Bestsellers.Category")]
+        public int CategoryId { get; set; }
+        [NopResourceDisplayName("Admin.SalesReport.Bestsellers.Manufacturer")]
+        public int ManufacturerId { get; set; }
+        [NopResourceDisplayName("Admin.SalesReport.Bestsellers.BillingCountry")]
+        public int BillingCountryId { get; set; }
 
         public IList<SelectListItem> AvailableOrderStatuses { get; set; }
         public IList<SelectListItem> AvailablePaymentStatuses { get; set; }
+        public IList<SelectListItem> AvailableCategories { get; set; }
+        public IList<SelectListItem> AvailableManufacturers { get; set; }
         public IList<SelectListItem> AvailableCountries { get; set; }
-
-
+        
         public bool IsLoggedInAsVendor { get; set; }
     }
 }
