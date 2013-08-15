@@ -2872,7 +2872,7 @@ namespace Nop.Admin.Controllers
             {
                 model.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString() });
             }
-            model.AvailableCountries.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
+            model.AvailableCountries.Insert(0, new SelectListItem() { Text = "*", Value = "0" });
 
             //vendor
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;

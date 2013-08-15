@@ -571,7 +571,7 @@ namespace Nop.Admin.Controllers
             model.FaxEnabled = _customerSettings.FaxEnabled;
             if (_customerSettings.CountryEnabled)
             {
-                model.AvailableCountries.Add(new SelectListItem() { Text = _localizationService.GetResource("Address.SelectCountry"), Value = "0" });
+                model.AvailableCountries.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
                 foreach (var c in _countryService.GetAllCountries())
                 {
                     model.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == model.CountryId) });
