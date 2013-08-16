@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
-using Nop.Core.Domain.Common;
-using Nop.Core.Domain.Seo;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
 
@@ -37,41 +35,62 @@ namespace Nop.Admin.Models.Settings
         {
             public StoreInformationSettingsModel()
             {
-                this.AvailableStoreThemesForDesktops = new List<SelectListItem>();
-                this.AvailableStoreThemesForMobileDevices = new List<SelectListItem>();
+                this.AvailableStoreThemesForDesktops = new List<ThemeConfigurationModel>();
+                this.AvailableStoreThemesForMobileDevices = new List<ThemeConfigurationModel>();
             }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.MobileDevicesSupported")]
             public bool MobileDevicesSupported { get; set; }
+
             public bool MobileDevicesSupported_OverrideForStore { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.StoreClosed")]
             public bool StoreClosed { get; set; }
+
             public bool StoreClosed_OverrideForStore { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.StoreClosedAllowForAdmins")]
             public bool StoreClosedAllowForAdmins { get; set; }
+
             public bool StoreClosedAllowForAdmins_OverrideForStore { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DefaultStoreThemeForDesktops")]
             [AllowHtml]
             public string DefaultStoreThemeForDesktops { get; set; }
+
             public bool DefaultStoreThemeForDesktops_OverrideForStore { get; set; }
-            public IList<SelectListItem> AvailableStoreThemesForDesktops { get; set; }
+            public IList<ThemeConfigurationModel> AvailableStoreThemesForDesktops { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DefaultStoreThemeForMobileDevices")]
             [AllowHtml]
             public string DefaultStoreThemeForMobileDevices { get; set; }
+
             public bool DefaultStoreThemeForMobileDevices_OverrideForStore { get; set; }
-            public IList<SelectListItem> AvailableStoreThemesForMobileDevices { get; set; }
+            public IList<ThemeConfigurationModel> AvailableStoreThemesForMobileDevices { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.AllowCustomerToSelectTheme")]
             public bool AllowCustomerToSelectTheme { get; set; }
+
             public bool AllowCustomerToSelectTheme_OverrideForStore { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisplayEuCookieLawWarning")]
             public bool DisplayEuCookieLawWarning { get; set; }
+
             public bool DisplayEuCookieLawWarning_OverrideForStore { get; set; }
+
+            #region Nested classes
+
+            public partial class ThemeConfigurationModel
+            {
+                public string ThemeName { get; set; }
+                public string ThemeTitle { get; set; }
+                public string PreviewImageUrl { get; set; }
+                public string PreviewText { get; set; }
+                public bool SupportRtl { get; set; }
+                public bool Selected { get; set; }
+            }
+
+            #endregion
         }
 
         public partial class SeoSettingsModel : BaseNopModel

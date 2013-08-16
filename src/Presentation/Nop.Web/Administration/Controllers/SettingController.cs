@@ -1736,10 +1736,13 @@ namespace Nop.Admin.Controllers
                 .Where(x => !x.MobileTheme)
                 .Select(x =>
                 {
-                    return new SelectListItem()
+                    return new GeneralCommonSettingsModel.StoreInformationSettingsModel.ThemeConfigurationModel()
                     {
-                        Text = x.ThemeTitle,
-                        Value = x.ThemeName,
+                        ThemeTitle = x.ThemeTitle,
+                        ThemeName = x.ThemeName,
+                        PreviewImageUrl = x.PreviewImageUrl,
+                        PreviewText = x.PreviewText,
+                        SupportRtl = x.SupportRtl,
                         Selected = x.ThemeName.Equals(storeInformationSettings.DefaultStoreThemeForDesktops, StringComparison.InvariantCultureIgnoreCase)
                     };
                 })
@@ -1753,10 +1756,13 @@ namespace Nop.Admin.Controllers
                 .Where(x => x.MobileTheme)
                 .Select(x =>
                 {
-                    return new SelectListItem()
+                    return new GeneralCommonSettingsModel.StoreInformationSettingsModel.ThemeConfigurationModel()
                     {
-                        Text = x.ThemeTitle,
-                        Value = x.ThemeName,
+                        ThemeTitle = x.ThemeTitle,
+                        ThemeName = x.ThemeName,
+                        PreviewImageUrl = x.PreviewImageUrl,
+                        PreviewText = x.PreviewText,
+                        SupportRtl = x.SupportRtl,
                         Selected = x.ThemeName.Equals(storeInformationSettings.DefaultStoreThemeForMobileDevices, StringComparison.InvariantCultureIgnoreCase)
                     };
                 })

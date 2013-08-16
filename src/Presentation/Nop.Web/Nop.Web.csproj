@@ -938,8 +938,10 @@
     <Content Include="Scripts\2013.2.611\telerik.upload.min.js" />
     <Content Include="Scripts\2013.2.611\telerik.window.min.js" />
     <Content Include="Scripts\public.common.mobile.js" />
+    <Content Include="Themes\Mobile\preview.jpg" />
     <Content Include="Themes\DefaultClean\Content\images\star-x-active.png" />
     <Content Include="Themes\DefaultClean\Content\images\star-x-inactive.png" />
+    <Content Include="Themes\DefaultClean\preview.jpg" />
     <Content Include="Themes\Mobile\Content\images\ajax-loader.gif" />
     <Content Include="Content\Images\default-avatar.jpg" />
     <Content Include="Content\Images\flags\ad.png" />
