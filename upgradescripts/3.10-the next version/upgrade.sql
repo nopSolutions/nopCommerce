@@ -114,3 +114,41 @@ DEALLOCATE cur_existinglanguage
 
 DROP TABLE #LocaleStringResourceTmp
 GO
+
+
+--Add a reference for [StoreMapping] table
+--but first, delete abandoned records
+DELETE FROM [StoreMapping]
+WHERE [StoreId] NOT IN (SELECT [Id] FROM [Store])
+GO
+
+IF NOT EXISTS (SELECT 1
+           FROM   sys.objects
+           WHERE  name = 'StoreMapping_Store'
+           AND parent_object_id = Object_id('StoreMapping')
+           AND Objectproperty(object_id,N'IsForeignKey') = 1)
+BEGIN
+	ALTER TABLE [dbo].[StoreMapping]  WITH CHECK ADD  CONSTRAINT [StoreMapping_Store] FOREIGN KEY([StoreId])
+	REFERENCES [dbo].[Store] ([Id])
+	ON DELETE CASCADE
+END
+GO
+
+
+--Add a reference for [AclRecord] table
+--but first, delete abandoned records
+DELETE FROM [AclRecord]
+WHERE [CustomerRoleId] NOT IN (SELECT [Id] FROM [CustomerRole])
+GO
+
+IF NOT EXISTS (SELECT 1
+           FROM   sys.objects
+           WHERE  name = 'AclRecord_CustomerRole'
+           AND parent_object_id = Object_id('AclRecord')
+           AND Objectproperty(object_id,N'IsForeignKey') = 1)
+BEGIN
+	ALTER TABLE [dbo].[AclRecord]  WITH CHECK ADD  CONSTRAINT [AclRecord_CustomerRole] FOREIGN KEY([CustomerRoleId])
+	REFERENCES [dbo].[CustomerRole] ([Id])
+	ON DELETE CASCADE
+END
+GO

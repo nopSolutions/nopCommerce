@@ -1,16 +1,21 @@
 using System.Data.Entity.ModelConfiguration;
 using Nop.Core.Domain.Security;
 
-namespace Nop.Data.Mapping.Seo
+namespace Nop.Data.Mapping.Security
 {
     public partial class AclRecordMap : EntityTypeConfiguration<AclRecord>
     {
         public AclRecordMap()
         {
             this.ToTable("AclRecord");
-            this.HasKey(lp => lp.Id);
+            this.HasKey(ar => ar.Id);
 
-            this.Property(lp => lp.EntityName).IsRequired().HasMaxLength(400);
+            this.Property(ar => ar.EntityName).IsRequired().HasMaxLength(400);
+
+            this.HasRequired(ar => ar.CustomerRole)
+                .WithMany()
+                .HasForeignKey(ar => ar.CustomerRoleId)
+                .WillCascadeOnDelete(true);
         }
     }
 }
