@@ -685,6 +685,9 @@ namespace Nop.Admin.Models.Catalog
             //used only on the values list page
             public string WeightAdjustmentStr { get; set; }
 
+            [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.Cost")]
+            public decimal Cost { get; set; }
+
             [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.IsPreSelected")]
             public bool IsPreSelected { get; set; }
 

@@ -41,6 +41,12 @@ set @resources='
   <LocaleResource Name="Admin.SalesReport.Bestsellers.Manufacturer.Hint">
     <Value>Search in a specific manufacturer.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.Cost">
+    <Value>Cost</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.Cost.Hint">
+    <Value>The attribute value cost is the cost of all the different components which make up this value. This may either be the purchase price if the components are bought from outside suppliers, or the combined cost of materials and manufacturing processes if the component is made in-house.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -157,3 +163,18 @@ DELETE FROM [dbo].[PermissionRecord]
 WHERE [SystemName] = N'ManageCustomerRoles'
 GO
 
+
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[ProductVariantAttributeValue]') and NAME='Cost')
+BEGIN
+	ALTER TABLE [ProductVariantAttributeValue]
+	ADD [Cost] [decimal](18, 4) NULL
+END
+GO
+
+UPDATE [ProductVariantAttributeValue]
+SET [Cost] = 0
+WHERE [Cost] IS NULL
+GO
+
+ALTER TABLE [ProductVariantAttributeValue] ALTER COLUMN [Cost] [decimal](18, 4) NOT NULL
+GO

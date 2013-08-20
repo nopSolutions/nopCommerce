@@ -14,6 +14,7 @@ namespace Nop.Data.Mapping.Catalog
 
             this.Property(pvav => pvav.PriceAdjustment).HasPrecision(18, 4);
             this.Property(pvav => pvav.WeightAdjustment).HasPrecision(18, 4);
+            this.Property(pvav => pvav.Cost).HasPrecision(18, 4);
 
             this.Ignore(pvav => pvav.AttributeValueType);
 

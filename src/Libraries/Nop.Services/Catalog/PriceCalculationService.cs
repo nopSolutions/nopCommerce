@@ -466,7 +466,7 @@ namespace Nop.Services.Catalog
                     case AttributeValueType.Simple:
                         {
                             //simple attribute
-                            //cost += pvaValue.AttributeCost;
+                            cost += pvaValue.Cost;
                         }
                         break;
                     case AttributeValueType.AssociatedToProduct:

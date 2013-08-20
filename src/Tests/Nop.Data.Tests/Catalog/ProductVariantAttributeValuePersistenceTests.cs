@@ -19,6 +19,7 @@ namespace Nop.Data.Tests.Catalog
                 ColorSquaresRgb = "12FF33",
                 PriceAdjustment = 1.1M,
                 WeightAdjustment = 2.1M,
+                Cost = 3.1M,
                 IsPreSelected = true,
                 DisplayOrder = 3,
                 ProductVariantAttribute = new ProductVariantAttribute
@@ -44,6 +45,7 @@ namespace Nop.Data.Tests.Catalog
             fromDb.ColorSquaresRgb.ShouldEqual("12FF33");
             fromDb.PriceAdjustment.ShouldEqual(1.1M);
             fromDb.WeightAdjustment.ShouldEqual(2.1M);
+            fromDb.Cost.ShouldEqual(3.1M);
             fromDb.IsPreSelected.ShouldEqual(true);
             fromDb.DisplayOrder.ShouldEqual(3);
 

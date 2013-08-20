@@ -44,6 +44,11 @@ namespace Nop.Core.Domain.Catalog
         public decimal WeightAdjustment { get; set; }
 
         /// <summary>
+        /// Gets or sets the attibute value cost
+        /// </summary>
+        public decimal Cost { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the value is pre-selected
         /// </summary>
         public bool IsPreSelected { get; set; }

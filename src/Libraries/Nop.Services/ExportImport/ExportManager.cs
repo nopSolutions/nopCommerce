@@ -344,6 +344,7 @@ namespace Nop.Services.ExportImport
                         xmlWriter.WriteElementString("ColorSquaresRgb", null, productVariantAttributeValue.ColorSquaresRgb);
                         xmlWriter.WriteElementString("PriceAdjustment", null, productVariantAttributeValue.PriceAdjustment.ToString());
                         xmlWriter.WriteElementString("WeightAdjustment", null, productVariantAttributeValue.WeightAdjustment.ToString());
+                        xmlWriter.WriteElementString("Cost", null, productVariantAttributeValue.Cost.ToString());
                         xmlWriter.WriteElementString("IsPreSelected", null, productVariantAttributeValue.IsPreSelected.ToString());
                         xmlWriter.WriteElementString("DisplayOrder", null, productVariantAttributeValue.DisplayOrder.ToString());
                         xmlWriter.WriteElementString("PictureId", null, productVariantAttributeValue.PictureId.ToString());

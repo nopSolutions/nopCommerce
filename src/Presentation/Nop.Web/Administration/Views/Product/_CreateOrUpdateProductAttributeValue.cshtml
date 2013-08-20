@@ -31,10 +31,12 @@
             $('#group-associated-product').hide();
             $('#group-price-adjustment').show();
             $('#group-weight-adjustment').show();
+            $('#group-cost').show();
         } else if (selectedProductTypeId == @(((int)AttributeValueType.AssociatedToProduct).ToString())) {
             $('#group-associated-product').show();
             $('#group-price-adjustment').hide();
             $('#group-weight-adjustment').hide();
+            $('#group-cost').hide();
         }
     }
 </script>
@@ -125,6 +127,15 @@
         <td class="adminData">
             @Html.EditorFor(model => model.WeightAdjustment)
             @Html.ValidationMessageFor(model => model.WeightAdjustment)
+        </td>
+    </tr>
+    <tr id="group-cost">
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.Cost):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.Cost)
+            @Html.ValidationMessageFor(model => model.Cost)
         </td>
     </tr>
     <tr>

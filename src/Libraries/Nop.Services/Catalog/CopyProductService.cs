@@ -389,6 +389,7 @@ namespace Nop.Services.Catalog
                         ColorSquaresRgb = productVariantAttributeValue.ColorSquaresRgb,
                         PriceAdjustment = productVariantAttributeValue.PriceAdjustment,
                         WeightAdjustment = productVariantAttributeValue.WeightAdjustment,
+                        Cost = productVariantAttributeValue.Cost,
                         IsPreSelected = productVariantAttributeValue.IsPreSelected,
                         DisplayOrder = productVariantAttributeValue.DisplayOrder,
                         PictureId = pvavPictureId,

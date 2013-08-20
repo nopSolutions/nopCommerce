@@ -2914,6 +2914,7 @@ namespace Nop.Admin.Controllers
                         PriceAdjustmentStr = x.AttributeValueType == AttributeValueType.Simple ? x.PriceAdjustment.ToString("G29") : "",
                         WeightAdjustment = x.WeightAdjustment,
                         WeightAdjustmentStr = x.AttributeValueType == AttributeValueType.Simple ? x.WeightAdjustment.ToString("G29") : "",
+                        Cost = x.Cost,
                         IsPreSelected = x.IsPreSelected,
                         DisplayOrder = x.DisplayOrder,
                         PictureId = x.PictureId,
@@ -3019,6 +3020,7 @@ namespace Nop.Admin.Controllers
                     ColorSquaresRgb = model.ColorSquaresRgb,
                     PriceAdjustment = model.PriceAdjustment,
                     WeightAdjustment = model.WeightAdjustment,
+                    Cost = model.Cost,
                     IsPreSelected = model.IsPreSelected,
                     DisplayOrder = model.DisplayOrder,
                     PictureId = model.PictureId,
@@ -3090,6 +3092,7 @@ namespace Nop.Admin.Controllers
                 DisplayColorSquaresRgb = pvav.ProductVariantAttribute.AttributeControlType == AttributeControlType.ColorSquares,
                 PriceAdjustment = pvav.PriceAdjustment,
                 WeightAdjustment = pvav.WeightAdjustment,
+                Cost = pvav.Cost,
                 IsPreSelected = pvav.IsPreSelected,
                 DisplayOrder = pvav.DisplayOrder,
                 PictureId = pvav.PictureId
@@ -3163,6 +3166,7 @@ namespace Nop.Admin.Controllers
                 pvav.ColorSquaresRgb = model.ColorSquaresRgb;
                 pvav.PriceAdjustment = model.PriceAdjustment;
                 pvav.WeightAdjustment = model.WeightAdjustment;
+                pvav.Cost = model.Cost;
                 pvav.IsPreSelected = model.IsPreSelected;
                 pvav.DisplayOrder = model.DisplayOrder;
                 pvav.PictureId = model.PictureId;
