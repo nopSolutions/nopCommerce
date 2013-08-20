@@ -152,3 +152,8 @@ BEGIN
 	ON DELETE CASCADE
 END
 GO
+
+DELETE FROM [dbo].[PermissionRecord]
+WHERE [SystemName] = N'ManageCustomerRoles'
+GO
+

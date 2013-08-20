@@ -47,7 +47,7 @@ namespace Nop.Admin.Controllers
 
 		public ActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomerRoles))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
             
 			return View();
@@ -56,7 +56,7 @@ namespace Nop.Admin.Controllers
 		[HttpPost, GridAction(EnableCustomBinding = true)]
 		public ActionResult List(GridCommand command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomerRoles))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
             
             var customerRoles = _customerService.GetAllCustomerRoles(true);
@@ -73,7 +73,7 @@ namespace Nop.Admin.Controllers
 
         public ActionResult Create()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomerRoles))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
             
             var model = new CustomerRoleModel();
@@ -85,7 +85,7 @@ namespace Nop.Admin.Controllers
         [HttpPost, ParameterBasedOnFormNameAttribute("save-continue", "continueEditing")]
         public ActionResult Create(CustomerRoleModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomerRoles))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
             
             if (ModelState.IsValid)
@@ -106,7 +106,7 @@ namespace Nop.Admin.Controllers
 
 		public ActionResult Edit(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomerRoles))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
             
             var customerRole = _customerService.GetCustomerRoleById(id);
@@ -120,7 +120,7 @@ namespace Nop.Admin.Controllers
         [HttpPost, ParameterBasedOnFormNameAttribute("save-continue", "continueEditing")]
         public ActionResult Edit(CustomerRoleModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomerRoles))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
             
             var customerRole = _customerService.GetCustomerRoleById(model.Id);
@@ -162,7 +162,7 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult Delete(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomerRoles))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
             
             var customerRole = _customerService.GetCustomerRoleById(id);

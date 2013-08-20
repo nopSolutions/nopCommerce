@@ -370,7 +370,6 @@ namespace Nop.Admin.Controllers
                 .Select(cr => cr.ToModel())
                 .ToList();
             model.SelectedCustomerRoleIds = new int[0];
-            model.AllowManagingCustomerRoles = _permissionService.Authorize(StandardPermissionProvider.ManageCustomerRoles);
             //vendors
             PrepareVendorsModel(model);
             //form fields
@@ -447,7 +446,6 @@ namespace Nop.Admin.Controllers
                 ModelState.AddModelError("", customerRolesError);
                 ErrorNotification(customerRolesError, false);
             }
-            bool allowManagingCustomerRoles = _permissionService.Authorize(StandardPermissionProvider.ManageCustomerRoles);
             
             if (ModelState.IsValid)
             {
@@ -507,12 +505,17 @@ namespace Nop.Admin.Controllers
                 }
 
                 //customer roles
-                if (allowManagingCustomerRoles)
+                foreach (var customerRole in newCustomerRoles)
                 {
-                    foreach (var customerRole in newCustomerRoles)
-                        customer.CustomerRoles.Add(customerRole);
-                    _customerService.UpdateCustomer(customer);
+                    //ensure that the current customer cannot add to "Administrators" system role if he's not an admin himself
+                    if (customerRole.SystemName == SystemCustomerRoleNames.Administrators && 
+                        !_workContext.CurrentCustomer.IsAdmin())
+                        continue;
+
+                    customer.CustomerRoles.Add(customerRole);
                 }
+                _customerService.UpdateCustomer(customer);
+                
 
                 //ensure that a customer with a vendor associated is not in "Administrators" role
                 //otherwise, he won't be have access to the other functionality in admin area
@@ -554,7 +557,6 @@ namespace Nop.Admin.Controllers
                 .GetAllCustomerRoles(true)
                 .Select(cr => cr.ToModel())
                 .ToList();
-            model.AllowManagingCustomerRoles = allowManagingCustomerRoles;
             //vendors
             PrepareVendorsModel(model);
             //form fields
@@ -694,7 +696,6 @@ namespace Nop.Admin.Controllers
                 .Select(cr => cr.ToModel())
                 .ToList();
             model.SelectedCustomerRoleIds = customer.CustomerRoles.Select(cr => cr.Id).ToArray();
-            model.AllowManagingCustomerRoles = _permissionService.Authorize(StandardPermissionProvider.ManageCustomerRoles);
             //reward points gistory
             model.DisplayRewardPointsHistory = _rewardPointsSettings.Enabled;
             model.AddRewardPointsValue = 0;
@@ -729,7 +730,6 @@ namespace Nop.Admin.Controllers
                 ModelState.AddModelError("", customerRolesError);
                 ErrorNotification(customerRolesError, false);
             }
-            bool allowManagingCustomerRoles = _permissionService.Authorize(StandardPermissionProvider.ManageCustomerRoles);
             
             if (ModelState.IsValid)
             {
@@ -818,28 +818,33 @@ namespace Nop.Admin.Controllers
 
 
                     //customer roles
-                    if (allowManagingCustomerRoles)
+                    foreach (var customerRole in allCustomerRoles)
                     {
-                        foreach (var customerRole in allCustomerRoles)
+                        //ensure that the current customer cannot add/remove to/from "Administrators" system role
+                        //if he's not an admin himself
+                        if (customerRole.SystemName == SystemCustomerRoleNames.Administrators &&
+                            !_workContext.CurrentCustomer.IsAdmin())
+                            continue;
+
+                        if (model.SelectedCustomerRoleIds != null &&
+                            model.SelectedCustomerRoleIds.Contains(customerRole.Id))
                         {
-                            if (model.SelectedCustomerRoleIds != null && model.SelectedCustomerRoleIds.Contains(customerRole.Id))
-                            {
-                                //new role
-                                if (customer.CustomerRoles.Count(cr => cr.Id == customerRole.Id) == 0)
-                                    customer.CustomerRoles.Add(customerRole);
-                            }
-                            else
-                            {
-                                //removed role
-                                if (customer.CustomerRoles.Count(cr => cr.Id == customerRole.Id) > 0)
-                                    customer.CustomerRoles.Remove(customerRole);
-                            }
+                            //new role
+                            if (customer.CustomerRoles.Count(cr => cr.Id == customerRole.Id) == 0)
+                                customer.CustomerRoles.Add(customerRole);
                         }
-                        _customerService.UpdateCustomer(customer);
+                        else
+                        {
+                            //removed role
+                            if (customer.CustomerRoles.Count(cr => cr.Id == customerRole.Id) > 0)
+                                customer.CustomerRoles.Remove(customerRole);
+                        }
                     }
+                    _customerService.UpdateCustomer(customer);
+                    
 
                     //ensure that a customer with a vendor associated is not in "Administrators" role
-                    //otherwise, he won't be have access to the other functionality in admin area
+                    //otherwise, he won't have access to the other functionality in admin area
                     if (customer.IsAdmin() && customer.VendorId > 0)
                     {
                         customer.VendorId = 0;
@@ -933,7 +938,6 @@ namespace Nop.Admin.Controllers
                 .GetAllCustomerRoles(true)
                 .Select(cr => cr.ToModel())
                 .ToList();
-            model.AllowManagingCustomerRoles = allowManagingCustomerRoles;
             //reward points gistory
             model.DisplayRewardPointsHistory = _rewardPointsSettings.Enabled;
             model.AddRewardPointsValue = 0;

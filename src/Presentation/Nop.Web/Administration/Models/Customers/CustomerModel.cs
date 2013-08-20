@@ -175,7 +175,6 @@ namespace Nop.Admin.Models.Customers
         public string CustomerRoleNames { get; set; }
         public List<CustomerRoleModel> AvailableCustomerRoles { get; set; }
         public int[] SelectedCustomerRoleIds { get; set; }
-        public bool AllowManagingCustomerRoles { get; set; }
 
 
 
