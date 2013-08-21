@@ -236,6 +236,7 @@ namespace Nop.Admin.Controllers
 
             model.Id = order.Id;
             model.OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext);
+            model.OrderStatusId = order.OrderStatusId;
             model.OrderGuid = order.OrderGuid;
             var store = _storeService.GetStoreById(order.StoreId);
             model.StoreName = store != null ? store.Name : "Unknown";
@@ -1213,6 +1214,40 @@ namespace Nop.Admin.Controllers
             catch (Exception exc)
             {
                 //error
+                PrepareOrderDetailsModel(model, order);
+                ErrorNotification(exc, false);
+                return View(model);
+            }
+        }
+
+        [HttpPost, ActionName("Edit")]
+        [FormValueRequired("btnSaveOrderStatus")]
+        public ActionResult ChangeOrderStatus(int id, OrderModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
+            var order = _orderService.GetOrderById(id);
+            if (order == null)
+                //No order found with the specified id
+                return RedirectToAction("List");
+
+            //a vendor does not have to this functionality
+            if (_workContext.CurrentVendor != null)
+                return RedirectToAction("Edit", "Order", new { id = id });
+
+            try
+            {
+                order.OrderStatusId = model.OrderStatusId;
+                _orderService.UpdateOrder(order);
+                model = new OrderModel();
+                PrepareOrderDetailsModel(model, order);
+                return View(model);
+            }
+            catch (Exception exc)
+            {
+                //error
+                model = new OrderModel();
                 PrepareOrderDetailsModel(model, order);
                 ErrorNotification(exc, false);
                 return View(model);

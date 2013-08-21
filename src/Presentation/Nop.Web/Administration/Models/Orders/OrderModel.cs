@@ -119,6 +119,8 @@ namespace Nop.Admin.Models.Orders
         //order status
         [NopResourceDisplayName("Admin.Orders.Fields.OrderStatus")]
         public string OrderStatus { get; set; }
+        [NopResourceDisplayName("Admin.Orders.Fields.OrderStatus")]
+        public int OrderStatusId { get; set; }
 
         //payment info
         [NopResourceDisplayName("Admin.Orders.Fields.PaymentStatus")]

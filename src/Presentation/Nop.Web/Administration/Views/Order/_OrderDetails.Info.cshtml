@@ -1,13 +1,25 @@
 ﻿@model OrderModel
 @using Nop.Core.Domain.Tax;
+@using Nop.Core.Domain.Orders;
 
 @if (!Model.IsLoggedInAsVendor)
 {
     <script type="text/javascript">
         $(document).ready(function() {
+            toggleChangeOrderStatus(false);
             toggleOrderTotals(false);
             toggleCC(false);
         });
+
+        function toggleChangeOrderStatus(editmode) {
+            if (editmode) {
+                $('#pnlChangeOrderStatus').show();
+                $('#btnChangeOrderStatus').hide();
+            } else {
+                $('#pnlChangeOrderStatus').hide();
+                $('#btnChangeOrderStatus').show();
+            }
+        }
 
         function toggleOrderTotals(editmode) {
             if (editmode) {
@@ -72,10 +84,18 @@
             <td class="adminData">
                 <strong>
                     @Model.OrderStatus</strong>&nbsp;
-                    @if (Model.CanCancelOrder)
-                    {
-                        <input type="submit" name="cancelorder" value="@T("Admin.Orders.Fields.OrderStatus.Cancel")" id="cancelorder" class="adminButton" onclick="return confirm('@T("Admin.Common.AreYouSure")');"  />
-                    }
+                @if (Model.CanCancelOrder)
+                {
+                    <input type="submit" name="cancelorder" value="@T("Admin.Orders.Fields.OrderStatus.Cancel")" id="cancelorder" class="adminButton" onclick="return confirm('@T("Admin.Common.AreYouSure")');"  />
+                }
+                <input type="submit" name="btnChangeOrderStatus" value="@T("Admin.Orders.Fields.OrderStatus.Change")" onclick="toggleChangeOrderStatus(true);return false;" id="btnChangeOrderStatus" class="adminButton"  />
+                <div id="pnlChangeOrderStatus">
+                    <em>@T("Admin.Orders.Fields.OrderStatus.Change.ForAdvancedUsers")</em>
+                    <br />
+                    @Html.DropDownListFor(model => model.OrderStatusId, ((OrderStatus)Model.OrderStatusId).ToSelectList())
+                    <input type="submit" name="btnSaveOrderStatus" value="@T("Admin.Common.Save")" id="btnSaveOrderStatus" class="adminButton" onclick="return confirm('@T("Admin.Common.AreYouSure")');"  />
+                    <input type="submit" name="btnCancelOrderStatus" value="@T("Admin.Common.Cancel")" onclick="toggleChangeOrderStatus(false);return false;" id="btnCancelOrderStatus" class="adminButton" />
+                </div>
             </td>
         </tr>
     }

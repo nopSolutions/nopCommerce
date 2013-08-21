@@ -8528,6 +8528,14 @@
                   <LocaleResource Name="Hint">
                     <Value>The status of this order.</Value>
                   </LocaleResource>
+                  <LocaleResource Name="Change">
+                    <Value>Change status</Value>
+                      <Children>
+                        <LocaleResource Name="ForAdvancedUsers">
+                          <Value>This option is only for advanced users (not recommended to change manually). All appropriate actions (such as invetory adjustment, sending notification emails, etc) should be also done manually in this case.</Value>
+                        </LocaleResource>
+                      </Children>
+                  </LocaleResource>
                   <LocaleResource Name="Cancel">
                     <Value>Cancel order</Value>
                   </LocaleResource>

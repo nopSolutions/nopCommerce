@@ -47,6 +47,12 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.Cost.Hint">
     <Value>The attribute value cost is the cost of all the different components which make up this value. This may either be the purchase price if the components are bought from outside suppliers, or the combined cost of materials and manufacturing processes if the component is made in-house.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderStatus.Change">
+    <Value>Change status</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderStatus.Change.ForAdvancedUsers">
+    <Value>This option is only for advanced users (not recommended to change manually). All appropriate actions (such as invetory adjustment, sending notification emails, etc) should be also done manually in this case.</Value>
+  </LocaleResource>
 </Language>
 '
 
