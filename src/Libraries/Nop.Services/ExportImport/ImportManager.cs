@@ -119,6 +119,7 @@ namespace Nop.Services.ExportImport
                     "DisableBuyButton",
                     "DisableWishlistButton",
                     "AvailableForPreOrder",
+                    "PreOrderAvailabilityStartDateTimeUtc",
                     "CallForPrice",
                     "Price",
                     "OldPrice",
@@ -211,6 +212,10 @@ namespace Nop.Services.ExportImport
                     bool disableBuyButton = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "DisableBuyButton")].Value);
                     bool disableWishlistButton = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "DisableWishlistButton")].Value);
                     bool availableForPreOrder = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "AvailableForPreOrder")].Value);
+                    DateTime? preOrderAvailabilityStartDateTimeUtc = null;
+                    var preOrderAvailabilityStartDateTimeUtcExcel = worksheet.Cells[iRow, GetColumnIndex(properties, "PreOrderAvailabilityStartDateTimeUtc")].Value;
+                    if (preOrderAvailabilityStartDateTimeUtcExcel != null)
+                        preOrderAvailabilityStartDateTimeUtc = DateTime.FromOADate(Convert.ToDouble(preOrderAvailabilityStartDateTimeUtcExcel));
                     bool callForPrice = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "CallForPrice")].Value);
                     decimal price = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "Price")].Value);
                     decimal oldPrice = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "OldPrice")].Value);
@@ -305,6 +310,7 @@ namespace Nop.Services.ExportImport
                     product.DisableBuyButton = disableBuyButton;
                     product.DisableWishlistButton = disableWishlistButton;
                     product.AvailableForPreOrder = availableForPreOrder;
+                    product.PreOrderAvailabilityStartDateTimeUtc = preOrderAvailabilityStartDateTimeUtc;
                     product.CallForPrice = callForPrice;
                     product.Price = price;
                     product.OldPrice = oldPrice;

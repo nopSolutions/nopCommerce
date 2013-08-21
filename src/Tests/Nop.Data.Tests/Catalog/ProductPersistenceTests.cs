@@ -75,6 +75,7 @@ namespace Nop.Data.Tests.Catalog
                 DisableBuyButton = true,
                 DisableWishlistButton = true,
                 AvailableForPreOrder = true,
+                PreOrderAvailabilityStartDateTimeUtc = new DateTime(2010, 01, 01),
                 CallForPrice = true,
                 Price = 21.1M,
                 OldPrice = 22.1M,
@@ -164,6 +165,7 @@ namespace Nop.Data.Tests.Catalog
             fromDb.DisableBuyButton.ShouldEqual(true);
             fromDb.DisableWishlistButton.ShouldEqual(true);
             fromDb.AvailableForPreOrder.ShouldEqual(true);
+            fromDb.PreOrderAvailabilityStartDateTimeUtc.ShouldEqual(new DateTime(2010, 01, 01));
             fromDb.CallForPrice.ShouldEqual(true);
             fromDb.Price.ShouldEqual(21.1M);
             fromDb.OldPrice.ShouldEqual(22.1M);

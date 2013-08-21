@@ -1786,6 +1786,14 @@
                   <LocaleResource Name="PictureThumbnailUrl">
                     <Value>Picture</Value>
                   </LocaleResource>
+                  <LocaleResource Name="PreOrderAvailabilityStartDateTimeUtc">
+                    <Value>Pre-order availability start date</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>The availability start date of the product configured for pre-order in Coordinated Universal Time (UTC). 'Pre-order' button will automatically be changed to 'Add to cart' at the monent.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
                   <LocaleResource Name="Price">
                     <Value>Price</Value>
                     <Children>

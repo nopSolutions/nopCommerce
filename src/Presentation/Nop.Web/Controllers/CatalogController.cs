@@ -347,7 +347,12 @@ namespace Nop.Web.Controllers
                                     !_permissionService.Authorize(StandardPermissionProvider.EnableWishlist) ||
                                     !_permissionService.Authorize(StandardPermissionProvider.DisplayPrices);
                                 //pre-order
-                                priceModel.AvailableForPreOrder = product.AvailableForPreOrder;
+                                if (product.AvailableForPreOrder)
+                                {
+                                    priceModel.AvailableForPreOrder = !product.PreOrderAvailabilityStartDateTimeUtc.HasValue ||
+                                        product.PreOrderAvailabilityStartDateTimeUtc.Value >= DateTime.UtcNow;
+                                    priceModel.PreOrderAvailabilityStartDateTimeUtc = product.PreOrderAvailabilityStartDateTimeUtc;
+                                }
 
                                 //prices
                                 if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
@@ -647,7 +652,12 @@ namespace Nop.Web.Controllers
                 model.AddToCart.DisableWishlistButton = true;
             }
             //pre-order
-            model.AddToCart.AvailableForPreOrder = product.AvailableForPreOrder;
+            if (product.AvailableForPreOrder)
+            {
+                model.AddToCart.AvailableForPreOrder = !product.PreOrderAvailabilityStartDateTimeUtc.HasValue ||
+                    product.PreOrderAvailabilityStartDateTimeUtc.Value >= DateTime.UtcNow;
+                model.AddToCart.PreOrderAvailabilityStartDateTimeUtc = product.PreOrderAvailabilityStartDateTimeUtc;
+            }
 
             //customer entered price
             model.AddToCart.CustomerEntersPrice = product.CustomerEntersPrice;

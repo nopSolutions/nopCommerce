@@ -98,7 +98,10 @@ namespace Nop.Web.Models.Catalog
             public bool DisableBuyButton { get; set; }
             public bool DisableWishlistButton { get; set; }
             public List<SelectListItem> AllowedQuantities { get; set; }
+
+            //pre-order
             public bool AvailableForPreOrder { get; set; }
+            public DateTime? PreOrderAvailabilityStartDateTimeUtc { get; set; }
         }
 
         public partial class ProductPriceModel : BaseNopModel

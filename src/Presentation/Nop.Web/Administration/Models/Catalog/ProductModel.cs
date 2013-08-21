@@ -235,6 +235,10 @@ namespace Nop.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.AvailableForPreOrder")]
         public bool AvailableForPreOrder { get; set; }
 
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.PreOrderAvailabilityStartDateTimeUtc")]
+        [UIHint("DateTimeNullable")]
+        public DateTime? PreOrderAvailabilityStartDateTimeUtc { get; set; }
+
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.CallForPrice")]
         public bool CallForPrice { get; set; }
 

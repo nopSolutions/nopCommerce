@@ -279,6 +279,7 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("DisableBuyButton", null, product.DisableBuyButton.ToString());
                 xmlWriter.WriteElementString("DisableWishlistButton", null, product.DisableWishlistButton.ToString());
                 xmlWriter.WriteElementString("AvailableForPreOrder", null, product.AvailableForPreOrder.ToString());
+                xmlWriter.WriteElementString("PreOrderAvailabilityStartDateTimeUtc", null, product.PreOrderAvailabilityStartDateTimeUtc.HasValue ? product.PreOrderAvailabilityStartDateTimeUtc.ToString() : "");
                 xmlWriter.WriteElementString("CallForPrice", null, product.CallForPrice.ToString());
                 xmlWriter.WriteElementString("Price", null, product.Price.ToString());
                 xmlWriter.WriteElementString("OldPrice", null, product.OldPrice.ToString());
@@ -510,6 +511,7 @@ namespace Nop.Services.ExportImport
                     "DisableBuyButton",
                     "DisableWishlistButton",
                     "AvailableForPreOrder",
+                    "PreOrderAvailabilityStartDateTimeUtc",
                     "CallForPrice",
                     "Price",
                     "OldPrice",
@@ -711,6 +713,9 @@ namespace Nop.Services.ExportImport
                     col++;
 
                     worksheet.Cells[row, col].Value = p.AvailableForPreOrder;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = p.PreOrderAvailabilityStartDateTimeUtc;
                     col++;
 
                     worksheet.Cells[row, col].Value = p.CallForPrice;

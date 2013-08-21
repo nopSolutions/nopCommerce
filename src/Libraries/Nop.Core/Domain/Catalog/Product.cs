@@ -338,6 +338,11 @@ namespace Nop.Core.Domain.Catalog
         public bool AvailableForPreOrder { get; set; }
 
         /// <summary>
+        /// Gets or sets the start date and time of the product availability (for pre-order products)
+        /// </summary>
+        public DateTime? PreOrderAvailabilityStartDateTimeUtc { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether to show "Call for Pricing" or "Call for quote" instead of price
         /// </summary>
         public bool CallForPrice { get; set; }

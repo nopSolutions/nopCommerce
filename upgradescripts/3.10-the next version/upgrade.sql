@@ -53,6 +53,12 @@ set @resources='
   <LocaleResource Name="Admin.Orders.Fields.OrderStatus.Change.ForAdvancedUsers">
     <Value>This option is only for advanced users (not recommended to change manually). All appropriate actions (such as invetory adjustment, sending notification emails, etc) should be also done manually in this case.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.PreOrderAvailabilityStartDateTimeUtc">
+    <Value>Pre-order availability start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.PreOrderAvailabilityStartDateTimeUtc.Hint">
+    <Value>The availability start date of the product configured for pre-order in Coordinated Universal Time (UTC). ''Pre-order'' button will automatically be changed to ''Add to cart'' at the monent.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -170,6 +176,7 @@ WHERE [SystemName] = N'ManageCustomerRoles'
 GO
 
 
+--add a new column
 IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[ProductVariantAttributeValue]') and NAME='Cost')
 BEGIN
 	ALTER TABLE [ProductVariantAttributeValue]
@@ -183,4 +190,13 @@ WHERE [Cost] IS NULL
 GO
 
 ALTER TABLE [ProductVariantAttributeValue] ALTER COLUMN [Cost] [decimal](18, 4) NOT NULL
+GO
+
+
+--add a new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Product]') and NAME='PreOrderAvailabilityStartDateTimeUtc')
+BEGIN
+	ALTER TABLE [Product]
+	ADD [PreOrderAvailabilityStartDateTimeUtc] datetime NULL
+END
 GO

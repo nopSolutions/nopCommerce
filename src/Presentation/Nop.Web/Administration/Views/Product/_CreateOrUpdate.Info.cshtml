@@ -6,6 +6,7 @@
         
         $("#@Html.FieldIdFor(model => model.ProductTypeId)").change(toggleProductType);
         $("#@Html.FieldIdFor(model => model.RequireOtherProducts)").click(toggleRequireOtherProducts);
+        $("#@Html.FieldIdFor(model => model.AvailableForPreOrder)").click(togglePreOrder);
         $("#@Html.FieldIdFor(model => model.IsGiftCard)").click(toggleGiftCard);
         $("#@Html.FieldIdFor(model => model.CustomerEntersPrice)").click(toggleCustomerEntersPrice);
         $("#@Html.FieldIdFor(model => model.IsDownload)").click(toggleDownloadableProduct);
@@ -20,6 +21,7 @@
         $("#@Html.FieldIdFor(model => model.DisplayStockAvailability)").click(toggleManageStock);
         
         toggleProductType();
+        togglePreOrder();
         toggleRequireOtherProducts();
         toggleGiftCard();
         toggleCustomerEntersPrice();
@@ -52,7 +54,16 @@
         $('#group-inventory').hide();
     }
     }
-
+    
+    function togglePreOrder() {
+        if ($('#@Html.FieldIdFor(model => model.AvailableForPreOrder)').is(':checked')) {
+            $('#pnlPreOrderAvailabilityStartDateTimeUtc').show();
+        }
+        else {
+            $('#pnlPreOrderAvailabilityStartDateTimeUtc').hide();
+        }
+    }
+    
     function toggleRequireOtherProducts() {
         if ($('#@Html.FieldIdFor(model => model.RequireOtherProducts)').is(':checked')) {
             $('#pnlRequiredProductIds').show();
@@ -499,6 +510,15 @@
         <td class="adminData">
             @Html.EditorFor(model => model.AvailableForPreOrder)
             @Html.ValidationMessageFor(model => model.AvailableForPreOrder)
+        </td>
+    </tr>
+    <tr id="pnlPreOrderAvailabilityStartDateTimeUtc">
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.PreOrderAvailabilityStartDateTimeUtc):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.PreOrderAvailabilityStartDateTimeUtc)
+            @Html.ValidationMessageFor(model => model.PreOrderAvailabilityStartDateTimeUtc)
         </td>
     </tr>
     <tr>

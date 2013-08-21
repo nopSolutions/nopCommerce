@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Models.Media;
 
@@ -39,6 +40,7 @@ namespace Nop.Web.Models.Catalog
             public bool DisableWishlistButton { get; set; }
 
             public bool AvailableForPreOrder { get; set; }
+            public DateTime? PreOrderAvailabilityStartDateTimeUtc { get; set; }
 
             public bool ForceRedirectionAfterAddingToCart { get; set; }
         }
