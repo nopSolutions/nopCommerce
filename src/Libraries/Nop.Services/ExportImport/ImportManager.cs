@@ -118,6 +118,7 @@ namespace Nop.Services.ExportImport
                     "AllowedQuantities",
                     "DisableBuyButton",
                     "DisableWishlistButton",
+                    "AvailableForPreOrder",
                     "CallForPrice",
                     "Price",
                     "OldPrice",
@@ -209,6 +210,7 @@ namespace Nop.Services.ExportImport
                     string allowedQuantities = worksheet.Cells[iRow, GetColumnIndex(properties, "AllowedQuantities")].Value as string;
                     bool disableBuyButton = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "DisableBuyButton")].Value);
                     bool disableWishlistButton = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "DisableWishlistButton")].Value);
+                    bool availableForPreOrder = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "AvailableForPreOrder")].Value);
                     bool callForPrice = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "CallForPrice")].Value);
                     decimal price = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "Price")].Value);
                     decimal oldPrice = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "OldPrice")].Value);
@@ -302,6 +304,7 @@ namespace Nop.Services.ExportImport
                     product.AllowedQuantities = allowedQuantities;
                     product.DisableBuyButton = disableBuyButton;
                     product.DisableWishlistButton = disableWishlistButton;
+                    product.AvailableForPreOrder = availableForPreOrder;
                     product.CallForPrice = callForPrice;
                     product.Price = price;
                     product.OldPrice = oldPrice;
