@@ -460,7 +460,8 @@ namespace Nop.Services.Catalog
                     AllowOutOfStockOrders = combination.AllowOutOfStockOrders,
                     Sku = combination.Sku,
                     ManufacturerPartNumber = combination.ManufacturerPartNumber,
-                    Gtin = combination.Gtin
+                    Gtin = combination.Gtin,
+                    OverriddenPrice = combination.OverriddenPrice
                 };
                 _productAttributeService.InsertProductVariantAttributeCombination(combinationCopy);
             }

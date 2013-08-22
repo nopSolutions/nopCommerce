@@ -3408,7 +3408,8 @@ namespace Nop.Admin.Controllers
                         AllowOutOfStockOrders1 = x.AllowOutOfStockOrders,
                         Sku1 = x.Sku,
                         ManufacturerPartNumber1 = x.ManufacturerPartNumber,
-                        Gtin1 = x.Gtin
+                        Gtin1 = x.Gtin,
+                        OverriddenPrice = x.OverriddenPrice
                     };
                     //warnings
                     var warnings = _shoppingCartService.GetShoppingCartItemAttributeWarnings(_workContext.CurrentCustomer,
@@ -3459,6 +3460,7 @@ namespace Nop.Admin.Controllers
             pvac.Sku = model.Sku1;
             pvac.ManufacturerPartNumber = model.ManufacturerPartNumber1;
             pvac.Gtin = model.Gtin1;
+            pvac.OverriddenPrice = model.OverriddenPrice;
             _productAttributeService.UpdateProductVariantAttributeCombination(pvac);
 
             return ProductVariantAttributeCombinationList(command, pvac.ProductId);
@@ -3655,6 +3657,7 @@ namespace Nop.Admin.Controllers
                     Sku = model.Sku,
                     ManufacturerPartNumber = model.ManufacturerPartNumber,
                     Gtin = model.Gtin,
+                    OverriddenPrice = model.OverriddenPrice
                 };
                 _productAttributeService.InsertProductVariantAttributeCombination(combination);
 
@@ -3709,7 +3712,8 @@ namespace Nop.Admin.Controllers
                     AllowOutOfStockOrders = false,
                     Sku = null,
                     ManufacturerPartNumber = null,
-                    Gtin = null
+                    Gtin = null,
+                    OverriddenPrice = null
                 };
                 _productAttributeService.InsertProductVariantAttributeCombination(combination);
             }

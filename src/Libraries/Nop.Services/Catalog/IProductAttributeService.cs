@@ -115,7 +115,7 @@ namespace Nop.Services.Catalog
 
         #endregion
 
-        #region Product variant attribute compinations (ProductVariantAttributeCombination)
+        #region Product variant attribute combinations (ProductVariantAttributeCombination)
 
         /// <summary>
         /// Deletes a product variant attribute combination

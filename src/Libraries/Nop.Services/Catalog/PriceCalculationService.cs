@@ -413,33 +413,44 @@ namespace Nop.Services.Catalog
             var customer = shoppingCartItem.Customer;
             decimal finalPrice = decimal.Zero;
             var product = shoppingCartItem.Product;
+
             if (product != null)
             {
-                decimal attributesTotalPrice = decimal.Zero;
-
-                var pvaValues = _productAttributeParser.ParseProductVariantAttributeValues(shoppingCartItem.AttributesXml);
-                if (pvaValues != null)
+                var combination = _productAttributeParser.FindProductVariantAttributeCombination(product, shoppingCartItem.AttributesXml);
+                if (combination != null && combination.OverriddenPrice.HasValue)
                 {
-                    foreach (var pvaValue in pvaValues)
-                    {
-                        attributesTotalPrice += GetProductVariantAttributeValuePriceAdjustment(pvaValue);
-                    }
-                }
-
-                if (product.CustomerEntersPrice)
-                {
-                    finalPrice = shoppingCartItem.CustomerEnteredPrice;
+                    finalPrice = combination.OverriddenPrice.Value;
                 }
                 else
                 {
-                    finalPrice = GetFinalPrice(product,
-                        customer,
-                        attributesTotalPrice,
-                        includeDiscounts,
-                        shoppingCartItem.Quantity);
+                    //summarize price of all attributes
+                    decimal attributesTotalPrice = decimal.Zero;
+                    var pvaValues = _productAttributeParser.ParseProductVariantAttributeValues(shoppingCartItem.AttributesXml);
+                    if (pvaValues != null)
+                    {
+                        foreach (var pvaValue in pvaValues)
+                        {
+                            attributesTotalPrice += GetProductVariantAttributeValuePriceAdjustment(pvaValue);
+                        }
+                    }
+
+                    //get price of a product (with previously calculated price of all attributes)
+                    if (product.CustomerEntersPrice)
+                    {
+                        finalPrice = shoppingCartItem.CustomerEnteredPrice;
+                    }
+                    else
+                    {
+                        finalPrice = GetFinalPrice(product,
+                            customer,
+                            attributesTotalPrice,
+                            includeDiscounts,
+                            shoppingCartItem.Quantity);
+                    }
                 }
             }
 
+            //rounding
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
                 finalPrice = Math.Round(finalPrice, 2);
 

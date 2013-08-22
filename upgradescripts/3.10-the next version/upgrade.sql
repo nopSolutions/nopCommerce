@@ -68,6 +68,12 @@ set @resources='
   <LocaleResource Name="Admin.Affiliates.Orders.Order">
     <Value>Order ID</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.OverriddenPrice">
+    <Value>Overridden price</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.OverriddenPrice.Hint">
+    <Value>Override price for this attribute combination. This way a store owner can override the default product price when this attribute combination is added to the cart. For example, you can give a discount this way. Leave empty to ignore field. All other applied discounts will be ignored when this field is specified.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -207,5 +213,14 @@ IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Product]') 
 BEGIN
 	ALTER TABLE [Product]
 	ADD [PreOrderAvailabilityStartDateTimeUtc] datetime NULL
+END
+GO
+
+
+--add a new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[ProductVariantAttributeCombination]') and NAME='OverriddenPrice')
+BEGIN
+	ALTER TABLE [ProductVariantAttributeCombination]
+	ADD [OverriddenPrice] decimal(18,4) NULL
 END
 GO

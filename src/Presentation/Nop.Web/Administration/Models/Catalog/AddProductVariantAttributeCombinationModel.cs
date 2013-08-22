@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Nop.Core.Domain.Catalog;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
@@ -20,13 +21,17 @@ namespace Nop.Admin.Models.Catalog
         public bool AllowOutOfStockOrders { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.Sku")]
-        public virtual string Sku { get; set; }
+        public string Sku { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.ManufacturerPartNumber")]
-        public virtual string ManufacturerPartNumber { get; set; }
+        public string ManufacturerPartNumber { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.Gtin")]
-        public virtual string Gtin { get; set; }
+        public string Gtin { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.OverriddenPrice")]
+        [UIHint("DecimalNullable")]
+        public decimal? OverriddenPrice { get; set; }
 
         public IList<ProductVariantAttributeModel> ProductVariantAttributes { get; set; }
 

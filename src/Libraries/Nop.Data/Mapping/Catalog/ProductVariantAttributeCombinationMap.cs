@@ -13,6 +13,7 @@ namespace Nop.Data.Mapping.Catalog
             this.Property(pvac => pvac.Sku).HasMaxLength(400);
             this.Property(pvac => pvac.ManufacturerPartNumber).HasMaxLength(400);
             this.Property(pvac => pvac.Gtin).HasMaxLength(400);
+            this.Property(pvac => pvac.OverriddenPrice).HasPrecision(18, 4);
 
             this.HasRequired(pvac => pvac.Product)
                 .WithMany(p => p.ProductVariantAttributeCombinations)

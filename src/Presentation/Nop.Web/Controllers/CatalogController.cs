@@ -280,6 +280,7 @@ namespace Nop.Web.Controllers
 
                                             if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
                                             {
+                                                //find a minimum possible price
                                                 decimal? minPossiblePrice = null;
                                                 Product minPriceProduct = null;
                                                 foreach (var associatedProduct in associatedProducts)

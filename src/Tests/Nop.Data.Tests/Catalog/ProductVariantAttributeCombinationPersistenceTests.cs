@@ -16,6 +16,10 @@ namespace Nop.Data.Tests.Catalog
                            AttributesXml = "Some XML",
                            StockQuantity = 2,
                            AllowOutOfStockOrders = true,
+                           Sku = "Sku1",
+                           ManufacturerPartNumber = "ManufacturerPartNumber1",
+                           Gtin = "Gtin1",
+                           OverriddenPrice = 0.01M,
                            Product = GetTestProduct()
                        };
 
@@ -24,6 +28,10 @@ namespace Nop.Data.Tests.Catalog
             fromDb.AttributesXml.ShouldEqual("Some XML");
             fromDb.StockQuantity.ShouldEqual(2);
             fromDb.AllowOutOfStockOrders.ShouldEqual(true);
+            fromDb.Sku.ShouldEqual("Sku1");
+            fromDb.ManufacturerPartNumber.ShouldEqual("ManufacturerPartNumber1");
+            fromDb.Gtin.ShouldEqual("Gtin1");
+            fromDb.OverriddenPrice.ShouldEqual(0.01M);
         }
 
         protected Product GetTestProduct()

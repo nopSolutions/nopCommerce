@@ -2363,6 +2363,14 @@
                               </LocaleResource>
                             </Children>
                           </LocaleResource>
+                          <LocaleResource Name="OverriddenPrice">
+                            <Value>Overridden price</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>Override price for this attribute combination. This way a store owner can override the default product price when this attribute combination is added to the cart. For example, you can give a discount this way. Leave empty to ignore field. All other applied discounts will be ignored when this field is specified.</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
                         </Children>
                       </LocaleResource>
                       <LocaleResource Name="GenerateAll">
