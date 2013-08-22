@@ -43,8 +43,9 @@ namespace Nop.Plugin.DiscountRules.HadSpentAmount
 
             if (request.Customer == null || request.Customer.IsGuest())
                 return false;
-            var orders = _orderService.SearchOrders(request.Store.Id, 0, request.Customer.Id,
-                null, null, OrderStatus.Complete, null, null, null, null, 0, int.MaxValue);
+            var orders = _orderService.SearchOrders(storeId: request.Store.Id, 
+                customerId: request.Customer.Id, 
+                os: OrderStatus.Complete);
             decimal spentAmount = orders.Sum(o => o.OrderTotal);
             return spentAmount > spentAmountRequirement;
         }

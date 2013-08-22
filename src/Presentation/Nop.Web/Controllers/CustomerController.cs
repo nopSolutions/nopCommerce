@@ -339,8 +339,8 @@ namespace Nop.Web.Controllers
             var model = new CustomerOrderListModel();
             model.NavigationModel = GetCustomerNavigationModel(customer);
             model.NavigationModel.SelectedTab = CustomerNavigationEnum.Orders;
-            var orders = _orderService.SearchOrders(_storeContext.CurrentStore.Id, 0, customer.Id,
-                    null, null, null, null, null, null, null, 0, int.MaxValue);
+            var orders = _orderService.SearchOrders(storeId: _storeContext.CurrentStore.Id,
+                customerId: customer.Id);
             foreach (var order in orders)
             {
                 var orderModel = new CustomerOrderListModel.OrderDetailsModel()

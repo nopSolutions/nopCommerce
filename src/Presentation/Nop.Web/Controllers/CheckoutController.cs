@@ -357,8 +357,8 @@ namespace Nop.Web.Controllers
             if (_orderSettings.MinimumOrderPlacementInterval == 0)
                 return true;
 
-            var lastOrder = _orderService.SearchOrders(_storeContext.CurrentStore.Id, 0, _workContext.CurrentCustomer.Id,
-                null, null, null, null, null, null, null, 0, 1)
+            var lastOrder = _orderService.SearchOrders(storeId: _storeContext.CurrentStore.Id,
+                customerId: _workContext.CurrentCustomer.Id, pageSize: 1)
                 .FirstOrDefault();
             if (lastOrder == null)
                 return true;
@@ -426,8 +426,8 @@ namespace Nop.Web.Controllers
             }
             if (order == null)
             {
-                order = _orderService.SearchOrders(_storeContext.CurrentStore.Id, 0, _workContext.CurrentCustomer.Id,
-                    null, null, null, null, null, null, null, 0, 1)
+                order = _orderService.SearchOrders(storeId: _storeContext.CurrentStore.Id,
+                customerId: _workContext.CurrentCustomer.Id, pageSize: 1)
                     .FirstOrDefault();
             }
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
@@ -1711,8 +1711,8 @@ namespace Nop.Web.Controllers
                     return new HttpUnauthorizedResult();
 
                 //get the order
-                var order = _orderService.SearchOrders(_storeContext.CurrentStore.Id, 0, _workContext.CurrentCustomer.Id,
-                    null, null, null, null, null, null, null, 0, 1)
+                var order = _orderService.SearchOrders(storeId: _storeContext.CurrentStore.Id,
+                customerId: _workContext.CurrentCustomer.Id, pageSize: 1)
                     .FirstOrDefault();
                 if (order == null)
                     return RedirectToRoute("HomePage");

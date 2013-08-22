@@ -152,10 +152,12 @@ namespace Nop.Services.Orders
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Order collection</returns>
-        public virtual IPagedList<Order> SearchOrders(int storeId, int vendorId, int customerId,
-            DateTime? createdFromUtc, DateTime? createdToUtc, 
-            OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss,
-            string billingEmail, string orderGuid, int pageIndex, int pageSize)
+        public virtual IPagedList<Order> SearchOrders(int storeId = 0, 
+            int vendorId = 0, int customerId = 0,
+            DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
+            OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
+            string billingEmail  = null, string orderGuid = null,
+            int pageIndex = 0, int pageSize = int.MaxValue)
         {
             int? orderStatusId = null;
             if (os.HasValue)

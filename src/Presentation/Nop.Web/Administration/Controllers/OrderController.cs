@@ -803,8 +803,7 @@ namespace Nop.Admin.Controllers
 
             try
             {
-                var orders = _orderService.SearchOrders(0, 0, 0, null, null, null,
-                    null, null, null, null, 0, int.MaxValue);
+                var orders = _orderService.SearchOrders();
 
                 var xml = _exportManager.ExportOrdersToXml(orders);
                 return new XmlDownloadResult(xml, "orders.xml");
@@ -850,8 +849,7 @@ namespace Nop.Admin.Controllers
 
             try
             {
-                var orders = _orderService.SearchOrders(0, 0, 0, null, null, null,
-                    null, null, null, null, 0, int.MaxValue);
+                var orders = _orderService.SearchOrders();
                 
                 byte[] bytes = null;
                 using (var stream = new MemoryStream())
