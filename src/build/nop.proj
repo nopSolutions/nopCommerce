@@ -99,5 +99,7 @@
 
 	<!--Transform root web.config file-->
 	<TransformXml Condition="Exists('$(WebFolder)\Web.$(Configuration).config')" Source="$(WebFolder)\Web.config" Transform="$(WebFolder)\Web.$(Configuration).config" Destination="$(DeployFolder)\Web.config" />
+	<!--Delete Web.Debug.config and Web.Release.config files-->
+        <Delete Files="$(DeployFolder)\Web.Debug.config;$(DeployFolder)\Web.Release.config"/>
     </Target>
 </Project>
