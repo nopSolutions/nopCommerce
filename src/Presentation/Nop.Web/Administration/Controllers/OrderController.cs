@@ -732,7 +732,7 @@ namespace Nop.Admin.Controllers
             ShippingStatus? shippingStatus = model.ShippingStatusId > 0 ? (ShippingStatus?)(model.ShippingStatusId) : null;
 
             //load orders
-            var orders = _orderService.SearchOrders(model.StoreId, model.VendorId, 0,
+            var orders = _orderService.SearchOrders(model.StoreId, model.VendorId, 0, 0, 0,
                 startDateValue, endDateValue, orderStatus,
                 paymentStatus, shippingStatus, model.CustomerEmail, model.OrderGuid,
                 command.Page - 1, command.PageSize);

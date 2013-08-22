@@ -47,6 +47,8 @@ namespace Nop.Services.Orders
         /// <param name="storeId">Store identifier; null to load all orders</param>
         /// <param name="vendorId">Vendor identifier; null to load all orders</param>
         /// <param name="customerId">Customer identifier; null to load all orders</param>
+        /// <param name="productId">Product identifier which was purchased in an order; 0 to load all orders</param>
+        /// <param name="affiliateId">Affiliate identifier; 0 to load all orders</param>
         /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
         /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
         /// <param name="os">Order status; null to load all orders</param>
@@ -58,20 +60,12 @@ namespace Nop.Services.Orders
         /// <param name="pageSize">Page size</param>
         /// <returns>Order collection</returns>
         IPagedList<Order> SearchOrders(int storeId = 0,
-            int vendorId = 0, int customerId = 0,
+            int vendorId = 0, int customerId = 0, 
+            int productId = 0, int affiliateId = 0,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
             string billingEmail = null, string orderGuid = null,
             int pageIndex = 0, int pageSize = int.MaxValue);
-        
-        /// <summary>
-        /// Gets all orders by affiliate identifier
-        /// </summary>
-        /// <param name="affiliateId">Affiliate identifier</param>
-        /// <param name="pageIndex">Page index</param>
-        /// <param name="pageSize">Page size</param>
-        /// <returns>Orders</returns>
-        IPagedList<Order> GetOrdersByAffiliateId(int affiliateId, int pageIndex, int pageSize);
         
         /// <summary>
         /// Inserts an order

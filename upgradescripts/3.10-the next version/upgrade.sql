@@ -59,6 +59,15 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Fields.PreOrderAvailabilityStartDateTimeUtc.Hint">
     <Value>The availability start date of the product configured for pre-order in Coordinated Universal Time (UTC). ''Pre-order'' button will automatically be changed to ''Add to cart'' at the monent.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.PurchasedWithOrders">
+    <Value>Purchased with orders</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.PurchasedWithOrders.Hint">
+    <Value>Here you can see a list of orders in which this product was purchased.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Orders.Order">
+    <Value>Order ID</Value>
+  </LocaleResource>
 </Language>
 '
 

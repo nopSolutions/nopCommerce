@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Web.Mvc;
 using Nop.Admin.Models.Catalog;
+using Nop.Admin.Models.Orders;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -62,13 +63,13 @@ namespace Nop.Admin.Controllers
         private readonly IPermissionService _permissionService;
         private readonly IAclService _aclService;
         private readonly IStoreService _storeService;
+        private readonly IOrderService _orderService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IVendorService _vendorService;
         private readonly ICurrencyService _currencyService;
         private readonly CurrencySettings _currencySettings;
         private readonly IMeasureService _measureService;
         private readonly MeasureSettings _measureSettings;
-        private readonly PdfSettings _pdfSettings;
         private readonly AdminAreaSettings _adminAreaSettings;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IDiscountService _discountService;
@@ -106,6 +107,7 @@ namespace Nop.Admin.Controllers
             IPermissionService permissionService, 
             IAclService aclService,
             IStoreService storeService,
+            IOrderService orderService,
             IStoreMappingService storeMappingService,
              IVendorService vendorService,
             ICurrencyService currencyService, 
@@ -146,13 +148,13 @@ namespace Nop.Admin.Controllers
             this._permissionService = permissionService;
             this._aclService = aclService;
             this._storeService = storeService;
+            this._orderService = orderService;
             this._storeMappingService = storeMappingService;
             this._vendorService = vendorService;
             this._currencyService = currencyService;
             this._currencySettings = currencySettings;
             this._measureService = measureService;
             this._measureSettings = measureSettings;
-            this._pdfSettings = pdfSettings;
             this._adminAreaSettings = adminAreaSettings;
             this._dateTimeHelper = dateTimeHelper;
             this._discountService = discountService;
@@ -2233,6 +2235,53 @@ namespace Nop.Admin.Controllers
 
             //If we got this far, something failed, redisplay form
             return View(model);
+        }
+
+        #endregion
+
+        #region Purchased with order
+
+        [HttpPost, GridAction(EnableCustomBinding = true)]
+        public ActionResult PurchasedWithOrders(GridCommand command, int productId)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+                return AccessDeniedView();
+
+            var product = _productService.GetProductById(productId);
+            if (product == null)
+                throw new ArgumentException("No product found with the specified id");
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
+                return Content("This is not your product");
+
+            var orders = _orderService.SearchOrders(
+                productId: productId,
+                pageIndex: command.Page - 1, 
+                pageSize: command.PageSize);
+            var gridModel = new GridModel<OrderModel>
+            {
+                Data = orders.Select(x =>
+                {
+                    var store = _storeService.GetStoreById(x.StoreId);
+                    return new OrderModel()
+                    {
+                        Id = x.Id,
+                        StoreName = store != null ? store.Name : "Unknown",
+                        OrderStatus = x.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
+                        PaymentStatus = x.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext),
+                        ShippingStatus = x.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext),
+                        CustomerEmail = x.BillingAddress.Email,
+                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
+                    };
+                }),
+                Total = orders.TotalCount
+            };
+
+            return new JsonResult
+            {
+                Data = gridModel
+            };
         }
 
         #endregion

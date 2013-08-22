@@ -1,0 +1,32 @@
+﻿@using Telerik.Web.Mvc.UI
+@model ProductModel
+@{
+    var gridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSize;
+}
+<p>
+    @T("Admin.Catalog.Products.PurchasedWithOrders.Hint")
+</p>
+@(Html.Telerik().Grid<OrderModel>()
+.Name("order-grid")
+.Columns(columns =>
+{
+    columns.Bound(x => x.Id).Width(50);
+    columns.Bound(x => x.CustomerEmail);
+    if (!Model.IsLoggedInAsVendor)
+    {
+        columns.Bound(x => x.OrderStatus);
+        columns.Bound(x => x.PaymentStatus);
+        columns.Bound(x => x.ShippingStatus);
+    }
+    columns.Bound(x => x.CreatedOn);
+    columns.Bound(x => x.Id)
+        .Template(x => Html.ActionLink(T("Admin.Common.View").Text, "Edit", "Order", new { id = x.Id }, new { }))
+        .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/Order/Edit/") + "<#= Id #>\">" + T("Admin.Common.View").Text + "</a>")
+        .Title(T("Admin.Common.View").Text);
+})
+.Pageable(settings => settings.PageSize(gridPageSize).Position(GridPagerPosition.Both))
+.DataBinding(dataBinding =>
+{
+    dataBinding.Ajax().Select("PurchasedWithOrders", "Product", new { productId = Model.Id });
+})
+.EnableCustomBinding(true))

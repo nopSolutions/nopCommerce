@@ -233,7 +233,7 @@
                 <Value>Created on</Value>
               </LocaleResource>
               <LocaleResource Name="Order">
-                <Value>Created order</Value>
+                <Value>Order ID</Value>
               </LocaleResource>
               <LocaleResource Name="OrderStatus">
                 <Value>Order status</Value>
@@ -2375,6 +2375,14 @@
                   </LocaleResource>
                   <LocaleResource Name="SaveBeforeEdit">
                     <Value>You need to save the product before you can add attributes for this page.</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+              <LocaleResource Name="PurchasedWithOrders">
+                <Value>Purchased with orders</Value>
+                <Children>
+                  <LocaleResource Name="Hint">
+                    <Value>Here you can see a list of orders in which this product was purchased.</Value>
                   </LocaleResource>
                 </Children>
               </LocaleResource>

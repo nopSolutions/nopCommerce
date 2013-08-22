@@ -142,6 +142,8 @@ namespace Nop.Services.Orders
         /// <param name="storeId">Store identifier; 0 to load all orders</param>
         /// <param name="vendorId">Vendor identifier; null to load all orders</param>
         /// <param name="customerId">Customer identifier; 0 to load all orders</param>
+        /// <param name="productId">Product identifier which was purchased in an order; 0 to load all orders</param>
+        /// <param name="affiliateId">Affiliate identifier; 0 to load all orders</param>
         /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
         /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
         /// <param name="os">Order status; null to load all orders</param>
@@ -152,8 +154,9 @@ namespace Nop.Services.Orders
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Order collection</returns>
-        public virtual IPagedList<Order> SearchOrders(int storeId = 0, 
+        public virtual IPagedList<Order> SearchOrders(int storeId = 0,
             int vendorId = 0, int customerId = 0,
+            int productId = 0, int affiliateId = 0,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
             string billingEmail  = null, string orderGuid = null,
@@ -174,14 +177,22 @@ namespace Nop.Services.Orders
             var query = _orderRepository.Table;
             if (storeId > 0)
                 query = query.Where(o => o.StoreId == storeId);
-            if (customerId > 0)
-                query = query.Where(o => o.CustomerId == customerId);
             if (vendorId > 0)
             {
                 query = query
                     .Where(o => o.OrderItems
                     .Any(orderItem => orderItem.Product.VendorId == vendorId));
             }
+            if (customerId > 0)
+                query = query.Where(o => o.CustomerId == customerId);
+            if (productId > 0)
+            {
+                query = query
+                    .Where(o => o.OrderItems
+                    .Any(orderItem => orderItem.Product.Id == productId));
+            }
+            if (affiliateId > 0)
+                query = query.Where(o => o.AffiliateId == affiliateId);
             if (createdFromUtc.HasValue)
                 query = query.Where(o => createdFromUtc.Value <= o.CreatedOnUtc);
             if (createdToUtc.HasValue)
@@ -212,24 +223,6 @@ namespace Nop.Services.Orders
                 return new PagedList<Order>(query, pageIndex, pageSize);
             }  
 
-        }
-
-        /// <summary>
-        /// Gets all orders by affiliate identifier
-        /// </summary>
-        /// <param name="affiliateId">Affiliate identifier</param>
-        /// <param name="pageIndex">Page index</param>
-        /// <param name="pageSize">Page size</param>
-        /// <returns>Orders</returns>
-        public virtual IPagedList<Order> GetOrdersByAffiliateId(int affiliateId, int pageIndex, int pageSize)
-        {
-            var query = _orderRepository.Table;
-            query = query.Where(o => !o.Deleted);
-            query = query.Where(o => o.AffiliateId == affiliateId);
-            query = query.OrderByDescending(o => o.CreatedOnUtc);
-
-            var orders = new PagedList<Order>(query, pageIndex, pageSize);
-            return orders;
         }
 
         /// <summary>

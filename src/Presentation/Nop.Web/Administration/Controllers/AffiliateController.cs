@@ -275,7 +275,9 @@ namespace Nop.Admin.Controllers
             if (affiliate == null)
                 throw new ArgumentException("No affiliate found with the specified id");
 
-            var orders = _orderService.GetOrdersByAffiliateId(affiliate.Id, command.Page - 1, command.PageSize);
+            var orders = _orderService.SearchOrders(affiliateId: affiliate.Id,
+                pageIndex: command.Page - 1,
+                pageSize: command.PageSize);
             var model = new GridModel<AffiliateModel.AffiliatedOrderModel>
             {
                 Data = orders.Select(order =>

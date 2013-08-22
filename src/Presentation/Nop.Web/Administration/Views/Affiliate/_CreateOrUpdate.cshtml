@@ -83,15 +83,16 @@
                     .Name("order-grid")
                     .Columns(columns =>
                     {
+                        columns.Bound(x => x.Id).Width(50);
+                        columns.Bound(x => x.OrderStatus);
+                        columns.Bound(x => x.PaymentStatus);
+                        columns.Bound(x => x.ShippingStatus);
+                        columns.Bound(x => x.OrderTotal);
+                        columns.Bound(x => x.CreatedOn);
                         columns.Bound(x => x.Id)
-                            .Width(100)
                             .Template(x => Html.ActionLink(T("Admin.Common.View").Text, "Edit", "Order", new { id = x.Id }, new { }))
-                            .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/Order/Edit/") + "<#= Id #>\">" + T("Admin.Common.View").Text + "</a>");
-                        columns.Bound(x => x.OrderStatus).Width(200);
-                        columns.Bound(x => x.PaymentStatus).Width(200);
-                        columns.Bound(x => x.ShippingStatus).Width(200);
-                        columns.Bound(x => x.OrderTotal).Width(200);
-                        columns.Bound(x => x.CreatedOn).Width(200);
+                            .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/Order/Edit/") + "<#= Id #>\">" + T("Admin.Common.View").Text + "</a>")
+                            .Title(T("Admin.Common.View").Text);;
 
                     })
                     .Pageable(settings => settings.PageSize(gridPageSize).Position(GridPagerPosition.Both))

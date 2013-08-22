@@ -20,7 +20,10 @@
     x.Add().Text(T("Admin.Catalog.Products.RelatedProducts").Text).Content(TabRelatedProducts().ToHtmlString());
     x.Add().Text(T("Admin.Catalog.Products.CrossSells").Text).Content(TabCrossSells().ToHtmlString());
     x.Add().Text(T("Admin.Catalog.Products.AssociatedProducts").Text).Content(TabAssociatedProducts().ToHtmlString());
-
+    if (Model.Id > 0)
+    {
+        x.Add().Text(T("Admin.Catalog.Products.PurchasedWithOrders").Text).Content(TabPurchasedWithOrders().ToHtmlString());
+    }
     //generate an event
     EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "product-edit"));
 })
@@ -80,4 +83,8 @@
 @helper TabAssociatedProducts()
 {
     @Html.Partial("_CreateOrUpdate.AssociatedProducts", Model)
+}
+@helper TabPurchasedWithOrders()
+{
+    @Html.Partial("_CreateOrUpdate.PurchasedWithOrders", Model)
 }
