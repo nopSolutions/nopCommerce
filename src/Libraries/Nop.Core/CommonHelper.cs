@@ -70,7 +70,7 @@ namespace Nop.Core
         /// <param name="min">Minimum number</param>
         /// <param name="max">Maximum number</param>
         /// <returns>Result</returns>
-        public static int GenerateRandomInteger(int min = 0, int max = 2147483647)
+        public static int GenerateRandomInteger(int min = 0, int max = int.MaxValue)
         {
             var randomNumberBuffer = new byte[10];
             new RNGCryptoServiceProvider().GetBytes(randomNumberBuffer);

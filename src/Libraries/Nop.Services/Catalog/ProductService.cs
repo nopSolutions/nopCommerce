@@ -276,7 +276,7 @@ namespace Nop.Services.Catalog
         /// <returns>Products</returns>
         public virtual IPagedList<Product> SearchProducts(
             int pageIndex = 0,
-            int pageSize = 2147483647, //Int32.MaxValue
+            int pageSize = int.MaxValue,
             IList<int> categoryIds = null,
             int manufacturerId = 0,
             int storeId = 0,

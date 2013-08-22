@@ -213,7 +213,7 @@ namespace Nop.Services.Orders
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
             int billingCountryId = 0,
             int orderBy = 1,
-            int pageIndex = 0, int pageSize = 2147483647, 
+            int pageIndex = 0, int pageSize = int.MaxValue, 
             bool showHidden = false)
         {
             int? orderStatusId = null;

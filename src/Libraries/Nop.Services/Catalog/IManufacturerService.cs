@@ -25,8 +25,7 @@ namespace Nop.Services.Catalog
         /// <returns>Manufacturers</returns>
         IPagedList<Manufacturer> GetAllManufacturers(string manufacturerName = "",
             int pageIndex = 0,
-            //Int32.MaxValue
-            int pageSize = 2147483647,
+            int pageSize = int.MaxValue,
             bool showHidden = false);
 
         /// <summary>

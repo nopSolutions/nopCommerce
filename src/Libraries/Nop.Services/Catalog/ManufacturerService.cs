@@ -130,9 +130,8 @@ namespace Nop.Services.Catalog
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Manufacturers</returns>
         public virtual IPagedList<Manufacturer> GetAllManufacturers(string manufacturerName = "",
-            int pageIndex = 0, 
-            //Int32.MaxValue
-            int pageSize = 2147483647, 
+            int pageIndex = 0,
+            int pageSize = int.MaxValue, 
             bool showHidden = false)
         {
             var query = _manufacturerRepository.Table;

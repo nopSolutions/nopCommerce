@@ -78,7 +78,7 @@ namespace Nop.Services.Catalog
         /// <returns>Products</returns>
         IPagedList<Product> SearchProducts(
             int pageIndex = 0,
-            int pageSize = 2147483647,  //Int32.MaxValue
+            int pageSize = int.MaxValue,
             IList<int> categoryIds = null,
             int manufacturerId = 0,
             int storeId = 0,
@@ -130,7 +130,7 @@ namespace Nop.Services.Catalog
             out IList<int> filterableSpecificationAttributeOptionIds,
             bool loadFilterableSpecificationAttributeOptionIds = false,
             int pageIndex = 0,
-            int pageSize = 2147483647,  //Int32.MaxValue
+            int pageSize = int.MaxValue,
             IList<int> categoryIds = null,
             int manufacturerId = 0,
             int storeId = 0,
