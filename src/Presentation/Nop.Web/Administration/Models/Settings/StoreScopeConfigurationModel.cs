@@ -1,9 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Web.Mvc;
-using FluentValidation.Attributes;
 using Nop.Admin.Models.Stores;
-using Nop.Admin.Validators.Settings;
-using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Settings

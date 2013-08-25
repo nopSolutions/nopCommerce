@@ -7,7 +7,6 @@ using Nop.Admin.Models.Customers;
 using Nop.Admin.Models.Discounts;
 using Nop.Admin.Models.Stores;
 using Nop.Admin.Validators.Catalog;
-using Nop.Core.Domain.Discounts;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Mvc;

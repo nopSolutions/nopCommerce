@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Nop.Core;
@@ -16,9 +15,9 @@ namespace Nop.Web.Controllers
     [StoreIpAddress]
     [StoreLastVisitedPage]
     [CheckAffiliate]
-    [StoreClosedAttribute]
+    [StoreClosed]
     [PublicStoreAllowNavigation]
-    [LanguageSeoCodeAttribute]
+    [LanguageSeoCode]
     [NopHttpsRequirement(SslRequirement.NoMatter)]
     public abstract partial class BaseNopController : Controller
     {

@@ -107,7 +107,7 @@ namespace Nop.Admin.Controllers
 		}
 
         [HttpPost, ActionName("Edit")]
-        [ParameterBasedOnFormNameAttribute("save-continue", "continueEditing")]
+        [ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
         public ActionResult Edit(QueuedEmailModel model, bool continueEditing)
         {

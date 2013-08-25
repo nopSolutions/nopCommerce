@@ -18,6 +18,7 @@ using Nop.Admin.Models.Plugins;
 using Nop.Admin.Models.Polls;
 using Nop.Admin.Models.Settings;
 using Nop.Admin.Models.Shipping;
+using Nop.Admin.Models.Stores;
 using Nop.Admin.Models.Tax;
 using Nop.Admin.Models.Topics;
 using Nop.Core.Domain.Blogs;
@@ -35,6 +36,7 @@ using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Polls;
 using Nop.Core.Domain.Shipping;
+using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Infrastructure;
@@ -42,11 +44,9 @@ using Nop.Core.Plugins;
 using Nop.Services.Authentication.External;
 using Nop.Services.Cms;
 using Nop.Services.Payments;
-using Nop.Services.Shipping;
 using Nop.Services.Seo;
+using Nop.Services.Shipping;
 using Nop.Services.Tax;
-using Nop.Core.Domain.Stores;
-using Nop.Admin.Models.Stores;
 
 namespace Nop.Admin.Infrastructure
 {

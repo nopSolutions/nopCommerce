@@ -5,7 +5,6 @@ using Nop.Services.Blogs;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Forums;
-using Nop.Services.Localization;
 using Nop.Services.News;
 using Nop.Services.Seo;
 using Nop.Services.Topics;

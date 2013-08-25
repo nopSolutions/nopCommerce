@@ -8,7 +8,6 @@ using System.Web.Mvc;
 using Nop.Admin.Models.Common;
 using Nop.Core;
 using Nop.Core.Caching;
-using Nop.Core.Domain;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Plugins;

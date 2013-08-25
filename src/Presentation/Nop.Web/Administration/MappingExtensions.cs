@@ -42,7 +42,6 @@ using Nop.Core.Domain.Topics;
 using Nop.Core.Plugins;
 using Nop.Services.Authentication.External;
 using Nop.Services.Cms;
-using Nop.Services.Messages;
 using Nop.Services.Payments;
 using Nop.Services.Shipping;
 using Nop.Services.Tax;

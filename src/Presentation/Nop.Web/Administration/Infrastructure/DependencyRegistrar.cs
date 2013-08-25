@@ -1,9 +1,9 @@
 using Autofac;
 using Autofac.Core;
+using Nop.Admin.Controllers;
 using Nop.Core.Caching;
 using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.DependencyManagement;
-using Nop.Admin.Controllers;
 
 namespace Nop.Admin.Infrastructure
 {

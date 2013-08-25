@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using Nop.Admin.Models.Directory;
 using Nop.Admin.Models.Tasks;
 using Nop.Services.Localization;
 

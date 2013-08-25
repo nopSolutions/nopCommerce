@@ -1,6 +1,5 @@
 ﻿using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
-using Telerik.Web.Mvc;
 
 namespace Nop.Admin.Models.Messages
 {

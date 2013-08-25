@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using FluentValidation.Attributes;
 using Nop.Admin.Validators.Settings;
 using Nop.Web.Framework;
