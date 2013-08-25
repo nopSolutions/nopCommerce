@@ -1,6 +1,6 @@
-﻿using Nop.Tests;
+﻿using NUnit.Framework;
+using Nop.Tests;
 using Nop.Web.Models.Polls;
-using NUnit.Framework;
 
 namespace Nop.Web.MVC.Tests.Public.Models.Polls
 {

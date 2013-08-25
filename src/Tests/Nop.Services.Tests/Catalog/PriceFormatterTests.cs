@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
+using NUnit.Framework;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
@@ -12,11 +13,9 @@ using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Plugins;
 using Nop.Services.Catalog;
-using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Tests;
-using NUnit.Framework;
 using Rhino.Mocks;
 
 namespace Nop.Services.Tests.Catalog

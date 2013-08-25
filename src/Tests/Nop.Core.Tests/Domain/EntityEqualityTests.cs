@@ -1,5 +1,5 @@
-﻿using Nop.Core.Domain.Catalog;
-using NUnit.Framework;
+﻿using NUnit.Framework;
+using Nop.Core.Domain.Catalog;
 
 namespace Nop.Core.Tests.Domain
 {

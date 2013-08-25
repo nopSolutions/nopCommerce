@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using Nop.Core;
-using Nop.Services.Stores;
 using Nop.Services.Tasks;
 
 namespace Nop.Services.Common

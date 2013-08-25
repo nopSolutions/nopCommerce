@@ -1,6 +1,6 @@
-﻿using Nop.Core.Domain.Configuration;
+﻿using NUnit.Framework;
+using Nop.Core.Domain.Configuration;
 using Nop.Tests;
-using NUnit.Framework;
 
 namespace Nop.Core.Tests.Domain.Configuration
 {

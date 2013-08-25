@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using NUnit.Framework;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
@@ -7,7 +8,6 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Logging;
 using Nop.Services.Logging;
 using Nop.Tests;
-using NUnit.Framework;
 using Rhino.Mocks;
 
 namespace Nop.Services.Tests.Logging

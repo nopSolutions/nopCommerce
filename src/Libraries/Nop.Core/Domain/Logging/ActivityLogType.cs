@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Nop.Core.Domain.Logging
+﻿namespace Nop.Core.Domain.Logging
 {
     /// <summary>
     /// Represents an activity log type record

@@ -6,7 +6,6 @@ using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
-using Nop.Core.Domain.Stores;
 using Nop.Data;
 using Nop.Services.Events;
 

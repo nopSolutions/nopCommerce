@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using NUnit.Framework;
 using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Stores;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
-using Nop.Services.Customers;
 using Nop.Services.Helpers;
 using Nop.Tests;
-using NUnit.Framework;
 using Rhino.Mocks;
 
 namespace Nop.Services.Tests.Helpers

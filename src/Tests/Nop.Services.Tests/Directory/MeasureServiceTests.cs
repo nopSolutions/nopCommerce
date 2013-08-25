@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using NUnit.Framework;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Directory;
 using Nop.Services.Directory;
 using Nop.Services.Events;
 using Nop.Tests;
-using NUnit.Framework;
 using Rhino.Mocks;
 
 namespace Nop.Services.Tests.Directory

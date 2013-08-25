@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using NUnit.Framework;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
@@ -12,7 +13,6 @@ using Nop.Services.Common;
 using Nop.Services.Discounts;
 using Nop.Services.Events;
 using Nop.Tests;
-using NUnit.Framework;
 using Rhino.Mocks;
 
 namespace Nop.Services.Tests.Discounts

@@ -1,13 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Web;
 using System.Web.Hosting;
 using Nop.Core.Data;
-using Nop.Core.Domain;
 using Nop.Core.Infrastructure;
 
 namespace Nop.Core

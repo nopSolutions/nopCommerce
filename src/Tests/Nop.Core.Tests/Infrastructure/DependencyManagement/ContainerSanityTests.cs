@@ -1,7 +1,7 @@
-﻿using Nop.Core.Configuration;
+﻿using NUnit.Framework;
+using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.DependencyManagement;
-using NUnit.Framework;
 
 namespace Nop.Core.Tests.Infrastructure.DependencyManagement
 {

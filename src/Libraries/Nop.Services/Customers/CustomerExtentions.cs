@@ -1,12 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Xml;
 using Nop.Core;
-using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Orders;
 using Nop.Core.Infrastructure;
 using Nop.Services.Common;
 using Nop.Services.Localization;

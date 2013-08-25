@@ -8,7 +8,6 @@ using System.Data.Entity.ModelConfiguration;
 using System.Linq;
 using System.Reflection;
 using Nop.Core;
-using Nop.Data.Mapping.Localization;
 
 namespace Nop.Data
 {

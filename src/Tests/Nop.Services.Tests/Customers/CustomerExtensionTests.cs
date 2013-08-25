@@ -1,7 +1,4 @@
-﻿using Nop.Core.Domain.Customers;
-using Nop.Services.Customers;
-using Nop.Tests;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace Nop.Services.Tests.Customers
 {

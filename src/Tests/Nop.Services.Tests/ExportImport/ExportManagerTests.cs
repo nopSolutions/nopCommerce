@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Nop.Core.Domain;
-using Nop.Core.Domain.Catalog;
+using NUnit.Framework;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
@@ -14,8 +13,6 @@ using Nop.Services.Catalog;
 using Nop.Services.ExportImport;
 using Nop.Services.Media;
 using Nop.Services.Messages;
-using Nop.Tests;
-using NUnit.Framework;
 using Rhino.Mocks;
 
 namespace Nop.Services.Tests.ExportImport

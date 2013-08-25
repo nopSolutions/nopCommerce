@@ -1,7 +1,7 @@
 ﻿using FluentValidation.TestHelper;
+using NUnit.Framework;
 using Nop.Web.Models.Boards;
 using Nop.Web.Validators.Boards;
-using NUnit.Framework;
 
 namespace Nop.Web.MVC.Tests.Public.Validators.Boards
 {

@@ -1,7 +1,7 @@
 ﻿using FluentValidation.TestHelper;
+using NUnit.Framework;
 using Nop.Web.Models.ShoppingCart;
 using Nop.Web.Validators.ShoppingCart;
-using NUnit.Framework;
 
 namespace Nop.Web.MVC.Tests.Public.Validators.ShoppingCart
 {

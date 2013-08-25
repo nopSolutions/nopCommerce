@@ -129,7 +129,7 @@ namespace Nop.Core.Plugins
                         }
                         break;
                     default:
-                        break;;
+                        break;
                 }
             }
 

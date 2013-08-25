@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
-using Nop.Services.Stores;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -20,7 +18,9 @@ using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
-using System.Globalization;
+using Nop.Services.Stores;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 
 namespace Nop.Services.Common
 {

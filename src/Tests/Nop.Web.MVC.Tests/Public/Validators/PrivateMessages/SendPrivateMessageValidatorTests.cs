@@ -1,7 +1,7 @@
 ﻿using FluentValidation.TestHelper;
+using NUnit.Framework;
 using Nop.Web.Models.PrivateMessages;
 using Nop.Web.Validators.PrivateMessages;
-using NUnit.Framework;
 
 namespace Nop.Web.MVC.Tests.Public.Validators.PrivateMessages
 {

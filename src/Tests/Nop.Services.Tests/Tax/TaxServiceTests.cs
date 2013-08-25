@@ -1,16 +1,15 @@
 ﻿using System;
+using NUnit.Framework;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Tax;
-using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
 using Nop.Services.Common;
 using Nop.Services.Events;
 using Nop.Services.Tax;
 using Nop.Tests;
-using NUnit.Framework;
 using Rhino.Mocks;
 
 namespace Nop.Services.Tests.Tax

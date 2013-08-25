@@ -1,5 +1,5 @@
-﻿using Nop.Web.Validators.Catalog;
-using NUnit.Framework;
+﻿using NUnit.Framework;
+using Nop.Web.Validators.Catalog;
 
 namespace Nop.Web.MVC.Tests.Public.Validators.Catalog
 {

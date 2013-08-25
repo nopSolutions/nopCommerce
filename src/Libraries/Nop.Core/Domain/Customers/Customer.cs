@@ -1,12 +1,7 @@
 using System;
 using System.Collections.Generic;
-using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.Common;
-using Nop.Core.Domain.Directory;
-using Nop.Core.Domain.Forums;
-using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
-using Nop.Core.Domain.Tax;
 
 namespace Nop.Core.Domain.Customers
 {

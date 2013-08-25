@@ -10,8 +10,8 @@
         <div>
             @if (Model.GiftCardType == Nop.Core.Domain.Catalog.GiftCardType.Virtual)
             {
-                @Html.LabelFor(model => model.RecipientEmail);
-                @Html.TextBoxFor(model => model.RecipientEmail, new { @class = "recipient-email" });
+                @Html.LabelFor(model => model.RecipientEmail)
+                @Html.TextBoxFor(model => model.RecipientEmail, new { @class = "recipient-email" })
             }
         </div>
         <div>
@@ -21,8 +21,8 @@
         <div>
             @if (Model.GiftCardType == Nop.Core.Domain.Catalog.GiftCardType.Virtual)
             {
-                @Html.LabelFor(model => model.SenderEmail);
-                @Html.TextBoxFor(model => model.SenderEmail, new { @class = "sender-email" });
+                @Html.LabelFor(model => model.SenderEmail)
+                @Html.TextBoxFor(model => model.SenderEmail, new { @class = "sender-email" })
             }
         </div>
         <div>

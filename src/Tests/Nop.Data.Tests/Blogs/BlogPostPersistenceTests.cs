@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Linq;
+using NUnit.Framework;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Tests;
-using NUnit.Framework;
 
 namespace Nop.Data.Tests.Blogs
 {

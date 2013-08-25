@@ -1,5 +1,5 @@
-﻿using Nop.Services.Localization;
-using NUnit.Framework;
+﻿using NUnit.Framework;
+using Nop.Services.Localization;
 using Rhino.Mocks;
 
 namespace Nop.Web.MVC.Tests.Public.Validators

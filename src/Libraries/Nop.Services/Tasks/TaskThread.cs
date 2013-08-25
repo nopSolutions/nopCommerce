@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading;
-using Nop.Core.Domain.Tasks;
 
 namespace Nop.Services.Tasks
 {

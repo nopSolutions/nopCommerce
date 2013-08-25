@@ -1,6 +1,6 @@
-﻿using Nop.Core.Domain.Seo;
+﻿using NUnit.Framework;
+using Nop.Core.Domain.Seo;
 using Nop.Tests;
-using NUnit.Framework;
 
 namespace Nop.Data.Tests.Seo
 {

@@ -6,7 +6,6 @@ using Nop.Core.Data;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Infrastructure;
-using Nop.Services.Customers;
 
 namespace Nop.Web.Framework
 {

@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
+using NUnit.Framework;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
-using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
 using Nop.Services.Payments;
 using Nop.Tests;
-using NUnit.Framework;
 
 namespace Nop.Services.Tests.Payments
 {

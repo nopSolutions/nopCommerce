@@ -1,8 +1,7 @@
-﻿using Nop.Core.Domain.Customers;
+﻿using NUnit.Framework;
 using Nop.Core.Domain.Discounts;
 using Nop.Services.Discounts;
 using Nop.Tests;
-using NUnit.Framework;
 
 namespace Nop.Services.Tests.Discounts
 {

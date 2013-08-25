@@ -4,7 +4,6 @@ using System.Configuration;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
-using Nop.Core.Configuration;
 using Nop.Core.Data;
 using Nop.Core.Domain.Configuration;
 using Nop.Services.Configuration;

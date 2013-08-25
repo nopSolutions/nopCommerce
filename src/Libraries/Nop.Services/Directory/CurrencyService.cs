@@ -7,7 +7,6 @@ using Nop.Core.Data;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Plugins;
-using Nop.Services.Customers;
 using Nop.Services.Events;
 
 namespace Nop.Services.Directory

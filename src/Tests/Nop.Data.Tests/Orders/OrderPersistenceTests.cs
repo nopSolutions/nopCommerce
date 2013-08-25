@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using NUnit.Framework;
 using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -11,7 +12,6 @@ using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Tests;
-using NUnit.Framework;
 
 namespace Nop.Data.Tests.Orders
 {

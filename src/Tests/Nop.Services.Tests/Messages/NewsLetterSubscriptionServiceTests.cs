@@ -1,9 +1,9 @@
-﻿using Nop.Core.Data;
+﻿using NUnit.Framework;
+using Nop.Core.Data;
 using Nop.Core.Domain.Messages;
 using Nop.Data;
 using Nop.Services.Events;
 using Nop.Services.Messages;
-using NUnit.Framework;
 using Rhino.Mocks;
 
 namespace Nop.Services.Tests.Messages {

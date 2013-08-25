@@ -1,10 +1,8 @@
-﻿using Nop.Core.Domain.Customers;
+﻿using System.Collections.Generic;
+using NUnit.Framework;
 using Nop.Core.Domain.Orders;
-using Nop.Services.Customers;
 using Nop.Services.Orders;
 using Nop.Tests;
-using NUnit.Framework;
-using System.Collections.Generic;
 
 namespace Nop.Services.Tests.Orders
 {

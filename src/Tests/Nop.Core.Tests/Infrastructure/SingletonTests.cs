@@ -1,6 +1,6 @@
 ﻿using System;
-using Nop.Core.Infrastructure;
 using NUnit.Framework;
+using Nop.Core.Infrastructure;
 
 namespace Nop.Core.Tests.Infrastructure
 {

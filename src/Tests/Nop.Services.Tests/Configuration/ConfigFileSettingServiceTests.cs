@@ -1,7 +1,7 @@
 ﻿using System;
+using NUnit.Framework;
 using Nop.Services.Configuration;
 using Nop.Tests;
-using NUnit.Framework;
 
 namespace Nop.Services.Tests.Configuration
 {

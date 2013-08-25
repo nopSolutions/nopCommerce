@@ -1,8 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Xml;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Orders;
 

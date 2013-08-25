@@ -1,6 +1,6 @@
-﻿using Nop.Core.Domain.Security;
+﻿using NUnit.Framework;
+using Nop.Core.Domain.Security;
 using Nop.Tests;
-using NUnit.Framework;
 
 namespace Nop.Data.Tests.Security
 {

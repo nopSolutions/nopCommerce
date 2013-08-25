@@ -3,9 +3,8 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
-using Nop.Services.Configuration;
 using Nop.Services.Common;
-using Nop.Services.Customers;
+using Nop.Services.Configuration;
 
 namespace Nop.Services.Helpers
 {

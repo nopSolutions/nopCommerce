@@ -4,7 +4,6 @@ using System.Configuration;
 using System.Linq;
 using Autofac;
 using Nop.Core.Configuration;
-using Nop.Core.Data;
 using Nop.Core.Infrastructure.DependencyManagement;
 
 namespace Nop.Core.Infrastructure

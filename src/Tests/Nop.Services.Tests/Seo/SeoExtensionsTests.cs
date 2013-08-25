@@ -1,6 +1,6 @@
-﻿using Nop.Services.Seo;
+﻿using NUnit.Framework;
+using Nop.Services.Seo;
 using Nop.Tests;
-using NUnit.Framework;
 
 namespace Nop.Services.Tests.Seo
 {

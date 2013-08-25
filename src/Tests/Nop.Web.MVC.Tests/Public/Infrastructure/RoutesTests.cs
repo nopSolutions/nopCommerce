@@ -1,6 +1,6 @@
 ﻿using System;
-using Nop.Web.Controllers;
 using NUnit.Framework;
+using Nop.Web.Controllers;
 
 namespace Nop.Web.MVC.Tests.Public.Infrastructure
 {

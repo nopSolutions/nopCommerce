@@ -1,9 +1,9 @@
 ﻿using System;
+using NUnit.Framework;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Stores;
 using Nop.Tests;
-using NUnit.Framework;
 
 namespace Nop.Data.Tests.Forums
 {

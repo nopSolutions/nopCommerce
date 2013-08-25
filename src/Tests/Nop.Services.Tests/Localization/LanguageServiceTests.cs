@@ -1,15 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using NUnit.Framework;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Stores;
 using Nop.Services.Configuration;
-using Nop.Services.Customers;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Tests;
-using NUnit.Framework;
 using Rhino.Mocks;
 
 namespace Nop.Services.Tests.Localization

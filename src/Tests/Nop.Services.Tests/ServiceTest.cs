@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
+using NUnit.Framework;
 using Nop.Core.Plugins;
 using Nop.Services.Tests.Directory;
 using Nop.Services.Tests.Discounts;
 using Nop.Services.Tests.Payments;
 using Nop.Services.Tests.Shipping;
 using Nop.Services.Tests.Tax;
-using NUnit.Framework;
 
 namespace Nop.Services.Tests
 {

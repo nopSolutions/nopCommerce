@@ -25,21 +25,21 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Polls;
 using Nop.Core.Domain.Security;
+using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Shipping;
+using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tasks;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Topics;
-using Nop.Core.Infrastructure;
 using Nop.Core.IO;
+using Nop.Core.Infrastructure;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
-using Nop.Services.Media;
 using Nop.Services.Localization;
+using Nop.Services.Media;
 using Nop.Services.Seo;
-using Nop.Core.Domain.Seo;
-using Nop.Core.Domain.Stores;
 
 namespace Nop.Services.Installation
 {

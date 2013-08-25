@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
+using NUnit.Framework;
 using Nop.Core.Infrastructure;
 using Nop.Services.Events;
-using NUnit.Framework;
 
 namespace Nop.Web.MVC.Tests.Events
 {

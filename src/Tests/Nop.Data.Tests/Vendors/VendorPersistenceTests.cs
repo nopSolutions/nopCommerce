@@ -1,9 +1,6 @@
-﻿using System;
-using Nop.Core.Domain.Common;
-using Nop.Core.Domain.Directory;
+﻿using NUnit.Framework;
 using Nop.Core.Domain.Vendors;
 using Nop.Tests;
-using NUnit.Framework;
 
 namespace Nop.Data.Tests.Vendors
 {

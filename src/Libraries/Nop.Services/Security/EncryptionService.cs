@@ -2,7 +2,6 @@
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
-using System.Web.Security;
 using Nop.Core.Domain.Security;
 
 namespace Nop.Services.Security

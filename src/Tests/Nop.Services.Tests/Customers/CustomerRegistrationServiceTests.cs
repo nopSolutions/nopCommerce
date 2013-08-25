@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using NUnit.Framework;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Common;
@@ -14,7 +15,6 @@ using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Tests;
-using NUnit.Framework;
 using Rhino.Mocks;
 
 namespace Nop.Services.Tests.Customers

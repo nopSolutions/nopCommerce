@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using NUnit.Framework;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
@@ -13,7 +14,6 @@ using Nop.Services.Logging;
 using Nop.Services.Orders;
 using Nop.Services.Shipping;
 using Nop.Tests;
-using NUnit.Framework;
 using Rhino.Mocks;
 
 namespace Nop.Services.Tests.Shipping
