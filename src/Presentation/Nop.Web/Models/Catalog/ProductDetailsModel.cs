@@ -102,6 +102,9 @@ namespace Nop.Web.Models.Catalog
             //pre-order
             public bool AvailableForPreOrder { get; set; }
             public DateTime? PreOrderAvailabilityStartDateTimeUtc { get; set; }
+
+            //updating existing shopping cart item?
+            public int UpdatedShoppingCartItemId { get; set; }
         }
 
         public partial class ProductPriceModel : BaseNopModel

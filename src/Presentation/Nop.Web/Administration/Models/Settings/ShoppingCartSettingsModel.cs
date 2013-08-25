@@ -72,5 +72,9 @@ namespace Nop.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.ShoppingCart.MiniShoppingCartProductNumber")]
         public int MiniShoppingCartProductNumber { get; set; }
         public bool MiniShoppingCartProductNumber_OverrideForStore { get; set; }
+        
+        [NopResourceDisplayName("Admin.Configuration.Settings.ShoppingCart.AllowCartItemEditing")]
+        public bool AllowCartItemEditing { get; set; }
+        public bool AllowCartItemEditing_OverrideForStore { get; set; }
     }
 }

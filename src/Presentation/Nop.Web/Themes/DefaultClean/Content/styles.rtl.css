@@ -314,6 +314,7 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 .order-summary-content .cart .cart-item-row td.product a,.wishlist-content .cart .cart-item-row td.product a{font-weight:700;text-decoration:none;}
 .order-summary-content .cart .cart-item-row td.end,.wishlist-content .cart .cart-item-row td.end{text-align:left;font-weight:700;color:green;padding-left:5px;}
 .order-summary-content .cart .cart-item-row .qty-input,.wishlist-content .cart .cart-item-row .qty-input{border:solid 1px #E3E3E3;font-size:12px;text-align:left;width:40px;}
+.order-summary-content .cart .cart-item-row .edit-item a{color:#B80709;}
 .order-summary-content .cart-footer{width:100%;zoom:1;}
 .order-summary-content .cart-footer:after{content:".";display:block;clear:both;height:0;font-size:0;line-height:0;visibility:hidden;}
 .order-summary-content .total-info{margin:0;font-size:12px;}

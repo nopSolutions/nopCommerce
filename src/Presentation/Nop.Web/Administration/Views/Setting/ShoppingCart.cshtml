@@ -207,6 +207,16 @@
                 @Html.EditorFor(model => model.ShowProductImagesInMiniShoppingCart)
                 @Html.ValidationMessageFor(model => model.ShowProductImagesInMiniShoppingCart)
             </td>
-        </tr>        
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.AllowCartItemEditing_OverrideForStore, model => model.AllowCartItemEditing, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.AllowCartItemEditing):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AllowCartItemEditing)
+                @Html.ValidationMessageFor(model => model.AllowCartItemEditing)
+            </td>
+        </tr>
     </table>
 }

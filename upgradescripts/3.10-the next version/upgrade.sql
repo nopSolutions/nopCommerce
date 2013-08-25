@@ -74,6 +74,15 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.OverriddenPrice.Hint">
     <Value>Override price for this attribute combination. This way a store owner can override the default product price when this attribute combination is added to the cart. For example, you can give a discount this way. Leave empty to ignore field. All other applied discounts will be ignored when this field is specified.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.AllowCartItemEditing">
+    <Value>Allow cart item editing</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.AllowCartItemEditing.Hint">
+    <Value>Check to allow customers to edit items already placed in the cart. It could be useful when your products have attributes or any other fields entered by a customer.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.AddToCart.Update">
+    <Value>Update</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -222,5 +231,13 @@ IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[ProductVari
 BEGIN
 	ALTER TABLE [ProductVariantAttributeCombination]
 	ADD [OverriddenPrice] decimal(18,4) NULL
+END
+GO
+
+--a new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'shoppingcartsettings.allowcartitemediting')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'shoppingcartsettings.allowcartitemediting', N'true', 0)
 END
 GO

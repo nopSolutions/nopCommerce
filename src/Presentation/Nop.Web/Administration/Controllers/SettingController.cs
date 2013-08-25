@@ -1415,6 +1415,7 @@ namespace Nop.Admin.Controllers
                 model.MiniShoppingCartEnabled_OverrideForStore = _settingService.SettingExists(shoppingCartSettings, x => x.MiniShoppingCartEnabled, storeScope);
                 model.ShowProductImagesInMiniShoppingCart_OverrideForStore = _settingService.SettingExists(shoppingCartSettings, x => x.ShowProductImagesInMiniShoppingCart, storeScope);
                 model.MiniShoppingCartProductNumber_OverrideForStore = _settingService.SettingExists(shoppingCartSettings, x => x.MiniShoppingCartProductNumber, storeScope);
+                model.AllowCartItemEditing_OverrideForStore = _settingService.SettingExists(shoppingCartSettings, x => x.AllowCartItemEditing, storeScope);
             }
             return View(model);
         }
@@ -1511,6 +1512,11 @@ namespace Nop.Admin.Controllers
                 _settingService.SaveSetting(shoppingCartSettings, x => x.MiniShoppingCartProductNumber, storeScope, false);
             else if (storeScope > 0)
                 _settingService.DeleteSetting(shoppingCartSettings, x => x.MiniShoppingCartProductNumber, storeScope);
+
+            if (model.AllowCartItemEditing_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(shoppingCartSettings, x => x.AllowCartItemEditing, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(shoppingCartSettings, x => x.AllowCartItemEditing, storeScope);
 
             //now clear settings cache
             _settingService.ClearCache();

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.ServiceModel.Syndication;
 using System.Web.Mvc;
@@ -72,6 +73,7 @@ namespace Nop.Web.Controllers
         private readonly IPermissionService _permissionService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IEventPublisher _eventPublisher;
+        private readonly IProductAttributeParser _productAttributeParser;
 
         private readonly MediaSettings _mediaSettings;
         private readonly CatalogSettings _catalogSettings;
@@ -94,7 +96,8 @@ namespace Nop.Web.Controllers
             IWorkContext workContext, IStoreContext storeContext,
             ITaxService taxService, ICurrencyService currencyService,
             IPictureService pictureService, ILocalizationService localizationService,
-            IPriceCalculationService priceCalculationService, IPriceFormatter priceFormatter,
+            IPriceCalculationService priceCalculationService,
+            IPriceFormatter priceFormatter,
             IWebHelper webHelper, ISpecificationAttributeService specificationAttributeService,
             IDateTimeHelper dateTimeHelper,
             IRecentlyViewedProductsService recentlyViewedProductsService,
@@ -105,7 +108,7 @@ namespace Nop.Web.Controllers
             IStoreMappingService storeMappingService,
             IPermissionService permissionService, 
             ICustomerActivityService customerActivityService,
-            IEventPublisher eventPublisher,
+            IEventPublisher eventPublisher, IProductAttributeParser productAttributeParser,
             MediaSettings mediaSettings, CatalogSettings catalogSettings,
             ShoppingCartSettings shoppingCartSettings,
             LocalizationSettings localizationSettings, CustomerSettings customerSettings, 
@@ -142,6 +145,7 @@ namespace Nop.Web.Controllers
             this._permissionService = permissionService;
             this._customerActivityService = customerActivityService;
             this._eventPublisher = eventPublisher;
+            this._productAttributeParser = productAttributeParser;
 
 
             this._mediaSettings = mediaSettings;
@@ -495,11 +499,12 @@ namespace Nop.Web.Controllers
         }
         
         [NonAction]
-        protected ProductDetailsModel PrepareProductDetailsPageModel(Product product, bool isAssociatedProduct = false)
+        protected ProductDetailsModel PrepareProductDetailsPageModel(Product product, 
+            ShoppingCartItem updatecartitem = null, bool isAssociatedProduct = false)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
-
+            
             #region Standard properties
 
             var model = new ProductDetailsModel()
@@ -640,9 +645,10 @@ namespace Nop.Web.Controllers
             #region 'Add to cart' model
 
             model.AddToCart.ProductId = product.Id;
+            model.AddToCart.UpdatedShoppingCartItemId = updatecartitem != null ? updatecartitem.Id : 0;
 
             //quantity
-            model.AddToCart.EnteredQuantity = product.OrderMinimumQuantity;
+            model.AddToCart.EnteredQuantity = updatecartitem != null ? updatecartitem.Quantity : product.OrderMinimumQuantity;
 
             //'add to cart', 'add to wishlist' buttons
             model.AddToCart.DisableBuyButton = product.DisableBuyButton || !_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart);
@@ -667,7 +673,7 @@ namespace Nop.Web.Controllers
                 decimal minimumCustomerEnteredPrice = _currencyService.ConvertFromPrimaryStoreCurrency(product.MinimumCustomerEnteredPrice, _workContext.WorkingCurrency);
                 decimal maximumCustomerEnteredPrice = _currencyService.ConvertFromPrimaryStoreCurrency(product.MaximumCustomerEnteredPrice, _workContext.WorkingCurrency);
 
-                model.AddToCart.CustomerEnteredPrice = minimumCustomerEnteredPrice;
+                model.AddToCart.CustomerEnteredPrice = updatecartitem != null ? updatecartitem.CustomerEnteredPrice : minimumCustomerEnteredPrice;
                 model.AddToCart.CustomerEnteredPriceRange = string.Format(_localizationService.GetResource("Products.EnterProductPrice.Range"),
                     _priceFormatter.FormatPrice(minimumCustomerEnteredPrice, false, false),
                     _priceFormatter.FormatPrice(maximumCustomerEnteredPrice, false, false));
@@ -679,7 +685,8 @@ namespace Nop.Web.Controllers
                 model.AddToCart.AllowedQuantities.Add(new SelectListItem()
                 {
                     Text = qty.ToString(),
-                    Value = qty.ToString()
+                    Value = qty.ToString(),
+                    Selected = updatecartitem != null && updatecartitem.Quantity == qty
                 });
             }
 
@@ -691,8 +698,25 @@ namespace Nop.Web.Controllers
             if (model.GiftCard.IsGiftCard)
             {
                 model.GiftCard.GiftCardType = product.GiftCardType;
-                model.GiftCard.SenderName = _workContext.CurrentCustomer.GetFullName();
-                model.GiftCard.SenderEmail = _workContext.CurrentCustomer.Email;
+
+                if (updatecartitem == null)
+                {
+                    model.GiftCard.SenderName = _workContext.CurrentCustomer.GetFullName();
+                    model.GiftCard.SenderEmail = _workContext.CurrentCustomer.Email;
+                }
+                else
+                {
+                    string giftCardRecipientName, giftCardRecipientEmail, giftCardSenderName, giftCardSenderEmail, giftCardMessage;
+                    _productAttributeParser.GetGiftCardAttribute(updatecartitem.AttributesXml,
+                        out giftCardRecipientName, out giftCardRecipientEmail,
+                        out giftCardSenderName, out giftCardSenderEmail, out giftCardMessage);
+
+                    model.GiftCard.RecipientName = giftCardRecipientName;
+                    model.GiftCard.RecipientEmail = giftCardRecipientEmail;
+                    model.GiftCard.SenderName = giftCardSenderName;
+                    model.GiftCard.SenderEmail = giftCardSenderEmail;
+                    model.GiftCard.Message = giftCardMessage;
+                }
             }
 
             #endregion
@@ -726,7 +750,7 @@ namespace Nop.Web.Controllers
                             Id = pvaValue.Id,
                             Name = pvaValue.GetLocalized(x => x.Name),
                             ColorSquaresRgb = pvaValue.ColorSquaresRgb, //used with "Color squares" attribute type
-                            IsPreSelected = pvaValue.IsPreSelected,
+                            IsPreSelected = pvaValue.IsPreSelected
                         };
                         pvaModel.Values.Add(pvaValueModel);
 
@@ -756,6 +780,66 @@ namespace Nop.Web.Controllers
                     }
                 }
 
+                //set already selected attributes (if we're going to update the existing shopping cart item)
+                if (updatecartitem != null)
+                {
+                    switch (attribute.AttributeControlType)
+                    {
+                        case AttributeControlType.DropdownList:
+                        case AttributeControlType.RadioList:
+                        case AttributeControlType.Checkboxes:
+                        case AttributeControlType.ColorSquares:
+                            {
+                                if (!String.IsNullOrEmpty(updatecartitem.AttributesXml))
+                                {
+                                    //clear default selection
+                                    foreach (var item in pvaModel.Values)
+                                        item.IsPreSelected = false;
+
+                                    //select new values
+                                    var selectedPvaValues = _productAttributeParser.ParseProductVariantAttributeValues(updatecartitem.AttributesXml);
+                                    foreach (var pvaValue in selectedPvaValues)
+                                        foreach (var item in pvaModel.Values)
+                                            if (pvaValue.Id == item.Id)
+                                                item.IsPreSelected = true;
+                                }
+                            }
+                            break;
+                        case AttributeControlType.TextBox:
+                        case AttributeControlType.MultilineTextbox:
+                            {
+                                if (!String.IsNullOrEmpty(updatecartitem.AttributesXml))
+                                {
+                                    var enteredText = _productAttributeParser.ParseValues(updatecartitem.AttributesXml, attribute.Id);
+                                    if (enteredText.Count > 0)
+                                        pvaModel.TextValue = enteredText[0];
+                                }
+                            }
+                            break;
+                        case AttributeControlType.Datepicker:
+                            {
+                                //keep in mind my that the code below works only in the current culture
+                                var selectedDateStr = _productAttributeParser.ParseValues(updatecartitem.AttributesXml, attribute.Id);
+                                if (selectedDateStr.Count > 0)
+                                {
+                                    DateTime selectedDate;
+                                    if (DateTime.TryParseExact(selectedDateStr[0], "D", CultureInfo.CurrentCulture,
+                                                           DateTimeStyles.None, out selectedDate))
+                                    {
+                                        //successfully parsed
+                                        pvaModel.SelectedDay = selectedDate.Day;
+                                        pvaModel.SelectedMonth = selectedDate.Month;
+                                        pvaModel.SelectedYear = selectedDate.Year;
+                                    }
+                                }
+
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
                 model.ProductVariantAttributes.Add(pvaModel);
             }
 
@@ -774,7 +858,7 @@ namespace Nop.Web.Controllers
                         parentGroupedProductId: product.Id
                         );
                     foreach (var associatedProduct in associatedProducts)
-                        model.AssociatedProducts.Add(PrepareProductDetailsPageModel(associatedProduct, true));
+                        model.AssociatedProducts.Add(PrepareProductDetailsPageModel(associatedProduct, null, true));
                 }
             }
 
@@ -1528,7 +1612,7 @@ namespace Nop.Web.Controllers
 
         //product details page
         [NopHttpsRequirement(SslRequirement.No)]
-        public ActionResult Product(int productId)
+        public ActionResult Product(int productId, int updatecartitemid = 0)
         {
             var product = _productService.GetProductById(productId);
             if (product == null || product.Deleted)
@@ -1562,9 +1646,30 @@ namespace Nop.Web.Controllers
                     return RedirectToRoute("HomePage");
                 }
             }
-            
+
+            //update existing shopping cart item?
+            ShoppingCartItem updatecartitem = null;
+            if (_shoppingCartSettings.AllowCartItemEditing && updatecartitemid > 0)
+            {
+                var cart = _workContext.CurrentCustomer.ShoppingCartItems
+                    .Where(x => x.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                    .Where(x => x.StoreId == _storeContext.CurrentStore.Id)
+                    .ToList();
+                updatecartitem = cart.FirstOrDefault(x => x.Id == updatecartitemid);
+                //not found?
+                if (updatecartitem == null)
+                {
+                    return RedirectToRoute("Product", new { SeName = product.GetSeName() });
+                }
+                //is it this product?
+                if (product.Id != updatecartitem.ProductId)
+                {
+                    return RedirectToRoute("Product", new { SeName = product.GetSeName() });
+                }
+            }
+
             //prepare the model
-            var model = PrepareProductDetailsPageModel(product, false);
+            var model = PrepareProductDetailsPageModel(product, updatecartitem, false);
 
             //save as recently viewed
             _recentlyViewedProductsService.AddProductToRecentlyViewedList(product.Id);

@@ -426,6 +426,16 @@ namespace Nop.Web.Controllers
                     AttributeInfo = _productAttributeFormatter.FormatAttributes(sci.Product, sci.AttributesXml),
                 };
 
+                //allow editing?
+                //1. setting enabled?
+                //2. simple product?
+                //3. has attribute or gift card?
+                //4. visible individually?
+                cartItemModel.AllowItemEditing = _shoppingCartSettings.AllowCartItemEditing && 
+                    sci.Product.ProductType == ProductType.SimpleProduct &&
+                    (!String.IsNullOrEmpty(cartItemModel.AttributeInfo) || sci.Product.IsGiftCard) &&
+                    sci.Product.VisibleIndividually;
+
                 //allowed quantities
                 var allowedQuantities = sci.Product.ParseAllowedQuatities();
                 foreach (var qty in allowedQuantities)
@@ -1073,6 +1083,43 @@ namespace Nop.Web.Controllers
                 });
             }
 
+            #region Update existing shopping cart item?
+            int updatecartitemid = 0;
+            foreach (string formKey in form.AllKeys)
+                if (formKey.Equals(string.Format("addtocart_{0}.UpdatedShoppingCartItemId", productId), StringComparison.InvariantCultureIgnoreCase))
+                {
+                    int.TryParse(form[formKey], out updatecartitemid);
+                    break;
+                }
+            ShoppingCartItem updatecartitem = null;
+            if (_shoppingCartSettings.AllowCartItemEditing && updatecartitemid > 0)
+            {
+                var cart = _workContext.CurrentCustomer.ShoppingCartItems
+                    .Where(x => x.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                    .Where(x => x.StoreId == _storeContext.CurrentStore.Id)
+                    .ToList();
+                updatecartitem = cart.FirstOrDefault(x => x.Id == updatecartitemid);
+                //not found?
+                if (updatecartitem == null)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "No shopping cart item found to update"
+                    });
+                }
+                //is it this product?
+                if (product.Id != updatecartitem.ProductId)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "This product does not match a passed shopping cart item identifier"
+                    });
+                }
+            }
+            #endregion
+
             #region Customer entered price
             decimal customerEnteredPriceConverted = decimal.Zero;
             if (product.CustomerEntersPrice)
@@ -1238,9 +1285,36 @@ namespace Nop.Web.Controllers
 
             //save item
             var cartType = (ShoppingCartType)shoppingCartTypeId;
-            addToCartWarnings.AddRange(_shoppingCartService.AddToCart(_workContext.CurrentCustomer,
-                product, cartType, _storeContext.CurrentStore.Id,
-                attributes, customerEnteredPriceConverted, quantity, true));
+            if (updatecartitem == null)
+            {
+                //add to the cart
+                addToCartWarnings.AddRange(_shoppingCartService.AddToCart(_workContext.CurrentCustomer,
+                    product, cartType, _storeContext.CurrentStore.Id,
+                    attributes, customerEnteredPriceConverted, quantity, true));
+            }
+            else
+            {
+                var cart = _workContext.CurrentCustomer.ShoppingCartItems
+                    .Where(x => x.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                    .Where(x => x.StoreId == _storeContext.CurrentStore.Id)
+                    .ToList();
+                var otherCartItemWithSameParameters = _shoppingCartService.FindShoppingCartItemInTheCart(
+                    cart, cartType, product, attributes, customerEnteredPriceConverted);
+                if (otherCartItemWithSameParameters != null &&
+                    otherCartItemWithSameParameters.Id == updatecartitem.Id)
+                {
+                    //ensure it's other shopping cart cart item
+                    otherCartItemWithSameParameters = null;
+                }
+                //update existing item
+                addToCartWarnings.AddRange(_shoppingCartService.UpdateShoppingCartItem(_workContext.CurrentCustomer,
+                    updatecartitem.Id, attributes, customerEnteredPriceConverted, quantity, true));
+                if (otherCartItemWithSameParameters != null && addToCartWarnings.Count == 0)
+                {
+                    //delete the same shopping cart item
+                    _shoppingCartService.DeleteShoppingCartItem(otherCartItemWithSameParameters);
+                }
+            }
 
             #region Return result
 
@@ -1485,7 +1559,8 @@ namespace Nop.Web.Controllers
                             if (int.TryParse(form[formKey], out newQuantity))
                             {
                                 var currSciWarnings = _shoppingCartService.UpdateShoppingCartItem(_workContext.CurrentCustomer,
-                                    sci.Id, newQuantity, true);
+                                    sci.Id, sci.AttributesXml, sci.CustomerEnteredPrice,
+                                    newQuantity, true);
                                 innerWarnings.Add(sci.Id, currSciWarnings);
                             }
                             break;
@@ -1550,7 +1625,7 @@ namespace Nop.Web.Controllers
                     if (int.TryParse(form[formKey], out newQuantity))
                     {
                         warnings.AddRange(_shoppingCartService.UpdateShoppingCartItem(_workContext.CurrentCustomer,
-                            sci.Id, newQuantity, true));
+                            sci.Id, sci.AttributesXml, sci.CustomerEnteredPrice, newQuantity, true));
                     }
                     break;
                 }
@@ -2092,7 +2167,7 @@ namespace Nop.Web.Controllers
                             if (int.TryParse(form[formKey], out newQuantity))
                             {
                                 var currSciWarnings = _shoppingCartService.UpdateShoppingCartItem(_workContext.CurrentCustomer,
-                                    sci.Id, newQuantity, true);
+                                    sci.Id, sci.AttributesXml, sci.CustomerEnteredPrice, newQuantity, true);
                                 innerWarnings.Add(sci.Id, currSciWarnings);
                             }
                             break;
@@ -2157,7 +2232,7 @@ namespace Nop.Web.Controllers
                     if (int.TryParse(form[formKey], out newQuantity))
                     {
                         warnings.AddRange(_shoppingCartService.UpdateShoppingCartItem(_workContext.CurrentCustomer,
-                            sci.Id, newQuantity, true));
+                            sci.Id, sci.AttributesXml, sci.CustomerEnteredPrice, newQuantity, true));
                     }
                     break;
                 }

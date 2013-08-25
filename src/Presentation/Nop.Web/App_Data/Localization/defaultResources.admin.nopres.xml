@@ -5718,6 +5718,14 @@
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
+                  <LocaleResource Name="AllowCartItemEditing">
+                    <Value>Allow cart item editing</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Check to allow customers to edit items already placed in the cart. It could be useful when your products have attributes or any other fields entered by a customer.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
                 </Children>
               </LocaleResource>
               <LocaleResource Name="StoreScope">

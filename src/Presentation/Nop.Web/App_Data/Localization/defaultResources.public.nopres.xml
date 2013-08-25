@@ -3830,6 +3830,11 @@
     <Children>
       <LocaleResource Name="AddToCart">
         <Value>Add to cart</Value>
+        <Children>
+          <LocaleResource Name="Update">
+            <Value>Update</Value>
+          </LocaleResource>
+        </Children>
       </LocaleResource>
       <LocaleResource Name="AddToWishlist">
         <Value>Add to wishlist</Value>

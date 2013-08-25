@@ -1,5 +1,10 @@
 ﻿@model ShoppingCartModel
+@using Nop.Core
+@using Nop.Core.Infrastructure
 @using Nop.Web.Models.ShoppingCart;
+@{
+    var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+}
 <div class="order-summary-content">
     @Html.Widget("order_summary_content_before")
     @Html.Partial("_OrderReviewData", Model.OrderReviewData)
@@ -93,7 +98,7 @@
                             </td>
                         }
                         <td class="product">
-                            <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a>
+                            <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })" class="product-name">@item.ProductName</a>
                             @if (!String.IsNullOrEmpty(item.AttributeInfo))
                             {
                                 <div class="attributes">
@@ -104,6 +109,14 @@
                             {
                                 <div class="recurring-info">
                                     @Html.Raw(item.RecurringInfo)
+                                </div>
+                            }
+                            @if (Model.IsEditable && item.AllowItemEditing)
+                            {
+                                var editCartItemUrl = Url.RouteUrl("Product", new {SeName = item.ProductSeName});
+                                editCartItemUrl = webHelper.ModifyQueryString(editCartItemUrl, "updatecartitemid=" + item.Id, null);
+                                <div class="edit-item">
+                                    <a href="@editCartItemUrl">@T("Common.Edit")</a>
                                 </div>
                             }
                             @if (item.Warnings.Count > 0)

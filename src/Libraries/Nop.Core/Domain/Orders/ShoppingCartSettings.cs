@@ -90,5 +90,10 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets a value indicating whether to round calculated prices and total during calculation
         /// </summary>
         public bool RoundPricesDuringCalculation { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether a customer will beable to edit products in the cart
+        /// </summary>
+        public bool AllowCartItemEditing { get; set; }
     }
 }

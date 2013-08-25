@@ -2,6 +2,10 @@
 @using Nop.Core.Domain.Orders
 @using Nop.Web.Models.Catalog;
 <div class="add-to-cart">
+    @if (Model.UpdatedShoppingCartItemId > 0)
+    {
+        @Html.HiddenFor(x => x.UpdatedShoppingCartItemId)
+    }
     @if (Model.CustomerEntersPrice)
     {
         <div class="customer-entered-price">
@@ -50,7 +54,16 @@
         </div>
             if (!Model.DisableBuyButton)
             {
-        <input type="button" id="add-to-cart-button-@Model.ProductId" value="@(Model.AvailableForPreOrder ? T("ShoppingCart.PreOrder") : T("ShoppingCart.AddToCart"))" onclick="AjaxCart.addproducttocart_details_mobile('@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.ProductId, shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart })', '#product-details-form', '@Url.RouteUrl("ShoppingCart")');return false;" />
+                var addToCartText = "";
+                if (Model.UpdatedShoppingCartItemId > 0)
+                {
+                    addToCartText = T("ShoppingCart.AddToCart.Update").Text;
+                }
+                else
+                {
+                    addToCartText = Model.AvailableForPreOrder ? T("ShoppingCart.PreOrder").Text : T("ShoppingCart.AddToCart").Text;
+                }
+        <input type="button" id="add-to-cart-button-@Model.ProductId" value="@addToCartText" onclick="AjaxCart.addproducttocart_details_mobile('@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.ProductId, shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart })', '#product-details-form', '@Url.RouteUrl("ShoppingCart")');return false;" />
             }
             if (!Model.DisableWishlistButton)
             {

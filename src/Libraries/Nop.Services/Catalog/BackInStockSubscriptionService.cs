@@ -19,7 +19,6 @@ namespace Nop.Services.Catalog
 
         private readonly IRepository<BackInStockSubscription> _backInStockSubscriptionRepository;
         private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly IWorkContext _workContext;
         private readonly IEventPublisher _eventPublisher;
 
         #endregion
@@ -31,16 +30,13 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="backInStockSubscriptionRepository">Back in stock subscription repository</param>
         /// <param name="workflowMessageService">Workflow message service</param>
-        /// <param name="workContext">Work context</param>
         /// <param name="eventPublisher">Event publisher</param>
         public BackInStockSubscriptionService(IRepository<BackInStockSubscription> backInStockSubscriptionRepository,
             IWorkflowMessageService workflowMessageService,
-            IWorkContext workContext,
             IEventPublisher eventPublisher)
         {
             this._backInStockSubscriptionRepository = backInStockSubscriptionRepository;
             this._workflowMessageService = workflowMessageService;
-            this._workContext = workContext;
             this._eventPublisher = eventPublisher;
         }
 

@@ -4763,6 +4763,7 @@ namespace Nop.Services.Installation
                     ShowProductImagesInMiniShoppingCart = true,
                     MiniShoppingCartProductNumber = 5,
                     RoundPricesDuringCalculation = true,
+                    AllowCartItemEditing = true,
                 });
 
             settingService.SaveSetting(new OrderSettings()

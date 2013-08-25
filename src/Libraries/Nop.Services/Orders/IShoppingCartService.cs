@@ -141,17 +141,20 @@ namespace Nop.Services.Orders
         IList<string> AddToCart(Customer customer, Product product,
             ShoppingCartType shoppingCartType, int storeId, string selectedAttributes,
             decimal customerEnteredPrice, int quantity, bool automaticallyAddRequiredProductsIfEnabled);
-
+        
         /// <summary>
         /// Updates the shopping cart item
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="shoppingCartItemId">Shopping cart item identifier</param>
-        /// <param name="newQuantity">New shopping cart item quantity</param>
+        /// <param name="selectedAttributes">New shopping cart item attributes</param>
+        /// <param name="customerEnteredPrice">New customer entered price</param>
+        /// <param name="quantity">New shopping cart item quantity</param>
         /// <param name="resetCheckoutData">A value indicating whether to reset checkout data</param>
         /// <returns>Warnings</returns>
-        IList<string> UpdateShoppingCartItem(Customer customer, int shoppingCartItemId,
-            int newQuantity, bool resetCheckoutData);
+        IList<string> UpdateShoppingCartItem(Customer customer,
+            int shoppingCartItemId, string selectedAttributes,
+            decimal customerEnteredPrice, int quantity, bool resetCheckoutData);
         
         /// <summary>
         /// Migrate shopping cart
