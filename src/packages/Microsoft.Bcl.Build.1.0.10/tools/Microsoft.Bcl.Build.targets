@@ -10,8 +10,11 @@ Copyright (C) Microsoft Corporation. All rights reserved.
 ***********************************************************************************************
 -->
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <BclBuildImported>true</BclBuildImported>
+  </PropertyGroup>
   
-  <PropertyGroup Condition="'$(TargetFrameworkIdentifier)' != 'Silverlight'">
+  <PropertyGroup Condition="'$(TargetFrameworkIdentifier)' != 'Silverlight' and '$(OutputType)' != 'AppContainerExe'">
     <!-- 
       Workaround MSBuild issue that prevents System.Runtime 2.5 and System.Threading.Tasks 2.5 from
       satisfying indirect dependencies on System.Runtime 1.5 and System.Threading.Tasks 1.5 respectively.  
@@ -38,6 +41,8 @@ Copyright (C) Microsoft Corporation. All rights reserved.
     -->
   <PropertyGroup>
     <__IntermediateAppConfig>$(IntermediateOutputPath)$(MSBuildProjectFile).App.config</__IntermediateAppConfig>
+
+    <SkipEnsureBindingRedirects Condition="'$(TargetFrameworkIdentifier)' == 'Silverlight' or '$(OutputType)' == 'AppContainerExe'">true</SkipEnsureBindingRedirects>
   </PropertyGroup>
 
   <UsingTask TaskName="EnsureBindingRedirects" AssemblyFile="$(MSBuildThisFileDirectory)Microsoft.Bcl.Build.Tasks.dll" />
@@ -49,7 +54,7 @@ Copyright (C) Microsoft Corporation. All rights reserved.
     Determine which references are opted in for binding redirects
     ===================================================================================================================
     -->
-  <Target Name="BclBuildDetermineReferencesToRedirect" BeforeTargets="BclBuildEnsureBindingRedirects">
+  <Target Name="BclBuildDetermineReferencesToRedirect" BeforeTargets="BclBuildEnsureBindingRedirects" Condition="'$(SkipEnsureBindingRedirects)' != 'true'">
     <!-- Convention is a file next to the reference with name "ensureRedirect.xml" -->
     <ItemGroup>
       <_EnsureBindingRedirectReference Include="@(Reference)"
@@ -67,7 +72,7 @@ Copyright (C) Microsoft Corporation. All rights reserved.
   <Target Name="BclBuildEnsureBindingRedirects"
           DependsOnTargets="BclBuildDetermineReferencesToRedirect"
           BeforeTargets="ResolveAssemblyReferences"
-          Condition="'@(_EnsureBindingRedirectReference)' != ''"
+          Condition="'@(_EnsureBindingRedirectReference)' != '' and '$(SkipEnsureBindingRedirects)' != 'true'"
           Inputs="$(MSBuildAllProjects);$(AppConfig);@(_EnsureBindingRedirectReference->'%(HintPath)')"
           Outputs="$(__IntermediateAppConfig)">
 
@@ -88,7 +93,7 @@ Copyright (C) Microsoft Corporation. All rights reserved.
   <Target Name="BclBuildUpdateAppConfigWithTargetPath"
           DependsOnTargets="BclBuildDetermineReferencesToRedirect;BclBuildEnsureBindingRedirects"
           BeforeTargets="ResolveAssemblyReferences"
-          Condition="'@(_EnsureBindingRedirectReference)' != ''">
+          Condition="'@(_EnsureBindingRedirectReference)' != '' and '$(SkipEnsureBindingRedirects)' != 'true'">
     <PropertyGroup>
       <AppConfig>$(__IntermediateAppConfig)</AppConfig>
     </PropertyGroup>
