@@ -24,12 +24,12 @@ namespace Nop.Web.Framework.UI
         private readonly Dictionary<ResourceLocation, List<ScriptReferenceMeta>> _scriptParts;
         private readonly Dictionary<ResourceLocation, List<string>> _cssParts;
         private readonly List<string> _canonicalUrlParts;
-        private readonly HttpContextBase _httpContext;
+        private readonly List<string> _headCustomParts;
         #endregion
 
         #region Ctor
 
-        public PageHeadBuilder(SeoSettings seoSettings, HttpContextBase httpContext)
+        public PageHeadBuilder(SeoSettings seoSettings)
         {
             this._seoSettings = seoSettings;
             this._titleParts = new List<string>();
@@ -38,7 +38,7 @@ namespace Nop.Web.Framework.UI
             this._scriptParts = new Dictionary<ResourceLocation, List<ScriptReferenceMeta>>();
             this._cssParts = new Dictionary<ResourceLocation, List<string>>();
             this._canonicalUrlParts = new List<string>();
-            this._httpContext = httpContext;
+            this._headCustomParts = new List<string>();
         }
 
         #endregion
@@ -362,6 +362,37 @@ namespace Nop.Web.Framework.UI
             }
             return result.ToString();
         }
+
+        public virtual void AddHeadCustomParts(string part)
+        {
+            if (string.IsNullOrEmpty(part))
+                return;
+
+            _headCustomParts.Add(part);
+        }
+        public virtual void AppendHeadCustomParts(string part)
+        {
+            if (string.IsNullOrEmpty(part))
+                return;
+
+            _headCustomParts.Insert(0, part);
+        }
+        public virtual string GenerateHeadCustom()
+        {
+            //use only distinct rows
+            var distinctParts = _headCustomParts.Distinct().ToList();
+            if (distinctParts.Count == 0)
+                return "";
+
+            var result = new StringBuilder();
+            foreach (var path in distinctParts)
+            {
+                result.AppendFormat(path);
+                result.Append(Environment.NewLine);
+            }
+            return result.ToString();
+        }
+
 
         #endregion
 

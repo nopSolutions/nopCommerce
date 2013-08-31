@@ -3,10 +3,10 @@
 @{
     var displayMiniProfiler = CommonHelper.GetTrustLevel() >= AspNetHostingPermissionLevel.High &&
         EngineContext.Current.Resolve<Nop.Core.Domain.StoreInformationSettings>().DisplayMiniProfilerInPublicStore;
-    
+
     //resources
     Html.AppendCssFileParts("~/Content/jquery-ui-themes/smoothness/jquery-ui-1.10.0.custom.min.css");
-    
+
     Html.AppendScriptParts("~/Scripts/public.ajaxcart.js");
     Html.AppendScriptParts("~/Scripts/public.common.js");
     Html.AppendScriptParts("~/Scripts/jquery-ui-1.10.0.min.js");
@@ -29,6 +29,7 @@
     @Html.NopCssFiles(this.Url, ResourceLocation.Head)
     @Html.NopScripts(this.Url, ResourceLocation.Head)
     @Html.NopCanonicalUrls()
+    @Html.NopHeadCustom()
     @Html.Action("RssHeaderLink", "News")
     @Html.Action("RssHeaderLink", "Blog")
     @*Favicon - upload favicon.ico file to the root directory*@

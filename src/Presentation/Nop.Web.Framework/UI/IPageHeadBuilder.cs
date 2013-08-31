@@ -28,5 +28,9 @@ namespace Nop.Web.Framework.UI
         void AddCanonicalUrlParts(string part);
         void AppendCanonicalUrlParts(string part);
         string GenerateCanonicalUrls();
+
+        void AddHeadCustomParts(string part);
+        void AppendHeadCustomParts(string part);
+        string GenerateHeadCustom();
     }
 }
