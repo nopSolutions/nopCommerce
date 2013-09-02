@@ -702,7 +702,7 @@ namespace Nop.Services.Messages
             var tokens = new List<Token>();
             _messageTokenProvider.AddStoreTokens(tokens, store);
             _messageTokenProvider.AddCustomerTokens(tokens, customer);
-            _messageTokenProvider.AddProductTokens(tokens, product);
+            _messageTokenProvider.AddProductTokens(tokens, product, languageId);
             tokens.Add(new Token("EmailAFriend.PersonalMessage", personalMessage, true));
             tokens.Add(new Token("EmailAFriend.Email", customerEmail));
 
@@ -1055,7 +1055,7 @@ namespace Nop.Services.Messages
 
             var tokens = new List<Token>();
             _messageTokenProvider.AddStoreTokens(tokens, store);
-            _messageTokenProvider.AddProductTokens(tokens, product);
+            _messageTokenProvider.AddProductTokens(tokens, product, languageId);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
