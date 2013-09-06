@@ -627,6 +627,7 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 .registration-page .accept-privacy-policy{float:left;margin-bottom:5px;margin-top:5px;clear:both;}
 .registration-page .accept-privacy-policy .read{text-decoration:underline;}
 .registration-page .buttons{margin-bottom:5px;margin-top:5px;clear:both;}
+.registration-page .message-error {margin-bottom:20px;}
 .registration-result-page{}
 .registration-result-page .page-title{}
 .registration-result-page .page-body{margin:0;padding:0;color:#555;background-color:inherit;}
@@ -860,6 +861,7 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 .customer-info-page{}
 .customer-info-page .vat-note{display:block;}
 .customer-info-page .buttons{margin-bottom:5px;margin-top:5px;text-align:center;}
+.customer-info-page .message-error {margin-bottom:20px;}
 .username-available-status{color:green;padding-left:5px;}
 .username-not-available-status{color:red;padding-left:5px;}
 .account-signature-text{height:100px;width:500px;border:solid 1px #E3E3E3;vertical-align:top;}
