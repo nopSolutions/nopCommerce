@@ -22,6 +22,11 @@ namespace Nop.Core.Domain.Seo
         public bool EnableJsBundling { get; set; }
 
         /// <summary>
+        /// A value indicating whether CSS file bundling and minification is enabled
+        /// </summary>
+        public bool EnableCssBundling { get; set; }
+
+        /// <summary>
         /// Slugs (sename) reserved for some other needs
         /// </summary>
         public List<string> ReservedUrlRecordSlugs { get; set; }

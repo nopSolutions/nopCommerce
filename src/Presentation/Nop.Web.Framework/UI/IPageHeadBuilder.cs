@@ -22,7 +22,7 @@ namespace Nop.Web.Framework.UI
 
         void AddCssFileParts(ResourceLocation location, string part);
         void AppendCssFileParts(ResourceLocation location, string part);
-        string GenerateCssFiles(UrlHelper urlHelper, ResourceLocation location);
+        string GenerateCssFiles(UrlHelper urlHelper, ResourceLocation location, bool? bundleFiles = null);
 
 
         void AddCanonicalUrlParts(string part);

@@ -4523,6 +4523,8 @@ namespace Nop.Services.Installation
                     ConvertNonWesternChars = false,
                     AllowUnicodeCharsInUrls = true,
                     EnableJsBundling = true,
+                    EnableCssBundling = false,
+                    CanonicalUrlsEnabled = false,
                     ReservedUrlRecordSlugs = new List<string>()
                     {
                         "admin", 

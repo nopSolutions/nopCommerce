@@ -237,20 +237,6 @@ namespace Nop.Web.Framework.UI
                 {
                     //IMPORTANT: Do not use bundling in web farms or Windows Azure
                     string bundleVirtualPath = GetBundleVirtualPath("~/bundles/scripts/", ".js", partsToBundle);
-                    //System.Web.Optimization library does not support dynamic bundles yet.
-                    //But we know how System.Web.Optimization library stores cached results.
-                    //so let's clear the cache because we add new file references dynamically based on a page
-                    //until it's officially supported in System.Web.Optimization we have to "workaround" it manually
-                    //var cacheKey = (string)typeof(Bundle)
-                    //    .GetMethod("GetCacheKey", BindingFlags.Static | BindingFlags.NonPublic)
-                    //    .Invoke(null, new object[] { bundleVirtualPath });
-                    //or use the code below
-                    //TODO: ...but periodically ensure that cache key which we use is valid (decompile Bundle.GetCacheKey method)
-                    //var cacheKey = "System.Web.Optimization.Bundle:" + bundleVirtualPath;
-
-                    //if (_httpContext.Cache[cacheKey] != null)
-                    //    _httpContext.Cache.Remove(cacheKey);
-
                     //create bundle
                     lock (s_lock)
                     {
@@ -318,7 +304,7 @@ namespace Nop.Web.Framework.UI
             
             _cssParts[location].Insert(0, part);
         }
-        public virtual string GenerateCssFiles(UrlHelper urlHelper, ResourceLocation location)
+        public virtual string GenerateCssFiles(UrlHelper urlHelper, ResourceLocation location, bool? bundleFiles = null)
         {
             if (!_cssParts.ContainsKey(location) || _cssParts[location] == null)
                 return "";
@@ -327,14 +313,64 @@ namespace Nop.Web.Framework.UI
             var distinctParts = _cssParts[location].Distinct().ToList();
             if (distinctParts.Count == 0)
                 return "";
-
-            var result = new StringBuilder();
-            foreach (var path in distinctParts)
+            if (!bundleFiles.HasValue)
             {
-                result.AppendFormat("<link href=\"{0}\" rel=\"stylesheet\" type=\"text/css\" />", urlHelper.Content(path));
-                result.Append(Environment.NewLine);
+                //use setting if not value is specified
+                bundleFiles = _seoSettings.EnableCssBundling;
             }
-            return result.ToString();
+            if (bundleFiles.Value)
+            {
+                //bundling is enabled
+                var result = new StringBuilder();
+
+                var partsToBundle = distinctParts.ToArray();
+                if (partsToBundle.Length > 0)
+                {
+                    //IMPORTANT: Do not use bundling in web farms or Windows Azure
+                    //IMPORTANT: Do not use CSS bundling in virtual categories
+                    string bundleVirtualPath = GetBundleVirtualPath("~/bundles/styles/", ".css", partsToBundle);
+
+                    //create bundle
+                    lock (s_lock)
+                    {
+                        var bundleFor = BundleTable.Bundles.GetBundleFor(bundleVirtualPath);
+                        if (bundleFor == null)
+                        {
+                            var bundle = new StyleBundle(bundleVirtualPath);
+                            //bundle.Transforms.Clear();
+
+                            //"As is" ordering
+                            bundle.Orderer = new AsIsBundleOrderer();
+                            //disable file extension replacements. renders scripts which were specified by a developer
+                            bundle.EnableFileExtensionReplacements = false;
+                            foreach (var ptb in partsToBundle)
+                            {
+                                bundle.Include(ptb, new CssRewriteUrlTransform());
+                            }
+                            BundleTable.Bundles.Add(bundle);
+                            //we clear ignore list because System.Web.Optimization library adds ignore patterns such as "*.min", "*.debug".
+                            //we think it's bad decision and should be disabled by default
+                            BundleTable.Bundles.IgnoreList.Clear();
+                        }
+                    }
+
+                    //parts to bundle
+                    result.AppendLine(Styles.Render(bundleVirtualPath).ToString());
+                }
+
+                return result.ToString();
+            }
+            else
+            {
+                //bundling is disabled
+                var result = new StringBuilder();
+                foreach (var path in distinctParts)
+                {
+                    result.AppendFormat("<link href=\"{0}\" rel=\"stylesheet\" type=\"text/css\" />", urlHelper.Content(path));
+                    result.Append(Environment.NewLine);
+                }
+                return result.ToString();
+            }
         }
 
 

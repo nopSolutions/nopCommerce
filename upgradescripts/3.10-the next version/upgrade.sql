@@ -241,3 +241,11 @@ BEGIN
 	VALUES (N'shoppingcartsettings.allowcartitemediting', N'true', 0)
 END
 GO
+
+--a new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'seosettings.enablecssbundling')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'seosettings.enablecssbundling', N'false', 0)
+END
+GO
