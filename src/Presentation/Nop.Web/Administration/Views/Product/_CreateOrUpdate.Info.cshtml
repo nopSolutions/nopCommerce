@@ -1,6 +1,12 @@
 ﻿@model ProductModel
-
+@{
+    //resources for product tags input
+    Html.AppendCssFileParts("~/Administration/Content/jquery.tagit.css");
+    Html.AppendScriptParts("~/Administration/Scripts/tag-it.min.js");
+}
 @using Nop.Core.Domain.Catalog;
+@using Nop.Services.Catalog;
+@using System.Text;
 <script type="text/javascript">
     $(document).ready(function () {
         
@@ -229,10 +235,33 @@
         }
         }
         
-    
-
+    @{
+        //TODO move to Model
+        var productTags = EngineContext.Current.Resolve<IProductTagService>().GetAllProductTags();
+        var productTagsSb = new StringBuilder();
+        productTagsSb.Append("var sampleTags = [");
+        for (int i = 0; i < productTags.Count; i++)
+        {
+            var tag = productTags[i];
+            productTagsSb.Append("'");
+            productTagsSb.Append(HttpUtility.JavaScriptStringEncode(tag.Name));
+            productTagsSb.Append("'");
+            if (i != productTags.Count - 1)
+            {
+                productTagsSb.Append(",");
+            }
+        }
+        productTagsSb.Append("]");
+    }
+    //product tags
+    $(document).ready(function () {          
+        @Html.Raw(productTagsSb.ToString())
+        $("#@Html.FieldIdFor(model => model.ProductTags)").tagit({
+            availableTags: sampleTags,
+            allowSpaces: true
+        });
+    });
 </script>
-
 <table class="adminContent">
     @if (Model.Id > 0)
     {
@@ -271,7 +300,7 @@
                 @Html.NopLabelFor(model => model.AssociatedToProductId):
             </td>
             <td class="adminData">
-                @Html.ActionLink(Model.AssociatedToProductName, "Edit", "Product", new { id = Model.AssociatedToProductId }, new {})
+                @Html.ActionLink(Model.AssociatedToProductName, "Edit", "Product", new { id = Model.AssociatedToProductId }, new { })
             </td>
         </tr>
     }
