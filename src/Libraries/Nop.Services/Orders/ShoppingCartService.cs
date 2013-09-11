@@ -432,12 +432,14 @@ namespace Nop.Services.Orders
         /// <param name="customer">Customer</param>
         /// <param name="shoppingCartType">Shopping cart type</param>
         /// <param name="product">Product</param>
+        /// <param name="quantity">Quantity</param>
         /// <param name="selectedAttributes">Selected attributes</param>
         /// <returns>Warnings</returns>
         public virtual IList<string> GetShoppingCartItemAttributeWarnings(Customer customer, 
             ShoppingCartType shoppingCartType,
             Product product, 
-            string selectedAttributes)
+            int quantity = 1,
+            string selectedAttributes = "")
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -512,7 +514,7 @@ namespace Nop.Services.Orders
                         {
                             var associatedProductWarnings = GetShoppingCartItemWarnings(customer,
                                 shoppingCartType, associatedProduct, _storeContext.CurrentStore.Id,
-                                "", decimal.Zero, 1, false, true, true, true, true);
+                                "", decimal.Zero, quantity, false, true, true, true, true);
                             foreach (var associatedProductWarning in associatedProductWarnings)
                             {
                                 var paName = pvaValue.ProductVariantAttribute.ProductAttribute.GetLocalized(a => a.Name);
@@ -617,7 +619,7 @@ namespace Nop.Services.Orders
 
             //selected attributes
             if (getAttributesWarnings)
-                warnings.AddRange(GetShoppingCartItemAttributeWarnings(customer, shoppingCartType, product, selectedAttributes));
+                warnings.AddRange(GetShoppingCartItemAttributeWarnings(customer, shoppingCartType, product, quantity, selectedAttributes));
 
             //gift cards
             if (getGiftCardWarnings)
