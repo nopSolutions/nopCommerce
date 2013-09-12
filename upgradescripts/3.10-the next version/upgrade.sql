@@ -80,8 +80,17 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.AllowCartItemEditing.Hint">
     <Value>Check to allow customers to edit items already placed in the cart. It could be useful when your products have attributes or any other fields entered by a customer.</Value>
   </LocaleResource>
-  <LocaleResource Name="ShoppingCart.AddToCart.Update">
-    <Value>Update</Value>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableJsBundling">
+    <Value>JavaScript bundling and minification</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableJsBundling.Hint">
+    <Value>Enable to combine (bundle) multiple JavaScript files into a single file. Don''t do it if you''re running nopCommerce in web farms or Windows Azure.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableCssBundling">
+    <Value>CSS bundling and minification</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableCssBundling.Hint">
+    <Value>Enable to combine (bundle) multiple CSS files into a single file. Don''t do it if you''re running nopCommerce in web farms or Windows Azure. It also doesn''t work in virtual IIS directories.</Value>
   </LocaleResource>
 </Language>
 '

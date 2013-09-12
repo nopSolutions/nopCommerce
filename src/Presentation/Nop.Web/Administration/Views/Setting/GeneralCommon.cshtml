@@ -307,6 +307,26 @@
                 @Html.ValidationMessageFor(model => model.SeoSettings.CanonicalUrlsEnabled)
             </td>
         </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.EnableJsBundling_OverrideForStore, model => model.SeoSettings.EnableJsBundling, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.SeoSettings.EnableJsBundling):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SeoSettings.EnableJsBundling)
+                @Html.ValidationMessageFor(model => model.SeoSettings.EnableJsBundling)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.EnableCssBundling_OverrideForStore, model => model.SeoSettings.EnableCssBundling, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.SeoSettings.EnableCssBundling):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SeoSettings.EnableCssBundling)
+                @Html.ValidationMessageFor(model => model.SeoSettings.EnableCssBundling)
+            </td>
+        </tr>
     </table>
 }
 @helper TabSecuritySettings()

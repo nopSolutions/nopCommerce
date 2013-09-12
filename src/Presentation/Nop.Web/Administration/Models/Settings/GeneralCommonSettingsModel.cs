@@ -127,6 +127,14 @@ namespace Nop.Admin.Models.Settings
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CanonicalUrlsEnabled")]
             public bool CanonicalUrlsEnabled { get; set; }
             public bool CanonicalUrlsEnabled_OverrideForStore { get; set; }
+
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.EnableJsBundling")]
+            public bool EnableJsBundling { get; set; }
+            public bool EnableJsBundling_OverrideForStore { get; set; }
+
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.EnableCssBundling")]
+            public bool EnableCssBundling { get; set; }
+            public bool EnableCssBundling_OverrideForStore { get; set; }
         }
 
         public partial class SecuritySettingsModel : BaseNopModel

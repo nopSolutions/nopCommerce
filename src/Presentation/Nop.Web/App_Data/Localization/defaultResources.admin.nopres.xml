@@ -4959,6 +4959,22 @@
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
+                  <LocaleResource Name="EnableJsBundling">
+                    <Value>JavaScript bundling and minification</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Enable to combine (bundle) multiple JavaScript files into a single file. Don't do it if you're running nopCommerce in web farms or Windows Azure.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="EnableCssBundling">
+                    <Value>CSS bundling and minification</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Enable to combine (bundle) multiple CSS files into a single file. Don't do it if you're running nopCommerce in web farms or Windows Azure. It also doesn't work in virtual IIS directories.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
                   <LocaleResource Name="EncryptionKey">
                     <Value>Encryption private key</Value>
                     <Children>
