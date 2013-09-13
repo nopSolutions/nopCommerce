@@ -3332,6 +3332,9 @@
           </LocaleResource>
         </Children>
       </LocaleResource>
+      <LocaleResource Name="DeliveryDate">
+        <Value>Delivery date</Value>
+      </LocaleResource>
       <LocaleResource Name="Details">
         <Value>Details</Value>
       </LocaleResource>

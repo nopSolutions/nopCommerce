@@ -435,6 +435,25 @@ namespace Nop.Admin
         }
 
         #endregion
+
+        #region Delivery dates
+
+        public static DeliveryDateModel ToModel(this DeliveryDate entity)
+        {
+            return Mapper.Map<DeliveryDate, DeliveryDateModel>(entity);
+        }
+
+        public static DeliveryDate ToEntity(this DeliveryDateModel model)
+        {
+            return Mapper.Map<DeliveryDateModel, DeliveryDate>(model);
+        }
+
+        public static DeliveryDate ToEntity(this DeliveryDateModel model, DeliveryDate destination)
+        {
+            return Mapper.Map(model, destination);
+        }
+
+        #endregion
         
         #region Payment methods
 

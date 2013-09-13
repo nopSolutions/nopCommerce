@@ -170,6 +170,7 @@ namespace Nop.Services.Catalog
                 IsShipEnabled = product.IsShipEnabled,
                 IsFreeShipping = product.IsFreeShipping,
                 AdditionalShippingCharge = product.AdditionalShippingCharge,
+                DeliveryDateId = product.DeliveryDateId,
                 IsTaxExempt = product.IsTaxExempt,
                 TaxCategoryId = product.TaxCategoryId,
                 ManageInventoryMethod = product.ManageInventoryMethod,

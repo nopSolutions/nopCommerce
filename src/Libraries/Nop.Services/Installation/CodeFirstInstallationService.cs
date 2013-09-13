@@ -74,6 +74,7 @@ namespace Nop.Services.Installation
         private readonly IRepository<NewsItem> _newsItemRepository;
         private readonly IRepository<Poll> _pollRepository;
         private readonly IRepository<ShippingMethod> _shippingMethodRepository;
+        private readonly IRepository<DeliveryDate> _deliveryDateRepository;
         private readonly IRepository<ActivityLogType> _activityLogTypeRepository;
         private readonly IRepository<ProductTag> _productTagRepository;
         private readonly IRepository<ProductTemplate> _productTemplateRepository;
@@ -114,6 +115,7 @@ namespace Nop.Services.Installation
             IRepository<NewsItem> newsItemRepository,
             IRepository<Poll> pollRepository,
             IRepository<ShippingMethod> shippingMethodRepository,
+            IRepository<DeliveryDate> deliveryDateRepository,
             IRepository<ActivityLogType> activityLogTypeRepository,
             IRepository<ProductTag> productTagRepository,
             IRepository<ProductTemplate> productTemplateRepository,
@@ -150,6 +152,7 @@ namespace Nop.Services.Installation
             this._newsItemRepository = newsItemRepository;
             this._pollRepository = pollRepository;
             this._shippingMethodRepository = shippingMethodRepository;
+            this._deliveryDateRepository = deliveryDateRepository;
             this._activityLogTypeRepository = activityLogTypeRepository;
             this._productTagRepository = productTagRepository;
             this._productTemplateRepository = productTemplateRepository;
@@ -4009,6 +4012,30 @@ namespace Nop.Services.Installation
                                         },
                                 };
             shippingMethods.ForEach(sm => _shippingMethodRepository.Insert(sm));
+
+        }
+
+        protected virtual void InstallDeliveryDates()
+        {
+            var deliveryDates = new List<DeliveryDate>
+                                {
+                                    new DeliveryDate
+                                        {
+                                            Name = "1-2 days",
+                                            DisplayOrder = 1
+                                        },
+                                    new DeliveryDate
+                                        {
+                                            Name = "3-5 days",
+                                            DisplayOrder = 5
+                                        },
+                                    new DeliveryDate
+                                        {
+                                            Name = "1 week",
+                                            DisplayOrder = 10
+                                        },
+                                };
+            deliveryDates.ForEach(dd => _deliveryDateRepository.Insert(dd));
 
         }
 
@@ -9671,6 +9698,7 @@ namespace Nop.Services.Installation
             InstallCurrencies();
             InstallCountriesAndStates();
             InstallShippingMethods();
+            InstallDeliveryDates();
             InstallCustomersAndUsers(defaultUserEmail, defaultUserPassword);
             InstallEmailAccounts();
             InstallMessageTemplates();

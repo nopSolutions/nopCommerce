@@ -908,7 +908,7 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 .product-details-page .gallery .picture-thumbs a{margin-left:3px;}
 .product-details-page .overview{float:left;width:330px;margin:5px 5px 10px;padding:10px;border:1px solid #eee;}
 .product-details-page .product-name{color:#5C5B5B;font-size:1.3em;margin-bottom:0.3em;padding-top:10px;}
-.product-details-page .short-description,.product-details-page .manufacturers,.product-details-page .sku,.product-details-page .manufacturer-part-number,.product-details-page .stock,.product-details-page .gtin{color:#555;margin-bottom:.3em;font-size:1.1em;}
+.product-details-page .short-description,.product-details-page .manufacturers,.product-details-page .sku,.product-details-page .manufacturer-part-number,.product-details-page .stock,.product-details-page .gtin,.product-details-page .delivery-date{color:#555;margin-bottom:.3em;font-size:1.1em;}
 .product-details-page .full-description{border:1px solid #eee;clear:both;color:#555;margin-bottom:.3em;padding:5px;}
 .product-details-page .full-description ul,.product-details-page .full-description ol{margin-right:25px;}
 .product-details-page .back-in-stock-subscription{margin-top:10px;margin-bottom:10px;}

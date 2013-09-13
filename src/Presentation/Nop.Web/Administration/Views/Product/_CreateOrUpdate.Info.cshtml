@@ -153,6 +153,7 @@
                 $('#pnlLength').show();
                 $('#pnlWidth').show();
                 $('#pnlHeight').show();
+                $('#pnlDeliveryDate').show();
             }
             else {
                 $('#pnlFreeShipping').hide();
@@ -161,6 +162,7 @@
                 $('#pnlLength').hide();
                 $('#pnlWidth').hide();
                 $('#pnlHeight').hide();
+                $('#pnlDeliveryDate').hide();
             }
         }
 
@@ -853,6 +855,15 @@
         <td class="adminData">
             @Html.EditorFor(model => model.Height) [@Model.BaseDimensionIn]
             @Html.ValidationMessageFor(model => model.Height)
+        </td>
+    </tr>
+    <tr id="pnlDeliveryDate">
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.DeliveryDateId):
+        </td>
+        <td class="adminData">
+            @Html.DropDownListFor(model => model.DeliveryDateId, Model.AvailableDeliveryDates)
+            @Html.ValidationMessageFor(model => model.DeliveryDateId)
         </td>
     </tr>
 </table>

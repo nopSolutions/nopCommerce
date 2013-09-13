@@ -1,7 +1,7 @@
-﻿@model ShippingMethodModel
+﻿@model DeliveryDateModel
 @Html.ValidationSummary(true)
 @Html.HiddenFor(model => model.Id)
-@(Html.LocalizedEditor<ShippingMethodModel, ShippingMethodLocalizedModel>("shipping-method-localized",
+@(Html.LocalizedEditor<DeliveryDateModel, DeliveryDateLocalizedModel>("delivery-date-localized",
                 @<table class="adminContent">
                     <tr>
                         <td class="adminTitle">
@@ -10,15 +10,6 @@
                         <td class="adminData">
                             @Html.EditorFor(model => Model.Locales[item].Name)
                             @Html.ValidationMessageFor(model => model.Locales[item].Name)
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="adminTitle">
-                            @Html.NopLabelFor(model => model.Locales[item].Description):
-                        </td>
-                        <td class="adminData">
-                            @Html.TextAreaFor(model => model.Locales[item].Description)
-                            @Html.ValidationMessageFor(model => model.Locales[item].Description)
                         </td>
                     </tr>
                     <tr>
@@ -36,15 +27,6 @@
                         <td class="adminData">
                             @Html.EditorFor(model => model.Name)
                             @Html.ValidationMessageFor(model => model.Name)
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="adminTitle">
-                            @Html.NopLabelFor(model => model.Description):
-                        </td>
-                        <td class="adminData">
-                            @Html.TextAreaFor(model => model.Description)
-                            @Html.ValidationMessageFor(model => model.Description)
                         </td>
                     </tr>
                 </table>

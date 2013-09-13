@@ -1484,6 +1484,14 @@
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
+                  <LocaleResource Name="DeliveryDate">
+                    <Value>Delivery date</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Choose a delivery date which will be displayed in the public store.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
                   <LocaleResource Name="DisableBuyButton">
                     <Value>Disable buy button</Value>
                     <Children>
@@ -5930,6 +5938,52 @@
           <LocaleResource Name="Shipping">
             <Value>Shipping</Value>
             <Children>
+              <LocaleResource Name="DeliveryDate">
+                <Value>Delivery dates</Value>
+                <Children>
+                  <LocaleResource Name="AddNew">
+                    <Value>Add a new delivery date</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="BackToList">
+                    <Value>back to delivery date list</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="EditDeliveryDateDetails">
+                    <Value>Edit delivery date details</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Fields">
+                    <Children>
+                      <LocaleResource Name="Name">
+                        <Value>Name</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Enter delivery date name.</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Required">
+                            <Value>Please provide a name.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="DisplayOrder">
+                        <Value>Display order</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>The display order of this delivery date. 1 represents the top of the list.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="Added">
+                    <Value>The new delivery date has been added successfully.</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Deleted">
+                    <Value>The delivery date has been deleted successfully.</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Updated">
+                    <Value>The delivery date has been updated successfully.</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
               <LocaleResource Name="Methods">
                 <Value>Shipping methods</Value>
                 <Children>

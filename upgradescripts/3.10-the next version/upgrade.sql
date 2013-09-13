@@ -92,6 +92,54 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableCssBundling.Hint">
     <Value>Enable to combine (bundle) multiple CSS files into a single file. Don''t do it if you''re running nopCommerce in web farms or Windows Azure. It also doesn''t work in virtual IIS directories.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.DeliveryDates">
+    <Value>Delivery dates</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.DeliveryDates.AddNew">
+    <Value>Add a new delivery date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.DeliveryDates.BackToList">
+    <Value>back to delivery date list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.DeliveryDates.EditDeliveryDateDetails">
+    <Value>Edit delivery date details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.DeliveryDates.Added">
+    <Value>The new delivery date has been added successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.DeliveryDates.Deleted">
+    <Value>The delivery date has been deleted successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.DeliveryDates.Updated">
+    <Value>The delivery date has been updated successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.DeliveryDates.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.DeliveryDates.Fields.Name.Hint">
+    <Value>Enter delivery date name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.DeliveryDates.Fields.Name.Required">
+    <Value>Please provide a name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.DeliveryDates.Fields.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.DeliveryDates.Fields.DisplayOrder.Hint">
+    <Value>The display order of this delivery date. 1 represents the top of the list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.DeliveryDate">
+    <Value>Delivery date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.DeliveryDate.Hint">
+    <Value>Choose a delivery date which will be displayed in the public store.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.DeliveryDate.None">
+    <Value>None</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.DeliveryDate">
+    <Value>Delivery date</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -257,4 +305,47 @@ BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'seosettings.enablecssbundling', N'false', 0)
 END
+GO
+
+
+--delivery dates
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[DeliveryDate]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+BEGIN
+	CREATE TABLE [dbo].[DeliveryDate](
+		[Id] [int] IDENTITY(1,1) NOT NULL,
+		[Name] nvarchar(400) NOT NULL,
+		[DisplayOrder] int NOT NULL,
+	PRIMARY KEY CLUSTERED 
+	(
+		[Id] ASC
+	)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON)
+	)
+
+	--create several sample options
+	INSERT INTO [DeliveryDate] ([Name], [DisplayOrder])
+	VALUES (N'1-2 days', 1)
+	
+	INSERT INTO [DeliveryDate] ([Name], [DisplayOrder])
+	VALUES (N'3-5 days', 5)
+	
+	INSERT INTO [DeliveryDate] ([Name], [DisplayOrder])
+	VALUES (N'1 week', 10)
+END
+GO
+
+
+--add a new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Product]') and NAME='DeliveryDateId')
+BEGIN
+	ALTER TABLE [Product]
+	ADD [DeliveryDateId] int NULL
+END
+GO
+
+UPDATE [Product]
+SET [DeliveryDateId] = 0
+WHERE [DeliveryDateId] IS NULL
+GO
+
+ALTER TABLE [Product] ALTER COLUMN [DeliveryDateId] int NOT NULL
 GO

@@ -1,0 +1,21 @@
+﻿@model DeliveryDateModel
+@{
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Shipping.DeliveryDates.EditDeliveryDateDetails").Text;
+}
+@using (Html.BeginForm())
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
+            @T("Admin.Configuration.Shipping.DeliveryDates.EditDeliveryDateDetails") - @Model.Name @Html.ActionLink("(" + T("Admin.Configuration.Shipping.DeliveryDates.BackToList") + ")", "DeliveryDates")
+        </div>
+        <div class="options">
+            <input type="submit" name="save" class="t-button" value="@T("Admin.Common.Save")" />
+            <input type="submit" name="save-continue" class="t-button" value="@T("Admin.Common.SaveContinue")" />
+            <span id="delivery-date-delete" class="t-button">@T("Admin.Common.Delete")</span>
+        </div>
+    </div>
+    @Html.Partial("_CreateOrUpdateDeliveryDate", Model)
+}
+@Html.DeleteConfirmation("DeleteDeliveryDate", "delivery-date-delete")

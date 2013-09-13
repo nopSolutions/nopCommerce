@@ -48,6 +48,8 @@ namespace Nop.Web.Models.Catalog
 
         public GiftCardModel GiftCard { get; set; }
 
+        public string DeliveryDate { get; set; }
+
         public string StockAvailability { get; set; }
 
         public bool IsCurrentCustomerRegistered { get; set; }

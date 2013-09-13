@@ -253,6 +253,11 @@ namespace Nop.Core.Domain.Catalog
         public decimal AdditionalShippingCharge { get; set; }
 
         /// <summary>
+        /// Gets or sets a delivery date identifier
+        /// </summary>
+        public int DeliveryDateId { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the product is marked as tax exempt
         /// </summary>
         public bool IsTaxExempt { get; set; }

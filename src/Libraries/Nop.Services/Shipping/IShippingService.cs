@@ -34,6 +34,8 @@ namespace Nop.Services.Shipping
 
 
 
+
+
         /// <summary>
         /// Deletes a shipping method
         /// </summary>
@@ -66,6 +68,39 @@ namespace Nop.Services.Shipping
         /// </summary>
         /// <param name="shippingMethod">Shipping method</param>
         void UpdateShippingMethod(ShippingMethod shippingMethod);
+
+
+
+        /// <summary>
+        /// Deletes a delivery date
+        /// </summary>
+        /// <param name="deliveryDate">The delivery date</param>
+        void DeleteDeliveryDate(DeliveryDate deliveryDate);
+
+        /// <summary>
+        /// Gets a delivery date
+        /// </summary>
+        /// <param name="deliveryDateId">The delivery date identifier</param>
+        /// <returns>Delivery date</returns>
+        DeliveryDate GetDeliveryDateById(int deliveryDateId);
+
+        /// <summary>
+        /// Gets all delivery dates
+        /// </summary>
+        /// <returns>Delivery dates</returns>
+        IList<DeliveryDate> GetAllDeliveryDates();
+
+        /// <summary>
+        /// Inserts a delivery date
+        /// </summary>
+        /// <param name="deliveryDate">Delivery date</param>
+        void InsertDeliveryDate(DeliveryDate deliveryDate);
+
+        /// <summary>
+        /// Updates the delivery date
+        /// </summary>
+        /// <param name="deliveryDate">Delivery date</param>
+        void UpdateDeliveryDate(DeliveryDate deliveryDate);
 
 
 

@@ -28,3 +28,11 @@
         <span class="label">@T("Products.Availability"): </span><span class="value">@Model.StockAvailability</span>
     </div>
 }
+@*Delivery date*@
+@if (!String.IsNullOrWhiteSpace(Model.DeliveryDate))
+{
+    <div class="delivery-date">
+        <span class="label">@T("Products.DeliveryDate"): </span><span class="value">@Model.DeliveryDate</span>
+    </div>
+}
+

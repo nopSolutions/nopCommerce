@@ -21,7 +21,8 @@ namespace Nop.Services.Tests.Shipping
     [TestFixture]
     public class ShippingServiceTests : ServiceTest
     {
-        IRepository<ShippingMethod> _shippingMethodRepository;
+        private IRepository<ShippingMethod> _shippingMethodRepository;
+        IRepository<DeliveryDate> _deliveryDateRepository;
         ILogger _logger;
         IProductAttributeParser _productAttributeParser;
         ICheckoutAttributeParser _checkoutAttributeParser;
@@ -41,6 +42,7 @@ namespace Nop.Services.Tests.Shipping
             _shippingSettings.ActiveShippingRateComputationMethodSystemNames.Add("FixedRateTestShippingRateComputationMethod");
 
             _shippingMethodRepository = MockRepository.GenerateMock<IRepository<ShippingMethod>>();
+            _deliveryDateRepository = MockRepository.GenerateMock<IRepository<DeliveryDate>>();
             _logger = new NullLogger();
             _productAttributeParser = MockRepository.GenerateMock<IProductAttributeParser>();
             _checkoutAttributeParser = MockRepository.GenerateMock<ICheckoutAttributeParser>();
@@ -58,6 +60,7 @@ namespace Nop.Services.Tests.Shipping
 
             _shoppingCartSettings = new ShoppingCartSettings();
             _shippingService = new ShippingService(_shippingMethodRepository, 
+                _deliveryDateRepository,
                 _logger,
                 _productService,
                 _productAttributeParser,

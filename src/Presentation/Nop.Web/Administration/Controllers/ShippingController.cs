@@ -75,6 +75,18 @@ namespace Nop.Admin.Controllers
             }
         }
 
+        [NonAction]
+        protected void UpdateLocales(DeliveryDate deliveryDate, DeliveryDateModel model)
+        {
+            foreach (var localized in model.Locales)
+            {
+                _localizedEntityService.SaveLocalizedValue(deliveryDate,
+                                                               x => x.Name,
+                                                               localized.Name,
+                                                               localized.LanguageId);
+            }
+        }
+
         #endregion
 
         #region Shipping rate computation methods
@@ -299,6 +311,136 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("Methods");
         }
         
+        #endregion
+
+        #region Delivery dates
+
+        public ActionResult DeliveryDates()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
+            return View();
+        }
+
+        [HttpPost, GridAction(EnableCustomBinding = true)]
+        public ActionResult DeliveryDates(GridCommand command)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
+            var deliveryDatesModel = _shippingService.GetAllDeliveryDates()
+                .Select(x => x.ToModel())
+                .ForCommand(command)
+                .ToList();
+            var model = new GridModel<DeliveryDateModel>
+            {
+                Data = deliveryDatesModel,
+                Total = deliveryDatesModel.Count
+            };
+
+            return new JsonResult
+            {
+                Data = model
+            };
+        }
+
+
+        public ActionResult CreateDeliveryDate()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
+            var model = new DeliveryDateModel();
+            //locales
+            AddLocales(_languageService, model.Locales);
+            return View(model);
+        }
+
+        [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        public ActionResult CreateDeliveryDate(DeliveryDateModel model, bool continueEditing)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
+            if (ModelState.IsValid)
+            {
+                var deliveryDate = model.ToEntity();
+                _shippingService.InsertDeliveryDate(deliveryDate);
+                //locales
+                UpdateLocales(deliveryDate, model);
+
+                SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.DeliveryDates.Added"));
+                return continueEditing ? RedirectToAction("EditDeliveryDate", new { id = deliveryDate.Id }) : RedirectToAction("DeliveryDates");
+            }
+
+            //If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+        public ActionResult EditDeliveryDate(int id)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
+            var deliveryDate = _shippingService.GetDeliveryDateById(id);
+            if (deliveryDate == null)
+                //No delivery date found with the specified id
+                return RedirectToAction("DeliveryDates");
+
+            var model = deliveryDate.ToModel();
+            //locales
+            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            {
+                locale.Name = deliveryDate.GetLocalized(x => x.Name, languageId, false, false);
+            });
+
+            return View(model);
+        }
+
+        [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        public ActionResult EditDeliveryDate(DeliveryDateModel model, bool continueEditing)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
+            var deliveryDate = _shippingService.GetDeliveryDateById(model.Id);
+            if (deliveryDate == null)
+                //No delivery date found with the specified id
+                return RedirectToAction("DeliveryDates");
+
+            if (ModelState.IsValid)
+            {
+                deliveryDate = model.ToEntity(deliveryDate);
+                _shippingService.UpdateDeliveryDate(deliveryDate);
+                //locales
+                UpdateLocales(deliveryDate, model);
+                SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.DeliveryDates.Updated"));
+                return continueEditing ? RedirectToAction("EditDeliveryDate", deliveryDate.Id) : RedirectToAction("DeliveryDates");
+            }
+
+
+            //If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult DeleteDeliveryDate(int id)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
+            var deliveryDate = _shippingService.GetDeliveryDateById(id);
+            if (deliveryDate == null)
+                //No delivery date found with the specified id
+                return RedirectToAction("DeliveryDates");
+
+            _shippingService.DeleteDeliveryDate(deliveryDate);
+
+            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.DeliveryDates.Deleted"));
+            return RedirectToAction("DeliveryDates");
+        }
+
         #endregion
         
         #region Restrictions

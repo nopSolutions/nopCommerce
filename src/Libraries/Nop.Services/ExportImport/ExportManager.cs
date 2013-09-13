@@ -260,6 +260,7 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("IsShipEnabled", null, product.IsShipEnabled.ToString());
                 xmlWriter.WriteElementString("IsFreeShipping", null, product.IsFreeShipping.ToString());
                 xmlWriter.WriteElementString("AdditionalShippingCharge", null, product.AdditionalShippingCharge.ToString());
+                xmlWriter.WriteElementString("DeliveryDateId", null, product.DeliveryDateId.ToString());
                 xmlWriter.WriteElementString("IsTaxExempt", null, product.IsTaxExempt.ToString());
                 xmlWriter.WriteElementString("TaxCategoryId", null, product.TaxCategoryId.ToString());
                 xmlWriter.WriteElementString("ManageInventoryMethodId", null, product.ManageInventoryMethodId.ToString());
@@ -492,6 +493,7 @@ namespace Nop.Services.ExportImport
                     "IsShipEnabled",
                     "IsFreeShipping",
                     "AdditionalShippingCharge",
+                    "DeliveryDateId",
                     "IsTaxExempt",
                     "TaxCategoryId",
                     "ManageInventoryMethodId",
@@ -660,6 +662,9 @@ namespace Nop.Services.ExportImport
                     col++;
 
                     worksheet.Cells[row, col].Value = p.AdditionalShippingCharge;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = p.DeliveryDateId;
                     col++;
 
                     worksheet.Cells[row, col].Value = p.IsTaxExempt;

@@ -25,6 +25,7 @@ using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Services.Seo;
+using Nop.Services.Shipping;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Web.Extensions;
@@ -74,6 +75,7 @@ namespace Nop.Web.Controllers
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IEventPublisher _eventPublisher;
         private readonly IProductAttributeParser _productAttributeParser;
+        private readonly IShippingService _shippingService;
 
         private readonly MediaSettings _mediaSettings;
         private readonly CatalogSettings _catalogSettings;
@@ -88,30 +90,42 @@ namespace Nop.Web.Controllers
 		#region Constructors
 
         public CatalogController(ICategoryService categoryService, 
-            IManufacturerService manufacturerService, IProductService productService, 
+            IManufacturerService manufacturerService,
+            IProductService productService, 
             IProductTemplateService productTemplateService,
             ICategoryTemplateService categoryTemplateService,
             IManufacturerTemplateService manufacturerTemplateService,
             IProductAttributeService productAttributeService,
-            IWorkContext workContext, IStoreContext storeContext,
-            ITaxService taxService, ICurrencyService currencyService,
-            IPictureService pictureService, ILocalizationService localizationService,
+            IWorkContext workContext, 
+            IStoreContext storeContext,
+            ITaxService taxService, 
+            ICurrencyService currencyService,
+            IPictureService pictureService, 
+            ILocalizationService localizationService,
             IPriceCalculationService priceCalculationService,
             IPriceFormatter priceFormatter,
-            IWebHelper webHelper, ISpecificationAttributeService specificationAttributeService,
+            IWebHelper webHelper, 
+            ISpecificationAttributeService specificationAttributeService,
             IDateTimeHelper dateTimeHelper,
             IRecentlyViewedProductsService recentlyViewedProductsService,
             ICompareProductsService compareProductsService,
-            IWorkflowMessageService workflowMessageService, IProductTagService productTagService,
-            IOrderReportService orderReportService, IGenericAttributeService genericAttributeService,
-            IBackInStockSubscriptionService backInStockSubscriptionService, IAclService aclService,
+            IWorkflowMessageService workflowMessageService, 
+            IProductTagService productTagService,
+            IOrderReportService orderReportService, 
+            IGenericAttributeService genericAttributeService,
+            IBackInStockSubscriptionService backInStockSubscriptionService, 
+            IAclService aclService,
             IStoreMappingService storeMappingService,
             IPermissionService permissionService, 
             ICustomerActivityService customerActivityService,
-            IEventPublisher eventPublisher, IProductAttributeParser productAttributeParser,
-            MediaSettings mediaSettings, CatalogSettings catalogSettings,
+            IEventPublisher eventPublisher,
+            IProductAttributeParser productAttributeParser,
+            IShippingService shippingService,
+            MediaSettings mediaSettings,
+            CatalogSettings catalogSettings,
             ShoppingCartSettings shoppingCartSettings,
-            LocalizationSettings localizationSettings, CustomerSettings customerSettings, 
+            LocalizationSettings localizationSettings, 
+            CustomerSettings customerSettings, 
             CaptchaSettings captchaSettings,
             ICacheManager cacheManager)
         {
@@ -146,6 +160,7 @@ namespace Nop.Web.Controllers
             this._customerActivityService = customerActivityService;
             this._eventPublisher = eventPublisher;
             this._productAttributeParser = productAttributeParser;
+            this._shippingService = shippingService;
 
 
             this._mediaSettings = mediaSettings;
@@ -527,6 +542,16 @@ namespace Nop.Web.Controllers
                 HasSampleDownload = product.IsDownload && product.HasSampleDownload,
                 IsCurrentCustomerRegistered = _workContext.CurrentCustomer.IsRegistered(),
             };
+
+            //delivery date
+            if (product.IsShipEnabled)
+            {
+                var deliveryDate = _shippingService.GetDeliveryDateById(product.DeliveryDateId);
+                if (deliveryDate != null)
+                {
+                    model.DeliveryDate = deliveryDate.GetLocalized(dd => dd.Name);
+                }
+            }
             
             #endregion
 
