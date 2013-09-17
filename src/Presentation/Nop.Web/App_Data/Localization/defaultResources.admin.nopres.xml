@@ -5938,7 +5938,7 @@
           <LocaleResource Name="Shipping">
             <Value>Shipping</Value>
             <Children>
-              <LocaleResource Name="DeliveryDate">
+              <LocaleResource Name="DeliveryDates">
                 <Value>Delivery dates</Value>
                 <Children>
                   <LocaleResource Name="AddNew">
