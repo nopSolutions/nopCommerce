@@ -140,6 +140,9 @@ set @resources='
   <LocaleResource Name="Products.DeliveryDate">
     <Value>Delivery date</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Report.Shipping">
+    <Value>Shipping</Value>
+  </LocaleResource>
 </Language>
 '
 

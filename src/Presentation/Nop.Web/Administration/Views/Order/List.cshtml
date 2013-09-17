@@ -157,10 +157,12 @@
                                        .FooterTemplate(
                                            string.Format("<div><strong>{0}:</strong></div>" +
                                                          "<div>{1}: <span id=\"aggregator-profit-block\"></span></div>" +
-                                                         "<div>{2}: <span id=\"aggregator-tax-block\"></span></div>" +
-                                                         "<div>{3}: <span id=\"aggregator-total-block\"></span></div>",
+                                                         "<div>{2}: <span id=\"aggregator-shipping-block\"></span></div>" +
+                                                         "<div>{3}: <span id=\"aggregator-tax-block\"></span></div>" +
+                                                         "<div>{4}: <span id=\"aggregator-total-block\"></span></div>",
                                                          T("Admin.Orders.Report.Summary").Text,
                                                          T("Admin.Orders.Report.Profit").Text,
+                                                         T("Admin.Orders.Report.Shipping").Text,
                                                          T("Admin.Orders.Report.Tax").Text,
                                                          T("Admin.Orders.Report.Total").Text));
                             }
@@ -292,6 +294,7 @@
         function updateAggregates(aggs) {
             for (var key in aggs) {
                 $('#aggregator-profit-block').text(aggs['aggregatorprofit']);
+                $('#aggregator-shipping-block').text(aggs['aggregatorshipping']);
                 $('#aggregator-tax-block').text(aggs['aggregatortax']);
                 $('#aggregator-total-block').text(aggs['aggregatortotal']);
             }

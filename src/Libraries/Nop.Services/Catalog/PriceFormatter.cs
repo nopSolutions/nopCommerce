@@ -57,6 +57,9 @@ namespace Nop.Services.Catalog
         protected string GetCurrencyString(decimal amount,
             bool showCurrency, Currency targetCurrency)
         {
+            if (targetCurrency == null)
+                throw new ArgumentNullException("targetCurrency");
+
             string result = "";
             if (!String.IsNullOrEmpty(targetCurrency.CustomFormatting))
             {

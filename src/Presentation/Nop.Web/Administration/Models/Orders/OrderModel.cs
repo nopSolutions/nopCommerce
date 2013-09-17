@@ -214,8 +214,9 @@ namespace Nop.Admin.Models.Orders
         public bool CanVoid { get; set; }
         public bool CanVoidOffline { get; set; }
         
-        //aggergator proeprties
+        //aggergator properties
         public string aggregatorprofit { get; set; }
+        public string aggregatorshipping { get; set; }
         public string aggregatortax { get; set; }
         public string aggregatortotal { get; set; }
 

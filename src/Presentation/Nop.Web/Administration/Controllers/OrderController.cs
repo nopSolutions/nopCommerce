@@ -255,6 +255,8 @@ namespace Nop.Admin.Controllers
             #region Order totals
 
             var primaryStoreCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
+            if (primaryStoreCurrency == null)
+                throw new Exception("Cannot load primary store currency");
 
             //subtotal
             model.OrderSubtotalInclTax = _priceFormatter.FormatPrice(order.OrderSubtotalInclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, true);
@@ -764,9 +766,14 @@ namespace Nop.Admin.Controllers
             var profit = _orderReportService.ProfitReport(model.StoreId, 
                 model.VendorId, orderStatus, paymentStatus, shippingStatus, 
                 startDateValue, endDateValue, model.CustomerEmail);
+            var primaryStoreCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
+            if (primaryStoreCurrency == null)
+                throw new Exception("Cannot load primary store currency");
+
 		    var aggregator = new OrderModel()
 		    {
                 aggregatorprofit = _priceFormatter.FormatPrice(profit, true, false),
+                aggregatorshipping = _priceFormatter.FormatShippingPrice(reportSummary.SumShippingExclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, false),
                 aggregatortax = _priceFormatter.FormatPrice(reportSummary.SumTax, true, false),
 		        aggregatortotal = _priceFormatter.FormatPrice(reportSummary.SumOrders, true, false)
 		    };

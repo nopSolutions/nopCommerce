@@ -115,10 +115,29 @@ namespace Nop.Services.Orders
 
 			var item = (from oq in query
 						group oq by 1 into result
-						select new { OrderCount = result.Count(), OrderTaxSum = result.Sum(o => o.OrderTax), OrderTotalSum = result.Sum(o => o.OrderTotal) }
-					   ).Select(r => new OrderAverageReportLine(){ SumTax = r.OrderTaxSum, CountOrders=r.OrderCount, SumOrders = r.OrderTotalSum}).FirstOrDefault();
+						select new
+						           {
+                                       OrderCount = result.Count(),
+                                       OrderShippingExclTaxSum = result.Sum(o => o.OrderShippingExclTax),
+                                       OrderTaxSum = result.Sum(o => o.OrderTax), 
+                                       OrderTotalSum = result.Sum(o => o.OrderTotal)
+						           }
+					   ).Select(r => new OrderAverageReportLine()
+                       {
+                           CountOrders = r.OrderCount,
+                           SumShippingExclTax = r.OrderShippingExclTaxSum, 
+                           SumTax = r.OrderTaxSum, 
+                           SumOrders = r.OrderTotalSum
+                       })
+                       .FirstOrDefault();
 
-			item = item ?? new OrderAverageReportLine() { CountOrders = 0, SumOrders = decimal.Zero, SumTax = decimal.Zero };
+			item = item ?? new OrderAverageReportLine()
+			                   {
+                                   CountOrders = 0,
+                                   SumShippingExclTax = decimal.Zero,
+                                   SumTax = decimal.Zero,
+                                   SumOrders = decimal.Zero, 
+			                   };
             return item;
         }
 
@@ -416,7 +435,7 @@ namespace Nop.Services.Orders
             var productCost = Convert.ToDecimal(query.Sum(orderItem => (decimal?)orderItem.OriginalProductCost * orderItem.Quantity));
 
             var reportSummary = GetOrderAverageReportLine(storeId, vendorId, os, ps, ss, startTimeUtc, endTimeUtc, billingEmail);
-            var profit = reportSummary.SumOrders - reportSummary.SumTax - productCost;
+            var profit = reportSummary.SumOrders - reportSummary.SumShippingExclTax - reportSummary.SumTax - productCost;
             return profit;
         }
 

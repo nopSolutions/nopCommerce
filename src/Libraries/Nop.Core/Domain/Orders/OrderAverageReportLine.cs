@@ -6,6 +6,16 @@ namespace Nop.Core.Domain.Orders
     public partial class OrderAverageReportLine
     {
         /// <summary>
+        /// Gets or sets the count
+        /// </summary>
+        public int CountOrders { get; set; }
+
+        /// <summary>
+        /// Gets or sets the shipping summary (excluding tax)
+        /// </summary>
+        public decimal SumShippingExclTax { get; set; }
+
+        /// <summary>
         /// Gets or sets the tax summary
         /// </summary>
         public decimal SumTax { get; set; }
@@ -14,10 +24,5 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets the order total summary
         /// </summary>
         public decimal SumOrders { get; set; }
-
-        /// <summary>
-        /// Gets or sets the count
-        /// </summary>
-        public int CountOrders { get; set; }
     }
 }

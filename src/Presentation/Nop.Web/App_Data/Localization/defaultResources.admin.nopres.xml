@@ -9149,6 +9149,9 @@
               <LocaleResource Name="Profit">
                 <Value>Profit</Value>
               </LocaleResource>
+              <LocaleResource Name="Shipping">
+                <Value>Shipping</Value>
+              </LocaleResource>
               <LocaleResource Name="Summary">
                 <Value>Summary</Value>
               </LocaleResource>
