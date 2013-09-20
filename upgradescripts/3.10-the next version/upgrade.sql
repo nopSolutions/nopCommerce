@@ -143,6 +143,15 @@ set @resources='
   <LocaleResource Name="Admin.Orders.Report.Shipping">
     <Value>Shipping</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.RunNow">
+    <Value>Run now</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.RunNow.Progress">
+    <Value>Running the schedule task</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.RunNow.Done">
+    <Value>Schedule task was run</Value>
+  </LocaleResource>
 </Language>
 '
 

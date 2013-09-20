@@ -9,6 +9,13 @@
         @T("Admin.System.ScheduleTasks")
     </div>
 </div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#schedule-tasks-grid").on("click", ".run-now", function (e) {
+                showThrobber('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Admin.System.ScheduleTasks.RunNow.Progress").Text))');
+            });
+        });
+    </script>    
 <table class="adminContent">
     <tr>
         <td>
@@ -44,6 +51,10 @@
                         columns.Bound(x => x.LastStartUtc).ReadOnly();
                         columns.Bound(x => x.LastEndUtc).ReadOnly();
                         columns.Bound(x => x.LastSuccessUtc).ReadOnly();
+                        columns.Bound(x => x.Id)
+                            .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/ScheduleTask/RunNow/") + "<#= Id #>\" class=\"t-button run-now\">" + T("Admin.System.ScheduleTasks.RunNow").Text + "</a>")
+                            .Centered()
+                            .Title(T("Admin.System.ScheduleTasks.RunNow").Text);
                         columns.Command(commands =>
                         {
                             commands.Edit().Text(T("Admin.Common.Edit").Text);

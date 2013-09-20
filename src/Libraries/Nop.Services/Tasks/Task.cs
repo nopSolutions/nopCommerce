@@ -53,7 +53,8 @@ namespace Nop.Services.Tasks
         /// <summary>
         /// Executes the task
         /// </summary>
-        public void Execute()
+        /// <param name="throwException">A value indicating whether eexception should be thrown if some error happens</param>
+        public void Execute(bool throwException = false)
         {
             this.IsRunning = true;
 
@@ -86,6 +87,8 @@ namespace Nop.Services.Tasks
                 //log error
                 var logger = EngineContext.Current.Resolve<ILogger>();
                 logger.Error(string.Format("Error while running the '{0}' schedule task. {1}", this.Name, exc.Message), exc);
+                if (throwException)
+                    throw;
             }
 
             if (scheduleTask != null)
@@ -137,6 +140,6 @@ namespace Nop.Services.Tasks
         /// <summary>
         /// A value indicating whether the task is enabled
         /// </summary>
-        public bool Enabled { get; private set; }
+        public bool Enabled { get; set; }
     }
 }

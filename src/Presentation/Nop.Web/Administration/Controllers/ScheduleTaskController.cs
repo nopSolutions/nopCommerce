@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using Nop.Admin.Models.Tasks;
 using Nop.Core.Domain.Tasks;
 using Nop.Services.Helpers;
+using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Services.Tasks;
 using Nop.Web.Framework.Controllers;
@@ -19,17 +20,20 @@ namespace Nop.Admin.Controllers
         private readonly IScheduleTaskService _scheduleTaskService;
         private readonly IPermissionService _permissionService;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly ILocalizationService _localizationService;
 
 		#endregion
 
 		#region Constructors
 
-        public ScheduleTaskController(IScheduleTaskService scheduleTaskService, IPermissionService permissionService,
-            IDateTimeHelper dateTimeHelper)
+        public ScheduleTaskController(IScheduleTaskService scheduleTaskService, 
+            IPermissionService permissionService,
+            IDateTimeHelper dateTimeHelper, ILocalizationService localizationService)
 		{
             this._scheduleTaskService = scheduleTaskService;
             this._permissionService = permissionService;
             this._dateTimeHelper = dateTimeHelper;
+            this._localizationService = localizationService;
 		}
 
 		#endregion 
@@ -116,7 +120,31 @@ namespace Nop.Admin.Controllers
             
             return List(command);
         }
-        
+
+        public ActionResult RunNow(int id)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageScheduleTasks))
+                return AccessDeniedView();
+
+            try
+            {
+                var scheduleTask = _scheduleTaskService.GetTaskById(id);
+                if (scheduleTask == null)
+                    throw new Exception("Schedule task cannot be loaded");
+
+                var task = new Task(scheduleTask);
+                //ensure that the task is enabled
+                task.Enabled = true;
+                task.Execute(true);
+                SuccessNotification(_localizationService.GetResource("Admin.System.ScheduleTasks.RunNow.Done"));
+            }
+            catch (Exception exc)
+            {
+                ErrorNotification(exc);
+            }
+
+            return RedirectToAction("List");
+        }
         #endregion
     }
 }

@@ -10590,6 +10590,17 @@
               <LocaleResource Name="RestartApplication">
                 <Value>Do not forgot to restart the application once a task has been modified.</Value>
               </LocaleResource>
+              <LocaleResource Name="RunNow">
+                <Value>Run now</Value>
+                <Children>
+                  <LocaleResource Name="Progress">
+                    <Value>Running the schedule task</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Done">
+                    <Value>Schedule task was run</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
             </Children>
           </LocaleResource>
           <LocaleResource Name="SystemInfo">
