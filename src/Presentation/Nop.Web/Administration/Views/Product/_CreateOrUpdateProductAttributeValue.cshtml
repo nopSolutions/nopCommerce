@@ -29,11 +29,13 @@
         var selectedProductTypeId = $("#@Html.FieldIdFor(model => model.AttributeValueTypeId)").val();
         if (selectedProductTypeId == @(((int)AttributeValueType.Simple).ToString())) {
             $('#group-associated-product').hide();
+            $('#group-quantity').hide();
             $('#group-price-adjustment').show();
             $('#group-weight-adjustment').show();
             $('#group-cost').show();
         } else if (selectedProductTypeId == @(((int)AttributeValueType.AssociatedToProduct).ToString())) {
             $('#group-associated-product').show();
+            $('#group-quantity').show();
             $('#group-price-adjustment').hide();
             $('#group-weight-adjustment').hide();
             $('#group-cost').hide();
@@ -59,6 +61,15 @@
             <span id="associate-product-name">@Model.AssociatedProductName</span>
             @Html.ValidationMessageFor(model => model.AssociatedProductId)
             <input type="submit" value=@T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.AssociatedProduct.AddNew") onclick="javascript:OpenWindow('@(Url.Action("AssociateProductToAttributeValuePopup", "Product", new { productIdInput = Html.FieldIdFor(model => model.AssociatedProductId), productNameInput = "associate-product-name", formId = "pvav-form" }))', 800, 800, true); return false;" class="t-button" />
+        </td>
+    </tr>
+    <tr id="group-quantity">
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.Quantity):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.Quantity)
+            @Html.ValidationMessageFor(model => model.Quantity)
         </td>
     </tr>
 </table>

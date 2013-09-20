@@ -20,6 +20,7 @@ namespace Nop.Data.Tests.Catalog
                 PriceAdjustment = 1.1M,
                 WeightAdjustment = 2.1M,
                 Cost = 3.1M,
+                Quantity = 2,
                 IsPreSelected = true,
                 DisplayOrder = 3,
                 ProductVariantAttribute = new ProductVariantAttribute
@@ -46,6 +47,7 @@ namespace Nop.Data.Tests.Catalog
             fromDb.PriceAdjustment.ShouldEqual(1.1M);
             fromDb.WeightAdjustment.ShouldEqual(2.1M);
             fromDb.Cost.ShouldEqual(3.1M);
+            fromDb.Quantity.ShouldEqual(2);
             fromDb.IsPreSelected.ShouldEqual(true);
             fromDb.DisplayOrder.ShouldEqual(3);
 

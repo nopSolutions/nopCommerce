@@ -7,6 +7,7 @@ using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
 using Nop.Services.Directory;
 using Nop.Services.Events;
@@ -37,6 +38,7 @@ namespace Nop.Services.Tests.Catalog
         IPriceCalculationService _priceCalculationService;
         IDownloadService _downloadService;
         IWebHelper _webHelper;
+        ShoppingCartSettings _shoppingCartSettings;
         IProductAttributeFormatter _productAttributeFormatter;
 
         ProductAttribute pa1, pa2, pa3;
@@ -193,6 +195,7 @@ namespace Nop.Services.Tests.Catalog
             _priceFormatter = MockRepository.GenerateMock<IPriceFormatter>();
             _downloadService = MockRepository.GenerateMock<IDownloadService>();
             _webHelper = MockRepository.GenerateMock<IWebHelper>();
+            _shoppingCartSettings = MockRepository.GenerateMock<ShoppingCartSettings>();
 
             _productAttributeFormatter = new ProductAttributeFormatter(_workContext,
                 _productAttributeService,
@@ -203,7 +206,8 @@ namespace Nop.Services.Tests.Catalog
                 _priceFormatter,
                 _downloadService,
                 _webHelper,
-                _priceCalculationService);
+                _priceCalculationService,
+                _shoppingCartSettings);
         }
         
         [Test]

@@ -729,7 +729,8 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.AllowCartItemEditing_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             Mapper.CreateMap<ShoppingCartSettingsModel, ShoppingCartSettings>()
-                .ForMember(dest => dest.RoundPricesDuringCalculation, mo => mo.Ignore());
+                .ForMember(dest => dest.RoundPricesDuringCalculation, mo => mo.Ignore())
+                .ForMember(dest => dest.RenderAssociatedAttributeValueQuantity, mo => mo.Ignore());
             Mapper.CreateMap<MediaSettings, MediaSettingsModel>()
                 .ForMember(dest => dest.PicturesStoredIntoDatabase, mo => mo.Ignore())
                 .ForMember(dest => dest.ActiveStoreScopeConfiguration, mo => mo.Ignore())

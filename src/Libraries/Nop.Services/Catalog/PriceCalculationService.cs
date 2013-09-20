@@ -485,7 +485,7 @@ namespace Nop.Services.Catalog
                             //bundled product
                             var associatedProduct = _productService.GetProductById(pvaValue.AssociatedProductId);
                             if (associatedProduct != null)
-                                cost += associatedProduct.ProductCost;
+                                cost += associatedProduct.ProductCost * pvaValue.Quantity;
                         }
                         break;
                     default:
@@ -572,7 +572,7 @@ namespace Nop.Services.Catalog
                         var associatedProduct = _productService.GetProductById(pvav.AssociatedProductId);
                         if (associatedProduct != null)
                         {
-                            adjustment = GetFinalPrice(associatedProduct, true);
+                            adjustment = GetFinalPrice(associatedProduct, true) * pvav.Quantity;
                         }
                     }
                     break;

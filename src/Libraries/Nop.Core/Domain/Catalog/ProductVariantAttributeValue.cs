@@ -44,9 +44,14 @@ namespace Nop.Core.Domain.Catalog
         public decimal WeightAdjustment { get; set; }
 
         /// <summary>
-        /// Gets or sets the attibute value cost
+        /// Gets or sets the attibute value cost (used only with AttributeValueType.Simple)
         /// </summary>
         public decimal Cost { get; set; }
+
+        /// <summary>
+        /// Gets or sets the quantity of associated product (used only with AttributeValueType.AssociatedToProduct)
+        /// </summary>
+        public int Quantity { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the value is pre-selected
@@ -59,7 +64,7 @@ namespace Nop.Core.Domain.Catalog
         public int DisplayOrder { get; set; }
 
         /// <summary>
-        /// Gets or sets the picture (identifier) assiciated with this value
+        /// Gets or sets the picture (identifier) associated with this value
         /// </summary>
         public int PictureId { get; set; }
 

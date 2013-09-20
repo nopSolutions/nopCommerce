@@ -152,6 +152,15 @@ set @resources='
   <LocaleResource Name="Admin.System.ScheduleTasks.RunNow.Done">
     <Value>Schedule task was run</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.Quantity">
+    <Value>Product quantity</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.Quantity.Hint">
+    <Value>Specify quantity of the associated product which will be added. Minimum allowed value is 1.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.Quantity.GreaterThanOrEqualTo1">
+    <Value>Quantity should be greater than or equal to 1</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -360,4 +369,30 @@ WHERE [DeliveryDateId] IS NULL
 GO
 
 ALTER TABLE [Product] ALTER COLUMN [DeliveryDateId] int NOT NULL
+GO
+
+
+
+
+--add a new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[ProductVariantAttributeValue]') and NAME='Quantity')
+BEGIN
+	ALTER TABLE [ProductVariantAttributeValue]
+	ADD [Quantity] int NULL
+END
+GO
+
+UPDATE [ProductVariantAttributeValue]
+SET [Quantity] = 1
+WHERE [Quantity] IS NULL
+GO
+
+ALTER TABLE [ProductVariantAttributeValue] ALTER COLUMN [Quantity] int NOT NULL
+GO
+--a new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'shoppingcartsettings.renderassociatedattributevaluequantity')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'shoppingcartsettings.renderassociatedattributevaluequantity', N'false', 0)
+END
 GO

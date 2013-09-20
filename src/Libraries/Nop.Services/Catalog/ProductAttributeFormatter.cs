@@ -4,6 +4,7 @@ using System.Web;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Orders;
 using Nop.Core.Html;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
@@ -27,6 +28,7 @@ namespace Nop.Services.Catalog
         private readonly IDownloadService _downloadService;
         private readonly IWebHelper _webHelper;
         private readonly IPriceCalculationService _priceCalculationService;
+        private readonly ShoppingCartSettings _shoppingCartSettings;
 
         public ProductAttributeFormatter(IWorkContext workContext,
             IProductAttributeService productAttributeService,
@@ -37,7 +39,8 @@ namespace Nop.Services.Catalog
             IPriceFormatter priceFormatter,
             IDownloadService downloadService,
             IWebHelper webHelper,
-            IPriceCalculationService priceCalculationService)
+            IPriceCalculationService priceCalculationService,
+            ShoppingCartSettings shoppingCartSettings)
         {
             this._workContext = workContext;
             this._productAttributeService = productAttributeService;
@@ -49,6 +52,7 @@ namespace Nop.Services.Catalog
             this._downloadService = downloadService;
             this._webHelper = webHelper;
             this._priceCalculationService = priceCalculationService;
+            this._shoppingCartSettings = shoppingCartSettings;
         }
 
         /// <summary>
@@ -161,6 +165,7 @@ namespace Nop.Services.Catalog
                                 if (pvaValue != null)
                                 {
                                     pvaAttribute = string.Format("{0}: {1}", pva.ProductAttribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), pvaValue.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id));
+                                    
                                     if (renderPrices)
                                     {
                                         decimal taxRate = decimal.Zero;
@@ -176,6 +181,18 @@ namespace Nop.Services.Catalog
                                         {
                                             string priceAdjustmentStr = _priceFormatter.FormatPrice(-priceAdjustment, false, false);
                                             pvaAttribute += string.Format(" [-{0}]", priceAdjustmentStr);
+                                        }
+                                    }
+
+                                    //display quantity
+                                    if (_shoppingCartSettings.RenderAssociatedAttributeValueQuantity && 
+                                        pvaValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
+                                    {
+                                        //render only when more than 1
+                                        if (pvaValue.Quantity > 1)
+                                        {
+                                            //TODO localize resource
+                                            pvaAttribute += string.Format(" - qty {0}", pvaValue.Quantity);
                                         }
                                     }
                                 }                               

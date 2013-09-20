@@ -696,6 +696,9 @@ namespace Nop.Admin.Models.Catalog
             [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.Cost")]
             public decimal Cost { get; set; }
 
+            [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.Quantity")]
+            public int Quantity { get; set; }
+
             [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.IsPreSelected")]
             public bool IsPreSelected { get; set; }
 

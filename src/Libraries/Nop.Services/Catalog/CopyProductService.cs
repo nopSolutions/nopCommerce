@@ -393,6 +393,7 @@ namespace Nop.Services.Catalog
                         PriceAdjustment = productVariantAttributeValue.PriceAdjustment,
                         WeightAdjustment = productVariantAttributeValue.WeightAdjustment,
                         Cost = productVariantAttributeValue.Cost,
+                        Quantity = productVariantAttributeValue.Quantity,
                         IsPreSelected = productVariantAttributeValue.IsPreSelected,
                         DisplayOrder = productVariantAttributeValue.DisplayOrder,
                         PictureId = pvavPictureId,

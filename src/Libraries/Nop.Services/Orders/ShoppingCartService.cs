@@ -512,9 +512,10 @@ namespace Nop.Services.Orders
                         var associatedProduct = _productService.GetProductById(pvaValue.AssociatedProductId);
                         if (associatedProduct != null)
                         {
+                            var totalQty = quantity*pvaValue.Quantity;
                             var associatedProductWarnings = GetShoppingCartItemWarnings(customer,
                                 shoppingCartType, associatedProduct, _storeContext.CurrentStore.Id,
-                                "", decimal.Zero, quantity, false, true, true, true, true);
+                                "", decimal.Zero, totalQty, false, true, true, true, true);
                             foreach (var associatedProductWarning in associatedProductWarnings)
                             {
                                 var paName = pvaValue.ProductVariantAttribute.ProductAttribute.GetLocalized(a => a.Name);

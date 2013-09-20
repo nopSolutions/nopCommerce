@@ -1067,7 +1067,8 @@ namespace Nop.Services.Catalog
                     var associatedProduct = GetProductById(pvaValue.AssociatedProductId);
                     if (associatedProduct != null)
                     {
-                        AdjustInventory(associatedProduct, decrease, quantity, "");
+                        var totalQty = quantity*pvaValue.Quantity;
+                        AdjustInventory(associatedProduct, decrease, totalQty, "");
                     }
                 }
             }

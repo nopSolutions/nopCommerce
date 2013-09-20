@@ -2983,6 +2983,7 @@ namespace Nop.Admin.Controllers
                         WeightAdjustment = x.WeightAdjustment,
                         WeightAdjustmentStr = x.AttributeValueType == AttributeValueType.Simple ? x.WeightAdjustment.ToString("G29") : "",
                         Cost = x.Cost,
+                        Quantity = x.Quantity,
                         IsPreSelected = x.IsPreSelected,
                         DisplayOrder = x.DisplayOrder,
                         PictureId = x.PictureId,
@@ -3021,6 +3022,9 @@ namespace Nop.Admin.Controllers
             //color squares
             model.DisplayColorSquaresRgb = pva.AttributeControlType == AttributeControlType.ColorSquares;
             model.ColorSquaresRgb = "#000000";
+
+            //default qantity for associated product
+            model.Quantity = 1;
 
             //locales
             AddLocales(_languageService, model.Locales);
@@ -3089,6 +3093,7 @@ namespace Nop.Admin.Controllers
                     PriceAdjustment = model.PriceAdjustment,
                     WeightAdjustment = model.WeightAdjustment,
                     Cost = model.Cost,
+                    Quantity = model.Quantity,
                     IsPreSelected = model.IsPreSelected,
                     DisplayOrder = model.DisplayOrder,
                     PictureId = model.PictureId,
@@ -3161,6 +3166,7 @@ namespace Nop.Admin.Controllers
                 PriceAdjustment = pvav.PriceAdjustment,
                 WeightAdjustment = pvav.WeightAdjustment,
                 Cost = pvav.Cost,
+                Quantity = pvav.Quantity,
                 IsPreSelected = pvav.IsPreSelected,
                 DisplayOrder = pvav.DisplayOrder,
                 PictureId = pvav.PictureId
@@ -3235,6 +3241,7 @@ namespace Nop.Admin.Controllers
                 pvav.PriceAdjustment = model.PriceAdjustment;
                 pvav.WeightAdjustment = model.WeightAdjustment;
                 pvav.Cost = model.Cost;
+                pvav.Quantity = model.Quantity;
                 pvav.IsPreSelected = model.IsPreSelected;
                 pvav.DisplayOrder = model.DisplayOrder;
                 pvav.PictureId = model.PictureId;

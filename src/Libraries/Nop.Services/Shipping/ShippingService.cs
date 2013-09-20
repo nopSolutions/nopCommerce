@@ -333,7 +333,7 @@ namespace Nop.Services.Shipping
                                     var associatedProduct = _productService.GetProductById(pvaValue.AssociatedProductId);
                                     if (associatedProduct != null)
                                     {
-                                        attributesTotalWeight += associatedProduct.Weight;
+                                        attributesTotalWeight += associatedProduct.Weight * pvaValue.Quantity;
                                     }
                                 }
                                 break;

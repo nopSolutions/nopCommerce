@@ -2275,6 +2275,17 @@
                                   </LocaleResource>
                                 </Children>
                               </LocaleResource>
+                              <LocaleResource Name="Quantity">
+                                <Value>Product quantity</Value>
+                                <Children>
+                                  <LocaleResource Name="Hint">
+                                    <Value>Specify quantity of the associated product which will be added. Minimum allowed value is 1.</Value>
+                                  </LocaleResource>
+                                  <LocaleResource Name="GreaterThanOrEqualTo1">
+                                    <Value>Quantity should be greater than or equal to 1</Value>
+                                  </LocaleResource>
+                                </Children>
+                              </LocaleResource>
                               <LocaleResource Name="IsPreSelected">
                                 <Value>Is pre-selected</Value>
                                 <Children>
