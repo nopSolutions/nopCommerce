@@ -1348,7 +1348,7 @@ namespace Nop.Web.Controllers
                     ProductName = item.Product.GetLocalized(x => x.Name),
                     ProductSeName = item.Product.GetSeName(),
                     ProductAttributes = item.AttributeDescription,
-                    ProductId = item.Id
+                    ProductId = item.ProductId
                 };
                 model.Items.Add(itemModel);
 
