@@ -3,7 +3,9 @@ using System.Web.Routing;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Infrastructure;
+using Nop.Services.Events;
 using Nop.Services.Seo;
+using Nop.Web.Framework.Events;
 using Nop.Web.Framework.Localization;
 
 namespace Nop.Web.Framework.Seo
@@ -173,7 +175,10 @@ namespace Nop.Web.Framework.Seo
                     default:
                         {
                             //no record found
-                            throw new NopException(string.Format("Not supported EntityName for UrlRecord: {0}", urlRecord.EntityName));
+
+                            //generate an event this way developers could insert their own types
+                            EngineContext.Current.Resolve<IEventPublisher>()
+                                .Publish(new CustomUrlRecordEntityNameRequested(data, urlRecord.EntityName));
                         }
                 }
             }

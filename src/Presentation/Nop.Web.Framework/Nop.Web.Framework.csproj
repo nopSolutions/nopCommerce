@@ -118,6 +118,7 @@
     <Compile Include="CheckAffiliateAttribute.cs" />
     <Compile Include="Controllers\ContollerExtensions.cs" />
     <Compile Include="Controllers\ParameterBasedOnFormNameAndValueAttribute.cs" />
+    <Compile Include="Seo\CustomUrlRecordEntityNameRequested.cs" />
     <Compile Include="WebStoreContext.cs" />
     <Compile Include="StoreIpAddressAttribute.cs" />
     <Compile Include="CustomerLastActivityAttribute.cs" />
