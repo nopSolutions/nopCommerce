@@ -180,6 +180,7 @@ namespace Nop.Web.Framework.Seo
                             EngineContext.Current.Resolve<IEventPublisher>()
                                 .Publish(new CustomUrlRecordEntityNameRequested(data, urlRecord.EntityName));
                         }
+                        break;
                 }
             }
             return data;
