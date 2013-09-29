@@ -161,6 +161,24 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.Quantity.GreaterThanOrEqualTo1">
     <Value>Quantity should be greater than or equal to 1</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.EstimateShipping.ShippingOptionWithRate">
+    <Value>{0} ({1})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Totals.Shipping.Method">
+    <Value>({0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.SelectShippingMethod.MethodAndFee">
+    <Value>{0} ({1})</Value>
+  </LocaleResource>
+  <LocaleResource Name="Categories.TotalProducts">
+    <Value>({0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.SelectPaymentMethod.MethodAndFee">
+    <Value>{0} ({1})</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Tags.Count">
+    <Value>({0})</Value>
+  </LocaleResource>
 </Language>
 '
 

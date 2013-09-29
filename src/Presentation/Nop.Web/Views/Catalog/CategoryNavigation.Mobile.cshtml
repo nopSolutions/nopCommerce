@@ -7,7 +7,7 @@
             @*uncomment to show number of products*@   
             @*@if (category.NumberOfProducts.HasValue)
             {
-                <span class="ui-li-count">@(category.NumberOfProducts.Value)</span>
+                <span class="ui-li-count">@T("Categories.TotalProducts", category.NumberOfProducts.Value)</span>
             }*@
     </a></li>
 }

@@ -27,7 +27,7 @@
         <a href="@Url.RouteUrl("Category", new { SeName = category.SeName })">@category.Name
             @if (category.NumberOfProducts.HasValue)
             {
-                <text> (@(category.NumberOfProducts.Value))</text>
+                <text> </text>@T("Categories.TotalProducts", category.NumberOfProducts.Value)
             }
         </a>
         @{

@@ -36,7 +36,7 @@
                     @if (Model.RequiresShipping && !String.IsNullOrEmpty(Model.SelectedShippingMethod))
                     {
                         <span class="selected-shipping-method">
-                            @String.Format("({0})", Model.SelectedShippingMethod)
+                            @T("ShoppingCart.Totals.Shipping.Method", Model.SelectedShippingMethod)
                         </span>
                     }
                 </td>
@@ -127,7 +127,7 @@
                 <tr>
                     <td class="cart-total-left">
                         <span class="nobr">
-                            @string.Format(T("ShoppingCart.Totals.GiftCardInfo").Text, gc.CouponCode)
+                            @T("ShoppingCart.Totals.GiftCardInfo", gc.CouponCode)
                             @if (Model.IsEditable)
                             {
                                 //little hack here with empty "value" element

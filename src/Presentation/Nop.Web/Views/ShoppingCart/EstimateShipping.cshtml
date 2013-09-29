@@ -62,7 +62,7 @@
                     {
                         <li class="shipping-option-item">
                             <strong class="option-name">
-                                @shippingOption.Name (@shippingOption.Price)
+                                @T("ShoppingCart.EstimateShipping.ShippingOptionWithRate", shippingOption.Name, shippingOption.Price)
                             </strong>
                             <span class="option-description">
                                 @Html.Raw(shippingOption.Description)

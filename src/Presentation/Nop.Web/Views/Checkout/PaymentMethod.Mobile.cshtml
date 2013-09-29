@@ -33,7 +33,7 @@
                             var paymentMethodName = paymentMethod.Name;
                             if (!String.IsNullOrEmpty(paymentMethod.Fee))
                             {
-                                paymentMethodName = string.Format("{0} ({1})", paymentMethodName, paymentMethod.Fee);
+                                paymentMethodName = T("Checkout.SelectPaymentMethod.MethodAndFee", paymentMethodName, paymentMethod.Fee).Text;
                             }
                             <div class="payment-method-item">
                                 <div class="option-name">

@@ -1086,6 +1086,9 @@
           </LocaleResource>
         </Children>
       </LocaleResource>
+      <LocaleResource Name="TotalProducts">
+        <Value>({0})</Value>
+      </LocaleResource>
     </Children>
   </LocaleResource>
   <LocaleResource Name="Checkout">
@@ -1181,6 +1184,11 @@
       </LocaleResource>
       <LocaleResource Name="SelectPaymentMethod">
         <Value>Select payment method</Value>
+        <Children>
+          <LocaleResource Name="MethodAndFee">
+            <Value>{0} ({1})</Value>
+          </LocaleResource>
+        </Children>
       </LocaleResource>
       <LocaleResource Name="SelectShippingAddress">
         <Value>Select shipping address</Value>
@@ -1190,6 +1198,11 @@
       </LocaleResource>
       <LocaleResource Name="SelectShippingMethod">
         <Value>Select shipping method</Value>
+        <Children>
+          <LocaleResource Name="MethodAndFee">
+            <Value>{0} ({1})</Value>
+          </LocaleResource>
+        </Children>
       </LocaleResource>
       <LocaleResource Name="ShippingAddress">
         <Value>Shipping address</Value>
@@ -3507,6 +3520,9 @@
           <LocaleResource Name="All">
             <Value>All product tags</Value>
           </LocaleResource>
+          <LocaleResource Name="Count">
+            <Value>({0})</Value>
+          </LocaleResource>
           <LocaleResource Name="ProductsTaggedWith">
             <Value>Products tagged with '{0}'</Value>
           </LocaleResource>
@@ -3901,6 +3917,9 @@
           <LocaleResource Name="Country">
             <Value>Country</Value>
           </LocaleResource>
+          <LocaleResource Name="ShippingOptionWithRate">
+            <Value>{0} ({1})</Value>
+          </LocaleResource>
           <LocaleResource Name="StateProvince">
             <Value>State / province</Value>
           </LocaleResource>
@@ -4052,6 +4071,9 @@
           <LocaleResource Name="Shipping">
             <Value>Shipping</Value>
             <Children>
+              <LocaleResource Name="Method">
+                <Value>({0})</Value>
+              </LocaleResource>
               <LocaleResource Name="NotRequired">
                 <Value>Not required</Value>
               </LocaleResource>
