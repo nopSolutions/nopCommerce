@@ -198,7 +198,7 @@ namespace Nop.Plugin.Shipping.Fedex
                 request.RequestedShipment.Recipient.Address.Residential = true;
                 request.RequestedShipment.Recipient.Address.ResidentialSpecified = true;
             }
-            request.RequestedShipment.Recipient.Address.StreetLines = new string[1] { "Recipient Address Line 1" };
+            request.RequestedShipment.Recipient.Address.StreetLines = new string[1] { getShippingOptionRequest.ShippingAddress.Address1 };
             request.RequestedShipment.Recipient.Address.City = getShippingOptionRequest.ShippingAddress.City;
             if (getShippingOptionRequest.ShippingAddress.StateProvince != null &&
                 IncludeStateProvinceCode(getShippingOptionRequest.ShippingAddress.Country.TwoLetterIsoCode))
@@ -211,11 +211,6 @@ namespace Nop.Plugin.Shipping.Fedex
             }
             request.RequestedShipment.Recipient.Address.PostalCode = getShippingOptionRequest.ShippingAddress.ZipPostalCode;
             request.RequestedShipment.Recipient.Address.CountryCode = getShippingOptionRequest.ShippingAddress.Country.TwoLetterIsoCode;
-
-            Debug.WriteLine(String.Format("Destination: {0}, {1}  {2}",
-                request.RequestedShipment.Recipient.Address.StateOrProvinceCode,
-                request.RequestedShipment.Recipient.Address.PostalCode,
-                request.RequestedShipment.Recipient.Address.CountryCode));
         }
 
         private void SetOrigin(RateRequest request, GetShippingOptionRequest getShippingOptionRequest)
@@ -223,35 +218,18 @@ namespace Nop.Plugin.Shipping.Fedex
             request.RequestedShipment.Shipper = new Party();
             request.RequestedShipment.Shipper.Address = new RateServiceWebReference.Address();
 
-            // use request origin if present, else use settings
-            if (getShippingOptionRequest.CountryFrom != null)
-            {
-                request.RequestedShipment.Shipper.Address.StreetLines = new string[1] { "" };
-                request.RequestedShipment.Shipper.Address.City = "";
-                if (IncludeStateProvinceCode(getShippingOptionRequest.CountryFrom.TwoLetterIsoCode))
-                {
-                    string stateProvinceAbbreviation = getShippingOptionRequest.StateProvinceFrom == null ? "" : getShippingOptionRequest.StateProvinceFrom.Abbreviation;
-                    request.RequestedShipment.Shipper.Address.StateOrProvinceCode = stateProvinceAbbreviation;
-                }
-                request.RequestedShipment.Shipper.Address.PostalCode = getShippingOptionRequest.ZipPostalCodeFrom;
-                request.RequestedShipment.Shipper.Address.CountryCode = getShippingOptionRequest.CountryFrom.TwoLetterIsoCode;
-            }
-            else
-            {
-                request.RequestedShipment.Shipper.Address.StreetLines = new string[1] { _fedexSettings.Street };
-                request.RequestedShipment.Shipper.Address.City = _fedexSettings.City;
-                if (IncludeStateProvinceCode(_fedexSettings.CountryCode))
-                {
-                    request.RequestedShipment.Shipper.Address.StateOrProvinceCode = _fedexSettings.StateOrProvinceCode;
-                }
-                request.RequestedShipment.Shipper.Address.PostalCode = _fedexSettings.PostalCode;
-                request.RequestedShipment.Shipper.Address.CountryCode = _fedexSettings.CountryCode;
-            }
+            if (getShippingOptionRequest.CountryFrom == null)
+                throw new Exception("FROM country is not specified");
 
-            Debug.WriteLine(String.Format("Origin: {0}, {1}  {2}",
-                request.RequestedShipment.Shipper.Address.StateOrProvinceCode,
-                request.RequestedShipment.Shipper.Address.PostalCode,
-                request.RequestedShipment.Shipper.Address.CountryCode));
+            request.RequestedShipment.Shipper.Address.StreetLines = new string[1] { getShippingOptionRequest.ShippingAddress.Address1 };
+            request.RequestedShipment.Shipper.Address.City = getShippingOptionRequest.ShippingAddress.City;
+            if (IncludeStateProvinceCode(getShippingOptionRequest.CountryFrom.TwoLetterIsoCode))
+            {
+                string stateProvinceAbbreviation = getShippingOptionRequest.StateProvinceFrom == null ? "" : getShippingOptionRequest.StateProvinceFrom.Abbreviation;
+                request.RequestedShipment.Shipper.Address.StateOrProvinceCode = stateProvinceAbbreviation;
+            }
+            request.RequestedShipment.Shipper.Address.PostalCode = getShippingOptionRequest.ZipPostalCodeFrom;
+            request.RequestedShipment.Shipper.Address.CountryCode = getShippingOptionRequest.CountryFrom.TwoLetterIsoCode;
         }
 
         private bool IncludeStateProvinceCode(string countryCode)
@@ -845,11 +823,6 @@ namespace Nop.Plugin.Shipping.Fedex
             {
                 Url = "https://gatewaybeta.fedex.com:443/web-services/rate",
                 DropoffType = Nop.Plugin.Shipping.Fedex.DropoffType.BusinessServiceCenter,
-                Street = "Sender Address Line 1",
-                City = "Memphis",
-                StateOrProvinceCode = "TN",
-                PostalCode = "38115",
-                CountryCode = "US",
                 PackingPackageVolume = 5184
             };
             _settingService.SaveSetting(settings);
@@ -873,16 +846,6 @@ namespace Nop.Plugin.Shipping.Fedex
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.AdditionalHandlingCharge.Hint", "Enter additional handling fee to charge your customers.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.CarrierServices", "Carrier Services Offered");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.CarrierServices.Hint", "Select the services you want to offer to customers.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.Street", "Shipping origin. Street");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.Street.Hint", "Specify origin street.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.City", "Shipping origin. City");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.City.Hint", "Specify origin city.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.StateOrProvinceCode", "Shipping origin. State code (2 characters)");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.StateOrProvinceCode.Hint", "Specify origin state code (2 characters).");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.PostalCode", "Shipping origin. Zip");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.PostalCode.Hint", "Specify origin zip code.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.CountryCode", "Shipping origin. Country code");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.CountryCode.Hint", "Specify origin country code.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.PassDimensions", "Pass dimensions");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.PassDimensions.Hint", "Check if you want to pass package dimensions when requesting rates.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.PackingType", "Packing type");
@@ -930,16 +893,6 @@ namespace Nop.Plugin.Shipping.Fedex
             this.DeletePluginLocaleResource("Plugins.Shipping.Fedex.Fields.AdditionalHandlingCharge.Hint");
             this.DeletePluginLocaleResource("Plugins.Shipping.Fedex.Fields.CarrierServices");
             this.DeletePluginLocaleResource("Plugins.Shipping.Fedex.Fields.CarrierServices.Hint");
-            this.DeletePluginLocaleResource("Plugins.Shipping.Fedex.Fields.Street");
-            this.DeletePluginLocaleResource("Plugins.Shipping.Fedex.Fields.Street.Hint");
-            this.DeletePluginLocaleResource("Plugins.Shipping.Fedex.Fields.City");
-            this.DeletePluginLocaleResource("Plugins.Shipping.Fedex.Fields.City.Hint");
-            this.DeletePluginLocaleResource("Plugins.Shipping.Fedex.Fields.StateOrProvinceCode");
-            this.DeletePluginLocaleResource("Plugins.Shipping.Fedex.Fields.StateOrProvinceCode.Hint");
-            this.DeletePluginLocaleResource("Plugins.Shipping.Fedex.Fields.PostalCode");
-            this.DeletePluginLocaleResource("Plugins.Shipping.Fedex.Fields.PostalCode.Hint");
-            this.DeletePluginLocaleResource("Plugins.Shipping.Fedex.Fields.CountryCode");
-            this.DeletePluginLocaleResource("Plugins.Shipping.Fedex.Fields.CountryCode.Hint");
             this.DeletePluginLocaleResource("Plugins.Shipping.Fedex.Fields.PassDimensions");
             this.DeletePluginLocaleResource("Plugins.Shipping.Fedex.Fields.PassDimensions.Hint");
             this.DeletePluginLocaleResource("Enums.Nop.Plugin.Shipping.Fedex.PackingType.PackByDimensions");

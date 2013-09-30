@@ -25,16 +25,6 @@ namespace Nop.Plugin.Shipping.Fedex
 
         public string CarrierServicesOffered { get; set; }
 
-        public string Street { get; set; }
-
-        public string City { get; set; }
-
-        public string StateOrProvinceCode { get; set; }
-
-        public string PostalCode { get; set; }
-
-        public string CountryCode { get; set; }
-
         public bool PassDimensions { get; set; }
 
         public int PackingPackageVolume { get; set; }

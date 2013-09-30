@@ -41,21 +41,6 @@ namespace Nop.Plugin.Shipping.Fedex.Models
         public IList<string> AvailableCarrierServices { get; set; }
         public string[] CheckedCarrierServices { get; set; }
 
-        [NopResourceDisplayName("Plugins.Shipping.Fedex.Fields.Street")]
-        public string Street { get; set; }
-
-        [NopResourceDisplayName("Plugins.Shipping.Fedex.Fields.City")]
-        public string City { get; set; }
-
-        [NopResourceDisplayName("Plugins.Shipping.Fedex.Fields.StateOrProvinceCode")]
-        public string StateOrProvinceCode { get; set; }
-
-        [NopResourceDisplayName("Plugins.Shipping.Fedex.Fields.PostalCode")]
-        public string PostalCode { get; set; }
-
-        [NopResourceDisplayName("Plugins.Shipping.Fedex.Fields.CountryCode")]
-        public string CountryCode { get; set; }
-
         [NopResourceDisplayName("Plugins.Shipping.Fedex.Fields.PassDimensions")]
         public bool PassDimensions { get; set; }
 

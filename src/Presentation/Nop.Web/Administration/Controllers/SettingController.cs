@@ -520,6 +520,8 @@ namespace Nop.Admin.Controllers
                 model.ShippingOriginAddress.AvailableStates.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
             model.ShippingOriginAddress.CountryEnabled = true;
             model.ShippingOriginAddress.StateProvinceEnabled = true;
+            model.ShippingOriginAddress.CityEnabled = true;
+            model.ShippingOriginAddress.StreetAddressEnabled = true;
             model.ShippingOriginAddress.ZipPostalCodeEnabled = true;
             model.ShippingOriginAddress.ZipPostalCodeRequired = true;
             

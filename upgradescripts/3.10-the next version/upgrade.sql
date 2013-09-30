@@ -203,6 +203,36 @@ set @resources='
   <LocaleResource Name="Plugins.Shipping.UPS.Fields.DefaultShippedFromZipPostalCode.Hint">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.Fedex.Fields.Street">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.Fedex.Fields.Street.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.Fedex.Fields.City">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.Fedex.Fields.City.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.Fedex.Fields.StateOrProvinceCode">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.Fedex.Fields.StateOrProvinceCode.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.Fedex.Fields.PostalCode">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.Fedex.Fields.PostalCode.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.Fedex.Fields.CountryCode">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.Fedex.Fields.CountryCode.Hint">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -450,4 +480,19 @@ DELETE FROM [Setting] WHERE [Name] = N'UPSSettings.DefaultShippedFromCountryId'
 GO
 
 DELETE FROM [Setting] WHERE [Name] = N'UPSSettings.DefaultShippedFromZipPostalCode'
+GO
+
+DELETE FROM [Setting] WHERE [Name] = N'FedexSettings.Street'
+GO
+
+DELETE FROM [Setting] WHERE [Name] = N'FedexSettings.City'
+GO
+
+DELETE FROM [Setting] WHERE [Name] = N'FedexSettings.StateOrProvinceCode'
+GO
+
+DELETE FROM [Setting] WHERE [Name] = N'FedexSettings.PostalCode'
+GO
+
+DELETE FROM [Setting] WHERE [Name] = N'FedexSettings.CountryCode'
 GO
