@@ -21,10 +21,6 @@ namespace Nop.Plugin.Shipping.UPS
 
         public UPSPackagingType PackagingType { get; set; }
 
-        public int DefaultShippedFromCountryId { get; set; }
-
-        public string DefaultShippedFromZipPostalCode { get; set; }
-
         public string CarrierServicesOffered { get; set; }
 
         public bool InsurePackage { get; set; }

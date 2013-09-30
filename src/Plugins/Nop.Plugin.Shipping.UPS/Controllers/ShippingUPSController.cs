@@ -5,7 +5,6 @@ using Nop.Core;
 using Nop.Plugin.Shipping.UPS.Domain;
 using Nop.Plugin.Shipping.UPS.Models;
 using Nop.Services.Configuration;
-using Nop.Services.Directory;
 using Nop.Web.Framework.Controllers;
 
 namespace Nop.Plugin.Shipping.UPS.Controllers
@@ -15,14 +14,11 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
     {
         private readonly UPSSettings _upsSettings;
         private readonly ISettingService _settingService;
-        private readonly ICountryService _countryService;
 
-        public ShippingUPSController(UPSSettings upsSettings, ISettingService settingService,
-            ICountryService countryService)
+        public ShippingUPSController(UPSSettings upsSettings, ISettingService settingService)
         {
             this._upsSettings = upsSettings;
             this._settingService = settingService;
-            this._countryService = countryService;
         }
 
         [ChildActionOnly]
@@ -64,18 +60,6 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
                 });
             }
 
-            foreach (var country in _countryService.GetAllCountries(true))
-            {
-                model.AvailableCountries.Add(new SelectListItem()
-                {
-                    Text = country.Name.ToString(),
-                    Value = country.Id.ToString(),
-                    Selected = country.Id == _upsSettings.DefaultShippedFromCountryId
-                });
-            }
-            model.DefaultShippedFromCountryId = _upsSettings.DefaultShippedFromCountryId;
-            model.DefaultShippedFromZipPostalCode = _upsSettings.DefaultShippedFromZipPostalCode;
-
             var services = new UPSServices();
             // Load Domestic service names
             string carrierServicesOfferedDomestic = _upsSettings.CarrierServicesOffered;
@@ -116,8 +100,6 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
             _upsSettings.CustomerClassification = (UPSCustomerClassification)Enum.Parse(typeof(UPSCustomerClassification), model.CustomerClassification);
             _upsSettings.PickupType = (UPSPickupType)Enum.Parse(typeof(UPSPickupType), model.PickupType);
             _upsSettings.PackagingType = (UPSPackagingType)Enum.Parse(typeof(UPSPackagingType), model.PackagingType);
-            _upsSettings.DefaultShippedFromCountryId = model.DefaultShippedFromCountryId;
-            _upsSettings.DefaultShippedFromZipPostalCode = model.DefaultShippedFromZipPostalCode;
 
 
             // Save selected services

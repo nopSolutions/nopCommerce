@@ -537,12 +537,8 @@ namespace Nop.Plugin.Shipping.UPS
 
             if (getShippingOptionRequest.CountryFrom == null)
             {
-                getShippingOptionRequest.CountryFrom = _countryService.GetCountryById(_upsSettings.DefaultShippedFromCountryId);
-                if (getShippingOptionRequest.CountryFrom == null)
-                    getShippingOptionRequest.CountryFrom = _countryService.GetAllCountries(true).FirstOrDefault();
+                getShippingOptionRequest.CountryFrom = _countryService.GetAllCountries().FirstOrDefault();
             }
-            if (String.IsNullOrEmpty(getShippingOptionRequest.ZipPostalCodeFrom))
-                getShippingOptionRequest.ZipPostalCodeFrom = _upsSettings.DefaultShippedFromZipPostalCode;
 
             string requestString = CreateRequest(_upsSettings.AccessKey, _upsSettings.Username, _upsSettings.Password, getShippingOptionRequest,
                 _upsSettings.CustomerClassification, _upsSettings.PickupType, _upsSettings.PackagingType);
@@ -605,7 +601,6 @@ namespace Nop.Plugin.Shipping.UPS
                 CustomerClassification = UPSCustomerClassification.Retail,
                 PickupType = UPSPickupType.OneTimePickup,
                 PackagingType = UPSPackagingType.ExpressBox,
-                DefaultShippedFromZipPostalCode = "10001"
 
             };
             _settingService.SaveSetting(settings);
@@ -629,10 +624,6 @@ namespace Nop.Plugin.Shipping.UPS
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.PickupType.Hint", "Choose UPS pickup type.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.PackagingType", "UPS Packaging Type");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.PackagingType.Hint", "Choose UPS packaging type.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.DefaultShippedFromCountry", "Shipped from country");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.DefaultShippedFromCountry.Hint", "Specify origin country.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.DefaultShippedFromZipPostalCode", "Shipped from zip");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.DefaultShippedFromZipPostalCode.Hint", "Specify origin zip code.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.AvailableCarrierServices", "Carrier Services");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.AvailableCarrierServices.Hint", "Select the services you want to offer to customers.");
             //tracker events
@@ -674,10 +665,6 @@ namespace Nop.Plugin.Shipping.UPS
             this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.PickupType.Hint");
             this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.PackagingType");
             this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.PackagingType.Hint");
-            this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.DefaultShippedFromCountry");
-            this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.DefaultShippedFromCountry.Hint");
-            this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.DefaultShippedFromZipPostalCode");
-            this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.DefaultShippedFromZipPostalCode.Hint");
             this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.AvailableCarrierServices");
             this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.AvailableCarrierServices.Hint");
             //tracker events

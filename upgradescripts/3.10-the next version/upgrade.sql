@@ -191,6 +191,18 @@ set @resources='
   <LocaleResource Name="Plugins.Shipping.USPS.Fields.ZipPostalCodeFrom.Hint">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.DefaultShippedFromCountry">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.DefaultShippedFromCountry.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.DefaultShippedFromZipPostalCode">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.DefaultShippedFromZipPostalCode.Hint">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -432,4 +444,10 @@ DELETE FROM [Setting] WHERE [Name] = N'AustraliaPostSettings.ShippedFromZipPosta
 GO
 
 DELETE FROM [Setting] WHERE [Name] = N'USPSSettings.ZipPostalCodeFrom'
+GO
+
+DELETE FROM [Setting] WHERE [Name] = N'UPSSettings.DefaultShippedFromCountryId'
+GO
+
+DELETE FROM [Setting] WHERE [Name] = N'UPSSettings.DefaultShippedFromZipPostalCode'
 GO

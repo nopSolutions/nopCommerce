@@ -89,24 +89,6 @@
         </tr>
         <tr>
             <td class="adminTitle">
-                @Html.NopLabelFor(model => model.DefaultShippedFromCountryId):
-            </td>
-            <td class="adminData">
-                @Html.DropDownListFor(model => model.DefaultShippedFromCountryId, Model.AvailableCountries)
-                @Html.ValidationMessageFor(model => model.DefaultShippedFromCountryId)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.DefaultShippedFromZipPostalCode):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.DefaultShippedFromZipPostalCode)
-                @Html.ValidationMessageFor(model => model.DefaultShippedFromZipPostalCode)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
                 @Html.NopLabelFor(model => model.AvailableCarrierServices):
             </td>
             <td class="adminData">
