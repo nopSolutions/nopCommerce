@@ -103,6 +103,7 @@ namespace Nop.Services.Tests.Orders
                 _checkoutAttributeParser,
                 _genericAttributeService,
                 _localizationService,
+                _addressService,
                 _shippingSettings, pluginFinder, 
                 _eventPublisher, _shoppingCartSettings);
             

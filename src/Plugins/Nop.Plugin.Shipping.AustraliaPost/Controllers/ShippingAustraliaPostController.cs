@@ -22,7 +22,6 @@ namespace Nop.Plugin.Shipping.AustraliaPost.Controllers
         {
             var model = new AustraliaPostShippingModel();
             model.GatewayUrl = _australiaPostSettings.GatewayUrl;
-            model.ShippedFromZipPostalCode = _australiaPostSettings.ShippedFromZipPostalCode;
             model.AdditionalHandlingCharge = _australiaPostSettings.AdditionalHandlingCharge;
             return View("Nop.Plugin.Shipping.AustraliaPost.Views.ShippingAustraliaPost.Configure", model);
         }
@@ -38,7 +37,6 @@ namespace Nop.Plugin.Shipping.AustraliaPost.Controllers
             
             //save settings
             _australiaPostSettings.GatewayUrl = model.GatewayUrl;
-            _australiaPostSettings.ShippedFromZipPostalCode = model.ShippedFromZipPostalCode;
             _australiaPostSettings.AdditionalHandlingCharge = model.AdditionalHandlingCharge;
             _settingService.SaveSetting(_australiaPostSettings);
 

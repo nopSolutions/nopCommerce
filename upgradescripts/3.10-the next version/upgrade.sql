@@ -179,6 +179,12 @@ set @resources='
   <LocaleResource Name="Products.Tags.Count">
     <Value>({0})</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.AustraliaPost.Fields.ShippedFromZipPostalCode">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.AustraliaPost.Fields.ShippedFromZipPostalCode.Hint">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -413,4 +419,8 @@ BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'shoppingcartsettings.renderassociatedattributevaluequantity', N'false', 0)
 END
+GO
+
+--obsolete settings
+DELETE FROM [Setting] WHERE [Name] = N'AustraliaPostSettings.ShippedFromZipPostalCode'
 GO

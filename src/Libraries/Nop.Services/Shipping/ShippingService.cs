@@ -33,6 +33,7 @@ namespace Nop.Services.Shipping
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ILocalizationService _localizationService;
+        private readonly IAddressService _addressService;
         private readonly ShippingSettings _shippingSettings;
         private readonly IPluginFinder _pluginFinder;
         private readonly IEventPublisher _eventPublisher;
@@ -53,6 +54,7 @@ namespace Nop.Services.Shipping
         /// <param name="checkoutAttributeParser">Checkout attribute parser</param>
         /// <param name="genericAttributeService">Generic attribute service</param>
         /// <param name="localizationService">Localization service</param>
+        /// <param name="addressService">Address service</param>
         /// <param name="shippingSettings">Shipping settings</param>
         /// <param name="pluginFinder">Plugin finder</param>
         /// <param name="eventPublisher">Event published</param>
@@ -65,6 +67,7 @@ namespace Nop.Services.Shipping
             ICheckoutAttributeParser checkoutAttributeParser,
             IGenericAttributeService genericAttributeService,
             ILocalizationService localizationService,
+            IAddressService addressService,
             ShippingSettings shippingSettings,
             IPluginFinder pluginFinder,
             IEventPublisher eventPublisher,
@@ -78,6 +81,7 @@ namespace Nop.Services.Shipping
             this._checkoutAttributeParser = checkoutAttributeParser;
             this._genericAttributeService = genericAttributeService;
             this._localizationService = localizationService;
+            this._addressService = addressService;
             this._shippingSettings = shippingSettings;
             this._pluginFinder = pluginFinder;
             this._eventPublisher = eventPublisher;
@@ -404,9 +408,15 @@ namespace Nop.Services.Shipping
                 if (sc.IsShipEnabled)
                     request.Items.Add(sc);
             request.ShippingAddress = shippingAddress;
-            request.CountryFrom = null;
-            request.StateProvinceFrom = null;
-            request.ZipPostalCodeFrom = string.Empty;
+
+
+            var originAddress = _addressService.GetAddressById(_shippingSettings.ShippingOriginAddressId);
+            if (originAddress != null)
+            {
+                request.CountryFrom = originAddress.Country;
+                request.StateProvinceFrom = originAddress.StateProvince;
+                request.ZipPostalCodeFrom = originAddress.ZipPostalCode;
+            }
             return request;
 
         }

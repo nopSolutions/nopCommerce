@@ -29,6 +29,7 @@ namespace Nop.Services.Tests.Shipping
         ShippingSettings _shippingSettings;
         IEventPublisher _eventPublisher;
         ILocalizationService _localizationService;
+        IAddressService _addressService;
         IGenericAttributeService _genericAttributeService;
         IShippingService _shippingService;
         ShoppingCartSettings _shoppingCartSettings;
@@ -56,6 +57,7 @@ namespace Nop.Services.Tests.Shipping
             _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
 
             _localizationService = MockRepository.GenerateMock<ILocalizationService>();
+            _addressService = MockRepository.GenerateMock<IAddressService>();
             _genericAttributeService = MockRepository.GenerateMock<IGenericAttributeService>();
 
             _shoppingCartSettings = new ShoppingCartSettings();
@@ -67,6 +69,7 @@ namespace Nop.Services.Tests.Shipping
                 _checkoutAttributeParser,
                 _genericAttributeService,
                 _localizationService,
+                _addressService,
                 _shippingSettings, pluginFinder, _eventPublisher,
                 _shoppingCartSettings);
         }
