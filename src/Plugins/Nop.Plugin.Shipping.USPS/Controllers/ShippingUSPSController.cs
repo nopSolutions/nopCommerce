@@ -28,7 +28,6 @@ namespace Nop.Plugin.Shipping.USPS.Controllers
             model.Username = _uspsSettings.Username;
             model.Password = _uspsSettings.Password;
             model.AdditionalHandlingCharge = _uspsSettings.AdditionalHandlingCharge;
-            model.ZipPostalCodeFrom = _uspsSettings.ZipPostalCodeFrom;
 
 
 
@@ -83,7 +82,6 @@ namespace Nop.Plugin.Shipping.USPS.Controllers
             _uspsSettings.Username = model.Username;
             _uspsSettings.Password = model.Password;
             _uspsSettings.AdditionalHandlingCharge = model.AdditionalHandlingCharge;
-            _uspsSettings.ZipPostalCodeFrom = model.ZipPostalCodeFrom;
 
 
 

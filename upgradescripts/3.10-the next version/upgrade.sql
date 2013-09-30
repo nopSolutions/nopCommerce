@@ -185,6 +185,12 @@ set @resources='
   <LocaleResource Name="Plugins.Shipping.AustraliaPost.Fields.ShippedFromZipPostalCode.Hint">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.USPS.Fields.ZipPostalCodeFrom">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.USPS.Fields.ZipPostalCodeFrom.Hint">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -423,4 +429,7 @@ GO
 
 --obsolete settings
 DELETE FROM [Setting] WHERE [Name] = N'AustraliaPostSettings.ShippedFromZipPostalCode'
+GO
+
+DELETE FROM [Setting] WHERE [Name] = N'USPSSettings.ZipPostalCodeFrom'
 GO

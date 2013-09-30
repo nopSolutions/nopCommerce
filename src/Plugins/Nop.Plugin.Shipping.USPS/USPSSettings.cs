@@ -13,8 +13,6 @@ namespace Nop.Plugin.Shipping.USPS
 
         public decimal AdditionalHandlingCharge { get; set; }
 
-        public string ZipPostalCodeFrom { get; set; }
-
         public string CarrierServicesOfferedDomestic { get; set; }
 
         public string CarrierServicesOfferedInternational { get; set; }

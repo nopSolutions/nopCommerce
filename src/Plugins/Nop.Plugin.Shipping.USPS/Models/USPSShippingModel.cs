@@ -24,10 +24,7 @@ namespace Nop.Plugin.Shipping.USPS.Models
 
         [NopResourceDisplayName("Plugins.Shipping.USPS.Fields.AdditionalHandlingCharge")]
         public decimal AdditionalHandlingCharge { get; set; }
-
-        [NopResourceDisplayName("Plugins.Shipping.USPS.Fields.ZipPostalCodeFrom")]
-        public string ZipPostalCodeFrom { get; set; }
-
+        
         public IList<string> CarrierServicesOfferedDomestic { get; set; }
         [NopResourceDisplayName("Plugins.Shipping.USPS.Fields.AvailableCarrierServicesDomestic")]
         public IList<string> AvailableCarrierServicesDomestic { get; set; }

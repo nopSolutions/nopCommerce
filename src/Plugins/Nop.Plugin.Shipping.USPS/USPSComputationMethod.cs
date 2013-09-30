@@ -605,11 +605,7 @@ namespace Nop.Plugin.Shipping.USPS
                 response.AddError("Shipping address is not set");
                 return response;
             }
-
-            if (String.IsNullOrEmpty(getShippingOptionRequest.ZipPostalCodeFrom))
-                getShippingOptionRequest.ZipPostalCodeFrom = _uspsSettings.ZipPostalCodeFrom;
-
-
+            
             bool isDomestic = IsDomesticRequest(getShippingOptionRequest);
             string requestString = CreateRequest(_uspsSettings.Username, _uspsSettings.Password, getShippingOptionRequest);
             string responseXml = DoRequest(_uspsSettings.Url, requestString);
@@ -668,7 +664,6 @@ namespace Nop.Plugin.Shipping.USPS
                 Username = "123",
                 Password = "456",
                 AdditionalHandlingCharge = 0,
-                ZipPostalCodeFrom = "10022",
                 CarrierServicesOfferedDomestic = "",
                 CarrierServicesOfferedInternational = ""
             };
@@ -684,8 +679,6 @@ namespace Nop.Plugin.Shipping.USPS
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.USPS.Fields.Password.Hint", "Specify USPS password.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.USPS.Fields.AdditionalHandlingCharge", "Additional handling charge");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.USPS.Fields.AdditionalHandlingCharge.Hint", "Enter additional handling fee to charge your customers.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.USPS.Fields.ZipPostalCodeFrom", "Shipped from zip");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.USPS.Fields.ZipPostalCodeFrom.Hint", "Specify origin zip code.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.USPS.Fields.AvailableCarrierServicesDomestic", "Domestic Carrier Services");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.USPS.Fields.AvailableCarrierServicesDomestic.Hint", "Select the services you want to offer to customers.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.USPS.Fields.AvailableCarrierServicesInternational", "International Carrier Services");
@@ -711,8 +704,6 @@ namespace Nop.Plugin.Shipping.USPS
             this.DeletePluginLocaleResource("Plugins.Shipping.USPS.Fields.Password.Hint");
             this.DeletePluginLocaleResource("Plugins.Shipping.USPS.Fields.AdditionalHandlingCharge");
             this.DeletePluginLocaleResource("Plugins.Shipping.USPS.Fields.AdditionalHandlingCharge.Hint");
-            this.DeletePluginLocaleResource("Plugins.Shipping.USPS.Fields.ZipPostalCodeFrom");
-            this.DeletePluginLocaleResource("Plugins.Shipping.USPS.Fields.ZipPostalCodeFrom.Hint");
             this.DeletePluginLocaleResource("Plugins.Shipping.USPS.Fields.AvailableCarrierServicesDomestic");
             this.DeletePluginLocaleResource("Plugins.Shipping.USPS.Fields.AvailableCarrierServicesDomestic.Hint");
             this.DeletePluginLocaleResource("Plugins.Shipping.USPS.Fields.AvailableCarrierServicesInternational");
