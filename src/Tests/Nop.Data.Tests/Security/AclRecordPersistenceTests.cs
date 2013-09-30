@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
 using Nop.Tests;
 
@@ -14,14 +15,27 @@ namespace Nop.Data.Tests.Security
             {
                 EntityId = 1,
                 EntityName = "EntityName 1",
-                CustomerRoleId = 2,
+                CustomerRole = GetTestCustomerRole(),
             };
 
             var fromDb = SaveAndLoadEntity(aclRecord);
             fromDb.ShouldNotBeNull();
             fromDb.EntityId.ShouldEqual(1);
             fromDb.EntityName.ShouldEqual("EntityName 1");
-            fromDb.CustomerRoleId.ShouldEqual(2);
+            fromDb.CustomerRole.ShouldNotBeNull();
+        }
+
+        protected CustomerRole GetTestCustomerRole()
+        {
+            return new CustomerRole
+            {
+                Name = "Administrators",
+                FreeShipping = true,
+                TaxExempt = true,
+                Active = true,
+                IsSystemRole = true,
+                SystemName = "Administrators"
+            };
         }
     }
 }

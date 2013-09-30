@@ -1,0 +1,38 @@
+﻿@using Telerik.Web.Mvc.UI;
+@{    
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Shipping.Warehouses").Text;
+}
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
+        @T("Admin.Configuration.Shipping.Warehouses")
+    </div>
+    <div class="options">
+        <a href="@Url.Action("CreateWarehouse")" class="t-button">@T("Admin.Common.AddNew")</a>
+    </div>
+</div>
+<table class="adminContent">
+    <tr>
+        <td>
+            @(Html.Telerik().Grid<WarehouseModel>()
+                    .Name("warehouse-grid")
+                    .DataKeys(x =>
+                    {
+                        x.Add(y => y.Id).RouteKey("Id");
+                    })
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.Name);
+                        columns.Bound(x => x.Id)
+                            .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "EditWarehouse", new { id = x.Id }))
+                            .ClientTemplate("<a href=\"EditWarehouse/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
+                            .Width(50)
+                            .Centered()
+                            .HeaderTemplate(T("Admin.Common.Edit").Text);
+                    })
+                    .DataBinding(dataBinding => dataBinding.Ajax().Select("Warehouses", "Shipping"))
+                    .EnableCustomBinding(true))
+        </td>
+    </tr>
+</table>

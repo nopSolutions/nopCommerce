@@ -233,6 +233,48 @@ set @resources='
   <LocaleResource Name="Plugins.Shipping.Fedex.Fields.CountryCode.Hint">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Warehouses">
+    <Value>Warehouses</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Warehouses.AddNew">
+    <Value>Add a new warehouse</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Warehouses.BackToList">
+    <Value>back to warehouse list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Warehouses.EditWarehouseDetails">
+    <Value>Edit warehouse details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Warehouses.Added">
+    <Value>The new warehouse has been added successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Warehouses.Deleted">
+    <Value>The warehouse has been deleted successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Warehouses.Updated">
+    <Value>The warehouse has been updated successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Warehouses.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Warehouses.Fields.Name.Hint">
+    <Value>Enter a warehouse name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Warehouses.Fields.Name.Required">
+    <Value>Please provide a name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Warehouses.Fields.Address">
+    <Value>Address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Warehouse">
+    <Value>Warehouse</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Warehouse.Hint">
+    <Value>Choose a warehouse which will be used when calculating shipping rates.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Warehouse.None">
+    <Value>None</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -495,4 +537,36 @@ DELETE FROM [Setting] WHERE [Name] = N'FedexSettings.PostalCode'
 GO
 
 DELETE FROM [Setting] WHERE [Name] = N'FedexSettings.CountryCode'
+GO
+
+
+--warehouses
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[Warehouse]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+BEGIN
+	CREATE TABLE [dbo].[Warehouse](
+		[Id] [int] IDENTITY(1,1) NOT NULL,
+		[Name] nvarchar(400) NOT NULL,
+		[AddressId] int NOT NULL,
+	PRIMARY KEY CLUSTERED 
+	(
+		[Id] ASC
+	)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON)
+	)
+END
+GO
+
+--add a new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Product]') and NAME='WarehouseId')
+BEGIN
+	ALTER TABLE [Product]
+	ADD [WarehouseId] int NULL
+END
+GO
+
+UPDATE [Product]
+SET [WarehouseId] = 0
+WHERE [WarehouseId] IS NULL
+GO
+
+ALTER TABLE [Product] ALTER COLUMN [WarehouseId] int NOT NULL
 GO

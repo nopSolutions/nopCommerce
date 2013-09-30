@@ -1,0 +1,19 @@
+﻿@model WarehouseModel
+@Html.ValidationSummary(true)
+@Html.HiddenFor(model => model.Id)
+<table class="adminContent">
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.Name):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.Name)
+            @Html.ValidationMessageFor(model => model.Name)
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            @Html.EditorFor(x => x.Address, "Address")
+        </td>
+    </tr>
+</table>

@@ -103,6 +103,7 @@ namespace Nop.Services.ExportImport
                     "IsFreeShipping",
                     "AdditionalShippingCharge",
                     "DeliveryDateId",
+                    "WarehouseId",
                     "IsTaxExempt",
                     "TaxCategoryId",
                     "ManageInventoryMethodId",
@@ -197,6 +198,7 @@ namespace Nop.Services.ExportImport
                     bool isFreeShipping = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "IsFreeShipping")].Value);
                     decimal additionalShippingCharge = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "AdditionalShippingCharge")].Value);
                     int deliveryDateId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "DeliveryDateId")].Value);
+                    int warehouseId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "WarehouseId")].Value);
                     bool isTaxExempt = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "IsTaxExempt")].Value);
                     int taxCategoryId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "TaxCategoryId")].Value);
                     int manageInventoryMethodId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "ManageInventoryMethodId")].Value);
@@ -296,6 +298,7 @@ namespace Nop.Services.ExportImport
                     product.IsFreeShipping = isFreeShipping;
                     product.AdditionalShippingCharge = additionalShippingCharge;
                     product.DeliveryDateId = deliveryDateId;
+                    product.WarehouseId = warehouseId;
                     product.IsTaxExempt = isTaxExempt;
                     product.TaxCategoryId = taxCategoryId;
                     product.ManageInventoryMethodId = manageInventoryMethodId;

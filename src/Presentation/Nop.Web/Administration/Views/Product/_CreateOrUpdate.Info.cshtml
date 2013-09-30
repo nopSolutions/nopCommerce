@@ -154,6 +154,7 @@
                 $('#pnlWidth').show();
                 $('#pnlHeight').show();
                 $('#pnlDeliveryDate').show();
+                $('#pnlWarehouse').show();
             }
             else {
                 $('#pnlFreeShipping').hide();
@@ -163,6 +164,7 @@
                 $('#pnlWidth').hide();
                 $('#pnlHeight').hide();
                 $('#pnlDeliveryDate').hide();
+                $('#pnlWarehouse').hide();
             }
         }
 
@@ -864,6 +866,15 @@
         <td class="adminData">
             @Html.DropDownListFor(model => model.DeliveryDateId, Model.AvailableDeliveryDates)
             @Html.ValidationMessageFor(model => model.DeliveryDateId)
+        </td>
+    </tr>
+    <tr id="pnlWarehouse">
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.WarehouseId):
+        </td>
+        <td class="adminData">
+            @Html.DropDownListFor(model => model.WarehouseId, Model.AvailableWarehouses)
+            @Html.ValidationMessageFor(model => model.WarehouseId)
         </td>
     </tr>
 </table>

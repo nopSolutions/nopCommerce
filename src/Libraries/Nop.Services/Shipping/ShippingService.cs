@@ -27,6 +27,7 @@ namespace Nop.Services.Shipping
 
         private readonly IRepository<ShippingMethod> _shippingMethodRepository;
         private readonly IRepository<DeliveryDate> _deliveryDateRepository;
+        private readonly IRepository<Warehouse> _warehouseRepository;
         private readonly ILogger _logger;
         private readonly IProductService _productService;
         private readonly IProductAttributeParser _productAttributeParser;
@@ -48,6 +49,7 @@ namespace Nop.Services.Shipping
         /// </summary>
         /// <param name="shippingMethodRepository">Shipping method repository</param>
         /// <param name="deliveryDateRepository">Delivery date repository</param>
+        /// <param name="warehouseRepository">Warehouse repository</param>
         /// <param name="logger">Logger</param>
         /// <param name="productService">Product service</param>
         /// <param name="productAttributeParser">Product attribute parser</param>
@@ -61,6 +63,7 @@ namespace Nop.Services.Shipping
         /// <param name="shoppingCartSettings">Shopping cart settings</param>
         public ShippingService(IRepository<ShippingMethod> shippingMethodRepository,
             IRepository<DeliveryDate> deliveryDateRepository,
+            IRepository<Warehouse> warehouseRepository,
             ILogger logger,
             IProductService productService,
             IProductAttributeParser productAttributeParser,
@@ -75,6 +78,7 @@ namespace Nop.Services.Shipping
         {
             this._shippingMethodRepository = shippingMethodRepository;
             this._deliveryDateRepository = deliveryDateRepository;
+            this._warehouseRepository = warehouseRepository;
             this._logger = logger;
             this._productService = productService;
             this._productAttributeParser = productAttributeParser;
@@ -298,6 +302,81 @@ namespace Nop.Services.Shipping
 
             //event notification
             _eventPublisher.EntityUpdated(deliveryDate);
+        }
+
+        #endregion
+
+        #region Warehouses
+
+        /// <summary>
+        /// Deletes a warehouse
+        /// </summary>
+        /// <param name="warehouse">The warehouse</param>
+        public virtual void DeleteWarehouse(Warehouse warehouse)
+        {
+            if (warehouse == null)
+                throw new ArgumentNullException("warehouse");
+
+            _warehouseRepository.Delete(warehouse);
+
+            //event notification
+            _eventPublisher.EntityDeleted(warehouse);
+        }
+
+        /// <summary>
+        /// Gets a warehouse
+        /// </summary>
+        /// <param name="warehouseId">The warehouse identifier</param>
+        /// <returns>Warehouse</returns>
+        public virtual Warehouse GetWarehouseById(int warehouseId)
+        {
+            if (warehouseId == 0)
+                return null;
+
+            return _warehouseRepository.GetById(warehouseId);
+        }
+
+        /// <summary>
+        /// Gets all warehouses
+        /// </summary>
+        /// <returns>Warehouses</returns>
+        public virtual IList<Warehouse> GetAllWarehouses()
+        {
+            var query = from wh in _warehouseRepository.Table
+                        orderby wh.Name
+                        select wh;
+            var warehouses = query.ToList();
+            return warehouses;
+        }
+
+        /// <summary>
+        /// Inserts a warehouse
+        /// </summary>
+        /// <param name="warehouse">Warehouse</param>
+        public virtual void InsertWarehouse(Warehouse warehouse)
+        {
+            if (warehouse == null)
+                throw new ArgumentNullException("warehouse");
+
+            _warehouseRepository.Insert(warehouse);
+
+            //event notification
+            _eventPublisher.EntityInserted(warehouse);
+        }
+
+        /// <summary>
+        /// Updates the warehouse
+        /// </summary>
+        /// <param name="warehouse">Warehouse</param>
+        public virtual void UpdateWarehouse(Warehouse warehouse)
+        {
+            if (warehouse == null)
+                throw new ArgumentNullException("warehouse");
+
+            _warehouseRepository.Update(warehouse);
+
+            //event notification
+            _eventPublisher.EntityUpdated(warehouse);
         }
 
         #endregion

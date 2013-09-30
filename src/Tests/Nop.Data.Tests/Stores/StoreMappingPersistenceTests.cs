@@ -8,20 +8,30 @@ namespace Nop.Data.Tests.Stores
     public class StoreMappingPersistenceTests : PersistenceTest
     {
         [Test]
-        public void Can_save_and_load_urlRecord()
+        public void Can_save_and_load_storeMapping()
         {
             var storeMapping = new StoreMapping
             {
                 EntityId = 1,
                 EntityName = "EntityName 1",
-                StoreId = 2,
+                Store = GetTestStore(),
             };
 
             var fromDb = SaveAndLoadEntity(storeMapping);
             fromDb.ShouldNotBeNull();
             fromDb.EntityId.ShouldEqual(1);
             fromDb.EntityName.ShouldEqual("EntityName 1");
-            fromDb.StoreId.ShouldEqual(2);
+            fromDb.Store.ShouldNotBeNull();
+        }
+
+        protected Store GetTestStore()
+        {
+            return new Store
+            {
+                Name = "Store 1",
+                Url = "http://www.test.com",
+                DisplayOrder = 1
+            };
         }
     }
 }

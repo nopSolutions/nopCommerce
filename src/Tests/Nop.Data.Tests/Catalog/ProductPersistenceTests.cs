@@ -58,6 +58,7 @@ namespace Nop.Data.Tests.Catalog
                 IsFreeShipping = true,
                 AdditionalShippingCharge = 10.1M,
                 DeliveryDateId = 5,
+                WarehouseId = 6,
                 IsTaxExempt = true,
                 TaxCategoryId = 11,
                 ManageInventoryMethodId = 12,
@@ -149,6 +150,7 @@ namespace Nop.Data.Tests.Catalog
             fromDb.IsFreeShipping.ShouldEqual(true);
             fromDb.AdditionalShippingCharge.ShouldEqual(10.1M);
             fromDb.DeliveryDateId.ShouldEqual(5);
+            fromDb.WarehouseId.ShouldEqual(6);
             fromDb.IsTaxExempt.ShouldEqual(true);
             fromDb.TaxCategoryId.ShouldEqual(11);
             fromDb.ManageInventoryMethodId.ShouldEqual(12);

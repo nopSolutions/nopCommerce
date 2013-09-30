@@ -535,6 +535,22 @@ namespace Nop.Admin.Controllers
                 });
             }
 
+            //warehouses
+            model.AvailableWarehouses.Add(new SelectListItem()
+            {
+                Text = _localizationService.GetResource("Admin.Catalog.Products.Fields.Warehouse.None"),
+                Value = "0"
+            });
+            var warehouses = _shippingService.GetAllWarehouses();
+            foreach (var warehouse in warehouses)
+            {
+                model.AvailableWarehouses.Add(new SelectListItem()
+                {
+                    Text = warehouse.Name,
+                    Value = warehouse.Id.ToString()
+                });
+            }
+
             //product tags
             if (product != null)
             {

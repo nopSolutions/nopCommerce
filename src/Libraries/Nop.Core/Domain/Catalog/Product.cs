@@ -258,6 +258,11 @@ namespace Nop.Core.Domain.Catalog
         public int DeliveryDateId { get; set; }
 
         /// <summary>
+        /// Gets or sets a warehouse identifier
+        /// </summary>
+        public int WarehouseId { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the product is marked as tax exempt
         /// </summary>
         public bool IsTaxExempt { get; set; }

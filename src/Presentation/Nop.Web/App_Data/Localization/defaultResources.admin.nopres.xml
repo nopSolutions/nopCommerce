@@ -1490,6 +1490,9 @@
                       <LocaleResource Name="Hint">
                         <Value>Choose a delivery date which will be displayed in the public store.</Value>
                       </LocaleResource>
+                      <LocaleResource Name="None">
+                        <Value>None</Value>
+                      </LocaleResource>
                     </Children>
                   </LocaleResource>
                   <LocaleResource Name="DisableBuyButton">
@@ -2018,6 +2021,17 @@
                     <Children>
                       <LocaleResource Name="Hint">
                         <Value>Check it if you want this product to be visible in catalog or search results. You can use this field (just uncheck) to hide associated products from catalog and make them accessible only from a parent "grouped" product details page.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="Warehouse">
+                    <Value>Warehouse</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Choose a warehouse which will be used when calculating shipping rates.</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="None">
+                        <Value>None</Value>
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
@@ -6090,6 +6104,47 @@
                   </LocaleResource>
                   <LocaleResource Name="Updated">
                     <Value>The settings have been updated successfully.</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+              <LocaleResource Name="Warehouses">
+                <Value>Warehouses</Value>
+                <Children>
+                  <LocaleResource Name="AddNew">
+                    <Value>Add a new warehouse</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="BackToList">
+                    <Value>back to warehouse list</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="EditWarehouseDetails">
+                    <Value>Edit warehouse details</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Fields">
+                    <Children>
+                      <LocaleResource Name="Name">
+                        <Value>Name</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Enter a warehouse name.</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Required">
+                            <Value>Please provide a name.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="Address">
+                        <Value>Address</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="Added">
+                    <Value>The new warehouse has been added successfully.</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Deleted">
+                    <Value>The warehouse has been deleted successfully.</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Updated">
+                    <Value>The warehouse has been updated successfully.</Value>
                   </LocaleResource>
                 </Children>
               </LocaleResource>

@@ -25,6 +25,7 @@ namespace Nop.Admin.Models.Catalog
             AvailableVendors = new List<SelectListItem>();
             AvailableTaxCategories = new List<SelectListItem>();
             AvailableDeliveryDates = new List<SelectListItem>();
+            AvailableWarehouses = new List<SelectListItem>();
             AddPictureModel = new ProductPictureModel();
             AddSpecificationAttributeModel = new AddProductSpecificationAttributeModel();
         }
@@ -186,6 +187,10 @@ namespace Nop.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.DeliveryDate")]
         public int DeliveryDateId { get; set; }
         public IList<SelectListItem> AvailableDeliveryDates { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.Warehouse")]
+        public int WarehouseId { get; set; }
+        public IList<SelectListItem> AvailableWarehouses { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.IsTaxExempt")]
         public bool IsTaxExempt { get; set; }
