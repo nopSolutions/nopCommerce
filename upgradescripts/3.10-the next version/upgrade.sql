@@ -275,6 +275,12 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Fields.Warehouse.None">
     <Value>None</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.UseWarehouseLocation">
+    <Value>Use warehouse location</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.UseWarehouseLocation.Hint">
+    <Value>Check to use warehouse location when requesting shipping rates. This is useful when you ship from multiple warehouses.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -569,4 +575,12 @@ WHERE [WarehouseId] IS NULL
 GO
 
 ALTER TABLE [Product] ALTER COLUMN [WarehouseId] int NOT NULL
+GO
+
+--a new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'shippingsettings.usewarehouselocation')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'shippingsettings.usewarehouselocation', N'false', 0)
+END
 GO

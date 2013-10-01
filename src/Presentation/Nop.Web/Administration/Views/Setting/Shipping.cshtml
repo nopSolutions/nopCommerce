@@ -39,6 +39,16 @@
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.UseWarehouseLocation_OverrideForStore, model => model.UseWarehouseLocation, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.UseWarehouseLocation):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.UseWarehouseLocation)
+                @Html.ValidationMessageFor(model => model.UseWarehouseLocation)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.OverrideStoreCheckboxFor(model => model.FreeShippingOverXEnabled_OverrideForStore, model => model.FreeShippingOverXEnabled, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.FreeShippingOverXEnabled):
             </td>

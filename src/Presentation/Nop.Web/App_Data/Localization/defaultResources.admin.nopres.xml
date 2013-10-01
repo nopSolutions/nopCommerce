@@ -5594,6 +5594,14 @@
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
+                  <LocaleResource Name="EstimateShippingEnabled">
+                    <Value>Estimate shipping enabled</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Check to allow customers to estimate shipping on shopping cart page</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
                   <LocaleResource Name="FreeShippingOverXEnabled">
                     <Value>Free shipping over 'X'</Value>
                     <Children>
@@ -5618,19 +5626,19 @@
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
-                  <LocaleResource Name="EstimateShippingEnabled">
-                    <Value>Estimate shipping enabled</Value>
-                    <Children>
-                      <LocaleResource Name="Hint">
-                        <Value>Check to allow customers to estimate shipping on shopping cart page</Value>
-                      </LocaleResource>
-                    </Children>
-                  </LocaleResource>
                   <LocaleResource Name="ShippingOriginAddress">
                     <Value>Shipping Origin</Value>
                     <Children>
                       <LocaleResource Name="Hint">
                         <Value>Shipping origin address</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="UseWarehouseLocation">
+                    <Value>Use warehouse location</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Check to use warehouse location when requesting shipping rates. This is useful when you ship from multiple warehouses.</Value>
                       </LocaleResource>
                     </Children>
                   </LocaleResource>

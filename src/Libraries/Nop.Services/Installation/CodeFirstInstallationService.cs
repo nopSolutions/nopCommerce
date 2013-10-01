@@ -4820,6 +4820,7 @@ namespace Nop.Services.Installation
             settingService.SaveSetting(new ShippingSettings()
                 {
                     ActiveShippingRateComputationMethodSystemNames = new List<string>() { "Shipping.FixedRate" },
+                    UseWarehouseLocation = false,
                     FreeShippingOverXEnabled = false,
                     FreeShippingOverXValue = decimal.Zero,
                     FreeShippingOverXIncludingTax = false,

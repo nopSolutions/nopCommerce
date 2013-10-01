@@ -189,19 +189,20 @@ namespace Nop.Web.Controllers
             {
                 //performance optimization. cache returned shipping options.
                 //we'll use them later (after a customer has selected an option).
-                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, 
-                    SystemCustomerAttributeNames.OfferedShippingOptions, 
-                    getShippingOptionResponse.ShippingOptions,
-                    _storeContext.CurrentStore.Id);
-            
+                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
+                                                       SystemCustomerAttributeNames.OfferedShippingOptions,
+                                                       getShippingOptionResponse.ShippingOptions,
+                                                       _storeContext.CurrentStore.Id);
+
                 foreach (var shippingOption in getShippingOptionResponse.ShippingOptions)
                 {
                     var soModel = new CheckoutShippingMethodModel.ShippingMethodModel()
-                    {
-                        Name = shippingOption.Name,
-                        Description = shippingOption.Description,
-                        ShippingRateComputationMethodSystemName = shippingOption.ShippingRateComputationMethodSystemName,
-                    };
+                                      {
+                                          Name = shippingOption.Name,
+                                          Description = shippingOption.Description,
+                                          ShippingRateComputationMethodSystemName =
+                                              shippingOption.ShippingRateComputationMethodSystemName,
+                                      };
 
                     //adjust rate
                     Discount appliedDiscount = null;
@@ -209,19 +210,31 @@ namespace Nop.Web.Controllers
                         shippingOption.Rate, cart, out appliedDiscount);
 
                     decimal rateBase = _taxService.GetShippingPrice(shippingTotal, _workContext.CurrentCustomer);
-                    decimal rate = _currencyService.ConvertFromPrimaryStoreCurrency(rateBase, _workContext.WorkingCurrency);
+                    decimal rate = _currencyService.ConvertFromPrimaryStoreCurrency(rateBase,
+                                                                                    _workContext.WorkingCurrency);
                     soModel.Fee = _priceFormatter.FormatShippingPrice(rate, true);
 
                     model.ShippingMethods.Add(soModel);
                 }
 
                 //find a selected (previously) shipping method
-                var selectedShippingOption = _workContext.CurrentCustomer.GetAttribute<ShippingOption>(SystemCustomerAttributeNames.SelectedShippingOption, _storeContext.CurrentStore.Id);
+                var selectedShippingOption =
+                    _workContext.CurrentCustomer.GetAttribute<ShippingOption>(
+                        SystemCustomerAttributeNames.SelectedShippingOption, _storeContext.CurrentStore.Id);
                 if (selectedShippingOption != null)
                 {
                     var shippingOptionToSelect = model.ShippingMethods.ToList()
-                        .Find(so => !String.IsNullOrEmpty(so.Name) && so.Name.Equals(selectedShippingOption.Name, StringComparison.InvariantCultureIgnoreCase) &&
-                        !String.IsNullOrEmpty(so.ShippingRateComputationMethodSystemName) && so.ShippingRateComputationMethodSystemName.Equals(selectedShippingOption.ShippingRateComputationMethodSystemName, StringComparison.InvariantCultureIgnoreCase));
+                                                      .Find(
+                                                          so =>
+                                                          !String.IsNullOrEmpty(so.Name) &&
+                                                          so.Name.Equals(selectedShippingOption.Name,
+                                                                         StringComparison.InvariantCultureIgnoreCase) &&
+                                                          !String.IsNullOrEmpty(
+                                                              so.ShippingRateComputationMethodSystemName) &&
+                                                          so.ShippingRateComputationMethodSystemName.Equals(
+                                                              selectedShippingOption
+                                                                  .ShippingRateComputationMethodSystemName,
+                                                              StringComparison.InvariantCultureIgnoreCase));
                     if (shippingOptionToSelect != null)
                         shippingOptionToSelect.Selected = true;
                 }
@@ -234,8 +247,10 @@ namespace Nop.Web.Controllers
                 }
             }
             else
+            {
                 foreach (var error in getShippingOptionResponse.Errors)
                     model.Warnings.Add(error);
+            }
 
             return model;
         }

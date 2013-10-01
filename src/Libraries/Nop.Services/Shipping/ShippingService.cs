@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -23,6 +24,22 @@ namespace Nop.Services.Shipping
     /// </summary>
     public partial class ShippingService : IShippingService
     {
+        #region Constants
+
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : warehouse ID
+        /// </remarks>
+        private const string WAREHOUSES_BY_ID_KEY = "Nop.warehouse.id-{0}";
+        /// <summary>
+        /// Key pattern to clear cache
+        /// </summary>
+        private const string WAREHOUSES_PATTERN_KEY = "Nop.warehouse.";
+
+        #endregion
+
         #region Fields
 
         private readonly IRepository<ShippingMethod> _shippingMethodRepository;
@@ -39,6 +56,7 @@ namespace Nop.Services.Shipping
         private readonly IPluginFinder _pluginFinder;
         private readonly IEventPublisher _eventPublisher;
         private readonly ShoppingCartSettings _shoppingCartSettings;
+        private readonly ICacheManager _cacheManager;
 
         #endregion
 
@@ -61,6 +79,7 @@ namespace Nop.Services.Shipping
         /// <param name="pluginFinder">Plugin finder</param>
         /// <param name="eventPublisher">Event published</param>
         /// <param name="shoppingCartSettings">Shopping cart settings</param>
+        /// <param name="cacheManager">Cache manager</param>
         public ShippingService(IRepository<ShippingMethod> shippingMethodRepository,
             IRepository<DeliveryDate> deliveryDateRepository,
             IRepository<Warehouse> warehouseRepository,
@@ -74,7 +93,8 @@ namespace Nop.Services.Shipping
             ShippingSettings shippingSettings,
             IPluginFinder pluginFinder,
             IEventPublisher eventPublisher,
-            ShoppingCartSettings shoppingCartSettings)
+            ShoppingCartSettings shoppingCartSettings,
+            ICacheManager cacheManager)
         {
             this._shippingMethodRepository = shippingMethodRepository;
             this._deliveryDateRepository = deliveryDateRepository;
@@ -90,6 +110,7 @@ namespace Nop.Services.Shipping
             this._pluginFinder = pluginFinder;
             this._eventPublisher = eventPublisher;
             this._shoppingCartSettings = shoppingCartSettings;
+            this._cacheManager = cacheManager;
         }
 
         #endregion
@@ -319,6 +340,9 @@ namespace Nop.Services.Shipping
 
             _warehouseRepository.Delete(warehouse);
 
+            //clear cache
+            _cacheManager.RemoveByPattern(WAREHOUSES_PATTERN_KEY);
+
             //event notification
             _eventPublisher.EntityDeleted(warehouse);
         }
@@ -333,7 +357,8 @@ namespace Nop.Services.Shipping
             if (warehouseId == 0)
                 return null;
 
-            return _warehouseRepository.GetById(warehouseId);
+            string key = string.Format(WAREHOUSES_BY_ID_KEY, warehouseId);
+            return _cacheManager.Get(key, () => { return _warehouseRepository.GetById(warehouseId); });
         }
 
         /// <summary>
@@ -360,6 +385,9 @@ namespace Nop.Services.Shipping
 
             _warehouseRepository.Insert(warehouse);
 
+            //clear cache
+            _cacheManager.RemoveByPattern(WAREHOUSES_PATTERN_KEY);
+
             //event notification
             _eventPublisher.EntityInserted(warehouse);
         }
@@ -374,6 +402,9 @@ namespace Nop.Services.Shipping
                 throw new ArgumentNullException("warehouse");
 
             _warehouseRepository.Update(warehouse);
+
+            //clear cache
+            _cacheManager.RemoveByPattern(WAREHOUSES_PATTERN_KEY);
 
             //event notification
             _eventPublisher.EntityUpdated(warehouse);
@@ -472,32 +503,75 @@ namespace Nop.Services.Shipping
         }
 
         /// <summary>
-        /// Create shipment package from shopping cart
+        /// Create shipment packages (requests) from shopping cart
         /// </summary>
         /// <param name="cart">Shopping cart</param>
         /// <param name="shippingAddress">Shipping address</param>
-        /// <returns>Shipment package</returns>
-        public virtual GetShippingOptionRequest CreateShippingOptionRequest(IList<ShoppingCartItem> cart,
+        /// <returns>Shipment packages (requests)</returns>
+        public virtual IList<GetShippingOptionRequest> CreateShippingOptionRequests(IList<ShoppingCartItem> cart, 
             Address shippingAddress)
         {
-            var request = new GetShippingOptionRequest();
-            request.Customer = cart.GetCustomer();
-            request.Items = new List<ShoppingCartItem>();
-            foreach (var sc in cart)
-                if (sc.IsShipEnabled)
-                    request.Items.Add(sc);
-            request.ShippingAddress = shippingAddress;
+            //if we always ship from the default shipping original, then there's only one request
+            //if we ship from warehouses, then there could be several requests
 
 
-            var originAddress = _addressService.GetAddressById(_shippingSettings.ShippingOriginAddressId);
-            if (originAddress != null)
+            //key - warehouse identifier (0 - default shipping origin)
+            //value - request
+            var requests = new Dictionary<int, GetShippingOptionRequest>();
+
+            foreach (var sci in cart)
             {
-                request.CountryFrom = originAddress.Country;
-                request.StateProvinceFrom = originAddress.StateProvince;
-                request.ZipPostalCodeFrom = originAddress.ZipPostalCode;
-            }
-            return request;
+                if (!sci.IsShipEnabled)
+                    continue;
 
+                Warehouse warehouse = null;
+                if (_shippingSettings.UseWarehouseLocation)
+                {
+                    warehouse = GetWarehouseById(sci.Product.WarehouseId);
+                }
+                GetShippingOptionRequest request = null;
+                if (requests.ContainsKey(warehouse != null ? warehouse.Id : 0))
+                {
+                    request = requests[warehouse != null ? warehouse.Id : 0];
+                    //add item
+                    request.Items.Add(sci);
+                }
+                else
+                {
+                    request = new GetShippingOptionRequest();
+                    //add item
+                    request.Items.Add(sci);
+                    //customer
+                    request.Customer = cart.GetCustomer();
+                    //ship to
+                    request.ShippingAddress = shippingAddress;
+                    //ship from
+                    Address originAddress = null;
+                    if (warehouse != null)
+                    {
+                        //warehouse address
+                        originAddress = _addressService.GetAddressById(warehouse.AddressId);
+                    }
+                    if (originAddress == null)
+                    {
+                        //no warehouse address. in this case use the default hipping origin
+                        originAddress = _addressService.GetAddressById(_shippingSettings.ShippingOriginAddressId);
+                    }
+                    if (originAddress != null)
+                    {
+                        request.CountryFrom = originAddress.Country;
+                        request.StateProvinceFrom = originAddress.StateProvince;
+                        request.ZipPostalCodeFrom = originAddress.ZipPostalCode;
+                        request.CityFrom = originAddress.City;
+                        request.AddressFrom = originAddress.Address1;
+                    }
+
+                    requests.Add(warehouse != null ? warehouse.Id : 0, request);
+                }
+
+            }
+
+            return requests.Values.ToList();
         }
 
         /// <summary>
@@ -518,7 +592,7 @@ namespace Nop.Services.Shipping
             var result = new GetShippingOptionResponse();
             
             //create a package
-            var getShippingOptionRequest = CreateShippingOptionRequest(cart, shippingAddress);
+            var shippingOptionRequests = CreateShippingOptionRequests(cart, shippingAddress);
             var shippingRateComputationMethods = LoadActiveShippingRateComputationMethods(storeId)
                 .Where(srcm => 
                     String.IsNullOrWhiteSpace(allowedShippingRateComputationMethodSystemName) || 
@@ -527,28 +601,82 @@ namespace Nop.Services.Shipping
             if (shippingRateComputationMethods.Count == 0)
                 throw new NopException("Shipping rate computation method could not be loaded");
 
-            //get shipping options
+            //request shipping options from each shipping rate computation methods
             foreach (var srcm in shippingRateComputationMethods)
             {
-                var getShippingOptionResponse = srcm.GetShippingOptions(getShippingOptionRequest);
-                foreach (var so2 in getShippingOptionResponse.ShippingOptions)
+                //shipping options for a certain shipping rate computation method
+                //key - request # (in case if we ship from multiple locations)
+                //value - a list of shipping options
+                var shippingOptionsForSrcm = new Dictionary<int, List<ShippingOption>>();
+
+                //request shipping options (separately for each package-request)
+                for (int i = 0; i < shippingOptionRequests.Count; i++)
                 {
-                    //system name
-                    so2.ShippingRateComputationMethodSystemName = srcm.PluginDescriptor.SystemName;
-                    //round
-                    if (_shoppingCartSettings.RoundPricesDuringCalculation)
-                        so2.Rate = Math.Round(so2.Rate, 2);
-                    result.ShippingOptions.Add(so2);
+                    shippingOptionsForSrcm.Add(i, new List<ShippingOption>());
+
+                    var shippingOptionRequest = shippingOptionRequests[i];
+                    var getShippingOptionResponse = srcm.GetShippingOptions(shippingOptionRequest);
+
+
+                    if (getShippingOptionResponse.Success)
+                    {
+                        //success
+                        foreach (var so in getShippingOptionResponse.ShippingOptions)
+                        {
+                            so.ShippingRateComputationMethodSystemName = srcm.PluginDescriptor.SystemName;
+                            if (_shoppingCartSettings.RoundPricesDuringCalculation)
+                                so.Rate = Math.Round(so.Rate, 2);
+                            shippingOptionsForSrcm[i].Add(so);
+                        }
+                    }
+                    else
+                    {
+                        //errors
+                        foreach (string error in getShippingOptionResponse.Errors)
+                        {
+                            result.AddError(error);
+                            _logger.Warning(string.Format("Shipping ({0}). {1}", srcm.PluginDescriptor.FriendlyName, error));
+                        }
+                    }
                 }
 
-                //log errors
-                if (!getShippingOptionResponse.Success)
+                //now select shipping options which exist in each of the requested packages (common elements)
+                var listOfLists = new List<List<string>>();
+                foreach (var shippingOptions in shippingOptionsForSrcm.Values)
                 {
-                    foreach (string error in getShippingOptionResponse.Errors)
+                    var list = new List<string>();
+                    foreach (var shippingOption in shippingOptions)
+                        list.Add(shippingOption.Name);
+                    listOfLists.Add(list);
+                }
+                var intersection = listOfLists.Aggregate((previousList, nextList) => previousList.Intersect(nextList).ToList());
+                //now add common shipping options to the result (and summarize the rates)
+                var commonShippingOptions = new List<ShippingOption>();
+                foreach (var shippingOptions in shippingOptionsForSrcm.Values)
+                {
+                    foreach (var shippingOption in shippingOptions)
                     {
-                        result.AddError(error);
-                        _logger.Warning(string.Format("Shipping ({0}). {1}", srcm.PluginDescriptor.FriendlyName, error));
+                        if (intersection.Contains(shippingOption.Name))
+                        {
+                            var commonShippingOption = commonShippingOptions.FirstOrDefault(x => x.Name == shippingOption.Name);
+                            if (commonShippingOption == null)
+                            {
+                                commonShippingOption = new ShippingOption()
+                                {
+                                    ShippingRateComputationMethodSystemName = shippingOption.ShippingRateComputationMethodSystemName,
+                                    Name = shippingOption.Name,
+                                    Description = shippingOption.Description
+                                };
+                                commonShippingOptions.Add(commonShippingOption);
+                            }
+                            //summarize the rates
+                            commonShippingOption.Rate += shippingOption.Rate;
+                        }
                     }
+                }
+                foreach (var shippingOption in commonShippingOptions)
+                {
+                    result.ShippingOptions.Add(shippingOption);
                 }
             }
 

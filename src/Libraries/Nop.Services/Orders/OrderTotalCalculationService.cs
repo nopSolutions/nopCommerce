@@ -540,10 +540,23 @@ namespace Nop.Services.Orders
 
                 if (shippingRateComputationMethods.Count == 1)
                 {
-                    var getShippingOptionRequest = _shippingService.CreateShippingOptionRequest(cart, shippingAddress);
-
                     var shippingRateComputationMethod = shippingRateComputationMethods[0];
-                    decimal? fixedRate = shippingRateComputationMethod.GetFixedRate(getShippingOptionRequest);
+
+                    var shippingOptionRequests = _shippingService.CreateShippingOptionRequests(cart, shippingAddress);
+                    decimal? fixedRate = null;
+                    foreach (var shippingOptionRequest in shippingOptionRequests)
+                    {
+                        //calculate fixed rates for each request-package
+                        var fixedRateTmp = shippingRateComputationMethod.GetFixedRate(shippingOptionRequest);
+                        if (fixedRateTmp.HasValue)
+                        {
+                            if (!fixedRate.HasValue)
+                                fixedRate = decimal.Zero;
+
+                            fixedRate += fixedRateTmp.Value;
+                        }
+                    }
+                    
                     if (fixedRate.HasValue)
                     {
                         //adjust shipping rate

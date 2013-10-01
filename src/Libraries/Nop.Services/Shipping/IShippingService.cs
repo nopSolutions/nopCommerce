@@ -157,12 +157,12 @@ namespace Nop.Services.Shipping
         decimal GetShoppingCartTotalWeight(IList<ShoppingCartItem> cart);
         
         /// <summary>
-        /// Create shipment package from shopping cart
+        /// Create shipment packages (requests) from shopping cart
         /// </summary>
         /// <param name="cart">Shopping cart</param>
         /// <param name="shippingAddress">Shipping address</param>
-        /// <returns>Shipment package</returns>
-        GetShippingOptionRequest CreateShippingOptionRequest(IList<ShoppingCartItem> cart, Address shippingAddress);
+        /// <returns>Shipment packages (requests)</returns>
+        IList<GetShippingOptionRequest> CreateShippingOptionRequests(IList<ShoppingCartItem> cart, Address shippingAddress);
 
         /// <summary>
         ///  Gets available shipping options

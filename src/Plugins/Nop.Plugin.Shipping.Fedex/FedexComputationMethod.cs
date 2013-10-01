@@ -221,8 +221,8 @@ namespace Nop.Plugin.Shipping.Fedex
             if (getShippingOptionRequest.CountryFrom == null)
                 throw new Exception("FROM country is not specified");
 
-            request.RequestedShipment.Shipper.Address.StreetLines = new string[1] { getShippingOptionRequest.ShippingAddress.Address1 };
-            request.RequestedShipment.Shipper.Address.City = getShippingOptionRequest.ShippingAddress.City;
+            request.RequestedShipment.Shipper.Address.StreetLines = new string[1] { getShippingOptionRequest.AddressFrom };
+            request.RequestedShipment.Shipper.Address.City = getShippingOptionRequest.CityFrom;
             if (IncludeStateProvinceCode(getShippingOptionRequest.CountryFrom.TwoLetterIsoCode))
             {
                 string stateProvinceAbbreviation = getShippingOptionRequest.StateProvinceFrom == null ? "" : getShippingOptionRequest.StateProvinceFrom.Abbreviation;

@@ -611,6 +611,7 @@ namespace Nop.Admin.Infrastructure
             Mapper.CreateMap<ShippingSettings, ShippingSettingsModel>()
                 .ForMember(dest => dest.ShippingOriginAddress, mo => mo.Ignore())
                 .ForMember(dest => dest.ActiveStoreScopeConfiguration, mo => mo.Ignore())
+                .ForMember(dest => dest.UseWarehouseLocation_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.FreeShippingOverXEnabled_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.FreeShippingOverXValue_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.FreeShippingOverXIncludingTax_OverrideForStore, mo => mo.Ignore())

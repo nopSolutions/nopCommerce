@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -125,6 +126,7 @@ namespace Nop.Services.Tests.Orders
             _deliveryDateRepository = MockRepository.GenerateMock<IRepository<DeliveryDate>>();
             _warehouseRepository = MockRepository.GenerateMock<IRepository<Warehouse>>();
             _logger = new NullLogger();
+            var cacheManager = new NopNullCache();
             _shippingService = new ShippingService(_shippingMethodRepository, 
                 _deliveryDateRepository,
                 _warehouseRepository,
@@ -135,8 +137,11 @@ namespace Nop.Services.Tests.Orders
                 _genericAttributeService,
                 _localizationService,
                 _addressService,
-                _shippingSettings, pluginFinder, 
-                _eventPublisher, _shoppingCartSettings);
+                _shippingSettings, 
+                pluginFinder, 
+                _eventPublisher, 
+                _shoppingCartSettings,
+                cacheManager);
             _shipmentService = MockRepository.GenerateMock<IShipmentService>();
             
 

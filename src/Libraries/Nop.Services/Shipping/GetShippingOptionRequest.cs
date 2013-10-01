@@ -27,7 +27,7 @@ namespace Nop.Services.Shipping
         public virtual IList<ShoppingCartItem> Items { get; set; }
 
         /// <summary>
-        /// Gets or sets a shipping address
+        /// Gets or sets a shipping address (where we ship to)
         /// </summary>
         public virtual Address ShippingAddress { get; set; }
 
@@ -35,15 +35,21 @@ namespace Nop.Services.Shipping
         /// Shipped from country
         /// </summary>
         public virtual Country CountryFrom { get; set; }
-
         /// <summary>
         /// Shipped from state/province
         /// </summary>
         public virtual StateProvince StateProvinceFrom { get; set; }
-
         /// <summary>
         /// Shipped from zip/postal code
         /// </summary>
         public virtual string ZipPostalCodeFrom { get; set; }
+        /// <summary>
+        /// Shipped from city
+        /// </summary>
+        public virtual string CityFrom { get; set; }
+        /// <summary>
+        /// Shipped from address
+        /// </summary>
+        public virtual string AddressFrom { get; set; }
     }
 }
