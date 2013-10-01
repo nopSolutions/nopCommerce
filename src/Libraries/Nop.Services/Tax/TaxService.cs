@@ -623,6 +623,9 @@ namespace Nop.Services.Tax
             if (String.IsNullOrEmpty(vatNumber))
                 return VatNumberStatus.Empty;
 
+            if (_taxSettings.EuVatAssumeValid)
+                return VatNumberStatus.Valid;
+
             if (!_taxSettings.EuVatUseWebService)
                 return VatNumberStatus.Unknown;
 

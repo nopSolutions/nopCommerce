@@ -291,6 +291,16 @@
                 @Html.ValidationMessageFor(model => model.EuVatUseWebService)
             </td>
         </tr>
+        <tr id="pnlEuVatAssumeValid">
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.EuVatAssumeValid_OverrideForStore, model => model.EuVatAssumeValid, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.EuVatAssumeValid):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.EuVatAssumeValid)
+                @Html.ValidationMessageFor(model => model.EuVatAssumeValid)
+            </td>
+        </tr>
         <tr id="pnlEuVatEmailAdminWhenNewVATSubmitted">
             <td class="adminTitle">
                 @Html.OverrideStoreCheckboxFor(model => model.EuVatEmailAdminWhenNewVatSubmitted_OverrideForStore, model => model.EuVatEmailAdminWhenNewVatSubmitted, Model.ActiveStoreScopeConfiguration)

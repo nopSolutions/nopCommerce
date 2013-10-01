@@ -638,6 +638,7 @@ namespace Nop.Admin.Controllers
                 model.EuVatShopCountryId_OverrideForStore = _settingService.SettingExists(taxSettings, x => x.EuVatShopCountryId, storeScope);
                 model.EuVatAllowVatExemption_OverrideForStore = _settingService.SettingExists(taxSettings, x => x.EuVatAllowVatExemption, storeScope);
                 model.EuVatUseWebService_OverrideForStore = _settingService.SettingExists(taxSettings, x => x.EuVatUseWebService, storeScope);
+                model.EuVatAssumeValid_OverrideForStore = _settingService.SettingExists(taxSettings, x => x.EuVatAssumeValid, storeScope);
                 model.EuVatEmailAdminWhenNewVatSubmitted_OverrideForStore = _settingService.SettingExists(taxSettings, x => x.EuVatEmailAdminWhenNewVatSubmitted, storeScope);
             }
 
@@ -819,6 +820,11 @@ namespace Nop.Admin.Controllers
                 _settingService.SaveSetting(taxSettings, x => x.EuVatUseWebService, storeScope, false);
             else if (storeScope > 0)
                 _settingService.DeleteSetting(taxSettings, x => x.EuVatUseWebService, storeScope);
+
+            if (model.EuVatAssumeValid_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(taxSettings, x => x.EuVatAssumeValid, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(taxSettings, x => x.EuVatAssumeValid, storeScope);
 
             if (model.EuVatEmailAdminWhenNewVatSubmitted_OverrideForStore || storeScope == 0)
                 _settingService.SaveSetting(taxSettings, x => x.EuVatEmailAdminWhenNewVatSubmitted, storeScope, false);

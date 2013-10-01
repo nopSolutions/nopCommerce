@@ -158,5 +158,22 @@ namespace Nop.Services.Tests.Tax
             vatNumberStatus2.ShouldEqual(VatNumberStatus.Invalid);
             exception.ShouldBeNull();
         }
+
+        [Test]
+        public void Ensure_EuVatAssumeValid_setting_is_false_by_default()
+        {
+            _taxSettings.EuVatAssumeValid.ShouldBeFalse();
+        }
+
+        [Test]
+        public void Should_assume_valid_VAT_number_if_EuVatAssumeValid_setting_is_true()
+        {
+            _taxSettings.EuVatAssumeValid = true;
+            string name, address;
+
+            VatNumberStatus vatNumberStatus = _taxService.GetVatNumberStatus("GB", "000 0000 00",
+                out name, out address);
+            vatNumberStatus.ShouldEqual(VatNumberStatus.Valid);
+        }
     }
 }
