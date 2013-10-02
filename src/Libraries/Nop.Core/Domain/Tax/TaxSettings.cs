@@ -106,6 +106,11 @@ namespace Nop.Core.Domain.Tax
         public bool EuVatUseWebService { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether VAT numbers should be automatically assumed valid
+        /// </summary>
+        public bool EuVatAssumeValid { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether we should notify a store owner when a new VAT number is submitted
         /// </summary>
         public bool EuVatEmailAdminWhenNewVatSubmitted { get; set; }

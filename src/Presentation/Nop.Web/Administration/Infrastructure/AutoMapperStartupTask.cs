@@ -546,6 +546,7 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.EuVatShopCountryId_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.EuVatAllowVatExemption_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.EuVatUseWebService_OverrideForStore, mo => mo.Ignore())
+                .ForMember(dest => dest.EuVatAssumeValid_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.EuVatEmailAdminWhenNewVatSubmitted_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             Mapper.CreateMap<TaxSettingsModel, TaxSettings>()
