@@ -335,7 +335,9 @@ namespace Nop.Web.Infrastructure.Cache
         /// Key for cart picture caching
         /// </summary>
         /// <remarks>
-        /// {0} : product id
+        /// {0} : shopping cart item id
+        /// P.S. we could cache by product ID. it could increase performance.
+        /// but it won't work for product attributes with custom images
         /// {1} : picture size
         /// {2} : value indicating whether a default picture is displayed in case if no real picture exists
         /// {3} : language ID ("alt" and "title" can depend on localized product name)

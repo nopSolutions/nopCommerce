@@ -180,21 +180,45 @@ namespace Nop.Web.Controllers
         #region Utilities
 
         [NonAction]
-        protected PictureModel PrepareCartItemPictureModel(Product product,
+        protected PictureModel PrepareCartItemPictureModel(ShoppingCartItem sci,
             int pictureSize, bool showDefaultPicture, string productName)
         {
-            var pictureCacheKey = string.Format(ModelCacheEventConsumer.CART_PICTURE_MODEL_KEY, product.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
-            var model = _cacheManager.Get(pictureCacheKey, () =>
+            var pictureCacheKey = string.Format(ModelCacheEventConsumer.CART_PICTURE_MODEL_KEY, sci.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
+            var model = _cacheManager.Get(pictureCacheKey, 
+                //as we cache per user (shopping cart item identifier)
+                //let's cache just for 3 minutes
+                3, () =>
             {
-                var picture = _pictureService.GetPicturesByProductId(product.Id, 1).FirstOrDefault();
-                if (picture == null && !product.VisibleIndividually && product.ParentGroupedProductId > 0)
+                //shopping cart item picture
+                Picture sciPicture = null;
+
+                //first, let's see whether a shopping cart item has some attribute values with custom pictures
+                var pvaValues = _productAttributeParser.ParseProductVariantAttributeValues(sci.AttributesXml);
+                foreach (var pvaValue in pvaValues)
                 {
-                    //let's check whether this product has some parent "grouped" product
-                    picture = _pictureService.GetPicturesByProductId(product.ParentGroupedProductId, 1).FirstOrDefault();
+                    var pvavPicture = _pictureService.GetPictureById(pvaValue.PictureId);
+                    if (pvavPicture != null)
+                    {
+                        sciPicture = pvavPicture;
+                        break;
+                    }
+                }
+
+                //now let's load the default product picture
+                var product = sci.Product;
+                if (sciPicture == null)
+                {
+                    sciPicture = _pictureService.GetPicturesByProductId(product.Id, 1).FirstOrDefault();
+                }
+
+                //let's check whether this product has some parent "grouped" product
+                if (sciPicture == null && !product.VisibleIndividually && product.ParentGroupedProductId > 0)
+                {
+                    sciPicture = _pictureService.GetPicturesByProductId(product.ParentGroupedProductId, 1).FirstOrDefault();
                 }
                 return new PictureModel()
                 {
-                    ImageUrl = _pictureService.GetPictureUrl(picture, pictureSize, showDefaultPicture),
+                    ImageUrl = _pictureService.GetPictureUrl(sciPicture, pictureSize, showDefaultPicture),
                     Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), productName),
                     AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), productName),
                 };
@@ -490,7 +514,7 @@ namespace Nop.Web.Controllers
                 //picture
                 if (_shoppingCartSettings.ShowProductImagesOnShoppingCart)
                 {
-                    cartItemModel.Picture = PrepareCartItemPictureModel(sci.Product,
+                    cartItemModel.Picture = PrepareCartItemPictureModel(sci,
                         _mediaSettings.CartThumbPictureSize, true, cartItemModel.ProductName);
                 }
 
@@ -671,7 +695,7 @@ namespace Nop.Web.Controllers
                 //picture
                 if (_shoppingCartSettings.ShowProductImagesOnShoppingCart)
                 {
-                    cartItemModel.Picture = PrepareCartItemPictureModel(sci.Product,
+                    cartItemModel.Picture = PrepareCartItemPictureModel(sci,
                         _mediaSettings.CartThumbPictureSize, true, cartItemModel.ProductName);
                 }
 
@@ -771,7 +795,7 @@ namespace Nop.Web.Controllers
                     //picture
                     if (_shoppingCartSettings.ShowProductImagesInMiniShoppingCart)
                     {
-                        cartItemModel.Picture = PrepareCartItemPictureModel(sci.Product,
+                        cartItemModel.Picture = PrepareCartItemPictureModel(sci,
                             _mediaSettings.MiniCartThumbPictureSize, true, cartItemModel.ProductName);
                     }
 
