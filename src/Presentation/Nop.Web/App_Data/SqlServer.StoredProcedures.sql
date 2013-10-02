@@ -69,6 +69,7 @@ CREATE PROCEDURE [dbo].[ProductLoadAllPaged]
 	@ManufacturerId		int = 0,
 	@StoreId			int = 0,
 	@VendorId			int = 0,
+	@WarehouseId		int = 0,
 	@ParentGroupedProductId	int = 0,
 	@ProductTypeId		int = null, --product type identifier, null - load all products
 	@VisibleIndividuallyOnly bit = 0, 	--0 - load all products , 1 - "visible indivially" only
@@ -437,6 +438,13 @@ BEGIN
 	BEGIN
 		SET @sql = @sql + '
 		AND p.VendorId = ' + CAST(@VendorId AS nvarchar(max))
+	END
+	
+	--filter by warehouse
+	IF @WarehouseId > 0
+	BEGIN
+		SET @sql = @sql + '
+		AND p.WarehouseId = ' + CAST(@WarehouseId AS nvarchar(max))
 	END
 	
 	--filter by parent grouped product identifer

@@ -79,6 +79,14 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SearchWarehouseId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownList("SearchWarehouseId", Model.AvailableWarehouses)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.NopLabelFor(model => model.SearchProductTypeId):
             </td>
             <td class="adminData">
@@ -234,6 +242,7 @@
                 SearchIncludeSubCategories: $('#@Html.FieldIdFor(model => model.SearchIncludeSubCategories)').is(':checked'),
                 SearchManufacturerId: $('#SearchManufacturerId').val(),
                 SearchStoreId: $('#SearchStoreId').val(),
+                SearchWarehouseId: $('#SearchWarehouseId').val(),
                 SearchVendorId: $('#SearchVendorId').val(),
                 SearchProductTypeId: $('#SearchProductTypeId').val()
             };

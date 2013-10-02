@@ -2117,6 +2117,14 @@
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
+                  <LocaleResource Name="SearchWarehouse">
+                    <Value>Warehouse</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Search by a specific warehouse.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
                   <LocaleResource Name="SearchProductType">
                     <Value>Product type</Value>
                     <Children>

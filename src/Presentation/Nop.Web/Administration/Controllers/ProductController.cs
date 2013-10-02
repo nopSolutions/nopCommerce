@@ -667,6 +667,11 @@ namespace Nop.Admin.Controllers
             foreach (var s in _storeService.GetAllStores())
                 model.AvailableStores.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString() });
 
+            //stores
+            model.AvailableWarehouses.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var wh in _shippingService.GetAllWarehouses())
+                model.AvailableWarehouses.Add(new SelectListItem() { Text = wh.Name, Value = wh.Id.ToString() });
+
             //vendors
             model.AvailableVendors.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var v in _vendorService.GetAllVendors(0, int.MaxValue, true))
@@ -701,6 +706,7 @@ namespace Nop.Admin.Controllers
                 manufacturerId: model.SearchManufacturerId,
                 storeId: model.SearchStoreId,
                 vendorId: model.SearchVendorId,
+                warehouseId: model.SearchWarehouseId,
                 productType: model.SearchProductTypeId > 0 ? (ProductType?)model.SearchProductTypeId: null,
                 keywords: model.SearchProductName,
                 pageIndex: command.Page - 1,
