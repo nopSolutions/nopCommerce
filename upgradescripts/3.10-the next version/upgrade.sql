@@ -287,6 +287,12 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.List.SearchWarehouse.Hint">
     <Value>Search by a specific warehouse.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.EuVatAssumeValid">
+    <Value>Assume VAT always valid</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.EuVatAssumeValid.Hint">
+    <Value>Check to skip VAT validation. Enter VAT nubmers will always be valid. It will be a client responsibility to provide the correct VAT nubmer.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1197,5 +1203,12 @@ BEGIN
 		[pi].IndexId
 	
 	DROP TABLE #PageIndex
+END
+GO
+--a new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'taxsettings.euvatassumevalid')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'taxsettings.euvatassumevalid', N'false', 0)
 END
 GO

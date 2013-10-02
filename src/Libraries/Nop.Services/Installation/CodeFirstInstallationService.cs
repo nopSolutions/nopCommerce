@@ -4865,6 +4865,7 @@ namespace Nop.Services.Installation
                     EuVatShopCountryId = 0,
                     EuVatAllowVatExemption = true,
                     EuVatUseWebService = false,
+                    EuVatAssumeValid = false,
                     EuVatEmailAdminWhenNewVatSubmitted = false
                 });
 

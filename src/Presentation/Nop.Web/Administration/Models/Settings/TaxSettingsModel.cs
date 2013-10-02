@@ -115,6 +115,10 @@ namespace Nop.Admin.Models.Settings
         public bool EuVatUseWebService { get; set; }
         public bool EuVatUseWebService_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Tax.EuVatAssumeValid")]
+        public bool EuVatAssumeValid { get; set; }
+        public bool EuVatAssumeValid_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Tax.EuVatEmailAdminWhenNewVatSubmitted")]
         public bool EuVatEmailAdminWhenNewVatSubmitted { get; set; }
         public bool EuVatEmailAdminWhenNewVatSubmitted_OverrideForStore { get; set; }

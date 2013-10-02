@@ -56,12 +56,14 @@
         if ($('#@Html.FieldIdFor(model => model.EuVatEnabled)').is(':checked')) {
             $('#pnlEuVatShopCountry').show();
             $('#pnlEuVatAllowVATExemption').show();
+            $('#pnlEuVatAssumeValid').show();
             $('#pnlEuVatUseWebService').show();
             $('#pnlEuVatEmailAdminWhenNewVATSubmitted').show();
         }
         else {
             $('#pnlEuVatShopCountry').hide();
             $('#pnlEuVatAllowVATExemption').hide();
+            $('#pnlEuVatAssumeValid').hide();
             $('#pnlEuVatUseWebService').hide();
             $('#pnlEuVatEmailAdminWhenNewVATSubmitted').hide();
         }
@@ -281,16 +283,6 @@
                 @Html.ValidationMessageFor(model => model.EuVatAllowVatExemption)
             </td>
         </tr>
-        <tr id="pnlEuVatUseWebService">
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.EuVatUseWebService_OverrideForStore, model => model.EuVatUseWebService, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.EuVatUseWebService):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.EuVatUseWebService)
-                @Html.ValidationMessageFor(model => model.EuVatUseWebService)
-            </td>
-        </tr>
         <tr id="pnlEuVatAssumeValid">
             <td class="adminTitle">
                 @Html.OverrideStoreCheckboxFor(model => model.EuVatAssumeValid_OverrideForStore, model => model.EuVatAssumeValid, Model.ActiveStoreScopeConfiguration)
@@ -299,6 +291,16 @@
             <td class="adminData">
                 @Html.EditorFor(model => model.EuVatAssumeValid)
                 @Html.ValidationMessageFor(model => model.EuVatAssumeValid)
+            </td>
+        </tr>
+        <tr id="pnlEuVatUseWebService">
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.EuVatUseWebService_OverrideForStore, model => model.EuVatUseWebService, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.EuVatUseWebService):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.EuVatUseWebService)
+                @Html.ValidationMessageFor(model => model.EuVatUseWebService)
             </td>
         </tr>
         <tr id="pnlEuVatEmailAdminWhenNewVATSubmitted">

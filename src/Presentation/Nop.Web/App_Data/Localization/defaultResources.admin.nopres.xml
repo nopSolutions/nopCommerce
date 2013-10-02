@@ -5964,6 +5964,14 @@
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
+                  <LocaleResource Name="EuVatAssumeValid">
+                    <Value>Assume VAT always valid</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Check to skip VAT validation. Enter VAT nubmers will always be valid. It will be a client responsibility to provide the correct VAT nubmer.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
                   <LocaleResource Name="EuVatEmailAdminWhenNewVatSubmitted">
                     <Value>Notify admin when a new VAT number is submitted</Value>
                     <Children>

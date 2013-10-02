@@ -160,12 +160,6 @@ namespace Nop.Services.Tests.Tax
         }
 
         [Test]
-        public void Ensure_EuVatAssumeValid_setting_is_false_by_default()
-        {
-            _taxSettings.EuVatAssumeValid.ShouldBeFalse();
-        }
-
-        [Test]
         public void Should_assume_valid_VAT_number_if_EuVatAssumeValid_setting_is_true()
         {
             _taxSettings.EuVatAssumeValid = true;
