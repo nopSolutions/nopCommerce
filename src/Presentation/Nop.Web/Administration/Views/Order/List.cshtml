@@ -138,13 +138,13 @@
                             columns.Bound(x => x.Id);
                             if (!Model.IsLoggedInAsVendor)
                             {
-                                //a vendor does not see order details such statuses or totals
+                                //a vendor does not have access to this functionality
                                 columns.Bound(x => x.OrderStatus);
                             }
                             columns.Bound(x => x.PaymentStatus);
                             if (!Model.IsLoggedInAsVendor)
                             {
-                                //a vendor does not see order details such statuses or totals
+                                //a vendor does not have access to this functionality
                                 columns.Bound(x => x.ShippingStatus);
                             }
                             columns.Bound(x => x.CustomerEmail);
@@ -152,7 +152,7 @@
                             columns.Bound(x => x.CreatedOn);
                             if (!Model.IsLoggedInAsVendor)
                             {
-                                //a vendor does not see order details such statuses or totals
+                                //a vendor does not have access to this functionality
                                 columns.Bound(x => x.OrderTotal)
                                        .FooterTemplate(
                                            string.Format("<div><strong>{0}:</strong></div>" +

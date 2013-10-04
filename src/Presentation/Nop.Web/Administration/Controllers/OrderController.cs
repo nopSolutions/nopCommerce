@@ -919,7 +919,7 @@ namespace Nop.Admin.Controllers
                 //No order found with the specified id
                 return RedirectToAction("List");
 
-            //a vendor does not have to this functionality
+            //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
                 return RedirectToAction("Edit", "Order", new { id = id });
 
@@ -952,7 +952,7 @@ namespace Nop.Admin.Controllers
                 //No order found with the specified id
                 return RedirectToAction("List");
 
-            //a vendor does not have to this functionality
+            //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
                 return RedirectToAction("Edit", "Order", new { id = id });
 
@@ -988,7 +988,7 @@ namespace Nop.Admin.Controllers
                 //No order found with the specified id
                 return RedirectToAction("List");
 
-            //a vendor does not have to this functionality
+            //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
                 return RedirectToAction("Edit", "Order", new { id = id });
 
@@ -1021,7 +1021,7 @@ namespace Nop.Admin.Controllers
                 //No order found with the specified id
                 return RedirectToAction("List");
 
-            //a vendor does not have to this functionality
+            //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
                 return RedirectToAction("Edit", "Order", new { id = id });
 
@@ -1056,7 +1056,7 @@ namespace Nop.Admin.Controllers
                 //No order found with the specified id
                 return RedirectToAction("List");
 
-            //a vendor does not have to this functionality
+            //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
                 return RedirectToAction("Edit", "Order", new { id = id });
 
@@ -1089,7 +1089,7 @@ namespace Nop.Admin.Controllers
                 //No order found with the specified id
                 return RedirectToAction("List");
 
-            //a vendor does not have to this functionality
+            //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
                 return RedirectToAction("Edit", "Order", new { id = id });
 
@@ -1124,7 +1124,7 @@ namespace Nop.Admin.Controllers
                 //No order found with the specified id
                 return RedirectToAction("List");
 
-            //a vendor does not have to this functionality
+            //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
                 return RedirectToAction("Edit", "Order", new { id = id });
 
@@ -1155,7 +1155,7 @@ namespace Nop.Admin.Controllers
                 //No order found with the specified id
                 return RedirectToAction("List");
 
-            //a vendor does not have to this functionality
+            //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
                 return RedirectToAction("Edit", "Order", new { id = id });
 
@@ -1177,7 +1177,7 @@ namespace Nop.Admin.Controllers
                 //No order found with the specified id
                 return RedirectToAction("List");
 
-            //a vendor does not have to this functionality
+            //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
                 return RedirectToAction("Edit", "Order", new { id = id });
 
@@ -1237,7 +1237,7 @@ namespace Nop.Admin.Controllers
                 //No order found with the specified id
                 return RedirectToAction("List");
 
-            //a vendor does not have to this functionality
+            //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
                 return RedirectToAction("Edit", "Order", new { id = id });
 
@@ -1273,7 +1273,7 @@ namespace Nop.Admin.Controllers
                 //No order found with the specified id
                 return RedirectToAction("List");
 
-            //a vendor does not have to this functionality
+            //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null && !HasAccessToOrder(order))
                 return RedirectToAction("List");
 
@@ -1294,7 +1294,7 @@ namespace Nop.Admin.Controllers
                 //No order found with the specified id
                 return RedirectToAction("List");
 
-            //a vendor does not have to this functionality
+            //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
                 return RedirectToAction("Edit", "Order", new { id = id });
 
@@ -1307,7 +1307,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
-            //a vendor does not have to this functionality
+            //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
                 return RedirectToAction("Edit", "Order", new { id = orderId });
 
@@ -1335,7 +1335,7 @@ namespace Nop.Admin.Controllers
                 //No order found with the specified id
                 return RedirectToAction("List");
 
-            //a vendor does not have to this functionality
+            //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
                 return RedirectToAction("Edit", "Order", new { id = id });
 
@@ -1374,7 +1374,7 @@ namespace Nop.Admin.Controllers
                 //No order found with the specified id
                 return RedirectToAction("List");
 
-            //a vendor does not have to this functionality
+            //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
                 return RedirectToAction("Edit", "Order", new { id = id });
 
@@ -1411,7 +1411,7 @@ namespace Nop.Admin.Controllers
 
             ViewData["selectedTab"] = "shippinginfo";
             
-            //a vendor does not have to this functionality
+            //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
                 return RedirectToAction("Edit", "Order", new { id = id });
 
@@ -1435,7 +1435,7 @@ namespace Nop.Admin.Controllers
                 //No order found with the specified id
                 return RedirectToAction("List");
 
-            //a vendor does not have to this functionality
+            //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
                 return RedirectToAction("Edit", "Order", new { id = id });
 
@@ -1503,7 +1503,7 @@ namespace Nop.Admin.Controllers
                 //No order found with the specified id
                 return RedirectToAction("List");
 
-            //a vendor does not have to this functionality
+            //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
                 return RedirectToAction("Edit", "Order", new { id = id });
 
@@ -1703,7 +1703,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
-            //a vendor does not have to this functionality
+            //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
                 return RedirectToAction("Edit", "Order", new { id = orderId });
 
@@ -1732,7 +1732,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
-            //a vendor does not have to this functionality
+            //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
                 return Content("");
 
@@ -1767,7 +1767,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
-            //a vendor does not have to this functionality
+            //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
                 return RedirectToAction("Edit", "Order", new { id = orderId });
 
@@ -1781,7 +1781,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
-            //a vendor does not have to this functionality
+            //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
                 return RedirectToAction("Edit", "Order", new { id = orderId });
 
@@ -2042,7 +2042,7 @@ namespace Nop.Admin.Controllers
                 //No order found with the specified id
                 return RedirectToAction("List");
 
-            //a vendor does not have to this functionality
+            //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
                 return RedirectToAction("Edit", "Order", new { id = orderId });
 
@@ -2104,7 +2104,7 @@ namespace Nop.Admin.Controllers
                 //No order found with the specified id
                 return RedirectToAction("List");
 
-            //a vendor does not have to this functionality
+            //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
                 return RedirectToAction("Edit", "Order", new { id = order.Id });
 
@@ -2749,7 +2749,7 @@ namespace Nop.Admin.Controllers
             if (order == null)
                 throw new ArgumentException("No order found with the specified id");
 
-            //a vendor does not have to this functionality
+            //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
                 return Content("");
 
@@ -2790,7 +2790,7 @@ namespace Nop.Admin.Controllers
             if (order == null)
                 return Json(new { Result = false }, JsonRequestBehavior.AllowGet);
 
-            //a vendor does not have to this functionality
+            //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
                 return Json(new { Result = false }, JsonRequestBehavior.AllowGet);
 
@@ -2825,7 +2825,7 @@ namespace Nop.Admin.Controllers
             if (order == null)
                 throw new ArgumentException("No order found with the specified id");
 
-            //a vendor does not have to this functionality
+            //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
                 return RedirectToAction("Edit", "Order", new { id = orderId });
 
