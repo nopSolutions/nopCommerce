@@ -1395,6 +1395,32 @@ namespace Nop.Admin.Controllers
             PrepareOrderDetailsModel(model, order);
             return View(model);
         }
+
+        [HttpPost, ActionName("Edit")]
+        [FormValueRequired("save-shipping-method")]
+        public ActionResult EditShippingMethod(int id, OrderModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
+            var order = _orderService.GetOrderById(id);
+            if (order == null)
+                //No order found with the specified id
+                return RedirectToAction("List");
+
+
+            ViewData["selectedTab"] = "shippinginfo";
+            
+            //a vendor does not have to this functionality
+            if (_workContext.CurrentVendor != null)
+                return RedirectToAction("Edit", "Order", new { id = id });
+
+            order.ShippingMethod = model.ShippingMethod;
+            _orderService.UpdateOrder(order);
+
+            PrepareOrderDetailsModel(model, order);
+            return View(model);
+        }
         
         [HttpPost, ActionName("Edit")]
         [FormValueRequired(FormValueRequirement.StartsWith, "btnSaveOrderItem")]
