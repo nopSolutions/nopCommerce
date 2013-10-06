@@ -455,7 +455,7 @@ namespace Nop.Admin.Controllers
 
         #endregion
 
-        #region Delivery dates
+        #region Warehouses
 
         public ActionResult Warehouses()
         {
