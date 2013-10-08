@@ -52,16 +52,6 @@ namespace Nop.Services.Orders
             out decimal subTotalWithoutDiscount, out decimal subTotalWithDiscount,
             out SortedDictionary<decimal, decimal> taxRates);
 
-        /// <summary>
-        /// Gets an order discount (applied to order subtotal)
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        /// <param name="orderSubTotal">Order subtotal</param>
-        /// <param name="appliedDiscount">Applied discount</param>
-        /// <returns>Order discount</returns>
-        decimal GetOrderSubtotalDiscount(Customer customer,
-            decimal orderSubTotal, out Discount appliedDiscount);
-
 
 
 
@@ -126,15 +116,6 @@ namespace Nop.Services.Orders
         decimal? GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart, bool includingTax,
             out decimal taxRate, out Discount appliedDiscount);
 
-        /// <summary>
-        /// Gets a shipping discount
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        /// <param name="shippingTotal">Shipping total</param>
-        /// <param name="appliedDiscount">Applied discount</param>
-        /// <returns>Shipping discount</returns>
-        decimal GetShippingDiscount(Customer customer, decimal shippingTotal, out Discount appliedDiscount);
-        
 
 
 
@@ -188,15 +169,6 @@ namespace Nop.Services.Orders
             out List<AppliedGiftCard> appliedGiftCards,
             out int redeemedRewardPoints, out decimal redeemedRewardPointsAmount,
             bool ignoreRewardPonts = false, bool usePaymentMethodAdditionalFee = true);
-
-        /// <summary>
-        /// Gets an order discount (applied to order total)
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        /// <param name="orderTotal">Order total</param>
-        /// <param name="appliedDiscount">Applied discount</param>
-        /// <returns>Order discount</returns>
-        decimal GetOrderTotalDiscount(Customer customer, decimal orderTotal, out Discount appliedDiscount);
 
 
 
