@@ -260,7 +260,7 @@ namespace Nop.Admin.Models.Orders
             public int DownloadCount { get; set; }
             public DownloadActivationType DownloadActivationType { get; set; }
             public bool IsDownloadActivated { get; set; }
-            public int? LicenseDownloadId { get; set; }
+            public Guid LicenseDownloadGuid { get; set; }
         }
 
         public partial class TaxRate : BaseNopModel

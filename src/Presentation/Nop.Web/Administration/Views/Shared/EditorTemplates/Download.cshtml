@@ -133,7 +133,7 @@
                 <div id="@(clientId + "downloadurl")">
                     @if (download != null)
                     {
-                        <a href="@(Url.Action("DownloadFile", "Download", new { downloadId = Model }))">@T("Admin.Download.DownloadUploadedFile")</a>
+                        <a href="@(Url.Action("DownloadFile", "Download", new { downloadGuid = download.DownloadGuid }))">@T("Admin.Download.DownloadUploadedFile")</a>
                     }
                 </div>
                 <div>
