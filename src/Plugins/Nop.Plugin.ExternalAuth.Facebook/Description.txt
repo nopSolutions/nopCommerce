@@ -1,5 +1,5 @@
 ﻿Group: ExternalAuth methods
-FriendlyName: Facebook
+FriendlyName: Facebook authentication
 SystemName: ExternalAuth.Facebook
 Version: 1.24
 SupportedVersions: 3.20
