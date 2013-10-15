@@ -1,0 +1,39 @@
+﻿@model ProductOverviewModel
+@using Nop.Plugin.Misc.FacebookShop.Models;
+@{
+    var productUrl = Url.RouteUrl("Product", new { SeName = Model.SeName }, "http");
+    //lo
+}
+<div class="product-item">
+    <div class="picture">
+        <a href="@productUrl" target="_blank" title="@Model.DefaultPictureModel.Title">
+            <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" />
+        </a>
+    </div>
+    <div class="details">
+        <h2 class="product-title">
+            <a href="@productUrl">@Model.Name</a>
+        </h2>
+        <div class="add-info">
+            <div class="prices">
+                @if (!String.IsNullOrEmpty(Model.ProductPrice.OldPrice))
+                {
+                    <span class="price old-price">@Model.ProductPrice.OldPrice</span>
+                }
+                <span class="price actual-price">@Model.ProductPrice.Price</span>
+            </div>
+            <div class="buttons">
+                <a href="@productUrl" target="_blank" class="product-box-detail-button">@T("Products.Details")</a>
+            </div>
+            <div class="fb-like">
+                @{
+                    var fbProductUrl = productUrl;
+                    //note that it won't be rendered on localhost
+                    //uncomment the line below in order to render facebook like box even on localhost (minor hack)
+                    fbProductUrl = fbProductUrl.Replace("://localhost", "://demo.nopcommerce.com");
+                }
+                <iframe src="//www.facebook.com/plugins/like.php?href=@Html.Raw(HttpUtility.UrlEncode(fbProductUrl))&amp;width=100&amp;height=21&amp;colorscheme=light&amp;layout=button_count&amp;action=like&amp;show_faces=false&amp;send=false&amp;appId=159953744080931" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:100px; height:21px;" allowTransparency="true"></iframe>
+            </div>
+        </div>
+    </div>
+</div>

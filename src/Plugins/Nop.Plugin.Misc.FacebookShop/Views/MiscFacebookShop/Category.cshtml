@@ -1,0 +1,57 @@
+﻿@model CategoryModel
+@{
+    Layout = "Nop.Plugin.Misc.FacebookShop.Views.MiscFacebookShop.Layout.cshtml";
+}
+@using Nop.Plugin.Misc.FacebookShop.Models;
+@using Nop.Plugin.Misc.FacebookShop.Extensions;
+<div class="page category-page">
+    <div class="page-title">
+        <h1>@Model.Name</h1>
+    </div>
+    <div class="page-body">
+        @*description*@
+        @if (!String.IsNullOrWhiteSpace(Model.Description))
+        {
+            <div class="category-description">
+                @Html.Raw(Model.Description)
+            </div>
+        }
+        @*subcategories*@
+        @if (Model.SubCategories.Count > 0)
+        {
+            <div class="sub-category-grid">
+                @foreach (var item in Model.SubCategories)
+                {
+                    <div class="item-box">
+                        <div class="sub-category-item">
+                            <h2 class="title">
+                                <a href="@Url.RouteUrl("Plugin.Misc.FacebookShop.Category", new { categoryId = item.Id })" title="@item.PictureModel.Title">
+                                    @item.Name</a>
+                            </h2>
+                            <div class="picture">
+                                <a href="@Url.RouteUrl("Plugin.Misc.FacebookShop.Category", new { categoryId = item.Id })" title="@item.PictureModel.Title">
+                                    <img alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl"
+                                         title="@item.PictureModel.Title" /></a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        @*product list*@
+        @if (Model.Products.Count > 0)
+        {
+            <div class="product-grid">
+                @foreach (var item in Model.Products)
+                {
+                    <div class="item-box">
+                        @Html.Partial("Nop.Plugin.Misc.FacebookShop.Views.MiscFacebookShop.ProductBox", item)
+                    </div>
+                }
+            </div>
+        }
+        <div class="pager">
+            @Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber")
+        </div>
+    </div>
+</div>

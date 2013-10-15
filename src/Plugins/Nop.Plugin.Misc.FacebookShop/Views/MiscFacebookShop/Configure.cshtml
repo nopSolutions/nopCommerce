@@ -1,0 +1,38 @@
+﻿@{
+    Layout = "";
+}
+<table class="adminContent">
+    <tr>
+        <td>
+            <h3>Configuration notes:</h3>
+            <br />
+            <h4>HTTPS requirement</h4>
+            <p>
+                The server will have to be secure, i.e., have an SSL Security Certificate for the domain under which it's hosted
+            </p>
+            <h4>Facebook developer application</h4>
+                <ul>
+                    <li>The first step in creating an application in Facebook. You can do by going to <a href="https://developers.facebook.com/apps/" target="_blank">https://developers.facebook.com/apps/</a>
+                    </li>
+                    <li>Select "Page Tab" integration type
+                    </li>
+                    <li>Enter "Page Tab Name". The displayed name of the tab in the page navigation
+                    </li>
+                    <li>For the "Page Tab URL" field enter "http://www.yourstore.com/facebook/shop/"
+                    </li>
+                    <li>For the "Secure Page Tab URL" field enter "https://www.yourstore.com/facebook/shop/" (same as the "Page Tab URL" but with HTTPS instead of HTTP)
+                    </li>
+                    <li>Page Tab Width. Choose "Normal (810px)".
+                    </li>
+                </ul>
+            <h4>Installing your iFrame application on your Fan Page</h4>
+            <p>
+                Navigate to the following URL in your browser: https://www.facebook.com/dialog/pagetab?app_id=YOUR_APP_ID&next=YOUR_URL
+                <br />
+                Replace "YOUR_APP_ID" with your App ID and "YOUR_URL" with your app's URL, both of which values are available in your app settings.
+                <br />
+                You'll see an "Add page tab" page. After selecting your Facebook page from the pulldown menu and clicking "Add Page Tab" your iFrame app should appear on your Fan Page.
+            </p>
+        </td>
+    </tr>
+</table>

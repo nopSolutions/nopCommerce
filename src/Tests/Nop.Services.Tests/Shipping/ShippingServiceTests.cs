@@ -34,7 +34,6 @@ namespace Nop.Services.Tests.Shipping
         IGenericAttributeService _genericAttributeService;
         IShippingService _shippingService;
         ShoppingCartSettings _shoppingCartSettings;
-        NopNullCache _cacheManager;
         IProductService _productService;
 
         [SetUp]

@@ -1,0 +1,5 @@
+﻿@model FooterModel
+@using Nop.Plugin.Misc.FacebookShop.Models;
+<div class="footer">
+    @T("Content.CopyrightNotice", DateTime.Now.Year.ToString(), Model.StoreName)
+</div>

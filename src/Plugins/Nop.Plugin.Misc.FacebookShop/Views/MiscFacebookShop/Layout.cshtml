@@ -1,0 +1,22 @@
+﻿@using Nop.Web.Framework.UI
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Facebook store</title>
+    <link href="@Url.Content("~/Plugins/Misc.FacebookShop/Content/styles.css")" type="text/css" rel="stylesheet" />
+    <script src="@Url.Content("~/Plugins/Misc.FacebookShop/Scripts/jquery-1.7.1.min.js")"></script>
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+</head>
+<body>
+    <div class="master-wrapper-page">
+        @Html.Partial("Nop.Plugin.Misc.FacebookShop.Views.MiscFacebookShop.Header")
+        <div class="header-menu">
+            @Html.Action("CategoryNavigation", "MiscFacebookShop")
+        </div>
+        <div class="master-wrapper-main">
+            @RenderBody()
+        </div>
+        @Html.Action("Footer", "MiscFacebookShop")
+    </div>
+</body>
+</html>

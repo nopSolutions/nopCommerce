@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>Mvc2Futures</id>
+    <version>2.0.50217.0</version>
+    <title>Mvc2Futures</title>
+    <authors>Microsoft</authors>
+    <owners>Microsoft</owners>
+    <licenseUrl>http://aspnet.codeplex.com/license</licenseUrl>
+    <projectUrl>http://aspnet.codeplex.com/</projectUrl>
+    <iconUrl>https://nugetgallery.blob.core.windows.net/icons/Mvc2Futures.2.0.50217.0.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>ASP.NET MVC 2 Futures includes unsupported prototype features for ASP.NET MVC 2, from the MVC team.</description>
+    <summary>ASP.NET MVC 2 Futures includes unsupported prototype features for ASP.NET MVC 2, from the MVC team.</summary>
+    <copyright>Microsoft</copyright>
+    <tags>aspnetmvc futures aspnet</tags>
+  </metadata>
+</package>

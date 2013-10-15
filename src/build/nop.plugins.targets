@@ -104,6 +104,10 @@
         <MSBuild Projects ="$(MSBuildProjectFullPath)"
                         Targets="Plugin-CopyToWeb"
                         Properties="
+                        PluginProjectName=Nop.Plugin.Misc.FacebookShop"/>
+        <MSBuild Projects ="$(MSBuildProjectFullPath)"
+                        Targets="Plugin-CopyToWeb"
+                        Properties="
                         PluginProjectName=Nop.Plugin.Misc.WebServices"/>
     </Target>
     
