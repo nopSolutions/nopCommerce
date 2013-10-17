@@ -5461,7 +5461,7 @@
             </remarks>
             <returns>A new container with the configured component registrations.</returns>
         </member>
-        <member name="M:Autofac.ContainerBuilder.Update(Autofac.IContainer)">
+        <member name="M:Autofac.ContainerBuilder.Update(Autofac.IContainer,Autofac.Builder.ContainerBuildOptions)">
             <summary>
             Configure an existing container with the component registrations
             that have been made.
@@ -5471,6 +5471,7 @@
             - this prevents ownership issues for provided instances.
             </remarks>
             <param name="container">An existing container to make the registrations in.</param>
+            <param name="options">Options that influence the way the container is updated.</param>
         </member>
         <member name="M:Autofac.ContainerBuilder.Update(Autofac.Core.IComponentRegistry)">
             <summary>
