@@ -18,6 +18,7 @@ namespace Nop.Core.Infrastructure
     {
         #region Fields
 
+        private bool ignoreReflectionErrors = true;
         private bool loadAppDomainAssemblies = true;
         private string assemblySkipLoadingPattern = "^System|^mscorlib|^Microsoft|^CppCodeProvider|^VJSharpCodeProvider|^WebDev|^Castle|^Iesi|^log4net|^NHibernate|^nunit|^TestDriven|^MbUnit|^Rhino|^QuickGraph|^TestFu|^Telerik|^ComponentArt|^MvcContrib|^AjaxControlToolkit|^Antlr3|^Remotion|^Recaptcha";
         private string assemblyRestrictToLoadingPattern = ".*";
@@ -116,27 +117,42 @@ namespace Nop.Core.Infrastructure
             {
                 foreach (var a in assemblies)
                 {
-                    foreach (var t in a.GetTypes())
+                    Type[] types = null;
+                    try
                     {
-                        if (assignTypeFrom.IsAssignableFrom(t) || (assignTypeFrom.IsGenericTypeDefinition && DoesTypeImplementOpenGeneric(t, assignTypeFrom)))
+                        types = a.GetTypes();
+                    }
+                    catch
+                    {
+                        //Entity Framework 6 doesn't allow getting types (throws an exception)
+                        if (!ignoreReflectionErrors)
                         {
-                            if (!t.IsInterface)
+                            throw;
+                        }
+                    }
+                    if (types != null)
+                    {
+                        foreach (var t in types)
+                        {
+                            if (assignTypeFrom.IsAssignableFrom(t) || (assignTypeFrom.IsGenericTypeDefinition && DoesTypeImplementOpenGeneric(t, assignTypeFrom)))
                             {
-                                if (onlyConcreteClasses)
+                                if (!t.IsInterface)
                                 {
-                                    if (t.IsClass && !t.IsAbstract)
+                                    if (onlyConcreteClasses)
+                                    {
+                                        if (t.IsClass && !t.IsAbstract)
+                                        {
+                                            result.Add(t);
+                                        }
+                                    }
+                                    else
                                     {
                                         result.Add(t);
                                     }
                                 }
-                                else
-                                {
-                                    result.Add(t);
-                                }
                             }
                         }
                     }
-
                 }
             }
             catch (ReflectionTypeLoadException ex)
