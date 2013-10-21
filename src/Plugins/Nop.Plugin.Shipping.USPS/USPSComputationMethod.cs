@@ -324,6 +324,15 @@ namespace Nop.Plugin.Shipping.USPS
                 string mailType = "Package"; //Package, Envelope
                 var packageSize = GetPackageSize(length, height, width);
 
+                var countryName = getShippingOptionRequest.ShippingAddress.Country.Name;
+                //USPS country hacks
+                //The USPS wants the NAME of the country for international shipments rather than one of the ISO codes
+                //It requires "Korea, Republic of (South Korea)" rather than "Korea".
+                if (countryName == "Korea")
+                {
+                    countryName = "Korea, Republic of (South Korea)";
+                }
+
                 if ((!IsPackageTooHeavy(pounds)) && (!IsPackageTooLarge(length, height, width)))
                 {
                     sb.Append("<Package ID=\"0\">");
@@ -336,7 +345,7 @@ namespace Nop.Plugin.Shipping.USPS
                     sb.Append("<GiftFlag>N</GiftFlag>");
                     sb.Append("</GXG>");
                     sb.AppendFormat("<ValueOfContents>{0}</ValueOfContents>", intlSubTotal);
-                    sb.AppendFormat("<Country>{0}</Country>", getShippingOptionRequest.ShippingAddress.Country.Name);
+                    sb.AppendFormat("<Country>{0}</Country>", countryName);
                     sb.Append("<Container>RECTANGULAR</Container>");
                     sb.AppendFormat("<Size>{0}</Size>", packageSize);
                     sb.AppendFormat("<Width>{0}</Width>", width);
@@ -397,7 +406,7 @@ namespace Nop.Plugin.Shipping.USPS
                         sb.Append("<GiftFlag>N</GiftFlag>");
                         sb.Append("</GXG>");
                         sb.AppendFormat("<ValueOfContents>{0}</ValueOfContents>", intlSubTotal);
-                        sb.AppendFormat("<Country>{0}</Country>", getShippingOptionRequest.ShippingAddress.Country.Name);
+                        sb.AppendFormat("<Country>{0}</Country>", countryName);
                         sb.Append("<Container>RECTANGULAR</Container>");
                         sb.AppendFormat("<Size>{0}</Size>", packageSize2);
                         sb.AppendFormat("<Width>{0}</Width>", width2);
