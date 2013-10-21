@@ -196,7 +196,7 @@ namespace Nop.Services.Orders
         /// Award reward points
         /// </summary>
         /// <param name="order">Order</param>
-        protected void AwardRewardPoints(Order order)
+        protected virtual void AwardRewardPoints(Order order)
         {
             if (!_rewardPointsSettings.Enabled)
                 return;
@@ -226,7 +226,7 @@ namespace Nop.Services.Orders
         /// Award reward points
         /// </summary>
         /// <param name="order">Order</param>
-        protected void ReduceRewardPoints(Order order)
+        protected virtual void ReduceRewardPoints(Order order)
         {
             if (!_rewardPointsSettings.Enabled)
                 return;
@@ -256,7 +256,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="order">Order</param>
         /// <param name="activate">A value indicating whether to activate gift cards; true - actuvate, false - deactivate</param>
-        protected void SetActivatedValueForPurchasedGiftCards(Order order, bool activate)
+        protected virtual void SetActivatedValueForPurchasedGiftCards(Order order, bool activate)
         {
             var giftCards = _giftCardService.GetAllGiftCards(order.Id, null, null, !activate, "", 0, int.MaxValue);
             foreach (var gc in giftCards)
@@ -300,8 +300,7 @@ namespace Nop.Services.Orders
         /// <param name="order">Order</param>
         /// <param name="os">New order status</param>
         /// <param name="notifyCustomer">True to notify customer</param>
-        protected void SetOrderStatus(Order order,
-            OrderStatus os, bool notifyCustomer)
+        protected virtual void SetOrderStatus(Order order, OrderStatus os, bool notifyCustomer)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -394,7 +393,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="order">Order</param>
         /// <returns>Validated order</returns>
-        public void CheckOrderStatus(Order order)
+        public virtual void CheckOrderStatus(Order order)
         {
             if (order == null)
                 throw new ArgumentNullException("order");

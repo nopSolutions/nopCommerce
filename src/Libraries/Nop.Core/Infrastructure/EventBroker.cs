@@ -9,7 +9,7 @@ namespace Nop.Core.Infrastructure
     /// class is to reduce the risk of temporary errors during initialization
     /// causing the site to be crippled.
     /// </summary>
-    public class EventBroker
+    public partial class EventBroker
     {
         static EventBroker()
         {
@@ -48,8 +48,8 @@ namespace Nop.Core.Infrastructure
         public EventHandler<EventArgs> PostMapRequestHandler;
         public EventHandler<EventArgs> Error;
         public EventHandler<EventArgs> EndRequest;
-        
-        protected void Application_BeginRequest(object sender, EventArgs e)
+
+        protected virtual void Application_BeginRequest(object sender, EventArgs e)
         {
             if (BeginRequest != null)
             {
@@ -58,7 +58,7 @@ namespace Nop.Core.Infrastructure
             }
         }
 
-        protected void Application_AuthorizeRequest(object sender, EventArgs e)
+        protected virtual void Application_AuthorizeRequest(object sender, EventArgs e)
         {
             if (AuthorizeRequest != null)
             {
@@ -67,7 +67,7 @@ namespace Nop.Core.Infrastructure
             }
         }
 
-        private void Application_PostResolveRequestCache(object sender, EventArgs e)
+        protected virtual void Application_PostResolveRequestCache(object sender, EventArgs e)
         {
             if (PostResolveRequestCache != null)
             {
@@ -76,7 +76,7 @@ namespace Nop.Core.Infrastructure
             }
         }
 
-        private void Application_PostMapRequestHandler(object sender, EventArgs e)
+        protected virtual void Application_PostMapRequestHandler(object sender, EventArgs e)
         {
             if (PostMapRequestHandler != null)
             {
@@ -85,7 +85,7 @@ namespace Nop.Core.Infrastructure
             }
         }
 
-        protected void Application_AcquireRequestState(object sender, EventArgs e)
+        protected virtual void Application_AcquireRequestState(object sender, EventArgs e)
         {
             if (AcquireRequestState != null)
             {
@@ -94,13 +94,13 @@ namespace Nop.Core.Infrastructure
             }
         }
 
-        protected void Application_Error(object sender, EventArgs e)
+        protected virtual void Application_Error(object sender, EventArgs e)
         {
             if (Error != null)
                 Error(sender, e);
         }
 
-        protected void Application_EndRequest(object sender, EventArgs e)
+        protected virtual void Application_EndRequest(object sender, EventArgs e)
         {
             if (EndRequest != null)
                 EndRequest(sender, e);

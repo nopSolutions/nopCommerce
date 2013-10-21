@@ -82,7 +82,7 @@ namespace Nop.Web.Framework
 
         #region Utilities
 
-        protected HttpCookie GetCustomerCookie()
+        protected virtual HttpCookie GetCustomerCookie()
         {
             if (_httpContext == null || _httpContext.Request == null)
                 return null;
@@ -90,7 +90,7 @@ namespace Nop.Web.Framework
             return _httpContext.Request.Cookies[CustomerCookieName];
         }
 
-        protected void SetCustomerCookie(Guid customerGuid)
+        protected virtual void SetCustomerCookie(Guid customerGuid)
         {
             if (_httpContext != null && _httpContext.Response != null)
             {

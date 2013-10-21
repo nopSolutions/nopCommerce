@@ -25,7 +25,7 @@ namespace Nop.Core.Caching
         /// <summary>
         /// Creates a new instance of the NopRequestCache class
         /// </summary>
-        protected IDictionary GetItems()
+        protected virtual IDictionary GetItems()
         {
             if (_context != null)
                 return _context.Items;
@@ -39,7 +39,7 @@ namespace Nop.Core.Caching
         /// <typeparam name="T">Type</typeparam>
         /// <param name="key">The key of the value to get.</param>
         /// <returns>The value associated with the specified key.</returns>
-        public T Get<T>(string key)
+        public virtual T Get<T>(string key)
         {
             var items = GetItems();
             if (items == null)
@@ -54,7 +54,7 @@ namespace Nop.Core.Caching
         /// <param name="key">key</param>
         /// <param name="data">Data</param>
         /// <param name="cacheTime">Cache time</param>
-        public void Set(string key, object data, int cacheTime)
+        public virtual void Set(string key, object data, int cacheTime)
         {
             var items = GetItems();
             if (items == null)
@@ -74,7 +74,7 @@ namespace Nop.Core.Caching
         /// </summary>
         /// <param name="key">key</param>
         /// <returns>Result</returns>
-        public bool IsSet(string key)
+        public virtual bool IsSet(string key)
         {
             var items = GetItems();
             if (items == null)
@@ -87,7 +87,7 @@ namespace Nop.Core.Caching
         /// Removes the value with the specified key from the cache
         /// </summary>
         /// <param name="key">/key</param>
-        public void Remove(string key)
+        public virtual void Remove(string key)
         {
             var items = GetItems();
             if (items == null)
@@ -100,7 +100,7 @@ namespace Nop.Core.Caching
         /// Removes items by pattern
         /// </summary>
         /// <param name="pattern">pattern</param>
-        public void RemoveByPattern(string pattern)
+        public virtual void RemoveByPattern(string pattern)
         {
             var items = GetItems();
             if (items == null)
@@ -126,7 +126,7 @@ namespace Nop.Core.Caching
         /// <summary>
         /// Clear all cache data
         /// </summary>
-        public void Clear()
+        public virtual void Clear()
         {
             var items = GetItems();
             if (items == null)

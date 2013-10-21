@@ -24,7 +24,7 @@ namespace Nop.Core.Caching
         /// <typeparam name="T">Type</typeparam>
         /// <param name="key">The key of the value to get.</param>
         /// <returns>The value associated with the specified key.</returns>
-        public T Get<T>(string key)
+        public virtual T Get<T>(string key)
         {
             return (T)Cache[key];
         }
@@ -35,7 +35,7 @@ namespace Nop.Core.Caching
         /// <param name="key">key</param>
         /// <param name="data">Data</param>
         /// <param name="cacheTime">Cache time</param>
-        public void Set(string key, object data, int cacheTime)
+        public virtual void Set(string key, object data, int cacheTime)
         {
             if (data == null)
                 return;
@@ -50,7 +50,7 @@ namespace Nop.Core.Caching
         /// </summary>
         /// <param name="key">key</param>
         /// <returns>Result</returns>
-        public bool IsSet(string key)
+        public virtual bool IsSet(string key)
         {
             return (Cache.Contains(key));
         }
@@ -59,7 +59,7 @@ namespace Nop.Core.Caching
         /// Removes the value with the specified key from the cache
         /// </summary>
         /// <param name="key">/key</param>
-        public void Remove(string key)
+        public virtual void Remove(string key)
         {
             Cache.Remove(key);
         }
@@ -68,7 +68,7 @@ namespace Nop.Core.Caching
         /// Removes items by pattern
         /// </summary>
         /// <param name="pattern">pattern</param>
-        public void RemoveByPattern(string pattern)
+        public virtual void RemoveByPattern(string pattern)
         {
             var regex = new Regex(pattern, RegexOptions.Singleline | RegexOptions.Compiled | RegexOptions.IgnoreCase);
             var keysToRemove = new List<String>();
@@ -86,7 +86,7 @@ namespace Nop.Core.Caching
         /// <summary>
         /// Clear all cache data
         /// </summary>
-        public void Clear()
+        public virtual void Clear()
         {
             foreach (var item in Cache)
                 Remove(item.Key);

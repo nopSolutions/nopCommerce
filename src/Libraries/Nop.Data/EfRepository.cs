@@ -24,12 +24,12 @@ namespace Nop.Data
             this._context = context;
         }
 
-        public T GetById(object id)
+        public virtual T GetById(object id)
         {
             return this.Entities.Find(id);
         }
 
-        public void Insert(T entity)
+        public virtual void Insert(T entity)
         {
             try
             {
@@ -54,7 +54,7 @@ namespace Nop.Data
             }
         }
 
-        public void Update(T entity)
+        public virtual void Update(T entity)
         {
             try
             {
@@ -77,7 +77,7 @@ namespace Nop.Data
             }
         }
 
-        public void Delete(T entity)
+        public virtual void Delete(T entity)
         {
             try
             {
@@ -110,7 +110,7 @@ namespace Nop.Data
             }
         }
 
-        private IDbSet<T> Entities
+        protected virtual IDbSet<T> Entities
         {
             get
             {

@@ -85,7 +85,7 @@ namespace Nop.Services.Events
         /// </summary>
         /// <typeparam name="T">Type</typeparam>
         /// <param name="eventMessage">Event message</param>
-        public void Publish<T>(T eventMessage)
+        public virtual void Publish<T>(T eventMessage)
         {
             var subscriptions = _subscriptionService.GetSubscriptions<T>();
             subscriptions.ToList().ForEach(x => PublishToConsumer(x, eventMessage));
