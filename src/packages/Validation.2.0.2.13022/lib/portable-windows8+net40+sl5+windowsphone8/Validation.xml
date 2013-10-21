@@ -1,0 +1,521 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Validation</name>
+    </assembly>
+    <members>
+        <member name="T:Validation.Assumes">
+            <summary>
+            Common runtime checks that throw public error exceptions upon failure.
+            </summary>
+            <content>
+            Contains the inner exception thrown by Assumes.
+            </content>
+        </member>
+        <member name="M:Validation.Assumes.NotNull``1(``0)">
+            <summary>
+            Throws an exception if the specified value is null.
+            </summary>
+            <typeparam name="T">The type of value to test.</typeparam>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:Validation.Assumes.NotNullOrEmpty(System.String)">
+            <summary>
+            Throws an exception if the specified value is null or empty.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:Validation.Assumes.NotNullOrEmpty``1(System.Collections.Generic.ICollection{``0})">
+            <summary>
+            Throws an exception if the specified value is null or empty.
+            </summary>
+            <typeparam name="T">The type of value to test.</typeparam>
+        </member>
+        <member name="M:Validation.Assumes.NotNullOrEmpty``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Throws an exception if the specified value is null or empty.
+            </summary>
+            <typeparam name="T">The type of value to test.</typeparam>
+            <param name="values">The values.</param>
+        </member>
+        <member name="M:Validation.Assumes.Null``1(``0)">
+            <summary>
+            Throws an exception if the specified value is not null.
+            </summary>
+            <typeparam name="T">The type of value to test.</typeparam>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:Validation.Assumes.Is``1(System.Object)">
+            <summary>
+            Throws an exception if the specified object is not of a given type.
+            </summary>
+            <typeparam name="T">The type the value is expected to be.</typeparam>
+            <param name="value">The value to test.</param>
+        </member>
+        <member name="M:Validation.Assumes.False(System.Boolean,System.String)">
+            <summary>
+            Throws an public exception if a condition evaluates to true.
+            </summary>
+        </member>
+        <member name="M:Validation.Assumes.False(System.Boolean,System.String,System.Object)">
+            <summary>
+            Throws an public exception if a condition evaluates to true.
+            </summary>
+        </member>
+        <member name="M:Validation.Assumes.False(System.Boolean,System.String,System.Object[])">
+            <summary>
+            Throws an public exception if a condition evaluates to true.
+            </summary>
+        </member>
+        <member name="M:Validation.Assumes.True(System.Boolean,System.String)">
+            <summary>
+            Throws an public exception if a condition evaluates to false.
+            </summary>
+        </member>
+        <member name="M:Validation.Assumes.True(System.Boolean,System.String,System.Object)">
+            <summary>
+            Throws an public exception if a condition evaluates to false.
+            </summary>
+        </member>
+        <member name="M:Validation.Assumes.True(System.Boolean,System.String,System.Object[])">
+            <summary>
+            Throws an public exception if a condition evaluates to false.
+            </summary>
+        </member>
+        <member name="M:Validation.Assumes.NotReachable">
+            <summary>
+            Throws an public exception.
+            </summary>
+            <returns>Nothing.  This method always throws.  But the signature allows calling code to "throw" this method for C# syntax reasons.</returns>
+        </member>
+        <member name="M:Validation.Assumes.Present``1(``0)">
+            <summary>
+            Verifies that a value is not null, and throws an exception about a missing service otherwise.
+            </summary>
+            <typeparam name="T">The interface of the imported part.</typeparam>
+        </member>
+        <member name="M:Validation.Assumes.Fail(System.String,System.Boolean)">
+            <summary>
+            Throws an public exception.
+            </summary>
+            <returns>Nothing, as this method always throws.  The signature allows for "throwing" Fail so C# knows execution will stop.</returns>
+        </member>
+        <member name="M:Validation.Assumes.Fail(System.String,System.Exception,System.Boolean)">
+            <summary>
+            Throws an public exception.
+            </summary>
+            <returns>Nothing, as this method always throws.  The signature allows for "throwing" Fail so C# knows execution will stop.</returns>
+        </member>
+        <member name="M:Validation.Assumes.Format(System.String,System.Object[])">
+            <summary>
+            Helper method that formats string arguments.
+            </summary>
+            <returns>The formatted strings.</returns>
+        </member>
+        <member name="T:Validation.Assumes.InternalErrorException">
+            <summary>
+            The exception that is thrown when an internal assumption failed.
+            </summary>
+        </member>
+        <member name="M:Validation.Assumes.InternalErrorException.#ctor(System.String,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Validation.Assumes.InternalErrorException"/> class.
+            </summary>
+        </member>
+        <member name="M:Validation.Assumes.InternalErrorException.#ctor(System.String,System.Exception,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Validation.Assumes.InternalErrorException"/> class.
+            </summary>
+        </member>
+        <member name="M:Validation.Assumes.InternalErrorException.ShowAssertDialog(System.Boolean)">
+            <summary>
+            Show the assert if showAssert==true.
+            </summary>
+            <param name="showAssert">Whether to show the assert.</param>
+            <remarks>
+            The assertion dialog may yet be suppressed if 
+            ((DefaultTraceListener)System.Diagnostics.Trace.Listeners["Default"]).AssertUiEnabled == false
+            </remarks>
+        </member>
+        <member name="T:Validation.IDisposableObservable">
+            <summary>
+            A disposable object that also provides a safe way to query its disposed status.
+            </summary>
+        </member>
+        <member name="P:Validation.IDisposableObservable.IsDisposed">
+            <summary>
+            Gets a value indicating whether this instance has been disposed.
+            </summary>
+        </member>
+        <member name="T:Validation.PrivateErrorHelpers">
+            <summary>
+            Common utility methods used by the various error detection and reporting classes.
+            </summary>
+        </member>
+        <member name="M:Validation.PrivateErrorHelpers.TrimGenericWrapper(System.Type,System.Type)">
+            <summary>
+            Trims away a given surrounding type, returning just the generic type argument,
+            if the given type is in fact a generic type with just one type argument and
+            the generic type matches a given wrapper type.  Otherwise, it returns the original type.
+            </summary>
+            <param name="type">The type to trim, or return unmodified.</param>
+            <param name="wrapper">The SomeType&lt;&gt; generic type definition to trim away from <paramref name="type"/> if it is present.</param>
+            <returns><paramref name="type"/>, if it is not a generic type instance of <paramref name="wrapper"/>; otherwise the type argument.</returns>
+        </member>
+        <member name="M:Validation.PrivateErrorHelpers.Format(System.String,System.Object[])">
+            <summary>
+            Helper method that formats string arguments.
+            </summary>
+            <param name="format">The unformatted string.</param>
+            <param name="arguments">The formatting arguments.</param>
+            <returns>The formatted string.</returns>
+        </member>
+        <member name="T:Validation.Report">
+            <summary>
+            Common runtime checks that trace messages and invoke an assertion failure,
+            but does *not* throw exceptions.
+            </summary>
+        </member>
+        <member name="M:Validation.Report.IfNotPresent``1(``0)">
+            <summary>
+            Verifies that a value is not null, and reports an error about a missing MEF component otherwise.
+            </summary>
+            <typeparam name="T">The interface of the imported part.</typeparam>
+        </member>
+        <member name="M:Validation.Report.If(System.Boolean,System.String)">
+            <summary>
+            Reports an error if a condition evaluates to true.
+            </summary>
+            <param name="condition">if set to <c>true</c>, an error is reported.</param>
+            <param name="message">The formatted message.</param>
+        </member>
+        <member name="M:Validation.Report.IfNot(System.Boolean,System.String)">
+            <summary>
+            Reports an error if a condition does not evaluate to true.
+            </summary>
+            <param name="condition">if set to <c>false</c>, an error is reported.</param>
+            <param name="message">The formatted message.</param>
+        </member>
+        <member name="M:Validation.Report.IfNot(System.Boolean,System.String,System.Object)">
+            <summary>
+            Reports an error if a condition does not evaluate to true.
+            </summary>
+            <param name="condition">if set to <c>false</c>, an error is reported.</param>
+            <param name="message">The unformatted message.</param>
+            <param name="arg1">The only formatting argument.</param>
+        </member>
+        <member name="M:Validation.Report.IfNot(System.Boolean,System.String,System.Object,System.Object)">
+            <summary>
+            Reports an error if a condition does not evaluate to true.
+            </summary>
+            <param name="condition">if set to <c>false</c>, an error is reported.</param>
+            <param name="message">The unformatted message.</param>
+            <param name="arg1">The first formatting argument.</param>
+            <param name="arg2">The second formatting argument.</param>
+        </member>
+        <member name="M:Validation.Report.IfNot(System.Boolean,System.String,System.Object[])">
+            <summary>
+            Reports an error if a condition does not evaluate to true.
+            </summary>
+            <param name="condition">if set to <c>false</c>, an error is reported.</param>
+            <param name="message">The unformatted message.</param>
+            <param name="args">The formatting args.</param>
+        </member>
+        <member name="M:Validation.Report.Fail(System.String)">
+            <summary>
+            Reports a certain failure.
+            </summary>
+            <param name="message">The message.</param>
+        </member>
+        <member name="M:Validation.Report.Fail(System.String,System.Object[])">
+            <summary>
+            Reports a certain failure.
+            </summary>
+        </member>
+        <member name="T:Validation.Requires">
+            <summary>
+            Common runtime checks that throw ArgumentExceptions upon failure.
+            </summary>
+        </member>
+        <member name="M:Validation.Requires.NotNull``1(``0,System.String)">
+            <summary>
+            Throws an exception if the specified parameter's value is null.
+            </summary>
+            <typeparam name="T">The type of the parameter.</typeparam>
+            <param name="value">The value of the argument.</param>
+            <param name="parameterName">The name of the parameter to include in any thrown exception.</param>
+            <returns>The value of the parameter.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="value"/> is <c>null</c></exception>
+        </member>
+        <member name="M:Validation.Requires.NotNull(System.IntPtr,System.String)">
+            <summary>
+            Throws an exception if the specified parameter's value is IntPtr.Zero.
+            </summary>
+            <param name="value">The value of the argument.</param>
+            <param name="parameterName">The name of the parameter to include in any thrown exception.</param>
+            <returns>The value of the parameter.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="value"/> is IntPtr.Zero</exception>
+        </member>
+        <member name="M:Validation.Requires.NotNull(System.Threading.Tasks.Task,System.String)">
+            <summary>
+            Throws an exception if the specified parameter's value is null.
+            </summary>
+            <param name="value">The value of the argument.</param>
+            <param name="parameterName">The name of the parameter to include in any thrown exception.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="value"/> is <c>null</c></exception>
+            <remarks>
+            This method allows async methods to use Requires.NotNull without having to assign the result
+            to local variables to avoid C# warnings.
+            </remarks>
+        </member>
+        <member name="M:Validation.Requires.NotNull``1(System.Threading.Tasks.Task{``0},System.String)">
+            <summary>
+            Throws an exception if the specified parameter's value is null.
+            </summary>
+            <typeparam name="T">The type of the return value of the task.</typeparam>
+            <param name="value">The value of the argument.</param>
+            <param name="parameterName">The name of the parameter to include in any thrown exception.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="value"/> is <c>null</c></exception>
+            <remarks>
+            This method allows async methods to use Requires.NotNull without having to assign the result
+            to local variables to avoid C# warnings.
+            </remarks>
+        </member>
+        <member name="M:Validation.Requires.NotNullAllowStructs``1(``0,System.String)">
+            <summary>
+            Throws an exception if the specified parameter's value is null.
+            </summary>
+            <typeparam name="T">The type of the parameter.</typeparam>
+            <param name="value">The value of the argument.</param>
+            <param name="parameterName">The name of the parameter to include in any thrown exception.</param>
+            <returns>The value of the parameter.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="value"/> is <c>null</c></exception>
+            <remarks>
+            This method exists for callers who themselves only know the type as a generic parameter which
+            may or may not be a class, but certainly cannot be null.
+            </remarks>
+        </member>
+        <member name="M:Validation.Requires.NotNullOrEmpty(System.String,System.String)">
+            <summary>
+            Throws an exception if the specified parameter's value is null or empty.
+            </summary>
+            <param name="value">The value of the argument.</param>
+            <param name="parameterName">The name of the parameter to include in any thrown exception.</param>
+            <exception cref="T:System.ArgumentException">Thrown if <paramref name="value"/> is <c>null</c> or empty.</exception>
+        </member>
+        <member name="M:Validation.Requires.NotNullOrWhiteSpace(System.String,System.String)">
+            <summary>
+            Throws an exception if the specified parameter's value is null, empty, or whitespace.
+            </summary>
+            <param name="value">The value of the argument.</param>
+            <param name="parameterName">The name of the parameter to include in any thrown exception.</param>
+            <exception cref="T:System.ArgumentException">Thrown if <paramref name="value"/> is <c>null</c> or empty.</exception>
+        </member>
+        <member name="M:Validation.Requires.NotNullOrEmpty(System.Collections.IEnumerable,System.String)">
+            <summary>
+            Throws an exception if the specified parameter's value is null,
+            has no elements or has an element with a null value.
+            </summary>
+            <param name="values">The value of the argument.</param>
+            <param name="parameterName">The name of the parameter to include in any thrown exception.</param>
+            <exception cref="T:System.ArgumentException">Thrown if the tested condition is false.</exception>
+        </member>
+        <member name="M:Validation.Requires.NotNullEmptyOrNullElements``1(System.Collections.Generic.IEnumerable{``0},System.String)">
+            <summary>
+            Throws an exception if the specified parameter's value is null,
+            has no elements or has an element with a null value.
+            </summary>
+            <typeparam name="T">The type of the elements in the sequence.</typeparam>
+            <param name="values">The value of the argument.</param>
+            <param name="parameterName">The name of the parameter to include in any thrown exception.</param>
+            <exception cref="T:System.ArgumentException">Thrown if the tested condition is false.</exception>
+        </member>
+        <member name="M:Validation.Requires.NullOrNotNullElements``1(System.Collections.Generic.IEnumerable{``0},System.String)">
+            <summary>
+            Throws an exception if the specified parameter's value is not null
+            <em>and</em> has an element with a null value.
+            </summary>
+            <typeparam name="T">The type of the elements in the sequence.</typeparam>
+            <param name="values">The value of the argument.</param>
+            <param name="parameterName">The name of the parameter to include in any thrown exception.</param>
+            <exception cref="T:System.ArgumentException">Thrown if the tested condition is false.</exception>
+        </member>
+        <member name="M:Validation.Requires.Range(System.Boolean,System.String,System.String)">
+            <summary>
+            Throws an <see cref="T:System.ArgumentOutOfRangeException"/> if a condition does not evaluate to true.
+            </summary>
+        </member>
+        <member name="M:Validation.Requires.FailRange(System.String,System.String)">
+            <summary>
+            Throws an <see cref="T:System.ArgumentOutOfRangeException"/> if a condition does not evaluate to true.
+            </summary>
+            <returns>Nothing.  This method always throws.</returns>
+        </member>
+        <member name="M:Validation.Requires.Argument(System.Boolean,System.String,System.String)">
+            <summary>
+            Throws an ArgumentException if a condition does not evaluate to true.
+            </summary>
+        </member>
+        <member name="M:Validation.Requires.Argument(System.Boolean,System.String,System.String,System.Object)">
+            <summary>
+            Throws an ArgumentException if a condition does not evaluate to true.
+            </summary>
+        </member>
+        <member name="M:Validation.Requires.Argument(System.Boolean,System.String,System.String,System.Object,System.Object)">
+            <summary>
+            Throws an ArgumentException if a condition does not evaluate to true.
+            </summary>
+        </member>
+        <member name="M:Validation.Requires.Argument(System.Boolean,System.String,System.String,System.Object[])">
+            <summary>
+            Throws an ArgumentException if a condition does not evaluate to true.
+            </summary>
+        </member>
+        <member name="M:Validation.Requires.That(System.Boolean,System.String,System.String,System.Object[])">
+            <summary>
+            Validates some expression describing the acceptable condition for an argument evaluates to true.
+            </summary>
+            <param name="condition">The expression that must evaluate to true to avoid an <see cref="T:System.ArgumentException"/>.</param>
+            <param name="parameterName">Name of the parameter.</param>
+            <param name="unformattedMessage">The unformatted message.</param>
+            <param name="args">Formatting arguments.</param>
+        </member>
+        <member name="M:Validation.Requires.ValidState(System.Boolean,System.String)">
+            <summary>
+            Validates some expression describing the acceptable condition for an argument evaluates to true.
+            </summary>
+            <param name="condition">The expression that must evaluate to true to avoid an <see cref="T:System.InvalidOperationException"/>.</param>
+            <param name="message">The message to include with the exception.</param>
+        </member>
+        <member name="M:Validation.Requires.Fail(System.String)">
+            <summary>
+            Throws an ArgumentException.
+            </summary>
+            <returns>Nothing.  It always throws.</returns>
+        </member>
+        <member name="M:Validation.Requires.Fail(System.String,System.Object[])">
+            <summary>
+            Throws an ArgumentException.
+            </summary>
+            <returns>Nothing.  It always throws.</returns>
+        </member>
+        <member name="M:Validation.Requires.Fail(System.Exception,System.String,System.Object[])">
+            <summary>
+            Throws an ArgumentException.
+            </summary>
+            <returns>Nothing.  This method always throws.  But the signature allows calling code to "throw" this method for C# syntax reasons.</returns>
+        </member>
+        <member name="M:Validation.Requires.Format(System.String,System.Object[])">
+            <summary>
+            Helper method that formats string arguments.
+            </summary>
+            <returns>The formatted string.</returns>
+        </member>
+        <member name="T:Validation.Strings">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Validation.Strings.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Validation.Strings.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Validation.Strings.Argument_EmptyArray">
+            <summary>
+              Looks up a localized string similar to &apos;{0}&apos; must contain at least one element..
+            </summary>
+        </member>
+        <member name="P:Validation.Strings.Argument_EmptyString">
+            <summary>
+              Looks up a localized string similar to &apos;{0}&apos; cannot be an empty string (&quot;&quot;) or start with the null character..
+            </summary>
+        </member>
+        <member name="P:Validation.Strings.Argument_NullElement">
+            <summary>
+              Looks up a localized string similar to &apos;{0}&apos; cannot contain a null (Nothing in Visual Basic) element..
+            </summary>
+        </member>
+        <member name="P:Validation.Strings.Argument_Whitespace">
+            <summary>
+              Looks up a localized string similar to The parameter &quot;{0}&quot; cannot consist entirely of white space characters..
+            </summary>
+        </member>
+        <member name="P:Validation.Strings.InternalExceptionMessage">
+            <summary>
+              Looks up a localized string similar to An internal error occurred. Please contact customer support..
+            </summary>
+        </member>
+        <member name="P:Validation.Strings.ServiceMissing">
+            <summary>
+              Looks up a localized string similar to Cannot find an instance of the {0} service..
+            </summary>
+        </member>
+        <member name="T:Validation.ValidatedNotNullAttribute">
+            <summary>
+            Indicates to Code Analysis that a method validates a particular parameter.
+            </summary>
+        </member>
+        <member name="M:Validation.ValidatedNotNullAttribute.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Validation.ValidatedNotNullAttribute"/> class.
+            </summary>
+        </member>
+        <member name="T:Validation.Verify">
+            <summary>
+            Common runtime checks that throw exceptions upon failure.
+            </summary>
+        </member>
+        <member name="M:Validation.Verify.Operation(System.Boolean,System.String)">
+            <summary>
+            Throws an <see cref="T:System.InvalidOperationException"/> if a condition is false.
+            </summary>
+        </member>
+        <member name="M:Validation.Verify.Operation(System.Boolean,System.String,System.Object)">
+            <summary>
+            Throws an <see cref="T:System.InvalidOperationException"/> if a condition is false.
+            </summary>
+        </member>
+        <member name="M:Validation.Verify.Operation(System.Boolean,System.String,System.Object,System.Object)">
+            <summary>
+            Throws an <see cref="T:System.InvalidOperationException"/> if a condition is false.
+            </summary>
+        </member>
+        <member name="M:Validation.Verify.Operation(System.Boolean,System.String,System.Object[])">
+            <summary>
+            Throws an <see cref="T:System.InvalidOperationException"/> if a condition is false.
+            </summary>
+        </member>
+        <member name="M:Validation.Verify.FailOperation(System.String,System.Object[])">
+            <summary>
+            Throws an <see cref="T:System.InvalidOperationException"/>.
+            </summary>
+            <returns>
+            Nothing.  This method always throws.
+            The signature claims to return an exception to allow callers to throw this method
+            to satisfy C# execution path constraints.
+            </returns>
+        </member>
+        <member name="M:Validation.Verify.NotDisposed(Validation.IDisposableObservable,System.String)">
+            <summary>
+            Throws an <see cref="T:System.ObjectDisposedException"/> if an object is disposed.
+            </summary>
+        </member>
+        <member name="M:Validation.Verify.NotDisposed(System.Boolean,System.Object,System.String)">
+            <summary>
+            Throws an <see cref="T:System.ObjectDisposedException"/> if a condition is false.
+            </summary>
+        </member>
+        <member name="M:Validation.Verify.NotDisposed(System.Boolean,System.String)">
+            <summary>
+            Throws an <see cref="T:System.ObjectDisposedException"/> if a condition is false.
+            </summary>
+        </member>
+    </members>
+</doc>

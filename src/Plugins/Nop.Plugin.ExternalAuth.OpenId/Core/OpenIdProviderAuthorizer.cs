@@ -74,7 +74,7 @@ namespace Nop.Plugin.ExternalAuth.OpenId.Core
 
                 return new AuthorizeState(returnUrl, OpenAuthenticationStatus.RequiresRedirect)
                 {
-                    Result = request.RedirectingResponse.AsActionResult()
+                    Result = request.RedirectingResponse.AsActionResultMvc5()
                 };
             }
             catch (ProtocolException ex)

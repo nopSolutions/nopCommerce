@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>DotNetOpenAuth.Mvc5</name>
+    </assembly>
+    <members>
+        <member name="T:DotNetOpenAuth.Messaging.MvcExtensions">
+            <summary>
+            Extensions for ASP.NET MVC.
+            </summary>
+        </member>
+        <member name="M:DotNetOpenAuth.Messaging.MvcExtensions.AsActionResultMvc5(DotNetOpenAuth.Messaging.OutgoingWebResponse)">
+            <summary>
+            Transforms an OutgoingWebResponse to an MVC-friendly ActionResult.
+            </summary>
+            <param name="response">The response to send to the user agent.</param>
+            <returns>The <see cref="T:System.Web.Mvc.ActionResult"/> instance to be returned by the Controller's action method.</returns>
+        </member>
+        <member name="T:DotNetOpenAuth.Messaging.OutgoingWebResponseActionResult5">
+            <summary>
+            An ASP.NET MVC 5 class to represent the response to send
+            to the user agent when the controller has finished its work.
+            </summary>
+        </member>
+        <member name="F:DotNetOpenAuth.Messaging.OutgoingWebResponseActionResult5.response">
+            <summary>
+            The outgoing web response to send when the ActionResult is executed.
+            </summary>
+        </member>
+        <member name="M:DotNetOpenAuth.Messaging.OutgoingWebResponseActionResult5.#ctor(DotNetOpenAuth.Messaging.OutgoingWebResponse)">
+            <summary>
+            Initializes a new instance of the <see cref="T:DotNetOpenAuth.Messaging.OutgoingWebResponseActionResult5"/> class.
+            </summary>
+            <param name="response">The response.</param>
+        </member>
+        <member name="M:DotNetOpenAuth.Messaging.OutgoingWebResponseActionResult5.ExecuteResult(System.Web.Mvc.ControllerContext)">
+            <summary>
+            Enables processing of the result of an action method by a custom type that inherits from <see cref="T:System.Web.Mvc.ActionResult"/>.
+            </summary>
+            <param name="context">The context in which to set the response.</param>
+        </member>
+    </members>
+</doc>
