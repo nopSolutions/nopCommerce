@@ -528,6 +528,15 @@
                 @Html.ValidationMessageFor(model => model.LocalizationSettings.LoadAllLocaleRecordsOnStartup)
             </td>
         </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.LocalizationSettings.LoadAllLocalizedPropertiesOnStartup):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.LocalizationSettings.LoadAllLocalizedPropertiesOnStartup)
+                @Html.ValidationMessageFor(model => model.LocalizationSettings.LoadAllLocalizedPropertiesOnStartup)
+            </td>
+        </tr>
     </table>
 }
 @helper TabFullTextSettings()

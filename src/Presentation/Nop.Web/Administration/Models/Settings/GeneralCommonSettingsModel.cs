@@ -210,6 +210,9 @@ namespace Nop.Admin.Models.Settings
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.LoadAllLocaleRecordsOnStartup")]
             public bool LoadAllLocaleRecordsOnStartup { get; set; }
+
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.LoadAllLocalizedPropertiesOnStartup")]
+            public bool LoadAllLocalizedPropertiesOnStartup { get; set; }
         }
 
         public partial class FullTextSettingsModel : BaseNopModel

@@ -20,8 +20,13 @@ namespace Nop.Core.Domain.Localization
         public bool SeoFriendlyUrlsForLanguagesEnabled { get; set; }
 
         /// <summary>
-        /// A value indicating whether to load all records on application startup
+        /// A value indicating whether to load all LocaleStringResource records on application startup
         /// </summary>
         public bool LoadAllLocaleRecordsOnStartup { get; set; }
+
+        /// <summary>
+        /// A value indicating whether to load all LocalizedProperty records on application startup
+        /// </summary>
+        public bool LoadAllLocalizedPropertiesOnStartup { get; set; }
     }
 }

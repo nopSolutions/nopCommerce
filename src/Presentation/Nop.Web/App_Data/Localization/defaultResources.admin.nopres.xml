@@ -5066,10 +5066,18 @@
                     </Children>
                   </LocaleResource>
                   <LocaleResource Name="LoadAllLocaleRecordsOnStartup">
-                    <Value>Load all locales on startup</Value>
+                    <Value>Load all locale resources on startup</Value>
                     <Children>
                       <LocaleResource Name="Hint">
                         <Value>When enabled, all locale resources will be loaded on application startup. The application start will be slower, but then all pages could be opened much faster.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="LoadAllLocalizedPropertiesOnStartup">
+                    <Value>Load all localized properties on startup</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>When enabled, all localized properties (such as localized product properties) will be loaded on application startup. The application start will be slower, but then all pages could be opened much faster. It's used only when you have two or more languages enabled. Not recommended to enable when you a large catalog (several thousands localized entities).</Value>
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
