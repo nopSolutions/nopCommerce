@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
+using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Seo;
 
 namespace Nop.Services.Seo
@@ -24,6 +26,10 @@ namespace Nop.Services.Seo
         /// </remarks>
         private const string URLRECORD_ACTIVE_BY_ID_NAME_LANGUAGE_KEY = "Nop.urlrecord.active.id-name-language-{0}-{1}-{2}";
         /// <summary>
+        /// Key for caching
+        /// </summary>
+        private const string URLRECORD_ALL_KEY = "Nop.urlrecord.all";
+        /// <summary>
         /// Key pattern to clear cache
         /// </summary>
         private const string URLRECORD_PATTERN_KEY = "Nop.urlrecord.";
@@ -34,6 +40,7 @@ namespace Nop.Services.Seo
 
         private readonly IRepository<UrlRecord> _urlRecordRepository;
         private readonly ICacheManager _cacheManager;
+        private readonly LocalizationSettings _localizationSettings;
 
         #endregion
 
@@ -44,11 +51,64 @@ namespace Nop.Services.Seo
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="urlRecordRepository">URL record repository</param>
+        /// <param name="localizationSettings">Localization settings</param>
         public UrlRecordService(ICacheManager cacheManager,
-            IRepository<UrlRecord> urlRecordRepository)
+            IRepository<UrlRecord> urlRecordRepository,
+            LocalizationSettings localizationSettings)
         {
             this._cacheManager = cacheManager;
             this._urlRecordRepository = urlRecordRepository;
+            this._localizationSettings = localizationSettings;
+        }
+
+        #endregion
+
+        #region Utilities
+
+        /// <summary>
+        /// Gets all cached URL records
+        /// </summary>
+        /// <returns>cached URL records</returns>
+        protected virtual IList<UrlRecordForCaching> GetAllUrlRecordsCached()
+        {
+            //cache
+            string key = string.Format(URLRECORD_ALL_KEY);
+            return _cacheManager.Get(key, () =>
+            {
+                var query = from ur in _urlRecordRepository.Table
+                            select ur;
+                var urlRecords = query.ToList();
+                var list = new List<UrlRecordForCaching>();
+                foreach (var ur in urlRecords)
+                {
+                    var localizedPropertyForCaching = new UrlRecordForCaching()
+                    {
+                        Id = ur.Id,
+                        EntityId = ur.EntityId,
+                        EntityName = ur.EntityName,
+                        Slug = ur.Slug,
+                        IsActive = ur.IsActive,
+                        LanguageId = ur.LanguageId
+                    };
+                    list.Add(localizedPropertyForCaching);
+                }
+                return list;
+            });
+        }
+
+        #endregion
+
+        #region Nested classes
+
+        [Serializable]
+        public class UrlRecordForCaching
+        {
+            public int Id { get; set; }
+            public int EntityId { get; set; }
+            public string EntityName { get; set; }
+            public string Slug { get; set; }
+            public bool IsActive { get; set; }
+            public int LanguageId { get; set; }
         }
 
         #endregion
@@ -157,22 +217,48 @@ namespace Nop.Services.Seo
         /// <returns>Found slug</returns>
         public virtual string GetActiveSlug(int entityId, string entityName, int languageId)
         {
-            string key = string.Format(URLRECORD_ACTIVE_BY_ID_NAME_LANGUAGE_KEY, entityId, entityName, languageId);
-            return _cacheManager.Get(key, () =>
+            if (_localizationSettings.LoadAllUrlRecordsOnStartup)
             {
-                var query = from ur in _urlRecordRepository.Table
-                            where ur.EntityId == entityId &&
-                            ur.EntityName == entityName &&
-                            ur.LanguageId == languageId &&
-                            ur.IsActive
-                            orderby ur.Id descending 
-                            select ur.Slug;
-                var slug = query.FirstOrDefault();
-                //little hack here. nulls aren't cacheable so set it to ""
-                if (slug == null)
-                    slug = "";
-                return slug;
-            });
+                string key = string.Format(URLRECORD_ACTIVE_BY_ID_NAME_LANGUAGE_KEY, entityId, entityName, languageId);
+                return _cacheManager.Get(key, () =>
+                {
+                    //load all records (we know they are cached)
+                    var source = GetAllUrlRecordsCached();
+                    var query = from ur in source
+                                where ur.EntityId == entityId &&
+                                ur.EntityName == entityName &&
+                                ur.LanguageId == languageId &&
+                                ur.IsActive
+                                orderby ur.Id descending
+                                select ur.Slug;
+                    var slug = query.FirstOrDefault();
+                    //little hack here. nulls aren't cacheable so set it to ""
+                    if (slug == null)
+                        slug = "";
+                    return slug;
+                });
+            }
+            else
+            {
+                //gradual loading
+                string key = string.Format(URLRECORD_ACTIVE_BY_ID_NAME_LANGUAGE_KEY, entityId, entityName, languageId);
+                return _cacheManager.Get(key, () =>
+                {
+                    var source = _urlRecordRepository.Table;
+                    var query = from ur in source
+                                where ur.EntityId == entityId &&
+                                ur.EntityName == entityName &&
+                                ur.LanguageId == languageId &&
+                                ur.IsActive
+                                orderby ur.Id descending
+                                select ur.Slug;
+                    var slug = query.FirstOrDefault();
+                    //little hack here. nulls aren't cacheable so set it to ""
+                    if (slug == null)
+                        slug = "";
+                    return slug;
+                });
+            }
         }
 
         /// <summary>

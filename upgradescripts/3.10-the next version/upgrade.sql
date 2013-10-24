@@ -303,7 +303,13 @@ set @resources='
     <Value>Load all localized properties on startup</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.LoadAllLocalizedPropertiesOnStartup.Hint">
-    <Value>When enabled, all localized properties (such as localized product properties) will be loaded on application startup. The application start will be slower, but then all pages could be opened much faster. It''s used only when you have two or more languages enabled. Not recommended to enable when you a large catalog (several thousands localized entities).</Value>
+    <Value>When enabled, all localized properties (such as localized product properties) will be loaded on application startup. The application start will be slower, but then all pages could be opened much faster. It''s used only when you have two or more languages enabled. Not recommended to enable when you a large catalog (several thousand localized entities).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.LoadAllUrlRecordsOnStartup">
+    <Value>Load all search engine friendly names on startup</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.LoadAllUrlRecordsOnStartup.Hint">
+    <Value>When enabled, all slugs (search engine friendly names) will be loaded on application startup. The application start will be slower, but then all pages could be opened much faster. Not recommended to enable when you a large catalog (several thousand entities).</Value>
   </LocaleResource>
 </Language>
 '
@@ -1231,5 +1237,12 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'localizationsettings.loa
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'localizationsettings.loadalllocalizedpropertiesonstartup', N'false', 0)
+END
+GO
+--a new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'localizationsettings.loadallurlrecordsonstartup')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'localizationsettings.loadallurlrecordsonstartup', N'false', 0)
 END
 GO

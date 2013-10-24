@@ -88,9 +88,9 @@ namespace Nop.Services.Localization
         }
 
         /// <summary>
-        /// Gets all settings
+        /// Gets all cached localized properties
         /// </summary>
-        /// <returns>Setting collection</returns>
+        /// <returns>Cached localized properties</returns>
         protected virtual IList<LocalizedPropertyForCaching> GetAllLocalizedPropertiesCached()
         {
             //cache

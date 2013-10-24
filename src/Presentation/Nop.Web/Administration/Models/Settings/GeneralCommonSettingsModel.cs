@@ -213,6 +213,9 @@ namespace Nop.Admin.Models.Settings
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.LoadAllLocalizedPropertiesOnStartup")]
             public bool LoadAllLocalizedPropertiesOnStartup { get; set; }
+
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.LoadAllUrlRecordsOnStartup")]
+            public bool LoadAllUrlRecordsOnStartup { get; set; }
         }
 
         public partial class FullTextSettingsModel : BaseNopModel

@@ -5077,7 +5077,15 @@
                     <Value>Load all localized properties on startup</Value>
                     <Children>
                       <LocaleResource Name="Hint">
-                        <Value>When enabled, all localized properties (such as localized product properties) will be loaded on application startup. The application start will be slower, but then all pages could be opened much faster. It's used only when you have two or more languages enabled. Not recommended to enable when you a large catalog (several thousands localized entities).</Value>
+                        <Value>When enabled, all localized properties (such as localized product properties) will be loaded on application startup. The application start will be slower, but then all pages could be opened much faster. It's used only when you have two or more languages enabled. Not recommended to enable when you a large catalog (several thousand localized entities).</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="LoadAllUrlRecordsOnStartup">
+                    <Value>Load all search engine friendly names on startup</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>When enabled, all slugs (search engine friendly names) will be loaded on application startup. The application start will be slower, but then all pages could be opened much faster. Not recommended to enable when you a large catalog (several thousand entities).</Value>
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
