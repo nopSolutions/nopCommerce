@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>DotNetOpenAuth.AspNet</id>
+    <version>4.3.3.13295</version>
+    <title>DotNetOpenAuth extensions for ASP.NET (WebPages)</title>
+    <authors>Microsoft</authors>
+    <owners>Microsoft</owners>
+    <licenseUrl>http://www.opensource.org/licenses/ms-pl.html</licenseUrl>
+    <projectUrl>http://www.dotnetopenauth.net/</projectUrl>
+    <iconUrl>https://github.com/AArnott/dotnetopenid/raw/v3.4/doc/logo/dnoa-logo_32x32.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Enables web site visitors to log into an ASP.NET web application via popular identity providers,
+			including Google, Yahoo!, Windows Live, Facebook, LinkedIn and Twitter.</description>
+    <summary>Allow your web visitors to log into your web site using accounts they already have with popular services.</summary>
+    <dependencies>
+      <dependency id="DotNetOpenAuth.OpenId.RelyingParty" version="[4.3.3.13295]" />
+      <dependency id="DotNetOpenAuth.OAuth.Consumer" version="[4.3.3.13295]" />
+    </dependencies>
+  </metadata>
+</package>
