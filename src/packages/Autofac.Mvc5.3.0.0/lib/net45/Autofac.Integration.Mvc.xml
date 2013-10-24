@@ -634,6 +634,25 @@
             <param name="order">The order in which the filter is applied.</param>
             <returns>A registration builder allowing further configuration of the component.</returns>
         </member>
+        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.AsAuthenticationFilterFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle},System.Linq.Expressions.Expression{System.Action{``0}},System.Int32)">
+            <summary>
+            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.Filters.IAuthenticationFilter"/> for the specified controller action.
+            </summary>
+            <typeparam name="TController">The type of the controller.</typeparam>
+            <param name="registration">The registration.</param>
+            <param name="actionSelector">The action selector.</param>
+            <param name="order">The order in which the filter is applied.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.AsAuthenticationFilterFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle},System.Int32)">
+            <summary>
+            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.Filters.IAuthenticationFilter"/> for the specified controller.
+            </summary>
+            <typeparam name="TController">The type of the controller.</typeparam>
+            <param name="registration">The registration.</param>
+            <param name="order">The order in which the filter is applied.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
         <member name="T:Autofac.Integration.Mvc.RequestLifetimeHttpModule">
             <summary>
             An <see cref="T:System.Web.IHttpModule"/> and <see cref="T:Autofac.Integration.Mvc.ILifetimeScopeProvider"/> implementation 
