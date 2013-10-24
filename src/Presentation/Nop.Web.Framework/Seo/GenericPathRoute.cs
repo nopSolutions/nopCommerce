@@ -178,7 +178,7 @@ namespace Nop.Web.Framework.Seo
 
                             //generate an event this way developers could insert their own types
                             EngineContext.Current.Resolve<IEventPublisher>()
-                                .Publish(new CustomUrlRecordEntityNameRequested(data, urlRecord.EntityName));
+                                .Publish(new CustomUrlRecordEntityNameRequested(data, urlRecord));
                         }
                         break;
                 }

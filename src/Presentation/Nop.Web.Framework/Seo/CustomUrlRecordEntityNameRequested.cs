@@ -1,5 +1,6 @@
 ﻿
 using System.Web.Routing;
+using Nop.Core.Domain.Seo;
 
 namespace Nop.Web.Framework.Seo
 {
@@ -8,13 +9,13 @@ namespace Nop.Web.Framework.Seo
     /// </summary>
     public class CustomUrlRecordEntityNameRequested
     {
-        public CustomUrlRecordEntityNameRequested(RouteData routeData, string urlRecordEntityName)
+        public CustomUrlRecordEntityNameRequested(RouteData routeData, UrlRecord urlRecord)
         {
             this.RouteData = routeData;
-            this.UrlRecordEntityName = urlRecordEntityName;
+            this.UrlRecord = urlRecord;
         }
 
         public RouteData RouteData { get; private set; }
-        public string UrlRecordEntityName { get; private set; }
+        public UrlRecord UrlRecord { get; private set; }
     }
 }
