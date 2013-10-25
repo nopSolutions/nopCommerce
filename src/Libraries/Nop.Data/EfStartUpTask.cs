@@ -11,9 +11,9 @@ namespace Nop.Data
             var settings = EngineContext.Current.Resolve<DataSettings>();
             if (settings != null && settings.IsValid())
             {
-                var provider = EngineContext.Current.Resolve<IEfDataProvider>();
+                var provider = EngineContext.Current.Resolve<IDataProvider>();
                 if (provider == null)
-                    throw new NopException("No EfDataProvider found");
+                    throw new NopException("No IDataProvider found");
                 provider.SetDatabaseInitializer();
             }
         }

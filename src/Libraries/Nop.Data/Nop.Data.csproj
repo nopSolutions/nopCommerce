@@ -59,7 +59,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseEfDataProvider.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="DataReaderExtensions.cs" />
     <Compile Include="DbContextExtensions.cs" />
@@ -69,7 +68,6 @@
     <Compile Include="Initializers\SqlCeInitializer.cs" />
     <Compile Include="Initializers\CreateTablesIfNotExist.cs" />
     <Compile Include="EfDataProviderManager.cs" />
-    <Compile Include="IEfDataProvider.cs" />
     <Compile Include="Mapping\Catalog\BackInStockSubscriptionMap.cs" />
     <Compile Include="Mapping\Catalog\ManufacturerTemplateMap.cs" />
     <Compile Include="Mapping\Catalog\CategoryTemplateMap.cs" />

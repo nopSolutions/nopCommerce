@@ -2,27 +2,36 @@
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.SqlClient;
+using Nop.Core.Data;
 using Nop.Data.Initializers;
 
 namespace Nop.Data
 {
-    public class SqlCeDataProvider : BaseEfDataProvider
+    public class SqlCeDataProvider : IDataProvider
     {
         /// <summary>
-        /// Get connection factory
+        /// Initialize connection factory
         /// </summary>
-        /// <returns>Connection factory</returns>
-        public override IDbConnectionFactory GetConnectionFactory()
+        public virtual void InitConnectionFactory()
         {
-            return new SqlCeConnectionFactory("System.Data.SqlServerCe.4.0");
+            var connectionFactory = new SqlCeConnectionFactory("System.Data.SqlServerCe.4.0");
+            Database.DefaultConnectionFactory = connectionFactory;
+        }
+
+        /// <summary>
+        /// Initialize database
+        /// </summary>
+        public virtual void InitDatabase()
+        {
+            InitConnectionFactory();
+            SetDatabaseInitializer();
         }
 
         /// <summary>
         /// Set database initializer
         /// </summary>
-        public override void SetDatabaseInitializer()
+        public virtual void SetDatabaseInitializer()
         {
-            //var initializer = new CreateDatabaseIfNotExists<NopObjectContext>();
             var initializer = new CreateCeDatabaseIfNotExists<NopObjectContext>();
             Database.SetInitializer(initializer);
         }
@@ -30,7 +39,7 @@ namespace Nop.Data
         /// <summary>
         /// A value indicating whether this data provider supports stored procedures
         /// </summary>
-        public override bool StoredProceduredSupported
+        public virtual bool StoredProceduredSupported
         {
             get { return false; }
         }
@@ -39,7 +48,7 @@ namespace Nop.Data
         /// Gets a support database parameter object (used by stored procedures)
         /// </summary>
         /// <returns>Parameter</returns>
-        public override DbParameter GetParameter()
+        public virtual DbParameter GetParameter()
         {
             return new SqlParameter();
         }

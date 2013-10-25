@@ -7,11 +7,12 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Text;
 using System.Web.Hosting;
+using Nop.Core.Data;
 using Nop.Data.Initializers;
 
 namespace Nop.Data
 {
-    public class SqlServerDataProvider : BaseEfDataProvider
+    public class SqlServerDataProvider : IDataProvider
     {
         #region Utilities
 
@@ -31,7 +32,7 @@ namespace Nop.Data
             using (var reader = new StreamReader(stream))
             {
                 var statement = "";
-                while ((statement = readNextStatementFromStream(reader)) != null)
+                while ((statement = ReadNextStatementFromStream(reader)) != null)
                 {
                     statements.Add(statement);
                 }
@@ -40,7 +41,7 @@ namespace Nop.Data
             return statements.ToArray();
         }
 
-        protected virtual string readNextStatementFromStream(StreamReader reader)
+        protected virtual string ReadNextStatementFromStream(StreamReader reader)
         {
             var sb = new StringBuilder();
 
@@ -71,18 +72,27 @@ namespace Nop.Data
         #region Methods
 
         /// <summary>
-        /// Get connection factory
+        /// Initialize connection factory
         /// </summary>
-        /// <returns>Connection factory</returns>
-        public override IDbConnectionFactory GetConnectionFactory()
+        public virtual void InitConnectionFactory()
         {
-            return new SqlConnectionFactory();
+            var connectionFactory = new SqlConnectionFactory();
+            Database.DefaultConnectionFactory = connectionFactory;
+        }
+
+        /// <summary>
+        /// Initialize database
+        /// </summary>
+        public virtual void InitDatabase()
+        {
+            InitConnectionFactory();
+            SetDatabaseInitializer();
         }
 
         /// <summary>
         /// Set database initializer
         /// </summary>
-        public override void SetDatabaseInitializer()
+        public virtual void SetDatabaseInitializer()
         {
             //pass some table names to ensure that we have nopCommerce 2.X installed
             var tablesToValidate = new[] { "Customer", "Discount", "Order", "Product", "ShoppingCartItem" };
@@ -102,7 +112,7 @@ namespace Nop.Data
         /// <summary>
         /// A value indicating whether this data provider supports stored procedures
         /// </summary>
-        public override bool StoredProceduredSupported
+        public virtual bool StoredProceduredSupported
         {
             get { return true; }
         }
@@ -111,7 +121,7 @@ namespace Nop.Data
         /// Gets a support database parameter object (used by stored procedures)
         /// </summary>
         /// <returns>Parameter</returns>
-        public override DbParameter GetParameter()
+        public virtual DbParameter GetParameter()
         {
             return new SqlParameter();
         }
