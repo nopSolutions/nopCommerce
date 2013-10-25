@@ -1681,6 +1681,9 @@ namespace Nop.Services.Orders
                 }
             }
 
+            //event
+            _eventPublisher.PublishShipmentSent(shipment);
+
             //check order status
             CheckOrderStatus(order);
         }
@@ -1733,6 +1736,9 @@ namespace Nop.Services.Orders
                     _orderService.UpdateOrder(order);
                 }
             }
+
+            //event
+            _eventPublisher.PublishShipmentDelivered(shipment);
 
             //check order status
             CheckOrderStatus(order);

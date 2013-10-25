@@ -87,6 +87,7 @@
     <Compile Include="Domain\Catalog\AttributeValueType.cs" />
     <Compile Include="Domain\Catalog\ProductType.cs" />
     <Compile Include="Domain\Customers\CustomerLoginResults.cs" />
+    <Compile Include="Domain\Shipping\Events.cs" />
     <Compile Include="Domain\Shipping\Warehouse.cs" />
     <Compile Include="Domain\Shipping\DeliveryDate.cs" />
     <Compile Include="Domain\Vendors\Vendor.cs" />

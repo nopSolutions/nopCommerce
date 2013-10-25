@@ -1,5 +1,8 @@
 namespace Nop.Core.Domain.Orders
 {
+    /// <summary>
+    /// Order paid event
+    /// </summary>
     public class OrderPaidEvent
     {
         private readonly Order _order;
@@ -15,6 +18,9 @@ namespace Nop.Core.Domain.Orders
         }
     }
 
+    /// <summary>
+    /// Order placed event
+    /// </summary>
     public class OrderPlacedEvent
     {
         private readonly Order _order;
@@ -30,6 +36,9 @@ namespace Nop.Core.Domain.Orders
         }
     }
 
+    /// <summary>
+    /// Order cancelled event
+    /// </summary>
     public class OrderCancelledEvent
     {
         private readonly Order _order;
