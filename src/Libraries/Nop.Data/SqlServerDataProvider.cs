@@ -13,34 +13,7 @@ namespace Nop.Data
 {
     public class SqlServerDataProvider : BaseEfDataProvider
     {
-        /// <summary>
-        /// Get connection factory
-        /// </summary>
-        /// <returns>Connection factory</returns>
-        public override IDbConnectionFactory GetConnectionFactory()
-        {
-            return new SqlConnectionFactory();
-        }
-
-        /// <summary>
-        /// Set database initializer
-        /// </summary>
-        public override void SetDatabaseInitializer()
-        {
-            //pass some table names to ensure that we have nopCommerce 2.X installed
-            var tablesToValidate = new[] {"Customer", "Discount", "Order", "Product", "ShoppingCartItem"};
-
-            //custom commands (stored proedures, indexes)
-
-            var customCommands = new List<string>();
-            //use webHelper.MapPath instead of HostingEnvironment.MapPath which is not available in unit tests
-            customCommands.AddRange(ParseCommands(HostingEnvironment.MapPath("~/App_Data/SqlServer.Indexes.sql"), false));
-            //use webHelper.MapPath instead of HostingEnvironment.MapPath which is not available in unit tests
-            customCommands.AddRange(ParseCommands(HostingEnvironment.MapPath("~/App_Data/SqlServer.StoredProcedures.sql"), false));
-            
-            var initializer = new CreateTablesIfNotExist<NopObjectContext>(tablesToValidate, customCommands.ToArray());
-            Database.SetInitializer(initializer);
-        }
+        #region Utilities
 
         protected virtual string[] ParseCommands(string filePath, bool throwExceptionIfNonExists)
         {
@@ -93,6 +66,39 @@ namespace Nop.Data
             return sb.ToString();
         }
 
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Get connection factory
+        /// </summary>
+        /// <returns>Connection factory</returns>
+        public override IDbConnectionFactory GetConnectionFactory()
+        {
+            return new SqlConnectionFactory();
+        }
+
+        /// <summary>
+        /// Set database initializer
+        /// </summary>
+        public override void SetDatabaseInitializer()
+        {
+            //pass some table names to ensure that we have nopCommerce 2.X installed
+            var tablesToValidate = new[] { "Customer", "Discount", "Order", "Product", "ShoppingCartItem" };
+
+            //custom commands (stored proedures, indexes)
+
+            var customCommands = new List<string>();
+            //use webHelper.MapPath instead of HostingEnvironment.MapPath which is not available in unit tests
+            customCommands.AddRange(ParseCommands(HostingEnvironment.MapPath("~/App_Data/SqlServer.Indexes.sql"), false));
+            //use webHelper.MapPath instead of HostingEnvironment.MapPath which is not available in unit tests
+            customCommands.AddRange(ParseCommands(HostingEnvironment.MapPath("~/App_Data/SqlServer.StoredProcedures.sql"), false));
+
+            var initializer = new CreateTablesIfNotExist<NopObjectContext>(tablesToValidate, customCommands.ToArray());
+            Database.SetInitializer(initializer);
+        }
+
         /// <summary>
         /// A value indicating whether this data provider supports stored procedures
         /// </summary>
@@ -109,5 +115,7 @@ namespace Nop.Data
         {
             return new SqlParameter();
         }
+
+        #endregion
     }
 }

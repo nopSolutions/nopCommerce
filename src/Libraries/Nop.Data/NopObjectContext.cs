@@ -16,12 +16,18 @@ namespace Nop.Data
     /// </summary>
     public class NopObjectContext : DbContext, IDbContext
     {
+        #region Ctor
+
         public NopObjectContext(string nameOrConnectionString)
             : base(nameOrConnectionString)
         {
             //((IObjectContextAdapter) this).ObjectContext.ContextOptions.LazyLoadingEnabled = true;
         }
         
+        #endregion
+
+        #region Utilities
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             //dynamically load all configuration
@@ -67,6 +73,10 @@ namespace Nop.Data
                 return alreadyAttached;
             }
         }
+        
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Create database script
@@ -211,5 +221,8 @@ namespace Nop.Data
             //return result
             return result;
         }
+
+        #endregion
+
     }
 }
