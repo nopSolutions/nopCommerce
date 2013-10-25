@@ -6,7 +6,6 @@ using System.Net;
 using System.Text;
 using System.Web.Routing;
 using Nop.Core;
-using Nop.Core.Domain;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
@@ -150,6 +149,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet
             form.Add("x_card_code", processPaymentRequest.CreditCardCvv2);
             form.Add("x_first_name", customer.BillingAddress.FirstName);
             form.Add("x_last_name", customer.BillingAddress.LastName);
+            form.Add("x_email", customer.BillingAddress.Email);
             if (!string.IsNullOrEmpty(customer.BillingAddress.Company))
                 form.Add("x_company", customer.BillingAddress.Company);
             form.Add("x_address", customer.BillingAddress.Address1);
