@@ -1533,6 +1533,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Plugins\bin\" />
+    <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Libraries\Nop.Core\Nop.Core.csproj">
@@ -1765,12 +1766,6 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
-
-
-
-
-
-
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
 		 Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
@@ -1796,7 +1791,8 @@
 		Administration\bin\**;
 		Properties\**\*;
 		App_Data\InstalledPlugins.txt;
-		App_Data\Settings.txt
+		App_Data\Settings.txt;
+		App_Data\Nop.Db.sdf;
       </ExcludeFilesFromDeployment>
     </PropertyGroup>
   </Target>
