@@ -1789,10 +1789,16 @@
 		**\*.csproj;
 		**\*.csproj.user;
 		Administration\bin\**;
-		Properties\**\*;
 		App_Data\InstalledPlugins.txt;
 		App_Data\Settings.txt;
 		App_Data\Nop.Db.sdf;
+		Content\Files\ExportImport\*.txt;
+		Content\Files\ExportImport\*.xml;
+		Content\Images\Thumbs\*.jpg;
+		Content\Images\Thumbs\*.jpeg;
+		Content\Images\Thumbs\*.png;
+		Content\Images\Thumbs\*.gif;
+		Properties\**\*;
       </ExcludeFilesFromDeployment>
     </PropertyGroup>
   </Target>
