@@ -1815,8 +1815,17 @@
     <Copy SourceFiles="@(SqlCeBinariesx86)" DestinationFolder="$(OutputPath)\x86\%(RecursiveDir)" SkipUnchangedFiles="true" />
     <Copy SourceFiles="@(SqlCeBinariesx64)" DestinationFolder="$(OutputPath)\amd64\%(RecursiveDir)" SkipUnchangedFiles="true" />
   </Target>
+  <PropertyGroup>
+    <PluginsBinDirectory>$(ProjectDir)\Plugins\Bin\</PluginsBinDirectory>
+  </PropertyGroup>
+  <Target Name="CreatePluginsBinDirectory">
+    <MakeDir Directories="$(PluginsBinDirectory)" />
+    <!-- Now copy an empty file from \Content\Files to ensure that \Plugins\bin\ is also deployed-->
+    <Copy SourceFiles="$(ProjectDir)Content\Files\Index.htm" DestinationFolder="$(ProjectDir)Plugins\bin\" ContinueOnError="true" />
+  </Target>
   <Target Name="AfterBuild" DependsOnTargets="MvcBuildViews">
     <CallTarget Targets="ExcludeRootBinariesDeployment" />
     <CallTarget Targets="CopySqlCeBinaries" />
+    <CallTarget Targets="CreatePluginsBinDirectory" />
   </Target>
 </Project>
