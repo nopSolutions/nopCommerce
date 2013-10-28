@@ -419,7 +419,6 @@
     <Content Include="Scripts\tag-it.min.js" />
     <Content Include="sitemap.config">
       <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
