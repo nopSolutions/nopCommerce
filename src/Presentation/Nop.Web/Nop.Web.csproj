@@ -46,6 +46,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <FilesToIncludeForPublish>AllFilesInProjectFolder</FilesToIncludeForPublish>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
@@ -1581,9 +1582,6 @@
     <Content Include="Content\samples\product_SingleLadies_1.zip" />
     <Content Include="51Degrees.mobi.config" />
     <Content Include="App_Data\GeoIP.dat" />
-    <None Include="App_Data\Resources.xsd">
-      <SubType>Designer</SubType>
-    </None>
     <Content Include="Views\Customer\Login.cshtml" />
     <Content Include="Views\Customer\Register.cshtml" />
     <Content Include="Views\Customer\RegisterResult.cshtml" />
@@ -1746,12 +1744,6 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target> -->
   <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
     <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
   </Target>
@@ -1773,11 +1765,56 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
-  <PropertyGroup>
-    <PostBuildEvent>
-    if not exist "$(TargetDir)x86" md "$(TargetDir)x86"
-    xcopy /s /y "$(SolutionDir)packages\Microsoft.SqlServer.Compact.4.0.8876.1\NativeBinaries\x86\*.*" "$(TargetDir)x86"
-    if not exist "$(TargetDir)amd64" md "$(TargetDir)amd64"
-    xcopy /s /y "$(SolutionDir)packages\Microsoft.SqlServer.Compact.4.0.8876.1\NativeBinaries\amd64\*.*" "$(TargetDir)amd64"</PostBuildEvent>
-  </PropertyGroup>
+
+
+
+
+
+
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+		 Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target> -->
+  <!-- And here we place our custom logic (below)
+  </Target> -->
+  <Target Name="ExcludeRootBinariesDeployment">
+    <ItemGroup>
+      <RootBinFiles Include="bin\*">
+        <InProject>false</InProject>
+      </RootBinFiles>
+    </ItemGroup>
+    <PropertyGroup>
+      <ExcludeFilesFromDeployment>
+		**\*.Debug.config;
+		**\*.Release.config;
+		**\obj\**;
+		**\bin\*.xml;
+		**\*.cs;
+		**\packages.config;
+		**\*.csproj;
+		**\*.csproj.user;
+		Administration\bin\**;
+		Properties\**\*;
+		App_Data\InstalledPlugins.txt;
+		App_Data\Settings.txt
+      </ExcludeFilesFromDeployment>
+    </PropertyGroup>
+  </Target>
+  <Target Name="ExcludeRootBinariesPackage" DependsOnTargets="ExcludeRootBinariesDeployment" BeforeTargets="ExcludeFilesFromPackage">
+    <ItemGroup>
+      <ExcludeFromPackageFiles Include="$(ExcludeFilesFromDeployment)" />
+    </ItemGroup>
+  </Target>
+  <Target Name="CopySqlCeBinaries">
+    <ItemGroup>
+      <SqlCeBinariesx86 Include="$(ProjectDir)..\..\packages\Microsoft.SqlServer.Compact.4.0.8876.1\NativeBinaries\x86\**\*" />
+      <SqlCeBinariesx64 Include="$(ProjectDir)..\..\packages\Microsoft.SqlServer.Compact.4.0.8876.1\NativeBinaries\amd64\**\*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(SqlCeBinariesx86)" DestinationFolder="$(OutputPath)\x86\%(RecursiveDir)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(SqlCeBinariesx64)" DestinationFolder="$(OutputPath)\amd64\%(RecursiveDir)" SkipUnchangedFiles="true" />
+  </Target>
+  <Target Name="AfterBuild" DependsOnTargets="MvcBuildViews">
+    <CallTarget Targets="ExcludeRootBinariesDeployment" />
+    <CallTarget Targets="CopySqlCeBinaries" />
+  </Target>
 </Project>

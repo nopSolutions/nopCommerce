@@ -1,19 +1,4 @@
-Manually:
-1. Nop.Web and Nop.Admin are two web applications. They both need to be published to the same directory. “Nop.Web” to “Published\Web\”. “Nop.Admin” to “Published\Web\Administration\”. Make sure the .dlls from Nop.Admin (Published\Web\Administration\bin\) are moved and exist in (Published\Web\bin\).
-2. Ensure that plugins (\Presentation\Nop.Web\Plugins) are copied into \Published\Web\Plugins\ directory
-3. Select all the files in Published\Web\ directory and upload them to your web server.
-
-
-
-
-Automatic:
-1. nopCommerce package with source code contains two .bat files for deploying that will deploy everything correctly for you to a "\Deployable\" folder.”. The first file is src\Prepare.bat. This file will build the project in release mode and move the plugins to the correct directory. The second file is src\Deploy.bat. This file will do what Prepare.bat does, but will also move all the websites and files to src\Deployable\Nop_{Version}.
-Note: Before running the files make sure you build the project in Visual Studio.
-2. Select all the files in src\Deployable\Nop_{Version} directory and upload them to your web server.
-Note: If you're getting an error, try to compile the solution in Visual Studio before running the .bat files
-
-
-
-
-Notes for HP (Hewlett Packard) users: 
-HP machines come preloaded with a registry key that will interfere when running the deploy batch file. If you have an HP laptop and get the following error: "the OutputPath property is not set for project Nop.Web.csproj", then using regedit.exe navigate to HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment. Delete the complete key (Key and value) Platform (your value is MCD). Restart your computer. 
+1. Open the solution in Visual Studio
+2. Re-build the entire solution
+3. Publish the "Nop.Web" project from Visual Studio
+P.S. When publishing ensure that configuration is set to "Release"
