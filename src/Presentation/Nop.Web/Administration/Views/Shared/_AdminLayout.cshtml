@@ -2,6 +2,7 @@
 @using Telerik.Web.Mvc.UI;
 @using Nop.Web.Framework.UI;
 @using Nop.Core;
+@using Nop.Services.Security;
 @{
     var currentCustomer = this.WorkContext.CurrentCustomer;
     var usernamesEnabled = EngineContext.Current.Resolve<CustomerSettings>().UsernamesEnabled;
@@ -24,6 +25,10 @@
         adminPageTitle = ViewBag.Title + " / ";
     }
     adminPageTitle += T("Admin.PageTitle").Text;
+
+    //can manage Mmaintenance
+    var canManageMaintenance = EngineContext.Current.Resolve<IPermissionService>()
+        .Authorize(StandardPermissionProvider.ManageMaintenance);
 }
 <!DOCTYPE html>
 <html>
@@ -62,10 +67,13 @@
                     @Html.Widget("admin_header_middle")
                     <div class="links">
                         @Html.ActionLink(T("Admin.Header.PublicStore").Text, "Index", "Home", new { area = "" }, null)
-                        <span class="separator">|</span>
-                        @Html.ActionLink(T("Admin.Header.ClearCache").Text, "ClearCache", "Common")
-                        <span class="separator">|</span>
-                        @Html.ActionLink(T("Admin.Header.RestartApplication").Text, "RestartApplication", "Common", null, new { id = "restart-application" })
+                        @if(canManageMaintenance)
+                        {
+                            <span class="separator">|</span>
+                            @Html.ActionLink(T("Admin.Header.ClearCache").Text, "ClearCache", "Common")
+                            <span class="separator">|</span>
+                            @Html.ActionLink(T("Admin.Header.RestartApplication").Text, "RestartApplication", "Common", null, new { id = "restart-application" })
+                        }
                     </div>
                     <div class="login-info">
                         @if (currentCustomer != null && currentCustomer.IsRegistered())
