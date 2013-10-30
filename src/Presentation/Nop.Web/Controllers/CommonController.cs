@@ -597,7 +597,7 @@ namespace Nop.Web.Controllers
             if (!_commonSettings.SitemapEnabled)
                 return RedirectToRoute("HomePage");
 
-            string siteMap = _sitemapGenerator.Generate();
+            string siteMap = _sitemapGenerator.Generate(this.Url);
             return Content(siteMap, "text/xml");
         }
 

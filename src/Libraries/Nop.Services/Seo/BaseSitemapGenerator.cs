@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using System.Xml;
 using Nop.Core;
+using System.Web.Mvc;
 
 namespace Nop.Services.Seo
 {
@@ -24,7 +25,8 @@ namespace Nop.Services.Seo
         /// Method that is overridden, that handles creation of child urls.
         /// Use the method WriteUrlLocation() within this method.
         /// </summary>
-        protected abstract void GenerateUrlNodes();
+        /// <param name="urlHelper">URL helper</param>
+        protected abstract void GenerateUrlNodes(UrlHelper urlHelper);
 
         /// <summary>
         /// Writes the url location to the writer.
@@ -50,12 +52,13 @@ namespace Nop.Services.Seo
         /// This will build an xml sitemap for better index with search engines.
         /// See http://en.wikipedia.org/wiki/Sitemaps for more information.
         /// </summary>
+        /// <param name="urlHelper">URL helper</param>
         /// <returns>Sitemap.xml as string</returns>
-        public virtual string Generate()
+        public virtual string Generate(UrlHelper urlHelper)
         {
             using (var stream = new MemoryStream())
             {
-                Generate(stream);
+                Generate(urlHelper, stream);
                 return Encoding.UTF8.GetString(stream.ToArray());
             }
         }
@@ -64,8 +67,9 @@ namespace Nop.Services.Seo
         /// This will build an xml sitemap for better index with search engines.
         /// See http://en.wikipedia.org/wiki/Sitemaps for more information.
         /// </summary>
+        /// <param name="urlHelper">URL helper</param>
         /// <param name="stream">Stream of sitemap.</param>
-        public virtual void Generate(Stream stream)
+        public virtual void Generate(UrlHelper urlHelper, Stream stream)
         {
             _writer = new XmlTextWriter(stream, Encoding.UTF8);
             _writer.Formatting = Formatting.Indented;
@@ -75,7 +79,7 @@ namespace Nop.Services.Seo
             _writer.WriteAttributeString("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
             _writer.WriteAttributeString("xsi:schemaLocation", "http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd");
 
-            GenerateUrlNodes();
+            GenerateUrlNodes(urlHelper);
 
             _writer.WriteEndElement();
             _writer.Close();
