@@ -4792,7 +4792,9 @@ namespace Nop.Services.Installation
                     ShowProductImagesInMiniShoppingCart = true,
                     MiniShoppingCartProductNumber = 5,
                     RoundPricesDuringCalculation = true,
+                    GroupTierPricesForDistinctShoppingCartItems= false,
                     AllowCartItemEditing = true,
+                    RenderAssociatedAttributeValueQuantity = false
                 });
 
             settingService.SaveSetting(new OrderSettings()

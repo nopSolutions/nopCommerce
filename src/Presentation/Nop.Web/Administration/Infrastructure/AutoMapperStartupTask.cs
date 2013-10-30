@@ -734,6 +734,7 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             Mapper.CreateMap<ShoppingCartSettingsModel, ShoppingCartSettings>()
                 .ForMember(dest => dest.RoundPricesDuringCalculation, mo => mo.Ignore())
+                .ForMember(dest => dest.GroupTierPricesForDistinctShoppingCartItems, mo => mo.Ignore())
                 .ForMember(dest => dest.RenderAssociatedAttributeValueQuantity, mo => mo.Ignore());
             Mapper.CreateMap<MediaSettings, MediaSettingsModel>()
                 .ForMember(dest => dest.PicturesStoredIntoDatabase, mo => mo.Ignore())

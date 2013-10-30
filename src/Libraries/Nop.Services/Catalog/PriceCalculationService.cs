@@ -441,11 +441,29 @@ namespace Nop.Services.Catalog
                     }
                     else
                     {
+                        var qty = 0;
+                        if (_shoppingCartSettings.GroupTierPricesForDistinctShoppingCartItems)
+                        {
+                            //the same products with distinct product attributes could be stored as distinct "ShoppingCartItem" records
+                            //so let's find how many of the current products are in the cart
+                            qty = customer.ShoppingCartItems
+                                .Where(x => x.ProductId == shoppingCartItem.ProductId)
+                                .Where(x => x.ShoppingCartTypeId == shoppingCartItem.ShoppingCartTypeId)
+                                .Sum(x => x.Quantity);
+                            if (qty == 0)
+                            {
+                                qty = shoppingCartItem.Quantity;
+                            }
+                        }
+                        else
+                        {
+                            qty = shoppingCartItem.Quantity;
+                        }
                         finalPrice = GetFinalPrice(product,
                             customer,
                             attributesTotalPrice,
                             includeDiscounts,
-                            shoppingCartItem.Quantity);
+                            qty);
                     }
                 }
             }

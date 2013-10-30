@@ -1246,3 +1246,11 @@ BEGIN
 	VALUES (N'localizationsettings.loadallurlrecordsonstartup', N'false', 0)
 END
 GO
+
+--a new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'shoppingcartsettings.grouptierpricesfordistinctshoppingcartitems')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'shoppingcartsettings.grouptierpricesfordistinctshoppingcartitems', N'false', 0)
+END
+GO
