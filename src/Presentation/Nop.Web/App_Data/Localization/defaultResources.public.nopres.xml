@@ -2295,6 +2295,36 @@
       </LocaleResource>
     </Children>
   </LocaleResource>
+  <LocaleResource Name="Footer">
+    <Children>
+      <LocaleResource Name="Information">
+        <Value>Information</Value>
+      </LocaleResource>
+      <LocaleResource Name="MyAccount">
+        <Value>My account</Value>
+      </LocaleResource>
+      <LocaleResource Name="CustomerService">
+        <Value>Customer service</Value>
+      </LocaleResource>
+      <LocaleResource Name="FollowUs">
+        <Value>Follow us</Value>
+        <Children>
+          <LocaleResource Name="Facebook">
+            <Value>Facebook</Value>
+          </LocaleResource>
+          <LocaleResource Name="Twitter">
+            <Value>Twitter</Value>
+          </LocaleResource>
+          <LocaleResource Name="Youtube">
+            <Value>Youtube</Value>
+          </LocaleResource>
+          <LocaleResource Name="RSS">
+            <Value>RSS</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
+    </Children>
+  </LocaleResource>
   <LocaleResource Name="GiftCardAttribute">
     <Children>
       <LocaleResource Name="From">
@@ -2334,9 +2364,6 @@
         <Value>Featured products</Value>
       </LocaleResource>
     </Children>
-  </LocaleResource>
-  <LocaleResource Name="Information">
-    <Value>Information</Value>
   </LocaleResource>
   <LocaleResource Name="Languages">
     <Value>Languages</Value>

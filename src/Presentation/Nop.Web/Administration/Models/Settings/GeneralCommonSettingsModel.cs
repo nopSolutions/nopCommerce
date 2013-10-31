@@ -41,42 +41,47 @@ namespace Nop.Admin.Models.Settings
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.MobileDevicesSupported")]
             public bool MobileDevicesSupported { get; set; }
-
             public bool MobileDevicesSupported_OverrideForStore { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.StoreClosed")]
             public bool StoreClosed { get; set; }
-
             public bool StoreClosed_OverrideForStore { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.StoreClosedAllowForAdmins")]
             public bool StoreClosedAllowForAdmins { get; set; }
-
             public bool StoreClosedAllowForAdmins_OverrideForStore { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DefaultStoreThemeForDesktops")]
             [AllowHtml]
             public string DefaultStoreThemeForDesktops { get; set; }
-
             public bool DefaultStoreThemeForDesktops_OverrideForStore { get; set; }
             public IList<ThemeConfigurationModel> AvailableStoreThemesForDesktops { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DefaultStoreThemeForMobileDevices")]
             [AllowHtml]
             public string DefaultStoreThemeForMobileDevices { get; set; }
-
             public bool DefaultStoreThemeForMobileDevices_OverrideForStore { get; set; }
             public IList<ThemeConfigurationModel> AvailableStoreThemesForMobileDevices { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.AllowCustomerToSelectTheme")]
             public bool AllowCustomerToSelectTheme { get; set; }
-
             public bool AllowCustomerToSelectTheme_OverrideForStore { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisplayEuCookieLawWarning")]
             public bool DisplayEuCookieLawWarning { get; set; }
-
             public bool DisplayEuCookieLawWarning_OverrideForStore { get; set; }
+
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.FacebookLink")]
+            public string FacebookLink { get; set; }
+            public bool FacebookLink_OverrideForStore { get; set; }
+
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.TwitterLink")]
+            public string TwitterLink { get; set; }
+            public bool TwitterLink_OverrideForStore { get; set; }
+
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.YoutubeLink")]
+            public string YoutubeLink { get; set; }
+            public bool YoutubeLink_OverrideForStore { get; set; }
 
             #region Nested classes
 

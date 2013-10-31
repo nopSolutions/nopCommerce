@@ -4928,6 +4928,30 @@
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
+                  <LocaleResource Name="FacebookLink">
+                    <Value>Facebook page URL</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Specify your Facebook page URL. Leave empty if you don't have such page.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="TwitterLink">
+                    <Value>Twitter page URL</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Specify your Twitter page URL. Leave empty if you don't have such page.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="YoutubeLink">
+                    <Value>YouTube channel URL</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Specify your YouTube channel URL. Leave empty if you don't have such page.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
                   <LocaleResource Name="PdfLetterPageSizeEnabled">
                     <Value>Use Letter page size</Value>
                     <Children>

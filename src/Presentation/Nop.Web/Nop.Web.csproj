@@ -302,7 +302,6 @@
     <Compile Include="Models\Customer\RegisterResultModel.cs" />
     <Compile Include="Models\Customer\RegisterModel.cs" />
     <Compile Include="Models\Customer\LoginModel.cs" />
-    <Compile Include="Models\Common\InfoBlockModel.cs" />
     <Compile Include="Models\Common\MenuModel.cs" />
     <Compile Include="Models\Common\ContactUsModel.cs" />
     <Compile Include="Models\Common\TaxTypeSelectorModel.cs" />
@@ -1442,7 +1441,6 @@
     <Content Include="Views\Catalog\ProductReviews.Mobile.cshtml" />
     <Content Include="Views\Catalog\ProductEmailAFriend.Mobile.cshtml" />
     <Content Include="Views\Common\HeaderLinks.Mobile.cshtml" />
-    <Content Include="Views\Common\InfoBlock.Mobile.cshtml" />
     <Content Include="Views\Common\ContactUs.Mobile.cshtml" />
     <Content Include="Views\Blog\List.Mobile.cshtml" />
     <Content Include="Views\Blog\BlogPost.Mobile.cshtml" />
@@ -1650,7 +1648,6 @@
     <Content Include="Views\Common\ContactUs.cshtml" />
     <Content Include="Views\Common\CurrencySelector.cshtml" />
     <Content Include="Views\Common\HeaderLinks.cshtml" />
-    <Content Include="Views\Common\InfoBlock.cshtml" />
     <Content Include="Views\Common\LanguageSelector.cshtml" />
     <Content Include="Views\Common\Menu.cshtml" />
     <Content Include="Views\Common\TaxTypeSelector.cshtml" />

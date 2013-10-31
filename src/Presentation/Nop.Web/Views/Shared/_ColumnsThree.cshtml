@@ -59,8 +59,7 @@
     {
         @Html.Widget("right_side_column_before")
         @Html.Action("NewsletterBox", "Newsletter")
-        @Html.Action("RecentlyViewedProductsBlock", "Catalog", new { productThumbPictureSize = 32 })        
-        @Html.Action("InfoBlock", "Common")    
+        @Html.Action("RecentlyViewedProductsBlock", "Catalog", new { productThumbPictureSize = 32 })   
         @Html.Action("PollBlock", "Poll", new { systemKeyword = "RightColumnPoll" })
         @Html.Widget("right_side_column_after")
     }

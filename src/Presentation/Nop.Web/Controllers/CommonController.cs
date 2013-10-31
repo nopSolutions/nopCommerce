@@ -421,7 +421,21 @@ namespace Nop.Web.Controllers
         {
             var model = new FooterModel()
             {
-                StoreName = _storeContext.CurrentStore.Name
+                StoreName = _storeContext.CurrentStore.Name,
+                WishlistEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableWishlist),
+                ShoppingCartEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart),
+                SitemapEnabled = _commonSettings.SitemapEnabled,
+                WorkingLanguageId = _workContext.WorkingLanguage.Id,
+                FacebookLink = _storeInformationSettings.FacebookLink,
+                TwitterLink = _storeInformationSettings.TwitterLink,
+                YoutubeLink = _storeInformationSettings.YoutubeLink,
+                BlogEnabled = _blogSettings.Enabled,
+                CompareProductsEnabled = _catalogSettings.CompareProductsEnabled,
+                ForumEnabled = _forumSettings.ForumsEnabled,
+                AllowPrivateMessages = _workContext.CurrentCustomer.IsRegistered() && _forumSettings.AllowPrivateMessages,
+                NewsEnabled = _newsSettings.Enabled,
+                RecentlyViewedProductsEnabled = _catalogSettings.RecentlyViewedProductsEnabled,
+                RecentlyAddedProductsEnabled = _catalogSettings.RecentlyAddedProductsEnabled
             };
 
             return PartialView(model);
@@ -440,28 +454,7 @@ namespace Nop.Web.Controllers
 
             return PartialView(model);
         }
-
-        //info block
-        [ChildActionOnly]
-        public ActionResult InfoBlock()
-        {
-            var customer = _workContext.CurrentCustomer;
-
-            var model = new InfoBlockModel()
-            {
-                RecentlyAddedProductsEnabled = _catalogSettings.RecentlyAddedProductsEnabled,
-                RecentlyViewedProductsEnabled = _catalogSettings.RecentlyViewedProductsEnabled,
-                CompareProductsEnabled = _catalogSettings.CompareProductsEnabled,
-                BlogEnabled = _blogSettings.Enabled,
-                NewsEnabled = _newsSettings.Enabled,
-                SitemapEnabled = _commonSettings.SitemapEnabled,
-                ForumEnabled = _forumSettings.ForumsEnabled,
-                AllowPrivateMessages = customer.IsRegistered() && _forumSettings.AllowPrivateMessages,
-            };
-
-            return PartialView(model);
-        }
-
+        
         //contact us page
         [NopHttpsRequirement(SslRequirement.No)]
         public ActionResult ContactUs()

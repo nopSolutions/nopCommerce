@@ -105,11 +105,13 @@ ul.language-list li:hover{cursor:pointer;}
 .footer-store-theme{margin:0 100px 0 10px;font-size:11px;}
 .store-theme-list{background:#e3e3e3;border:solid 1px #3a3a3a;}
 .change-device{clear:both;text-align:right;}
-.footer-menu{float:left;margin-left:100px;text-align:left;}
-.footer-menu-first{margin-left:0;}
-.footer-menu h3,.footer-menu-first h3{font-size:14px;}
-.footer-menu ul,.footer-menu-first ul{margin:10px 0;padding:0;list-style:none outside none;}
-.footer-menu ul li,.footer-menu-first ul{line-height:150%;}
+.footer-menu-wrapper{zoom:1;padding:20px;overflow:auto;background:none repeat scroll 0 0 #F6F6F4;border-radius:4px;-o-border-radius:4px;-icab-border-radius:4px;-khtml-border-radius:4px;-moz-border-radius:4px;-webkit-border-radius:4px;-moz-border-radius:4px;}
+.footer-menu-wrapper:after{content:".";display:block;clear:both;height:0;font-size:0;line-height:0;visibility:hidden;}
+.footer-menu-wrapper .column{float:left;text-align:left;width:25%;}
+.footer-menu-wrapper .column h3{font-size:13px;color:#333;text-transform:uppercase;font-weight:700;}
+.footer-menu-wrapper .column ul{margin:13px 0;padding:0;list-style:none outside none;}
+.footer-menu-wrapper .column ul li{line-height:150%;margin-bottom:3px;}
+
 
 
 /* MISC. CLASSES */

@@ -48,5 +48,20 @@ namespace Nop.Core.Domain
         /// Gets or sets a value indicating whether we should display warnings about the new EU cookie law
         /// </summary>
         public bool DisplayEuCookieLawWarning { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value of Facebook page URL of the site
+        /// </summary>
+        public string FacebookLink { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value of Twitter page URL of the site
+        /// </summary>
+        public string TwitterLink { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value of YouTube channel URL of the site
+        /// </summary>
+        public string YoutubeLink { get; set; }
     }
 }

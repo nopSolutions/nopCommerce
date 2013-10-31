@@ -4735,7 +4735,10 @@ namespace Nop.Services.Installation
                     DefaultStoreThemeForMobileDevices = "Mobile",
                     EmulateMobileDevice = false,
                     DisplayMiniProfilerInPublicStore = false,
-                    DisplayEuCookieLawWarning = false
+                    DisplayEuCookieLawWarning = false,
+                    FacebookLink = "http://www.facebook.com/nopCommerce",
+                    TwitterLink = "https://twitter.com/nopCommerce",
+                    YoutubeLink = "http://www.youtube.com/user/nopCommerce",
                 });
 
             settingService.SaveSetting(new RewardPointsSettings()
@@ -9183,7 +9186,7 @@ namespace Nop.Services.Installation
             {
                 Language = defaultLanguage,
                 Name = "Do you like nopCommerce?",
-                SystemKeyword = "LeftColumnPoll",
+                SystemKeyword = "RightColumnPoll",
                 Published = true,
                 DisplayOrder = 1,
             };

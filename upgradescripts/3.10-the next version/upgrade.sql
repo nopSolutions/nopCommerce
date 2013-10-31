@@ -311,6 +311,51 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.LoadAllUrlRecordsOnStartup.Hint">
     <Value>When enabled, all slugs (search engine friendly names) will be loaded on application startup. The application start will be slower, but then all pages could be opened much faster. Not recommended to enable when you a large catalog (several thousand entities).</Value>
   </LocaleResource>
+  <LocaleResource Name="Information">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Footer.Information">
+    <Value>Information</Value>
+  </LocaleResource>
+  <LocaleResource Name="Footer.MyAccount">
+    <Value>My account</Value>
+  </LocaleResource>
+  <LocaleResource Name="Footer.CustomerService">
+    <Value>Customer service</Value>
+  </LocaleResource>
+  <LocaleResource Name="Footer.FollowUs">
+    <Value>Follow us</Value>
+  </LocaleResource>
+  <LocaleResource Name="Footer.FollowUs.Facebook">
+    <Value>Facebook</Value>
+  </LocaleResource>
+  <LocaleResource Name="Footer.FollowUs.Twitter">
+    <Value>Twitter</Value>
+  </LocaleResource>
+  <LocaleResource Name="Footer.FollowUs.Youtube">
+    <Value>Youtube</Value>
+  </LocaleResource>
+  <LocaleResource Name="Footer.FollowUs.RSS">
+    <Value>RSS</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FacebookLink">
+    <Value>Facebook page URL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FacebookLink.Hint">
+    <Value>Specify your Facebook page URL. Leave empty if you don''t have such page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.TwitterLink">
+    <Value>Twitter page URL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.TwitterLink.Hint">
+    <Value>Specify your Twitter page URL. Leave empty if you don''t have such page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.YoutubeLink">
+    <Value>YouTube channel URL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.YoutubeLink.Hint">
+    <Value>Specify your YouTube channel URL. Leave empty if you don''t have such page.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1252,5 +1297,27 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'shoppingcartsettings.gro
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'shoppingcartsettings.grouptierpricesfordistinctshoppingcartitems', N'false', 0)
+END
+GO
+
+--new settings
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'storeinformationsettings.facebooklink')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'storeinformationsettings.facebooklink', N'http://www.facebook.com/nopCommerce', 0)
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'storeinformationsettings.twitterlink')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'storeinformationsettings.twitterlink', N'https://twitter.com/nopCommerce', 0)
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'storeinformationsettings.youtubelink')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'storeinformationsettings.youtubelink', N'http://www.youtube.com/user/nopCommerce', 0)
 END
 GO

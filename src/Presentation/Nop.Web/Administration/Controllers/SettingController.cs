@@ -1789,6 +1789,10 @@ namespace Nop.Admin.Controllers
                 .ToList();
             //EU Cookie law
             model.StoreInformationSettings.DisplayEuCookieLawWarning = storeInformationSettings.DisplayEuCookieLawWarning;
+            //social pages
+            model.StoreInformationSettings.FacebookLink = storeInformationSettings.FacebookLink;
+            model.StoreInformationSettings.TwitterLink = storeInformationSettings.TwitterLink;
+            model.StoreInformationSettings.YoutubeLink = storeInformationSettings.YoutubeLink;
             //override settings
             if (storeScope > 0)
             {
@@ -1799,6 +1803,9 @@ namespace Nop.Admin.Controllers
                 model.StoreInformationSettings.DefaultStoreThemeForMobileDevices_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.DefaultStoreThemeForMobileDevices, storeScope);
                 model.StoreInformationSettings.AllowCustomerToSelectTheme_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.AllowCustomerToSelectTheme, storeScope);
                 model.StoreInformationSettings.DisplayEuCookieLawWarning_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.DisplayEuCookieLawWarning, storeScope);
+                model.StoreInformationSettings.FacebookLink_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.FacebookLink, storeScope);
+                model.StoreInformationSettings.TwitterLink_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.TwitterLink, storeScope);
+                model.StoreInformationSettings.YoutubeLink_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.YoutubeLink, storeScope);
             }
 
             //seo settings
@@ -1905,6 +1912,10 @@ namespace Nop.Admin.Controllers
             storeInformationSettings.DefaultStoreThemeForMobileDevices = model.StoreInformationSettings.DefaultStoreThemeForMobileDevices;
             //EU Cookie law
             storeInformationSettings.DisplayEuCookieLawWarning = model.StoreInformationSettings.DisplayEuCookieLawWarning;
+            //social pages
+            storeInformationSettings.FacebookLink = model.StoreInformationSettings.FacebookLink;
+            storeInformationSettings.TwitterLink = model.StoreInformationSettings.TwitterLink;
+            storeInformationSettings.YoutubeLink = model.StoreInformationSettings.YoutubeLink;
 
             /* We do not clear cache after each setting update.
              * This behavior can increase performance because cached settings will not be cleared 
@@ -1943,6 +1954,21 @@ namespace Nop.Admin.Controllers
                 _settingService.SaveSetting(storeInformationSettings, x => x.DisplayEuCookieLawWarning, storeScope, false);
             else if (storeScope > 0)
                 _settingService.DeleteSetting(storeInformationSettings, x => x.DisplayEuCookieLawWarning, storeScope);
+
+            if (model.StoreInformationSettings.FacebookLink_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(storeInformationSettings, x => x.FacebookLink, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(storeInformationSettings, x => x.FacebookLink, storeScope);
+
+            if (model.StoreInformationSettings.TwitterLink_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(storeInformationSettings, x => x.TwitterLink, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(storeInformationSettings, x => x.TwitterLink, storeScope);
+
+            if (model.StoreInformationSettings.YoutubeLink_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(storeInformationSettings, x => x.YoutubeLink, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(storeInformationSettings, x => x.YoutubeLink, storeScope);
             
             //now clear settings cache
             _settingService.ClearCache();
