@@ -169,7 +169,7 @@ namespace Nop.Web.Framework
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
                 .InstancePerHttpRequest();
 
-            builder.RegisterType<GeoCountryLookup>().As<IGeoCountryLookup>().InstancePerHttpRequest();
+            builder.RegisterType<GeoLookupService>().As<IGeoLookupService>().InstancePerHttpRequest();
             builder.RegisterType<CountryService>().As<ICountryService>().InstancePerHttpRequest();
             builder.RegisterType<CurrencyService>().As<ICurrencyService>().InstancePerHttpRequest();
             builder.RegisterType<MeasureService>().As<IMeasureService>().InstancePerHttpRequest();

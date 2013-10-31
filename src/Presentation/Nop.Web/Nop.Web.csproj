@@ -1533,7 +1533,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Plugins\bin\" />
-    <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Libraries\Nop.Core\Nop.Core.csproj">
@@ -1582,7 +1581,6 @@
     <Content Include="Content\samples\product_PokerFace_1.zip" />
     <Content Include="Content\samples\product_SingleLadies_1.zip" />
     <Content Include="51Degrees.mobi.config" />
-    <Content Include="App_Data\GeoIP.dat" />
     <Content Include="Views\Customer\Login.cshtml" />
     <Content Include="Views\Customer\Register.cshtml" />
     <Content Include="Views\Customer\RegisterResult.cshtml" />
@@ -1737,6 +1735,9 @@
     <Content Include="Views\Common\PageNotFound.Mobile.cshtml" />
     <Content Include="Views\Common\EuCookieLaw.Mobile.cshtml" />
     <Content Include="Views\Common\EuCookieLaw.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Data\GeoLite2-Country.mmdb" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

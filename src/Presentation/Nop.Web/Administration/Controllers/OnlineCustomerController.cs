@@ -21,10 +21,9 @@ namespace Nop.Admin.Controllers
         #region Fields
 
         private readonly ICustomerService _customerService;
-        private readonly IGeoCountryLookup _geoCountryLookup;
+        private readonly IGeoLookupService _geoLookupService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly CustomerSettings _customerSettings;
-        private readonly AdminAreaSettings _adminAreaSettings;
         private readonly IPermissionService _permissionService;
         private readonly ILocalizationService _localizationService;
 
@@ -33,22 +32,21 @@ namespace Nop.Admin.Controllers
         #region Constructors
 
         public OnlineCustomerController(ICustomerService customerService,
-            IGeoCountryLookup geoCountryLookup, IDateTimeHelper dateTimeHelper,
-            CustomerSettings customerSettings, AdminAreaSettings adminAreaSettings,
+            IGeoLookupService geoLookupService, IDateTimeHelper dateTimeHelper,
+            CustomerSettings customerSettings,
             IPermissionService permissionService, ILocalizationService localizationService)
         {
             this._customerService = customerService;
-            this._geoCountryLookup = geoCountryLookup;
+            this._geoLookupService = geoLookupService;
             this._dateTimeHelper = dateTimeHelper;
             this._customerSettings = customerSettings;
-            this._adminAreaSettings = adminAreaSettings;
             this._permissionService = permissionService;
             this._localizationService = localizationService;
         }
 
         #endregion
         
-        #region Online customers
+        #region Methods
 
         public ActionResult List()
         {
@@ -75,7 +73,7 @@ namespace Nop.Admin.Controllers
                         Id = x.Id,
                         CustomerInfo = x.IsRegistered() ? x.Email : _localizationService.GetResource("Admin.Customers.Guest"),
                         LastIpAddress = x.LastIpAddress,
-                        Location = _geoCountryLookup.LookupCountryName(x.LastIpAddress),
+                        Location = _geoLookupService.LookupCountryName(x.LastIpAddress),
                         LastActivityDate = _dateTimeHelper.ConvertToUserTime(x.LastActivityDateUtc, DateTimeKind.Utc),
                         LastVisitedPage = x.GetAttribute<string>(SystemCustomerAttributeNames.LastVisitedPage)
                     };
