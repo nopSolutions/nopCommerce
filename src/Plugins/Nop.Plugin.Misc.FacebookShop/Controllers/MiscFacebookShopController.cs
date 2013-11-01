@@ -352,7 +352,6 @@ namespace Nop.Plugin.Misc.FacebookShop.Controllers
             return View("Nop.Plugin.Misc.FacebookShop.Views.MiscFacebookShop.Configure");
         }
 
-
         public ActionResult Index()
         {
             return View("Nop.Plugin.Misc.FacebookShop.Views.MiscFacebookShop.Index");
