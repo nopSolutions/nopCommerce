@@ -92,7 +92,7 @@
 .nivo-directionNav a {
 	position:absolute;
 	top:45%;
-	z-index:9;
+	z-index:8;
 	cursor:pointer;
 }
 .nivo-prevNav {

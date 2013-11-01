@@ -55,9 +55,9 @@ a.logo{background:url("images/logo.gif") no-repeat scroll 0 0 transparent;displa
 .header-menu .top-menu li .sublist.active{display:block}
 .header-menu .top-menu li .sublist.firstLevel{}
 .header-menu .top-menu li .sublist .sublist.active{left:100px;margin-top:-30px;top:auto;}
-.header-menu .top-menu .sublist li a{text-transform:none;min-height: 22px;margin: 0 8px 0 28px;}
-.header-menu .top-menu .sublist li{background: url(images/top-menu-list-image.png) no-repeat 10px;height:22px;margin:6px 5px;text-align:left;float:none;padding:0;} 
-.header-menu .top-menu .sublist li:hover{background: #696969 url(images/top-menu-list-image-hover.png) no-repeat 10px;}
+.header-menu .top-menu .sublist li a{text-transform:none;min-height:22px;margin:0 8px 0 28px;}
+.header-menu .top-menu .sublist li{background:url(images/top-menu-list-image.png) no-repeat 5% 8px;height:22px;margin:6px 5px;text-align:left;float:none;padding:0;} 
+.header-menu .top-menu .sublist li:hover{background:#696969 url(images/top-menu-list-image-hover.png) no-repeat 5% 8px;}
 .header-menu .top-menu-triangle.active{display:none;}
 .header-menu .top-menu-triangle{background:url(images/top-menu-triangle.png) no-repeat;margin-top:-9px;margin-left:10px;width:10px;height:5px;position:absolute;z-index:10;display:none;}
 .header-menu .top-menu-triangle.active{display:block;}
