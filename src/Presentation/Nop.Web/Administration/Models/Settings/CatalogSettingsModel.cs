@@ -164,6 +164,10 @@ namespace Nop.Admin.Models.Settings
         public bool IgnoreFeaturedProducts { get; set; }
         public bool IgnoreFeaturedProducts_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.TopCategoryMenuSubcategoryLevelsToDisplay")]
+        public int TopCategoryMenuSubcategoryLevelsToDisplay { get; set; }
+        public bool TopCategoryMenuSubcategoryLevelsToDisplay_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ManufacturersBlockItemsToDisplay")]
         public int ManufacturersBlockItemsToDisplay { get; set; }
         public bool ManufacturersBlockItemsToDisplay_OverrideForStore { get; set; }

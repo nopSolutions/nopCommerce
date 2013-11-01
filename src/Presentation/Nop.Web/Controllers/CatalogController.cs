@@ -197,13 +197,46 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        protected IList<CategoryNavigationModel.CategoryModel> PrepareCategoryNavigationModel(int rootCategoryId,
-            IList<int> breadCrumbIds)
+        protected int GetCategoryProductNumber(int categoryId)
         {
-            var result = new List<CategoryNavigationModel.CategoryModel>();
+            var customerRolesIds = _workContext.CurrentCustomer.CustomerRoles
+                .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
+            string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_NUMBER_OF_PRODUCTS_MODEL_KEY,
+                string.Join(",", customerRolesIds), _storeContext.CurrentStore.Id, categoryId);
+            var cachedModel = _cacheManager.Get(cacheKey, () =>
+            {
+                var categoryIds = new List<int>();
+                categoryIds.Add(categoryId);
+                //include subcategories
+                if (_catalogSettings.ShowCategoryProductNumberIncludingSubcategories)
+                    categoryIds.AddRange(GetChildCategoryIds(categoryId));
+                var numberOfProducts = _productService
+                    .SearchProducts(categoryIds: categoryIds,
+                    storeId: _storeContext.CurrentStore.Id,
+                    visibleIndividuallyOnly: true,
+                    pageSize: 1)
+                    .TotalCount;
+                return numberOfProducts;
+            });
+            return cachedModel;
+        }        
+
+        /// <summary>
+        /// Prepare category (simple) models
+        /// </summary>
+        /// <param name="rootCategoryId">Root category identifier</param>
+        /// <param name="loadSubCategoriesForIds">Load subcategories only for the specified category IDs; pass null to load subcategories for all categories</param>
+        /// <param name="level">Current level</param>
+        /// <param name="levelsToLoad">A value indiating how many levels to load (max)</param>
+        /// <returns>Category models</returns>
+        [NonAction]
+        protected IList<CategorySimpleModel> PrepareCategorySimpleModels(int rootCategoryId,
+            IList<int> loadSubCategoriesForIds, int level, int levelsToLoad)
+        {
+            var result = new List<CategorySimpleModel>();
             foreach (var category in _categoryService.GetAllCategoriesByParentCategoryId(rootCategoryId))
             {
-                var categoryModel = new CategoryNavigationModel.CategoryModel()
+                var categoryModel = new CategorySimpleModel()
                 {
                     Id = category.Id,
                     Name = category.GetLocalized(x => x.Name),
@@ -213,30 +246,43 @@ namespace Nop.Web.Controllers
                 //product number for each category
                 if (_catalogSettings.ShowCategoryProductNumber)
                 {
-                    var categoryIds = new List<int>();
-                    categoryIds.Add(category.Id);
-                    //include subcategories
-                    if (_catalogSettings.ShowCategoryProductNumberIncludingSubcategories)
-                        categoryIds.AddRange(GetChildCategoryIds(category.Id));
-                    categoryModel.NumberOfProducts = _productService
-                        .SearchProducts(categoryIds: categoryIds,
-                        storeId: _storeContext.CurrentStore.Id,
-                        visibleIndividuallyOnly: true,
-                        pageSize: 1)
-                        .TotalCount;
+                    categoryModel.NumberOfProducts = GetCategoryProductNumber(category.Id);
                 }
 
-                //subcategories
-                for (int i = 0; i <= breadCrumbIds.Count - 1; i++)
-                    if (breadCrumbIds[i] == category.Id)
-                        categoryModel.SubCategories.AddRange(PrepareCategoryNavigationModel(category.Id, breadCrumbIds));
-
+                //load subcategories?
+                bool loadSubCategories = false;
+                if (loadSubCategoriesForIds == null)
+                {
+                    //load all subcategories
+                    loadSubCategories = true;
+                }
+                else
+                {
+                    //we load subcategories only for certain categories
+                    for (int i = 0; i <= loadSubCategoriesForIds.Count - 1; i++)
+                    {
+                        if (loadSubCategoriesForIds[i] == category.Id)
+                        {
+                            loadSubCategories = true;
+                            break;
+                        }
+                    }
+                }
+                if (levelsToLoad <= level)
+                {
+                    loadSubCategories = false;
+                }
+                if (loadSubCategories)
+                {
+                    var subCategories = PrepareCategorySimpleModels(category.Id, loadSubCategoriesForIds, level + 1, levelsToLoad);
+                    categoryModel.SubCategories.AddRange(subCategories);
+                }
                 result.Add(categoryModel);
             }
 
             return result;
         }
-
+        
         [NonAction]
         protected IEnumerable<ProductOverviewModel> PrepareProductOverviewModels(IEnumerable<Product> products, 
             bool preparePriceModel = true, bool preparePictureModel = true,
@@ -1281,27 +1327,42 @@ namespace Nop.Web.Controllers
             string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_NAVIGATION_MODEL_KEY, _workContext.WorkingLanguage.Id,
                 string.Join(",", customerRolesIds), _storeContext.CurrentStore.Id, activeCategoryId);
             var cachedModel = _cacheManager.Get(cacheKey, () =>
-                {
-                    var breadCrumb = activeCategory != null ?
-                        activeCategory.GetCategoryBreadCrumb(_categoryService, _aclService, _storeMappingService)
-                        .Select(x => x.Id)
-                        .ToList()
-                        : new List<int>();
-                    return new CategoryNavigationModel()
-                    {
-                        Categories = PrepareCategoryNavigationModel(0, breadCrumb).ToList()
-                    };                                      
-                }
-            );
+            {
+                var breadCrumb = activeCategory != null ?
+                    activeCategory.GetCategoryBreadCrumb(_categoryService, _aclService, _storeMappingService)
+                    .Select(x => x.Id).ToList()
+                    : new List<int>();
+                return PrepareCategorySimpleModels(0, breadCrumb, 0, int.MaxValue).ToList();
+            });
 
-            //"CurrentCategoryId" property of "CategoryNavigationModel" object depends on the current category or product.
-            //We need to clone the cached model (the updated one should not be cached)
-            var model = (CategoryNavigationModel)cachedModel.Clone();
-            model.CurrentCategoryId = activeCategoryId;
+            var model = new CategoryNavigationModel()
+            {
+                CurrentCategoryId = activeCategoryId,
+                Categories = cachedModel
+            };
 
             return PartialView(model);
         }
 
+        [ChildActionOnly]
+        public ActionResult CategoryMenu()
+        {
+            var customerRolesIds = _workContext.CurrentCustomer.CustomerRoles
+                .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
+            string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_MENU_MODEL_KEY, _workContext.WorkingLanguage.Id,
+                string.Join(",", customerRolesIds), _storeContext.CurrentStore.Id);
+            var cachedModel = _cacheManager.Get(cacheKey, () =>
+            {
+                return PrepareCategorySimpleModels(0, null, 0, _catalogSettings.TopCategoryMenuSubcategoryLevelsToDisplay).ToList();
+            });
+
+            var model = new CategoryMenuModel()
+            {
+                Categories = cachedModel
+            };
+            return PartialView(model);
+        }
+        
         [ChildActionOnly]
         public ActionResult HomepageCategories()
         {

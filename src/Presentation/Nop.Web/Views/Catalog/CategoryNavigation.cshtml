@@ -2,7 +2,7 @@
 @using Nop.Web.Models.Catalog;
 
 @functions{
-    public bool BreadCrumbContainsCurrentCategoryId(CategoryNavigationModel.CategoryModel category)
+    public bool BreadCrumbContainsCurrentCategoryId(CategorySimpleModel category)
     {
         if (Model.CurrentCategoryId == 0)
             return false;
@@ -21,7 +21,7 @@
         return false;
     }
 }
-@helper RenderCategoryLine(CategoryNavigationModel.CategoryModel category)
+@helper RenderCategoryLine(CategorySimpleModel category)
 {
     <li class="@(category.Id == Model.CurrentCategoryId ? "active" : "inactive")">
         <a href="@Url.RouteUrl("Category", new { SeName = category.SeName })">@category.Name

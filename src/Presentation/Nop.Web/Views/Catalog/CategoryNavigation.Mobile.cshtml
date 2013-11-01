@@ -1,6 +1,6 @@
 ﻿@model CategoryNavigationModel
 @using Nop.Web.Models.Catalog;
-@helper RenderCategoryLine(CategoryNavigationModel.CategoryModel category)
+@helper RenderCategoryLine(CategorySimpleModel category)
 {
     <li><a href="@Url.RouteUrl("Category", new { SeName = category.SeName })">
         @category.Name

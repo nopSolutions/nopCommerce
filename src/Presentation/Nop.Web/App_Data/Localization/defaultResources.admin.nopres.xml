@@ -4217,6 +4217,14 @@
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
+                  <LocaleResource Name="TopCategoryMenuSubcategoryLevelsToDisplay">
+                    <Value>Number of subcategory levels in top menu</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Enter the number of subcategory levels to display in top category menu.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
                 </Children>
               </LocaleResource>
               <LocaleResource Name="CustomerUser">

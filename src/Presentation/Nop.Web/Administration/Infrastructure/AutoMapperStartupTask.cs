@@ -663,6 +663,7 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.IncludeFullDescriptionInCompareProducts_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.IgnoreDiscounts_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.IgnoreFeaturedProducts_OverrideForStore, mo => mo.Ignore())
+                .ForMember(dest => dest.TopCategoryMenuSubcategoryLevelsToDisplay_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.ManufacturersBlockItemsToDisplay_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             Mapper.CreateMap<CatalogSettingsModel, CatalogSettings>()

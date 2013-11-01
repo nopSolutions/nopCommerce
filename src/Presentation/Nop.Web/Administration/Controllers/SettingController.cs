@@ -901,6 +901,7 @@ namespace Nop.Admin.Controllers
                 model.IncludeFullDescriptionInCompareProducts_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.IncludeFullDescriptionInCompareProducts, storeScope);
                 model.IgnoreDiscounts_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.IgnoreDiscounts, storeScope);
                 model.IgnoreFeaturedProducts_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.IgnoreFeaturedProducts, storeScope);
+                model.TopCategoryMenuSubcategoryLevelsToDisplay_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.TopCategoryMenuSubcategoryLevelsToDisplay, storeScope);
                 model.ManufacturersBlockItemsToDisplay_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ManufacturersBlockItemsToDisplay, storeScope);
             }
             return View(model);
@@ -1109,7 +1110,12 @@ namespace Nop.Admin.Controllers
                 _settingService.SaveSetting(catalogSettings, x => x.IgnoreFeaturedProducts, storeScope, false);
             else if (storeScope > 0)
                 _settingService.DeleteSetting(catalogSettings, x => x.IgnoreFeaturedProducts, storeScope);
-            
+
+            if (model.TopCategoryMenuSubcategoryLevelsToDisplay_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(catalogSettings, x => x.TopCategoryMenuSubcategoryLevelsToDisplay, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(catalogSettings, x => x.TopCategoryMenuSubcategoryLevelsToDisplay, storeScope);
+
             if (model.ManufacturersBlockItemsToDisplay_OverrideForStore || storeScope == 0)
                 _settingService.SaveSetting(catalogSettings, x => x.ManufacturersBlockItemsToDisplay, storeScope, false);
             else if (storeScope > 0)

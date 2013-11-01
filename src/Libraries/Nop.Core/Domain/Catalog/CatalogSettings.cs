@@ -255,6 +255,11 @@ namespace Nop.Core.Domain.Catalog
         public List<string> FileUploadAllowedExtensions { get; set; }
 
         /// <summary>
+        /// Gets or sets the value indicating how many subcategory levels to display in the top menu with categories
+        /// </summary>
+        public int TopCategoryMenuSubcategoryLevelsToDisplay { get; set; }
+
+        /// <summary>
         /// Gets or sets the value indicating how many manufacturers to display in manufacturers block
         /// </summary>
         public int ManufacturersBlockItemsToDisplay { get; set; }

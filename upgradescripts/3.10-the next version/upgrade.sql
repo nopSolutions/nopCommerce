@@ -356,6 +356,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.YoutubeLink.Hint">
     <Value>Specify your YouTube channel URL. Leave empty if you don''t have such page.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.TopCategoryMenuSubcategoryLevelsToDisplay">
+    <Value>Number of subcategory levels in top menu</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.TopCategoryMenuSubcategoryLevelsToDisplay.Hint">
+    <Value>Enter the number of subcategory levels to display in top category menu</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1319,5 +1325,13 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'storeinformationsettings
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'storeinformationsettings.youtubelink', N'http://www.youtube.com/user/nopCommerce', 0)
+END
+GO
+
+--a new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.topcategorymenusubcategorylevelstodisplay')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'catalogsettings.topcategorymenusubcategorylevelstodisplay', N'1', 0)
 END
 GO

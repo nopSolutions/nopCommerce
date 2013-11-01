@@ -441,20 +441,7 @@ namespace Nop.Web.Controllers
             return PartialView(model);
         }
 
-        //menu
-        [ChildActionOnly]
-        public ActionResult Menu()
-        {
-            var model = new MenuModel()
-            {
-                RecentlyAddedProductsEnabled = _catalogSettings.RecentlyAddedProductsEnabled,
-                BlogEnabled = _blogSettings.Enabled,
-                ForumEnabled = _forumSettings.ForumsEnabled
-            };
 
-            return PartialView(model);
-        }
-        
         //contact us page
         [NopHttpsRequirement(SslRequirement.No)]
         public ActionResult ContactUs()

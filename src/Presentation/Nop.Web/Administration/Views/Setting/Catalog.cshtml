@@ -469,6 +469,16 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.TopCategoryMenuSubcategoryLevelsToDisplay_OverrideForStore, model => model.TopCategoryMenuSubcategoryLevelsToDisplay, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.TopCategoryMenuSubcategoryLevelsToDisplay):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.TopCategoryMenuSubcategoryLevelsToDisplay)
+                @Html.ValidationMessageFor(model => model.TopCategoryMenuSubcategoryLevelsToDisplay)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.OverrideStoreCheckboxFor(model => model.ManufacturersBlockItemsToDisplay_OverrideForStore, model => model.ManufacturersBlockItemsToDisplay, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ManufacturersBlockItemsToDisplay):
             </td>
