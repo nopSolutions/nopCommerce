@@ -1,5 +1,4 @@
-﻿@model Telerik.Web.Mvc.GridModel<TaxProviderModel>
-@using Telerik.Web.Mvc.UI
+﻿@using Telerik.Web.Mvc.UI
 @{    
     //page title
     ViewBag.Title = T("Admin.Configuration.Tax.Providers").Text;
@@ -14,12 +13,11 @@
     <tr>
         <td>
             @(Html.Telerik().Grid<TaxProviderModel>()
-                    .Name("taxProviders-grid")
+                    .Name("tax-providers-grid")
                     .DataKeys(x =>
                     {
                         x.Add(y => y.SystemName).RouteKey("systemName");
                     })
-                    .BindTo(Model.Data)
                     .Columns(columns =>
                     {
                         columns.Bound(x => x.FriendlyName);
@@ -32,8 +30,12 @@
                             .Centered()
                             .Width(100)
                             .ReadOnly();
-                        columns.Command(commands => commands.Select().Text(T("Admin.Configuration.Tax.Providers.Fields.MarkAsPrimaryProvider").Text))
-                            .Title(T("Admin.Configuration.Tax.Providers.Fields.MarkAsPrimaryProvider").Text).Width(100);
+                        columns.Bound(x => x.SystemName)
+                            .Template(x => Html.ActionLink(T("Admin.Configuration.Tax.Providers.Fields.MarkAsPrimaryProvider").Text, "MarkAsPrimaryProvider", new { systemName = x.SystemName }, new { @class = "t-button" }))
+                            .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/Tax/MarkAsPrimaryProvider") + "?systemName=<#= SystemName #>\" class=\"t-button\">" + T("Admin.Configuration.Tax.Providers.Fields.MarkAsPrimaryProvider").Text + "</a>")
+                            .Centered()
+                            .Width(200)
+                            .HeaderTemplate(T("Admin.Configuration.Tax.Providers.Fields.MarkAsPrimaryProvider").Text);
                         columns.Template(
                                 @<div>
                                     @Html.ActionLink(T("Admin.Configuration.Tax.Providers.Configure").Text, "ConfigureProvider", new { systemName = item.SystemName })

@@ -43,32 +43,12 @@ namespace Nop.Admin.Controllers
 
         #region Tax Providers
 
-        public ActionResult Providers(string systemName)
+        public ActionResult Providers()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
                 return AccessDeniedView();
-
-            //mark as active tax provider (if selected)
-            if (!String.IsNullOrEmpty(systemName))
-            {
-                var taxProvider = _taxService.LoadTaxProviderBySystemName(systemName);
-                if (taxProvider != null)
-                {
-                    _taxSettings.ActiveTaxProviderSystemName = systemName;
-                    _settingService.SaveSetting(_taxSettings);
-                }
-            }
-
-            var taxProvidersModel = _taxService.LoadAllTaxProviders()
-                .Select(x => x.ToModel()).ToList();
-            foreach (var tpm in taxProvidersModel)
-                tpm.IsPrimaryTaxProvider = tpm.SystemName.Equals(_taxSettings.ActiveTaxProviderSystemName, StringComparison.InvariantCultureIgnoreCase);
-            var gridModel = new GridModel<TaxProviderModel>
-            {
-                Data = taxProvidersModel,
-                Total = taxProvidersModel.Count()
-            };
-            return View(gridModel);
+            
+            return View();
         }
 
         [HttpPost, GridAction(EnableCustomBinding = true)]
@@ -114,9 +94,29 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
+        public ActionResult MarkAsPrimaryProvider(string systemName)
+        {
+            if (String.IsNullOrEmpty(systemName))
+            {
+                return RedirectToAction("Providers");
+            }
+
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
+                return AccessDeniedView();
+
+            var taxProvider = _taxService.LoadTaxProviderBySystemName(systemName);
+            if (taxProvider != null)
+            {
+                _taxSettings.ActiveTaxProviderSystemName = systemName;
+                _settingService.SaveSetting(_taxSettings);
+            }
+
+            return RedirectToAction("Providers");
+        }
+
         #endregion
 
-        #region Tax categories
+        #region Tax Categories
 
         public ActionResult Categories()
         {

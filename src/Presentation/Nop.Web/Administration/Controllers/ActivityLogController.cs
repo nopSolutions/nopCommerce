@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Nop.Admin.Models.Logging;
@@ -44,13 +45,11 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
                 return AccessDeniedView();
 
-            var activityLogTypeModel = _customerActivityService.GetAllActivityTypes().Select(x => x.ToModel());
-            var gridModel = new GridModel<ActivityLogTypeModel>
-            {
-                Data = activityLogTypeModel,
-                Total = activityLogTypeModel.Count()
-            };
-            return View(gridModel);
+            var model = _customerActivityService
+                .GetAllActivityTypes()
+                .Select(x => x.ToModel())
+                .ToList();
+            return View(model);
         }
 
         [HttpPost]

@@ -127,13 +127,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
 
-			var languages = _languageService.GetAllLanguages(true);
-			var gridModel = new GridModel<LanguageModel>
-			{
-				Data = languages.Select(x => x.ToModel()),
-				Total = languages.Count()
-			};
-			return View(gridModel);
+			return View();
 		}
 
 		[HttpPost, GridAction(EnableCustomBinding = true)]

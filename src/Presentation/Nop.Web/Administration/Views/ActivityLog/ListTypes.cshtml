@@ -1,5 +1,4 @@
-﻿@model GridModel<ActivityLogTypeModel>
-@using Telerik.Web.Mvc;
+﻿@model List<ActivityLogTypeModel>
 @using Telerik.Web.Mvc.UI;
 @{  
     //page title
@@ -23,20 +22,20 @@
             <td>
                 @(Html.Telerik().Grid<ActivityLogTypeModel>()
                 .Name("activityLogType-grid")
-                .BindTo(Model.Data)
-                        .Columns(columns =>
-                        {
-                            columns.Bound(x => x.Name)
-                                .Centered()
-                                .Width("50%");
-                            columns.Bound(x => x.Enabled)
-                                .Centered()
-                                .Template(x => Html.CheckBox("checkBox_" + x.Id.ToString(), x.Enabled, new { id = x.Id, @class = "checkboxGroups" }))
-                                .Title(T("Admin.Configuration.ActivityLog.ActivityLogType.Fields.Enabled").Text + "&nbsp<input id='mastercheckbox' type='checkbox'/>")
-                                .Width("50%")
-                                .HtmlAttributes(new { style = "text-align:center" })
-                                .HeaderHtmlAttributes(new { style = "text-align:center" });
-                        })
+                .BindTo(Model)
+                .Columns(columns =>
+                {
+                    columns.Bound(x => x.Name)
+                        .Centered()
+                        .Width("50%");
+                    columns.Bound(x => x.Enabled)
+                        .Centered()
+                        .Template(x => Html.CheckBox("checkBox_" + x.Id.ToString(), x.Enabled, new { id = x.Id, @class = "checkboxGroups" }))
+                        .Title(T("Admin.Configuration.ActivityLog.ActivityLogType.Fields.Enabled").Text + "&nbsp<input id='mastercheckbox' type='checkbox'/>")
+                        .Width("50%")
+                        .HtmlAttributes(new { style = "text-align:center" })
+                        .HeaderHtmlAttributes(new { style = "text-align:center" });
+                })
                 .Footer(false)
 )
             </td>

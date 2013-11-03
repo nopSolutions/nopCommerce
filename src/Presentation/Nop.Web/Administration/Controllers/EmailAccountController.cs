@@ -39,35 +39,12 @@ namespace Nop.Admin.Controllers
             this._permissionService = permissionService;
 		}
 
-		public ActionResult List(string id)
+		public ActionResult List()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
                 return AccessDeniedView();
 
-			//mark as default email account (if selected)
-			if (!String.IsNullOrEmpty(id))
-			{
-				int defaultEmailAccountId = Convert.ToInt32(id);
-				var defaultEmailAccount = _emailAccountService.GetEmailAccountById(defaultEmailAccountId);
-				if (defaultEmailAccount != null)
-				{
-					_emailAccountSettings.DefaultEmailAccountId = defaultEmailAccountId;
-					_settingService.SaveSetting(_emailAccountSettings);
-				}
-			}
-
-			var emailAccountModels = _emailAccountService.GetAllEmailAccounts()
-									.Select(x => x.ToModel())
-									.ToList();
-			foreach (var eam in emailAccountModels)
-				eam.IsDefaultEmailAccount = eam.Id == _emailAccountSettings.DefaultEmailAccountId;
-
-			var gridModel = new GridModel<EmailAccountModel>
-			{
-				Data = emailAccountModels,
-				Total = emailAccountModels.Count()
-			};
-			return View(gridModel);
+			return View();
 		}
 
 		[HttpPost, GridAction(EnableCustomBinding = true)]
@@ -93,6 +70,20 @@ namespace Nop.Admin.Controllers
 				Data = gridModel
 			};
 		}
+
+        public ActionResult MarkAsDefaultEmail(int id)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
+                return AccessDeniedView();
+
+            var defaultEmailAccount = _emailAccountService.GetEmailAccountById(id);
+            if (defaultEmailAccount != null)
+            {
+                _emailAccountSettings.DefaultEmailAccountId = defaultEmailAccount.Id;
+                _settingService.SaveSetting(_emailAccountSettings);
+            }
+            return RedirectToAction("List");
+        }
 
 		public ActionResult Create()
         {

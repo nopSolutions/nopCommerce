@@ -1,5 +1,4 @@
-﻿@model Telerik.Web.Mvc.GridModel<EmailAccountModel>
-@using Telerik.Web.Mvc.UI
+﻿@using Telerik.Web.Mvc.UI
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.EmailAccounts").Text;
@@ -22,26 +21,25 @@
                     {
                         x.Add(y => y.Id).RouteKey("Id");
                     })
-                    .BindTo(Model.Data)
                     .Columns(columns =>
                     {
                         columns.Bound(x => x.Email);
                         columns.Bound(x => x.DisplayName)
-                            .Width(150)
                             .Centered();
                         columns.Bound(x => x.IsDefaultEmailAccount)
                             .Template(
                                 @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.IsDefaultEmailAccount.ToString().ToLowerInvariant() + ".gif")" />
                             )
                             .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= IsDefaultEmailAccount #>.gif' />")
+                            .Centered();
+                        columns.Bound(x => x.Id)
+                            .Template(x => Html.ActionLink(T("Admin.Configuration.EmailAccounts.Fields.MarkAsDefaultEmail").Text, "MarkAsDefaultEmail", new { id = x.Id }, new { @class = "t-button" }))
+                            .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/EmailAccount/MarkAsDefaultEmail/") + "<#= Id #>\" class=\"t-button\">" + T("Admin.Configuration.EmailAccounts.Fields.MarkAsDefaultEmail").Text + "</a>")
                             .Centered()
-                            .Width(100);
-                        columns.Command(commands => commands.Select().Text(T("Admin.Configuration.EmailAccounts.Fields.MarkAsDefaultEmail").Text))                            
-                            .Title(T("Admin.Configuration.EmailAccounts.Fields.MarkAsDefaultEmail").Text).Width(100);
+                            .HeaderTemplate(T("Admin.Configuration.EmailAccounts.Fields.MarkAsDefaultEmail").Text);
                         columns.Bound(x => x.Id)
                             .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
                             .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
-                            .Width(50)
                             .Centered()
                             .HeaderTemplate(T("Admin.Common.Edit").Text)
                             .Filterable(false);
