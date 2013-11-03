@@ -1,6 +1,4 @@
-﻿@model Telerik.Web.Mvc.GridModel<MeasureWeightModel>
-@using Telerik.Web.Mvc.UI;
-@using System.Linq;
+﻿@using Telerik.Web.Mvc.UI;
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Measures.Weights").Text;
@@ -19,7 +17,7 @@
     </tr>
     <tr>
         <td>
-            @(Html.Telerik().Grid(Model.Data)
+            @(Html.Telerik().Grid<MeasureWeightModel>()
                     .Name("measureweight-grid")
                     .DataKeys(x =>
                     {
@@ -39,8 +37,13 @@
                             .Centered()
                             .Width(100)
                             .ReadOnly();
-                        columns.Command(commands => commands.Select().Text(T("Admin.Configuration.Measures.Weights.Fields.MarkAsPrimaryWeight").Text))
-                            .Title(T("Admin.Configuration.Measures.Weights.Fields.MarkAsPrimaryWeight").Text).Width(100);
+                        columns.Bound(x => x.Id)
+                            .Template(x => Html.ActionLink(T("Admin.Configuration.Measures.Weights.Fields.MarkAsPrimaryWeight").Text, "MarkAsPrimaryWeight", new { id = x.Id }, new { @class = "t-button" }))
+                            .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/Measure/MarkAsPrimaryWeight/") + "<#= Id #>\" class=\"t-button\">" + T("Admin.Configuration.Measures.Weights.Fields.MarkAsPrimaryWeight").Text + "</a>")
+                            .Centered()
+                            .HeaderTemplate(T("Admin.Configuration.Measures.Weights.Fields.MarkAsPrimaryWeight").Text)
+                            .Width(100)
+                            .ReadOnly();
                         columns.Command(commands =>
                         {
                             commands.Edit().Text(T("Admin.Common.Edit").Text);

@@ -45,34 +45,12 @@ namespace Nop.Admin.Controllers
         
         #region Weights
 
-        public ActionResult Weights(string id)
+        public ActionResult Weights()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMeasures))
                 return AccessDeniedView();
 
-            //mark as primary weight (if selected)
-            if (!String.IsNullOrEmpty(id))
-            {
-                int primaryWeightId = Convert.ToInt32(id);
-                var primaryWeight = _measureService.GetMeasureWeightById(primaryWeightId);
-                if (primaryWeight != null)
-                {
-                    _measureSettings.BaseWeightId = primaryWeightId;
-                    _settingService.SaveSetting(_measureSettings);
-                }
-            }
-
-            var weightsModel = _measureService.GetAllMeasureWeights()
-                .Select(x => x.ToModel())
-                .ToList();
-            foreach (var wm in weightsModel)
-                wm.IsPrimaryWeight = wm.Id == _measureSettings.BaseWeightId;
-            var model = new GridModel<MeasureWeightModel>
-			{
-                Data = weightsModel,
-                Total = weightsModel.Count
-			};
-            return View(model);
+            return View();
 		}
 
 		[HttpPost, GridAction(EnableCustomBinding = true)]
@@ -157,38 +135,31 @@ namespace Nop.Admin.Controllers
             return Weights(command);
         }
 
-        #endregion
-
-        #region Dimensions
-
-        public ActionResult Dimensions(string id)
+        public ActionResult MarkAsPrimaryWeight(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMeasures))
                 return AccessDeniedView();
 
-            //mark as primary dimension (if selected)
-            if (!String.IsNullOrEmpty(id))
+            var primaryWeight = _measureService.GetMeasureWeightById(id);
+            if (primaryWeight != null)
             {
-                int primaryDimensionId = Convert.ToInt32(id);
-                var primaryDimension = _measureService.GetMeasureDimensionById(primaryDimensionId);
-                if (primaryDimension != null)
-                {
-                    _measureSettings.BaseDimensionId = primaryDimensionId;
-                    _settingService.SaveSetting(_measureSettings);
-                }
+                _measureSettings.BaseWeightId = primaryWeight.Id;
+                _settingService.SaveSetting(_measureSettings);
             }
 
-            var dimensionsModel = _measureService.GetAllMeasureDimensions()
-                .Select(x => x.ToModel())
-                .ToList();
-            foreach (var wm in dimensionsModel)
-                wm.IsPrimaryDimension = wm.Id == _measureSettings.BaseDimensionId;
-            var model = new GridModel<MeasureDimensionModel>
-            {
-                Data = dimensionsModel,
-                Total = dimensionsModel.Count
-            };
-            return View(model);
+            return RedirectToAction("Weights");
+        }
+
+        #endregion
+
+        #region Dimensions
+
+        public ActionResult Dimensions()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMeasures))
+                return AccessDeniedView();
+
+            return View();
         }
 
         [HttpPost, GridAction(EnableCustomBinding = true)]
@@ -273,6 +244,19 @@ namespace Nop.Admin.Controllers
             return Dimensions(command);
         }
 
+        public ActionResult MarkAsPrimaryDimension(int id)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMeasures))
+                return AccessDeniedView();
+
+            var primaryDimension = _measureService.GetMeasureDimensionById(id);
+            if (primaryDimension != null)
+            {
+                _measureSettings.BaseDimensionId = id;
+                _settingService.SaveSetting(_measureSettings);
+            }
+            return RedirectToAction("Dimensions");
+        }
         #endregion
 
         #endregion

@@ -1,5 +1,4 @@
-﻿@model Telerik.Web.Mvc.GridModel<CurrencyModel>
-@using Telerik.Web.Mvc.UI
+﻿@using Telerik.Web.Mvc.UI
 @{
     List<Nop.Core.Domain.Directory.ExchangeRate> rates = ViewBag.Rates;
     bool autoUpdateEnabled = ViewBag.AutoUpdateEnabled ?? false;
@@ -44,7 +43,6 @@
         <td>
             @(Html.Telerik().Grid<CurrencyModel>()
                     .Name("currencies-grid")
-                    .BindTo(Model.Data)
                     .Columns(columns =>
                     {
                         columns.Bound(x => x.Name);
