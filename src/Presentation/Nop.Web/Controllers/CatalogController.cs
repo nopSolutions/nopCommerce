@@ -37,6 +37,8 @@ using Nop.Web.Framework.UI.Captcha;
 using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Catalog;
 using Nop.Web.Models.Media;
+using Nop.Core.Domain.Blogs;
+using Nop.Core.Domain.Forums;
 
 namespace Nop.Web.Controllers
 {
@@ -80,6 +82,8 @@ namespace Nop.Web.Controllers
         private readonly MediaSettings _mediaSettings;
         private readonly CatalogSettings _catalogSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
+        private readonly BlogSettings _blogSettings;
+        private readonly ForumSettings _forumSettings;
         private readonly LocalizationSettings _localizationSettings;
         private readonly CustomerSettings _customerSettings;
         private readonly ICacheManager _cacheManager;
@@ -124,6 +128,8 @@ namespace Nop.Web.Controllers
             MediaSettings mediaSettings,
             CatalogSettings catalogSettings,
             ShoppingCartSettings shoppingCartSettings,
+            BlogSettings blogSettings,
+            ForumSettings  forumSettings,
             LocalizationSettings localizationSettings, 
             CustomerSettings customerSettings, 
             CaptchaSettings captchaSettings,
@@ -166,6 +172,8 @@ namespace Nop.Web.Controllers
             this._mediaSettings = mediaSettings;
             this._catalogSettings = catalogSettings;
             this._shoppingCartSettings = shoppingCartSettings;
+            this._blogSettings = blogSettings;
+            this._forumSettings = forumSettings;
             this._localizationSettings = localizationSettings;
             this._customerSettings = customerSettings;
             this._captchaSettings = captchaSettings;
@@ -1345,7 +1353,7 @@ namespace Nop.Web.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult CategoryMenu()
+        public ActionResult TopMenu()
         {
             var customerRolesIds = _workContext.CurrentCustomer.CustomerRoles
                 .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
@@ -1356,9 +1364,12 @@ namespace Nop.Web.Controllers
                 return PrepareCategorySimpleModels(0, null, 0, _catalogSettings.TopCategoryMenuSubcategoryLevelsToDisplay).ToList();
             });
 
-            var model = new CategoryMenuModel()
+            var model = new TopMenuModel()
             {
-                Categories = cachedModel
+                Categories = cachedModel,
+                RecentlyAddedProductsEnabled = _catalogSettings.RecentlyAddedProductsEnabled,
+                BlogEnabled = _blogSettings.Enabled,
+                ForumEnabled = _forumSettings.ForumsEnabled
             };
             return PartialView(model);
         }

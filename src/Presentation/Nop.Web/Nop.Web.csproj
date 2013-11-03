@@ -303,7 +303,7 @@
     <Compile Include="Models\Customer\RegisterResultModel.cs" />
     <Compile Include="Models\Customer\RegisterModel.cs" />
     <Compile Include="Models\Customer\LoginModel.cs" />
-    <Compile Include="Models\Catalog\CategoryMenuModel.cs" />
+    <Compile Include="Models\Catalog\TopMenuModel.cs" />
     <Compile Include="Models\Common\ContactUsModel.cs" />
     <Compile Include="Models\Common\TaxTypeSelectorModel.cs" />
     <Compile Include="Models\Common\CurrencyModel.cs" />
@@ -1655,7 +1655,7 @@
     <Content Include="Views\Common\CurrencySelector.cshtml" />
     <Content Include="Views\Common\HeaderLinks.cshtml" />
     <Content Include="Views\Common\LanguageSelector.cshtml" />
-    <Content Include="Views\Catalog\CategoryMenu.cshtml" />
+    <Content Include="Views\Catalog\TopMenu.cshtml" />
     <Content Include="Views\Common\TaxTypeSelector.cshtml" />
     <Content Include="Views\Blog\List.cshtml" />
     <Content Include="Views\Blog\BlogTags.cshtml" />

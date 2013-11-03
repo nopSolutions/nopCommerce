@@ -141,7 +141,7 @@ namespace Nop.Web.Infrastructure.Cache
         public const string CATEGORY_NAVIGATION_PATTERN_KEY = "Nop.pres.category.navigation";
 
         /// <summary>
-        /// Key for CategoryMenuModel caching
+        /// Key for TopMenuModel caching
         /// </summary>
         /// <remarks>
         /// {0} : language id
