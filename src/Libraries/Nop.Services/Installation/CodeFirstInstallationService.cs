@@ -4415,9 +4415,18 @@ namespace Nop.Services.Installation
                                        {
                                            Name = "OrderPlaced.VendorNotification",
                                            Subject = "%Store.Name%. Order placed",
-                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />%Customer.FullName% (%Customer.Email%) has just placed on order. <br /><br />Order Number: %Order.OrderNumber%<br />Date Ordered: %Order.CreatedOn%</p>",
+                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />%Customer.FullName% (%Customer.Email%) has just placed an order. <br /><br />Order Number: %Order.OrderNumber%<br />Date Ordered: %Order.CreatedOn%</p>",
                                            //this template is disabled by default
-                                           IsActive = true,
+                                           IsActive = false,
+                                           EmailAccountId = eaGeneral.Id,
+                                       },
+                                   new MessageTemplate
+                                       {
+                                           Name = "OrderPaid.StoreOwnerNotification",
+                                           Subject = "%Store.Name%. Order #%Order.OrderNumber% paid",
+                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />Order #%Order.OrderNumber% has been just paid<br />Date Ordered: %Order.CreatedOn%</p>",
+                                           //this template is disabled by default
+                                           IsActive = false,
                                            EmailAccountId = eaGeneral.Id,
                                        },
                                };

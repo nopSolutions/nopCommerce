@@ -1335,3 +1335,15 @@ BEGIN
 	VALUES (N'catalogsettings.topcategorymenusubcategorylevelstodisplay', N'1', 0)
 END
 GO
+
+
+--'Order paid' message template
+IF NOT EXISTS (
+		SELECT 1
+		FROM [MessageTemplate]
+		WHERE [Name] = N'OrderPaid.StoreOwnerNotification')
+BEGIN
+	INSERT [MessageTemplate] ([Name], [BccEmailAddresses], [Subject], [Body], [IsActive], [EmailAccountId], [LimitedToStores])
+	VALUES (N'OrderPaid.StoreOwnerNotification', null, N'%Store.Name%. Order #%Order.OrderNumber% paid', N'<p><a href="%Store.URL%">%Store.Name%</a> <br /><br />Order #%Order.OrderNumber% has been just paid<br />Date Ordered: %Order.CreatedOn%</p>', 0, 0, 0)
+END
+GO

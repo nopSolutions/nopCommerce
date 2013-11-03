@@ -1355,10 +1355,18 @@ namespace Nop.Services.Orders
                         //raise event       
                         _eventPublisher.PublishOrderPlaced(order);
 
-                        //raise event         
                         if (order.PaymentStatus == PaymentStatus.Paid)
                         {
+                            //raise event
                             _eventPublisher.PublishOrderPaid(order);
+
+                            //order paid email notification
+                            if (order.OrderTotal != decimal.Zero)
+                            {
+                                //we should not send it for free ($0 total) orders?
+                                //remove this "if" statement if you want to send it in this case
+                                _workflowMessageService.SendOrderPaidStoreOwnerNotification(order, _localizationSettings.DefaultAdminLanguageId);
+                            }
                         }
                         #endregion
                     }
@@ -1913,11 +1921,14 @@ namespace Nop.Services.Orders
                     _orderService.UpdateOrder(order);
 
                     CheckOrderStatus(order);
-
-                    //raise event         
+     
                     if (order.PaymentStatus == PaymentStatus.Paid)
                     {
+                        //raise event
                         _eventPublisher.PublishOrderPaid(order);
+
+                        //order paid email notification
+                        _workflowMessageService.SendOrderPaidStoreOwnerNotification(order, _localizationSettings.DefaultAdminLanguageId);
                     }
                 }
             }
@@ -2002,11 +2013,14 @@ namespace Nop.Services.Orders
             _orderService.UpdateOrder(order);
 
             CheckOrderStatus(order);
-
-            //raise event         
+   
             if (order.PaymentStatus == PaymentStatus.Paid)
             {
+                //raise event
                 _eventPublisher.PublishOrderPaid(order);
+
+                //order paid email notification
+                _workflowMessageService.SendOrderPaidStoreOwnerNotification(order, _localizationSettings.DefaultAdminLanguageId);
             }
         }
 
