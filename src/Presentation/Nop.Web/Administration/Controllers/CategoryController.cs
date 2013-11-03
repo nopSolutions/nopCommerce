@@ -439,7 +439,7 @@ namespace Nop.Admin.Controllers
             //default values
             model.PageSize = 4;
             model.Published = true;
-
+            model.IncludeInTopMenu = true;
             model.AllowCustomersToSelectPageSize = true;            
             model.PageSizeOptions = _catalogSettings.DefaultCategoryPageSizeOptions;
 

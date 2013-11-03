@@ -76,6 +76,7 @@ namespace Nop.Services.ExportImport
                     xmlWriter.WriteElementString("PageSizeOptions", null, category.PageSizeOptions);
                     xmlWriter.WriteElementString("PriceRanges", null, category.PriceRanges);
                     xmlWriter.WriteElementString("ShowOnHomePage", null, category.ShowOnHomePage.ToString());
+                    xmlWriter.WriteElementString("IncludeInTopMenu", null, category.IncludeInTopMenu.ToString());
                     xmlWriter.WriteElementString("Published", null, category.Published.ToString());
                     xmlWriter.WriteElementString("Deleted", null, category.Deleted.ToString());
                     xmlWriter.WriteElementString("DisplayOrder", null, category.DisplayOrder.ToString());

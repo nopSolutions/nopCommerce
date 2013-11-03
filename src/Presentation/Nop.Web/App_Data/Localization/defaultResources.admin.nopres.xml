@@ -786,6 +786,14 @@
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
+                  <LocaleResource Name="IncludeInTopMenu">
+                    <Value>Include in top menu</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Display in the top menu bar. If this category is a subcategory, then ensure that its parent category also has this property enabled.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
                   <LocaleResource Name="Published">
                     <Value>Published</Value>
                     <Children>

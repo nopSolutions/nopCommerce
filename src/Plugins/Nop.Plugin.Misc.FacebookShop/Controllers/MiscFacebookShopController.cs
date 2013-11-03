@@ -86,11 +86,16 @@ namespace Nop.Plugin.Misc.FacebookShop.Controllers
         //just copy this method from CatalogController (removed some redundant code)
         [NonAction]
         protected IList<CategoryModel> PrepareCategorySimpleModels(int rootCategoryId,
-            IList<int> loadSubCategoriesForIds, int level, int levelsToLoad)
+            IList<int> loadSubCategoriesForIds, int level, int levelsToLoad, bool validateIncludeInTopMenu)
         {
             var result = new List<CategoryModel>();
             foreach (var category in _categoryService.GetAllCategoriesByParentCategoryId(rootCategoryId))
             {
+                if (validateIncludeInTopMenu && !category.IncludeInTopMenu)
+                {
+                    continue;
+                }
+
                 var categoryModel = new CategoryModel()
                 {
                     Id = category.Id,
@@ -123,7 +128,7 @@ namespace Nop.Plugin.Misc.FacebookShop.Controllers
                 }
                 if (loadSubCategories)
                 {
-                    var subCategories = PrepareCategorySimpleModels(category.Id, loadSubCategoriesForIds, level + 1, levelsToLoad);
+                    var subCategories = PrepareCategorySimpleModels(category.Id, loadSubCategoriesForIds, level + 1, levelsToLoad, validateIncludeInTopMenu);
                     categoryModel.SubCategories.AddRange(subCategories);
                 }
                 result.Add(categoryModel);
@@ -402,7 +407,7 @@ namespace Nop.Plugin.Misc.FacebookShop.Controllers
                 string.Join(",", customerRolesIds), _storeContext.CurrentStore.Id);
             var model = _cacheManager.Get(cacheKey, () =>
             {
-                return PrepareCategorySimpleModels(0, null, 0, _catalogSettings.TopCategoryMenuSubcategoryLevelsToDisplay).ToList();
+                return PrepareCategorySimpleModels(0, null, 0, _catalogSettings.TopCategoryMenuSubcategoryLevelsToDisplay, true).ToList();
             });
 
             return PartialView("Nop.Plugin.Misc.FacebookShop.Views.MiscFacebookShop.CategoryNavigation", model);

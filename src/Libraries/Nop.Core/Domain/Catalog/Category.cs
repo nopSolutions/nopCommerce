@@ -81,6 +81,11 @@ namespace Nop.Core.Domain.Catalog
         public bool ShowOnHomePage { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to include this category in the top menu
+        /// </summary>
+        public bool IncludeInTopMenu { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether this category has discounts applied
         /// <remarks>The same as if we run category.AppliedDiscounts.Count > 0
         /// We use this property for performance optimization:

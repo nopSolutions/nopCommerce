@@ -371,6 +371,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GooglePlusLink.Hint">
     <Value>Specify your Google+ page URL. Leave empty if you don''t have such page.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.IncludeInTopMenu">
+    <Value>Include in top menu</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.IncludeInTopMenu.Hint">
+    <Value>Display in the top menu bar. If this category is a subcategory, then ensure that its parent category also has this property enabled.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1362,4 +1368,21 @@ BEGIN
 	INSERT [MessageTemplate] ([Name], [BccEmailAddresses], [Subject], [Body], [IsActive], [EmailAccountId], [LimitedToStores])
 	VALUES (N'OrderPaid.StoreOwnerNotification', null, N'%Store.Name%. Order #%Order.OrderNumber% paid', N'<p><a href="%Store.URL%">%Store.Name%</a> <br /><br />Order #%Order.OrderNumber% has been just paid<br />Date Ordered: %Order.CreatedOn%</p>', 0, 0, 0)
 END
+GO
+
+
+--add a new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Category]') and NAME='IncludeInTopMenu')
+BEGIN
+	ALTER TABLE [Category]
+	ADD [IncludeInTopMenu] bit NULL
+END
+GO
+
+UPDATE [Category]
+SET [IncludeInTopMenu] = 1
+WHERE [IncludeInTopMenu] IS NULL
+GO
+
+ALTER TABLE [Category] ALTER COLUMN [IncludeInTopMenu] bit NOT NULL
 GO
