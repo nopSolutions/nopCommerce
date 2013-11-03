@@ -3,9 +3,9 @@
 @{
     var isRtl = this.ShouldUseRtlTheme();
 }
-@helper RenderCategoryLine(CategorySimpleModel category, int level, bool lastItem)
+@helper RenderCategoryLine(CategorySimpleModel category, int level)
 {
-    <li @(lastItem ? Html.Raw(" class=\"last\"") : null)>
+    <li>
         <a href="@Url.RouteUrl("Category", new { SeName = category.SeName })">@category.Name
         @if (category.NumberOfProducts.HasValue)
         {
@@ -22,10 +22,9 @@
             if (category.SubCategories.Count > 0)
             {
                 <ul class="sublist @levelClass">
-                    @for (var i = 0; i < category.SubCategories.Count; i++)
+                    @foreach (var subCategory in  category.SubCategories)
                     {
-                        var subCategory = category.SubCategories[i];
-                        @RenderCategoryLine(subCategory, level + 1, i == category.SubCategories.Count - 1)
+                        @RenderCategoryLine(subCategory, level + 1)
                     }
                 </ul>
             }
@@ -36,10 +35,9 @@
 {
     <ul class="top-menu">
         @Html.Widget("header_menu_before")
-        @for (var i =0; i < Model.Categories.Count; i++)
+        @foreach (var category in Model.Categories)
         {
-            var category = Model.Categories[i]; 
-            @RenderCategoryLine(category, 0, i == Model.Categories.Count - 1)
+            @RenderCategoryLine(category, 0)
         }
         @*uncomment below to get more items (just a sample)
         <li><a href="@Url.RouteUrl("HomePage")">@T("HomePage")</a></li>
