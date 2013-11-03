@@ -4960,6 +4960,14 @@
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
+                  <LocaleResource Name="GooglePlusLink">
+                    <Value>Google+ page URL</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Specify your Google+ page URL. Leave empty if you don't have such page.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
                   <LocaleResource Name="PdfLetterPageSizeEnabled">
                     <Value>Use Letter page size</Value>
                     <Children>

@@ -362,6 +362,15 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.TopCategoryMenuSubcategoryLevelsToDisplay.Hint">
     <Value>Enter the number of subcategory levels to display in top category menu</Value>
   </LocaleResource>
+  <LocaleResource Name="Footer.FollowUs.GooglePlus">
+    <Value>Google+</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GooglePlusLink">
+    <Value>Google+ page URL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GooglePlusLink.Hint">
+    <Value>Specify your Google+ page URL. Leave empty if you don''t have such page.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1325,6 +1334,13 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'storeinformationsettings
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'storeinformationsettings.youtubelink', N'http://www.youtube.com/user/nopCommerce', 0)
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'storeinformationsettings.googlepluslink')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'storeinformationsettings.googlepluslink', N'https://plus.google.com/+nopcommerce', 0)
 END
 GO
 

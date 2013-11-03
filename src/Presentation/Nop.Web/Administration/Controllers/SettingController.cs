@@ -1799,6 +1799,7 @@ namespace Nop.Admin.Controllers
             model.StoreInformationSettings.FacebookLink = storeInformationSettings.FacebookLink;
             model.StoreInformationSettings.TwitterLink = storeInformationSettings.TwitterLink;
             model.StoreInformationSettings.YoutubeLink = storeInformationSettings.YoutubeLink;
+            model.StoreInformationSettings.GooglePlusLink = storeInformationSettings.GooglePlusLink;
             //override settings
             if (storeScope > 0)
             {
@@ -1812,6 +1813,7 @@ namespace Nop.Admin.Controllers
                 model.StoreInformationSettings.FacebookLink_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.FacebookLink, storeScope);
                 model.StoreInformationSettings.TwitterLink_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.TwitterLink, storeScope);
                 model.StoreInformationSettings.YoutubeLink_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.YoutubeLink, storeScope);
+                model.StoreInformationSettings.GooglePlusLink_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.GooglePlusLink, storeScope);
             }
 
             //seo settings
@@ -1922,6 +1924,7 @@ namespace Nop.Admin.Controllers
             storeInformationSettings.FacebookLink = model.StoreInformationSettings.FacebookLink;
             storeInformationSettings.TwitterLink = model.StoreInformationSettings.TwitterLink;
             storeInformationSettings.YoutubeLink = model.StoreInformationSettings.YoutubeLink;
+            storeInformationSettings.GooglePlusLink = model.StoreInformationSettings.GooglePlusLink;
 
             /* We do not clear cache after each setting update.
              * This behavior can increase performance because cached settings will not be cleared 
@@ -1975,6 +1978,11 @@ namespace Nop.Admin.Controllers
                 _settingService.SaveSetting(storeInformationSettings, x => x.YoutubeLink, storeScope, false);
             else if (storeScope > 0)
                 _settingService.DeleteSetting(storeInformationSettings, x => x.YoutubeLink, storeScope);
+
+            if (model.StoreInformationSettings.GooglePlusLink_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(storeInformationSettings, x => x.GooglePlusLink, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(storeInformationSettings, x => x.GooglePlusLink, storeScope);
             
             //now clear settings cache
             _settingService.ClearCache();

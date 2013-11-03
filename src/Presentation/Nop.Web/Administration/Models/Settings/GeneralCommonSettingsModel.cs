@@ -83,6 +83,10 @@ namespace Nop.Admin.Models.Settings
             public string YoutubeLink { get; set; }
             public bool YoutubeLink_OverrideForStore { get; set; }
 
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.GooglePlusLink")]
+            public string GooglePlusLink { get; set; }
+            public bool GooglePlusLink_OverrideForStore { get; set; }
+            
             #region Nested classes
 
             public partial class ThemeConfigurationModel

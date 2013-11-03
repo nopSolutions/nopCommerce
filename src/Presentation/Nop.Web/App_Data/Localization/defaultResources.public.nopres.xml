@@ -2312,14 +2312,17 @@
           <LocaleResource Name="Facebook">
             <Value>Facebook</Value>
           </LocaleResource>
+          <LocaleResource Name="GooglePlus">
+            <Value>Google+</Value>
+          </LocaleResource>
+          <LocaleResource Name="RSS">
+            <Value>RSS</Value>
+          </LocaleResource>
           <LocaleResource Name="Twitter">
             <Value>Twitter</Value>
           </LocaleResource>
           <LocaleResource Name="Youtube">
             <Value>Youtube</Value>
-          </LocaleResource>
-          <LocaleResource Name="RSS">
-            <Value>RSS</Value>
           </LocaleResource>
         </Children>
       </LocaleResource>

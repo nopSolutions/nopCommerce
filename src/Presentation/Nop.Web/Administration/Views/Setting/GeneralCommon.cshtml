@@ -261,6 +261,16 @@
                 @Html.ValidationMessageFor(model => model.StoreInformationSettings.YoutubeLink)
             </td>
         </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.GooglePlusLink_OverrideForStore, model => model.StoreInformationSettings.GooglePlusLink, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.StoreInformationSettings.GooglePlusLink):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.StoreInformationSettings.GooglePlusLink)
+                @Html.ValidationMessageFor(model => model.StoreInformationSettings.GooglePlusLink)
+            </td>
+        </tr>
     </table>
 }
 @helper TabSEOSettings()
