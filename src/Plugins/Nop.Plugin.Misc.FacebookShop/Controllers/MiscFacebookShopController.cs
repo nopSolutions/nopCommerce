@@ -83,8 +83,10 @@ namespace Nop.Plugin.Misc.FacebookShop.Controllers
         
         #region Utilities
 
+        //just copy this method from CatalogController (removed some redundant code)
         [NonAction]
-        protected IList<CategoryModel> PrepareCategoryNavigationModel(int rootCategoryId)
+        protected IList<CategoryModel> PrepareCategorySimpleModels(int rootCategoryId,
+            IList<int> loadSubCategoriesForIds, int level, int levelsToLoad)
         {
             var result = new List<CategoryModel>();
             foreach (var category in _categoryService.GetAllCategoriesByParentCategoryId(rootCategoryId))
@@ -96,9 +98,34 @@ namespace Nop.Plugin.Misc.FacebookShop.Controllers
                     SeName = category.GetSeName()
                 };
 
-                //subcategories
-                categoryModel.SubCategories.AddRange(PrepareCategoryNavigationModel(category.Id));
-
+                //load subcategories?
+                bool loadSubCategories = false;
+                if (loadSubCategoriesForIds == null)
+                {
+                    //load all subcategories
+                    loadSubCategories = true;
+                }
+                else
+                {
+                    //we load subcategories only for certain categories
+                    for (int i = 0; i <= loadSubCategoriesForIds.Count - 1; i++)
+                    {
+                        if (loadSubCategoriesForIds[i] == category.Id)
+                        {
+                            loadSubCategories = true;
+                            break;
+                        }
+                    }
+                }
+                if (levelsToLoad <= level)
+                {
+                    loadSubCategories = false;
+                }
+                if (loadSubCategories)
+                {
+                    var subCategories = PrepareCategorySimpleModels(category.Id, loadSubCategoriesForIds, level + 1, levelsToLoad);
+                    categoryModel.SubCategories.AddRange(subCategories);
+                }
                 result.Add(categoryModel);
             }
 
@@ -375,7 +402,7 @@ namespace Nop.Plugin.Misc.FacebookShop.Controllers
                 string.Join(",", customerRolesIds), _storeContext.CurrentStore.Id);
             var model = _cacheManager.Get(cacheKey, () =>
             {
-                return PrepareCategoryNavigationModel(0).ToList();
+                return PrepareCategorySimpleModels(0, null, 0, _catalogSettings.TopCategoryMenuSubcategoryLevelsToDisplay).ToList();
             });
 
             return PartialView("Nop.Plugin.Misc.FacebookShop.Views.MiscFacebookShop.CategoryNavigation", model);
