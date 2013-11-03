@@ -132,11 +132,6 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
                 return AccessDeniedView();
 
-            var currenciesModel = _currencyService.GetAllCurrencies(true).Select(x => x.ToModel()).ToList();
-            foreach (var currency in currenciesModel)
-                currency.IsPrimaryExchangeRateCurrency = currency.Id == _currencySettings.PrimaryExchangeRateCurrencyId ? true : false;
-            foreach (var currency in currenciesModel)
-                currency.IsPrimaryStoreCurrency = currency.Id == _currencySettings.PrimaryStoreCurrencyId ? true : false;
             if (liveRates)
             {
                 try
@@ -163,12 +158,8 @@ namespace Nop.Admin.Controllers
                 });
             }
             ViewBag.AutoUpdateEnabled = _currencySettings.AutoUpdateEnabled;
-            var gridModel = new GridModel<CurrencyModel>
-            {
-                Data = currenciesModel,
-                Total = currenciesModel.Count()
-            };
-            return View(gridModel);
+           
+            return View();
         }
 
         public ActionResult ApplyRate(string currencyCode, decimal rate)
