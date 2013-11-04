@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Nop.Core.Domain.Shipping;
 using Nop.Web.Framework.Mvc;
 
 namespace Nop.Web.Models.Checkout
@@ -24,6 +25,8 @@ namespace Nop.Web.Models.Checkout
             public string Description { get; set; }
             public string Fee { get; set; }
             public bool Selected { get; set; }
+
+            public ShippingOption ShippingOption { get; set; } 
         }
         #endregion
     }

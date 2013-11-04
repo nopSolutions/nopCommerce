@@ -377,6 +377,12 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Categories.Fields.IncludeInTopMenu.Hint">
     <Value>Display in the top menu bar. If this category is a subcategory, then ensure that its parent category also has this property enabled.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.BypassShippingMethodSelectionIfOnlyOne">
+    <Value>Bypass shipping method page if there''s only one</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.BypassShippingMethodSelectionIfOnlyOne.Hint">
+    <Value>Check to bypass a shipping method page during checkout if there''s only one shipping method available.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1385,4 +1391,12 @@ WHERE [IncludeInTopMenu] IS NULL
 GO
 
 ALTER TABLE [Category] ALTER COLUMN [IncludeInTopMenu] bit NOT NULL
+GO
+
+--a new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'shippingsettings.bypassshippingmethodselectionifonlyone')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'shippingsettings.bypassshippingmethodselectionifonlyone', N'false', 0)
+END
 GO

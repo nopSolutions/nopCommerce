@@ -61,25 +61,39 @@ namespace Nop.Web.Controllers
         private readonly OrderSettings _orderSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly PaymentSettings _paymentSettings;
+        private readonly ShippingSettings _shippingSettings;
         private readonly AddressSettings _addressSettings;
 
         #endregion
 
 		#region Constructors
 
-        public CheckoutController(IWorkContext workContext, IStoreContext storeContext,
-            IShoppingCartService shoppingCartService, ILocalizationService localizationService, 
-            ITaxService taxService, ICurrencyService currencyService, 
-            IPriceFormatter priceFormatter, IOrderProcessingService orderProcessingService,
-            ICustomerService customerService,  IGenericAttributeService genericAttributeService,
+        public CheckoutController(IWorkContext workContext,
+            IStoreContext storeContext,
+            IShoppingCartService shoppingCartService, 
+            ILocalizationService localizationService, 
+            ITaxService taxService, 
+            ICurrencyService currencyService, 
+            IPriceFormatter priceFormatter, 
+            IOrderProcessingService orderProcessingService,
+            ICustomerService customerService, 
+            IGenericAttributeService genericAttributeService,
             ICountryService countryService,
-            IStateProvinceService stateProvinceService, IShippingService shippingService, 
-            IPaymentService paymentService, IPluginFinder pluginFinder,
+            IStateProvinceService stateProvinceService,
+            IShippingService shippingService, 
+            IPaymentService paymentService,
+            IPluginFinder pluginFinder,
             IOrderTotalCalculationService orderTotalCalculationService,
-            ILogger logger, IOrderService orderService, IWebHelper webHelper,
-            HttpContextBase httpContext, IMobileDeviceHelper mobileDeviceHelper,
-            OrderSettings orderSettings, RewardPointsSettings rewardPointsSettings,
-            PaymentSettings paymentSettings, AddressSettings addressSettings)
+            ILogger logger,
+            IOrderService orderService,
+            IWebHelper webHelper,
+            HttpContextBase httpContext,
+            IMobileDeviceHelper mobileDeviceHelper,
+            OrderSettings orderSettings, 
+            RewardPointsSettings rewardPointsSettings,
+            PaymentSettings paymentSettings,
+            ShippingSettings shippingSettings,
+            AddressSettings addressSettings)
         {
             this._workContext = workContext;
             this._storeContext = storeContext;
@@ -106,6 +120,7 @@ namespace Nop.Web.Controllers
             this._orderSettings = orderSettings;
             this._rewardPointsSettings = rewardPointsSettings;
             this._paymentSettings = paymentSettings;
+            this._shippingSettings = shippingSettings;
             this._addressSettings = addressSettings;
         }
 
@@ -200,8 +215,8 @@ namespace Nop.Web.Controllers
                                       {
                                           Name = shippingOption.Name,
                                           Description = shippingOption.Description,
-                                          ShippingRateComputationMethodSystemName =
-                                              shippingOption.ShippingRateComputationMethodSystemName,
+                                          ShippingRateComputationMethodSystemName = shippingOption.ShippingRateComputationMethodSystemName,
+                                          ShippingOption = shippingOption,
                                       };
 
                     //adjust rate
@@ -649,9 +664,21 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("CheckoutPaymentMethod");
             }
             
-            
             //model
             var model = PrepareShippingMethodModel(cart);
+
+            if (_shippingSettings.BypassShippingMethodSelectionIfOnlyOne &&
+                model.ShippingMethods.Count == 1)
+            {
+                //if we have only one shipping method, then a customer doesn't have to choose a shipping method
+                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, 
+                    SystemCustomerAttributeNames.SelectedShippingOption,
+                    model.ShippingMethods.First().ShippingOption,
+                    _storeContext.CurrentStore.Id);
+            
+                return RedirectToRoute("CheckoutPaymentMethod");
+            }
+
             return View(model);
         }
         [HttpPost, ActionName("ShippingMethod")]
@@ -1318,15 +1345,31 @@ namespace Nop.Web.Controllers
                 }
 
                 var shippingMethodModel = PrepareShippingMethodModel(cart);
-                return Json(new
+
+                if (_shippingSettings.BypassShippingMethodSelectionIfOnlyOne &&
+                    shippingMethodModel.ShippingMethods.Count == 1)
                 {
-                    update_section = new UpdateSectionJsonModel()
+                    //if we have only one shipping method, then a customer doesn't have to choose a shipping method
+                    _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
+                        SystemCustomerAttributeNames.SelectedShippingOption,
+                        shippingMethodModel.ShippingMethods.First().ShippingOption,
+                        _storeContext.CurrentStore.Id);
+
+                    //load next step
+                    return OpcLoadStepAfterShippingMethod(cart);
+                }
+                else
+                {
+                    return Json(new
                     {
-                        name = "shipping-method",
-                        html = this.RenderPartialViewToString("OpcShippingMethods", shippingMethodModel)
-                    },
-                    goto_section = "shipping_method"
-                });
+                        update_section = new UpdateSectionJsonModel()
+                        {
+                            name = "shipping-method",
+                            html = this.RenderPartialViewToString("OpcShippingMethods", shippingMethodModel)
+                        },
+                        goto_section = "shipping_method"
+                    });
+                }
             }
             catch (Exception exc)
             {

@@ -98,6 +98,16 @@
             </td>
         </tr>
         <tr>
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.BypassShippingMethodSelectionIfOnlyOne_OverrideForStore, model => model.BypassShippingMethodSelectionIfOnlyOne, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.BypassShippingMethodSelectionIfOnlyOne):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.BypassShippingMethodSelectionIfOnlyOne)
+                @Html.ValidationMessageFor(model => model.BypassShippingMethodSelectionIfOnlyOne)
+            </td>
+        </tr>
+        <tr>
             <td class="adminTitle" colspan="2">
                 @Html.OverrideStoreCheckboxFor(model => model.ShippingOriginAddress_OverrideForStore, "pnlShippingOriginAddress", Model.ActiveStoreScopeConfiguration)
                 <strong>@Html.LabelFor(model => model.ShippingOriginAddress):</strong>

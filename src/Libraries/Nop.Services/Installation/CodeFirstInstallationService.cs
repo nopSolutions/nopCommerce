@@ -4843,6 +4843,7 @@ namespace Nop.Services.Installation
                     EstimateShippingEnabled = true,
                     DisplayShipmentEventsToCustomers = false,
                     ReturnValidOptionsIfThereAreAny = true,
+                    BypassShippingMethodSelectionIfOnlyOne = false,
                 });
 
             settingService.SaveSetting(new PaymentSettings()

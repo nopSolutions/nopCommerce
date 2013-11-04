@@ -5698,6 +5698,14 @@
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
+                  <LocaleResource Name="BypassShippingMethodSelectionIfOnlyOne">
+                    <Value>Bypass shipping method page if there's only one</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Check to bypass a shipping method page during checkout if there's only one shipping method available.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
                   <LocaleResource Name="ShippingOriginAddress">
                     <Value>Shipping Origin</Value>
                     <Children>

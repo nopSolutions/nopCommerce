@@ -56,5 +56,10 @@ namespace Nop.Core.Domain.Shipping
         /// Gets or sets a value indicating whether we should return valid options if there are any (no matter of the errors returned by other shipping rate compuation methods).
         /// </summary>
         public bool ReturnValidOptionsIfThereAreAny { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether we should bypass 'select shipping method' page if we have only one shipping method
+        /// </summary>
+        public bool BypassShippingMethodSelectionIfOnlyOne { get; set; }
     }
 }
