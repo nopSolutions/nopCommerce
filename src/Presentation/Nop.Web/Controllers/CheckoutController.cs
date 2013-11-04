@@ -1040,6 +1040,79 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
+        [NonAction]
+        protected JsonResult OpcLoadStepAfterShippingMethod(List<ShoppingCartItem> cart)
+        {
+            //Check whether payment workflow is required
+            //we ignore reward points during cart total calculation
+            bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart, true);
+            if (isPaymentWorkflowRequired)
+            {
+                //payment is required
+                var paymentMethodModel = PreparePaymentMethodModel(cart);
+
+                if (_paymentSettings.BypassPaymentMethodSelectionIfOnlyOne &&
+                    paymentMethodModel.PaymentMethods.Count == 1 && !paymentMethodModel.DisplayRewardPoints)
+                {
+                    //if we have only one payment method and reward points are disabled or the current customer doesn't have any reward points
+                    //so customer doesn't have to choose a payment method
+
+                    var selectedPaymentMethodSystemName = paymentMethodModel.PaymentMethods[0].PaymentMethodSystemName;
+                    _genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer,
+                        SystemCustomerAttributeNames.SelectedPaymentMethod,
+                        selectedPaymentMethodSystemName, _storeContext.CurrentStore.Id);
+
+                    var paymentMethodInst = _paymentService.LoadPaymentMethodBySystemName(selectedPaymentMethodSystemName);
+                    if (paymentMethodInst == null ||
+                        !paymentMethodInst.IsPaymentMethodActive(_paymentSettings) ||
+                        !_pluginFinder.AuthenticateStore(paymentMethodInst.PluginDescriptor, _storeContext.CurrentStore.Id))
+                        throw new Exception("Selected payment method can't be parsed");
+
+
+                    var paymenInfoModel = PreparePaymentInfoModel(paymentMethodInst);
+                    return Json(new
+                    {
+                        update_section = new UpdateSectionJsonModel()
+                        {
+                            name = "payment-info",
+                            html = this.RenderPartialViewToString("OpcPaymentInfo", paymenInfoModel)
+                        },
+                        goto_section = "payment_info"
+                    });
+                }
+                else
+                {
+                    //customer have to choose a payment method
+                    return Json(new
+                    {
+                        update_section = new UpdateSectionJsonModel()
+                        {
+                            name = "payment-method",
+                            html = this.RenderPartialViewToString("OpcPaymentMethods", paymentMethodModel)
+                        },
+                        goto_section = "payment_method"
+                    });
+                }
+            }
+            else
+            {
+                //payment is not required
+                _genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer,
+                    SystemCustomerAttributeNames.SelectedPaymentMethod, null, _storeContext.CurrentStore.Id);
+
+                var confirmOrderModel = PrepareConfirmOrderModel(cart);
+                return Json(new
+                {
+                    update_section = new UpdateSectionJsonModel()
+                    {
+                        name = "confirm-order",
+                        html = this.RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
+                    },
+                    goto_section = "confirm_order"
+                });
+            }
+        }
+
         [ChildActionOnly]
         public ActionResult OpcBillingForm()
         {
@@ -1146,75 +1219,8 @@ namespace Nop.Web.Controllers
                     //shipping is not required
                     _genericAttributeService.SaveAttribute<ShippingOption>(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedShippingOption, null, _storeContext.CurrentStore.Id);
 
-
-                    //Check whether payment workflow is required
-                    //we ignore reward points during cart total calculation
-                    bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart, true);
-                    if (isPaymentWorkflowRequired)
-                    {
-                        //payment is required
-                        var paymentMethodModel = PreparePaymentMethodModel(cart);
-
-                        if (_paymentSettings.BypassPaymentMethodSelectionIfOnlyOne &&
-                            paymentMethodModel.PaymentMethods.Count == 1 && !paymentMethodModel.DisplayRewardPoints)
-                        {
-                            //if we have only one payment method and reward points are disabled or the current customer doesn't have any reward points
-                            //so customer doesn't have to choose a payment method
-
-                            var selectedPaymentMethodSystemName = paymentMethodModel.PaymentMethods[0].PaymentMethodSystemName;
-                            _genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer,
-                                SystemCustomerAttributeNames.SelectedPaymentMethod,
-                                selectedPaymentMethodSystemName, _storeContext.CurrentStore.Id);
-
-                            var paymentMethodInst = _paymentService.LoadPaymentMethodBySystemName(selectedPaymentMethodSystemName);
-                            if (paymentMethodInst == null ||
-                                !paymentMethodInst.IsPaymentMethodActive(_paymentSettings) ||
-                                !_pluginFinder.AuthenticateStore(paymentMethodInst.PluginDescriptor, _storeContext.CurrentStore.Id))
-                                throw new Exception("Selected payment method can't be parsed");
-
-
-                            var paymenInfoModel = PreparePaymentInfoModel(paymentMethodInst);
-                            return Json(new
-                            {
-                                update_section = new UpdateSectionJsonModel()
-                                {
-                                    name = "payment-info",
-                                    html = this.RenderPartialViewToString("OpcPaymentInfo", paymenInfoModel)
-                                },
-                                goto_section = "payment_info"
-                            });
-                        }
-                        else
-                        {
-                            //customer have to choose a payment method
-                            return Json(new
-                            {
-                                update_section = new UpdateSectionJsonModel()
-                                {
-                                    name = "payment-method",
-                                    html = this.RenderPartialViewToString("OpcPaymentMethods", paymentMethodModel)
-                                },
-                                goto_section = "payment_method"
-                            });
-                        }
-                    }
-                    else
-                    {
-                        //payment is not required
-                        _genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer,
-                            SystemCustomerAttributeNames.SelectedPaymentMethod, null, _storeContext.CurrentStore.Id);
-
-                        var confirmOrderModel = PrepareConfirmOrderModel(cart);
-                        return Json(new
-                        {
-                            update_section = new UpdateSectionJsonModel()
-                            {
-                                name = "confirm-order",
-                                html = this.RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
-                            },
-                            goto_section = "confirm_order"
-                        });
-                    }
+                    //load next step
+                    return OpcLoadStepAfterShippingMethod(cart);
                 }
             }
             catch (Exception exc)
@@ -1387,73 +1393,8 @@ namespace Nop.Web.Controllers
                 //save
                 _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedShippingOption, shippingOption, _storeContext.CurrentStore.Id);
 
-
-                //Check whether payment workflow is required
-                //we ignore reward points during cart total calculation
-                bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart, true);
-                if (isPaymentWorkflowRequired)
-                {
-                    //payment is required
-                    var paymentMethodModel = PreparePaymentMethodModel(cart);
-
-                    if (_paymentSettings.BypassPaymentMethodSelectionIfOnlyOne &&
-                        paymentMethodModel.PaymentMethods.Count == 1 && !paymentMethodModel.DisplayRewardPoints)
-                    {
-                        //if we have only one payment method and reward points are disabled or the current customer doesn't have any reward points
-                        //so customer doesn't have to choose a payment method
-                        var selectedPaymentMethodSystemName = paymentMethodModel.PaymentMethods[0].PaymentMethodSystemName;
-                        _genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer,
-                            SystemCustomerAttributeNames.SelectedPaymentMethod, selectedPaymentMethodSystemName, _storeContext.CurrentStore.Id);
-
-                        var paymentMethodInst = _paymentService.LoadPaymentMethodBySystemName(selectedPaymentMethodSystemName);
-                        if (paymentMethodInst == null ||
-                            !paymentMethodInst.IsPaymentMethodActive(_paymentSettings) ||
-                            !_pluginFinder.AuthenticateStore(paymentMethodInst.PluginDescriptor, _storeContext.CurrentStore.Id))
-                            throw new Exception("Selected payment method can't be parsed");
-
-
-                        var paymenInfoModel = PreparePaymentInfoModel(paymentMethodInst);
-                        return Json(new
-                        {
-                            update_section = new UpdateSectionJsonModel()
-                            {
-                                name = "payment-info",
-                                html = this.RenderPartialViewToString("OpcPaymentInfo", paymenInfoModel)
-                            },
-                            goto_section = "payment_info"
-                        });
-                    }
-                    else
-                    {
-                        //customer have to choose a payment method
-                        return Json(new
-                        {
-                            update_section = new UpdateSectionJsonModel()
-                            {
-                                name = "payment-method",
-                                html = this.RenderPartialViewToString("OpcPaymentMethods", paymentMethodModel)
-                            },
-                            goto_section = "payment_method"
-                        });
-                    }
-                }
-                else
-                {
-                    //payment is not required
-                    _genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer,
-                        SystemCustomerAttributeNames.SelectedPaymentMethod, null, _storeContext.CurrentStore.Id);
-
-                    var confirmOrderModel = PrepareConfirmOrderModel(cart);
-                    return Json(new
-                    {
-                        update_section = new UpdateSectionJsonModel()
-                        {
-                            name = "confirm-order",
-                            html = this.RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
-                        },
-                        goto_section = "confirm_order"
-                    });
-                }
+                //load next step
+                return OpcLoadStepAfterShippingMethod(cart);
             }
             catch (Exception exc)
             {
