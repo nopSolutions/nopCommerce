@@ -49,7 +49,7 @@ namespace Nop.Data.Tests.Catalog
             fromDb.PageSizeOptions.ShouldEqual("4, 2, 8, 12");
             fromDb.PriceRanges.ShouldEqual("1-3;");
             fromDb.ShowOnHomePage.ShouldEqual(false);
-            fromDb.IncludeInTopMenu.ShouldEqual(true)
+            fromDb.IncludeInTopMenu.ShouldEqual(true);
             fromDb.HasDiscountsApplied.ShouldEqual(true);
             fromDb.Published.ShouldEqual(true);
             fromDb.SubjectToAcl.ShouldEqual(true);
