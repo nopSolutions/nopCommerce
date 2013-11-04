@@ -6,12 +6,10 @@
 var Checkout = {
     loadWaiting: false,
     failureUrl: false,
-    steps: new Array(),
 
     init: function (failureUrl) {
         this.loadWaiting = false;
         this.failureUrl = failureUrl;
-        this.steps = ['billing', 'shipping', 'shipping_method', 'payment_method', 'payment_info', 'confirm_order'];
 
         Accordion.disallowAccessToNextSections = true;
     },
