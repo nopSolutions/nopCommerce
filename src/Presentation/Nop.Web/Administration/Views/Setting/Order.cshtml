@@ -32,6 +32,25 @@
 }
 @helper TabOrderSettings()
 {
+    
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#@Html.FieldIdFor(model => model.OnePageCheckoutEnabled)").click(toggleOnePageCheckoutEnabled);
+
+            toggleOnePageCheckoutEnabled();
+        });
+
+        function toggleOnePageCheckoutEnabled() {
+            if ($('#@Html.FieldIdFor(model => model.OnePageCheckoutEnabled)').is(':checked')) {
+                $('#pnlOnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab').show();
+            }
+            else {
+                $('#pnlOnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab').hide();
+            }
+        }
+        
+    </script>
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
@@ -91,6 +110,16 @@
             <td class="adminData">
                 @Html.EditorFor(model => model.OnePageCheckoutEnabled)
                 @Html.ValidationMessageFor(model => model.OnePageCheckoutEnabled)
+            </td>
+        </tr>
+        <tr id="pnlOnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab">
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab_OverrideForStore, model => model.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab)
+                @Html.ValidationMessageFor(model => model.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab)
             </td>
         </tr>
         <tr>

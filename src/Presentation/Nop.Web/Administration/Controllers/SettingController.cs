@@ -1263,6 +1263,7 @@ namespace Nop.Admin.Controllers
                 model.AnonymousCheckoutAllowed_OverrideForStore = _settingService.SettingExists(orderSettings, x => x.AnonymousCheckoutAllowed, storeScope);
                 model.TermsOfServiceEnabled_OverrideForStore = _settingService.SettingExists(orderSettings, x => x.TermsOfServiceEnabled, storeScope);
                 model.OnePageCheckoutEnabled_OverrideForStore = _settingService.SettingExists(orderSettings, x => x.OnePageCheckoutEnabled, storeScope);
+                model.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab_OverrideForStore = _settingService.SettingExists(orderSettings, x => x.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab, storeScope);
                 model.DisableOrderCompletedPage_OverrideForStore = _settingService.SettingExists(orderSettings, x => x.DisableOrderCompletedPage, storeScope);
                 model.ReturnRequestsEnabled_OverrideForStore = _settingService.SettingExists(orderSettings, x => x.ReturnRequestsEnabled, storeScope);
                 model.NumberOfDaysReturnRequestAvailable_OverrideForStore = _settingService.SettingExists(orderSettings, x => x.NumberOfDaysReturnRequestAvailable, storeScope);
@@ -1343,6 +1344,11 @@ namespace Nop.Admin.Controllers
                     _settingService.SaveSetting(orderSettings, x => x.OnePageCheckoutEnabled, storeScope, false);
                 else if (storeScope > 0)
                     _settingService.DeleteSetting(orderSettings, x => x.OnePageCheckoutEnabled, storeScope);
+
+                if (model.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab_OverrideForStore || storeScope == 0)
+                    _settingService.SaveSetting(orderSettings, x => x.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab, storeScope, false);
+                else if (storeScope > 0)
+                    _settingService.DeleteSetting(orderSettings, x => x.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab, storeScope);
 
                 if (model.DisableOrderCompletedPage_OverrideForStore || storeScope == 0)
                     _settingService.SaveSetting(orderSettings, x => x.DisableOrderCompletedPage, storeScope, false);

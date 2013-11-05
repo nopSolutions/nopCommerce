@@ -5490,6 +5490,14 @@
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
+                  <LocaleResource Name="OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab">
+                    <Value>Order totals on payment info tab</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Check to display a product list and order totals on the payment info tab (one-page checkout).</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
                   <LocaleResource Name="DisableOrderCompletedPage">
                     <Value>Disable "Order completed" page</Value>
                     <Children>

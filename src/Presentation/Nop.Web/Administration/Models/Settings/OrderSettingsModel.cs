@@ -43,6 +43,10 @@ namespace Nop.Admin.Models.Settings
         public bool OnePageCheckoutEnabled { get; set; }
         public bool OnePageCheckoutEnabled_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Order.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab")]
+        public bool OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab { get; set; }
+        public bool OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.DisableOrderCompletedPage")]
         public bool DisableOrderCompletedPage { get; set; }
         public bool DisableOrderCompletedPage_OverrideForStore { get; set; }

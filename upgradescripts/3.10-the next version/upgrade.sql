@@ -392,6 +392,12 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Fields.NotifyAdminForQuantityBelow.Hint">
     <Value>When the current stock quantity falls below (reaches) this quantity, a store owner will receive a notification.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab">
+    <Value>Order totals on payment info tab</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab.Hint">
+    <Value>Check to display a product list and order totals on the payment info tab (one-page checkout).</Value>
+  </LocaleResource>
 </Language>
 '
 
