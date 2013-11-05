@@ -1683,7 +1683,7 @@
                     <Value>Low stock activity</Value>
                     <Children>
                       <LocaleResource Name="Hint">
-                        <Value>Action to be taken when your current stock quantity falls below the 'Minimum stock quantity'.</Value>
+                        <Value>Action to be taken when your current stock quantity falls below (reaches) the 'Minimum stock quantity'.</Value>
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
@@ -1755,7 +1755,7 @@
                     <Value>Minimum stock quantity</Value>
                     <Children>
                       <LocaleResource Name="Hint">
-                        <Value>If you have enabled 'Manage Stock' you can perform a number of different actions when the current stock quantity falls below your minimum stock quantity.</Value>
+                        <Value>If you have enabled 'Manage Stock' you can perform a number of different actions when the current stock quantity falls below (reaches) your minimum stock quantity.</Value>
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
@@ -1774,7 +1774,7 @@
                     <Value>Notify admin for quantity below</Value>
                     <Children>
                       <LocaleResource Name="Hint">
-                        <Value>When the current stock quantity falls below this quantity, the storekeeper (admin) will receive a notification.</Value>
+                        <Value>When the current stock quantity falls below (reaches) this quantity, a store owner will receive a notification.</Value>
                       </LocaleResource>
                     </Children>
                   </LocaleResource>

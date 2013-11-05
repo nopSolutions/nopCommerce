@@ -383,6 +383,15 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.BypassShippingMethodSelectionIfOnlyOne.Hint">
     <Value>Check to bypass a shipping method page during checkout if there''s only one shipping method available.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.LowStockActivity.Hint">
+    <Value>Action to be taken when your current stock quantity falls below (reaches) the ''Minimum stock quantity''.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.MinStockQuantity.Hint">
+    <Value>If you have enabled ''Manage Stock'' you can perform a number of different actions when the current stock quantity falls below (reaches) your minimum stock quantity.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.NotifyAdminForQuantityBelow.Hint">
+    <Value>When the current stock quantity falls below (reaches) this quantity, a store owner will receive a notification.</Value>
+  </LocaleResource>
 </Language>
 '
 
