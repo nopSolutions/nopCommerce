@@ -282,12 +282,14 @@ namespace Nop.Services.Installation
 
         protected virtual void InstallStores()
         {
+            //var storeUrl = "http://www.yourStore.com/";
+            var storeUrl = _webHelper.GetStoreLocation(false);
             var stores = new List<Store>()
             {
                 new Store()
                 {
                     Name = "Your store name",
-                    Url = "http://www.yourStore.com/",
+                    Url = storeUrl,
                     SslEnabled = false,
                     Hosts = "yourstore.com,www.yourstore.com",
                     DisplayOrder = 1,

@@ -9,6 +9,7 @@ using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Stores;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Services.Customers;
@@ -22,6 +23,7 @@ namespace Nop.Services.Installation
 
         private readonly IRepository<Language> _languageRepository;
         private readonly IRepository<Customer> _customerRepository;
+        private readonly IRepository<Store> _storeRepository;
         private readonly IDbContext _dbContext;
         private readonly IWebHelper _webHelper;
 
@@ -31,11 +33,13 @@ namespace Nop.Services.Installation
 
         public SqlFileInstallationService(IRepository<Language> languageRepository,
             IRepository<Customer> customerRepository, 
+            IRepository<Store> storeRepository,
             IDbContext dbContext,
             IWebHelper webHelper)
         {
             this._languageRepository = languageRepository;
             this._customerRepository = customerRepository;
+            this._storeRepository = storeRepository;
             this._dbContext = dbContext;
             this._webHelper = webHelper;
         }
@@ -224,6 +228,16 @@ namespace Nop.Services.Installation
                  PasswordFormat.Hashed, defaultUserPassword));
         }
 
+        protected virtual void UpdateDefaultStoreUrl()
+        {
+            var store = _storeRepository.Table.FirstOrDefault();
+            if (store == null)
+                throw new Exception("Default store cannot be loaded");
+
+            store.Url = _webHelper.GetStoreLocation(false);
+            _storeRepository.Update(store);
+        }
+
         protected virtual void ExecuteSqlFile(string path)
         {
             var statements = new List<string>();
@@ -274,6 +288,7 @@ namespace Nop.Services.Installation
             ExecuteSqlFile(_webHelper.MapPath("~/App_Data/Install/create_required_data.sql"));
             InstallLocaleResources();
             UpdateDefaultCustomer(defaultUserEmail, defaultUserPassword);
+            UpdateDefaultStoreUrl();
 
             if (installSampleData)
             {
