@@ -154,11 +154,21 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTopics))
                 return AccessDeniedView();
 
-            var topics = _topicService.GetAllTopics(model.SearchStoreId);
+            var topicModels = _topicService.GetAllTopics(model.SearchStoreId)
+                .Select(x =>x.ToModel())
+                .ToList();
+            //little hack here:
+            //we don't have paging supported for topic list page
+            //now ensure that topic bodies are not returned. otherwise, we can get the following error:
+            //"Error during serialization or deserialization using the JSON JavaScriptSerializer. The length of the string exceeds the value set on the maxJsonLength property. "
+            foreach (var topic in topicModels)
+            {
+                topic.Body = "";
+            }
             var gridModel = new GridModel<TopicModel>
             {
-                Data = topics.Select(x =>x.ToModel()),
-                Total = topics.Count
+                Data = topicModels,
+                Total = topicModels.Count
             };
             return new JsonResult
             {
