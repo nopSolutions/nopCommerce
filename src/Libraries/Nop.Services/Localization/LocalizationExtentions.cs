@@ -3,6 +3,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using Nop.Core;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Security;
 using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
 
@@ -114,6 +115,8 @@ namespace Nop.Services.Localization
             return result;
         }
 
+
+
         /// <summary>
         /// Get localized value of enum
         /// </summary>
@@ -159,6 +162,116 @@ namespace Nop.Services.Localization
 
             return result;
         }
+
+
+        /// <summary>
+        /// Get localized value of permission
+        /// We don't have UI to manage permission localizable name. That's why we're using this extension method
+        /// </summary>
+        /// <param name="permissionRecord">Permission record</param>
+        /// <param name="localizationService">Localization service</param>
+        /// <param name="workContext">Work context</param>
+        /// <returns>Localized value</returns>
+        public static string GetLocalizedPermissionName(this PermissionRecord permissionRecord,
+            ILocalizationService localizationService, IWorkContext workContext)
+        {
+            if (workContext == null)
+                throw new ArgumentNullException("workContext");
+
+            return GetLocalizedPermissionName(permissionRecord, localizationService, workContext.WorkingLanguage.Id);
+        }
+        /// <summary>
+        /// Get localized value of enum
+        /// We don't have UI to manage permission localizable name. That's why we're using this extension method
+        /// </summary>
+        /// <param name="permissionRecord">Permission record</param>
+        /// <param name="localizationService">Localization service</param>
+        /// <param name="languageId">Language identifier</param>
+        /// <returns>Localized value</returns>
+        public static string GetLocalizedPermissionName(this PermissionRecord permissionRecord, 
+            ILocalizationService localizationService, int languageId)
+        {
+            if (permissionRecord == null)
+                throw new ArgumentNullException("permissionRecord");
+
+            if (localizationService == null)
+                throw new ArgumentNullException("localizationService");
+
+            //localized value
+            string resourceName = string.Format("Permission.{0}", permissionRecord.SystemName);
+            string result = localizationService.GetResource(resourceName, languageId, false, "", true);
+
+            //set default value if required
+            if (String.IsNullOrEmpty(result))
+                result = permissionRecord.Name;
+
+            return result;
+        }
+        /// <summary>
+        /// Save localized name of a permission
+        /// </summary>
+        /// <param name="permissionRecord">Permission record</param>
+        /// <param name="localizationService">Localization service</param>
+        /// <param name="languageService">Language service</param>
+        public static void SaveLocalizedPermissionName(this PermissionRecord permissionRecord,
+            ILocalizationService localizationService, ILanguageService languageService)
+        {
+            if (permissionRecord == null)
+                throw new ArgumentNullException("permissionRecord");
+            if (localizationService == null)
+                throw new ArgumentNullException("localizationService");
+            if (languageService == null)
+                throw new ArgumentNullException("languageService");
+
+            string resourceName = string.Format("Permission.{0}", permissionRecord.SystemName);
+            string resourceValue = permissionRecord.Name;
+
+            foreach (var lang in languageService.GetAllLanguages(true))
+            {
+                var lsr = localizationService.GetLocaleStringResourceByName(resourceName, lang.Id, false);
+                if (lsr == null)
+                {
+                    lsr = new LocaleStringResource()
+                    {
+                        LanguageId = lang.Id,
+                        ResourceName = resourceName,
+                        ResourceValue = resourceValue
+                    };
+                    localizationService.InsertLocaleStringResource(lsr);
+                }
+                else
+                {
+                    lsr.ResourceValue = resourceValue;
+                    localizationService.UpdateLocaleStringResource(lsr);
+                }
+            }
+        }
+        /// <summary>
+        /// Delete a localized name of a permission
+        /// </summary>
+        /// <param name="permissionRecord">Permission record</param>
+        /// <param name="localizationService">Localization service</param>
+        /// <param name="languageService">Language service</param>
+        public static void DeleteLocalizedPermissionName(this PermissionRecord permissionRecord,
+            ILocalizationService localizationService, ILanguageService languageService)
+        {
+            if (permissionRecord == null)
+                throw new ArgumentNullException("permissionRecord");
+            if (localizationService == null)
+                throw new ArgumentNullException("localizationService");
+            if (languageService == null)
+                throw new ArgumentNullException("languageService");
+
+            string resourceName = string.Format("Permission.{0}", permissionRecord.SystemName);
+            foreach (var lang in languageService.GetAllLanguages(true))
+            {
+                var lsr = localizationService.GetLocaleStringResourceByName(resourceName, lang.Id, false);
+                if (lsr != null)
+                    localizationService.DeleteLocaleStringResource(lsr);
+            }
+        }
+
+
 
         /// <summary>
         /// Delete a locale resource
@@ -290,16 +403,14 @@ namespace Nop.Services.Localization
 
             return result;
         }
-
         /// <summary>
-        /// Get localized friendly name of a plugin
+        /// Save localized friendly name of a plugin
         /// </summary>
         /// <typeparam name="T">Plugin</typeparam>
         /// <param name="plugin">Plugin</param>
         /// <param name="localizationService">Localization service</param>
         /// <param name="languageId">Language identifier</param>
         /// <param name="localizedFriendlyName">Localized friendly name</param>
-        /// <returns>Localized value</returns>
         public static void SaveLocalizedFriendlyName<T>(this T plugin, 
             ILocalizationService localizationService, int languageId,
             string localizedFriendlyName)

@@ -72,7 +72,8 @@ namespace Nop.Admin.Controllers
             {
                 model.AvailablePermissions.Add(new PermissionRecordModel()
                 {
-                    Name = pr.Name,
+                    //Name = pr.Name,
+                    Name = pr.GetLocalizedPermissionName(_localizationService, _workContext),
                     SystemName = pr.SystemName
                 });
             }

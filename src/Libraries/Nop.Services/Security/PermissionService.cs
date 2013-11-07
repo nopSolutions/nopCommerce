@@ -7,6 +7,7 @@ using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
 using Nop.Services.Customers;
+using Nop.Services.Localization;
 
 namespace Nop.Services.Security
 {
@@ -35,6 +36,8 @@ namespace Nop.Services.Security
         private readonly IRepository<PermissionRecord> _permissionPecordRepository;
         private readonly ICustomerService _customerService;
         private readonly IWorkContext _workContext;
+        private readonly ILocalizationService _localizationService;
+        private readonly ILanguageService _languageService;
         private readonly ICacheManager _cacheManager;
 
         #endregion
@@ -47,14 +50,21 @@ namespace Nop.Services.Security
         /// <param name="permissionPecordRepository">Permission repository</param>
         /// <param name="customerService">Customer service</param>
         /// <param name="workContext">Work context</param>
+        /// <param name="localizationService">Localization service</param>
+        /// <param name="languageService">Language service</param>
         /// <param name="cacheManager">Cache manager</param>
         public PermissionService(IRepository<PermissionRecord> permissionPecordRepository,
             ICustomerService customerService,
-            IWorkContext workContext, ICacheManager cacheManager)
+            IWorkContext workContext,
+             ILocalizationService localizationService,
+            ILanguageService languageService,
+            ICacheManager cacheManager)
         {
             this._permissionPecordRepository = permissionPecordRepository;
             this._customerService = customerService;
             this._workContext = workContext;
+            this._localizationService = localizationService;
+            this._languageService = languageService;
             this._cacheManager = cacheManager;
         }
 
@@ -229,6 +239,9 @@ namespace Nop.Services.Security
 
                     //save new permission
                     InsertPermissionRecord(permission1);
+
+                    //save localization
+                    permission1.SaveLocalizedPermissionName(_localizationService, _languageService);
                 }
             }
         }
@@ -246,8 +259,12 @@ namespace Nop.Services.Security
                 if (permission1 != null)
                 {
                     DeletePermissionRecord(permission1);
+
+                    //delete permission locales
+                    permission1.DeleteLocalizedPermissionName(_localizationService, _languageService);
                 }
             }
+
         }
         
         /// <summary>

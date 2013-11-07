@@ -398,6 +398,153 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Order.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab.Hint">
     <Value>Check to display a product list and order totals on the payment info tab (one-page checkout).</Value>
   </LocaleResource>
+  <LocaleResource Name="Permission.AccessAdminPanel">
+    <Value>Access admin area</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.AllowCustomerImpersonation">
+    <Value>Admin area. Allow Customer Impersonation</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.ManageProducts">
+    <Value>Admin area. Manage Products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.ManageCategories">
+    <Value>Admin area. Manage Categories</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.ManageManufacturers">
+    <Value>Admin area. Manage Manufacturers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.ManageProductReviews">
+    <Value>Admin area. Manage Product Reviews</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.ManageProductTags">
+    <Value>Admin area. Manage Product Tags</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.ManageAttributes">
+    <Value>Admin area. Manage Attributes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.ManageCustomers">
+    <Value>Admin area. Manage Customers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.ManageVendors">
+    <Value>Admin area. Manage Vendors</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.ManageCurrentCarts">
+    <Value>Admin area. Manage Current Carts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.ManageOrders">
+    <Value>Admin area. Manage Orders</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.ManageRecurringPayments">
+    <Value>Admin area. Manage Recurring Payments</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.ManageGiftCards">
+    <Value>Admin area. Manage Gift Cards</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.ManageReturnRequests">
+    <Value>Admin area. Manage Return Requests</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.ManageAffiliates">
+    <Value>Admin area. Manage Affiliates</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.ManageCampaigns">
+    <Value>Admin area. Manage Campaigns</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.ManageDiscounts">
+    <Value>Admin area. Manage Discounts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.ManageNewsletterSubscribers">
+    <Value>Admin area. Manage Newsletter Subscribers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.ManagePolls">
+    <Value>Admin area. Manage Polls</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.ManageNews">
+    <Value>Admin area. Manage News</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.ManageBlog">
+    <Value>Admin area. Manage Blog</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.ManageWidgets">
+    <Value>Admin area. Manage Widgets</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.ManageTopics">
+    <Value>Admin area. Manage Topics</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.ManageForums">
+    <Value>Admin area. Manage Forums</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.ManageMessageTemplates">
+    <Value>Admin area. Manage Message Templates</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.ManageCountries">
+    <Value>Admin area. Manage Countries</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.ManageLanguages">
+    <Value>Admin area. Manage Languages</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.ManageSettings">
+    <Value>Admin area. Manage Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.ManagePaymentMethods">
+    <Value>Admin area. Manage Payment Methods</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.ManageExternalAuthenticationMethods">
+    <Value>Admin area. Manage External Authentication Methods</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.ManageTaxSettings">
+    <Value>Admin area. Manage Tax Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.ManageShippingSettings">
+    <Value>Admin area. Manage Shipping Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.ManageCurrencies">
+    <Value>"Admin area. Manage Currencies</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.ManageMeasures">
+    <Value>Admin area. Manage Measures</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.ManageActivityLog">
+    <Value>Admin area. Manage Activity Log</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.ManageACL">
+    <Value>Admin area. Manage ACL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.ManageEmailAccounts">
+    <Value>Admin area. Manage Email Accounts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.ManageStores">
+    <Value>Admin area. Manage Stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.ManagePlugins">
+    <Value>Admin area. Manage Plugins</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.ManageSystemLog">
+    <Value>Admin area. Manage System Log</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.ManageMessageQueue">
+    <Value>Admin area. Manage Message Queue</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.ManageMaintenance">
+    <Value>Admin area. Manage Maintenance</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.HtmlEditor.ManagePictures">
+    <Value>Admin area. HTML Editor. Manage pictures</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.ManageScheduleTasks">
+    <Value>Admin area. Manage Schedule Tasks</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.DisplayPrices">
+    <Value>Public store. Display Prices</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.EnableShoppingCart">
+    <Value>Public store. Enable shopping cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.EnableWishlist">
+    <Value>Public store. Enable wishlist</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.PublicStoreAllowNavigation">
+    <Value>Public store. Allow navigation</Value>
+  </LocaleResource>
 </Language>
 '
 
