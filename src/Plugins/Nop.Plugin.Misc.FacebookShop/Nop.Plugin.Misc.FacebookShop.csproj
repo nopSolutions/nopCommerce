@@ -30,6 +30,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\..\packages\Autofac.3.1.5\lib\net40\Autofac.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
@@ -74,6 +78,7 @@
     <Compile Include="Extensions\PagerHtmlExtension.cs" />
     <Compile Include="FacebookShopPlugin.cs" />
     <Compile Include="Infrastructure\Cache\ModelCacheEventConsumer.cs" />
+    <Compile Include="Infrastructure\DependencyRegistrar.cs" />
     <Compile Include="Models\CatalogPagingFilteringModel.cs" />
     <Compile Include="Models\CategoryModel.cs" />
     <Compile Include="Models\FooterModel.cs" />
