@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Nop.Services.Stores;
 using NUnit.Framework;
 using Nop.Core.Caching;
 using Nop.Core.Data;
@@ -18,7 +19,7 @@ namespace Nop.Services.Tests.Directory
     public class CurrencyServiceTests : ServiceTest
     {
         IRepository<Currency> _currencyRepository;
-        IRepository<StoreMapping> _storeMappingRepo;
+        IStoreMappingService _storeMappingService;
         CurrencySettings _currencySettings;
         IEventPublisher _eventPublisher;
         ICurrencyService _currencyService;
@@ -73,7 +74,7 @@ namespace Nop.Services.Tests.Directory
             _currencyRepository.Expect(x => x.GetById(currencyEUR.Id)).Return(currencyEUR);
             _currencyRepository.Expect(x => x.GetById(currencyRUR.Id)).Return(currencyRUR);
 
-            _storeMappingRepo = MockRepository.GenerateMock<IRepository<StoreMapping>>();
+            _storeMappingService = MockRepository.GenerateMock<IStoreMappingService>();
 
             var cacheManager = new NopNullCache();
             
@@ -86,7 +87,7 @@ namespace Nop.Services.Tests.Directory
             
             var pluginFinder = new PluginFinder();
             _currencyService = new CurrencyService(cacheManager,
-                _currencyRepository, _storeMappingRepo, 
+                _currencyRepository, _storeMappingService, 
                 _currencySettings, pluginFinder, _eventPublisher);
         }
         

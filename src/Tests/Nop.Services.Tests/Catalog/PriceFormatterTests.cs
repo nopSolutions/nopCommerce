@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
+using Nop.Services.Stores;
 using NUnit.Framework;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -24,7 +25,7 @@ namespace Nop.Services.Tests.Catalog
     public class PriceFormatterTests : ServiceTest
     {
         IRepository<Currency> _currencyRepo;
-        IRepository<StoreMapping> _storeMappingRepo;
+        IStoreMappingService _storeMappingService;
         ICurrencyService _currencyService;
         CurrencySettings _currencySettings;
         IWorkContext _workContext;
@@ -67,10 +68,10 @@ namespace Nop.Services.Tests.Catalog
             _currencyRepo = MockRepository.GenerateMock<IRepository<Currency>>();
             _currencyRepo.Expect(x => x.Table).Return(new List<Currency>() { currency1, currency2 }.AsQueryable());
 
-            _storeMappingRepo = MockRepository.GenerateMock<IRepository<StoreMapping>>();
+            _storeMappingService = MockRepository.GenerateMock<IStoreMappingService>();
 
             var pluginFinder = new PluginFinder();
-            _currencyService = new CurrencyService(cacheManager, _currencyRepo,_storeMappingRepo,
+            _currencyService = new CurrencyService(cacheManager, _currencyRepo, _storeMappingService,
                 _currencySettings, pluginFinder, null);
 
             _taxSettings = new TaxSettings();
