@@ -545,6 +545,9 @@ set @resources='
   <LocaleResource Name="Permission.PublicStoreAllowNavigation">
     <Value>Public store. Allow navigation</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.OnlineCustomers.Fields.LastVisitedPage.Disabled">
+    <Value>"Store last visited page" setting is disabled</Value>
+  </LocaleResource>
 </Language>
 '
 

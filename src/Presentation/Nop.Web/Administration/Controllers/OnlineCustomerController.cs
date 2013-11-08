@@ -75,7 +75,9 @@ namespace Nop.Admin.Controllers
                         LastIpAddress = x.LastIpAddress,
                         Location = _geoLookupService.LookupCountryName(x.LastIpAddress),
                         LastActivityDate = _dateTimeHelper.ConvertToUserTime(x.LastActivityDateUtc, DateTimeKind.Utc),
-                        LastVisitedPage = x.GetAttribute<string>(SystemCustomerAttributeNames.LastVisitedPage)
+                        LastVisitedPage = _customerSettings.StoreLastVisitedPage ?
+                            x.GetAttribute<string>(SystemCustomerAttributeNames.LastVisitedPage) :
+                            _localizationService.GetResource("Admin.Customers.OnlineCustomers.Fields.LastVisitedPage.Disabled")
                     };
                 }),
                 Total = customers.TotalCount

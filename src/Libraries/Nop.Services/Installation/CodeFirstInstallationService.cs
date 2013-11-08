@@ -4697,7 +4697,7 @@ namespace Nop.Services.Installation
                     NewsletterEnabled = true,
                     HideNewsletterBlock = false,
                     OnlineCustomerMinutes = 20,
-                    StoreLastVisitedPage = true,
+                    StoreLastVisitedPage = false,
                     SuffixDeletedCustomers = false,
                 });
 

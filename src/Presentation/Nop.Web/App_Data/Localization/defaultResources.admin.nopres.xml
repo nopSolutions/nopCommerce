@@ -8133,6 +8133,11 @@
                   </LocaleResource>
                   <LocaleResource Name="LastVisitedPage">
                     <Value>Last visited page</Value>
+                    <Children>
+                      <LocaleResource Name="Disabled">
+                        <Value>"Store last visited page" setting is disabled</Value>
+                      </LocaleResource>
+                    </Children>
                   </LocaleResource>
                 </Children>
               </LocaleResource>
