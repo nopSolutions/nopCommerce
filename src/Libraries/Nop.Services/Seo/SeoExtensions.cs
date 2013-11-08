@@ -142,7 +142,7 @@ namespace Nop.Services.Seo
                 if (ensureTwoPublishedLanguages)
                 {
                     var lService = EngineContext.Current.Resolve<ILanguageService>();
-                    var totalPublishedLanguages = lService.GetAllLanguages(false).Count;
+                    var totalPublishedLanguages = lService.GetAllLanguages().Count;
                     loadLocalizedValue = totalPublishedLanguages >= 2;
                 }
                 //localized value

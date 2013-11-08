@@ -91,7 +91,7 @@ namespace Nop.Services.Localization
                 if (ensureTwoPublishedLanguages)
                 {
                     var lService = EngineContext.Current.Resolve<ILanguageService>();
-                    var totalPublishedLanguages = lService.GetAllLanguages(false).Count;
+                    var totalPublishedLanguages = lService.GetAllLanguages().Count;
                     loadLocalizedValue = totalPublishedLanguages >= 2;
                 }
 

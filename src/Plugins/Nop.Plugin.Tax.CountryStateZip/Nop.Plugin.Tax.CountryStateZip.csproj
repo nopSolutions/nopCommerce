@@ -106,11 +106,13 @@
     <Compile Include="Data\TaxRateObjectContext.cs" />
     <Compile Include="DependencyRegistrar.cs" />
     <Compile Include="Domain\TaxRate.cs" />
+    <Compile Include="Infrastructure\Cache\ModelCacheEventConsumer.cs" />
+    <Compile Include="Infrastructure\Cache\TaxRateForCaching.cs" />
+    <Compile Include="Infrastructure\DependencyRegistrar.cs" />
     <Compile Include="Models\TaxRateListModel.cs" />
     <Compile Include="Models\TaxRateModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RouteProvider.cs" />
-    <Compile Include="Services\Extensions.cs" />
     <Compile Include="Services\ITaxRateService.cs" />
     <Compile Include="Services\TaxRateService.cs" />
   </ItemGroup>

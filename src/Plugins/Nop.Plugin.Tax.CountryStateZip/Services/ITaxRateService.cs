@@ -22,17 +22,6 @@ namespace Nop.Plugin.Tax.CountryStateZip.Services
         IPagedList<TaxRate> GetAllTaxRates(int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
-        /// Gets all tax rates
-        /// </summary>
-        /// <param name="taxCategoryId">The tax category identifier</param>
-        /// <param name="countryId">The country identifier</param>
-        /// <param name="stateProvinceId">The state/province identifier</param>
-        /// <param name="zip">The zip</param>
-        /// <returns>Tax rates</returns>
-        IList<TaxRate> GetAllTaxRates(int taxCategoryId, int countryId,
-            int stateProvinceId, string zip);
-
-        /// <summary>
         /// Gets a tax rate
         /// </summary>
         /// <param name="taxRateId">Tax rate identifier</param>

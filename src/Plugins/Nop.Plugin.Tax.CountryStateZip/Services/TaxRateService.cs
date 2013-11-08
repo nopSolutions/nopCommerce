@@ -5,6 +5,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Plugin.Tax.CountryStateZip.Domain;
+using Nop.Services.Events;
 
 namespace Nop.Plugin.Tax.CountryStateZip.Services
 {
@@ -20,6 +21,7 @@ namespace Nop.Plugin.Tax.CountryStateZip.Services
 
         #region Fields
 
+        private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<TaxRate> _taxRateRepository;
         private readonly ICacheManager _cacheManager;
 
@@ -30,11 +32,14 @@ namespace Nop.Plugin.Tax.CountryStateZip.Services
         /// <summary>
         /// Ctor
         /// </summary>
+        /// <param name="eventPublisher">Event publisher</param>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="taxRateRepository">Tax rate repository</param>
-        public TaxRateService(ICacheManager cacheManager,
+        public TaxRateService(IEventPublisher eventPublisher,
+            ICacheManager cacheManager,
             IRepository<TaxRate> taxRateRepository)
         {
+            this._eventPublisher = eventPublisher;
             this._cacheManager = cacheManager;
             this._taxRateRepository = taxRateRepository;
         }
@@ -55,6 +60,9 @@ namespace Nop.Plugin.Tax.CountryStateZip.Services
             _taxRateRepository.Delete(taxRate);
 
             _cacheManager.RemoveByPattern(TAXRATE_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityDeleted(taxRate);
         }
 
         /// <summary>
@@ -72,51 +80,6 @@ namespace Nop.Plugin.Tax.CountryStateZip.Services
                 var records = new PagedList<TaxRate>(query, pageIndex, pageSize);
                 return records;
             });
-        }
-
-        /// <summary>
-        /// Gets all tax rates
-        /// </summary>
-        /// <param name="taxCategoryId">The tax category identifier</param>
-        /// <param name="countryId">The country identifier</param>
-        /// <param name="stateProvinceId">The state/province identifier</param>
-        /// <param name="zip">The zip</param>
-        /// <returns>Tax rates</returns>
-        public virtual IList<TaxRate> GetAllTaxRates(int taxCategoryId, int countryId,
-            int stateProvinceId, string zip)
-        {
-            if (zip == null)
-                zip = string.Empty;
-            zip = zip.Trim();
-
-            var existingRates = GetAllTaxRates().FindTaxRates(countryId, taxCategoryId);
-
-            //filter by state/province
-            var matchedByStateProvince = new List<TaxRate>();
-            foreach (var taxRate in existingRates)
-                if (stateProvinceId == taxRate.StateProvinceId)
-                    matchedByStateProvince.Add(taxRate);
-
-
-            if (matchedByStateProvince.Count == 0)
-                foreach (var taxRate in existingRates)
-                    if (taxRate.StateProvinceId == 0)
-                        matchedByStateProvince.Add(taxRate);
-
-
-            //filter by zip
-            var matchedByZip = new List<TaxRate>();
-            foreach (var taxRate in matchedByStateProvince)
-                if ((String.IsNullOrEmpty(zip) && String.IsNullOrEmpty(taxRate.Zip)) ||
-                    (zip.Equals(taxRate.Zip, StringComparison.InvariantCultureIgnoreCase)))
-                    matchedByZip.Add(taxRate);
-
-            if (matchedByZip.Count == 0)
-                foreach (var taxRate in matchedByStateProvince)
-                    if (String.IsNullOrWhiteSpace(taxRate.Zip))
-                        matchedByZip.Add(taxRate);
-                
-            return matchedByZip;
         }
 
         /// <summary>
@@ -144,6 +107,9 @@ namespace Nop.Plugin.Tax.CountryStateZip.Services
             _taxRateRepository.Insert(taxRate);
 
             _cacheManager.RemoveByPattern(TAXRATE_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityInserted(taxRate);
         }
 
         /// <summary>
@@ -158,6 +124,9 @@ namespace Nop.Plugin.Tax.CountryStateZip.Services
             _taxRateRepository.Update(taxRate);
 
             _cacheManager.RemoveByPattern(TAXRATE_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityUpdated(taxRate);
         }
         #endregion
     }
