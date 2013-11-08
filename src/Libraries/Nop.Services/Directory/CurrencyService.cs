@@ -8,6 +8,7 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Plugins;
 using Nop.Services.Events;
+using Nop.Services.Stores;
 
 namespace Nop.Services.Directory
 {
@@ -29,9 +30,8 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <remarks>
         /// {0} : show hidden records?
-        /// {1} : store ID
         /// </remarks>
-        private const string CURRENCIES_ALL_KEY = "Nop.currency.all-{0}-{1}";
+        private const string CURRENCIES_ALL_KEY = "Nop.currency.all-{0}";
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
@@ -42,7 +42,7 @@ namespace Nop.Services.Directory
         #region Fields
 
         private readonly IRepository<Currency> _currencyRepository;
-        private readonly IRepository<StoreMapping> _storeMappingRepository;
+        private readonly IStoreMappingService _storeMappingService;
         private readonly ICacheManager _cacheManager;
         private readonly CurrencySettings _currencySettings;
         private readonly IPluginFinder _pluginFinder;
@@ -57,20 +57,20 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="currencyRepository">Currency repository</param>
-        /// <param name="storeMappingRepository">Store mapping repository</param>
+        /// <param name="storeMappingService">Store mapping service</param>
         /// <param name="currencySettings">Currency settings</param>
         /// <param name="pluginFinder">Plugin finder</param>
         /// <param name="eventPublisher">Event published</param>
         public CurrencyService(ICacheManager cacheManager,
             IRepository<Currency> currencyRepository,
-            IRepository<StoreMapping> storeMappingRepository,
+            IStoreMappingService storeMappingService,
             CurrencySettings currencySettings,
             IPluginFinder pluginFinder,
             IEventPublisher eventPublisher)
         {
             this._cacheManager = cacheManager;
             this._currencyRepository = currencyRepository;
-            this._storeMappingRepository = storeMappingRepository;
+            this._storeMappingService = storeMappingService;
             this._currencySettings = currencySettings;
             this._pluginFinder = pluginFinder;
             this._eventPublisher = eventPublisher;
@@ -144,8 +144,8 @@ namespace Nop.Services.Directory
         /// <returns>Currencies</returns>
         public virtual IList<Currency> GetAllCurrencies(bool showHidden = false, int storeId = 0)
         {
-            string key = string.Format(CURRENCIES_ALL_KEY, showHidden, storeId);
-            return _cacheManager.Get(key, () =>
+            string key = string.Format(CURRENCIES_ALL_KEY, showHidden);
+            var currencies = _cacheManager.Get(key, () =>
             {
                 var query = _currencyRepository.Table;
                 if (!showHidden)
@@ -153,27 +153,39 @@ namespace Nop.Services.Directory
                 query = query.OrderBy(c => c.DisplayOrder);
 
                 //Store mapping
-                if (storeId > 0)
-                {
-                    query = from c in query
-                            join sm in _storeMappingRepository.Table
-                            on new { c1 = c.Id, c2 = "Currency" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into c_sm
-                            from sm in c_sm.DefaultIfEmpty()
-                            where !c.LimitedToStores || storeId == sm.StoreId
-                            select c;
+                //usually we don't have more than 2-3 currencies
+                //and the code below could generate too complex and heavy SQL code
+                //so let's load all currencies here
+                //and then filter them using "_storeMappingService".
+                //if (storeId > 0)
+                //{
+                //    query = from c in query
+                //            join sm in _storeMappingRepository.Table
+                //            on new { c1 = c.Id, c2 = "Currency" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into c_sm
+                //            from sm in c_sm.DefaultIfEmpty()
+                //            where !c.LimitedToStores || storeId == sm.StoreId
+                //            select c;
 
-                    //only distinct languages (group by ID)
-                    query = from c in query
-                            group c by c.Id
-                            into cGroup
-                            orderby cGroup.Key
-                            select cGroup.FirstOrDefault();
-                    query = query.OrderBy(c => c.DisplayOrder);
-                }
+                //    //only distinct languages (group by ID)
+                //    query = from c in query
+                //            group c by c.Id
+                //            into cGroup
+                //            orderby cGroup.Key
+                //            select cGroup.FirstOrDefault();
+                //    query = query.OrderBy(c => c.DisplayOrder);
+                //}
 
-                var currencies = query.ToList();
-                return currencies;
+                return query.ToList();
             });
+
+            //store mapping
+            if (storeId > 0)
+            {
+                currencies = currencies
+                    .Where(c => _storeMappingService.Authorize(c, storeId))
+                    .ToList();
+            }
+            return currencies;
         }
 
         /// <summary>

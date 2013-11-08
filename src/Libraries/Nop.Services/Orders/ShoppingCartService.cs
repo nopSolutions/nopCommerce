@@ -301,7 +301,7 @@ namespace Nop.Services.Orders
             }
 
             //Store mapping
-            if (!_storeMappingService.Authorize(product, _storeContext.CurrentStore))
+            if (!_storeMappingService.Authorize(product, _storeContext.CurrentStore.Id))
             {
                 warnings.Add(_localizationService.GetResource("ShoppingCart.ProductUnpublished"));
             }

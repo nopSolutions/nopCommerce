@@ -7,6 +7,7 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Stores;
 using Nop.Services.Configuration;
 using Nop.Services.Events;
+using Nop.Services.Stores;
 
 namespace Nop.Services.Localization
 {
@@ -29,9 +30,8 @@ namespace Nop.Services.Localization
         /// </summary>
         /// <remarks>
         /// {0} : show hidden records?
-        /// {1} : store ID
         /// </remarks>
-        private const string LANGUAGES_ALL_KEY = "Nop.language.all-{0}-{1}";
+        private const string LANGUAGES_ALL_KEY = "Nop.language.all-{0}";
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
@@ -42,7 +42,7 @@ namespace Nop.Services.Localization
         #region Fields
 
         private readonly IRepository<Language> _languageRepository;
-        private readonly IRepository<StoreMapping> _storeMappingRepository;
+        private readonly IStoreMappingService _storeMappingService;
         private readonly ICacheManager _cacheManager;
         private readonly ISettingService _settingService;
         private readonly LocalizationSettings _localizationSettings;
@@ -57,20 +57,20 @@ namespace Nop.Services.Localization
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="languageRepository">Language repository</param>
-        /// <param name="storeMappingRepository">Store mapping repository</param>
+        /// <param name="storeMappingService">Store mapping service</param>
         /// <param name="settingService">Setting service</param>
         /// <param name="localizationSettings">Localization settings</param>
         /// <param name="eventPublisher">Event published</param>
         public LanguageService(ICacheManager cacheManager,
             IRepository<Language> languageRepository,
-            IRepository<StoreMapping> storeMappingRepository,
+            IStoreMappingService storeMappingService,
             ISettingService settingService,
             LocalizationSettings localizationSettings,
             IEventPublisher eventPublisher)
         {
             this._cacheManager = cacheManager;
             this._languageRepository = languageRepository;
-            this._storeMappingRepository = storeMappingRepository;
+            this._storeMappingService = storeMappingService;
             this._settingService = settingService;
             this._localizationSettings = localizationSettings;
             this._eventPublisher = eventPublisher;
@@ -120,8 +120,8 @@ namespace Nop.Services.Localization
         /// <returns>Language collection</returns>
         public virtual IList<Language> GetAllLanguages(bool showHidden = false, int storeId = 0)
         {
-            string key = string.Format(LANGUAGES_ALL_KEY, showHidden, storeId);
-            return _cacheManager.Get(key, () =>
+            string key = string.Format(LANGUAGES_ALL_KEY, showHidden);
+            var languages = _cacheManager.Get(key, () =>
             {
                 var query = _languageRepository.Table;
                 if (!showHidden)
@@ -129,28 +129,39 @@ namespace Nop.Services.Localization
                 query = query.OrderBy(l => l.DisplayOrder);
 
                 //Store mapping
-                if (storeId > 0)
-                {
-                    query = from l in query
-                            join sm in _storeMappingRepository.Table
-                            on new { c1 = l.Id, c2 = "Language" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into l_sm
-                            from sm in l_sm.DefaultIfEmpty()
-                            where !l.LimitedToStores || storeId == sm.StoreId
-                            select l;
+                //usually we don't have more than 2-3 languages
+                //and the code below could generate too complex and heavy SQL code
+                //so let's load all languages here
+                //and then filter them using "_storeMappingService".
+                //if (storeId > 0)
+                //{
+                //    query = from l in query
+                //            join sm in _storeMappingRepository.Table
+                //            on new { c1 = l.Id, c2 = "Language" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into l_sm
+                //            from sm in l_sm.DefaultIfEmpty()
+                //            where !l.LimitedToStores || storeId == sm.StoreId
+                //            select l;
 
-                    //only distinct languages (group by ID)
-                    query = from l in query
-                            group l by l.Id
-                            into lGroup
-                            orderby lGroup.Key
-                            select lGroup.FirstOrDefault();
-                    query = query.OrderBy(l => l.DisplayOrder);
-                }
-
-
-                var languages = query.ToList();
-                return languages;
+                //    //only distinct languages (group by ID)
+                //    query = from l in query
+                //            group l by l.Id
+                //            into lGroup
+                //            orderby lGroup.Key
+                //            select lGroup.FirstOrDefault();
+                //    query = query.OrderBy(l => l.DisplayOrder);
+                //}
+                
+                return query.ToList();
             });
+
+            //store mapping
+            if (storeId > 0)
+            {
+                languages = languages
+                    .Where(l => _storeMappingService.Authorize(l, storeId))
+                    .ToList();
+            }
+            return languages;
         }
 
         /// <summary>

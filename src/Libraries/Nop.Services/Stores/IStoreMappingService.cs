@@ -71,8 +71,8 @@ namespace Nop.Services.Stores
         /// </summary>
         /// <typeparam name="T">Type</typeparam>
         /// <param name="entity">Entity</param>
-        /// <param name="store">Store</param>
+        /// <param name="storeId">Store identifier</param>
         /// <returns>true - authorized; otherwise, false</returns>
-        bool Authorize<T>(T entity, Store store) where T : BaseEntity, IStoreMappingSupported;
+        bool Authorize<T>(T entity, int storeId) where T : BaseEntity, IStoreMappingSupported;
     }
 }
