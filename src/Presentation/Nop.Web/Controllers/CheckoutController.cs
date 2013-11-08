@@ -141,7 +141,8 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        protected CheckoutBillingAddressModel PrepareBillingAddressModel(int? selectedCountryId = null)
+        protected CheckoutBillingAddressModel PrepareBillingAddressModel(int? selectedCountryId = null, 
+            bool prePopulateNewAddressWithCustomerFields = false)
         {
             var model = new CheckoutBillingAddressModel();
             //existing addresses
@@ -162,12 +163,15 @@ namespace Nop.Web.Controllers
                 _addressSettings,
                 _localizationService,
                 _stateProvinceService,
-                () => _countryService.GetAllCountriesForBilling());
+                () => _countryService.GetAllCountriesForBilling(),
+                prePopulateNewAddressWithCustomerFields,
+                _workContext.CurrentCustomer);
             return model;
         }
 
         [NonAction]
-        protected CheckoutShippingAddressModel PrepareShippingAddressModel(int? selectedCountryId = null)
+        protected CheckoutShippingAddressModel PrepareShippingAddressModel(int? selectedCountryId = null, 
+            bool prePopulateNewAddressWithCustomerFields = false)
         {
             var model = new CheckoutShippingAddressModel();
             //existing addresses
@@ -188,7 +192,9 @@ namespace Nop.Web.Controllers
                 _addressSettings,
                 _localizationService,
                 _stateProvinceService,
-                () => _countryService.GetAllCountriesForShipping());
+                () => _countryService.GetAllCountriesForShipping(),
+                prePopulateNewAddressWithCustomerFields,
+                _workContext.CurrentCustomer);
             return model;
         }
 
@@ -502,7 +508,7 @@ namespace Nop.Web.Controllers
                 return new HttpUnauthorizedResult();
 
             //model
-            var model = PrepareBillingAddressModel();
+            var model = PrepareBillingAddressModel(prePopulateNewAddressWithCustomerFields: true);
             return View(model);
         }
         public ActionResult SelectBillingAddress(int addressId)
@@ -552,7 +558,7 @@ namespace Nop.Web.Controllers
 
 
             //If we got this far, something failed, redisplay form
-            model = PrepareBillingAddressModel(model.NewAddress.CountryId);
+            model = PrepareBillingAddressModel(selectedCountryId: model.NewAddress.CountryId);
             return View(model);
         }
 
@@ -580,7 +586,7 @@ namespace Nop.Web.Controllers
             }
 
             //model
-            var model = PrepareShippingAddressModel();
+            var model = PrepareShippingAddressModel(prePopulateNewAddressWithCustomerFields: true);
             return View(model);
         }
         public ActionResult SelectShippingAddress(int addressId)
@@ -637,7 +643,7 @@ namespace Nop.Web.Controllers
 
 
             //If we got this far, something failed, redisplay form
-            model = PrepareShippingAddressModel(model.NewAddress.CountryId);
+            model = PrepareShippingAddressModel(selectedCountryId: model.NewAddress.CountryId);
             return View(model);
         }
         
@@ -1143,7 +1149,7 @@ namespace Nop.Web.Controllers
         [ChildActionOnly]
         public ActionResult OpcBillingForm()
         {
-            var billingAddressModel = PrepareBillingAddressModel();
+            var billingAddressModel = PrepareBillingAddressModel(prePopulateNewAddressWithCustomerFields: true);
             return PartialView("OpcBillingAddress", billingAddressModel);
         }
 
@@ -1189,7 +1195,7 @@ namespace Nop.Web.Controllers
                     if (!ModelState.IsValid)
                     {
                         //model is not valid. redisplay the form with errors
-                        var billingAddressModel = PrepareBillingAddressModel(model.NewAddress.CountryId);
+                        var billingAddressModel = PrepareBillingAddressModel(selectedCountryId: model.NewAddress.CountryId);
                         billingAddressModel.NewAddressPreselected = true;
                         return Json(new
                         {
@@ -1230,7 +1236,7 @@ namespace Nop.Web.Controllers
                 if (cart.RequiresShipping())
                 {
                     //shipping is required
-                    var shippingAddressModel = PrepareShippingAddressModel();
+                    var shippingAddressModel = PrepareShippingAddressModel(prePopulateNewAddressWithCustomerFields: true);
                     return Json(new
                     {
                         update_section = new UpdateSectionJsonModel()
@@ -1302,7 +1308,7 @@ namespace Nop.Web.Controllers
                     if (!ModelState.IsValid)
                     {
                         //model is not valid. redisplay the form with errors
-                        var shippingAddressModel = PrepareShippingAddressModel(model.NewAddress.CountryId);
+                        var shippingAddressModel = PrepareShippingAddressModel(selectedCountryId: model.NewAddress.CountryId);
                         shippingAddressModel.NewAddressPreselected = true;
                         return Json(new
                         {

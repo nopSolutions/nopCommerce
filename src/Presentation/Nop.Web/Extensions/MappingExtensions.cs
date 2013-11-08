@@ -4,7 +4,9 @@ using System.Linq;
 using System.Web.Mvc;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
+using Nop.Services.Common;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Seo;
@@ -63,12 +65,16 @@ namespace Nop.Web.Extensions
         /// <param name="localizationService">Localization service (used to prepare a select list)</param>
         /// <param name="stateProvinceService">State service (used to prepare a select list). null to don't prepare the list.</param>
         /// <param name="loadCountries">A function to load countries  (used to prepare a select list). null to don't prepare the list.</param>
+        /// <param name="prePopulateWithCustomerFields">A value indicating whether to pre-populate an address with customer fields entered during registration. It's used only when "address" parameter is set to "null"</param>
+        /// <param name="customer">Customer record which will be used to pre-populate address. Used only when "prePopulateWithCustomerFields" is "true".</param>
         public static void PrepareModel(this AddressModel model,
             Address address, bool excludeProperties, 
             AddressSettings addressSettings,
             ILocalizationService localizationService = null,
             IStateProvinceService stateProvinceService = null,
-            Func<IList<Country>> loadCountries = null)
+            Func<IList<Country>> loadCountries = null,
+            bool prePopulateWithCustomerFields = false,
+            Customer customer = null)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -97,6 +103,25 @@ namespace Nop.Web.Extensions
                 model.ZipPostalCode = address.ZipPostalCode;
                 model.PhoneNumber = address.PhoneNumber;
                 model.FaxNumber = address.FaxNumber;
+            }
+
+            if (address == null && prePopulateWithCustomerFields)
+            {
+                if (customer == null)
+                    throw new Exception("Customer cannot be null when prepopulating an address");
+                model.Email = customer.Email;
+                model.FirstName = customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName);
+                model.LastName = customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName);
+                model.Company = customer.GetAttribute<string>(SystemCustomerAttributeNames.Company);
+                model.Address1 = customer.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress);
+                model.Address2 = customer.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress2);
+                model.ZipPostalCode = customer.GetAttribute<string>(SystemCustomerAttributeNames.ZipPostalCode);
+                model.City = customer.GetAttribute<string>(SystemCustomerAttributeNames.City);
+                //ignore country and state for prepopulation. it can cause some issues when posting pack with errors, etc
+                //model.CountryId = customer.GetAttribute<int>(SystemCustomerAttributeNames.CountryId);
+                //model.StateProvinceId = customer.GetAttribute<int>(SystemCustomerAttributeNames.StateProvinceId);
+                model.PhoneNumber = customer.GetAttribute<string>(SystemCustomerAttributeNames.Phone);
+                model.FaxNumber = customer.GetAttribute<string>(SystemCustomerAttributeNames.Fax);
             }
 
             //countries and states
