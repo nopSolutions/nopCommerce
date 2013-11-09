@@ -86,10 +86,18 @@ namespace Nop.Core.Data
                 );
         }
 
-        public virtual DataSettings LoadSettings()
+        /// <summary>
+        /// Load settings
+        /// </summary>
+        /// <param name="filePath">File path; pass null to use default settings file path</param>
+        /// <returns></returns>
+        public virtual DataSettings LoadSettings(string filePath = null)
         {
-            //use webHelper.MapPath instead of HostingEnvironment.MapPath which is not available in unit tests
-            string filePath = Path.Combine(MapPath("~/App_Data/"), filename);
+            if (String.IsNullOrEmpty(filePath))
+            {
+                //use webHelper.MapPath instead of HostingEnvironment.MapPath which is not available in unit tests
+                filePath = Path.Combine(MapPath("~/App_Data/"), filename);
+            }
             if (File.Exists(filePath))
             {
                 string text = File.ReadAllText(filePath);
