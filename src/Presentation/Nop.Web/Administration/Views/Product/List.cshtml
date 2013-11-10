@@ -119,7 +119,7 @@
                     {
                         columns.Bound(x => x.Id)
                         .Filterable(false)
-                        .ClientTemplate("<input type='checkbox' name='checkedRecords' value='<#= Id #>' class='checkboxGroups'/>")
+                        .ClientTemplate("<input type='checkbox' value='<#= Id #>' class='checkboxGroups'/>")
                         .Title("<input id='mastercheckbox' type='checkbox'/>")
                         .Width(50)
                         .HtmlAttributes(new { style = "text-align:center" })
