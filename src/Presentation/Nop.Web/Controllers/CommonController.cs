@@ -640,12 +640,16 @@ namespace Nop.Web.Controllers
         [ChildActionOnly]
         public ActionResult Favicon()
         {
+            var localFaviconPath = System.IO.Path.Combine(Request.PhysicalApplicationPath, "favicon.ico");
+            if (!System.IO.File.Exists(localFaviconPath))
+            {
+                return Content("");
+            }
+
             var model = new FaviconModel()
             {
-                Uploaded = System.IO.File.Exists(System.IO.Path.Combine(Request.PhysicalApplicationPath, "favicon.ico")),
                 FaviconUrl = _webHelper.GetStoreLocation() + "favicon.ico"
             };
-            
             return PartialView(model);
         }
 
