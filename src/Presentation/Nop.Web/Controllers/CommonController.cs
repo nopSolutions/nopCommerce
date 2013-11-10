@@ -640,15 +640,23 @@ namespace Nop.Web.Controllers
         [ChildActionOnly]
         public ActionResult Favicon()
         {
-            var localFaviconPath = System.IO.Path.Combine(Request.PhysicalApplicationPath, "favicon.ico");
+            //try loading a store specific favicon
+            var faviconFileName = string.Format("favicon-{0}.ico", _storeContext.CurrentStore.Id);
+            var localFaviconPath = System.IO.Path.Combine(Request.PhysicalApplicationPath, faviconFileName);
             if (!System.IO.File.Exists(localFaviconPath))
             {
-                return Content("");
+                //try loading a generic favicon
+                faviconFileName = "favicon.ico";
+                localFaviconPath = System.IO.Path.Combine(Request.PhysicalApplicationPath, faviconFileName);
+                if (!System.IO.File.Exists(localFaviconPath))
+                {
+                    return Content("");
+                }
             }
 
             var model = new FaviconModel()
             {
-                FaviconUrl = _webHelper.GetStoreLocation() + "favicon.ico"
+                FaviconUrl = _webHelper.GetStoreLocation() + faviconFileName
             };
             return PartialView(model);
         }
