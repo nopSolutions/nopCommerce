@@ -39,7 +39,7 @@
                                 <input id="paymentmethod_@(i)" type="radio" name="paymentmethod" value="@(paymentMethod.PaymentMethodSystemName)" checked="@paymentMethod.Selected" />
                                 @if (!String.IsNullOrEmpty(paymentMethod.LogoUrl))
                                 {
-                                    <img src="@paymentMethod.LogoUrl" alt="@paymentMethodName">
+                                    <img src="@paymentMethod.LogoUrl" alt="@paymentMethodName" class="payment-logo" />
                                 }
                                 <label for="paymentmethod_@(i)">@paymentMethodName</label>
                             </div>
