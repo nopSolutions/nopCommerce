@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using System.Web.Routing;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Plugins;
@@ -126,7 +127,12 @@ namespace Nop.Services.Payments
         /// Gets a payment method type
         /// </summary>
         PaymentMethodType PaymentMethodType { get; }
-        
+
+        /// <summary>
+        /// Gets a value indicating whether we should display a payment information page for this plugin
+        /// </summary>
+        bool SkipPaymentInfo { get; }
+
         #endregion
     }
 }

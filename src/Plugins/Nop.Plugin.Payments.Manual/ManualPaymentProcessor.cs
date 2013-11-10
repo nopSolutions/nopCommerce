@@ -320,6 +320,17 @@ namespace Nop.Plugin.Payments.Manual
                 return PaymentMethodType.Standard;
             }
         }
+        
+        /// <summary>
+        /// Gets a value indicating whether we should display a payment information page for this plugin
+        /// </summary>
+        public bool SkipPaymentInfo
+        {
+            get
+            {
+                return false;
+            }
+        }
 
         #endregion
         

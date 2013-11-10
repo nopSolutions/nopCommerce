@@ -880,6 +880,17 @@ namespace Nop.Web.Controllers
             if (paymentMethod == null)
                 return RedirectToRoute("CheckoutPaymentMethod");
 
+            //Check whether payment info should be skipped
+            if (paymentMethod.SkipPaymentInfo)
+            {
+                //skip payment info page
+                var paymentInfo = new ProcessPaymentRequest();
+                //session save
+                _httpContext.Session["OrderPaymentInfo"] = paymentInfo;
+
+                return RedirectToRoute("CheckoutConfirm");
+            }
+
             //model
             var model = PreparePaymentInfoModel(paymentMethod);
             return View(model);
@@ -1050,29 +1061,6 @@ namespace Nop.Web.Controllers
 
         #region Methods (one page checkout)
 
-        public ActionResult OnePageCheckout()
-        {
-            //validation
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
-                .ToList();
-            if (cart.Count == 0)
-                return RedirectToRoute("ShoppingCart");
-
-            if (!UseOnePageCheckout())
-                return RedirectToRoute("Checkout");
-
-            if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
-                return new HttpUnauthorizedResult();
-
-            var model = new OnePageCheckoutModel()
-            {
-                ShippingRequired = cart.RequiresShipping()
-            };
-            return View(model);
-        }
-
         [NonAction]
         protected JsonResult OpcLoadStepAfterShippingMethod(List<ShoppingCartItem> cart)
         {
@@ -1101,17 +1089,7 @@ namespace Nop.Web.Controllers
                         !_pluginFinder.AuthenticateStore(paymentMethodInst.PluginDescriptor, _storeContext.CurrentStore.Id))
                         throw new Exception("Selected payment method can't be parsed");
 
-
-                    var paymenInfoModel = PreparePaymentInfoModel(paymentMethodInst);
-                    return Json(new
-                    {
-                        update_section = new UpdateSectionJsonModel()
-                        {
-                            name = "payment-info",
-                            html = this.RenderPartialViewToString("OpcPaymentInfo", paymenInfoModel)
-                        },
-                        goto_section = "payment_info"
-                    });
+                    return OpcLoadStepAfterPaymentMethod(paymentMethodInst, cart);
                 }
                 else
                 {
@@ -1144,6 +1122,66 @@ namespace Nop.Web.Controllers
                     goto_section = "confirm_order"
                 });
             }
+        }
+
+        [NonAction]
+        protected JsonResult OpcLoadStepAfterPaymentMethod(IPaymentMethod paymentMethod, List<ShoppingCartItem> cart)
+        {
+            if (paymentMethod.SkipPaymentInfo)
+            {
+                //skip payment info page
+                var paymentInfo = new ProcessPaymentRequest();
+                //session save
+                _httpContext.Session["OrderPaymentInfo"] = paymentInfo;
+
+                var confirmOrderModel = PrepareConfirmOrderModel(cart);
+                return Json(new
+                {
+                    update_section = new UpdateSectionJsonModel()
+                    {
+                        name = "confirm-order",
+                        html = this.RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
+                    },
+                    goto_section = "confirm_order"
+                });
+            }
+            else
+            {
+                //return payment info page
+                var paymenInfoModel = PreparePaymentInfoModel(paymentMethod);
+                return Json(new
+                {
+                    update_section = new UpdateSectionJsonModel()
+                    {
+                        name = "payment-info",
+                        html = this.RenderPartialViewToString("OpcPaymentInfo", paymenInfoModel)
+                    },
+                    goto_section = "payment_info"
+                });
+            }
+        }
+
+        public ActionResult OnePageCheckout()
+        {
+            //validation
+            var cart = _workContext.CurrentCustomer.ShoppingCartItems
+                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
+                .ToList();
+            if (cart.Count == 0)
+                return RedirectToRoute("ShoppingCart");
+
+            if (!UseOnePageCheckout())
+                return RedirectToRoute("Checkout");
+
+            if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
+                return new HttpUnauthorizedResult();
+
+            var model = new OnePageCheckoutModel()
+            {
+                ShippingRequired = cart.RequiresShipping()
+            };
+            return View(model);
         }
 
         [ChildActionOnly]
@@ -1517,18 +1555,8 @@ namespace Nop.Web.Controllers
                 //save
                 _genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer,
                     SystemCustomerAttributeNames.SelectedPaymentMethod, paymentmethod, _storeContext.CurrentStore.Id);
-                
 
-                var paymenInfoModel = PreparePaymentInfoModel(paymentMethodInst);
-                return Json(new
-                {
-                    update_section = new UpdateSectionJsonModel()
-                    {
-                        name = "payment-info",
-                        html = this.RenderPartialViewToString("OpcPaymentInfo", paymenInfoModel)
-                    },
-                    goto_section = "payment_info"
-                });
+                return OpcLoadStepAfterPaymentMethod(paymentMethodInst, cart);
             }
             catch (Exception exc)
             {
@@ -1564,8 +1592,7 @@ namespace Nop.Web.Controllers
                     throw new Exception("Payment method is not selected");
 
                 var paymentControllerType = paymentMethod.GetControllerType();
-                var paymentController =
-                    DependencyResolver.Current.GetService(paymentControllerType) as BaseNopPaymentController;
+                var paymentController = DependencyResolver.Current.GetService(paymentControllerType) as BaseNopPaymentController;
                 var warnings = paymentController.ValidatePaymentForm(form);
                 foreach (var warning in warnings)
                     ModelState.AddModelError("", warning);
