@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.Routing;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
@@ -27,6 +21,13 @@ using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Security;
 using Nop.Web.Models.Checkout;
 using Nop.Web.Models.Common;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using System.Web.Routing;
 
 namespace Nop.Web.Controllers
 {
@@ -309,6 +310,7 @@ namespace Nop.Web.Controllers
                 {
                     Name = pm.GetLocalizedFriendlyName(_localizationService, _workContext.WorkingLanguage.Id),
                     PaymentMethodSystemName = pm.PluginDescriptor.SystemName,
+                    LogoUrl = pm.PluginDescriptor.GetLogoUrl(_webHelper)
                 };
                 //payment method additional fee
                 decimal paymentMethodAdditionalFee = _paymentService.GetAdditionalHandlingFee(cart, pm.PluginDescriptor.SystemName);
