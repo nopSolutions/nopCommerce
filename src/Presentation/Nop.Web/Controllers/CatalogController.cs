@@ -2054,7 +2054,7 @@ namespace Nop.Web.Controllers
         public ActionResult RecentlyAddedProductsRss()
         {
             var feed = new SyndicationFeed(
-                                    string.Format("{0}: Recently added products", _storeContext.CurrentStore.Name),
+                                    string.Format("{0}: Recently added products", _storeContext.CurrentStore.GetLocalized(x => x.Name)),
                                     "Information about products",
                                     new Uri(_webHelper.GetStoreLocation(false)),
                                     "RecentlyAddedProductsRSS",

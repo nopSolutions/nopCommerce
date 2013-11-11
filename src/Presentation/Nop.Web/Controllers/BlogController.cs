@@ -219,7 +219,7 @@ namespace Nop.Web.Controllers
         public ActionResult ListRss(int languageId)
         {
             var feed = new SyndicationFeed(
-                                    string.Format("{0}: Blog", _storeContext.CurrentStore.Name),
+                                    string.Format("{0}: Blog", _storeContext.CurrentStore.GetLocalized(x => x.Name)),
                                     "Blog",
                                     new Uri(_webHelper.GetStoreLocation(false)),
                                     "BlogRSS",
@@ -416,7 +416,7 @@ namespace Nop.Web.Controllers
                 return Content("");
 
             string link = string.Format("<link href=\"{0}\" rel=\"alternate\" type=\"application/rss+xml\" title=\"{1}: Blog\" />",
-                Url.RouteUrl("BlogRSS", new { languageId = _workContext.WorkingLanguage.Id }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http"), _storeContext.CurrentStore.Name);
+                Url.RouteUrl("BlogRSS", new { languageId = _workContext.WorkingLanguage.Id }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http"), _storeContext.CurrentStore.GetLocalized(x => x.Name));
 
             return Content(link);
         }

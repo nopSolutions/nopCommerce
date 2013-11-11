@@ -552,7 +552,7 @@ namespace Nop.Plugin.Misc.FacebookShop.Controllers
         {
             var model = new FooterModel()
             {
-                StoreName = _storeContext.CurrentStore.Name
+                StoreName = _storeContext.CurrentStore.GetLocalized(x => x.Name)
             };
 
             return PartialView("Nop.Plugin.Misc.FacebookShop.Views.MiscFacebookShop.Footer", model);

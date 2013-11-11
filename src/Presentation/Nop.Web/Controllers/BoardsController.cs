@@ -273,7 +273,7 @@ namespace Nop.Web.Controllers
             var feedDescription = _localizationService.GetResource("Forum.ActiveDiscussionsFeedDescription");
 
             var feed = new SyndicationFeed(
-                                    string.Format(feedTitle, _storeContext.CurrentStore.Name),
+                                    string.Format(feedTitle, _storeContext.CurrentStore.GetLocalized(x => x.Name)),
                                     feedDescription,
                                     new Uri(url),
                                     "ActiveDiscussionsRSS",
@@ -393,7 +393,7 @@ namespace Nop.Web.Controllers
                 var feedDescription = _localizationService.GetResource("Forum.ForumFeedDescription");
 
                 var feed = new SyndicationFeed(
-                                        string.Format(feedTitle, _storeContext.CurrentStore.Name, forum.Name),
+                                        string.Format(feedTitle, _storeContext.CurrentStore.GetLocalized(x => x.Name), forum.Name),
                                         feedDescription,
                                         new Uri(url),
                                         string.Format("ForumRSS:{0}", forum.Id),

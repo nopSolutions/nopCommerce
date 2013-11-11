@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web.Mvc;
 using Nop.Admin.Models.Stores;
+using Nop.Core.Domain.Stores;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Security;
@@ -16,18 +17,36 @@ namespace Nop.Admin.Controllers
     {
         private readonly IStoreService _storeService;
         private readonly ISettingService _settingService;
+        private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
+        private readonly ILocalizedEntityService _localizedEntityService;
         private readonly IPermissionService _permissionService;
 
         public StoreController(IStoreService storeService,
             ISettingService settingService,
+            ILanguageService languageService,
             ILocalizationService localizationService,
+            ILocalizedEntityService localizedEntityService,
             IPermissionService permissionService)
         {
             this._storeService = storeService;
             this._settingService = settingService;
+            this._languageService = languageService;
             this._localizationService = localizationService;
+            this._localizedEntityService = localizedEntityService;
             this._permissionService = permissionService;
+        }
+
+        [NonAction]
+        protected void UpdateAttributeLocales(Store store, StoreModel model)
+        {
+            foreach (var localized in model.Locales)
+            {
+                _localizedEntityService.SaveLocalizedValue(store,
+                    x => x.Name,
+                    localized.Name,
+                    localized.LanguageId);
+            }
         }
 
         public ActionResult List()
@@ -66,6 +85,8 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var model = new StoreModel();
+            //locales
+            AddLocales(_languageService, model.Locales);
             return View(model);
         }
 
@@ -82,6 +103,8 @@ namespace Nop.Admin.Controllers
                 if (!store.Url.EndsWith("/"))
                     store.Url += "/";
                 _storeService.InsertStore(store);
+                //locales
+                UpdateAttributeLocales(store, model);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Stores.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = store.Id }) : RedirectToAction("List");
@@ -102,6 +125,11 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("List");
 
             var model = store.ToModel();
+            //locales
+            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            {
+                locale.Name = store.GetLocalized(x => x.Name, languageId, false, false);
+            });
             return View(model);
         }
 
@@ -124,6 +152,8 @@ namespace Nop.Admin.Controllers
                 if (!store.Url.EndsWith("/"))
                     store.Url += "/";
                 _storeService.UpdateStore(store);
+                //locales
+                UpdateAttributeLocales(store, model);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Stores.Updated"));
                 return continueEditing ? RedirectToAction("Edit", new { id = store.Id }) : RedirectToAction("List");

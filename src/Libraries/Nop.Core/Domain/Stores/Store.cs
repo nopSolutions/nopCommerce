@@ -1,10 +1,12 @@
 
+using Nop.Core.Domain.Localization;
+
 namespace Nop.Core.Domain.Stores
 {
     /// <summary>
     /// Represents a store
     /// </summary>
-    public partial class Store : BaseEntity
+    public partial class Store : BaseEntity, ILocalizedEntity
     {
         /// <summary>
         /// Gets or sets the store name

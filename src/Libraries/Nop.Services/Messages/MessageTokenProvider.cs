@@ -464,7 +464,7 @@ namespace Nop.Services.Messages
 
         public virtual void AddStoreTokens(IList<Token> tokens, Store store)
         {
-            tokens.Add(new Token("Store.Name", store.Name));
+            tokens.Add(new Token("Store.Name", store.GetLocalized(x => x.Name)));
             tokens.Add(new Token("Store.URL", store.Url, true));
             var defaultEmailAccount = _emailAccountService.GetEmailAccountById(_emailAccountSettings.DefaultEmailAccountId);
             if (defaultEmailAccount == null)

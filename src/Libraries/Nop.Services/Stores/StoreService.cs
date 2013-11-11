@@ -93,7 +93,7 @@ namespace Nop.Services.Stores
             return _cacheManager.Get(key, () =>
             {
                 var query = from s in _storeRepository.Table
-                            orderby s.DisplayOrder, s.Name
+                            orderby s.DisplayOrder, s.Id
                             select s;
                 var stores = query.ToList();
                 return stores;

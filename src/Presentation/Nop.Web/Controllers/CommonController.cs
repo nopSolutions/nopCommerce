@@ -421,7 +421,7 @@ namespace Nop.Web.Controllers
         {
             var model = new FooterModel()
             {
-                StoreName = _storeContext.CurrentStore.Name,
+                StoreName = _storeContext.CurrentStore.GetLocalized(x => x.Name),
                 WishlistEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableWishlist),
                 ShoppingCartEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart),
                 SitemapEnabled = _commonSettings.SitemapEnabled,
