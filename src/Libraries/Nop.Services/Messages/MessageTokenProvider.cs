@@ -819,7 +819,7 @@ namespace Nop.Services.Messages
                 "%Customer.PasswordRecoveryURL%", 
                 "%Customer.AccountActivationURL%", 
                 "%Wishlist.URLForCustomer%", 
-                "NewsLetterSubscription.Email%", 
+                "%NewsLetterSubscription.Email%", 
                 "%NewsLetterSubscription.ActivationUrl%",
                 "%NewsLetterSubscription.DeactivationUrl%", 
                 "%ProductReview.ProductName%", 
