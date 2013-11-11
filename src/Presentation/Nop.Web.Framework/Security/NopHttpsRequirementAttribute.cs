@@ -34,20 +34,18 @@ namespace Nop.Web.Framework.Security
             if (securitySettings.ForceSslForAllPages)
                 //all pages are forced to be SSL no matter of the specified value
                 this.SslRequirement = SslRequirement.Yes;
-
-            var currentConnectionSecured = filterContext.HttpContext.Request.IsSecureConnection;
-            //TODO uncomment currentConnectionSecured = _webHelper.IsCurrentConnectionSecured();
-
+            
             switch (this.SslRequirement)
             {
                 case SslRequirement.Yes:
                     {
+                        var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+                        var currentConnectionSecured = webHelper.IsCurrentConnectionSecured();
                         if (!currentConnectionSecured)
                         {
                             var storeContext = EngineContext.Current.Resolve<IStoreContext>();
                             if (storeContext.CurrentStore.SslEnabled)
                             {
-                                var webHelper = EngineContext.Current.Resolve<IWebHelper>();
                                 //redirect to HTTPS version of page
                                 //string url = "https://" + filterContext.HttpContext.Request.Url.Host + filterContext.HttpContext.Request.RawUrl;
                                 string url = webHelper.GetThisPageUrl(true, true);
@@ -58,10 +56,10 @@ namespace Nop.Web.Framework.Security
                     break;
                 case SslRequirement.No:
                     {
+                        var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+                        var currentConnectionSecured = webHelper.IsCurrentConnectionSecured();
                         if (currentConnectionSecured)
                         {
-                            var webHelper = EngineContext.Current.Resolve<IWebHelper>();
-
                             //redirect to HTTP version of page
                             //string url = "http://" + filterContext.HttpContext.Request.Url.Host + filterContext.HttpContext.Request.RawUrl;
                             string url = webHelper.GetThisPageUrl(true, false);

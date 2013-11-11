@@ -1648,6 +1648,19 @@
           </LocaleResource>
         </Children>
       </LocaleResource>
+      <LocaleResource Name="Nop.Core.Domain.Seo.WwwRequirement">
+        <Children>
+          <LocaleResource Name="NoMatter">
+            <Value>Doesn't matter</Value>
+          </LocaleResource>
+          <LocaleResource Name="WithWww">
+            <Value>Pages should have WWW prefix</Value>
+          </LocaleResource>
+          <LocaleResource Name="WithoutWww">
+            <Value>Pages should not have WWW prefix</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
       <LocaleResource Name="Nop.Core.Domain.Customers.CustomerNameFormat">
         <Children>
           <LocaleResource Name="ShowEmails">

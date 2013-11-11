@@ -5048,6 +5048,14 @@
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
+                  <LocaleResource Name="WwwRequirement">
+                    <Value>WWW prefix requirement</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Choose your store WWW prefix requirement. For example, http://yourStore.com/ could be automatically be redirected to http://www.yourStore.com/</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
                   <LocaleResource Name="EnableJsBundling">
                     <Value>JavaScript bundling and minification</Value>
                     <Children>

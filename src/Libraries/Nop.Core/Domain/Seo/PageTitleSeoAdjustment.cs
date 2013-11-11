@@ -1,7 +1,7 @@
 ﻿namespace Nop.Core.Domain.Seo
 {
     /// <summary>
-    /// Represents an editor type
+    /// Represents a page title SEO adjustment
     /// </summary>
     public enum PageTitleSeoAdjustment
     {

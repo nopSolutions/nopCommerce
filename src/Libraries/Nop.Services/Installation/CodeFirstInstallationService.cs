@@ -4563,6 +4563,7 @@ namespace Nop.Services.Installation
                     EnableJsBundling = true,
                     EnableCssBundling = false,
                     CanonicalUrlsEnabled = false,
+                    WwwRequirement = WwwRequirement.NoMatter,
                     ReservedUrlRecordSlugs = new List<string>()
                     {
                         "admin", 

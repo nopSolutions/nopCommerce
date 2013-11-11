@@ -548,6 +548,21 @@ set @resources='
   <LocaleResource Name="Admin.Customers.OnlineCustomers.Fields.LastVisitedPage.Disabled">
     <Value>"Store last visited page" setting is disabled</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.WwwRequirement">
+    <Value>WWW prefix requirement</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.WwwRequirement.Hint">
+    <Value>Choose your store WWW prefix requirement. For example, http://yourStore.com/ could be automatically be redirected to http://www.yourStore.com/</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Seo.WwwRequirement.NoMatter">
+    <Value>Doesn''t matter</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Seo.WwwRequirement.WithWww">
+    <Value>Pages should have WWW prefix</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Seo.WwwRequirement.WithoutWww">
+    <Value>Pages should not have WWW prefix</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1563,5 +1578,13 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'shippingsettings.bypasss
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'shippingsettings.bypassshippingmethodselectionifonlyone', N'false', 0)
+END
+GO
+
+--a new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'seosettings.wwwrequirement')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'seosettings.wwwrequirement', N'NoMatter', 0)
 END
 GO

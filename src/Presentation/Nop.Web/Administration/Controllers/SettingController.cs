@@ -1838,6 +1838,8 @@ namespace Nop.Admin.Controllers
             model.SeoSettings.DefaultMetaDescription = seoSettings.DefaultMetaDescription;
             model.SeoSettings.ConvertNonWesternChars = seoSettings.ConvertNonWesternChars;
             model.SeoSettings.CanonicalUrlsEnabled = seoSettings.CanonicalUrlsEnabled;
+            model.SeoSettings.WwwRequirement = (int)seoSettings.WwwRequirement;
+            model.SeoSettings.WwwRequirementValues = seoSettings.WwwRequirement.ToSelectList();
             model.SeoSettings.EnableJsBundling = seoSettings.EnableJsBundling;
             model.SeoSettings.EnableCssBundling = seoSettings.EnableCssBundling;
             //override settings
@@ -1850,6 +1852,7 @@ namespace Nop.Admin.Controllers
                 model.SeoSettings.DefaultMetaDescription_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.DefaultMetaDescription, storeScope);
                 model.SeoSettings.ConvertNonWesternChars_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.ConvertNonWesternChars, storeScope);
                 model.SeoSettings.CanonicalUrlsEnabled_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.CanonicalUrlsEnabled, storeScope);
+                model.SeoSettings.WwwRequirement_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.WwwRequirement, storeScope);
                 model.SeoSettings.EnableJsBundling_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.EnableJsBundling, storeScope);
                 model.SeoSettings.EnableCssBundling_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.EnableCssBundling, storeScope);
             }
@@ -2010,6 +2013,7 @@ namespace Nop.Admin.Controllers
             seoSettings.DefaultMetaDescription = model.SeoSettings.DefaultMetaDescription;
             seoSettings.ConvertNonWesternChars = model.SeoSettings.ConvertNonWesternChars;
             seoSettings.CanonicalUrlsEnabled = model.SeoSettings.CanonicalUrlsEnabled;
+            seoSettings.WwwRequirement = (WwwRequirement)model.SeoSettings.WwwRequirement;
             seoSettings.EnableJsBundling = model.SeoSettings.EnableJsBundling;
             seoSettings.EnableCssBundling = model.SeoSettings.EnableCssBundling;
 
@@ -2051,6 +2055,11 @@ namespace Nop.Admin.Controllers
             else if (storeScope > 0)
                 _settingService.DeleteSetting(seoSettings, x => x.CanonicalUrlsEnabled, storeScope);
 
+            if (model.SeoSettings.WwwRequirement_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(seoSettings, x => x.WwwRequirement, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(seoSettings, x => x.WwwRequirement, storeScope);
+            
             if (model.SeoSettings.EnableJsBundling_OverrideForStore || storeScope == 0)
                 _settingService.SaveSetting(seoSettings, x => x.EnableJsBundling, storeScope, false);
             else if (storeScope > 0)

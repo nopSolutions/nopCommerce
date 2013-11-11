@@ -349,6 +349,16 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.WwwRequirement_OverrideForStore, model => model.SeoSettings.WwwRequirement, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.SeoSettings.WwwRequirement):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.SeoSettings.WwwRequirement, Model.SeoSettings.WwwRequirementValues)
+                @Html.ValidationMessageFor(model => model.SeoSettings.WwwRequirement)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.EnableJsBundling_OverrideForStore, model => model.SeoSettings.EnableJsBundling, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.SeoSettings.EnableJsBundling):
             </td>
