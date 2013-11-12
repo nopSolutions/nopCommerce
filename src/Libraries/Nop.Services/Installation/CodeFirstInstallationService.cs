@@ -4833,7 +4833,7 @@ namespace Nop.Services.Installation
             settingService.SaveSetting(new SecuritySettings()
                 {
                     ForceSslForAllPages = false,
-                    EncryptionKey = "273ece6f97dd844d",
+                    EncryptionKey = CommonHelper.GenerateRandomDigitCode(16),
                     AdminAreaAllowedIpAddresses = null,
                 });
 
