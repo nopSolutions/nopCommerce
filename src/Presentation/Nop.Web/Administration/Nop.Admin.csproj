@@ -362,6 +362,7 @@
   <ItemGroup>
     <Content Include="Content\farbtastic\farbtastic.css" />
     <Content Include="Content\jquery.tagit.css" />
+    <Content Include="Content\styles.rtl.css" />
     <Content Include="Scripts\farbtastic.js" />
     <Content Include="Content\farbtastic\marker.png" />
     <Content Include="Content\farbtastic\mask.png" />

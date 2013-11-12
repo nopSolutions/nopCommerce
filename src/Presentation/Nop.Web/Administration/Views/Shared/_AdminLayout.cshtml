@@ -8,9 +8,18 @@
     var usernamesEnabled = EngineContext.Current.Resolve<CustomerSettings>().UsernamesEnabled;
     var currentVersion = NopVersion.CurrentVersion;
 
+    var supportRtl = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Rtl;
+    
     //resources
     Html.AppendCssFileParts("~/Content/jquery-ui-themes/smoothness/jquery-ui-1.10.0.custom.min.css");
-    Html.AppendCssFileParts("~/Administration/Content/styles.css");
+    if (supportRtl)
+    {
+        Html.AppendCssFileParts("~/Administration/Content/styles.rtl.css");
+    }
+    else
+    {
+        Html.AppendCssFileParts("~/Administration/Content/styles.css");
+    }
     Html.AppendScriptParts("~/Administration/Scripts/admin.common.js");
     Html.AppendScriptParts("~/Scripts/jquery-ui-1.10.0.min.js");
     Html.AppendScriptParts("~/Administration/Scripts/jquery.validate.unobtrusive.min.js");
@@ -31,14 +40,14 @@
         .Authorize(StandardPermissionProvider.ManageMaintenance);
 }
 <!DOCTYPE html>
-<html>
+<html @(supportRtl ? Html.Raw("dir=\"rtl\"") : null)>
 <head>
     <title>@adminPageTitle</title>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
     @Html.NopCssFiles(this.Url, ResourceLocation.Head)
     @Html.NopScripts(this.Url, ResourceLocation.Head)
 </head>
-<body>
+<body @(supportRtl ? Html.Raw("class=\"t-rtl\"") : null)>
     <div id="ajaxBusy">
         <span>&nbsp;</span>
     </div>
@@ -54,8 +63,8 @@
                     $(document).ready(function () {
                         $("#restart-application").click(function (e) {
                             showThrobber('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Admin.Header.RestartApplication.Progress").Text))');
-                            });
                         });
+                    });
                 </script>
                 <div class="header">
                     <div class="logo">
@@ -67,7 +76,7 @@
                     @Html.Widget("admin_header_middle")
                     <div class="links">
                         @Html.ActionLink(T("Admin.Header.PublicStore").Text, "Index", "Home", new { area = "" }, null)
-                        @if(canManageMaintenance)
+                        @if (canManageMaintenance)
                         {
                             <span class="separator">|</span>
                             @Html.ActionLink(T("Admin.Header.ClearCache").Text, "ClearCache", "Common")
@@ -142,8 +151,10 @@
     @(Html.Telerik().ScriptRegistrar()
               .jQuery(false)
               .jQueryValidation(false)
-              )
+    )
     @Html.NopCssFiles(this.Url, ResourceLocation.Foot)
     @Html.NopScripts(this.Url, ResourceLocation.Foot)
 </body>
+
 </html>
+
