@@ -78,7 +78,7 @@ a img{border:0;}
 .header .links .separator{color:#FFF;padding:0 3px;}
 .header .login-info{position:absolute;left:5px;top:35px;text-align:right;color:#e7e7e7;font-size:10px;}
 .header .login-info .a{color:#009FFF;text-decoration:none;font-weight:700;}
-.header .version{position:absolute;right:5px;top:55px;text-align:left;color:#e7e7e7;font-size:10px;}
+.header .version{position:absolute;left:5px;top:55px;text-align:left;color:#e7e7e7;font-size:10px;}
 /* MASTER HEADER MENU */
 .header-menu{width:100%;background:url(images/admin-menu-bg.gif) repeat-x;text-transform:capitalize;}
 .header-menu .t-menu .t-link{padding:.6em .97em;}
