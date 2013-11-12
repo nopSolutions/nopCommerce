@@ -267,6 +267,7 @@ namespace Nop.Web.Controllers
                 model.MinOrderSubtotalWarning = string.Format(_localizationService.GetResource("Checkout.MinOrderSubtotalAmount"), _priceFormatter.FormatPrice(minOrderSubtotalAmount, true, false));
             }
             model.TermsOfServiceEnabled = _orderSettings.TermsOfServiceEnabled;
+            model.OnePageCheckoutEnabled = _orderSettings.OnePageCheckoutEnabled;
 
             //gift card and gift card boxes
             model.DiscountBox.Display= _shoppingCartSettings.ShowDiscountBox;

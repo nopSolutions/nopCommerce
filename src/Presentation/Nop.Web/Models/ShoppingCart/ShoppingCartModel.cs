@@ -25,6 +25,8 @@ namespace Nop.Web.Models.ShoppingCart
             ButtonPaymentMethodRouteValues = new List<RouteValueDictionary>();
         }
 
+        public bool OnePageCheckoutEnabled { get; set; }
+
         public bool ShowSku { get; set; }
         public bool ShowProductImages { get; set; }
         public bool IsEditable { get; set; }

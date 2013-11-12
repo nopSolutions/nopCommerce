@@ -483,7 +483,7 @@ namespace Nop.Web.Controllers
             var model = new CheckoutCompletedModel()
             {
                 OrderId = order.Id,
-                OnePageCheckoutEnabled = UseOnePageCheckout()
+                OnePageCheckoutEnabled = _orderSettings.OnePageCheckoutEnabled
             };
 
             return View(model);
