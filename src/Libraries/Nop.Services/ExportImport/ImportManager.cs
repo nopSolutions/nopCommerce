@@ -7,6 +7,8 @@ using Nop.Services.Catalog;
 using Nop.Services.Media;
 using Nop.Services.Seo;
 using OfficeOpenXml;
+using Nop.Core.Domain.Media;
+using System.Collections.Generic;
 
 namespace Nop.Services.ExportImport
 {
@@ -15,11 +17,17 @@ namespace Nop.Services.ExportImport
     /// </summary>
     public partial class ImportManager : IImportManager
     {
+        #region Fields
+
         private readonly IProductService _productService;
         private readonly ICategoryService _categoryService;
         private readonly IManufacturerService _manufacturerService;
         private readonly IPictureService _pictureService;
         private readonly IUrlRecordService _urlRecordService;
+
+        #endregion
+
+        #region Ctor
 
         public ImportManager(IProductService productService, ICategoryService categoryService,
             IManufacturerService manufacturerService, IPictureService pictureService,
@@ -31,6 +39,10 @@ namespace Nop.Services.ExportImport
             this._pictureService = pictureService;
             this._urlRecordService = urlRecordService;
         }
+
+        #endregion
+
+        #region Utilities
 
         protected virtual int GetColumnIndex(string[] properties, string columnName)
         {
@@ -45,6 +57,10 @@ namespace Nop.Services.ExportImport
                     return i + 1; //excel indexes start from 1
             return 0;
         }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Import products from XLSX file
@@ -395,17 +411,38 @@ namespace Nop.Services.ExportImport
                     }
 
                     //pictures
-                    foreach (var picture in new string[] { picture1, picture2, picture3 })
+                    foreach (var picturePath in new string[] { picture1, picture2, picture3 })
                     {
-                        if (String.IsNullOrEmpty(picture))
+                        if (String.IsNullOrEmpty(picturePath))
                             continue;
 
-                        product.ProductPictures.Add(new ProductPicture()
+                        var newPictureBinary = File.ReadAllBytes(picturePath);
+                        var pictureAlreadyExists = false;
+                        if (!newProduct)
                         {
-                            Picture = _pictureService.InsertPicture(File.ReadAllBytes(picture), "image/jpeg", _pictureService.GetPictureSeName(name), true),
-                            DisplayOrder = 1,
-                        });
-                        _productService.UpdateProduct(product);
+                            //compare with existing product pictures
+                            var existingPictures = _pictureService.GetPicturesByProductId(product.Id);
+                            foreach (var existingPicture in existingPictures)
+                            {
+                                var existingBinary = _pictureService.LoadPictureBinary(existingPicture);
+                                if (existingBinary.SequenceEqual(newPictureBinary))
+                                {
+                                    //the same picture content
+                                    pictureAlreadyExists = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (!pictureAlreadyExists)
+                        {
+                            product.ProductPictures.Add(new ProductPicture()
+                            {
+                                Picture = _pictureService.InsertPicture(newPictureBinary, "image/jpeg", _pictureService.GetPictureSeName(name), true),
+                                DisplayOrder = 1,
+                            });
+                            _productService.UpdateProduct(product);
+                        }
                     }
 
                     //update "HasTierPrices" and "HasDiscountsApplied" properties
@@ -419,5 +456,7 @@ namespace Nop.Services.ExportImport
                 }
             }
         }
+
+        #endregion
     }
 }
