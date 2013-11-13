@@ -262,8 +262,14 @@ namespace Nop.Admin.Controllers
             }
 
             //shipping rate coputation methods
-            if (_shippingService.LoadActiveShippingRateComputationMethods()
-                .Count(x => x.ShippingRateComputationMethodType == ShippingRateComputationMethodType.Offline)  > 1)
+            var srcMethods = _shippingService.LoadActiveShippingRateComputationMethods();
+            if (srcMethods.Count == 0)
+                model.Add(new SystemWarningModel()
+                {
+                    Level = SystemWarningLevel.Fail,
+                    Text = _localizationService.GetResource("Admin.System.Warnings.Shipping.NoComputationMethods")
+                });
+            if (srcMethods.Count(x => x.ShippingRateComputationMethodType == ShippingRateComputationMethodType.Offline) > 1)
                 model.Add(new SystemWarningModel()
                 {
                     Level = SystemWarningLevel.Warning,

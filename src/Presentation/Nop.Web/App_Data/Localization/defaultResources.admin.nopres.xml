@@ -10925,8 +10925,11 @@
                   </LocaleResource>
                 </Children>
               </LocaleResource>
-              <LocaleResource Name="Shipping">
+              <LocaleResource Name="NoComputationMethods">
                 <Children>
+                  <LocaleResource Name="OnlyOneOffline">
+                    <Value>No shipping rate computation methods enabled</Value>
+                  </LocaleResource>
                   <LocaleResource Name="OnlyOneOffline">
                     <Value>Only one offline shipping rate computation method is recommended to use</Value>
                   </LocaleResource>

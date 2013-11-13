@@ -563,6 +563,9 @@ set @resources='
   <LocaleResource Name="Enums.Nop.Core.Domain.Seo.WwwRequirement.WithoutWww">
     <Value>Pages should not have WWW prefix</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.Shipping.NoComputationMethods">
+    <Value>No shipping rate computation methods enabled</Value>
+  </LocaleResource>
 </Language>
 '
 
