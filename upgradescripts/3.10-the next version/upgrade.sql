@@ -572,6 +572,12 @@ set @resources='
   <LocaleResource Name="Plugins.Payments.PayPalStandard.Fields.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage.Hint">
     <Value>Enable if a customer should be redirected to the order details page when he clicks "return to store" link on PayPal site WITHOUT completing a payment</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Countries.PublishSelected">
+    <Value>Publish selected</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Countries.UnpublishSelected">
+    <Value>Unpublish selected</Value>
+  </LocaleResource>
 </Language>
 '
 

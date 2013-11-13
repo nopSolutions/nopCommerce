@@ -3032,6 +3032,12 @@
               <LocaleResource Name="Updated">
                 <Value>The country has been updated successfully.</Value>
               </LocaleResource>
+              <LocaleResource Name="PublishSelected">
+                <Value>Publish selected</Value>
+              </LocaleResource>
+              <LocaleResource Name="UnublishSelected">
+                <Value>Unpublish selected</Value>
+              </LocaleResource>
             </Children>
           </LocaleResource>
           <LocaleResource Name="Currencies">

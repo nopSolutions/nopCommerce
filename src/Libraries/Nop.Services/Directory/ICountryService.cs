@@ -43,6 +43,13 @@ namespace Nop.Services.Directory
         Country GetCountryById(int countryId);
 
         /// <summary>
+        /// Get countries by identifiers
+        /// </summary>
+        /// <param name="countryIds">Country identifiers</param>
+        /// <returns>Countries</returns>
+        IList<Country> GetCountriesByIds(int[] countryIds);
+
+        /// <summary>
         /// Gets a country by two letter ISO code
         /// </summary>
         /// <param name="twoLetterIsoCode">Country two letter ISO code</param>

@@ -10,70 +10,191 @@
     </div>
     <div class="options">
         <a href="@Url.Action("Create")" class="t-button">@T("Admin.Common.AddNew")</a>
+        <input type="button" id="publish-selected" class="t-button" value="@T("Admin.Configuration.Countries.PublishSelected")" />
+        <input type="button" id="unpublish-selected" class="t-button" value="@T("Admin.Configuration.Countries.UnpublishSelected")" />
     </div>
 </div>
 <table class="adminContent">
     <tr>
         <td>
             @(Html.Telerik().Grid<CountryModel>()
-                    .Name("countries-grid")
-                    .Columns(columns =>
-                    {
-                        columns.Bound(x => x.Name)
-                            .Width(150)
-                            .Centered();
-                        columns.Bound(x => x.AllowsBilling)
-                            .Template(
-                                @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.AllowsBilling.ToString().ToLowerInvariant() + ".gif")" />
-                            )
-                            .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= AllowsBilling #>.gif' />")
-                            .Centered()
-                            .Width(100);
-                        columns.Bound(x => x.AllowsShipping)
-                            .Template(
-                                @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.AllowsShipping.ToString().ToLowerInvariant() + ".gif")" />
-                            )
-                            .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= AllowsShipping #>.gif' />")
-                            .Centered()
-                            .Width(100);
-                        columns.Bound(x => x.TwoLetterIsoCode)
-                            .Width(50)
-                            .Centered();
-                        columns.Bound(x => x.ThreeLetterIsoCode)
-                            .Width(50)
-                            .Centered();
-                        columns.Bound(x => x.NumericIsoCode)
-                            .Width(50)
-                            .Centered();
-                        columns.Bound(x => x.SubjectToVat)
-                            .Template(
-                                @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.SubjectToVat.ToString().ToLowerInvariant() + ".gif")" />
-                            )
-                            .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= SubjectToVat #>.gif' />")
-                            .Centered()
-                            .Width(100);
-                        columns.Bound(x => x.NumberOfStates)
-                            .Width(50)
-                            .Centered();
-                        columns.Bound(x => x.DisplayOrder)
-                            .Width(50)
-                            .Centered();
-                        columns.Bound(x => x.Published)
-                            .Template(
-                                @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.Published.ToString().ToLowerInvariant() + ".gif")" />
-                            )
-                            .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= Published #>.gif' />")
-                            .Centered()
-                            .Width(100);
-                        columns.Bound(x => x.Id)
-                            .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
-                            .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
-                            .Width(50)
-                            .Centered()
-                            .HeaderTemplate(T("Admin.Common.Edit").Text);
-                    })
-                    .DataBinding(dataBinding => dataBinding.Ajax().Select("CountryList", "Country"))
-                    .EnableCustomBinding(true))
+                  .Name("countries-grid")
+                  .ClientEvents(events => events.OnDataBound("onDataBound"))
+                  .Columns(columns =>
+                           {
+                               columns.Bound(x => x.Id)
+                                   .ClientTemplate("<input type='checkbox' value='<#= Id #>' class='checkboxGroups'/>")
+                                   .Title("<input id='mastercheckbox' type='checkbox'/>")
+                                   .Width(50)
+                                   .HtmlAttributes(new { style = "text-align:center" })
+                                   .HeaderHtmlAttributes(new { style = "text-align:center" });
+
+                               columns.Bound(x => x.Name)
+                                   .Width(150)
+                                   .Centered();
+                               columns.Bound(x => x.AllowsBilling)
+                                   .Template(
+                                       @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.AllowsBilling.ToString().ToLowerInvariant() + ".gif")" />
+                                   )
+                                   .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= AllowsBilling #>.gif' />")
+                                   .Centered()
+                                   .Width(100);
+                               columns.Bound(x => x.AllowsShipping)
+                                   .Template(
+                                       @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.AllowsShipping.ToString().ToLowerInvariant() + ".gif")" />
+                                   )
+                                   .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= AllowsShipping #>.gif' />")
+                                   .Centered()
+                                   .Width(100);
+                               columns.Bound(x => x.TwoLetterIsoCode)
+                                   .Width(50)
+                                   .Centered();
+                               columns.Bound(x => x.ThreeLetterIsoCode)
+                                   .Width(50)
+                                   .Centered();
+                               columns.Bound(x => x.NumericIsoCode)
+                                   .Width(50)
+                                   .Centered();
+                               columns.Bound(x => x.SubjectToVat)
+                                   .Template(
+                                       @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.SubjectToVat.ToString().ToLowerInvariant() + ".gif")" />
+                                   )
+                                   .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= SubjectToVat #>.gif' />")
+                                   .Centered()
+                                   .Width(100);
+                               columns.Bound(x => x.NumberOfStates)
+                                   .Width(50)
+                                   .Centered();
+                               columns.Bound(x => x.DisplayOrder)
+                                   .Width(50)
+                                   .Centered();
+                               columns.Bound(x => x.Published)
+                                   .Template(
+                                       @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.Published.ToString().ToLowerInvariant() + ".gif")" />
+                                   )
+                                   .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= Published #>.gif' />")
+                                   .Centered()
+                                   .Width(100);
+                               columns.Bound(x => x.Id)
+                                   .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
+                                   .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
+                                   .Width(50)
+                                   .Centered()
+                                   .HeaderTemplate(T("Admin.Common.Edit").Text);
+                           })
+                  .DataBinding(dataBinding => dataBinding.Ajax().Select("CountryList", "Country"))
+                  .EnableCustomBinding(true))
         </td>
     </tr>
 </table>
+
+<script type="text/javascript">
+        var selectedIds = [];
+
+        $(document).ready(function () {
+
+            //"publish selected" button
+            $('#publish-selected').click(function (e) {
+                e.preventDefault();
+
+                var postData = {
+                    selectedIds: selectedIds
+                };
+
+                $.ajax({
+                    cache:false,
+                    type: "POST",
+                    url: "@(Url.Action("PublishSelected", "Country"))",
+                    data: postData,
+                    complete: function (data) {
+                        //reload grid
+                        var grid = $('#countries-grid').data('tGrid');
+                        grid.currentPage = 1; //new search. Set page size to 1
+                        grid.ajaxRequest();
+                        //clear selected checkboxes
+                        $('.checkboxGroups').attr('checked', false).change();
+                        selectedIds = [];
+                    },
+                    error:function (xhr, ajaxOptions, thrownError){
+                        alert(thrownError);
+                    },
+                    traditional: true
+                });
+                return false;
+            });
+            
+            //"unpublish selected" button
+            $('#unpublish-selected').click(function (e) {
+                e.preventDefault();
+
+                var postData = {
+                    selectedIds: selectedIds
+                };
+
+                $.ajax({
+                    cache:false,
+                    type: "POST",
+                    url: "@(Url.Action("UnpublishSelected", "Country"))",
+                    data: postData,
+                    complete: function (data) {
+                        //reload grid
+                        var grid = $('#countries-grid').data('tGrid');
+                        grid.currentPage = 1; //new search. Set page size to 1
+                        grid.ajaxRequest();
+                        //clear selected checkboxes
+                        $('.checkboxGroups').attr('checked', false).change();
+                        selectedIds = [];
+                    },
+                    error:function (xhr, ajaxOptions, thrownError){
+                        alert(thrownError);
+                    },
+                    traditional: true
+                });
+                return false;
+            });
+            
+            $('#mastercheckbox').click(function () {
+                $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
+            });
+
+            //wire up checkboxes.
+            $('#countries-grid').on('change', 'input[type=checkbox][id!=mastercheckbox]', function (e) {
+                var $check = $(this);
+                if ($check.is(":checked") == true) {
+                    var checked = jQuery.inArray($check.val(), selectedIds);
+                    if (checked == -1) {
+                        //add id to selectedIds.
+                        selectedIds.push($check.val());
+                    }
+                }
+                else {
+                    var checked = jQuery.inArray($check.val(), selectedIds);
+                    if (checked > -1) {
+                        //remove id from selectedIds.
+                        selectedIds = $.grep(selectedIds, function (item, index) {
+                            return item != $check.val();
+                        });
+                    }
+                }
+                updateMasterCheckbox();
+            });
+        });
+
+    function onDataBound(e) {
+
+        $('#countries-grid input[type=checkbox][id!=mastercheckbox]').each(function () {
+            var currentId = $(this).val();
+            var checked = jQuery.inArray(currentId, selectedIds);
+            //set checked based on if current checkbox's value is in selectedIds.
+            $(this).attr('checked', checked > -1);
+        });
+
+        updateMasterCheckbox();
+    }
+
+    function updateMasterCheckbox() {
+        var numChkBoxes = $('#countries-grid input[type=checkbox][id!=mastercheckbox]').length;
+        var numChkBoxesChecked = $('#countries-grid input[type=checkbox][checked][id!=mastercheckbox]').length;
+        $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
+    }
+</script>

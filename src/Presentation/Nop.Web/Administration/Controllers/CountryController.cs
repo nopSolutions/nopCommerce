@@ -217,6 +217,41 @@ namespace Nop.Admin.Controllers
             }
         }
 
+        [HttpPost]
+        public ActionResult PublishSelected(ICollection<int> selectedIds)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
+                return AccessDeniedView();
+
+            if (selectedIds != null)
+            {
+                var countries = _countryService.GetCountriesByIds(selectedIds.ToArray());
+                foreach (var country in countries)
+                {
+                    country.Published = true;
+                    _countryService.UpdateCountry(country);
+                }
+            }
+
+            return Json(new { Result = true });
+        }
+        [HttpPost]
+        public ActionResult UnpublishSelected(ICollection<int> selectedIds)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
+                return AccessDeniedView();
+
+            if (selectedIds != null)
+            {
+                var countries = _countryService.GetCountriesByIds(selectedIds.ToArray());
+                foreach (var country in countries)
+                {
+                    country.Published = false;
+                    _countryService.UpdateCountry(country);
+                }
+            }
+            return Json(new { Result = true });
+        }
 
         #endregion
 

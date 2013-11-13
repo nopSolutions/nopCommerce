@@ -160,6 +160,31 @@ namespace Nop.Services.Directory
         }
 
         /// <summary>
+        /// Get countries by identifiers
+        /// </summary>
+        /// <param name="countryIds">Country identifiers</param>
+        /// <returns>Countries</returns>
+        public virtual IList<Country> GetCountriesByIds(int[] countryIds)
+        {
+            if (countryIds == null || countryIds.Length == 0)
+                return new List<Country>();
+
+            var query = from c in _countryRepository.Table
+                        where countryIds.Contains(c.Id)
+                        select c;
+            var countries = query.ToList();
+            //sort by passed identifiers
+            var sortedCountries = new List<Country>();
+            foreach (int id in countryIds)
+            {
+                var country = countries.Find(x => x.Id == id);
+                if (country != null)
+                    sortedCountries.Add(country);
+            }
+            return sortedCountries;
+        }
+
+        /// <summary>
         /// Gets a country by two letter ISO code
         /// </summary>
         /// <param name="twoLetterIsoCode">Country two letter ISO code</param>
