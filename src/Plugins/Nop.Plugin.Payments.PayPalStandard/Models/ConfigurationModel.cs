@@ -42,5 +42,9 @@ namespace Nop.Plugin.Payments.PayPalStandard.Models
         [NopResourceDisplayName("Plugins.Payments.PayPalStandard.Fields.IpnUrl")]
         public string IpnUrl { get; set; }
         public bool IpnUrl_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Plugins.Payments.PayPalStandard.Fields.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage")]
+        public bool ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage { get; set; }
+        public bool ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage_OverrideForStore { get; set; }
     }
 }

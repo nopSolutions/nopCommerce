@@ -19,5 +19,11 @@ namespace Nop.Plugin.Payments.PayPalStandard
         public bool PdtValidateOrderTotal { get; set; }
         public bool EnableIpn { get; set; }
         public string IpnUrl { get; set; }
+        /// <summary>
+        /// Enable if a customer should be redirected to the order details page
+        /// when he clicks "return to store" link on PayPal site
+        /// WITHOUT completing a payment
+        /// </summary>
+        public bool ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage { get; set; }
     }
 }

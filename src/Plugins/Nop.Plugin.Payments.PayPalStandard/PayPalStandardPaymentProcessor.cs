@@ -430,8 +430,9 @@ namespace Nop.Plugin.Payments.PayPalStandard
             if (order == null)
                 throw new ArgumentNullException("order");
             
-            //let's ensure that at least 1 minute passed after order is placed
-            if ((DateTime.UtcNow - order.CreatedOnUtc).TotalMinutes < 1)
+            //let's ensure that at least 5 seconds passed after order is placed
+            //P.S. there's no any particular reason for that. we just do it
+            if ((DateTime.UtcNow - order.CreatedOnUtc).TotalSeconds < 5)
                 return false;
 
             return true;
@@ -502,7 +503,9 @@ namespace Nop.Plugin.Payments.PayPalStandard
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.EnableIpn.Hint2", "Leave blank to use the default IPN handler URL.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.IpnUrl", "IPN Handler");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.IpnUrl.Hint", "Specify IPN Handler.");
-            
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage", "Return to order details page");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage.Hint", "Enable if a customer should be redirected to the order details page when he clicks \"return to store\" link on PayPal site WITHOUT completing a payment");
+
             base.Install();
         }
         
@@ -532,6 +535,8 @@ namespace Nop.Plugin.Payments.PayPalStandard
             this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.EnableIpn.Hint2");
             this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.IpnUrl");
             this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.IpnUrl.Hint");
+            this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage");
+            this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage.Hint");
             
             base.Uninstall();
         }

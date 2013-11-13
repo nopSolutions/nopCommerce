@@ -184,6 +184,16 @@
             </td>
         </tr>
         <tr>
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage_OverrideForStore, model => model.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage)
+                @Html.ValidationMessageFor(model => model.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage)
+            </td>
+        </tr>
+        <tr>
             <td colspan="2" width="100%">
                 <input type="submit" name="save" class="t-button" value="@T("Admin.Common.Save")" />
             </td>

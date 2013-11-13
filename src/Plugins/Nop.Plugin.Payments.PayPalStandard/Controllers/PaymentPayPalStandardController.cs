@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Web.Mvc;
 using Nop.Core;
@@ -24,9 +25,11 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
         private readonly IPaymentService _paymentService;
         private readonly IOrderService _orderService;
         private readonly IOrderProcessingService _orderProcessingService;
+        private readonly IStoreContext _storeContext;
         private readonly ILogger _logger;
         private readonly IWebHelper _webHelper;
         private readonly PaymentSettings _paymentSettings;
+        private readonly PayPalStandardPaymentSettings _payPalStandardPaymentSettings;
 
         public PaymentPayPalStandardController(IWorkContext workContext,
             IStoreService storeService, 
@@ -34,8 +37,11 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             IPaymentService paymentService, 
             IOrderService orderService, 
             IOrderProcessingService orderProcessingService, 
-            ILogger logger, IWebHelper webHelper,
-            PaymentSettings paymentSettings)
+            IStoreContext storeContext,
+            ILogger logger, 
+            IWebHelper webHelper,
+            PaymentSettings paymentSettings,
+            PayPalStandardPaymentSettings payPalStandardPaymentSettings)
         {
             this._workContext = workContext;
             this._storeService = storeService;
@@ -43,9 +49,11 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             this._paymentService = paymentService;
             this._orderService = orderService;
             this._orderProcessingService = orderProcessingService;
+            this._storeContext = storeContext;
             this._logger = logger;
             this._webHelper = webHelper;
             this._paymentSettings = paymentSettings;
+            this._payPalStandardPaymentSettings = payPalStandardPaymentSettings;
         }
         
         [AdminAuthorize]
@@ -66,6 +74,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             model.PassProductNamesAndTotals = payPalStandardPaymentSettings.PassProductNamesAndTotals;
             model.EnableIpn = payPalStandardPaymentSettings.EnableIpn;
             model.IpnUrl = payPalStandardPaymentSettings.IpnUrl;
+            model.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage = payPalStandardPaymentSettings.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage;
 
             model.ActiveStoreScopeConfiguration = storeScope;
             if (storeScope > 0)
@@ -79,6 +88,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                 model.PassProductNamesAndTotals_OverrideForStore = _settingService.SettingExists(payPalStandardPaymentSettings, x => x.PassProductNamesAndTotals, storeScope);
                 model.EnableIpn_OverrideForStore = _settingService.SettingExists(payPalStandardPaymentSettings, x => x.EnableIpn, storeScope);
                 model.IpnUrl_OverrideForStore = _settingService.SettingExists(payPalStandardPaymentSettings, x => x.IpnUrl, storeScope);
+                model.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage_OverrideForStore = _settingService.SettingExists(payPalStandardPaymentSettings, x => x.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage, storeScope);
             }
 
             return View("Nop.Plugin.Payments.PayPalStandard.Views.PaymentPayPalStandard.Configure", model);
@@ -106,6 +116,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             payPalStandardPaymentSettings.PassProductNamesAndTotals = model.PassProductNamesAndTotals;
             payPalStandardPaymentSettings.EnableIpn = model.EnableIpn;
             payPalStandardPaymentSettings.IpnUrl = model.IpnUrl;
+            payPalStandardPaymentSettings.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage = model.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage;
 
             /* We do not clear cache after each setting update.
              * This behavior can increase performance because cached settings will not be cleared 
@@ -154,6 +165,11 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                 _settingService.SaveSetting(payPalStandardPaymentSettings, x => x.IpnUrl, storeScope, false);
             else if (storeScope > 0)
                 _settingService.DeleteSetting(payPalStandardPaymentSettings, x => x.IpnUrl, storeScope);
+
+            if (model.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(payPalStandardPaymentSettings, x => x.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(payPalStandardPaymentSettings, x => x.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage, storeScope);
 
             //now clear settings cache
             _settingService.ClearCache();
@@ -525,6 +541,17 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
 
         public ActionResult CancelOrder(FormCollection form)
         {
+            if (_payPalStandardPaymentSettings.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage)
+            {
+                var order = _orderService.SearchOrders(storeId: _storeContext.CurrentStore.Id,
+                    customerId: _workContext.CurrentCustomer.Id, pageSize: 1)
+                    .FirstOrDefault();
+                if (order != null)
+                {
+                    return RedirectToRoute("OrderDetails", new { orderId = order.Id });
+                }
+            }
+
             return RedirectToAction("Index", "Home", new { area = "" });
         }
     }
