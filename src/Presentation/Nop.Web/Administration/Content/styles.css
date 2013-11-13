@@ -122,11 +122,11 @@ table.order-edit td{padding:1px 5px;border:medium none;}
 .product-attributes-input textarea{width:300px;height:150px;}
 /* WARNINGS */
 .system-warnings ul{padding-left:5px;}
-.system-warnings .inprogress,.system-warnings .pass,.system-warnings .fail,.system-warnings .warning{padding-left:40px;display:block;min-height:35px;font-size:120%;vertical-align:middle;}
-.system-warnings .inprogress{background:transparent url(images/warnings-ajax-loader.gif) no-repeat;}
-.system-warnings .pass{background:transparent url(images/warnings-tick.png) no-repeat;}
-.system-warnings .fail{background:transparent url(images/warnings-cross.png) no-repeat;}
-.system-warnings .warning{background:transparent url(images/warnings-warning.png) no-repeat;}
+.system-warnings .inprogress,.system-warnings .pass,.system-warnings .fail,.system-warnings .warning{font-size:120%;vertical-align:middle;padding:10px 40px;display:table-cell;}
+.system-warnings .inprogress{background:transparent url(images/warnings-ajax-loader.gif) no-repeat 0% 50%;}
+.system-warnings .pass{background:transparent url(images/warnings-tick.png) no-repeat 0% 50%;}
+.system-warnings .fail{background:transparent url(images/warnings-cross.png) no-repeat 0% 50%;}
+.system-warnings .warning{background:transparent url(images/warnings-warning.png) no-repeat 0% 50%;}
 .system-warnings .error{color:Red;}
 .system-warnings .suggestion{color:Red;font-style:italic;font-size:120%;}
 .system-warnings ul{list-style:none;}
