@@ -10287,6 +10287,17 @@
           </LocaleResource>
         </Children>
       </LocaleResource>
+      <LocaleResource Name="SearchTermReport">
+        <Value>Popular search keywords</Value>
+        <Children>
+          <LocaleResource Name="Keyword">
+            <Value>Keyword</Value>
+          </LocaleResource>
+          <LocaleResource Name="Count">
+            <Value>Count</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
       <LocaleResource Name="System">
         <Value>System</Value>
         <Children>

@@ -11,6 +11,7 @@ using Nop.Core.Caching;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Plugins;
+using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
@@ -47,6 +48,7 @@ namespace Nop.Admin.Controllers
         private readonly IStoreContext _storeContext;
         private readonly IPermissionService _permissionService;
         private readonly ILocalizationService _localizationService;
+        private readonly ISearchTermService _searchTermService;
 
         #endregion
 
@@ -67,7 +69,8 @@ namespace Nop.Admin.Controllers
             IWorkContext workContext,
             IStoreContext storeContext,
             IPermissionService permissionService, 
-            ILocalizationService localizationService)
+            ILocalizationService localizationService,
+            ISearchTermService searchTermService)
         {
             this._paymentService = paymentService;
             this._shippingService = shippingService;
@@ -85,6 +88,7 @@ namespace Nop.Admin.Controllers
             this._storeContext = storeContext;
             this._permissionService = permissionService;
             this._localizationService = localizationService;
+            this._searchTermService = searchTermService;
         }
 
         #endregion
@@ -473,6 +477,7 @@ namespace Nop.Admin.Controllers
         }
 
         #region Searh engine friendly names
+
         public ActionResult SeNames()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
@@ -544,6 +549,40 @@ namespace Nop.Admin.Controllers
         }
 
         #endregion
+
+        [ChildActionOnly]
+        public ActionResult PopularSearchTermsReport()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+                return AccessDeniedView();
+
+            return PartialView();
+        }
+
+        [HttpPost, GridAction(EnableCustomBinding = true)]
+        public ActionResult PopularSearchTermsReport(GridCommand command)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+                return AccessDeniedView();
+
+            var searchTermRecordLines = _searchTermService.GetStats(command.Page - 1, command.PageSize);
+            var gridModel = new GridModel<SearchTermReportLineModel>
+            {
+                Data = searchTermRecordLines.Select(x =>
+                {
+                    return new SearchTermReportLineModel()
+                    {
+                        Keyword = x.Keyword,
+                        Count = x.Count,
+                    };
+                }),
+                Total = searchTermRecordLines.TotalCount
+            };
+            return new JsonResult
+            {
+                Data = gridModel
+            };
+        }
 
         #endregion
     }

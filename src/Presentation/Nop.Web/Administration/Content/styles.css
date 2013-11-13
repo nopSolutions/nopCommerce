@@ -98,8 +98,9 @@ table.dashboard td.splitcol{width:50%;vertical-align:top;}
 table.dashboard td.rightcol{width:215px;background:#f3f3f3;padding:10px 5px 5px;vertical-align:top;}
 table.stats{margin-top:10px;width:100%;}
 table.stats td.orderaveragereport{width:100%;vertical-align:top;}
-table.stats td.orderstatistics{width:50%;vertical-align:top;}
-table.stats td.customerstatistics{width:50%;vertical-align:top;padding-left:5px;}
+table.stats td.orderstatistics{width:33%;vertical-align:top;}
+table.stats td.customerstatistics{width:33%;vertical-align:top;padding-left:5px;}
+table.stats td.search-term-statistics{width:33%;vertical-align:top;padding-left:5px;}
 table.stats td.bestsellers{width:50%;vertical-align:top;}
 .statisticsTitle{text-align:left;color:#333;font-weight:700;margin-bottom:5px;}
 .nop-news .newsitem{}

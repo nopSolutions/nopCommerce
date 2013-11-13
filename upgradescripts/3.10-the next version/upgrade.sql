@@ -584,6 +584,15 @@ set @resources='
   <LocaleResource Name="Plugins.Tax.CountryStateZip.Fields.Store.Hint">
     <Value>If an asterisk is selected, then this tax rate will apply to all stores.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.SearchTermReport">
+    <Value>Popular search keywords</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SearchTermReport.Keyword">
+    <Value>Keyword</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SearchTermReport.Count">
+    <Value>Count</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1624,5 +1633,22 @@ BEGIN
 		
 		EXEC (''ALTER TABLE [TaxRate] ALTER COLUMN [StoreId] int NOT NULL'')
 	END')
+END
+GO
+
+
+--new table
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[SearchTerm]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+BEGIN
+	CREATE TABLE [dbo].[SearchTerm](
+		[Id] [int] IDENTITY(1,1) NOT NULL,
+		[Keyword] nvarchar(MAX) NOT NULL,
+		[StoreId] int NOT NULL,
+		[Count] int NOT NULL,
+	PRIMARY KEY CLUSTERED 
+	(
+		[Id] ASC
+	)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON)
+	)
 END
 GO

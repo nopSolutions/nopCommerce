@@ -148,6 +148,8 @@
     <Compile Include="Cms\WidgetExtentions.cs" />
     <Compile Include="Cms\WidgetService.cs" />
     <Compile Include="Cms\IWidgetPlugin.cs" />
+    <Compile Include="Common\ISearchTermService.cs" />
+    <Compile Include="Common\SearchTermService.cs" />
     <Compile Include="Common\AddressService.cs" />
     <Compile Include="Common\AddressExtentions.cs" />
     <Compile Include="Common\IMaintenanceService.cs" />

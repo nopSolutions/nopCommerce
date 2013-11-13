@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
@@ -76,6 +77,7 @@ namespace Nop.Web.Controllers
         private readonly IPermissionService _permissionService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IEventPublisher _eventPublisher;
+        private readonly ISearchTermService _searchTermService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IShippingService _shippingService;
 
@@ -123,6 +125,7 @@ namespace Nop.Web.Controllers
             IPermissionService permissionService, 
             ICustomerActivityService customerActivityService,
             IEventPublisher eventPublisher,
+            ISearchTermService searchTermService,
             IProductAttributeParser productAttributeParser,
             IShippingService shippingService,
             MediaSettings mediaSettings,
@@ -165,6 +168,7 @@ namespace Nop.Web.Controllers
             this._permissionService = permissionService;
             this._customerActivityService = customerActivityService;
             this._eventPublisher = eventPublisher;
+            this._searchTermService = searchTermService;
             this._productAttributeParser = productAttributeParser;
             this._shippingService = shippingService;
 
@@ -2924,15 +2928,36 @@ namespace Nop.Web.Controllers
 
                     model.NoResults = !model.Products.Any();
 
+                    //search term statistics
+                    if (!String.IsNullOrEmpty(model.Q))
+                    {
+                        var searchTerm = _searchTermService.GetSearchTermByKeyword(model.Q, _storeContext.CurrentStore.Id);
+                        if (searchTerm != null)
+                        {
+                            searchTerm.Count++;
+                            _searchTermService.UpdateSearchTerm(searchTerm);
+                        }
+                        else
+                        {
+                            searchTerm = new SearchTerm()
+                            {
+                                Keyword = model.Q,
+                                StoreId = _storeContext.CurrentStore.Id,
+                                Count = 1
+                            };
+                            _searchTermService.InsertSearchTerm(searchTerm);
+                        }
+                    }
+
                     //event
                     _eventPublisher.Publish(new ProductSearchEvent()
-                                                {
-                                                    SearchTerm = model.Q,
-                                                    SearchInDescriptions = searchInDescriptions,
-                                                    CategoryIds = categoryIds,
-                                                    ManufacturerId = manufacturerId,
-                                                    WorkingLanguageId = _workContext.WorkingLanguage.Id
-                                                });
+                    {
+                        SearchTerm = model.Q,
+                        SearchInDescriptions = searchInDescriptions,
+                        CategoryIds = categoryIds,
+                        ManufacturerId = manufacturerId,
+                        WorkingLanguageId = _workContext.WorkingLanguage.Id
+                    });
                 }
             }
 

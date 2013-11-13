@@ -49,6 +49,12 @@
                                 </div>
                                 @Html.Action("ReportRegisteredCustomers", "Customer")
                             </td>
+                            <td class="search-term-statistics">
+                                <div class="statisticsTitle">
+                                    @T("Admin.SearchTermReport")
+                                </div>
+                                @Html.Action("PopularSearchTermsReport", "Common")
+                            </td>
                         </tr>
                     </tbody>
                 </table>

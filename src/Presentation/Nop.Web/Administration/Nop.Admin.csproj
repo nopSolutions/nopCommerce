@@ -201,6 +201,7 @@
     <Compile Include="Models\Catalog\CopyProductModel.cs" />
     <Compile Include="Models\Cms\RenderWidgetModel.cs" />
     <Compile Include="Models\Common\LanguageSelectorModel.cs" />
+    <Compile Include="Models\Common\SearchTermReportLineModel.cs" />
     <Compile Include="Models\Common\UrlRecordListModel.cs" />
     <Compile Include="Models\Common\UrlRecordModel.cs" />
     <Compile Include="Models\Common\MaintenanceModel.cs" />
@@ -1188,6 +1189,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shipping\CreateWarehouse.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Common\PopularSearchTermsReport.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

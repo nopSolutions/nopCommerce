@@ -1,0 +1,20 @@
+﻿@{
+    var gridPageSize = 4;
+}
+@using Telerik.Web.Mvc.UI
+<table class="adminContent">
+    <tr>
+        <td>
+            @(Html.Telerik().Grid<SearchTermReportLineModel>()
+                .Name("search-term-report-grid")
+                .Columns(columns =>
+                {
+                    columns.Bound(x => x.Keyword);
+                    columns.Bound(x => x.Count);
+                })
+                .Pageable(settings => settings.PageSize(gridPageSize).Position(GridPagerPosition.Bottom))
+                .DataBinding(dataBinding => dataBinding.Ajax().Select("PopularSearchTermsReport", "Common"))
+                .EnableCustomBinding(true))
+        </td>
+    </tr>
+</table>
