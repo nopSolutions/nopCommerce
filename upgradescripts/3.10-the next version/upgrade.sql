@@ -578,6 +578,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Countries.UnpublishSelected">
     <Value>Unpublish selected</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.CountryStateZip.Fields.Store">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.CountryStateZip.Fields.Store.Hint">
+    <Value>If an asterisk is selected, then this tax rate will apply to all stores.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1601,5 +1607,22 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'seosettings.wwwrequireme
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'seosettings.wwwrequirement', N'NoMatter', 0)
+END
+GO
+
+
+--tax by country/state/zip plugin
+IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[TaxRate]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+BEGIN
+	--new [StoreId] column
+	EXEC ('IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id(''[TaxRate]'') and NAME=''StoreId'')
+	BEGIN
+		ALTER TABLE [TaxRate]
+		ADD [StoreId] int NULL
+
+		exec(''UPDATE [TaxRate] SET [StoreId] = 0'')
+		
+		EXEC (''ALTER TABLE [TaxRate] ALTER COLUMN [StoreId] int NOT NULL'')
+	END')
 END
 GO

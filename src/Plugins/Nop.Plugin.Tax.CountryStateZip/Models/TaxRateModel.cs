@@ -5,6 +5,11 @@ namespace Nop.Plugin.Tax.CountryStateZip.Models
 {
     public class TaxRateModel : BaseNopEntityModel
     {
+        [NopResourceDisplayName("Plugins.Tax.CountryStateZip.Fields.Store")]
+        public int StoreId { get; set; }
+        [NopResourceDisplayName("Plugins.Tax.CountryStateZip.Fields.Store")]
+        public string StoreName { get; set; }
+
         [NopResourceDisplayName("Plugins.Tax.CountryStateZip.Fields.TaxCategory")]
         public int TaxCategoryId { get; set; }
         [NopResourceDisplayName("Plugins.Tax.CountryStateZip.Fields.TaxCategory")]

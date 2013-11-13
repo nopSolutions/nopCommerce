@@ -9,12 +9,15 @@ namespace Nop.Plugin.Tax.CountryStateZip.Models
     {
         public TaxRateListModel()
         {
+            AvailableStores = new List<SelectListItem>();
             AvailableCountries = new List<SelectListItem>();
             AvailableStates = new List<SelectListItem>();
             AvailableTaxCategories = new List<SelectListItem>();
             TaxRates = new List<TaxRateModel>();
         }
 
+        [NopResourceDisplayName("Plugins.Tax.CountryStateZip.Fields.Store")]
+        public int AddStoreId { get; set; }
         [NopResourceDisplayName("Plugins.Tax.CountryStateZip.Fields.Country")]
         public int AddCountryId { get; set; }
         [NopResourceDisplayName("Plugins.Tax.CountryStateZip.Fields.StateProvince")]
@@ -25,6 +28,9 @@ namespace Nop.Plugin.Tax.CountryStateZip.Models
         public int AddTaxCategoryId { get; set; }
         [NopResourceDisplayName("Plugins.Tax.CountryStateZip.Fields.Percentage")]
         public decimal AddPercentage { get; set; }
+
+
+        public IList<SelectListItem> AvailableStores { get; set; }
         public IList<SelectListItem> AvailableCountries { get; set; }
         public IList<SelectListItem> AvailableStates { get; set; }
         public IList<SelectListItem> AvailableTaxCategories { get; set; }

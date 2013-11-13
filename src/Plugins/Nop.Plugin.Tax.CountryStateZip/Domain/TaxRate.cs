@@ -8,6 +8,11 @@ namespace Nop.Plugin.Tax.CountryStateZip.Domain
     public partial class TaxRate : BaseEntity
     {
         /// <summary>
+        /// Gets or sets the store identifier
+        /// </summary>
+        public int StoreId { get; set; }
+
+        /// <summary>
         /// Gets or sets the tax category identifier
         /// </summary>
         public int TaxCategoryId { get; set; }

@@ -16,11 +16,12 @@
                     .DataKeys(keys => keys.Add(x => x.Id).RouteKey("Id"))
                     .Columns(columns =>
                     {
-                        columns.Bound(x => x.CountryName).Width(200).ReadOnly();
-                        columns.Bound(x => x.StateProvinceName).Width(200).ReadOnly();
-                        columns.Bound(x => x.Zip).Width(100);
-                        columns.Bound(x => x.TaxCategoryName).Width(200).ReadOnly();
-                        columns.Bound(x => x.Percentage).Width(100).Format("{0:G29}");
+                        columns.Bound(x => x.StoreName).ReadOnly();
+                        columns.Bound(x => x.CountryName).ReadOnly();
+                        columns.Bound(x => x.StateProvinceName).ReadOnly();
+                        columns.Bound(x => x.Zip);
+                        columns.Bound(x => x.TaxCategoryName).ReadOnly();
+                        columns.Bound(x => x.Percentage).Format("{0:G29}");
                         columns.Command(commands =>
                         {
                             commands.Edit().Text(T("Admin.Common.Edit").Text);
@@ -75,6 +76,15 @@
         <tr>
             <td class="adminTitle" colspan="2">
                 <strong>@T("Plugins.Tax.CountryStateZip.AddRecord.Hint")</strong>
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AddStoreId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.AddStoreId, Model.AvailableStores)
+                @Html.ValidationMessageFor(model => model.AddStoreId)
             </td>
         </tr>
         <tr>

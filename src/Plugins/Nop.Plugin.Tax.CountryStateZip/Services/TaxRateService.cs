@@ -75,7 +75,7 @@ namespace Nop.Plugin.Tax.CountryStateZip.Services
             return _cacheManager.Get(key, () =>
             {
                 var query = from tr in _taxRateRepository.Table
-                            orderby tr.CountryId, tr.StateProvinceId, tr.Zip, tr.TaxCategoryId
+                            orderby tr.StoreId, tr.CountryId, tr.StateProvinceId, tr.Zip, tr.TaxCategoryId
                             select tr;
                 var records = new PagedList<TaxRate>(query, pageIndex, pageSize);
                 return records;
