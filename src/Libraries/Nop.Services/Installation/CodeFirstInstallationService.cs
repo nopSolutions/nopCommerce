@@ -4661,6 +4661,11 @@ namespace Nop.Services.Installation
                 {
                     DefaultAdminLanguageId = _languageRepository.Table.Single(l => l.Name == "English").Id,
                     UseImagesForLanguageSelection = false,
+                    SeoFriendlyUrlsForLanguagesEnabled = false,
+                    LoadAllLocaleRecordsOnStartup = false,
+                    LoadAllLocalizedPropertiesOnStartup = false,
+                    LoadAllUrlRecordsOnStartup = false,
+                    IgnoreRtlPropertyForAdminArea = false,
                 });
 
             settingService.SaveSetting(new CustomerSettings()

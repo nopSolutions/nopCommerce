@@ -1,4 +1,5 @@
 ﻿@using Nop.Core.Domain.Customers
+@using Nop.Core.Domain.Localization
 @using Telerik.Web.Mvc.UI;
 @using Nop.Web.Framework.UI;
 @using Nop.Core;
@@ -8,7 +9,8 @@
     var usernamesEnabled = EngineContext.Current.Resolve<CustomerSettings>().UsernamesEnabled;
     var currentVersion = NopVersion.CurrentVersion;
 
-    var supportRtl = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Rtl;
+    var supportRtl = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Rtl &&
+        !EngineContext.Current.Resolve<LocalizationSettings>().IgnoreRtlPropertyForAdminArea;
     
     //resources
     Html.AppendCssFileParts("~/Content/jquery-ui-themes/smoothness/jquery-ui-1.10.0.custom.min.css");

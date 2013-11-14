@@ -1652,3 +1652,12 @@ BEGIN
 	)
 END
 GO
+
+
+--a new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'localizationsettings.ignorertlpropertyforadminarea')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'localizationsettings.ignorertlpropertyforadminarea', N'false', 0)
+END
+GO
