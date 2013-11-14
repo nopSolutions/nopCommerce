@@ -4,7 +4,17 @@
 
     //title
     Html.AddTitleParts(string.Format(T("PageTitle.ProductsByTag").Text, Model.TagName));
+
+    //canonical URL
+    var canonicalUrlsEnabled = EngineContext.Current.Resolve<SeoSettings>().CanonicalUrlsEnabled;
+    if (canonicalUrlsEnabled)
+    {
+        var productsByTagUrl = Url.RouteUrl("ProductsByTag", new { productTagId = Model.Id, SeName = Model.TagName }, this.Request.Url.Scheme);
+        Html.AddCanonicalUrlParts(productsByTagUrl);
+    }
 }
+@using Nop.Core.Domain.Seo
+@using Nop.Core.Infrastructure
 @using Nop.Web.Models.Catalog;
 @using Nop.Web.Extensions;
 <div class="page product-tag-page">
