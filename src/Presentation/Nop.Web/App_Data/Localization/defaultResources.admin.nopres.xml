@@ -3690,6 +3690,20 @@
                   </LocaleResource>
                 </Children>
               </LocaleResource>
+              <LocaleResource Name="MethodRestrictions">
+                <Value>Payment method restrictions</Value>
+                <Children>
+                  <LocaleResource Name="Country">
+                    <Value>Country</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Description">
+                    <Value>Please mark the checkbox(es) for the country or countries in which you want the payment method(s) not available</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Updated">
+                    <Value>Settings have been updated successfully</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
             </Children>
           </LocaleResource>
           <LocaleResource Name="Plugins">

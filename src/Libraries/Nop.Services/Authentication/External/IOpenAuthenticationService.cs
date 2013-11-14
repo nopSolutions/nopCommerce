@@ -10,7 +10,7 @@ namespace Nop.Services.Authentication.External
         /// <summary>
         /// Load active external authentication methods
         /// </summary>
-        /// <param name="storeId">Load records allows only in specified store; pass 0 to load all records</param>
+        /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <returns>Payment methods</returns>
         IList<IExternalAuthenticationMethod> LoadActiveExternalAuthenticationMethods(int storeId = 0);
 
@@ -24,7 +24,7 @@ namespace Nop.Services.Authentication.External
         /// <summary>
         /// Load all external authentication methods
         /// </summary>
-        /// <param name="storeId">Load records allows only in specified store; pass 0 to load all records</param>
+        /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <returns>External authentication methods</returns>
         IList<IExternalAuthenticationMethod> LoadAllExternalAuthenticationMethods(int storeId = 0);
 

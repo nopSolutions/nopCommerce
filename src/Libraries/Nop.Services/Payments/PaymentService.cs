@@ -5,6 +5,7 @@ using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Plugins;
+using Nop.Services.Configuration;
 
 namespace Nop.Services.Payments
 {
@@ -17,6 +18,7 @@ namespace Nop.Services.Payments
 
         private readonly PaymentSettings _paymentSettings;
         private readonly IPluginFinder _pluginFinder;
+        private readonly ISettingService _settingService;
         private readonly ShoppingCartSettings _shoppingCartSettings;
         #endregion
 
@@ -27,12 +29,16 @@ namespace Nop.Services.Payments
         /// </summary>
         /// <param name="paymentSettings">Payment settings</param>
         /// <param name="pluginFinder">Plugin finder</param>
+        /// <param name="settingService">Setting service</param>
         /// <param name="shoppingCartSettings">Shopping cart settings</param>
-        public PaymentService(PaymentSettings paymentSettings, IPluginFinder pluginFinder,
+        public PaymentService(PaymentSettings paymentSettings, 
+            IPluginFinder pluginFinder,
+            ISettingService settingService,
             ShoppingCartSettings shoppingCartSettings)
         {
             this._paymentSettings = paymentSettings;
             this._pluginFinder = pluginFinder;
+            this._settingService = settingService;
             this._shoppingCartSettings = shoppingCartSettings;
         }
 
@@ -44,11 +50,12 @@ namespace Nop.Services.Payments
         /// Load active payment methods
         /// </summary>
         /// <param name="filterByCustomerId">Filter payment methods by customer; null to load all records</param>
-        /// <param name="storeId">Load records allows only in specified store; pass 0 to load all records</param>
+        /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
+        /// <param name="filterByCountryId">Load records allowed only in a specified country; pass 0 to load all records</param>
         /// <returns>Payment methods</returns>
-        public virtual IList<IPaymentMethod> LoadActivePaymentMethods(int? filterByCustomerId = null, int storeId = 0)
+        public virtual IList<IPaymentMethod> LoadActivePaymentMethods(int? filterByCustomerId = null, int storeId = 0, int filterByCountryId = 0)
         {
-            return LoadAllPaymentMethods(storeId)
+            return LoadAllPaymentMethods(storeId, filterByCountryId)
                    .Where(provider => _paymentSettings.ActivePaymentMethodSystemNames.Contains(provider.PluginDescriptor.SystemName, StringComparer.InvariantCultureIgnoreCase))
                    .ToList();
         }
@@ -70,13 +77,59 @@ namespace Nop.Services.Payments
         /// <summary>
         /// Load all payment providers
         /// </summary>
-        /// <param name="storeId">Load records allows only in specified store; pass 0 to load all records</param>
+        /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
+        /// <param name="filterByCountryId">Load records allowed only in a specified country; pass 0 to load all records</param>
         /// <returns>Payment providers</returns>
-        public virtual IList<IPaymentMethod> LoadAllPaymentMethods(int storeId = 0)
+        public virtual IList<IPaymentMethod> LoadAllPaymentMethods(int storeId = 0, int filterByCountryId = 0)
         {
-            return _pluginFinder.GetPlugins<IPaymentMethod>(storeId: storeId).ToList();
+            var paymentMethods = _pluginFinder.GetPlugins<IPaymentMethod>(storeId: storeId).ToList();
+            if (filterByCountryId == 0)
+                return paymentMethods;
+
+            //filter by country
+            var paymentMetodsByCountry = new List<IPaymentMethod>();
+            foreach (var pm in paymentMethods)
+            {
+                var restictedCountryIds = GetRestictedCountryIds(pm);
+                if (!restictedCountryIds.Contains(filterByCountryId))
+                {
+                    paymentMetodsByCountry.Add(pm);
+                }
+            }
+            return paymentMetodsByCountry;
         }
 
+        /// <summary>
+        /// Gets a list of coutnry identifiers in which a certain payment method is now allowed
+        /// </summary>
+        /// <param name="paymentMethod">Payment method</param>
+        /// <returns>A list of country identifiers</returns>
+        public virtual IList<int> GetRestictedCountryIds(IPaymentMethod paymentMethod)
+        {
+            if (paymentMethod == null)
+                throw new ArgumentNullException("paymentMethod");
+
+            var settingKey = string.Format("PaymentMethodRestictions.{0}", paymentMethod.PluginDescriptor.SystemName);
+            var restictedCountryIds = _settingService.GetSettingByKey<List<int>>(settingKey);
+            if (restictedCountryIds == null)
+                restictedCountryIds = new List<int>();
+            return restictedCountryIds;
+        }
+
+        /// <summary>
+        /// Saves a list of coutnry identifiers in which a certain payment method is now allowed
+        /// </summary>
+        /// <param name="paymentMethod">Payment method</param>
+        /// <param name="countryIds">A list of country identifiers</param>
+        public virtual void SaveRestictedCountryIds(IPaymentMethod paymentMethod, List<int> countryIds)
+        {
+            if (paymentMethod == null)
+                throw new ArgumentNullException("paymentMethod");
+
+            //we should be sure that countryIds is of type List<int> (not IList<int>)
+            var settingKey = string.Format("PaymentMethodRestictions.{0}", paymentMethod.PluginDescriptor.SystemName);
+            _settingService.SetSetting<List<int>>(settingKey, countryIds);
+        }
 
 
         /// <summary>

@@ -20,7 +20,7 @@ namespace Nop.Core.Plugins
         /// </summary>
         /// <typeparam name="T">The type of plugins to get.</typeparam>
         /// <param name="installedOnly">A value indicating whether to load only installed plugins</param>
-        /// <param name="storeId">Load records allows only in specified store; pass 0 to load all records</param>
+        /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <returns>Plugins</returns>
         IEnumerable<T> GetPlugins<T>(bool installedOnly = true, int storeId = 0) where T : class, IPlugin;
 
@@ -28,7 +28,7 @@ namespace Nop.Core.Plugins
         /// Get plugin descriptors
         /// </summary>
         /// <param name="installedOnly">A value indicating whether to load only installed plugins</param>
-        /// <param name="storeId">Load records allows only in specified store; pass 0 to load all records</param>
+        /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <returns>Plugin descriptors</returns>
         IEnumerable<PluginDescriptor> GetPluginDescriptors(bool installedOnly = true, int storeId = 0);
 
@@ -37,7 +37,7 @@ namespace Nop.Core.Plugins
         /// </summary>
         /// <typeparam name="T">The type of plugin to get.</typeparam>
         /// <param name="installedOnly">A value indicating whether to load only installed plugins</param>
-        /// <param name="storeId">Load records allows only in specified store; pass 0 to load all records</param>
+        /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <returns>Plugin descriptors</returns>
         IEnumerable<PluginDescriptor> GetPluginDescriptors<T>(bool installedOnly = true, int storeId = 0) where T : class, IPlugin;
 

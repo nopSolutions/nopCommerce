@@ -593,6 +593,18 @@ set @resources='
   <LocaleResource Name="Admin.SearchTermReport.Count">
     <Value>Count</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Payment.MethodRestrictions">
+    <Value>Payment methods restrictions</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Payment.MethodRestrictions.Updated">
+    <Value>Settings have been updated successfully</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Payment.MethodRestrictions.Country">
+    <Value>Country</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Payment.MethodRestrictions.Description">
+    <Value>Please mark the checkbox(es) for the country or countries in which you want the payment method(s) not available</Value>
+  </LocaleResource>
 </Language>
 '
 
