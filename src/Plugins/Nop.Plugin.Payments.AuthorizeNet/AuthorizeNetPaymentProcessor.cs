@@ -162,8 +162,9 @@ namespace Nop.Plugin.Payments.AuthorizeNet
             form.Add("x_zip", customer.BillingAddress.ZipPostalCode);
             if (customer.BillingAddress.Country != null)
                 form.Add("x_country", customer.BillingAddress.Country.TwoLetterIsoCode);
-            //20 chars maximum
+            //x_invoice_num is 20 chars maximum. hece we also pass x_description
             form.Add("x_invoice_num", processPaymentRequest.OrderGuid.ToString().Substring(0, 20));
+            form.Add("x_description", string.Format("Full order #{0}", processPaymentRequest.OrderGuid));
             form.Add("x_customer_ip", _webHelper.GetCurrentIpAddress());
 
             string reply = null;
@@ -333,7 +334,9 @@ namespace Nop.Plugin.Payments.AuthorizeNet
             var lastFourDigitsCardNumber = maskedCreditCardNumberDecrypted.Substring(maskedCreditCardNumberDecrypted.Length - 4);
             form.Add("x_card_num", lastFourDigitsCardNumber); // only last four digits are required for doing a credit
             form.Add("x_amount", refundPaymentRequest.AmountToRefund.ToString("0.00", CultureInfo.InvariantCulture));
+            //x_invoice_num is 20 chars maximum. hece we also pass x_description
             form.Add("x_invoice_num", refundPaymentRequest.Order.OrderGuid.ToString().Substring(0, 20));
+            form.Add("x_description", string.Format("Full order #{0}", refundPaymentRequest.Order.OrderGuid));
             form.Add("x_type", "CREDIT");
             
             // Send Request to Authorize and Get Response
