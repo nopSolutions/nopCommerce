@@ -6090,6 +6090,51 @@
                   </LocaleResource>
                 </Children>
               </LocaleResource>
+              <LocaleResource Name="Vendor">
+                <Value>Vendor settings</Value>
+                <Children>
+                  <LocaleResource Name="PageSize">
+                    <Value>Page size</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Set the page size for products on the vendor details page e.g. ''4'' products per page.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="AllowCustomersToSelectPageSize">
+                    <Value>Allow customers to select page size</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Whether customers are allowed to select a page size from a predefined list of options on the vendor details page.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="PageSizeOptions">
+                    <Value>Page size options (comma separated)</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Comma separated list of page size options (e.g. 10, 5, 15, 20). First option is the default page size if none are selected.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="VendorsBlockItemsToDisplay">
+                    <Value>Number of vendors to display</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Enter the number of vendors to display in vendor navigation block.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="ShowVendorOnProductDetailsPage">
+                    <Value>Show vendor on product details page</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Check to display a vendor name on the product details page (if associated)</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
             </Children>
           </LocaleResource>
           <LocaleResource Name="Shipping">

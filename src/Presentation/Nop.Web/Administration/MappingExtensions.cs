@@ -39,6 +39,7 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Topics;
+using Nop.Core.Domain.Vendors;
 using Nop.Core.Plugins;
 using Nop.Services.Authentication.External;
 using Nop.Services.Cms;
@@ -759,6 +760,20 @@ namespace Nop.Admin
             return Mapper.Map<BlogSettingsModel, BlogSettings>(model);
         }
         public static BlogSettings ToEntity(this BlogSettingsModel model, BlogSettings destination)
+        {
+            return Mapper.Map(model, destination);
+        }
+
+
+        public static VendorSettingsModel ToModel(this VendorSettings entity)
+        {
+            return Mapper.Map<VendorSettings, VendorSettingsModel>(entity);
+        }
+        public static VendorSettings ToEntity(this VendorSettingsModel model)
+        {
+            return Mapper.Map<VendorSettingsModel, VendorSettings>(model);
+        }
+        public static VendorSettings ToEntity(this VendorSettingsModel model, VendorSettings destination)
         {
             return Mapper.Map(model, destination);
         }

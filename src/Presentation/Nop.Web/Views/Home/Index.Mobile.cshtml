@@ -13,6 +13,8 @@
         @Html.Action("CategoryNavigation", "Catalog", new { currentCategoryId = 0, currentProductId = 0 })
         @*manufacturers*@
         @Html.Action("ManufacturerNavigation", "Catalog", new { currentManufacturerId = 0 })
+        @*vendors*@
+        @Html.Action("VendorNavigation", "Catalog")
         @*home page products*@ @*uncomment the line below to show home page featured products*@
         @*@Html.Action("HomepageProducts", "Catalog")*@
         @Html.Widget("mobile_home_page_bottom")

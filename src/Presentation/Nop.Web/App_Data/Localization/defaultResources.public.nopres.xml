@@ -3598,6 +3598,9 @@
           </LocaleResource>
         </Children>
       </LocaleResource>
+      <LocaleResource Name="Vendor">
+        <Value>Vendor</Value>
+      </LocaleResource>
     </Children>
   </LocaleResource>
   <LocaleResource Name="Profile">
@@ -4218,6 +4221,33 @@
       </LocaleResource>
       <LocaleResource Name="WrongPassword">
         <Value>Wrong password</Value>
+      </LocaleResource>
+    </Children>
+  </LocaleResource>
+  <LocaleResource Name="Vendors">
+    <Value>Vendors</Value>
+    <Children>
+      <LocaleResource Name="OrderBy">
+        <Value>Sort by</Value>
+      </LocaleResource>
+      <LocaleResource Name="ViewMode">
+        <Value>View as</Value>
+        <Children>
+          <LocaleResource Name="Grid">
+            <Value>Grid</Value>
+          </LocaleResource>
+          <LocaleResource Name="List">
+            <Value>List</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
+      <LocaleResource Name="PageSize">
+        <Value>Display</Value>
+        <Children>
+          <LocaleResource Name="PerPage">
+            <Value>per page</Value>
+          </LocaleResource>
+        </Children>
       </LocaleResource>
     </Children>
   </LocaleResource>

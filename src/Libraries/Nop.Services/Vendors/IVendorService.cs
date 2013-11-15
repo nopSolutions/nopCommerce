@@ -28,7 +28,7 @@ namespace Nop.Services.Vendors
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Vendors</returns>
-        IPagedList<Vendor> GetAllVendors(int pageIndex, int pageSize, bool showHidden = false);
+        IPagedList<Vendor> GetAllVendors(int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false);
 
         /// <summary>
         /// Inserts a vendor

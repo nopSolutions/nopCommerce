@@ -31,6 +31,7 @@ using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tasks;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Topics;
+using Nop.Core.Domain.Vendors;
 using Nop.Core.IO;
 using Nop.Core.Infrastructure;
 using Nop.Services.Common;
@@ -4959,6 +4960,15 @@ namespace Nop.Services.Installation
                     ForumFeedCount = 10,
                     ForumSearchTermMinimumLength = 3,
                 });
+            
+            settingService.SaveSetting(new VendorSettings()
+            {
+                PageSize = 15,
+                AllowCustomersToSelectPageSize = true,
+                PageSizeOptions = "4, 2, 8, 12",
+                VendorsBlockItemsToDisplay = 0,
+                ShowVendorOnProductDetailsPage = true,
+            });
 
             var eaGeneral = _emailAccountRepository.Table.FirstOrDefault();
             if (eaGeneral == null)

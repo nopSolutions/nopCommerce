@@ -19,6 +19,7 @@ namespace Nop.Web.Models.Catalog
             AddToCart = new AddToCartModel();
             ProductVariantAttributes = new List<ProductVariantAttributeModel>();
             AssociatedProducts = new List<ProductDetailsModel>();
+            VendorModel = new VendorBriefInfoModel();
         }
 
         //picture(s)
@@ -43,6 +44,9 @@ namespace Nop.Web.Models.Catalog
 
         public bool ShowGtin { get; set; }
         public string Gtin { get; set; }
+
+        public bool ShowVendor { get; set; }
+        public VendorBriefInfoModel VendorModel { get; set; }
 
         public bool HasSampleDownload { get; set; }
 

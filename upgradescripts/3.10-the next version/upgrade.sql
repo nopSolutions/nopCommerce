@@ -605,6 +605,63 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Payment.MethodRestrictions.Description">
     <Value>Please mark the checkbox(es) for the country or countries in which you want the payment method(s) not available</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor">
+    <Value>Vendor settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.PageSize">
+    <Value>Page size</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.PageSize.Hint">
+    <Value>Set the page size for products on the vendor details page e.g. ''4'' products per page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AllowCustomersToSelectPageSize">
+    <Value>Allow customers to select page size</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AllowCustomersToSelectPageSize.Hint">
+    <Value>Whether customers are allowed to select a page size from a predefined list of options on the vendor details page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.PageSizeOptions">
+    <Value>Page size options (comma separated)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.PageSizeOptions.Hint">
+    <Value>Comma separated list of page size options (e.g. 10, 5, 15, 20). First option is the default page size if none are selected.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.VendorsBlockItemsToDisplay">
+    <Value>Number of vendors to display</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.VendorsBlockItemsToDisplay.Hint">
+    <Value>Enter the number of vendors to display in vendor navigation block.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.ShowVendorOnProductDetailsPage">
+    <Value>Show vendor on product details page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.ShowVendorOnProductDetailsPage.Hint">
+    <Value>Check to display a vendor name on the product details page (if associated)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Vendors">
+    <Value>Vendors</Value>
+  </LocaleResource>
+  <LocaleResource Name="Vendors.OrderBy">
+    <Value>Sort by</Value>
+  </LocaleResource>
+  <LocaleResource Name="Vendors.ViewMode">
+    <Value>View as</Value>
+  </LocaleResource>
+  <LocaleResource Name="Vendors.ViewMode.Grid">
+    <Value>Grid</Value>
+  </LocaleResource>
+  <LocaleResource Name="Vendors.ViewMode.List">
+    <Value>List</Value>
+  </LocaleResource>
+  <LocaleResource Name="Vendors.PageSize">
+    <Value>Display</Value>
+  </LocaleResource>
+  <LocaleResource Name="Vendors.PageSize.PerPage">
+    <Value>per page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Vendor">
+    <Value>Vendor</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1671,5 +1728,46 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'localizationsettings.ign
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'localizationsettings.ignorertlpropertyforadminarea', N'false', 0)
+END
+GO
+
+
+--a new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'vendorsettings.pagesize')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'vendorsettings.pagesize', N'8', 0)
+END
+GO
+
+--a new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'vendorsettings.allowcustomerstoselectpagesize')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'vendorsettings.allowcustomerstoselectpagesize', N'true', 0)
+END
+GO
+
+--a new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'vendorsettings.pagesizeoptions')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'vendorsettings.pagesizeoptions', N'4, 2, 8, 12', 0)
+END
+GO
+
+--a new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'vendorsettings.vendorsblockitemstodisplay')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'vendorsettings.vendorsblockitemstodisplay', N'0', 0)
+END
+GO
+
+--a new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'vendorsettings.showvendoronproductdetailspage')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'vendorsettings.showvendoronproductdetailspage', N'true', 0)
 END
 GO

@@ -1,0 +1,90 @@
+﻿@model VendorModel
+@{
+    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+    Html.AddTitleParts(Model.Name);
+
+    var canonicalUrlsEnabled = EngineContext.Current.Resolve<SeoSettings>().CanonicalUrlsEnabled;
+    if (canonicalUrlsEnabled)
+    {
+        var vendorUrl = Url.RouteUrl("Vendor", new { SeName = Model.SeName }, this.Request.Url.Scheme);
+        Html.AddCanonicalUrlParts(vendorUrl);
+    }
+}
+@using Nop.Core.Domain.Seo;
+@using Nop.Core.Infrastructure;
+@using Nop.Web.Models.Catalog;
+@using Nop.Web.Extensions;
+<div class="page vendor-page">
+    <div class="page-title">
+        <h1>@Model.Name</h1>
+    </div>
+    <div class="page-body">
+        @Html.Widget("vendordetails_top")
+        @*description*@
+        @if (!String.IsNullOrWhiteSpace(Model.Description))
+        {
+            <div class="vendor-description">
+                @Html.Raw(Model.Description)
+            </div>
+        }
+        <div class="product-selectors">
+            @*view mode*@
+            @if (Model.PagingFilteringContext.AllowProductViewModeChanging && Model.Products.Count > 0)
+            {
+                <div class="product-viewmode">
+                    <span>@T("Vendors.ViewMode")</span>
+                    @Html.DropDownList("products-viewmode", Model.PagingFilteringContext.AvailableViewModes, new { onchange = "setLocation(this.value);" })
+                </div>
+            }
+            @*sorting*@
+            @if (Model.PagingFilteringContext.AllowProductSorting && Model.Products.Count > 0)
+            {
+                <div class="product-sorting">
+                    <span>@T("Vendors.OrderBy")</span>
+                    @Html.DropDownList("products-orderby", Model.PagingFilteringContext.AvailableSortOptions, new { onchange = "setLocation(this.value);" })
+                </div>
+            }
+            @*page size*@
+            @if (Model.PagingFilteringContext.AllowCustomersToSelectPageSize && Model.Products.Count > 0)
+            {
+                <div class="product-page-size">
+                    <span>@T("Vendors.PageSize")</span>
+                    @Html.DropDownList("products-pagesize", Model.PagingFilteringContext.PageSizeOptions, new { onchange = "setLocation(this.value);" })
+                    <span>@T("Vendors.PageSize.PerPage")</span>
+                </div>
+            }
+        </div>
+        @*product list*@
+        @if (Model.Products.Count > 0)
+        {
+            if (Model.PagingFilteringContext.ViewMode == "list")
+            {
+            @*list mode*@
+            <div class="product-list">
+                @foreach (var product in Model.Products)
+                {
+                    <div class="item-box">
+                        @Html.Partial("_ProductBox", product)
+                    </div>
+                }
+            </div>
+            }
+            else
+            {
+            @*grid mode*@
+            <div class="product-grid">
+                @foreach (var product in Model.Products)
+                {
+                    <div class="item-box">
+                        @Html.Partial("_ProductBox", product)
+                    </div>
+                }
+            </div>
+            }
+        }
+        <div class="pager">
+            @Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber")
+        </div>
+        @Html.Widget("vendordetails_bottom")
+    </div>
+</div>

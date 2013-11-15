@@ -1,0 +1,19 @@
+﻿@model VendorNavigationModel
+@using Nop.Web.Models.Catalog;
+@if (Model.Vendors.Count > 0)
+{
+    <div class="block block-vendor-navigation">
+        <div class="title">
+            <strong>@T("Vendors")</strong>
+        </div>
+        <div class="listbox">
+            <ul class="list">
+                @foreach (var vendor in Model.Vendors)
+                {
+                    <li><a href="@Url.RouteUrl("Vendor", new { vendorId = vendor.Id, SeName = vendor.SeName })">@vendor.Name</a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+}

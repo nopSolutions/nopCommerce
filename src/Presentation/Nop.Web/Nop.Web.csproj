@@ -238,6 +238,8 @@
     <Compile Include="Models\Catalog\BackInStockSubscribeModel.cs" />
     <Compile Include="Models\Catalog\CategorySimpleModel.cs" />
     <Compile Include="Models\Catalog\CompareProductsModel.cs" />
+    <Compile Include="Models\Catalog\VendorModel.cs" />
+    <Compile Include="Models\Catalog\VendorNavigationModel.cs" />
     <Compile Include="Models\Catalog\ProductOverviewModel.cs" />
     <Compile Include="Models\Catalog\SearchBoxModel.cs" />
     <Compile Include="Models\Catalog\SearchModel.cs" />
@@ -1741,6 +1743,18 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\GeoLite2-Country.mmdb" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Catalog\VendorNavigation.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Catalog\VendorNavigation.Mobile.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Catalog\Vendor.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Catalog\Vendor.Mobile.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

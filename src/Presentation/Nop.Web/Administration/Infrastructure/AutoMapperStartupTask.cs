@@ -39,6 +39,7 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Topics;
+using Nop.Core.Domain.Vendors;
 using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
 using Nop.Services.Authentication.External;
@@ -515,6 +516,7 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore());
             //stores
             Mapper.CreateMap<Store, StoreModel>()
+                .ForMember(dest => dest.Locales, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             Mapper.CreateMap<StoreModel, Store>();
 
@@ -609,6 +611,15 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.ShowHeaderRssUrl_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             Mapper.CreateMap<BlogSettingsModel, BlogSettings>();
+            Mapper.CreateMap<VendorSettings, VendorSettingsModel>()
+                .ForMember(dest => dest.ActiveStoreScopeConfiguration, mo => mo.Ignore())
+                .ForMember(dest => dest.PageSize_OverrideForStore, mo => mo.Ignore())
+                .ForMember(dest => dest.AllowCustomersToSelectPageSize_OverrideForStore, mo => mo.Ignore())
+                .ForMember(dest => dest.PageSizeOptions_OverrideForStore, mo => mo.Ignore())
+                .ForMember(dest => dest.VendorsBlockItemsToDisplay_OverrideForStore, mo => mo.Ignore())
+                .ForMember(dest => dest.ShowVendorOnProductDetailsPage_OverrideForStore, mo => mo.Ignore())
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+            Mapper.CreateMap<VendorSettingsModel, VendorSettings>();
             Mapper.CreateMap<ShippingSettings, ShippingSettingsModel>()
                 .ForMember(dest => dest.ShippingOriginAddress, mo => mo.Ignore())
                 .ForMember(dest => dest.ActiveStoreScopeConfiguration, mo => mo.Ignore())

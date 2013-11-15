@@ -13,6 +13,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Vendors;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -40,6 +41,7 @@ using Nop.Web.Models.Catalog;
 using Nop.Web.Models.Media;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Forums;
+using Nop.Services.Vendors;
 
 namespace Nop.Web.Controllers
 {
@@ -50,6 +52,7 @@ namespace Nop.Web.Controllers
         private readonly ICategoryService _categoryService;
         private readonly IManufacturerService _manufacturerService;
         private readonly IProductService _productService;
+        private readonly IVendorService _vendorService;
         private readonly IProductTemplateService _productTemplateService;
         private readonly ICategoryTemplateService _categoryTemplateService;
         private readonly IManufacturerTemplateService _manufacturerTemplateService;
@@ -83,6 +86,7 @@ namespace Nop.Web.Controllers
 
         private readonly MediaSettings _mediaSettings;
         private readonly CatalogSettings _catalogSettings;
+        private readonly VendorSettings _vendorSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly BlogSettings _blogSettings;
         private readonly ForumSettings _forumSettings;
@@ -98,6 +102,7 @@ namespace Nop.Web.Controllers
         public CatalogController(ICategoryService categoryService, 
             IManufacturerService manufacturerService,
             IProductService productService, 
+            IVendorService vendorService,
             IProductTemplateService productTemplateService,
             ICategoryTemplateService categoryTemplateService,
             IManufacturerTemplateService manufacturerTemplateService,
@@ -130,6 +135,7 @@ namespace Nop.Web.Controllers
             IShippingService shippingService,
             MediaSettings mediaSettings,
             CatalogSettings catalogSettings,
+            VendorSettings vendorSettings,
             ShoppingCartSettings shoppingCartSettings,
             BlogSettings blogSettings,
             ForumSettings  forumSettings,
@@ -141,6 +147,7 @@ namespace Nop.Web.Controllers
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
             this._productService = productService;
+            this._vendorService = vendorService;
             this._productTemplateService = productTemplateService;
             this._categoryTemplateService = categoryTemplateService;
             this._manufacturerTemplateService = manufacturerTemplateService;
@@ -175,6 +182,7 @@ namespace Nop.Web.Controllers
 
             this._mediaSettings = mediaSettings;
             this._catalogSettings = catalogSettings;
+            this._vendorSettings = vendorSettings;
             this._shoppingCartSettings = shoppingCartSettings;
             this._blogSettings = blogSettings;
             this._forumSettings = forumSettings;
@@ -606,6 +614,19 @@ namespace Nop.Web.Controllers
                 HasSampleDownload = product.IsDownload && product.HasSampleDownload,
                 IsCurrentCustomerRegistered = _workContext.CurrentCustomer.IsRegistered(),
             };
+
+            //vendor
+            if (_vendorSettings.ShowVendorOnProductDetailsPage)
+            {
+                var vendor = _vendorService.GetVendorById(product.VendorId);
+                if (vendor != null && vendor.Active)
+                {
+                    model.ShowVendor = true;
+                    model.VendorModel.Id = vendor.Id;
+                    model.VendorModel.Name = vendor.Name;
+                    model.VendorModel.SeName = SeoExtensions.GetSeName(vendor.Name);
+                }
+            } 
 
             //delivery date
             if (product.IsShipEnabled)
@@ -1719,6 +1740,204 @@ namespace Nop.Web.Controllers
                     }
                     return model;
                 });
+
+            return PartialView(cacheModel);
+        }
+
+        #endregion
+
+        #region Vendors
+
+        [NopHttpsRequirement(SslRequirement.No)]
+        public ActionResult Vendor(int vendorId, CatalogPagingFilteringModel command)
+        {
+            var vendor = _vendorService.GetVendorById(vendorId);
+            if (vendor == null || vendor.Deleted)
+                return InvokeHttp404();
+
+            //Vendor is active?
+            if (!vendor.Active)
+                return InvokeHttp404();
+
+            //'Continue shopping' URL
+            _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
+                SystemCustomerAttributeNames.LastContinueShoppingPage,
+                _webHelper.GetThisPageUrl(false),
+                _storeContext.CurrentStore.Id);
+
+            if (command.PageNumber <= 0) command.PageNumber = 1;
+
+            var model = new VendorModel()
+            {
+                Id = vendor.Id,
+                Name = vendor.Name,
+                Description = vendor.Description,
+                SeName = SeoExtensions.GetSeName(vendor.Name)
+            };
+
+
+
+
+            //sorting
+            model.PagingFilteringContext.AllowProductSorting = _catalogSettings.AllowProductSorting;
+            if (model.PagingFilteringContext.AllowProductSorting)
+            {
+                foreach (ProductSortingEnum enumValue in Enum.GetValues(typeof(ProductSortingEnum)))
+                {
+                    var currentPageUrl = _webHelper.GetThisPageUrl(true);
+                    var sortUrl = _webHelper.ModifyQueryString(currentPageUrl, "orderby=" + ((int)enumValue).ToString(), null);
+
+                    var sortValue = enumValue.GetLocalizedEnum(_localizationService, _workContext);
+                    model.PagingFilteringContext.AvailableSortOptions.Add(new SelectListItem()
+                    {
+                        Text = sortValue,
+                        Value = sortUrl,
+                        Selected = enumValue == (ProductSortingEnum)command.OrderBy
+                    });
+                }
+            }
+
+
+
+            //view mode
+            model.PagingFilteringContext.AllowProductViewModeChanging = _catalogSettings.AllowProductViewModeChanging;
+            var viewMode = !string.IsNullOrEmpty(command.ViewMode)
+                ? command.ViewMode
+                : _catalogSettings.DefaultViewMode;
+            if (model.PagingFilteringContext.AllowProductViewModeChanging)
+            {
+                var currentPageUrl = _webHelper.GetThisPageUrl(true);
+                //grid
+                model.PagingFilteringContext.AvailableViewModes.Add(new SelectListItem()
+                {
+                    Text = _localizationService.GetResource("Vendors.ViewMode.Grid"),
+                    Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=grid", null),
+                    Selected = viewMode == "grid"
+                });
+                //list
+                model.PagingFilteringContext.AvailableViewModes.Add(new SelectListItem()
+                {
+                    Text = _localizationService.GetResource("Vendors.ViewMode.List"),
+                    Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=list", null),
+                    Selected = viewMode == "list"
+                });
+            }
+
+            //page size
+            model.PagingFilteringContext.AllowCustomersToSelectPageSize = false;
+            if (_vendorSettings.AllowCustomersToSelectPageSize && _vendorSettings.PageSizeOptions != null)
+            {
+                var pageSizes = _vendorSettings.PageSizeOptions.Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+                if (pageSizes.Any())
+                {
+                    // get the first page size entry to use as the default (manufacturer page load) or if customer enters invalid value via query string
+                    if (command.PageSize <= 0 || !pageSizes.Contains(command.PageSize.ToString()))
+                    {
+                        int temp = 0;
+
+                        if (int.TryParse(pageSizes.FirstOrDefault(), out temp))
+                        {
+                            if (temp > 0)
+                            {
+                                command.PageSize = temp;
+                            }
+                        }
+                    }
+
+                    var currentPageUrl = _webHelper.GetThisPageUrl(true);
+                    var sortUrl = _webHelper.ModifyQueryString(currentPageUrl, "pagesize={0}", null);
+                    sortUrl = _webHelper.RemoveQueryString(sortUrl, "pagenumber");
+
+                    foreach (var pageSize in pageSizes)
+                    {
+                        int temp = 0;
+                        if (!int.TryParse(pageSize, out temp))
+                        {
+                            continue;
+                        }
+                        if (temp <= 0)
+                        {
+                            continue;
+                        }
+
+                        model.PagingFilteringContext.PageSizeOptions.Add(new SelectListItem()
+                        {
+                            Text = pageSize,
+                            Value = String.Format(sortUrl, pageSize),
+                            Selected = pageSize.Equals(command.PageSize.ToString(), StringComparison.InvariantCultureIgnoreCase)
+                        });
+                    }
+
+                    model.PagingFilteringContext.PageSizeOptions = model.PagingFilteringContext.PageSizeOptions.OrderBy(x => int.Parse(x.Text)).ToList();
+
+                    if (model.PagingFilteringContext.PageSizeOptions.Any())
+                    {
+                        model.PagingFilteringContext.PageSizeOptions = model.PagingFilteringContext.PageSizeOptions.OrderBy(x => int.Parse(x.Text)).ToList();
+                        model.PagingFilteringContext.AllowCustomersToSelectPageSize = true;
+
+                        if (command.PageSize <= 0)
+                        {
+                            command.PageSize = int.Parse(model.PagingFilteringContext.PageSizeOptions.FirstOrDefault().Text);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                //customer is not allowed to select a page size
+                command.PageSize = _vendorSettings.PageSize;
+            }
+
+            if (command.PageSize <= 0) command.PageSize = _vendorSettings.PageSize;
+
+
+            //products
+            IList<int> filterableSpecificationAttributeOptionIds = null;
+            var products = _productService.SearchProducts(out filterableSpecificationAttributeOptionIds, true,
+                vendorId: vendor.Id,
+                storeId: _storeContext.CurrentStore.Id,
+                visibleIndividuallyOnly: true,
+                featuredProducts: null,
+                priceMin: null,
+                priceMax: null,
+                orderBy: (ProductSortingEnum)command.OrderBy,
+                pageIndex: command.PageNumber - 1,
+                pageSize: command.PageSize);
+            model.Products = PrepareProductOverviewModels(products).ToList();
+
+            model.PagingFilteringContext.LoadPagedList(products);
+            model.PagingFilteringContext.ViewMode = viewMode;
+
+            return View(model);
+        }
+
+        [ChildActionOnly]
+        public ActionResult VendorNavigation()
+        {
+            if (_vendorSettings.VendorsBlockItemsToDisplay == 0)
+                return Content("");
+
+            string cacheKey = ModelCacheEventConsumer.MANUFACTURER_NAVIGATION_MODEL_KEY;
+            var cacheModel = _cacheManager.Get(cacheKey, () =>
+            {
+                var vendors = _vendorService.GetAllVendors(pageSize: _vendorSettings.VendorsBlockItemsToDisplay);
+                var model = new VendorNavigationModel()
+                {
+                    TotalVendors = vendors.TotalCount
+                };
+
+                foreach (var vendor in vendors)
+                {
+                    model.Vendors.Add(new VendorBriefInfoModel()
+                    {
+                        Id = vendor.Id,
+                        Name = vendor.Name,
+                        SeName = SeoExtensions.GetSeName(vendor.Name),
+                    });
+                }
+                return model;
+            });
 
             return PartialView(cacheModel);
         }

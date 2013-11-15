@@ -40,6 +40,7 @@
         @Html.Action("CategoryNavigation", "Catalog", new { currentCategoryId = currentCategoryId, currentProductId = currentProductId })
         @Html.Widget("left_side_column_after_category_navigation")
         @Html.Action("ManufacturerNavigation", "Catalog", new { currentManufacturerId = currentManufacturerId })
+        @Html.Action("VendorNavigation", "Catalog")
         @Html.Action("PopularProductTags", "Catalog")
         @Html.Action("PollBlock", "Poll", new { systemKeyword = "LeftColumnPoll" })
         @Html.Widget("left_side_column_after")

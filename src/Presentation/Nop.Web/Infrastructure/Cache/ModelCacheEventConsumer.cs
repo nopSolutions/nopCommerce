@@ -9,6 +9,7 @@ using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Polls;
 using Nop.Core.Domain.Topics;
+using Nop.Core.Domain.Vendors;
 using Nop.Core.Events;
 using Nop.Core.Infrastructure;
 using Nop.Services.Events;
@@ -33,6 +34,10 @@ namespace Nop.Web.Infrastructure.Cache
         IConsumer<EntityInserted<Manufacturer>>,
         IConsumer<EntityUpdated<Manufacturer>>,
         IConsumer<EntityDeleted<Manufacturer>>,
+        //vendors
+        IConsumer<EntityInserted<Vendor>>,
+        IConsumer<EntityUpdated<Vendor>>,
+        IConsumer<EntityDeleted<Vendor>>,
         //product manufacturers
         IConsumer<EntityInserted<ProductManufacturer>>,
         IConsumer<EntityUpdated<ProductManufacturer>>,
@@ -116,6 +121,12 @@ namespace Nop.Web.Infrastructure.Cache
         /// </remarks>
         public const string MANUFACTURER_NAVIGATION_MODEL_KEY = "Nop.pres.manufacturer.navigation-{0}-{1}-{2}-{3}";
         public const string MANUFACTURER_NAVIGATION_PATTERN_KEY = "Nop.pres.manufacturer.navigation";
+
+        /// <summary>
+        /// Key for VendorNavigationModel caching
+        /// </summary>
+        public const string VENDOR_NAVIGATION_MODEL_KEY = "Nop.pres.vendor.navigation";
+        public const string VENDOR_NAVIGATION_PATTERN_KEY = "Nop.pres.vendor.navigation";
 
         /// <summary>
         /// Key for caching of a value indicating whether a manufacturer has featured products
@@ -518,6 +529,7 @@ namespace Nop.Web.Infrastructure.Cache
             //clear models which depend on settings
             _cacheManager.RemoveByPattern(PRODUCTTAG_POPULAR_PATTERN_KEY); //depends on CatalogSettings.NumberOfProductTags
             _cacheManager.RemoveByPattern(MANUFACTURER_NAVIGATION_PATTERN_KEY); //depends on CatalogSettings.ManufacturersBlockItemsToDisplay
+            _cacheManager.RemoveByPattern(VENDOR_NAVIGATION_PATTERN_KEY); //depends on VendorSettings.VendorBlockItemsToDisplay
             _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY); //depends on CatalogSettings.ShowCategoryProductNumber and CatalogSettings.ShowCategoryProductNumberIncludingSubcategories
             _cacheManager.RemoveByPattern(CATEGORY_MENU_PATTERN_KEY); //depends on CatalogSettings.ShowCategoryProductNumber and CatalogSettings.ShowCategoryProductNumberIncludingSubcategories and CatalogSettings.TopCategoryMenuSubcategoryLevelsToDisplay
             _cacheManager.RemoveByPattern(CATEGORY_NUMBER_OF_PRODUCTS_PATTERN_KEY); //depends on CatalogSettings.ShowCategoryProductNumberIncludingSubcategories
@@ -525,8 +537,23 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(PRODUCTS_ALSO_PURCHASED_IDS_PATTERN_KEY); //depends on CatalogSettings.ProductsAlsoPurchasedNumber
             _cacheManager.RemoveByPattern(BLOG_PATTERN_KEY); //depends on BlogSettings.NumberOfTags
             _cacheManager.RemoveByPattern(NEWS_PATTERN_KEY); //depends on NewsSettings.MainPageNewsCount
-            
+
         }
+
+        //vendors
+        public void HandleEvent(EntityInserted<Vendor> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(VENDOR_NAVIGATION_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityUpdated<Vendor> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(VENDOR_NAVIGATION_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityDeleted<Vendor> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(VENDOR_NAVIGATION_PATTERN_KEY);
+        }
+
         //manufacturers
         public void HandleEvent(EntityInserted<Manufacturer> eventMessage)
         {

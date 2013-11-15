@@ -209,6 +209,7 @@
     <Compile Include="Models\Common\SystemInfoModel.cs" />
     <Compile Include="Models\Home\DashboardModel.cs" />
     <Compile Include="Models\Payments\PaymentMethodRestrictionModel.cs" />
+    <Compile Include="Models\Settings\VendorSettingsModel.cs" />
     <Compile Include="Models\Shipping\WarehouseModel.cs" />
     <Compile Include="Models\Shipping\DeliveryDateModel.cs" />
     <Compile Include="Models\Vendors\VendorModel.cs" />
@@ -1196,6 +1197,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Payment\MethodRestrictions.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Setting\Vendor.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

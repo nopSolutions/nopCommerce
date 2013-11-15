@@ -1,0 +1,92 @@
+﻿@model VendorSettingsModel
+@{
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Settings.Vendor").Text;
+}
+@using (Html.BeginForm())
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
+            @T("Admin.Configuration.Settings.Vendor")
+        </div>
+        <div class="options">
+            <input type="submit" name="save" class="t-button" value="@T("Admin.Common.Save")" />
+        </div>
+    </div>
+    
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#@Html.FieldIdFor(model => model.AllowCustomersToSelectPageSize)").click(togglePageSize);
+
+            togglePageSize();
+        });
+
+        function togglePageSize() {
+            if ($('#@Html.FieldIdFor(model => model.AllowCustomersToSelectPageSize)').is(':checked')) {
+                $('#pnlPageSize').hide();
+                $('#pnlPageSizeOptions').show();
+            } else {
+                $('#pnlPageSize').show();
+                $('#pnlPageSizeOptions').hide();
+            }
+        }
+
+        
+    </script>
+    @Html.Action("StoreScopeConfiguration", "Setting")
+    @Html.ValidationSummary(false)
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.AllowCustomersToSelectPageSize_OverrideForStore, model => model.AllowCustomersToSelectPageSize, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.AllowCustomersToSelectPageSize):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AllowCustomersToSelectPageSize)
+                @Html.ValidationMessageFor(model => model.AllowCustomersToSelectPageSize)
+            </td>
+        </tr>
+        <tr id="pnlPageSize">
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.PageSize_OverrideForStore, model => model.PageSize, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.PageSize):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.PageSize)
+                @Html.ValidationMessageFor(model => model.PageSize)
+            </td>
+        </tr>
+        <tr id="pnlPageSizeOptions">
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.PageSizeOptions_OverrideForStore, model => model.PageSizeOptions, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.PageSizeOptions):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.PageSizeOptions)
+                @Html.ValidationMessageFor(model => model.PageSizeOptions)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.VendorsBlockItemsToDisplay_OverrideForStore, model => model.VendorsBlockItemsToDisplay, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.VendorsBlockItemsToDisplay):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.VendorsBlockItemsToDisplay)
+                @Html.ValidationMessageFor(model => model.VendorsBlockItemsToDisplay)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ShowVendorOnProductDetailsPage_OverrideForStore, model => model.ShowVendorOnProductDetailsPage, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.ShowVendorOnProductDetailsPage):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ShowVendorOnProductDetailsPage)
+                @Html.ValidationMessageFor(model => model.ShowVendorOnProductDetailsPage)
+            </td>
+        </tr>
+    </table>
+}
