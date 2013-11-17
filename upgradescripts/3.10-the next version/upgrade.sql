@@ -51,7 +51,7 @@ set @resources='
     <Value>Change status</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.OrderStatus.Change.ForAdvancedUsers">
-    <Value>This option is only for advanced users (not recommended to change manually). All appropriate actions (such as invetory adjustment, sending notification emails, reward points, gift card activation/deactivation, etc) should be also done manually in this case.</Value>
+    <Value>This option is only for advanced users (not recommended to change manually). All appropriate actions (such as invetory adjustment, sending notification emails, reward points, gift card activation/deactivation, etc) should be done manually in this case.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.PreOrderAvailabilityStartDateTimeUtc">
     <Value>Pre-order availability start date</Value>
