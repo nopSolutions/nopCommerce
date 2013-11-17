@@ -11052,6 +11052,16 @@
                   </LocaleResource>
                 </Children>
               </LocaleResource>
+              <LocaleResource Name="MachineKey">
+                <Children>
+                  <LocaleResource Name="NotSpecified">
+                    <Value>A custom machine key is not specified (web.config file)</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Specified">
+                    <Value>A custom machine key is specified (web.config file)</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
             </Children>
           </LocaleResource>
         </Children>

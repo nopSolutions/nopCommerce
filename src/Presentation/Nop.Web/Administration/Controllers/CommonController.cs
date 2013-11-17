@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
+using System.Web.Configuration;
 using System.Web.Mvc;
 using Nop.Admin.Models.Common;
 using Nop.Core;
@@ -341,7 +343,36 @@ namespace Nop.Admin.Controllers
                     Level = SystemWarningLevel.Pass,
                     Text = _localizationService.GetResource("Admin.System.Warnings.FilePermission.OK")
                 });
-            
+
+            //machine key
+            try
+            {
+                var machineKeySection = ConfigurationManager.GetSection("system.web/machineKey") as MachineKeySection;
+                var machineKeySpecified = machineKeySection != null &&
+                    !String.IsNullOrEmpty(machineKeySection.DecryptionKey) &&
+                    !machineKeySection.DecryptionKey.StartsWith("AutoGenerate",StringComparison.InvariantCultureIgnoreCase);
+
+                if (!machineKeySpecified)
+                {
+                    model.Add(new SystemWarningModel()
+                    {
+                        Level = SystemWarningLevel.Warning,
+                        Text = _localizationService.GetResource("Admin.System.Warnings.MachineKey.NotSpecified")
+                    });
+                }
+                else
+                {
+                    model.Add(new SystemWarningModel()
+                    {
+                        Level = SystemWarningLevel.Pass,
+                        Text = _localizationService.GetResource("Admin.System.Warnings.MachineKey.Specified")
+                    });
+                }
+            }
+            catch (Exception exc)
+            {
+                LogException(exc);
+            }
             
             return View(model);
         }

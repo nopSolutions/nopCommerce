@@ -680,6 +680,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Order.TermsOfServiceOnOrderConfirmPage.Hint">
     <Value>Require customers to accept or decline terms of service before processing the order (on the confirm order page)</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.MachineKey.NotSpecified">
+    <Value>A custom machine key is not specified (web.config file)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.MachineKey.Specified">
+    <Value>A custom machine key is specified (web.config file)</Value>
+  </LocaleResource>
 </Language>
 '
 
