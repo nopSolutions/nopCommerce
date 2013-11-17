@@ -57,6 +57,7 @@ namespace Nop.Services.Installation
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<CustomerRole> _customerRoleRepository;
         private readonly IRepository<SpecificationAttribute> _specificationAttributeRepository;
+        private readonly IRepository<CheckoutAttribute> _checkoutAttributeRepository;
         private readonly IRepository<ProductAttribute> _productAttributeRepository;
         private readonly IRepository<Category> _categoryRepository;
         private readonly IRepository<Manufacturer> _manufacturerRepository;
@@ -98,6 +99,7 @@ namespace Nop.Services.Installation
             IRepository<Customer> customerRepository,
             IRepository<CustomerRole> customerRoleRepository,
             IRepository<SpecificationAttribute> specificationAttributeRepository,
+            IRepository<CheckoutAttribute> checkoutAttributeRepository,
             IRepository<ProductAttribute> productAttributeRepository,
             IRepository<Category> categoryRepository,
             IRepository<Manufacturer> manufacturerRepository,
@@ -135,6 +137,7 @@ namespace Nop.Services.Installation
             this._customerRepository = customerRepository;
             this._customerRoleRepository = customerRoleRepository;
             this._specificationAttributeRepository = specificationAttributeRepository;
+            this._checkoutAttributeRepository = checkoutAttributeRepository;
             this._productAttributeRepository = productAttributeRepository;
             this._categoryRepository = categoryRepository;
             this._manufacturerRepository = manufacturerRepository;
@@ -4985,6 +4988,35 @@ namespace Nop.Services.Installation
                 });
         }
 
+        protected virtual void InstallCheckoutAttributes()
+        {
+            var ca1 = new CheckoutAttribute
+            {
+                Name = "Gift wrapping",
+                IsRequired = true,
+                ShippableProductRequired = true,
+                AttributeControlType = AttributeControlType.DropdownList,
+                DisplayOrder = 1,
+            };
+            ca1.CheckoutAttributeValues.Add(new CheckoutAttributeValue()
+            {
+                Name = "Yes",
+                PriceAdjustment = 10,
+                DisplayOrder = 1,
+            });
+            ca1.CheckoutAttributeValues.Add(new CheckoutAttributeValue()
+            {
+                Name = "No",
+                PriceAdjustment = 0,
+                DisplayOrder = 2,
+            });
+            var checkoutAttributes = new List<CheckoutAttribute>
+                                {
+                                    ca1,
+                                };
+            checkoutAttributes.ForEach(ca => _checkoutAttributeRepository.Insert(ca));
+        }
+
         protected virtual void InstallSpecificationAttributes()
         {
             var sa1 = new SpecificationAttribute
@@ -9771,6 +9803,7 @@ namespace Nop.Services.Installation
 
             if (installSampleData)
             {
+                InstallCheckoutAttributes();
                 InstallSpecificationAttributes();
                 InstallProductAttributes();
                 InstallCategories();
