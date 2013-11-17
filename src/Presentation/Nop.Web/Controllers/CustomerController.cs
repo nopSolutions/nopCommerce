@@ -936,24 +936,12 @@ namespace Nop.Web.Controllers
 
             var customer = _workContext.CurrentCustomer;
 
-            //email
-            if (String.IsNullOrEmpty(model.Email))
-                ModelState.AddModelError("", "Email is required.");
-            //username 
-            if (_customerSettings.UsernamesEnabled &&
-                this._customerSettings.AllowUsersToChangeUsernames)
-            {
-                if (String.IsNullOrEmpty(model.Username))
-                    ModelState.AddModelError("", "Username is required.");
-            }
-
             try
             {
                 if (ModelState.IsValid)
                 {
                     //username 
-                    if (_customerSettings.UsernamesEnabled &&
-                        this._customerSettings.AllowUsersToChangeUsernames)
+                    if (_customerSettings.UsernamesEnabled && this._customerSettings.AllowUsersToChangeUsernames)
                     {
                         if (!customer.Username.Equals(model.Username.Trim(), StringComparison.InvariantCultureIgnoreCase))
                         {

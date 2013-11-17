@@ -14,6 +14,11 @@ namespace Nop.Web.Validators.Customer
             RuleFor(x => x.FirstName).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.FirstName.Required"));
             RuleFor(x => x.LastName).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.LastName.Required"));
 
+            if (customerSettings.UsernamesEnabled && customerSettings.AllowUsersToChangeUsernames)
+            {
+                RuleFor(x => x.Username).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.Username.Required"));
+            }
+
             //form fields
             if (customerSettings.CompanyRequired && customerSettings.CompanyEnabled)
             {
