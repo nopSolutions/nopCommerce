@@ -3,6 +3,7 @@
 @using Telerik.Web.Mvc.UI;
 @using Nop.Web.Framework.UI;
 @using Nop.Core;
+@using Nop.Core.Domain.Common;
 @using Nop.Services.Security;
 @{
     var currentCustomer = this.WorkContext.CurrentCustomer;
@@ -40,6 +41,13 @@
     //has "Manage Maintenance" permission?
     var canManageMaintenance = EngineContext.Current.Resolve<IPermissionService>()
         .Authorize(StandardPermissionProvider.ManageMaintenance);
+
+    //X-UA-Compatible tag
+    var commonSettings = EngineContext.Current.Resolve<CommonSettings>();
+    if (commonSettings.RenderXuaCompatible)
+    {
+        Html.AppendHeadCustomParts(string.Format("<meta http-equiv=\"X-UA-Compatible\" content=\"{0}\"/>", commonSettings.XuaCompatibleValue));
+    }
 }
 <!DOCTYPE html>
 <html @(supportRtl ? Html.Raw("dir=\"rtl\"") : null)>

@@ -1815,3 +1815,19 @@ GO
 DELETE FROM [Setting]
 WHERE [name] = N'ordersettings.termsofserviceenabled'
 GO
+
+--a new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'commonsettings.renderxuacompatible')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'commonsettings.renderxuacompatible', N'false', 0)
+END
+GO
+
+--a new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'commonsettings.xuacompatiblevalue')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'commonsettings.xuacompatiblevalue', N'IE=edge', 0)
+END
+GO

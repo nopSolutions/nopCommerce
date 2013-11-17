@@ -4552,7 +4552,9 @@ namespace Nop.Services.Installation
                     UseFullTextSearch = false,
                     FullTextMode = FulltextSearchMode.ExactMatch,
                     Log404Errors = true,
-                    BreadcrumbDelimiter = "/"
+                    BreadcrumbDelimiter = "/",
+                    RenderXuaCompatible = false,
+                    XuaCompatibleValue = "IE=edge"
                 });
 
             settingService.SaveSetting(new SeoSettings()

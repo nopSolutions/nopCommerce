@@ -41,5 +41,15 @@ namespace Nop.Core.Domain.Common
         /// Gets a sets a breadcrumb delimiter used on the site
         /// </summary>
         public string BreadcrumbDelimiter { get; set; }
+
+        /// <summary>
+        /// Gets a sets a value indicating whether we should render <meta http-equiv="X-UA-Compatible" content="IE=edge"/> tag
+        /// </summary>
+        public bool RenderXuaCompatible { get; set; }
+
+        /// <summary>
+        /// Gets a sets a value of "X-UA-Compatible" META tag
+        /// </summary>
+        public string XuaCompatibleValue { get; set; }
     }
 }
