@@ -37,7 +37,7 @@
     }
     adminPageTitle += T("Admin.PageTitle").Text;
 
-    //can manage Mmaintenance
+    //has "Manage Maintenance" permission?
     var canManageMaintenance = EngineContext.Current.Resolve<IPermissionService>()
         .Authorize(StandardPermissionProvider.ManageMaintenance);
 }
