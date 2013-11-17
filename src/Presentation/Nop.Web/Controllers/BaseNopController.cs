@@ -27,7 +27,7 @@ namespace Nop.Web.Controllers
         /// Log exception
         /// </summary>
         /// <param name="exc">Exception</param>
-        private void LogException(Exception exc)
+        protected void LogException(Exception exc)
         {
             var workContext = EngineContext.Current.Resolve<IWorkContext>();
             var logger = EngineContext.Current.Resolve<ILogger>();
