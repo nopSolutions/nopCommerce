@@ -94,12 +94,22 @@
         </tr>
         <tr>
             <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.TermsOfServiceEnabled_OverrideForStore, model => model.TermsOfServiceEnabled, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.TermsOfServiceEnabled):
+                @Html.OverrideStoreCheckboxFor(model => model.TermsOfServiceOnShoppingCartPage_OverrideForStore, model => model.TermsOfServiceOnShoppingCartPage, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.TermsOfServiceOnShoppingCartPage):
             </td>
             <td class="adminData">
-                @Html.EditorFor(model => model.TermsOfServiceEnabled)
-                @Html.ValidationMessageFor(model => model.TermsOfServiceEnabled)
+                @Html.EditorFor(model => model.TermsOfServiceOnShoppingCartPage)
+                @Html.ValidationMessageFor(model => model.TermsOfServiceOnShoppingCartPage)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.TermsOfServiceOnOrderConfirmPage_OverrideForStore, model => model.TermsOfServiceOnOrderConfirmPage, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.TermsOfServiceOnOrderConfirmPage):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.TermsOfServiceOnOrderConfirmPage)
+                @Html.ValidationMessageFor(model => model.TermsOfServiceOnOrderConfirmPage)
             </td>
         </tr>
         <tr>

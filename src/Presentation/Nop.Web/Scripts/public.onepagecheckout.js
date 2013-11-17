@@ -414,15 +414,30 @@ var ConfirmOrder = {
     save: function () {
         if (Checkout.loadWaiting != false) return;
         
-        Checkout.setLoadWaiting('confirm-order');
-        $.ajax({
-            cache: false,
-            url: this.saveUrl,
-            type: 'post',
-            success: this.nextStep,
-            complete: this.resetLoadWaiting,
-            error: Checkout.ajaxFailure
-        });
+        //terms of service
+        var termOfServiceOk = true;
+        if ($('#termsofservice').length > 0) {
+            //terms of service element exists
+            if (!$('#termsofservice').is(':checked')) {
+                $("#terms-of-service-warning-box").dialog();
+                termOfServiceOk = false;
+            } else {
+                termOfServiceOk = true;
+            }
+        }
+        if (termOfServiceOk) {
+            Checkout.setLoadWaiting('confirm-order');
+            $.ajax({
+                cache: false,
+                url: this.saveUrl,
+                type: 'post',
+                success: this.nextStep,
+                complete: this.resetLoadWaiting,
+                error: Checkout.ajaxFailure
+            });
+        } else {
+            return false;
+        }
     },
     
     resetLoadWaiting: function (transport) {

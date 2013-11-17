@@ -266,7 +266,8 @@ namespace Nop.Web.Controllers
                 decimal minOrderSubtotalAmount = _currencyService.ConvertFromPrimaryStoreCurrency(_orderSettings.MinOrderSubtotalAmount, _workContext.WorkingCurrency);
                 model.MinOrderSubtotalWarning = string.Format(_localizationService.GetResource("Checkout.MinOrderSubtotalAmount"), _priceFormatter.FormatPrice(minOrderSubtotalAmount, true, false));
             }
-            model.TermsOfServiceEnabled = _orderSettings.TermsOfServiceEnabled;
+            model.TermsOfServiceOnShoppingCartPage = _orderSettings.TermsOfServiceOnShoppingCartPage;
+            model.TermsOfServiceOnOrderConfirmPage = _orderSettings.TermsOfServiceOnOrderConfirmPage;
             model.OnePageCheckoutEnabled = _orderSettings.OnePageCheckoutEnabled;
 
             //gift card and gift card boxes
@@ -750,7 +751,7 @@ namespace Nop.Web.Controllers
                 model.SubTotal = _priceFormatter.FormatPrice(subtotal);
 
                 //a customer should visit the shopping cart page before going to checkout if:
-                //1. "terms of services" are enabled
+                //1. "terms of service" are enabled
                 //2. we have at least one checkout attribute
                 //3. min order sub-total is OK
                 var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes();
@@ -760,7 +761,7 @@ namespace Nop.Web.Controllers
                     checkoutAttributes = checkoutAttributes.RemoveShippableAttributes();
                 }
                 bool minOrderSubtotalAmountOk = _orderProcessingService.ValidateMinOrderSubtotalAmount(cart);
-                model.DisplayCheckoutButton = !_orderSettings.TermsOfServiceEnabled && 
+                model.DisplayCheckoutButton = !_orderSettings.TermsOfServiceOnShoppingCartPage && 
                     checkoutAttributes.Count == 0 &&
                     minOrderSubtotalAmountOk;
 

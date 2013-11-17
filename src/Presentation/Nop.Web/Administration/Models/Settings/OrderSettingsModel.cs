@@ -35,9 +35,13 @@ namespace Nop.Admin.Models.Settings
         public bool AnonymousCheckoutAllowed { get; set; }
         public bool AnonymousCheckoutAllowed_OverrideForStore { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Settings.Order.TermsOfServiceEnabled")]
-        public bool TermsOfServiceEnabled { get; set; }
-        public bool TermsOfServiceEnabled_OverrideForStore { get; set; }
+        [NopResourceDisplayName("Admin.Configuration.Settings.Order.TermsOfServiceOnShoppingCartPage")]
+        public bool TermsOfServiceOnShoppingCartPage { get; set; }
+        public bool TermsOfServiceOnShoppingCartPage_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Order.TermsOfServiceOnOrderConfirmPage")]
+        public bool TermsOfServiceOnOrderConfirmPage { get; set; }
+        public bool TermsOfServiceOnOrderConfirmPage_OverrideForStore { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.OnePageCheckoutEnabled")]
         public bool OnePageCheckoutEnabled { get; set; }

@@ -150,7 +150,7 @@
                 @Html.Action("OrderTotals", "ShoppingCart", new { isEditable = Model.IsEditable })
                 @if (Model.IsEditable)
                 {
-                    if (Model.TermsOfServiceEnabled)
+                    if (Model.TermsOfServiceOnShoppingCartPage)
                     {
                     <div class="terms-of-service">
                         <input id="termsofservice" type="checkbox" name="termsofservice" />
@@ -163,19 +163,17 @@
                             <script type="text/javascript">
                                 $(document).ready(function () {
                                     $('#checkout').click(function () {
-                                        //terms of services
+
+                                        //terms of service
                                         var termOfServiceOk = true;
-                                        @if (Model.TermsOfServiceEnabled)
-                                        {
-                                                <text>
-                                        if (!$('#termsofservice').is(':checked')) {
-                                            alert('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Checkout.TermsOfService.PleaseAccept").Text))');
-                                            termOfServiceOk = false;
-                                        }
-                                        else {
-                                            termOfServiceOk = true;
-                                        }
-                                                </text>
+                                        if ($('#termsofservice').length > 0) {
+                                            //terms of service element exists
+                                            if (!$('#termsofservice').is(':checked')) {
+                                                alert('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Checkout.TermsOfService.PleaseAccept").Text))');
+                                                termOfServiceOk = false;
+                                            } else {
+                                                termOfServiceOk = true;
+                                            }
                                         }
                                         return termOfServiceOk;
                                     });

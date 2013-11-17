@@ -5502,11 +5502,19 @@
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
-                  <LocaleResource Name="TermsOfServiceEnabled">
-                    <Value>Terms of service</Value>
+                  <LocaleResource Name="TermsOfServiceOnShoppingCartPage">
+                    <Value>Terms of service (shopping cart page)</Value>
                     <Children>
                       <LocaleResource Name="Hint">
-                        <Value>Require customers to accept or decline terms of service before processing the order</Value>
+                        <Value>Require customers to accept or decline terms of service before processing the order (on the shopping cart page)</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="TermsOfServiceOnOrderConfirmPage">
+                    <Value>Terms of service (confirm order page)</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Require customers to accept or decline terms of service before processing the order (on the confirm order page)</Value>
                       </LocaleResource>
                     </Children>
                   </LocaleResource>

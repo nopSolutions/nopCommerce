@@ -357,6 +357,9 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 .order-summary-content .terms-of-service{margin:0;padding:10px 0 10px 10px;}
 .order-summary-content .terms-of-service .read{text-decoration:underline;}
 .order-summary-content .terms-of-service .read:hover{cursor:pointer;}
+.checkout-data .terms-of-service{margin:0;padding:10px 0 10px 10px;}
+.checkout-data .terms-of-service .read{text-decoration:underline;}
+.checkout-data .terms-of-service .read:hover{cursor:pointer;}
 .order-summary-content .common-buttons{margin:0;padding:10px;}
 .order-summary-content .checkout-buttons{float:right;margin:0;padding:10px 0 10px 10px;}
 .order-summary-content .checkout-buttons .checkout-button{font:bold 15px/30px Arial,Helvetica,sans-serif;}

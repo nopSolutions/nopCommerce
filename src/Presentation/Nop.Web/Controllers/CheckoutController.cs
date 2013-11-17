@@ -372,6 +372,8 @@ namespace Nop.Web.Controllers
         protected CheckoutConfirmModel PrepareConfirmOrderModel(IList<ShoppingCartItem> cart)
         {
             var model = new CheckoutConfirmModel();
+            //terms of service
+            model.TermsOfServiceOnOrderConfirmPage = _orderSettings.TermsOfServiceOnOrderConfirmPage;
             //min order amount validation
             bool minOrderTotalAmountOk = _orderProcessingService.ValidateMinOrderTotalAmount(cart);
             if (!minOrderTotalAmountOk)
@@ -1001,7 +1003,7 @@ namespace Nop.Web.Controllers
 
 
             //model
-            var model = new CheckoutConfirmModel();
+            var model = PrepareConfirmOrderModel(cart);
             try
             {
                 var processPaymentRequest = _httpContext.Session["OrderPaymentInfo"] as ProcessPaymentRequest;
@@ -1190,7 +1192,7 @@ namespace Nop.Web.Controllers
 
             var model = new OnePageCheckoutModel()
             {
-                ShippingRequired = cart.RequiresShipping()
+                ShippingRequired = cart.RequiresShipping(),
             };
             return View(model);
         }

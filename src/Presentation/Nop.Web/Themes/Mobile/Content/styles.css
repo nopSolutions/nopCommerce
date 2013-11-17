@@ -122,7 +122,7 @@
 .order-summary-content .checkout-attributes textarea{width:300px;height:150px;}
 .order-summary-content .min-amount-warning{margin:0;padding:10px 0 10px 10px;}
 .order-summary-content .terms-of-service{margin:0;padding:0;}
-.order-summary-content .terms-of-service .read{text-decoration:underline;}
+.confirm-order .terms-of-service{margin:0;padding:0;}
 .order-summary-content .common-buttons{margin:0;padding:10px;}
 .order-summary-content .checkout-buttons{margin:0;padding:0;}
 .order-summary-content .addon-buttons{clear:both;margin:0;padding:10px;text-align:right;}

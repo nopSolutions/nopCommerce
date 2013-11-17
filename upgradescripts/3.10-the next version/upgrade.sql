@@ -662,6 +662,24 @@ set @resources='
   <LocaleResource Name="Products.Vendor">
     <Value>Vendor</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.TermsOfServiceEnabled">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.TermsOfServiceEnabled.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.TermsOfServiceOnShoppingCartPage">
+    <Value>Terms of service (shopping cart page)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.TermsOfServiceOnShoppingCartPage.Hint">
+    <Value>Require customers to accept or decline terms of service before processing the order (on the shopping cart page)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.TermsOfServiceOnOrderConfirmPage">
+    <Value>Terms of service (confirm order page)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.TermsOfServiceOnOrderConfirmPage.Hint">
+    <Value>Require customers to accept or decline terms of service before processing the order (on the confirm order page)</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1770,4 +1788,24 @@ BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'vendorsettings.showvendoronproductdetailspage', N'true', 0)
 END
+GO
+
+--a new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'ordersettings.termsofserviceonshoppingcartpage')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'ordersettings.termsofserviceonshoppingcartpage', N'false', 0)
+END
+GO
+
+--a new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'ordersettings.termsofserviceonorderconfirmpage')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'ordersettings.termsofserviceonorderconfirmpage', N'false', 0)
+END
+GO
+
+DELETE FROM [Setting]
+WHERE [name] = N'ordersettings.termsofserviceenabled'
 GO

@@ -18,8 +18,25 @@
             {
                 <script type="text/javascript">
                     $(document).ready(function () {
-                        $('#confirm-order-form').submit(function () {
-                            $('input[type=submit]', this).attr('disabled', 'disabled');
+                        $('.confirm-order-next-step-button').click(function () {
+                            //terms of service
+                            var termOfServiceOk = true;
+                            if ($('#termsofservice').length > 0) {
+                                //terms of service element exists
+                                if (!$('#termsofservice').is(':checked')) {
+                                    $("#terms-of-service-warning-box").dialog();
+                                    termOfServiceOk = false;
+                                } else {
+                                    termOfServiceOk = true;
+                                }
+                            }
+                            if (termOfServiceOk) {
+                                //$('#confirm-order-form').submit();
+                                //$('.confirm-order-next-step-button').attr('disabled', 'disabled');
+                                return true;
+                            } else {
+                                return false;
+                            }
                         });
                     });
                 </script>
@@ -29,9 +46,20 @@
                 }
                 else
                 {
-                <div class="buttons">
-                    <input type="submit" name="nextstep" value="@T("Checkout.ConfirmButton")" class="button-1 confirm-order-next-step-button" />
-                </div>
+                    if (Model.TermsOfServiceOnOrderConfirmPage)
+                    {
+                    <div id="terms-of-service-warning-box" title="@T("Checkout.TermsOfService")" style="display:none;">
+                        <p>@T("Checkout.TermsOfService.PleaseAccept")</p>
+                    </div>
+                    <div class="terms-of-service">
+                        <input id="termsofservice" type="checkbox" name="termsofservice" />
+                        @T("Checkout.TermsOfService.IAccept")
+                        <span class="read" onclick="javascript:OpenWindow('@Url.RouteUrl("TopicPopup", new { SystemName = "conditionsofUse" })', 450, 500, true)">@T("Checkout.TermsOfService.Read")</span>
+                    </div>
+                    }
+                    <div class="buttons">
+                        <input type="submit" name="nextstep" value="@T("Checkout.ConfirmButton")" class="button-1 confirm-order-next-step-button" />
+                    </div>
                 }
                 if (Model.Warnings.Count > 0)
                 {

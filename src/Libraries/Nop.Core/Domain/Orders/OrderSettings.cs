@@ -26,9 +26,14 @@ namespace Nop.Core.Domain.Orders
         public bool AnonymousCheckoutAllowed { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether 'Terms of service' enabled
+        /// Gets or sets a value indicating whether 'Terms of service' enabled on the shopping cart page
         /// </summary>
-        public bool TermsOfServiceEnabled { get; set; }
+        public bool TermsOfServiceOnShoppingCartPage { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether 'Terms of service' enabled on the order confirmation page
+        /// </summary>
+        public bool TermsOfServiceOnOrderConfirmPage { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'One-page checkout' is enabled
