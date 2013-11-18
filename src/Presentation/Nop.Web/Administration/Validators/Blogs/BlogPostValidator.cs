@@ -9,11 +9,11 @@ namespace Nop.Admin.Validators.Blogs
         public BlogPostValidator(ILocalizationService localizationService)
         {
             RuleFor(x => x.Title)
-                .NotNull()
+                .NotEmpty()
                 .WithMessage(localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Fields.Title.Required"));
 
             RuleFor(x => x.Body)
-                .NotNull()
+                .NotEmpty()
                 .WithMessage(localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Fields.Body.Required"));
         }
     }

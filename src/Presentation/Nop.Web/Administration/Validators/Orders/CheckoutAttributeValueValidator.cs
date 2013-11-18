@@ -8,7 +8,7 @@ namespace Nop.Admin.Validators.Orders
     {
         public CheckoutAttributeValueValidator(ILocalizationService localizationService)
         {
-            RuleFor(x => x.Name).NotNull().WithMessage(localizationService.GetResource("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.Name.Required"));
+            RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.Name.Required"));
         }
     }
 }

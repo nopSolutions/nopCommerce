@@ -8,7 +8,7 @@ namespace Nop.Admin.Validators.Settings
     {
         public SettingValidator(ILocalizationService localizationService)
         {
-            RuleFor(x => x.Name).NotNull().WithMessage(localizationService.GetResource("Admin.Configuration.Settings.AllSettings.Fields.Name.Required"));
+            RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Configuration.Settings.AllSettings.Fields.Name.Required"));
         }
     }
 }

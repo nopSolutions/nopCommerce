@@ -9,18 +9,18 @@ namespace Nop.Admin.Validators.Directory
         public CountryValidator(ILocalizationService localizationService)
         {
             RuleFor(x => x.Name)
-                .NotNull()
+                .NotEmpty()
                 .WithMessage(localizationService.GetResource("Admin.Configuration.Countries.Fields.Name.Required"));
 
             RuleFor(x => x.TwoLetterIsoCode)
-                .NotNull()
+                .NotEmpty()
                 .WithMessage(localizationService.GetResource("Admin.Configuration.Countries.Fields.TwoLetterIsoCode.Required"));
             RuleFor(x => x.TwoLetterIsoCode)
                 .Length(2)
                 .WithMessage(localizationService.GetResource("Admin.Configuration.Countries.Fields.TwoLetterIsoCode.Length"));
 
             RuleFor(x => x.ThreeLetterIsoCode)
-                .NotNull()
+                .NotEmpty()
                 .WithMessage(localizationService.GetResource("Admin.Configuration.Countries.Fields.ThreeLetterIsoCode.Required"));
             RuleFor(x => x.ThreeLetterIsoCode)
                 .Length(3)

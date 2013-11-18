@@ -8,9 +8,7 @@ namespace Nop.Admin.Validators.Polls
     {
         public PollAnswerValidator(ILocalizationService localizationService)
         {
-            RuleFor(x => x.Name)
-                .NotNull()
-                .WithMessage(localizationService.GetResource("Admin.ContentManagement.Polls.Answers.Fields.Name.Required"));
+            RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.ContentManagement.Polls.Answers.Fields.Name.Required"));
         }
     }
 }

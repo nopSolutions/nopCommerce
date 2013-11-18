@@ -8,7 +8,7 @@ namespace Nop.Admin.Validators.Tax
     {
         public TaxCategoryValidator(ILocalizationService localizationService)
         {
-            RuleFor(x => x.Name).NotNull().WithMessage(localizationService.GetResource("Admin.Configuration.Tax.Categories.Fields.Name.Required"));
+            RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Configuration.Tax.Categories.Fields.Name.Required"));
         }
     }
 }

@@ -8,17 +8,11 @@ namespace Nop.Admin.Validators.Messages
     {
         public CampaignValidator(ILocalizationService localizationService)
         {
-            RuleFor(x => x.Name)
-                .NotNull()
-                .WithMessage(localizationService.GetResource("Admin.Promotions.Campaigns.Fields.Name.Required"));
+            RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Promotions.Campaigns.Fields.Name.Required"));
 
-            RuleFor(x => x.Subject)
-                .NotNull()
-                .WithMessage(localizationService.GetResource("Admin.Promotions.Campaigns.Fields.Subject.Required"));
+            RuleFor(x => x.Subject).NotEmpty().WithMessage(localizationService.GetResource("Admin.Promotions.Campaigns.Fields.Subject.Required"));
 
-            RuleFor(x => x.Body)
-                .NotNull()
-                .WithMessage(localizationService.GetResource("Admin.Promotions.Campaigns.Fields.Body.Required"));
+            RuleFor(x => x.Body).NotEmpty().WithMessage(localizationService.GetResource("Admin.Promotions.Campaigns.Fields.Body.Required"));
         }
     }
 }
