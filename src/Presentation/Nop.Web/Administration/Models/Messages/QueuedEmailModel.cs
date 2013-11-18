@@ -49,6 +49,10 @@ namespace Nop.Admin.Models.Messages
         [AllowHtml]
         public string Body { get; set; }
 
+        [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.AttachmentFilePath")]
+        [AllowHtml]
+        public string AttachmentFilePath { get; set; }
+
         [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.CreatedOn")]
         public DateTime CreatedOn { get; set; }
 

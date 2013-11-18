@@ -85,6 +85,7 @@ namespace Nop.Services.Tests.Orders
         CurrencySettings _currencySettings;
         IAffiliateService _affiliateService;
         IVendorService _vendorService;
+        IPdfService _pdfService;
 
         Store _store;
 
@@ -181,6 +182,7 @@ namespace Nop.Services.Tests.Orders
             _currencyService = MockRepository.GenerateMock<ICurrencyService>();
             _affiliateService = MockRepository.GenerateMock<IAffiliateService>();
             _vendorService = MockRepository.GenerateMock<IVendorService>();
+            _pdfService = MockRepository.GenerateMock<IPdfService>();
 
             _paymentSettings = new PaymentSettings()
             {
@@ -209,7 +211,7 @@ namespace Nop.Services.Tests.Orders
                 _encryptionService, _workContext, 
                 _workflowMessageService, _vendorService,
                 _customerActivityService, _currencyService, _affiliateService,
-                _eventPublisher, _paymentSettings, _rewardPointsSettings,
+                _eventPublisher,_pdfService, _paymentSettings, _rewardPointsSettings,
                 _orderSettings, _taxSettings, _localizationSettings,
                 _currencySettings);
         }

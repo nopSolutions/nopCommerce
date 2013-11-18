@@ -157,6 +157,7 @@ namespace Nop.Admin.Controllers
                 Bcc = queuedEmail.Bcc,
                 Subject = queuedEmail.Subject,
                 Body = queuedEmail.Body,
+                AttachmentFilePath = queuedEmail.AttachmentFilePath,
                 CreatedOnUtc = DateTime.UtcNow,
                 EmailAccountId = queuedEmail.EmailAccountId
             };

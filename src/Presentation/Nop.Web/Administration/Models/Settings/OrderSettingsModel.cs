@@ -55,6 +55,14 @@ namespace Nop.Admin.Models.Settings
         public bool DisableOrderCompletedPage { get; set; }
         public bool DisableOrderCompletedPage_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Order.AttachPdfInvoiceToOrderPlacedEmail")]
+        public bool AttachPdfInvoiceToOrderPlacedEmail { get; set; }
+        public bool AttachPdfInvoiceToOrderPlacedEmail_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Order.AttachPdfInvoiceToOrderCompletedEmail")]
+        public bool AttachPdfInvoiceToOrderCompletedEmail { get; set; }
+        public bool AttachPdfInvoiceToOrderCompletedEmail_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.ReturnRequestsEnabled")]
         public bool ReturnRequestsEnabled { get; set; }
         public bool ReturnRequestsEnabled_OverrideForStore { get; set; }

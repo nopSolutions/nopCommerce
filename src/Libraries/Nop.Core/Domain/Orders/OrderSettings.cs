@@ -49,6 +49,16 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets a value indicating whether "Order completed" page should be skipped
         /// </summary>
         public bool DisableOrderCompletedPage { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating we should attach PDF invoice to "Order places" email
+        /// </summary>
+        public bool AttachPdfInvoiceToOrderPlacedEmail { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating we should attach PDF invoice to "Order completed" email
+        /// </summary>
+        public bool AttachPdfInvoiceToOrderCompletedEmail { get; set; }
         
         /// <summary>
         /// Gets or sets a value indicating whether "Return requests" are allowed

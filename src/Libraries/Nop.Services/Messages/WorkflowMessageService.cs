@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Blogs;
@@ -12,6 +13,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Vendors;
+using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Events;
 using Nop.Services.Localization;
@@ -31,7 +33,6 @@ namespace Nop.Services.Messages
         private readonly IMessageTokenProvider _messageTokenProvider;
         private readonly IStoreService _storeService;
         private readonly IStoreContext _storeContext;
-
         private readonly EmailAccountSettings _emailAccountSettings;
         private readonly IEventPublisher _eventPublisher;
 
@@ -40,8 +41,10 @@ namespace Nop.Services.Messages
         #region Ctor
 
         public WorkflowMessageService(IMessageTemplateService messageTemplateService,
-            IQueuedEmailService queuedEmailService, ILanguageService languageService,
-            ITokenizer tokenizer, IEmailAccountService emailAccountService,
+            IQueuedEmailService queuedEmailService,
+            ILanguageService languageService,
+            ITokenizer tokenizer, 
+            IEmailAccountService emailAccountService,
             IMessageTokenProvider messageTokenProvider,
             IStoreService storeService,
             IStoreContext storeContext,
@@ -56,7 +59,6 @@ namespace Nop.Services.Messages
             this._messageTokenProvider = messageTokenProvider;
             this._storeService = storeService;
             this._storeContext = storeContext;
-
             this._emailAccountSettings = emailAccountSettings;
             this._eventPublisher = eventPublisher;
         }
@@ -65,9 +67,9 @@ namespace Nop.Services.Messages
 
         #region Utilities
         
-        private int SendNotification(MessageTemplate messageTemplate, 
+        protected virtual int SendNotification(MessageTemplate messageTemplate, 
             EmailAccount emailAccount, int languageId, IEnumerable<Token> tokens,
-            string toEmailAddress, string toName)
+            string toEmailAddress, string toName, string attachmentFilePath = null)
         {
             //retrieve localized message template data
             var bcc = messageTemplate.GetLocalized((mt) => mt.BccEmailAddresses, languageId);
@@ -89,6 +91,7 @@ namespace Nop.Services.Messages
                 Bcc = bcc,
                 Subject = subjectReplaced,
                 Body = bodyReplaced,
+                AttachmentFilePath = attachmentFilePath,
                 CreatedOnUtc = DateTime.UtcNow,
                 EmailAccountId = emailAccount.Id
             };
@@ -96,8 +99,8 @@ namespace Nop.Services.Messages
             _queuedEmailService.InsertQueuedEmail(email);
             return email.Id;
         }
-        
-        private MessageTemplate GetLocalizedActiveMessageTemplate(string messageTemplateName, 
+
+        protected virtual MessageTemplate GetLocalizedActiveMessageTemplate(string messageTemplateName, 
             int languageId, int storeId)
         {
             //TODO remove languageId parameter
@@ -115,7 +118,7 @@ namespace Nop.Services.Messages
             return messageTemplate;
         }
 
-        private EmailAccount GetEmailAccountOfMessageTemplate(MessageTemplate messageTemplate, int languageId)
+        protected virtual EmailAccount GetEmailAccountOfMessageTemplate(MessageTemplate messageTemplate, int languageId)
         {
             var emailAccounId = messageTemplate.GetLocalized(mt => mt.EmailAccountId, languageId);
             var emailAccount = _emailAccountService.GetEmailAccountById(emailAccounId);
@@ -127,7 +130,7 @@ namespace Nop.Services.Messages
 
         }
 
-        private int EnsureLanguageIsActive(int languageId, int storeId)
+        protected virtual int EnsureLanguageIsActive(int languageId, int storeId)
         {
             //load language by specified ID
             var language = _languageService.GetLanguageById(languageId);
@@ -410,8 +413,9 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="order">Order instance</param>
         /// <param name="languageId">Message language identifier</param>
+        /// <param name="attachmentFilePath">Attachment file path</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendOrderPlacedCustomerNotification(Order order, int languageId)
+        public virtual int SendOrderPlacedCustomerNotification(Order order, int languageId, string attachmentFilePath = null)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -437,7 +441,8 @@ namespace Nop.Services.Messages
             var toName = string.Format("{0} {1}", order.BillingAddress.FirstName, order.BillingAddress.LastName);
             return SendNotification(messageTemplate, emailAccount,
                 languageId, tokens,
-                toEmail, toName);
+                toEmail, toName,
+                attachmentFilePath);
         }
 
         /// <summary>
@@ -525,8 +530,9 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="order">Order instance</param>
         /// <param name="languageId">Message language identifier</param>
+        /// <param name="attachmentFilePath">Attachment file path</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendOrderCompletedCustomerNotification(Order order, int languageId)
+        public virtual int SendOrderCompletedCustomerNotification(Order order, int languageId, string attachmentFilePath = null)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -552,7 +558,8 @@ namespace Nop.Services.Messages
             var toName = string.Format("{0} {1}", order.BillingAddress.FirstName, order.BillingAddress.LastName);
             return SendNotification(messageTemplate, emailAccount,
                 languageId, tokens,
-                toEmail, toName);
+                toEmail, toName,
+                attachmentFilePath);
         }
 
         /// <summary>

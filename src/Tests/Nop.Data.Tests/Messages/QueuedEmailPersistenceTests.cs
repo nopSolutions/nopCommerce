@@ -22,6 +22,7 @@ namespace Nop.Data.Tests.Messages
                 Bcc = "Bcc",
                 Subject = "Subject",
                 Body = "Body",
+                AttachmentFilePath = "some file path",
                 CreatedOnUtc = new DateTime(2010, 01, 01),
                 SentTries = 5,
                 SentOnUtc = new DateTime(2010, 02, 02),
@@ -51,6 +52,7 @@ namespace Nop.Data.Tests.Messages
             fromDb.Bcc.ShouldEqual("Bcc");
             fromDb.Subject.ShouldEqual("Subject");
             fromDb.Body.ShouldEqual("Body");
+            fromDb.AttachmentFilePath.ShouldEqual("some file path");
             fromDb.CreatedOnUtc.ShouldEqual(new DateTime(2010, 01, 01));
             fromDb.SentTries.ShouldEqual(5);
             fromDb.SentOnUtc.Value.ShouldEqual(new DateTime(2010, 02, 02));

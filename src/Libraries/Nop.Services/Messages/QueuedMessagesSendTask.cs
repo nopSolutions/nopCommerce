@@ -41,7 +41,8 @@ namespace Nop.Services.Messages
                 try
                 {
                     _emailSender.SendEmail(queuedEmail.EmailAccount, queuedEmail.Subject, queuedEmail.Body,
-                       queuedEmail.From, queuedEmail.FromName, queuedEmail.To, queuedEmail.ToName, bcc, cc);
+                       queuedEmail.From, queuedEmail.FromName, queuedEmail.To, queuedEmail.ToName, bcc, cc,
+                       queuedEmail.AttachmentFilePath);
 
                     queuedEmail.SentOnUtc = DateTime.UtcNow;
                 }

@@ -4,6 +4,9 @@ using Nop.Core.Domain.Messages;
 
 namespace Nop.Services.Messages
 {
+    /// <summary>
+    /// Email sender
+    /// </summary>
     public partial interface IEmailSender
     {
         /// <summary>
@@ -18,9 +21,11 @@ namespace Nop.Services.Messages
         /// <param name="toName">To display name</param>
         /// <param name="bcc">BCC addresses list</param>
         /// <param name="cc">CC addresses ist</param>
+        /// <param name="attachmentFilePath">Attachment file path</param>
         void SendEmail(EmailAccount emailAccount, string subject, string body,
             string fromAddress, string fromName, string toAddress, string toName,
-            IEnumerable<string> bcc = null, IEnumerable<string> cc = null);
+            IEnumerable<string> bcc = null, IEnumerable<string> cc = null,
+            string attachmentFilePath = null);
 
         /// <summary>
         /// Sends an email
@@ -32,8 +37,10 @@ namespace Nop.Services.Messages
         /// <param name="to">To address</param>
         /// <param name="bcc">BCC addresses list</param>
         /// <param name="cc">CC addresses ist</param>
+        /// <param name="attachmentFilePath">Attachment file path</param>
         void SendEmail(EmailAccount emailAccount, string subject, string body,
             MailAddress from, MailAddress to,
-            IEnumerable<string> bcc = null, IEnumerable<string> cc = null);
+            IEnumerable<string> bcc = null, IEnumerable<string> cc = null,
+            string attachmentFilePath = null);
     }
 }

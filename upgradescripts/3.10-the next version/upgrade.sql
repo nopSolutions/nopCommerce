@@ -686,6 +686,24 @@ set @resources='
   <LocaleResource Name="Admin.System.Warnings.MachineKey.Specified">
     <Value>A custom machine key is specified (web.config file)</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.AttachPdfInvoiceToOrderPlacedEmail">
+    <Value>Attach PDF invoice ("order placed" email)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.AttachPdfInvoiceToOrderPlacedEmail.Hint">
+    <Value>Check to attach PDF invoice to the "order placed" email sent to a customer.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.AttachPdfInvoiceToOrderCompletedEmail">
+    <Value>Attach PDF invoice ("order completed" email)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.AttachPdfInvoiceToOrderCompletedEmail.Hint">
+    <Value>Check to attach PDF invoice to the "order completed" email sent to a customer.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.QueuedEmails.Fields.AttachmentFilePath">
+    <Value>Attached file path</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.QueuedEmails.Fields.AttachmentFilePath.Hint">
+    <Value>A path to the attached file path.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1829,5 +1847,29 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'commonsettings.xuacompat
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'commonsettings.xuacompatiblevalue', N'IE=edge', 0)
+END
+GO
+
+--a new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'ordersettings.attachpdfinvoicetoorderplacedemail')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'ordersettings.attachpdfinvoicetoorderplacedemail', N'false', 0)
+END
+GO
+
+--a new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'ordersettings.attachpdfinvoicetoordercompletedemail')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'ordersettings.attachpdfinvoicetoordercompletedemail', N'false', 0)
+END
+GO
+
+--add a new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[QueuedEmail]') and NAME='AttachmentFilePath')
+BEGIN
+	ALTER TABLE [QueuedEmail]
+	ADD [AttachmentFilePath] nvarchar(MAX) NULL
 END
 GO

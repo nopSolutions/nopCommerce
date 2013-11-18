@@ -53,6 +53,11 @@ namespace Nop.Core.Domain.Messages
         public string Body { get; set; }
 
         /// <summary>
+        /// Gets or sets the attachment file path
+        /// </summary>
+        public string AttachmentFilePath { get; set; }
+
+        /// <summary>
         /// Gets or sets the date and time of item creation in UTC
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }

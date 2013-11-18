@@ -4835,6 +4835,8 @@ namespace Nop.Services.Installation
                     TermsOfServiceOnOrderConfirmPage = false,
                     OnePageCheckoutEnabled = true,
                     OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab = false,
+                    AttachPdfInvoiceToOrderPlacedEmail = false,
+                    AttachPdfInvoiceToOrderCompletedEmail = false,
                     ReturnRequestsEnabled = true,
                     ReturnRequestActions = new List<string>() { "Repair", "Replacement", "Store Credit" },
                     ReturnRequestReasons = new List<string>() { "Received Wrong Product", "Wrong Product Ordered", "There Was A Problem With The Product" },

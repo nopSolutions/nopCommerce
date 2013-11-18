@@ -1340,6 +1340,8 @@ namespace Nop.Admin.Controllers
                 model.OnePageCheckoutEnabled_OverrideForStore = _settingService.SettingExists(orderSettings, x => x.OnePageCheckoutEnabled, storeScope);
                 model.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab_OverrideForStore = _settingService.SettingExists(orderSettings, x => x.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab, storeScope);
                 model.DisableOrderCompletedPage_OverrideForStore = _settingService.SettingExists(orderSettings, x => x.DisableOrderCompletedPage, storeScope);
+                model.AttachPdfInvoiceToOrderPlacedEmail_OverrideForStore = _settingService.SettingExists(orderSettings, x => x.AttachPdfInvoiceToOrderPlacedEmail, storeScope);
+                model.AttachPdfInvoiceToOrderCompletedEmail_OverrideForStore = _settingService.SettingExists(orderSettings, x => x.AttachPdfInvoiceToOrderCompletedEmail, storeScope);
                 model.ReturnRequestsEnabled_OverrideForStore = _settingService.SettingExists(orderSettings, x => x.ReturnRequestsEnabled, storeScope);
                 model.NumberOfDaysReturnRequestAvailable_OverrideForStore = _settingService.SettingExists(orderSettings, x => x.NumberOfDaysReturnRequestAvailable, storeScope);
             }
@@ -1434,6 +1436,16 @@ namespace Nop.Admin.Controllers
                     _settingService.SaveSetting(orderSettings, x => x.DisableOrderCompletedPage, storeScope, false);
                 else if (storeScope > 0)
                     _settingService.DeleteSetting(orderSettings, x => x.DisableOrderCompletedPage, storeScope);
+
+                if (model.AttachPdfInvoiceToOrderPlacedEmail_OverrideForStore || storeScope == 0)
+                    _settingService.SaveSetting(orderSettings, x => x.AttachPdfInvoiceToOrderPlacedEmail, storeScope, false);
+                else if (storeScope > 0)
+                    _settingService.DeleteSetting(orderSettings, x => x.AttachPdfInvoiceToOrderPlacedEmail, storeScope);
+
+                if (model.AttachPdfInvoiceToOrderCompletedEmail_OverrideForStore || storeScope == 0)
+                    _settingService.SaveSetting(orderSettings, x => x.AttachPdfInvoiceToOrderCompletedEmail, storeScope, false);
+                else if (storeScope > 0)
+                    _settingService.DeleteSetting(orderSettings, x => x.AttachPdfInvoiceToOrderCompletedEmail, storeScope);
                 
                 if (model.ReturnRequestsEnabled_OverrideForStore || storeScope == 0)
                     _settingService.SaveSetting(orderSettings, x => x.ReturnRequestsEnabled, storeScope, false);

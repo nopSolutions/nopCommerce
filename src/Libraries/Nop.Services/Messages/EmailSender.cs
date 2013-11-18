@@ -1,13 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
+using System.Net.Mime;
 using Nop.Core.Domain.Messages;
 
 namespace Nop.Services.Messages
 {
-    public partial class EmailSender:IEmailSender
+    /// <summary>
+    /// Email sender
+    /// </summary>
+    public partial class EmailSender : IEmailSender
     {
         /// <summary>
         /// Sends an email
@@ -20,14 +25,16 @@ namespace Nop.Services.Messages
         /// <param name="toAddress">To address</param>
         /// <param name="toName">To display name</param>
         /// <param name="bcc">BCC addresses list</param>
-        /// <param name="cc">CC addresses ist</param>
+        /// <param name="cc">CC addresses list</param>
+        /// <param name="attachmentFilePath">Attachment file path</param>
         public void SendEmail(EmailAccount emailAccount, string subject, string body,
             string fromAddress, string fromName, string toAddress, string toName,
-            IEnumerable<string> bcc = null, IEnumerable<string> cc = null)
+            IEnumerable<string> bcc = null, IEnumerable<string> cc = null,
+            string attachmentFilePath = null)
         {
             SendEmail(emailAccount, subject, body, 
-                new MailAddress(fromAddress, fromName), new MailAddress(toAddress, toName), 
-                bcc, cc);
+                new MailAddress(fromAddress, fromName), new MailAddress(toAddress, toName),
+                bcc, cc, attachmentFilePath);
         }
 
         /// <summary>
@@ -39,22 +46,24 @@ namespace Nop.Services.Messages
         /// <param name="from">From address</param>
         /// <param name="to">To address</param>
         /// <param name="bcc">BCC addresses list</param>
-        /// <param name="cc">CC addresses ist</param>
+        /// <param name="cc">CC addresses list</param>
+        /// <param name="attachmentFilePath">Attachment file path</param>
         public virtual void SendEmail(EmailAccount emailAccount, string subject, string body,
             MailAddress from, MailAddress to,
-            IEnumerable<string> bcc = null, IEnumerable<string> cc = null)
+            IEnumerable<string> bcc = null, IEnumerable<string> cc = null,
+            string attachmentFilePath = null)
         {
             var message = new MailMessage();
             message.From = from;
             message.To.Add(to);
-            if (null != bcc)
+            if (bcc != null)
             {
                 foreach (var address in bcc.Where(bccValue => !String.IsNullOrWhiteSpace(bccValue)))
                 {
                     message.Bcc.Add(address.Trim());
                 }
             }
-            if (null != cc)
+            if (cc != null)
             {
                 foreach (var address in cc.Where(ccValue => !String.IsNullOrWhiteSpace(ccValue)))
                 {
@@ -64,6 +73,17 @@ namespace Nop.Services.Messages
             message.Subject = subject;
             message.Body = body;
             message.IsBodyHtml = true;
+
+            //create  the file attachment for this e-mail message
+            if (!String.IsNullOrEmpty(attachmentFilePath) &&
+                File.Exists(attachmentFilePath))
+            {
+                var attachment = new Attachment(attachmentFilePath);
+                attachment.ContentDisposition.CreationDate = File.GetCreationTime(attachmentFilePath);
+                attachment.ContentDisposition.ModificationDate = File.GetLastWriteTime(attachmentFilePath);
+                attachment.ContentDisposition.ReadDate = File.GetLastAccessTime(attachmentFilePath);
+                message.Attachments.Add(attachment);
+            }
 
             using (var smtpClient = new SmtpClient())
             {

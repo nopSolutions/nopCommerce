@@ -7,6 +7,7 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
@@ -117,6 +118,28 @@ namespace Nop.Services.Common
         /// <summary>
         /// Print an order to PDF
         /// </summary>
+        /// <param name="order">Order</param>
+        /// <param name="languageId">Language identifier; 0 to use a language used when placing an order</param>
+        /// <returns>A path of generates file</returns>
+        public virtual string PrintOrderToPdf(Order order, int languageId)
+        {
+            if (order == null)
+                throw new ArgumentNullException("order");
+
+            string fileName = string.Format("order_{0}_{1}.pdf", order.OrderGuid, CommonHelper.GenerateRandomDigitCode(4));
+            string filePath = Path.Combine(_webHelper.MapPath("~/content/files/ExportImport"), fileName);
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                var orders = new List<Order>();
+                orders.Add(order);
+                PrintOrdersToPdf(fileStream, orders, languageId);
+            }
+            return filePath;
+        }
+
+        /// <summary>
+        /// Print orders to PDF
+        /// </summary>
         /// <param name="stream">Stream</param>
         /// <param name="orders">Orders</param>
         /// <param name="languageId">Language identifier; 0 to use a language used when placing an order</param>
@@ -127,10 +150,6 @@ namespace Nop.Services.Common
 
             if (orders == null)
                 throw new ArgumentNullException("orders");
-
-            var lang = _languageService.GetLanguageById(languageId);
-            if (lang == null)
-                throw new ArgumentException(string.Format("Cannot load language. ID={0}", languageId));
 
             var pageSize = PageSize.A4;
 
@@ -157,12 +176,9 @@ namespace Nop.Services.Common
 
             foreach (var order in orders)
             {
-                if (languageId == 0)
-                {
-                    lang = _languageService.GetLanguageById(order.CustomerLanguageId);
-                    if (lang == null || !lang.Published)
-                        lang = _workContext.WorkingLanguage;
-                }
+                var lang = _languageService.GetLanguageById(languageId == 0 ? order.CustomerLanguageId : languageId);
+                if (lang == null || !lang.Published)
+                    lang = _workContext.WorkingLanguage;
 
                 #region Header
 

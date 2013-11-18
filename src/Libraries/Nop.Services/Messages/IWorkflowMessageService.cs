@@ -80,8 +80,9 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="order">Order instance</param>
         /// <param name="languageId">Message language identifier</param>
+        /// <param name="attachmentFilePath">Attachment file path</param>
         /// <returns>Queued email identifier</returns>
-        int SendOrderPlacedCustomerNotification(Order order, int languageId);
+        int SendOrderPlacedCustomerNotification(Order order, int languageId, string attachmentFilePath = null);
 
         /// <summary>
         /// Sends a shipment sent notification to a customer
@@ -104,8 +105,9 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="order">Order instance</param>
         /// <param name="languageId">Message language identifier</param>
+        /// <param name="attachmentFilePath">Attachment file path</param>
         /// <returns>Queued email identifier</returns>
-        int SendOrderCompletedCustomerNotification(Order order, int languageId);
+        int SendOrderCompletedCustomerNotification(Order order, int languageId, string attachmentFilePath = null);
 
         /// <summary>
         /// Sends an order cancelled notification to a customer

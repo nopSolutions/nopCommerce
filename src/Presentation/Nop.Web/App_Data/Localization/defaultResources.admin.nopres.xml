@@ -5542,6 +5542,22 @@
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
+                  <LocaleResource Name="AttachPdfInvoiceToOrderPlacedEmail">
+                    <Value>Attach PDF invoice ("order placed" email)</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Check to attach PDF invoice to the "order placed" email sent to a customer.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="AttachPdfInvoiceToOrderCompletedEmail">
+                    <Value>Attach PDF invoice ("order completed" email)</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Check to attach PDF invoice to the "order completed" email sent to a customer.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
                   <LocaleResource Name="ReturnRequestsDescription1">
                     <Value>The returns system will allow your customers to request a return on items they've purchased. These are also known as RMA requests.</Value>
                   </LocaleResource>
@@ -10673,6 +10689,14 @@
                     <Children>
                       <LocaleResource Name="Hint">
                         <Value>Message body.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="AttachmentFilePath">
+                    <Value>Attached file path</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>A path to the attached file path.</Value>
                       </LocaleResource>
                     </Children>
                   </LocaleResource>

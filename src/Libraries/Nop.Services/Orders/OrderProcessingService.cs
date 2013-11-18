@@ -69,6 +69,7 @@ namespace Nop.Services.Orders
         private readonly ICurrencyService _currencyService;
         private readonly IAffiliateService _affiliateService;
         private readonly IEventPublisher _eventPublisher;
+        private readonly IPdfService _pdfService;
 
         private readonly PaymentSettings _paymentSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
@@ -107,10 +108,12 @@ namespace Nop.Services.Orders
         /// <param name="encryptionService">Encryption service</param>
         /// <param name="workContext">Work context</param>
         /// <param name="workflowMessageService">Workflow message service</param>
+        /// <param name="vendorService">Vendor service</param>
         /// <param name="customerActivityService">Customer activity service</param>
         /// <param name="currencyService">Currency service</param>
         /// <param name="affiliateService">Affiliate service</param>
         /// <param name="eventPublisher">Event published</param>
+        /// <param name="pdfService">PDF service</param>
         /// <param name="paymentSettings">Payment settings</param>
         /// <param name="rewardPointsSettings">Reward points settings</param>
         /// <param name="orderSettings">Order settings</param>
@@ -145,6 +148,7 @@ namespace Nop.Services.Orders
             ICurrencyService currencyService,
             IAffiliateService affiliateService,
             IEventPublisher eventPublisher,
+            IPdfService pdfService,
             PaymentSettings paymentSettings,
             RewardPointsSettings rewardPointsSettings,
             OrderSettings orderSettings,
@@ -180,6 +184,7 @@ namespace Nop.Services.Orders
             this._currencyService = currencyService;
             this._affiliateService = affiliateService;
             this._eventPublisher = eventPublisher;
+            this._pdfService = pdfService;
             this._paymentSettings = paymentSettings;
             this._rewardPointsSettings = rewardPointsSettings;
             this._orderSettings = orderSettings;
@@ -328,7 +333,9 @@ namespace Nop.Services.Orders
                 && notifyCustomer)
             {
                 //notification
-                int orderCompletedCustomerNotificationQueuedEmailId = _workflowMessageService.SendOrderCompletedCustomerNotification(order, order.CustomerLanguageId);
+                var orderCompletedCustomerNotificationAttachmentFilePath = _orderSettings.AttachPdfInvoiceToOrderCompletedEmail ?
+                    _pdfService.PrintOrderToPdf(order, 0) : null;
+                int orderCompletedCustomerNotificationQueuedEmailId = _workflowMessageService.SendOrderCompletedCustomerNotification(order, order.CustomerLanguageId, orderCompletedCustomerNotificationAttachmentFilePath);
                 if (orderCompletedCustomerNotificationQueuedEmailId > 0)
                 {
                     order.OrderNotes.Add(new OrderNote()
@@ -1291,7 +1298,9 @@ namespace Nop.Services.Orders
                             _orderService.UpdateOrder(order);
                         }
 
-                        int orderPlacedCustomerNotificationQueuedEmailId = _workflowMessageService.SendOrderPlacedCustomerNotification(order, order.CustomerLanguageId);
+                        var orderPlacedCustomerNotificationAttachmentFilePath = _orderSettings.AttachPdfInvoiceToOrderPlacedEmail ?
+                            _pdfService.PrintOrderToPdf(order, 0) : null;
+                        int orderPlacedCustomerNotificationQueuedEmailId = _workflowMessageService.SendOrderPlacedCustomerNotification(order, order.CustomerLanguageId, orderPlacedCustomerNotificationAttachmentFilePath);
                         if (orderPlacedCustomerNotificationQueuedEmailId > 0)
                         {
                             order.OrderNotes.Add(new OrderNote()
