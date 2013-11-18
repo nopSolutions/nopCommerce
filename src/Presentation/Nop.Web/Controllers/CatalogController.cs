@@ -626,11 +626,13 @@ namespace Nop.Web.Controllers
                     model.VendorModel.Name = vendor.Name;
                     model.VendorModel.SeName = SeoExtensions.GetSeName(vendor.Name);
                 }
-            } 
+            }
 
-            //delivery date
+            model.IsShipEnabled = product.IsShipEnabled;
             if (product.IsShipEnabled)
             {
+                model.IsFreeShipping = product.IsFreeShipping;
+                //delivery date
                 var deliveryDate = _shippingService.GetDeliveryDateById(product.DeliveryDateId);
                 if (deliveryDate != null)
                 {
