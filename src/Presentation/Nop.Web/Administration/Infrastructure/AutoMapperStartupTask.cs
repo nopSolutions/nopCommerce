@@ -20,6 +20,7 @@ using Nop.Admin.Models.Settings;
 using Nop.Admin.Models.Shipping;
 using Nop.Admin.Models.Stores;
 using Nop.Admin.Models.Tax;
+using Nop.Admin.Models.Templates;
 using Nop.Admin.Models.Topics;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
@@ -784,6 +785,20 @@ namespace Nop.Admin.Infrastructure
             Mapper.CreateMap<AddressSettings, CustomerUserSettingsModel.AddressSettingsModel>()
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             Mapper.CreateMap<CustomerUserSettingsModel.AddressSettingsModel, AddressSettings>();
+
+
+            //category template
+            Mapper.CreateMap<CategoryTemplate, CategoryTemplateModel>()
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+            Mapper.CreateMap<CategoryTemplateModel, CategoryTemplate>();
+            //manufacturer template
+            Mapper.CreateMap<ManufacturerTemplate, ManufacturerTemplateModel>()
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+            Mapper.CreateMap<ManufacturerTemplateModel, ManufacturerTemplate>();
+            //product template
+            Mapper.CreateMap<ProductTemplate, ProductTemplateModel>()
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+            Mapper.CreateMap<ProductTemplateModel, ProductTemplate>();
         }
         
         public int Order

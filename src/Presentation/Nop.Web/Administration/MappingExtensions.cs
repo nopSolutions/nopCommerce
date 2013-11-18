@@ -20,6 +20,7 @@ using Nop.Admin.Models.Settings;
 using Nop.Admin.Models.Shipping;
 using Nop.Admin.Models.Stores;
 using Nop.Admin.Models.Tax;
+using Nop.Admin.Models.Templates;
 using Nop.Admin.Models.Topics;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
@@ -916,6 +917,56 @@ namespace Nop.Admin
         }
 
         #endregion
-        
+
+        #region Templates
+
+        public static CategoryTemplateModel ToModel(this CategoryTemplate entity)
+        {
+            return Mapper.Map<CategoryTemplate, CategoryTemplateModel>(entity);
+        }
+
+        public static CategoryTemplate ToEntity(this CategoryTemplateModel model)
+        {
+            return Mapper.Map<CategoryTemplateModel, CategoryTemplate>(model);
+        }
+
+        public static CategoryTemplate ToEntity(this CategoryTemplateModel model, CategoryTemplate destination)
+        {
+            return Mapper.Map(model, destination);
+        }
+
+
+        public static ManufacturerTemplateModel ToModel(this ManufacturerTemplate entity)
+        {
+            return Mapper.Map<ManufacturerTemplate, ManufacturerTemplateModel>(entity);
+        }
+
+        public static ManufacturerTemplate ToEntity(this ManufacturerTemplateModel model)
+        {
+            return Mapper.Map<ManufacturerTemplateModel, ManufacturerTemplate>(model);
+        }
+
+        public static ManufacturerTemplate ToEntity(this ManufacturerTemplateModel model, ManufacturerTemplate destination)
+        {
+            return Mapper.Map(model, destination);
+        }
+
+
+        public static ProductTemplateModel ToModel(this ProductTemplate entity)
+        {
+            return Mapper.Map<ProductTemplate, ProductTemplateModel>(entity);
+        }
+
+        public static ProductTemplate ToEntity(this ProductTemplateModel model)
+        {
+            return Mapper.Map<ProductTemplateModel, ProductTemplate>(model);
+        }
+
+        public static ProductTemplate ToEntity(this ProductTemplateModel model, ProductTemplate destination)
+        {
+            return Mapper.Map(model, destination);
+        }
+        #endregion
+
     }
 }

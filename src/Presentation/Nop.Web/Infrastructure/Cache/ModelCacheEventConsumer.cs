@@ -97,7 +97,17 @@ namespace Nop.Web.Infrastructure.Cache
         //states/province
         IConsumer<EntityInserted<StateProvince>>,
         IConsumer<EntityUpdated<StateProvince>>,
-        IConsumer<EntityDeleted<StateProvince>>
+        IConsumer<EntityDeleted<StateProvince>>,
+        //templates
+        IConsumer<EntityInserted<CategoryTemplate>>,
+        IConsumer<EntityUpdated<CategoryTemplate>>,
+        IConsumer<EntityDeleted<CategoryTemplate>>,
+        IConsumer<EntityInserted<ManufacturerTemplate>>,
+        IConsumer<EntityUpdated<ManufacturerTemplate>>,
+        IConsumer<EntityDeleted<ManufacturerTemplate>>,
+        IConsumer<EntityInserted<ProductTemplate>>,
+        IConsumer<EntityUpdated<ProductTemplate>>,
+        IConsumer<EntityDeleted<ProductTemplate>>
     {
         /// <summary>
         /// Key for categories on the search page
@@ -836,6 +846,44 @@ namespace Nop.Web.Infrastructure.Cache
         public void HandleEvent(EntityDeleted<StateProvince> eventMessage)
         {
             _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
+        }
+
+        //templates
+        public void HandleEvent(EntityInserted<CategoryTemplate> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(CATEGORY_TEMPLATE_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityUpdated<CategoryTemplate> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(CATEGORY_TEMPLATE_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityDeleted<CategoryTemplate> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(CATEGORY_TEMPLATE_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityInserted<ManufacturerTemplate> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(MANUFACTURER_TEMPLATE_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityUpdated<ManufacturerTemplate> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(MANUFACTURER_TEMPLATE_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityDeleted<ManufacturerTemplate> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(MANUFACTURER_TEMPLATE_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityInserted<ProductTemplate> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(PRODUCT_TEMPLATE_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityUpdated<ProductTemplate> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(PRODUCT_TEMPLATE_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityDeleted<ProductTemplate> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(PRODUCT_TEMPLATE_PATTERN_KEY);
         }
     }
 }

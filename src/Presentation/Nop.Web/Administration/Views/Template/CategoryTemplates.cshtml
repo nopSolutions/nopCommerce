@@ -1,0 +1,55 @@
+﻿@using Telerik.Web.Mvc.UI;
+@{
+    //page title
+    ViewBag.Title = T("Admin.System.Templates.Category").Text;
+}
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Administration/Content/images/ico-system.png")" alt="" />
+        @T("Admin.System.Templates.Category")
+    </div>
+</div>
+<table class="adminContent">
+    <tr>
+        <td>
+            @(Html.Telerik().Grid<CategoryTemplateModel>()
+                    .Name("templates-grid")
+                    .DataKeys(x =>
+                    {
+                        x.Add(y => y.Id).RouteKey("Id");
+                    })
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.Name);
+                        columns.Bound(x => x.ViewPath);
+                        columns.Bound(x => x.DisplayOrder);
+                        columns.Command(commands =>
+                        {
+                            commands.Edit().Text(T("Admin.Common.Edit").Text);
+                            commands.Delete().Text(T("Admin.Common.Delete").Text);
+                        }).Width(200);
+
+                    })
+                    .ToolBar(x => x.Insert())
+                    .Editable(x =>
+                    {
+                        x.Mode(GridEditMode.InLine);
+                    })
+                    .DataBinding(dataBinding =>
+                    {
+                        dataBinding.Ajax().Select("CategoryTemplates", "Template")
+                            .Update("CategoryTemplateUpdate", "Template")
+                            .Delete("CategoryTemplateDelete", "Template")
+                            .Insert("CategoryTemplateAdd", "Template");
+                    })
+                    .ClientEvents(x => x.OnError("grid_onError"))
+                    .EnableCustomBinding(true))
+            <script type="text/javascript">
+                function grid_onError(e) {
+                    alert(e.XMLHttpRequest.responseText);
+                    e.preventDefault();
+                }
+            </script>
+        </td>
+    </tr>
+</table>

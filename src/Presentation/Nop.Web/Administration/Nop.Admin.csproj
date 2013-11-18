@@ -140,6 +140,7 @@
     <Compile Include="Controllers\AffiliateController.cs" />
     <Compile Include="Controllers\CampaignController.cs" />
     <Compile Include="Controllers\BlogController.cs" />
+    <Compile Include="Controllers\TemplateController.cs" />
     <Compile Include="Controllers\CommonController.cs" />
     <Compile Include="Controllers\VendorController.cs" />
     <Compile Include="Controllers\StoreController.cs" />
@@ -212,6 +213,9 @@
     <Compile Include="Models\Settings\VendorSettingsModel.cs" />
     <Compile Include="Models\Shipping\WarehouseModel.cs" />
     <Compile Include="Models\Shipping\DeliveryDateModel.cs" />
+    <Compile Include="Models\Templates\ManufacturerTemplateModel.cs" />
+    <Compile Include="Models\Templates\ProductTemplateModel.cs" />
+    <Compile Include="Models\Templates\CategoryTemplateModel.cs" />
     <Compile Include="Models\Vendors\VendorModel.cs" />
     <Compile Include="Models\Customers\OnlineCustomerModel.cs" />
     <Compile Include="Models\Messages\MessageTemplateListModel.cs" />
@@ -313,6 +317,9 @@
     <Compile Include="Models\Settings\TaxSettingsModel.cs" />
     <Compile Include="Models\Cms\WidgetModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Validators\Templates\ProductTemplateValidator.cs" />
+    <Compile Include="Validators\Templates\ManufacturerTemplateValidator.cs" />
+    <Compile Include="Validators\Templates\CategoryTemplateValidator.cs" />
     <Compile Include="Validators\Catalog\CategoryValidator.cs" />
     <Compile Include="Validators\Catalog\ProductTagValidator.cs" />
     <Compile Include="Validators\Catalog\ManufacturerValidator.cs" />
@@ -1200,6 +1207,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Setting\Vendor.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Template\CategoryTemplates.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Template\ManufacturerTemplates.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Template\ProductTemplates.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

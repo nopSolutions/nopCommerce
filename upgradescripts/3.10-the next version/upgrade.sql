@@ -704,6 +704,63 @@ set @resources='
   <LocaleResource Name="Admin.System.QueuedEmails.Fields.AttachmentFilePath.Hint">
     <Value>A path to the attached file path.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates">
+    <Value>Templates</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Category">
+    <Value>Category templates</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Category.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Category.Name.Required">
+    <Value>Name is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Category.ViewPath">
+    <Value>View path</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Category.ViewPath.Required">
+    <Value>View path is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Category.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Manufacturer">
+    <Value>Manufacturer templates</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Manufacturer.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Manufacturer.Name.Required">
+    <Value>Name is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Manufacturer.ViewPath">
+    <Value>View path</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Manufacturer.ViewPath.Required">
+    <Value>View path is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Manufacturer.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Product">
+    <Value>Product templates</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Product.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Product.Name.Required">
+    <Value>Name is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Product.ViewPath">
+    <Value>View path</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Product.ViewPath.Required">
+    <Value>View path is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Product.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
 </Language>
 '
 
