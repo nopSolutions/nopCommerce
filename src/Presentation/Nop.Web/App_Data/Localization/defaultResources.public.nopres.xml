@@ -3458,6 +3458,9 @@
       <LocaleResource Name="FeaturedProducts">
         <Value>Featured products</Value>
       </LocaleResource>
+      <LocaleResource Name="FreeShipping">
+        <Value>Free shipping</Value>
+      </LocaleResource>
       <LocaleResource Name="GiftCard">
         <Children>
           <LocaleResource Name="Message">

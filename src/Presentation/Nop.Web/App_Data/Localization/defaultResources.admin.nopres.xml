@@ -3957,6 +3957,14 @@
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
+                  <LocaleResource Name="ShowFreeShippingNotification">
+                    <Value>Show "free shipping" icon</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Check to show "free shipping" notification for products with this option enabled.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
                   <LocaleResource Name="AllowProductSorting">
                     <Value>Allow product sorting</Value>
                     <Children>

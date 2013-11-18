@@ -4614,6 +4614,8 @@ namespace Nop.Services.Installation
                 {
                     ShowProductSku = false,
                     ShowManufacturerPartNumber = false,
+                    ShowGtin = false,
+                    ShowFreeShippingNotification = true,
                     AllowProductSorting = true,
                     AllowProductViewModeChanging = true,
                     DefaultViewMode = "grid",
@@ -5579,10 +5581,17 @@ namespace Nop.Services.Installation
 
         protected virtual void InstallProducts(string defaultUserEmail)
         {
-            var productTemplateSimple =
-                _productTemplateRepository.Table.FirstOrDefault(pt => pt.Name == "Simple product");
-            var productTemplateGrouped =
-                _productTemplateRepository.Table.FirstOrDefault(pt => pt.Name == "Grouped product");
+            var productTemplateSimple = _productTemplateRepository.Table.FirstOrDefault(pt => pt.Name == "Simple product");
+            if (productTemplateSimple == null)
+                throw new Exception("Simple product template could not be loaded");
+            var productTemplateGrouped = _productTemplateRepository.Table.FirstOrDefault(pt => pt.Name == "Grouped product");
+            if (productTemplateGrouped == null)
+                throw new Exception("Simple product template could not be loaded");
+
+            //delivery date
+            var deliveryDate = _deliveryDateRepository.Table.FirstOrDefault();
+            if (deliveryDate == null)
+                throw new Exception("No default deliveryDate could be loaded");
 
             //default customer/user
             var defaultCustomer = _customerRepository.Table.FirstOrDefault(x => x.Email == defaultUserEmail);
@@ -5596,7 +5605,6 @@ namespace Nop.Services.Installation
             //downloads
             var downloadService = EngineContext.Current.Resolve<IDownloadService>();
             var sampleDownloadsPath = _webHelper.MapPath("~/content/samples/");
-
 
             //products
             var allProducts = new List<Product>();
@@ -5693,6 +5701,8 @@ namespace Nop.Services.Installation
                 IsGiftCard = true,
                 GiftCardType = GiftCardType.Physical,
                 IsShipEnabled = true,
+                IsFreeShipping = true,
+                DeliveryDateId = deliveryDate.Id,
                 Weight = 1,
                 Length = 1,
                 Width = 1,
@@ -5738,6 +5748,7 @@ namespace Nop.Services.Installation
                 IsGiftCard = true,
                 GiftCardType = GiftCardType.Physical,
                 IsShipEnabled = true,
+                DeliveryDateId = deliveryDate.Id,
                 Weight = 1,
                 Length = 1,
                 Width = 1,
@@ -5871,6 +5882,7 @@ namespace Nop.Services.Installation
                 AllowCustomerReviews = true,
                 Price = 21.6M,
                 IsShipEnabled = true,
+                IsFreeShipping = true,
                 Weight = 2,
                 Length = 2,
                 Width = 2,
@@ -6200,6 +6212,7 @@ namespace Nop.Services.Installation
                 AllowCustomerReviews = true,
                 Price = 2600M,
                 IsShipEnabled = true,
+                IsFreeShipping = true,
                 Weight = 3,
                 Length = 3,
                 Width = 2,
@@ -6354,6 +6367,7 @@ namespace Nop.Services.Installation
                 Price = 27M,
                 OldPrice = 30M,
                 IsShipEnabled = true,
+                IsFreeShipping = true,
                 Weight = 2,
                 Length = 2,
                 Width = 2,
@@ -6401,6 +6415,7 @@ namespace Nop.Services.Installation
                 AllowCustomerReviews = true,
                 Price = 130M,
                 IsShipEnabled = true,
+                IsFreeShipping = true,
                 Weight = 2,
                 Length = 2,
                 Width = 2,
@@ -6494,6 +6509,7 @@ namespace Nop.Services.Installation
                 AllowCustomerReviews = true,
                 Price = 1200M,
                 IsShipEnabled = true,
+                IsFreeShipping = true,
                 Weight = 2,
                 Length = 2,
                 Width = 2,
@@ -6889,6 +6905,7 @@ namespace Nop.Services.Installation
                 Price = 19M,
                 OldPrice = 27M,
                 IsShipEnabled = true,
+                DeliveryDateId = deliveryDate.Id,
                 Weight = 2,
                 Length = 2,
                 Width = 2,
@@ -7085,6 +7102,7 @@ namespace Nop.Services.Installation
                 AllowCustomerReviews = true,
                 Price = 360M,
                 IsShipEnabled = true,
+                IsFreeShipping = true,
                 Weight = 2,
                 Length = 2,
                 Width = 2,

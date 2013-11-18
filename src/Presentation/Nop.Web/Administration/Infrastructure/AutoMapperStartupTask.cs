@@ -641,6 +641,7 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.ShowProductSku_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.ShowManufacturerPartNumber_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.ShowGtin_OverrideForStore, mo => mo.Ignore())
+                .ForMember(dest => dest.ShowFreeShippingNotification_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.AllowProductSorting_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.AllowProductViewModeChanging_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.ShowProductsFromSubcategories_OverrideForStore, mo => mo.Ignore())

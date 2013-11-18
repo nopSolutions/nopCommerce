@@ -159,6 +159,16 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ShowFreeShippingNotification_OverrideForStore, model => model.ShowFreeShippingNotification, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.ShowFreeShippingNotification):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ShowFreeShippingNotification)
+                @Html.ValidationMessageFor(model => model.ShowFreeShippingNotification)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.OverrideStoreCheckboxFor(model => model.AllowProductSorting_OverrideForStore, model => model.AllowProductSorting, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.AllowProductSorting):
             </td>

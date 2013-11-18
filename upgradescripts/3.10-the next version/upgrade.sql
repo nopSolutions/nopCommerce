@@ -761,6 +761,15 @@ set @resources='
   <LocaleResource Name="Admin.System.Templates.Product.DisplayOrder">
     <Value>Display order</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowFreeShippingNotification">
+    <Value>Show "free shipping" icon</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowFreeShippingNotification.Hint">
+    <Value>Check to show "free shipping" notification for products with this option enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.FreeShipping">
+    <Value>Free shipping</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1928,5 +1937,13 @@ IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[QueuedEmail
 BEGIN
 	ALTER TABLE [QueuedEmail]
 	ADD [AttachmentFilePath] nvarchar(MAX) NULL
+END
+GO
+
+--a new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.showfreeshippingnotification')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'catalogsettings.showfreeshippingnotification', N'true', 0)
 END
 GO

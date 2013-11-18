@@ -422,7 +422,7 @@
 .product-details-page .picture-thumbs{}
 .product-details-page .overview{margin-right:15px;margin-top:25px;padding:5px;}
 .product-details-page .product-name{color:#f93;font-size:1.3em;margin-bottom:1em;}
-.product-details-page .short-description,.product-details-page .manufacturers,.product-details-page .sku,.product-details-page .manufacturer-part-number,.product-details-page .stock,.product-details-page .gtin,.product-details-page .delivery-date{margin-bottom:.3em;font-size:1.1em;}
+.product-details-page .short-description,.product-details-page .manufacturers,.product-details-page .sku,.product-details-page .manufacturer-part-number,.product-details-page .stock,.product-details-page .gtin,.product-details-page .delivery-date,.product-details-page .free-shipping{margin-bottom:.3em;font-size:1.1em;}
 .product-details-page .full-description{border-top:solid 1px #d3d3d3;clear:both;margin-bottom:.3em;}
 .product-details-page .back-in-stock-subscription{}
 .product-details-page .product-reviews-overview{margin-top:20px;margin-bottom:20px;}

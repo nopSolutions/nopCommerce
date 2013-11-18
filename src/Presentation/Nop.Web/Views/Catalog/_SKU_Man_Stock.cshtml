@@ -29,6 +29,11 @@
     </div>
 }
 @*Delivery date*@
+@if (Model.FreeShippingNitificationEnabled && Model.IsFreeShipping)
+{
+    <div class="free-shipping">@T("Products.FreeShipping")</div>
+}
+@*Delivery date*@
 @if (!String.IsNullOrWhiteSpace(Model.DeliveryDate))
 {
     <div class="delivery-date">
