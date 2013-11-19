@@ -1,9 +1,9 @@
 using System;
 using System.IO;
 using System.Text;
+using System.Web.Mvc;
 using System.Xml;
 using Nop.Core;
-using System.Web.Mvc;
 
 namespace Nop.Services.Seo
 {

@@ -1,6 +1,6 @@
-﻿using NUnit.Framework;
-using Nop.Core.Domain.Stores;
+﻿using Nop.Core.Domain.Stores;
 using Nop.Tests;
+using NUnit.Framework;
 
 namespace Nop.Core.Tests.Domain.Stores
 {

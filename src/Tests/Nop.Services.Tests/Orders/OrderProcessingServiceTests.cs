@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using NUnit.Framework;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
@@ -32,6 +31,7 @@ using Nop.Services.Shipping;
 using Nop.Services.Tax;
 using Nop.Services.Vendors;
 using Nop.Tests;
+using NUnit.Framework;
 using Rhino.Mocks;
 
 namespace Nop.Services.Tests.Orders
@@ -39,55 +39,55 @@ namespace Nop.Services.Tests.Orders
     [TestFixture]
     public class OrderProcessingServiceTests : ServiceTest
     {
-        IWorkContext _workContext;
-        IStoreContext _storeContext;
-        ITaxService _taxService;
-        IShippingService _shippingService;
-        IShipmentService _shipmentService;
-        IPaymentService _paymentService;
-        ICheckoutAttributeParser _checkoutAttributeParser;
-        IDiscountService _discountService;
-        IGiftCardService _giftCardService;
-        IGenericAttributeService _genericAttributeService;
-        TaxSettings _taxSettings;
-        RewardPointsSettings _rewardPointsSettings;
-        ICategoryService _categoryService;
-        IProductAttributeParser _productAttributeParser;
-        IPriceCalculationService _priceCalcService;
-        IOrderTotalCalculationService _orderTotalCalcService;
-        IAddressService _addressService;
-        ShippingSettings _shippingSettings;
-        ILogger _logger;
-        IRepository<ShippingMethod> _shippingMethodRepository;
-        IRepository<DeliveryDate> _deliveryDateRepository;
-        IRepository<Warehouse> _warehouseRepository;
-        IOrderService _orderService;
-        IWebHelper _webHelper;
-        ILocalizationService _localizationService;
-        ILanguageService _languageService;
-        IProductService _productService;
-        IPriceFormatter _priceFormatter;
-        IProductAttributeFormatter _productAttributeFormatter;
-        IShoppingCartService _shoppingCartService;
-        ICheckoutAttributeFormatter _checkoutAttributeFormatter;
-        ICustomerService _customerService;
-        IEncryptionService _encryptionService;
-        IWorkflowMessageService _workflowMessageService;
-        ICustomerActivityService _customerActivityService;
-        ICurrencyService _currencyService;
-        PaymentSettings _paymentSettings;
-        OrderSettings _orderSettings;
-        LocalizationSettings _localizationSettings;
-        ShoppingCartSettings _shoppingCartSettings;
-        CatalogSettings _catalogSettings;
-        IOrderProcessingService _orderProcessingService;
-        IEventPublisher _eventPublisher;
-        CurrencySettings _currencySettings;
-        IAffiliateService _affiliateService;
-        IVendorService _vendorService;
-        IPdfService _pdfService;
+        private IWorkContext _workContext;
+        private IStoreContext _storeContext;
+        private ITaxService _taxService;
+        private IShippingService _shippingService;
+        private IShipmentService _shipmentService;
+        private IPaymentService _paymentService;
+        private ICheckoutAttributeParser _checkoutAttributeParser;
+        private IDiscountService _discountService;
+        private IGiftCardService _giftCardService;
+        private IGenericAttributeService _genericAttributeService;
+        private TaxSettings _taxSettings;
+        private RewardPointsSettings _rewardPointsSettings;
+        private ICategoryService _categoryService;
+        private IProductAttributeParser _productAttributeParser;
+        private IPriceCalculationService _priceCalcService;
+        private IOrderTotalCalculationService _orderTotalCalcService;
+        private IAddressService _addressService;
+        private ShippingSettings _shippingSettings;
+        private ILogger _logger;
+        private IRepository<ShippingMethod> _shippingMethodRepository;
+        private IRepository<DeliveryDate> _deliveryDateRepository;
+        private IRepository<Warehouse> _warehouseRepository;
+        private IOrderService _orderService;
+        private IWebHelper _webHelper;
+        private ILocalizationService _localizationService;
+        private ILanguageService _languageService;
+        private IProductService _productService;
+        private IPriceFormatter _priceFormatter;
+        private IProductAttributeFormatter _productAttributeFormatter;
+        private IShoppingCartService _shoppingCartService;
+        private ICheckoutAttributeFormatter _checkoutAttributeFormatter;
+        private ICustomerService _customerService;
+        private IEncryptionService _encryptionService;
+        private IWorkflowMessageService _workflowMessageService;
+        private ICustomerActivityService _customerActivityService;
+        private ICurrencyService _currencyService;
+        private PaymentSettings _paymentSettings;
+        private OrderSettings _orderSettings;
+        private LocalizationSettings _localizationSettings;
+        private ShoppingCartSettings _shoppingCartSettings;
+        private CatalogSettings _catalogSettings;
+        private IOrderProcessingService _orderProcessingService;
+        private IEventPublisher _eventPublisher;
+        private CurrencySettings _currencySettings;
+        private IAffiliateService _affiliateService;
+        private IVendorService _vendorService;
+        private IPdfService _pdfService;
 
-        Store _store;
+        private Store _store;
 
         [SetUp]
         public new void SetUp()

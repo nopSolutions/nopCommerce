@@ -1,21 +1,21 @@
 ﻿using System.Collections.Generic;
-using Nop.Services.Configuration;
-using NUnit.Framework;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Plugins;
+using Nop.Services.Configuration;
 using Nop.Services.Payments;
 using Nop.Tests;
+using NUnit.Framework;
 
 namespace Nop.Services.Tests.Payments
 {
     [TestFixture]
     public class PaymentServiceTests : ServiceTest
     {
-        PaymentSettings _paymentSettings;
-        ShoppingCartSettings _shoppingCartSettings;
-        ISettingService _settingService;
-        IPaymentService _paymentService;
+        private PaymentSettings _paymentSettings;
+        private ShoppingCartSettings _shoppingCartSettings;
+        private ISettingService _settingService;
+        private IPaymentService _paymentService;
         
         [SetUp]
         public new void SetUp()

@@ -7,8 +7,6 @@ using Nop.Services.Catalog;
 using Nop.Services.Media;
 using Nop.Services.Seo;
 using OfficeOpenXml;
-using Nop.Core.Domain.Media;
-using System.Collections.Generic;
 
 namespace Nop.Services.ExportImport
 {

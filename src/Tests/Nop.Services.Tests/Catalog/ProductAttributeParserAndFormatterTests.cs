@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using NUnit.Framework;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
@@ -15,6 +14,7 @@ using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Tax;
 using Nop.Tests;
+using NUnit.Framework;
 using Rhino.Mocks;
 
 namespace Nop.Services.Tests.Catalog
@@ -22,28 +22,28 @@ namespace Nop.Services.Tests.Catalog
     [TestFixture]
     public class ProductAttributeParserTests : ServiceTest
     {
-        IRepository<ProductAttribute> _productAttributeRepo;
-        IRepository<ProductVariantAttribute> _productVariantAttributeRepo;
-        IRepository<ProductVariantAttributeCombination> _productVariantAttributeCombinationRepo;
-        IRepository<ProductVariantAttributeValue> _productVariantAttributeValueRepo;
-        IProductAttributeService _productAttributeService;
-        IProductAttributeParser _productAttributeParser;
-        IEventPublisher _eventPublisher;
+        private IRepository<ProductAttribute> _productAttributeRepo;
+        private IRepository<ProductVariantAttribute> _productVariantAttributeRepo;
+        private IRepository<ProductVariantAttributeCombination> _productVariantAttributeCombinationRepo;
+        private IRepository<ProductVariantAttributeValue> _productVariantAttributeValueRepo;
+        private IProductAttributeService _productAttributeService;
+        private IProductAttributeParser _productAttributeParser;
+        private IEventPublisher _eventPublisher;
 
-        IWorkContext _workContext;
-        ICurrencyService _currencyService;
-        ILocalizationService _localizationService;
-        ITaxService _taxService;
-        IPriceFormatter _priceFormatter;
-        IPriceCalculationService _priceCalculationService;
-        IDownloadService _downloadService;
-        IWebHelper _webHelper;
-        ShoppingCartSettings _shoppingCartSettings;
-        IProductAttributeFormatter _productAttributeFormatter;
+        private IWorkContext _workContext;
+        private ICurrencyService _currencyService;
+        private ILocalizationService _localizationService;
+        private ITaxService _taxService;
+        private IPriceFormatter _priceFormatter;
+        private IPriceCalculationService _priceCalculationService;
+        private IDownloadService _downloadService;
+        private IWebHelper _webHelper;
+        private ShoppingCartSettings _shoppingCartSettings;
+        private IProductAttributeFormatter _productAttributeFormatter;
 
-        ProductAttribute pa1, pa2, pa3;
-        ProductVariantAttribute pva1_1, pva2_1, pva3_1;
-        ProductVariantAttributeValue pvav1_1, pvav1_2, pvav2_1, pvav2_2;
+        private ProductAttribute pa1, pa2, pa3;
+        private ProductVariantAttribute pva1_1, pva2_1, pva3_1;
+        private ProductVariantAttributeValue pvav1_1, pvav1_2, pvav2_1, pvav2_2;
         
         [SetUp]
         public new void SetUp()

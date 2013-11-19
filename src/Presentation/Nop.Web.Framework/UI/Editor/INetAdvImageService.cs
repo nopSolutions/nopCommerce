@@ -5,22 +5,25 @@ using System.Web;
 
 namespace Nop.Web.Framework.UI.Editor
 {
+    /// <summary>
+    /// NetAdv image service
+    /// </summary>
     public partial interface INetAdvImageService
     {
         /// <summary>
         /// Gets a list of top-level images within a given directory
         /// </summary>
-        /// <param name="path"></param>
-        /// <param name="ctx"></param>
-        /// <returns></returns>
+        /// <param name="path">Path</param>
+        /// <param name="ctx">HTTP context</param>
+        /// <returns>A lit of images</returns>
         IEnumerable<NetAdvImage> GetImages(string path, HttpContextBase ctx);
 
         /// <summary>
         /// Deletes a image
         /// </summary>
-        /// <param name="path"></param>
-        /// <param name="name"></param>
-        /// <returns></returns>
+        /// <param name="path">Path</param>
+        /// <param name="name">Name</param>
+        /// <returns>Error (if happens)</returns>
         string DeleteImage(string path, string name);
     }
 }

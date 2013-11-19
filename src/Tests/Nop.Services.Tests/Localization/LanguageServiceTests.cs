@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Nop.Services.Stores;
-using NUnit.Framework;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Localization;
 using Nop.Services.Configuration;
 using Nop.Services.Events;
 using Nop.Services.Localization;
+using Nop.Services.Stores;
 using Nop.Tests;
+using NUnit.Framework;
 using Rhino.Mocks;
 
 namespace Nop.Services.Tests.Localization
@@ -16,12 +16,12 @@ namespace Nop.Services.Tests.Localization
     [TestFixture]
     public class LanguageServiceTests : ServiceTest
     {
-        IRepository<Language> _languageRepo;
-        IStoreMappingService _storeMappingService;
-        ILanguageService _languageService;
-        ISettingService _settingService;
-        IEventPublisher _eventPublisher;
-        LocalizationSettings _localizationSettings;
+        private IRepository<Language> _languageRepo;
+        private IStoreMappingService _storeMappingService;
+        private ILanguageService _languageService;
+        private ISettingService _settingService;
+        private IEventPublisher _eventPublisher;
+        private LocalizationSettings _localizationSettings;
 
         [SetUp]
         public new void SetUp()

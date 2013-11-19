@@ -1,15 +1,15 @@
-﻿using NUnit.Framework;
-using Nop.Core.Domain.Security;
+﻿using Nop.Core.Domain.Security;
 using Nop.Services.Security;
 using Nop.Tests;
+using NUnit.Framework;
 
 namespace Nop.Services.Tests.Security
 {
     [TestFixture]
     public class EncryptionServiceTests : ServiceTest
     {
-        IEncryptionService _encryptionService;
-        SecuritySettings _securitySettings;
+        private IEncryptionService _encryptionService;
+        private SecuritySettings _securitySettings;
 
         [SetUp]
         public new void SetUp() 

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using NUnit.Framework;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
@@ -23,6 +22,7 @@ using Nop.Services.Payments;
 using Nop.Services.Shipping;
 using Nop.Services.Tax;
 using Nop.Tests;
+using NUnit.Framework;
 using Rhino.Mocks;
 
 namespace Nop.Services.Tests.Orders
@@ -30,33 +30,33 @@ namespace Nop.Services.Tests.Orders
     [TestFixture]
     public class OrderTotalCalculationServiceTests : ServiceTest
     {
-        IWorkContext _workContext;
-        IStoreContext _storeContext;
-        ITaxService _taxService;
-        IShippingService _shippingService;
-        IPaymentService _paymentService;
-        ICheckoutAttributeParser _checkoutAttributeParser;
-        IDiscountService _discountService;
-        IGiftCardService _giftCardService;
-        IGenericAttributeService _genericAttributeService;
-        TaxSettings _taxSettings;
-        RewardPointsSettings _rewardPointsSettings;
-        ICategoryService _categoryService;
-        IProductAttributeParser _productAttributeParser;
-        IPriceCalculationService _priceCalcService;
-        IOrderTotalCalculationService _orderTotalCalcService;
-        IAddressService _addressService;
-        ShippingSettings _shippingSettings;
-        ILocalizationService _localizationService;
-        ILogger _logger;
-        IRepository<ShippingMethod> _shippingMethodRepository;
-        IRepository<DeliveryDate> _deliveryDateRepository;
-        IRepository<Warehouse> _warehouseRepository;
-        ShoppingCartSettings _shoppingCartSettings;
-        CatalogSettings _catalogSettings;
-        IEventPublisher _eventPublisher;
-        Store _store;
-        IProductService _productService;
+        private IWorkContext _workContext;
+        private IStoreContext _storeContext;
+        private ITaxService _taxService;
+        private IShippingService _shippingService;
+        private IPaymentService _paymentService;
+        private ICheckoutAttributeParser _checkoutAttributeParser;
+        private IDiscountService _discountService;
+        private IGiftCardService _giftCardService;
+        private IGenericAttributeService _genericAttributeService;
+        private TaxSettings _taxSettings;
+        private RewardPointsSettings _rewardPointsSettings;
+        private ICategoryService _categoryService;
+        private IProductAttributeParser _productAttributeParser;
+        private IPriceCalculationService _priceCalcService;
+        private IOrderTotalCalculationService _orderTotalCalcService;
+        private IAddressService _addressService;
+        private ShippingSettings _shippingSettings;
+        private ILocalizationService _localizationService;
+        private ILogger _logger;
+        private IRepository<ShippingMethod> _shippingMethodRepository;
+        private IRepository<DeliveryDate> _deliveryDateRepository;
+        private IRepository<Warehouse> _warehouseRepository;
+        private ShoppingCartSettings _shoppingCartSettings;
+        private CatalogSettings _catalogSettings;
+        private IEventPublisher _eventPublisher;
+        private Store _store;
+        private IProductService _productService;
 
         [SetUp]
         public new void SetUp()

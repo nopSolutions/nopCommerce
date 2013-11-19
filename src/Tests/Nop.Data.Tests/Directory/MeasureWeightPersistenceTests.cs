@@ -1,6 +1,6 @@
-﻿using NUnit.Framework;
-using Nop.Core.Domain.Directory;
+﻿using Nop.Core.Domain.Directory;
 using Nop.Tests;
+using NUnit.Framework;
 
 namespace Nop.Data.Tests.Directory
 {

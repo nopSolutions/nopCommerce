@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using NUnit.Framework;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Messages;
 using Nop.Tests;
+using NUnit.Framework;
 
 namespace Nop.Services.Tests.Messages
 {

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using NUnit.Framework;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
@@ -8,6 +7,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Logging;
 using Nop.Services.Logging;
 using Nop.Tests;
+using NUnit.Framework;
 using Rhino.Mocks;
 
 namespace Nop.Services.Tests.Logging
@@ -15,14 +15,15 @@ namespace Nop.Services.Tests.Logging
     [TestFixture]
     public class CustomerActivityServiceTests : ServiceTest
     {
-        ICacheManager _cacheManager;
-        IRepository<ActivityLog> _activityLogRepository;
-        IRepository<ActivityLogType> _activityLogTypeRepository;
-        IWorkContext _workContext;
-        ICustomerActivityService _customerActivityService;
-        ActivityLogType _activityType1, _activityType2;
-        ActivityLog _activity1, _activity2;
-        Customer _customer1, _customer2;
+        private ICacheManager _cacheManager;
+        private IRepository<ActivityLog> _activityLogRepository;
+        private IRepository<ActivityLogType> _activityLogTypeRepository;
+        private IWorkContext _workContext;
+        private ICustomerActivityService _customerActivityService;
+        private ActivityLogType _activityType1, _activityType2;
+        private ActivityLog _activity1, _activity2;
+        private Customer _customer1, _customer2;
+
         [SetUp]
         public new void SetUp()
         {

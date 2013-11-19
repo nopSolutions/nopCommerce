@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
-using NUnit.Framework;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
 using Nop.Tests;
+using NUnit.Framework;
 
 namespace Nop.Data.Tests.Catalog
 {

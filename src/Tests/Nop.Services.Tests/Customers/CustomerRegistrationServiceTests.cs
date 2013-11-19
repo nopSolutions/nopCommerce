@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using NUnit.Framework;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Common;
@@ -15,6 +14,7 @@ using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Tests;
+using NUnit.Framework;
 using Rhino.Mocks;
 
 namespace Nop.Services.Tests.Customers
@@ -22,22 +22,22 @@ namespace Nop.Services.Tests.Customers
     [TestFixture]
     public class CustomerRegistrationServiceTests : ServiceTest
     {
-        IRepository<Customer> _customerRepo;
-        IRepository<CustomerRole> _customerRoleRepo;
-        IRepository<GenericAttribute> _genericAttributeRepo;
-        IRepository<Order> _orderRepo;
-        IRepository<ForumPost> _forumPostRepo;
-        IRepository<ForumTopic> _forumTopicRepo;
-        IGenericAttributeService _genericAttributeService;
-        IEncryptionService _encryptionService;
-        ICustomerService _customerService;
-        ICustomerRegistrationService _customerRegistrationService;
-        ILocalizationService _localizationService;
-        CustomerSettings _customerSettings;
-        INewsLetterSubscriptionService _newsLetterSubscriptionService;
-        IEventPublisher _eventPublisher;
-        RewardPointsSettings _rewardPointsSettings;
-        SecuritySettings _securitySettings;
+        private IRepository<Customer> _customerRepo;
+        private IRepository<CustomerRole> _customerRoleRepo;
+        private IRepository<GenericAttribute> _genericAttributeRepo;
+        private IRepository<Order> _orderRepo;
+        private IRepository<ForumPost> _forumPostRepo;
+        private IRepository<ForumTopic> _forumTopicRepo;
+        private IGenericAttributeService _genericAttributeService;
+        private IEncryptionService _encryptionService;
+        private ICustomerService _customerService;
+        private ICustomerRegistrationService _customerRegistrationService;
+        private ILocalizationService _localizationService;
+        private CustomerSettings _customerSettings;
+        private INewsLetterSubscriptionService _newsLetterSubscriptionService;
+        private IEventPublisher _eventPublisher;
+        private RewardPointsSettings _rewardPointsSettings;
+        private SecuritySettings _securitySettings;
 
         [SetUp]
         public new void SetUp()

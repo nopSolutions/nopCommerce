@@ -1,6 +1,6 @@
 ﻿using System;
-using NUnit.Framework;
 using Nop.Tests;
+using NUnit.Framework;
 
 namespace Nop.Core.Tests
 {

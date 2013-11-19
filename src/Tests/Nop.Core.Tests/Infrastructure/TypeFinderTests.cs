@@ -1,7 +1,7 @@
 ﻿using System.Linq;
-using NUnit.Framework;
 using Nop.Core.Infrastructure;
 using Nop.Tests;
+using NUnit.Framework;
 
 namespace Nop.Core.Tests.Infrastructure
 {

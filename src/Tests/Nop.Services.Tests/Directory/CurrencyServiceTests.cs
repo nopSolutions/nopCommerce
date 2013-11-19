@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Nop.Services.Stores;
-using NUnit.Framework;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Directory;
-using Nop.Core.Domain.Stores;
 using Nop.Core.Plugins;
 using Nop.Services.Directory;
 using Nop.Services.Events;
+using Nop.Services.Stores;
 using Nop.Tests;
+using NUnit.Framework;
 using Rhino.Mocks;
 
 namespace Nop.Services.Tests.Directory
@@ -18,13 +17,13 @@ namespace Nop.Services.Tests.Directory
     [TestFixture]
     public class CurrencyServiceTests : ServiceTest
     {
-        IRepository<Currency> _currencyRepository;
-        IStoreMappingService _storeMappingService;
-        CurrencySettings _currencySettings;
-        IEventPublisher _eventPublisher;
-        ICurrencyService _currencyService;
+        private IRepository<Currency> _currencyRepository;
+        private IStoreMappingService _storeMappingService;
+        private CurrencySettings _currencySettings;
+        private IEventPublisher _eventPublisher;
+        private ICurrencyService _currencyService;
 
-        Currency currencyUSD, currencyRUR, currencyEUR;
+        private Currency currencyUSD, currencyRUR, currencyEUR;
         
         [SetUp]
         public new void SetUp()

@@ -1,11 +1,11 @@
 using System;
 using System.Linq;
+using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Services.Catalog;
 using Nop.Services.Topics;
-using System.Web.Mvc;
 
 namespace Nop.Services.Seo
 {

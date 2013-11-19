@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.UI.Editor;
 using Telerik.Web.Mvc.UI;
 
 //Original code can be found here http://demos.telerik.com/aspnet-mvc/razor/editor/imagetool
@@ -8,8 +9,6 @@ namespace Nop.Admin.Controllers
     [AdminAuthorize]
     public partial class ImageBrowserController : EditorFileBrowserController
     {
-        private const string UploadedImagesFolder = "~/content/images/uploaded/";
-
         /// <summary>
         /// Gets the base paths from which content will be served.
         /// </summary>
@@ -17,10 +16,10 @@ namespace Nop.Admin.Controllers
         {
             get
             {
-                var path = Server.MapPath(UploadedImagesFolder);
+                var path = Server.MapPath(NetAdvImageSettings.UploadPath);
                 if (!Directory.Exists(path))
                     Directory.CreateDirectory(path);
-                return new[] { UploadedImagesFolder };
+                return new[] { NetAdvImageSettings.UploadPath };
             }
         }
     }

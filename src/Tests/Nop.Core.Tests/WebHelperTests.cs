@@ -1,8 +1,8 @@
 ﻿using System.Collections.Specialized;
 using System.Web;
-using NUnit.Framework;
 using Nop.Core.Fakes;
 using Nop.Tests;
+using NUnit.Framework;
 
 namespace Nop.Core.Tests
 {

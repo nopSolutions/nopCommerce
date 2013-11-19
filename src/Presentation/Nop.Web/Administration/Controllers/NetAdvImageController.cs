@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Web;
 using System.Web.Mvc;
+using Nop.Core;
 using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.UI.Editor;
@@ -33,12 +34,25 @@ namespace Nop.Admin.Controllers
             this._httpContext = httpContext;
         }
 
+        [NonAction]
+        protected virtual bool ValidatePath(string path)
+        {
+            if (String.IsNullOrEmpty(path))
+                return false;
+
+            if (!path.EndsWith("\\"))
+                path += "\\";
+
+            var uploadedDirectoryPath = Server.MapPath(NetAdvImageSettings.UploadPath).ToLowerInvariant();
+            var result = path.ToLowerInvariant().Contains(uploadedDirectoryPath);
+            return result;
+        }
+
         public ActionResult Index()
         {
             return View();
         }
-
-
+        
         [HttpPost]
         public JsonResult Index(string path)
         {
@@ -65,6 +79,9 @@ namespace Nop.Admin.Controllers
                     // Webkit, Mozilla
                     filePath = Path.Combine(path, Request["qqfile"]);
                 }
+
+                if (!ValidatePath(path))
+                    throw new Exception(string.Format("{0} is not valid path", path));
 
                 try
                 {
@@ -102,6 +119,9 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.HtmlEditorManagePictures))
                 return Json(new { success = false, message = "No access to this functionality" }, "application/json");
+            
+            if (!ValidatePath(path))
+                throw new Exception(string.Format("{0} is not valid path", path));
 
             return new JsonResult { Data = _imageService.GetImages(path, HttpContext) };
         }
@@ -111,6 +131,9 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.HtmlEditorManagePictures))
                 return Json(new { success = false, message = "No access to this functionality" }, "application/json");
+            
+            if (!ValidatePath(path))
+                throw new Exception(string.Format("{0} is not valid path", path));
 
             return new JsonResult { Data = _imageService.DeleteImage(path, name) };
         }
@@ -120,6 +143,9 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.HtmlEditorManagePictures))
                 return Json(new { success = false, message = "No access to this functionality" }, "application/json");
+            
+            if (!ValidatePath(path))
+                throw new Exception(string.Format("{0} is not valid path", path));
 
             return new JsonResult { Data = _directoryService.MoveDirectory(path, destinationPath) };
         }
@@ -129,6 +155,9 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.HtmlEditorManagePictures))
                 return Json(new { success = false, message = "No access to this functionality" }, "application/json");
+            
+            if (!ValidatePath(path))
+                throw new Exception(string.Format("{0} is not valid path", path));
 
             return new JsonResult { Data = _directoryService.DeleteDirectory(path, HttpContext) };
         }
@@ -164,6 +193,9 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.HtmlEditorManagePictures))
                 return Json(new { success = false, message = "No access to this functionality" }, "application/json");
+            
+            if (!ValidatePath(path))
+                throw new Exception(string.Format("{0} is not valid path", path));
 
             return new JsonResult { Data = _directoryService.RenameDirectory(path, name, HttpContext) };
         }

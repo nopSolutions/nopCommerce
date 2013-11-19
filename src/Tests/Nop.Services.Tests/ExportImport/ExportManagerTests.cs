@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using NUnit.Framework;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
@@ -13,6 +12,7 @@ using Nop.Services.Catalog;
 using Nop.Services.ExportImport;
 using Nop.Services.Media;
 using Nop.Services.Messages;
+using NUnit.Framework;
 using Rhino.Mocks;
 
 namespace Nop.Services.Tests.ExportImport
@@ -20,12 +20,12 @@ namespace Nop.Services.Tests.ExportImport
     [TestFixture]
     public class ExportManagerTests : ServiceTest
     {
-        ICategoryService _categoryService;
-        IManufacturerService _manufacturerService;
-        IProductAttributeService _productAttributeService;
-        IPictureService _pictureService;
-        INewsLetterSubscriptionService _newsLetterSubscriptionService;
-        IExportManager _exportManager;
+        private ICategoryService _categoryService;
+        private IManufacturerService _manufacturerService;
+        private IProductAttributeService _productAttributeService;
+        private IPictureService _pictureService;
+        private INewsLetterSubscriptionService _newsLetterSubscriptionService;
+        private IExportManager _exportManager;
 
         [SetUp]
         public new void SetUp()

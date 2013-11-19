@@ -1,6 +1,6 @@
-﻿using NUnit.Framework;
-using Nop.Core.Domain.Blogs;
+﻿using Nop.Core.Domain.Blogs;
 using Nop.Tests;
+using NUnit.Framework;
 
 namespace Nop.Core.Tests.Domain.Blogs
 {

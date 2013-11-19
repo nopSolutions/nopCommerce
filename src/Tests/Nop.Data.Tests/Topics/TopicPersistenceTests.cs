@@ -1,6 +1,6 @@
-﻿using NUnit.Framework;
-using Nop.Core.Domain.Topics;
+﻿using Nop.Core.Domain.Topics;
 using Nop.Tests;
+using NUnit.Framework;
 
 namespace Nop.Data.Tests.Topics
 {

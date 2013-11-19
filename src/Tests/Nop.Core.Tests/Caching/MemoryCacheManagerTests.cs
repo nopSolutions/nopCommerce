@@ -1,6 +1,6 @@
-﻿using NUnit.Framework;
-using Nop.Core.Caching;
+﻿using Nop.Core.Caching;
 using Nop.Tests;
+using NUnit.Framework;
 
 namespace Nop.Core.Tests.Caching
 {

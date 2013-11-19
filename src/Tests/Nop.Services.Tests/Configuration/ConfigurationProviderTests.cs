@@ -1,7 +1,7 @@
-﻿using NUnit.Framework;
-using Nop.Core.Configuration;
+﻿using Nop.Core.Configuration;
 using Nop.Services.Configuration;
 using Nop.Tests;
+using NUnit.Framework;
 
 namespace Nop.Services.Tests.Configuration
 {

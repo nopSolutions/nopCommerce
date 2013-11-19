@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using NUnit.Framework;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
@@ -14,6 +13,7 @@ using Nop.Services.Logging;
 using Nop.Services.Orders;
 using Nop.Services.Shipping;
 using Nop.Tests;
+using NUnit.Framework;
 using Rhino.Mocks;
 
 namespace Nop.Services.Tests.Shipping
@@ -22,19 +22,19 @@ namespace Nop.Services.Tests.Shipping
     public class ShippingServiceTests : ServiceTest
     {
         private IRepository<ShippingMethod> _shippingMethodRepository;
-        IRepository<DeliveryDate> _deliveryDateRepository;
-        IRepository<Warehouse> _warehouseRepository;
-        ILogger _logger;
-        IProductAttributeParser _productAttributeParser;
-        ICheckoutAttributeParser _checkoutAttributeParser;
-        ShippingSettings _shippingSettings;
-        IEventPublisher _eventPublisher;
-        ILocalizationService _localizationService;
-        IAddressService _addressService;
-        IGenericAttributeService _genericAttributeService;
-        IShippingService _shippingService;
-        ShoppingCartSettings _shoppingCartSettings;
-        IProductService _productService;
+        private IRepository<DeliveryDate> _deliveryDateRepository;
+        private IRepository<Warehouse> _warehouseRepository;
+        private ILogger _logger;
+        private IProductAttributeParser _productAttributeParser;
+        private ICheckoutAttributeParser _checkoutAttributeParser;
+        private ShippingSettings _shippingSettings;
+        private IEventPublisher _eventPublisher;
+        private ILocalizationService _localizationService;
+        private IAddressService _addressService;
+        private IGenericAttributeService _genericAttributeService;
+        private IShippingService _shippingService;
+        private ShoppingCartSettings _shoppingCartSettings;
+        private IProductService _productService;
 
         [SetUp]
         public new void SetUp()

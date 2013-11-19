@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using NUnit.Framework;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Directory;
 using Nop.Services.Directory;
 using Nop.Services.Events;
 using Nop.Tests;
+using NUnit.Framework;
 using Rhino.Mocks;
 
 namespace Nop.Services.Tests.Directory
@@ -14,14 +14,14 @@ namespace Nop.Services.Tests.Directory
     [TestFixture]
     public class MeasureServiceTests : ServiceTest
     {
-        IRepository<MeasureDimension> _measureDimensionRepository;
-        IRepository<MeasureWeight> _measureWeightRepository;
-        MeasureSettings _measureSettings;
-        IEventPublisher _eventPublisher;
-        IMeasureService _measureService;
+        private IRepository<MeasureDimension> _measureDimensionRepository;
+        private IRepository<MeasureWeight> _measureWeightRepository;
+        private MeasureSettings _measureSettings;
+        private IEventPublisher _eventPublisher;
+        private IMeasureService _measureService;
 
-        MeasureDimension measureDimension1, measureDimension2, measureDimension3, measureDimension4;
-        MeasureWeight measureWeight1, measureWeight2, measureWeight3, measureWeight4;
+        private MeasureDimension measureDimension1, measureDimension2, measureDimension3, measureDimension4;
+        private MeasureWeight measureWeight1, measureWeight2, measureWeight3, measureWeight4;
         
         [SetUp]
         public new void SetUp()

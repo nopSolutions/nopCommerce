@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using NUnit.Framework;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
@@ -10,6 +9,7 @@ using Nop.Core.Domain.Stores;
 using Nop.Services.Catalog;
 using Nop.Services.Discounts;
 using Nop.Tests;
+using NUnit.Framework;
 using Rhino.Mocks;
 
 namespace Nop.Services.Tests.Catalog
@@ -17,17 +17,17 @@ namespace Nop.Services.Tests.Catalog
     [TestFixture]
     public class PriceCalculationServiceTests : ServiceTest
     {
-        IWorkContext _workContext;
-        IStoreContext _storeContext;
-        IDiscountService _discountService;
-        ICategoryService _categoryService;
-        IProductAttributeParser _productAttributeParser;
-        IProductService _productService;
-        IPriceCalculationService _priceCalcService;
-        ShoppingCartSettings _shoppingCartSettings;
-        CatalogSettings _catalogSettings;
+        private IWorkContext _workContext;
+        private IStoreContext _storeContext;
+        private IDiscountService _discountService;
+        private ICategoryService _categoryService;
+        private IProductAttributeParser _productAttributeParser;
+        private IProductService _productService;
+        private IPriceCalculationService _priceCalcService;
+        private ShoppingCartSettings _shoppingCartSettings;
+        private CatalogSettings _catalogSettings;
 
-        Store _store;
+        private Store _store;
 
         [SetUp]
         public new void SetUp()

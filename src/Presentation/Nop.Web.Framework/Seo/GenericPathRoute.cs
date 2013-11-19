@@ -5,7 +5,6 @@ using Nop.Core.Data;
 using Nop.Core.Infrastructure;
 using Nop.Services.Events;
 using Nop.Services.Seo;
-using Nop.Web.Framework.Events;
 using Nop.Web.Framework.Localization;
 
 namespace Nop.Web.Framework.Seo

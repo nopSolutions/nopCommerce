@@ -4,7 +4,6 @@ using System.Linq;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Localization;
-using Nop.Core.Domain.Stores;
 using Nop.Services.Configuration;
 using Nop.Services.Events;
 using Nop.Services.Stores;

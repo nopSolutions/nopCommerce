@@ -1,5 +1,4 @@
 ﻿using System;
-using NUnit.Framework;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -10,6 +9,7 @@ using Nop.Services.Common;
 using Nop.Services.Events;
 using Nop.Services.Tax;
 using Nop.Tests;
+using NUnit.Framework;
 using Rhino.Mocks;
 
 namespace Nop.Services.Tests.Tax
@@ -17,11 +17,11 @@ namespace Nop.Services.Tests.Tax
     [TestFixture]
     public class TaxServiceTests : ServiceTest
     {
-        IAddressService _addressService;
-        IWorkContext _workContext;
-        TaxSettings _taxSettings;
-        IEventPublisher _eventPublisher;
-        ITaxService _taxService;
+        private IAddressService _addressService;
+        private IWorkContext _workContext;
+        private TaxSettings _taxSettings;
+        private IEventPublisher _eventPublisher;
+        private ITaxService _taxService;
 
         [SetUp]
         public new void SetUp()

@@ -7,8 +7,6 @@ namespace Nop.Services.Tests.Directory
 {
     public class TestExchangeRateProvider : BasePlugin, IExchangeRateProvider
     {
-        #region Methods
-
         /// <summary>
         /// Gets currency live rates
         /// </summary>
@@ -18,8 +16,5 @@ namespace Nop.Services.Tests.Directory
         {
             return new List<ExchangeRate>();
         }
-
-        #endregion
-
     }
 }

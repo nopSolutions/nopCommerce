@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NUnit.Framework;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
@@ -13,6 +12,7 @@ using Nop.Services.Common;
 using Nop.Services.Discounts;
 using Nop.Services.Events;
 using Nop.Tests;
+using NUnit.Framework;
 using Rhino.Mocks;
 
 namespace Nop.Services.Tests.Discounts
@@ -20,13 +20,13 @@ namespace Nop.Services.Tests.Discounts
     [TestFixture]
     public class DiscountServiceTests : ServiceTest
     {
-        IRepository<Discount> _discountRepo;
-        IRepository<DiscountRequirement> _discountRequirementRepo;
-        IRepository<DiscountUsageHistory> _discountUsageHistoryRepo;
-        IEventPublisher _eventPublisher;
-        IGenericAttributeService _genericAttributeService;
-        IDiscountService _discountService;
-        IStoreContext _storeContext;
+        private IRepository<Discount> _discountRepo;
+        private IRepository<DiscountRequirement> _discountRequirementRepo;
+        private IRepository<DiscountUsageHistory> _discountUsageHistoryRepo;
+        private IEventPublisher _eventPublisher;
+        private IGenericAttributeService _genericAttributeService;
+        private IDiscountService _discountService;
+        private IStoreContext _storeContext;
         
         [SetUp]
         public new void SetUp()

@@ -1,7 +1,7 @@
 ﻿using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
-using NUnit.Framework;
 using Nop.Core;
+using NUnit.Framework;
 
 namespace Nop.Data.Tests
 {

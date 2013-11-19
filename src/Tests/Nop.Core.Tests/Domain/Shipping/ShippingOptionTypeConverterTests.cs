@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
-using NUnit.Framework;
 using Nop.Core.Domain.Shipping;
 using Nop.Tests;
+using NUnit.Framework;
 
 namespace Nop.Core.Tests.Domain.Shipping
 {
