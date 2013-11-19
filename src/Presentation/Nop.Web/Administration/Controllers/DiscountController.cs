@@ -159,7 +159,12 @@ namespace Nop.Admin.Controllers
             var discounts = _discountService.GetAllDiscounts(null, null, true);
             var gridModel = new GridModel<DiscountModel>
             {
-                Data = discounts.PagedForCommand(command).Select(x => x.ToModel()),
+                Data = discounts.PagedForCommand(command).Select(x =>
+                {
+                    var discountModel = x.ToModel();
+                    discountModel.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
+                    return discountModel;
+                }),
                 Total = discounts.Count
             };
             return new JsonResult

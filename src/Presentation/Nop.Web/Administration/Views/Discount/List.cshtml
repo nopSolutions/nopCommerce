@@ -23,20 +23,10 @@
                     {
                         columns.Bound(x => x.Name)
                             .Width(200);
-                        columns.Bound(x => x.UsePercentage)
-                            .Template(
-                                @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.UsePercentage.ToString().ToLowerInvariant() + ".gif")" />
-                            )
-                            .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= UsePercentage #>.gif' />")
-                            .Centered()
-                            .Width(100);
-                        columns.Bound(x => x.DiscountPercentage)
-                            .Width(100)
-                            .Format("{0:G29}")
-                            .Centered();
                         columns.Bound(x => x.DiscountAmount)
+                            .ClientTemplate("<# if (UsePercentage)  { #> " + "<#= DiscountPercentage #> %" + "<# } else { #>" + "<#= DiscountAmount #> <#= PrimaryStoreCurrencyCode #>" + "<# } #>")
                             .Width(100)
-                            .Format("{0:G29}")
+                            .Title(T("Admin.Promotions.Discounts.Fields.Discount").Text)
                             .Centered();
                         columns.Bound(x => x.StartDateUtc)
                             //.Format("{0:d}")

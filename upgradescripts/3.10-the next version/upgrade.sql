@@ -782,6 +782,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.InvoiceFooterTextColumn2.Hint">
     <Value>Enter the text that will appear at the bottom of generated invoices (column 2).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.Discount">
+    <Value>Discount</Value>
+  </LocaleResource>
 </Language>
 '
 

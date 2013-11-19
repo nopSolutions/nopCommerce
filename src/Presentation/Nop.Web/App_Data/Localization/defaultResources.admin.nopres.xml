@@ -9681,6 +9681,9 @@
               </LocaleResource>
               <LocaleResource Name="Fields">
                 <Children>
+                  <LocaleResource Name="Discount">
+                    <Value>Discount</Value>
+                  </LocaleResource>
                   <LocaleResource Name="Name">
                     <Value>Name</Value>
                     <Children>
