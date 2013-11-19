@@ -1,8 +1,8 @@
 ﻿using System.Web.Mvc;
 using System.Web.Routing;
-using NUnit.Framework;
 using Nop.Core.Fakes;
 using Nop.Web.Framework.Controllers;
+using NUnit.Framework;
 using Rhino.Mocks;
 
 namespace Nop.Web.MVC.Tests.Framework.Controllers

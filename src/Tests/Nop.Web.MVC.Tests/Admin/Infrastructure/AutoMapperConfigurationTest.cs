@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using NUnit.Framework;
 using Nop.Admin.Infrastructure;
+using NUnit.Framework;
 
 namespace Nop.Web.MVC.Tests.Admin.Infrastructure
 {

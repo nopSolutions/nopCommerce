@@ -1,8 +1,8 @@
 ﻿using FluentValidation.TestHelper;
-using NUnit.Framework;
 using Nop.Core.Domain.Customers;
 using Nop.Web.Models.Customer;
 using Nop.Web.Validators.Customer;
+using NUnit.Framework;
 
 namespace Nop.Web.MVC.Tests.Public.Validators.Customer
 {

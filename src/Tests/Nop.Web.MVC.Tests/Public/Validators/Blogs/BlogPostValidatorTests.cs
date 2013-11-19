@@ -1,5 +1,5 @@
-﻿using NUnit.Framework;
-using Nop.Web.Validators.Blogs;
+﻿using Nop.Web.Validators.Blogs;
+using NUnit.Framework;
 
 namespace Nop.Web.MVC.Tests.Public.Validators.Blogs
 {

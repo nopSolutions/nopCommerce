@@ -1,8 +1,8 @@
 ﻿using FluentValidation.TestHelper;
-using NUnit.Framework;
 using Nop.Web.Infrastructure.Installation;
 using Nop.Web.Models.Install;
 using Nop.Web.Validators.Install;
+using NUnit.Framework;
 using Rhino.Mocks;
 
 namespace Nop.Web.MVC.Tests.Public.Validators.Install

@@ -1,7 +1,7 @@
 ﻿using System;
-using NUnit.Framework;
 using Nop.Tests;
 using Nop.Web.Models.News;
+using NUnit.Framework;
 
 namespace Nop.Web.MVC.Tests.Public.Models.News
 {
