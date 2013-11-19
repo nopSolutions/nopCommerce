@@ -7,7 +7,6 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
-using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
@@ -160,7 +159,7 @@ namespace Nop.Services.Common
 
 
             var doc = new Document(pageSize);
-            PdfWriter.GetInstance(doc, stream);
+            var pdfWriter = PdfWriter.GetInstance(doc, stream);
             doc.Open();
 
             //fonts
@@ -685,6 +684,81 @@ namespace Nop.Services.Common
                             notesTable.AddCell(cell);
                         }
                         doc.Add(notesTable);
+                    }
+                }
+
+                #endregion
+
+                #region Footer
+
+                if (!String.IsNullOrEmpty(_pdfSettings.InvoiceFooterTextColumn1) || !String.IsNullOrEmpty(_pdfSettings.InvoiceFooterTextColumn2))
+                {
+                    var column1Lines = String.IsNullOrEmpty(_pdfSettings.InvoiceFooterTextColumn1) ?
+                        new List<string>() :
+                        _pdfSettings.InvoiceFooterTextColumn1
+                        .Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)
+                        .ToList();
+                    var column2Lines = String.IsNullOrEmpty(_pdfSettings.InvoiceFooterTextColumn2) ?
+                        new List<string>() :
+                        _pdfSettings.InvoiceFooterTextColumn2
+                        .Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)
+                        .ToList();
+                    if (column1Lines.Count > 0 || column2Lines.Count > 0)
+                    {
+                        var totalLines = Math.Max(column1Lines.Count, column2Lines.Count);
+                        const float margin = 43;
+
+                        //if you have really a lot of lines in the footer, then replace 9 with 10 or 11
+                        int footerHeight = totalLines * 9;
+                        var directContent = pdfWriter.DirectContent;
+                        directContent.MoveTo(pageSize.GetLeft(margin), pageSize.GetBottom(margin) + footerHeight);
+                        directContent.LineTo(pageSize.GetRight(margin), pageSize.GetBottom(margin) + footerHeight);
+                        directContent.Stroke();
+
+
+                        var footerTable = new PdfPTable(2);
+                        footerTable.WidthPercentage = 100f;
+                            footerTable.SetTotalWidth(new float[] { 250, 250 });
+
+                        //column 1
+                        if (column1Lines.Count > 0)
+                        {
+                            var column1 = new PdfPCell();
+                            column1.Border = Rectangle.NO_BORDER;
+                            column1.HorizontalAlignment = Element.ALIGN_LEFT;
+                            foreach (var footerLine in column1Lines)
+                            {
+                                column1.AddElement(new Phrase(footerLine, font));
+                            }
+                            footerTable.AddCell(column1);
+                        }
+                        else
+                        {
+                            var column = new PdfPCell(new Phrase(" "));
+                            column.Border = Rectangle.NO_BORDER;
+                            footerTable.AddCell(column);
+                        }
+
+                        //column 2
+                        if (column2Lines.Count > 0)
+                        {
+                            var column2 = new PdfPCell();
+                            column2.Border = Rectangle.NO_BORDER;
+                            column2.HorizontalAlignment = Element.ALIGN_LEFT;
+                            foreach (var footerLine in column2Lines)
+                            {
+                                column2.AddElement(new Phrase(footerLine, font));
+                            }
+                            footerTable.AddCell(column2);
+                        }
+                        else
+                        {
+                            var column = new PdfPCell(new Phrase(" "));
+                            column.Border = Rectangle.NO_BORDER;
+                            footerTable.AddCell(column);
+                        }
+
+                        footerTable.WriteSelectedRows(0, totalLines, pageSize.GetLeft(margin), pageSize.GetBottom(margin) + footerHeight, directContent);
                     }
                 }
 

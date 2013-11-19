@@ -546,6 +546,26 @@
                 @Html.ValidationMessageFor(model => model.PdfSettings.LogoPictureId)
             </td>
         </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.PdfSettings.InvoiceFooterTextColumn1_OverrideForStore, model => model.PdfSettings.InvoiceFooterTextColumn1, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.PdfSettings.InvoiceFooterTextColumn1):
+            </td>
+            <td class="adminData">
+                @Html.TextAreaFor(model => model.PdfSettings.InvoiceFooterTextColumn1, new { style = "Width: 250px; Height: 150px;" })
+                @Html.ValidationMessageFor(model => model.PdfSettings.InvoiceFooterTextColumn1)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.PdfSettings.InvoiceFooterTextColumn2_OverrideForStore, model => model.PdfSettings.InvoiceFooterTextColumn2, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.PdfSettings.InvoiceFooterTextColumn2):
+            </td>
+            <td class="adminData">
+                @Html.TextAreaFor(model => model.PdfSettings.InvoiceFooterTextColumn2, new { style = "Width: 250px; Height: 150px;" })
+                @Html.ValidationMessageFor(model => model.PdfSettings.InvoiceFooterTextColumn2)
+            </td>
+        </tr>
     </table>
 }
 @helper TabLocalizationSettings()

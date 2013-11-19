@@ -212,6 +212,15 @@ namespace Nop.Admin.Models.Settings
             [UIHint("Picture")]
             public int LogoPictureId { get; set; }
             public bool LogoPictureId_OverrideForStore { get; set; }
+
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.InvoiceFooterTextColumn1")]
+            public string InvoiceFooterTextColumn1 { get; set; }
+            public bool InvoiceFooterTextColumn1_OverrideForStore { get; set; }
+
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.InvoiceFooterTextColumn2")]
+            public string InvoiceFooterTextColumn2 { get; set; }
+            public bool InvoiceFooterTextColumn2_OverrideForStore { get; set; }
+
         }
 
         public partial class LocalizationSettingsModel : BaseNopModel

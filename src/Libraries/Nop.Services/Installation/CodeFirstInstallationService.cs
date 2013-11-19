@@ -4534,9 +4534,12 @@ namespace Nop.Services.Installation
             var settingService = EngineContext.Current.Resolve<ISettingService>();
             settingService.SaveSetting(new PdfSettings()
                 {
+                    LogoPictureId = 0,
                     LetterPageSizeEnabled = false,
                     RenderOrderNotes = true,
                     FontFileName = "FreeSerif.ttf",
+                    InvoiceFooterTextColumn1 = null,
+                    InvoiceFooterTextColumn2 = null,
                 });
 
             settingService.SaveSetting(new CommonSettings()

@@ -5020,6 +5020,24 @@
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
+                  <LocaleResource Name="InvoiceFooterTextColumn1">
+                    <Value>Invoice footer text (column 1)</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Enter the text that will appear at the bottom of generated invoices (column 1).</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="InvoiceFooterTextColumn2">
+                    <Value>Invoice footer text (column 2)</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Enter the text that will appear at the bottom of generated invoices (column 2).</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                    </Children>
+                  </LocaleResource>
                   <LocaleResource Name="PageTitleSeparator">
                     <Value>Page title separator</Value>
                     <Children>

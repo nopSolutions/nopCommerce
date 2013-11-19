@@ -770,6 +770,18 @@ set @resources='
   <LocaleResource Name="Products.FreeShipping">
     <Value>Free shipping</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.InvoiceFooterTextColumn1">
+    <Value>Invoice footer text (column 1)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.InvoiceFooterTextColumn1.Hint">
+    <Value>Enter the text that will appear at the bottom of generated invoices (column 1).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.InvoiceFooterTextColumn2">
+    <Value>Invoice footer text (column 2)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.InvoiceFooterTextColumn2.Hint">
+    <Value>Enter the text that will appear at the bottom of generated invoices (column 2).</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1945,5 +1957,21 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.showfree
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'catalogsettings.showfreeshippingnotification', N'true', 0)
+END
+GO
+
+--a new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'pdfsettings.invoicefootertextcolumn1')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'pdfsettings.invoicefootertextcolumn1', N'', 0)
+END
+GO
+
+--a new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'pdfsettings.invoicefootertextcolumn2')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'pdfsettings.invoicefootertextcolumn2', N'', 0)
 END
 GO
