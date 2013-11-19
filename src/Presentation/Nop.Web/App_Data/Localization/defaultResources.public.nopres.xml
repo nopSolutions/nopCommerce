@@ -2923,6 +2923,9 @@
       <LocaleResource Name="StoreClosed">
         <Value>Store closed</Value>
       </LocaleResource>
+      <LocaleResource Name="Vendors">
+        <Value>Vendors</Value>
+      </LocaleResource>
       <LocaleResource Name="ViewPM">
         <Value>View the private message</Value>
       </LocaleResource>
@@ -4230,8 +4233,14 @@
   <LocaleResource Name="Vendors">
     <Value>Vendors</Value>
     <Children>
+      <LocaleResource Name="List">
+        <Value>Vendor List</Value>
+      </LocaleResource>
       <LocaleResource Name="OrderBy">
         <Value>Sort by</Value>
+      </LocaleResource>
+      <LocaleResource Name="ViewAll">
+        <Value>View all</Value>
       </LocaleResource>
       <LocaleResource Name="ViewMode">
         <Value>View as</Value>

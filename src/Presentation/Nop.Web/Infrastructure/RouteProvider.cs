@@ -60,10 +60,15 @@ namespace Nop.Web.Infrastructure
                             new { productId = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
 
-            //catalog
+            //manufacturers
             routes.MapLocalizedRoute("ManufacturerList",
                             "manufacturer/all/",
                             new { controller = "Catalog", action = "ManufacturerAll" },
+                            new[] { "Nop.Web.Controllers" });
+            //vendors
+            routes.MapLocalizedRoute("VendorList",
+                            "vendor/all/",
+                            new { controller = "Catalog", action = "VendorAll" },
                             new[] { "Nop.Web.Controllers" });
             //downloads
             routes.MapRoute("GetSampleDownload",

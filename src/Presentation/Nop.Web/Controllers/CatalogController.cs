@@ -1915,6 +1915,30 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
+        [NopHttpsRequirement(SslRequirement.No)]
+        public ActionResult VendorAll()
+        {
+            //we don't allow viewing of vendors if "vendors" block is hidden
+            if (_vendorSettings.VendorsBlockItemsToDisplay == 0)
+                return RedirectToRoute("HomePage");
+
+            var model = new List<VendorModel>();
+            var vendors = _vendorService.GetAllVendors();
+            foreach (var vendor in vendors)
+            {
+                var vendorModel = new VendorModel()
+                {
+                    Id = vendor.Id,
+                    Name = vendor.Name,
+                    Description = vendor.Description,
+                    SeName = SeoExtensions.GetSeName(vendor.Name)
+                };
+                model.Add(vendorModel);
+            }
+
+            return View(model);
+        }
+
         [ChildActionOnly]
         public ActionResult VendorNavigation()
         {

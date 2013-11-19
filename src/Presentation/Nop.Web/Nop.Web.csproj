@@ -1757,6 +1757,12 @@
   <ItemGroup>
     <Content Include="Views\Catalog\Vendor.Mobile.cshtml" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Catalog\VendorAll.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Catalog\VendorAll.Mobile.cshtml" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

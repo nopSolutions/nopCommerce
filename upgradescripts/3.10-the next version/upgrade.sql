@@ -785,6 +785,15 @@ set @resources='
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.Discount">
     <Value>Discount</Value>
   </LocaleResource>
+  <LocaleResource Name="Vendors.List">
+    <Value>Vendor List</Value>
+  </LocaleResource>
+  <LocaleResource Name="Vendors.ViewAll">
+    <Value>View all</Value>
+  </LocaleResource>
+  <LocaleResource Name="PageTitle.Vendors">
+    <Value>Vendors</Value>
+  </LocaleResource>
 </Language>
 '
 

@@ -247,6 +247,7 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 .block-category-navigation ul.sublist{margin:0px 0px 0px 7px;}
 .block-category-navigation ul.sublist .inactive a:hover{color:#5C5B5B;font-weight:400;}
 .block-manufacturer-navigation .listbox .view-all a{color:#5C5B5B;font-weight:700;}
+.block-vendor-navigation .listbox .view-all a{color:#5C5B5B;font-weight:700;}
 .block-recently-viewed-products li{background:none;min-height:35px;clear:both;border-bottom:1px solid #e5e5e5;}
 .block-recently-viewed-products li.last{border-bottom:none;}
 .block-recently-viewed-products .product-picture{float:left;height:40px;width:40px;margin:0;}
@@ -560,10 +561,12 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 
 
 /* CATALOG PAGES */
-.category-page,.manufacturer-page,.vendor-page,.manufacturer-list-page,.product-tag-page,.product-tags-all-page{}
-.category-page .page-title,.manufacturer-list-page .page-title,.manufacturer-page .page-title,.vendor-page .page-title,.product-tag-page .page-title,.product-tags-all-page .page-title{border-bottom:0 none;clear:both;}
+.category-page,.manufacturer-page,.vendor-page,.manufacturer-list-page,.product-tag-page,.product-tags-all-page,.vendor-list-page{}
+.category-page .page-title,.manufacturer-list-page .page-title,.manufacturer-page .page-title,.vendor-page .page-title,.product-tag-page .page-title,.product-tags-all-page .page-title,.vendor-list-page .page-title{border-bottom:0 none;clear:both;}
 .product-tags-all-page .product-tags-list li{display:inline;}
 .product-tags-all-page .product-tags-list li a{text-decoration:none;margin:0 2px 0 0;}
+.vendor-list-page .vendor-list li{display:inline;}
+.vendor-list-page .vendor-list li a{text-decoration:none;margin:0 2px 0 0;}
 .category-page .category-description,.manufacturer-page .manufacturer-description,.vendor-page .vendor-description{color:#555;font-size:1.1em;}
 .sub-category-grid,.manufacturer-grid{margin-left:auto;margin-right:auto;width:auto;margin-bottom:15px;zoom:1;}
 .sub-category-grid:after,.manufacturer-grid:after{content:".";display:block;clear:both;height:0;font-size:0;line-height:0;visibility:hidden;}

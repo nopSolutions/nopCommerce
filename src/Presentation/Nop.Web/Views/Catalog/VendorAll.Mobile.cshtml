@@ -1,0 +1,24 @@
+﻿@model IList<VendorModel>
+@{
+    Layout = "~/Views/Shared/_Root.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Vendors").Text);
+}
+@using Nop.Web.Models.Catalog;
+<div class="page vendor-list-page">
+    <div class="page-title">
+        <h1>@T("Vendors.List")</h1>
+    </div>
+    <div class="page-body">
+        @if (Model.Count > 0)
+        {
+            <ul data-role="listview" data-inset="true" data-filter="false">
+                @foreach (var item in Model)
+                {
+                    <li><a href="@Url.RouteUrl("Vendor", new { vendorId = item.Id, SeName = item.SeName })">@item.Name</a></li>
+                }
+            </ul>
+        }
+    </div>
+</div>
