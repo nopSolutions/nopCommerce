@@ -182,7 +182,18 @@ namespace Nop.Admin.Controllers
                 UpdateLocales(country, model);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Countries.Updated"));
-                return continueEditing ? RedirectToAction("Edit", new { id = country.Id }) : RedirectToAction("List");
+
+                if (continueEditing)
+                {
+                    //selected tab
+                    SaveSelectedTabIndex();
+
+                    return RedirectToAction("Edit", new {id = country.Id});
+                }
+                else
+                {
+                    return RedirectToAction("List");
+                }
             }
 
             //If we got this far, something failed, redisplay form

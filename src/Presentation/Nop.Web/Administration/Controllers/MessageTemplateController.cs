@@ -254,7 +254,18 @@ namespace Nop.Admin.Controllers
                 UpdateLocales(messageTemplate, model);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Updated"));
-                return continueEditing ? RedirectToAction("Edit", messageTemplate.Id) : RedirectToAction("List");
+                
+                if (continueEditing)
+                {
+                    //selected tab
+                    SaveSelectedTabIndex();
+
+                    return RedirectToAction("Edit", messageTemplate.Id);
+                }
+                else
+                {
+                    return RedirectToAction("List");
+                }
             }
 
 

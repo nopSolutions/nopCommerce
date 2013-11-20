@@ -423,7 +423,18 @@ namespace Nop.Admin.Controllers
                 _customerActivityService.InsertActivity("EditManufacturer", _localizationService.GetResource("ActivityLog.EditManufacturer"), manufacturer.Name);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Manufacturers.Updated"));
-                return continueEditing ? RedirectToAction("Edit", manufacturer.Id) : RedirectToAction("List");
+
+                if (continueEditing)
+                {
+                    //selected tab
+                    SaveSelectedTabIndex();
+
+                    return RedirectToAction("Edit", manufacturer.Id);
+                }
+                else
+                {
+                    return RedirectToAction("List");
+                }
             }
 
 

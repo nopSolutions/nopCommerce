@@ -1416,9 +1416,6 @@ namespace Nop.Admin.Controllers
                 //No order found with the specified id
                 return RedirectToAction("List");
 
-
-            ViewData["selectedTab"] = "shippinginfo";
-            
             //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
                 return RedirectToAction("Edit", "Order", new { id = id });
@@ -1427,6 +1424,10 @@ namespace Nop.Admin.Controllers
             _orderService.UpdateOrder(order);
 
             PrepareOrderDetailsModel(model, order);
+
+            //selected tab
+            SaveSelectedTabIndex(persistForTheNextRequest: false);
+
             return View(model);
         }
         
@@ -1446,8 +1447,6 @@ namespace Nop.Admin.Controllers
             //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
                 return RedirectToAction("Edit", "Order", new { id = id });
-
-            ViewData["selectedTab"] = "products";
 
             //get order item identifier
             int orderItemId = 0;
@@ -1495,6 +1494,10 @@ namespace Nop.Admin.Controllers
 
             var model = new OrderModel();
             PrepareOrderDetailsModel(model, order);
+
+            //selected tab
+            SaveSelectedTabIndex(persistForTheNextRequest: false);
+
             return View(model);
         }
 
@@ -1515,8 +1518,6 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null)
                 return RedirectToAction("Edit", "Order", new { id = id });
 
-            ViewData["selectedTab"] = "products";
-
             //get order item identifier
             int orderItemId = 0;
             foreach (var formValue in form.AllKeys)
@@ -1531,6 +1532,10 @@ namespace Nop.Admin.Controllers
 
             var model = new OrderModel();
             PrepareOrderDetailsModel(model, order);
+
+            //selected tab
+            SaveSelectedTabIndex(persistForTheNextRequest: false);
+
             return View(model);
         }
 
@@ -1546,8 +1551,6 @@ namespace Nop.Admin.Controllers
             if (order == null)
                 //No order found with the specified id
                 return RedirectToAction("List");
-
-            ViewData["selectedTab"] = "products";
 
             //get order item identifier
             int orderItemId = 0;
@@ -1568,6 +1571,10 @@ namespace Nop.Admin.Controllers
 
             var model = new OrderModel();
             PrepareOrderDetailsModel(model, order);
+
+            //selected tab
+            SaveSelectedTabIndex(persistForTheNextRequest: false);
+
             return View(model);
         }
 
@@ -1583,8 +1590,6 @@ namespace Nop.Admin.Controllers
             if (order == null)
                 //No order found with the specified id
                 return RedirectToAction("List");
-
-            ViewData["selectedTab"] = "products";
 
             //get order item identifier
             int orderItemId = 0;
@@ -1605,6 +1610,10 @@ namespace Nop.Admin.Controllers
 
             var model = new OrderModel();
             PrepareOrderDetailsModel(model, order);
+
+            //selected tab
+            SaveSelectedTabIndex(persistForTheNextRequest: false);
+
             return View(model);
         }
 

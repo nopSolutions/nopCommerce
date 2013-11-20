@@ -869,7 +869,17 @@ namespace Nop.Admin.Controllers
                     _customerActivityService.InsertActivity("EditCustomer", _localizationService.GetResource("ActivityLog.EditCustomer"), customer.Id);
 
                     SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Updated"));
-                    return continueEditing ? RedirectToAction("Edit", customer.Id) : RedirectToAction("List");
+                    if (continueEditing)
+                    {
+                        //selected tab
+                        SaveSelectedTabIndex();
+
+                        return RedirectToAction("Edit", customer.Id);
+                    }
+                    else
+                    {
+                        return  RedirectToAction("List");
+                    }
                 }
                 catch (Exception exc)
                 {

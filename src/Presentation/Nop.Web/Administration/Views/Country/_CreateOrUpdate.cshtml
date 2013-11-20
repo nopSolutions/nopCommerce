@@ -5,12 +5,16 @@
 @Html.HiddenFor(model => model.Id)
 @Html.Telerik().TabStrip().Name("country-edit").Items(x =>
 {
-    x.Add().Text(T("Admin.Configuration.Countries.Info").Text).Content(TabInfo().ToHtmlString()).Selected(true);
+    x.Add().Text(T("Admin.Configuration.Countries.Info").Text).Content(TabInfo().ToHtmlString());
     x.Add().Text(T("Admin.Configuration.Countries.States").Text).Content(TabStates().ToHtmlString());
-    
+
     //generate an event
     EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "country-edit"));
-})
+}).ClientEvents(events => events.OnSelect("telerik_on_tab_select")).SetSelectedTabIndex(GetSelectedTabIndex())
+
+@*save selected tab index*@
+<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+
 @helper TabInfo()
     {        
     @(Html.LocalizedEditor<CountryModel, CountryLocalizedModel>("country-info-localized",

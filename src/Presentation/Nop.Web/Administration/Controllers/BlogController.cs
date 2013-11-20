@@ -238,7 +238,17 @@ namespace Nop.Admin.Controllers
                 SaveStoreMappings(blogPost, model);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Updated"));
-                return continueEditing ? RedirectToAction("Edit", new { id = blogPost.Id }) : RedirectToAction("List");
+                if (continueEditing)
+                {
+                    //selected tab
+                    SaveSelectedTabIndex();
+
+                    return RedirectToAction("Edit", new {id = blogPost.Id});
+                }
+                else
+                {
+                    return RedirectToAction("List");
+                }
             }
 
             //If we got this far, something failed, redisplay form

@@ -65,6 +65,12 @@ function checkOverridenStoreValue(obj, selector) {
     };
 }
 
+function telerik_on_tab_select(e) {
+    //we use this function to store selected tab index into HML input
+    //this way we can persist selected tab between HTTP requests
+    $("#selected-tab-index").val($(e.item).index());
+}
+
 // Ajax activity indicator bound to ajax start/stop document events
 $(document).ajaxStart(function () {
     $('#ajaxBusy').show();

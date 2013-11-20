@@ -230,7 +230,17 @@ namespace Nop.Admin.Controllers
                 _customerActivityService.InsertActivity("EditCheckoutAttribute", _localizationService.GetResource("ActivityLog.EditCheckoutAttribute"), checkoutAttribute.Name);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.CheckoutAttributes.Updated"));
-                return continueEditing ? RedirectToAction("Edit", checkoutAttribute.Id) : RedirectToAction("List");
+                if (continueEditing)
+                {
+                    //selected tab
+                    SaveSelectedTabIndex();
+
+                    return RedirectToAction("Edit", checkoutAttribute.Id);
+                }
+                else
+                {
+                    return RedirectToAction("List");
+                }
             }
 
             //If we got this far, something failed, redisplay form

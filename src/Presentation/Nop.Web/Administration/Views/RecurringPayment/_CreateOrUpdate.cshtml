@@ -7,26 +7,16 @@
 @Html.HiddenFor(model => model.Id)
 @Html.Telerik().TabStrip().Name("recurringpayment-edit").Items(x =>
 {
-    var tabInfo = x.Add().Text(T("Admin.RecurringPayments.Info").Text).Content(TabInfo().ToHtmlString());
-    var tabHistory = x.Add().Text(T("Admin.RecurringPayments.History").Text).Content(TabHistory().ToHtmlString());
+    x.Add().Text(T("Admin.RecurringPayments.Info").Text).Content(TabInfo().ToHtmlString());
+    x.Add().Text(T("Admin.RecurringPayments.History").Text).Content(TabHistory().ToHtmlString());
 
-    var selectedTab = (string)ViewData["selectedTab"];
-    switch (selectedTab)
-    {
-        case "info":
-            tabInfo.Selected(true);
-            break;
-        case "history":
-            tabHistory.Selected(true);
-            break;
-        default:
-            tabInfo.Selected(true);
-            break;
-    }
-    
     //generate an event
     EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "recurringpayment-edit"));
-})
+}).ClientEvents(events => events.OnSelect("telerik_on_tab_select")).SetSelectedTabIndex(GetSelectedTabIndex())
+
+@*save selected tab index*@
+<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+
 @helper TabInfo()
     {
         

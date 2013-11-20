@@ -922,7 +922,18 @@ namespace Nop.Admin.Controllers
                 _customerActivityService.InsertActivity("EditProduct", _localizationService.GetResource("ActivityLog.EditProduct"), product.Name);
                 
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Products.Updated"));
-                return continueEditing ? RedirectToAction("Edit", new { id = product.Id }) : RedirectToAction("List");
+
+                if (continueEditing)
+                {
+                    //selected tab
+                    SaveSelectedTabIndex();
+
+                    return RedirectToAction("Edit", new {id = product.Id});
+                }
+                else
+                {
+                    return RedirectToAction("List");
+                }
             }
 
             //If we got this far, something failed, redisplay form

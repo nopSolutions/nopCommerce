@@ -1511,6 +1511,10 @@ namespace Nop.Admin.Controllers
                     foreach (var error in modelState.Errors)
                         ErrorNotification(error.ErrorMessage);
             }
+
+            //selected tab
+            SaveSelectedTabIndex();
+
             return RedirectToAction("Order");
         }
 
@@ -1842,6 +1846,10 @@ namespace Nop.Admin.Controllers
             _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
+
+            //selected tab
+            SaveSelectedTabIndex();
+
             return RedirectToAction("CustomerUser");
         }
 
@@ -1850,7 +1858,7 @@ namespace Nop.Admin.Controllers
 
 
 
-        public ActionResult GeneralCommon(string selectedTab)
+        public ActionResult GeneralCommon()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -2010,7 +2018,6 @@ namespace Nop.Admin.Controllers
             model.FullTextSettings.SearchModeValues = commonSettings.FullTextMode.ToSelectList();
 
 
-            ViewData["selectedTab"] = selectedTab;
             return View(model);
         }
         [HttpPost]
@@ -2274,6 +2281,10 @@ namespace Nop.Admin.Controllers
             }
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
+
+            //selected tab
+            SaveSelectedTabIndex();
+
             return RedirectToAction("GeneralCommon");
         }
         [HttpPost, ActionName("GeneralCommon")]
@@ -2354,7 +2365,11 @@ namespace Nop.Admin.Controllers
             {
                 ErrorNotification(exc);
             }
-            return RedirectToAction("GeneralCommon", new { selectedTab = "security" });
+
+            //selected tab
+            SaveSelectedTabIndex();
+
+            return RedirectToAction("GeneralCommon");
         }
         [HttpPost, ActionName("GeneralCommon")]
         [FormValueRequired("togglefulltext")]
@@ -2393,7 +2408,11 @@ namespace Nop.Admin.Controllers
             {
                 ErrorNotification(exc);
             }
-            return RedirectToAction("GeneralCommon", new { selectedTab = "fulltext" });
+
+            //selected tab
+            SaveSelectedTabIndex();
+
+            return RedirectToAction("GeneralCommon");
         }
 
 

@@ -327,7 +327,18 @@ namespace Nop.Admin.Controllers
 
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Currencies.Updated"));
-                return continueEditing ? RedirectToAction("Edit", new { id = currency.Id }) : RedirectToAction("List");
+
+                if (continueEditing)
+                {
+                    //selected tab
+                    SaveSelectedTabIndex();
+
+                    return RedirectToAction("Edit", new {id = currency.Id});
+                }
+                else
+                {
+                    return RedirectToAction("List");
+                }
             }
 
             //If we got this far, something failed, redisplay form

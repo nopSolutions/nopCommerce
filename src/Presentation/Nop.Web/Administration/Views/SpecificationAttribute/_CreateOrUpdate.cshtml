@@ -6,12 +6,16 @@
 @Html.HiddenFor(model => model.Id)
 @Html.Telerik().TabStrip().Name("specificationattribute-edit").Items(x =>
 {
-    x.Add().Text(T("Admin.Catalog.Attributes.SpecificationAttributes.Info").Text).Content(TabInfo().ToHtmlString()).Selected(true);
+    x.Add().Text(T("Admin.Catalog.Attributes.SpecificationAttributes.Info").Text).Content(TabInfo().ToHtmlString());
     x.Add().Text(T("Admin.Catalog.Attributes.SpecificationAttributes.Options").Text).Content(TabOptions().ToHtmlString());
 
     //generate an event
     EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "specificationattribute-edit"));
-})
+}).ClientEvents(events => events.OnSelect("telerik_on_tab_select")).SetSelectedTabIndex(GetSelectedTabIndex())
+
+@*save selected tab index*@
+<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+
 @helper TabInfo()
     { 
     @(Html.LocalizedEditor<SpecificationAttributeModel, SpecificationAttributeLocalizedModel>("specificationattribute-localized",

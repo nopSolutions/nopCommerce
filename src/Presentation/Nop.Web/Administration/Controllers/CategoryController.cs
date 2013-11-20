@@ -612,7 +612,17 @@ namespace Nop.Admin.Controllers
                 _customerActivityService.InsertActivity("EditCategory", _localizationService.GetResource("ActivityLog.EditCategory"), category.Name);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Categories.Updated"));
-                return continueEditing ? RedirectToAction("Edit", category.Id) : RedirectToAction("List");
+                if (continueEditing)
+                {
+                    //selected tab
+                    SaveSelectedTabIndex();
+
+                    return RedirectToAction("Edit", category.Id);
+                }
+                else
+                {
+                    return RedirectToAction("List");
+                }
             }
 
 

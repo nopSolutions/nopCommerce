@@ -5,76 +5,44 @@
 @Html.HiddenFor(model => model.Id)
 @Html.Telerik().TabStrip().Name("customer-edit").Items(x =>
 {
-    var tabInfo = x.Add().Text(T("Admin.Customers.Customers.Info").Text).Content(TabInfo().ToHtmlString());
-    var tabCustomerRoles = x.Add().Text(T("Admin.Customers.Customers.CustomerRoles").Text).Content(TabCustomerRoles().ToHtmlString());
-
-
-    TabStripItemBuilder tabOrders = null;
+    x.Add().Text(T("Admin.Customers.Customers.Info").Text).Content(TabInfo().ToHtmlString());
+    x.Add().Text(T("Admin.Customers.Customers.CustomerRoles").Text).Content(TabCustomerRoles().ToHtmlString());
     if (Model.Id > 0)
-        tabOrders = x.Add().Text(T("Admin.Customers.Customers.Orders").Text).Content(TabOrders().ToHtmlString());
-
-    TabStripItemBuilder tabRewardPoints = null;
-    if (Model.DisplayRewardPointsHistory)
-        tabRewardPoints = x.Add().Text(T("Admin.Customers.Customers.RewardPoints").Text).Content(TabRewardPoints().ToHtmlString());
-
-    TabStripItemBuilder tabAddresses = null;
-    if (Model.Id > 0)
-        tabAddresses = x.Add().Text(T("Admin.Customers.Customers.Addresses").Text).Content(TabAddresses().ToHtmlString());
-
-    TabStripItemBuilder tabShoppingCart = null;
-    if (Model.Id > 0)
-        tabShoppingCart = x.Add().Text(T("Admin.Customers.Customers.CurrentShoppingCart").Text).Content(TabCurrentShoppingCart().ToHtmlString());
-
-    TabStripItemBuilder tabWishlist = null;
-    if (Model.Id > 0)
-        tabWishlist = x.Add().Text(T("Admin.Customers.Customers.CurrentWishlist").Text).Content(TabCurrentWishlist().ToHtmlString());
-
-    TabStripItemBuilder tabActivityLog = null;
-    if (Model.Id > 0)
-        tabActivityLog = x.Add().Text(T("Admin.Customers.Customers.ActivityLog").Text).Content(TabActivityLog().ToHtmlString());
-
-    TabStripItemBuilder tabImpersonate = null;
-    if (Model.Id > 0)
-        tabImpersonate = x.Add().Text(T("Admin.Customers.Customers.Impersonate").Text).Content(TabImpersonate().ToHtmlString());
-
-    var selectedTab = (string)ViewData["selectedTab"];
-    switch (selectedTab)
     {
-        case "info":
-            tabInfo.Selected(true);
-            break;
-        case "customerroles":
-            tabCustomerRoles.Selected(true);
-            break;
-        case "orders":
-            tabOrders.Selected(true);
-            break;
-        case "rewardpoints":
-            tabRewardPoints.Selected(true);
-            break;
-        case "addresses":
-            tabAddresses.Selected(true);
-            break;
-        case "shoppingcart":
-            tabShoppingCart.Selected(true);
-            break;
-        case "wishlist":
-            tabWishlist.Selected(true);
-            break;
-        case "activitylog":
-            tabActivityLog.Selected(true);
-            break;
-        case "impersonate":
-            tabImpersonate.Selected(true);
-            break;
-        default:
-            tabInfo.Selected(true);
-            break;
+        x.Add().Text(T("Admin.Customers.Customers.Orders").Text).Content(TabOrders().ToHtmlString());
+    }
+    if (Model.DisplayRewardPointsHistory)
+    {
+        x.Add().Text(T("Admin.Customers.Customers.RewardPoints").Text).Content(TabRewardPoints().ToHtmlString());
+    }
+    if (Model.Id > 0)
+    {
+        x.Add().Text(T("Admin.Customers.Customers.Addresses").Text).Content(TabAddresses().ToHtmlString());
+    }
+    if (Model.Id > 0)
+    {
+        x.Add().Text(T("Admin.Customers.Customers.CurrentShoppingCart").Text).Content(TabCurrentShoppingCart().ToHtmlString());
+    }
+    if (Model.Id > 0)
+    {
+        x.Add().Text(T("Admin.Customers.Customers.CurrentWishlist").Text).Content(TabCurrentWishlist().ToHtmlString());
+    }
+    if (Model.Id > 0)
+    {
+        x.Add().Text(T("Admin.Customers.Customers.ActivityLog").Text).Content(TabActivityLog().ToHtmlString());
+    }
+    if (Model.Id > 0)
+    {
+        x.Add().Text(T("Admin.Customers.Customers.Impersonate").Text).Content(TabImpersonate().ToHtmlString());
     }
 
     //generate an event
     EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "customer-edit"));
-})
+}).ClientEvents(events => events.OnSelect("telerik_on_tab_select")).SetSelectedTabIndex(GetSelectedTabIndex())
+
+@*save selected tab index*@
+<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+
 @helper TabInfo()
     { 
         if (Model.CountryEnabled && Model.StateProvinceEnabled)

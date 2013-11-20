@@ -146,5 +146,36 @@ namespace Nop.Admin.Controllers
                 ((List<string>)ViewData[dataKey]).Add(message);
             }
         }
+
+        /// <summary>
+        /// Save selected TAB index
+        /// </summary>
+        /// <param name="index">Idnex to save; null to automatically detect it</param>
+        /// <param name="persistForTheNextRequest">A value indicating whether a message should be persisted for the next request</param>
+        protected void SaveSelectedTabIndex(int? index = null, bool persistForTheNextRequest = true)
+        {
+            //keep this method synchornized with
+            //"GetSelectedTabIndex" method of \Nop.Web.Framework\ViewEngines\Razor\WebViewPage.cs
+            if (!index.HasValue)
+            {
+                int tmp = 0;
+                if (int.TryParse(this.Request.Form["selected-tab-index"], out tmp))
+                {
+                    index = tmp;
+                }
+            }
+            if (index.HasValue)
+            {
+                string dataKey = "nop.selected-tab-index";
+                if (persistForTheNextRequest)
+                {
+                    TempData[dataKey] = index;
+                }
+                else
+                {
+                    ViewData[dataKey] = index;
+                }
+            }
+        }
     }
 }

@@ -240,7 +240,17 @@ namespace Nop.Admin.Controllers
                 _affiliateService.UpdateAffiliate(affiliate);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Affiliates.Updated"));
-                return continueEditing ? RedirectToAction("Edit", affiliate.Id) : RedirectToAction("List");
+                if (continueEditing)
+                {
+                    //selected tab
+                    SaveSelectedTabIndex();
+
+                    return RedirectToAction("Edit", affiliate.Id);
+                }
+                else
+                {
+                    return RedirectToAction("List");
+                }
             }
 
             //If we got this far, something failed, redisplay form

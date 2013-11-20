@@ -1,7 +1,6 @@
 ﻿@model CustomerUserSettingsModel
 @using Telerik.Web.Mvc.UI;
 @using Nop.Core.Domain.Customers;
-@using Nop.Core.Domain.Security;
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.CustomerUser").Text;
@@ -21,9 +20,9 @@
     @Html.ValidationSummary(false)
 
     
-    @Html.Telerik().TabStrip().Name("customersettings-edit").Items(x =>
+@Html.Telerik().TabStrip().Name("customersettings-edit").Items(x =>
 {
-    x.Add().Text(T("Admin.Configuration.Settings.CustomerUser.CustomerSettings").Text).Content(TabCustomerSettings().ToHtmlString()).Selected(true);
+    x.Add().Text(T("Admin.Configuration.Settings.CustomerUser.CustomerSettings").Text).Content(TabCustomerSettings().ToHtmlString());
     x.Add().Text(T("Admin.Configuration.Settings.CustomerUser.CustomerFormFields").Text).Content(TabCustomerFormFields().ToHtmlString());
     x.Add().Text(T("Admin.Configuration.Settings.CustomerUser.AddressFormFields").Text).Content(TabAddressFormFields().ToHtmlString());
     x.Add().Text(T("Admin.Configuration.Settings.CustomerUser.DateTimeSettings").Text).Content(TabDateTimeSettings().ToHtmlString());
@@ -31,7 +30,11 @@
 
     //generate an event
     EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "customersettings-edit"));
-})
+}).ClientEvents(events => events.OnSelect("telerik_on_tab_select")).SetSelectedTabIndex(GetSelectedTabIndex())
+    
+    @*save selected tab index*@
+	<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+    
 }
 @helper TabCustomerSettings()
 {

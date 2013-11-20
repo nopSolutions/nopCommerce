@@ -5,18 +5,18 @@
 {
     if (Model.NumberOfAvailableProductAttributes > 0)
     {
-    @Html.Telerik().TabStrip().Name("productvariantattribute-edit").Items(x =>
-{
-    x.Add().Text(T("Admin.Catalog.Products.ProductVariantAttributes.Attributes").Text).Content(TabAttributes().ToHtmlString()).Selected(true);
-    x.Add().Text(T("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations").Text).Content(TabAttributeCombinations().ToHtmlString());
+        @Html.Telerik().TabStrip().Name("productvariantattribute-edit").Items(x =>
+        {
+            x.Add().Text(T("Admin.Catalog.Products.ProductVariantAttributes.Attributes").Text).Content(TabAttributes().ToHtmlString()).Selected(true);
+            x.Add().Text(T("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations").Text).Content(TabAttributeCombinations().ToHtmlString());
 
-    //generate an event
-    EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "productvariantattribute-edit"));
-})
+            //generate an event
+            EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "productvariantattribute-edit"));
+        })
     }
     else
     {
-    @T("Admin.Catalog.Products.ProductVariantAttributes.NoAttributesAvailable")
+        @T("Admin.Catalog.Products.ProductVariantAttributes.NoAttributesAvailable")
     }
 }
 else

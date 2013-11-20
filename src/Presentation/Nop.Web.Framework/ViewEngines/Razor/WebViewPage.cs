@@ -10,6 +10,7 @@ using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Themes;
+using Telerik.Web.Mvc.UI;
 
 #endregion
 
@@ -135,6 +136,32 @@ namespace Nop.Web.Framework.ViewEngines.Razor
                 supportRtl = themeProvider.GetThemeConfiguration(themeContext.WorkingDesktopTheme).SupportRtl;
             }
             return supportRtl;
+        }
+
+        /// <summary>
+        /// Gets a selected tab index (used in admin area to store selected tab index)
+        /// </summary>
+        /// <returns>Index</returns>
+        public int GetSelectedTabIndex()
+        {
+            //keep this method synchornized with
+            //"SetSelectedTabIndex" method of \Administration\Controllers\BaseNopController.cs
+            int index = 0;
+            string dataKey = "nop.selected-tab-index";
+            if (ViewData[dataKey] is int)
+            {
+                index = (int)ViewData[dataKey];
+            }
+            if (TempData[dataKey] is int)
+            {
+                index = (int)TempData[dataKey];
+            }
+
+            //ensure it's not negative
+            if (index < 0)
+                index = 0;
+
+            return index;
         }
     }
 

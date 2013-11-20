@@ -206,7 +206,18 @@ namespace Nop.Admin.Controllers
                 _customerActivityService.InsertActivity("EditGiftCard", _localizationService.GetResource("ActivityLog.EditGiftCard"), giftCard.GiftCardCouponCode);
 
                 SuccessNotification(_localizationService.GetResource("Admin.GiftCards.Updated"));
-                return continueEditing ? RedirectToAction("Edit", giftCard.Id) : RedirectToAction("List");
+
+                if (continueEditing)
+                {
+                    //selected tab
+                    SaveSelectedTabIndex();
+
+                    return RedirectToAction("Edit", giftCard.Id);
+                }
+                else
+                {
+                    return RedirectToAction("List");
+                }
             }
 
             //If we got this far, something failed, redisplay form

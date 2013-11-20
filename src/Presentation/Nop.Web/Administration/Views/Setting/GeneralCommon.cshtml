@@ -80,42 +80,20 @@
     
     @Html.Telerik().TabStrip().Name("generalsettings-edit").Items(x =>
 {
-    var tabStoreInformationSettings = x.Add().Text(T("Admin.Configuration.Settings.GeneralCommon.StoreInformationSettings").Text).Content(TabStoreInformationSettings().ToHtmlString());
-    var tabSEOSettings = x.Add().Text(T("Admin.Configuration.Settings.GeneralCommon.SEOSettings").Text).Content(TabSEOSettings().ToHtmlString());
-    var tabSecuritySettings = x.Add().Text(T("Admin.Configuration.Settings.GeneralCommon.SecuritySettings").Text).Content(TabSecuritySettings().ToHtmlString());
-    var tabPdfSettings = x.Add().Text(T("Admin.Configuration.Settings.GeneralCommon.PdfSettings").Text).Content(TabPdfSettings().ToHtmlString());
-    var tabLocalizationSettings = x.Add().Text(T("Admin.Configuration.Settings.GeneralCommon.LocalizationSettings").Text).Content(TabLocalizationSettings().ToHtmlString());
-    var tabFullTextSettings = x.Add().Text(T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings").Text).Content(TabFullTextSettings().ToHtmlString());
-
-    var selectedTab = (string)ViewData["selectedTab"];
-    switch (selectedTab)
-    {
-        case "storeinformation":
-            tabStoreInformationSettings.Selected(true);
-            break;
-        case "seo":
-            tabSEOSettings.Selected(true);
-            break;
-        case "security":
-            tabSecuritySettings.Selected(true);
-            break;
-        case "pdf":
-            tabPdfSettings.Selected(true);
-            break;
-        case "localization":
-            tabLocalizationSettings.Selected(true);
-            break;
-        case "fulltext":
-            tabFullTextSettings.Selected(true);
-            break;
-        default:
-            tabStoreInformationSettings.Selected(true);
-            break;
-    }
+    x.Add().Text(T("Admin.Configuration.Settings.GeneralCommon.StoreInformationSettings").Text).Content(TabStoreInformationSettings().ToHtmlString());
+    x.Add().Text(T("Admin.Configuration.Settings.GeneralCommon.SEOSettings").Text).Content(TabSEOSettings().ToHtmlString());
+    x.Add().Text(T("Admin.Configuration.Settings.GeneralCommon.SecuritySettings").Text).Content(TabSecuritySettings().ToHtmlString());
+    x.Add().Text(T("Admin.Configuration.Settings.GeneralCommon.PdfSettings").Text).Content(TabPdfSettings().ToHtmlString());
+    x.Add().Text(T("Admin.Configuration.Settings.GeneralCommon.LocalizationSettings").Text).Content(TabLocalizationSettings().ToHtmlString());
+    x.Add().Text(T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings").Text).Content(TabFullTextSettings().ToHtmlString());
 
     //generate an event
     EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "generalsettings-edit"));
-})
+}).ClientEvents(events => events.OnSelect("telerik_on_tab_select")).SetSelectedTabIndex(GetSelectedTabIndex())
+    
+    @*save selected tab index*@
+    <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+    
 }
 @helper TabStoreInformationSettings()
 {

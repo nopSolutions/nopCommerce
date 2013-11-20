@@ -182,7 +182,18 @@ namespace Nop.Admin.Controllers
             _orderService.UpdateRecurringPayment(payment);
 
             SuccessNotification(_localizationService.GetResource("Admin.RecurringPayments.Updated"));
-            return continueEditing ? RedirectToAction("Edit", payment.Id) : RedirectToAction("List");
+
+            if (continueEditing)
+            {
+                //selected tab
+                SaveSelectedTabIndex();
+
+                return RedirectToAction("Edit", payment.Id);
+            }
+            else
+            {
+                return RedirectToAction("List");
+            }
         }
 
         //delete
@@ -248,9 +259,7 @@ namespace Nop.Admin.Controllers
             if (payment == null)
                 //No recurring payment found with the specified id
                 return RedirectToAction("List");
-
-            ViewData["selectedTab"] = "history";
-
+            
             try
             {
                 _orderProcessingService.ProcessNextRecurringPayment(payment);
@@ -258,6 +267,10 @@ namespace Nop.Admin.Controllers
                 PrepareRecurringPaymentModel(model, payment, true);
 
                 SuccessNotification(_localizationService.GetResource("Admin.RecurringPayments.NextPaymentProcessed"), false);
+
+                //selected tab
+                SaveSelectedTabIndex(persistForTheNextRequest: false);
+
                 return View(model);
             }
             catch (Exception exc)
@@ -266,6 +279,10 @@ namespace Nop.Admin.Controllers
                 var model = new RecurringPaymentModel();
                 PrepareRecurringPaymentModel(model, payment, true);
                 ErrorNotification(exc, false);
+
+                //selected tab
+                SaveSelectedTabIndex(persistForTheNextRequest: false);
+
                 return View(model);
             }
         }
@@ -282,8 +299,6 @@ namespace Nop.Admin.Controllers
                 //No recurring payment found with the specified id
                 return RedirectToAction("List");
 
-            ViewData["selectedTab"] = "history";
-
             try
             {
                 var errors = _orderProcessingService.CancelRecurringPayment(payment);
@@ -296,6 +311,10 @@ namespace Nop.Admin.Controllers
                 }
                 else
                     SuccessNotification(_localizationService.GetResource("Admin.RecurringPayments.Cancelled"), false);
+
+                //selected tab
+                SaveSelectedTabIndex(persistForTheNextRequest: false);
+
                 return View(model);
             }
             catch (Exception exc)
@@ -304,6 +323,10 @@ namespace Nop.Admin.Controllers
                 var model = new RecurringPaymentModel();
                 PrepareRecurringPaymentModel(model, payment, true);
                 ErrorNotification(exc, false);
+
+                //selected tab
+                SaveSelectedTabIndex(persistForTheNextRequest: false);
+
                 return View(model);
             }
         }

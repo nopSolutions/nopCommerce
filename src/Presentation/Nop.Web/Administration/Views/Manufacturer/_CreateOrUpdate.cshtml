@@ -6,7 +6,7 @@
 @Html.HiddenFor(model => model.Id)
 @Html.Telerik().TabStrip().Name("manufacturer-edit").Items(x =>
 {
-    x.Add().Text(T("Admin.Catalog.Manufacturers.Info").Text).Content(TabInfo().ToHtmlString()).Selected(true);
+    x.Add().Text(T("Admin.Catalog.Manufacturers.Info").Text).Content(TabInfo().ToHtmlString());
     x.Add().Text(T("Admin.Common.SEO").Text).Content(TabSeo().ToHtmlString());
     x.Add().Text(T("Admin.Catalog.Manufacturers.Products").Text).Content(TabProducts().ToHtmlString());
     x.Add().Text(T("Admin.Catalog.Manufacturers.Acl").Text).Content(TabAcl().ToHtmlString());
@@ -14,7 +14,11 @@
 
     //generate an event
     EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "manufacturer-edit"));
-})
+}).ClientEvents(events => events.OnSelect("telerik_on_tab_select")).SetSelectedTabIndex(GetSelectedTabIndex())
+
+@*save selected tab index*@
+<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+
 @helper TabInfo()
     { 
     @(Html.LocalizedEditor<ManufacturerModel, ManufacturerLocalizedModel>("manufacturer-info-localized",

@@ -279,7 +279,18 @@ namespace Nop.Admin.Controllers
                 UpdateLocales(topic, model);
                 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Topics.Updated"));
-                return continueEditing ? RedirectToAction("Edit", topic.Id) : RedirectToAction("List");
+                
+                if (continueEditing)
+                {
+                    //selected tab
+                    SaveSelectedTabIndex();
+
+                    return RedirectToAction("Edit", topic.Id);
+                }
+                else
+                {
+                    return RedirectToAction("List");
+                }
             }
 
 

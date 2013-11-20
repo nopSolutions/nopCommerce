@@ -218,6 +218,35 @@ namespace Nop.Web.Framework
             return MvcHtmlString.Create(result.ToString());
         }
 
+
+        /// <summary>
+        /// Sets a selected tab index (used in admin area to store selected tab index)
+        /// </summary>
+        /// <param name="tabStripBuilder">TabStripBuilder</param>
+        /// <param name="index">Tab index</param>
+        /// <returns>TabStripBuilder</returns>
+        public static TabStripBuilder SetSelectedTabIndex(this TabStripBuilder tabStripBuilder, int index)
+        {
+            if (tabStripBuilder == null)
+                throw new ArgumentNullException("tabStripBuilder");
+
+            //ensure it's not negative
+            if (index < 0)
+                index = 0;
+
+            //ensure tab has required number of tabs
+            //otherwise, nothing could be selected
+            var totalTabs = tabStripBuilder.ToComponent().Items.Count;
+            if (index >= totalTabs)
+            {
+                index = 0;
+            }
+
+            tabStripBuilder.SelectedIndex(index);
+
+            return tabStripBuilder;
+        }
+
         #endregion
 
         #region Common extensions

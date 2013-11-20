@@ -244,7 +244,17 @@ namespace Nop.Admin.Controllers
 
                 //notification
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Languages.Updated"));
-                return continueEditing ? RedirectToAction("Edit", new { id = language.Id }) : RedirectToAction("List");
+                if (continueEditing)
+                {
+                    //selected tab
+                    SaveSelectedTabIndex();
+
+                    return RedirectToAction("Edit", new {id = language.Id});
+                }
+                else
+                {
+                    return RedirectToAction("List");
+                }
             }
 
             //If we got this far, something failed, redisplay form

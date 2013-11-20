@@ -34,48 +34,23 @@
     
     @Html.ValidationSummary(false)
 
-    @Html.Telerik().TabStrip().Name("order-edit").Items(x =>
+@Html.Telerik().TabStrip().Name("order-edit").Items(x =>
 {
-    var tabInfo = x.Add().Text(T("Admin.Orders.Info").Text).Content(TabInfo().ToHtmlString());
-    var tabBillingInfo = x.Add().Text(T("Admin.Orders.BillingInfo").Text).Content(TabBillingInfo().ToHtmlString());
-    var tabShippingInfo = x.Add().Text(T("Admin.Orders.ShippingInfo").Text).Content(TabShippingInfo().ToHtmlString());
-    var tabProducts = x.Add().Text(T("Admin.Orders.Products").Text).Content(TabProducts().ToHtmlString());
-    TabStripItemBuilder tabOrderNotes = null;
+    x.Add().Text(T("Admin.Orders.Info").Text).Content(TabInfo().ToHtmlString());
+    x.Add().Text(T("Admin.Orders.BillingInfo").Text).Content(TabBillingInfo().ToHtmlString());
+    x.Add().Text(T("Admin.Orders.ShippingInfo").Text).Content(TabShippingInfo().ToHtmlString());
+    x.Add().Text(T("Admin.Orders.Products").Text).Content(TabProducts().ToHtmlString());
     if (!Model.IsLoggedInAsVendor)
     {
-        tabOrderNotes = x.Add().Text(T("Admin.Orders.OrderNotes").Text).Content(TabOrderNotes().ToHtmlString());
-    }
-
-    var selectedTab = (string)ViewData["selectedTab"];
-    switch (selectedTab)
-    {
-        case "info":
-            tabInfo.Selected(true);
-            break;
-        case "billinginfo":
-            tabBillingInfo.Selected(true);
-            break;
-        case "shippinginfo":
-            tabShippingInfo.Selected(true);
-            break;
-        case "products":
-            tabProducts.Selected(true);
-            break;
-        case "ordernotes":
-            if (tabOrderNotes != null)
-            {
-                tabOrderNotes.Selected(true);
-            }
-            break;
-        default:
-            tabInfo.Selected(true);
-            break;
+        x.Add().Text(T("Admin.Orders.OrderNotes").Text).Content(TabOrderNotes().ToHtmlString());
     }
 
     //generate an event
     EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "order-edit"));
-})
+}).ClientEvents(events => events.OnSelect("telerik_on_tab_select")).SetSelectedTabIndex(GetSelectedTabIndex())
 
+    @*save selected tab index*@
+	<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
 
 }
 @Html.DeleteConfirmation("order-delete")

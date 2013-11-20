@@ -5,12 +5,16 @@
 @Html.HiddenFor(model => model.Id)
 @Html.Telerik().TabStrip().Name("template-edit").Items(x =>
 {
-    x.Add().Text(T("Admin.ContentManagement.MessageTemplates.Info").Text).Content(TabInfo().ToHtmlString()).Selected(true);
+    x.Add().Text(T("Admin.ContentManagement.MessageTemplates.Info").Text).Content(TabInfo().ToHtmlString());
     x.Add().Text(T("Admin.ContentManagement.MessageTemplates.Stores").Text).Content(TabStores().ToHtmlString());
 
     //generate an event
     EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "template-edit"));
-})
+}).ClientEvents(events => events.OnSelect("telerik_on_tab_select")).SetSelectedTabIndex(GetSelectedTabIndex())
+
+@*save selected tab index*@
+<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+
 @helper TabInfo()
 {
     <table class="adminContent">

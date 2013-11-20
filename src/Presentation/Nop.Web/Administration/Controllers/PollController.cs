@@ -156,7 +156,18 @@ namespace Nop.Admin.Controllers
                 _pollService.UpdatePoll(poll);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Polls.Updated"));
-                return continueEditing ? RedirectToAction("Edit", new { id = poll.Id }) : RedirectToAction("List");
+
+                if (continueEditing)
+                {
+                    //selected tab
+                    SaveSelectedTabIndex();
+
+                    return RedirectToAction("Edit", new { id = poll.Id });
+                }
+                else
+                {
+                    return RedirectToAction("List");
+                }
             }
 
             //If we got this far, something failed, redisplay form
