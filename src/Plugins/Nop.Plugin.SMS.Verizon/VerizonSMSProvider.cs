@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Web.Routing;
 using Nop.Core;
-using Nop.Core.Domain;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Plugins;
 using Nop.Services.Common;

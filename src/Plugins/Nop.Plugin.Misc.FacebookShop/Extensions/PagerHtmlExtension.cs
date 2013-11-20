@@ -1,5 +1,4 @@
-﻿using System;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using Nop.Web.Framework.UI.Paging;
 
 namespace Nop.Plugin.Misc.FacebookShop.Extensions

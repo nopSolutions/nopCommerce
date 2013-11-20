@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using Nop.Web.Framework;
+﻿using Nop.Web.Framework;
 
 namespace Nop.Plugin.Shipping.AustraliaPost.Models
 {

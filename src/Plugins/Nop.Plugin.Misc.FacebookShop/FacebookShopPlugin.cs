@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Web;
-using System.Web.Routing;
-using System.Xml;
+﻿using System.Web.Routing;
 using Nop.Core.Plugins;
 using Nop.Services.Common;
 

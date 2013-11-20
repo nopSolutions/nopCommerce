@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Routing;
 using Nop.Core;
@@ -9,7 +10,6 @@ using Nop.Plugin.Tax.CountryStateZip.Infrastructure.Cache;
 using Nop.Plugin.Tax.CountryStateZip.Services;
 using Nop.Services.Localization;
 using Nop.Services.Tax;
-using System.Collections.Generic;
 
 namespace Nop.Plugin.Tax.CountryStateZip
 {
