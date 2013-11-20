@@ -11152,6 +11152,123 @@
               </LocaleResource>
             </Children>
           </LocaleResource>
+          <LocaleResource Name="Warnings">
+            <Value>Warnings</Value>
+            <Children>
+              <LocaleResource Name="URL">
+                <Children>
+                  <LocaleResource Name="Match">
+                    <Value>Specified store URL matches this store URL</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="NoMatch">
+                    <Value>Specified store URL ({0}) doesn't match this store URL ({1})</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+              <LocaleResource Name="ExchangeCurrency">
+                <Children>
+                  <LocaleResource Name="Set">
+                    <Value>Primary exchange rate currency is set</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Rate1">
+                    <Value>Primary exchange rate currency. The rate should be set to 1.</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="NotSet">
+                    <Value>Primary exchange rate currency is not set</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+              <LocaleResource Name="PrimaryCurrency">
+                <Children>
+                  <LocaleResource Name="Set">
+                    <Value>Primary store currency is set</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="NotSet">
+                    <Value>Primary store currency is not set</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+              <LocaleResource Name="DefaultWeight">
+                <Children>
+                  <LocaleResource Name="Set">
+                    <Value>Default weight is set</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Ratio1">
+                    <Value>Default weight. The ratio should be set to 1.</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="NotSet">
+                    <Value>Default weight is not set</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+              <LocaleResource Name="DefaultDimension">
+                <Children>
+                  <LocaleResource Name="Set">
+                    <Value>Default dimension is set</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Ratio1">
+                    <Value>Default dimension. The ratio should be set to 1.</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="NotSet">
+                    <Value>Default dimension is not set</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+              <LocaleResource Name="NoComputationMethods">
+                <Children>
+                  <LocaleResource Name="OnlyOneOffline">
+                    <Value>No shipping rate computation methods enabled</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="OnlyOneOffline">
+                    <Value>Only one offline shipping rate computation method is recommended to use</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+              <LocaleResource Name="PaymentMethods">
+                <Children>
+                  <LocaleResource Name="OK">
+                    <Value>Payment methods are OK</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="NoActive">
+                    <Value>You don't have active payment methods</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+              <LocaleResource Name="IncompatiblePlugin">
+                <Value>'{0}' plugin is incompatible with your nopCommerce version. Delete it or update to the latest version.</Value>
+              </LocaleResource>
+              <LocaleResource Name="DirectoryPermission">
+                <Children>
+                  <LocaleResource Name="OK">
+                    <Value>All directory permissions are OK</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Wrong">
+                    <Value>The '{0}' account is not granted with Modify permission on folder '{1}'. Please configure these permissions.</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+              <LocaleResource Name="FilePermission">
+                <Children>
+                  <LocaleResource Name="OK">
+                    <Value>All file permissions are OK</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Wrong">
+                    <Value>The '{0}' account is not granted with Modify permission on file '{1}'. Please configure these permissions.</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+              <LocaleResource Name="MachineKey">
+                <Children>
+                  <LocaleResource Name="NotSpecified">
+                    <Value>A custom machine key is not specified (web.config file)</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Specified">
+                    <Value>A custom machine key is specified (web.config file)</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+            </Children>
+          </LocaleResource>
         </Children>
       </LocaleResource>
       <LocaleResource Name="Telerik">
