@@ -5036,8 +5036,6 @@
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
-                    </Children>
-                  </LocaleResource>
                   <LocaleResource Name="PageTitleSeparator">
                     <Value>Page title separator</Value>
                     <Children>
