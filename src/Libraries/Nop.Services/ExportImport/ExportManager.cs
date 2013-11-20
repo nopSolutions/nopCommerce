@@ -916,6 +916,7 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("PaidDateUtc", null, (order.PaidDateUtc == null) ? string.Empty : order.PaidDateUtc.Value.ToString());
                 xmlWriter.WriteElementString("ShippingMethod", null, order.ShippingMethod);
                 xmlWriter.WriteElementString("ShippingRateComputationMethodSystemName", null, order.ShippingRateComputationMethodSystemName);
+                xmlWriter.WriteElementString("CustomValuesXml", null, order.CustomValuesXml);
                 xmlWriter.WriteElementString("VatNumber", null, order.VatNumber);
                 xmlWriter.WriteElementString("Deleted", null, order.Deleted.ToString());
                 xmlWriter.WriteElementString("CreatedOnUtc", null, order.CreatedOnUtc.ToString());
@@ -1154,6 +1155,9 @@ namespace Nop.Services.ExportImport
                         col++;
 
                         worksheet.Cells[row, col].Value = order.ShippingRateComputationMethodSystemName;
+                        col++;
+                        
+                        worksheet.Cells[row, col].Value = order.CustomValuesXml;
                         col++;
 
                         worksheet.Cells[row, col].Value = order.VatNumber;

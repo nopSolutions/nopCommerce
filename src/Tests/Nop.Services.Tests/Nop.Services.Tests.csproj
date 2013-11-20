@@ -85,6 +85,7 @@
     <Compile Include="Orders\CheckoutAttributeExtensionsTests.cs" />
     <Compile Include="Orders\OrderProcessingServiceTests.cs" />
     <Compile Include="Orders\OrderTotalCalculationServiceTests.cs" />
+    <Compile Include="Payments\PaymentExtensionTests.cs" />
     <Compile Include="Payments\TestPaymentMethod.cs" />
     <Compile Include="Payments\PaymentServiceTests.cs" />
     <Compile Include="Seo\SeoExtensionsTests.cs" />

@@ -1987,3 +1987,11 @@ BEGIN
 	VALUES (N'pdfsettings.invoicefootertextcolumn2', N'', 0)
 END
 GO
+
+--add a new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='CustomValuesXml')
+BEGIN
+	ALTER TABLE [Order]
+	ADD [CustomValuesXml] nvarchar(MAX) NULL
+END
+GO

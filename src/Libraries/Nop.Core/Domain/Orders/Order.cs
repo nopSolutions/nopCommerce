@@ -315,6 +315,11 @@ namespace Nop.Core.Domain.Orders
         public string ShippingRateComputationMethodSystemName { get; set; }
 
         /// <summary>
+        /// Gets or sets the serialized CustomValues (values from ProcessPaymentRequest)
+        /// </summary>
+        public string CustomValuesXml { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the entity has been deleted
         /// </summary>
         public bool Deleted { get; set; }

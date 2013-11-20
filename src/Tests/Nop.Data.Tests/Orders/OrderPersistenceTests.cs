@@ -72,6 +72,7 @@ namespace Nop.Data.Tests.Orders
                 ShippingAddress = null,
                 ShippingMethod = "ShippingMethod1",
                 ShippingRateComputationMethodSystemName="ShippingRateComputationMethodSystemName1",
+                CustomValuesXml = "CustomValuesXml1",
                 Deleted = false,
                 CreatedOnUtc = new DateTime(2010, 01, 04)
             };
@@ -127,6 +128,7 @@ namespace Nop.Data.Tests.Orders
             fromDb.ShippingAddress.ShouldBeNull();
             fromDb.ShippingMethod.ShouldEqual("ShippingMethod1");
             fromDb.ShippingRateComputationMethodSystemName.ShouldEqual("ShippingRateComputationMethodSystemName1");
+            fromDb.CustomValuesXml.ShouldEqual("CustomValuesXml1");
             fromDb.Deleted.ShouldEqual(false);
             fromDb.CreatedOnUtc.ShouldEqual(new DateTime(2010, 01, 04));
         }
