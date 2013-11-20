@@ -65,7 +65,7 @@ namespace Nop.Services.Common
             if (_commonSettings.UseStoredProceduresIfSupported && _dataProvider.StoredProceduredSupported)
             {
                 //stored procedures are enabled and supported by the database.
-                _dbContext.ExecuteSqlCommand("EXEC [FullText_Enable]");
+                _dbContext.ExecuteSqlCommand("EXEC [FullText_Enable]", true);
             }
             else
             {
@@ -81,7 +81,7 @@ namespace Nop.Services.Common
             if (_commonSettings.UseStoredProceduresIfSupported && _dataProvider.StoredProceduredSupported)
             {
                 //stored procedures are enabled and supported by the database.
-                _dbContext.ExecuteSqlCommand("EXEC [FullText_Disable]");
+                _dbContext.ExecuteSqlCommand("EXEC [FullText_Disable]", true);
             }
             else
             {

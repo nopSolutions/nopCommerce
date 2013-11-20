@@ -389,7 +389,7 @@ namespace Nop.Services.Localization
                 pXmlPackage.DbType = DbType.Xml;
 
                 //long-running query. specify timeout (600 seconds)
-                _dbContext.ExecuteSqlCommand("EXEC [LanguagePackImport] @LanguageId, @XmlPackage", 600, pLanguageId, pXmlPackage);
+                _dbContext.ExecuteSqlCommand("EXEC [LanguagePackImport] @LanguageId, @XmlPackage", false, 600, pLanguageId, pXmlPackage);
             }
             else
             {
