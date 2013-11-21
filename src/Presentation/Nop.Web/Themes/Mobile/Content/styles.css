@@ -649,3 +649,8 @@ pre{white-space:pre-wrap;/* css-3 */white-space:0;/* Mozilla, since 1999 */white
 .csharpcode .attr{color:red;}
 .csharpcode .alt{background-color:#f4f4f4;width:100%;margin:0;}
 .csharpcode .lnum{color:#606060;}
+
+/* recaptcha issue fixed*/
+/* by default it's overriden by jQuery mobile style - "input.ui-input-text, textarea.ui-input-text"'*/
+/* and it breaks the layout*/
+.recaptcha_input_area input.ui-input-text{display:inline !important;}
