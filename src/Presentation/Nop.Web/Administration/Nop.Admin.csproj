@@ -56,12 +56,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\Autofac.3.1.5\lib\net40\Autofac.dll</HintPath>
     </Reference>
-    <Reference Include="AutoMapper, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="AutoMapper, Version=3.1.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\packages\AutoMapper.3.0.0\lib\net40\AutoMapper.dll</HintPath>
+      <HintPath>..\..\..\packages\AutoMapper.3.1.0\lib\net40\AutoMapper.dll</HintPath>
     </Reference>
-    <Reference Include="AutoMapper.Net4">
-      <HintPath>..\..\..\packages\AutoMapper.3.0.0\lib\net40\AutoMapper.Net4.dll</HintPath>
+    <Reference Include="AutoMapper.Net4, Version=3.1.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\AutoMapper.3.1.0\lib\net40\AutoMapper.Net4.dll</HintPath>
     </Reference>
     <Reference Include="FluentValidation, Version=5.0.0.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -98,7 +99,7 @@
     </Reference>
     <Reference Include="System.Web.Optimization, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\packages\Microsoft.AspNet.Web.Optimization.1.1.1\lib\net40\System.Web.Optimization.dll</HintPath>
+      <HintPath>..\..\..\packages\Microsoft.AspNet.Web.Optimization.1.1.2\lib\net40\System.Web.Optimization.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

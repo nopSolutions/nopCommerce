@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/01/nuspec.xsd">
+  <metadata minClientVersion="2.5">
+    <id>Microsoft.Bcl</id>
+    <version>1.1.6</version>
+    <title>Microsoft BCL Portability Pack</title>
+    <authors>Microsoft</authors>
+    <owners>Microsoft</owners>
+    <licenseUrl>http://go.microsoft.com/fwlink/?LinkId=329770</licenseUrl>
+    <projectUrl>http://go.microsoft.com/fwlink/?LinkID=280057</projectUrl>
+    <iconUrl>http://go.microsoft.com/fwlink/?LinkID=288859</iconUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>This packages enables projects targeting down-level platforms to use some of the types added in later versions including:
+
+- CallerMemberNameAttribute
+- CallerLineNumberAttribute
+- CallerFilePathAttribute
+- Tuple&lt;T1, T2, ...&gt;
+- IProgress&lt;T&gt;
+- IStructuralComparable
+- IStructuralEquatable
+- Task
+- InvalidDataException
+
+These types are "unified" to their later version equivalent. For example, when running on .NET Framework 4.5, IProgress&lt;T&gt; from this package will be seen by the runtime as the same type as the one already available in the platform.
+
+Supported Platforms:
+- .NET Framework 4 (with KB2468871)
+- Windows Phone 7.5
+- Silverlight 4 and 5
+- Portable Class Libraries
+This package is only required for projects targeting .NET Framework 4.5, NET for Windows Store apps or Windows Phone 8 when consuming a library that uses this package.</description>
+    <summary>Adds support for types added in later versions of .NET when targeting previous versions.</summary>
+    <copyright>Copyright © Microsoft Corporation</copyright>
+    <tags>BCL Microsoft System Task IProgress</tags>
+    <dependencies>
+      <dependency id="Microsoft.Bcl.Build" version="1.0.10" />
+    </dependencies>
+  </metadata>
+</package>

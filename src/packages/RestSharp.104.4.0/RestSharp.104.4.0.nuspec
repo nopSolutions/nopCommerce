@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>RestSharp</id>
+    <version>104.4.0</version>
+    <authors>John Sheehan,  RestSharp Community</authors>
+    <owners>John Sheehan,  RestSharp Community</owners>
+    <licenseUrl>https://github.com/restsharp/RestSharp/blob/master/LICENSE.txt</licenseUrl>
+    <projectUrl>http://restsharp.org/</projectUrl>
+    <iconUrl>http://dl.dropbox.com/u/1827/restsharp100.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Simple REST and HTTP API Client</description>
+    <releaseNotes>For full release notes see https://github.com/restsharp/RestSharp/blob/master/releasenotes.markdown</releaseNotes>
+    <language>en-US</language>
+    <tags>REST HTTP API JSON XML</tags>
+  </metadata>
+</package>

@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>MaxMind.GeoIP2</id>
+    <version>0.3.0.0</version>
+    <title>MaxMind GeoIP2</title>
+    <authors>MaxMind Inc.</authors>
+    <owners>MaxMind Inc.</owners>
+    <licenseUrl>https://github.com/maxmind/GeoIP2-dotnet/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/maxmind/GeoIP2-dotnet</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Currently, this distribution provides an API for the GeoIP2 web services.</description>
+    <releaseNotes>Initial release.</releaseNotes>
+    <copyright>Copyright 2013</copyright>
+    <tags>geolocation</tags>
+    <dependencies>
+      <dependency id="RestSharp" version="104.3" />
+      <dependency id="Newtonsoft.Json" version="5.0.8" />
+      <dependency id="MaxMind.Db" version="0.2.1.0" />
+    </dependencies>
+  </metadata>
+</package>

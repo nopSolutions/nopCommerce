@@ -52,7 +52,8 @@ namespace Nop.Services.Directory
                 //Console.WriteLine(omni.Location.Latitude); // 44.9733
                 //Console.WriteLine(omni.Location.Longitude); // -93.2323
             }
-            catch (GeoIP2AddressNotFoundException exc)
+            //catch (AddressNotFoundException exc)
+            catch (GeoIP2Exception exc)
             {
                 //address is not found
                 //do not throw exceptions

@@ -42,11 +42,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\nopCommerceCustom\itextsharp.dll</HintPath>
     </Reference>
-    <Reference Include="MaxMind.Db">
-      <HintPath>..\..\packages\MaxMind.Db.0.2.0.0\lib\net40\MaxMind.Db.dll</HintPath>
+    <Reference Include="MaxMind.Db, Version=0.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\MaxMind.Db.0.2.1.0\lib\net40\MaxMind.Db.dll</HintPath>
     </Reference>
-    <Reference Include="MaxMind.GeoIP2">
-      <HintPath>..\..\packages\MaxMind.GeoIP2.0.2.0.0\lib\net40\MaxMind.GeoIP2.dll</HintPath>
+    <Reference Include="MaxMind.GeoIP2, Version=0.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\MaxMind.GeoIP2.0.3.0.0\lib\net40\MaxMind.GeoIP2.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -56,8 +58,9 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\packages\Newtonsoft.Json.5.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="RestSharp">
-      <HintPath>..\..\packages\RestSharp.104.1\lib\net4\RestSharp.dll</HintPath>
+    <Reference Include="RestSharp, Version=104.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\RestSharp.104.4.0\lib\net4\RestSharp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
