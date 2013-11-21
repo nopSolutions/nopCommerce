@@ -772,6 +772,11 @@ namespace Nop.Admin.Controllers
                 {
                     model.VendorId = _workContext.CurrentVendor.Id;
                 }
+                //vendors cannot edit "Show on home page" property
+                if (_workContext.CurrentVendor != null && model.ShowOnHomePage)
+                {
+                    model.ShowOnHomePage = false;
+                }
 
                 //product
                 var product = model.ToEntity();
@@ -867,6 +872,11 @@ namespace Nop.Admin.Controllers
                 if (_workContext.CurrentVendor != null)
                 {
                     model.VendorId = _workContext.CurrentVendor.Id;
+                }
+                //vendors cannot edit "Show on home page" property
+                if (_workContext.CurrentVendor != null && model.ShowOnHomePage != product.ShowOnHomePage)
+                {
+                    model.ShowOnHomePage = product.ShowOnHomePage;
                 }
                 var prevStockQuantity = product.StockQuantity;
 
