@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Web.Management;
+using iTextSharp.text.pdf.crypto;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -144,38 +146,28 @@ namespace Nop.Services.Tax
         /// Gets tax rate
         /// </summary>
         /// <param name="product">Product</param>
+        /// <param name="taxCategoryId">Tax category identifier</param>
         /// <param name="customer">Customer</param>
-        /// <returns>Tax rate</returns>
-        protected virtual decimal GetTaxRate(Product product, Customer customer)
+        /// <param name="taxRate">Calculated tax rate</param>
+        /// <param name="isTaxable">A value indicating whether a request is taxable</param>
+        protected virtual void GetTaxRate(Product product, int taxCategoryId, 
+            Customer customer, out decimal taxRate, out bool isTaxable)
         {
-            return GetTaxRate(product, 0, customer);
-        }
+            taxRate = decimal.Zero;
+            isTaxable = true;
 
-        /// <summary>
-        /// Gets tax rate
-        /// </summary>
-        /// <param name="taxCategoryId">Tax category identifier</param>
-        /// <param name="customer">Customer</param>
-        /// <returns>Tax rate</returns>
-        protected virtual decimal GetTaxRate(int taxCategoryId, Customer customer)
-        {
-            return GetTaxRate(null, taxCategoryId, customer);
-        }
-        
-        /// <summary>
-        /// Gets tax rate
-        /// </summary>
-        /// <param name="product">Product</param>
-        /// <param name="taxCategoryId">Tax category identifier</param>
-        /// <param name="customer">Customer</param>
-        /// <returns>Tax rate</returns>
-        protected virtual decimal GetTaxRate(Product product, int taxCategoryId, 
-            Customer customer)
-        {
+            //active tax provider
+            var activeTaxProvider = LoadActiveTaxProvider();
+            if (activeTaxProvider == null)
+            {
+                //throw new NopException("Active tax provider cannot be loaded. Please select at least one in admin area.");
+                return;
+            }
+
             //tax exempt
             if (IsTaxExempt(product, customer))
             {
-                return decimal.Zero;
+                isTaxable = false;
             }
 
             //tax request
@@ -186,17 +178,9 @@ namespace Nop.Services.Tax
             {
                 if (IsVatExempt(calculateTaxRequest.Address, calculateTaxRequest.Customer))
                 {
-                    //return zero if VAT is not chargeable
-                    return decimal.Zero;
+                    //VAT is not chargeable
+                    isTaxable = false;
                 }
-            }
-
-            //active tax provider
-            var activeTaxProvider = LoadActiveTaxProvider();
-            if (activeTaxProvider == null)
-            {
-                //throw new NopException("Active tax provider cannot be loaded. Please select at least one in admin area.");
-                return decimal.Zero;
             }
 
             //get tax rate
@@ -206,10 +190,9 @@ namespace Nop.Services.Tax
                 //ensure that tax is equal or greater than zero
                 if (calculateTaxResult.TaxRate < decimal.Zero)
                     calculateTaxResult.TaxRate = decimal.Zero;
-                return calculateTaxResult.TaxRate;
+                
+                taxRate = calculateTaxResult.TaxRate;
             }
-            else
-                return decimal.Zero;
         }
         
 
@@ -325,23 +308,49 @@ namespace Nop.Services.Tax
             decimal price, bool includingTax, Customer customer,
             bool priceIncludesTax, out decimal taxRate)
         {
-            taxRate = GetTaxRate(product, taxCategoryId, customer);
-            
+            bool isTaxable;
+            GetTaxRate(product, taxCategoryId, customer, out taxRate, out isTaxable);
+
             if (priceIncludesTax)
             {
+                //"price" already includes tax
                 if (!includingTax)
                 {
+                    //we should calculated price WITHOUT tax
                     price = CalculatePrice(price, taxRate, false);
+                }
+                else
+                {
+                    //we should calculated price WITH tax
+                    if (!isTaxable)
+                    {
+                        //but our request is not taxable
+                        //hence we should calculated price WITHOUT tax
+                        price = CalculatePrice(price, taxRate, false);
+                    }
                 }
             }
             else
             {
+                //"price" doesn't include tax
                 if (includingTax)
                 {
-                    price = CalculatePrice(price, taxRate, true);
+                    //we should calculated price WITH tax
+                    //do it only when price is taxable
+                    if (isTaxable)
+                    {
+                        price = CalculatePrice(price, taxRate, true);
+                    }
                 }
             }
 
+
+            if (!isTaxable)
+            {
+                //we return 0% tax rate in case a request is not taxable
+                taxRate = decimal.Zero;
+            }
+            
             //allowed to support negative price adjustments
             //if (price < decimal.Zero)
             //    price = decimal.Zero;

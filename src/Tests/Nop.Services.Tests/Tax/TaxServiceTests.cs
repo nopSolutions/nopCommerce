@@ -66,7 +66,7 @@ namespace Nop.Services.Tests.Tax
         }
 
         [Test]
-        public void Can_check_taxExempt_productVariant()
+        public void Can_check_taxExempt_product()
         {
             var product = new Product();
             product.IsTaxExempt = true;
@@ -128,7 +128,7 @@ namespace Nop.Services.Tests.Tax
         //}
 
         [Test]
-        public void Can_get_productPrice_priceIncludesTax_includingTax()
+        public void Can_get_productPrice_priceIncludesTax_includingTax_taxable()
         {
             var customer = new Customer();
             var product = new Product();
@@ -136,6 +136,22 @@ namespace Nop.Services.Tests.Tax
             decimal taxRate;
             _taxService.GetProductPrice(product, 0, 1000M, true, customer, true, out taxRate).ShouldEqual(1000);
             _taxService.GetProductPrice(product, 0, 1000M, true, customer, false, out taxRate).ShouldEqual(1100);
+            _taxService.GetProductPrice(product, 0, 1000M, false, customer, true, out taxRate).ShouldEqual(909.0909090909090909090909091M);
+            _taxService.GetProductPrice(product, 0, 1000M, false, customer, false, out taxRate).ShouldEqual(1000);
+        }
+
+        [Test]
+        public void Can_get_productPrice_priceIncludesTax_includingTax_non_taxable()
+        {
+            var customer = new Customer();
+            var product = new Product();
+
+            //not taxable
+            customer.IsTaxExempt = true;
+
+            decimal taxRate;
+            _taxService.GetProductPrice(product, 0, 1000M, true, customer, true, out taxRate).ShouldEqual(909.0909090909090909090909091M);
+            _taxService.GetProductPrice(product, 0, 1000M, true, customer, false, out taxRate).ShouldEqual(1000);
             _taxService.GetProductPrice(product, 0, 1000M, false, customer, true, out taxRate).ShouldEqual(909.0909090909090909090909091M);
             _taxService.GetProductPrice(product, 0, 1000M, false, customer, false, out taxRate).ShouldEqual(1000);
         }
