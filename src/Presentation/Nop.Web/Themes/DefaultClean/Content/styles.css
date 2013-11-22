@@ -406,7 +406,10 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 .checkout-data .use-reward-points{margin:0;padding:10px;color:#555;background:#F7F5E8;margin-bottom:10px;border:dotted 1px #d3d3d3;}
 .checkout-data .payment-method{text-align:left;border: 1px solid #EEE;height:auto;}
 .checkout-data .payment-method li{padding:10px;text-align:left;vertical-align:text-top; list-style:none;}
-.checkout-data .payment-method .payment-logo{}
+.checkout-data .payment-method .method-name{clear:both;}
+.checkout-data .payment-method .method-name:after{content:".";display:block;clear:both;height:0;font-size:0;line-height:0;visibility:hidden;}
+.checkout-data .payment-method .payment-logo{float:left;}
+.checkout-data .payment-method .payment-details{float:left;padding-top:8px;}
 .checkout-data .payment-method .buttons{margin:10px;text-align:left;}
 .checkout-data .payment-method .message-error{margin:10px;text-align:left;}
 .checkout-data .payment-info{text-align:left;border:1px solid #EEE;height:auto;}

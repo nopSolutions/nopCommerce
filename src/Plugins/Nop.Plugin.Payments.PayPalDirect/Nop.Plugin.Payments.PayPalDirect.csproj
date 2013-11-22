@@ -128,6 +128,9 @@
       <SubType>
       </SubType>
     </EmbeddedResource>
+    <Content Include="logo.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Notes.txt" />
     <None Include="app.config" />
     <None Include="packages.config" />

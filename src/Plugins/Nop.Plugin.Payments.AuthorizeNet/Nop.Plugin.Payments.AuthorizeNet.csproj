@@ -201,6 +201,9 @@
     <None Include="Web References\net.authorize.api\Service.disco" />
     <EmbeddedResource Include="Views\PaymentAuthorizeNet\Configure.cshtml" />
     <EmbeddedResource Include="Views\PaymentAuthorizeNet\PaymentInfo.cshtml" />
+    <Content Include="logo.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Notes.txt" />
     <None Include="Web References\net.authorize.api\Service.wsdl" />
     <None Include="Web References\net.authorize.api\UpdateCustomerPaymentProfileResponseType.datasource">

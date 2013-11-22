@@ -23,12 +23,16 @@
                     }
                     <li>
                         <div class="method-name">
-                            <input id="paymentmethod_@(i)" type="radio" name="paymentmethod" value="@(paymentMethod.PaymentMethodSystemName)" checked="@paymentMethod.Selected" />
                             @if (!String.IsNullOrEmpty(paymentMethod.LogoUrl))
                             {
-                                <img src="@paymentMethod.LogoUrl" alt="@paymentMethodName" class="payment-logo" />
+                                <div class ="payment-logo">
+                                    <img src="@paymentMethod.LogoUrl" alt="@paymentMethodName" />
+                                </div>
                             }
-                            <label for="paymentmethod_@(i)">@paymentMethodName</label>
+                            <div class="payment-details">
+                                <input id="paymentmethod_@(i)" type="radio" name="paymentmethod" value="@(paymentMethod.PaymentMethodSystemName)" checked="@paymentMethod.Selected" />
+                                <label for="paymentmethod_@(i)">@paymentMethodName</label>
+                            </div>
                         </div>
                     </li>
                 }
