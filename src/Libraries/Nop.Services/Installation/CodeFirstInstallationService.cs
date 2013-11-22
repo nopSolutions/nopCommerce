@@ -4771,6 +4771,11 @@ namespace Nop.Services.Installation
                     GooglePlusLink = "https://plus.google.com/+nopcommerce",
                 });
 
+            settingService.SaveSetting(new ExternalAuthenticationSettings()
+                {
+                    AutoRegisterEnabled = true,
+                });
+
             settingService.SaveSetting(new RewardPointsSettings()
                 {
                     Enabled = true,
