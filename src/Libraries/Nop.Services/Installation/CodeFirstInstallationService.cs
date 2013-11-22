@@ -4836,7 +4836,7 @@ namespace Nop.Services.Installation
                     MinOrderSubtotalAmount = 0,
                     MinOrderTotalAmount = 0,
                     AnonymousCheckoutAllowed = true,
-                    TermsOfServiceOnShoppingCartPage = false,
+                    TermsOfServiceOnShoppingCartPage = true,
                     TermsOfServiceOnOrderConfirmPage = false,
                     OnePageCheckoutEnabled = true,
                     OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab = false,
