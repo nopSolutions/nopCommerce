@@ -4773,7 +4773,7 @@ namespace Nop.Services.Installation
 
             settingService.SaveSetting(new RewardPointsSettings()
                 {
-                    Enabled = false,
+                    Enabled = true,
                     ExchangeRate = 1,
                     PointsForRegistration = 0,
                     PointsForPurchases_Amount = 10,
