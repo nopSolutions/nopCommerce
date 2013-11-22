@@ -794,6 +794,9 @@ set @resources='
   <LocaleResource Name="PageTitle.Vendors">
     <Value>Vendors</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.List.ImportFromExcelTip">
+    <Value>Imported products are distinguished by SKU. If some SKU already exists, then an appropriate product will be updated.</Value>
+  </LocaleResource>
 </Language>
 '
 
