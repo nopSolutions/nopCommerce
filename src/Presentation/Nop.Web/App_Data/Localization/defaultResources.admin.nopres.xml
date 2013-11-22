@@ -2077,6 +2077,9 @@
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
+                  <LocaleResource Name="ImportFromExcelTip">
+                    <Value>Imported products are distinguished by SKU. If some SKU already exists, then an appropriate product will be updated.</Value>
+                  </LocaleResource>
                   <LocaleResource Name="SearchProductName">
                     <Value>Product name</Value>
                     <Children>
