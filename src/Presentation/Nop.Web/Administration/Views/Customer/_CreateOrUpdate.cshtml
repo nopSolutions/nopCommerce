@@ -113,7 +113,7 @@
                 @Html.NopLabelFor(model => model.Password):
             </td>
             <td class="adminData">
-                @Html.EditorFor(model => model.Password)
+                @Html.TextBoxFor(model => model.Password, new { autocomplete = "off", @class = "text-box single-line" })
                 @Html.ValidationMessageFor(model => model.Password)
                 @if (Model.Id > 0)
                 {
