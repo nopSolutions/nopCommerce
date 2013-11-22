@@ -4673,9 +4673,9 @@ namespace Nop.Services.Installation
                     DefaultAdminLanguageId = _languageRepository.Table.Single(l => l.Name == "English").Id,
                     UseImagesForLanguageSelection = false,
                     SeoFriendlyUrlsForLanguagesEnabled = false,
-                    LoadAllLocaleRecordsOnStartup = false,
-                    LoadAllLocalizedPropertiesOnStartup = false,
-                    LoadAllUrlRecordsOnStartup = false,
+                    LoadAllLocaleRecordsOnStartup = true,
+                    LoadAllLocalizedPropertiesOnStartup = true,
+                    LoadAllUrlRecordsOnStartup = true,
                     IgnoreRtlPropertyForAdminArea = false,
                 });
 
