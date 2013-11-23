@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Web;
 using System.Web.Hosting;
@@ -42,21 +43,45 @@ namespace Nop.Core
 
             return referrerUrl;
         }
-        
+
         /// <summary>
         /// Get context IP address
         /// </summary>
         /// <returns>URL referrer</returns>
         public virtual string GetCurrentIpAddress()
         {
-            if (_httpContext != null &&
-                _httpContext.Request != null &&
-                _httpContext.Request.UserHostAddress != null)
+            if (_httpContext == null || _httpContext.Request == null)
+                return string.Empty;
+
+            if (_httpContext.Request.Headers != null)
+            {
+                //look for the X-Forwarded-For (XFF) HTTP header field
+                //it's used for identifying the originating IP address of a client connecting to a web server through an HTTP proxy or load balancer. 
+                string xff = _httpContext.Request.Headers.AllKeys
+                    .Where(x => "X-FORWARDED-FOR".Equals(x, StringComparison.InvariantCultureIgnoreCase))
+                    .Select(k => _httpContext.Request.Headers[k])
+                    .FirstOrDefault();
+
+                //if you want to exclude private IP addresses, then see http://stackoverflow.com/questions/2577496/how-can-i-get-the-clients-ip-address-in-asp-net-mvc
+
+                if (!String.IsNullOrEmpty(xff))
+                {
+                    string lastIp = xff.Split(new char[] { ',' }).FirstOrDefault();
+                    if (!String.IsNullOrEmpty(lastIp))
+                    {
+                        return lastIp;
+                    }
+                }
+            }
+
+            if (_httpContext.Request.UserHostAddress != null)
+            {
                 return _httpContext.Request.UserHostAddress;
-            
+            }
+
             return string.Empty;
         }
-        
+
         /// <summary>
         /// Gets this page name
         /// </summary>
