@@ -97,11 +97,12 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
-            var specificationAttributes = _specificationAttributeService.GetSpecificationAttributes();
+            var specificationAttributes = _specificationAttributeService
+                .GetSpecificationAttributes(command.Page - 1, command.PageSize);
             var gridModel = new GridModel<SpecificationAttributeModel>
             {
                 Data = specificationAttributes.Select(x => x.ToModel()),
-                Total = specificationAttributes.Count()
+                Total = specificationAttributes.TotalCount
             };
             return new JsonResult
             {

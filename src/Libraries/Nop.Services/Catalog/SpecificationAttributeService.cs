@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
@@ -85,13 +86,15 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Gets specification attributes
         /// </summary>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
         /// <returns>Specification attributes</returns>
-        public virtual IList<SpecificationAttribute> GetSpecificationAttributes()
+        public virtual IPagedList<SpecificationAttribute> GetSpecificationAttributes(int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = from sa in _specificationAttributeRepository.Table
                         orderby sa.DisplayOrder
                         select sa;
-            var specificationAttributes = query.ToList();
+            var specificationAttributes = new PagedList<SpecificationAttribute>(query, pageIndex, pageSize);
             return specificationAttributes;
         }
 

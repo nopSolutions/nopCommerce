@@ -472,7 +472,7 @@ namespace Nop.Admin.Controllers
                 model.UpdatedOn = _dateTimeHelper.ConvertToUserTime(product.UpdatedOnUtc, DateTimeKind.Utc);
             }
 
-            model.NumberOfAvailableProductAttributes = _productAttributeService.GetAllProductAttributes().Count;
+            model.NumberOfAvailableProductAttributes = _productAttributeService.GetAllProductAttributes(0, 1).TotalCount;
             model.NumberOfAvailableManufacturers = _manufacturerService.GetAllManufacturers("",
                 pageIndex: 0,
                 pageSize: 1,

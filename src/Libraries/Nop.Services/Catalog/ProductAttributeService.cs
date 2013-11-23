@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
@@ -17,7 +18,11 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Key for caching
         /// </summary>
-        private const string PRODUCTATTRIBUTES_ALL_KEY = "Nop.productattribute.all";
+        /// <remarks>
+        /// {0} : page index
+        /// {1} : page size
+        /// </remarks>
+        private const string PRODUCTATTRIBUTES_ALL_KEY = "Nop.productattribute.all-{0}-{1}";
         /// <summary>
         /// Key for caching
         /// </summary>
@@ -148,8 +153,10 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Gets all product attributes
         /// </summary>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
         /// <returns>Product attribute collection</returns>
-        public virtual IList<ProductAttribute> GetAllProductAttributes()
+        public virtual IPagedList<ProductAttribute> GetAllProductAttributes(int pageIndex = 0, int pageSize = int.MaxValue)
         {
             string key = PRODUCTATTRIBUTES_ALL_KEY;
             return _cacheManager.Get(key, () =>
@@ -157,7 +164,7 @@ namespace Nop.Services.Catalog
                 var query = from pa in _productAttributeRepository.Table
                             orderby pa.Name
                             select pa;
-                var productAttributes = query.ToList();
+                var productAttributes = new PagedList<ProductAttribute>(query, pageIndex, pageSize);
                 return productAttributes;
             });
         }
