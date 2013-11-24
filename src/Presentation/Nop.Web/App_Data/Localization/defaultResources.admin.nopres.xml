@@ -9295,6 +9295,14 @@
           </LocaleResource>
           <LocaleResource Name="PdfInvoice">
             <Value>Invoice (PDF)</Value>
+            <Children>
+              <LocaleResource Name="NoOrders">
+                <Value>No orders selected</Value>
+              </LocaleResource>
+              <LocaleResource Name="Selected">
+                <Value>Print PDF invoices (selected)</Value>
+              </LocaleResource>
+            </Children>
           </LocaleResource>
           <LocaleResource Name="Products">
             <Value>Products</Value>

@@ -1331,6 +1331,43 @@ namespace Nop.Admin.Controllers
             return File(bytes, "application/pdf", string.Format("order_{0}.pdf", order.Id));
         }
 
+        public ActionResult PdfInvoiceSelected(string selectedIds)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
+            var orders = new List<Order>();
+            if (selectedIds != null)
+            {
+                var ids = selectedIds
+                    .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(x => Convert.ToInt32(x))
+                    .ToArray();
+                orders.AddRange(_orderService.GetOrdersByIds(ids));
+            }
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                orders = orders.Where(o => HasAccessToOrder(o)).ToList();
+            }
+
+            //ensure that we at least one order selected
+            if (orders.Count == 0)
+            {
+                ErrorNotification(_localizationService.GetResource("Admin.Orders.PdfInvoice.NoOrders"));
+                return RedirectToAction("List");
+            }
+
+            byte[] bytes = null;
+            using (var stream = new MemoryStream())
+            {
+                _pdfService.PrintOrdersToPdf(stream, orders, _workContext.WorkingLanguage.Id);
+                bytes = stream.ToArray();
+            }
+            return File(bytes, "application/pdf", "orders.pdf");
+        }
+
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("btnSaveCC")]
         public ActionResult EditCreditCardInfo(int id, OrderModel model)

@@ -797,6 +797,12 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.List.ImportFromExcelTip">
     <Value>Imported products are distinguished by SKU. If some SKU already exists, then an appropriate product will be updated.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.PdfInvoice.NoOrders">
+    <Value>No orders selected</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.PdfInvoice.Selected">
+    <Value>Print PDF invoices (selected)</Value>
+  </LocaleResource>
 </Language>
 '
 
