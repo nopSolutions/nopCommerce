@@ -99,11 +99,11 @@
 
                             columns.Bound(x => x.Id).Width(50);
                             columns.Bound(x => x.Subject).Width(300);
-                            columns.Bound(x => x.Priority).Width(50);
                             columns.Bound(x => x.From).Width(100);
-                            columns.Bound(x => x.FromName).Width(100);
+                            columns.Bound(x => x.To).Width(100);
                             columns.Bound(x => x.CreatedOn).Width(100);
                             columns.Bound(x => x.SentOn).Width(150);
+                            columns.Bound(x => x.Priority).Width(50);
                             columns.Bound(x => x.Id)
                                 .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
                                 .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
