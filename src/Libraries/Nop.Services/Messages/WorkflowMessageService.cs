@@ -67,7 +67,8 @@ namespace Nop.Services.Messages
         
         protected virtual int SendNotification(MessageTemplate messageTemplate, 
             EmailAccount emailAccount, int languageId, IEnumerable<Token> tokens,
-            string toEmailAddress, string toName, string attachmentFilePath = null)
+            string toEmailAddress, string toName,
+            string attachmentFilePath = null, string attachmentFileName = null)
         {
             //retrieve localized message template data
             var bcc = messageTemplate.GetLocalized((mt) => mt.BccEmailAddresses, languageId);
@@ -90,6 +91,7 @@ namespace Nop.Services.Messages
                 Subject = subjectReplaced,
                 Body = bodyReplaced,
                 AttachmentFilePath = attachmentFilePath,
+                AttachmentFileName = attachmentFileName,
                 CreatedOnUtc = DateTime.UtcNow,
                 EmailAccountId = emailAccount.Id
             };
@@ -412,8 +414,10 @@ namespace Nop.Services.Messages
         /// <param name="order">Order instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <param name="attachmentFilePath">Attachment file path</param>
+        /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendOrderPlacedCustomerNotification(Order order, int languageId, string attachmentFilePath = null)
+        public virtual int SendOrderPlacedCustomerNotification(Order order, int languageId,
+            string attachmentFilePath = null, string attachmentFileName = null)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -440,7 +444,8 @@ namespace Nop.Services.Messages
             return SendNotification(messageTemplate, emailAccount,
                 languageId, tokens,
                 toEmail, toName,
-                attachmentFilePath);
+                attachmentFilePath,
+                attachmentFileName);
         }
 
         /// <summary>
@@ -529,8 +534,10 @@ namespace Nop.Services.Messages
         /// <param name="order">Order instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <param name="attachmentFilePath">Attachment file path</param>
+        /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendOrderCompletedCustomerNotification(Order order, int languageId, string attachmentFilePath = null)
+        public virtual int SendOrderCompletedCustomerNotification(Order order, int languageId,
+            string attachmentFilePath = null, string attachmentFileName = null)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -557,7 +564,8 @@ namespace Nop.Services.Messages
             return SendNotification(messageTemplate, emailAccount,
                 languageId, tokens,
                 toEmail, toName,
-                attachmentFilePath);
+                attachmentFilePath,
+                attachmentFileName);
         }
 
         /// <summary>

@@ -42,7 +42,7 @@ namespace Nop.Services.Messages
                 {
                     _emailSender.SendEmail(queuedEmail.EmailAccount, queuedEmail.Subject, queuedEmail.Body,
                        queuedEmail.From, queuedEmail.FromName, queuedEmail.To, queuedEmail.ToName, bcc, cc,
-                       queuedEmail.AttachmentFilePath);
+                       queuedEmail.AttachmentFilePath, queuedEmail.AttachmentFileName);
 
                     queuedEmail.SentOnUtc = DateTime.UtcNow;
                 }

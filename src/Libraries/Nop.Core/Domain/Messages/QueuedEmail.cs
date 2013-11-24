@@ -53,9 +53,14 @@ namespace Nop.Core.Domain.Messages
         public string Body { get; set; }
 
         /// <summary>
-        /// Gets or sets the attachment file path
+        /// Gets or sets the attachment file path (full file path)
         /// </summary>
         public string AttachmentFilePath { get; set; }
+
+        /// <summary>
+        /// Gets or sets the attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.
+        /// </summary>
+        public string AttachmentFileName { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of item creation in UTC

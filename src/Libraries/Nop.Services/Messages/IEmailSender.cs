@@ -22,10 +22,11 @@ namespace Nop.Services.Messages
         /// <param name="bcc">BCC addresses list</param>
         /// <param name="cc">CC addresses ist</param>
         /// <param name="attachmentFilePath">Attachment file path</param>
+        /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
         void SendEmail(EmailAccount emailAccount, string subject, string body,
             string fromAddress, string fromName, string toAddress, string toName,
             IEnumerable<string> bcc = null, IEnumerable<string> cc = null,
-            string attachmentFilePath = null);
+            string attachmentFilePath = null, string attachmentFileName = null);
 
         /// <summary>
         /// Sends an email
@@ -38,9 +39,10 @@ namespace Nop.Services.Messages
         /// <param name="bcc">BCC addresses list</param>
         /// <param name="cc">CC addresses ist</param>
         /// <param name="attachmentFilePath">Attachment file path</param>
+        /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
         void SendEmail(EmailAccount emailAccount, string subject, string body,
             MailAddress from, MailAddress to,
             IEnumerable<string> bcc = null, IEnumerable<string> cc = null,
-            string attachmentFilePath = null);
+            string attachmentFilePath = null, string attachmentFileName = null);
     }
 }

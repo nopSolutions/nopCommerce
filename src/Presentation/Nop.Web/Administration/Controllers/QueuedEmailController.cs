@@ -158,6 +158,7 @@ namespace Nop.Admin.Controllers
                 Subject = queuedEmail.Subject,
                 Body = queuedEmail.Body,
                 AttachmentFilePath = queuedEmail.AttachmentFilePath,
+                AttachmentFileName = queuedEmail.AttachmentFileName,
                 CreatedOnUtc = DateTime.UtcNow,
                 EmailAccountId = queuedEmail.EmailAccountId
             };

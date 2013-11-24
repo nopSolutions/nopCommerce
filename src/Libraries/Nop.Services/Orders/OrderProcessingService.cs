@@ -334,9 +334,13 @@ namespace Nop.Services.Orders
                 && notifyCustomer)
             {
                 //notification
-                var orderCompletedCustomerNotificationAttachmentFilePath = _orderSettings.AttachPdfInvoiceToOrderCompletedEmail ?
+                var orderCompletedAttachmentFilePath = _orderSettings.AttachPdfInvoiceToOrderCompletedEmail ?
                     _pdfService.PrintOrderToPdf(order, 0) : null;
-                int orderCompletedCustomerNotificationQueuedEmailId = _workflowMessageService.SendOrderCompletedCustomerNotification(order, order.CustomerLanguageId, orderCompletedCustomerNotificationAttachmentFilePath);
+                var orderCompletedAttachmentFileName = _orderSettings.AttachPdfInvoiceToOrderCompletedEmail ?
+                    "order.pdf" : null;
+                int orderCompletedCustomerNotificationQueuedEmailId = _workflowMessageService
+                    .SendOrderCompletedCustomerNotification(order, order.CustomerLanguageId, orderCompletedAttachmentFilePath,
+                    orderCompletedAttachmentFileName);
                 if (orderCompletedCustomerNotificationQueuedEmailId > 0)
                 {
                     order.OrderNotes.Add(new OrderNote()
@@ -1300,9 +1304,12 @@ namespace Nop.Services.Orders
                             _orderService.UpdateOrder(order);
                         }
 
-                        var orderPlacedCustomerNotificationAttachmentFilePath = _orderSettings.AttachPdfInvoiceToOrderPlacedEmail ?
+                        var orderPlacedAttachmentFilePath = _orderSettings.AttachPdfInvoiceToOrderPlacedEmail ?
                             _pdfService.PrintOrderToPdf(order, 0) : null;
-                        int orderPlacedCustomerNotificationQueuedEmailId = _workflowMessageService.SendOrderPlacedCustomerNotification(order, order.CustomerLanguageId, orderPlacedCustomerNotificationAttachmentFilePath);
+                        var orderPlacedAttachmentFileName = _orderSettings.AttachPdfInvoiceToOrderPlacedEmail ?
+                            "order.pdf" : null;
+                        int orderPlacedCustomerNotificationQueuedEmailId = _workflowMessageService
+                            .SendOrderPlacedCustomerNotification(order, order.CustomerLanguageId, orderPlacedAttachmentFilePath, orderPlacedAttachmentFileName);
                         if (orderPlacedCustomerNotificationQueuedEmailId > 0)
                         {
                             order.OrderNotes.Add(new OrderNote()
