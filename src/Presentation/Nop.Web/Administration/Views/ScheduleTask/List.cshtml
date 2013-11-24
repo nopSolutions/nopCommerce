@@ -54,7 +54,8 @@
                         columns.Bound(x => x.Id)
                             .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/ScheduleTask/RunNow/") + "<#= Id #>\" class=\"t-button run-now\">" + T("Admin.System.ScheduleTasks.RunNow").Text + "</a>")
                             .Centered()
-                            .Title(T("Admin.System.ScheduleTasks.RunNow").Text);
+                            .Title(T("Admin.System.ScheduleTasks.RunNow").Text)
+                            .ReadOnly();
                         columns.Command(commands =>
                         {
                             commands.Edit().Text(T("Admin.Common.Edit").Text);
