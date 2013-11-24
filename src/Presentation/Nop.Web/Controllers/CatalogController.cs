@@ -1230,10 +1230,30 @@ namespace Nop.Web.Controllers
 
 
 
+            var customerRolesIds = _workContext.CurrentCustomer.CustomerRoles
+                .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
+
+
 
             //subcategories
-            model.SubCategories = _categoryService
-                .GetAllCategoriesByParentCategoryId(categoryId)
+            //We cache whether we have subcategories
+            IList<Category> subcategories = null;
+            string hasSubcategoriesCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_HAS_SUBCATEGORIES_KEY, categoryId,
+                string.Join(",", customerRolesIds), _storeContext.CurrentStore.Id);
+            var hasSubcategoriesCache = _cacheManager.Get<bool?>(hasSubcategoriesCacheKey);
+            if (!hasSubcategoriesCache.HasValue)
+            {
+                subcategories = _categoryService.GetAllCategoriesByParentCategoryId(categoryId);
+                hasSubcategoriesCache = subcategories.Count > 0;
+                _cacheManager.Set(hasSubcategoriesCacheKey, hasSubcategoriesCache, 60);
+            }
+            if (hasSubcategoriesCache.Value && subcategories == null)
+            {
+                subcategories = _categoryService.GetAllCategoriesByParentCategoryId(categoryId);
+            }
+            if (subcategories != null)
+            {
+                model.SubCategories = subcategories
                 .Select(x =>
                 {
                     var subCatName = x.GetLocalized(y => y.Name);
@@ -1262,18 +1282,15 @@ namespace Nop.Web.Controllers
                     return subCatModel;
                 })
                 .ToList();
-
+            }
 
 
 
             //featured products
             if (!_catalogSettings.IgnoreFeaturedProducts)
             {
-                IPagedList<Product> featuredProducts = null;
-
                 //We cache whether we have featured products
-                var customerRolesIds = _workContext.CurrentCustomer.CustomerRoles
-                    .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
+                IPagedList<Product> featuredProducts = null;
                 string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_HAS_FEATURED_PRODUCTS_KEY, categoryId,
                     string.Join(",", customerRolesIds), _storeContext.CurrentStore.Id);
                 var hasFeaturedProductsCache = _cacheManager.Get<bool?>(cacheKey);
