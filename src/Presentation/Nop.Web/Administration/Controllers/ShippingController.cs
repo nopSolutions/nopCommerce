@@ -5,6 +5,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using Nop.Admin.Models.Directory;
 using Nop.Admin.Models.Shipping;
+using Nop.Core;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Plugins;
@@ -36,6 +37,7 @@ namespace Nop.Admin.Controllers
         private readonly ILocalizedEntityService _localizedEntityService;
         private readonly ILanguageService _languageService;
         private readonly IPluginFinder _pluginFinder;
+        private readonly IWebHelper _webHelper;
 
 		#endregion
 
@@ -51,7 +53,8 @@ namespace Nop.Admin.Controllers
             IPermissionService permissionService,
              ILocalizedEntityService localizedEntityService,
             ILanguageService languageService,
-            IPluginFinder pluginFinder)
+            IPluginFinder pluginFinder,
+            IWebHelper webHelper)
 		{
             this._shippingService = shippingService;
             this._shippingSettings = shippingSettings;
@@ -64,6 +67,7 @@ namespace Nop.Admin.Controllers
             this._localizedEntityService = localizedEntityService;
             this._languageService = languageService;
             this._pluginFinder = pluginFinder;
+            this._webHelper = webHelper;
 		}
 
 		#endregion 
@@ -123,6 +127,7 @@ namespace Nop.Admin.Controllers
             {
                 var tmp1 = shippingProvider.ToModel();
                 tmp1.IsActive = shippingProvider.IsShippingRateComputationMethodActive(_shippingSettings);
+                tmp1.LogoUrl = shippingProvider.PluginDescriptor.GetLogoUrl(_webHelper);
                 shippingProvidersModel.Add(tmp1);
             }
             shippingProvidersModel = shippingProvidersModel.ForCommand(command).ToList();

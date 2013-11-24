@@ -52,6 +52,10 @@
                     .Columns(columns =>
                     {
                         columns.Bound(x => x.Group);
+                        columns.Bound(x => x.LogoUrl)
+                            .ClientTemplate("<img alt='' src='<#= LogoUrl #>' />")
+                            .Centered()
+                            .Width(150);
                         columns.Bound(x => x.FriendlyName)
                             .ClientTemplate("<b><#= FriendlyName #></b>" +
                                 " <br />" + T("Admin.Configuration.Plugins.Fields.Version").Text + ": <#= Version #>" +

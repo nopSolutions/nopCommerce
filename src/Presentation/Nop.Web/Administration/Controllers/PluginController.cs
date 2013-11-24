@@ -81,6 +81,8 @@ namespace Nop.Admin.Controllers
         protected PluginModel PreparePluginModel(PluginDescriptor pluginDescriptor)
         {
             var pluginModel = pluginDescriptor.ToModel();
+            //logo
+            pluginModel.LogoUrl = pluginDescriptor.GetLogoUrl(_webHelper);
 
             //locales
             AddLocales(_languageService, pluginModel.Locales, (locale, languageId) =>

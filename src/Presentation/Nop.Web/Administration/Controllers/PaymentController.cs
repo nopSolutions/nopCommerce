@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Nop.Admin.Models.Payments;
+using Nop.Core;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Plugins;
 using Nop.Services.Configuration;
@@ -28,6 +29,7 @@ namespace Nop.Admin.Controllers
         private readonly IPermissionService _permissionService;
 	    private readonly ICountryService _countryService;
         private readonly IPluginFinder _pluginFinder;
+	    private readonly IWebHelper _webHelper;
 	    private readonly ILocalizationService _localizationService;
 
 		#endregion
@@ -40,6 +42,7 @@ namespace Nop.Admin.Controllers
             IPermissionService permissionService,
             ICountryService countryService,
             IPluginFinder pluginFinder,
+            IWebHelper webHelper,
             ILocalizationService localizationService)
 		{
             this._paymentService = paymentService;
@@ -48,6 +51,7 @@ namespace Nop.Admin.Controllers
             this._permissionService = permissionService;
             this._countryService = countryService;
             this._pluginFinder = pluginFinder;
+            this._webHelper = webHelper;
             this._localizationService = localizationService;
 		}
 
@@ -75,6 +79,7 @@ namespace Nop.Admin.Controllers
             {
                 var tmp1 = paymentMethod.ToModel();
                 tmp1.IsActive = paymentMethod.IsPaymentMethodActive(_paymentSettings);
+                tmp1.LogoUrl = paymentMethod.PluginDescriptor.GetLogoUrl(_webHelper);
                 paymentMethodsModel.Add(tmp1);
             }
             paymentMethodsModel = paymentMethodsModel.ForCommand(command).ToList();

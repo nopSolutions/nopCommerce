@@ -803,6 +803,15 @@ set @resources='
   <LocaleResource Name="Admin.Orders.PdfInvoice.Selected">
     <Value>Print PDF invoices (selected)</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Fields.Logo">
+    <Value>Logo</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Payment.Methods.Fields.Logo">
+    <Value>Logo</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Providers.Fields.Logo">
+    <Value>Logo</Value>
+  </LocaleResource>
 </Language>
 '
 

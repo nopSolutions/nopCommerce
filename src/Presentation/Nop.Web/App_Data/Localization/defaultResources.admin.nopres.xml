@@ -3674,6 +3674,9 @@
                       <LocaleResource Name="IsActive">
                         <Value>Is active</Value>
                       </LocaleResource>
+                      <LocaleResource Name="Logo">
+                        <Value>Logo</Value>
+                      </LocaleResource>
                       <LocaleResource Name="SupportCapture">
                         <Value>Supports capture</Value>
                       </LocaleResource>
@@ -3800,6 +3803,9 @@
                         <Value>Indicates whether the plugin is enabled/active.</Value>
                       </LocaleResource>
                     </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="Logo">
+                    <Value>Logo</Value>
                   </LocaleResource>
                   <LocaleResource Name="LimitedToStores">
                     <Value>Limited to stores</Value>
@@ -6307,6 +6313,9 @@
                       </LocaleResource>
                       <LocaleResource Name="SystemName">
                         <Value>System name</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="Logo">
+                        <Value>Logo</Value>
                       </LocaleResource>
                       <LocaleResource Name="DisplayOrder">
                         <Value>Display order</Value>

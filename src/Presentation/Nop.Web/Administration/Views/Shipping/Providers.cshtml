@@ -24,6 +24,11 @@
                             .Width(250)
                             .ReadOnly();
                         columns.Bound(x => x.SystemName).Width(250).ReadOnly();
+                        columns.Bound(x => x.LogoUrl)
+                            .ClientTemplate("<img alt='' src='<#= LogoUrl #>' />")
+                            .Centered()
+                            .Width(150)
+                            .ReadOnly();
                         columns.Bound(x => x.DisplayOrder).Width(100);
                         columns.Bound(x => x.IsActive)
                             .Template(

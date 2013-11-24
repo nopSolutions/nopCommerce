@@ -138,6 +138,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Views\ShippingByWeight\Configure.cshtml" />
+    <Content Include="logo.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Notes.txt" />
     <Content Include="packages.config">
       <SubType>Designer</SubType>
