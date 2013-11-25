@@ -181,7 +181,7 @@ namespace Nop.Core.Infrastructure.DependencyManagement
                 //no scope specified
                 scope = Scope();
             }
-            return Scope().TryResolve(serviceType, out instance);
+            return scope.TryResolve(serviceType, out instance);
         }
 
         public bool IsRegistered(Type serviceType, ILifetimeScope scope = null)
