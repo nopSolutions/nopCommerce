@@ -101,36 +101,56 @@ namespace Nop.Core.Infrastructure.DependencyManagement
             });
         }
 
-        public T Resolve<T>(string key = "") where T : class
+        public T Resolve<T>(string key = "", ILifetimeScope scope = null) where T : class
         {
+            if (scope == null)
+            {
+                //no scope specified
+                scope = Scope();
+            }
             if (string.IsNullOrEmpty(key))
             {
-                return Scope().Resolve<T>();
+                return scope.Resolve<T>();
             }
-            return Scope().ResolveKeyed<T>(key);
+            return scope.ResolveKeyed<T>(key);
         }
 
-        public object Resolve(Type type)
+        public object Resolve(Type type, ILifetimeScope scope = null)
         {
-            return Scope().Resolve(type);
+            if (scope == null)
+            {
+                //no scope specified
+                scope = Scope();
+            }
+            return scope.Resolve(type);
         }
 
-        public T[] ResolveAll<T>(string key = "")
+        public T[] ResolveAll<T>(string key = "", ILifetimeScope scope = null)
         {
+            if (scope == null)
+            {
+                //no scope specified
+                scope = Scope();
+            }
             if (string.IsNullOrEmpty(key))
             {
-                return Scope().Resolve<IEnumerable<T>>().ToArray();
+                return scope.Resolve<IEnumerable<T>>().ToArray();
             }
-            return Scope().ResolveKeyed<IEnumerable<T>>(key).ToArray();
+            return scope.ResolveKeyed<IEnumerable<T>>(key).ToArray();
         }
 
-        public T ResolveUnregistered<T>() where T:class
+        public T ResolveUnregistered<T>(ILifetimeScope scope = null) where T:class
         {
-            return ResolveUnregistered(typeof(T)) as T;
+            return ResolveUnregistered(typeof(T), scope) as T;
         }
 
-        public object ResolveUnregistered(Type type)
+        public object ResolveUnregistered(Type type, ILifetimeScope scope = null)
         {
+            if (scope == null)
+            {
+                //no scope specified
+                scope = Scope();
+            }
             var constructors = type.GetConstructors();
             foreach (var constructor in constructors)
             {
@@ -140,7 +160,7 @@ namespace Nop.Core.Infrastructure.DependencyManagement
                     var parameterInstances = new List<object>();
                     foreach (var parameter in parameters)
                     {
-                        var service = Resolve(parameter.ParameterType);
+                        var service = Resolve(parameter.ParameterType, scope);
                         if (service == null) throw new NopException("Unkown dependency");
                         parameterInstances.Add(service);
                     }
@@ -153,20 +173,35 @@ namespace Nop.Core.Infrastructure.DependencyManagement
             }
             throw new NopException("No contructor was found that had all the dependencies satisfied.");
         }
-
-        public bool TryResolve(Type serviceType, out object instance)
+        
+        public bool TryResolve(Type serviceType, ILifetimeScope scope, out object instance)
         {
+            if (scope == null)
+            {
+                //no scope specified
+                scope = Scope();
+            }
             return Scope().TryResolve(serviceType, out instance);
         }
 
-        public bool IsRegistered(Type serviceType)
+        public bool IsRegistered(Type serviceType, ILifetimeScope scope = null)
         {
-            return Scope().IsRegistered(serviceType);
+            if (scope == null)
+            {
+                //no scope specified
+                scope = Scope();
+            }
+            return scope.IsRegistered(serviceType);
         }
 
-        public object ResolveOptional(Type serviceType)
+        public object ResolveOptional(Type serviceType, ILifetimeScope scope = null)
         {
-            return Scope().ResolveOptional(serviceType);
+            if (scope == null)
+            {
+                //no scope specified
+                scope = Scope();
+            }
+            return scope.ResolveOptional(serviceType);
         }
         
 

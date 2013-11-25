@@ -38,11 +38,16 @@ namespace Nop.Services.Tasks
                 var type2 = System.Type.GetType(this.Type);
                 if (type2 != null)
                 {
+                    //background tasks has an issue with Autofac
+                    //because scope is generated each time it's requested
+                    //that's why we get one single scope here 
+                    var scope = EngineContext.Current.ContainerManager.Scope();
+
                     object instance;
-                    if (!EngineContext.Current.ContainerManager.TryResolve(type2, out instance))
+                    if (!EngineContext.Current.ContainerManager.TryResolve(type2, scope, out instance))
                     {
                         //not resolved
-                        instance = EngineContext.Current.ContainerManager.ResolveUnregistered(type2);
+                        instance = EngineContext.Current.ContainerManager.ResolveUnregistered(type2, scope);
                     }
                     task = instance as ITask;
                 }

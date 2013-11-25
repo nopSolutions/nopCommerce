@@ -91,7 +91,7 @@ namespace Nop.Core.Plugins
         public virtual T Instance<T>() where T : class, IPlugin
         {
             object instance;
-            if (!EngineContext.Current.ContainerManager.TryResolve(PluginType, out instance))
+            if (!EngineContext.Current.ContainerManager.TryResolve(PluginType, null, out instance))
             {
                 //not resolved
                 instance = EngineContext.Current.ContainerManager.ResolveUnregistered(PluginType);
