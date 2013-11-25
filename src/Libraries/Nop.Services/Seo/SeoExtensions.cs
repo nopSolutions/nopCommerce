@@ -1321,6 +1321,16 @@ namespace Nop.Services.Seo
                     _seoCharacterTable.Add(ToUnichar("044D"), "e");  // RUSSIAN SMALL LETTER э
                     _seoCharacterTable.Add(ToUnichar("044E"), "yu");  // RUSSIAN SMALL LETTER ю
                     _seoCharacterTable.Add(ToUnichar("044F"), "ya");  // RUSSIAN SMALL LETTER я
+                    _seoCharacterTable.Add(ToUnichar("0406"), "I");  // Ukraine-Byelorussian CAPITAL LETTER І
+                    _seoCharacterTable.Add(ToUnichar("0456"), "i");  // Ukraine-Byelorussian SMALL LETTER і
+                    _seoCharacterTable.Add(ToUnichar("0407"), "I");  // Ukraine CAPITAL LETTER Ї
+                    _seoCharacterTable.Add(ToUnichar("0457"), "i");  // Ukraine SMALL LETTER ї
+                    _seoCharacterTable.Add(ToUnichar("0404"), "Ie");  // Ukraine CAPITAL LETTER Є
+                    _seoCharacterTable.Add(ToUnichar("0454"), "ie");  // Ukraine SMALL LETTER є
+                    _seoCharacterTable.Add(ToUnichar("0490"), "G");  // Ukraine CAPITAL LETTER Ґ
+                    _seoCharacterTable.Add(ToUnichar("0491"), "g");  // Ukraine SMALL LETTER ґ
+                    _seoCharacterTable.Add(ToUnichar("040E"), "U");  // Byelorussian CAPITAL LETTER Ў
+                    _seoCharacterTable.Add(ToUnichar("045E"), "u");  // Byelorussian SMALL LETTER ў
                 }
             }
 
