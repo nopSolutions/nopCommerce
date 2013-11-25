@@ -785,6 +785,7 @@
     <Content Include="Content\editors\tinymce\plugins\style\js\props.js" />
     <Content Include="Content\editors\tinymce\plugins\style\langs\en_dlg.js" />
     <Content Include="Content\editors\tinymce\plugins\style\props.htm" />
+    <Content Include="Content\editors\tinymce\plugins\style\readme.txt" />
     <Content Include="Content\editors\tinymce\plugins\tabfocus\editor_plugin.js" />
     <Content Include="Content\editors\tinymce\plugins\tabfocus\editor_plugin_src.js" />
     <Content Include="Content\editors\tinymce\plugins\table\cell.htm" />
@@ -808,6 +809,9 @@
     <Content Include="Content\editors\tinymce\plugins\template\js\template.js" />
     <Content Include="Content\editors\tinymce\plugins\template\langs\en_dlg.js" />
     <Content Include="Content\editors\tinymce\plugins\template\template.htm" />
+    <Content Include="Content\editors\tinymce\plugins\visualblocks\css\visualblocks.css" />
+    <Content Include="Content\editors\tinymce\plugins\visualblocks\editor_plugin.js" />
+    <Content Include="Content\editors\tinymce\plugins\visualblocks\editor_plugin_src.js" />
     <Content Include="Content\editors\tinymce\plugins\visualchars\editor_plugin.js" />
     <Content Include="Content\editors\tinymce\plugins\visualchars\editor_plugin_src.js" />
     <Content Include="Content\editors\tinymce\plugins\wordcount\editor_plugin.js" />

@@ -23,6 +23,7 @@
 			paste_convert_headers_to_strong : false,
 			paste_dialog_width : "450",
 			paste_dialog_height : "400",
+			paste_max_consecutive_linebreaks: 2,
 			paste_text_use_dialog : false,
 			paste_text_sticky : false,
 			paste_text_sticky_default : false,
@@ -290,7 +291,7 @@
 				}
 			}
 
-			// Check if we should use the new auto process method			
+			// Check if we should use the new auto process method
 			if (getParam(ed, "paste_auto_cleanup_on_paste")) {
 				// Is it's Opera or older FF use key handler
 				if (tinymce.isOpera || /Firefox\/2/.test(navigator.userAgent)) {
@@ -353,13 +354,13 @@
 						h = h.replace(v[0], v[1]);
 				});
 			}
-			
+
 			if (ed.settings.paste_enable_default_filters == false) {
 				return;
 			}
 
 			// IE9 adds BRs before/after block elements when contents is pasted from word or for example another browser
-			if (tinymce.isIE && document.documentMode >= 9) {
+			if (tinymce.isIE && document.documentMode >= 9 && /<(h[1-6r]|p|div|address|pre|form|table|tbody|thead|tfoot|th|tr|td|li|ol|ul|caption|blockquote|center|dl|dt|dd|dir|fieldset)/.test(o.content)) {
 				// IE9 adds BRs before/after block elements when contents is pasted from word or for example another browser
 				process([[/(?:<br>&nbsp;[\s\r\n]+|<br>)*(<\/?(h[1-6r]|p|div|address|pre|form|table|tbody|thead|tfoot|th|tr|td|li|ol|ul|caption|blockquote|center|dl|dt|dd|dir|fieldset)[^>]*>)(?:<br>&nbsp;[\s\r\n]+|<br>)*/g, '$1']]);
 
@@ -412,7 +413,9 @@
 				// If JavaScript had a RegExp look-behind, we could have integrated this with the last process() array and got rid of the loop. But alas, it does not, so we cannot.
 				do {
 					len = h.length;
-					h = h.replace(/(<[a-z][^>]*\s)(?:id|name|language|type|on\w+|\w+:\w+)=(?:"[^"]*"|\w+)\s?/gi, "$1");
+					// Don't remove the type attribute for lists so that non-default list types display correctly.
+					h = h.replace(/(<?!(ol|ul)[^>]*\s)(?:id|name|language|type|on\w+|\w+:\w+)=(?:"[^"]*"|\w+)\s?/gi, "$1");
+					h = h.replace(/(<(ol|ul)[^>]*\s)(?:id|name|language|on\w+|\w+:\w+)=(?:"[^"]*"|\w+)\s?/gi, "$1");
 				} while (len != h.length);
 
 				// Remove all spans if no styles is to be retained
@@ -588,7 +591,7 @@
 			if (ed.settings.paste_enable_default_filters == false) {
 				return;
 			}
-			
+
 			if (o.wordContent) {
 				// Remove named anchors or TOC links
 				each(dom.select('a', o.node), function(a) {
@@ -790,9 +793,22 @@
 					[/<\/t[dh]>\s*<t[dh][^>]*>/gi, "\t"],		// Table cells get tabs betweem them
 					/<[a-z!\/?][^>]*>/gi,						// Delete all remaining tags
 					[/&nbsp;/gi, " "],							// Convert non-break spaces to regular spaces (remember, *plain text*)
-					[/(?:(?!\n)\s)*(\n+)(?:(?!\n)\s)*/gi, "$1"],// Cool little RegExp deletes whitespace around linebreak chars.
-					[/\n{3,}/g, "\n\n"]							// Max. 2 consecutive linebreaks
+					[/(?:(?!\n)\s)*(\n+)(?:(?!\n)\s)*/gi, "$1"] // Cool little RegExp deletes whitespace around linebreak chars.
 				]);
+
+				var maxLinebreaks = Number(getParam(ed, "paste_max_consecutive_linebreaks"));
+				if (maxLinebreaks > -1) {
+					var maxLinebreaksRegex = new RegExp("\n{" + (maxLinebreaks + 1) + ",}", "g");
+					var linebreakReplacement = "";
+
+					while (linebreakReplacement.length < maxLinebreaks) {
+						linebreakReplacement += "\n";
+					}
+
+					process([
+						[maxLinebreaksRegex, linebreakReplacement] // Limit max consecutive linebreaks
+					]);
+				}
 
 				content = ed.dom.decode(tinymce.html.Entities.encodeRaw(content));
 
