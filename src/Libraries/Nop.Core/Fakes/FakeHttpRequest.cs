@@ -10,6 +10,7 @@ namespace Nop.Core.Fakes
         private readonly HttpCookieCollection _cookies;
         private readonly NameValueCollection _formParams;
         private readonly NameValueCollection _queryStringParams;
+        private readonly NameValueCollection _headers;
         private readonly NameValueCollection _serverVariables;
         private readonly string _relativeUrl;
         private readonly Uri _url;
@@ -35,6 +36,8 @@ namespace Nop.Core.Fakes
                 _cookies = new HttpCookieCollection();
             if (_serverVariables == null)
                 _serverVariables = new NameValueCollection();
+            if (_headers == null)
+                _headers = new NameValueCollection();
         }
 
         public FakeHttpRequest(string relativeUrl, string method, Uri url, Uri urlReferrer,
@@ -67,6 +70,11 @@ namespace Nop.Core.Fakes
         public override NameValueCollection QueryString
         {
             get { return _queryStringParams; }
+        }
+
+        public override NameValueCollection Headers
+        {
+            get { return _headers; }
         }
 
         public override HttpCookieCollection Cookies
