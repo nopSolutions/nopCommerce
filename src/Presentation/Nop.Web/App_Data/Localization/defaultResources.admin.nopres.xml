@@ -1809,7 +1809,7 @@
                     <Value>Pre-order availability start date</Value>
                     <Children>
                       <LocaleResource Name="Hint">
-                        <Value>The availability start date of the product configured for pre-order in Coordinated Universal Time (UTC). 'Pre-order' button will automatically be changed to 'Add to cart' at the monent.</Value>
+                        <Value>The availability start date of the product configured for pre-order in Coordinated Universal Time (UTC). 'Pre-order' button will automatically be changed to 'Add to cart' at this moment.</Value>
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
@@ -2304,7 +2304,7 @@
                                 <Value>Cost</Value>
                                 <Children>
                                   <LocaleResource Name="Hint">
-                                    <Value>The attribute value cost is the cost of all the different components which make up this value. This may either be the purchase price if the components are bought from outside suppliers, or the combined cost of materials and manufacturing processes if the component is made in-house.</Value>
+                                    <Value>The attribute value cost is the cost of all the different components which make up this value. This may be either the purchase price if the components are bought from outside suppliers, or the combined cost of materials and manufacturing processes if the component is made in-house.</Value>
                                   </LocaleResource>
                                 </Children>
                               </LocaleResource>
@@ -4985,7 +4985,7 @@
                     <Value>Facebook page URL</Value>
                     <Children>
                       <LocaleResource Name="Hint">
-                        <Value>Specify your Facebook page URL. Leave empty if you don't have such page.</Value>
+                        <Value>Specify your Facebook page URL. Leave empty if you have no such page.</Value>
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
@@ -4993,7 +4993,7 @@
                     <Value>Twitter page URL</Value>
                     <Children>
                       <LocaleResource Name="Hint">
-                        <Value>Specify your Twitter page URL. Leave empty if you don't have such page.</Value>
+                        <Value>Specify your Twitter page URL. Leave empty if you have no such page.</Value>
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
@@ -5001,7 +5001,7 @@
                     <Value>YouTube channel URL</Value>
                     <Children>
                       <LocaleResource Name="Hint">
-                        <Value>Specify your YouTube channel URL. Leave empty if you don't have such page.</Value>
+                        <Value>Specify your YouTube channel URL. Leave empty if you have no such page.</Value>
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
@@ -5009,7 +5009,7 @@
                     <Value>Google+ page URL</Value>
                     <Children>
                       <LocaleResource Name="Hint">
-                        <Value>Specify your Google+ page URL. Leave empty if you don't have such page.</Value>
+                        <Value>Specify your Google+ page URL. Leave empty if you have no such page.</Value>
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
@@ -5105,7 +5105,7 @@
                     <Value>WWW prefix requirement</Value>
                     <Children>
                       <LocaleResource Name="Hint">
-                        <Value>Choose your store WWW prefix requirement. For example, http://yourStore.com/ could be automatically be redirected to http://www.yourStore.com/</Value>
+                        <Value>Choose your store WWW prefix requirement. For example, http://yourStore.com/ could be automatically redirected to http://www.yourStore.com/.</Value>
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
@@ -5113,7 +5113,7 @@
                     <Value>JavaScript bundling and minification</Value>
                     <Children>
                       <LocaleResource Name="Hint">
-                        <Value>Enable to combine (bundle) multiple JavaScript files into a single file. Don't do it if you're running nopCommerce in web farms or Windows Azure.</Value>
+                        <Value>Enable to combine (bundle) multiple JavaScript files into a single file. Don't enable if you're running nopCommerce in web farms or Windows Azure.</Value>
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
@@ -5121,7 +5121,7 @@
                     <Value>CSS bundling and minification</Value>
                     <Children>
                       <LocaleResource Name="Hint">
-                        <Value>Enable to combine (bundle) multiple CSS files into a single file. Don't do it if you're running nopCommerce in web farms or Windows Azure. It also doesn't work in virtual IIS directories.</Value>
+                        <Value>Enable to combine (bundle) multiple CSS files into a single file. Don't enable if you're running nopCommerce in web farms or Windows Azure. It also doesn't work in virtual IIS directories.</Value>
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
@@ -6133,7 +6133,7 @@
                     <Value>Assume VAT always valid</Value>
                     <Children>
                       <LocaleResource Name="Hint">
-                        <Value>Check to skip VAT validation. Enter VAT nubmers will always be valid. It will be a client responsibility to provide the correct VAT nubmer.</Value>
+                        <Value>Check to skip VAT validation. Entered VAT numbers will always be valid. It will be a client responsibility to provide the correct VAT number.</Value>
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
@@ -8942,7 +8942,7 @@
                     <Value>Change status</Value>
                       <Children>
                         <LocaleResource Name="ForAdvancedUsers">
-                          <Value>This option is only for advanced users (not recommended to change manually). All appropriate actions (such as invetory adjustment, sending notification emails, reward points, gift card activation/deactivation, etc) should be done manually in this case.</Value>
+                          <Value>This option is only for advanced users (not recommended to change manually). All appropriate actions (such as inventory adjustment, sending notification emails, reward points, gift card activation/deactivation, etc) should be done manually in this case.</Value>
                         </LocaleResource>
                       </Children>
                   </LocaleResource>
@@ -10743,7 +10743,7 @@
                     <Value>Attached file path</Value>
                     <Children>
                       <LocaleResource Name="Hint">
-                        <Value>A path to the attached file path.</Value>
+                        <Value>The file path to the attachment.</Value>
                       </LocaleResource>
                     </Children>
                   </LocaleResource>

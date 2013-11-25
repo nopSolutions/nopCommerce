@@ -45,19 +45,19 @@ set @resources='
     <Value>Cost</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.Cost.Hint">
-    <Value>The attribute value cost is the cost of all the different components which make up this value. This may either be the purchase price if the components are bought from outside suppliers, or the combined cost of materials and manufacturing processes if the component is made in-house.</Value>
+    <Value>The attribute value cost is the cost of all the different components which make up this value. This may be either the purchase price if the components are bought from outside suppliers, or the combined cost of materials and manufacturing processes if the component is made in-house.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.OrderStatus.Change">
     <Value>Change status</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.OrderStatus.Change.ForAdvancedUsers">
-    <Value>This option is only for advanced users (not recommended to change manually). All appropriate actions (such as invetory adjustment, sending notification emails, reward points, gift card activation/deactivation, etc) should be done manually in this case.</Value>
+    <Value>This option is only for advanced users (not recommended to change manually). All appropriate actions (such as inventory adjustment, sending notification emails, reward points, gift card activation/deactivation, etc) should be done manually in this case.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.PreOrderAvailabilityStartDateTimeUtc">
     <Value>Pre-order availability start date</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.PreOrderAvailabilityStartDateTimeUtc.Hint">
-    <Value>The availability start date of the product configured for pre-order in Coordinated Universal Time (UTC). ''Pre-order'' button will automatically be changed to ''Add to cart'' at the monent.</Value>
+    <Value>The availability start date of the product configured for pre-order in Coordinated Universal Time (UTC). ''Pre-order'' button will automatically be changed to ''Add to cart'' at this moment.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.PurchasedWithOrders">
     <Value>Purchased with orders</Value>
@@ -84,13 +84,13 @@ set @resources='
     <Value>JavaScript bundling and minification</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableJsBundling.Hint">
-    <Value>Enable to combine (bundle) multiple JavaScript files into a single file. Don''t do it if you''re running nopCommerce in web farms or Windows Azure.</Value>
+    <Value>Enable to combine (bundle) multiple JavaScript files into a single file. Don''t enable if you''re running nopCommerce in web farms or Windows Azure.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableCssBundling">
     <Value>CSS bundling and minification</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableCssBundling.Hint">
-    <Value>Enable to combine (bundle) multiple CSS files into a single file. Don''t do it if you''re running nopCommerce in web farms or Windows Azure. It also doesn''t work in virtual IIS directories.</Value>
+    <Value>Enable to combine (bundle) multiple CSS files into a single file. Don''t enable if you''re running nopCommerce in web farms or Windows Azure. It also doesn''t work in virtual IIS directories.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.DeliveryDates">
     <Value>Delivery dates</Value>
@@ -291,7 +291,7 @@ set @resources='
     <Value>Assume VAT always valid</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Tax.EuVatAssumeValid.Hint">
-    <Value>Check to skip VAT validation. Enter VAT nubmers will always be valid. It will be a client responsibility to provide the correct VAT nubmer.</Value>
+    <Value>Check to skip VAT validation. Entered VAT numbers will always be valid. It will be a client responsibility to provide the correct VAT number.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.LoadAllLocaleRecordsOnStartup">
     <Value>Load all locale resources on startup</Value>
@@ -303,13 +303,13 @@ set @resources='
     <Value>Load all localized properties on startup</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.LoadAllLocalizedPropertiesOnStartup.Hint">
-    <Value>When enabled, all localized properties (such as localized product properties) will be loaded on application startup. The application start will be slower, but then all pages could be opened much faster. It''s used only when you have two or more languages enabled. Not recommended to enable when you a have large catalog (several thousand localized entities).</Value>
+    <Value>When enabled, all localized properties (such as localized product properties) will be loaded on application startup. The application start will be slower, but then all pages could be opened much faster. It''s used only when you have two or more languages enabled. Not recommended to enable when you have a large catalog (several thousand localized entities).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.LoadAllUrlRecordsOnStartup">
     <Value>Load all search engine friendly names on startup</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.LoadAllUrlRecordsOnStartup.Hint">
-    <Value>When enabled, all slugs (search engine friendly names) will be loaded on application startup. The application start will be slower, but then all pages could be opened much faster. Not recommended to enable when you a have large catalog (several thousand entities).</Value>
+    <Value>When enabled, all slugs (search engine friendly names) will be loaded on application startup. The application start will be slower, but then all pages could be opened much faster. Not recommended to enable when you have a large catalog (several thousand entities).</Value>
   </LocaleResource>
   <LocaleResource Name="Information">
     <Value></Value>
@@ -333,7 +333,7 @@ set @resources='
     <Value>Twitter</Value>
   </LocaleResource>
   <LocaleResource Name="Footer.FollowUs.Youtube">
-    <Value>Youtube</Value>
+    <Value>YouTube</Value>
   </LocaleResource>
   <LocaleResource Name="Footer.FollowUs.RSS">
     <Value>RSS</Value>
@@ -342,19 +342,19 @@ set @resources='
     <Value>Facebook page URL</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FacebookLink.Hint">
-    <Value>Specify your Facebook page URL. Leave empty if you don''t have such page.</Value>
+    <Value>Specify your Facebook page URL. Leave empty if you have no such page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.TwitterLink">
     <Value>Twitter page URL</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.TwitterLink.Hint">
-    <Value>Specify your Twitter page URL. Leave empty if you don''t have such page.</Value>
+    <Value>Specify your Twitter page URL. Leave empty if you have no such page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.YoutubeLink">
     <Value>YouTube channel URL</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.YoutubeLink.Hint">
-    <Value>Specify your YouTube channel URL. Leave empty if you don''t have such page.</Value>
+    <Value>Specify your YouTube channel URL. Leave empty if you have no such page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.TopCategoryMenuSubcategoryLevelsToDisplay">
     <Value>Number of subcategory levels in top menu</Value>
@@ -369,7 +369,7 @@ set @resources='
     <Value>Google+ page URL</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GooglePlusLink.Hint">
-    <Value>Specify your Google+ page URL. Leave empty if you don''t have such page.</Value>
+    <Value>Specify your Google+ page URL. Leave empty if you have no such page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.IncludeInTopMenu">
     <Value>Include in top menu</Value>
@@ -552,7 +552,7 @@ set @resources='
     <Value>WWW prefix requirement</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.WwwRequirement.Hint">
-    <Value>Choose your store WWW prefix requirement. For example, http://yourStore.com/ could be automatically be redirected to http://www.yourStore.com/</Value>
+    <Value>Choose your store WWW prefix requirement. For example, http://yourStore.com/ could be automatically redirected to http://www.yourStore.com/.</Value>
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Seo.WwwRequirement.NoMatter">
     <Value>Doesn''t matter</Value>
@@ -702,7 +702,7 @@ set @resources='
     <Value>Attached file path</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.QueuedEmails.Fields.AttachmentFilePath.Hint">
-    <Value>A path to the attached file path.</Value>
+    <Value>The file path to the attachment.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Templates">
     <Value>Templates</Value>
@@ -1979,6 +1979,14 @@ IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[QueuedEmail
 BEGIN
 	ALTER TABLE [QueuedEmail]
 	ADD [AttachmentFilePath] nvarchar(MAX) NULL
+END
+GO
+
+--add a new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[QueuedEmail]') and NAME='AttachmentFileName')
+BEGIN
+	ALTER TABLE [QueuedEmail]
+	ADD [AttachmentFileName] nvarchar(MAX) NULL
 END
 GO
 

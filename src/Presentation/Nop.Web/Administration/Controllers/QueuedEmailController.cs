@@ -45,7 +45,7 @@ namespace Nop.Admin.Controllers
             return View(model);
 		}
 
-		[GridAction(EnableCustomBinding = true)]
+		[HttpPost, GridAction(EnableCustomBinding = true)]
 		public ActionResult QueuedEmailList(GridCommand command, QueuedEmailListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageQueue))
