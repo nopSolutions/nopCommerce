@@ -144,9 +144,9 @@
                                     <li class="repost">
                                         @using (Html.BeginRouteForm("OrderDetails", FormMethod.Post))
                                         {
-                                            <input type="submit" name="repost-payment" value="@T("Order.CompletePayment")" class="button-1 re-order-button" />
+                                            <input type="submit" name="repost-payment" value="@T("Order.RetryPayment")" class="button-1 re-order-button" />
                                             <p class="hint">
-                                                <em>@T("Order.CompletePayment.Hint")</em>
+                                                <em>@T("Order.RetryPayment.Hint")</em>
                                             </p>
                                         }
                                     </li>

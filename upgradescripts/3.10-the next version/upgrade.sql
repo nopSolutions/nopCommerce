@@ -812,6 +812,18 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Shipping.Providers.Fields.Logo">
     <Value>Logo</Value>
   </LocaleResource>
+  <LocaleResource Name="Order.RetryPayment">
+    <Value>Retry Payment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.RetryPayment.Hint">
+    <Value>This order is not yet paid for. To pay now click the "Retry payment" button.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.CompletePayment">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.CompletePayment.Hint">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 
