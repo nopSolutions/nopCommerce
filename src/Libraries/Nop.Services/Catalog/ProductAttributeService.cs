@@ -158,7 +158,7 @@ namespace Nop.Services.Catalog
         /// <returns>Product attribute collection</returns>
         public virtual IPagedList<ProductAttribute> GetAllProductAttributes(int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            string key = PRODUCTATTRIBUTES_ALL_KEY;
+            string key = string.Format(PRODUCTATTRIBUTES_ALL_KEY, pageIndex, pageSize);
             return _cacheManager.Get(key, () =>
             {
                 var query = from pa in _productAttributeRepository.Table
