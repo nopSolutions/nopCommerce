@@ -5014,14 +5014,15 @@ namespace Nop.Services.Installation
             };
             ca1.CheckoutAttributeValues.Add(new CheckoutAttributeValue()
             {
-                Name = "Yes",
-                PriceAdjustment = 10,
+                Name = "No",
+                PriceAdjustment = 0,
                 DisplayOrder = 1,
+                IsPreSelected = true,
             });
             ca1.CheckoutAttributeValues.Add(new CheckoutAttributeValue()
             {
-                Name = "No",
-                PriceAdjustment = 0,
+                Name = "Yes",
+                PriceAdjustment = 10,
                 DisplayOrder = 2,
             });
             var checkoutAttributes = new List<CheckoutAttribute>
