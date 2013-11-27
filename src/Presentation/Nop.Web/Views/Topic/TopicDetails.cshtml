@@ -47,7 +47,7 @@
             }
         }
     </script>
-    <div id="ph-password">
+    <div class="topic-password" id="ph-password">
         @using (Ajax.BeginRouteForm("TopicAuthenticate", new AjaxOptions
         {
             HttpMethod = "Post",
@@ -61,7 +61,7 @@
             </div>
             <div class="enter-password-form">
                 @Html.Password("password")
-                <input type="submit" value="@T("Topic.Button")" class="button-1 topic-password-button"/>
+                <input type="submit" value="@T("Topic.Button")" class="button-1 topic-password-button" />
                 <span id="authenticate-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
             </div>
             <div class="password-error">
