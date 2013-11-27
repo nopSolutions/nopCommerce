@@ -4514,7 +4514,7 @@ namespace Nop.Services.Installation
                                            IncludeInSitemap = false,
                                            IsPasswordProtected = false,
                                            Title = "",
-                                           Body = "<p><strong>The page you requested was not found, and we have a fine guess why.</strong><ul><li>If you typed the URL directly, please make sure the spelling is correct.</li><li>The page no longer exists. In this case, we profusely apologize for the inconvenience and for any damage this may cause.</li></ul></p>"
+                                           Body = "<p><strong>The page you requested was not found, and we have a fine guess why.</strong></p><ul><li>If you typed the URL directly, please make sure the spelling is correct.</li><li>The page no longer exists. In this case, we profusely apologize for the inconvenience and for any damage this may cause.</li></ul>"
                                        },
                                    new Topic
                                        {
