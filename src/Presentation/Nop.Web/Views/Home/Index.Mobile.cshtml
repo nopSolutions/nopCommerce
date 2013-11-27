@@ -7,8 +7,7 @@
         @*product search box*@
         @Html.Action("SearchBox", "Catalog")
         @*logo*@
-        <div class="homepage-logo">
-            &nbsp;</div>
+        <div class="homepage-logo">&nbsp;</div>
         @*categories*@
         @Html.Action("CategoryNavigation", "Catalog", new { currentCategoryId = 0, currentProductId = 0 })
         @*manufacturers*@

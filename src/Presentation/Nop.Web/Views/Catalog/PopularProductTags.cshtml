@@ -11,8 +11,7 @@
                 <ul>
                     @foreach (var item in Model.Tags)
                     {
-                        <li><a href="@Url.RouteUrl("ProductsByTag", new { productTagId = item.Id, SeName = item.SeName })" style="font-size:@(Model.GetFontSize(item))%;">@item.Name</a>&nbsp;&nbsp;
-                        </li>
+                        <li><a href="@Url.RouteUrl("ProductsByTag", new { productTagId = item.Id, SeName = item.SeName })" style="font-size:@(Model.GetFontSize(item))%;">@item.Name</a></li>
                     }
                 </ul>
             </div>

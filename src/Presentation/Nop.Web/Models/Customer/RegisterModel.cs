@@ -127,7 +127,6 @@ namespace Nop.Web.Models.Customer
         //EU VAT
         [NopResourceDisplayName("Account.Fields.VatNumber")]
         public string VatNumber { get; set; }
-        public string VatNumberStatusNote { get; set; }
         public bool DisplayVatNumber { get; set; }
 
         public bool DisplayCaptcha { get; set; }

@@ -198,7 +198,8 @@
                     {
                         <div class="inputs">
                             @Html.LabelFor(model => model.VatNumber, new { }, ":")
-                            @Html.EditorFor(model => model.VatNumber)&nbsp;&nbsp;&nbsp;@Model.VatNumberStatusNote
+                            @Html.EditorFor(model => model.VatNumber)
+                            <span class="vat-status">@Model.VatNumberStatusNote</span>
                             <span class="vat-note"><em>@T("Account.Fields.VatNumber.Note")</em></span>
                         </div>
                     }

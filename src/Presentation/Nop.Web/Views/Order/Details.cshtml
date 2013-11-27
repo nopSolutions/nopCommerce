@@ -346,7 +346,6 @@
                         }
                         @if (Model.IsReturnRequestAllowed)
                         {
-                            <text>&nbsp; &nbsp; &nbsp;</text>
                             <input type="button" value="@T("Order.ReturnItems")" class="button-2 return-items-button" onclick="setLocation('@Url.RouteUrl("ReturnRequest", new { orderId = Model.Id })    ')" />
                         }
                     </div>
