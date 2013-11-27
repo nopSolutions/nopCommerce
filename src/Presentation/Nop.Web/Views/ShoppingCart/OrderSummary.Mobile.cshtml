@@ -182,15 +182,12 @@
                             <button type="submit"  id="checkout" name="checkout" value="checkout">@T("Checkout.Button")</button>
                         }
                     </div>
+                    <div class="addon-buttons">
+                        @*Payment method buttons (e.g. GoogleCheckoutButton, Paypal Express)*@
+                        @Html.Partial("_ButtonPaymentMethod", Model)
+                    </div>
                 }
             </div>
-        </div>
-        }
-        if (Model.IsEditable)
-        {
-        <div class="addon-buttons">
-            @*Payment method buttons (e.g. GoogleCheckoutButton, Paypal Express)*@
-            @Html.Partial("_ButtonPaymentMethod", Model)
         </div>
         }
     }

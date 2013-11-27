@@ -240,13 +240,10 @@
                             </button>
                         }
                     </div>
-                    if (Model.IsEditable)
-                    {
                     <div class="addon-buttons">
                         @*Payment method buttons (e.g. GoogleCheckoutButton, Paypal Express)*@
                         @Html.Partial("_ButtonPaymentMethod", Model)
                     </div>
-                    }
                 }
             </div>
             <div class="cart-collaterals">
@@ -260,11 +257,11 @@
                     @Html.Partial("EstimateShipping", Model.EstimateShipping)
                 }
             </div>
-            @if (Model.IsEditable)
-            {
-                @Html.Action("CrossSellProducts", "Catalog")
-            }
         </div>
+        if (Model.IsEditable)
+        {
+             @Html.Action("CrossSellProducts", "Catalog")
+        }
         }
     }
     else
