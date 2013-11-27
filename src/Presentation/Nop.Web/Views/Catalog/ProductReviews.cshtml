@@ -44,11 +44,11 @@
                                 <ul>
                                     <li class="first">@T("Reviews.Fields.Rating.Bad")</li>
                                     <li>
-                                        @Html.RadioButtonFor(model => model.AddProductReview.Rating, "1")
-                                        @Html.RadioButtonFor(model => model.AddProductReview.Rating, "2")
-                                        @Html.RadioButtonFor(model => model.AddProductReview.Rating, "3")
-                                        @Html.RadioButtonFor(model => model.AddProductReview.Rating, "4")
-                                        @Html.RadioButtonFor(model => model.AddProductReview.Rating, "5")
+                                        @Html.RadioButtonFor(model => model.AddProductReview.Rating, "1", new { id = "addproductrating_1" })
+                                        @Html.RadioButtonFor(model => model.AddProductReview.Rating, "2", new { id = "addproductrating_2" })
+                                        @Html.RadioButtonFor(model => model.AddProductReview.Rating, "3", new { id = "addproductrating_3" })
+                                        @Html.RadioButtonFor(model => model.AddProductReview.Rating, "4", new { id = "addproductrating_4" })
+                                        @Html.RadioButtonFor(model => model.AddProductReview.Rating, "5", new { id = "addproductrating_5" })
                                     </li>
                                     <li class="last">@T("Reviews.Fields.Rating.Excellent")</li>
                                 </ul>
