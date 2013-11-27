@@ -354,66 +354,6 @@ namespace Nop.Admin.Controllers
             return new JsonResult { Data = children };
         }
 
-        //ajax
-        public ActionResult TreeDrop(int item, int destinationitem, string position)
-        {
-            var categoryItem = _categoryService.GetCategoryById(item);
-            var categoryDestinationItem = _categoryService.GetCategoryById(destinationitem);
-            
-            #region Re-calculate all display orders
-            //switch (position)
-            //{
-            //    case "over":
-            //        categoryItem.ParentCategoryId = categoryDestinationItem.Id;
-            //        break;
-            //    case "before":
-            //    case "after":
-            //        categoryItem.ParentCategoryId = categoryDestinationItem.ParentCategoryId;
-            //        break;
-            //}
-            ////update display orders
-            //int tmp = 0;
-            //foreach (var c in _categoryService.GetAllCategoriesByParentCategoryId(categoryItem.ParentCategoryId, true))
-            //{
-            //    c.DisplayOrder = tmp;
-            //    tmp += 10;
-            //    _categoryService.UpdateCategory(c);
-            //
-            //switch (position)
-            //{
-            //    case "before":
-            //        categoryItem.DisplayOrder = categoryDestinationItem.DisplayOrder - 5;
-            //        break;
-            //    case "after":
-            //        categoryItem.DisplayOrder = categoryDestinationItem.DisplayOrder + 5;
-            //        break;
-            //}
-            //_categoryService.UpdateCategory(categoryItem);
-            #endregion
-
-
-            //simple method which keeps display order for other categories
-            //but can cause issues when your display order values are the same or neighbours
-            switch (position)
-            {
-                case "over":
-                    categoryItem.ParentCategoryId = categoryDestinationItem.Id;
-                    break;
-                case "before":
-                    categoryItem.ParentCategoryId = categoryDestinationItem.ParentCategoryId;
-                    categoryItem.DisplayOrder = categoryDestinationItem.DisplayOrder - 1;
-                    break;
-                case "after":
-                    categoryItem.ParentCategoryId = categoryDestinationItem.ParentCategoryId;
-                    categoryItem.DisplayOrder = categoryDestinationItem.DisplayOrder + 1;
-                    break;
-            }
-            _categoryService.UpdateCategory(categoryItem);
-
-
-            return Json(new { success = true });
-        }
-
         #endregion
 
         #region Create / Edit / Delete
