@@ -71,7 +71,7 @@
                 });
     </script>
         }
-    <table class="adminContent">
+    <table class="adminContent customer-info-tab">
         @if (Model.UsernamesEnabled)
         {
             if (Model.Id == 0 || Model.AllowUsersToChangeUsernames)
@@ -160,10 +160,14 @@
                     @Html.NopLabelFor(model => model.Gender):
                 </td>
                 <td class="adminData">
-                    @Html.RadioButton("Gender", "M", (Model.Gender == "M"), new { id = "Gender_Male" })
+                    <div class="gender">
+                        @Html.RadioButton("Gender", "M", (Model.Gender == "M"), new { id = "Gender_Male" })
                     <label class="forcheckbox" for="Gender_Male">@T("Admin.Customers.Customers.Fields.Gender.Male")</label>
-                    @Html.RadioButton("Gender", "F", (Model.Gender == "F"), new { id = "Gender_Female" })
-                    <label class="forcheckbox" for="Gender_Female">@T("Admin.Customers.Customers.Fields.Gender.Female")</label>
+                        </div>
+                    <div class="gender">
+                        @Html.RadioButton("Gender", "F", (Model.Gender == "F"), new { id = "Gender_Female" })
+                        <label class="forcheckbox" for="Gender_Female">@T("Admin.Customers.Customers.Fields.Gender.Female")</label>
+                    </div>
                 </td>
             </tr>
         }

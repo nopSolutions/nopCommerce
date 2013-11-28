@@ -61,14 +61,14 @@
                     {
                         <div class="inputs">
                             <label>@T("Account.Fields.Gender"):</label>
-                            <span class="gender">
-                                @Html.RadioButton("Gender", "M", (Model.Gender == "M"), new { id = "gender-male" })
-                                <span class="forcheckbox" for="gender-male">@T("Account.Fields.Gender.Male")</span>
-                            </span>
-                            <span class="gender">
+                            <div class="gender">
+                                @Html.RadioButton("Gender", "M", (Model.Gender == "M"), new { id = "gender-male"})
+                                <label class="forcheckbox" for="gender-male">@T("Account.Fields.Gender.Male")</label>
+                            </div>
+                            <div class="gender">
                                 @Html.RadioButton("Gender", "F", (Model.Gender == "F"), new { id = "gender-female" })
-                                <span class="forcheckbox" for="gender-female">@T("Account.Fields.Gender.Female")</span>
-                            </span>
+                                <label class="forcheckbox" for="gender-female">@T("Account.Fields.Gender.Female")</label>
+                            </div>
                         </div>
                     }
                     <div class="inputs">

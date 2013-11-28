@@ -151,3 +151,5 @@ body .t-button{font-weight:400;color:inherit!important;text-decoration:none;}
 /* Telerik overrides */
 .form-actions{overflow:hidden;padding-top:1em;}
 .form-actions .t-button,.form-actions .t-button button{float:right;margin-left:10px;padding:2px 15px;}
+/* etc */
+.customer-info-tab .gender{display:inline-block;}
