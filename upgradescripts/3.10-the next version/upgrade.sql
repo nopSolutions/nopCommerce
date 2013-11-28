@@ -824,6 +824,9 @@ set @resources='
   <LocaleResource Name="Order.CompletePayment.Hint">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DefaultStoreThemeForDesktops.GetMore">
+    <Value>You can get more themes on</Value>
+  </LocaleResource>
 </Language>
 '
 

@@ -4947,6 +4947,9 @@
                       <LocaleResource Name="Hint">
                         <Value>The public store theme for desktops. You can download themes from the extensions page at www.nopcommerce.com.</Value>
                       </LocaleResource>
+                      <LocaleResource Name="GetMore">
+                        <Value>You can get more themes on</Value>
+                      </LocaleResource>
                     </Children>
                   </LocaleResource>
                   <LocaleResource Name="AllowCustomerToSelectTheme">
