@@ -199,20 +199,31 @@
                 </div>
                 }
             }
+            <div class="cart-collaterals">
+                @if (Model.IsEditable)
+                {
+                    <div class="deals">
+                        @Html.Partial("_DiscountBox", Model.DiscountBox)
+                        @Html.Partial("_GiftCardBox", Model.GiftCardBox)
+                        @Html.Widget("order_summary_content_deals")
+                    </div>
+                    @Html.Partial("EstimateShipping", Model.EstimateShipping)
+                }
+            </div>
             <div class="totals">
                 @Html.Action("OrderTotals", "ShoppingCart", new { isEditable = Model.IsEditable })
                 @if (Model.IsEditable)
                 {
                     if (Model.TermsOfServiceOnShoppingCartPage)
                     {
-                    <div id="terms-of-service-warning-box" title="@T("Checkout.TermsOfService")" style="display:none;">
-                        <p>@T("Checkout.TermsOfService.PleaseAccept")</p>
-                    </div>
-                    <div class="terms-of-service">
-                        <input id="termsofservice" type="checkbox" name="termsofservice" />
-                        @T("Checkout.TermsOfService.IAccept")
-                        <span class="read" onclick="javascript:OpenWindow('@Url.RouteUrl("TopicPopup", new { SystemName = "conditionsofUse" })', 450, 500, true)">@T("Checkout.TermsOfService.Read")</span>
-                    </div>
+                        <div id="terms-of-service-warning-box" title="@T("Checkout.TermsOfService")" style="display:none;">
+                            <p>@T("Checkout.TermsOfService.PleaseAccept")</p>
+                        </div>
+                        <div class="terms-of-service">
+                            <input id="termsofservice" type="checkbox" name="termsofservice" />
+                            @T("Checkout.TermsOfService.IAccept")
+                            <span class="read" onclick="javascript:OpenWindow('@Url.RouteUrl("TopicPopup", new { SystemName = "conditionsofUse" })', 450, 500, true)">@T("Checkout.TermsOfService.Read")</span>
+                        </div>
                     }
                     <div class="checkout-buttons">
                         @if (String.IsNullOrEmpty(Model.MinOrderSubtotalWarning))
@@ -244,17 +255,6 @@
                         @*Payment method buttons (e.g. GoogleCheckoutButton, Paypal Express)*@
                         @Html.Partial("_ButtonPaymentMethod", Model)
                     </div>
-                }
-            </div>
-            <div class="cart-collaterals">
-                @if (Model.IsEditable)
-                {
-                    <div class="deals">
-                        @Html.Partial("_DiscountBox", Model.DiscountBox)
-                        @Html.Partial("_GiftCardBox", Model.GiftCardBox)
-                        @Html.Widget("order_summary_content_deals")
-                    </div>
-                    @Html.Partial("EstimateShipping", Model.EstimateShipping)
                 }
             </div>
         </div>
