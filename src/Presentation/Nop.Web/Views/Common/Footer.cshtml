@@ -50,6 +50,7 @@
         <div class="column my-account">
             <h3>@T("Footer.MyAccount")</h3>
             <ul>
+                <li><a href="@Url.RouteUrl("CustomerInfo")" class="account">@T("Account.MyAccount")</a></li>
                 @if (!Model.HideOrders)
                 {
                     <li><a href="@Url.RouteUrl("CustomerOrders")">@T("Account.CustomerOrders")</a></li>
@@ -58,7 +59,6 @@
                 {
                     <li><a href="@Url.RouteUrl("CustomerAddresses")" class="">@T("Account.CustomerAddresses")</a></li>
                 }
-                <li><a href="@Url.RouteUrl("CustomerInfo")" class="account">@T("Account.MyAccount")</a></li>
                 @if (Model.ShoppingCartEnabled)
                 {
                     <li><a href="@Url.RouteUrl("ShoppingCart")" class="ico-cart">@T("ShoppingCart")</a></li>
