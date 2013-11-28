@@ -299,7 +299,8 @@ namespace Nop.Plugin.Shipping.AustraliaPost
                         //domestic services
                         response.ShippingOptions.Add(RequestShippingOption(zipPostalCodeFrom, zipPostalCodeTo, country.TwoLetterIsoCode, "Standard", weight, length, width, height, totalPackages));
                         response.ShippingOptions.Add(RequestShippingOption(zipPostalCodeFrom, zipPostalCodeTo, country.TwoLetterIsoCode, "Express", weight, length, width, height, totalPackages));
-                        response.ShippingOptions.Add(RequestShippingOption(zipPostalCodeFrom, zipPostalCodeTo, country.TwoLetterIsoCode, "EXP_PLT", weight, length, width, height, totalPackages));
+                        //discontinued
+                        //response.ShippingOptions.Add(RequestShippingOption(zipPostalCodeFrom, zipPostalCodeTo, country.TwoLetterIsoCode, "EXP_PLT", weight, length, width, height, totalPackages));
                         break;
                     default:
                         //international services
