@@ -9,42 +9,43 @@
 @using Nop.Web.Extensions;
 <div class="page search-page">
     <div class="page-body">
-        @using (Html.BeginRouteForm("ProductSearch", FormMethod.Get))
-        {
-            <div class="search-input">
+        <div class="search-input">
+            @using (Html.BeginRouteForm("ProductSearch", FormMethod.Get))
+            {
                 <label for="small-searchterms" class="ui-hidden-accessible">@T("Search"):</label>
-                <input type="search" name="q" id="small-searchterms" value="@Model.Q"  />
-            </div>
-            <div class="search-results">
-                @if (!String.IsNullOrEmpty(Model.Warning))
-                {
-                    <span class="warning">
-                        @Model.Warning
-                    </span>
-                }
-                @if (Model.NoResults)
-                {
-                    <span class="result">
-                        @T("Search.NoResultsText")
-                    </span>
-                }
-                @if (Model.Products.Count > 0)
-                {
-                    <div class="product-list">
-                        <ul data-role="listview" data-inset="true" data-filter="false" data-theme="c">
-                            @foreach (var product in Model.Products)
-                            {
-                                <li>
-                                    @Html.Partial("_ProductBox", product)
-                                </li>
-                            }
-                        </ul>
-                    </div>
-                }
-                <div class="pager">
-                    @Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber")
+                <input type="search" name="q" id="small-searchterms" value="@Model.Q" />
+            }
+        </div>
+        <div class="search-results">
+            @if (!String.IsNullOrEmpty(Model.Warning))
+            {
+                <span class="warning">
+                    @Model.Warning
+                </span>
+            }
+            @if (Model.NoResults)
+            {
+                <span class="result">
+                    @T("Search.NoResultsText")
+                </span>
+            }
+            @if (Model.Products.Count > 0)
+            {
+                <div class="product-list">
+                    <ul data-role="listview" data-inset="true" data-filter="false" data-theme="c">
+                        @foreach (var product in Model.Products)
+                        {
+                            <li>
+                                @Html.Partial("_ProductBox", product)
+                            </li>
+                        }
+                    </ul>
                 </div>
+            }
+            <div class="pager">
+                @Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber")
             </div>
-        }
+        </div>
+
     </div>
 </div>
