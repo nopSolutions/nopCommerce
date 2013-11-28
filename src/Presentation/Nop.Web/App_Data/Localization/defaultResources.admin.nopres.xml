@@ -3038,7 +3038,7 @@
               <LocaleResource Name="PublishSelected">
                 <Value>Publish selected</Value>
               </LocaleResource>
-              <LocaleResource Name="UnublishSelected">
+              <LocaleResource Name="UnpublishSelected">
                 <Value>Unpublish selected</Value>
               </LocaleResource>
             </Children>
