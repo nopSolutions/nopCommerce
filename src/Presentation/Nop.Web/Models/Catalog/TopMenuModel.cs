@@ -1,5 +1,5 @@
-﻿using Nop.Web.Framework.Mvc;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Nop.Web.Framework.Mvc;
 
 namespace Nop.Web.Models.Catalog
 {

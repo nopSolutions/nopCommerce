@@ -7,9 +7,11 @@ using System.ServiceModel.Syndication;
 using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Caching;
+using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
@@ -30,6 +32,7 @@ using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
+using Nop.Services.Vendors;
 using Nop.Web.Extensions;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
@@ -39,9 +42,6 @@ using Nop.Web.Framework.UI.Captcha;
 using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Catalog;
 using Nop.Web.Models.Media;
-using Nop.Core.Domain.Blogs;
-using Nop.Core.Domain.Forums;
-using Nop.Services.Vendors;
 
 namespace Nop.Web.Controllers
 {
