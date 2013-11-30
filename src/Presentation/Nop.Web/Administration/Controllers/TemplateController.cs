@@ -1,12 +1,12 @@
-﻿using Nop.Admin.Models.Templates;
+﻿using System;
+using System.Linq;
+using System.Web.Mvc;
+using Nop.Admin.Models.Templates;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;
 using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
-using System;
-using System.Linq;
-using System.Web.Mvc;
 using Telerik.Web.Mvc;
 
 namespace Nop.Admin.Controllers
