@@ -593,11 +593,14 @@ namespace Nop.Services.Shipping
             
             //create a package
             var shippingOptionRequests = CreateShippingOptionRequests(cart, shippingAddress);
-            var shippingRateComputationMethods = LoadActiveShippingRateComputationMethods(storeId)
-                .Where(srcm => 
-                    String.IsNullOrWhiteSpace(allowedShippingRateComputationMethodSystemName) || 
-                    allowedShippingRateComputationMethodSystemName.Equals(srcm.PluginDescriptor.SystemName, StringComparison.InvariantCultureIgnoreCase))
-                .ToList();
+            var shippingRateComputationMethods = LoadActiveShippingRateComputationMethods(storeId);
+            //filter by system name
+            if (!String.IsNullOrWhiteSpace(allowedShippingRateComputationMethodSystemName))
+            {
+                shippingRateComputationMethods = shippingRateComputationMethods
+                    .Where(srcm => allowedShippingRateComputationMethodSystemName.Equals(srcm.PluginDescriptor.SystemName, StringComparison.InvariantCultureIgnoreCase))
+                    .ToList();
+            }
             if (shippingRateComputationMethods.Count == 0)
                 throw new NopException("Shipping rate computation method could not be loaded");
 
