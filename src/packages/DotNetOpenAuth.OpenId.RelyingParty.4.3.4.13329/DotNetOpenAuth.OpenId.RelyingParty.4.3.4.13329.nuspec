@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>DotNetOpenAuth.OpenId.RelyingParty</id>
+    <version>4.3.4.13329</version>
+    <title>DotNetOpenAuth OpenID Relying Party</title>
+    <authors>Andrew Arnott</authors>
+    <owners>Andrew Arnott</owners>
+    <licenseUrl>http://www.opensource.org/licenses/ms-pl.html</licenseUrl>
+    <projectUrl>http://www.dotnetopenauth.net/</projectUrl>
+    <iconUrl>https://github.com/AArnott/dotnetopenid/raw/v3.4/doc/logo/dnoa-logo_32x32.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Increase conversion rates to your web site by lowering the bar to create an account with your site,
+			by allowing customers to use accounts they already have with other sites, such as Google and Yahoo!</description>
+    <summary>Add OpenID 1.1/2.0 Relying Party authentication functionality to a web application programmatically.</summary>
+    <dependencies>
+      <dependency id="DotNetOpenAuth.OpenId.Core" version="[4.3.4.13329]" />
+    </dependencies>
+  </metadata>
+</package>

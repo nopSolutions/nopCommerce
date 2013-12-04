@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>DotNetOpenAuth.Mvc5</id>
+    <version>4.3.4.13329</version>
+    <title>DotNetOpenAuth MVC 5 extensions</title>
+    <authors>Andrew Arnott</authors>
+    <owners>Andrew Arnott</owners>
+    <licenseUrl>http://www.opensource.org/licenses/ms-pl.html</licenseUrl>
+    <projectUrl>http://www.dotnetopenauth.net/</projectUrl>
+    <iconUrl>https://github.com/AArnott/dotnetopenid/raw/v3.4/doc/logo/dnoa-logo_32x32.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Provides the HttpResponseMessage.AsActionResult() extension method.</description>
+    <summary>Provides the HttpResponseMessage.AsActionResult() extension method.</summary>
+    <dependencies>
+      <dependency id="DotNetOpenAuth.Core" version="[4.3.4.13329]" />
+      <dependency id="Microsoft.Bcl" version="[1.1.3, 2.0)" />
+      <dependency id="Microsoft.Bcl.Build" version="[1.0.10, 2.0)" />
+      <dependency id="Validation" version="[2.0.2.13022, 3.0)" />
+      <dependency id="Microsoft.AspNet.Mvc" version="[5.0, 6.0)" />
+    </dependencies>
+  </metadata>
+</package>

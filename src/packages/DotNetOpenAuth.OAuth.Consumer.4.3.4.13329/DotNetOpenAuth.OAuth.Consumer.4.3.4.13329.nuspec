@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>DotNetOpenAuth.OAuth.Consumer</id>
+    <version>4.3.4.13329</version>
+    <title>DotNetOpenAuth OAuth 1.0(a) Consumer</title>
+    <authors>Andrew Arnott</authors>
+    <owners>Andrew Arnott</owners>
+    <licenseUrl>http://www.opensource.org/licenses/ms-pl.html</licenseUrl>
+    <projectUrl>http://www.dotnetopenauth.net/</projectUrl>
+    <iconUrl>https://github.com/AArnott/dotnetopenid/raw/v3.4/doc/logo/dnoa-logo_32x32.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Improve usability, reliability, conversion rates and security simultaneously by simply asking the user for permission to access their
+			data on 3rd party services rather than asking for their password.</description>
+    <summary>Add the role of an OAuth 1.0(a) consumer to a .NET (web) application.</summary>
+    <dependencies>
+      <dependency id="DotNetOpenAuth.OAuth.Core" version="[4.3.4.13329]" />
+    </dependencies>
+  </metadata>
+</package>
