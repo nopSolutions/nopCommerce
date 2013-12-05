@@ -80,6 +80,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.AllowCartItemEditing.Hint">
     <Value>Check to allow customers to edit items already placed in the cart. It could be useful when your products have attributes or any other fields entered by a customer.</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.AddToCart.Update">
+    <Value>Update</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableJsBundling">
     <Value>JavaScript bundling and minification</Value>
   </LocaleResource>
@@ -498,7 +501,7 @@ set @resources='
     <Value>Admin area. Manage Shipping Settings</Value>
   </LocaleResource>
   <LocaleResource Name="Permission.ManageCurrencies">
-    <Value>"Admin area. Manage Currencies</Value>
+    <Value>Admin area. Manage Currencies</Value>
   </LocaleResource>
   <LocaleResource Name="Permission.ManageMeasures">
     <Value>Admin area. Manage Measures</Value>
@@ -816,7 +819,7 @@ set @resources='
     <Value>Retry Payment</Value>
   </LocaleResource>
   <LocaleResource Name="Order.RetryPayment.Hint">
-    <Value>This order is not yet paid for. To pay now click the "Retry payment" button.</Value>
+    <Value>This order is not yet paid for. To pay now, click the "Retry payment" button.</Value>
   </LocaleResource>
   <LocaleResource Name="Order.CompletePayment">
     <Value></Value>
@@ -826,6 +829,21 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DefaultStoreThemeForDesktops.GetMore">
     <Value>You can get more themes on</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.ByWeight.Fields.To.Hint">
+    <Value>Order weight to.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Widgets.NivoSlider.Text.Hint">
+    <Value>Enter comment for picture. Leave empty if you don''t want to display any text.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Widgets.NivoSlider.Link.Hint">
+    <Value>Enter URL. Leave empty if you don''t want this picture to be clickable.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.InsurePackage.Hint">
+    <Value>Check to insure packages.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Feed.Froogle.DefaultGoogleCategory.Hint">
+    <Value>The default Google category to use if one is not specified.</Value>
   </LocaleResource>
 </Language>
 '

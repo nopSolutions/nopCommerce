@@ -193,7 +193,7 @@ namespace Nop.Plugin.Shipping.ByWeight
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.From", "Order weight from");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.From.Hint", "Order weight from.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.To", "Order weight to");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.To.Hint", "Order weight toy.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.To.Hint", "Order weight to.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.AdditionalFixedCost", "Additional fixed cost");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.AdditionalFixedCost.Hint", "Specify an additional fixed cost per shopping cart for this option. Set to 0 if you don't want an additional fixed cost to be applied.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.LowerWeightLimit", "Lower weight limit");

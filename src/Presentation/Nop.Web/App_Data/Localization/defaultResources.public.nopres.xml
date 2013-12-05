@@ -2707,7 +2707,7 @@
         <Value>Retry payment</Value>
         <Children>
           <LocaleResource Name="Hint">
-            <Value>This order is not yet paid for. To pay now click the "Retry payment" button.</Value>
+            <Value>This order is not yet paid for. To pay now, click the "Retry payment" button.</Value>
           </LocaleResource>
         </Children>
       </LocaleResource>

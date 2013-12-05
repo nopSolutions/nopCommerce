@@ -467,7 +467,7 @@ namespace Nop.Plugin.Feed.Froogle
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Currency", "Currency");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Currency.Hint", "Select the default currency that will be used to generate the feed.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.DefaultGoogleCategory", "Default Google category");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.DefaultGoogleCategory.Hint", "The default Google category will be useds if other one is not specified.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.DefaultGoogleCategory.Hint", "The default Google category to use if one is not specified.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.General", "General");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Generate", "Generate feed");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Override", "Override product settings");
