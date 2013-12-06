@@ -4675,7 +4675,7 @@ namespace Nop.Services.Installation
                     SeoFriendlyUrlsForLanguagesEnabled = false,
                     LoadAllLocaleRecordsOnStartup = true,
                     LoadAllLocalizedPropertiesOnStartup = true,
-                    LoadAllUrlRecordsOnStartup = true,
+                    LoadAllUrlRecordsOnStartup = false,
                     IgnoreRtlPropertyForAdminArea = false,
                 });
 

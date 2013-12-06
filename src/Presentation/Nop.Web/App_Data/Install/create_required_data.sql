@@ -616,7 +616,7 @@ INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (89, N'localiza
 INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (90, N'localizationsettings.seofriendlyurlsforlanguagesenabled', N'False', 0)
 INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (91, N'localizationsettings.loadalllocalerecordsonstartup', N'True', 0)
 INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (92, N'localizationsettings.loadalllocalizedpropertiesonstartup', N'True', 0)
-INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (93, N'localizationsettings.loadallurlrecordsonstartup', N'True', 0)
+INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (93, N'localizationsettings.loadallurlrecordsonstartup', N'False', 0)
 INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (94, N'localizationsettings.ignorertlpropertyforadminarea', N'False', 0)
 INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (95, N'customersettings.usernamesenabled', N'False', 0)
 INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (96, N'customersettings.checkusernameavailabilityenabled', N'False', 0)
