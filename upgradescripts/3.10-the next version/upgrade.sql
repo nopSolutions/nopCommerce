@@ -294,7 +294,7 @@ set @resources='
     <Value>Assume VAT always valid</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Tax.EuVatAssumeValid.Hint">
-    <Value>Check to skip VAT validation. Entered VAT numbers will always be valid. It will be a client responsibility to provide the correct VAT number.</Value>
+    <Value>Check to skip VAT validation. Entered VAT numbers will always be valid. It will be a client''s responsibility to provide the correct VAT number.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.LoadAllLocaleRecordsOnStartup">
     <Value>Load all locale resources on startup</Value>

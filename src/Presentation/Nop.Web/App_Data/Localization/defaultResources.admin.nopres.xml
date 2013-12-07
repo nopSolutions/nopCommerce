@@ -6136,7 +6136,7 @@
                     <Value>Assume VAT always valid</Value>
                     <Children>
                       <LocaleResource Name="Hint">
-                        <Value>Check to skip VAT validation. Entered VAT numbers will always be valid. It will be a client responsibility to provide the correct VAT number.</Value>
+                        <Value>Check to skip VAT validation. Entered VAT numbers will always be valid. It will be a client's responsibility to provide the correct VAT number.</Value>
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
