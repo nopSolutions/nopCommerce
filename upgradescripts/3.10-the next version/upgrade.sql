@@ -845,6 +845,9 @@ set @resources='
   <LocaleResource Name="Plugins.Feed.Froogle.DefaultGoogleCategory.Hint">
     <Value>The default Google category to use if one is not specified.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Help.SupportServices">
+    <Value>Premium support services</Value>
+  </LocaleResource>
 </Language>
 '
 

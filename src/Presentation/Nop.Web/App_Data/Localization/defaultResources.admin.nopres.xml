@@ -8621,6 +8621,9 @@
           <LocaleResource Name="Forums">
             <Value>Community forums</Value>
           </LocaleResource>
+          <LocaleResource Name="SupportServices">
+            <Value>Premium support services</Value>
+          </LocaleResource>
         </Children>
       </LocaleResource>
       <LocaleResource Name="NopCommerceNews">
