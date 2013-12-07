@@ -268,6 +268,9 @@ namespace Nop.Core.Plugins
             //add display order and path to list
             foreach (var descriptionFile in pluginFolder.GetFiles("Description.txt", SearchOption.AllDirectories))
             {
+                if (!IsPackagePluginFolder(descriptionFile.Directory))
+                    continue;
+
                 //parse file
                 var pluginDescriptor = PluginFileParser.ParsePluginDescriptionFile(descriptionFile.FullName);
 
