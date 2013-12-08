@@ -604,32 +604,40 @@ namespace Nop.Services.Shipping
             if (shippingRateComputationMethods.Count == 0)
                 throw new NopException("Shipping rate computation method could not be loaded");
 
+
+
             //request shipping options from each shipping rate computation methods
             foreach (var srcm in shippingRateComputationMethods)
             {
-                //shipping options for a certain shipping rate computation method
-                //key - request # (in case if we ship from multiple locations)
-                //value - a list of shipping options
-                var shippingOptionsForSrcm = new Dictionary<int, List<ShippingOption>>();
-
                 //request shipping options (separately for each package-request)
-                for (int i = 0; i < shippingOptionRequests.Count; i++)
+                IList<ShippingOption> scrmShippingOptions = null;
+                foreach (var shippingOptionRequest in shippingOptionRequests)
                 {
-                    shippingOptionsForSrcm.Add(i, new List<ShippingOption>());
-
-                    var shippingOptionRequest = shippingOptionRequests[i];
                     var getShippingOptionResponse = srcm.GetShippingOptions(shippingOptionRequest);
-
 
                     if (getShippingOptionResponse.Success)
                     {
                         //success
-                        foreach (var so in getShippingOptionResponse.ShippingOptions)
+                        if (scrmShippingOptions == null)
                         {
-                            so.ShippingRateComputationMethodSystemName = srcm.PluginDescriptor.SystemName;
-                            if (_shoppingCartSettings.RoundPricesDuringCalculation)
-                                so.Rate = Math.Round(so.Rate, 2);
-                            shippingOptionsForSrcm[i].Add(so);
+                            scrmShippingOptions = getShippingOptionResponse.ShippingOptions;
+                        }
+                        else
+                        {
+                            //get shipping options which already exist for prior requested packages for this scrm (i.e. common options) ...
+                            var intersection = scrmShippingOptions
+                                .Where(existingso => getShippingOptionResponse.ShippingOptions.Any(newso => newso.Name == existingso.Name));
+
+                            //and sum the rates
+                            foreach (var existingso in intersection)
+                            {
+                                existingso.Rate += getShippingOptionResponse
+                                    .ShippingOptions
+                                    .First(newso => newso.Name == existingso.Name)
+                                    .Rate;
+                            }
+
+                            scrmShippingOptions = intersection.ToList();
                         }
                     }
                     else
@@ -643,43 +651,16 @@ namespace Nop.Services.Shipping
                     }
                 }
 
-                //now select shipping options which exist in each of the requested packages (common elements)
-                var listOfLists = new List<List<string>>();
-                foreach (var shippingOptions in shippingOptionsForSrcm.Values)
+                // add this scrm's options to the result
+                if (scrmShippingOptions != null)
                 {
-                    var list = new List<string>();
-                    foreach (var shippingOption in shippingOptions)
-                        list.Add(shippingOption.Name);
-                    listOfLists.Add(list);
-                }
-                var intersection = listOfLists.Aggregate((previousList, nextList) => previousList.Intersect(nextList).ToList());
-                //now add common shipping options to the result (and summarize the rates)
-                var commonShippingOptions = new List<ShippingOption>();
-                foreach (var shippingOptions in shippingOptionsForSrcm.Values)
-                {
-                    foreach (var shippingOption in shippingOptions)
+                    foreach (var so in scrmShippingOptions)
                     {
-                        if (intersection.Contains(shippingOption.Name))
-                        {
-                            var commonShippingOption = commonShippingOptions.FirstOrDefault(x => x.Name == shippingOption.Name);
-                            if (commonShippingOption == null)
-                            {
-                                commonShippingOption = new ShippingOption()
-                                {
-                                    ShippingRateComputationMethodSystemName = shippingOption.ShippingRateComputationMethodSystemName,
-                                    Name = shippingOption.Name,
-                                    Description = shippingOption.Description
-                                };
-                                commonShippingOptions.Add(commonShippingOption);
-                            }
-                            //summarize the rates
-                            commonShippingOption.Rate += shippingOption.Rate;
-                        }
+                        so.ShippingRateComputationMethodSystemName = srcm.PluginDescriptor.SystemName;
+                        if (_shoppingCartSettings.RoundPricesDuringCalculation)
+                            so.Rate = Math.Round(so.Rate, 2);
+                        result.ShippingOptions.Add(so);
                     }
-                }
-                foreach (var shippingOption in commonShippingOptions)
-                {
-                    result.ShippingOptions.Add(shippingOption);
                 }
             }
 
