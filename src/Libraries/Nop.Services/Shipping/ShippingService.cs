@@ -620,6 +620,7 @@ namespace Nop.Services.Shipping
                         //success
                         if (scrmShippingOptions == null)
                         {
+                            //first shipping option request
                             scrmShippingOptions = getShippingOptionResponse.ShippingOptions;
                         }
                         else
@@ -648,19 +649,18 @@ namespace Nop.Services.Shipping
                             result.AddError(error);
                             _logger.Warning(string.Format("Shipping ({0}). {1}", srcm.PluginDescriptor.FriendlyName, error));
                         }
+                        //clear the shipping options in this case
+                        scrmShippingOptions = new List<ShippingOption>();
                     }
                 }
 
                 // add this scrm's options to the result
-                if (scrmShippingOptions != null)
+                foreach (var so in scrmShippingOptions)
                 {
-                    foreach (var so in scrmShippingOptions)
-                    {
-                        so.ShippingRateComputationMethodSystemName = srcm.PluginDescriptor.SystemName;
-                        if (_shoppingCartSettings.RoundPricesDuringCalculation)
-                            so.Rate = Math.Round(so.Rate, 2);
-                        result.ShippingOptions.Add(so);
-                    }
+                    so.ShippingRateComputationMethodSystemName = srcm.PluginDescriptor.SystemName;
+                    if (_shoppingCartSettings.RoundPricesDuringCalculation)
+                        so.Rate = Math.Round(so.Rate, 2);
+                    result.ShippingOptions.Add(so);
                 }
             }
 
