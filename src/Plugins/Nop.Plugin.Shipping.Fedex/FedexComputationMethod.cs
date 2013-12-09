@@ -171,7 +171,16 @@ namespace Nop.Plugin.Shipping.Fedex
             request.RequestedShipment.TotalInsuredValue = new Money();
             request.RequestedShipment.TotalInsuredValue.Amount = orderSubTotal;
             request.RequestedShipment.TotalInsuredValue.Currency = currencyCode;
-            request.RequestedShipment.ShipTimestamp = DateTime.Now; // Shipping date and time
+
+
+            //Saturday pickup is available for certain FedEx Express U.S. service types:
+            //http://www.fedex.com/us/developer/product/WebServices/MyWebHelp/Services/Options/c_SaturdayShipAndDeliveryServiceDetails.html
+            //If the customer orders on a Saturday, the rate calculation will use Saturday as the shipping date, and the rates will include a Saturday pickup surcharge
+            //More info: http://www.nopcommerce.com/boards/t/27348/fedex-rate-can-be-excessive-for-express-methods-if-calculated-on-a-saturday.aspx
+            var shipTimestamp = DateTime.Now;
+            if (shipTimestamp.DayOfWeek == DayOfWeek.Saturday)
+                shipTimestamp = shipTimestamp.AddDays(2);
+            request.RequestedShipment.ShipTimestamp = shipTimestamp; // Shipping date and time
             request.RequestedShipment.ShipTimestampSpecified = true;
             request.RequestedShipment.RateRequestTypes = new RateRequestType[2];
             request.RequestedShipment.RateRequestTypes[0] = RateRequestType.ACCOUNT;
