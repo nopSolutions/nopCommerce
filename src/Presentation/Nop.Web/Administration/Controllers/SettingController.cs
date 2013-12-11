@@ -1470,9 +1470,9 @@ namespace Nop.Admin.Controllers
                 _settingService.SaveSetting(orderSettings, x => x.ReturnRequestReasons, storeScope, false);
 
                 if (model.NumberOfDaysReturnRequestAvailable_OverrideForStore || storeScope == 0)
-                    _settingService.SaveSetting(orderSettings, x => x.NumberOfDaysReturnRequestAvailable, 0, false);
+                    _settingService.SaveSetting(orderSettings, x => x.NumberOfDaysReturnRequestAvailable, storeScope, false);
                 else if (storeScope > 0)
-                    _settingService.DeleteSetting(orderSettings, x => x.NumberOfDaysReturnRequestAvailable, 0);
+                    _settingService.DeleteSetting(orderSettings, x => x.NumberOfDaysReturnRequestAvailable, storeScope);
 
                 _settingService.SaveSetting(orderSettings, x => x.GiftCards_Activated_OrderStatusId, 0, false);
                 _settingService.SaveSetting(orderSettings, x => x.GiftCards_Deactivated_OrderStatusId, 0, false);
