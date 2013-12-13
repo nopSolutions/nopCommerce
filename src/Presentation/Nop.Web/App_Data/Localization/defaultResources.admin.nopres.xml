@@ -11240,9 +11240,9 @@
                   </LocaleResource>
                 </Children>
               </LocaleResource>
-              <LocaleResource Name="NoComputationMethods">
+              <LocaleResource Name="Shipping">
                 <Children>
-                  <LocaleResource Name="OnlyOneOffline">
+                  <LocaleResource Name="NoComputationMethods">
                     <Value>No shipping rate computation methods enabled</Value>
                   </LocaleResource>
                   <LocaleResource Name="OnlyOneOffline">
