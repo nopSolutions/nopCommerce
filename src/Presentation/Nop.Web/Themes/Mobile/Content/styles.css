@@ -105,7 +105,7 @@
 .order-summary-content .cart .cart-item-row .unitprice,.wishlist-content .cart .cart-item-row .unitprice{color:Green;}
 .order-summary-content .cart .cart-item-row .totalprice,.wishlist-content .cart .cart-item-row .totalprice{color:Green;}
 .order-summary-content .cart .cart-item-row .remove,.wishlist-content .cart .cart-item-row .remove{}
-.order-summary-content .cart .cart-item-row .qty-input,.wishlist-content .cart .cart-item-row .qty-input{width:100px;}
+.order-summary-content .cart .cart-item-row .qty-input,.wishlist-content .cart .cart-item-row .qty-input{}
 .order-summary-content .cart-footer{}
 .order-summary-content .total-info{margin:0;}
 .cart-total-left{text-align:left;vertical-align:top;font-weight:700;}
@@ -446,9 +446,9 @@
 .product-details-page .prices .old-product-price span{color:red;text-decoration:line-through;}
 .product-details-page .add-to-cart{padding-top:10px;width:100%;}
 .product-details-page .add-to-cart .enter-price-label{display:inline-block;margin-right:10px;}
-.product-details-page .add-to-cart .enter-price-input{display:inline-block;width:60px;}
+.product-details-page .add-to-cart .enter-price-input{display:inline-block;}
 .product-details-page .add-to-cart .qty-label{display:inline-block;margin-right:10px;}
-.product-details-page .add-to-cart .qty-input{display:inline-block;width:40px;}
+.product-details-page .add-to-cart .qty-input{display:inline-block;}
 .product-details-page .add-to-cart .qty-dropdown{}
 .product-details-page .attributes{}
 .product-details-page .attributes .text-prompt{font-weight:bold;}

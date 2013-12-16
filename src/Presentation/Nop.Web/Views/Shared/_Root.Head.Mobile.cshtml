@@ -1,9 +1,10 @@
 ﻿@{
     Html.AppendScriptParts("~/Scripts/public.ajaxcart.js");
     Html.AppendScriptParts("~/Scripts/public.common.mobile.js");
+    Html.AppendScriptParts("~/Scripts/jquery-migrate-1.2.1.min.js");
     Html.AppendScriptParts("~/Scripts/jquery.validate.unobtrusive.min.js");
     Html.AppendScriptParts("~/Scripts/jquery.validate.min.js");
-    Html.AppendScriptParts("~/Scripts/jquery-1.7.1.min.js");
+    Html.AppendScriptParts("~/Scripts/jquery-1.10.2.min.js");
 }
 <!DOCTYPE html>
 <html>
@@ -28,7 +29,7 @@
     </script>
     @*Fixing jQuery mobile mobileinit binding issue
     we should not bundle jquery.mobile.js and place it after mobileinit event*@
-    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.mobile-1.2.0.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.mobile-1.3.2.min.js")"></script>
     <!--Powered by nopCommerce - http://www.nopCommerce.com-->
     <!--Copyright (c) 2008-2013-->
 </head>

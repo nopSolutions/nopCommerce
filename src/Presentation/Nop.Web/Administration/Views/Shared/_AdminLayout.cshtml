@@ -14,7 +14,7 @@
         !EngineContext.Current.Resolve<LocalizationSettings>().IgnoreRtlPropertyForAdminArea;
     
     //resources
-    Html.AppendCssFileParts("~/Content/jquery-ui-themes/smoothness/jquery-ui-1.10.0.custom.min.css");
+    Html.AppendCssFileParts("~/Content/jquery-ui-themes/smoothness/jquery-ui-1.10.3.custom.min.css");
     if (supportRtl)
     {
         Html.AppendCssFileParts("~/Administration/Content/styles.rtl.css");
@@ -23,12 +23,13 @@
     {
         Html.AppendCssFileParts("~/Administration/Content/styles.css");
     }
-    Html.AppendScriptParts("~/Administration/Scripts/admin.common.js");
-    Html.AppendScriptParts("~/Scripts/jquery-ui-1.10.0.min.js");
-    Html.AppendScriptParts("~/Administration/Scripts/jquery.validate.unobtrusive.min.js");
-    Html.AppendScriptParts("~/Administration/Scripts/jquery.validate.min.js");
-    Html.AppendScriptParts("~/Administration/Scripts/jquery.unobtrusive-ajax.min.js");
-    Html.AppendScriptParts("~/Administration/Scripts/jquery-1.7.1.min.js");
+    Html.AppendScriptParts("~/Scripts/admin.common.js");
+    Html.AppendScriptParts("~/Scripts/jquery-migrate-1.2.1.min.js");
+    Html.AppendScriptParts("~/Scripts/jquery-ui-1.10.3.custom.min.js");
+    Html.AppendScriptParts("~/Scripts/jquery.validate.unobtrusive.min.js");
+    Html.AppendScriptParts("~/Scripts/jquery.validate.min.js");
+    Html.AppendScriptParts("~/Scripts/jquery.unobtrusive-ajax.min.js");
+    Html.AppendScriptParts("~/Scripts/jquery-1.10.2.min.js");
 
     //page title
     string adminPageTitle = "";

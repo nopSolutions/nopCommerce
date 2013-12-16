@@ -371,14 +371,7 @@
     <Compile Include="Validators\Catalog\ProductValidator.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\farbtastic\farbtastic.css" />
-    <Content Include="Content\jquery.tagit.css" />
     <Content Include="Content\styles.rtl.css" />
-    <Content Include="Scripts\farbtastic.js" />
-    <Content Include="Content\farbtastic\marker.png" />
-    <Content Include="Content\farbtastic\mask.png" />
-    <Content Include="Content\farbtastic\wheel.png" />
-    <Content Include="Content\fileuploader.css" />
     <Content Include="Content\images\1pix.gif" />
     <Content Include="Content\images\admin-gvw-bg.gif" />
     <Content Include="Content\images\admin-header-bg.gif" />
@@ -405,7 +398,6 @@
     <Content Include="Content\images\ico-stat1.gif" />
     <Content Include="Content\images\ico-system.png" />
     <Content Include="Content\images\ico-warnings.gif" />
-    <Content Include="Content\images\fileuploader-loading.gif" />
     <Content Include="Content\images\throbber-synchronizing.gif" />
     <Content Include="Content\images\logo.gif" />
     <Content Include="Content\images\success-message.gif" />
@@ -415,20 +407,6 @@
     <Content Include="Content\images\warnings-tick.png" />
     <Content Include="Content\images\warnings-warning.png" />
     <Content Include="Content\styles.css" />
-    <Content Include="Scripts\admin.common.js" />
-    <Content Include="Scripts\fileuploader.js" />
-    <Content Include="Scripts\jquery-1.7.1-vsdoc.js" />
-    <Content Include="Scripts\jquery-1.7.1.js" />
-    <Content Include="Scripts\jquery-1.7.1.min.js" />
-    <Content Include="Scripts\jquery.tmpl.min.js" />
-    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
-    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
-    <Content Include="Scripts\jquery.validate.js" />
-    <Content Include="Scripts\jquery.validate.min.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
-    <Content Include="Scripts\tag-it.js" />
-    <Content Include="Scripts\tag-it.min.js" />
     <Content Include="sitemap.config">
       <SubType>Designer</SubType>
     </Content>
