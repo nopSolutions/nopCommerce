@@ -13,6 +13,9 @@ using Telerik.Web.Mvc.UI.Fluent;
 
 namespace Nop.Web.Framework
 {
+    /// <summary>
+    /// Extensions
+    /// </summary>
     public static class Extensions
     {
         public static IEnumerable<T> ForCommand<T>(this IEnumerable<T> current, GridCommand command)
@@ -186,7 +189,6 @@ namespace Nop.Web.Framework
         {
             return RelativeFormat(source, string.Empty);
         }
-
         /// <summary>
         /// Relative formatting of DateTime (e.g. 2 hours ago, a month ago)
         /// </summary>
@@ -197,7 +199,6 @@ namespace Nop.Web.Framework
         {
             return RelativeFormat(source, false, defaultFormat);
         }
-
         /// <summary>
         /// Relative formatting of DateTime (e.g. 2 hours ago, a month ago)
         /// </summary>

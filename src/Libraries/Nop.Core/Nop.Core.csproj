@@ -147,7 +147,6 @@
     <Compile Include="Fakes\FakeHttpSessionState.cs" />
     <Compile Include="Fakes\FakeIdentity.cs" />
     <Compile Include="Fakes\FakePrincipal.cs" />
-    <Compile Include="CollectionTExtensions.cs" />
     <Compile Include="BaseEntity.cs" />
     <Compile Include="Caching\Extensions.cs" />
     <Compile Include="Caching\ICacheManager.cs" />

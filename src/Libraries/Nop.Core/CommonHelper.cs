@@ -295,15 +295,5 @@ namespace Nop.Core
                     result += c.ToString();
             return result;
         }
-
-        public static bool OneToManyCollectionWrapperEnabled
-        {
-            get
-            {
-                bool enabled = !String.IsNullOrEmpty(ConfigurationManager.AppSettings["OneToManyCollectionWrapperEnabled"]) &&
-                   Convert.ToBoolean(ConfigurationManager.AppSettings["OneToManyCollectionWrapperEnabled"]);
-                return enabled;
-            }
-        }
     }
 }
