@@ -1,0 +1,12 @@
+/*
+* Kendo UI Web v2013.3.1119 (http://kendoui.com)
+* Copyright 2013 Telerik AD. All rights reserved.
+*
+* Kendo UI Web commercial licenses may be obtained at
+* https://www.kendoui.com/purchase/license-agreement/kendo-ui-web-commercial.aspx
+* If you do not own a commercial license, this file shall be governed by the
+* GNU General Public License (GPL) version 3.
+* For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
+*/
+!function(define){return define(["./kendo.core.min"],function(){!function(e,t){function n(a){var i,s,d,p,c,f,l,u,y=[],g=a.logic||"and",j=a.filters;for(i=0,s=j.length;s>i;i++)a=j[i],d=a.field,l=a.value,f=a.operator,a.filters?a=n(a):(u=a.ignoreCase,d=d.replace(/\./g,"/"),a=r[f],a&&l!==t&&(p=e.type(l),"string"===p?(c="'{1}'",l=l.replace(/'/g,"''"),u===!0&&(d="tolower("+d+")")):c="date"===p?"datetime'{1:yyyy-MM-ddTHH:mm:ss}'":"{1}",a.length>3?"substringof"!==a?c="{0}({2},"+c+")":(c="{0}("+c+",{2})","doesnotcontain"===f&&(c+=" eq false")):c="{2} {0} "+c,a=o.format(c,a,l,d))),y.push(a);return a=y.join(" "+g+" "),y.length>1&&(a="("+a+")"),a}var o=window.kendo,a=e.extend,r={eq:"eq",neq:"ne",gt:"gt",gte:"ge",lt:"lt",lte:"le",contains:"substringof",doesnotcontain:"substringof",endswith:"endswith",startswith:"startswith"},i={pageSize:e.noop,page:e.noop,filter:function(e,t){t&&(e.$filter=n(t))},sort:function(t,n){var o=e.map(n,function(e){var t=e.field.replace(/\./g,"/");return"desc"===e.dir&&(t+=" desc"),t}).join(",");o&&(t.$orderby=o)},skip:function(e,t){t&&(e.$skip=t)},take:function(e,t){t&&(e.$top=t)}},s={read:{dataType:"jsonp"}};a(!0,o.data,{schemas:{odata:{type:"json",data:function(e){return e.d.results||[e.d]},total:"d.__count"}},transports:{odata:{read:{cache:!0,dataType:"jsonp",jsonp:"$callback"},update:{cache:!0,dataType:"json",contentType:"application/json",type:"PUT"},create:{cache:!0,dataType:"json",contentType:"application/json",type:"POST"},destroy:{cache:!0,dataType:"json",type:"DELETE"},parameterMap:function(e,t){var n,a,r,d;if(e=e||{},t=t||"read",d=(this.options||s)[t],d=d?d.dataType:"json","read"===t){n={$inlinecount:"allpages"},"json"!=d&&(n.$format="json");for(r in e)i[r]?i[r](n,e[r]):n[r]=e[r]}else{if("json"!==d)throw Error("Only json dataType can be used for "+t+" operation.");if("destroy"!==t){for(r in e)a=e[r],"number"==typeof a&&(e[r]=a+"");n=o.stringify(e)}}return n}}}})}(window.kendo.jQuery)})}("function"==typeof define&&define.amd?define:function(e,t){return t()});
+//@ sourceMappingURL=kendo.data.odata.min.js.map

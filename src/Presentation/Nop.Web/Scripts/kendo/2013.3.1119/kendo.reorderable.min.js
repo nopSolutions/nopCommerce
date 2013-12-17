@@ -1,0 +1,12 @@
+/*
+* Kendo UI Web v2013.3.1119 (http://kendoui.com)
+* Copyright 2013 Telerik AD. All rights reserved.
+*
+* Kendo UI Web commercial licenses may be obtained at
+* https://www.kendoui.com/purchase/license-agreement/kendo-ui-web-commercial.aspx
+* If you do not own a commercial license, this file shall be governed by the
+* GNU General Public License (GPL) version 3.
+* For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
+*/
+!function(define){return define(["./kendo.core.min","./kendo.draganddrop.min"],function(){!function(e){function r(r,d){r=e(r),d?r.find(".k-drag-status").removeClass("k-add").addClass("k-denied"):r.find(".k-drag-status").removeClass("k-denied").addClass("k-add")}var d=window.kendo,n=d.ui.Widget,a="change",i="k-reorderable",o=n.extend({init:function(o,t){var g,l=this,s=d.guid()+"-reorderable";n.fn.init.call(l,o,t),o=l.element.addClass(i),t=l.options,l.draggable=g=t.draggable||new d.ui.Draggable(o,{group:s,filter:t.filter,hint:t.hint}),l.reorderDropCue=e('<div class="k-reorder-cue"><div class="k-icon k-i-arrow-s"></div><div class="k-icon k-i-arrow-n"></div></div>'),o.find(g.options.filter).kendoDropTarget({group:g.options.group,dragenter:function(e){if(l._draggable){var n,a=this.element,i=a[0]===l._draggable[0];r(e.draggable.hint,i),i||(n=d.getOffset(a),l.reorderDropCue.css({height:a.outerHeight(),top:n.top,left:n.left+(a.index()>l._draggable.index()?a.outerWidth():0)}).appendTo(document.body))}},dragleave:function(e){r(e.draggable.hint,!0),l.reorderDropCue.remove()},drop:function(){if(l._draggable){var e,r=l._draggable[0],d=this.element[0];r!==d&&(e=o.find(g.options.filter),l.trigger(a,{element:l._draggable,oldIndex:e.index(r),newIndex:e.index(d)}))}}}),g.bind(["dragcancel","dragend","dragstart"],{dragcancel:function(){l.reorderDropCue.remove(),l._draggable=null},dragend:function(){l.reorderDropCue.remove(),l._draggable=null},dragstart:function(e){l._draggable=e.currentTarget}})},options:{name:"Reorderable",filter:"*"},events:[a],destroy:function(){var e=this;n.fn.destroy.call(e),e.draggable&&e.draggable.destroy(),d.destroy(e.element)}});d.ui.plugin(o)}(window.kendo.jQuery)})}("function"==typeof define&&define.amd?define:function(e,r){return r()});
+//@ sourceMappingURL=kendo.reorderable.min.js.map

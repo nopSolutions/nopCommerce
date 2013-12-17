@@ -12,8 +12,10 @@
 
     var supportRtl = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Rtl &&
         !EngineContext.Current.Resolve<LocalizationSettings>().IgnoreRtlPropertyForAdminArea;
-    
+
     //resources
+    Html.AppendCssFileParts("~/Content/kendo/2013.3.1119/kendo.default.min.css");
+    Html.AppendCssFileParts("~/Content/kendo/2013.3.1119/kendo.common.min.css");
     Html.AppendCssFileParts("~/Content/jquery-ui-themes/smoothness/jquery-ui-1.10.3.custom.min.css");
     if (supportRtl)
     {
@@ -23,6 +25,7 @@
     {
         Html.AppendCssFileParts("~/Administration/Content/styles.css");
     }
+    Html.AppendScriptParts("~/Scripts/kendo/2013.3.1119/kendo.web.min.js");
     Html.AppendScriptParts("~/Scripts/admin.common.js");
     Html.AppendScriptParts("~/Scripts/jquery-migrate-1.2.1.min.js");
     Html.AppendScriptParts("~/Scripts/jquery-ui-1.10.3.custom.min.js");
@@ -63,7 +66,7 @@
     <div id="ajaxBusy">
         <span>&nbsp;</span>
     </div>
-    <div class="master-wrapper-page">
+    <div class="master-wrapper-page k-content">
         <div class="master-wrapper-content">
             @if (IsSectionDefined("header"))
             {
@@ -90,17 +93,17 @@
                         @Html.ActionLink(T("Admin.Header.PublicStore").Text, "Index", "Home", new { area = "" }, null)
                         @if (canManageMaintenance)
                         {
-                            <span class="separator">|</span>
-                            @Html.ActionLink(T("Admin.Header.ClearCache").Text, "ClearCache", "Common")
-                            <span class="separator">|</span>
-                            @Html.ActionLink(T("Admin.Header.RestartApplication").Text, "RestartApplication", "Common", null, new { id = "restart-application" })
+                        <span class="separator">|</span>
+                        @Html.ActionLink(T("Admin.Header.ClearCache").Text, "ClearCache", "Common")
+                        <span class="separator">|</span>
+                        @Html.ActionLink(T("Admin.Header.RestartApplication").Text, "RestartApplication", "Common", null, new { id = "restart-application" })
                         }
                     </div>
                     <div class="login-info">
                         @if (currentCustomer != null && currentCustomer.IsRegistered())
                         {
-                            @String.Format(T("Admin.Header.LoggedInAs").Text, usernamesEnabled ? currentCustomer.Username : currentCustomer.Email)
-                            <text>, </text> @Html.ActionLink(T("Admin.Header.Logout").Text, "Logout", "Customer", new { area = "" }, null)
+                        @String.Format(T("Admin.Header.LoggedInAs").Text, usernamesEnabled ? currentCustomer.Username : currentCustomer.Email)
+                        <text>, </text> @Html.ActionLink(T("Admin.Header.Logout").Text, "Logout", "Customer", new { area = "" }, null)
                         }
                     </div>
                     <div class="version">
