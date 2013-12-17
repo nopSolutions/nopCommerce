@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Web;
 using Nop.Core.ComponentModel;
 using Nop.Core.Domain.Shipping;
@@ -294,6 +295,19 @@ namespace Nop.Core
                 else
                     result += c.ToString();
             return result;
+        }
+
+        /// <summary>
+        /// Set Telerik culture
+        /// </summary>
+        public static void SetTelerikCulture()
+        {
+            //little hack here
+            //always set culture to 'en-US' (Telerik has a bug related to editing decimal values in other cultures). Like currently it's done for admin area in Global.asax.cs
+            
+            var culture = new CultureInfo("en-US");
+            Thread.CurrentThread.CurrentCulture = culture;
+            Thread.CurrentThread.CurrentUICulture = culture;
         }
     }
 }

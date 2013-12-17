@@ -53,7 +53,7 @@ namespace Nop.Services.Directory
                 //Console.WriteLine(omni.Location.Longitude); // -93.2323
             }
             //catch (AddressNotFoundException exc)
-            catch (GeoIP2Exception exc)
+            catch (GeoIP2Exception)
             {
                 //address is not found
                 //do not throw exceptions

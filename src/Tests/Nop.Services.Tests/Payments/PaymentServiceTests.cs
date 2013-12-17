@@ -6,6 +6,7 @@ using Nop.Services.Configuration;
 using Nop.Services.Payments;
 using Nop.Tests;
 using NUnit.Framework;
+using Rhino.Mocks;
 
 namespace Nop.Services.Tests.Payments
 {
@@ -27,6 +28,7 @@ namespace Nop.Services.Tests.Payments
             var pluginFinder = new PluginFinder();
 
             _shoppingCartSettings = new ShoppingCartSettings();
+            _settingService = MockRepository.GenerateMock<ISettingService>();
 
             _paymentService = new PaymentService(_paymentSettings, pluginFinder, _settingService, _shoppingCartSettings);
         }

@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Web.Mvc;
+using Nop.Core;
 using Nop.Core.Domain.Discounts;
 using Nop.Plugin.DiscountRules.HadSpentAmount.Models;
 using Nop.Services.Configuration;
@@ -32,9 +33,7 @@ namespace Nop.Plugin.DiscountRules.HadSpentAmount.Controllers
         {
             //little hack here
             //always set culture to 'en-US' (Telerik has a bug related to editing decimal values in other cultures). Like currently it's done for admin area in Global.asax.cs
-            var culture = new CultureInfo("en-US");
-            Thread.CurrentThread.CurrentCulture = culture;
-            Thread.CurrentThread.CurrentUICulture = culture;
+            CommonHelper.SetTelerikCulture();
 
             base.Initialize(requestContext);
         }

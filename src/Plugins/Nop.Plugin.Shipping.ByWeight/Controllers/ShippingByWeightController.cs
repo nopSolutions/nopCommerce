@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Web.Mvc;
+using Nop.Core;
 using Nop.Core.Domain.Directory;
 using Nop.Plugin.Shipping.ByWeight.Domain;
 using Nop.Plugin.Shipping.ByWeight.Models;
@@ -66,9 +67,7 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
         {
             //little hack here
             //always set culture to 'en-US' (Telerik has a bug related to editing decimal values in other cultures). Like currently it's done for admin area in Global.asax.cs
-            var culture = new CultureInfo("en-US");
-            Thread.CurrentThread.CurrentCulture = culture;
-            Thread.CurrentThread.CurrentUICulture = culture;
+            CommonHelper.SetTelerikCulture();
 
             base.Initialize(requestContext);
         }

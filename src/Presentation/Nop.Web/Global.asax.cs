@@ -226,9 +226,7 @@ namespace Nop.Web
                 //we set culture of admin area to 'en-US' because current implementation of Telerik grid 
                 //doesn't work well in other cultures
                 //e.g., editing decimal value in russian culture
-                var culture = new CultureInfo("en-US");
-                Thread.CurrentThread.CurrentCulture = culture;
-                Thread.CurrentThread.CurrentUICulture = culture;
+                CommonHelper.SetTelerikCulture();
             }
             else
             {
