@@ -1,7 +1,5 @@
 ﻿@model System.DateTime
-@using Telerik.Web.Mvc.UI
-
-@(Html.Telerik().DatePicker()
-        .Name(ViewData.TemplateInfo.GetFullHtmlFieldName(string.Empty))
-        .Value(Model > DateTime.MinValue? Model : DateTime.Today)
-)
+<input id="@ViewData.TemplateInfo.GetFullHtmlFieldId(string.Empty)" name="@ViewData.TemplateInfo.GetFullHtmlFieldName(string.Empty)" value="@((Model > DateTime.MinValue ? Model : DateTime.Today).ToShortDateString())" />
+<script>
+    $("#@ViewData.TemplateInfo.GetFullHtmlFieldId(string.Empty)").kendoDatePicker();
+</script>
