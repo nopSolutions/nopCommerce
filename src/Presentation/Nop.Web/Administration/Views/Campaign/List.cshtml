@@ -1,5 +1,4 @@
-﻿@using Telerik.Web.Mvc.UI
-@{
+﻿@{
     //page title
     ViewBag.Title = T("Admin.Promotions.Campaigns").Text;
 }
@@ -15,23 +14,58 @@
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<CampaignModel>()
-                    .Name("campaigns-grid")
-                    .Columns(columns =>
-                    {
-                        columns.Bound(x => x.Name)
-                            .Width(400);
-                        columns.Bound(x => x.CreatedOn)
-                            .Width(100);
-                        columns.Bound(x => x.Id)
-                            .Width(50)
-                            .Centered()
-                            .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
-                            .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
-                            .Title(T("Admin.Common.Edit").Text);
-                    })
-                    .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "Campaign"))
-                    .EnableCustomBinding(true))
+            <div id="campaigns-grid"></div>
+
+            <script>
+                $(document).ready(function () {
+                    $("#campaigns-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Url.Action("List", "Campaign")",
+                                    type: "POST",
+                                    dataType: "json"
+                                },
+                                contentType: "application/json"
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors"
+                            },
+                            error: function(e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        editable: {
+                            confirmation: false,
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [{
+                            field: "Name",
+                            title: "@T("Admin.Promotions.Campaigns.Fields.Name")"
+                        }, {
+                            field: "CreatedOn",
+                            title: "@T("Admin.Promotions.Campaigns.Fields.CreatedOn")",
+                            width: 200,
+                            type: "date",
+                            format: "{0:G}"
+                        }, {
+                            field: "Id",
+                            title: "@T("Admin.Common.Edit")",
+                            width: 100,
+                            template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
+                        }]
+                    });
+                });
+            </script>
         </td>
     </tr>
 </table>
