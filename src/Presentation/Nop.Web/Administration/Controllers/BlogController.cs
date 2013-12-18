@@ -13,6 +13,7 @@ using Nop.Services.Seo;
 using Nop.Services.Stores;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Kendoui;
 using Telerik.Web.Mvc;
 
 namespace Nop.Admin.Controllers
@@ -118,14 +119,14 @@ namespace Nop.Admin.Controllers
 			return View();
 		}
 
-		[HttpPost, GridAction(EnableCustomBinding = true)]
+		[HttpPost]
 		public ActionResult List(GridCommand command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedView();
 
             var blogPosts = _blogService.GetAllBlogPosts(0, 0, null, null, command.Page - 1, command.PageSize, true);
-            var gridModel = new GridModel<BlogPostModel>
+            var gridModel = new DataSourceResult
             {
                 Data = blogPosts.Select(x =>
                 {
