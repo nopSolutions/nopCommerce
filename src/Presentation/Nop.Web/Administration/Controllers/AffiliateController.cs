@@ -16,7 +16,6 @@ using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
-using Telerik.Web.Mvc;
 
 namespace Nop.Admin.Controllers
 {
@@ -140,7 +139,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult List(GridCommand command)
+        public ActionResult List(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
                 return AccessDeniedView();
@@ -280,8 +279,8 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("List");
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult AffiliatedOrderList(int affiliateId, GridCommand command)
+        [HttpPost]
+        public ActionResult AffiliatedOrderList(int affiliateId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
                 return AccessDeniedView();
@@ -293,7 +292,7 @@ namespace Nop.Admin.Controllers
             var orders = _orderService.SearchOrders(affiliateId: affiliate.Id,
                 pageIndex: command.Page - 1,
                 pageSize: command.PageSize);
-            var model = new GridModel<AffiliateModel.AffiliatedOrderModel>
+            var model = new DataSourceResult
             {
                 Data = orders.Select(order =>
                     {
@@ -315,8 +314,8 @@ namespace Nop.Admin.Controllers
             };
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult AffiliatedCustomerList(int affiliateId, GridCommand command)
+        [HttpPost]
+        public ActionResult AffiliatedCustomerList(int affiliateId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
                 return AccessDeniedView();
@@ -329,7 +328,7 @@ namespace Nop.Admin.Controllers
                 affiliateId: affiliate.Id,
                 pageIndex: command.Page - 1,
                 pageSize: command.PageSize);
-            var model = new GridModel<AffiliateModel.AffiliatedCustomerModel>
+            var model = new DataSourceResult
             {
                 Data = customers.Select(customer =>
                     {
