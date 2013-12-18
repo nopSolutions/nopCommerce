@@ -15,6 +15,7 @@ using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Kendoui;
 using Telerik.Web.Mvc;
 
 namespace Nop.Admin.Controllers
@@ -65,7 +66,8 @@ namespace Nop.Admin.Controllers
         #region Utilities
 
         [NonAction]
-        protected void PrepareAffiliateModel(AffiliateModel model, Affiliate affiliate, bool excludeProperties)
+        protected void PrepareAffiliateModel(AffiliateModel model, Affiliate affiliate, bool excludeProperties,
+            bool prepareEntireAddressModel = true)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -81,39 +83,42 @@ namespace Nop.Admin.Controllers
                 }
             }
 
-            model.Address.FirstNameEnabled = true;
-            model.Address.FirstNameRequired = true;
-            model.Address.LastNameEnabled = true;
-            model.Address.LastNameRequired = true;
-            model.Address.EmailEnabled = true;
-            model.Address.EmailRequired = true;
-            model.Address.CompanyEnabled = true;
-            model.Address.CountryEnabled = true;
-            model.Address.StateProvinceEnabled = true;
-            model.Address.CityEnabled = true;
-            model.Address.CityRequired = true;
-            model.Address.StreetAddressEnabled = true;
-            model.Address.StreetAddressRequired = true;
-            model.Address.StreetAddress2Enabled = true;
-            model.Address.ZipPostalCodeEnabled = true;
-            model.Address.ZipPostalCodeRequired = true;
-            model.Address.PhoneEnabled = true;
-            model.Address.PhoneRequired = true;
-            model.Address.FaxEnabled = true;
-
-            //address
-            model.Address.AvailableCountries.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
-            foreach (var c in _countryService.GetAllCountries(true))
-                model.Address.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = (affiliate != null && c.Id == affiliate.Address.CountryId) });
-            
-            var states = model.Address.CountryId.HasValue ? _stateProvinceService.GetStateProvincesByCountryId(model.Address.CountryId.Value, true).ToList() : new List<StateProvince>();
-            if (states.Count > 0)
+            if (prepareEntireAddressModel)
             {
-                foreach (var s in states)
-                    model.Address.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (affiliate != null && s.Id == affiliate.Address.StateProvinceId) });
+                model.Address.FirstNameEnabled = true;
+                model.Address.FirstNameRequired = true;
+                model.Address.LastNameEnabled = true;
+                model.Address.LastNameRequired = true;
+                model.Address.EmailEnabled = true;
+                model.Address.EmailRequired = true;
+                model.Address.CompanyEnabled = true;
+                model.Address.CountryEnabled = true;
+                model.Address.StateProvinceEnabled = true;
+                model.Address.CityEnabled = true;
+                model.Address.CityRequired = true;
+                model.Address.StreetAddressEnabled = true;
+                model.Address.StreetAddressRequired = true;
+                model.Address.StreetAddress2Enabled = true;
+                model.Address.ZipPostalCodeEnabled = true;
+                model.Address.ZipPostalCodeRequired = true;
+                model.Address.PhoneEnabled = true;
+                model.Address.PhoneRequired = true;
+                model.Address.FaxEnabled = true;
+
+                //address
+                model.Address.AvailableCountries.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
+                foreach (var c in _countryService.GetAllCountries(true))
+                    model.Address.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = (affiliate != null && c.Id == affiliate.Address.CountryId) });
+
+                var states = model.Address.CountryId.HasValue ? _stateProvinceService.GetStateProvincesByCountryId(model.Address.CountryId.Value, true).ToList() : new List<StateProvince>();
+                if (states.Count > 0)
+                {
+                    foreach (var s in states)
+                        model.Address.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (affiliate != null && s.Id == affiliate.Address.StateProvinceId) });
+                }
+                else
+                    model.Address.AvailableStates.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
             }
-            else
-                model.Address.AvailableStates.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
         }
         
         #endregion
@@ -134,19 +139,19 @@ namespace Nop.Admin.Controllers
             return View();
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
+        [HttpPost]
         public ActionResult List(GridCommand command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
                 return AccessDeniedView();
 
             var affiliates = _affiliateService.GetAllAffiliates(command.Page - 1, command.PageSize, true);
-            var gridModel = new GridModel<AffiliateModel>
+            var gridModel = new DataSourceResult
             {
                 Data = affiliates.Select(x =>
                 {
                     var m = new AffiliateModel();
-                    PrepareAffiliateModel(m, x, false);
+                    PrepareAffiliateModel(m, x, false, false);
                     return m;
                 }),
                 Total = affiliates.TotalCount,
