@@ -76,7 +76,13 @@
                                 },
                                 schema: {
                                     data: "Data",
-                                    total: "Total"
+                                    total: "Total",
+                                    errors: "Errors"
+                                },
+                                error: function(e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
                                 },
                                 pageSize: @(gridPageSize),
                                 serverPaging: true,

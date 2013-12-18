@@ -71,6 +71,32 @@ function telerik_on_tab_select(e) {
     $("#selected-tab-index").val($(e.item).index());
 }
 
+function display_kendoui_grid_error(e) {
+    if (e.errors) {
+        if ((typeof e.errors) == 'string') {
+            //single error
+            alert('single error');
+            //display the message
+            alert(e.errors);
+        } else {
+            //array of errors
+            //source: http://docs.kendoui.com/getting-started/using-kendo-with/aspnet-mvc/helpers/grid/faq#how-do-i-display-model-state-errors?
+            var message = "The following errors have occurred:\n";
+            //create a message containing all errors.
+            $.each(e.errors, function (key, value) {
+                if (value.errors) {
+                    message += value.errors.join("\n");
+                }
+            });
+            //display the message
+            alert(message);
+        }
+    } else {
+        alert('Error happened');
+    }
+}
+
+
 // Ajax activity indicator bound to ajax start/stop document events
 $(document).ajaxStart(function () {
     $('#ajaxBusy').show();

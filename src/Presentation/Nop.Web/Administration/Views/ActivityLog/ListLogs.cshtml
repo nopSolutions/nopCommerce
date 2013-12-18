@@ -70,14 +70,14 @@
                                     destroy: {
                                         url: "@Url.Action("AcivityLogDelete", "ActivityLog")",
                                         type: "POST",
-                                        dataType: "json",
-                                        data: additionalData
+                                        dataType: "json"
                                     },
                                     contentType: "application/json"
                                 },
                                 schema: {
                                     data: "Data",
                                     total: "Total",
+                                    errors: "Errors",
                                     model: {
                                         id: "Id",
                                         fields: {
@@ -88,7 +88,11 @@
                                         }
                                     }
                                 },
-                                requestEnd: onGridDataSourceRequestEnd,
+                                error: function(e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
                                 pageSize: @(gridPageSize),
                                 serverPaging: true,
                                 serverFiltering: true,
@@ -140,12 +144,6 @@
                         });
                     });
 
-                    function onGridDataSourceRequestEnd(e) {
-                        if(e.type=="create" || e.type=="update" || e.type=="destroy")
-                        {
-                            this.read();
-                        }
-                    }
                     function additionalData() {
                         return {
                             CreatedOnFrom: $('#@Html.FieldIdFor(model => model.CreatedOnFrom)').val(),
@@ -153,7 +151,6 @@
                             ActivityLogTypeId: $('#ActivityLogTypeId').val()
                         };
                     }
-
                 </script>
             </td>
         </tr>

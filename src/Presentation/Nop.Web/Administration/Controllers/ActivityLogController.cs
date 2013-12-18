@@ -8,7 +8,6 @@ using Nop.Services.Logging;
 using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
-using Telerik.Web.Mvc;
 
 namespace Nop.Admin.Controllers
 {
@@ -132,19 +131,19 @@ namespace Nop.Admin.Controllers
             return new JsonResult { Data = gridModel};
         }
 
-        public ActionResult AcivityLogDelete(int id, DataSourceRequest command)
+        public ActionResult AcivityLogDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
                 return AccessDeniedView();
 
             var activityLog = _customerActivityService.GetActivityById(id);
             if (activityLog == null)
+            {
                 throw new ArgumentException("No activity log found with the specified id");
-            
+            }
             _customerActivityService.DeleteActivity(activityLog);
 
-            //TODO pass and return current ActivityLogSearchModel
-            return ListLogs(command, new ActivityLogSearchModel());
+            return Json(null);
         }
 
         public ActionResult ClearAll()
