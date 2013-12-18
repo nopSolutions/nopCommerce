@@ -14,7 +14,6 @@ using Nop.Services.Stores;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
-using Telerik.Web.Mvc;
 
 namespace Nop.Admin.Controllers
 {
@@ -120,7 +119,7 @@ namespace Nop.Admin.Controllers
 		}
 
 		[HttpPost]
-		public ActionResult List(GridCommand command)
+        public ActionResult List(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedView();
@@ -289,8 +288,8 @@ namespace Nop.Admin.Controllers
             return View();
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult Comments(int? filterByBlogPostId, GridCommand command)
+        [HttpPost]
+        public ActionResult Comments(int? filterByBlogPostId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedView();
@@ -308,7 +307,7 @@ namespace Nop.Admin.Controllers
                 comments = _blogService.GetAllComments(0);
             }
 
-            var gridModel = new GridModel<BlogCommentModel>
+            var gridModel = new DataSourceResult
             {
                 Data = comments.PagedForCommand(command).Select(blogComment =>
                 {
@@ -330,9 +329,8 @@ namespace Nop.Admin.Controllers
                 Data = gridModel
             };
         }
-        
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult CommentDelete(int? filterByBlogPostId, int id, GridCommand command)
+
+        public ActionResult CommentDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedView();
@@ -347,7 +345,7 @@ namespace Nop.Admin.Controllers
             blogPost.CommentCount = blogPost.BlogComments.Count;
             _blogService.UpdateBlogPost(blogPost);
 
-            return Comments(filterByBlogPostId, command);
+            return Json(null);
         }
 
 

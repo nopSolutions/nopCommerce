@@ -7,6 +7,7 @@ using Nop.Core;
 using Nop.Core.Infrastructure;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Web.Framework.Kendoui;
 using Telerik.Web.Mvc;
 using Telerik.Web.Mvc.Extensions;
 using Telerik.Web.Mvc.UI.Fluent;
@@ -63,6 +64,11 @@ namespace Nop.Web.Framework
         }
 
         public static IEnumerable<T> PagedForCommand<T>(this IEnumerable<T> current, GridCommand command)
+        {
+            return current.Skip((command.Page - 1) * command.PageSize).Take(command.PageSize);
+        }
+
+        public static IEnumerable<T> PagedForCommand<T>(this IEnumerable<T> current, DataSourceRequest command)
         {
             return current.Skip((command.Page - 1) * command.PageSize).Take(command.PageSize);
         }
