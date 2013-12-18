@@ -54,59 +54,108 @@
     <table class="adminContent">
         <tr>
             <td>
-                @(Html.Telerik().Grid<ActivityLogModel>()
-                        .Name("activityLog-grid")
-                        .DataKeys(x =>
+                <div id="activityLog-grid"></div>
+                <script>
+                    $(document).ready(function () {
+                        $("#activityLog-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Url.Action("ListLogs", "ActivityLog")",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: additionalData
+                                    },
+                                    destroy: {
+                                        url: "@Url.Action("AcivityLogDelete", "ActivityLog")",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: additionalData
+                                    },
+                                    contentType: "application/json"
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    model: {
+                                        id: "Id",
+                                        fields: {
+                                            //do not implicitly specify all fields
+                                            //we do it only for fields which implicitly require it
+                                            //otherwise, they'll be formatted wrong way
+                                            CreatedOn: {type: "date" }
+                                        }
+                                    }
+                                },
+                                requestEnd: onGridDataSourceRequestEnd,
+                                pageSize: @(gridPageSize),
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true
+                            },
+                            editable: {
+                                confirmation: false,
+                                mode: "inline"
+                            },
+                            scrollable: false,
+                            columns: [{
+                                field: "ActivityLogTypeName",
+                                title: "@T("Admin.Configuration.ActivityLog.ActivityLog.Fields.ActivityLogType")",
+                                width: 200
+                            }, {
+                                field: "CustomerId",
+                                title: "@T("Admin.Configuration.ActivityLog.ActivityLog.Fields.Customer")",
+                                width: 100,
+                                template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=Id#">#:CustomerEmail#</a>'
+                            }, {
+                                field: "Comment",
+                                title: "@T("Admin.Configuration.ActivityLog.ActivityLog.Fields.Comment")"
+                            }, {
+                                field: "CreatedOn",
+                                title: "@T("Admin.System.Log.Fields.CreatedOn")",
+                                width: 200,
+                                type: "date",
+                                format: "{0:G}"
+                            }, {
+                                command: { name: "destroy", text: "@T("Admin.Common.Delete")" }, 
+                                title: "@T("Admin.Common.Delete")",
+                                width: 100
+                            }]
+                        });
+                    });
+                </script>
+                <script type="text/javascript">
+
+                    $(document).ready(function () {
+
+                        $('#btnSearch').click(function () {
+                            var grid = $('#activityLog-grid').data('kendoGrid');
+                            grid.dataSource.page(1); //new search. Set page size to 1
+                            grid.dataSource.read();
+                            return false;
+                        });
+                    });
+
+                    function onGridDataSourceRequestEnd(e) {
+                        if(e.type=="create" || e.type=="update" || e.type=="destroy")
                         {
-                            x.Add(y => y.Id).RouteKey("Id");
-                        })
-                        .ClientEvents(events => events.OnDataBinding("onDataBinding"))
-                        .Columns(columns =>
-                        {
-                            columns.Bound(x => x.ActivityLogTypeName)
-                                .Centered();
-                            columns.Bound(x => x.CustomerId)
-                                .Template(x => Html.ActionLink(x.CustomerEmail, "Edit", "Customer", new { id = x.CustomerId }, new { }))
-                                .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/Customer/Edit/") + "<#= CustomerId #>\"><#= CustomerEmail #></a>");
-                            columns.Bound(x => x.Comment)
-                                .Centered();                        
-                            columns.Bound(x => x.CreatedOn)
-                                .Centered();
-                            columns.Command(commands =>
-                            {
-                                commands.Delete().Text(T("Admin.Common.Delete").Text);
-                            }).Title(T("Admin.Common.Delete").Text).Width(50);
-                        })
-                        .Pageable(settings => settings.PageSize(gridPageSize).Position(GridPagerPosition.Both))
-                        .DataBinding(dataBinding =>
-                        {
-                            dataBinding.Ajax().Select("ListLogs", "ActivityLog")
-                                .Delete("AcivityLogDelete", "ActivityLog");
-                        })
-                        .EnableCustomBinding(true))
+                            this.read();
+                        }
+                    }
+                    function additionalData() {
+                        return {
+                            CreatedOnFrom: $('#@Html.FieldIdFor(model => model.CreatedOnFrom)').val(),
+                            CreatedOnTo: $('#@Html.FieldIdFor(model => model.CreatedOnTo)').val(),
+                            ActivityLogTypeId: $('#ActivityLogTypeId').val()
+                        };
+                    }
+
+                </script>
             </td>
         </tr>
     </table>
-    <script type="text/javascript">
-
-        $(document).ready(function () {
-
-            $('#btnSearch').click(function () {
-                var grid = $('#activityLog-grid').data('tGrid');
-                grid.currentPage = 1; //new search. Set page size to 1
-                grid.ajaxRequest();
-                return false;
-            });
-        });
-
-        function onDataBinding(e) {
-            var searchModel = {
-                CreatedOnFrom: $('#@Html.FieldIdFor(model => model.CreatedOnFrom)').val(),
-                CreatedOnTo: $('#@Html.FieldIdFor(model => model.CreatedOnTo)').val(),
-                ActivityLogTypeId: $('#ActivityLogTypeId').val()
-            };
-            e.data = searchModel;
-        }
-
-   </script>    
 }

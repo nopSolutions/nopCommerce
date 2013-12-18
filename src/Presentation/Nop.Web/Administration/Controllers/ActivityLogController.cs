@@ -7,6 +7,7 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Kendoui;
 using Telerik.Web.Mvc;
 
 namespace Nop.Admin.Controllers
@@ -104,8 +105,8 @@ namespace Nop.Admin.Controllers
             return View(activityLogSearchModel);
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult ListLogs(GridCommand command, ActivityLogSearchModel model)
+        [HttpPost]
+        public ActionResult ListLogs(DataSourceRequest command, ActivityLogSearchModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
                 return AccessDeniedView();
@@ -117,7 +118,7 @@ namespace Nop.Admin.Controllers
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.CreatedOnTo.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
             var activityLog = _customerActivityService.GetAllActivities(startDateValue, endDateValue,null, model.ActivityLogTypeId, command.Page - 1, command.PageSize);
-            var gridModel = new GridModel<ActivityLogModel>
+            var gridModel = new DataSourceResult()
             {
                 Data = activityLog.Select(x =>
                 {
@@ -131,8 +132,7 @@ namespace Nop.Admin.Controllers
             return new JsonResult { Data = gridModel};
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult AcivityLogDelete(int id, GridCommand command)
+        public ActionResult AcivityLogDelete(int id, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
                 return AccessDeniedView();
