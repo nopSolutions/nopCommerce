@@ -10,6 +10,7 @@ using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Kendoui;
 using Telerik.Web.Mvc;
 
 namespace Nop.Admin.Controllers
@@ -89,14 +90,14 @@ namespace Nop.Admin.Controllers
             return View();
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult CountryList(GridCommand command)
+        [HttpPost]
+        public ActionResult CountryList(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
 
             var countries = _countryService.GetAllCountries(true);
-            var model = new GridModel<CountryModel>
+            var model = new DataSourceResult
             {
                 Data = countries.Select(x => x.ToModel()),
                 Total = countries.Count
