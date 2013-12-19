@@ -18,8 +18,8 @@ using Nop.Services.Stores;
 using Nop.Services.Vendors;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
-using Telerik.Web.Mvc;
 using Telerik.Web.Mvc.UI;
 
 namespace Nop.Admin.Controllers
@@ -284,15 +284,15 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult List(GridCommand command, CategoryListModel model)
+        [HttpPost]
+        public ActionResult List(DataSourceRequest command, CategoryListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
 
             var categories = _categoryService.GetAllCategories(model.SearchCategoryName, 
                 command.Page - 1, command.PageSize, true);
-            var gridModel = new GridModel<CategoryModel>
+            var gridModel = new DataSourceResult
             {
                 Data = categories.Select(x =>
                 {
@@ -635,18 +635,17 @@ namespace Nop.Admin.Controllers
 
         #region Products
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult ProductList(GridCommand command, int categoryId)
+        [HttpPost]
+        public ActionResult ProductList(DataSourceRequest command, int categoryId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
 
             var productCategories = _categoryService.GetProductCategoriesByCategoryId(categoryId,
                 command.Page - 1, command.PageSize, true);
-            var model = new GridModel<CategoryModel.CategoryProductModel>
+            var model = new DataSourceResult
             {
-                Data = productCategories
-                .Select(x =>
+                Data = productCategories.Select(x =>
                 {
                     return new CategoryModel.CategoryProductModel()
                     {
@@ -667,8 +666,7 @@ namespace Nop.Admin.Controllers
             };
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult ProductUpdate(GridCommand command, CategoryModel.CategoryProductModel model)
+        public ActionResult ProductUpdate(CategoryModel.CategoryProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
@@ -681,11 +679,10 @@ namespace Nop.Admin.Controllers
             productCategory.DisplayOrder = model.DisplayOrder1;
             _categoryService.UpdateProductCategory(productCategory);
 
-            return ProductList(command, productCategory.CategoryId);
+            return Json(null);
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult ProductDelete(int id, GridCommand command)
+        public ActionResult ProductDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
@@ -694,10 +691,10 @@ namespace Nop.Admin.Controllers
             if (productCategory == null)
                 throw new ArgumentException("No product category mapping found with the specified id");
 
-            var categoryId = productCategory.CategoryId;
+            //var categoryId = productCategory.CategoryId;
             _categoryService.DeleteProductCategory(productCategory);
 
-            return ProductList(command, categoryId);
+            return Json(null);
         }
 
         public ActionResult ProductAddPopup(int categoryId)
@@ -733,13 +730,13 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult ProductAddPopupList(GridCommand command, CategoryModel.AddCategoryProductModel model)
+        [HttpPost]
+        public ActionResult ProductAddPopupList(DataSourceRequest command, CategoryModel.AddCategoryProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
 
-            var gridModel = new GridModel();
+            var gridModel = new DataSourceResult();
             var products = _productService.SearchProducts(
                 categoryIds: new List<int>() { model.SearchCategoryId },
                 manufacturerId: model.SearchManufacturerId,
