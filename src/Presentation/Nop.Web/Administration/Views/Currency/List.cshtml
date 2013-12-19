@@ -41,56 +41,94 @@
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<CurrencyModel>()
-                    .Name("currencies-grid")
-                    .Columns(columns =>
-                    {
-                        columns.Bound(x => x.Name);
-                        columns.Bound(x => x.CurrencyCode)
-                            .Centered();
-                        columns.Bound(x => x.Rate)
-                            .Centered()
-                            .Format("{0:G29}");
-                        columns.Bound(x => x.IsPrimaryExchangeRateCurrency)
-                                .Template(
-                                    @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.IsPrimaryExchangeRateCurrency.ToString().ToLowerInvariant() + ".gif")" />
-                                )
-                                .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= IsPrimaryExchangeRateCurrency #>.gif' />")
-                                .Centered()
-                                .Width(100);
-                        columns.Bound(x => x.Id)
-                            .Template(x => Html.ActionLink(T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryExchangeRateCurrency").Text, "MarkAsPrimaryExchangeRateCurrency", new { id = x.Id }, new { @class = "t-button" }))
-                            .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/Currency/MarkAsPrimaryExchangeRateCurrency/") + "<#= Id #>\" class=\"t-button\">" + T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryExchangeRateCurrency").Text + "</a>")
-                            .Centered()
-                            .HeaderTemplate(T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryExchangeRateCurrency").Text);
-                        columns.Bound(x => x.IsPrimaryStoreCurrency)
-                                .Template(
-                                    @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.IsPrimaryStoreCurrency.ToString().ToLowerInvariant() + ".gif")" />
-                                )
-                                .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= IsPrimaryStoreCurrency #>.gif' />")
-                                .Centered()
-                                .Width(100);
-                        columns.Bound(x => x.Id)
-                            .Template(x => Html.ActionLink(T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryStoreCurrency").Text, "MarkAsPrimaryStoreCurrency", new { id = x.Id }, new { @class = "t-button" }))
-                            .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/Currency/MarkAsPrimaryStoreCurrency/") + "<#= Id #>\" class=\"t-button\">" + T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryStoreCurrency").Text + "</a>")
-                            .Centered()
-                            .HeaderTemplate(T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryStoreCurrency").Text);
-                        columns.Bound(x => x.Published)
-                                .Template(
-                                    @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.Published.ToString().ToLowerInvariant() + ".gif")" />
-                                )
-                                .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= Published #>.gif' />")
-                                .Centered()
-                                .Width(100);
-                        columns.Bound(x => x.Id)
-                            .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
-                            .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
-                            .Centered()
-                            .HeaderTemplate(T("Admin.Common.Edit").Text);
-                    })
-                    .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "Currency"))
-                    .EnableCustomBinding(true)
-                    )
+            <div id="currencies-grid"></div>
+
+            <script>
+                $(document).ready(function () {
+                    $("#currencies-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Url.Action("List", "Currency")",
+                                    type: "POST",
+                                    dataType: "json"
+                                },
+                                contentType: "application/json"
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors"
+                            },
+                            error: function (e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true,
+                            numeric: false,
+                            previousNext: false,
+                            info: false
+                        },
+                        editable: {
+                            confirmation: false,
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [{
+                            field: "Name",
+                            title: "@T("Admin.Configuration.Currencies.Fields.Name")"
+                        }, {
+                            field: "CurrencyCode",
+                            title: "@T("Admin.Configuration.Currencies.Fields.CurrencyCode")",
+                            width: 200
+                        }, {
+                            field: "Rate",
+                            title: "@T("Admin.Configuration.Currencies.Fields.Rate")",
+                            width: 200
+                        }, {
+                            field: "IsPrimaryExchangeRateCurrency",
+                            title: "@T("Admin.Configuration.Currencies.Fields.IsPrimaryExchangeRateCurrency")",
+                            width: 100,
+                            template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsPrimaryExchangeRateCurrency#.gif" />'
+                        }, {
+                            field: "Id",
+                            title: "@T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryExchangeRateCurrency")",
+                            template: '<a href="@Url.Content("~/Admin/Currency/MarkAsPrimaryExchangeRateCurrency/")#=Id#" class="t-button">@T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryExchangeRateCurrency")</a>'
+                        }, {
+                            field: "IsPrimaryStoreCurrency",
+                            title: "@T("Admin.Configuration.Currencies.Fields.IsPrimaryStoreCurrency")",
+                            width: 100,
+                            template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsPrimaryStoreCurrency#.gif" />'
+                        }, {
+                            field: "Id",
+                            title: "@T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryStoreCurrency")",
+                            template: '<a href="@Url.Content("~/Admin/Currency/MarkAsPrimaryStoreCurrency/")#=Id#" class="t-button">@T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryStoreCurrency")</a>'
+                        }, {
+                            field: "Published",
+                            title: "@T("Admin.Configuration.Currencies.Fields.Published")",
+                            width: 100,
+                            template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Published#.gif" />'
+                        }, {
+                            field: "DisplayOrder",
+                            title: "@T("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.DisplayOrder")",
+                            width: 100
+                        }, {
+                            field: "Id",
+                            title: "@T("Admin.Common.Edit")",
+                            width: 100,
+                            template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
+                        }]
+                    });
+                });
+            </script>
+
         </td>
     </tr>
 </table>
@@ -115,6 +153,7 @@
                                 .Centered()
                                 .HeaderTemplate(T("Admin.Configuration.Currencies.Fields.CurrencyCode").Text);
                             columns.Bound(x => x.Rate)
+                                .Format("{0:G29}")
                                 .Centered()
                                 .HeaderTemplate(T("Admin.Configuration.Currencies.Fields.Rate").Text);
                             columns.Bound(x => x)

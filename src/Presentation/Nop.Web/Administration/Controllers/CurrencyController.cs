@@ -12,6 +12,7 @@ using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Kendoui;
 using Telerik.Web.Mvc;
 
 namespace Nop.Admin.Controllers
@@ -167,14 +168,14 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
                 return AccessDeniedView();
 
-            Currency currency = _currencyService.GetCurrencyByCode(currencyCode);
+            var currency = _currencyService.GetCurrencyByCode(currencyCode);
             if (currency != null)
             {
                 currency.Rate = rate;
                 currency.UpdatedOnUtc = DateTime.UtcNow;
                 _currencyService.UpdateCurrency(currency);
             }
-            return RedirectToAction("List","Currency", new { liveRates=true });
+            return RedirectToAction("List","Currency", new { liveRates = true });
         }
 
         [HttpPost]
@@ -189,8 +190,8 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("List", "Currency");
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult List(GridCommand command)
+        [HttpPost]
+        public ActionResult List(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
                 return AccessDeniedView();
@@ -200,8 +201,8 @@ namespace Nop.Admin.Controllers
                 currency.IsPrimaryExchangeRateCurrency = currency.Id == _currencySettings.PrimaryExchangeRateCurrencyId ? true : false;
             foreach (var currency in currenciesModel)
                 currency.IsPrimaryStoreCurrency = currency.Id == _currencySettings.PrimaryStoreCurrencyId ? true : false;
-            
-            var gridModel = new GridModel<CurrencyModel>
+
+            var gridModel = new DataSourceResult
             {
                 Data = currenciesModel,
                 Total = currenciesModel.Count
