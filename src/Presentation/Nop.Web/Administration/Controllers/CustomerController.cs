@@ -35,6 +35,7 @@ using Nop.Services.Tax;
 using Nop.Services.Vendors;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
 using Telerik.Web.Mvc;
 
@@ -1674,17 +1675,16 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return Content("");
 
-            var model = GetReportRegisteredCustomersModel();
-            return PartialView(model);
+            return PartialView();
         }
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult ReportRegisteredCustomersList(GridCommand command)
+        [HttpPost]
+        public ActionResult ReportRegisteredCustomersList(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return Content("");
 
             var model = GetReportRegisteredCustomersModel();
-            var gridModel = new GridModel<RegisteredCustomerReportLineModel>
+            var gridModel = new DataSourceResult
             {
                 Data = model,
                 Total = model.Count

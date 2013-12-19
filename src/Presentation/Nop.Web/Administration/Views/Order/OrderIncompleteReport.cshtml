@@ -1,18 +1,60 @@
-﻿@model IList<OrderIncompleteReportLineModel>
-@using Telerik.Web.Mvc.UI
-<table class="adminContent">
+﻿<table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid(Model)
-                .Name("incomplete-order-report-grid")
-                .Columns(columns =>
-                {
-                    columns.Bound(x => x.Item).Width(300);
-                    columns.Bound(x => x.Total);
-                    columns.Bound(x => x.Count);
-                })
-                .DataBinding(dataBinding => dataBinding.Ajax().Select("OrderIncompleteReportList", "Order"))
-                .EnableCustomBinding(true))
+            <div id="incomplete-order-report-grid"></div>
+            <script>
+                $(document).ready(function () {
+                    $("#incomplete-order-report-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Url.Action("OrderIncompleteReportList", "Order")",
+                                    type: "POST",
+                                    dataType: "json"
+                                },
+                                contentType: "application/json"
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors"
+                            },
+                            error: function(e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true,
+                            numeric: false,
+                            previousNext: false,
+                            info: false
+                        },
+                        editable: {
+                            confirmation: false,
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [{
+                            field: "Item",
+                            title: "@T("Admin.SalesReport.Incomplete.Item")"
+                        }, {
+                            field: "Total",
+                            title: "@T("Admin.SalesReport.Incomplete.Total")",
+                            width: 150
+                        }, {
+                            field: "Count",
+                            title: "@T("Admin.SalesReport.Incomplete.Count")",
+                            width: 150
+                        }]
+                    });
+                });
+            </script>
         </td>
     </tr>
 </table>

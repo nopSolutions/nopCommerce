@@ -1,18 +1,57 @@
-﻿@model IList<RegisteredCustomerReportLineModel>
-@using Telerik.Web.Mvc;
-@using Telerik.Web.Mvc.UI
-<table class="adminContent">
+﻿<table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid(Model)
-                .Name("registered-customers-grid")
-                .Columns(columns =>
-                {
-                    columns.Bound(x => x.Period);
-                    columns.Bound(x => x.Customers).Width(100);
-                })
-                .DataBinding(dataBinding => dataBinding.Ajax().Select("ReportRegisteredCustomersList", "Customer"))
-                .EnableCustomBinding(true))
+            <div id="registered-customers-grid"></div>
+
+            <script>
+                    $(document).ready(function () {
+                        $("#registered-customers-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Url.Action("ReportRegisteredCustomersList", "Customer")",
+                                        type: "POST",
+                                        dataType: "json"
+                                    },
+                                    contentType: "application/json"
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors"
+                                },
+                                error: function(e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true,
+                                numeric: false,
+                                previousNext: false,
+                                info: false
+                            },
+                            editable: {
+                                confirmation: false,
+                                mode: "inline"
+                            },
+                            scrollable: false,
+                            columns: [{
+                                field: "Period",
+                                title: "@T("Admin.Customers.Reports.RegisteredCustomers.Fields.Period")"
+                            }, {
+                                field: "Customers",
+                                title: "@T("Admin.Customers.Reports.RegisteredCustomers.Fields.Customers")",
+                                width: 150
+                            }]
+                        });
+                    });
+            </script>
         </td>
     </tr>
 </table>

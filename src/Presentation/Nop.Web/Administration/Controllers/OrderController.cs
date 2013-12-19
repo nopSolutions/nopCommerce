@@ -33,6 +33,7 @@ using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
 using Telerik.Web.Mvc;
+using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Admin.Controllers
 {
@@ -3112,9 +3113,25 @@ namespace Nop.Admin.Controllers
         }
 
 
-        [NonAction]
-        protected virtual IList<OrderAverageReportLineSummaryModel> GetOrderAverageReportModel()
+        [ChildActionOnly]
+        public ActionResult OrderAverageReport()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Content("");
+
+            return PartialView();
+        }
+        [HttpPost]
+        public ActionResult OrderAverageReportList(DataSourceRequest command)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Content("");
+
+            //a vendor does have access to this report
+            if (_workContext.CurrentVendor != null)
+                return Content("");
+
+
             var report = new List<OrderAverageReportLineSummary>();
             report.Add(_orderReportService.OrderAverageReport(0, OrderStatus.Pending));
             report.Add(_orderReportService.OrderAverageReport(0, OrderStatus.Processing));
@@ -3133,29 +3150,7 @@ namespace Nop.Admin.Controllers
                 };
             }).ToList();
 
-            return model;
-        }
-        [ChildActionOnly]
-        public ActionResult OrderAverageReport()
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return Content("");
-
-            var model = GetOrderAverageReportModel();
-            return PartialView(model);
-        }
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult OrderAverageReportList(GridCommand command)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return Content("");
-
-            //a vendor does have access to this report
-            if (_workContext.CurrentVendor != null)
-                return Content("");
-
-            var model = GetOrderAverageReportModel();
-            var gridModel = new GridModel<OrderAverageReportLineSummaryModel>
+            var gridModel = new DataSourceResult
             {
                 Data = model,
                 Total = model.Count
@@ -3166,9 +3161,24 @@ namespace Nop.Admin.Controllers
             };
         }
 
-        [NonAction]
-        protected virtual IList<OrderIncompleteReportLineModel> GetOrderIncompleteReportModel()
+        [ChildActionOnly]
+        public ActionResult OrderIncompleteReport()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Content("");
+
+            return PartialView();
+        }
+        [HttpPost]
+        public ActionResult OrderIncompleteReportList(DataSourceRequest command)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Content("");
+            
+            //a vendor does have access to this report
+            if (_workContext.CurrentVendor != null)
+                return Content("");
+
             var model = new List<OrderIncompleteReportLineModel>();
             //not paid
             var psPending = _orderReportService.GetOrderAverageReportLine(0, 0, null, PaymentStatus.Pending, null, null, null, null, true);
@@ -3194,29 +3204,8 @@ namespace Nop.Admin.Controllers
                 Count = osPending.CountOrders,
                 Total = _priceFormatter.FormatPrice(osPending.SumOrders, true, false)
             });
-            return model;
-        }
-        [ChildActionOnly]
-        public ActionResult OrderIncompleteReport()
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return Content("");
 
-            var model = GetOrderIncompleteReportModel();
-            return PartialView(model);
-        }
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult OrderIncompleteReportList(GridCommand command)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return Content("");
-            
-            //a vendor does have access to this report
-            if (_workContext.CurrentVendor != null)
-                return Content("");
-
-            var model = GetOrderIncompleteReportModel();
-            var gridModel = new GridModel<OrderIncompleteReportLineModel>
+            var gridModel = new DataSourceResult
             {
                 Data = model,
                 Total = model.Count
