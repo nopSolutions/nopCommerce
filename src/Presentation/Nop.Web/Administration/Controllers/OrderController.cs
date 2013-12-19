@@ -2897,7 +2897,7 @@ namespace Nop.Admin.Controllers
         #region Reports
 
         [NonAction]
-        protected GridModel<BestsellersReportLineModel> GetBestsellersBriefReportModel(int pageIndex,
+        protected DataSourceResult GetBestsellersBriefReportModel(int pageIndex,
             int pageSize, int orderBy)
         {
             //a vendor should have access only to his products
@@ -2911,7 +2911,7 @@ namespace Nop.Admin.Controllers
                 pageIndex: pageIndex,
                 pageSize: pageSize,
                 showHidden: true);
-            var gridModel = new GridModel<BestsellersReportLineModel>
+            var gridModel = new DataSourceResult
             {
                 Data = items.Select(x =>
                 {
@@ -2937,8 +2937,8 @@ namespace Nop.Admin.Controllers
 
             return PartialView();
         }
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult BestsellersBriefReportByQuantityList(GridCommand command)
+        [HttpPost]
+        public ActionResult BestsellersBriefReportByQuantityList(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return Content("");
@@ -2957,8 +2957,8 @@ namespace Nop.Admin.Controllers
 
             return PartialView();
         }
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult BestsellersBriefReportByAmountList(GridCommand command)
+        [HttpPost]
+        public ActionResult BestsellersBriefReportByAmountList(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return Content("");
