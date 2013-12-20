@@ -1582,8 +1582,8 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult ReportBestCustomersByOrderTotalList(GridCommand command, BestCustomersReportModel model)
+        [HttpPost]
+        public ActionResult ReportBestCustomersByOrderTotalList(DataSourceRequest command, BestCustomersReportModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return Content("");
@@ -1601,7 +1601,7 @@ namespace Nop.Admin.Controllers
 
             var items = _customerReportService.GetBestCustomersReport(startDateValue, endDateValue,
                 orderStatus, paymentStatus, shippingStatus, 1);
-            var gridModel = new GridModel<BestCustomerReportLineModel>
+            var gridModel = new DataSourceResult
             {
                 Data = items.Select(x =>
                 {
@@ -1625,8 +1625,8 @@ namespace Nop.Admin.Controllers
                 Data = gridModel
             };
         }
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult ReportBestCustomersByNumberOfOrdersList(GridCommand command, BestCustomersReportModel model)
+        [HttpPost]
+        public ActionResult ReportBestCustomersByNumberOfOrdersList(DataSourceRequest command, BestCustomersReportModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return Content("");
@@ -1644,7 +1644,7 @@ namespace Nop.Admin.Controllers
 
             var items = _customerReportService.GetBestCustomersReport(startDateValue, endDateValue,
                 orderStatus, paymentStatus, shippingStatus, 2);
-            var gridModel = new GridModel<BestCustomerReportLineModel>
+            var gridModel = new DataSourceResult
             {
                 Data = items.Select(x =>
                 {

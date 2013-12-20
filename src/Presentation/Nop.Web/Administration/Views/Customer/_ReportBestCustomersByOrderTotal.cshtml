@@ -1,106 +1,140 @@
 ﻿@model BestCustomersReportModel
+<table width="100%">
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.StartDate):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.StartDate)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.EndDate):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => Model.EndDate)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.OrderStatusId):
+        </td>
+        <td class="adminData">
+            @Html.DropDownList("OrderStatusId", Model.AvailableOrderStatuses)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.PaymentStatusId):
+        </td>
+        <td class="adminData">
+            @Html.DropDownList("PaymentStatusId", Model.AvailablePaymentStatuses)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.ShippingStatusId):
+        </td>
+        <td class="adminData">
+            @Html.DropDownList("ShippingStatusId", Model.AvailableShippingStatuses)
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <input type="button" id="search-best-customers-ordertotal" class="t-button" value="@T("Admin.Customers.Reports.RunReport")" />
+        </td>
+    </tr>
+</table>
+<p>
+</p>
+<table class="adminContent">
+    <tr>
+        <td>
+            <div id="best-customers-ordertotal-grid"></div>
 
-@using Telerik.Web.Mvc.UI
+            <script>
+                $(document).ready(function () {
+                    $("#best-customers-ordertotal-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("ReportBestCustomersByOrderTotalList", "Customer"))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: bestCustomersOrderTotalAdditionalData
+                                },
+                                contentType: "application/json"
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors"
+                            },
+                            error: function (e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true,
+                            numeric: false,
+                            previousNext: false,
+                            info: false
+                        },
+                        editable: {
+                            confirmation: false,
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [{
+                            field: "CustomerName",
+                            title: "@T("Admin.Customers.Reports.BestBy.Fields.Customer")"
+                        }, {
+                            field: "OrderTotal",
+                            title: "@T("Admin.Customers.Reports.BestBy.Fields.OrderTotal")"
+                        }, {
+                            field: "OrderCount",
+                            title: "@T("Admin.Customers.Reports.BestBy.Fields.OrderCount")"
+                        }, {
+                            field: "Id",
+                            title: "@T("Admin.Common.View")",
+                            width: 100,
+                            template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">@T("Admin.Common.View")</a>'
+                        }]
+                    });
+                });
+            </script>
 
-@using (Html.BeginForm())
-{
-    <table width="100%">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.StartDate):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.StartDate)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.EndDate):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => Model.EndDate)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.OrderStatusId):
-            </td>
-            <td class="adminData">
-                @Html.DropDownList("OrderStatusId", Model.AvailableOrderStatuses)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.PaymentStatusId):
-            </td>
-            <td class="adminData">
-                @Html.DropDownList("PaymentStatusId", Model.AvailablePaymentStatuses)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.ShippingStatusId):
-            </td>
-            <td class="adminData">
-                @Html.DropDownList("ShippingStatusId", Model.AvailableShippingStatuses)
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <input type="button" id="search-best-customers-ordertotal" class="t-button" value="@T("Admin.Customers.Reports.RunReport")" />
-            </td>
-        </tr>
-    </table>
-    <p>
-    </p>
-    <table class="adminContent">
-        <tr>
-            <td>
-                @(Html.Telerik().Grid<BestCustomerReportLineModel>()
-                .Name("best-customers-ordertotal-grid")
-                .ClientEvents(events => events.OnDataBinding("bestCustomersOrderTotalOnDataBinding"))
-                .Columns(columns =>
-                {
-                    columns.Bound(x => x.CustomerName);
-                    columns.Bound(x => x.OrderTotal);
-                    columns.Bound(x => x.OrderCount);
-                    columns.Bound(x => x.CustomerId)
-                        .Template(x => Html.ActionLink(T("Admin.Common.View").Text, "Edit", "Customer", new { id = x.CustomerId }, new { }))
-                        .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/Customer/Edit/") + "<#= CustomerId #>\">" + T("Admin.Common.View").Text + "</a>")
-                        .Width(50)
-                        .Centered()
-                        .Title(T("Admin.Common.View").Text);
-                })
-                .DataBinding(dataBinding => dataBinding.Ajax().Select("ReportBestCustomersByOrderTotalList", "Customer"))
-                .EnableCustomBinding(true))
-            </td>
-        </tr>
-    </table>
-    
-    <script type="text/javascript">
+            <script type="text/javascript">
 
-        $(document).ready(function () {
+                $(document).ready(function () {
 
-            $('#search-best-customers-ordertotal').click(function () {
-                var grid = $('#best-customers-ordertotal-grid').data('tGrid');
-                grid.currentPage = 1; //new search. Set page size to 1
-                grid.ajaxRequest();
-                return false;
-            });
+                    $('#search-best-customers-ordertotal').click(function () {
+                        var grid = $('#best-customers-ordertotal-grid').data('kendoGrid');
+                        grid.dataSource.page(1); //new search. Set page size to 1
+                        grid.dataSource.read();
+                        return false;
+                    });
 
-        });
+                });
 
-    function bestCustomersOrderTotalOnDataBinding(e) {
-        var searchModel = {
-                StartDate: $('#@Html.FieldIdFor(model => model.StartDate)').val(),
-                EndDate: $('#@Html.FieldIdFor(model => model.EndDate)').val(),
-                OrderStatusId: $('#@Html.FieldIdFor(model => model.OrderStatusId)').val(),
-                PaymentStatusId: $('#@Html.FieldIdFor(model => model.PaymentStatusId)').val(),
-                ShippingStatusId: $('#@Html.FieldIdFor(model => model.ShippingStatusId)').val()
-                };
-        e.data = searchModel;
-    }
+                function bestCustomersOrderTotalAdditionalData(e) {
+                    return {
+                        StartDate: $('#@Html.FieldIdFor(model => model.StartDate)').val(),
+                        EndDate: $('#@Html.FieldIdFor(model => model.EndDate)').val(),
+                        OrderStatusId: $('#@Html.FieldIdFor(model => model.OrderStatusId)').val(),
+                        PaymentStatusId: $('#@Html.FieldIdFor(model => model.PaymentStatusId)').val(),
+                        ShippingStatusId: $('#@Html.FieldIdFor(model => model.ShippingStatusId)').val()
+                    };
+                }
 
-    </script>
-    
-}
+            </script>
+        </td>
+    </tr>
+</table>
