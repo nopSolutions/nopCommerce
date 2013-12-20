@@ -9,17 +9,16 @@
         <img src="@Url.Content("~/Administration/Content/images/ico-content.png")" alt="" />
         @T("Admin.ContentManagement.Forums.Manage")
     </div>
+    <div class="options">
+        <a href="@Url.Action("CreateForumGroup")" class="t-button">@T("Admin.ContentManagement.Forums.ForumGroup.CreateForumGroup")</a>
+        <a href="@Url.Action("CreateForum")" class="t-button">@T("Admin.ContentManagement.Forums.Forum.CreateForum")</a>
+    </div>
 </div>
 <table class="adminContent">
     <tr>
         <td>
             @{ Html.Telerik().Grid(Model)
                 .Name("forumgroup-grid")
-                .ToolBar(commands =>
-                {
-                    commands.Custom().Text(T("Admin.ContentManagement.Forums.ForumGroup.CreateForumGroup").Text).Action("CreateForumGroup", "Forum").HtmlAttributes(new { style = "margin:0 0.2em;" });
-                    commands.Custom().Text(T("Admin.ContentManagement.Forums.Forum.CreateForum").Text).Action("CreateForum", "Forum");
-                })
                 .Columns(columns =>
                 {
                     columns.Bound(x => x.Name);

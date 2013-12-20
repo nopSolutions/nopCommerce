@@ -15,7 +15,6 @@ using Nop.Services.Security;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
-using Telerik.Web.Mvc;
 
 namespace Nop.Admin.Controllers
 {
@@ -392,7 +391,7 @@ namespace Nop.Admin.Controllers
         #region Discount usage history
         
         [HttpPost]
-        public ActionResult UsageHistoryList(int discountId, GridCommand command)
+        public ActionResult UsageHistoryList(int discountId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();

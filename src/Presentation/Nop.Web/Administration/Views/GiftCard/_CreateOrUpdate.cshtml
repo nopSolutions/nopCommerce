@@ -191,27 +191,62 @@
 @helper TabHistory()
     {
         var gridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSize;
-    @(Html.Telerik().Grid<GiftCardModel.GiftCardUsageHistoryModel>()
-                    .Name("usagehistory-grid")
-                    .DataKeys(x =>
-                    {
-                        x.Add(y => y.Id).RouteKey("Id");
-                    })
-                    .Columns(columns =>
-                    {
-                        columns.Bound(x => x.UsedValue).Width(200);
-                        columns.Bound(x => x.OrderId)
-                            .Width(100)
-                            .Template(x => Html.ActionLink(T("Admin.Common.View").Text, "Edit", "Order", new { id = x.OrderId }, new { }))
-                            .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/Order/Edit/") + "<#= OrderId #>\">" + T("Admin.Common.View").Text + "</a>");
-                        columns.Bound(x => x.CreatedOn).Width(200);
-
-                    })
-                    .Pageable(settings => settings.PageSize(gridPageSize).Position(GridPagerPosition.Both))
-                    .DataBinding(dataBinding =>
-                    {
-                        dataBinding.Ajax().Select("UsageHistoryList", "GiftCard", new { giftCardId = Model.Id });
-                    })
-                    .EnableCustomBinding(true))
     
+    <div id="usagehistory-grid"></div>
+
+    <script>
+        $(document).ready(function () {
+            $("#usagehistory-grid").kendoGrid({
+                dataSource: {
+                    type: "json",
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("UsageHistoryList", "GiftCard", new { giftCardId = Model.Id }))",
+                            type: "POST",
+                            dataType: "json"
+                        },
+                        contentType: "application/json"
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors"
+                    },
+                    error: function(e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    pageSize: @(gridPageSize),
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true
+                },
+                editable: {
+                    confirmation: false,
+                    mode: "inline"
+                },
+                scrollable: false,
+                columns: [{
+                    field: "UsedValue",
+                    title: "@T("Admin.GiftCards.History.UsedValue")",
+                    width: 200
+                }, {
+                    field: "OrderId",
+                    title: "@T("Admin.GiftCards.History.Order")",
+                    width: 200,
+                    template: '<a href="@Url.Content("~/Admin/Order/Edit/")#=OrderId#">#=OrderId# - @T("Admin.Common.View")</a>'
+                }, {
+                    field: "CreatedOn",
+                    title: "@T("Admin.GiftCards.History.CreatedOn")",
+                    width: 200,
+                    type: "date",
+                    format: "{0:G}"
+                }]
+            });
+        });
+    </script>
 }

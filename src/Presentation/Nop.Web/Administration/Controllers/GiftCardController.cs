@@ -16,7 +16,7 @@ using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
-using Telerik.Web.Mvc;
+using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Admin.Controllers
 {
@@ -96,8 +96,8 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult GiftCardList(GridCommand command, GiftCardListModel model)
+        [HttpPost]
+        public ActionResult GiftCardList(DataSourceRequest command, GiftCardListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
                 return AccessDeniedView();
@@ -109,7 +109,7 @@ namespace Nop.Admin.Controllers
                 isGiftCardActivated = false;
             var giftCards = _giftCardService.GetAllGiftCards(null, null, null,
                 isGiftCardActivated, model.CouponCode, command.Page - 1, command.PageSize);
-            var gridModel = new GridModel<GiftCardModel>
+            var gridModel = new DataSourceResult
             {
                 Data = giftCards.Select(x =>
                 {
@@ -304,8 +304,8 @@ namespace Nop.Admin.Controllers
         }
         
         //Gif card usage history
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult UsageHistoryList(int giftCardId, GridCommand command)
+        [HttpPost]
+        public ActionResult UsageHistoryList(int giftCardId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
                 return AccessDeniedView();
@@ -326,7 +326,7 @@ namespace Nop.Admin.Controllers
                     };
                 })
                 .ToList();
-            var model = new GridModel<GiftCardModel.GiftCardUsageHistoryModel>
+            var model = new DataSourceResult
             {
                 Data = usageHistoryModel.PagedForCommand(command),
                 Total = usageHistoryModel.Count

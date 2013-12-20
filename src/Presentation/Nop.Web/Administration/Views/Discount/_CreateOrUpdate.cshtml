@@ -428,10 +428,8 @@
 }
 @helper TabHistory()
     {
-
     var gridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSize;
-
-
+    
     <div id="usagehistory-grid"></div>
 
     <script>
@@ -471,15 +469,13 @@
                         // Cancel the changes
                         this.cancelChanges();
                     },
+                    pageSize: @(gridPageSize),
                     serverPaging: true,
                     serverFiltering: true,
                     serverSorting: true
                 },
                 pageable: {
-                    refresh: true,
-                    numeric: false,
-                    previousNext: false,
-                    info: false
+                    refresh: true
                 },
                 editable: {
                     confirmation: false,
