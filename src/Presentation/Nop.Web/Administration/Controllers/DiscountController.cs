@@ -391,7 +391,7 @@ namespace Nop.Admin.Controllers
 
         #region Discount usage history
         
-        [HttpPost, GridAction(EnableCustomBinding = true)]
+        [HttpPost]
         public ActionResult UsageHistoryList(int discountId, GridCommand command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
@@ -403,7 +403,7 @@ namespace Nop.Admin.Controllers
 
             var duh = _discountService.GetAllDiscountUsageHistory(discount.Id, null, null, command.Page - 1, command.PageSize);
             
-            var model = new GridModel<DiscountModel.DiscountUsageHistoryModel>
+            var model = new DataSourceResult
             {
                 Data = duh.Select(x =>
                 {
@@ -423,8 +423,8 @@ namespace Nop.Admin.Controllers
             };
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult UsageHistoryDelete(int discountId, int id, GridCommand command)
+        [HttpPost]
+        public ActionResult UsageHistoryDelete(int discountId, int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
@@ -436,7 +436,7 @@ namespace Nop.Admin.Controllers
             var duh = _discountService.GetDiscountUsageHistoryById(id);
             if (duh != null)
                 _discountService.DeleteDiscountUsageHistory(duh);
-            return UsageHistoryList(discountId, command);
+            return Json(null);
         }
 
         #endregion
