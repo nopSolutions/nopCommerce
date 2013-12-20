@@ -12,6 +12,7 @@ using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
 using Telerik.Web.Mvc;
 
@@ -130,14 +131,14 @@ namespace Nop.Admin.Controllers
 			return View();
 		}
 
-		[HttpPost, GridAction(EnableCustomBinding = true)]
-		public ActionResult List(GridCommand command)
+		[HttpPost]
+        public ActionResult List(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
 
 			var languages = _languageService.GetAllLanguages(true);
-			var gridModel = new GridModel<LanguageModel>
+			var gridModel = new DataSourceResult
 			{
 				Data = languages.Select(x => x.ToModel()),
 				Total = languages.Count()

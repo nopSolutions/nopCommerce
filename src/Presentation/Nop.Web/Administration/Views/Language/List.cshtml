@@ -1,5 +1,4 @@
-﻿@using Telerik.Web.Mvc.UI
-@{
+﻿@{
     //page title
     ViewBag.Title = T("Admin.Configuration.Languages").Text;
 }
@@ -15,43 +14,76 @@
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<LanguageModel>()
-                    .Name("languages-grid")
-                    .Columns(columns =>
-                    {
-                        columns.Bound(x => x.Name);
-                        columns.Bound(x => x.LanguageCulture)
-                            .Width(150)
-                            .Centered();
-                        columns.Template(
-                                @<div>
-                                    @Html.ActionLink(T("Admin.Configuration.Languages.Resources.View").Text, "Resources", new { languageId = item.Id })
-                                </div>
-                            )
-                            .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/Language/Resources") + "?languageId=<#= Id #>\">" + T("Admin.Configuration.Languages.Resources.View").Text + "</a>")
-                            .Width(200)
-                            .Centered()
-                            .Title(T("Admin.Configuration.Languages.Resources.View").Text);
-                        columns.Bound(x => x.DisplayOrder)
-                            .Width(100)
-                            .Centered();
-                        columns.Bound(x => x.Published)
-                            .Template(
-                                @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.Published.ToString().ToLowerInvariant() + ".gif")" />
-                            )
-                            .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= Published #>.gif' />")
-                            .Centered()
-                            .Width(100);
-                        columns.Bound(x => x.Id)
-                            .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
-                            .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
-                            .Width(50)
-                            .Centered()
-                            .HeaderTemplate(T("Admin.Common.Edit").Text)
-                            .Filterable(false);
-                    })
-                    .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "Language"))
-                    .EnableCustomBinding(true))
+            <div id="languages-grid"></div>
+
+            <script>
+                $(document).ready(function () {
+                    $("#languages-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("List", "Language"))",
+                                    type: "POST",
+                                    dataType: "json"
+                                },
+                                contentType: "application/json"
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors"
+                            },
+                            error: function(e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true,
+                            numeric: false,
+                            previousNext: false,
+                            info: false
+                        },
+                        editable: {
+                            confirmation: false,
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [{
+                            field: "Name",
+                            title: "@T("Admin.Configuration.Languages.Fields.Name")"
+                        }, {
+                            field: "LanguageCulture",
+                            title: "@T("Admin.Configuration.Languages.Fields.LanguageCulture")",
+                            width: 200
+                        },{
+                            field: "Id",
+                            title: "@T("Admin.Configuration.Languages.Resources.View")",
+                            template: '<a href="@Url.Content("~/Admin/Language/Resources")?languageId=#=Id#">@T("Admin.Configuration.Languages.Resources.View")</a>',
+                            width: 200
+                        },{
+                            field: "DisplayOrder",
+                            title: "@T("Admin.Configuration.Languages.Fields.DisplayOrder")",
+                            width: 100
+                        }, {
+                            field: "Published",
+                            title: "@T("Admin.Configuration.Languages.Fields.Published")",
+                            width: 100,
+                            template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Published#.gif" />'
+                        },{
+                            field: "Id",
+                            title: "@T("Admin.Common.Edit")",
+                            width: 100,
+                            template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
+                        }]
+                    });
+                });
+            </script>
         </td>
     </tr>
 </table>
