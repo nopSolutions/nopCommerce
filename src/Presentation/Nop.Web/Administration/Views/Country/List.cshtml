@@ -25,7 +25,7 @@
                             type: "json",
                             transport: {
                                 read: {
-                                    url: "@Url.Action("CountryList", "Country")",
+                                    url: "@Html.Raw(Url.Action("CountryList", "Country"))",
                                     type: "POST",
                                     dataType: "json"
                                 },

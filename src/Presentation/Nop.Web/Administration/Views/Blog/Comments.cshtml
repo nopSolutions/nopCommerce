@@ -42,7 +42,7 @@
                                     dataType: "json"
                                 },
                                 destroy: {
-                                    url: "@Url.Action("CommentDelete", "Blog")",
+                                    url: "@Html.Raw(Url.Action("CommentDelete", "Blog"))",
                                     type: "POST",
                                     dataType: "json"
                                 },

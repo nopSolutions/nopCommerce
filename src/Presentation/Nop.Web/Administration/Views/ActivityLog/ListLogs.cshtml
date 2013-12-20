@@ -60,13 +60,13 @@
                                 type: "json",
                                 transport: {
                                     read: {
-                                        url: "@Url.Action("ListLogs", "ActivityLog")",
+                                        url: "@Html.Raw(Url.Action("ListLogs", "ActivityLog"))",
                                         type: "POST",
                                         dataType: "json",
                                         data: additionalData
                                     },
                                     destroy: {
-                                        url: "@Url.Action("AcivityLogDelete", "ActivityLog")",
+                                        url: "@Html.Raw(Url.Action("AcivityLogDelete", "ActivityLog"))",
                                         type: "POST",
                                         dataType: "json"
                                     },
@@ -112,7 +112,7 @@
                                 field: "CustomerId",
                                 title: "@T("Admin.Configuration.ActivityLog.ActivityLog.Fields.Customer")",
                                 width: 100,
-                                template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=Id#">#:CustomerEmail#</a>'
+                                template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerEmail#</a>'
                             }, {
                                 field: "Comment",
                                 title: "@T("Admin.Configuration.ActivityLog.ActivityLog.Fields.Comment")"

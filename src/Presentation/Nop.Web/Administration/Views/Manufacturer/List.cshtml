@@ -43,7 +43,7 @@
                             type: "json",
                             transport: {
                                 read: {
-                                    url: "@Url.Action("List", "Manufacturer")",
+                                    url: "@Html.Raw(Url.Action("List", "Manufacturer"))",
                                     type: "POST",
                                     dataType: "json",
                                     data: additionalData
@@ -114,7 +114,7 @@
                     });
                 });
 
-                function additionalData(e) {
+                function additionalData() {
                     return {
                         SearchManufacturerName: $('#@Html.FieldIdFor(model => model.SearchManufacturerName)').val()
                     };

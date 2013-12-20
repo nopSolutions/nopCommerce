@@ -297,17 +297,17 @@
                                         type: "json",
                                         transport: {
                                             read: {
-                                                url: "@Url.Action("ProductList", "Category", new { categoryId = Model.Id })",
+                                                url: "@Html.Raw(Url.Action("ProductList", "Category", new { categoryId = Model.Id }))",
                                                 type: "POST",
                                                 dataType: "json"
                                             },
                                             update: {
-                                                url:"@Url.Action("ProductUpdate", "Category")",
+                                                url:"@Html.Raw(Url.Action("ProductUpdate", "Category"))",
                                                 type: "POST",
                                                 dataType: "json"
                                             },
                                             destroy: {
-                                                url: "@Url.Action("ProductDelete", "Category")",
+                                                url: "@Html.Raw(Url.Action("ProductDelete", "Category"))",
                                                 type: "POST",
                                                 dataType: "json"
                                             },

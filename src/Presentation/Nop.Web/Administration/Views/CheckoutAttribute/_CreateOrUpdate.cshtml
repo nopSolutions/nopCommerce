@@ -161,12 +161,12 @@
                                         type: "json",
                                         transport: {
                                             read: {
-                                                url: "@Url.Action("ValueList", "CheckoutAttribute", new { checkoutAttributeId = Model.Id })",
+                                                url: "@Html.Raw(Url.Action("ValueList", "CheckoutAttribute", new { checkoutAttributeId = Model.Id }))",
                                                 type: "POST",
                                                 dataType: "json"
                                             },
                                             destroy: {
-                                                url: "@Url.Action("ValueDelete", "CheckoutAttribute")",
+                                                url: "@Html.Raw(Url.Action("ValueDelete", "CheckoutAttribute"))",
                                                 type: "POST",
                                                 dataType: "json"
                                             },

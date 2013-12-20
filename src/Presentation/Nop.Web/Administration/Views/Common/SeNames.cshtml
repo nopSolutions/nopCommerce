@@ -43,7 +43,7 @@
                                 type: "json",
                                 transport: {
                                     read: {
-                                        url: "@Url.Action("SeNames", "Common")",
+                                        url: "@Html.Raw(Url.Action("SeNames", "Common"))",
                                         type: "POST",
                                         dataType: "json",
                                         data: additionalData
@@ -194,7 +194,7 @@
             });
         });
 
-        function additionalData(e) {
+        function additionalData() {
             return {
                 SeName: $('#@Html.FieldIdFor(model => model.SeName)').val()
         };

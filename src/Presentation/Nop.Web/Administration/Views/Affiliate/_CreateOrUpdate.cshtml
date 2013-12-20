@@ -68,7 +68,7 @@
                 type: "json",
                 transport: {
                     read: {
-                        url: "@Url.Action("AffiliatedCustomerList", "Affiliate", new { affiliateId = Model.Id })",
+                        url: "@Html.Raw(Url.Action("AffiliatedCustomerList", "Affiliate", new { affiliateId = Model.Id }))",
                         type: "POST",
                         dataType: "json"
                     },
@@ -128,7 +128,7 @@
                     type: "json",
                     transport: {
                         read: {
-                            url: "@Url.Action("AffiliatedOrderList", "Affiliate", new { affiliateId = Model.Id })",
+                            url: "@Html.Raw(Url.Action("AffiliatedOrderList", "Affiliate", new { affiliateId = Model.Id }))",
                             type: "POST",
                             dataType: "json"
                         },

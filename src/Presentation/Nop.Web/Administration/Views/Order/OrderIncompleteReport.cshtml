@@ -9,7 +9,7 @@
                             type: "json",
                             transport: {
                                 read: {
-                                    url: "@Url.Action("OrderIncompleteReportList", "Order")",
+                                    url: "@Html.Raw(Url.Action("OrderIncompleteReportList", "Order"))",
                                     type: "POST",
                                     dataType: "json"
                                 },

@@ -138,12 +138,12 @@
                                         type: "json",
                                         transport: {
                                             read: {
-                                                url: "@Url.Action("States", "Country", new { countryId = Model.Id })",
+                                                url: "@Html.Raw(Url.Action("States", "Country", new { countryId = Model.Id }))",
                                                 type: "POST",
                                                 dataType: "json"
                                             },
                                             destroy: {
-                                                url: "@Url.Action("StateDelete", "Country")",
+                                                url: "@Html.Raw(Url.Action("StateDelete", "Country"))",
                                                 type: "POST",
                                                 dataType: "json"
                                             },

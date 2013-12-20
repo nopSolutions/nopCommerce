@@ -98,7 +98,7 @@
                                 type: "json",
                                 transport: {
                                     read: {
-                                        url: "@Url.Action("ProductAddPopupList", "Manufacturer")",
+                                        url: "@Html.Raw(Url.Action("ProductAddPopupList", "Manufacturer"))",
                                         type: "POST",
                                         dataType: "json",
                                         data: additionalData
@@ -165,7 +165,7 @@
                         }
                     });
 
-                    function additionalData(e) {
+                    function additionalData() {
                         return {
                             SearchProductName: $('#@Html.FieldIdFor(model => model.SearchProductName)').val(),
                             SearchCategoryId: $('#SearchCategoryId').val(),
