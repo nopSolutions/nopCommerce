@@ -1,5 +1,4 @@
-﻿@using Telerik.Web.Mvc.UI
-@{
+﻿@{
     //page title
     ViewBag.Title = T("Admin.Configuration.EmailAccounts").Text;
 }
@@ -15,37 +14,71 @@
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<EmailAccountModel>()
-                    .Name("emailAccounts-grid")
-                    .DataKeys(x =>
-                    {
-                        x.Add(y => y.Id).RouteKey("Id");
-                    })
-                    .Columns(columns =>
-                    {
-                        columns.Bound(x => x.Email);
-                        columns.Bound(x => x.DisplayName)
-                            .Centered();
-                        columns.Bound(x => x.IsDefaultEmailAccount)
-                            .Template(
-                                @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.IsDefaultEmailAccount.ToString().ToLowerInvariant() + ".gif")" />
-                            )
-                            .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= IsDefaultEmailAccount #>.gif' />")
-                            .Centered();
-                        columns.Bound(x => x.Id)
-                            .Template(x => Html.ActionLink(T("Admin.Configuration.EmailAccounts.Fields.MarkAsDefaultEmail").Text, "MarkAsDefaultEmail", new { id = x.Id }, new { @class = "t-button" }))
-                            .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/EmailAccount/MarkAsDefaultEmail/") + "<#= Id #>\" class=\"t-button\">" + T("Admin.Configuration.EmailAccounts.Fields.MarkAsDefaultEmail").Text + "</a>")
-                            .Centered()
-                            .HeaderTemplate(T("Admin.Configuration.EmailAccounts.Fields.MarkAsDefaultEmail").Text);
-                        columns.Bound(x => x.Id)
-                            .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
-                            .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
-                            .Centered()
-                            .HeaderTemplate(T("Admin.Common.Edit").Text)
-                            .Filterable(false);
-                    })
-                    .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "EmailAccount"))
-                    .EnableCustomBinding(true))
+
+            <div id="email-accounts-grid"></div>
+
+            <script>
+                $(document).ready(function () {
+                    $("#email-accounts-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("List", "EmailAccount"))",
+                                    type: "POST",
+                                    dataType: "json"
+                                },
+                                contentType: "application/json"
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors"
+                            },
+                            error: function(e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true,
+                            numeric: false,
+                            previousNext: false,
+                            info: false
+                        },
+                        editable: {
+                            confirmation: false,
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [{
+                            field: "Email",
+                            title: "@T("Admin.Configuration.EmailAccounts.Fields.Email")"
+                        }, {
+                            field: "DisplayName",
+                            title: "@T("Admin.Configuration.EmailAccounts.Fields.DisplayName")"
+                        }, {
+                            field: "IsDefaultEmailAccount",
+                            title: "@T("Admin.Configuration.EmailAccounts.Fields.IsDefaultEmailAccount")",
+                            width: 100,
+                            template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsDefaultEmailAccount#.gif" />'
+                        }, {
+                            field: "Id",
+                            title: "@T("Admin.Configuration.EmailAccounts.Fields.MarkAsDefaultEmail")",
+                            template: '<a href="@Url.Content("~/Admin/EmailAccount/MarkAsDefaultEmail/")#=Id#" class="t-button">@T("Admin.Configuration.EmailAccounts.Fields.MarkAsDefaultEmail")</a>'
+                        }, {
+                            field: "Id",
+                            title: "@T("Admin.Common.Edit")",
+                            width: 100,
+                            template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
+                        }]
+                    });
+                });
+            </script>
         </td>
     </tr>
 </table>
