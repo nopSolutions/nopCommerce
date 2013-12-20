@@ -1,5 +1,4 @@
-﻿@using Telerik.Web.Mvc.UI;
-@{
+﻿@{
     //page title
     ViewBag.Title = T("Admin.Configuration.Measures.Weights").Text;
 }
@@ -17,58 +16,128 @@
     </tr>
     <tr>
         <td>
-            @(Html.Telerik().Grid<MeasureWeightModel>()
-                    .Name("measureweight-grid")
-                    .DataKeys(x =>
-                    {
-                        x.Add(y => y.Id).RouteKey("Id");
-                    })
-                    .Columns(columns =>
-                    {
-                        columns.Bound(x => x.Name).Width(200);
-                        columns.Bound(x => x.SystemKeyword).Width(150);
-                        columns.Bound(x => x.Ratio).Width(100).Format("{0:G29}");
-                        columns.Bound(x => x.DisplayOrder).Width(100);
-                        columns.Bound(x => x.IsPrimaryWeight)
-                            .Template(
-                                @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.IsPrimaryWeight.ToString().ToLowerInvariant() + ".gif")" />
-                            )
-                            .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= IsPrimaryWeight #>.gif' />")
-                            .Centered()
-                            .Width(100)
-                            .ReadOnly();
-                        columns.Bound(x => x.Id)
-                            .Template(x => Html.ActionLink(T("Admin.Configuration.Measures.Weights.Fields.MarkAsPrimaryWeight").Text, "MarkAsPrimaryWeight", new { id = x.Id }, new { @class = "t-button" }))
-                            .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/Measure/MarkAsPrimaryWeight/") + "<#= Id #>\" class=\"t-button\">" + T("Admin.Configuration.Measures.Weights.Fields.MarkAsPrimaryWeight").Text + "</a>")
-                            .Centered()
-                            .HeaderTemplate(T("Admin.Configuration.Measures.Weights.Fields.MarkAsPrimaryWeight").Text)
-                            .Width(100)
-                            .ReadOnly();
-                        columns.Command(commands =>
-                        {
-                            commands.Edit().Text(T("Admin.Common.Edit").Text);
-                            commands.Delete().Text(T("Admin.Common.Delete").Text);
-                        }).Width(180);
+            <div id="measureweight-grid"></div>
 
-                    })
-                    .ToolBar(x => x.Insert())
-                    .Editable(x =>
-                    {
-                        x.Mode(GridEditMode.InLine);
-                    })
-                    .DataBinding(dataBinding =>
-                    {
-                        dataBinding.Ajax().Select("Weights", "Measure")
-                            .Update("WeightUpdate", "Measure")
-                            .Delete("WeightDelete", "Measure")
-                            .Insert("WeightAdd", "Measure");
-                    })
-                    .ClientEvents(x => x.OnError("grid_onError"))
-                    .EnableCustomBinding(true))
-            <script type="text/javascript">
-                function grid_onError(e) {
-                    alert(e.XMLHttpRequest.responseText);
-                    e.preventDefault();
+            <script>
+                $(document).ready(function () {
+                    $("#measureweight-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("Weights", "Measure"))",
+                                    type: "POST",
+                                    dataType: "json"
+                                },
+                                create: {
+                                    url: "@Url.Action("WeightAdd", "Measure")",
+                                    type: "POST",
+                                    dataType: "json"
+                                },
+                                update: {
+                                    url:"@Html.Raw(Url.Action("WeightUpdate", "Measure"))",
+                                    type: "POST",
+                                    dataType: "json"
+                                },
+                                destroy: {
+                                    url: "@Html.Raw(Url.Action("WeightDelete", "Measure"))",
+                                    type: "POST",
+                                    dataType: "json"
+                                },
+                                contentType: "application/json"
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors",
+                                model: {
+                                    id: "Id",
+                                    fields: {
+                                        Name: { editable: true, type: "string" },
+                                        SystemKeyword: { editable: true, type: "string" },
+                                        Ratio: { editable: true, type: "number" },
+                                        DisplayOrder: { editable: true, type: "number" },
+                                        IsPrimaryWeight: { editable: false, type: "boolean" },
+                                        Id: { editable: false }
+                                    }
+                                }
+                            },
+                            requestEnd: function (e) {
+                                if (e.type == "create" || e.type == "update") {
+                                    this.read();
+                                }
+                            },
+                            error: function (e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true,
+                            numeric: false,
+                            previousNext: false,
+                            info: false
+                        },
+                        toolbar: ["create"],
+                        editable: {
+                            confirmation: false,
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [{
+                            field: "Name",
+                            title: "@T("Admin.Configuration.Measures.Weights.Fields.Name")",
+                            width: 300
+                        }, {
+                            field: "SystemKeyword",
+                            title: "@T("Admin.Configuration.Measures.Weights.Fields.SystemKeyword")",
+                            width: 200
+                        }, {
+                            field: "Ratio",
+                            title: "@T("Admin.Configuration.Measures.Weights.Fields.Ratio")",
+                            width: 200,
+                            editor: number8Editor,
+                        }, {
+                            field: "DisplayOrder",
+                            title: "@T("Admin.Configuration.Measures.Weights.Fields.DisplayOrder")",
+                            //integer format
+                            format: "{0:0}",
+                            width: 100
+                        }, {
+                            field: "IsPrimaryWeight",
+                            title: "@T("Admin.Configuration.Measures.Weights.Fields.IsPrimaryWeight")",
+                            width: 100,
+                            template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsPrimaryWeight#.gif" />'
+                        }, {
+                            field: "Id",
+                            title: "@T("Admin.Configuration.Measures.Weights.Fields.MarkAsPrimaryWeight")",
+                            width: 150,
+                            template: '<a href="@Url.Content("~/Admin/Measure/MarkAsPrimaryWeight/")#=Id#" class="t-button">@T("Admin.Configuration.Measures.Weights.Fields.MarkAsPrimaryWeight")</a>'
+                        }, {
+                            command: [{
+                                name: "edit", 
+                                text: "@T("Admin.Common.Edit")"
+                            }, {
+                                name: "destroy", 
+                                text: "@T("Admin.Common.Delete")"
+                            }],
+                            width: 200
+                        }]
+                    });
+                });
+
+                function number8Editor(container, options) {
+                    $('<input name="' + options.field + '"/>')
+                            .appendTo(container)
+                            .kendoNumericTextBox({
+                                format: "{0:n8}",
+                                decimals: 8,
+                                step: 0.00000001
+                            });
                 }
             </script>
         </td>

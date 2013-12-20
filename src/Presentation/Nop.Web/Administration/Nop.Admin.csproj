@@ -976,9 +976,6 @@
     <Content Include="Views\OnlineCustomer\List.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Measure\EditorTemplates\Decimal8.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\ExternalAuthentication\ConfigureMethod.cshtml" />
   </ItemGroup>
   <ItemGroup>
