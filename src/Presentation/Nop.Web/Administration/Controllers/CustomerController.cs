@@ -37,7 +37,6 @@ using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
-using Telerik.Web.Mvc;
 
 namespace Nop.Admin.Controllers
 {
@@ -342,7 +341,7 @@ namespace Nop.Admin.Controllers
                 loadOnlyWithShoppingCart: false,
                 pageIndex: command.Page - 1,
                 pageSize: command.PageSize);
-            var gridModel = new GridModel<CustomerModel>
+            var gridModel = new DataSourceResult
             {
                 Data = customers.Select(PrepareCustomerModelForList),
                 Total = customers.TotalCount
