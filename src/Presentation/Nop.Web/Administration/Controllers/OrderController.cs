@@ -1781,8 +1781,8 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult AddProductToOrder(GridCommand command, OrderModel.AddOrderProductModel model)
+        [HttpPost]
+        public ActionResult AddProductToOrder(DataSourceRequest command, OrderModel.AddOrderProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -1791,7 +1791,7 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null)
                 return Content("");
 
-            var gridModel = new GridModel();
+            var gridModel = new DataSourceResult();
             var products = _productService.SearchProducts(categoryIds: new List<int>() {model.SearchCategoryId},
                 manufacturerId: model.SearchManufacturerId,
                 productType: model.SearchProductTypeId > 0 ? (ProductType?)model.SearchProductTypeId : null,
@@ -2794,8 +2794,8 @@ namespace Nop.Admin.Controllers
 
         #region Order notes
         
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult OrderNotesSelect(int orderId, GridCommand command)
+        [HttpPost]
+        public ActionResult OrderNotesSelect(int orderId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -2823,7 +2823,7 @@ namespace Nop.Admin.Controllers
                 });
             }
 
-            var model = new GridModel<OrderModel.OrderNote>
+            var model = new DataSourceResult
             {
                 Data = orderNoteModels,
                 Total = orderNoteModels.Count
@@ -2869,9 +2869,9 @@ namespace Nop.Admin.Controllers
 
             return Json(new { Result = true }, JsonRequestBehavior.AllowGet);
         }
-        
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult OrderNoteDelete(int orderId, int orderNoteId, GridCommand command)
+
+        [HttpPost]
+        public ActionResult OrderNoteDelete(int id, int orderId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -2884,12 +2884,12 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null)
                 return RedirectToAction("Edit", "Order", new { id = orderId });
 
-            var orderNote = order.OrderNotes.FirstOrDefault(on => on.Id == orderNoteId);
+            var orderNote = order.OrderNotes.FirstOrDefault(on => on.Id == id);
             if (orderNote == null)
                 throw new ArgumentException("No order note found with the specified id");
             _orderService.DeleteOrderNote(orderNote);
 
-            return OrderNotesSelect(orderId, command);
+            return Json(null);
         }
 
         #endregion
@@ -3010,8 +3010,8 @@ namespace Nop.Admin.Controllers
 
             return View(model);
         }
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult BestsellersReportList(GridCommand command, BestsellersReportModel model)
+        [HttpPost]
+        public ActionResult BestsellersReportList(DataSourceRequest command, BestsellersReportModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return Content("");
@@ -3043,7 +3043,7 @@ namespace Nop.Admin.Controllers
                 pageIndex: command.Page - 1,
                 pageSize: command.PageSize,
                 showHidden: true);
-            var gridModel = new GridModel<BestsellersReportLineModel>
+            var gridModel = new DataSourceResult
             {
                 Data = items.Select(x =>
                 {
@@ -3076,8 +3076,8 @@ namespace Nop.Admin.Controllers
             var model = new NeverSoldReportModel();
             return View(model);
         }
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult NeverSoldReportList(GridCommand command, NeverSoldReportModel model)
+        [HttpPost]
+        public ActionResult NeverSoldReportList(DataSourceRequest command, NeverSoldReportModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return Content("");
@@ -3096,7 +3096,7 @@ namespace Nop.Admin.Controllers
             var items = _orderReportService.ProductsNeverSold(vendorId,
                 startDateValue, endDateValue,
                 command.Page - 1, command.PageSize, true);
-            var gridModel = new GridModel<NeverSoldReportLineModel>
+            var gridModel = new DataSourceResult
             {
                 Data = items.Select(x =>
                     new NeverSoldReportLineModel()
