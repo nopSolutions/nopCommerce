@@ -21,6 +21,7 @@ using Nop.Services.Shipping;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Kendoui;
 using Telerik.Web.Mvc;
 
 namespace Nop.Admin.Controllers
@@ -211,7 +212,8 @@ namespace Nop.Admin.Controllers
             return View();
         }
 
-        public ActionResult ListSelect(GridCommand command)
+        [HttpPost]
+        public ActionResult ListSelect(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();

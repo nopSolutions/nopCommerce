@@ -1,5 +1,4 @@
-﻿@using Telerik.Web.Mvc.UI
-@{    
+﻿@{    
     //page title
     ViewBag.Title = T("Admin.Configuration.Plugins").Text;
 }
@@ -43,40 +42,81 @@
         </tr>
         <tr>
             <td>
-                @(Html.Telerik().Grid<PluginModel>()
-                    .Name("plugins-grid")
-                    .DataKeys(keys =>
-                    {
-                        keys.Add(x => x.SystemName);
-                    })
-                    .Columns(columns =>
-                    {
-                        columns.Bound(x => x.Group);
-                        columns.Bound(x => x.LogoUrl)
-                            .ClientTemplate("<img alt='' src='<#= LogoUrl #>' />")
-                            .Centered()
-                            .Width(150);
-                        columns.Bound(x => x.FriendlyName)
-                            .ClientTemplate("<b><#= FriendlyName #></b>" +
-                                " <br />" + T("Admin.Configuration.Plugins.Fields.Version").Text + ": <#= Version #>" +
-                                " <br />" + T("Admin.Configuration.Plugins.Fields.Author").Text + ": <#= Author #>" +
-                                " <br />" + T("Admin.Configuration.Plugins.Fields.SystemName").Text + ": <#= SystemName #>" +
-                                " <br />" + T("Admin.Configuration.Plugins.Fields.DisplayOrder").Text + ": <#= DisplayOrder #>" +
-                                " <br />" + T("Admin.Configuration.Plugins.Fields.Installed").Text + ": <img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= Installed #>.gif' />" +
-                                "<# if (CanChangeEnabled)  { #><br />" + T("Admin.Configuration.Plugins.Fields.IsEnabled").Text + ": <img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= IsEnabled #>.gif' /><# } #>" +
-                                //allow configuration only when a plugin has a configuration URL specified
-                                " <br />" + "<# if (ConfigurationUrl && ConfigurationUrl.length > 0)  { #> <a class=\"plugin-button plugin-button-configure\" href=\"<#= ConfigurationUrl #>\">" + T("Admin.Configuration.Plugins.Fields.Configure").Text + "</a>&nbsp;&nbsp;&nbsp;<# } else { #>  <# } #>" +
-                                "<a class=\"plugin-button plugin-button-edit\" href=\"" + "javascript:OpenWindow('" + @Url.Content("~/Admin/Plugin/EditPopup") + "?systemName=<#= SystemName #>&btnId=btnRefresh&formId=plugins-form', 800, 300, true);\" >" + T("Admin.Common.Edit").Text + "</a>")
-                             .Title(T("Admin.Configuration.Plugins.Info").Text);
-                        columns.Bound(x => x.Installed)
-                            .ClientTemplate("<# if (Installed)  { #> <a href=\"" + @Url.Content("~/Admin/Plugin/Uninstall/") + "?systemName=<#= SystemName #>\" class=\"plugin-button uninstall-plugin-link\">" + T("Admin.Configuration.Plugins.Fields.Uninstall").Text + "</a> <# } else { #> <a href=\"" + @Url.Content("~/Admin/Plugin/Install/") + "?systemName=<#= SystemName #>\" class=\"plugin-button install-plugin-link\">" + T("Admin.Configuration.Plugins.Fields.Install").Text + "</a> <# } #>")
-                            .Centered()
-                            .Title(T("Admin.Configuration.Plugins.Fields.Installation").Text);
-                    })
-                    .DataBinding(dataBinding =>
-                        dataBinding.Ajax()
-                        .Select("ListSelect", "Plugin")
-                    ))
+                <div id="plugins-grid"></div>
+
+                <script>
+                    $(document).ready(function() {
+                        $("#plugins-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("ListSelect", "Plugin"))",
+                                        type: "POST",
+                                        dataType: "json"
+                                    },
+                                    contentType: "application/json"
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors"
+                                },
+                                error: function(e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true,
+                                numeric: false,
+                                previousNext: false,
+                                info: false
+                            },
+                            editable: {
+                                confirmation: false,
+                                mode: "inline"
+                            },
+                            scrollable: false,
+                            columns: [
+                                {
+                                    field: "Group",
+                                    title: "@T("Admin.Configuration.Plugins.Fields.Group")"
+                                }, {
+                                    field: "LogoUrl",
+                                    title: "@T("Admin.Configuration.Plugins.Fields.Logo")",
+                                    width: 100,
+                                    template: '<img src="#=LogoUrl#" />',
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" }
+                                }, {
+                                    field: "FriendlyName",
+                                    title: "@T("Admin.Configuration.Plugins.Info")",
+                                    template: '<b>#:FriendlyName#</b>' +
+                                        '<br />@T("Admin.Configuration.Plugins.Fields.Version"): #:Version#' +
+                                        '<br />@T("Admin.Configuration.Plugins.Fields.Author"): #:Author#' +
+                                        '<br />@T("Admin.Configuration.Plugins.Fields.SystemName"): #:SystemName#' +
+                                        '<br />@T("Admin.Configuration.Plugins.Fields.DisplayOrder"): #:DisplayOrder#' +
+                                        '<br />@T("Admin.Configuration.Plugins.Fields.Installed"): <img src="@Url.Content("~/Administration/Content/images/")active-#=Installed#.gif" />' +
+                                        '# if(CanChangeEnabled) {# <br />@T("Admin.Configuration.Plugins.Fields.IsEnabled"): <img src="@Url.Content("~/Administration/Content/images/")active-#=IsEnabled#.gif" /> #} #' +
+                                        //allow configuration only when a plugin has a configuration URL specified
+                                        '<br /># if(ConfigurationUrl && ConfigurationUrl.length > 0) {# <a class="plugin-button plugin-button-configure" href="#=ConfigurationUrl#">@T("Admin.Configuration.Plugins.Fields.Configure")</a>&nbsp;&nbsp;&nbsp; #} #' +
+                                        '<a class="plugin-button plugin-button-edit" href="javascript:OpenWindow(\'@Url.Content("~/Admin/Plugin/EditPopup")?systemName=#=SystemName#&btnId=btnRefresh&formId=plugins-form\', 800, 300, true);">@T("Admin.Common.Edit")</a>'
+                                }, {
+                                    field: "Installed",
+                                    title: "@T("Admin.Configuration.Plugins.Fields.Installation")",
+                                    template: '# if(Installed) {# <a href="@Url.Content("~/Admin/Plugin/Uninstall/")?systemName=#=SystemName#" class="plugin-button uninstall-plugin-link">@T("Admin.Configuration.Plugins.Fields.Uninstall")<a/> #} else {#  <a href="@Url.Content("~/Admin/Plugin/Install/")?systemName=#=SystemName#" class="plugin-button install-plugin-link">@T("Admin.Configuration.Plugins.Fields.Install")<a/> #} #',
+                                    headerAttributes: {style: "text-align:center" },
+                                    attributes: { style: "text-align:center" }
+                                }
+                            ]
+                        });
+                    });
+                </script>
             </td>
         </tr>
         <tr>
@@ -86,8 +126,9 @@
                     $(document).ready(function () {
                         $('#btnRefresh').click(function () {
                             //refresh grid
-                            var optionsGrid = $("#plugins-grid");
-                            optionsGrid.data('tGrid').ajaxRequest();
+                            var grid = $("#plugins-grid").data('kendoGrid');
+                            //grid.dataSource.page(1); //new search. Set page size to 1
+                            grid.dataSource.read();
 
                             //return false to don't reload a page
                             return false;
