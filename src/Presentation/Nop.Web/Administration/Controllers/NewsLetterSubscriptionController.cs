@@ -11,7 +11,7 @@ using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
-using Telerik.Web.Mvc;
+using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Admin.Controllers
 {
@@ -48,8 +48,8 @@ namespace Nop.Admin.Controllers
 			return View(model);
 		}
 
-		[HttpPost, GridAction(EnableCustomBinding = true)]
-		public ActionResult SubscriptionList(GridCommand command, NewsLetterSubscriptionListModel model)
+		[HttpPost]
+		public ActionResult SubscriptionList(DataSourceRequest command, NewsLetterSubscriptionListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNewsletterSubscribers))
                 return AccessDeniedView();
@@ -57,7 +57,7 @@ namespace Nop.Admin.Controllers
             var newsletterSubscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(model.SearchEmail, 
                 command.Page - 1, command.PageSize, true);
 
-            var gridModel = new GridModel<NewsLetterSubscriptionModel>
+            var gridModel = new DataSourceResult
             {
                 Data = newsletterSubscriptions.Select(x =>
 				{
@@ -73,17 +73,15 @@ namespace Nop.Admin.Controllers
             };
 		}
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult SubscriptionUpdate(NewsLetterSubscriptionModel model, GridCommand command)
+        [HttpPost]
+        public ActionResult SubscriptionUpdate([Bind(Exclude = "CreatedOn")] NewsLetterSubscriptionModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNewsletterSubscribers))
                 return AccessDeniedView();
-            
+
             if (!ModelState.IsValid)
             {
-                //display the first model error
-                var modelStateErrors = this.ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage);
-                return Content(modelStateErrors.FirstOrDefault());
+                return Json(new DataSourceResult() { Errors = ModelState.SerializeErrors() });
             }
 
             var subscription = _newsLetterSubscriptionService.GetNewsLetterSubscriptionById(model.Id);
@@ -91,11 +89,11 @@ namespace Nop.Admin.Controllers
             subscription.Active = model.Active;
             _newsLetterSubscriptionService.UpdateNewsLetterSubscription(subscription);
 
-            return SubscriptionList(command, new NewsLetterSubscriptionListModel());
+            return Json(null);
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult SubscriptionDelete(int id, GridCommand command)
+        [HttpPost]
+        public ActionResult SubscriptionDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNewsletterSubscribers))
                 return AccessDeniedView();
@@ -105,7 +103,7 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentException("No subscription found with the specified id");
             _newsLetterSubscriptionService.DeleteNewsLetterSubscription(subscription);
 
-            return SubscriptionList(command, new NewsLetterSubscriptionListModel());
+            return Json(null);
         }
 
 		public ActionResult ExportCsv(NewsLetterSubscriptionListModel model)
