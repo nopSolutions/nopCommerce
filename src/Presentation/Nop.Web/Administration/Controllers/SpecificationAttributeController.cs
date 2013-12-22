@@ -8,6 +8,7 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Kendoui;
 using Telerik.Web.Mvc;
 
 namespace Nop.Admin.Controllers
@@ -91,15 +92,15 @@ namespace Nop.Admin.Controllers
             return View();
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult List(GridCommand command)
+        [HttpPost]
+        public ActionResult List(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
             var specificationAttributes = _specificationAttributeService
                 .GetSpecificationAttributes(command.Page - 1, command.PageSize);
-            var gridModel = new GridModel<SpecificationAttributeModel>
+            var gridModel = new DataSourceResult
             {
                 Data = specificationAttributes.Select(x => x.ToModel()),
                 Total = specificationAttributes.TotalCount

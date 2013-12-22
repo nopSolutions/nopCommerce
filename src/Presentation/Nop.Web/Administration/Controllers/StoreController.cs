@@ -8,7 +8,7 @@ using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Web.Framework.Controllers;
-using Telerik.Web.Mvc;
+using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Admin.Controllers
 {
@@ -57,8 +57,8 @@ namespace Nop.Admin.Controllers
             return View();
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult List(GridCommand command)
+        [HttpPost]
+        public ActionResult List(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageStores))
                 return AccessDeniedView();
@@ -67,7 +67,7 @@ namespace Nop.Admin.Controllers
                 .Select(x => x.ToModel())
                 .ToList();
 
-            var gridModel = new GridModel<StoreModel>
+            var gridModel = new DataSourceResult
             {
                 Data = storeModels,
                 Total = storeModels.Count()
