@@ -9,7 +9,7 @@ using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Web.Framework.Controllers;
-using Telerik.Web.Mvc;
+using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Admin.Controllers
 {
@@ -168,14 +168,14 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult List(GridCommand command, MessageTemplateListModel model)
+        [HttpPost]
+        public ActionResult List(DataSourceRequest command, MessageTemplateListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageTemplates))
                 return AccessDeniedView();
 
             var messageTemplates = _messageTemplateService.GetAllMessageTemplates(model.SearchStoreId);
-            var gridModel = new GridModel<MessageTemplateModel>
+            var gridModel = new DataSourceResult
             {
                 Data = messageTemplates.Select(x =>
                 {
