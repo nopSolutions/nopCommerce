@@ -14,6 +14,7 @@ using Nop.Services.Payments;
 using Nop.Services.Security;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Kendoui;
 using Telerik.Web.Mvc;
 
 namespace Nop.Admin.Controllers
@@ -67,8 +68,8 @@ namespace Nop.Admin.Controllers
             return View();
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult Methods(GridCommand command)
+        [HttpPost]
+        public ActionResult Methods(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
                 return AccessDeniedView();
@@ -82,16 +83,71 @@ namespace Nop.Admin.Controllers
                 tmp1.LogoUrl = paymentMethod.PluginDescriptor.GetLogoUrl(_webHelper);
                 paymentMethodsModel.Add(tmp1);
             }
-            paymentMethodsModel = paymentMethodsModel.ForCommand(command).ToList();
-            var gridModel = new GridModel<PaymentMethodModel>
+            paymentMethodsModel = paymentMethodsModel.ToList();
+            var gridModel = new DataSourceResult
             {
                 Data = paymentMethodsModel,
-                Total = paymentMethodsModel.Count()
+                Total = paymentMethodsModel.Count
             };
             return new JsonResult
             {
                 Data = gridModel
             };
+        }
+
+        [HttpPost]
+        public ActionResult MethodUpdate([Bind(Exclude = "ConfigurationRouteValues")] PaymentMethodModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
+                return AccessDeniedView();
+
+            var pm = _paymentService.LoadPaymentMethodBySystemName(model.SystemName);
+            if (pm.IsPaymentMethodActive(_paymentSettings))
+            {
+                if (!model.IsActive)
+                {
+                    //mark as disabled
+                    _paymentSettings.ActivePaymentMethodSystemNames.Remove(pm.PluginDescriptor.SystemName);
+                    _settingService.SaveSetting(_paymentSettings);
+                }
+            }
+            else
+            {
+                if (model.IsActive)
+                {
+                    //mark as active
+                    _paymentSettings.ActivePaymentMethodSystemNames.Add(pm.PluginDescriptor.SystemName);
+                    _settingService.SaveSetting(_paymentSettings);
+                }
+            }
+            var pluginDescriptor = pm.PluginDescriptor;
+            pluginDescriptor.FriendlyName = model.FriendlyName;
+            pluginDescriptor.DisplayOrder = model.DisplayOrder;
+            PluginFileParser.SavePluginDescriptionFile(pluginDescriptor);
+            //reset plugin cache
+            _pluginFinder.ReloadPlugins();
+            
+            return Json(null);
+        }
+
+        public ActionResult ConfigureMethod(string systemName)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
+                return AccessDeniedView();
+
+            var pm = _paymentService.LoadPaymentMethodBySystemName(systemName);
+            if (pm == null)
+                //No payment method found with the specified id
+                return RedirectToAction("Methods");
+
+            var model = pm.ToModel();
+            string actionName, controllerName;
+            RouteValueDictionary routeValues;
+            pm.GetConfigurationRoute(out actionName, out controllerName, out routeValues);
+            model.ConfigurationActionName = actionName;
+            model.ConfigurationControllerName = controllerName;
+            model.ConfigurationRouteValues = routeValues;
+            return View(model);
         }
 
         public ActionResult MethodRestrictions()
@@ -154,62 +210,6 @@ namespace Nop.Admin.Controllers
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Payment.MethodRestrictions.Updated"));
             return RedirectToAction("MethodRestrictions");
-        }
-
-
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult MethodUpdate(PaymentMethodModel model, GridCommand command)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
-                return AccessDeniedView();
-
-            var pm = _paymentService.LoadPaymentMethodBySystemName(model.SystemName);
-            if (pm.IsPaymentMethodActive(_paymentSettings))
-            {
-                if (!model.IsActive)
-                {
-                    //mark as disabled
-                    _paymentSettings.ActivePaymentMethodSystemNames.Remove(pm.PluginDescriptor.SystemName);
-                    _settingService.SaveSetting(_paymentSettings);
-                }
-            }
-            else
-            {
-                if (model.IsActive)
-                {
-                    //mark as active
-                    _paymentSettings.ActivePaymentMethodSystemNames.Add(pm.PluginDescriptor.SystemName);
-                    _settingService.SaveSetting(_paymentSettings);
-                }
-            }
-            var pluginDescriptor = pm.PluginDescriptor;
-            pluginDescriptor.FriendlyName = model.FriendlyName;
-            pluginDescriptor.DisplayOrder = model.DisplayOrder;
-            PluginFileParser.SavePluginDescriptionFile(pluginDescriptor);
-            //reset plugin cache
-            _pluginFinder.ReloadPlugins();
-            
-            return Methods(command);
-        }
-
-        public ActionResult ConfigureMethod(string systemName)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
-                return AccessDeniedView();
-
-            var pm = _paymentService.LoadPaymentMethodBySystemName(systemName);
-            if (pm == null)
-                //No payment method found with the specified id
-                return RedirectToAction("Methods");
-
-            var model = pm.ToModel();
-            string actionName, controllerName;
-            RouteValueDictionary routeValues;
-            pm.GetConfigurationRoute(out actionName, out controllerName, out routeValues);
-            model.ConfigurationActionName = actionName;
-            model.ConfigurationControllerName = controllerName;
-            model.ConfigurationRouteValues = routeValues;
-            return View(model);
         }
 
         #endregion
