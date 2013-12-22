@@ -13,7 +13,7 @@ using Nop.Services.Seo;
 using Nop.Services.Stores;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
-using Telerik.Web.Mvc;
+using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Admin.Controllers
 {
@@ -128,14 +128,14 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult List(GridCommand command, NewsItemListModel model)
+        [HttpPost]
+        public ActionResult List(DataSourceRequest command, NewsItemListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
                 return AccessDeniedView();
 
             var news = _newsService.GetAllNews(0, model.SearchStoreId, command.Page - 1, command.PageSize, true);
-            var gridModel = new GridModel<NewsItemModel>
+            var gridModel = new DataSourceResult
             {
                 Data = news.Select(x =>
                 {
@@ -300,8 +300,8 @@ namespace Nop.Admin.Controllers
             return View();
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult Comments(int? filterByNewsItemId, GridCommand command)
+        [HttpPost]
+        public ActionResult Comments(int? filterByNewsItemId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
                 return AccessDeniedView();
@@ -319,7 +319,7 @@ namespace Nop.Admin.Controllers
                 comments = _newsService.GetAllComments(0);
             }
 
-            var gridModel = new GridModel<NewsCommentModel>
+            var gridModel = new DataSourceResult
             {
                 Data = comments.PagedForCommand(command).Select(newsComment =>
                 {
@@ -343,8 +343,8 @@ namespace Nop.Admin.Controllers
             };
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult CommentDelete(int? filterByNewsItemId, int id, GridCommand command)
+        [HttpPost]
+        public ActionResult CommentDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
                 return AccessDeniedView();
@@ -359,7 +359,7 @@ namespace Nop.Admin.Controllers
             newsItem.CommentCount = newsItem.NewsComments.Count;
             _newsService.UpdateNews(newsItem);
 
-            return Comments(filterByNewsItemId, command);
+            return Json(null);
         }
 
 
