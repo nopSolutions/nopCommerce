@@ -2984,8 +2984,8 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult ProductAttributeValueList(int productVariantAttributeId, GridCommand command)
+        [HttpPost]
+        public ActionResult ProductAttributeValueList(int productVariantAttributeId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -3003,7 +3003,7 @@ namespace Nop.Admin.Controllers
                 return Content("This is not your product");
 
             var values = _productAttributeService.GetProductVariantAttributeValues(productVariantAttributeId);
-            var gridModel = new GridModel<ProductModel.ProductVariantAttributeValueModel>
+            var gridModel = new DataSourceResult
             {
                 Data = values.Select(x =>
                 {
@@ -3323,13 +3323,13 @@ namespace Nop.Admin.Controllers
         }
 
         //delete
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult ProductAttributeValueDelete(int pvavId, int productVariantAttributeId, GridCommand command)
+        [HttpPost]
+        public ActionResult ProductAttributeValueDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            var pvav = _productAttributeService.GetProductVariantAttributeValueById(pvavId);
+            var pvav = _productAttributeService.GetProductVariantAttributeValueById(id);
             if (pvav == null)
                 throw new ArgumentException("No product variant attribute value found with the specified id");
 
@@ -3343,7 +3343,7 @@ namespace Nop.Admin.Controllers
 
             _productAttributeService.DeleteProductVariantAttributeValue(pvav);
 
-            return ProductAttributeValueList(productVariantAttributeId, command);
+            return Json(null);
         }
 
 
@@ -3386,8 +3386,8 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult AssociateProductToAttributeValuePopupList(GridCommand command,
+        [HttpPost]
+        public ActionResult AssociateProductToAttributeValuePopupList(DataSourceRequest command,
             ProductModel.ProductVariantAttributeValueModel.AssociateProductToAttributeValueModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
@@ -3410,7 +3410,7 @@ namespace Nop.Admin.Controllers
                 pageSize: command.PageSize,
                 showHidden: true
                 );
-            var gridModel = new GridModel();
+            var gridModel = new DataSourceResult();
             gridModel.Data = products.Select(x => x.ToModel());
             gridModel.Total = products.TotalCount;
             return new JsonResult
