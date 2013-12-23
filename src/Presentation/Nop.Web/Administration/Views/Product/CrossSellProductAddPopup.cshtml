@@ -8,7 +8,6 @@
     //page title
     ViewBag.Title = T("Admin.Catalog.Products.CrossSells.AddNew").Text;
 }
-@using Telerik.Web.Mvc.UI;
 @using (Html.BeginForm())
 {
     <div class="section-header">
@@ -88,32 +87,65 @@
     <table class="adminContent">
         <tr>
             <td>
-                @(Html.Telerik().Grid<ProductModel>()
-                    .Name("products-grid")
-                    .Columns(columns =>
-                    {
-                        columns.Bound(x => x.Id)
-                        .Template(
-                                @<text>
-                <input name="SelectedProductIds" type="checkbox" value="@item.Id " />
-                </text>
-                        )
-                        .ClientTemplate("<input type='checkbox' name='SelectedProductIds' value='<#= Id #>' />")
-                        .Title(T("Admin.Common.Check").Text)
-                        .Width(50);
-                        columns.Bound(x => x.Name);
-                        columns.Bound(x => x.Published)
-                            .Template(
-                                @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.Published.ToString().ToLowerInvariant() + ".gif")" />
-                            )
-                            .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= Published #>.gif' />")
-                            .Centered()
-                            .Width(100);
-                    })
-                    .Pageable(settings => settings.PageSize(gridPageSize).Position(GridPagerPosition.Both))
-                    .DataBinding(dataBinding => dataBinding.Ajax().Select("CrossSellProductAddPopupList", "Product"))
-                    .ClientEvents(events => events.OnDataBinding("onDataBinding"))
-                    .EnableCustomBinding(true))
+                <div id="products-grid"></div>
+
+                <script>
+                    $(document).ready(function () {
+                        $("#products-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("CrossSellProductAddPopupList", "Product"))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: additionalData
+                                    },
+                                    contentType: "application/json"
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors"
+                                },
+                                error: function(e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                pageSize: @(gridPageSize),
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true
+                            },
+                            editable: {
+                                confirmation: false,
+                                mode: "inline"
+                            },
+                            scrollable: false,
+                            columns: [{
+                                field: "Id",
+                                title: "@T("Admin.Common.Check")",
+                                template: "<input type='checkbox' name='SelectedProductIds' value='#=Id#' />",
+                                attributes: {
+                                    style: "text-align:center"
+                                },
+                                width: 50
+                            }, {
+                                field: "Name",
+                                title: "@T("Admin.Catalog.Products.Fields.Name")"
+                            }, {
+                                field: "Published",
+                                title: "@T("Admin.Catalog.Products.Fields.Published")",
+                                width: 100,
+                                template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Published#.gif" />'
+                            }]
+                        });
+                    });
+                </script>
             </td>
         </tr>
         <tr>
@@ -126,9 +158,9 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $('#search-products').click(function () {
-                var grid = $('#products-grid').data('tGrid');
-                grid.currentPage = 1; //new search. Set page size to 1
-                grid.ajaxRequest();
+                var grid = $('#products-grid').data('kendoGrid');
+                grid.dataSource.page(1); //new search. Set page size to 1
+                grid.dataSource.read();
                 return false;
             });
         });
@@ -140,8 +172,8 @@
             }
         });
 
-        function onDataBinding(e) {
-            var searchModel = {
+        function additionalData() {
+            return {
                 SearchProductName: $('#@Html.FieldIdFor(model => model.SearchProductName)').val(),
                 SearchCategoryId: $('#SearchCategoryId').val(),
                 SearchManufacturerId: $('#SearchManufacturerId').val(),
@@ -149,7 +181,6 @@
                 SearchVendorId: $('#SearchVendorId').val(),
                 SearchProductTypeId: $('#SearchProductTypeId').val()
             };
-            e.data = searchModel;
         }
     </script>
 }

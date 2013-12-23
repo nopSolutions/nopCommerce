@@ -1465,8 +1465,8 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult RelatedProductAddPopupList(GridCommand command, ProductModel.AddRelatedProductModel model)
+        [HttpPost]
+        public ActionResult RelatedProductAddPopupList(DataSourceRequest command, ProductModel.AddRelatedProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -1488,7 +1488,7 @@ namespace Nop.Admin.Controllers
                 pageSize: command.PageSize,
                 showHidden: true
                 );
-            var gridModel = new GridModel();
+            var gridModel = new DataSourceResult();
             gridModel.Data = products.Select(x => x.ToModel());
             gridModel.Total = products.TotalCount;
             return new JsonResult
@@ -1647,8 +1647,8 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult CrossSellProductAddPopupList(GridCommand command, ProductModel.AddCrossSellProductModel model)
+        [HttpPost]
+        public ActionResult CrossSellProductAddPopupList(DataSourceRequest command, ProductModel.AddCrossSellProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -1670,7 +1670,7 @@ namespace Nop.Admin.Controllers
                 pageSize: command.PageSize,
                 showHidden: true
                 );
-            var gridModel = new GridModel();
+            var gridModel = new DataSourceResult();
             gridModel.Data = products.Select(x => x.ToModel());
             gridModel.Total = products.TotalCount;
             return new JsonResult
@@ -1853,8 +1853,8 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult AssociatedProductAddPopupList(GridCommand command, ProductModel.AddAssociatedProductModel model)
+        [HttpPost]
+        public ActionResult AssociatedProductAddPopupList(DataSourceRequest command, ProductModel.AddAssociatedProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -1876,7 +1876,7 @@ namespace Nop.Admin.Controllers
                 pageSize: command.PageSize,
                 showHidden: true
                 );
-            var gridModel = new GridModel();
+            var gridModel = new DataSourceResult();
             gridModel.Data = products.Select(x => x.ToModel());
             gridModel.Total = products.TotalCount;
             return new JsonResult
