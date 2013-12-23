@@ -120,25 +120,73 @@
     <table class="adminContent">
         <tr>
             <td>
-                @(Html.Telerik().Grid<RecurringPaymentModel.RecurringPaymentHistoryModel>(Model.History)
-                    .Name("history-grid")
-                    .Columns(columns =>
-                    {
-                        columns.Bound(x => x.OrderId)
-                            .Width(100)
-                            .Template(x => Html.ActionLink(T("Admin.Common.View").Text, "Edit", "Order", new { id = x.OrderId }, new { }))
-                            .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/Order/Edit/") + "<#= OrderId #>\">" + T("Admin.Common.View").Text + "</a>");
-                        columns.Bound(x => x.OrderStatus).Width(200);
-                        columns.Bound(x => x.PaymentStatus).Width(200);
-                        columns.Bound(x => x.ShippingStatus).Width(200);
-                        columns.Bound(x => x.CreatedOn).Width(200);
+                <div id="history-grid"></div>
 
-                    })
-                    .DataBinding(dataBinding =>
-                    {
-                        dataBinding.Ajax().Select("HistoryList", "RecurringPayment", new { recurringPaymentId = Model.Id });
-                    })
-                    .EnableCustomBinding(true))
+                <script>
+                    $(document).ready(function () {
+                        $("#history-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("HistoryList", "RecurringPayment", new { recurringPaymentId = Model.Id }))",
+                                        type: "POST",
+                                        dataType: "json"
+                                    },
+                                    contentType: "application/json"
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors"
+                                },
+                                error: function(e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true,
+                                numeric: false,
+                                previousNext: false,
+                                info: false
+                            },
+                            editable: {
+                                confirmation: false,
+                                mode: "inline"
+                            },
+                            scrollable: false,
+                            columns: [{
+                                field: "OrderId",
+                                title: "@T("Admin.RecurringPayments.History.Order")",
+                                width: 200,
+                                template: '<a href="@Url.Content("~/Admin/Order/Edit/")#=OrderId#">#=OrderId# - @T("Admin.Common.View")</a>'
+                            }, {
+                                field: "OrderStatus",
+                                title: "@T("Admin.RecurringPayments.History.OrderStatus")",
+                                width: 200
+                            }, {
+                                field: "PaymentStatus",
+                                title: "@T("Admin.RecurringPayments.History.PaymentStatus")",
+                                width: 200
+                            }, {
+                                field: "ShippingStatus",
+                                title: "@T("Admin.RecurringPayments.History.ShippingStatus")",
+                                width: 200
+                            }, {
+                                field: "CreatedOn",
+                                title: "@T("Admin.RecurringPayments.History.CreatedOn")",
+                                width: 200,
+                                type: "date",
+                                format: "{0:G}"
+                            }]
+                        });
+                    });
+                </script>
             </td>
         </tr>
     </table>

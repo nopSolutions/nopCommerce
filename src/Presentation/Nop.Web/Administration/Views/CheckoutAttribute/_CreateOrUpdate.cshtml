@@ -243,8 +243,8 @@
                             $(document).ready(function () {
                                 $('#btnRefresh').click(function () {
                                     //refresh grid
-                                    var valuesGrid = $("#checkoutattributevalues-grid");
-                                    valuesGrid.data('kendoGrid').dataSource.read();
+                                    var valuesGrid = $("#checkoutattributevalues-grid").data('kendoGrid');
+                                    valuesGrid.dataSource.read();
 
                                     //return false to don't reload a page
                                     return false;

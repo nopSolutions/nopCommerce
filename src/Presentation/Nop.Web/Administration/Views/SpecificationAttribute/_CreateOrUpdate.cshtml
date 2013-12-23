@@ -67,41 +67,78 @@
             <table class="adminContent">
                 <tr>
                     <td>
-                        @(Html.Telerik().Grid<SpecificationAttributeOptionModel>()
-                        .Name("specificationattributeoptions-grid")
-                            .DataKeys(x =>
-                            {
-                                x.Add(y => y.Id).RouteKey("optionId");
-                                x.Add(y => y.SpecificationAttributeId).RouteKey("specificationAttributeId");
-                            })
-                            .Columns(columns =>
-                            {
-                                columns.Bound(x => x.Name)
-                                    .Width(300);
-                                    //TODO display localized values here
-                                columns.Bound(x => x.DisplayOrder)
-                                    .Width(100)
-                                    .Centered();
-                                columns.Bound(x => x.NumberOfAssociatedProducts)
-                                    .Width(100)
-                                    .ReadOnly()
-                                    .Centered();
-                                columns.Bound(x => x.Id)
-                                    .Width(50)
-                                    .Centered()
-                                    .ClientTemplate("<input type='submit' value='" + @T("Admin.Common.Edit").Text + "' onclick=\"" + "javascript:OpenWindow('" + @Url.Content("~/Admin/SpecificationAttribute/OptionEditPopup/") + "<#= Id #>?btnId=btnRefresh&formId=specificationattribute-form', 800, 250, true); return false;\" class='t-button' />")
-                                    .Title(T("Admin.Common.Edit").Text);
-                                columns.Command(commands =>
-                                {
-                                    commands.Delete().Text(T("Admin.Common.Delete").Text);
-                                })
-                                .Width(50)
-                                .Title(T("Admin.Common.Delete").Text);
-                            })
-                            .DataBinding(dataBinding => 
-                                dataBinding.Ajax().Select("OptionList", "SpecificationAttribute", new { specificationAttributeId = Model.Id })
-                                .Delete("OptionDelete", "SpecificationAttribute"))
-                            .EnableCustomBinding(true))
+                        <div id="specificationattributeoptions-grid"></div>
+
+                        <script>
+                            $(document).ready(function () {
+                                $("#specificationattributeoptions-grid").kendoGrid({
+                                    dataSource: {
+                                        type: "json",
+                                        transport: {
+                                            read: {
+                                                url: "@Html.Raw(Url.Action("OptionList", "SpecificationAttribute", new { specificationAttributeId = Model.Id }))",
+                                                type: "POST",
+                                                dataType: "json"
+                                            },
+                                            destroy: {
+                                                url: "@Html.Raw(Url.Action("OptionDelete", "SpecificationAttribute"))",
+                                                type: "POST",
+                                                dataType: "json"
+                                            },
+                                            contentType: "application/json"
+                                        },
+                                        schema: {
+                                            data: "Data",
+                                            total: "Total",
+                                            errors: "Errors",
+                                            model: {
+                                                id: "Id"
+                                            }
+                                        },
+                                        error: function(e) {
+                                            display_kendoui_grid_error(e);
+                                            // Cancel the changes
+                                            this.cancelChanges();
+                                        },
+                                        serverPaging: true,
+                                        serverFiltering: true,
+                                        serverSorting: true
+                                    },
+                                    pageable: {
+                                        refresh: true,
+                                        numeric: false,
+                                        previousNext: false,
+                                        info: false
+                                    },
+                                    editable: {
+                                        confirmation: false,
+                                        mode: "inline"
+                                    },
+                                    scrollable: false,
+                                    columns: [{
+                                        //TODO display localized values here
+                                        field: "Name",
+                                        title: "@T("Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.Name")"
+                                    }, {
+                                        field: "DisplayOrder",
+                                        title: "@T("Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.DisplayOrder")",
+                                        width: 100
+                                    }, {
+                                        field: "NumberOfAssociatedProducts",
+                                        title: "@T("Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.NumberOfAssociatedProducts")"
+                                    }, {
+                                        field: "Id",
+                                        title: "@T("Admin.Common.Edit")",
+                                        width: 100,
+                                        template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/SpecificationAttribute/OptionEditPopup/")#=Id#?btnId=btnRefresh&formId=specificationattribute-form', 800, 250, true); return false;\" class='t-button' />"
+                                    }, {
+                                        command: {name: "destroy", text: "@T("Admin.Common.Delete")"},
+                                        title: "@T("Admin.Common.Delete")",
+                                        width: 100
+                                    }]
+                                });
+                            });
+                        </script>
                     </td>
                 </tr>
                 <tr>
@@ -112,8 +149,8 @@
                             $(document).ready(function () {
                                 $('#btnRefresh').click(function () {
                                     //refresh grid
-                                    var optionsGrid = $("#specificationattributeoptions-grid");
-                                    optionsGrid.data('tGrid').ajaxRequest();
+                                    var valuesGrid = $("#specificationattributeoptions-grid").data('kendoGrid');
+                                    valuesGrid.dataSource.read();
 
                                     //return false to don't reload a page
                                     return false;
