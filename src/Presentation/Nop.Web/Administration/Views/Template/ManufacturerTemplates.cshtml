@@ -1,5 +1,4 @@
-﻿@using Telerik.Web.Mvc.UI;
-@{
+﻿@{
     //page title
     ViewBag.Title = T("Admin.System.Templates.Manufacturer").Text;
 }
@@ -12,43 +11,102 @@
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<ManufacturerTemplateModel>()
-                    .Name("templates-grid")
-                    .DataKeys(x =>
-                    {
-                        x.Add(y => y.Id).RouteKey("Id");
-                    })
-                    .Columns(columns =>
-                    {
-                        columns.Bound(x => x.Name);
-                        columns.Bound(x => x.ViewPath);
-                        columns.Bound(x => x.DisplayOrder);
-                        columns.Command(commands =>
-                        {
-                            commands.Edit().Text(T("Admin.Common.Edit").Text);
-                            commands.Delete().Text(T("Admin.Common.Delete").Text);
-                        }).Width(200);
+            <div id="templates-grid"></div>
 
-                    })
-                    .ToolBar(x => x.Insert())
-                    .Editable(x =>
-                    {
-                        x.Mode(GridEditMode.InLine);
-                    })
-                    .DataBinding(dataBinding =>
-                    {
-                        dataBinding.Ajax().Select("ManufacturerTemplates", "Template")
-                            .Update("ManufacturerTemplateUpdate", "Template")
-                            .Delete("ManufacturerTemplateDelete", "Template")
-                            .Insert("ManufacturerTemplateAdd", "Template");
-                    })
-                    .ClientEvents(x => x.OnError("grid_onError"))
-                    .EnableCustomBinding(true))
-            <script type="text/javascript">
-                function grid_onError(e) {
-                    alert(e.XMLHttpRequest.responseText);
-                    e.preventDefault();
-                }
+            <script>
+                $(document).ready(function () {
+                    $("#templates-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("ManufacturerTemplates", "Template"))",
+                                    type: "POST",
+                                    dataType: "json"
+                                },
+                                create: {
+                                    url: "@Url.Action("ManufacturerTemplateAdd", "Template")",
+                                    type: "POST",
+                                    dataType: "json"
+                                },
+                                update: {
+                                    url:"@Html.Raw(Url.Action("ManufacturerTemplateUpdate", "Template"))",
+                                    type: "POST",
+                                    dataType: "json"
+                                },
+                                destroy: {
+                                    url: "@Html.Raw(Url.Action("ManufacturerTemplateDelete", "Template"))",
+                                    type: "POST",
+                                    dataType: "json"
+                                },
+                                contentType: "application/json"
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors",
+                                model: {
+                                    id: "Id",
+                                    fields: {
+                                        Name: { editable: true, type: "string" },
+                                        ViewPath: { editable: true, type: "string" },
+                                        DisplayOrder: { editable: true, type: "number" },
+                                        Id: { editable: false }
+                                    }
+                                }
+                            },
+                            requestEnd: function (e) {
+                                if (e.type == "create" || e.type == "update") {
+                                    this.read();
+                                }
+                            },
+                            error: function (e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true,
+                            numeric: false,
+                            previousNext: false,
+                            info: false
+                        },
+                        toolbar: ["create"],
+                        editable: {
+                            confirmation: false,
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [{
+                            field: "Name",
+                            title: "@T("Admin.System.Templates.Manufacturer.Name")",
+                            width: 300
+                        }, {
+                            field: "ViewPath",
+                            title: "@T("Admin.System.Templates.Manufacturer.ViewPath")",
+                            width: 300
+                        }, {
+                            field: "DisplayOrder",
+                            title: "@T("Admin.System.Templates.Manufacturer.DisplayOrder")",
+                            //integer format
+                            format: "{0:0}",
+                            width: 100
+                        }, {
+                            command: [{
+                                name: "edit",
+                                text: "@T("Admin.Common.Edit")"
+                            }, {
+                                name: "destroy",
+                                text: "@T("Admin.Common.Delete")"
+                            }],
+                            width: 200
+                        }]
+                    });
+                });
             </script>
         </td>
     </tr>
