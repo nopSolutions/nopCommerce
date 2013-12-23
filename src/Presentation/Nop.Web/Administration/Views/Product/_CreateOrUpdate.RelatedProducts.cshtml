@@ -1,6 +1,5 @@
 ﻿@model ProductModel
 
-@using Telerik.Web.Mvc.UI;
 
     @if (Model.Id > 0)
     {
@@ -8,37 +7,96 @@
     <table class="adminContent">
         <tr>
             <td>
-                @(Html.Telerik().Grid<ProductModel.RelatedProductModel>()
-                .Name("relatedproducts-grid")
-                    .DataKeys(keys =>
-                    {
-                        keys.Add(x => x.Id);
-                    })
-                    .DataBinding(dataBinding =>
-                    {
-                        dataBinding.Ajax()
-                            .Select("RelatedProductList", "Product", new { productId = Model.Id })
-                            .Update("RelatedProductUpdate", "Product")
-                            .Delete("RelatedProductDelete", "Product");
-                    })
-                    .Columns(columns =>
-                    {
-                        columns.Bound(x => x.Product2Name)
-                            .ReadOnly();
-                        columns.Bound(x => x.DisplayOrder)
-                            .Centered();
-                        columns.Bound(x => x.Id)
-                            .Template(x => Html.ActionLink(T("Admin.Common.View").Text, "Edit", "Product", new { id = x.ProductId2 }, new { }))
-                            .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/Product/Edit/") + "<#= ProductId2 #>\">" + T("Admin.Common.View").Text + "</a>")
-                            .Title(T("Admin.Common.View").Text)
-                            .ReadOnly();
-                        columns.Command(commands =>
-                        {
-                            commands.Edit().Text(T("Admin.Common.Edit").Text);
-                            commands.Delete().Text(T("Admin.Common.Delete").Text);
+                <div id="relatedproducts-grid"></div>
+
+                <script>
+                    $(document).ready(function () {
+                        $("#relatedproducts-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("RelatedProductList", "Product", new { productId = Model.Id }))",
+                                        type: "POST",
+                                        dataType: "json"
+                                    },
+                                    update: {
+                                        url:"@Html.Raw(Url.Action("RelatedProductUpdate", "Product"))",
+                                        type: "POST",
+                                        dataType: "json"
+                                    },
+                                    destroy: {
+                                        url: "@Html.Raw(Url.Action("RelatedProductDelete", "Product"))",
+                                        type: "POST",
+                                        dataType: "json"
+                                    },
+                                    contentType: "application/json"
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors",
+                                    model: {
+                                        id: "Id",
+                                        fields: {
+                                            Product2Name: { editable: false, type: "string" },
+                                            DisplayOrder: {editable: true, type: "number" },
+                                            ProductId2: { editable: false, type: "number" }
+                                        }
+                                    }
+                                },
+                                requestEnd: function(e) {
+                                    if(e.type=="update") {
+                                        this.read();
+                                    }
+                                },
+                                error: function(e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true,
+                                numeric: false,
+                                previousNext: false,
+                                info: false
+                            },
+                            editable: {
+                                confirmation: false,
+                                mode: "inline"
+                            },
+                            scrollable: false,
+                            columns: [{
+                                field: "Product2Name",
+                                title: "@T("Admin.Catalog.Products.RelatedProducts.Fields.Product")"
+                            }, {
+                                field: "DisplayOrder",
+                                title: "@T("Admin.Catalog.Products.RelatedProducts.Fields.DisplayOrder")",
+                                //integer format
+                                format: "{0:0}",
+                                width: 150
+                            }, {
+                                field: "ProductId2",
+                                title: "@T("Admin.Common.View")",
+                                width: 100,
+                                template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId2#">@T("Admin.Common.View")</a>'
+                            }, {
+                                command: [{
+                                    name: "edit",
+                                    text: "@T("Admin.Common.Edit")"
+                                }, {
+                                    name: "destroy",
+                                    text: "@T("Admin.Common.Delete")"
+                                }],
+                                width: 200
+                            }]
                         });
-                    })
-                    .EnableCustomBinding(true))
+                    });
+                </script>
             </td>
         </tr>
         <tr>
@@ -49,8 +107,8 @@
                     $(document).ready(function () {
                         $('#btnRefreshRelatedProducts').click(function () {
                             //refresh grid
-                            var optionsGrid = $("#relatedproducts-grid");
-                            optionsGrid.data('tGrid').ajaxRequest();
+                            var optionsGrid = $("#relatedproducts-grid").data('kendoGrid');
+                            optionsGrid.dataSource.read();
 
                             //return false to don't reload a page
                             return false;

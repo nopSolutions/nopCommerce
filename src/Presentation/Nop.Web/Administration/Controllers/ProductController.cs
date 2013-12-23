@@ -1333,8 +1333,8 @@ namespace Nop.Admin.Controllers
 
         #region Related products
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult RelatedProductList(GridCommand command, int productId)
+        [HttpPost]
+        public ActionResult RelatedProductList(DataSourceRequest command, int productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -1364,7 +1364,7 @@ namespace Nop.Admin.Controllers
                 })
                 .ToList();
 
-            var model = new GridModel<ProductModel.RelatedProductModel>
+            var model = new DataSourceResult()
             {
                 Data = relatedProductsModel,
                 Total = relatedProductsModel.Count
@@ -1375,9 +1375,9 @@ namespace Nop.Admin.Controllers
                 Data = model
             };
         }
-        
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult RelatedProductUpdate(GridCommand command, ProductModel.RelatedProductModel model)
+
+        [HttpPost]
+        public ActionResult RelatedProductUpdate(ProductModel.RelatedProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -1399,11 +1399,11 @@ namespace Nop.Admin.Controllers
             relatedProduct.DisplayOrder = model.DisplayOrder;
             _productService.UpdateRelatedProduct(relatedProduct);
 
-            return RelatedProductList(command, relatedProduct.ProductId1);
+            return Json(null);
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult RelatedProductDelete(int id, GridCommand command)
+        [HttpPost]
+        public ActionResult RelatedProductDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -1426,7 +1426,7 @@ namespace Nop.Admin.Controllers
 
             _productService.DeleteRelatedProduct(relatedProduct);
 
-            return RelatedProductList(command, productId);
+            return Json(null);
         }
         
         public ActionResult RelatedProductAddPopup(int productId)
@@ -1542,8 +1542,8 @@ namespace Nop.Admin.Controllers
 
         #region Cross-sell products
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult CrossSellProductList(GridCommand command, int productId)
+        [HttpPost]
+        public ActionResult CrossSellProductList(DataSourceRequest command, int productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -1572,7 +1572,7 @@ namespace Nop.Admin.Controllers
                 })
                 .ToList();
 
-            var model = new GridModel<ProductModel.CrossSellProductModel>
+            var model = new DataSourceResult()
             {
                 Data = crossSellProductsModel,
                 Total = crossSellProductsModel.Count
@@ -1584,8 +1584,8 @@ namespace Nop.Admin.Controllers
             };
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult CrossSellProductDelete(int id, GridCommand command)
+        [HttpPost]
+        public ActionResult CrossSellProductDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -1608,7 +1608,7 @@ namespace Nop.Admin.Controllers
 
             _productService.DeleteCrossSellProduct(crossSellProduct);
 
-            return CrossSellProductList(command, productId);
+            return Json(null);
         }
 
         public ActionResult CrossSellProductAddPopup(int productId)
@@ -1723,8 +1723,8 @@ namespace Nop.Admin.Controllers
 
         #region Associated products
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult AssociatedProductList(GridCommand command, int productId)
+        [HttpPost]
+        public ActionResult AssociatedProductList(DataSourceRequest command, int productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -1761,7 +1761,7 @@ namespace Nop.Admin.Controllers
                 })
                 .ToList();
 
-            var model = new GridModel<ProductModel.AssociatedProductModel>
+            var model = new DataSourceResult
             {
                 Data = associatedProductsModel,
                 Total = associatedProductsModel.Count
@@ -1773,8 +1773,8 @@ namespace Nop.Admin.Controllers
             };
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult AssociatedProductUpdate(GridCommand command, ProductModel.AssociatedProductModel model)
+        [HttpPost]
+        public ActionResult AssociatedProductUpdate(ProductModel.AssociatedProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -1792,11 +1792,11 @@ namespace Nop.Admin.Controllers
             associatedProduct.DisplayOrder = model.DisplayOrder;
             _productService.UpdateProduct(associatedProduct);
 
-            return AssociatedProductList(command, associatedProduct.ParentGroupedProductId);
+            return Json(null);
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult AssociatedProductDelete(int id, GridCommand command)
+        [HttpPost]
+        public ActionResult AssociatedProductDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -1814,7 +1814,7 @@ namespace Nop.Admin.Controllers
             product.ParentGroupedProductId = 0;
             _productService.UpdateProduct(product);
 
-            return AssociatedProductList(command, originalParentGroupedProductId);
+            return Json(null);
         }
 
         public ActionResult AssociatedProductAddPopup(int productId)
@@ -2304,8 +2304,8 @@ namespace Nop.Admin.Controllers
 
         #region Purchased with order
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult PurchasedWithOrders(GridCommand command, int productId)
+        [HttpPost]
+        public ActionResult PurchasedWithOrders(DataSourceRequest command, int productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -2322,7 +2322,7 @@ namespace Nop.Admin.Controllers
                 productId: productId,
                 pageIndex: command.Page - 1, 
                 pageSize: command.PageSize);
-            var gridModel = new GridModel<OrderModel>
+            var gridModel = new DataSourceResult
             {
                 Data = orders.Select(x =>
                 {

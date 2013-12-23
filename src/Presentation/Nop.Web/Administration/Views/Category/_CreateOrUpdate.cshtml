@@ -352,8 +352,6 @@
                                     scrollable: false,
                                     columns: [{
                                         field: "ProductName",
-                                        editable: false,
-                                        type: "string",
                                         title: "@T("Admin.Catalog.Categories.Products.Fields.Product")"
                                     }, {
                                         field: "IsFeaturedProduct",
@@ -393,8 +391,8 @@
                             $(document).ready(function () {
                                 $('#btnRefreshProducts').click(function () {
                                     //refresh grid
-                                    var optionsGrid = $("#products-grid");
-                                    optionsGrid.data('kendoGrid').dataSource.read();
+                                    var optionsGrid = $("#products-grid").data('kendoGrid');
+                                    optionsGrid.dataSource.read();
 
                                     //return false to don't reload a page
                                     return false;
