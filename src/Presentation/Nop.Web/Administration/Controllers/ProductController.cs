@@ -32,6 +32,7 @@ using Nop.Services.Tax;
 using Nop.Services.Vendors;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
 using Telerik.Web.Mvc;
 
@@ -684,8 +685,8 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult ProductList(GridCommand command, ProductListModel model)
+        [HttpPost]
+        public ActionResult ProductList(DataSourceRequest command, ProductListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -713,7 +714,7 @@ namespace Nop.Admin.Controllers
                 pageSize: command.PageSize,
                 showHidden: true
             );
-            var gridModel = new GridModel();
+            var gridModel = new DataSourceResult();
             gridModel.Data = products.Select(x =>
             {
                 var productModel = x.ToModel();
@@ -2522,8 +2523,8 @@ namespace Nop.Admin.Controllers
 
             return View();
         }
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult LowStockReportList(GridCommand command)
+        [HttpPost]
+        public ActionResult LowStockReportList(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -2534,7 +2535,7 @@ namespace Nop.Admin.Controllers
                 vendorId = _workContext.CurrentVendor.Id;
 
             var allVariants = _productService.GetLowStockProducts(vendorId);
-            var model = new GridModel<ProductModel>()
+            var model = new DataSourceResult
             {
                 Data = allVariants.PagedForCommand(command).Select(x => x.ToModel()),
                 Total = allVariants.Count
