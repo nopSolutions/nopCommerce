@@ -9,7 +9,7 @@ using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
-using Telerik.Web.Mvc;
+using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Admin.Controllers
 {
@@ -45,8 +45,8 @@ namespace Nop.Admin.Controllers
             return View(model);
 		}
 
-		[HttpPost, GridAction(EnableCustomBinding = true)]
-		public ActionResult QueuedEmailList(GridCommand command, QueuedEmailListModel model)
+		[HttpPost]
+		public ActionResult QueuedEmailList(DataSourceRequest command, QueuedEmailListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageQueue))
                 return AccessDeniedView();
@@ -61,7 +61,7 @@ namespace Nop.Admin.Controllers
                 startDateValue, endDateValue, 
                 model.SearchLoadNotSent, model.SearchMaxSentTries, true,
                 command.Page - 1, command.PageSize);
-            var gridModel = new GridModel<QueuedEmailModel>
+            var gridModel = new DataSourceResult
             {
                 Data = queuedEmails.Select(x => {
                     var m = x.ToModel();

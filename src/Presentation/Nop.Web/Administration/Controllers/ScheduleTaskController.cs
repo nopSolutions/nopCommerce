@@ -8,7 +8,7 @@ using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Services.Tasks;
 using Nop.Web.Framework.Controllers;
-using Telerik.Web.Mvc;
+using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Admin.Controllers
 {
@@ -74,8 +74,8 @@ namespace Nop.Admin.Controllers
             return View();
 		}
 
-		[HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult List(GridCommand command)
+		[HttpPost]
+        public ActionResult List(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageScheduleTasks))
                 return AccessDeniedView();
@@ -83,7 +83,7 @@ namespace Nop.Admin.Controllers
             var models = _scheduleTaskService.GetAllTasks(true)
                 .Select(PrepareScheduleTaskModel)
                 .ToList();
-            var model = new GridModel<ScheduleTaskModel>
+            var model = new DataSourceResult
             {
                 Data = models,
                 Total = models.Count
@@ -95,8 +95,8 @@ namespace Nop.Admin.Controllers
 			};
 		}
 
-        [GridAction(EnableCustomBinding=true)]
-        public ActionResult TaskUpdate(ScheduleTaskModel model, GridCommand command)
+        [HttpPost]
+        public ActionResult TaskUpdate(ScheduleTaskModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageScheduleTasks))
                 return AccessDeniedView();
@@ -118,7 +118,7 @@ namespace Nop.Admin.Controllers
             scheduleTask.StopOnError = model.StopOnError;
             _scheduleTaskService.UpdateTask(scheduleTask);
             
-            return List(command);
+            return Json(null);
         }
 
         public ActionResult RunNow(int id)
