@@ -17,6 +17,7 @@ using Nop.Services.Security;
 using Nop.Services.Shipping;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Kendoui;
 using Telerik.Web.Mvc;
 
 namespace Nop.Admin.Controllers
@@ -209,17 +210,16 @@ namespace Nop.Admin.Controllers
             return View();
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult Methods(GridCommand command)
+        [HttpPost]
+        public ActionResult Methods(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             var shippingMethodsModel = _shippingService.GetAllShippingMethods()
                 .Select(x => x.ToModel())
-                .ForCommand(command)
                 .ToList();
-            var model = new GridModel<ShippingMethodModel>
+            var model = new DataSourceResult
             {
                 Data = shippingMethodsModel,
                 Total = shippingMethodsModel.Count
@@ -340,17 +340,16 @@ namespace Nop.Admin.Controllers
             return View();
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult DeliveryDates(GridCommand command)
+        [HttpPost]
+        public ActionResult DeliveryDates(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             var deliveryDatesModel = _shippingService.GetAllDeliveryDates()
                 .Select(x => x.ToModel())
-                .ForCommand(command)
                 .ToList();
-            var model = new GridModel<DeliveryDateModel>
+            var model = new DataSourceResult
             {
                 Data = deliveryDatesModel,
                 Total = deliveryDatesModel.Count
@@ -470,8 +469,8 @@ namespace Nop.Admin.Controllers
             return View();
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult Warehouses(GridCommand command)
+        [HttpPost]
+        public ActionResult Warehouses(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
@@ -487,9 +486,8 @@ namespace Nop.Admin.Controllers
                                 };
                                 return warehouseModel;
                             })
-                .ForCommand(command)
                 .ToList();
-            var model = new GridModel<WarehouseModel>
+            var model = new DataSourceResult
             {
                 Data = warehousesModel,
                 Total = warehousesModel.Count

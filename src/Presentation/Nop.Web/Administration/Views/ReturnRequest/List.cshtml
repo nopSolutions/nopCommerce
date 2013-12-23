@@ -1,6 +1,4 @@
-﻿@using Telerik.Web.Mvc.UI
-
-@{
+﻿@{
     var gridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSize;
     
     //page title
@@ -17,43 +15,78 @@
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<ReturnRequestModel>()
-                    .Name("returnrequests-grid")
-                    .Columns(columns =>
-                    {
-                        columns.Bound(x => x.Id)
-                            .Width(50);
-                        columns.Bound(x => x.ProductName)
-                            .Width(200)
-                            .Template(x => Html.ActionLink(x.ProductName, "Edit", "Product", new { id = x.ProductId }, new { }))
-                            .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/Product/Edit/") + "<#= ProductId #>\"><#= ProductName #></a>");
-                        columns.Bound(x => x.Quantity)
-                            .Width(50)
-                            .Centered();
-                        columns.Bound(x => x.CustomerId)
-                            .Width(100)
-                            .Template(x => Html.ActionLink(x.CustomerInfo, "Edit", "Customer", new { id = x.CustomerId }, new { }))
-                            .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/Customer/Edit/") + "<#= CustomerId #>\"><#= CustomerInfo #></a>");
-                        columns.Bound(x => x.OrderId)
-                            .Width(50)
-                            .Template(x => Html.ActionLink(T("Admin.Common.View").Text, "Edit", "Order", new { id = x.OrderId }, new { }))
-                            .ClientTemplate("<a href=\""+ @Url.Content("~/Admin/Order/Edit/") + "<#= OrderId #>\">" + T("Admin.Common.View").Text + "</a>");
-                        columns.Bound(x => x.CreatedOn)
-                            .Width(100)
-                            .Centered();
-                        columns.Bound(x => x.ReturnRequestStatusStr)
-                            .Width(100)
-                            .Centered();
-                        columns.Bound(x => x.Id)
-                            .Width(50)
-                            .Centered()
-                            .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
-                            .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
-                            .Title(T("Admin.Common.Edit").Text);
-                    })
-                    .Pageable(settings => settings.PageSize(gridPageSize).Position(GridPagerPosition.Both))
-                    .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "ReturnRequest"))
-                    .EnableCustomBinding(true))
+            <div id="returnrequests-grid"></div>
+
+            <script>
+                $(document).ready(function() {
+                    $("#returnrequests-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("List", "ReturnRequest"))",
+                                    type: "POST",
+                                    dataType: "json"
+                                },
+                                contentType: "application/json"
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors"
+                            },
+                            error: function(e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            pageSize: @(gridPageSize),
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true
+                        },
+                        editable: {
+                            confirmation: false,
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [
+                            {
+                                field: "Id",
+                                title: "@T("Admin.ReturnRequests.Fields.ID")",
+                                width: 50
+                            }, {
+                                field: "ProductName",
+                                title: "@T("Admin.ReturnRequests.Fields.Product")",
+                                width: 200,
+                                template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">#:ProductName#</a>'
+                            }, {
+                                field: "CustomerId",
+                                title: "@T("Admin.ReturnRequests.Fields.Customer")",
+                                width: 200,
+                                template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerInfo#</a>'
+                            }, {
+                                field: "OrderId",
+                                title: "@T("Admin.ReturnRequests.Fields.Order")",
+                                width: 200,
+                                template: '<a href="@Url.Content("~/Admin/Order/Edit/")#=OrderId#">#=OrderId# - @T("Admin.Common.View")</a>'
+                            }, {
+                                field: "ReturnRequestStatusStr",
+                                title: "@T("Admin.ReturnRequests.Fields.Status")",
+                                width: 100
+                            }, {
+                                field: "Id",
+                                title: "@T("Admin.Common.Edit")",
+                                width: 100,
+                                template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
+                            }
+                        ]
+                    });
+                });
+            </script>
         </td>
     </tr>
 </table>

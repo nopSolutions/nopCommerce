@@ -14,7 +14,7 @@ using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
-using Telerik.Web.Mvc;
+using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Admin.Controllers
 {
@@ -112,8 +112,8 @@ namespace Nop.Admin.Controllers
             return View();
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult List(GridCommand command)
+        [HttpPost]
+        public ActionResult List(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests))
                 return AccessDeniedView();
@@ -126,7 +126,7 @@ namespace Nop.Admin.Controllers
                 if (PrepareReturnRequestModel(m, rr, false))
                     returnRequestModels.Add(m);
             }
-            var gridModel = new GridModel<ReturnRequestModel>
+            var gridModel = new DataSourceResult
             {
                 Data = returnRequestModels,
                 Total = returnRequests.TotalCount,

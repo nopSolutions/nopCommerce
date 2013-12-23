@@ -1,5 +1,4 @@
-﻿@using Telerik.Web.Mvc.UI;
-@{    
+﻿@{    
     //page title
     ViewBag.Title = T("Admin.Configuration.Shipping.Methods").Text;
 }
@@ -15,26 +14,67 @@
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<ShippingMethodModel>()
-                    .Name("shippingmethod-grid")
-                    .DataKeys(x =>
-                    {
-                        x.Add(y => y.Id).RouteKey("Id");
-                    })
-                    .Columns(columns =>
-                    {
-                        columns.Bound(x => x.Name).Width(200);
-                        columns.Bound(x => x.Description).Width(400);
-                        columns.Bound(x => x.DisplayOrder).Width(100);
-                        columns.Bound(x => x.Id)
-                            .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "EditMethod", new { id = x.Id }))
-                            .ClientTemplate("<a href=\"EditMethod/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
-                            .Width(50)
-                            .Centered()
-                            .HeaderTemplate(T("Admin.Common.Edit").Text);
-                    })
-                    .DataBinding(dataBinding => dataBinding.Ajax().Select("Methods", "Shipping"))
-                    .EnableCustomBinding(true))
+            <div id="shippingmethod-grid"></div>
+
+            <script>
+                $(document).ready(function () {
+                    $("#shippingmethod-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("Methods", "Shipping"))",
+                                    type: "POST",
+                                    dataType: "json"
+                                },
+                                contentType: "application/json"
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors"
+                            },
+                            error: function(e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true,
+                            numeric: false,
+                            previousNext: false,
+                            info: false
+                        },
+                        editable: {
+                            confirmation: false,
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [{
+                            field: "Name",
+                            title: "@T("Admin.Configuration.Shipping.Methods.Fields.Name")",
+                            width: 200
+                        }, {
+                            field: "Description",
+                            title: "@T("Admin.Configuration.Shipping.Methods.Fields.Description")",
+                            width: 400
+                        },{
+                            field: "DisplayOrder",
+                            title: "@T("Admin.Configuration.Shipping.Methods.Fields.DisplayOrder")",
+                            width: 100
+                        }, {
+                            field: "Id",
+                            title: "@T("Admin.Common.Edit")",
+                            width: 100,
+                            template: '<a href="EditMethod/#=Id#">@T("Admin.Common.Edit")</a>'
+                        }]
+                    });
+                });
+            </script>
         </td>
     </tr>
 </table>
