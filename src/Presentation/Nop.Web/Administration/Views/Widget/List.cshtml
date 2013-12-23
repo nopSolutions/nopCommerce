@@ -1,5 +1,4 @@
-﻿@using Telerik.Web.Mvc.UI
-@{    
+﻿@{    
     //page title
     ViewBag.Title = T("Admin.ContentManagement.Widgets").Text;
 }
@@ -12,47 +11,97 @@
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<WidgetModel>()
-                    .Name("widgets-grid")
-                    .DataKeys(x =>
-                    {
-                        x.Add(y => y.SystemName).RouteKey("systemName");
-                    })
-                    .Columns(columns =>
-                    {
-                        columns.Bound(x => x.FriendlyName)
-                            .Width(150)
-                            .ReadOnly();
-                        columns.Bound(x => x.SystemName).Width(150).ReadOnly();
-                        columns.Bound(x => x.DisplayOrder)
-                            .Width(100);
-                        columns.Bound(x => x.IsActive)
-                            .Template(
-                                @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.IsActive.ToString().ToLowerInvariant() + ".gif")" />
-                            )
-                            .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= IsActive #>.gif' />")
-                            .Centered()
-                            .Width(100);
-                        columns.Template(
-                                @<div>
-                                    @Html.ActionLink(T("Admin.ContentManagement.Widgets.Configure").Text, "ConfigureWidget", new { systemName = item.SystemName })
-                                </div>
-                            )
-                            .ClientTemplate("<a href=\"ConfigureWidget?systemName=<#= SystemName #>\">" + T("Admin.ContentManagement.Widgets.Configure").Text + "</a>")
-                            .Width(100)
-                            .Centered()
-                            .Title(T("Admin.ContentManagement.Widgets.Configure").Text);
-                        columns.Command(commands =>
-                        {
-                            commands.Edit().Text(T("Admin.Common.Edit").Text);
-                        }).Title(T("Admin.Common.Edit").Text).Width(100);
-                    })
-                    .DataBinding(dataBinding =>
-                    {
-                        dataBinding.Ajax().Select("List", "Widget")
-                            .Update("WidgetUpdate", "Widget");
-                    })
-                    .EnableCustomBinding(true))
+            <div id="widgets-grid"></div>
+
+            <script>
+                $(document).ready(function () {
+                    $("#widgets-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("List", "Widget"))",
+                                    type: "POST",
+                                    dataType: "json"
+                                },
+                                update: {
+                                    url: "@Html.Raw(Url.Action("WidgetUpdate", "Widget"))",
+                                    type: "POST",
+                                    dataType: "json"
+                                },
+                                contentType: "application/json"
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors",
+                                model: {
+                                    id: "SystemName",
+                                    fields: {
+                                        FriendlyName: { editable: false, type: "string" },
+                                        SystemName: { editable: false, type: "string" },
+                                        DisplayOrder: { editable: true, type: "number" },
+                                        IsActive: { editable: true, type: "boolean" }
+                                    }
+                                }
+                            },
+                            requestEnd: function (e) {
+                                if (e.type == "update") {
+                                    this.read();
+                                }
+                            },
+                            error: function (e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true,
+                            numeric: false,
+                            previousNext: false,
+                            info: false
+                        },
+                        editable: {
+                            confirmation: false,
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [{
+                            field: "FriendlyName",
+                            title: "@T("Admin.ContentManagement.Widgets.Fields.FriendlyName")",
+                            width: 250
+                        }, {
+                            field: "SystemName",
+                            title: "@T("Admin.ContentManagement.Widgets.Fields.SystemName")",
+                            width: 250
+                        }, {
+                            field: "DisplayOrder",
+                            title: "@T("Admin.ContentManagement.Widgets.Fields.DisplayOrder")",
+                            //integer format
+                            format: "{0:0}",
+                            width: 100
+                        }, {
+                            field: "IsActive",
+                            title: "@T("Admin.ContentManagement.Widgets.Fields.IsActive")",
+                            width: 100,
+                            template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsActive#.gif" />'
+                        }, {
+                            field: "SystemName",
+                            title: "@T("Admin.ContentManagement.Widgets.Configure")",
+                            width: 150,
+                            template: '<a href="ConfigureWidget?systemName=#=SystemName#">@T("Admin.ContentManagement.Widgets.Configure")</a>'
+                        }, {
+                            command: { name: "edit", text: "@T("Admin.Common.Edit")" },
+                            title: "@T("Admin.Common.Edit")",
+                            width: 150
+                        }]
+                    });
+                });
+            </script>
         </td>
     </tr>
 </table>

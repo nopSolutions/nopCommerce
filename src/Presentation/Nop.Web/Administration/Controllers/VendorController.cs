@@ -8,7 +8,7 @@ using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Services.Vendors;
 using Nop.Web.Framework.Controllers;
-using Telerik.Web.Mvc;
+using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Admin.Controllers
 {
@@ -83,14 +83,14 @@ namespace Nop.Admin.Controllers
             return View();
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult List(GridCommand command)
+        [HttpPost]
+        public ActionResult List(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
                 return AccessDeniedView();
 
             var vendors = _vendorService.GetAllVendors(command.Page - 1, command.PageSize, true);
-            var gridModel = new GridModel<VendorModel>
+            var gridModel = new DataSourceResult
             {
                 Data = vendors.Select(x =>
                 {
