@@ -11,7 +11,7 @@ using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
-using Telerik.Web.Mvc;
+using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Admin.Controllers
 {
@@ -90,8 +90,8 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult List(GridCommand command, ProductReviewListModel model)
+        [HttpPost]
+        public ActionResult List(DataSourceRequest command, ProductReviewListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
                 return AccessDeniedView();
@@ -104,7 +104,7 @@ namespace Nop.Admin.Controllers
 
             var productReviews = _productService.GetAllProductReviews(0, null, 
                 createdOnFromValue, createdToFromValue, model.SearchText);
-            var gridModel = new GridModel<ProductReviewModel>
+            var gridModel = new DataSourceResult
             {
                 Data = productReviews.PagedForCommand(command).Select(x =>
                 {
