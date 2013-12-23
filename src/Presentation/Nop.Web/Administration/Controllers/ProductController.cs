@@ -1949,8 +1949,8 @@ namespace Nop.Admin.Controllers
             return Json(new { Result = true }, JsonRequestBehavior.AllowGet);
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult ProductPictureList(GridCommand command, int productId)
+        [HttpPost]
+        public ActionResult ProductPictureList(DataSourceRequest command, int productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -1980,7 +1980,7 @@ namespace Nop.Admin.Controllers
                 })
                 .ToList();
 
-            var model = new GridModel<ProductModel.ProductPictureModel>
+            var model = new DataSourceResult
             {
                 Data = productPicturesModel,
                 Total = productPicturesModel.Count
@@ -1992,8 +1992,8 @@ namespace Nop.Admin.Controllers
             };
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult ProductPictureUpdate(ProductModel.ProductPictureModel model, GridCommand command)
+        [HttpPost]
+        public ActionResult ProductPictureUpdate(ProductModel.ProductPictureModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -2015,11 +2015,11 @@ namespace Nop.Admin.Controllers
             productPicture.DisplayOrder = model.DisplayOrder;
             _productService.UpdateProductPicture(productPicture);
 
-            return ProductPictureList(command, productPicture.ProductId);
+            return Json(null);
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult ProductPictureDelete(int id, GridCommand command)
+        [HttpPost]
+        public ActionResult ProductPictureDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -2043,8 +2043,8 @@ namespace Nop.Admin.Controllers
             _productService.DeleteProductPicture(productPicture);
             var picture = _pictureService.GetPictureById(pictureId);
             _pictureService.DeletePicture(picture);
-            
-            return ProductPictureList(command, productId);
+
+            return Json(null);
         }
 
         #endregion
