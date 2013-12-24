@@ -1081,9 +1081,6 @@
     <Content Include="Views\Store\List.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Setting\EditorTemplates\Store.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Setting\StoreScopeConfiguration.cshtml" />
   </ItemGroup>
   <ItemGroup>

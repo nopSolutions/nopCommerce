@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web.Mvc;
-using Nop.Admin.Models.Common;
+﻿using Nop.Admin.Models.Common;
 using Nop.Admin.Models.Settings;
 using Nop.Admin.Models.Stores;
 using Nop.Core;
@@ -36,10 +32,14 @@ using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Themes;
 using Nop.Web.Framework.UI.Captcha;
-using Telerik.Web.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web.Mvc;
 
 namespace Nop.Admin.Controllers
 {
@@ -2426,8 +2426,8 @@ namespace Nop.Admin.Controllers
             
             return View();
         }
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult AllSettings(GridCommand command)
+        [HttpPost]
+        public ActionResult AllSettings(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -2456,12 +2456,11 @@ namespace Nop.Admin.Controllers
                                 };
                                 return settingModel;
                             })
-                .ForCommand(command)
                 .ToList();
-            
-            var model = new GridModel<SettingModel>
+
+            var model = new DataSourceResult
             {
-                Data = settings.PagedForCommand(command),
+                Data = settings.PagedForCommand(command).ToList(),
                 Total = settings.Count
             };
             return new JsonResult
@@ -2469,8 +2468,8 @@ namespace Nop.Admin.Controllers
                 Data = model
             };
         }
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult SettingUpdate(SettingModel model, GridCommand command)
+        [HttpPost]
+        public ActionResult SettingUpdate(SettingModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -2482,16 +2481,14 @@ namespace Nop.Admin.Controllers
 
             if (!ModelState.IsValid)
             {
-                //display the first model error
-                var modelStateErrors = this.ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage);
-                return Content(modelStateErrors.FirstOrDefault());
+                return Json(new DataSourceResult() { Errors = ModelState.SerializeErrors() });
             }
 
             var setting = _settingService.GetSettingById(model.Id);
             if (setting == null)
                 return Content("No setting could be loaded with the specified ID");
 
-            var storeId = Int32.Parse(model.Store); //use Store property (not StoreId) because appropriate property is stored in it
+            var storeId = model.StoreId;
 
             if (!setting.Name.Equals(model.Name, StringComparison.InvariantCultureIgnoreCase) ||
                 setting.StoreId != storeId)
@@ -2505,10 +2502,10 @@ namespace Nop.Admin.Controllers
             //activity log
             _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
 
-            return AllSettings(command);
+            return Json(null);
         }
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult SettingAdd([Bind(Exclude = "Id")] SettingModel model, GridCommand command)
+        [HttpPost]
+        public ActionResult SettingAdd([Bind(Exclude = "Id")] SettingModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -2520,20 +2517,18 @@ namespace Nop.Admin.Controllers
 
             if (!ModelState.IsValid)
             {
-                //display the first model error
-                var modelStateErrors = this.ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage);
-                return Content(modelStateErrors.FirstOrDefault());
+                return Json(new DataSourceResult() { Errors = ModelState.SerializeErrors() });
             }
-            var storeId = Int32.Parse(model.Store); //use Store property (not StoreId) because appropriate property is stored in it
+            var storeId = model.StoreId;
             _settingService.SetSetting(model.Name, model.Value, storeId);
 
             //activity log
             _customerActivityService.InsertActivity("AddNewSetting", _localizationService.GetResource("ActivityLog.AddNewSetting"), model.Name);
 
-            return AllSettings(command);
+            return Json(null);
         }
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult SettingDelete(int id, GridCommand command)
+        [HttpPost]
+        public ActionResult SettingDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -2546,7 +2541,7 @@ namespace Nop.Admin.Controllers
             //activity log
             _customerActivityService.InsertActivity("DeleteSetting", _localizationService.GetResource("ActivityLog.DeleteSetting"), setting.Name);
 
-            return AllSettings(command);
+            return Json(null);
         }
 
         #endregion
