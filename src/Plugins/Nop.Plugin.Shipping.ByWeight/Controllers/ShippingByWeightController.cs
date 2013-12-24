@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Directory;
@@ -17,7 +15,7 @@ using Nop.Services.Security;
 using Nop.Services.Shipping;
 using Nop.Services.Stores;
 using Nop.Web.Framework.Controllers;
-using Telerik.Web.Mvc;
+using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Plugin.Shipping.ByWeight.Controllers
 {
@@ -92,8 +90,8 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
             return Json(new { Result = true });
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult RatesList(GridCommand command)
+        [HttpPost]
+        public ActionResult RatesList(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return Content("Access denied");
@@ -149,7 +147,7 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
                     return m;
                 })
                 .ToList();
-            var model = new GridModel<ShippingByWeightModel>
+            var model = new DataSourceResult
             {
                 Data = sbwModel,
                 Total = records.TotalCount
@@ -161,8 +159,8 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
             };
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult RateDelete(int id, GridCommand command)
+        [HttpPost]
+        public ActionResult RateDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return Content("Access denied");
@@ -171,7 +169,7 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
             if (sbw != null)
                 _shippingByWeightService.DeleteShippingByWeightRecord(sbw);
 
-            return RatesList(command);
+            return Json(null);
         }
 
         //add

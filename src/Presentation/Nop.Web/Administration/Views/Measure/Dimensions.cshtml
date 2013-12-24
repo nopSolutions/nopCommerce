@@ -100,7 +100,7 @@
                             field: "Ratio",
                             title: "@T("Admin.Configuration.Measures.Dimensions.Fields.Ratio")",
                             width: 200,
-                            editor: number8Editor,
+                            editor: number8Editor
                         }, {
                             field: "DisplayOrder",
                             title: "@T("Admin.Configuration.Measures.Dimensions.Fields.DisplayOrder")",
@@ -135,8 +135,7 @@
                         .appendTo(container)
                         .kendoNumericTextBox({
                             format: "{0:n8}",
-                            decimals: 8,
-                            step: 0.00000001
+                            decimals: 8
                         });
                 }
             </script>

@@ -1,16 +1,12 @@
 ﻿using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Threading;
 using System.Web.Mvc;
 using Nop.Core;
 using Nop.Plugin.Tax.FixedRate.Models;
 using Nop.Services.Configuration;
 using Nop.Services.Security;
 using Nop.Services.Tax;
-using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
-using Telerik.Web.Mvc;
+using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Plugin.Tax.FixedRate.Controllers
 {
@@ -45,26 +41,25 @@ namespace Nop.Plugin.Tax.FixedRate.Controllers
             return View("Nop.Plugin.Tax.FixedRate.Views.TaxFixedRate.Configure");
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult Configure(GridCommand command)
+        [HttpPost]
+        public ActionResult Configure(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
                 return Content("Access denied");
 
-            var tmp = new List<FixedTaxRateModel>();
+            var taxRateModels = new List<FixedTaxRateModel>();
             foreach (var taxCategory in _taxCategoryService.GetAllTaxCategories())
-                tmp.Add(new FixedTaxRateModel()
+                taxRateModels.Add(new FixedTaxRateModel()
                 {
                     TaxCategoryId = taxCategory.Id,
                     TaxCategoryName = taxCategory.Name,
                     Rate = GetTaxRate(taxCategory.Id)
                 });
 
-            var tmp2 = tmp.ForCommand(command);
-            var gridModel = new GridModel<FixedTaxRateModel>
+            var gridModel = new DataSourceResult
             {
-                Data = tmp2,
-                Total = tmp2.Count()
+                Data = taxRateModels,
+                Total = taxRateModels.Count
             };
             return new JsonResult
             {
@@ -72,8 +67,8 @@ namespace Nop.Plugin.Tax.FixedRate.Controllers
             };
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult TaxRateUpdate(FixedTaxRateModel model, GridCommand command)
+        [HttpPost]
+        public ActionResult TaxRateUpdate(FixedTaxRateModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
                 return Content("Access denied");
@@ -83,7 +78,7 @@ namespace Nop.Plugin.Tax.FixedRate.Controllers
 
             _settingService.SetSetting(string.Format("Tax.TaxProvider.FixedRate.TaxCategoryId{0}", taxCategoryId), rate);
 
-            return Configure(command);
+            return Json(null);
         }
 
         [NonAction]
