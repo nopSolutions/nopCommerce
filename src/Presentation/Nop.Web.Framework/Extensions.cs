@@ -73,11 +73,6 @@ namespace Nop.Web.Framework
             return current.Skip((command.Page - 1) * command.PageSize).Take(command.PageSize);
         }
 
-        public static IQueryable<T> PagedForCommand<T>(this IQueryable<T> current, DataSourceRequest command)
-        {
-            return current.Skip((command.Page - 1) * command.PageSize).Take(command.PageSize);
-        }
-
         public static bool IsEntityFrameworkProvider(this IQueryProvider provider)
         {
             return provider.GetType().FullName == "System.Data.Objects.ELinq.ObjectQueryProvider";
