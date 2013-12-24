@@ -8,6 +8,7 @@ using Nop.Services.Logging;
 using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
+using System.Collections.Generic;
 
 namespace Nop.Admin.Controllers
 {
@@ -52,22 +53,19 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult SaveTypes(FormCollection formCollection)
+        public ActionResult SaveTypes(FormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
                 return AccessDeniedView();
 
-            var keys = formCollection.AllKeys.Where(c => c.StartsWith("checkBox_")).Select(c => c.Substring(9));
-            foreach (var key in keys)
+            string formKey = "checkbox_activity_types";
+            var checkedActivityTypes = form[formKey] != null ? form[formKey].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => Convert.ToInt32(x)).ToList() : new List<int>();
+            
+            var activityTypes = _customerActivityService.GetAllActivityTypes();
+            foreach (var activityType in activityTypes)
             {
-                int id;
-                if (Int32.TryParse(key,out id))
-                {
-                    var activityType = _customerActivityService.GetActivityTypeById(id);
-                    activityType.Enabled = formCollection["checkBox_"+key].Equals("false") ? false : true;
-                    _customerActivityService.UpdateActivityType(activityType);
-                }
-
+                activityType.Enabled = checkedActivityTypes.Contains(activityType.Id);
+                _customerActivityService.UpdateActivityType(activityType);
             }
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.ActivityLog.ActivityLogType.Updated"));
             return RedirectToAction("ListTypes");
