@@ -128,18 +128,75 @@
                     @Html.NopLabelFor(model => model.AssociatedExternalAuthRecords):
                 </td>
                 <td class="adminData">
-                    @(Html.Telerik().Grid<CustomerModel.AssociatedExternalAuthModel>(Model.AssociatedExternalAuthRecords)
-                    .Name("externalauthrecords-grid")
-                    .Columns(columns =>
-                    {
-                        columns.Bound(x => x.AuthMethodName)
-                            .Width(100);
-                        columns.Bound(x => x.Email)
-                             .Width(100);
-                        columns.Bound(x => x.ExternalIdentifier)
-                            .Width(300);
-                    })
-                    .Footer(false))
+
+                    <div id="externalauthrecords-grid"></div>
+
+                    <script>
+
+                        //local datasource
+                        var externalauthrecords = [
+                            @for (int i = 0; i < Model.AssociatedExternalAuthRecords.Count; i++)
+                            {
+                                var aear = Model.AssociatedExternalAuthRecords[i];
+                                <text>
+    {
+        AuthMethodName: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(aear.AuthMethodName)))",
+        Email: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(aear.Email)))",
+    ExternalIdentifier: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(aear.ExternalIdentifier)))"
+    }
+</text>
+                                if (i != Model.AssociatedExternalAuthRecords.Count - 1)
+                                {
+                                    <text>,</text>
+                                }
+                            }
+                        ];
+
+                        $(document).ready(function () {
+                            $("#externalauthrecords-grid").kendoGrid({
+                                dataSource: {
+                                    data: externalauthrecords,
+                                    schema: {
+                                        model: {
+                                            fields: {
+                                                AuthMethodName: { type: "string" },
+                                                Email: { type: "string" },
+                                                ExternalIdentifier: { type: "string" }
+                                            }
+                                        }
+                                    },
+                                    error: function (e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    }
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    numeric: false,
+                                    previousNext: false,
+                                    info: false
+                                },
+                                scrollable: false,
+                                columns: [
+                                    {
+                                        field: "AuthMethodName",
+                                        title: "@T("Admin.Customers.Customers.AssociatedExternalAuth.Fields.AuthMethodName")",
+                                        width: 100
+                                    }, {
+                                        field: "Email",
+                                        title: "@T("Admin.Customers.Customers.AssociatedExternalAuth.Fields.Email")",
+                                        width: 100
+                                    },{
+                                        field: "ExternalIdentifier",
+                                        title: "@T("Admin.Customers.Customers.AssociatedExternalAuth.Fields.ExternalIdentifier")",
+                                        width: 300
+                                    }
+                                ]
+                            });
+                        });
+
+                    </script>
                 </td>
             </tr>
         }
