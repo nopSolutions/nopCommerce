@@ -1,5 +1,4 @@
-﻿@using Telerik.Web.Mvc.UI
-@{
+﻿@{
     List<Nop.Core.Domain.Directory.ExchangeRate> rates = ViewBag.Rates;
     bool autoUpdateEnabled = ViewBag.AutoUpdateEnabled ?? false;
     //page title
@@ -140,31 +139,73 @@
     <table class="adminContent" style="width: 300px">
         <tr>
             <td>
-                @(Html.Telerik().Grid<Nop.Core.Domain.Directory.ExchangeRate>()
-                        .Name("rate-grid")
-                        .DataKeys(x =>
-                        {
-                            x.Add(y => y.CurrencyCode).RouteKey("CurrencyCode");
-                        })
-                        .BindTo(rates)
-                        .Columns(columns =>
-                        {
-                            columns.Bound(x => x.CurrencyCode)
-                                .Centered()
-                                .HeaderTemplate(T("Admin.Configuration.Currencies.Fields.CurrencyCode").Text);
-                            columns.Bound(x => x.Rate)
-                                .Format("{0:G29}")
-                                .Centered()
-                                .HeaderTemplate(T("Admin.Configuration.Currencies.Fields.Rate").Text);
-                            columns.Bound(x => x)
-                                .Template(x => Html.ActionLink(T("Admin.Configuration.Currencies.ApplyRate").Text, "ApplyRate", new { rate = x.Rate, currencyCode = x.CurrencyCode }))
-                                .Centered()
-                                .HeaderTemplate(T("Admin.Configuration.Currencies.ApplyRate").Text)
-                                .Filterable(false);
 
-                        })
-                        .EnableCustomBinding(true)
-                        )
+                <div id="rate-grid"></div>
+
+                <script>
+
+                    //local datasource
+                    var rates = [
+                        @for (int i = 0; i < rates.Count; i++)
+                        {
+                            var rate = rates[i];
+                            <text>
+{
+    CurrencyCode: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(rate.CurrencyCode)))",
+    Rate: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(rate.Rate.ToString())))"
+}
+</text>
+                            if (i != rates.Count - 1)
+                            {
+                                <text>,</text>
+                            }
+                        }
+                    ];
+
+                    $(document).ready(function () {
+                        $("#rate-grid").kendoGrid({
+                            dataSource: {
+                                data: rates,
+                                schema: {
+                                    model: {
+                                        fields: {
+                                            CurrencyCode: { type: "string" },
+                                            Rate: { type: "number" }
+                                        }
+                                    }
+                                },
+                                error: function (e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                }
+                            },
+                            pageable: {
+                                refresh: true,
+                                numeric: false,
+                                previousNext: false,
+                                info: false
+                            },
+                            scrollable: false,
+                            columns: [
+                                {
+                                    field: "CurrencyCode",
+                                    title: "@T("Admin.Configuration.Currencies.Fields.CurrencyCode")",
+                                    width: 100
+                                }, {
+                                    field: "Rate",
+                                    title: "@T("Admin.Configuration.Currencies.Fields.Rate")",
+                                    width: 100
+                                },{
+                                    field: "CurrencyCode",
+                                    title: "@T("Admin.Configuration.Currencies.ApplyRate")",
+                                    template: '<a href="@Url.Action("ApplyRate")?rate=#=Rate#&currencyCode=#=CurrencyCode#">@T("Admin.Configuration.Currencies.ApplyRate")</a>'
+                                }
+                            ]
+                        });
+                    });
+
+                </script>
             </td>
         </tr>
     </table>
