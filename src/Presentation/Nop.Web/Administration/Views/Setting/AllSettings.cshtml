@@ -34,7 +34,7 @@
                                     dataType: "json"
                                 },
                                 create: {
-                                    url: "@Url.Action("SettingAdd", "Setting")",
+                                    url: "@Html.Raw(Url.Action("SettingAdd", "Setting"))",
                                     type: "POST",
                                     dataType: "json"
                                 },

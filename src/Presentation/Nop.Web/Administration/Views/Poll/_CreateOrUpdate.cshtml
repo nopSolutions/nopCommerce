@@ -121,7 +121,7 @@
                                         dataType: "json"
                                     },
                                     create: {
-                                        url: "@Url.Action("PollAnswerAdd", "Poll", new { pollId = Model.Id })",
+                                        url: "@Html.Raw(Url.Action("PollAnswerAdd", "Poll", new { pollId = Model.Id }))",
                                         type: "POST",
                                         dataType: "json"
                                     },

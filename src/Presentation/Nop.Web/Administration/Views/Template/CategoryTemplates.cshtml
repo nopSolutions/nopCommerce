@@ -25,7 +25,7 @@
                                     dataType: "json"
                                 },
                                 create: {
-                                    url: "@Url.Action("CategoryTemplateAdd", "Template")",
+                                    url: "@Html.Raw(Url.Action("CategoryTemplateAdd", "Template"))",
                                     type: "POST",
                                     dataType: "json"
                                 },

@@ -14,7 +14,6 @@ using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
-using Telerik.Web.Mvc;
 
 namespace Nop.Admin.Controllers
 {
@@ -319,8 +318,8 @@ namespace Nop.Admin.Controllers
 			return View();
 		}
 
-		[HttpPost, GridAction(EnableCustomBinding = true)]
-		public ActionResult Resources(int languageId, GridCommand command)
+        [HttpPost]
+		public ActionResult Resources(int languageId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
@@ -338,10 +337,9 @@ namespace Nop.Admin.Controllers
                         Name = x.Key,
                         Value = x.Value.Value,
                     })
-                .ForCommand(command)
                 .ToList();
             
-            var model = new GridModel<LanguageResourceModel>
+            var model = new DataSourceResult
             {
                 Data = resources.PagedForCommand(command),
                 Total = resources.Count
@@ -352,8 +350,8 @@ namespace Nop.Admin.Controllers
 			};
 		}
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult ResourceUpdate(LanguageResourceModel model, GridCommand command)
+        [HttpPost]
+        public ActionResult ResourceUpdate(LanguageResourceModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
@@ -365,9 +363,7 @@ namespace Nop.Admin.Controllers
 
             if (!ModelState.IsValid)
             {
-                //display the first model error
-                var modelStateErrors = this.ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage);
-                return Content(modelStateErrors.FirstOrDefault());
+                return Json(new DataSourceResult() { Errors = ModelState.SerializeErrors() });
             }
 
             var resource = _localizationService.GetLocaleStringResourceById(model.Id);
@@ -385,11 +381,11 @@ namespace Nop.Admin.Controllers
             resource.ResourceValue = model.Value;
             _localizationService.UpdateLocaleStringResource(resource);
 
-            return Resources(model.LanguageId, command);
+            return Json(null);
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult ResourceAdd(int id, LanguageResourceModel model, GridCommand command)
+        [HttpPost]
+        public ActionResult ResourceAdd(int languageId, [Bind(Exclude = "Id")] LanguageResourceModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
@@ -401,15 +397,13 @@ namespace Nop.Admin.Controllers
 
             if (!ModelState.IsValid)
             {
-                //display the first model error
-                var modelStateErrors = this.ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage);
-                return Content(modelStateErrors.FirstOrDefault());
+                return Json(new DataSourceResult() { Errors = ModelState.SerializeErrors() });
             }
 
             var res = _localizationService.GetLocaleStringResourceByName(model.Name, model.LanguageId, false);
             if (res == null)
             {
-                var resource = new LocaleStringResource { LanguageId = id };
+                var resource = new LocaleStringResource { LanguageId = languageId };
                 resource.ResourceName = model.Name;
                 resource.ResourceValue = model.Value;
                 _localizationService.InsertLocaleStringResource(resource);
@@ -418,11 +412,11 @@ namespace Nop.Admin.Controllers
             {
                 return Content(string.Format(_localizationService.GetResource("Admin.Configuration.Languages.Resources.NameAlreadyExists"), model.Name));
             }
-            return Resources(id, command);
+            return Json(null);
         }
         
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult ResourceDelete(int id, int languageId, GridCommand command)
+        [HttpPost]
+        public ActionResult ResourceDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
@@ -432,7 +426,7 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentException("No resource found with the specified id");
             _localizationService.DeleteLocaleStringResource(resource);
             
-            return Resources(languageId, command);
+            return Json(null);
         }
 
         #endregion
