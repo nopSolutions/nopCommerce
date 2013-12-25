@@ -613,9 +613,6 @@
     <Content Include="Views\Shared\_AdminPopupLayout.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Product\EditorTemplates\ProductCategory.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Product\EditorTemplates\ProductManufacturer.cshtml" />
   </ItemGroup>
   <ItemGroup>

@@ -1,57 +1,163 @@
-﻿@model ProductModel
+﻿@using Nop.Services.Catalog
+@model ProductModel
 
-@using Telerik.Web.Mvc.UI;
 
 @if (Model.Id > 0)
 {
     if (Model.NumberOfAvailableCategories > 0)
     {
-    @(Html.Telerik().Grid<ProductModel.ProductCategoryModel>()
-                    .Name("productcategories-grid")
-                       .DataKeys(keys =>
-                       {
-                           keys.Add(x => x.Id);
-                       })
-                       .DataBinding(dataBinding =>
-                       {
-                           dataBinding.Ajax()
-                               .Select("ProductCategoryList", "Product", new { productId = Model.Id })
-                               .Insert("ProductCategoryInsert", "Product", new { productId = Model.Id })
-                               .Update("ProductCategoryUpdate", "Product")
-                               .Delete("ProductCategoryDelete", "Product");
-                       })
-                       .Columns(columns =>
-                       {
-                           columns.Bound(x => x.Category)
-                               .Width(500)
-                               .Centered();
-                           if (!Model.IsLoggedInAsVendor)
-                           {
-                               //vendor cannot edit this field
-                               columns.Bound(x => x.IsFeaturedProduct)
-                                   .Width(100)
-                                   .Centered();
-                           }
-                           columns.Bound(x => x.DisplayOrder)
-                               .Width(100);
-                           columns.Command(commands =>
-                           {
-                               commands.Edit().Text(T("Admin.Common.Edit").Text);
-                               commands.Delete().Text(T("Admin.Common.Delete").Text);
-                           })
-                           .Width(180);
-                       })
-                       .ToolBar(commands => commands.Insert())
-                       .ClientEvents(events => events.OnEdit("onProductCategoryEdit"))
-                       .EnableCustomBinding(true))
-    
-    <script type="text/javascript">
-        function onProductCategoryEdit(e) {
-            $(e.form).find('#Category').data('tDropDownList').select(function (dataItem) {
-                return dataItem.Value == e.dataItem['CategoryId'];
+        <div id="productcategories-grid"></div>
+
+        <script>
+            $(document).ready(function () {
+                $("#productcategories-grid").kendoGrid({
+                    dataSource: {
+                        type: "json",
+                        transport: {
+                            read: {
+                                url: "@Html.Raw(Url.Action("ProductCategoryList", "Product", new { productId = Model.Id }))",
+                                type: "POST",
+                                dataType: "json"
+                            },
+                            create: {
+                                url: "@Html.Raw(Url.Action("ProductCategoryInsert", "Product", new { productId = Model.Id }))",
+                                type: "POST",
+                                dataType: "json"
+                            },
+                            update: {
+                                url:"@Html.Raw(Url.Action("ProductCategoryUpdate", "Product"))",
+                                type: "POST",
+                                dataType: "json"
+                            },
+                            destroy: {
+                                url: "@Html.Raw(Url.Action("ProductCategoryDelete", "Product"))",
+                                type: "POST",
+                                dataType: "json"
+                            },
+                            contentType: "application/json"
+                        },
+                        schema: {
+                            data: "Data",
+                            total: "Total",
+                            errors: "Errors",
+                            model: {
+                                id: "Id",
+                                fields: {
+                                    Category: { editable: true, type: "string" },
+                                    //ProductId: { editable: false, type: "number" },
+                                    CategoryId: { editable: true, type: "number" },
+                                    IsFeaturedProduct: { editable: true, type: "boolean" },
+                                    DisplayOrder: { editable: true, type: "number" },
+                                    Id: { editable: false }
+                                }
+                            }
+                        },
+                        requestEnd: function (e) {
+                            if (e.type == "create" || e.type == "update") {
+                                this.read();
+                            }
+                        },
+                        error: function (e) {
+                            display_kendoui_grid_error(e);
+                            // Cancel the changes
+                            this.cancelChanges();
+                        },
+                        serverPaging: true,
+                        serverFiltering: true,
+                        serverSorting: true
+                    },
+                    pageable: {
+                        refresh: true,
+                        numeric: false,
+                        previousNext: false,
+                        info: false
+                    },
+                    toolbar: ["create"],
+                    edit: function(e) {
+                        if (e.model.isNew()) {
+                            //little hack here
+                            //pre-select the first value of kendoui dropdownlist datasource
+                            //for some reasons (maybe, bug) it always sends 0
+                            //if no value has been selected (changed) in the dropdownlist
+                            if (allCategories.length > 0) {
+                                e.model.CategoryId = allCategories[0].Id;
+                            }
+                        }
+                    },
+                    editable: {
+                        confirmation: false,
+                        mode: "inline"
+                    },
+                    scrollable: false,
+                    columns: [{
+                            field: "CategoryId",
+                            title: "@T("Admin.Catalog.Products.Categories.Fields.Category")",
+                            width: 200,
+                            editor: categoryDropDownEditor, 
+                            template: "#:Category#"
+                        },
+                        @if (!Model.IsLoggedInAsVendor)
+                        {
+                            //vendor cannot edit this field
+                            <text>{
+                            field: "IsFeaturedProduct",
+                                        title: "@T("Admin.Catalog.Products.Categories.Fields.IsFeaturedProduct")",
+                        width: 200
+                    },</text>
+                        }
+                        
+                    {
+                        field: "DisplayOrder",
+                        title: "@T("Admin.Catalog.Products.Categories.Fields.DisplayOrder")",
+                        width: 200,
+                        //integer format
+                        format: "{0:0}"
+                    }, {
+                        command: [{
+                            name: "edit",
+                            text: "@T("Admin.Common.Edit")"
+                        }, {
+                            name: "destroy",
+                            text: "@T("Admin.Common.Delete")"
+                        }],
+                        width: 200
+                    }]
+                });
             });
-        }
-    </script>
+                
+            //local datasource
+            var allCategories = [
+                @{
+                    var categoryService = EngineContext.Current.Resolve<ICategoryService>();
+                    var allCategories = categoryService.GetAllCategories(showHidden: true);
+                }
+                @for (int i = 0; i < allCategories.Count; i++)
+                {
+                    var category = allCategories[i];
+                    <text>
+                        {
+                            Id: @(category.Id),
+                            Name: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(category.GetFormattedBreadCrumb(categoryService))))"
+                        }
+                        </text>
+                    if (i != allCategories.Count - 1)
+                    {
+                        <text>,</text>
+                    }
+                }
+            ];
+
+            function categoryDropDownEditor(container, options) {
+                $('<input required data-text-field="Name" data-value-field="Id" data-bind="value:CategoryId"/>')
+                    .appendTo(container)
+                    .kendoDropDownList({
+                        autoBind: true,
+                        dataTextField: "Name",
+                        dataValueField: "Id",
+                        dataSource: allCategories
+                    });
+            }
+        </script>
     }
     else
     {

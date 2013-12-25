@@ -419,7 +419,6 @@ namespace Nop.Admin.Models.Catalog
         public partial class ProductCategoryModel : BaseNopEntityModel
         {
             [NopResourceDisplayName("Admin.Catalog.Products.Categories.Fields.Category")]
-            [UIHint("ProductCategory")]
             public string Category { get; set; }
 
             public int ProductId { get; set; }

@@ -1039,8 +1039,8 @@ namespace Nop.Admin.Controllers
         
         #region Product categories
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult ProductCategoryList(GridCommand command, int productId)
+        [HttpPost]
+        public ActionResult ProductCategoryList(DataSourceRequest command, int productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -1083,14 +1083,14 @@ namespace Nop.Admin.Controllers
             };
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult ProductCategoryInsert(GridCommand command, ProductModel.ProductCategoryModel model)
+        [HttpPost]
+        public ActionResult ProductCategoryInsert(ProductModel.ProductCategoryModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             var productId = model.ProductId;
-            var categoryId = Int32.Parse(model.Category); //use Category property (not CategoryId) because appropriate property is stored in it
+            var categoryId = model.CategoryId;
 
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
@@ -1118,12 +1118,12 @@ namespace Nop.Admin.Controllers
                 }
                 _categoryService.InsertProductCategory(productCategory);
             }
-            
-            return ProductCategoryList(command, productId);
+
+            return Json(null);
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult ProductCategoryUpdate(GridCommand command, ProductModel.ProductCategoryModel model)
+        [HttpPost]
+        public ActionResult ProductCategoryUpdate(ProductModel.ProductCategoryModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -1142,8 +1142,7 @@ namespace Nop.Admin.Controllers
                 }
             }
 
-            //use Category property (not CategoryId) because appropriate property is stored in it
-            productCategory.CategoryId = Int32.Parse(model.Category);
+            productCategory.CategoryId = model.CategoryId;
             productCategory.DisplayOrder = model.DisplayOrder;
             //a vendor cannot edit "IsFeaturedProduct" property
             if (_workContext.CurrentVendor == null)
@@ -1152,11 +1151,11 @@ namespace Nop.Admin.Controllers
             }
             _categoryService.UpdateProductCategory(productCategory);
 
-            return ProductCategoryList(command, productCategory.ProductId);
+            return Json(null);
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult ProductCategoryDelete(int id, GridCommand command)
+        [HttpPost]
+        public ActionResult ProductCategoryDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -1179,7 +1178,7 @@ namespace Nop.Admin.Controllers
 
             _categoryService.DeleteProductCategory(productCategory);
 
-            return ProductCategoryList(command, productId);
+            return Json(null);
         }
 
         #endregion
