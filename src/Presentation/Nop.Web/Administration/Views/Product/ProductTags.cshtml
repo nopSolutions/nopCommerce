@@ -4,8 +4,6 @@
     //page title
     ViewBag.Title = T("Admin.Catalog.ProductTags").Text;
 }
-@using Telerik.Web.Mvc.UI;
-@using System.Linq;
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "product-tags-form" }))
 {
     <div class="section-header">
@@ -17,37 +15,85 @@
     <table class="adminContent">
         <tr>
             <td>
-                @(Html.Telerik().Grid<ProductTagModel>()
-                    .Name("product-tags-grid")
-                    .DataKeys(x =>
-                    {
-                        x.Add(y => y.Id).RouteKey("Id");
-                    })
-                    .Columns(columns =>
-                    {
-                        columns.Bound(x => x.Name);
-                        columns.Bound(x => x.ProductCount).Width(150);
-                        columns.Bound(x => x.Id)
-                            .Centered()
-                            .Width(100)
-                            .Filterable(false)
-                            .ClientTemplate("<input type='submit' value='" + @T("Admin.Common.Edit").Text + "' onclick=\"" + "javascript:OpenWindow('" + @Url.Content("~/Admin/Product/EditProductTag/") + "<#= Id #>?btnId=btnRefresh&formId=product-tags-form', 800, 250, true); return false;\" class='t-button' />")
-                            .Title(T("Admin.Common.Edit").Text);
-                        columns.Command(commands =>
-                        {
-                            commands.Delete().Text(T("Admin.Common.Delete").Text);
-                        }).Width(90)
-                        .Title(T("Admin.Common.Delete").Text);
+                <div id="product-tags-grid"></div>
 
-                    })
-                    .Filterable()
-                    .Pageable(settings => settings.PageSize(gridPageSize).Position(GridPagerPosition.Both))
-                    .DataBinding(dataBinding =>
-                    {
-                        dataBinding.Ajax().Select("ProductTags", "Product")
-                            .Delete("ProductTagDelete", "Product");
-                    })
-                    .EnableCustomBinding(true))
+                <script>
+                    $(document).ready(function () {
+                        $("#product-tags-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("ProductTags", "Product"))",
+                                        type: "POST",
+                                        dataType: "json"
+                                    },
+                                    destroy: {
+                                        url: "@Html.Raw(Url.Action("ProductTagDelete", "Product"))",
+                                        type: "POST",
+                                        dataType: "json"
+                                    },
+                                    contentType: "application/json"
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors",
+                                    model: {
+                                        id: "Id",
+                                        fields: {
+                                            Name: { editable: true, type: "string" },
+                                            Value: { editable: true, type: "string" },
+                                            Store: { editable: true, type: "string" },
+                                            StoreId: { editable: true, type: "number" },
+                                            Id: { editable: false }
+                                        }
+                                    }
+                                },
+                                requestEnd: function (e) {
+                                    if (e.type == "create" || e.type == "update") {
+                                        this.read();
+                                    }
+                                },
+                                error: function (e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                pageSize: @(gridPageSize),
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true
+                            },
+                            editable: {
+                                confirmation: false,
+                                mode: "inline"
+                            },
+                            scrollable: false,
+                            columns: [{
+                                field: "Name",
+                                title: "@T("Admin.Catalog.ProductTags.Fields.Name")",
+                                width: 300
+                            }, {
+                                field: "ProductCount",
+                                title: "@T("Admin.Catalog.ProductTags.Fields.ProductCount")",
+                                width: 150
+                            }, {
+                                field: "Id",
+                                title: "@T("Admin.Common.Edit")",
+                                width: 150,
+                                template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/Product/EditProductTag/")#=Id#?btnId=btnRefresh&formId=product-tags-form', 800, 250, true); return false;\" class='t-button' />"
+                            }, {
+                                command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
+                                title: "@T("Admin.Common.Delete")",
+                                width: 100
+                            }]
+                        });
+                    });
+                </script>       
             </td>
         </tr>
         <tr>
@@ -57,8 +103,8 @@
                     $(document).ready(function () {
                         $('#btnRefresh').click(function () {
                             //refresh grid
-                            var optionsGrid = $("#product-tags-grid");
-                            optionsGrid.data('tGrid').ajaxRequest();
+                            var grid = $("#product-tags-grid").data('kendoGrid');
+                            grid.dataSource.read();
 
                             //return false to don't reload a page
                             return false;

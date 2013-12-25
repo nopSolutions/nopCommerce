@@ -2201,8 +2201,8 @@ namespace Nop.Admin.Controllers
             return View();
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult ProductTags(GridCommand command)
+        [HttpPost]
+        public ActionResult ProductTags(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductTags))
                 return AccessDeniedView();
@@ -2219,12 +2219,12 @@ namespace Nop.Admin.Controllers
                         ProductCount = _productTagService.GetProductCount(x.Id, 0)
                     };
                 })
-                .ForCommand(command);
+                .ToList();
 
-            var model = new GridModel<ProductTagModel>
+            var model = new DataSourceResult
             {
                 Data = tags.PagedForCommand(command),
-                Total = tags.Count()
+                Total = tags.Count
             };
             return new JsonResult
             {
@@ -2232,8 +2232,8 @@ namespace Nop.Admin.Controllers
             };
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult ProductTagDelete(int id, GridCommand command)
+        [HttpPost]
+        public ActionResult ProductTagDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductTags))
                 return AccessDeniedView();
@@ -2243,7 +2243,7 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentException("No product tag found with the specified id");
             _productTagService.DeleteProductTag(tag);
 
-            return ProductTags(command);
+            return Json(null);
         }
 
         //edit
