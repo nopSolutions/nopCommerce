@@ -70,7 +70,14 @@
                             field: "Rate",
                             title: "@T("Plugins.Tax.FixedRate.Fields.Rate")",
                             width: 200,
-                            editor: number4Editor
+                            editor: function (container, options) {
+                                $('<input name="' + options.field + '"/>')
+                                        .appendTo(container)
+                                        .kendoNumericTextBox({
+                                            format: "{0:n4}",
+                                            decimals: 4
+                                        });
+                            }
                         }, {
                             command: {name: "edit", text: "@T("Admin.Common.Edit")"},
                             title: "@T("Admin.Common.Edit")",
@@ -79,14 +86,7 @@
                     });
                 });
 
-                function number4Editor(container, options) {
-                    $('<input name="' + options.field + '"/>')
-                            .appendTo(container)
-                            .kendoNumericTextBox({
-                                format: "{0:n4}",
-                                decimals: 4
-                            });
-                }
+                
             </script>
         </td>
     </tr>

@@ -3443,8 +3443,8 @@ namespace Nop.Admin.Controllers
 
         #region Product variant attribute combinations
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult ProductVariantAttributeCombinationList(GridCommand command, int productId)
+        [HttpPost]
+        public ActionResult ProductVariantAttributeCombinationList(DataSourceRequest command, int productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -3465,8 +3465,7 @@ namespace Nop.Admin.Controllers
                     {
                         Id = x.Id,
                         ProductId = x.ProductId,
-                        AttributesXml = _productAttributeFormatter.FormatAttributes(x.Product,
-                            x.AttributesXml, _workContext.CurrentCustomer, "<br />", true, true, true, false),
+                        AttributesXml = _productAttributeFormatter.FormatAttributes(x.Product, x.AttributesXml, _workContext.CurrentCustomer, "<br />", true, true, true, false),
                         StockQuantity1 = x.StockQuantity,
                         AllowOutOfStockOrders1 = x.AllowOutOfStockOrders,
                         Sku1 = x.Sku,
@@ -3488,7 +3487,7 @@ namespace Nop.Admin.Controllers
                 })
                 .ToList();
 
-            var model = new GridModel<ProductModel.ProductVariantAttributeCombinationModel>
+            var model = new DataSourceResult
             {
                 Data = productVariantAttributesModel,
                 Total = productVariantAttributesModel.Count
@@ -3500,8 +3499,8 @@ namespace Nop.Admin.Controllers
             };
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult ProductVariantAttrbiuteCombinationUpdate(GridCommand command, ProductModel.ProductVariantAttributeCombinationModel model)
+        [HttpPost]
+        public ActionResult ProductVariantAttributeCombinationUpdate(ProductModel.ProductVariantAttributeCombinationModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -3526,11 +3525,11 @@ namespace Nop.Admin.Controllers
             pvac.OverriddenPrice = model.OverriddenPrice;
             _productAttributeService.UpdateProductVariantAttributeCombination(pvac);
 
-            return ProductVariantAttributeCombinationList(command, pvac.ProductId);
+            return Json(null);
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult ProductVariantAttributeCombinationDelete(int id, GridCommand command)
+        [HttpPost]
+        public ActionResult ProductVariantAttributeCombinationDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -3550,7 +3549,7 @@ namespace Nop.Admin.Controllers
             var productId = pvac.ProductId;
             _productAttributeService.DeleteProductVariantAttributeCombination(pvac);
 
-            return ProductVariantAttributeCombinationList(command, productId);
+            return Json(null);
         }
 
         //edit

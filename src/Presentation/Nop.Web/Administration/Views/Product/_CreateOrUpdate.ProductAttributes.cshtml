@@ -236,63 +236,148 @@ else
         <strong>@T("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Description")</strong>
     </div>
     <div>
-        @(Html.Telerik().Grid<ProductModel.ProductVariantAttributeCombinationModel>()
-                .Name("attributecombinations-grid")
-                .DataKeys(keys =>
-                {
-                    keys.Add(x => x.Id);
-                })
-                .DataBinding(dataBinding =>
-                {
-                    dataBinding.Ajax()
-                        .Select("ProductVariantAttributeCombinationList", "Product", new { productId = Model.Id })
-                        .Update("ProductVariantAttrbiuteCombinationUpdate", "Product")
-                        .Delete("ProductVariantAttributeCombinationDelete", "Product");
-                })
-                .Columns(columns =>
-                {
-                    columns.Bound(x => x.AttributesXml)
-                        .ClientTemplate("<#= AttributesXml #><br /><span style=\"color: red\"><#= Warnings #></span>")
-                        .Encoded(false)
-                        .ReadOnly();
-                    columns.Bound(x => x.StockQuantity1)
-                        .Centered();
-                    columns.Bound(x => x.AllowOutOfStockOrders1)
-                            .Template(
-                                @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.AllowOutOfStockOrders1.ToString().ToLowerInvariant() + ".gif")" />
-                            )
-                            .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= AllowOutOfStockOrders1 #>.gif' />")
-                            .Centered();
-                    columns.Bound(x => x.Sku1)
-                        .Centered();
-                    columns.Bound(x => x.ManufacturerPartNumber1)
-                        .Centered();
-                    columns.Bound(x => x.Gtin1)
-                        .Centered();
-                    columns.Bound(x => x.OverriddenPrice)
-                        .Centered();
-                    columns.Command(commands =>
-                    {
-                        commands.Edit().Text(T("Admin.Common.Edit").Text);
-                        commands.Delete().Text(T("Admin.Common.Delete").Text);
-                    })
-                    .Width(180);
-                })
-                .EnableCustomBinding(true))
+        <div id="attributecombinations-grid"></div>
+
+        <script>
+            $(document).ready(function() {
+                $("#attributecombinations-grid").kendoGrid({
+                    dataSource: {
+                        type: "json",
+                        transport: {
+                            read: {
+                                url: "@Html.Raw(Url.Action("ProductVariantAttributeCombinationList", "Product", new { productId = Model.Id }))",
+                                type: "POST",
+                                dataType: "json"
+                            },
+                            update: {
+                                url: "@Html.Raw(Url.Action("ProductVariantAttributeCombinationUpdate", "Product"))",
+                                type: "POST",
+                                dataType: "json"
+                            },
+                            destroy: {
+                                url: "@Html.Raw(Url.Action("ProductVariantAttributeCombinationDelete", "Product"))",
+                                type: "POST",
+                                dataType: "json"
+                            },
+                            contentType: "application/json"
+                        },
+                        schema: {
+                            data: "Data",
+                            total: "Total",
+                            errors: "Errors",
+                            model: {
+                                id: "Id",
+                                fields: {
+                                    //ProductId: { editable: false, type: "number" },
+                                    AttributesXml: { editable: false, type: "string" },
+                                    Warnings: { editable: false, type: "string" },
+                                    StockQuantity1: { editable: true, type: "number" },
+                                    AllowOutOfStockOrders1: { editable: true, type: "boolean" },
+                                    Sku1: { editable: true, type: "string" },
+                                    ManufacturerPartNumber1: { editable: true, type: "string" },
+                                    Gtin1: { editable: true, type: "string" },
+                                    OverriddenPrice: { editable: true, type: "number" },
+                                    Id: { editable: false }
+                                }
+                            }
+                        },
+                        requestEnd: function(e) {
+                            if (e.type == "update") {
+                                this.read();
+                            }
+                        },
+                        error: function(e) {
+                            display_kendoui_grid_error(e);
+                            // Cancel the changes
+                            this.cancelChanges();
+                        },
+                        serverPaging: true,
+                        serverFiltering: true,
+                        serverSorting: true
+                    },
+                    pageable: {
+                        refresh: true,
+                        numeric: false,
+                        previousNext: false,
+                        info: false
+                    },
+                    editable: {
+                        confirmation: false,
+                        mode: "inline"
+                    },
+                    scrollable: false,
+                    columns: [
+                        {
+                            field: "AttributesXml",
+                            title: "@T("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.Attributes")",
+                            width: 400,
+                            template: "#=AttributesXml#<br /> # if(Warnings !== null) {# <span style=\"color: red\">#=Warnings#</span> #}  #",
+                            encoded: false
+                        }, {
+                            field: "StockQuantity1",
+                            title: "@T("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.StockQuantity")",
+                            width: 150,
+                            //integer format
+                            format: "{0:0}"
+                        }, {
+                            field: "AllowOutOfStockOrders1",
+                            title: "@T("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.AllowOutOfStockOrders")",
+                            width: 150,
+                            template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=AllowOutOfStockOrders1#.gif" />'
+                        }, {
+                            field: "Sku1",
+                            title: "@T("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.Sku")",
+                            width: 200
+                        }, {
+                            field: "ManufacturerPartNumber1",
+                            title: "@T("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.ManufacturerPartNumber")",
+                            width: 200
+                        }, {
+                            field: "Gtin1",
+                            title: "@T("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.Gtin")",
+                            width: 200
+                        }, {
+                            field: "OverriddenPrice",
+                            title: "@T("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.OverriddenPrice")",
+                            width: 200,
+                            editor: function (container, options) {
+                                $('<input name="' + options.field + '"/>')
+                                        .appendTo(container)
+                                        .kendoNumericTextBox({
+                                            format: "{0:n4}",
+                                            decimals: 4
+                                        });
+                            }
+                        }, {
+                            command: [
+                                {
+                                    name: "edit",
+                                    text: "@T("Admin.Common.Edit")"
+                                }, {
+                                    name: "destroy",
+                                    text: "@T("Admin.Common.Delete")"
+                                }
+                            ],
+                            width: 200
+                        }
+                    ]
+                });
+            });
+        </script>
     </div>
     <div>
         <p>
-        <input type="submit" id="btnAddNewCombination" name="btnAddNewCombination" value="@T("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("AddAttributeCombinationPopup", "Product", new { productId = Model.Id, btnId = "btnRefreshCombinations", formId = "product-form" }))', 800, 600, true); return false;" class="t-button" />
-        <input type="button" id="btnGenerateAllCombinations" value="@T("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.GenerateAll")" class="t-button" />
-</p>
+            <input type="submit" id="btnAddNewCombination" name="btnAddNewCombination" value="@T("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("AddAttributeCombinationPopup", "Product", new { productId = Model.Id, btnId = "btnRefreshCombinations", formId = "product-form" }))', 800, 600, true); return false;" class="t-button" />
+            <input type="button" id="btnGenerateAllCombinations" value="@T("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.GenerateAll")" class="t-button" />
+        </p>
         <input type="submit" id="btnRefreshCombinations" name="btnRefreshCombinations" style="display: none" />
         <script type="text/javascript">
             $(document).ready(function () {
                 //refresh button
                 $('#btnRefreshCombinations').click(function () {
                     //refresh grid
-                    var optionsGrid = $("#attributecombinations-grid");
-                    optionsGrid.data('tGrid').ajaxRequest();
+                    var grid = $("#attributecombinations-grid").data('kendoGrid');
+                    grid.dataSource.read();
 
                     //return false to don't reload a page
                     return false;
@@ -309,8 +394,8 @@ else
                             dataType: 'json',
                             success: function(data) {
                                 //refresh grid
-                                var optionsGrid = $("#attributecombinations-grid");
-                                optionsGrid.data('tGrid').ajaxRequest();
+                                var grid = $("#attributecombinations-grid").data('kendoGrid');
+                                grid.dataSource.read();
                             },
                             error: function(xhr, ajaxOptions, thrownError) {
                                 alert('Error while generating attribute combinations');

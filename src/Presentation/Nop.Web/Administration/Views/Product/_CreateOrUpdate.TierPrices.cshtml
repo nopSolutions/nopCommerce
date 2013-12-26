@@ -103,7 +103,14 @@
                     field: "Price1",
                     title: "@T("Admin.Catalog.Products.TierPrices.Fields.Price")",
                     width: 150,
-                    editor: number4Editor
+                    editor: function (container, options) {
+                        $('<input name="' + options.field + '"/>')
+                                .appendTo(container)
+                                .kendoNumericTextBox({
+                                    format: "{0:n4}",
+                                    decimals: 4
+                                });
+                    }
                 },{
                     command: [{
                         name: "edit",
@@ -174,15 +181,6 @@
                     autoBind: false,
                     dataSource: allCustomerRoles
                 });
-        }
-        
-        function number4Editor(container, options) {
-            $('<input name="' + options.field + '"/>')
-                    .appendTo(container)
-                    .kendoNumericTextBox({
-                        format: "{0:n4}",
-                        decimals: 4
-                    });
         }
     </script>
 }

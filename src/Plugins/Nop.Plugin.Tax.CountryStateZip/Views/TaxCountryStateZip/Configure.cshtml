@@ -99,7 +99,14 @@
                             field: "Percentage",
                             title: "@T("Plugins.Tax.CountryStateZip.Fields.Percentage")",
                             width: 100,
-                            editor: number4Editor
+                            editor: function (container, options) {
+                                $('<input name="' + options.field + '"/>')
+                                        .appendTo(container)
+                                        .kendoNumericTextBox({
+                                            format: "{0:n4}",
+                                            decimals: 4
+                                        });
+                            }
                         }, {
                             command: [{
                                 name: "edit",
@@ -112,15 +119,6 @@
                         }]
                     });
                 });
-
-                function number4Editor(container, options) {
-                    $('<input name="' + options.field + '"/>')
-                        .appendTo(container)
-                        .kendoNumericTextBox({
-                            format: "{0:n4}",
-                            decimals: 4
-                        });
-                }
             </script>
         </td>
     </tr>

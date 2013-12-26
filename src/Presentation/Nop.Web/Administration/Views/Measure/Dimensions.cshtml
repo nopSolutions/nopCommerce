@@ -100,7 +100,14 @@
                             field: "Ratio",
                             title: "@T("Admin.Configuration.Measures.Dimensions.Fields.Ratio")",
                             width: 200,
-                            editor: number8Editor
+                            editor: function (container, options) {
+                                $('<input name="' + options.field + '"/>')
+                                    .appendTo(container)
+                                    .kendoNumericTextBox({
+                                        format: "{0:n8}",
+                                        decimals: 8
+                                    });
+                            }
                         }, {
                             field: "DisplayOrder",
                             title: "@T("Admin.Configuration.Measures.Dimensions.Fields.DisplayOrder")",
@@ -129,15 +136,6 @@
                         }]
                     });
                 });
-
-                function number8Editor(container, options) {
-                    $('<input name="' + options.field + '"/>')
-                        .appendTo(container)
-                        .kendoNumericTextBox({
-                            format: "{0:n8}",
-                            decimals: 8
-                        });
-                }
             </script>
         </td>
     </tr>
