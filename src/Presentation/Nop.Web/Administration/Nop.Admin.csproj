@@ -622,9 +622,6 @@
     <Content Include="Views\Category\ProductAddPopup.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Product\EditorTemplates\TierPriceCustomer.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Product\EditorTemplates\ProductAttribute.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -1103,9 +1100,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Order\_OrderDetails.Products.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Product\EditorTemplates\TierPriceStore.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Product\_CreateOrUpdate.Info.cshtml" />

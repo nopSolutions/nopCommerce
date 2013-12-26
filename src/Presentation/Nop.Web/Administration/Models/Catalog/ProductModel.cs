@@ -595,13 +595,11 @@ namespace Nop.Admin.Models.Catalog
 
             public int CustomerRoleId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.CustomerRole")]
-            [UIHint("TierPriceCustomer")]
             public string CustomerRole { get; set; }
 
 
             public int StoreId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.Store")]
-            [UIHint("TierPriceStore")]
             public string Store { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.Quantity")]

@@ -2665,8 +2665,8 @@ namespace Nop.Admin.Controllers
 
         #region Tier prices
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult TierPriceList(GridCommand command, int productId)
+        [HttpPost]
+        public ActionResult TierPriceList(DataSourceRequest command, int productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -2698,6 +2698,7 @@ namespace Nop.Admin.Controllers
                     return new ProductModel.TierPriceModel()
                     {
                         Id = x.Id,
+                        StoreId = x.StoreId,
                         Store = storeName,
                         CustomerRole = x.CustomerRoleId.HasValue ? _customerService.GetCustomerRoleById(x.CustomerRoleId.Value).Name : _localizationService.GetResource("Admin.Catalog.Products.TierPrices.Fields.CustomerRole.All"),
                         ProductId = x.ProductId,
@@ -2708,7 +2709,7 @@ namespace Nop.Admin.Controllers
                 })
                 .ToList();
 
-            var model = new GridModel<ProductModel.TierPriceModel>
+            var model = new DataSourceResult
             {
                 Data = tierPricesModel,
                 Total = tierPricesModel.Count
@@ -2720,8 +2721,8 @@ namespace Nop.Admin.Controllers
             };
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult TierPriceInsert(GridCommand command, ProductModel.TierPriceModel model)
+        [HttpPost]
+        public ActionResult TierPriceInsert(ProductModel.TierPriceModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -2737,10 +2738,8 @@ namespace Nop.Admin.Controllers
             var tierPrice = new TierPrice()
             {
                 ProductId = model.ProductId,
-                //use Store property (not Store propertyId) because appropriate property is stored in it
-                StoreId = Int32.Parse(model.Store),
-                //use CustomerRole property (not CustomerRoleId) because appropriate property is stored in it
-                CustomerRoleId = Int32.Parse(model.CustomerRole) != 0 ? Int32.Parse(model.CustomerRole) : (int?)null, //use CustomerRole property (not CustomerRoleId) because appropriate property is stored in it
+                StoreId = model.StoreId,
+                CustomerRoleId = model.CustomerRoleId > 0 ? model.CustomerRoleId : (int?)null,
                 Quantity = model.Quantity,
                 Price = model.Price1
             };
@@ -2749,11 +2748,11 @@ namespace Nop.Admin.Controllers
             //update "HasTierPrices" property
             _productService.UpdateHasTierPricesProperty(product);
 
-            return TierPriceList(command, model.ProductId);
+            return Json(null);
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult TierPriceUpdate(GridCommand command, ProductModel.TierPriceModel model)
+        [HttpPost]
+        public ActionResult TierPriceUpdate(ProductModel.TierPriceModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -2770,19 +2769,17 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return Content("This is not your product");
 
-            //use Store property (not Store propertyId) because appropriate property is stored in it
-            tierPrice.StoreId = Int32.Parse(model.Store);
-            //use CustomerRole property (not CustomerRoleId) because appropriate property is stored in it
-            tierPrice.CustomerRoleId = Int32.Parse(model.CustomerRole) != 0 ? Int32.Parse(model.CustomerRole) : (int?)null;
+            tierPrice.StoreId = model.StoreId;
+            tierPrice.CustomerRoleId = model.CustomerRoleId > 0 ? model.CustomerRoleId : (int?) null;
             tierPrice.Quantity = model.Quantity;
             tierPrice.Price = model.Price1;
             _productService.UpdateTierPrice(tierPrice);
 
-            return TierPriceList(command, tierPrice.ProductId);
+            return Json(null);
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult TierPriceDelete(int id, GridCommand command)
+        [HttpPost]
+        public ActionResult TierPriceDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -2805,7 +2802,7 @@ namespace Nop.Admin.Controllers
             //update "HasTierPrices" property
             _productService.UpdateHasTierPricesProperty(product);
 
-            return TierPriceList(command, productId);
+            return Json(null);
         }
 
         #endregion
