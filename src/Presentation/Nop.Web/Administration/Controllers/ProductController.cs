@@ -2081,8 +2081,8 @@ namespace Nop.Admin.Controllers
             return Json(new { Result = true }, JsonRequestBehavior.AllowGet);
         }
         
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult ProductSpecAttrList(GridCommand command, int productId)
+        [HttpPost]
+        public ActionResult ProductSpecAttrList(DataSourceRequest command, int productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -2116,7 +2116,7 @@ namespace Nop.Admin.Controllers
                 })
                 .ToList();
 
-            var model = new GridModel<ProductSpecificationAttributeModel>
+            var model = new DataSourceResult
             {
                 Data = productrSpecsModel,
                 Total = productrSpecsModel.Count
@@ -2128,14 +2128,13 @@ namespace Nop.Admin.Controllers
             };
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult ProductSpecAttrUpdate(int psaId, ProductSpecificationAttributeModel model,
-            GridCommand command)
+        [HttpPost]
+        public ActionResult ProductSpecAttrUpdate(ProductSpecificationAttributeModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            var psa = _specificationAttributeService.GetProductSpecificationAttributeById(psaId);
+            var psa = _specificationAttributeService.GetProductSpecificationAttributeById(model.Id);
             if (psa == null)
                 return Content("No product specification attribute found with the specified id");
 
@@ -2157,16 +2156,16 @@ namespace Nop.Admin.Controllers
             psa.DisplayOrder = model.DisplayOrder;
             _specificationAttributeService.UpdateProductSpecificationAttribute(psa);
 
-            return ProductSpecAttrList(command, psa.ProductId);
+            return Json(null);
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult ProductSpecAttrDelete(int psaId, GridCommand command)
+        [HttpPost]
+        public ActionResult ProductSpecAttrDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            var psa = _specificationAttributeService.GetProductSpecificationAttributeById(psaId);
+            var psa = _specificationAttributeService.GetProductSpecificationAttributeById(id);
             if (psa == null)
                 throw new ArgumentException("No specification attribute found with the specified id");
 
@@ -2184,7 +2183,7 @@ namespace Nop.Admin.Controllers
 
             _specificationAttributeService.DeleteProductSpecificationAttribute(psa);
 
-            return ProductSpecAttrList(command, productId);
+            return Json(null);
         }
 
         #endregion
