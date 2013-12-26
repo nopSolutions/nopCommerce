@@ -1185,8 +1185,8 @@ namespace Nop.Admin.Controllers
 
         #region Product manufacturers
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult ProductManufacturerList(GridCommand command, int productId)
+        [HttpPost]
+        public ActionResult ProductManufacturerList(DataSourceRequest command, int productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -1217,7 +1217,7 @@ namespace Nop.Admin.Controllers
                 })
                 .ToList();
 
-            var model = new GridModel<ProductModel.ProductManufacturerModel>
+            var model = new DataSourceResult
             {
                 Data = productManufacturersModel,
                 Total = productManufacturersModel.Count
@@ -1229,14 +1229,14 @@ namespace Nop.Admin.Controllers
             };
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult ProductManufacturerInsert(GridCommand command, ProductModel.ProductManufacturerModel model)
+        [HttpPost]
+        public ActionResult ProductManufacturerInsert(ProductModel.ProductManufacturerModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             var productId = model.ProductId;
-            var manufacturerId = Int32.Parse(model.Manufacturer); //use Manufacturer property (not ManufacturerId) because appropriate property is stored in it
+            var manufacturerId = model.ManufacturerId;
 
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
@@ -1264,12 +1264,12 @@ namespace Nop.Admin.Controllers
                 }
                 _manufacturerService.InsertProductManufacturer(productManufacturer);
             }
-            
-            return ProductManufacturerList(command, productId);
+
+            return Json(null);
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult ProductManufacturerUpdate(GridCommand command, ProductModel.ProductManufacturerModel model)
+        [HttpPost]
+        public ActionResult ProductManufacturerUpdate(ProductModel.ProductManufacturerModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -1288,8 +1288,7 @@ namespace Nop.Admin.Controllers
                 }
             }
 
-            //use Manufacturer property (not ManufacturerId) because appropriate property is stored in it
-            productManufacturer.ManufacturerId = Int32.Parse(model.Manufacturer);
+            productManufacturer.ManufacturerId = model.ManufacturerId;
             productManufacturer.DisplayOrder = model.DisplayOrder;
             //a vendor cannot edit "IsFeaturedProduct" property
             if (_workContext.CurrentVendor == null)
@@ -1298,11 +1297,11 @@ namespace Nop.Admin.Controllers
             }
             _manufacturerService.UpdateProductManufacturer(productManufacturer);
 
-            return ProductManufacturerList(command, productManufacturer.ProductId);
+            return Json(null);
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult ProductManufacturerDelete(int id, GridCommand command)
+        [HttpPost]
+        public ActionResult ProductManufacturerDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -1325,7 +1324,7 @@ namespace Nop.Admin.Controllers
 
             _manufacturerService.DeleteProductManufacturer(productManufacturer);
 
-            return ProductManufacturerList(command, productId);
+            return Json(null);
         }
         
         #endregion

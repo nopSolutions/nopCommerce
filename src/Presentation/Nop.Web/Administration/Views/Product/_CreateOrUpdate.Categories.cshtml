@@ -151,9 +151,7 @@
                 $('<input required data-text-field="Name" data-value-field="Id" data-bind="value:CategoryId"/>')
                     .appendTo(container)
                     .kendoDropDownList({
-                        autoBind: true,
-                        dataTextField: "Name",
-                        dataValueField: "Id",
+                        autoBind: false,
                         dataSource: allCategories
                     });
             }

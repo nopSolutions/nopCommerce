@@ -435,7 +435,6 @@ namespace Nop.Admin.Models.Catalog
         public partial class ProductManufacturerModel : BaseNopEntityModel
         {
             [NopResourceDisplayName("Admin.Catalog.Products.Manufacturers.Fields.Manufacturer")]
-            [UIHint("ProductManufacturer")]
             public string Manufacturer { get; set; }
 
             public int ProductId { get; set; }
