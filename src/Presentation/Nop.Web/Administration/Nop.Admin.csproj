@@ -622,12 +622,6 @@
     <Content Include="Views\Category\ProductAddPopup.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Product\EditorTemplates\ProductAttribute.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Product\EditorTemplates\AttributeControlType.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Product\EditAttributeValues.cshtml" />
   </ItemGroup>
   <ItemGroup>

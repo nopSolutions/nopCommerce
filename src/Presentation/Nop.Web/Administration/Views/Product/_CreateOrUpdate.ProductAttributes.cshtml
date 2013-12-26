@@ -1,5 +1,7 @@
 ﻿@model ProductModel
 
+@using Nop.Core.Domain.Catalog
+@using Nop.Services.Catalog
 @using Telerik.Web.Mvc.UI;
 @if (Model.Id > 0)
 {
@@ -27,66 +29,204 @@ else
 
 @helper TabAttributes()
 {
-    @(Html.Telerik().Grid<ProductModel.ProductVariantAttributeModel>()
-                .Name("productvariantattributes-grid")
-                .DataKeys(keys =>
-                {
-                    keys.Add(x => x.Id);
-                })
-                .DataBinding(dataBinding =>
-                {
-                    dataBinding.Ajax()
-                        .Select("ProductVariantAttributeList", "Product", new { productId = Model.Id })
-                        .Insert("ProductVariantAttributeInsert", "Product", new { productId = Model.Id })
-                        .Update("ProductVariantAttrbiuteUpdate", "Product")
-                        .Delete("ProductVariantAttributeDelete", "Product");
-                })
-                .Columns(columns =>
-                {
-                    columns.Bound(x => x.ProductAttribute)
-                        .Width(150)
-                        .Centered();
-                    columns.Bound(x => x.TextPrompt)
-                        .Width(150)
-                        .Centered();
-                    columns.Bound(x => x.IsRequired)
-                            .Template(
-                                @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.IsRequired.ToString().ToLowerInvariant() + ".gif")" />
-                            )
-                            .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= IsRequired #>.gif' />")
-                            .Centered()
-                            .Width(100);
-                    columns.Bound(x => x.AttributeControlType)
-                        .Width(150)
-                        .Centered();
-                    columns.Bound(x => x.DisplayOrder1)
-                        .Width(150)
-                        .Centered();
-                    columns.Bound(x => x.ViewEditUrl)
-                        .Width(200)
-                        .ClientTemplate("<a href=\"<#= ViewEditUrl #>\"><#= ViewEditText #></a>")
-                        .ReadOnly()
-                        .Title(T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values").Text);
-                    columns.Command(commands =>
-                    {
-                        commands.Edit().Text(T("Admin.Common.Edit").Text);
-                        commands.Delete().Text(T("Admin.Common.Delete").Text);
-                    })
-                    .Width(180);
-                })
-                .ToolBar(commands => commands.Insert())
-                .ClientEvents(events => events.OnEdit("onProductVariantAttributeEdit"))
-                .EnableCustomBinding(true))
-    
-    <script type="text/javascript">
-        function onProductVariantAttributeEdit(e) {
-            $(e.form).find('#ProductAttribute').data('tDropDownList').select(function (dataItem) {
-                return dataItem.Value == e.dataItem['ProductAttributeId'];
-            });
+    <div id="productvariantattributes-grid"></div>
 
-            $(e.form).find('#AttributeControlType').data('tDropDownList').select(function (dataItem) {
-                return dataItem.Value == e.dataItem['AttributeControlTypeId'];
+    <script>
+        $(document).ready(function () {
+            $("#productvariantattributes-grid").kendoGrid({
+                dataSource: {
+                    type: "json",
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("ProductVariantAttributeList", "Product", new { productId = Model.Id }))",
+                            type: "POST",
+                            dataType: "json"
+                        },
+                        create: {
+                            url: "@Html.Raw(Url.Action("ProductVariantAttributeInsert", "Product", new { productId = Model.Id }))",
+                            type: "POST",
+                            dataType: "json"
+                        },
+                        update: {
+                            url:"@Html.Raw(Url.Action("ProductVariantAttributeUpdate", "Product"))",
+                            type: "POST",
+                            dataType: "json"
+                        },
+                        destroy: {
+                            url: "@Html.Raw(Url.Action("ProductVariantAttributeDelete", "Product"))",
+                            type: "POST",
+                            dataType: "json"
+                        },
+                        contentType: "application/json"
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors",
+                        model: {
+                            id: "Id",
+                            fields: {
+                                ProductAttribute: { editable: true, type: "string" },
+                                ProductAttributeId: { editable: true, type: "number" },
+                                TextPrompt: { editable: true, type: "string" },
+                                IsRequired: { editable: true, type: "boolean" },
+                                AttributeControlType: { editable: true, type: "string" },
+                                AttributeControlTypeId: { editable: true, type: "number" },
+                                //ProductId: { editable: false, type: "number" },
+                                DisplayOrder1: { editable: true, type: "number" },
+                                ViewEditUrl: { editable: false, type: "string" },
+                                ViewEditText: { editable: false, type: "string" },
+                                Id: { editable: false }
+                            }
+                        }
+                    },
+                    requestEnd: function (e) {
+                        if (e.type == "create" || e.type == "update") {
+                            this.read();
+                        }
+                    },
+                    error: function (e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    numeric: false,
+                    previousNext: false,
+                    info: false
+                },
+                toolbar: ["create"],
+                edit: function(e) {
+                    if (e.model.isNew()) {
+                        //little hack here
+                        //pre-select the first value of kendoui dropdownlist datasource
+                        //for some reasons (maybe, bug) it always sends 0
+                        //if no value has been selected (changed) in the dropdownlist
+                        if (allProductAttributes.length > 0) {
+                            e.model.ProductAttributeId = allProductAttributes[0].Id;
+                        }
+                        if (allAttributeControlTypes.length > 0) {
+                            e.model.AttributeControlTypeId = allAttributeControlTypes[0].Id;
+                        }
+                    }
+                },
+                editable: {
+                    confirmation: false,
+                    mode: "inline"
+                },
+                scrollable: false,
+                columns: [{
+                    field: "ProductAttributeId",
+                    title: "@T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Fields.Attribute")",
+                    width: 250,
+                    editor: productAttributeDropDownEditor,
+                    template: "#:ProductAttribute#"
+                },{
+                    field: "TextPrompt",
+                    title: "@T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Fields.TextPrompt")",
+                    width: 150
+                },{
+                    field: "IsRequired",
+                    title: "@T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Fields.IsRequired")",
+                    width: 150,
+                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsRequired#.gif" />'
+        },
+                {
+                    field: "AttributeControlTypeId",
+                    title: "@T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Fields.AttributeControlType")",
+                    width: 250,
+                    editor: attributeControlTypeDropDownEditor,
+                    template: "#:AttributeControlType#"
+                },
+
+                {
+                    field: "DisplayOrder1",
+                    title: "@T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Fields.DisplayOrder")",
+                    width: 150,
+                    //integer format
+                    format: "{0:0}"
+                }, {
+                    field: "ViewEditUrl",
+                    title: "@T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values")",
+                    width: 150,
+                    template: "<a href='#=ViewEditUrl#\'>#:ViewEditText#</a>"
+                },{
+                    command: [{
+                        name: "edit",
+                        text: "@T("Admin.Common.Edit")"
+                    }, {
+                        name: "destroy",
+                        text: "@T("Admin.Common.Delete")"
+                    }],
+                    width: 200
+                }]
             });
+        });
+
+        //local datasource
+        var allProductAttributes = [
+            @{
+                var productAttributeService = EngineContext.Current.Resolve<IProductAttributeService>();
+                var allProductAttributes = productAttributeService.GetAllProductAttributes();
+            }
+            @for (int i = 0; i < allProductAttributes.Count; i++)
+            {
+                var productAttributes = allProductAttributes[i];
+                <text>
+                {
+                    Id: @(productAttributes.Id),
+                    Name: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(productAttributes.Name)))"
+                }
+                    </text>
+                if (i != allProductAttributes.Count - 1)
+                {
+                    <text>,</text>
+                }
+            }
+        ];
+
+        var allAttributeControlTypes = [
+            @{
+                var allAttributeControlTypes = (from act in AttributeControlType.DropdownList.ToSelectList()
+                                      select new {Id = act.Value, Name = act.Text}).ToList();
+            }
+            @for (int i = 0; i < allAttributeControlTypes.Count; i++)
+            {
+                var attributeControlType = allAttributeControlTypes[i];
+                <text>
+                {
+                Id: @(attributeControlType.Id),
+                Name: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(attributeControlType.Name)))"
+                }
+                </text>
+                if (i != allAttributeControlTypes.Count - 1)
+                {
+                    <text>,</text>
+                }
+            }
+        ];
+
+        function productAttributeDropDownEditor(container, options) {
+            $('<input required data-text-field="Name" data-value-field="Id" data-bind="value:ProductAttributeId"/>')
+                .appendTo(container)
+                .kendoDropDownList({
+                    autoBind: false,
+                    dataSource: allProductAttributes
+                });
+        }
+
+        function attributeControlTypeDropDownEditor(container, options) {
+            $('<input required data-text-field="Name" data-value-field="Id" data-bind="value:AttributeControlTypeId"/>')
+                .appendTo(container)
+                .kendoDropDownList({
+                    autoBind: false,
+                    dataSource: allAttributeControlTypes
+                });
         }
     </script>
 }

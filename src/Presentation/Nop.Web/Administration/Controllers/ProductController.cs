@@ -2809,8 +2809,8 @@ namespace Nop.Admin.Controllers
 
         #region Product variant attributes
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult ProductVariantAttributeList(GridCommand command, int productId)
+        [HttpPost]
+        public ActionResult ProductVariantAttributeList(DataSourceRequest command, int productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -2849,7 +2849,7 @@ namespace Nop.Admin.Controllers
                 })
                 .ToList();
 
-            var model = new GridModel<ProductModel.ProductVariantAttributeModel>
+            var model = new DataSourceResult
             {
                 Data = productVariantAttributesModel,
                 Total = productVariantAttributesModel.Count
@@ -2861,8 +2861,8 @@ namespace Nop.Admin.Controllers
             };
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult ProductVariantAttributeInsert(GridCommand command, ProductModel.ProductVariantAttributeModel model)
+        [HttpPost]
+        public ActionResult ProductVariantAttributeInsert(ProductModel.ProductVariantAttributeModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -2880,19 +2880,19 @@ namespace Nop.Admin.Controllers
             var pva = new ProductVariantAttribute()
             {
                 ProductId = model.ProductId,
-                ProductAttributeId = Int32.Parse(model.ProductAttribute), //use ProductAttribute property (not ProductAttributeId) because appropriate property is stored in it
+                ProductAttributeId = model.ProductAttributeId,
                 TextPrompt = model.TextPrompt,
                 IsRequired = model.IsRequired,
-                AttributeControlTypeId = Int32.Parse(model.AttributeControlType), //use AttributeControlType property (not AttributeControlTypeId) because appropriate property is stored in it
+                AttributeControlTypeId = model.AttributeControlTypeId,
                 DisplayOrder = model.DisplayOrder1
             };
             _productAttributeService.InsertProductVariantAttribute(pva);
 
-            return ProductVariantAttributeList(command, model.ProductId);
+            return Json(null);
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult ProductVariantAttrbiuteUpdate(GridCommand command, ProductModel.ProductVariantAttributeModel model)
+        [HttpPost]
+        public ActionResult ProductVariantAttributeUpdate(ProductModel.ProductVariantAttributeModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -2909,20 +2909,18 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return Content("This is not your product");
 
-            //use ProductAttribute property (not ProductAttributeId) because appropriate property is stored in it
-            pva.ProductAttributeId = Int32.Parse(model.ProductAttribute);
+            pva.ProductAttributeId = model.ProductAttributeId;
             pva.TextPrompt = model.TextPrompt;
             pva.IsRequired = model.IsRequired;
-            //use AttributeControlType property (not AttributeControlTypeId) because appropriate property is stored in it
-            pva.AttributeControlTypeId = Int32.Parse(model.AttributeControlType);
+            pva.AttributeControlTypeId = model.AttributeControlTypeId;
             pva.DisplayOrder = model.DisplayOrder1;
             _productAttributeService.UpdateProductVariantAttribute(pva);
 
-            return ProductVariantAttributeList(command, pva.ProductId);
+            return Json(null);
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult ProductVariantAttributeDelete(int id, GridCommand command)
+        [HttpPost]
+        public ActionResult ProductVariantAttributeDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -2943,7 +2941,7 @@ namespace Nop.Admin.Controllers
 
             _productAttributeService.DeleteProductVariantAttribute(pva);
 
-            return ProductVariantAttributeList(command, productId);
+            return Json(null);
         }
 
         #endregion

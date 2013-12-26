@@ -618,7 +618,6 @@ namespace Nop.Admin.Models.Catalog
 
             public int ProductAttributeId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Fields.Attribute")]
-            [UIHint("ProductAttribute")]
             public string ProductAttribute { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Fields.TextPrompt")]
@@ -630,7 +629,6 @@ namespace Nop.Admin.Models.Catalog
 
             public int AttributeControlTypeId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Fields.AttributeControlType")]
-            [UIHint("AttributeControlType")]
             public string AttributeControlType { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Fields.DisplayOrder")]
