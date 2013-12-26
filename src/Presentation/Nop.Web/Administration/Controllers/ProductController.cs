@@ -34,7 +34,6 @@ using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
-using Telerik.Web.Mvc;
 
 namespace Nop.Admin.Controllers
 {
@@ -1071,7 +1070,7 @@ namespace Nop.Admin.Controllers
                 })
                 .ToList();
 
-            var model = new GridModel<ProductModel.ProductCategoryModel>
+            var model = new DataSourceResult
             {
                 Data = productCategoriesModel,
                 Total = productCategoriesModel.Count
@@ -2569,8 +2568,9 @@ namespace Nop.Admin.Controllers
 
             return View(model);
         }
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult BulkEditSelect(GridCommand command, BulkEditListModel model)
+
+        [HttpPost]
+        public ActionResult BulkEditSelect(DataSourceRequest command, BulkEditListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -2588,7 +2588,7 @@ namespace Nop.Admin.Controllers
                 pageIndex: command.Page - 1,
                 pageSize: command.PageSize,
                 showHidden: true);
-            var gridModel = new GridModel();
+            var gridModel = new DataSourceResult();
             gridModel.Data = products.Select(x =>
             {
                 var productModel = new BulkEditProductModel()
@@ -2611,19 +2611,16 @@ namespace Nop.Admin.Controllers
                 Data = gridModel
             };
         }
-        [AcceptVerbs(HttpVerbs.Post)]
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult BulkEditSave(GridCommand command,
-            [Bind(Prefix = "updated")]IEnumerable<BulkEditProductModel> updatedProducts,
-            [Bind(Prefix = "deleted")]IEnumerable<BulkEditProductModel> deletedProducts,
-            BulkEditListModel model)
+
+        [HttpPost]
+        public ActionResult BulkEditUpdate(IEnumerable<BulkEditProductModel> products)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            if (updatedProducts != null)
+            if (products != null)
             {
-                foreach (var pModel in updatedProducts)
+                foreach (var pModel in products)
                 {
                     //update
                     var product = _productService.GetProductById(pModel.Id);
@@ -2642,9 +2639,19 @@ namespace Nop.Admin.Controllers
                     }
                 }
             }
-            if (deletedProducts != null)
+
+            return Json(null);
+        }
+
+        [HttpPost]
+        public ActionResult BulkEditDelete(IEnumerable<BulkEditProductModel> products)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+                return AccessDeniedView();
+
+            if (products != null)
             {
-                foreach (var pModel in deletedProducts)
+                foreach (var pModel in products)
                 {
                     //delete
                     var product = _productService.GetProductById(pModel.Id);
@@ -2658,8 +2665,9 @@ namespace Nop.Admin.Controllers
                     }
                 }
             }
-            return BulkEditSelect(command, model);
+            return Json(null);
         }
+
         #endregion
 
         #region Tier prices
