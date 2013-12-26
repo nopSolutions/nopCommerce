@@ -17,7 +17,7 @@ using Nop.Services.Logging;
 using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Web.Framework.Controllers;
-using Telerik.Web.Mvc;
+using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Plugin.Feed.Froogle.Controllers
 {
@@ -174,8 +174,8 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
             return View("Nop.Plugin.Feed.Froogle.Views.FeedFroogle.Configure", model);
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult GoogleProductList(GridCommand command)
+        [HttpPost]
+        public ActionResult GoogleProductList(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return Content("Access denied");
@@ -205,7 +205,7 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
                             })
                 .ToList();
 
-            var model = new GridModel<FeedFroogleModel.GoogleProductModel>
+            var model = new DataSourceResult
             {
                 Data = productsModel,
                 Total = products.TotalCount
@@ -217,8 +217,8 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
             };
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult GoogleProductUpdate(GridCommand command, FeedFroogleModel.GoogleProductModel model)
+        [HttpPost]
+        public ActionResult GoogleProductUpdate(FeedFroogleModel.GoogleProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return Content("Access denied");
@@ -249,7 +249,7 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
                 _googleService.InsertGoogleProductRecord(googleProduct);
             }
             
-            return GoogleProductList(command);
+            return Json(null);
         }
     }
 }
