@@ -1,5 +1,4 @@
 ﻿@model OrderModel
-@using Telerik.Web.Mvc.UI;
 @if (Model.IsShippable && Model.ShippingAddress != null)
 {
     <table class="adminContent">
@@ -203,43 +202,138 @@
     <table class="adminContent">
         <tr>
             <td>
-                @(Html.Telerik().Grid<ShipmentModel>().Name("shipments-grid")
-                .DataBinding(binding =>
-                {
-                    binding.Ajax().Select("ShipmentsByOrder", "Order", new { orderId = Model.Id });
-                })
-                .Columns(columns =>
-                {
-                    columns.Bound(x => x.Id).Width(50);
-                    columns.Bound(x => x.TrackingNumber);
-                    columns.Bound(x => x.TotalWeight);
-                    columns.Bound(x => x.ShippedDate);
-                    columns.Bound(x => x.DeliveryDate);
-                    columns.Bound(x => x.Id)
-                        .Template(x => Html.ActionLink(T("Admin.Common.View").Text, "ShipmentDetails", "Order", new { id = x.Id }, new { }))
-                        .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/Order/ShipmentDetails/") + "<#= Id #>\">" + T("Admin.Common.View").Text + "</a>")
-                        .Width(50)
-                        .Centered()
-                        .HeaderTemplate(T("Admin.Common.View").Text);
-                })
-                .DetailView(details => details.ClientTemplate(
-                    Html.Telerik().Grid<ShipmentModel.ShipmentItemModel>()
-                    .Name("shipment-items-grid-<#= Id #>")
-                    .Columns(columns =>
-                    {
-                        columns.Bound(si => si.ProductName);
-                        columns.Bound(si => si.QuantityInThisShipment);
-                        columns.Bound(si => si.ItemWeight);
-                        columns.Bound(si => si.ItemDimensions);
-                    })
-                    .DataBinding(dataBinding => dataBinding.Ajax()
-                        .Select("ShipmentsItemsByShipmentId", "Order", new
-                        {
-                            shipmentId = "<#= Id #>"
-                        }))
-                   .ToHtmlString()
-                ))
-                .EnableCustomBinding(true))
+                <div id="shipments-grid"></div>
+
+                <script>
+                    $(document).ready(function () {
+                        $("#shipments-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("ShipmentsByOrder", "Order", new { orderId = Model.Id }))",
+                                        type: "POST",
+                                        dataType: "json"
+                                    },
+                                    contentType: "application/json"
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors"
+                                },
+                                error: function(e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true,
+                                numeric: false,
+                                previousNext: false,
+                                info: false
+                            },
+                            //details grid
+                            detailInit: detailInit,
+                            scrollable: false,
+                            columns: [{
+                                field: "Id",
+                                title: "@T("Admin.Orders.Shipments.ID")",
+                                width: 50
+                            }, {
+                                field: "OrderId",
+                                title: "@T("Admin.Orders.Shipments.OrderID")",
+                                width: 100
+                            }, {
+                                field: "TrackingNumber",
+                                title: "@T("Admin.Orders.Shipments.TrackingNumber")",
+                                width: 100
+                            }, {
+                                field: "TotalWeight",
+                                title: "@T("Admin.Orders.Shipments.TotalWeight")",
+                                width: 100
+                            }, {
+                                field: "ShippedDate",
+                                title: "@T("Admin.Orders.Shipments.ShippedDate")",
+                                width: 200,
+                                type: "date",
+                                format: "{0:G}"
+                            }, {
+                                field: "DeliveryDate",
+                                title: "@T("Admin.Orders.Shipments.DeliveryDate")",
+                                width: 200,
+                                type: "date",
+                                format: "{0:G}"
+                            }, {
+                                field: "Id",
+                                title: "@T("Admin.Common.View")",
+                                width: 50,
+                                template: '<a href="@Url.Content("~/Admin/Order/ShipmentDetails/")#=Id#">@T("Admin.Common.View")</a>'
+                            }]
+                        });
+                    });
+
+                    //details grid
+                    function detailInit(e) {
+                        $("<div/>").appendTo(e.detailCell).kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("ShipmentsItemsByShipmentId", "Order"))?shipmentId="+e.data.Id,
+                                        type: "POST",
+                                        dataType: "json"
+                                    },
+                                    contentType: "application/json"
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors"
+                                },
+                                error: function(e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            scrollable: false,
+                            sortable: true,
+                            pageable: {
+                                refresh: true,
+                                numeric: false,
+                                previousNext: false,
+                                info: false
+                            },
+                            columns: [
+                                {
+                                    field: "ProductName",
+                                    title: "@T("Admin.Orders.Shipments.Products.ProductName")",
+                                    width: 400
+                                },{
+                                    field: "QuantityInThisShipment",
+                                    title: "@T("Admin.Orders.Shipments.Products.QtyShipped")",
+                                    width: 150
+                                },{
+                                    field: "ItemWeight",
+                                    title: "@T("Admin.Orders.Shipments.Products.ItemWeight")",
+                                    width: 150
+                                },{
+                                    field: "ItemDimensions",
+                                    title: "@T("Admin.Orders.Shipments.Products.ItemDimensions")",
+                                    width: 150
+                                }
+                            ]
+                        });
+                    }
+                </script>
             </td>
         </tr>
         @if (Model.CanAddNewShipments)

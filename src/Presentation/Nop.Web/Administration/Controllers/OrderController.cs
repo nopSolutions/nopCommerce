@@ -2269,9 +2269,9 @@ namespace Nop.Admin.Controllers
 				Data = gridModel
 			};
 		}
-        
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult ShipmentsByOrder(int orderId, GridCommand command)
+
+        [HttpPost]
+        public ActionResult ShipmentsByOrder(int orderId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -2294,7 +2294,7 @@ namespace Nop.Admin.Controllers
             foreach (var shipment in shipments)
                 shipmentModels.Add(PrepareShipmentModel(shipment, false));
 
-            var model = new GridModel<ShipmentModel>
+            var model = new DataSourceResult
             {
                 Data = shipmentModels,
                 Total = shipmentModels.Count
