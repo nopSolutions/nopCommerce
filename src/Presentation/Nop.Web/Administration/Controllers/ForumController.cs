@@ -7,6 +7,7 @@ using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Admin.Controllers
 {
@@ -40,21 +41,57 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
                 return AccessDeniedView();
 
-            var forumGroupsModel = _forumService.GetAllForumGroups()
-                .Select(fg =>
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult ForumGroupList(DataSourceRequest command)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
+                return AccessDeniedView();
+
+            var forumGroups = _forumService.GetAllForumGroups();
+            var gridModel = new DataSourceResult
+            {
+                Data = forumGroups.Select(fg =>
                 {
-                    var forumGroupModel = fg.ToModel();
-                    forumGroupModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(fg.CreatedOnUtc, DateTimeKind.Utc);
-                    foreach (var f in fg.Forums.OrderBy(x=>x.DisplayOrder))
-                    {
-                        var forumModel = f.ToModel();
-                        forumModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(f.CreatedOnUtc, DateTimeKind.Utc);
-                        forumGroupModel.ForumModels.Add(forumModel);
-                    }
-                    return forumGroupModel;
-                })
-                .ToList();
-            return View(forumGroupsModel);
+                    var model = fg.ToModel();
+                    model.CreatedOn = _dateTimeHelper.ConvertToUserTime(fg.CreatedOnUtc, DateTimeKind.Utc);
+                    return model;
+                }),
+                Total = forumGroups.Count
+            };
+            return new JsonResult
+            {
+                Data = gridModel
+            };
+        }
+
+        [HttpPost]
+        public ActionResult ForumList(int forumGroupId)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
+                return AccessDeniedView();
+
+            var forumGroup = _forumService.GetForumGroupById(forumGroupId);
+            if (forumGroup == null)
+                throw new Exception("Forum group cannot be loaded");
+
+            var forums = forumGroup.Forums;
+            var gridModel = new DataSourceResult
+            {
+                Data = forums.Select(f =>
+                {
+                    var forumModel = f.ToModel();
+                    forumModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(f.CreatedOnUtc, DateTimeKind.Utc);
+                    return forumModel;
+                }),
+                Total = forums.Count
+            };
+            return new JsonResult
+            {
+                Data = gridModel
+            };
         }
 
         #endregion

@@ -392,7 +392,6 @@ namespace Nop.Admin.Infrastructure
             //forums
             Mapper.CreateMap<ForumGroup, ForumGroupModel>()
                 .ForMember(dest => dest.CreatedOn, mo => mo.Ignore())
-                .ForMember(dest => dest.ForumModels, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             Mapper.CreateMap<ForumGroupModel, ForumGroup>()
                 .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
