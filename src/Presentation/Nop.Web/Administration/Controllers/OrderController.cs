@@ -32,8 +32,8 @@ using Nop.Services.Vendors;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
-using Telerik.Web.Mvc;
 using Nop.Web.Framework.Kendoui;
+using Telerik.Web.Mvc;
 
 namespace Nop.Admin.Controllers
 {
@@ -720,8 +720,8 @@ namespace Nop.Admin.Controllers
             return View(model);
 		}
 
-		[GridAction(EnableCustomBinding = true)]
-		public ActionResult OrderList(GridCommand command, OrderListModel model)
+		[HttpPost]
+		public ActionResult OrderList(DataSourceRequest command, OrderListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -747,7 +747,7 @@ namespace Nop.Admin.Controllers
                 startDateValue, endDateValue, orderStatus,
                 paymentStatus, shippingStatus, model.CustomerEmail, model.OrderGuid,
                 command.Page - 1, command.PageSize);
-            var gridModel = new GridModel<OrderModel>
+            var gridModel = new DataSourceResult
             {
                 Data = orders.Select(x =>
                 {
@@ -768,7 +768,6 @@ namespace Nop.Admin.Controllers
             };
 
             //summary report
-            //implemented as a workaround described here: http://www.telerik.com/community/forums/aspnet-mvc/grid/gridmodel-aggregates-how-to-use.aspx
             var reportSummary = _orderReportService.GetOrderAverageReportLine(model.StoreId,
                 model.VendorId, orderStatus,  paymentStatus, shippingStatus, 
                 startDateValue, endDateValue, model.CustomerEmail);
@@ -779,14 +778,13 @@ namespace Nop.Admin.Controllers
             if (primaryStoreCurrency == null)
                 throw new Exception("Cannot load primary store currency");
 
-		    var aggregator = new OrderModel()
-		    {
+            gridModel.ExtraData = new OrderAggreratorModel()
+            {
                 aggregatorprofit = _priceFormatter.FormatPrice(profit, true, false),
                 aggregatorshipping = _priceFormatter.FormatShippingPrice(reportSummary.SumShippingExclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, false),
                 aggregatortax = _priceFormatter.FormatPrice(reportSummary.SumTax, true, false),
-		        aggregatortotal = _priceFormatter.FormatPrice(reportSummary.SumOrders, true, false)
-		    };
-		    gridModel.Aggregates = aggregator;
+                aggregatortotal = _priceFormatter.FormatPrice(reportSummary.SumOrders, true, false)
+            };
 			return new JsonResult
 			{
 				Data = gridModel
