@@ -121,10 +121,8 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = giftCards.TotalCount
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
         public ActionResult Create()
@@ -326,16 +324,13 @@ namespace Nop.Admin.Controllers
                     };
                 })
                 .ToList();
-            var model = new DataSourceResult
+            var gridModel = new DataSourceResult
             {
                 Data = usageHistoryModel.PagedForCommand(command),
                 Total = usageHistoryModel.Count
             };
 
-            return new JsonResult
-            {
-                Data = model
-            };
+            return Json(gridModel);
         }
 
         #endregion

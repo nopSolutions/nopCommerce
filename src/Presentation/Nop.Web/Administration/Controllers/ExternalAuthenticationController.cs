@@ -72,10 +72,8 @@ namespace Nop.Admin.Controllers
                 Data = methodsModel,
                 Total = methodsModel.Count
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
         [HttpPost]

@@ -324,10 +324,7 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = comments.Count,
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return Json(gridModel);
         }
 
         public ActionResult CommentDelete(int id)

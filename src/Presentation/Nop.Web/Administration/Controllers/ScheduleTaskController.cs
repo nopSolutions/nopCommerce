@@ -83,16 +83,13 @@ namespace Nop.Admin.Controllers
             var models = _scheduleTaskService.GetAllTasks(true)
                 .Select(PrepareScheduleTaskModel)
                 .ToList();
-            var model = new DataSourceResult
+            var gridModel = new DataSourceResult
             {
                 Data = models,
                 Total = models.Count
             };
 
-		    return new JsonResult
-			{
-				Data = model
-			};
+            return Json(gridModel);
 		}
 
         [HttpPost]

@@ -88,10 +88,8 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = customers.TotalCount
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
         [HttpPost]
@@ -124,10 +122,8 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = cart.Count
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
 
@@ -168,10 +164,8 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = customers.TotalCount
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
         [HttpPost]
@@ -204,10 +198,8 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = cart.Count
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
         #endregion

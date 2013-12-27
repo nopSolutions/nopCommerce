@@ -96,16 +96,13 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var countries = _countryService.GetAllCountries(true);
-            var model = new DataSourceResult
+            var gridModel = new DataSourceResult
             {
                 Data = countries.Select(x => x.ToModel()),
                 Total = countries.Count
             };
 
-            return new JsonResult
-            {
-                Data = model
-            };
+            return Json(gridModel);
         }
         
         public ActionResult Create()
@@ -276,15 +273,12 @@ namespace Nop.Admin.Controllers
 
             var states = _stateProvinceService.GetStateProvincesByCountryId(countryId, true);
 
-            var model = new DataSourceResult
+            var gridModel = new DataSourceResult
             {
                 Data = states.Select(x => x.ToModel()),
                 Total = states.Count
             };
-            return new JsonResult
-            {
-                Data = model
-            };
+            return Json(gridModel);
         }
 
         //create

@@ -207,10 +207,7 @@ namespace Nop.Admin.Controllers
                 Data = currenciesModel,
                 Total = currenciesModel.Count
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return Json(gridModel);
         }
         
         public ActionResult MarkAsPrimaryExchangeRateCurrency(int id)

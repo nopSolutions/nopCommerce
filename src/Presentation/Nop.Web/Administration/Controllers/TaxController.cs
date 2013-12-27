@@ -66,10 +66,8 @@ namespace Nop.Admin.Controllers
                 Data = taxProvidersModel,
                 Total = taxProvidersModel.Count()
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
         public ActionResult ConfigureProvider(string systemName)
@@ -133,16 +131,13 @@ namespace Nop.Admin.Controllers
             var categoriesModel = _taxCategoryService.GetAllTaxCategories()
                 .Select(x => x.ToModel())
                 .ToList();
-            var model = new DataSourceResult
+            var gridModel = new DataSourceResult
             {
                 Data = categoriesModel,
                 Total = categoriesModel.Count
             };
 
-            return new JsonResult
-            {
-                Data = model
-            };
+            return Json(gridModel);
         }
 
         [HttpPost]

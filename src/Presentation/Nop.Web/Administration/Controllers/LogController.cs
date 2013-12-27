@@ -90,10 +90,8 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = logItems.TotalCount
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
         [HttpPost, ActionName("List")]

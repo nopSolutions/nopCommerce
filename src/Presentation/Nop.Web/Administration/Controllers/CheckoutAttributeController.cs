@@ -142,10 +142,7 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = checkoutAttributes.Count()
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return Json(gridModel);
         }
         
         //create
@@ -295,10 +292,7 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = values.Count()
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return Json(gridModel);
         }
 
         //create

@@ -61,10 +61,7 @@ namespace Nop.Plugin.Tax.FixedRate.Controllers
                 Data = taxRateModels,
                 Total = taxRateModels.Count
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return Json(gridModel);
         }
 
         [HttpPost]

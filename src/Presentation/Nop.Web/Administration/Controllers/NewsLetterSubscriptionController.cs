@@ -67,10 +67,8 @@ namespace Nop.Admin.Controllers
 				}),
                 Total = newsletterSubscriptions.TotalCount
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
 		}
 
         [HttpPost]

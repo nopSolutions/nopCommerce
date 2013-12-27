@@ -155,10 +155,7 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = affiliates.TotalCount,
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return Json(gridModel);
         }
 
         //create
@@ -292,7 +289,7 @@ namespace Nop.Admin.Controllers
             var orders = _orderService.SearchOrders(affiliateId: affiliate.Id,
                 pageIndex: command.Page - 1,
                 pageSize: command.PageSize);
-            var model = new DataSourceResult
+            var gridModel = new DataSourceResult
             {
                 Data = orders.Select(order =>
                     {
@@ -308,10 +305,7 @@ namespace Nop.Admin.Controllers
                 Total = orders.TotalCount
             };
 
-            return new JsonResult
-            {
-                Data = model
-            };
+            return Json(gridModel);
         }
 
         [HttpPost]
@@ -328,7 +322,7 @@ namespace Nop.Admin.Controllers
                 affiliateId: affiliate.Id,
                 pageIndex: command.Page - 1,
                 pageSize: command.PageSize);
-            var model = new DataSourceResult
+            var gridModel = new DataSourceResult
             {
                 Data = customers.Select(customer =>
                     {
@@ -340,10 +334,7 @@ namespace Nop.Admin.Controllers
                 Total = customers.TotalCount
             };
 
-            return new JsonResult
-            {
-                Data = model
-            };
+            return Json(gridModel);
         }
         #endregion
     }

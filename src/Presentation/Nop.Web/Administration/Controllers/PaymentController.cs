@@ -89,10 +89,8 @@ namespace Nop.Admin.Controllers
                 Data = paymentMethodsModel,
                 Total = paymentMethodsModel.Count
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
         [HttpPost]

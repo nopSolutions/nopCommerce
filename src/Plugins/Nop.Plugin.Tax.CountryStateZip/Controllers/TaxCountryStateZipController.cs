@@ -114,16 +114,13 @@ namespace Nop.Plugin.Tax.CountryStateZip.Controllers
                     return m;
                 })
                 .ToList();
-            var model = new DataSourceResult
+            var gridModel = new DataSourceResult
             {
                 Data = taxRatesModel,
                 Total = records.TotalCount
             };
 
-            return new JsonResult
-            {
-                Data = model
-            };
+            return Json(gridModel);
         }
 
         [HttpPost]

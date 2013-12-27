@@ -170,10 +170,8 @@ namespace Nop.Admin.Controllers
                 Data = topicModels,
                 Total = topicModels.Count
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
         #endregion

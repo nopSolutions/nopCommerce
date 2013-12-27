@@ -65,10 +65,7 @@ namespace Nop.Plugin.Shipping.FixedRateShipping.Controllers
                 Data = rateModels,
                 Total = rateModels.Count
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return Json(gridModel);
         }
 
         [HttpPost]

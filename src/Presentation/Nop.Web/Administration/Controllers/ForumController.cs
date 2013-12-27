@@ -61,10 +61,8 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = forumGroups.Count
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
         [HttpPost]
@@ -88,10 +86,8 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = forums.Count
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
         #endregion

@@ -151,10 +151,8 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = news.TotalCount
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
         public ActionResult Create()
@@ -337,10 +335,8 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = comments.Count,
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
         [HttpPost]

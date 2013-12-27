@@ -133,10 +133,8 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = payments.TotalCount,
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
         //edit
@@ -228,16 +226,13 @@ namespace Nop.Admin.Controllers
                     return m;
                 })
                 .ToList();
-            var model = new DataSourceResult
+            var gridModel = new DataSourceResult
             {
                 Data = historyModel,
                 Total = historyModel.Count
             };
 
-            return new JsonResult
-            {
-                Data = model
-            };
+            return Json(gridModel);
         }
 
         [HttpPost, ActionName("Edit")]

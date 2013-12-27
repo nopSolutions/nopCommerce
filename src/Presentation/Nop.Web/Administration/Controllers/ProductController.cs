@@ -726,10 +726,8 @@ namespace Nop.Admin.Controllers
                 return productModel;
             });
             gridModel.Total = products.TotalCount;
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
         [HttpPost, ActionName("List")]
@@ -1070,16 +1068,13 @@ namespace Nop.Admin.Controllers
                 })
                 .ToList();
 
-            var model = new DataSourceResult
+            var gridModel = new DataSourceResult
             {
                 Data = productCategoriesModel,
                 Total = productCategoriesModel.Count
             };
 
-            return new JsonResult
-            {
-                Data = model
-            };
+            return Json(gridModel);
         }
 
         [HttpPost]
@@ -1216,16 +1211,13 @@ namespace Nop.Admin.Controllers
                 })
                 .ToList();
 
-            var model = new DataSourceResult
+            var gridModel = new DataSourceResult
             {
                 Data = productManufacturersModel,
                 Total = productManufacturersModel.Count
             };
 
-            return new JsonResult
-            {
-                Data = model
-            };
+            return Json(gridModel);
         }
 
         [HttpPost]
@@ -1361,16 +1353,13 @@ namespace Nop.Admin.Controllers
                 })
                 .ToList();
 
-            var model = new DataSourceResult()
+            var gridModel = new DataSourceResult()
             {
                 Data = relatedProductsModel,
                 Total = relatedProductsModel.Count
             };
 
-            return new JsonResult
-            {
-                Data = model
-            };
+            return Json(gridModel);
         }
 
         [HttpPost]
@@ -1488,10 +1477,8 @@ namespace Nop.Admin.Controllers
             var gridModel = new DataSourceResult();
             gridModel.Data = products.Select(x => x.ToModel());
             gridModel.Total = products.TotalCount;
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
         [HttpPost]
@@ -1569,16 +1556,13 @@ namespace Nop.Admin.Controllers
                 })
                 .ToList();
 
-            var model = new DataSourceResult()
+            var gridModel = new DataSourceResult()
             {
                 Data = crossSellProductsModel,
                 Total = crossSellProductsModel.Count
             };
 
-            return new JsonResult
-            {
-                Data = model
-            };
+            return Json(gridModel);
         }
 
         [HttpPost]
@@ -1670,10 +1654,8 @@ namespace Nop.Admin.Controllers
             var gridModel = new DataSourceResult();
             gridModel.Data = products.Select(x => x.ToModel());
             gridModel.Total = products.TotalCount;
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
         [HttpPost]
@@ -1758,16 +1740,13 @@ namespace Nop.Admin.Controllers
                 })
                 .ToList();
 
-            var model = new DataSourceResult
+            var gridModel = new DataSourceResult
             {
                 Data = associatedProductsModel,
                 Total = associatedProductsModel.Count
             };
 
-            return new JsonResult
-            {
-                Data = model
-            };
+            return Json(gridModel);
         }
 
         [HttpPost]
@@ -1876,10 +1855,8 @@ namespace Nop.Admin.Controllers
             var gridModel = new DataSourceResult();
             gridModel.Data = products.Select(x => x.ToModel());
             gridModel.Total = products.TotalCount;
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
         [HttpPost]
@@ -1977,16 +1954,13 @@ namespace Nop.Admin.Controllers
                 })
                 .ToList();
 
-            var model = new DataSourceResult
+            var gridModel = new DataSourceResult
             {
                 Data = productPicturesModel,
                 Total = productPicturesModel.Count
             };
 
-            return new JsonResult
-            {
-                Data = model
-            };
+            return Json(gridModel);
         }
 
         [HttpPost]
@@ -2115,16 +2089,13 @@ namespace Nop.Admin.Controllers
                 })
                 .ToList();
 
-            var model = new DataSourceResult
+            var gridModel = new DataSourceResult
             {
                 Data = productrSpecsModel,
                 Total = productrSpecsModel.Count
             };
 
-            return new JsonResult
-            {
-                Data = model
-            };
+            return Json(gridModel);
         }
 
         [HttpPost]
@@ -2217,15 +2188,13 @@ namespace Nop.Admin.Controllers
                 })
                 .ToList();
 
-            var model = new DataSourceResult
+            var gridModel = new DataSourceResult
             {
                 Data = tags.PagedForCommand(command),
                 Total = tags.Count
             };
-            return new JsonResult
-            {
-                Data = model
-            };
+
+            return Json(gridModel);
         }
 
         [HttpPost]
@@ -2337,10 +2306,7 @@ namespace Nop.Admin.Controllers
                 Total = orders.TotalCount
             };
 
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return Json(gridModel);
         }
 
         #endregion
@@ -2531,15 +2497,13 @@ namespace Nop.Admin.Controllers
                 vendorId = _workContext.CurrentVendor.Id;
 
             var allVariants = _productService.GetLowStockProducts(vendorId);
-            var model = new DataSourceResult
+            var gridModel = new DataSourceResult
             {
                 Data = allVariants.PagedForCommand(command).Select(x => x.ToModel()),
                 Total = allVariants.Count
             };
-            return new JsonResult
-            {
-                Data = model
-            };
+
+            return Json(gridModel);
         }
 
         #endregion
@@ -2606,10 +2570,8 @@ namespace Nop.Admin.Controllers
                 return productModel;
             });
             gridModel.Total = products.TotalCount;
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
         [HttpPost]
@@ -2716,16 +2678,13 @@ namespace Nop.Admin.Controllers
                 })
                 .ToList();
 
-            var model = new DataSourceResult
+            var gridModel = new DataSourceResult
             {
                 Data = tierPricesModel,
                 Total = tierPricesModel.Count
             };
 
-            return new JsonResult
-            {
-                Data = model
-            };
+            return Json(gridModel);
         }
 
         [HttpPost]
@@ -2856,16 +2815,13 @@ namespace Nop.Admin.Controllers
                 })
                 .ToList();
 
-            var model = new DataSourceResult
+            var gridModel = new DataSourceResult
             {
                 Data = productVariantAttributesModel,
                 Total = productVariantAttributesModel.Count
             };
 
-            return new JsonResult
-            {
-                Data = model
-            };
+            return Json(gridModel);
         }
 
         [HttpPost]
@@ -3036,10 +2992,8 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = values.Count()
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
         //create
@@ -3413,10 +3367,8 @@ namespace Nop.Admin.Controllers
             var gridModel = new DataSourceResult();
             gridModel.Data = products.Select(x => x.ToModel());
             gridModel.Total = products.TotalCount;
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
         [HttpPost]
@@ -3494,16 +3446,13 @@ namespace Nop.Admin.Controllers
                 })
                 .ToList();
 
-            var model = new DataSourceResult
+            var gridModel = new DataSourceResult
             {
                 Data = productVariantAttributesModel,
                 Total = productVariantAttributesModel.Count
             };
 
-            return new JsonResult
-            {
-                Data = model
-            };
+            return Json(gridModel);
         }
 
         [HttpPost]

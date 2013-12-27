@@ -114,10 +114,8 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = productReviews.Count,
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
         //edit

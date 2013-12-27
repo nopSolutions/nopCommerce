@@ -135,10 +135,8 @@ namespace Nop.Admin.Controllers
                 Data = shippingProvidersModel,
                 Total = shippingProvidersModel.Count()
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
         [HttpPost]
@@ -217,16 +215,13 @@ namespace Nop.Admin.Controllers
             var shippingMethodsModel = _shippingService.GetAllShippingMethods()
                 .Select(x => x.ToModel())
                 .ToList();
-            var model = new DataSourceResult
+            var gridModel = new DataSourceResult
             {
                 Data = shippingMethodsModel,
                 Total = shippingMethodsModel.Count
             };
 
-            return new JsonResult
-            {
-                Data = model
-            };
+            return Json(gridModel);
         }
 
 
@@ -347,16 +342,13 @@ namespace Nop.Admin.Controllers
             var deliveryDatesModel = _shippingService.GetAllDeliveryDates()
                 .Select(x => x.ToModel())
                 .ToList();
-            var model = new DataSourceResult
+            var gridModel = new DataSourceResult
             {
                 Data = deliveryDatesModel,
                 Total = deliveryDatesModel.Count
             };
 
-            return new JsonResult
-            {
-                Data = model
-            };
+            return Json(gridModel);
         }
 
 
@@ -485,16 +477,13 @@ namespace Nop.Admin.Controllers
                                 return warehouseModel;
                             })
                 .ToList();
-            var model = new DataSourceResult
+            var gridModel = new DataSourceResult
             {
                 Data = warehousesModel,
                 Total = warehousesModel.Count
             };
 
-            return new JsonResult
-            {
-                Data = model
-            };
+            return Json(gridModel);
         }
 
 

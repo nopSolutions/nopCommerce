@@ -147,16 +147,13 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
                     return m;
                 })
                 .ToList();
-            var model = new DataSourceResult
+            var gridModel = new DataSourceResult
             {
                 Data = sbwModel,
                 Total = records.TotalCount
             };
 
-            return new JsonResult
-            {
-                Data = model
-            };
+            return Json(gridModel);
         }
 
         [HttpPost]

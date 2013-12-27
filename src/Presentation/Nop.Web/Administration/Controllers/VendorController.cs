@@ -100,10 +100,8 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = vendors.TotalCount,
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
         //create

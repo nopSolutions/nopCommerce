@@ -551,10 +551,7 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = urlRecords.TotalCount
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return Json(gridModel);
         }
 
         [HttpPost]
@@ -609,10 +606,7 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = searchTermRecordLines.TotalCount
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return Json(gridModel);
         }
 
         #endregion

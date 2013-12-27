@@ -73,10 +73,7 @@ namespace Nop.Admin.Controllers
                 Total = storeModels.Count()
             };
 
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return Json(gridModel);
         }
 
         public ActionResult Create()

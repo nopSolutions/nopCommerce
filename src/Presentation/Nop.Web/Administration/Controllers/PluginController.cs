@@ -218,11 +218,9 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();
 
-            var model = PreparePluginListModel();
-            return new JsonResult
-            {
-                Data = model
-            };
+            var gridModel = PreparePluginListModel();
+
+            return Json(gridModel);
         }
         
         public ActionResult Install(string systemName)

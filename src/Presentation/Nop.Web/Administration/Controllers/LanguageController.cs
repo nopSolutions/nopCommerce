@@ -339,15 +339,13 @@ namespace Nop.Admin.Controllers
                     })
                 .ToList();
             
-            var model = new DataSourceResult
+            var gridModel = new DataSourceResult
             {
                 Data = resources.PagedForCommand(command),
                 Total = resources.Count
             };
-		    return new JsonResult
-			{
-				Data = model
-			};
+
+            return Json(gridModel);
 		}
 
         [HttpPost]

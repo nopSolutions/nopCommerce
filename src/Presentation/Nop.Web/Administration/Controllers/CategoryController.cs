@@ -302,10 +302,7 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = categories.TotalCount
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return Json(gridModel);
         }
 
         //ajax
@@ -643,7 +640,7 @@ namespace Nop.Admin.Controllers
 
             var productCategories = _categoryService.GetProductCategoriesByCategoryId(categoryId,
                 command.Page - 1, command.PageSize, true);
-            var model = new DataSourceResult
+            var gridModel = new DataSourceResult
             {
                 Data = productCategories.Select(x =>
                 {
@@ -660,10 +657,7 @@ namespace Nop.Admin.Controllers
                 Total = productCategories.TotalCount
             };
 
-            return new JsonResult
-            {
-                Data = model
-            };
+            return Json(gridModel);
         }
 
         public ActionResult ProductUpdate(CategoryModel.CategoryProductModel model)
@@ -750,10 +744,8 @@ namespace Nop.Admin.Controllers
                 );
             gridModel.Data = products.Select(x => x.ToModel());
             gridModel.Total = products.TotalCount;
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
         
         [HttpPost]

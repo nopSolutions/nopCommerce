@@ -93,10 +93,8 @@ namespace Nop.Admin.Controllers
                 Data = productAttributes.Select(x => x.ToModel()),
                 Total = productAttributes.TotalCount
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
         
         //create

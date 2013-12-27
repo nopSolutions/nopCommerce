@@ -131,10 +131,8 @@ namespace Nop.Admin.Controllers
                 Data = returnRequestModels,
                 Total = returnRequests.TotalCount,
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
         //edit

@@ -104,10 +104,8 @@ namespace Nop.Admin.Controllers
                 Data = specificationAttributes.Select(x => x.ToModel()),
                 Total = specificationAttributes.TotalCount
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
         
         //create
@@ -255,10 +253,8 @@ namespace Nop.Admin.Controllers
                     }),
                 Total = options.Count()
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
         //create

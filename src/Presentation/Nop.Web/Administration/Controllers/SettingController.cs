@@ -2458,15 +2458,13 @@ namespace Nop.Admin.Controllers
                             })
                 .ToList();
 
-            var model = new DataSourceResult
+            var gridModel = new DataSourceResult
             {
                 Data = settings.PagedForCommand(command).ToList(),
                 Total = settings.Count
             };
-            return new JsonResult
-            {
-                Data = model
-            };
+
+            return Json(gridModel);
         }
         [HttpPost]
         public ActionResult SettingUpdate(SettingModel model)

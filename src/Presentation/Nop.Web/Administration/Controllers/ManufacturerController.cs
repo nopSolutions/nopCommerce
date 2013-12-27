@@ -276,10 +276,8 @@ namespace Nop.Admin.Controllers
                 Data = manufacturers.Select(x => x.ToModel()),
                 Total = manufacturers.TotalCount
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
         #endregion
@@ -504,7 +502,7 @@ namespace Nop.Admin.Controllers
             var productManufacturers = _manufacturerService.GetProductManufacturersByManufacturerId(manufacturerId,
                 command.Page - 1, command.PageSize, true);
 
-            var model = new DataSourceResult
+            var gridModel = new DataSourceResult
             {
                 Data = productManufacturers
                 .Select(x =>
@@ -522,10 +520,8 @@ namespace Nop.Admin.Controllers
                 Total = productManufacturers.TotalCount
             };
 
-            return new JsonResult
-            {
-                Data = model
-            };
+
+            return Json(gridModel);
         }
 
         [HttpPost]
@@ -614,10 +610,8 @@ namespace Nop.Admin.Controllers
                 );
             gridModel.Data = products.Select(x => x.ToModel());
             gridModel.Total = products.TotalCount;
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
         
         [HttpPost]

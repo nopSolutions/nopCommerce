@@ -167,10 +167,8 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = discounts.Count
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
         
         //create
@@ -401,8 +399,8 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentException("No discount found with the specified id");
 
             var duh = _discountService.GetAllDiscountUsageHistory(discount.Id, null, null, command.Page - 1, command.PageSize);
-            
-            var model = new DataSourceResult
+
+            var gridModel = new DataSourceResult
             {
                 Data = duh.Select(x =>
                 {
@@ -416,10 +414,8 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = duh.TotalCount
             };
-            return new JsonResult
-            {
-                Data = model
-            };
+
+            return Json(gridModel);
         }
 
         [HttpPost]

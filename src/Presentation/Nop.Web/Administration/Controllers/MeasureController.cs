@@ -63,16 +63,13 @@ namespace Nop.Admin.Controllers
                 .ToList();
             foreach (var wm in weightsModel)
                 wm.IsPrimaryWeight = wm.Id == _measureSettings.BaseWeightId;
-            var model = new DataSourceResult
+            var gridModel = new DataSourceResult
             {
                 Data = weightsModel,
                 Total = weightsModel.Count
             };
 
-		    return new JsonResult
-			{
-				Data = model
-			};
+            return Json(gridModel);
 		}
 
         [HttpPost]
@@ -167,16 +164,13 @@ namespace Nop.Admin.Controllers
                 .ToList();
             foreach (var wm in dimensionsModel)
                 wm.IsPrimaryDimension = wm.Id == _measureSettings.BaseDimensionId;
-            var model = new DataSourceResult
+            var gridModel = new DataSourceResult
             {
                 Data = dimensionsModel,
                 Total = dimensionsModel.Count
             };
 
-            return new JsonResult
-            {
-                Data = model
-            };
+            return Json(gridModel);
         }
 
         [HttpPost]

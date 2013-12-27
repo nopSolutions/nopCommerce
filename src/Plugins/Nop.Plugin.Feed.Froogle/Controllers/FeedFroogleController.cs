@@ -205,16 +205,13 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
                             })
                 .ToList();
 
-            var model = new DataSourceResult
+            var gridModel = new DataSourceResult
             {
                 Data = productsModel,
                 Total = products.TotalCount
             };
 
-            return new JsonResult
-            {
-                Data = model
-            };
+            return Json(gridModel);
         }
 
         [HttpPost]

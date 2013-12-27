@@ -195,10 +195,8 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = messageTemplates.Count
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
         public ActionResult Edit(int id)

@@ -79,10 +79,8 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = polls.TotalCount
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
         public ActionResult Create()
@@ -208,7 +206,7 @@ namespace Nop.Admin.Controllers
 
             var answers = poll.PollAnswers.OrderBy(x=>x.DisplayOrder).ToList();
 
-            var model = new DataSourceResult
+            var gridModel = new DataSourceResult
             {
                 Data = answers.Select(x => 
                 {
@@ -223,10 +221,8 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = answers.Count
             };
-            return new JsonResult
-            {
-                Data = model
-            };
+
+            return Json(gridModel);
         }
 
 

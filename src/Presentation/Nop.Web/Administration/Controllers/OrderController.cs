@@ -1809,10 +1809,8 @@ namespace Nop.Admin.Controllers
                 return productModel;
             });
             gridModel.Total = products.TotalCount;
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
         public ActionResult AddProductToOrderDetails(int orderId, int productId)
@@ -2292,16 +2290,14 @@ namespace Nop.Admin.Controllers
             foreach (var shipment in shipments)
                 shipmentModels.Add(PrepareShipmentModel(shipment, false));
 
-            var model = new DataSourceResult
+            var gridModel = new DataSourceResult
             {
                 Data = shipmentModels,
                 Total = shipmentModels.Count
             };
 
-            return new JsonResult
-            {
-                Data = model
-            };
+
+            return Json(gridModel);
         }
 
         [HttpPost]
@@ -2328,16 +2324,13 @@ namespace Nop.Admin.Controllers
 
             //shipments
             var shipmentModel = PrepareShipmentModel(shipment, true);
-            var model = new DataSourceResult
+            var gridModel = new DataSourceResult
             {
                 Data = shipmentModel.Items,
                 Total = shipmentModel.Items.Count
             };
 
-            return new JsonResult
-            {
-                Data = model
-            };
+            return Json(gridModel);
         }
 
         public ActionResult AddShipment(int orderId)
@@ -2821,16 +2814,13 @@ namespace Nop.Admin.Controllers
                 });
             }
 
-            var model = new DataSourceResult
+            var gridModel = new DataSourceResult
             {
                 Data = orderNoteModels,
                 Total = orderNoteModels.Count
             };
 
-            return new JsonResult
-            {
-                Data = model
-            };
+            return Json(gridModel);
         }
         
         [ValidateInput(false)]
@@ -2943,10 +2933,8 @@ namespace Nop.Admin.Controllers
 
             var gridModel = GetBestsellersBriefReportModel(command.Page - 1,
                 command.PageSize, 1);
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
         public ActionResult BestsellersBriefReportByAmount()
         {
@@ -2963,10 +2951,8 @@ namespace Nop.Admin.Controllers
 
             var gridModel = GetBestsellersBriefReportModel(command.Page - 1,
                 command.PageSize, 2);
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
 
@@ -3058,10 +3044,8 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = items.TotalCount
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
 
@@ -3104,10 +3088,8 @@ namespace Nop.Admin.Controllers
                     }),
                 Total = items.TotalCount
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
 
@@ -3153,10 +3135,8 @@ namespace Nop.Admin.Controllers
                 Data = model,
                 Total = model.Count
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
         [ChildActionOnly]
@@ -3208,10 +3188,8 @@ namespace Nop.Admin.Controllers
                 Data = model,
                 Total = model.Count
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
         
         #endregion

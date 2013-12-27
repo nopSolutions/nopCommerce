@@ -60,16 +60,13 @@ namespace Nop.Admin.Controllers
             var templatesModel = _categoryTemplateService.GetAllCategoryTemplates()
                 .Select(x => x.ToModel())
                 .ToList();
-            var model = new DataSourceResult
+            var gridModel = new DataSourceResult
             {
                 Data = templatesModel,
                 Total = templatesModel.Count
             };
 
-            return new JsonResult
-            {
-                Data = model
-            };
+            return Json(gridModel);
         }
 
         [HttpPost]
@@ -146,16 +143,13 @@ namespace Nop.Admin.Controllers
             var templatesModel = _manufacturerTemplateService.GetAllManufacturerTemplates()
                 .Select(x => x.ToModel())
                 .ToList();
-            var model = new DataSourceResult
+            var gridModel = new DataSourceResult
             {
                 Data = templatesModel,
                 Total = templatesModel.Count
             };
 
-            return new JsonResult
-            {
-                Data = model
-            };
+            return Json(gridModel);
         }
 
         [HttpPost]

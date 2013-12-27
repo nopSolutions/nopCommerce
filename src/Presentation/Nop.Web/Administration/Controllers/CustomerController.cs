@@ -346,10 +346,8 @@ namespace Nop.Admin.Controllers
                 Data = customers.Select(PrepareCustomerModelForList),
                 Total = customers.TotalCount
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
         
         public ActionResult Create()
@@ -1207,10 +1205,8 @@ namespace Nop.Admin.Controllers
                 Data = model,
                 Total = model.Count
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
         [ValidateInput(false)]
@@ -1270,10 +1266,8 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = addresses.Count
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
         [HttpPost]
@@ -1523,7 +1517,7 @@ namespace Nop.Admin.Controllers
 
             var orders = _orderService.SearchOrders(customerId: customerId);
 
-            var model = new DataSourceResult
+            var gridModel = new DataSourceResult
             {
                 Data = orders.PagedForCommand(command)
                     .Select(order =>
@@ -1544,10 +1538,8 @@ namespace Nop.Admin.Controllers
                 Total = orders.Count
             };
 
-            return new JsonResult
-            {
-                Data = model
-            };
+
+            return Json(gridModel);
         }
         
         #endregion
@@ -1619,10 +1611,8 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = items.Count
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
         [HttpPost]
         public ActionResult ReportBestCustomersByNumberOfOrdersList(DataSourceRequest command, BestCustomersReportModel model)
@@ -1662,10 +1652,8 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = items.Count
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
         [ChildActionOnly]
@@ -1688,10 +1676,8 @@ namespace Nop.Admin.Controllers
                 Data = model,
                 Total = model.Count
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
         
         #endregion
@@ -1728,10 +1714,8 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = cart.Count
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
         #endregion
@@ -1761,10 +1745,8 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = activityLog.TotalCount
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
         #endregion

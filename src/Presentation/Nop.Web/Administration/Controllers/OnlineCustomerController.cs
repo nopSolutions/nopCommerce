@@ -63,7 +63,7 @@ namespace Nop.Admin.Controllers
 
             var customers = _customerService.GetOnlineCustomers(DateTime.UtcNow.AddMinutes(-_customerSettings.OnlineCustomerMinutes),
                 null, command.Page - 1, command.PageSize);
-            var model = new DataSourceResult
+            var gridModel = new DataSourceResult
             {
                 Data = customers.Select(x =>
                 {
@@ -81,10 +81,8 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = customers.TotalCount
             };
-            return new JsonResult
-            {
-                Data = model
-            };
+
+            return Json(gridModel);
         }
 
         #endregion
