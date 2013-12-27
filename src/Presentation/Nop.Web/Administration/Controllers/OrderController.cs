@@ -2237,8 +2237,8 @@ namespace Nop.Admin.Controllers
             return View(model);
 		}
 
-		[GridAction(EnableCustomBinding = true)]
-        public ActionResult ShipmentListSelect(GridCommand command, ShipmentListModel model)
+		[HttpPost]
+        public ActionResult ShipmentListSelect(DataSourceRequest command, ShipmentListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -2259,7 +2259,7 @@ namespace Nop.Admin.Controllers
                 model.CountryId, model.StateProvinceId, model.City, model.TrackingNumber, 
                 startDateValue, endDateValue, 
                 command.Page - 1, command.PageSize);
-            var gridModel = new GridModel<ShipmentModel>
+            var gridModel = new DataSourceResult
             {
                 Data = shipments.Select(shipment => PrepareShipmentModel(shipment, false)),
                 Total = shipments.TotalCount
@@ -2306,8 +2306,8 @@ namespace Nop.Admin.Controllers
             };
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult ShipmentsItemsByShipmentId(int shipmentId, GridCommand command)
+        [HttpPost]
+        public ActionResult ShipmentsItemsByShipmentId(int shipmentId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -2330,7 +2330,7 @@ namespace Nop.Admin.Controllers
 
             //shipments
             var shipmentModel = PrepareShipmentModel(shipment, true);
-            var model = new GridModel<ShipmentModel.ShipmentItemModel>
+            var model = new DataSourceResult
             {
                 Data = shipmentModel.Items,
                 Total = shipmentModel.Items.Count
