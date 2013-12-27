@@ -97,12 +97,10 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageScheduleTasks))
                 return AccessDeniedView();
-            
+
             if (!ModelState.IsValid)
             {
-                //display the first model error
-                var modelStateErrors = this.ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage);
-                return Content(modelStateErrors.FirstOrDefault());
+                return Json(new DataSourceResult() { Errors = ModelState.SerializeErrors() });
             }
 
             var scheduleTask = _scheduleTaskService.GetTaskById(model.Id);
