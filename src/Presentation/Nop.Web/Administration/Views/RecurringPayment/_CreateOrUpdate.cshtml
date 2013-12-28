@@ -71,7 +71,7 @@
                 @Html.NopLabelFor(model => model.CycleLength):
             </td>
             <td class="adminData">
-                @Html.Telerik().IntegerTextBoxFor(model => model.CycleLength).MinValue(1)
+                @Html.EditorFor(model => model.CycleLength)
                 @Html.ValidationMessageFor(model => model.CycleLength)
             </td>
         </tr>
@@ -89,7 +89,7 @@
                 @Html.NopLabelFor(model => model.TotalCycles):
             </td>
             <td class="adminData">
-                @Html.Telerik().IntegerTextBoxFor(model => model.TotalCycles).MinValue(1)
+                @Html.EditorFor(model => model.TotalCycles)
                 @Html.ValidationMessageFor(model => model.TotalCycles)
             </td>
         </tr>
