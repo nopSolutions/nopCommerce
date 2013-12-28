@@ -1,7 +1,0 @@
-@model DateTime
-@using Telerik.Web.Mvc.UI
-
-@(Html.Telerik().TimePicker()
-        .Name(ViewData.TemplateInfo.GetFullHtmlFieldName(string.Empty))
-        .Value(Model > DateTime.MinValue? Model : DateTime.Today)
-)
