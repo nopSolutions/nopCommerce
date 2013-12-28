@@ -145,8 +145,7 @@
                 @Html.NopLabelFor(model => model.ParentCategoryId):
             </td>
             <td class="adminData">
-                @(Html.Telerik().ComboBoxFor(x => x.ParentCategoryId).BindTo(Model.ParentCategories).Encode(true)
-                            .DataBinding(x => x.Ajax().Enabled(true).Select("AllCategories", "Category", new { selectedId = Model.ParentCategoryId })))
+                @Html.DropDownListFor(model => model.ParentCategoryId, Model.AvailableCategories)
                 @Html.ValidationMessageFor(model => model.ParentCategoryId)
             </td>
         </tr>

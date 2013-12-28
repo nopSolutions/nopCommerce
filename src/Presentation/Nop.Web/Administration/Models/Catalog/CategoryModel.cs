@@ -24,6 +24,7 @@ namespace Nop.Admin.Models.Catalog
             }
             Locales = new List<CategoryLocalizedModel>();
             AvailableCategoryTemplates = new List<SelectListItem>();
+            AvailableCategories = new List<SelectListItem>();
         }
 
         [NopResourceDisplayName("Admin.Catalog.Categories.Fields.Name")]
@@ -109,7 +110,7 @@ namespace Nop.Admin.Models.Catalog
         public int[] SelectedStoreIds { get; set; }
 
 
-        public IList<DropDownItem> ParentCategories { get; set; }
+        public IList<SelectListItem> AvailableCategories { get; set; }
 
 
         //discounts

@@ -141,6 +141,28 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
+        protected void PrepareAllCategoriesModel(CategoryModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            model.AvailableCategories.Add(new SelectListItem()
+            {
+                Text = "[None]",
+                Value = "0"
+            });
+            var categories = _categoryService.GetAllCategories(showHidden: true);
+            foreach (var c in categories)
+            {
+                model.AvailableCategories.Add(new SelectListItem()
+                {
+                    Text = c.GetFormattedBreadCrumb(_categoryService),
+                    Value = c.Id.ToString()
+                });
+            }
+        }
+
+        [NonAction]
         protected void PrepareTemplatesModel(CategoryModel model)
         {
             if (model == null)
@@ -304,25 +326,7 @@ namespace Nop.Admin.Controllers
             };
             return Json(gridModel);
         }
-
-        //ajax
-        public ActionResult AllCategories(string text, int selectedId)
-        {
-            var categories = _categoryService.GetAllCategories(showHidden: true);
-            categories.Insert(0, new Category { Name = "[None]", Id = 0 });
-            var selectList = new List<SelectListItem>();
-            foreach (var c in categories)
-                selectList.Add(new SelectListItem()
-                    {
-                         Value = c.Id.ToString(),
-                         Text = c.GetFormattedBreadCrumb(_categoryService),
-                         Selected = c.Id == selectedId
-                    });
-
-            //var selectList = new SelectList(categories, "Id", "Name", selectedId);
-            return new JsonResult { Data = selectList, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
-        }
-
+        
         public ActionResult Tree()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
@@ -361,12 +365,12 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var model = new CategoryModel();
-            //parent categories
-            model.ParentCategories = new List<DropDownItem> { new DropDownItem { Text = "[None]", Value = "0" } };
             //locales
             AddLocales(_languageService, model.Locales);
             //templates
             PrepareTemplatesModel(model);
+            //categories
+            PrepareAllCategoriesModel(model);
             //discounts
             PrepareDiscountModel(model, null, true);
             //ACL
@@ -427,16 +431,8 @@ namespace Nop.Admin.Controllers
             //If we got this far, something failed, redisplay form
             //templates
             PrepareTemplatesModel(model);
-            //parent categories
-            model.ParentCategories = new List<DropDownItem> { new DropDownItem { Text = "[None]", Value = "0" } };
-            if (model.ParentCategoryId > 0)
-            {
-                var parentCategory = _categoryService.GetCategoryById(model.ParentCategoryId);
-                if (parentCategory != null && !parentCategory.Deleted)
-                    model.ParentCategories.Add(new DropDownItem { Text = parentCategory.GetFormattedBreadCrumb(_categoryService), Value = parentCategory.Id.ToString() });
-                else
-                    model.ParentCategoryId = 0;
-            }
+            //categories
+            PrepareAllCategoriesModel(model);
             //discounts
             PrepareDiscountModel(model, null, true);
             //ACL
@@ -457,16 +453,6 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("List");
 
             var model = category.ToModel();
-            //parent categories
-            model.ParentCategories = new List<DropDownItem> { new DropDownItem { Text = "[None]", Value = "0" } };
-            if (model.ParentCategoryId > 0)
-            {
-                var parentCategory = _categoryService.GetCategoryById(model.ParentCategoryId);
-                if (parentCategory != null && !parentCategory.Deleted)
-                    model.ParentCategories.Add(new DropDownItem { Text = parentCategory.GetFormattedBreadCrumb(_categoryService), Value = parentCategory.Id.ToString() });
-                else
-                    model.ParentCategoryId = 0;
-            }
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
@@ -479,6 +465,8 @@ namespace Nop.Admin.Controllers
             });
             //templates
             PrepareTemplatesModel(model);
+            //categories
+            PrepareAllCategoriesModel(model);
             //discounts
             PrepareDiscountModel(model, category, false);
             //ACL
@@ -564,18 +552,10 @@ namespace Nop.Admin.Controllers
 
 
             //If we got this far, something failed, redisplay form
-            //parent categories
-            model.ParentCategories = new List<DropDownItem> { new DropDownItem { Text = "[None]", Value = "0" } };
-            if (model.ParentCategoryId > 0)
-            {
-                var parentCategory = _categoryService.GetCategoryById(model.ParentCategoryId);
-                if (parentCategory != null && !parentCategory.Deleted)
-                    model.ParentCategories.Add(new DropDownItem { Text = parentCategory.GetFormattedBreadCrumb(_categoryService), Value = parentCategory.Id.ToString() });
-                else
-                    model.ParentCategoryId = 0;
-            }
             //templates
             PrepareTemplatesModel(model);
+            //categories
+            PrepareAllCategoriesModel(model);
             //discounts
             PrepareDiscountModel(model, category, true);
             //ACL

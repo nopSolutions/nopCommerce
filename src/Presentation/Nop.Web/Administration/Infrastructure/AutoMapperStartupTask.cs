@@ -170,7 +170,7 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.AvailableCategoryTemplates, mo => mo.Ignore())
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
                 .ForMember(dest => dest.Breadcrumb, mo => mo.Ignore())
-                .ForMember(dest => dest.ParentCategories, mo => mo.Ignore())
+                .ForMember(dest => dest.AvailableCategories, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableDiscounts, mo => mo.Ignore())
                 .ForMember(dest => dest.SelectedDiscountIds, mo => mo.Ignore())
                 .ForMember(dest => dest.SeName, mo => mo.MapFrom(src => src.GetSeName(0, true, false)))
