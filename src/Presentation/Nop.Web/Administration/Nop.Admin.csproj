@@ -997,9 +997,6 @@
     <Content Include="Views\Plugin\ConfigureMiscPlugin.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Shared\EditorTemplates\RichEditor.Telerik.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\NetAdvImage\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
