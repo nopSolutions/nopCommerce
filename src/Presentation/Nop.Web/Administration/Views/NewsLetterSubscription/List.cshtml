@@ -157,13 +157,11 @@
     }
 </script>
 @*import emails form*@
-@{Html.Telerik().Window()
-        .Name("importcsv-window")
-        .Title(T("Admin.Common.ImportFromCsv").Text)
-        .Content(@<text>
+
+<div id="importcsv-window" style="display:none;">
     @using (Html.BeginForm("ImportCsv", "NewsLetterSubscription", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
-        <table style="text-align: left;">
+        <table style="text-align:left;">
             <tr>
                 <td>
                     @T("Admin.Common.CsvFile"):
@@ -179,20 +177,23 @@
             </tr>
         </table>
     }
-    </text>)
-        .Width(400)
-        .Scrollable(false)
-        .Draggable(true)
-        .Modal(true)
-        .Visible(false)
-        .Render();
-}
+</div>
+
+
 <script type="text/javascript">
     $(document).ready(function () {
-
         $("#importcsv").click(function (e) {
             e.preventDefault();
-            $('#importcsv-window').data('tWindow').center().open();
+            var window = $("#importcsv-window");
+            if (!window.data("kendoWindow")) {
+                window.kendoWindow({
+                    modal: true,
+                    width: "400px",
+                    title: "@T("Admin.Common.ImportFromCsv")",
+                    actions: ["Close"]
+                });
+            }
+            $('#importcsv-window').data('kendoWindow').center().open();
         });
     });
 </script>
