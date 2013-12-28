@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using System.Web.WebPages;
@@ -64,7 +65,10 @@ namespace Nop.Web.Framework
                         var language = EngineContext.Current.Resolve<ILanguageService>().GetLanguageById(locale.LanguageId);
 
                         tabStrip.AppendLine("<li>");
-                        tabStrip.AppendLine(language.Name);
+                        var urlHelper = new UrlHelper(helper.ViewContext.RequestContext);
+                        var iconUrl = urlHelper.Content("~/Content/images/flags/" + language.FlagImageFileName);
+                        tabStrip.AppendLine(string.Format("<img class='k-image' alt='' src='{0}'>", iconUrl));
+                        tabStrip.AppendLine(HttpUtility.HtmlEncode(language.Name));
                         tabStrip.AppendLine("</li>");
                     }
                     tabStrip.AppendLine("</ul>");
