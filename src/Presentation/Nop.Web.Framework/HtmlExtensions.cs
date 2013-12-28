@@ -100,22 +100,6 @@ namespace Nop.Web.Framework
                     tabStrip.AppendLine("});");
                     tabStrip.AppendLine("});");
                     tabStrip.AppendLine("</script>");
-
-
-
-
-                    //var tabStrip = helper.Telerik().TabStrip().Name(name).Items(x =>
-                    //{
-                    //    x.Add().Text("Standard").Content(standardTemplate(helper.ViewData.Model).ToHtmlString()).Selected(true);
-                    //    for (int i = 0; i < helper.ViewData.Model.Locales.Count; i++)
-                    //    {
-                    //        var locale = helper.ViewData.Model.Locales[i];
-                    //        var language = EngineContext.Current.Resolve<ILanguageService>().GetLanguageById(locale.LanguageId);
-                    //        x.Add().Text(language.Name)
-                    //            .Content()
-                    //            .ImageUrl("~/Content/images/flags/" + language.FlagImageFileName);
-                    //    }
-                    //}).ToHtmlString();
                     writer.Write(new MvcHtmlString(tabStrip.ToString()));
                 }
                 else
