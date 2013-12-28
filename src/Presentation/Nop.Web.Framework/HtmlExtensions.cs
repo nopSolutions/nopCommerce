@@ -48,22 +48,71 @@ namespace Nop.Web.Framework
             {
                 if (helper.ViewData.Model.Locales.Count > 1)
                 {
-                    var tabStrip = helper.Telerik().TabStrip().Name(name).Items(x =>
+                    var tabStrip = new StringBuilder();
+                    tabStrip.AppendLine(string.Format("<div id='{0}'>", name));
+                    tabStrip.AppendLine("<ul>");
+
+                    //default tab
+                    tabStrip.AppendLine("<li class='k-state-active'>");
+                    tabStrip.AppendLine("Standard");
+                    tabStrip.AppendLine("</li>");
+
+                    for (int i = 0; i < helper.ViewData.Model.Locales.Count; i++)
                     {
-                        x.Add().Text("Standard").Content(standardTemplate(helper.ViewData.Model).ToHtmlString()).Selected(true);
-                        for (int i = 0; i < helper.ViewData.Model.Locales.Count; i++)
-                        {
-                            var locale = helper.ViewData.Model.Locales[i];
-                            var language = EngineContext.Current.Resolve<ILanguageService>().GetLanguageById(locale.LanguageId);
-                            x.Add().Text(language.Name)
-                                .Content(localizedTemplate
-                                    (i).
-                                    ToHtmlString
-                                    ())
-                                .ImageUrl("~/Content/images/flags/" + language.FlagImageFileName);
-                        }
-                    }).ToHtmlString();
-                    writer.Write(tabStrip);
+                        //languages
+                        var locale = helper.ViewData.Model.Locales[i];
+                        var language = EngineContext.Current.Resolve<ILanguageService>().GetLanguageById(locale.LanguageId);
+
+                        tabStrip.AppendLine("<li>");
+                        tabStrip.AppendLine(language.Name);
+                        tabStrip.AppendLine("</li>");
+                    }
+                    tabStrip.AppendLine("</ul>");
+
+
+
+                    //default tab
+                    tabStrip.AppendLine("<div>");
+                    tabStrip.AppendLine(standardTemplate(helper.ViewData.Model).ToHtmlString());
+                    tabStrip.AppendLine("</div>");
+
+                    for (int i = 0; i < helper.ViewData.Model.Locales.Count; i++)
+                    {
+                        //languages
+                        tabStrip.AppendLine("<div>");
+                        tabStrip.AppendLine(localizedTemplate(i).ToHtmlString());
+                        tabStrip.AppendLine("</div>");
+                    }
+                    tabStrip.AppendLine("</div>");
+                    tabStrip.AppendLine("<script>");
+                    tabStrip.AppendLine("$(document).ready(function() {");
+                    tabStrip.AppendLine(string.Format("$('#{0}').kendoTabStrip(", name));
+                    tabStrip.AppendLine("{");
+                    tabStrip.AppendLine("animation:  {");
+                    tabStrip.AppendLine("open: {");
+                    tabStrip.AppendLine("effects: \"fadeIn\"");
+                    tabStrip.AppendLine("}");
+                    tabStrip.AppendLine("}");
+                    tabStrip.AppendLine("});");
+                    tabStrip.AppendLine("});");
+                    tabStrip.AppendLine("</script>");
+
+
+
+
+                    //var tabStrip = helper.Telerik().TabStrip().Name(name).Items(x =>
+                    //{
+                    //    x.Add().Text("Standard").Content(standardTemplate(helper.ViewData.Model).ToHtmlString()).Selected(true);
+                    //    for (int i = 0; i < helper.ViewData.Model.Locales.Count; i++)
+                    //    {
+                    //        var locale = helper.ViewData.Model.Locales[i];
+                    //        var language = EngineContext.Current.Resolve<ILanguageService>().GetLanguageById(locale.LanguageId);
+                    //        x.Add().Text(language.Name)
+                    //            .Content()
+                    //            .ImageUrl("~/Content/images/flags/" + language.FlagImageFileName);
+                    //    }
+                    //}).ToHtmlString();
+                    writer.Write(new MvcHtmlString(tabStrip.ToString()));
                 }
                 else
                 {
