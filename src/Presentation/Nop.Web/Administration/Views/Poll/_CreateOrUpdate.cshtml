@@ -1,15 +1,46 @@
 ﻿@model PollModel
-@using Telerik.Web.Mvc.UI;
 @Html.ValidationSummary(true)
 @Html.HiddenFor(model => model.Id)
-@Html.Telerik().TabStrip().Name("poll-edit").Items(x =>
-{
-    x.Add().Text(T("Admin.ContentManagement.Polls.Info").Text).Content(TabInfo().ToHtmlString());
-    x.Add().Text(T("Admin.ContentManagement.Polls.Answers").Text).Content(TabAnswers().ToHtmlString());
 
-    //generate an event
-    EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "poll-edit"));
-}).ClientEvents(events => events.OnSelect("tabstrip_on_tab_select")).SetSelectedTabIndex(GetSelectedTabIndex())
+<div id="poll-edit">
+    <ul>
+        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+            @T("Admin.ContentManagement.Polls.Info")
+        </li>
+        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+            @T("Admin.ContentManagement.Polls.Answers")
+        </li>
+    </ul>
+    <div>
+        @TabInfo()
+    </div>
+    <div>
+        @TabAnswers()
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $("#poll-edit").kendoTabStrip({
+            animation: {
+                open: {
+                    effects: "fadeIn"
+                }
+            },
+            select: tabstrip_on_tab_select
+        });
+    });
+</script>
+
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "poll-edit");
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}
+
 
 @*save selected tab index*@
 <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">

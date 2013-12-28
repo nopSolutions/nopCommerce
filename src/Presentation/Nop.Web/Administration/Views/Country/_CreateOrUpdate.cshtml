@@ -1,16 +1,47 @@
 ﻿@model CountryModel
 
-@using Telerik.Web.Mvc.UI;
 @Html.ValidationSummary(true)
 @Html.HiddenFor(model => model.Id)
-@Html.Telerik().TabStrip().Name("country-edit").Items(x =>
-{
-    x.Add().Text(T("Admin.Configuration.Countries.Info").Text).Content(TabInfo().ToHtmlString());
-    x.Add().Text(T("Admin.Configuration.Countries.States").Text).Content(TabStates().ToHtmlString());
 
-    //generate an event
-    EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "country-edit"));
-}).ClientEvents(events => events.OnSelect("tabstrip_on_tab_select")).SetSelectedTabIndex(GetSelectedTabIndex())
+<div id="country-edit">
+    <ul>
+        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+            @T("Admin.Configuration.Countries.Info")
+        </li>
+        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+            @T("Admin.Configuration.Countries.States")
+        </li>
+    </ul>
+    <div>
+        @TabInfo()
+    </div>
+    <div>
+        @TabStates()
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $("#country-edit").kendoTabStrip({
+            animation: {
+                open: {
+                    effects: "fadeIn"
+                }
+            },
+            select: tabstrip_on_tab_select
+        });
+    });
+</script>
+
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "country-edit");
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}
+
 
 @*save selected tab index*@
 <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">

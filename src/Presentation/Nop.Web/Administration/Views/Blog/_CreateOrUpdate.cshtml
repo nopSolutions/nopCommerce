@@ -2,18 +2,53 @@
 
 @using System.Text;
 @using Nop.Services.Blogs
-@using Telerik.Web.Mvc.UI;
 @Html.ValidationSummary(true)
 @Html.HiddenFor(model => model.Id)
-@Html.Telerik().TabStrip().Name("blog-post-edit").Items(x =>
-{
-    x.Add().Text(T("Admin.ContentManagement.Blog.BlogPosts.Info").Text).Content(TabInfo().ToHtmlString());
-    x.Add().Text(T("Admin.Common.SEO").Text).Content(TabSeo().ToHtmlString());
-    x.Add().Text(T("Admin.ContentManagement.News.NewsItems.Stores").Text).Content(TabStores().ToHtmlString());
 
-    //generate an event
-    EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "blog-post-edit"));
-}).ClientEvents(events => events.OnSelect("tabstrip_on_tab_select")).SetSelectedTabIndex(GetSelectedTabIndex())
+<div id="blog-post-edit">
+    <ul>
+        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+            @T("Admin.ContentManagement.Blog.BlogPosts.Info")
+        </li>
+        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+            @T("Admin.Common.SEO")
+        </li>
+        <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
+            @T("Admin.ContentManagement.News.NewsItems.Stores")
+        </li>
+    </ul>
+    <div>
+        @TabInfo()
+    </div>
+    <div>
+        @TabSeo()
+    </div>
+    <div>
+        @TabStores()
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $("#blog-post-edit").kendoTabStrip({
+            animation: {
+                open: {
+                    effects: "fadeIn"
+                }
+            },
+            select: tabstrip_on_tab_select
+        });
+    });
+</script>
+
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "blog-post-edit");
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}
 
 @*save selected tab index*@
 <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">

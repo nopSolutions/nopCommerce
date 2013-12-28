@@ -34,20 +34,69 @@
     
     @Html.ValidationSummary(false)
 
-@Html.Telerik().TabStrip().Name("order-edit").Items(x =>
-{
-    x.Add().Text(T("Admin.Orders.Info").Text).Content(TabInfo().ToHtmlString());
-    x.Add().Text(T("Admin.Orders.BillingInfo").Text).Content(TabBillingInfo().ToHtmlString());
-    x.Add().Text(T("Admin.Orders.ShippingInfo").Text).Content(TabShippingInfo().ToHtmlString());
-    x.Add().Text(T("Admin.Orders.Products").Text).Content(TabProducts().ToHtmlString());
-    if (!Model.IsLoggedInAsVendor)
+    <div id="order-edit">
+        <ul>
+            <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+                @T("Admin.Orders.Info")
+            </li>
+            <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+                @T("Admin.Orders.BillingInfo")
+            </li>
+            <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
+                @T("Admin.Orders.ShippingInfo")
+            </li>
+            <li @Html.RenderSelectedTabIndex(3, GetSelectedTabIndex())>
+                @T("Admin.Orders.Products")
+            </li>
+            @if (!Model.IsLoggedInAsVendor)
+            {
+                <li @Html.RenderSelectedTabIndex(4, GetSelectedTabIndex())>
+                    @T("Admin.Orders.OrderNotes")
+                </li>
+            }
+        </ul>
+        <div>
+            @TabInfo()
+        </div>
+        <div>
+            @TabBillingInfo()
+        </div>
+        <div>
+            @TabShippingInfo()
+        </div>
+        <div>
+            @TabProducts()
+        </div>
+        @if (!Model.IsLoggedInAsVendor)
+        {
+            <div>
+                @TabOrderNotes()
+            </div>
+        }
+    </div>
+    <script>
+        $(document).ready(function() {
+            $("#order-edit").kendoTabStrip({
+                animation:  {
+                    open: {
+                        effects: "fadeIn"
+                    }
+                },
+                select: tabstrip_on_tab_select
+            });
+        });
+    </script>
+
     {
-        x.Add().Text(T("Admin.Orders.OrderNotes").Text).Content(TabOrderNotes().ToHtmlString());
+        //custom tabs
+        var eventMessage = new AdminTabStripCreated(this.Html, "order-edit");
+        EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+        foreach (var eventBlock in eventMessage.BlocksToRender)
+        {
+            @eventBlock
+        }
     }
 
-    //generate an event
-    EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "order-edit"));
-}).ClientEvents(events => events.OnSelect("tabstrip_on_tab_select")).SetSelectedTabIndex(GetSelectedTabIndex())
 
     @*save selected tab index*@
 	<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">

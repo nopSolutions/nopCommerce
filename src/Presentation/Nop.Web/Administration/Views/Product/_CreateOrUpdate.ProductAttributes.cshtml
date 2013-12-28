@@ -2,19 +2,38 @@
 
 @using Nop.Core.Domain.Catalog
 @using Nop.Services.Catalog
-@using Telerik.Web.Mvc.UI;
 @if (Model.Id > 0)
 {
     if (Model.NumberOfAvailableProductAttributes > 0)
     {
-        @Html.Telerik().TabStrip().Name("productvariantattribute-edit").Items(x =>
-        {
-            x.Add().Text(T("Admin.Catalog.Products.ProductVariantAttributes.Attributes").Text).Content(TabAttributes().ToHtmlString()).Selected(true);
-            x.Add().Text(T("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations").Text).Content(TabAttributeCombinations().ToHtmlString());
-
-            //generate an event
-            EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "productvariantattribute-edit"));
-        })
+        <div id="productvariantattribute-edit">
+            <ul>
+                <li @Html.RenderSelectedTabIndex(0, 0)>
+                    @T("Admin.Catalog.Products.ProductVariantAttributes.Attributes")
+                </li>
+                <li>
+                    @T("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations")
+                </li>
+            </ul>
+            <div>
+                @TabAttributes()
+            </div>
+            <div>
+                @TabAttributeCombinations()
+            </div>
+        </div>
+        <script>
+            $(document).ready(function() {
+                $("#productvariantattribute-edit").kendoTabStrip({
+                    animation: {
+                        open: {
+                            effects: "fadeIn"
+                        }
+                    },
+                    select: tabstrip_on_tab_select
+                });
+            });
+        </script>
     }
     else
     {

@@ -1,18 +1,47 @@
 ﻿@model RecurringPaymentModel
-
 @using Nop.Core.Domain.Catalog;
 @using Telerik.Web.Mvc.UI;
-
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
-@Html.Telerik().TabStrip().Name("recurringpayment-edit").Items(x =>
-{
-    x.Add().Text(T("Admin.RecurringPayments.Info").Text).Content(TabInfo().ToHtmlString());
-    x.Add().Text(T("Admin.RecurringPayments.History").Text).Content(TabHistory().ToHtmlString());
 
-    //generate an event
-    EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "recurringpayment-edit"));
-}).ClientEvents(events => events.OnSelect("tabstrip_on_tab_select")).SetSelectedTabIndex(GetSelectedTabIndex())
+<div id="recurringpayment-edit">
+    <ul>
+        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+            @T("Admin.RecurringPayments.Info")
+        </li>
+        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+            @T("Admin.RecurringPayments.History")
+        </li>
+    </ul>
+    <div>
+        @TabInfo()
+    </div>
+    <div>
+        @TabHistory()
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $("#recurringpayment-edit").kendoTabStrip({
+            animation: {
+                open: {
+                    effects: "fadeIn"
+                }
+            },
+            select: tabstrip_on_tab_select
+        });
+    });
+</script>
+
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "recurringpayment-edit");
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}
 
 @*save selected tab index*@
 <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">

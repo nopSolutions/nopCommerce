@@ -3,7 +3,6 @@
     //page title
     ViewBag.Title = T("Admin.Customers.Reports").Text;
 }
-@using Telerik.Web.Mvc.UI
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-customers.png")" alt="" />
@@ -12,15 +11,53 @@
     <div class="options">
     </div>
 </div>
-@Html.Telerik().TabStrip().Name("customer-reports").Items(x =>
-{
-    x.Add().Text(T("Admin.Customers.Reports.BestBy.BestByOrderTotal").Text).Content(TabBestByOrderTotal().ToHtmlString()).Selected(true);
-    x.Add().Text(T("Admin.Customers.Reports.BestBy.BestByNumberOfOrders").Text).Content(TabBestByNumberOfOrders().ToHtmlString());
-    x.Add().Text(T("Admin.Customers.Reports.RegisteredCustomers").Text).Content(TabRegisteredCustomers().ToHtmlString());
 
-    //generate an event
-    EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "customer-reports"));
-})
+<div id="customer-reports">
+    <ul>
+        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+            @T("Admin.Customers.Reports.BestBy.BestByOrderTotal")
+        </li>
+        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+            @T("Admin.Customers.Reports.BestBy.BestByNumberOfOrders")
+        </li>
+        <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
+            @T("Admin.Customers.Reports.RegisteredCustomers")
+        </li>
+    </ul>
+    <div>
+        @TabBestByOrderTotal()
+    </div>
+    <div>
+        @TabBestByNumberOfOrders()
+    </div>
+    <div>
+        @TabRegisteredCustomers()
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $("#customer-reports").kendoTabStrip({
+            animation: {
+                open: {
+                    effects: "fadeIn"
+                }
+            },
+            select: tabstrip_on_tab_select
+        });
+    });
+</script>
+
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "customer-reports");
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}
+
+
 @helper TabBestByOrderTotal()
     {
         var dataDictAttributes = new ViewDataDictionary();

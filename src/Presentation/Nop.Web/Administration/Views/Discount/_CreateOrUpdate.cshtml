@@ -1,25 +1,70 @@
 ﻿@model DiscountModel
 
 @using Nop.Core.Domain.Discounts;
-@using Telerik.Web.Mvc.UI;
 @using Nop.Web.Framework.UI;
 @{
     Html.AddScriptParts("~/Scripts/jquery.tmpl.min.js");
 }
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
-@Html.Telerik().TabStrip().Name("discount-edit").Items(x =>
-{
-    x.Add().Text(T("Admin.Promotions.Discounts.Info").Text).Content(TabInfo().ToHtmlString());
-    x.Add().Text(T("Admin.Promotions.Discounts.Requirements").Text).Content(TabRequirements().ToHtmlString());
-    if (Model.Id > 0)
-    {
-        x.Add().Text(T("Admin.Promotions.Discounts.History").Text).Content(TabHistory().ToHtmlString());
-    }
 
-    //generate an event
-    EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "discount-edit"));
-}).ClientEvents(events => events.OnSelect("tabstrip_on_tab_select")).SetSelectedTabIndex(GetSelectedTabIndex())
+
+
+<div id="discount-edit">
+    <ul>
+        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+            @T("Admin.Promotions.Discounts.Info")
+        </li>
+        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+            @T("Admin.Promotions.Discounts.Requirements")
+        </li>
+        @if (Model.Id > 0)
+        {
+            <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
+                @T("Admin.Promotions.Discounts.History")
+            </li>
+        }
+    </ul>
+    <div>
+        @TabInfo()
+    </div>
+    <div>
+        @TabRequirements()
+    </div>
+    @if (Model.Id > 0)
+    {
+        <div>
+            @TabHistory()
+        </div>
+    }
+</div>
+<script>
+    $(document).ready(function() {
+        $("#discount-edit").kendoTabStrip({
+            animation:  {
+                open: {
+                    effects: "fadeIn"
+                }
+            },
+            select: tabstrip_on_tab_select
+        });
+    });
+</script>
+
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "discount-edit");
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}
+
+
+
+
+
 
 @*save selected tab index*@
 <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">

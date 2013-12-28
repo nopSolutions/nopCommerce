@@ -1,5 +1,4 @@
 ﻿@model PluginModel
-@using Telerik.Web.Mvc.UI;
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.SystemName)
 @if (ViewBag.RefreshPage == true)
@@ -10,14 +9,47 @@
         window.close();
     </script>
 }
-@Html.Telerik().TabStrip().Name("plugin-edit").Items(x =>
-{
-    x.Add().Text(T("Admin.Configuration.Plugins.Info").Text).Content(TabInfo().ToHtmlString()).Selected(true);
-    x.Add().Text(T("Admin.Configuration.Plugins.Stores").Text).Content(TabStores().ToHtmlString());
 
-    //generate an event
-    EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "plugin-edit"));
-})
+<div id="plugin-edit">
+    <ul>
+        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+            @T("Admin.Configuration.Plugins.Info")
+        </li>
+        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+            @T("Admin.Configuration.Plugins.Stores")
+        </li>
+    </ul>
+    <div>
+        @TabInfo()
+    </div>
+    <div>
+        @TabStores()
+    </div>
+</div>
+<script>
+    $(document).ready(function() {
+        $("#plugin-edit").kendoTabStrip({
+            animation:  {
+                open: {
+                    effects: "fadeIn"
+                }
+            },
+            select: tabstrip_on_tab_select
+        });
+    });
+</script>
+
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "plugin-edit");
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}
+
+
 @helper TabInfo()
 {
     @(Html.LocalizedEditor<PluginModel, PluginLocalizedModel>("plugin-localized",

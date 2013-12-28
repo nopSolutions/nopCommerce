@@ -1,16 +1,46 @@
 ﻿@model MessageTemplateModel
 
-@using Telerik.Web.Mvc.UI;
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
-@Html.Telerik().TabStrip().Name("template-edit").Items(x =>
-{
-    x.Add().Text(T("Admin.ContentManagement.MessageTemplates.Info").Text).Content(TabInfo().ToHtmlString());
-    x.Add().Text(T("Admin.ContentManagement.MessageTemplates.Stores").Text).Content(TabStores().ToHtmlString());
 
-    //generate an event
-    EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "template-edit"));
-}).ClientEvents(events => events.OnSelect("tabstrip_on_tab_select")).SetSelectedTabIndex(GetSelectedTabIndex())
+<div id="template-edit">
+    <ul>
+        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+            @T("Admin.ContentManagement.MessageTemplates.Info")
+        </li>
+        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+            @T("Admin.ContentManagement.MessageTemplates.Stores")
+        </li>
+    </ul>
+    <div>
+        @TabInfo()
+    </div>
+    <div>
+        @TabStores()
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $("#template-edit").kendoTabStrip({
+            animation: {
+                open: {
+                    effects: "fadeIn"
+                }
+            },
+            select: tabstrip_on_tab_select
+        });
+    });
+</script>
+
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "template-edit");
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}
 
 @*save selected tab index*@
 <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
