@@ -1,73 +1,70 @@
-﻿@using Telerik.Web.Mvc.UI;
-@using Nop.Web.Framework.Web;
-@using Nop.Services.Security;
+﻿@using Nop.Web.Framework.Web;
 @{
-    //load and register sitemap
-    if (!Telerik.Web.Mvc.SiteMapManager.SiteMaps.ContainsKey("admin"))
-    {
-        Telerik.Web.Mvc.SiteMapManager.SiteMaps.Register<Telerik.Web.Mvc.XmlSiteMap>("admin", sitemap =>
-            sitemap.LoadFrom("~/Administration/sitemap.config"));
-    }
+    //load sitemap
+    var siteMap = new Nop.Admin.Infrastructure.Menu.XmlSiteMap();
+    siteMap.LoadFrom("~/Administration/sitemap.config");
     
     //menu plugin
     var adminMenuPlugins = EngineContext.Current.Resolve<Nop.Core.Plugins.IPluginFinder>()
         .GetPlugins<IAdminMenuPlugin>()
         .Where(x => x.Authenticate())
         .ToList();
-        
-    //permission service
-    var permissionService = EngineContext.Current.Resolve<IPermissionService>();
 }
-@{
-    Html.Telerik().Menu().Name("Admin")
-    .BindTo("admin", (item, siteMapNode) =>
+@helper RenderMenuItem(Nop.Admin.Infrastructure.Menu.SiteMapNode item)
+{
+    string url = null;
+    if (!string.IsNullOrEmpty(item.ControllerName) && !string.IsNullOrEmpty(item.ActionName))
     {
-        if (!String.IsNullOrWhiteSpace(item.ControllerName))
-        {
-            //apply admin area as described here - http://www.nopcommerce.com/boards/t/20478/broken-menus-in-admin-area-whilst-trying-to-make-a-plugin-admin-page.aspx
-            item.RouteValues = new RouteValueDictionary() 
-            { 
-                { "area", "Admin" }
-            };
-        }
-        
-        var imageUrl = siteMapNode.Attributes["ImageUrl"];
-        if (imageUrl != null && !string.IsNullOrEmpty(imageUrl.ToString()))
-        {
-            item.ImageUrl = imageUrl.ToString();
-        }
-        
-        var resourceName = siteMapNode.Attributes["nopResource"];
-        if (resourceName != null && !string.IsNullOrEmpty(resourceName.ToString()))
-        {
-            item.Text = T(resourceName.ToString()).ToHtmlString();
-        }
-
-        if (ViewBag.SelectedMenuItem == item.Text)
-        {
-            item.Selected = true;
-        }
-
-        var permissionNames = siteMapNode.Attributes["PermissionNames"];
-        if (permissionNames != null && !string.IsNullOrEmpty(permissionNames.ToString()))
-        {
-            item.Visible = permissionNames.ToString().Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                .Any(permissionName => permissionService.Authorize(permissionName.Trim()));
-        } 
-    })
-    .Items(x =>
+        url = Url.Action(item.ActionName, item.ControllerName, item.RouteValues, null, null);
+    }
+    else if (!string.IsNullOrEmpty(item.Url))
     {
-        if (adminMenuPlugins.Any())
+        url = item.Url.StartsWith("~/", StringComparison.Ordinal) ? Url.Content(item.Url) : item.Url;
+    }
+    <li>
+        
+        @if (!String.IsNullOrEmpty(url))
         {
-                x.Add().Text(T("Admin.Plugins").ToHtmlString()).Items(y =>
+            <a href="@url">
+                @if (!String.IsNullOrEmpty(item.ImageUrl))
                 {
-                    foreach (var adminMenuPlugin in adminMenuPlugins)
-                    {
-                        adminMenuPlugin.BuildMenuItem(y.Add());
-                    }
-                });
+                    <text>
+                        <img alt="" src="@Url.Content(item.ImageUrl)" />
+                    </text>
+                }
+                @item.Title
+            </a>
         }
-    })
-    .OpenOnClick(false)
-    .Render();
+        else
+        {
+            if (!String.IsNullOrEmpty(item.ImageUrl))
+            {
+                <text>
+                    <img alt="" src="@Url.Content(item.ImageUrl)" />
+                </text>
+            }
+            @item.Title
+        }
+        @if (item.ChildNodes.Any(x => x.Visible))
+        {
+            <ul>
+                @foreach (var childItem in item.ChildNodes.Where(x => x.Visible))
+                {
+                    @RenderMenuItem(childItem)
+                }
+            </ul>
+        }
+    </li>
 }
+
+<ul id="admin-menu">
+    @foreach (var item in siteMap.RootNode.ChildNodes.Where(x => x.Visible))
+    {
+        @RenderMenuItem(item)
+    }
+</ul>
+<script>
+    $(document).ready(function() {
+        $("#admin-menu").kendoMenu();
+    });
+</script>
