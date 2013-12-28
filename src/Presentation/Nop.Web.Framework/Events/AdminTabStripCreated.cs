@@ -1,5 +1,5 @@
-﻿
-using Telerik.Web.Mvc.UI;
+﻿using System.Collections.Generic;
+using System.Web.Mvc;
 
 namespace Nop.Web.Framework.Events
 {
@@ -8,13 +8,15 @@ namespace Nop.Web.Framework.Events
     /// </summary>
     public class AdminTabStripCreated
     {
-        public AdminTabStripCreated(TabStripItemFactory itemFactory, string tabStripName)
+        public AdminTabStripCreated(HtmlHelper helper, string tabStripName)
         {
-            this.ItemFactory = itemFactory;
+            this.Helper = helper;
             this.TabStripName = tabStripName;
+            this.BlocksToRender = new List<MvcHtmlString>();
         }
 
-        public TabStripItemFactory ItemFactory { get; private set; }
+        public HtmlHelper Helper { get; private set; }
         public string TabStripName { get; private set; }
+        public IList<MvcHtmlString> BlocksToRender { get; set; }
     }
 }

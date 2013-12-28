@@ -247,6 +247,31 @@ namespace Nop.Web.Framework
             return tabStripBuilder;
         }
 
+        /// <summary>
+        /// Render CSS styles of selected index 
+        /// </summary>
+        /// <param name="helper">HTML helper</param>
+        /// <param name="currentIndex">Current tab index (where appropriate CSS style should be rendred)</param>
+        /// <param name="indexToSelect">Tab index to select</param>
+        /// <returns>MvcHtmlString</returns>
+        public static MvcHtmlString RenderSelectedTabIndex(this HtmlHelper helper, int currentIndex, int indexToSelect)
+        {
+            if (helper == null)
+                throw new ArgumentNullException("helper");
+
+            //ensure it's not negative
+            if (indexToSelect < 0)
+                indexToSelect = 0;
+            
+            //required validation
+            if (indexToSelect == currentIndex)
+            {
+            return new MvcHtmlString(" class='k-state-active'");
+            }
+
+            return new MvcHtmlString("");
+        }
+
         #endregion
 
         #region Common extensions

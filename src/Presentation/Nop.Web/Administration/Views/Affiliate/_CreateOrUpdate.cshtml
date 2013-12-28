@@ -1,21 +1,57 @@
 ﻿@model AffiliateModel
-
-@using Telerik.Web.Mvc.UI;
-
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
-@Html.Telerik().TabStrip().Name("affiliate-edit").Items(x =>
-{
-    x.Add().Text(T("Admin.Affiliates.Info").Text).Content(TabInfo().ToHtmlString());
-    if (Model.Id > 0)
-    {
-        x.Add().Text(T("Admin.Affiliates.Customers").Text).Content(TabCustomers().ToHtmlString());
-        x.Add().Text(T("Admin.Affiliates.Orders").Text).Content(TabOrders().ToHtmlString());
-    }
 
-    //generate an event
-    EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "affiliate-edit"));
-}).ClientEvents(events => events.OnSelect("telerik_on_tab_select")).SetSelectedTabIndex(GetSelectedTabIndex())
+<div id="affiliate-edit">
+    <ul>
+        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+            @T("Admin.Affiliates.Info")
+        </li>
+        @if (Model.Id > 0)
+        {
+            <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+                @T("Admin.Affiliates.Customers")
+            </li>
+            <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
+                @T("Admin.Affiliates.Orders")
+            </li>
+        }
+    </ul>
+    <div>
+        @TabInfo()
+    </div>
+    @if (Model.Id > 0)
+    {
+        <div>
+            @TabCustomers()
+        </div>
+        <div>
+            @TabOrders()
+        </div>
+    }
+</div>
+<script>
+    $(document).ready(function() {
+        $("#affiliate-edit").kendoTabStrip({
+            animation:  {
+                open: {
+                    effects: "fadeIn"
+                }
+            },
+            select: tabstrip_on_tab_select
+        });
+    });
+</script>
+
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "affiliate-edit");
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}
 
 @*save selected tab index*@
 <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
