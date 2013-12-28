@@ -1,5 +1,4 @@
 ﻿@model NewsLetterSubscriptionListModel
-@using Telerik.Web.Mvc.UI
 @{
     var gridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSize;
     
@@ -156,8 +155,8 @@
         };
     }
 </script>
-@*import emails form*@
 
+@*import emails form*@
 <div id="importcsv-window" style="display:none;">
     @using (Html.BeginForm("ImportCsv", "NewsLetterSubscription", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
@@ -178,8 +177,6 @@
         </table>
     }
 </div>
-
-
 <script type="text/javascript">
     $(document).ready(function () {
         $("#importcsv").click(function (e) {
@@ -193,7 +190,7 @@
                     actions: ["Close"]
                 });
             }
-            $('#importcsv-window').data('kendoWindow').center().open();
+            window.data('kendoWindow').center().open();
         });
     });
 </script>

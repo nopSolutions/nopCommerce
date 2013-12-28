@@ -1,5 +1,4 @@
-﻿@using Telerik.Web.Mvc.UI
-@model ProductListModel
+﻿@model ProductListModel
 @{
     var gridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSize;
 
@@ -327,14 +326,13 @@
         }
     </script>  
 }
+
+
 @*import products form*@
-@{Html.Telerik().Window()
-        .Name("importexcel-window")
-        .Title(T("Admin.Common.ImportFromExcel").Text)
-        .Content(@<text>
-    @using (Html.BeginForm("ImportExcel", "Product", FormMethod.Post, new { enctype = "multipart/form-data" }))
+<div id="importexcel-window" style="display:none;">
+    @using (Html.BeginForm("ImportExcel", "Product", FormMethod.Post, new {enctype = "multipart/form-data"}))
     {
-        <table style="text-align: left;">
+        <table style="text-align:left;">
             <tr>
                 <td colspan="2">
                     <em>@T("Admin.Catalog.Products.List.ImportFromExcelTip")</em>
@@ -355,20 +353,21 @@
             </tr>
         </table>
     }
-    </text>)
-        .Width(400)
-        .Scrollable(false)
-        .Draggable(true)
-        .Modal(true)
-        .Visible(false)
-        .Render();
-}
+</div>
 <script type="text/javascript">
     $(document).ready(function () {
-
         $("#importexcel").click(function (e) {
             e.preventDefault();
-            $('#importexcel-window').data('tWindow').center().open();
+            var window = $("#importexcel-window");
+            if (!window.data("kendoWindow")) {
+                window.kendoWindow({
+                    modal: true,
+                    width: "400px",
+                    title: "@T("Admin.Common.ImportFromCsv")",
+                    actions: ["Close"]
+                });
+            }
+            window.data('kendoWindow').center().open();
         });
     });
 </script>

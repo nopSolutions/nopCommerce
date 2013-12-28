@@ -1,5 +1,4 @@
 ﻿@model ProductModel
-@using Telerik.Web.Mvc.UI;
 @{
     //page title
     ViewBag.Title = T("Admin.Catalog.Products.EditProductDetails").Text;
@@ -24,10 +23,7 @@
 @Html.DeleteConfirmation("product-delete")
 
 @*copy product form*@
-@{Html.Telerik().Window()
-        .Name("copyproduct-window")
-        .Title(T("Admin.Catalog.Products.Copy").Text)
-        .Content(@<text>
+<div id="copyproduct-window" style="display:none;">
     @using (Html.BeginForm("CopyProduct", "Product"))
     {
         @Html.HiddenFor(model => Model.CopyProductModel.Id)
@@ -63,20 +59,21 @@
             </tr>
         </table>
     }
-    </text>)
-        .Width(400)
-        .Scrollable(false)
-        .Draggable(true)
-        .Modal(true)
-        .Visible(false)
-        .Render();
-}
+</div>
 <script type="text/javascript">
     $(document).ready(function () {
-
         $("#copyproduct").click(function (e) {
             e.preventDefault();
-            $('#copyproduct-window').data('tWindow').center().open();
+            var window = $("#copyproduct-window");
+            if (!window.data("kendoWindow")) {
+                window.kendoWindow({
+                    modal: true,
+                    width: "400px",
+                    title: "@T("Admin.Catalog.Products.Copy")",
+                    actions: ["Close"]
+                });
+            }
+            window.data('kendoWindow').center().open();
         });
     });
 </script>

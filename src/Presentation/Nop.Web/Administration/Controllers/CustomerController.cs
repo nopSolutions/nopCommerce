@@ -1109,6 +1109,7 @@ namespace Nop.Admin.Controllers
 
                 var email = new QueuedEmail()
                 {
+                    Priority = 5,
                     EmailAccountId = emailAccount.Id,
                     FromName = emailAccount.DisplayName,
                     From = emailAccount.Email,

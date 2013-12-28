@@ -1,5 +1,4 @@
 ﻿@model LanguageModel
-@using Telerik.Web.Mvc.UI
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Languages.EditLanguageDetails").Text;
@@ -22,11 +21,10 @@
     @Html.Partial("_CreateOrUpdate", Model)
 }
 @Html.DeleteConfirmation("language-delete")
+
+
 @*import resources form*@
-@{Html.Telerik().Window()
-        .Name("importxml-window")
-        .Title(T("Admin.Configuration.Languages.Import").Text)
-        .Content(@<text>
+<div id="importxml-window" style="display:none;">
     @using (Html.BeginForm("ImportXml", "Language", new { id = Model.Id }, FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
         <table style="text-align: left;">
@@ -52,32 +50,21 @@
             </tr>
         </table>
     }
-    </text>)
-        .Width(400)
-        .Scrollable(false)
-        .Draggable(true)
-        .Modal(true)
-        .Visible(false)
-        .Render();
-}
+</div>
 <script type="text/javascript">
     $(document).ready(function () {
-
         $("#importxml").click(function (e) {
             e.preventDefault();
-            $('#importxml-window').data('tWindow').center().open();
+            var window = $("#importxml-window");
+            if (!window.data("kendoWindow")) {
+                window.kendoWindow({
+                    modal: true,
+                    width: "400px",
+                    title: "@T("Admin.Configuration.Languages.Import")",
+                    actions: ["Close"]
+                });
+            }
+            window.data('kendoWindow').center().open();
         });
     });
 </script>
-
-
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('#installationform').submit(function () {
-                if ($('form').valid()) {
-                    $('input[type=submit]', this).attr('disabled', 'disabled');
-                }
-            });
-        });
-
-    </script>
