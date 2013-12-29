@@ -109,7 +109,7 @@
                                 field: "Id",
                                 title: "@T("Admin.Common.Edit")",
                                 width: 100,
-                                template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.RouteUrl("Plugin.Shipping.ByWeight.EditPopup")?id=#=Id#&btnId=btnRefresh&formId=shipping-byweight-form', 800, 400, true); return false;\" class='t-button' />"
+                                template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.RouteUrl("Plugin.Shipping.ByWeight.EditPopup")?id=#=Id#&btnId=btnRefresh&formId=shipping-byweight-form', 800, 400, true); return false;\" class='k-button' />"
                             },  {
                                 command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
                                 title: "@T("Admin.Common.Delete")",
@@ -126,7 +126,7 @@
     var addNewUrl = Url.RouteUrl("Plugin.Shipping.ByWeight.AddPopup") + "?btnId=btnRefresh&formId=shipping-byweight-form";
                 }
                 <br />
-                <input type="submit" id="btnAddNewOption" name="btnAddNewOption" value="@T("Plugins.Shipping.ByWeight.AddRecord")" onclick="javascript:OpenWindow('@(addNewUrl)', 800, 400, true); return false;" class="t-button" />
+                <input type="submit" id="btnAddNewOption" name="btnAddNewOption" value="@T("Plugins.Shipping.ByWeight.AddRecord")" onclick="javascript:OpenWindow('@(addNewUrl)', 800, 400, true); return false;" class="k-button" />
                 <input type="submit" id="btnRefresh" name="btnRefresh" style="display: none" />
                 <script type="text/javascript">
                     $(document).ready(function () {
@@ -160,7 +160,7 @@
         <tr>
             <td colspan="2">
                 <br/>
-                <input type="button" id="savegeneralsettings" class="t-button" value="@T("Admin.Common.Save")" />
+                <input type="button" id="savegeneralsettings" class="k-button" value="@T("Admin.Common.Save")" />
                 <script type="text/javascript">
                     $(function () {
                         $('#savegeneralsettings').click(function () {

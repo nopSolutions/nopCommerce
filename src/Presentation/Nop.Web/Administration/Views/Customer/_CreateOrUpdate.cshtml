@@ -173,7 +173,7 @@
                 @Html.ValidationMessageFor(model => model.Password)
                 @if (Model.Id > 0)
                 {
-                    <input type="submit" name="changepassword" class="t-button" value="@T("Admin.Customers.Customers.Fields.Password.Change")" />
+                    <input type="submit" name="changepassword" class="k-button" value="@T("Admin.Customers.Customers.Fields.Password.Change")" />
                 }
             </td>
         </tr>
@@ -471,8 +471,8 @@
                 <td class="adminData">
                     @Html.EditorFor(model => model.VatNumber)
                     (@string.Format(T("Admin.Customers.Customers.Fields.VatNumberStatus").Text, Model.VatNumberStatusNote))
-                    <input type="submit" name="markVatNumberAsValid" class="t-button" value="@T("Admin.Customers.Customers.Fields.VatNumber.MarkAsValid")" />
-                    <input type="submit" name="markVatNumberAsInvalid" class="t-button" value="@T("Admin.Customers.Customers.Fields.VatNumber.MarkAsInvalid")" />
+                    <input type="submit" name="markVatNumberAsValid" class="k-button" value="@T("Admin.Customers.Customers.Fields.VatNumber.MarkAsValid")" />
+                    <input type="submit" name="markVatNumberAsInvalid" class="k-button" value="@T("Admin.Customers.Customers.Fields.VatNumber.MarkAsInvalid")" />
                     @Html.ValidationMessageFor(model => model.VatNumber)
                 </td>
             </tr>
@@ -721,7 +721,7 @@
         </tr>
         <tr>
             <td colspan="2" align="left">
-                <input type="button" id="addRewardPoints" class="t-button" value="@T("Admin.Customers.Customers.RewardPoints.AddButton")" />
+                <input type="button" id="addRewardPoints" class="k-button" value="@T("Admin.Customers.Customers.RewardPoints.AddButton")" />
             </td>
         </tr>
     </table>
@@ -835,7 +835,7 @@
     </script>
     <p>
         <strong>
-            <input type="button" class="t-button" onclick="location.href='@Url.Action("AddressCreate", new { customerId = Model.Id })'" value='@T("Admin.Customers.Customers.Addresses.AddButton")' />
+            <input type="button" class="k-button" onclick="location.href='@Url.Action("AddressCreate", new { customerId = Model.Id })'" value='@T("Admin.Customers.Customers.Addresses.AddButton")' />
         </strong>
     </p>
 }
@@ -1075,7 +1075,7 @@
                 @T("Admin.Customers.Customers.Impersonate.Description2")
                 <br />
                 <br />
-                <input type="submit" name="impersonate" class="t-button" value="@T("Admin.Customers.Customers.Impersonate.Button")" />
+                <input type="submit" name="impersonate" class="k-button" value="@T("Admin.Customers.Customers.Impersonate.Button")" />
             </td>
         </tr>
     </table>

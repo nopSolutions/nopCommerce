@@ -14,11 +14,11 @@
         <div class="options">
             @if (!Model.IsLoggedInAsVendor)
             {
-                <a href="@Url.Action("PdfInvoice", new { orderId = Model.Id })" class="t-button">@T("Admin.Orders.PdfInvoice")</a>
+                <a href="@Url.Action("PdfInvoice", new { orderId = Model.Id })" class="k-button">@T("Admin.Orders.PdfInvoice")</a>
             }
             @if (!Model.IsLoggedInAsVendor)
             {
-                <span id="order-delete" class="t-button">@T("Admin.Common.Delete")</span>
+                <span id="order-delete" class="k-button">@T("Admin.Common.Delete")</span>
             }
             <input type="submit" id="btnRefreshPage" name="btnRefreshPage" style="display: none" />
             <script type="text/javascript">

@@ -13,18 +13,18 @@
             @T("Admin.Catalog.Products.Manage")
         </div>
         <div class="options">
-            <a href="@Url.Action("Create")" class="t-button">@T("Admin.Common.AddNew")</a>
-            <a href="@Url.Action("DownloadCatalogAsPdf")" class="t-button">@T("Admin.Catalog.Products.List.DownloadPDF")</a>
-            <a href="@Url.Action("ExportXmlAll")" class="t-button">@T("Admin.Common.ExportToXml.All")</a>
-            <input type="button" id="exportxml-selected" class="t-button" value="@T("Admin.Common.ExportToXml.Selected")" />
-            <a href="@Url.Action("ExportExcelAll")" class="t-button">@T("Admin.Common.ExportToExcel.All")</a>
-            <input type="button" id="exportexcel-selected" class="t-button" value="@T("Admin.Common.ExportToExcel.Selected")" />
+            <a href="@Url.Action("Create")" class="k-button">@T("Admin.Common.AddNew")</a>
+            <a href="@Url.Action("DownloadCatalogAsPdf")" class="k-button">@T("Admin.Catalog.Products.List.DownloadPDF")</a>
+            <a href="@Url.Action("ExportXmlAll")" class="k-button">@T("Admin.Common.ExportToXml.All")</a>
+            <input type="button" id="exportxml-selected" class="k-button" value="@T("Admin.Common.ExportToXml.Selected")" />
+            <a href="@Url.Action("ExportExcelAll")" class="k-button">@T("Admin.Common.ExportToExcel.All")</a>
+            <input type="button" id="exportexcel-selected" class="k-button" value="@T("Admin.Common.ExportToExcel.Selected")" />
             @if (!Model.IsLoggedInAsVendor)
             {
                 //a vendor cannot import products
-                <input type="button" id="importexcel" name="importexcel" class="t-button" value="@T("Admin.Common.ImportFromExcel")" />
+                <input type="button" id="importexcel" name="importexcel" class="k-button" value="@T("Admin.Common.ImportFromExcel")" />
             }
-            <input type="button" id="delete-selected" class="t-button" value="@T("Admin.Common.Delete.Selected")" />
+            <input type="button" id="delete-selected" class="k-button" value="@T("Admin.Common.Delete.Selected")" />
         </div>
     </div>
     <table width="100%">
@@ -98,12 +98,12 @@
             </td>
             <td class="adminData">
                 @Html.EditorFor(model => Model.GoDirectlyToSku)
-                <input type="submit" id="go-to-product-by-sku" name="go-to-product-by-sku" class="t-button" value="@T("Admin.Common.Go")" />
+                <input type="submit" id="go-to-product-by-sku" name="go-to-product-by-sku" class="k-button" value="@T("Admin.Common.Go")" />
             </td>
         </tr>
         <tr>
             <td colspan="2">
-                <input type="button" id="search-products" class="t-button" value="@T("Admin.Common.Search")" />
+                <input type="button" id="search-products" class="k-button" value="@T("Admin.Common.Search")" />
             </td>
         </tr>
     </table>
@@ -348,7 +348,7 @@
             </tr>
             <tr>
                 <td colspan="2">
-                    <input type="submit" class="t-button" value="@T("Admin.Common.ImportFromExcel")" />
+                    <input type="submit" class="k-button" value="@T("Admin.Common.ImportFromExcel")" />
                 </td>
             </tr>
         </table>

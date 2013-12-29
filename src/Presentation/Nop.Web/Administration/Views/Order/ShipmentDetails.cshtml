@@ -51,8 +51,8 @@
             @T("Admin.Orders.Shipments.ViewDetails") - @Model.Id @Html.ActionLink("(" + T("Admin.Orders.Shipments.BackToOrder") + ")", "Edit", new { id = Model.OrderId })
         </div>
         <div class="options">
-            <a href="@Url.Action("PdfPackagingSlip", new { shipmentId = Model.Id })" class="t-button">@T("Admin.Orders.Shipments.PrintPackagingSlip")</a>
-            <span id="shipment-delete" class="t-button">@T("Admin.Common.Delete")</span>
+            <a href="@Url.Action("PdfPackagingSlip", new { shipmentId = Model.Id })" class="k-button">@T("Admin.Orders.Shipments.PrintPackagingSlip")</a>
+            <span id="shipment-delete" class="k-button">@T("Admin.Common.Delete")</span>
         </div>
     </div>
     @Html.ValidationSummary(false)

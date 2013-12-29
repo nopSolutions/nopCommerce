@@ -133,7 +133,7 @@
                     {
                         <tr>
                             <td colspan="2">
-                                <a href="@Url.Action("AddressEdit", new { addressId = Model.ShippingAddress.Id, orderId = Model.Id })" class="t-button">@T("Admin.Common.Edit")</a>
+                                <a href="@Url.Action("AddressEdit", new { addressId = Model.ShippingAddress.Id, orderId = Model.Id })" class="k-button">@T("Admin.Common.Edit")</a>
                             </td>
                         </tr>
                     }
@@ -340,7 +340,7 @@
         {
             <tr>
                 <td class="adminData">
-                    <input type="submit" id="btnAddNewShipment" name="btnAddNewShipment" value="@T("Admin.Orders.Shipments.AddNew")" onclick="javascript:setLocation('@(Url.Action("AddShipment", "Order", new { orderId = Model.Id }))'); return false;" class="t-button" />
+                    <input type="submit" id="btnAddNewShipment" name="btnAddNewShipment" value="@T("Admin.Orders.Shipments.AddNew")" onclick="javascript:setLocation('@(Url.Action("AddShipment", "Order", new { orderId = Model.Id }))'); return false;" class="k-button" />
                 </td>
             </tr>
         }

@@ -17,12 +17,12 @@
             @if (!Model.IsLoggedInAsVendor)
             {
                 //a vendor cannot export/import orders
-                <a href="@Url.Action("ExportXmlAll")" class="t-button">@T("Admin.Common.ExportToXml.All")</a>
-                <input type="button" id="exportxml-selected" class="t-button" value="@T("Admin.Common.ExportToXml.Selected")" />
-                <a href="@Url.Action("ExportExcelAll")" class="t-button">@T("Admin.Common.ExportToExcel.All")</a>
-                <input type="button" id="exportexcel-selected" class="t-button" value="@T("Admin.Common.ExportToExcel.Selected")" />
+                <a href="@Url.Action("ExportXmlAll")" class="k-button">@T("Admin.Common.ExportToXml.All")</a>
+                <input type="button" id="exportxml-selected" class="k-button" value="@T("Admin.Common.ExportToXml.Selected")" />
+                <a href="@Url.Action("ExportExcelAll")" class="k-button">@T("Admin.Common.ExportToExcel.All")</a>
+                <input type="button" id="exportexcel-selected" class="k-button" value="@T("Admin.Common.ExportToExcel.Selected")" />
             }
-            <input type="button" id="pdf-invoice-selected" class="t-button" value="@T("Admin.Orders.PdfInvoice.Selected")" />
+            <input type="button" id="pdf-invoice-selected" class="k-button" value="@T("Admin.Orders.PdfInvoice.Selected")" />
         </div>
     </div>
     <table width="100%">
@@ -104,12 +104,12 @@
             </td>
             <td class="adminData">
                 @Html.EditorFor(model => Model.GoDirectlyToNumber)
-                <input type="submit" name="go-to-order-by-number" class="t-button" value="@T("Admin.Common.Go")" />
+                <input type="submit" name="go-to-order-by-number" class="k-button" value="@T("Admin.Common.Go")" />
             </td>
         </tr>
         <tr>
             <td colspan="2">
-                <input type="button" id="btnSearch" class="t-button" value="@T("Admin.Common.Search")" />
+                <input type="button" id="btnSearch" class="k-button" value="@T("Admin.Common.Search")" />
             </td>
         </tr>
     </table>

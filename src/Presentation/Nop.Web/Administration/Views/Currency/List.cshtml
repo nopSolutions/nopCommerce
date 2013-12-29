@@ -10,9 +10,9 @@
         @T("Admin.Configuration.Currencies")
     </div>
     <div class="options">
-        <a href="javascript:document.CurrencySettings.submit()" class="t-button">@T("Admin.Common.Save")</a>
-        <a href="@Url.Action("List", "Currency", new { liveRates = true })" class="t-button">@T("Admin.Configuration.Currencies.GetLiveRates")</a>
-        <a href="@Url.Action("Create")" class="t-button">@T("Admin.Common.AddNew")</a>
+        <a href="javascript:document.CurrencySettings.submit()" class="k-button">@T("Admin.Common.Save")</a>
+        <a href="@Url.Action("List", "Currency", new { liveRates = true })" class="k-button">@T("Admin.Configuration.Currencies.GetLiveRates")</a>
+        <a href="@Url.Action("Create")" class="k-button">@T("Admin.Common.AddNew")</a>
     </div>
 </div>
 @using (Html.BeginForm("Save", "Currency", FormMethod.Post, new { name = "CurrencySettings" }))
@@ -99,7 +99,7 @@
                         }, {
                             field: "Id",
                             title: "@T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryExchangeRateCurrency")",
-                            template: '<a href="@Url.Content("~/Admin/Currency/MarkAsPrimaryExchangeRateCurrency/")#=Id#" class="t-button">@T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryExchangeRateCurrency")</a>'
+                            template: '<a href="@Url.Content("~/Admin/Currency/MarkAsPrimaryExchangeRateCurrency/")#=Id#" class="k-button">@T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryExchangeRateCurrency")</a>'
                         }, {
                             field: "IsPrimaryStoreCurrency",
                             title: "@T("Admin.Configuration.Currencies.Fields.IsPrimaryStoreCurrency")",
@@ -108,7 +108,7 @@
                         }, {
                             field: "Id",
                             title: "@T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryStoreCurrency")",
-                            template: '<a href="@Url.Content("~/Admin/Currency/MarkAsPrimaryStoreCurrency/")#=Id#" class="t-button">@T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryStoreCurrency")</a>'
+                            template: '<a href="@Url.Content("~/Admin/Currency/MarkAsPrimaryStoreCurrency/")#=Id#" class="k-button">@T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryStoreCurrency")</a>'
                         }, {
                             field: "Published",
                             title: "@T("Admin.Configuration.Currencies.Fields.Published")",

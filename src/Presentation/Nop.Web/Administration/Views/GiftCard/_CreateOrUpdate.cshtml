@@ -133,7 +133,7 @@
             <td class="adminData">
                 @Html.EditorFor(model => model.GiftCardCouponCode)
                 @Html.ValidationMessageFor(model => model.GiftCardCouponCode)
-                <input type="button" id="generateCouponCode" class="t-button" value="@T("Admin.GiftCards.Fields.GiftCardCouponCode.Generate")" />
+                <input type="button" id="generateCouponCode" class="k-button" value="@T("Admin.GiftCards.Fields.GiftCardCouponCode.Generate")" />
                 <script type="text/javascript">
         $(document).ready(function () {
             $('#generateCouponCode').click(function () {
@@ -206,7 +206,7 @@
                 </td>
                 <td class="adminData">
                     @Model.IsRecipientNotified.ToString()
-                    <input type="submit" name="notifyRecipient" class="t-button" value="@T("Admin.GiftCards.Fields.IsRecipientNotified.Notify")" />
+                    <input type="submit" name="notifyRecipient" class="k-button" value="@T("Admin.GiftCards.Fields.IsRecipientNotified.Notify")" />
                 </td>
             </tr>
         }

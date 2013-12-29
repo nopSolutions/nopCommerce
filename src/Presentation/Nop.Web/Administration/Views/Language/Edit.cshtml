@@ -11,11 +11,11 @@
             @T("Admin.Configuration.Languages.EditLanguageDetails") - @Model.Name @Html.ActionLink("(" + T("Admin.Configuration.Languages.BackToList") + ")", "List")
         </div>
         <div class="options">
-            <input type="submit" name="save" class="t-button" value="@T("Admin.Common.Save")" />
-            <input type="submit" name="save-continue" class="t-button" value="@T("Admin.Common.SaveContinue")" />
-            <a href="@Url.Action("ExportXml", new { id = Model.Id })" class="t-button">@T("Admin.Configuration.Languages.Export")</a>
-            <input type="button" id="importxml" class="t-button" value="@T("Admin.Configuration.Languages.Import")" />
-            <span id="language-delete" class="t-button">@T("Admin.Common.Delete")</span>
+            <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
+            <input type="submit" name="save-continue" class="k-button" value="@T("Admin.Common.SaveContinue")" />
+            <a href="@Url.Action("ExportXml", new { id = Model.Id })" class="k-button">@T("Admin.Configuration.Languages.Export")</a>
+            <input type="button" id="importxml" class="k-button" value="@T("Admin.Configuration.Languages.Import")" />
+            <span id="language-delete" class="k-button">@T("Admin.Common.Delete")</span>
         </div>
     </div>
     @Html.Partial("_CreateOrUpdate", Model)
@@ -45,7 +45,7 @@
             </tr>
             <tr>
                 <td colspan="2">
-                    <input id="importxmlsubmit" type="submit" class="t-button" value="@T("Admin.Configuration.Languages.Import")" />
+                    <input id="importxmlsubmit" type="submit" class="k-button" value="@T("Admin.Configuration.Languages.Import")" />
                 </td>
             </tr>
         </table>

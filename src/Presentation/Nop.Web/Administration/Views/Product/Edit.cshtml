@@ -11,11 +11,11 @@
             @T("Admin.Catalog.Products.EditProductDetails") - @Model.Name @Html.ActionLink("(" + T("Admin.Catalog.Products.BackToList") + ")", "List")
         </div>
         <div class="options">
-            <input type="submit" value="@T("Admin.Common.Preview")" onclick="javascript:OpenWindow('@Url.RouteUrl("Product", new { SeName = Model.SeName })', 800, 600, true); return false;" class="t-button" />
-            <input type="submit" name="save" class="t-button" value="@T("Admin.Common.Save")" />
-            <input type="submit" name="save-continue" class="t-button" value="@T("Admin.Common.SaveContinue")" />
-            <input type="submit" id="copyproduct" name="copyproduct" class="t-button" value="@T("Admin.Catalog.Products.Copy")" />
-            <span id="product-delete" class="t-button">@T("Admin.Common.Delete")</span>
+            <input type="submit" value="@T("Admin.Common.Preview")" onclick="javascript:OpenWindow('@Url.RouteUrl("Product", new { SeName = Model.SeName })', 800, 600, true); return false;" class="k-button" />
+            <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
+            <input type="submit" name="save-continue" class="k-button" value="@T("Admin.Common.SaveContinue")" />
+            <input type="submit" id="copyproduct" name="copyproduct" class="k-button" value="@T("Admin.Catalog.Products.Copy")" />
+            <span id="product-delete" class="k-button">@T("Admin.Common.Delete")</span>
         </div>
     </div>
     @Html.Partial("_CreateOrUpdate", Model)
@@ -54,7 +54,7 @@
             </tr>
             <tr>
                 <td colspan="2">
-                    <input type="submit" class="t-button" value="@T("Admin.Catalog.Products.Copy")" />
+                    <input type="submit" class="k-button" value="@T("Admin.Catalog.Products.Copy")" />
                 </td>
             </tr>
         </table>
