@@ -1,7 +1,7 @@
 ﻿@using Nop.Web.Framework.Web;
 @{
     //load sitemap
-    var siteMap = new Nop.Admin.Infrastructure.Menu.XmlSiteMap();
+    var siteMap = new Nop.Web.Framework.Menu.XmlSiteMap();
     siteMap.LoadFrom("~/Administration/sitemap.config");
     
     //menu plugin
@@ -10,7 +10,7 @@
         .Where(x => x.Authenticate())
         .ToList();
 }
-@helper RenderMenuItem(Nop.Admin.Infrastructure.Menu.SiteMapNode item)
+@helper RenderMenuItem(Nop.Web.Framework.Menu.SiteMapNode item)
 {
     string url = null;
     if (!string.IsNullOrEmpty(item.ControllerName) && !string.IsNullOrEmpty(item.ActionName))
@@ -61,6 +61,20 @@
     @foreach (var item in siteMap.RootNode.ChildNodes.Where(x => x.Visible))
     {
         @RenderMenuItem(item)
+    }
+	@*plugin custom items*@
+    @if (adminMenuPlugins.Any())
+    {
+        var pluginRootMenuItem = new Nop.Web.Framework.Menu.SiteMapNode()
+        {
+            Title = T("Admin.Plugins").Text,
+            Visible = true
+        };
+        foreach (var adminMenuPlugin in adminMenuPlugins)
+        {
+            pluginRootMenuItem.ChildNodes.Add(adminMenuPlugin.BuildMenuItem());
+        }
+        @RenderMenuItem(pluginRootMenuItem)
     }
 </ul>
 <script>

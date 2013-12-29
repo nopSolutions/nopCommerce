@@ -127,6 +127,8 @@
     <Compile Include="Controllers\ParameterBasedOnFormNameAndValueAttribute.cs" />
     <Compile Include="Kendoui\DataSourceRequest.cs" />
     <Compile Include="Kendoui\DataSourceResult.cs" />
+    <Compile Include="Menu\SiteMapNode.cs" />
+    <Compile Include="Menu\XmlSiteMap.cs" />
     <Compile Include="Seo\CustomUrlRecordEntityNameRequested.cs" />
     <Compile Include="Seo\WwwRequirementAttribute.cs" />
     <Compile Include="WebStoreContext.cs" />

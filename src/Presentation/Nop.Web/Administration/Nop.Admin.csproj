@@ -189,8 +189,6 @@
     <Compile Include="HtmlExtensions.cs" />
     <Compile Include="Infrastructure\Cache\ModelCacheEventConsumer.cs" />
     <Compile Include="Infrastructure\DependencyRegistrar.cs" />
-    <Compile Include="Infrastructure\Menu\SiteMapNode.cs" />
-    <Compile Include="Infrastructure\Menu\XmlSiteMap.cs" />
     <Compile Include="Infrastructure\RouteProvider.cs" />
     <Compile Include="MappingExtensions.cs" />
     <Compile Include="Infrastructure\AdminStartupTask.cs" />

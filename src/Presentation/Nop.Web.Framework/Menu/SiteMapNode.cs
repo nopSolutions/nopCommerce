@@ -2,7 +2,7 @@
 using System.Web.Routing;
 
 //code from Telerik MVC Extensions
-namespace Nop.Admin.Infrastructure.Menu
+namespace Nop.Web.Framework.Menu
 {
     public class SiteMapNode
     {

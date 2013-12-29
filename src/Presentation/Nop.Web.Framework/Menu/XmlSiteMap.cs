@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web.Routing;
@@ -11,7 +10,7 @@ using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
 using Nop.Services.Security;
 
-namespace Nop.Admin.Infrastructure.Menu
+namespace Nop.Web.Framework.Menu
 {
     public class XmlSiteMap
     {
