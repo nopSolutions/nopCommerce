@@ -1,6 +1,5 @@
 ﻿@using Nop.Core.Domain.Customers
 @using Nop.Core.Domain.Localization
-@using Telerik.Web.Mvc.UI;
 @using Nop.Web.Framework.UI;
 @using Nop.Core;
 @using Nop.Core.Domain.Common;
@@ -56,106 +55,105 @@
 }
 <!DOCTYPE html>
 <html @(supportRtl ? Html.Raw("dir=\"rtl\"") : null)>
-<head>
-    <title>@adminPageTitle</title>
-    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
-    @Html.NopHeadCustom()
-    @Html.NopCssFiles(this.Url, ResourceLocation.Head)
-    @Html.NopScripts(this.Url, ResourceLocation.Head)
-</head>
-<body @(supportRtl ? Html.Raw("class=\"k-rtl\"") : null)>
-    <div id="ajaxBusy">
-        <span>&nbsp;</span>
-    </div>
-    <div class="master-wrapper-page k-content">
-        <div class="master-wrapper-content">
-            @if (IsSectionDefined("header"))
-            {
-                @RenderSection("header")
-            }
-            else
-            {
-                <script type="text/javascript">
-                    $(document).ready(function () {
-                        $("#restart-application").click(function (e) {
-                            showThrobber('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Admin.Header.RestartApplication.Progress").Text))');
+    <head>
+        <title>@adminPageTitle</title>
+        <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+        @Html.NopHeadCustom()
+        @Html.NopCssFiles(this.Url, ResourceLocation.Head)
+        @Html.NopScripts(this.Url, ResourceLocation.Head)
+    </head>
+    <body @(supportRtl ? Html.Raw("class=\"k-rtl\"") : null)>
+        <div id="ajaxBusy">
+            <span>&nbsp;</span>
+        </div>
+        <div class="master-wrapper-page k-content">
+            <div class="master-wrapper-content">
+                @if (IsSectionDefined("header"))
+                {
+                    @RenderSection("header")
+                }
+                else
+                {
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $("#restart-application").click(function (e) {
+                                showThrobber('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Admin.Header.RestartApplication.Progress").Text))');
+                            });
                         });
-                    });
-                </script>
-                <div class="header">
-                    <div class="logo">
+                    </script>
+                    <div class="header">
+                        <div class="logo">
+                        </div>
+                        @Html.Widget("admin_header_before")
+                        <div class="languageselector">
+                            @Html.Action("LanguageSelector", "Common")
+                        </div>
+                        @Html.Widget("admin_header_middle")
+                        <div class="links">
+                            @Html.ActionLink(T("Admin.Header.PublicStore").Text, "Index", "Home", new { area = "" }, null)
+                            @if (canManageMaintenance)
+                            {
+                                <span class="separator">|</span>
+                                @Html.ActionLink(T("Admin.Header.ClearCache").Text, "ClearCache", "Common")
+                                <span class="separator">|</span>
+                                @Html.ActionLink(T("Admin.Header.RestartApplication").Text, "RestartApplication", "Common", null, new { id = "restart-application" })
+                            }
+                        </div>
+                        <div class="login-info">
+                            @if (currentCustomer != null && currentCustomer.IsRegistered())
+                            {
+                                @String.Format(T("Admin.Header.LoggedInAs").Text, usernamesEnabled ? currentCustomer.Username : currentCustomer.Email)
+                                <text>, </text> @Html.ActionLink(T("Admin.Header.Logout").Text, "Logout", "Customer", new { area = "" }, null)
+                            }
+                        </div>
+                        <div class="version">
+                            <span>nopCommerce @currentVersion</span>
+                        </div>
+                        @Html.Widget("admin_header_after")
                     </div>
-                    @Html.Widget("admin_header_before")
-                    <div class="languageselector">
-                        @Html.Action("LanguageSelector", "Common")
+                }
+                @if (IsSectionDefined("headermenu"))
+                {
+                    @RenderSection("headermenu")
+                }
+                else
+                {
+                    <div class="header-menu">
+                        @Html.Partial("Menu")
                     </div>
-                    @Html.Widget("admin_header_middle")
-                    <div class="links">
-                        @Html.ActionLink(T("Admin.Header.PublicStore").Text, "Index", "Home", new { area = "" }, null)
-                        @if (canManageMaintenance)
-                        {
-                        <span class="separator">|</span>
-                        @Html.ActionLink(T("Admin.Header.ClearCache").Text, "ClearCache", "Common")
-                        <span class="separator">|</span>
-                        @Html.ActionLink(T("Admin.Header.RestartApplication").Text, "RestartApplication", "Common", null, new { id = "restart-application" })
-                        }
+                }
+                @if (IsSectionDefined("statusbar"))
+                {
+                    @RenderSection("statusbar")
+                }
+                else
+                {
+                    <div class="status-bar">
+                        @(EngineContext.Current.Resolve<Nop.Services.Helpers.IDateTimeHelper>().ConvertToUserTime(DateTime.Now).ToString("f"))
                     </div>
-                    <div class="login-info">
-                        @if (currentCustomer != null && currentCustomer.IsRegistered())
-                        {
-                        @String.Format(T("Admin.Header.LoggedInAs").Text, usernamesEnabled ? currentCustomer.Username : currentCustomer.Email)
-                        <text>, </text> @Html.ActionLink(T("Admin.Header.Logout").Text, "Logout", "Customer", new { area = "" }, null)
-                        }
+                }
+                <div class="content">
+                    @Html.Partial("Notifications")
+                    <div class="cph">
+                        @RenderBody()
                     </div>
-                    <div class="version">
-                        <span>nopCommerce @currentVersion</span>
+                </div>
+                <div class="throbber">
+                    <div class="curtain">
                     </div>
-                    @Html.Widget("admin_header_after")
-                </div>
-            }
-            @if (IsSectionDefined("headermenu"))
-            {
-                @RenderSection("headermenu")
-            }
-            else
-            {
-                <div class="header-menu">
-                    @Html.Partial("Menu")
-                </div>
-            }
-            @if (IsSectionDefined("statusbar"))
-            {
-                @RenderSection("statusbar")
-            }
-            else
-            {
-                <div class="status-bar">
-                    @(EngineContext.Current.Resolve<Nop.Services.Helpers.IDateTimeHelper>().ConvertToUserTime(DateTime.Now).ToString("f"))
-                </div>
-            }
-            <div class="content">
-                @Html.Partial("Notifications")
-                <div class="cph">
-                    @RenderBody()
-                </div>
-            </div>
-            <div class="throbber">
-                <div class="curtain">
-                </div>
-                <div class="curtain-content">
-                    <div>
-                        <h1 class="throbber-header">Wait...</h1>
-                        <p>
-                            <img src="@Url.Content("~/administration/content/images/throbber-synchronizing.gif")" alt="" />
-                        </p>
+                    <div class="curtain-content">
+                        <div>
+                            <h1 class="throbber-header">Wait...</h1>
+                            <p>
+                                <img src="@Url.Content("~/administration/content/images/throbber-synchronizing.gif")" alt="" />
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    @Html.NopCssFiles(this.Url, ResourceLocation.Foot)
-    @Html.NopScripts(this.Url, ResourceLocation.Foot)
-</body>
-
+        @Html.NopCssFiles(this.Url, ResourceLocation.Foot)
+        @Html.NopScripts(this.Url, ResourceLocation.Foot)
+    </body>
 </html>
 
