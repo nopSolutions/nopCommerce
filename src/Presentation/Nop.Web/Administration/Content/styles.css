@@ -151,3 +151,4 @@ body .k-button{font-weight:400;color:inherit!important;text-decoration:none;}
 .k-state-active, .k-state-active:hover, .k-active-filter, .k-tabstrip .k-state-active{border-color:#c5c5c5 !important;}
 /* etc */
 .customer-info-tab .gender{display:inline-block;}
+.field-validation-error{color:red;}
