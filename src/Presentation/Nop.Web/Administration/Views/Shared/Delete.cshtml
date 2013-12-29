@@ -6,7 +6,7 @@
             @T("Admin.Common.DeleteConfirmation")
         </p>
         <div class="form-actions">
-            <span class="k-button" onclick="closeModalWindow();">@T("Admin.Common.NoCancel")</span>
+            <span id="" class="k-button" onclick="$('#@Model.WindowId').data('kendoWindow').close();">@T("Admin.Common.NoCancel")</span>
             <input type="submit" class="k-button" value="@T("Admin.Common.Delete")" />
         </div>
     </div>
