@@ -35,21 +35,21 @@ function checkOverridenStoreValue(obj, selector) {
     var elementsArray = selector.split(",");
     if (!$(obj).is(':checked')) {
         $(selector).attr('disabled', true);
-        //Telerik elements are enabled/disabled some other way
+        //Kendo UI elements are enabled/disabled some other way
         $.each(elementsArray, function(key, value) {
-            var telerikElement = $(value).data("tTextBox");
-            if (telerikElement !== undefined && telerikElement !== null) {
-                telerikElement.disable();
+            var kenoduiElement = $(value).data("kendoNumericTextBox");
+            if (kenoduiElement !== undefined && kenoduiElement !== null) {
+                kenoduiElement.enable(false);
             }
         }); 
     }
     else {
         $(selector).removeAttr('disabled');
-        //Telerik elements are enabled/disabled some other way
+        //Kendo UI elements are enabled/disabled some other way
         $.each(elementsArray, function(key, value) {
-            var telerikElement = $(value).data("tTextBox");
-            if (telerikElement !== undefined && telerikElement !== null) {
-                telerikElement.enable();
+            var kenoduiElement = $(value).data("kendoNumericTextBox");
+            if (kenoduiElement !== undefined && kenoduiElement !== null) {
+                kenoduiElement.enable();
             }
         });
     };
