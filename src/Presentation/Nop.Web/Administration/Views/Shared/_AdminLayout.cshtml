@@ -152,21 +152,6 @@
             </div>
         </div>
     </div>
-    <!--These need to be at the end of the page to ensure that all the controls requiring scripts have been rendered-->
-    @(Html.Telerik().StyleSheetRegistrar()
-              .DefaultGroup(group => group
-                                         .Add("telerik.common.min.css")
-                                         .Add("telerik.vista.min.css")
-                                         .Add("telerik.rtl.min.css")
-            //uncomment the lines below in order to combine and compress CSS files
-            //but in this case you'll have to add asset.axd file handler by Telerik to web.config file
-            //.Combined(true)
-            //.Compress(true)
-              ))
-    @(Html.Telerik().ScriptRegistrar()
-              .jQuery(false)
-              .jQueryValidation(false)
-    )
     @Html.NopCssFiles(this.Url, ResourceLocation.Foot)
     @Html.NopScripts(this.Url, ResourceLocation.Foot)
 </body>
