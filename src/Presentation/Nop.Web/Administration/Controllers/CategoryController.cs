@@ -20,7 +20,6 @@ using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
-using Telerik.Web.Mvc.UI;
 
 namespace Nop.Admin.Controllers
 {
@@ -332,27 +331,22 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
 
-            var rootCategories = _categoryService.GetAllCategoriesByParentCategoryId(0, true);
-            return View(rootCategories);
+            return View();
         }
 
-        //ajax
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult TreeLoadChildren(TreeViewItem node)
+        [HttpPost,]
+        public ActionResult TreeLoadChildren(int id = 0)
         {
-            var parentId = !string.IsNullOrEmpty(node.Value) ? Convert.ToInt32(node.Value) : 0;
+            var categories = _categoryService.GetAllCategoriesByParentCategoryId(id, true)
+                .Select(x => new
+                             {
+                                 id = x.Id,
+                                 Name = x.Name,
+                                 hasChildren = _categoryService.GetAllCategoriesByParentCategoryId(x.Id, true).Count > 0,
+                                 imageUrl = Url.Content("~/Administration/Content/images/ico-content.png")
+                             });
 
-            var children = _categoryService.GetAllCategoriesByParentCategoryId(parentId, true).Select(x =>
-                new TreeViewItem
-                {
-                    Text = x.Name,
-                    Value = x.Id.ToString(),
-                    LoadOnDemand = _categoryService.GetAllCategoriesByParentCategoryId(x.Id, true).Count > 0,
-                    Enabled = true,
-                    ImageUrl = Url.Content("~/Administration/Content/images/ico-content.png")
-                });
-
-            return new JsonResult { Data = children };
+            return Json(categories);
         }
 
         #endregion

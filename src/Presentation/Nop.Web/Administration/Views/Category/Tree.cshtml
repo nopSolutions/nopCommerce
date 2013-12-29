@@ -1,8 +1,4 @@
-﻿@model IList<Nop.Core.Domain.Catalog.Category>
-@using Telerik.Web.Mvc.UI;
-@{
-    var categoryService = EngineContext.Current.Resolve<Nop.Services.Catalog.ICategoryService>();
-    
+﻿@{
     //page title
     ViewBag.Title = T("Admin.Catalog.Categories.Manage").Text;
 }
@@ -15,31 +11,42 @@
         <a href="@Url.Action("Create")" class="k-button">@T("Admin.Common.AddNew")</a>
     </div>
 </div>
-<script type="text/javascript">
-
-            function onSelect(e) {
-                var itemId = $('#category-treeview').data('tTreeView').getItemValue(e.item);
-                var url = "@(Url.Action("Edit"))" + "/" + itemId;
-                window.location = url;
-            }
-</script>
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().TreeView()
-        .Name("category-treeview")
-        .BindTo(Model, (item, category) =>
-        {
-            item.Text = category.Name;
-            item.Value = category.Id.ToString();
-            item.LoadOnDemand = categoryService.GetAllCategoriesByParentCategoryId(category.Id, true).Count > 0;
-            item.Enabled = true;
-            item.ImageUrl = Url.Content("~/Administration/Content/images/ico-content.png");
-        })
-        .ClientEvents(events => events.OnSelect("onSelect"))
-        .DataBinding(dataBinding => dataBinding.Ajax().Select("TreeLoadChildren", "Category"))
-        .ShowLines(true)
-        .DragAndDrop(false))
+            <div id="category-treeview"></div>
+
+            <script>
+                categories = new kendo.data.HierarchicalDataSource({
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("TreeLoadChildren", "Category"))",
+                            type: "POST",
+                            dataType: "json"
+                        }
+                    },
+                    schema: {
+                        model: {
+                            id: "id",
+                            hasChildren: "hasChildren"
+                        }
+                    }
+                });
+
+                $(document).ready(function() {
+                    $("#category-treeview").kendoTreeView({
+                        dataSource: categories,
+                        dataTextField: "Name",
+                        select: function (e) {
+                            var dataItem = this.dataItem(e.node);
+                            var url = "@(Url.Action("Edit"))" + "/" + dataItem.id;
+                            window.location = url;
+                        }
+                    });
+                });
+
+                
+            </script>
         </td>
     </tr>
 </table>
