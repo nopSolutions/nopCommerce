@@ -13,7 +13,6 @@ using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
-using Telerik.Web.Mvc;
 
 namespace Nop.Admin.Controllers
 {

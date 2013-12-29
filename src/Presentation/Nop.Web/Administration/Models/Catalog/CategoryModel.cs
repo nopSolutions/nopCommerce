@@ -9,7 +9,6 @@ using Nop.Admin.Validators.Catalog;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Mvc;
-using Telerik.Web.Mvc.UI;
 
 namespace Nop.Admin.Models.Catalog
 {

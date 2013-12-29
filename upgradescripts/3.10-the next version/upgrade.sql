@@ -848,6 +848,288 @@ set @resources='
   <LocaleResource Name="Admin.Help.SupportServices">
     <Value>Premium support services</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.EditorLocalization.Bold">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.EditorLocalization.Close">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.EditorLocalization.CreateLink">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.EditorLocalization.DeleteFile">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.EditorLocalization.DirectoryNotFound">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.EditorLocalization.EmptyFolder">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.EditorLocalization.FontName">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.EditorLocalization.FontNameInherit">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.EditorLocalization.FontSize">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.EditorLocalization.FontSizeInherit">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.EditorLocalization.FormatBlock">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.EditorLocalization.Indent">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.EditorLocalization.InsertHtml">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.EditorLocalization.InsertImage">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.EditorLocalization.InsertOrderedList">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.EditorLocalization.InsertUnorderedList">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.EditorLocalization.InvalidFileType">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.EditorLocalization.Italic">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.EditorLocalization.JustifyCenter">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.EditorLocalization.JustifyFull">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.EditorLocalization.JustifyLeft">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.EditorLocalization.JustifyRight">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.EditorLocalization.OpenInNewWindow">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.EditorLocalization.Or">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.EditorLocalization.OrderBy">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.EditorLocalization.OrderByName">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.EditorLocalization.OrderBySize">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.EditorLocalization.Outdent">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.EditorLocalization.OverwriteFile">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.EditorLocalization.Strikethrough">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.EditorLocalization.Style">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.EditorLocalization.Tooltip">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.EditorLocalization.Underline">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.EditorLocalization.Unlink">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.EditorLocalization.UploadFile">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.EditorLocalization.WebAddress">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.GridLocalization.AddNew">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.GridLocalization.Cancel">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.GridLocalization.CancelChanges">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.GridLocalization.Delete">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.GridLocalization.DeleteConfirmation">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.GridLocalization.DisplayingItems">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.GridLocalization.Edit">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.GridLocalization.Filter">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.GridLocalization.FilterAnd">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.GridLocalization.FilterBoolIsFalse">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.GridLocalization.FilterBoolIsTrue">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.GridLocalization.FilterClear">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.GridLocalization.FilterDateEq">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.GridLocalization.FilterDateGe">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.GridLocalization.FilterDateGt">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.GridLocalization.FilterDateLe">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.GridLocalization.FilterDateLt">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.GridLocalization.FilterDateNe">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.GridLocalization.FilterEnumNe">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.GridLocalization.FilterEnumEq">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.GridLocalization.FilterForeignKeyEq">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.GridLocalization.FilterForeignKeyNe">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.GridLocalization.FilterNumberEq">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.GridLocalization.FilterNumberGe">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.GridLocalization.FilterNumberGt">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.GridLocalization.FilterNumberLe">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.GridLocalization.FilterNumberLt">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.GridLocalization.FilterNumberNe">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.GridLocalization.FilterOr">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.GridLocalization.FilterSelectValue">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.GridLocalization.FilterShowRows">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.GridLocalization.FilterStringEndsWith">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.GridLocalization.FilterStringEq">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.GridLocalization.FilterStringNe">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.GridLocalization.FilterStringNotSubstringOf">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.GridLocalization.FilterStringStartsWith">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.GridLocalization.FilterStringSubstringOf">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.GridLocalization.GroupHint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.GridLocalization.Insert">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.GridLocalization.NoRecords">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.GridLocalization.Page">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.GridLocalization.PageOf">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.GridLocalization.Refresh">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.GridLocalization.SaveChanges">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.GridLocalization.Select">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.GridLocalization.SortedAsc">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.GridLocalization.SortedDesc">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.GridLocalization.UnGroup">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.GridLocalization.Update">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.UploadLocalization.Cancel">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.UploadLocalization.DropFilesHere">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.UploadLocalization.Remove">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.UploadLocalization.Retry">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.UploadLocalization.Select">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.UploadLocalization.StatusFailed">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.UploadLocalization.StatusUploaded">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.UploadLocalization.StatusUploading">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Telerik.UploadLocalization.UploadSelectedFiles">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 

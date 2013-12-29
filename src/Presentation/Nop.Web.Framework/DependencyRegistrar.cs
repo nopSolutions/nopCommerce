@@ -270,8 +270,6 @@ namespace Nop.Web.Framework
 
             builder.RegisterType<ScheduleTaskService>().As<IScheduleTaskService>().InstancePerHttpRequest();
 
-            builder.RegisterType<TelerikLocalizationServiceFactory>().As<Telerik.Web.Mvc.Infrastructure.ILocalizationServiceFactory>().InstancePerHttpRequest();
-
             builder.RegisterType<ExportManager>().As<IExportManager>().InstancePerHttpRequest();
             builder.RegisterType<ImportManager>().As<IImportManager>().InstancePerHttpRequest();
             builder.RegisterType<MobileDeviceHelper>().As<IMobileDeviceHelper>().InstancePerHttpRequest();

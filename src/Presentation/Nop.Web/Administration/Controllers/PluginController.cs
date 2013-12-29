@@ -22,7 +22,6 @@ using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
-using Telerik.Web.Mvc;
 
 namespace Nop.Admin.Controllers
 {
@@ -182,17 +181,16 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected GridModel<PluginModel> PreparePluginListModel()
+        protected DataSourceResult PreparePluginListModel()
         {
             var pluginDescriptors = _pluginFinder.GetPluginDescriptors(false);
-            var model = new GridModel<PluginModel>
+            return new DataSourceResult
             {
                 Data = pluginDescriptors.Select(x => PreparePluginModel(x))
                 .OrderBy(x => x.Group)
                 .ThenBy(x => x.DisplayOrder).ToList(),
                 Total = pluginDescriptors.Count()
             };
-            return model;
         }
 
         #endregion

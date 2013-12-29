@@ -10,7 +10,6 @@ using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Themes;
-using Telerik.Web.Mvc.UI;
 
 #endregion
 

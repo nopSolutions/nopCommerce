@@ -123,10 +123,6 @@
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="Telerik.Web.Mvc, Version=2013.1.219.340, Culture=neutral, PublicKeyToken=29ac1a93ec063d92, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\packages\TelerikMvcExtensions.2013.2.611\lib\net40\Telerik.Web.Mvc.dll</HintPath>
-    </Reference>
     <Reference Include="WebGrease, Version=1.5.2.14234, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
@@ -146,7 +142,6 @@
     <Compile Include="Controllers\VendorController.cs" />
     <Compile Include="Controllers\StoreController.cs" />
     <Compile Include="Controllers\ScheduleTaskController.cs" />
-    <Compile Include="Controllers\ImageBrowserController.cs" />
     <Compile Include="Controllers\ExternalAuthenticationController.cs" />
     <Compile Include="Controllers\NetAdvImageController.cs" />
     <Compile Include="Controllers\WidgetController.cs" />
@@ -191,7 +186,6 @@
     <Compile Include="Infrastructure\DependencyRegistrar.cs" />
     <Compile Include="Infrastructure\RouteProvider.cs" />
     <Compile Include="MappingExtensions.cs" />
-    <Compile Include="Infrastructure\AdminStartupTask.cs" />
     <Compile Include="Infrastructure\AutoMapperStartupTask.cs" />
     <Compile Include="Models\Catalog\AddProductVariantAttributeCombinationModel.cs" />
     <Compile Include="Models\Catalog\BulkEditProductModel.cs" />
