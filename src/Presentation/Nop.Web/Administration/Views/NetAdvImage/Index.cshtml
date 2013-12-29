@@ -1,5 +1,4 @@
-﻿@using Telerik.Web.Mvc.UI
-@{
+﻿@{
     Layout = ""; 
     var storeLocation = EngineContext.Current.Resolve<Nop.Core.IWebHelper>().GetStoreLocation();    
 }
@@ -19,12 +18,13 @@
     <script type="text/javascript" src="@Url.Content("~/Content/editors/tinymce/plugins/netadvimage/js/fileuploader.js")"></script>
     <link href="@Url.Content("~/Content/editors/tinymce/plugins/netadvimage/css/dialog.css")" rel="stylesheet" type="text/css" />
     <link href="@Url.Content("~/Content/editors/tinymce/plugins/netadvimage/css/fileuploader.css")" rel="stylesheet" type="text/css" />
-    @(Html.Telerik().StyleSheetRegistrar()
-        .DefaultGroup(group => group
-            .Add("telerik.common.min.css")
-            .Add("telerik.vista.min.css")
-            .Add("telerik.rtl.min.css")
-            ))
+    @*temporary commented 
+        @(Html.Telerik().StyleSheetRegistrar()
+    .DefaultGroup(group => group
+        .Add("telerik.common.min.css")
+        .Add("telerik.vista.min.css")
+        .Add("telerik.rtl.min.css")
+        ))*@
     @*Little hack here. Store URL js variable used by dialog.js file*@
     @*TODO pass storeLocation value in init method of ImageDialog*@
     <script type="text/javascript">
@@ -70,7 +70,8 @@
                 </div>
             </div>
             <div class="ui-layout-west">
-                @(Html.Telerik().TreeView()
+                @*temporary commented 
+                    @(Html.Telerik().TreeView()
                         .Name("directory")
                         .DragAndDrop(settings =>
                             settings.DropTargets(".t-drop")
@@ -84,7 +85,7 @@
                             events.OnCollapse("OnCollapse");
                             events.OnExpand("OnExpand");
                         })
-                )
+                )*@
                 <div class="options dir-options">
                     <ul>
                         <li><a href="#" title="Delete selected directory" id="dir-delete" class="t-drop">
@@ -325,6 +326,6 @@
     </form>
 </body>
 </html>
-@(Html.Telerik().ScriptRegistrar()
-            .jQuery(false)
-            )
+@*temporary commented @(Html.Telerik().ScriptRegistrar()
+    .jQuery(false)
+    )*@
