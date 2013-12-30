@@ -1,27 +1,64 @@
 ﻿@{
     var gridPageSize = 5;
 }
-@using Telerik.Web.Mvc.UI
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<BestsellersReportLineModel>()
-                        .Name("bestsellers-byquantity-grid")
-                        .Columns(columns =>
-                        {
-                            columns.Bound(x => x.ProductName);
-                            columns.Bound(x => x.TotalQuantity);
-                            columns.Bound(x => x.TotalAmount);
-                            columns.Bound(x => x.ProductId)
-                                .Template(x => Html.ActionLink(T("Admin.Common.View").Text, "Edit", "Product", new { id = x.ProductId }, new { }))
-                                .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/Product/Edit/") + "<#= ProductId #>\">" + T("Admin.Common.View").Text + "</a>")
-                                .Width(50)
-                                .Centered()
-                                .Title(T("Admin.Common.View").Text);
-                        })
-                        .Pageable(settings => settings.PageSize(gridPageSize).Position(GridPagerPosition.Both))
-                        .DataBinding(dataBinding => dataBinding.Ajax().Select("BestsellersBriefReportByQuantityList", "Order"))
-                        .EnableCustomBinding(true))
+            <div id="bestsellers-byquantity-grid"></div>
+
+            <script>
+                $(document).ready(function () {
+                    $("#bestsellers-byquantity-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("BestsellersBriefReportByQuantityList", "Order"))",
+                                    type: "POST",
+                                    dataType: "json"
+                                }
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors"
+                            },
+                            error: function(e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            pageSize: @(gridPageSize),
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true
+                        },
+                        editable: {
+                            confirmation: false,
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [{
+                            field: "ProductName",
+                            title: "@T("Admin.SalesReport.Bestsellers.Fields.Name")"
+                        }, {
+                            field: "TotalQuantity",
+                            title: "@T("Admin.SalesReport.Bestsellers.Fields.TotalQuantity")"
+                        }, {
+                            field: "TotalAmount",
+                            title: "@T("Admin.SalesReport.Bestsellers.Fields.TotalAmount")"
+                        }, {
+                            field: "ProductId",
+                            title: "@T("Admin.Common.View")",
+                            width: 100,
+                            template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">@T("Admin.Common.View")</a>'
+                        }]
+                    });
+                });
+            </script>
         </td>
     </tr>
 </table>

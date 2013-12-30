@@ -1,5 +1,4 @@
-﻿@using Telerik.Web.Mvc.UI
-@{
+﻿@{
     //page title
     ViewBag.Title = T("Admin.Configuration.ExternalAuthenticationMethods").Text;
 }
@@ -12,47 +11,98 @@
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<AuthenticationMethodModel>()
-                    .Name("authenticationmethods-grid")
-                    .DataKeys(x =>
-                    {
-                        x.Add(y => y.SystemName).RouteKey("systemName");
-                    })
-                    .Columns(columns =>
-                    {
-                        columns.Bound(x => x.FriendlyName)
-                            .Width(150)
-                            .ReadOnly();
-                        columns.Bound(x => x.SystemName).Width(150).ReadOnly();
-                        columns.Bound(x => x.DisplayOrder)
-                            .Width(100);
-                        columns.Bound(x => x.IsActive)
-                            .Template(
-                                @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.IsActive.ToString().ToLowerInvariant() + ".gif")" />
-                            )
-                            .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= IsActive #>.gif' />")
-                            .Centered()
-                            .Width(100);
-                        columns.Template(
-                                @<div>
-                                    @Html.ActionLink(T("Admin.Configuration.ExternalAuthenticationMethods.Configure").Text, "ConfigureMethod", new { systemName = item.SystemName })
-                                </div>
-                            )
-                            .ClientTemplate("<a href=\"ConfigureMethod?systemName=<#= SystemName #>\">" + T("Admin.Configuration.ExternalAuthenticationMethods.Configure").Text + "</a>")
-                            .Width(100)
-                            .Centered()
-                            .Title(T("Admin.Configuration.ExternalAuthenticationMethods.Configure").Text);
-                        columns.Command(commands =>
-                        {
-                            commands.Edit().Text(T("Admin.Common.Edit").Text);
-                        }).Width(100).Title(T("Admin.Common.Edit").Text);
-                    })
-                    .DataBinding(dataBinding =>
-                    {
-                        dataBinding.Ajax().Select("Methods", "ExternalAuthentication")
-                            .Update("MethodUpdate", "ExternalAuthentication");
-                    })
-                    .EnableCustomBinding(true))
+            <div id="authenticationmethods-grid"></div>
+
+            <script>
+                $(document).ready(function () {
+                    $("#authenticationmethods-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("Methods", "ExternalAuthentication"))",
+                                    type: "POST",
+                                    dataType: "json"
+                                },
+                                update: {
+                                    url:"@Html.Raw(Url.Action("MethodUpdate", "ExternalAuthentication"))",
+                                    type: "POST",
+                                    dataType: "json"
+                                }
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors",
+                                model: {
+                                    id: "SystemName",
+                                    fields: {
+                                        FriendlyName: { editable: false, type: "string" },
+                                        SystemName: { editable: false, type: "string" },
+                                        DisplayOrder: { editable: true, type: "number" },
+                                        IsActive: { editable: true, type: "boolean" }
+                                    }
+                                }
+                            },
+                            requestEnd: function (e) {
+                                if (e.type == "update") {
+                                    this.read();
+                                }
+                            },
+                            error: function (e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true,
+                            numeric: false,
+                            previousNext: false,
+                            info: false
+                        },
+                        editable: {
+                            confirmation: false,
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [{
+                            field: "FriendlyName",
+                            title: "@T("Admin.Configuration.ExternalAuthenticationMethods.Fields.FriendlyName")",
+                            width: 250
+                        }, {
+                            field: "SystemName",
+                            title: "@T("Admin.Configuration.ExternalAuthenticationMethods.Fields.SystemName")",
+                            width: 250
+                        }, {
+                            field: "DisplayOrder",
+                            title: "@T("Admin.Configuration.ExternalAuthenticationMethods.Fields.DisplayOrder")",
+                            //integer format
+                            format: "{0:0}",
+                            width: 100
+                        }, {
+                            field: "IsActive",
+                            title: "@T("Admin.Configuration.ExternalAuthenticationMethods.Fields.IsActive")",
+                            width: 100,
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
+                            template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsActive#.gif" />'
+                        }, {
+                            field: "SystemName",
+                            title: "@T("Admin.Configuration.ExternalAuthenticationMethods.Configure")",
+                            width: 150,
+                            template: '<a href="ConfigureMethod?systemName=#=SystemName#">@T("Admin.Configuration.ExternalAuthenticationMethods.Configure")</a>'
+                        }, {
+                            command: {name: "edit", text: "@T("Admin.Common.Edit")"},
+                            title: "@T("Admin.Common.Edit")",
+                            width: 150
+                        }]
+                    });
+                });
+            </script>
         </td>
     </tr>
 </table>

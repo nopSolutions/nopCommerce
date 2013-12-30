@@ -1,15 +1,46 @@
 ﻿@model PollModel
-@using Telerik.Web.Mvc.UI;
 @Html.ValidationSummary(true)
 @Html.HiddenFor(model => model.Id)
-@Html.Telerik().TabStrip().Name("poll-edit").Items(x =>
-{
-    x.Add().Text(T("Admin.ContentManagement.Polls.Info").Text).Content(TabInfo().ToHtmlString());
-    x.Add().Text(T("Admin.ContentManagement.Polls.Answers").Text).Content(TabAnswers().ToHtmlString());
 
-    //generate an event
-    EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "poll-edit"));
-}).ClientEvents(events => events.OnSelect("telerik_on_tab_select")).SetSelectedTabIndex(GetSelectedTabIndex())
+<div id="poll-edit">
+    <ul>
+        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+            @T("Admin.ContentManagement.Polls.Info")
+        </li>
+        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+            @T("Admin.ContentManagement.Polls.Answers")
+        </li>
+    </ul>
+    <div>
+        @TabInfo()
+    </div>
+    <div>
+        @TabAnswers()
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $("#poll-edit").kendoTabStrip({
+            animation: {
+                open: {
+                    effects: "fadeIn"
+                }
+            },
+            select: tabstrip_on_tab_select
+        });
+    });
+</script>
+
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "poll-edit");
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}
+
 
 @*save selected tab index*@
 <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
@@ -107,47 +138,102 @@
     <table class="adminContent">
         <tr>
             <td>
-                @(Html.Telerik().Grid<PollAnswerModel>()
-                    .Name("answers-grid")
-                    .DataKeys(x =>
-                    {
-                        x.Add(y => y.Id).RouteKey("Id");
-                        x.Add(y => y.PollId).RouteKey("pollId");
-                    })
-                    .Columns(columns =>
-                    {
-                        columns.Bound(x => x.Name)
-                            .Width(250);
-                        columns.Bound(x => x.NumberOfVotes)
-                            .ReadOnly()
-                            .Width(100);
-                        columns.Bound(x => x.DisplayOrder1).Width(100);
-                        columns.Command(commands =>
-                        {
-                            commands.Edit().Text(T("Admin.Common.Edit").Text);
-                            commands.Delete().Text(T("Admin.Common.Delete").Text);
-                        }).Width(180);
+                <div id="answers-grid"></div>
 
-                    })
-                    .ToolBar(x => x.Insert())
-                    .Editable(x =>
-                    {
-                        x.Mode(GridEditMode.InLine);
-                    })
-                    .DataBinding(dataBinding =>
-                    {
-                        dataBinding.Ajax().Select("PollAnswers", "Poll", new { pollId = Model.Id })
-                            .Update("PollAnswerUpdate", "Poll")
-                            .Delete("PollAnswerDelete", "Poll")
-                            .Insert("PollAnswerAdd", "Poll", new { pollId = Model.Id });
-                    })
-                    .ClientEvents(x => x.OnError("grid_onError"))
-                    .EnableCustomBinding(true))
-                <script type="text/javascript">
-                    function grid_onError(e) {
-                        alert(e.XMLHttpRequest.responseText);
-                        e.preventDefault();
-                    }
+                <script>
+                    $(document).ready(function () {
+                        $("#answers-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("PollAnswers", "Poll", new { pollId = Model.Id }))",
+                                        type: "POST",
+                                        dataType: "json"
+                                    },
+                                    create: {
+                                        url: "@Html.Raw(Url.Action("PollAnswerAdd", "Poll", new { pollId = Model.Id }))",
+                                        type: "POST",
+                                        dataType: "json"
+                                    },
+                                    update: {
+                                        url:"@Html.Raw(Url.Action("PollAnswerUpdate", "Poll"))",
+                                        type: "POST",
+                                        dataType: "json"
+                                    },
+                                    destroy: {
+                                        url: "@Html.Raw(Url.Action("PollAnswerDelete", "Poll"))",
+                                        type: "POST",
+                                        dataType: "json"
+                                    }
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors",
+                                    model: {
+                                        id: "Id",
+                                        fields: {
+                                            Name: { editable: true, type: "string" },
+                                            NumberOfVotes: { editable: false, type: "number" },
+                                            DisplayOrder1: { editable: true, type: "number" },
+                                            Id: { editable: false, type: "number" }
+                                        }
+                                    }
+                                },
+                                requestEnd: function (e) {
+                                    if (e.type == "create" || e.type == "update") {
+                                        this.read();
+                                    }
+                                },
+                                error: function (e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true,
+                                numeric: false,
+                                previousNext: false,
+                                info: false
+                            },
+                            toolbar: ["create"],
+                            editable: {
+                                confirmation: false,
+                                mode: "inline"
+                            },
+                            scrollable: false,
+                            columns: [{
+                                field: "Name",
+                                title: "@T("Admin.ContentManagement.Polls.Answers.Fields.Name")",
+                                width: 300
+                            }, {
+                                field: "NumberOfVotes",
+                                title: "@T("Admin.ContentManagement.Polls.Answers.Fields.NumberOfVotes")",
+                                width: 100
+                            }, {
+                                field: "DisplayOrder1",
+                                title: "@T("Admin.ContentManagement.Polls.Answers.Fields.DisplayOrder")",
+                                //integer format
+                                format: "{0:0}",
+                                width: 100
+                            }, {
+                                command: [{
+                                    name: "edit",
+                                    text: "@T("Admin.Common.Edit")"
+                                }, {
+                                    name: "destroy",
+                                    text: "@T("Admin.Common.Delete")"
+                                }],
+                                width: 200
+                            }]
+                        });
+                    });
+
                 </script>
             </td>
         </tr>

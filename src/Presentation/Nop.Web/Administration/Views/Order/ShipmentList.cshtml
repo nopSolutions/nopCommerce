@@ -1,7 +1,5 @@
 ﻿@model ShipmentListModel
            
-@using Telerik.Web.Mvc.UI
-
 @{
     var gridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSize;
     
@@ -17,8 +15,8 @@
             @T("Admin.Orders.Shipments.List")
         </div>
         <div class="options">
-            <a href="@Url.Action("PdfPackagingSlipAll")" class="t-button">@T("Admin.Orders.Shipments.PrintPackagingSlip.All")</a>
-            <input type="button" id="exportpackagingslips-selected" class="t-button" value="@T("Admin.Orders.Shipments.PrintPackagingSlip.Selected")" />
+            <a href="@Url.Action("PdfPackagingSlipAll")" class="k-button">@T("Admin.Orders.Shipments.PrintPackagingSlip.All")</a>
+            <input type="button" id="exportpackagingslips-selected" class="k-button" value="@T("Admin.Orders.Shipments.PrintPackagingSlip.Selected")" />
         </div>
     </div>
     <table width="100%">
@@ -72,7 +70,7 @@
         </tr>
         <tr>
             <td colspan="2">
-                <input type="button" id="btnSearch" class="t-button" value="@T("Admin.Common.Search")" />
+                <input type="button" id="btnSearch" class="k-button" value="@T("Admin.Common.Search")" />
             </td>
         </tr>
     </table>
@@ -81,52 +79,143 @@
     <table class="adminContent">
         <tr>
             <td>
-                @(Html.Telerik().Grid<ShipmentModel>()
-                        .Name("shipments-grid")
-                        .ClientEvents(events => events
-                            .OnDataBinding("onDataBinding")
-                            .OnDataBound("onDataBound"))
-                        .Columns(columns =>
-                        {
-                            columns.Bound(x => x.Id)
-                            .ClientTemplate("<input type='checkbox' value='<#= Id #>' class='checkboxGroups'/>")
-                            .Title("<input id='mastercheckbox' type='checkbox'/>")
-                            .Width(50)
-                            .HtmlAttributes(new { style = "text-align:center" })
-                            .HeaderHtmlAttributes(new { style = "text-align:center" });
-                            columns.Bound(x => x.Id);
-                            columns.Bound(x => x.OrderId);
-                            columns.Bound(x => x.TrackingNumber);
-                            columns.Bound(x => x.TotalWeight);
-                            columns.Bound(x => x.ShippedDate);
-                            columns.Bound(x => x.DeliveryDate);
-                            columns.Bound(x => x.Id)
-                                .Template(x => Html.ActionLink(T("Admin.Common.View").Text, "ShipmentDetails", "Order", new { id = x.Id }, new { }))
-                                .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/Order/ShipmentDetails/") + "<#= Id #>\">" + T("Admin.Common.View").Text + "</a>")
-                                .Width(50)
-                                .Centered()
-                                .HeaderTemplate(T("Admin.Common.View").Text);
-                        })
-                        .DetailView(details => details.ClientTemplate(
-                            Html.Telerik().Grid<ShipmentModel.ShipmentItemModel>()
-                            .Name("shipment-items-grid-<#= Id #>")
-                            .Columns(columns =>
-                            {
-                                columns.Bound(si => si.ProductName);
-                                columns.Bound(si => si.QuantityInThisShipment);
-                                columns.Bound(si => si.ItemWeight);
-                                columns.Bound(si => si.ItemDimensions);
-                            })
-                            .DataBinding(dataBinding => dataBinding.Ajax()
-                                 .Select("ShipmentsItemsByShipmentId", "Order", new
-                                 {
-                                     shipmentId = "<#= Id #>"
-                                 }))
-                            .ToHtmlString()
-                         ))
-                        .Pageable(settings => settings.PageSize(gridPageSize).Position(GridPagerPosition.Both))
-                        .DataBinding(dataBinding => dataBinding.Ajax().Select("ShipmentListSelect", "Order"))
-                        .EnableCustomBinding(true))
+                <div id="shipments-grid"></div>
+
+                <script>
+                    $(document).ready(function () {
+                        $("#shipments-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("ShipmentListSelect", "Order"))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: additionalData
+                                    }
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors"
+                                },
+                                error: function(e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                pageSize: @(gridPageSize),
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true
+                            },
+                            //details grid
+                            detailInit: detailInit,
+                            scrollable: false,
+                            dataBound: onDataBound,
+                            columns: [{
+                                field: "Id",
+                                headerTemplate: "<input id='mastercheckbox' type='checkbox'/>",
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:center" },
+                                template: "<input type='checkbox' value='#=Id#' class='checkboxGroups'/>",
+                                width: 50
+                            }, {
+                                field: "Id",
+                                title: "@T("Admin.Orders.Shipments.ID")",
+                                width: 50
+                            }, {
+                                field: "OrderId",
+                                title: "@T("Admin.Orders.Shipments.OrderID")",
+                                width: 100
+                            }, {
+                                field: "TrackingNumber",
+                                title: "@T("Admin.Orders.Shipments.TrackingNumber")",
+                                width: 100
+                            }, {
+                                field: "TotalWeight",
+                                title: "@T("Admin.Orders.Shipments.TotalWeight")",
+                                width: 100
+                            }, {
+                                field: "ShippedDate",
+                                title: "@T("Admin.Orders.Shipments.ShippedDate")",
+                                width: 200,
+                                type: "date",
+                                format: "{0:G}"
+                            }, {
+                                field: "DeliveryDate",
+                                title: "@T("Admin.Orders.Shipments.DeliveryDate")",
+                                width: 200,
+                                type: "date",
+                                format: "{0:G}"
+                            }, {
+                                field: "Id",
+                                title: "@T("Admin.Common.View")",
+                                width: 50,
+                                template: '<a href="@Url.Content("~/Admin/Order/ShipmentDetails/")#=Id#">@T("Admin.Common.View")</a>'
+                            }]
+                        });
+                    });
+
+                    //details grid
+                    function detailInit(e) {
+                        $("<div/>").appendTo(e.detailCell).kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("ShipmentsItemsByShipmentId", "Order"))?shipmentId="+e.data.Id,
+                                        type: "POST",
+                                        dataType: "json"
+                                    }
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors"
+                                },
+                                error: function(e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            scrollable: false,
+                            sortable: true,
+                            pageable: {
+                                refresh: true,
+                                numeric: false,
+                                previousNext: false,
+                                info: false
+                            },
+                            columns: [
+                                {
+                                    field: "ProductName",
+                                    title: "@T("Admin.Orders.Shipments.Products.ProductName")",
+                                    width: 400
+                                },{
+                                    field: "QuantityInThisShipment",
+                                    title: "@T("Admin.Orders.Shipments.Products.QtyShipped")",
+                                    width: 150
+                                },{
+                                    field: "ItemWeight",
+                                    title: "@T("Admin.Orders.Shipments.Products.ItemWeight")",
+                                    width: 150
+                                },{
+                                    field: "ItemDimensions",
+                                    title: "@T("Admin.Orders.Shipments.Products.ItemDimensions")",
+                                    width: 150
+                                }
+                            ]
+                        });
+                    }
+                </script>
             </td>
         </tr>
     </table>
@@ -174,9 +263,9 @@
             //search button
             $('#btnSearch').click(function () {
                 //search
-                var grid = $('#shipments-grid').data('tGrid');
-                grid.currentPage = 1; //new search. Set page size to 1
-                grid.ajaxRequest();
+                var grid = $('#shipments-grid').data('kendoGrid');
+                grid.dataSource.page(1); //new search. Set page size to 1
+                grid.dataSource.read();
                 //clear selected checkboxes
                 $('.checkboxGroups').attr('checked', false).change();
                 selectedIds = [];
@@ -220,8 +309,8 @@
             });
         });
 
-        function onDataBinding(e) {
-            var searchModel = {
+        function additionalData() {
+            return {
                     StartDate: $('#@Html.FieldIdFor(model => model.StartDate)').val(),
                     EndDate: $('#@Html.FieldIdFor(model => model.EndDate)').val(),
                     TrackingNumber: $('#@Html.FieldIdFor(model => model.TrackingNumber)').val(),
@@ -229,7 +318,6 @@
                     StateProvinceId: $('#@Html.FieldIdFor(model => model.StateProvinceId)').val(),
                     City: $('#@Html.FieldIdFor(model => model.City)').val()
                     };
-            e.data = searchModel;
         }
     
         function onDataBound(e) {

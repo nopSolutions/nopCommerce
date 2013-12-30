@@ -1,5 +1,4 @@
-﻿@using Telerik.Web.Mvc.UI
-@{
+﻿@{
     //page title
     ViewBag.Title = T("Admin.Customers.CustomerRoles").Text;
 }
@@ -9,55 +8,93 @@
         @T("Admin.Customers.CustomerRoles")
     </div>
     <div class="options">
-        <a href="@Url.Action("Create")" class="t-button">@T("Admin.Common.AddNew")</a>
+        <a href="@Url.Action("Create")" class="k-button">@T("Admin.Common.AddNew")</a>
     </div>
 </div>
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<CustomerRoleModel>()
-                    .Name("customerroles-grid")
-                    .Columns(columns =>
-                    {
-                        columns.Bound(x => x.Name).Width(150);
-                        columns.Bound(x => x.FreeShipping)
-                            .Template(
-                                @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.FreeShipping.ToString().ToLowerInvariant() + ".gif")" />
-                            )
-                            .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= FreeShipping #>.gif' />")
-                            .Centered()
-                            .Width(100);
-                        columns.Bound(x => x.TaxExempt)
-                            .Template(
-                                @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.TaxExempt.ToString().ToLowerInvariant() + ".gif")" />
-                            )
-                            .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= TaxExempt #>.gif' />")
-                            .Centered()
-                            .Width(100);
-                        columns.Bound(x => x.Active)
-                            .Template(
-                                @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.Active.ToString().ToLowerInvariant() + ".gif")" />
-                            )
-                            .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= Active #>.gif' />")
-                            .Centered()
-                            .Width(100);
-                        columns.Bound(x => x.IsSystemRole)
-                            .Template(
-                                @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.IsSystemRole.ToString().ToLowerInvariant() + ".gif")" />
-                            )
-                            .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= IsSystemRole #>.gif' />")
-                            .Centered()
-                            .Width(100);
-                        columns.Bound(x => x.Id)
-                            .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
-                            .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
-                            .Width(50)
-                            .Centered()
-                            .HeaderTemplate(T("Admin.Common.Edit").Text)
-                            .Filterable(false);
-                    })
-                    .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "CustomerRole"))
-                    .EnableCustomBinding(true))
+
+            <div id="customerroles-grid"></div>
+
+            <script>
+                $(document).ready(function () {
+                    $("#customerroles-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("List", "CustomerRole"))",
+                                    type: "POST",
+                                    dataType: "json"
+                                }
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors"
+                            },
+                            error: function(e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true,
+                            numeric: false,
+                            previousNext: false,
+                            info: false
+                        },
+                        editable: {
+                            confirmation: false,
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [{
+                            field: "Name",
+                            title: "@T("Admin.Customers.CustomerRoles.Fields.Name")",
+                            width: 300
+                        }, {
+                            field: "FreeShipping",
+                            title: "@T("Admin.Customers.CustomerRoles.Fields.FreeShipping")",
+                            width: 100,
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
+                            template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=FreeShipping#.gif" />'
+                        }, {
+                            field: "TaxExempt",
+                            title: "@T("Admin.Customers.CustomerRoles.Fields.TaxExempt")",
+                            width: 100,
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
+                            template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=TaxExempt#.gif" />'
+                        },{
+                            field: "Active",
+                            title: "@T("Admin.Customers.CustomerRoles.Fields.Active")",
+                            width: 100,
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
+                            template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Active#.gif" />'
+                        },{
+                            field: "IsSystemRole",
+                            title: "@T("Admin.Customers.CustomerRoles.Fields.IsSystemRole")",
+                            width: 100,
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
+                            template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsSystemRole#.gif" />'
+                        },{
+                            field: "Id",
+                            title: "@T("Admin.Common.Edit")",
+                            width: 100,
+                            template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
+                        }]
+                    });
+                });
+            </script>
         </td>
     </tr>
 </table>

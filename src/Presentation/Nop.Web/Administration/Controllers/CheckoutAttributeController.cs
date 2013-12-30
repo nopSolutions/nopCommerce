@@ -13,7 +13,7 @@ using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Services.Tax;
 using Nop.Web.Framework.Controllers;
-using Telerik.Web.Mvc;
+using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Admin.Controllers
 {
@@ -125,14 +125,14 @@ namespace Nop.Admin.Controllers
             return View();
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult List(GridCommand command)
+        [HttpPost]
+        public ActionResult List(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
             var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes();
-            var gridModel = new GridModel<CheckoutAttributeModel>
+            var gridModel = new DataSourceResult
             {
                 Data = checkoutAttributes.Select(x =>
                 {
@@ -142,10 +142,7 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = checkoutAttributes.Count()
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return Json(gridModel);
         }
         
         //create
@@ -270,14 +267,14 @@ namespace Nop.Admin.Controllers
         #region Checkout attribute values
 
         //list
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult ValueList(int checkoutAttributeId, GridCommand command)
+        [HttpPost]
+        public ActionResult ValueList(int checkoutAttributeId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
             var values = _checkoutAttributeService.GetCheckoutAttributeValues(checkoutAttributeId);
-            var gridModel = new GridModel<CheckoutAttributeValueModel>
+            var gridModel = new DataSourceResult
             {
                 Data = values.Select(x =>
                 {
@@ -295,10 +292,7 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = values.Count()
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return Json(gridModel);
         }
 
         //create
@@ -463,18 +457,18 @@ namespace Nop.Admin.Controllers
         }
 
         //delete
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult ValueDelete(int valueId, int checkoutAttributeId, GridCommand command)
+        [HttpPost]
+        public ActionResult ValueDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
-            var cav = _checkoutAttributeService.GetCheckoutAttributeValueById(valueId);
+            var cav = _checkoutAttributeService.GetCheckoutAttributeValueById(id);
             if (cav == null)
                 throw new ArgumentException("No checkout attribute value found with the specified id");
             _checkoutAttributeService.DeleteCheckoutAttributeValue(cav);
 
-            return ValueList(checkoutAttributeId, command);
+            return Json(null);
         }
 
 

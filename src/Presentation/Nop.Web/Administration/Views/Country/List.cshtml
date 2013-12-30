@@ -1,5 +1,4 @@
-﻿@using Telerik.Web.Mvc.UI
-@{
+﻿@{
     //page title
     ViewBag.Title = T("Admin.Configuration.Countries").Text;
 }
@@ -9,81 +8,118 @@
         @T("Admin.Configuration.Countries")
     </div>
     <div class="options">
-        <a href="@Url.Action("Create")" class="t-button">@T("Admin.Common.AddNew")</a>
-        <input type="button" id="publish-selected" class="t-button" value="@T("Admin.Configuration.Countries.PublishSelected")" />
-        <input type="button" id="unpublish-selected" class="t-button" value="@T("Admin.Configuration.Countries.UnpublishSelected")" />
+        <a href="@Url.Action("Create")" class="k-button">@T("Admin.Common.AddNew")</a>
+        <input type="button" id="publish-selected" class="k-button" value="@T("Admin.Configuration.Countries.PublishSelected")" />
+        <input type="button" id="unpublish-selected" class="k-button" value="@T("Admin.Configuration.Countries.UnpublishSelected")" />
     </div>
 </div>
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<CountryModel>()
-                  .Name("countries-grid")
-                  .ClientEvents(events => events.OnDataBound("onDataBound"))
-                  .Columns(columns =>
-                           {
-                               columns.Bound(x => x.Id)
-                                   .ClientTemplate("<input type='checkbox' value='<#= Id #>' class='checkboxGroups'/>")
-                                   .Title("<input id='mastercheckbox' type='checkbox'/>")
-                                   .Width(50)
-                                   .HtmlAttributes(new { style = "text-align:center" })
-                                   .HeaderHtmlAttributes(new { style = "text-align:center" });
+            <div id="countries-grid"></div>
 
-                               columns.Bound(x => x.Name)
-                                   .Width(150)
-                                   .Centered();
-                               columns.Bound(x => x.AllowsBilling)
-                                   .Template(
-                                       @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.AllowsBilling.ToString().ToLowerInvariant() + ".gif")" />
-                                   )
-                                   .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= AllowsBilling #>.gif' />")
-                                   .Centered()
-                                   .Width(100);
-                               columns.Bound(x => x.AllowsShipping)
-                                   .Template(
-                                       @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.AllowsShipping.ToString().ToLowerInvariant() + ".gif")" />
-                                   )
-                                   .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= AllowsShipping #>.gif' />")
-                                   .Centered()
-                                   .Width(100);
-                               columns.Bound(x => x.TwoLetterIsoCode)
-                                   .Width(50)
-                                   .Centered();
-                               columns.Bound(x => x.ThreeLetterIsoCode)
-                                   .Width(50)
-                                   .Centered();
-                               columns.Bound(x => x.NumericIsoCode)
-                                   .Width(50)
-                                   .Centered();
-                               columns.Bound(x => x.SubjectToVat)
-                                   .Template(
-                                       @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.SubjectToVat.ToString().ToLowerInvariant() + ".gif")" />
-                                   )
-                                   .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= SubjectToVat #>.gif' />")
-                                   .Centered()
-                                   .Width(100);
-                               columns.Bound(x => x.NumberOfStates)
-                                   .Width(50)
-                                   .Centered();
-                               columns.Bound(x => x.DisplayOrder)
-                                   .Width(50)
-                                   .Centered();
-                               columns.Bound(x => x.Published)
-                                   .Template(
-                                       @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.Published.ToString().ToLowerInvariant() + ".gif")" />
-                                   )
-                                   .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= Published #>.gif' />")
-                                   .Centered()
-                                   .Width(100);
-                               columns.Bound(x => x.Id)
-                                   .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
-                                   .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
-                                   .Width(50)
-                                   .Centered()
-                                   .HeaderTemplate(T("Admin.Common.Edit").Text);
-                           })
-                  .DataBinding(dataBinding => dataBinding.Ajax().Select("CountryList", "Country"))
-                  .EnableCustomBinding(true))
+            <script>
+                $(document).ready(function () {
+                    $("#countries-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("CountryList", "Country"))",
+                                    type: "POST",
+                                    dataType: "json"
+                                }
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors"
+                            },
+                            error: function (e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true,
+                            numeric: false,
+                            previousNext: false,
+                            info: false
+                        },
+                        scrollable: false,
+                        dataBound: onDataBound,
+                        columns: [{
+                            field: "Id",
+                            headerTemplate: "<input id='mastercheckbox' type='checkbox'/>",
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
+                            template: "<input type='checkbox' value='#=Id#' class='checkboxGroups'/>",
+                            width: 50
+                        }, {
+                            field: "Name",
+                            title: "@T("Admin.Configuration.Countries.Fields.Name")",
+                            width: 300
+                        }, {
+                            field: "AllowsBilling",
+                            title: "@T("Admin.Configuration.Countries.Fields.AllowsBilling")",
+                            width: 100,
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
+                            template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=AllowsBilling#.gif" />'
+                        }, {
+                            field: "AllowsShipping",
+                            title: "@T("Admin.Configuration.Countries.Fields.AllowsShipping")",
+                            width: 100,
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
+                            template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=AllowsShipping#.gif" />'
+                        }, {
+                            field: "TwoLetterIsoCode",
+                            title: "@T("Admin.Configuration.Countries.Fields.TwoLetterIsoCode")",
+                            width: 100
+                        }, {
+                            field: "ThreeLetterIsoCode",
+                            title: "@T("Admin.Configuration.Countries.Fields.ThreeLetterIsoCode")",
+                            width: 100
+                        }, {
+                            field: "NumericIsoCode",
+                            title: "@T("Admin.Configuration.Countries.Fields.NumericIsoCode")",
+                            width: 100
+                        }, {
+                            field: "SubjectToVat",
+                            title: "@T("Admin.Configuration.Countries.Fields.SubjectToVat")",
+                            width: 100,
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
+                            template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=SubjectToVat#.gif" />'
+                        }, {
+                            field: "NumberOfStates",
+                            title: "@T("Admin.Configuration.Countries.Fields.NumberOfStates")",
+                            width: 100
+                        }, {
+                            field: "DisplayOrder",
+                            title: "@T("Admin.Configuration.Countries.Fields.DisplayOrder")",
+                            width: 100
+                        }, {
+                            field: "Published",
+                            title: "@T("Admin.Configuration.Countries.Fields.Published")",
+                            width: 100,
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
+                            template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Published#.gif" />'
+                        }, {
+                            field: "Id",
+                            title: "@T("Admin.Common.Edit")",
+                            width: 50,
+                            template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
+                        }]
+                    });
+                });
+            </script>
         </td>
     </tr>
 </table>
@@ -108,9 +144,9 @@
                     data: postData,
                     complete: function (data) {
                         //reload grid
-                        var grid = $('#countries-grid').data('tGrid');
-                        grid.currentPage = 1; //new search. Set page size to 1
-                        grid.ajaxRequest();
+                        var grid = $('#countries-grid').data('kendoGrid');
+                        grid.dataSource.page(1); //new search. Set page size to 1
+                        grid.dataSource.read();
                         //clear selected checkboxes
                         $('.checkboxGroups').attr('checked', false).change();
                         selectedIds = [];
@@ -138,9 +174,9 @@
                     data: postData,
                     complete: function (data) {
                         //reload grid
-                        var grid = $('#countries-grid').data('tGrid');
-                        grid.currentPage = 1; //new search. Set page size to 1
-                        grid.ajaxRequest();
+                        var grid = $('#countries-grid').data('kendoGrid');
+                        grid.dataSource.page(1); //new search. Set page size to 1
+                        grid.dataSource.read();
                         //clear selected checkboxes
                         $('.checkboxGroups').attr('checked', false).change();
                         selectedIds = [];

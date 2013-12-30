@@ -1,6 +1,4 @@
-﻿@using Telerik.Web.Mvc.UI
-
-@{
+﻿@{
     //page title
     ViewBag.Title = T("Admin.Catalog.Attributes.CheckoutAttributes").Text;
 }
@@ -10,39 +8,78 @@
         @T("Admin.Catalog.Attributes.CheckoutAttributes")
     </div>
     <div class="options">
-        <a href="@Url.Action("Create")" class="t-button">@T("Admin.Common.AddNew")</a>
+        <a href="@Url.Action("Create")" class="k-button">@T("Admin.Common.AddNew")</a>
     </div>
 </div>
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<CheckoutAttributeModel>()
-                    .Name("checkoutattributes-grid")
-                    .Columns(columns =>
-                    {
-                        columns.Bound(x => x.Name)
-                            .Width(300);
-                        columns.Bound(x => x.AttributeControlTypeName)
-                            .Width(150);
-                        columns.Bound(x => x.IsRequired)
-                            .Template(
-                                @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.IsRequired.ToString().ToLowerInvariant() + ".gif")" />
-                            )
-                            .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= IsRequired #>.gif' />")
-                            .Centered()
-                            .Width(100);
-                        columns.Bound(x => x.DisplayOrder)
-                            .Width(100)
-                            .Centered();
-                        columns.Bound(x => x.Id)
-                            .Width(50)
-                            .Centered()
-                            .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
-                            .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
-                            .Title(T("Admin.Common.Edit").Text);
-                    })
-                    .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "CheckoutAttribute"))
-                    .EnableCustomBinding(true))
+            <div id="checkoutattributes-grid"></div>
+
+            <script>
+                $(document).ready(function () {
+                    $("#checkoutattributes-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("List", "CheckoutAttribute"))",
+                                    type: "POST",
+                                    dataType: "json"
+                                }
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors"
+                            },
+                            error: function(e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true,
+                            numeric: false,
+                            previousNext: false,
+                            info: false
+                        },
+                        editable: {
+                            confirmation: false,
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [{
+                            field: "Name",
+                            title: "@T("Admin.Catalog.Attributes.CheckoutAttributes.Fields.Name")"
+                        }, {
+                            field: "AttributeControlTypeName",
+                            title: "@T("Admin.Catalog.Attributes.CheckoutAttributes.Fields.AttributeControlType")",
+                            width: 200
+                        },{
+                            field: "IsRequired",
+                            title: "@T("Admin.Catalog.Attributes.CheckoutAttributes.Fields.IsRequired")",
+                            width: 100,
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
+                            template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsRequired#.gif" />'
+                        }, {
+                            field: "DisplayOrder",
+                            title: "@T("Admin.Catalog.Categories.Fields.DisplayOrder")",
+                            width: 100
+                        }, {
+                            field: "Id",
+                            title: "@T("Admin.Common.Edit")",
+                            width: 100,
+                            template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
+                        }]
+                    });
+                });
+            </script>
         </td>
     </tr>
 </table>

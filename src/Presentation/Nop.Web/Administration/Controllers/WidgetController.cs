@@ -10,7 +10,7 @@ using Nop.Services.Configuration;
 using Nop.Services.Security;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
-using Telerik.Web.Mvc;
+using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Admin.Controllers
 {
@@ -57,8 +57,8 @@ namespace Nop.Admin.Controllers
             return View();
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult List(GridCommand command)
+        [HttpPost]
+        public ActionResult List(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageWidgets))
                 return AccessDeniedView();
@@ -71,20 +71,18 @@ namespace Nop.Admin.Controllers
                 tmp1.IsActive = widget.IsWidgetActive(_widgetSettings);
                 widgetsModel.Add(tmp1);
             }
-            widgetsModel = widgetsModel.ForCommand(command).ToList();
-            var gridModel = new GridModel<WidgetModel>
+            widgetsModel = widgetsModel.ToList();
+            var gridModel = new DataSourceResult
             {
                 Data = widgetsModel,
                 Total = widgetsModel.Count()
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult WidgetUpdate(WidgetModel model, GridCommand command)
+        [HttpPost]
+        public ActionResult WidgetUpdate([Bind(Exclude = "ConfigurationRouteValues")] WidgetModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageWidgets))
                 return AccessDeniedView();
@@ -115,7 +113,7 @@ namespace Nop.Admin.Controllers
             //reset plugin cache
             _pluginFinder.ReloadPlugins();
 
-            return List(command);
+            return Json(null);
         }
         
         public ActionResult ConfigureWidget(string systemName)

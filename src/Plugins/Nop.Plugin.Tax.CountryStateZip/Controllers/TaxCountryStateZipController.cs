@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Globalization;
 using System.Linq;
-using System.Threading;
 using System.Web.Mvc;
 using Nop.Core;
 using Nop.Plugin.Tax.CountryStateZip.Domain;
@@ -12,7 +10,7 @@ using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Web.Framework.Controllers;
-using Telerik.Web.Mvc;
+using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Plugin.Tax.CountryStateZip.Controllers
 {
@@ -79,8 +77,8 @@ namespace Nop.Plugin.Tax.CountryStateZip.Controllers
             return View("Nop.Plugin.Tax.CountryStateZip.Views.TaxCountryStateZip.Configure", model);
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult RatesList(GridCommand command)
+        [HttpPost]
+        public ActionResult RatesList(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
                 return Content("Access denied");
@@ -116,20 +114,17 @@ namespace Nop.Plugin.Tax.CountryStateZip.Controllers
                     return m;
                 })
                 .ToList();
-            var model = new GridModel<TaxRateModel>
+            var gridModel = new DataSourceResult
             {
                 Data = taxRatesModel,
                 Total = records.TotalCount
             };
 
-            return new JsonResult
-            {
-                Data = model
-            };
+            return Json(gridModel);
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult RateUpdate(TaxRateModel model, GridCommand command)
+        [HttpPost]
+        public ActionResult RateUpdate(TaxRateModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
                 return Content("Access denied");
@@ -139,11 +134,11 @@ namespace Nop.Plugin.Tax.CountryStateZip.Controllers
             taxRate.Percentage = model.Percentage;
             _taxRateService.UpdateTaxRate(taxRate);
 
-            return RatesList(command);
+            return Json(null);
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult RateDelete(int id, GridCommand command)
+        [HttpPost]
+        public ActionResult RateDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
                 return Content("Access denied");
@@ -152,7 +147,7 @@ namespace Nop.Plugin.Tax.CountryStateZip.Controllers
             if (taxRate != null)
                 _taxRateService.DeleteTaxRate(taxRate);
 
-            return RatesList(command);
+            return Json(null);
         }
 
         [HttpPost]

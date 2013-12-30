@@ -1,6 +1,5 @@
 ﻿@model ProductModel
 
-@using Telerik.Web.Mvc.UI;
 @if (Model.Id > 0)
 {     
     <table class="adminContent">
@@ -18,49 +17,107 @@
         </tr>
         <tr>
             <td>
-                @(Html.Telerik().Grid<ProductModel.AssociatedProductModel>()
-                .Name("associatedproducts-grid")
-                    .DataKeys(keys =>
-                    {
-                        keys.Add(x => x.Id);
-                    })
-                    .DataBinding(dataBinding =>
-                    {
-                        dataBinding.Ajax()
-                            .Select("AssociatedProductList", "Product", new { productId = Model.Id })
-                            .Update("AssociatedProductUpdate", "Product")
-                            .Delete("AssociatedProductDelete", "Product");
-                    })
-                    .Columns(columns =>
-                    {
-                        columns.Bound(x => x.ProductName)
-                            .ReadOnly();
-                        columns.Bound(x => x.DisplayOrder)
-                            .Centered();
-                        columns.Bound(x => x.Id)
-                            .Template(x => Html.ActionLink(T("Admin.Common.View").Text, "Edit", "Product", new { id = x.Id }, new { }))
-                            .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/Product/Edit/") + "<#= Id #>\">" + T("Admin.Common.View").Text + "</a>")
-                            .Title(T("Admin.Common.View").Text)
-                            .ReadOnly();
-                        columns.Command(commands =>
-                        {
-                            commands.Edit().Text(T("Admin.Common.Edit").Text);
-                            commands.Delete().Text(T("Admin.Common.Delete").Text);
+                <div id="associatedproducts-grid"></div>
+
+                <script>
+                    $(document).ready(function () {
+                        $("#associatedproducts-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("AssociatedProductList", "Product", new { productId = Model.Id }))",
+                                        type: "POST",
+                                        dataType: "json"
+                                    },
+                                    update: {
+                                        url:"@Html.Raw(Url.Action("AssociatedProductUpdate", "Product"))",
+                                        type: "POST",
+                                        dataType: "json"
+                                    },
+                                    destroy: {
+                                        url: "@Html.Raw(Url.Action("AssociatedProductDelete", "Product"))",
+                                        type: "POST",
+                                        dataType: "json"
+                                    }
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors",
+                                    model: {
+                                        id: "Id",
+                                        fields: {
+                                            ProductName: {editable: false, type: "string" },
+                                            DisplayOrder: {editable: true, type: "number" },
+                                            Id: {editable: false, type: "number" }
+                                        }
+                                    }
+                                },
+                                requestEnd: function(e) {
+                                    if(e.type=="update") {
+                                        this.read();
+                                    }
+                                },
+                                error: function(e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true,
+                                numeric: false,
+                                previousNext: false,
+                                info: false
+                            },
+                            editable: {
+                                confirmation: false,
+                                mode: "inline"
+                            },
+                            scrollable: false,
+                            columns: [{
+                                field: "ProductName",
+                                title: "@T("Admin.Catalog.Products.AssociatedProducts.Fields.Product")"
+                            }, {
+                                field: "DisplayOrder",
+                                title: "@T("Admin.Catalog.Products.AssociatedProducts.Fields.DisplayOrder")",
+                                //integer format
+                                format: "{0:0}",
+                                width: 150
+                            }, {
+                                field: "Id",
+                                title: "@T("Admin.Common.View")",
+                                width: 100,
+                                template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=Id#">@T("Admin.Common.View")</a>'
+                            }, {
+                                command: [{
+                                    name: "edit",
+                                    text: "@T("Admin.Common.Edit")"
+                                }, {
+                                    name: "destroy",
+                                    text: "@T("Admin.Common.Delete")"
+                                }],
+                                width: 200
+                            }]
                         });
-                    })
-                    .EnableCustomBinding(true))
+                    });
+                </script>
             </td>
         </tr>
         <tr>
             <td width="100%">
-                <input type="submit" id="btnAddNewAssociatedProduct" name="btnAddNewAssociatedProduct" value="@T("Admin.Catalog.Products.AssociatedProducts.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("AssociatedProductAddPopup", "Product", new { productId = Model.Id, btnId = "btnRefreshAssociatedProducts", formId = "product-form" }))    ', 800, 800, true); return false;" class="t-button" />
+                <input type="submit" id="btnAddNewAssociatedProduct" name="btnAddNewAssociatedProduct" value="@T("Admin.Catalog.Products.AssociatedProducts.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("AssociatedProductAddPopup", "Product", new { productId = Model.Id, btnId = "btnRefreshAssociatedProducts", formId = "product-form" }))    ', 800, 800, true); return false;" class="k-button" />
                 <input type="submit" id="btnRefreshAssociatedProducts" name="btnRefreshAssociatedProducts" style="display: none" />
                 <script type="text/javascript">
                     $(document).ready(function () {
                         $('#btnRefreshAssociatedProducts').click(function () {
                             //refresh grid
-                            var optionsGrid = $("#associatedproducts-grid");
-                            optionsGrid.data('tGrid').ajaxRequest();
+                            var optionsGrid = $("#associatedproducts-grid").data('kendoGrid');
+                            optionsGrid.dataSource.read();
 
                             //return false to don't reload a page
                             return false;

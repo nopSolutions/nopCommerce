@@ -1,6 +1,4 @@
-﻿@using Telerik.Web.Mvc.UI
-
-@{
+﻿@{
     var gridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSize;
     
     //page title
@@ -12,43 +10,87 @@
         @T("Admin.ContentManagement.Blog.BlogPosts")
     </div>
     <div class="options">
-        <a href="@Url.Action("Create")" class="t-button">@T("Admin.Common.AddNew")</a>
+        <a href="@Url.Action("Create")" class="k-button">@T("Admin.Common.AddNew")</a>
     </div>
 </div>
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<BlogPostModel>()
-                    .Name("blogpost-grid")
-                    .Columns(columns =>
-                    {
-                        columns.Bound(x => x.Title);
-                        columns.Bound(x => x.LanguageName);
-                        columns.Bound(x => x.Comments)
-                            .Centered()
-                            .Template(
-                            @<div>
-                                    @Html.ActionLink(T("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments").Text + " - " + @item.Comments, "Comments", new { filterByBlogPostId = item.Id })
-                                </div>
-                            )
-                            .ClientTemplate("<div><a href=\"Comments?filterByBlogPostId=<#= Id #>\">" + T("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments").Text + " - <#= Comments #>" + "</a></div>");
-                        columns.Bound(x => x.StartDate)
-                            .Centered();
-                        columns.Bound(x => x.EndDate)
-                            .Centered();
-                        columns.Bound(x => x.CreatedOn)
-                            .Centered();
-                        columns.Bound(x => x.Id)
-                            .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
-                            .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
-                            .Width(50)
-                            .Centered()
-                            .HeaderTemplate(T("Admin.Common.Edit").Text)
-                            .Filterable(false);
-                    })
-                    .Pageable(settings => settings.PageSize(gridPageSize).Position(GridPagerPosition.Both))
-                    .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "Blog"))
-                    .EnableCustomBinding(true))
+            <div id="blogpost-grid"></div>
+
+            <script>
+                    $(document).ready(function () {
+                        $("#blogpost-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("List", "Blog"))",
+                                        type: "POST",
+                                        dataType: "json"
+                                    }
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors"
+                                },
+                                error: function(e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                pageSize: @(gridPageSize),
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true
+                            },
+                            editable: {
+                                confirmation: false,
+                                mode: "inline"
+                            },
+                            scrollable: false,
+                            columns: [{
+                                field: "Title",
+                                title: "@T("Admin.ContentManagement.Blog.BlogPosts.Fields.Title")"
+                            }, {
+                                field: "LanguageName",
+                                title: "@T("Admin.ContentManagement.Blog.BlogPosts.Fields.Language")"
+                            }, {
+                                field: "Comments",
+                                title: "@T("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments")",
+                                width: 100,
+                                template: '<a href="Comments?filterByBlogPostId=#=Id#">@T("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments") - #=Comments# </a>'
+                            }, {
+                                field: "StartDate",
+                                title: "@T("Admin.ContentManagement.Blog.BlogPosts.Fields.StartDate")",
+                                width: 200,
+                                type: "date",
+                                format: "{0:G}"
+                            }, {
+                                field: "EndDate",
+                                title: "@T("Admin.ContentManagement.Blog.BlogPosts.Fields.EndDate")",
+                                width: 200,
+                                type: "date",
+                                format: "{0:G}"
+                            },  {
+                                field: "CreatedOn",
+                                title: "@T("Admin.ContentManagement.Blog.BlogPosts.Fields.CreatedOn")",
+                                width: 200,
+                                type: "date",
+                                format: "{0:G}"
+                            }, {
+                                field: "Id",
+                                title: "@T("Admin.Common.Edit")",
+                                width: 100,
+                                template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
+                            }]
+                        });
+                    });
+            </script>
         </td>
     </tr>
 </table>

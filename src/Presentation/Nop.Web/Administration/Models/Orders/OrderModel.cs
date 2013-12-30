@@ -213,12 +213,6 @@ namespace Nop.Admin.Models.Orders
         public bool CanPartiallyRefundOffline { get; set; }
         public bool CanVoid { get; set; }
         public bool CanVoidOffline { get; set; }
-        
-        //aggergator properties
-        public string aggregatorprofit { get; set; }
-        public string aggregatorshipping { get; set; }
-        public string aggregatortax { get; set; }
-        public string aggregatortotal { get; set; }
 
         #region Nested Classes
 
@@ -435,5 +429,15 @@ namespace Nop.Admin.Models.Orders
         }
 
         #endregion
+    }
+
+
+    public partial class OrderAggreratorModel : BaseNopModel
+    {
+        //aggergator properties
+        public string aggregatorprofit { get; set; }
+        public string aggregatorshipping { get; set; }
+        public string aggregatortax { get; set; }
+        public string aggregatortotal { get; set; }
     }
 }

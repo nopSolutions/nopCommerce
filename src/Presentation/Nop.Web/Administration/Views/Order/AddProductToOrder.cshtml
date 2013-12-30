@@ -5,7 +5,6 @@
     //page title
     ViewBag.Title = string.Format(T("Admin.Orders.Products.AddNew.Title1").Text, Model.OrderId);
 }
-@using Telerik.Web.Mvc.UI;
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-sales.png")" alt="" />
@@ -49,7 +48,7 @@
     </tr>
     <tr>
         <td colspan="2">
-            <input type="button" id="search-products" class="t-button" value="@T("Admin.Common.Search")" />
+            <input type="button" id="search-products" class="k-button" value="@T("Admin.Common.Search")" />
         </td>
     </tr>
 </table>
@@ -61,57 +60,102 @@
     </tr>
     <tr>
         <td>
-            @(Html.Telerik().Grid<OrderModel.AddOrderProductModel.ProductModel>()
-                    .Name("products-grid")
-                    .Columns(columns =>
-                    {
-                        columns.Bound(p => p.Id).Width(70);
-                        columns.Bound(p => p.Name).Width(400);
-                        columns.Bound(p => p.Sku).Width(100);
-                    })
-                    .Selectable()
-                    .Pageable(settings => settings.PageSize(gridPageSize).Position(GridPagerPosition.Both))
-                            .DataBinding(dataBinding => dataBinding.Ajax().Select("AddProductToOrder", "Order"))
-                    .ClientEvents(events => events.OnDataBinding("onDataBinding").OnRowSelected("onRowSelected"))
-                    .EnableCustomBinding(true))
+            <div id="products-grid"></div>
+
+            <script>
+                $(document).ready(function () {
+                    $("#products-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("AddProductToOrder", "Order"))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: additionalData
+                                }
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors"
+                            },
+                            error: function(e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            pageSize: @(gridPageSize),
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true
+                        },
+                        editable: {
+                            confirmation: false,
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        //selectable
+                        selectable: true,
+                        change: onChange,
+                        columns: [{
+                            field: "Id",
+                            title: "ID",
+                            width: 50
+                        }, {
+                            field: "Name",
+                            title: "@T("Admin.Orders.Products.AddNew.Name")",
+                            width: 400
+                        },{
+                            field: "Sku",
+                            title: "@T("Admin.Orders.Products.AddNew.SKU")",
+                            width: 100
+                        }]
+                    });
+                });
+            </script>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#search-products').click(function () {
+                        var grid = $('#products-grid').data('kendoGrid');
+                        grid.dataSource.page(1); //new search. Set page size to 1
+                        grid.dataSource.read();
+                        return false;
+                    });
+                });
+
+                $("#@Html.FieldIdFor(model => model.SearchProductName)").keydown(function (event) {
+                    if (event.keyCode == 13) {
+                        $("#search-products").click();
+                        return false;
+                    }
+                });
+
+                function additionalData() {
+                    return {
+                        SearchProductName: $('#@Html.FieldIdFor(model => model.SearchProductName)').val(),
+                        SearchCategoryId: $('#SearchCategoryId').val(),
+                        SearchManufacturerId: $('#SearchManufacturerId').val(),
+                        SearchProductTypeId: $('#SearchProductTypeId').val()
+                    };
+                }
+
+                function onChange(e) {
+                    var grid = $('#products-grid').data('kendoGrid');
+                    var selectedItem = grid.dataItem(grid.select());
+                    var productId = selectedItem.Id;
+                    //load "product details page" block
+                    var productDetailsActionUrl = '@Html.Raw(Url.Action("AddProductToOrderDetails", "Order", new { orderId = Model.OrderId, productId = "productidplaceholder" }))';
+                    productDetailsActionUrl = productDetailsActionUrl.replace("productidplaceholder", productId);
+                    setLocation(productDetailsActionUrl);
+                }
+            </script>
         </td>
     </tr>
 </table>
 <div id="productdetails">
 </div>
 @Html.HiddenFor(model => Model.OrderId)
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#search-products').click(function () {
-            var grid = $('#products-grid').data('tGrid');
-            grid.currentPage = 1; //new search. Set page size to 1
-            grid.ajaxRequest();
-            return false;
-        });
-    });
-
-    $("#@Html.FieldIdFor(model => model.SearchProductName)").keydown(function (event) {
-        if (event.keyCode == 13) {
-            $("#search-products").click();
-            return false;
-        }
-    });
-
-    function onDataBinding(e) {
-        var searchModel = {
-            SearchProductName: $('#@Html.FieldIdFor(model => model.SearchProductName)').val(),
-            SearchCategoryId: $('#SearchCategoryId').val(),
-            SearchManufacturerId: $('#SearchManufacturerId').val(),
-            SearchProductTypeId: $('#SearchProductTypeId').val()
-        };
-        e.data = searchModel;
-    }
-
-    function onRowSelected(e) {
-        productID = e.row.cells[0].innerHTML;
-        //load "product details page" block
-        var productDetailsActionUrl = '@Html.Raw(Url.Action("AddProductToOrderDetails", "Order", new { orderId = Model.OrderId, productId = "productidplaceholder" }))';
-        productDetailsActionUrl = productDetailsActionUrl.replace("productidplaceholder", productID);
-        setLocation(productDetailsActionUrl);
-    }
-</script>

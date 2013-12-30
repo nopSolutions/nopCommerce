@@ -10,7 +10,7 @@ using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
-using Telerik.Web.Mvc;
+using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Admin.Controllers
 {
@@ -47,8 +47,8 @@ namespace Nop.Admin.Controllers
 			return View();
 		}
 
-		[HttpPost, GridAction(EnableCustomBinding = true)]
-		public ActionResult List(GridCommand command)
+		[HttpPost]
+		public ActionResult List(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
                 return AccessDeniedView();
@@ -59,7 +59,7 @@ namespace Nop.Admin.Controllers
             foreach (var eam in emailAccountModels)
                 eam.IsDefaultEmailAccount = eam.Id == _emailAccountSettings.DefaultEmailAccountId;
 
-            var gridModel = new GridModel<EmailAccountModel>
+            var gridModel = new DataSourceResult
             {
                 Data = emailAccountModels,
                 Total = emailAccountModels.Count()

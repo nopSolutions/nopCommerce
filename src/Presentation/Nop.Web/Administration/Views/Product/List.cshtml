@@ -1,5 +1,4 @@
 ﻿@model ProductListModel
-@using Telerik.Web.Mvc.UI
 @{
     var gridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSize;
 
@@ -14,18 +13,18 @@
             @T("Admin.Catalog.Products.Manage")
         </div>
         <div class="options">
-            <a href="@Url.Action("Create")" class="t-button">@T("Admin.Common.AddNew")</a>
-            <a href="@Url.Action("DownloadCatalogAsPdf")" class="t-button">@T("Admin.Catalog.Products.List.DownloadPDF")</a>
-            <a href="@Url.Action("ExportXmlAll")" class="t-button">@T("Admin.Common.ExportToXml.All")</a>
-            <input type="button" id="exportxml-selected" class="t-button" value="@T("Admin.Common.ExportToXml.Selected")" />
-            <a href="@Url.Action("ExportExcelAll")" class="t-button">@T("Admin.Common.ExportToExcel.All")</a>
-            <input type="button" id="exportexcel-selected" class="t-button" value="@T("Admin.Common.ExportToExcel.Selected")" />
+            <a href="@Url.Action("Create")" class="k-button">@T("Admin.Common.AddNew")</a>
+            <a href="@Url.Action("DownloadCatalogAsPdf")" class="k-button">@T("Admin.Catalog.Products.List.DownloadPDF")</a>
+            <a href="@Url.Action("ExportXmlAll")" class="k-button">@T("Admin.Common.ExportToXml.All")</a>
+            <input type="button" id="exportxml-selected" class="k-button" value="@T("Admin.Common.ExportToXml.Selected")" />
+            <a href="@Url.Action("ExportExcelAll")" class="k-button">@T("Admin.Common.ExportToExcel.All")</a>
+            <input type="button" id="exportexcel-selected" class="k-button" value="@T("Admin.Common.ExportToExcel.Selected")" />
             @if (!Model.IsLoggedInAsVendor)
             {
                 //a vendor cannot import products
-                <input type="button" id="importexcel" name="importexcel" class="t-button" value="@T("Admin.Common.ImportFromExcel")" />
+                <input type="button" id="importexcel" name="importexcel" class="k-button" value="@T("Admin.Common.ImportFromExcel")" />
             }
-            <input type="button" id="delete-selected" class="t-button" value="@T("Admin.Common.Delete.Selected")" />
+            <input type="button" id="delete-selected" class="k-button" value="@T("Admin.Common.Delete.Selected")" />
         </div>
     </div>
     <table width="100%">
@@ -99,12 +98,12 @@
             </td>
             <td class="adminData">
                 @Html.EditorFor(model => Model.GoDirectlyToSku)
-                <input type="submit" id="go-to-product-by-sku" name="go-to-product-by-sku" class="t-button" value="@T("Admin.Common.Go")" />
+                <input type="submit" id="go-to-product-by-sku" name="go-to-product-by-sku" class="k-button" value="@T("Admin.Common.Go")" />
             </td>
         </tr>
         <tr>
             <td colspan="2">
-                <input type="button" id="search-products" class="t-button" value="@T("Admin.Common.Search")" />
+                <input type="button" id="search-products" class="k-button" value="@T("Admin.Common.Search")" />
             </td>
         </tr>
     </table>
@@ -113,42 +112,100 @@
     <table class="adminContent">
         <tr>
             <td>
-                @(Html.Telerik().Grid<ProductModel>()
-                    .Name("products-grid")
-                    .Columns(columns =>
-                    {
-                        columns.Bound(x => x.Id)
-                        .Filterable(false)
-                        .ClientTemplate("<input type='checkbox' value='<#= Id #>' class='checkboxGroups'/>")
-                        .Title("<input id='mastercheckbox' type='checkbox'/>")
-                        .Width(50)
-                        .HtmlAttributes(new { style = "text-align:center" })
-                        .HeaderHtmlAttributes(new { style = "text-align:center" });
-                        if (Model.DisplayProductPictures)
-                        {
-                            columns.Bound(x => x.PictureThumbnailUrl)
-                                .ClientTemplate("<img alt='<#= Id #>' src='<#= PictureThumbnailUrl #>' />");
-                        }
-                        columns.Bound(x => x.Name);
-                        columns.Bound(x => x.Sku);
-                        columns.Bound(x => x.Price);
-                        columns.Bound(x => x.StockQuantity);
-                        columns.Bound(x => x.ProductTypeName);
-                        columns.Bound(x => x.Published)
-                            .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= Published #>.gif' />")
-                            .Centered()
-                            .Width(100);
-                        columns.Bound(x => x.Id)
-                            .Width(50)
-                            .Centered()
-                            .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
-                            .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
-                            .Title(T("Admin.Common.Edit").Text);
-                    })
-                     .Pageable(settings => settings.PageSize(gridPageSize).Position(GridPagerPosition.Both))
-                     .DataBinding(dataBinding => dataBinding.Ajax().Select("ProductList", "Product"))
-                     .ClientEvents(events => events.OnDataBinding("onDataBinding").OnDataBound("onDataBound"))
-                     .EnableCustomBinding(true))
+                <div id="products-grid"></div>
+
+                <script>
+                    $(document).ready(function() {
+                        $("#products-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("ProductList", "Product"))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: additionalData
+                                    }
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors"
+                                },
+                                error: function(e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                pageSize: @(gridPageSize),
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true
+                            },
+                            editable: {
+                                confirmation: false,
+                                mode: "inline"
+                            },
+                            scrollable: false,
+                            dataBound: onDataBound,
+                            columns: [
+                                {
+                                    field: "Id",
+                                    headerTemplate: "<input id='mastercheckbox' type='checkbox'/>",
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    template: "<input type='checkbox' value='#=Id#' class='checkboxGroups'/>",
+                                    width: 50
+                                },  
+                                @if (Model.DisplayProductPictures)
+                                {
+                                    <text>{
+                                field: "PictureThumbnailUrl",
+                                title: "@T("Admin.Catalog.Products.Fields.PictureThumbnailUrl")",
+                                template: '<img src="#=PictureThumbnailUrl#" />',
+                            width: 200
+                        },</text>
+                                }
+                                {
+                                    field: "Name",
+                                    title: "@T("Admin.Catalog.Products.Fields.Name")",
+                                    width: 300
+                                }, {
+                                    field: "Sku",
+                                    title: "@T("Admin.Catalog.Products.Fields.Sku")",
+                                    width: 100
+                                }, {
+                                    field: "Price",
+                                    title: "@T("Admin.Catalog.Products.Fields.Price")",
+                                    width: 150
+                                }, {
+                                    field: "StockQuantity",
+                                    title: "@T("Admin.Catalog.Products.Fields.StockQuantity")",
+                                    width: 100
+                                }, {
+                                    field: "ProductTypeName",
+                                    title: "@T("Admin.Catalog.Products.Fields.ProductType")",
+                                    width: 100
+                                }, {
+                                    field: "Published",
+                                    title: "@T("Admin.Catalog.Products.Fields.Published")",
+                                    width: 100,
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Published#.gif" />'
+                                }, {
+                                    field: "Id",
+                                    title: "@T("Admin.Common.Edit")",
+                                    width: 100,
+                                    template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
+                                }
+                            ]
+                        } );
+                    });
+                </script>
             </td>
         </tr>
     </table>
@@ -162,9 +219,9 @@
             //search button
             $('#search-products').click(function () {
                 //search
-                var grid = $('#products-grid').data('tGrid');
-                grid.currentPage = 1; //new search. Set page size to 1
-                grid.ajaxRequest();
+                var grid = $('#products-grid').data('kendoGrid');
+                grid.dataSource.page(1); //new search. Set page size to 1
+                grid.dataSource.read();
                 //clear selected checkboxes
                 $('.checkboxGroups').attr('checked', false).change();
                 selectedIds = [];
@@ -235,8 +292,8 @@
             });
         });
 
-        function onDataBinding(e) {
-            var searchModel = {
+        function additionalData() {
+            return {
                 SearchProductName: $('#@Html.FieldIdFor(model => model.SearchProductName)').val(),
                 SearchCategoryId: $('#SearchCategoryId').val(),
                 SearchIncludeSubCategories: $('#@Html.FieldIdFor(model => model.SearchIncludeSubCategories)').is(':checked'),
@@ -246,7 +303,6 @@
                 SearchVendorId: $('#SearchVendorId').val(),
                 SearchProductTypeId: $('#SearchProductTypeId').val()
             };
-            e.data = searchModel;
         }
 
         function onDataBound(e) {
@@ -267,14 +323,13 @@
         }
     </script>  
 }
+
+
 @*import products form*@
-@{Html.Telerik().Window()
-        .Name("importexcel-window")
-        .Title(T("Admin.Common.ImportFromExcel").Text)
-        .Content(@<text>
-    @using (Html.BeginForm("ImportExcel", "Product", FormMethod.Post, new { enctype = "multipart/form-data" }))
+<div id="importexcel-window" style="display:none;">
+    @using (Html.BeginForm("ImportExcel", "Product", FormMethod.Post, new {enctype = "multipart/form-data"}))
     {
-        <table style="text-align: left;">
+        <table style="text-align:left;">
             <tr>
                 <td colspan="2">
                     <em>@T("Admin.Catalog.Products.List.ImportFromExcelTip")</em>
@@ -290,25 +345,26 @@
             </tr>
             <tr>
                 <td colspan="2">
-                    <input type="submit" class="t-button" value="@T("Admin.Common.ImportFromExcel")" />
+                    <input type="submit" class="k-button" value="@T("Admin.Common.ImportFromExcel")" />
                 </td>
             </tr>
         </table>
     }
-    </text>)
-        .Width(400)
-        .Scrollable(false)
-        .Draggable(true)
-        .Modal(true)
-        .Visible(false)
-        .Render();
-}
+</div>
 <script type="text/javascript">
     $(document).ready(function () {
-
         $("#importexcel").click(function (e) {
             e.preventDefault();
-            $('#importexcel-window').data('tWindow').center().open();
+            var window = $("#importexcel-window");
+            if (!window.data("kendoWindow")) {
+                window.kendoWindow({
+                    modal: true,
+                    width: "400px",
+                    title: "@T("Admin.Common.ImportFromCsv")",
+                    actions: ["Close"]
+                });
+            }
+            window.data('kendoWindow').center().open();
         });
     });
 </script>

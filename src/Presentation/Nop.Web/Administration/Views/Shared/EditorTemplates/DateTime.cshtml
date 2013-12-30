@@ -1,7 +1,6 @@
-@model DateTime
-@using Telerik.Web.Mvc.UI
-
-@(Html.Telerik().DateTimePicker()
-        .Name(ViewData.TemplateInfo.GetFullHtmlFieldName(string.Empty))
-        .Value(Model > DateTime.MinValue? Model : DateTime.Today)
-)
+@using System.Globalization
+@model System.DateTime
+<input id="@ViewData.TemplateInfo.GetFullHtmlFieldId(string.Empty)" name="@ViewData.TemplateInfo.GetFullHtmlFieldName(string.Empty)" value="@((Model > DateTime.MinValue ? Model : DateTime.Today).ToString(CultureInfo.CurrentCulture.DateTimeFormat))" />
+<script>
+    $("#@ViewData.TemplateInfo.GetFullHtmlFieldId(string.Empty)").kendoDateTimePicker();
+</script>

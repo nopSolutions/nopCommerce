@@ -1,18 +1,46 @@
 ﻿@model RecurringPaymentModel
-
 @using Nop.Core.Domain.Catalog;
-@using Telerik.Web.Mvc.UI;
-
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
-@Html.Telerik().TabStrip().Name("recurringpayment-edit").Items(x =>
-{
-    x.Add().Text(T("Admin.RecurringPayments.Info").Text).Content(TabInfo().ToHtmlString());
-    x.Add().Text(T("Admin.RecurringPayments.History").Text).Content(TabHistory().ToHtmlString());
 
-    //generate an event
-    EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "recurringpayment-edit"));
-}).ClientEvents(events => events.OnSelect("telerik_on_tab_select")).SetSelectedTabIndex(GetSelectedTabIndex())
+<div id="recurringpayment-edit">
+    <ul>
+        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+            @T("Admin.RecurringPayments.Info")
+        </li>
+        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+            @T("Admin.RecurringPayments.History")
+        </li>
+    </ul>
+    <div>
+        @TabInfo()
+    </div>
+    <div>
+        @TabHistory()
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $("#recurringpayment-edit").kendoTabStrip({
+            animation: {
+                open: {
+                    effects: "fadeIn"
+                }
+            },
+            select: tabstrip_on_tab_select
+        });
+    });
+</script>
+
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "recurringpayment-edit");
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}
 
 @*save selected tab index*@
 <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
@@ -42,7 +70,7 @@
                 @Html.NopLabelFor(model => model.CycleLength):
             </td>
             <td class="adminData">
-                @Html.Telerik().IntegerTextBoxFor(model => model.CycleLength).MinValue(1)
+                @Html.EditorFor(model => model.CycleLength)
                 @Html.ValidationMessageFor(model => model.CycleLength)
             </td>
         </tr>
@@ -60,7 +88,7 @@
                 @Html.NopLabelFor(model => model.TotalCycles):
             </td>
             <td class="adminData">
-                @Html.Telerik().IntegerTextBoxFor(model => model.TotalCycles).MinValue(1)
+                @Html.EditorFor(model => model.TotalCycles)
                 @Html.ValidationMessageFor(model => model.TotalCycles)
             </td>
         </tr>
@@ -108,11 +136,11 @@
                         {
                     @T("Admin.RecurringPayments.History.NextPaymentDate")
                     <text>:</text> @Model.NextPaymentDate
-                    <input type="submit" name="processnextpayment" class="t-button" value="@T("Admin.RecurringPayments.History.ProcessNextPayment")" />
+                    <input type="submit" name="processnextpayment" class="k-button" value="@T("Admin.RecurringPayments.History.ProcessNextPayment")" />
                         }
                 @if (Model.CanCancelRecurringPayment)
                         {
-                    <input type="submit" name="cancelpayment" class="t-button" value="@T("Admin.RecurringPayments.History.CancelPayment")" />
+                    <input type="submit" name="cancelpayment" class="k-button" value="@T("Admin.RecurringPayments.History.CancelPayment")" />
                         }
             </td>
         </tr>
@@ -120,25 +148,72 @@
     <table class="adminContent">
         <tr>
             <td>
-                @(Html.Telerik().Grid<RecurringPaymentModel.RecurringPaymentHistoryModel>(Model.History)
-                    .Name("history-grid")
-                    .Columns(columns =>
-                    {
-                        columns.Bound(x => x.OrderId)
-                            .Width(100)
-                            .Template(x => Html.ActionLink(T("Admin.Common.View").Text, "Edit", "Order", new { id = x.OrderId }, new { }))
-                            .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/Order/Edit/") + "<#= OrderId #>\">" + T("Admin.Common.View").Text + "</a>");
-                        columns.Bound(x => x.OrderStatus).Width(200);
-                        columns.Bound(x => x.PaymentStatus).Width(200);
-                        columns.Bound(x => x.ShippingStatus).Width(200);
-                        columns.Bound(x => x.CreatedOn).Width(200);
+                <div id="history-grid"></div>
 
-                    })
-                    .DataBinding(dataBinding =>
-                    {
-                        dataBinding.Ajax().Select("HistoryList", "RecurringPayment", new { recurringPaymentId = Model.Id });
-                    })
-                    .EnableCustomBinding(true))
+                <script>
+                    $(document).ready(function () {
+                        $("#history-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("HistoryList", "RecurringPayment", new { recurringPaymentId = Model.Id }))",
+                                        type: "POST",
+                                        dataType: "json"
+                                    }
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors"
+                                },
+                                error: function(e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true,
+                                numeric: false,
+                                previousNext: false,
+                                info: false
+                            },
+                            editable: {
+                                confirmation: false,
+                                mode: "inline"
+                            },
+                            scrollable: false,
+                            columns: [{
+                                field: "OrderId",
+                                title: "@T("Admin.RecurringPayments.History.Order")",
+                                width: 200,
+                                template: '<a href="@Url.Content("~/Admin/Order/Edit/")#=OrderId#">#=OrderId# - @T("Admin.Common.View")</a>'
+                            }, {
+                                field: "OrderStatus",
+                                title: "@T("Admin.RecurringPayments.History.OrderStatus")",
+                                width: 200
+                            }, {
+                                field: "PaymentStatus",
+                                title: "@T("Admin.RecurringPayments.History.PaymentStatus")",
+                                width: 200
+                            }, {
+                                field: "ShippingStatus",
+                                title: "@T("Admin.RecurringPayments.History.ShippingStatus")",
+                                width: 200
+                            }, {
+                                field: "CreatedOn",
+                                title: "@T("Admin.RecurringPayments.History.CreatedOn")",
+                                width: 200,
+                                type: "date",
+                                format: "{0:G}"
+                            }]
+                        });
+                    });
+                </script>
             </td>
         </tr>
     </table>

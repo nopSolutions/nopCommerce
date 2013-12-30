@@ -1,6 +1,4 @@
 ﻿@model OrderSettingsModel
-@using Telerik.Web.Mvc.UI;
-@using Nop.Core.Domain.Orders;
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.Order").Text;
@@ -13,23 +11,53 @@
             @T("Admin.Configuration.Settings.Order")
         </div>
         <div class="options">
-            <input type="submit" name="save" class="t-button" value="@T("Admin.Common.Save")" />
+            <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
         </div>
     </div>
     @Html.Action("StoreScopeConfiguration", "Setting")
     @Html.ValidationSummary(false)
 
     
-     
-    @Html.Telerik().TabStrip().Name("ordersettings-edit").Items(x =>
-    {
-        x.Add().Text(T("Admin.Configuration.Settings.Order.OrderSettings").Text).Content(TabOrderSettings().ToHtmlString());
-        x.Add().Text(T("Admin.Configuration.Settings.Order.ReturnRequestSettings").Text).Content(TabReturnRequestSettings().ToHtmlString());
+    <div id="ordersettings-edit">
+        <ul>
+            <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+                @T("Admin.Configuration.Settings.Order.OrderSettings")
+            </li>
+            <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+                @T("Admin.Configuration.Settings.Order.ReturnRequestSettings")
+            </li>
+        </ul>
+        <div>
+            @TabOrderSettings()
+        </div>
+        <div>
+            @TabReturnRequestSettings()
+        </div>
+    </div>
+    <script>
+        $(document).ready(function() {
+            $("#ordersettings-edit").kendoTabStrip({
+                animation:  {
+                    open: {
+                        effects: "fadeIn"
+                    }
+                },
+                select: tabstrip_on_tab_select
+            });
+        });
+    </script>
 
-        //generate an event
-        EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "ordersettings-edit"));
-    }).ClientEvents(events => events.OnSelect("telerik_on_tab_select")).SetSelectedTabIndex(GetSelectedTabIndex())
-    
+    {
+        //custom tabs
+        var eventMessage = new AdminTabStripCreated(this.Html, "ordersettings-edit");
+        EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+        foreach (var eventBlock in eventMessage.BlocksToRender)
+        {
+            @eventBlock
+        }
+    }
+     
+
      @*save selected tab index*@
 	<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
 }

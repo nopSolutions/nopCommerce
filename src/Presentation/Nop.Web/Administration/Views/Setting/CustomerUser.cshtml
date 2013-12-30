@@ -1,5 +1,4 @@
 ﻿@model CustomerUserSettingsModel
-@using Telerik.Web.Mvc.UI;
 @using Nop.Core.Domain.Customers;
 @{
     //page title
@@ -13,25 +12,69 @@
             @T("Admin.Configuration.Settings.CustomerUser")
         </div>
         <div class="options">
-            <input type="submit" name="save" class="t-button" value="@T("Admin.Common.Save")" />
+            <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
         </div>
     </div>
     
     @Html.ValidationSummary(false)
 
-    
-@Html.Telerik().TabStrip().Name("customersettings-edit").Items(x =>
-{
-    x.Add().Text(T("Admin.Configuration.Settings.CustomerUser.CustomerSettings").Text).Content(TabCustomerSettings().ToHtmlString());
-    x.Add().Text(T("Admin.Configuration.Settings.CustomerUser.CustomerFormFields").Text).Content(TabCustomerFormFields().ToHtmlString());
-    x.Add().Text(T("Admin.Configuration.Settings.CustomerUser.AddressFormFields").Text).Content(TabAddressFormFields().ToHtmlString());
-    x.Add().Text(T("Admin.Configuration.Settings.CustomerUser.DateTimeSettings").Text).Content(TabDateTimeSettings().ToHtmlString());
-    x.Add().Text(T("Admin.Configuration.Settings.CustomerUser.ExternalAuthenticationSettings").Text).Content(TabExternalAuthenticationSettings().ToHtmlString());
+    <div id="customersettings-edit">
+        <ul>
+            <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+                @T("Admin.Configuration.Settings.CustomerUser.CustomerSettings")
+            </li>
+            <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+                @T("Admin.Configuration.Settings.CustomerUser.CustomerFormFields")
+            </li>
+            <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
+                @T("Admin.Configuration.Settings.CustomerUser.AddressFormFields")
+            </li>
+            <li @Html.RenderSelectedTabIndex(3, GetSelectedTabIndex())>
+                @T("Admin.Configuration.Settings.CustomerUser.DateTimeSettings")
+            </li>
+            <li @Html.RenderSelectedTabIndex(4, GetSelectedTabIndex())>
+                @T("Admin.Configuration.Settings.CustomerUser.ExternalAuthenticationSettings")
+            </li>
+        </ul>
+        <div>
+            @TabCustomerSettings()
+        </div>
+        <div>
+            @TabCustomerFormFields()
+        </div>
+        <div>
+            @TabAddressFormFields()
+        </div>
+        <div>
+            @TabDateTimeSettings()
+        </div>
+        <div>
+            @TabExternalAuthenticationSettings()
+        </div>
+    </div>
+    <script>
+        $(document).ready(function() {
+            $("#customersettings-edit").kendoTabStrip({
+                animation:  {
+                    open: {
+                        effects: "fadeIn"
+                    }
+                },
+                select: tabstrip_on_tab_select
+            });
+        });
+    </script>
 
-    //generate an event
-    EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "customersettings-edit"));
-}).ClientEvents(events => events.OnSelect("telerik_on_tab_select")).SetSelectedTabIndex(GetSelectedTabIndex())
-    
+    {
+        //custom tabs
+        var eventMessage = new AdminTabStripCreated(this.Html, "customersettings-edit");
+        EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+        foreach (var eventBlock in eventMessage.BlocksToRender)
+        {
+            @eventBlock
+        }
+    }
+
     @*save selected tab index*@
 	<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
     

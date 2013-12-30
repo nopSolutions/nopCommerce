@@ -1,46 +1,129 @@
 ﻿@model ProductModel
 
-@using Telerik.Web.Mvc.UI;
 @if (Model.Id > 0)
 {
 
     /*hide "add spec" table if no attributes are defined*/
     if (Model.AddSpecificationAttributeModel.AvailableAttributes.Count > 0)
     {
-    <div>
-        @(Html.Telerik().Grid<ProductSpecificationAttributeModel>()
-                    .Name("specificationattributes-grid")
-                    .DataKeys(x =>
-                    {
-                        x.Add(y => y.Id).RouteKey("psaId");
-                    })
-                    .Columns(columns =>
-                    {
-                        columns.Bound(x => x.SpecificationAttributeName).Width(200).ReadOnly();
-                        columns.Bound(x => x.SpecificationAttributeOptionName).Width(200).ReadOnly();
-                        columns.Bound(x => x.CustomValue).Width(200);
-                        columns.Bound(x => x.AllowFiltering).Width(100);
-                        columns.Bound(x => x.ShowOnProductPage).Width(100);
-                        columns.Bound(x => x.DisplayOrder).Width(100);
-                        columns.Command(commands =>
-                        {
-                            commands.Edit().Text(T("Admin.Common.Edit").Text);
-                            commands.Delete().Text(T("Admin.Common.Delete").Text);
-                        }).Width(180);
+        <div>
+            <div id="specificationattributes-grid"></div>
 
-                    })
-                    .Editable(x =>
-                    {
-                        x.Mode(GridEditMode.InLine);
-                    })
-                    .DataBinding(dataBinding =>
-                    {
-                        dataBinding.Ajax().Select("ProductSpecAttrList", "Product", new { productId = Model.Id })
-                            .Update("ProductSpecAttrUpdate", "Product")
-                            .Delete("ProductSpecAttrDelete", "Product");
-                    })
-                    .EnableCustomBinding(true))
-    </div>
+            <script>
+                $(document).ready(function() {
+                    $("#specificationattributes-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("ProductSpecAttrList", "Product", new { productId = Model.Id }))",
+                                    type: "POST",
+                                    dataType: "json"
+                                },
+                                update: {
+                                    url: "@Html.Raw(Url.Action("ProductSpecAttrUpdate", "Product"))",
+                                    type: "POST",
+                                    dataType: "json"
+                                },
+                                destroy: {
+                                    url: "@Html.Raw(Url.Action("ProductSpecAttrDelete", "Product"))",
+                                    type: "POST",
+                                    dataType: "json"
+                                }
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors",
+                                model: {
+                                    id: "Id",
+                                    fields: {
+                                        //ProductId: { editable: false, type: "number" },
+                                        SpecificationAttributeName: { editable: false, type: "string" },
+                                        SpecificationAttributeOptionName: { editable: false, type: "string" },
+                                        CustomValue: { editable: true, type: "string" },
+                                        AllowFiltering: { editable: true, type: "boolean" },
+                                        ShowOnProductPage: { editable: true, type: "boolean" },
+                                        DisplayOrder: { editable: true, type: "number" },
+                                        Id: { editable: false, type: "number" }
+                                    }
+                                }
+                            },
+                            requestEnd: function(e) {
+                                if (e.type == "update") {
+                                    this.read();
+                                }
+                            },
+                            error: function(e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true,
+                            numeric: false,
+                            previousNext: false,
+                            info: false
+                        },
+                        editable: {
+                            confirmation: false,
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [{
+                                field: "SpecificationAttributeName",
+                                title: "@T("Admin.Catalog.Products.SpecificationAttributes.Fields.SpecificationAttribute")",
+                                width: 200
+                            }, {
+                                field: "SpecificationAttributeOptionName",
+                                title: "@T("Admin.Catalog.Products.SpecificationAttributes.Fields.SpecificationAttributeOption")",
+                                width: 200
+                            }, {
+                                field: "CustomValue",
+                                title: "@T("Admin.Catalog.Products.SpecificationAttributes.Fields.CustomValue")",
+                                width: 200
+                            }, {
+                                field: "AllowFiltering",
+                                title: "@T("Admin.Catalog.Products.SpecificationAttributes.Fields.AllowFiltering")",
+                                width: 150,
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:center" },
+                                template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=AllowFiltering#.gif" />'
+                            }, {
+                                field: "ShowOnProductPage",
+                                title: "@T("Admin.Catalog.Products.SpecificationAttributes.Fields.ShowOnProductPage")",
+                                width: 150,
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:center" },
+                                template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=ShowOnProductPage#.gif" />'
+                            },
+                            {
+                                field: "DisplayOrder",
+                                title: "@T("Admin.Catalog.Products.SpecificationAttributes.Fields.DisplayOrder")",
+                                width: 150,
+                                //integer format
+                                format: "{0:0}"
+                            }, {
+                                command: [
+                                    {
+                                        name: "edit",
+                                        text: "@T("Admin.Common.Edit")"
+                                    }, {
+                                        name: "destroy",
+                                        text: "@T("Admin.Common.Delete")"
+                                    }
+                                ],
+                                width: 200
+                            }
+                        ]
+                    });
+                });
+            </script>
+        </div>
     <p>
         <strong>@T("Admin.Catalog.Products.SpecificationAttributes.AddNew")</strong>
     </p>
@@ -85,8 +168,8 @@
                         url: "@(Url.Action("ProductSpecificationAttributeAdd", "Product"))",
                         data: { "specificationAttributeOptionId": specificationAttributeOptionId, "customValue": customValue, "allowFiltering": allowFiltering, "showOnProductPage": showOnProductPage, "displayOrder": displayOrder, "productId": @(Model.Id) },
                         success: function (data) {
-                            var specificationAttributesGrid = $("#specificationattributes-grid");
-                            specificationAttributesGrid.data('tGrid').ajaxRequest();
+                            var grid = $("#specificationattributes-grid").data('kendoGrid');
+                            grid.dataSource.read();
                             $('#addProductSpec').attr('disabled', false);
                         },
                         error:function (xhr, ajaxOptions, thrownError){
@@ -155,7 +238,7 @@
         </tr>
         <tr>
             <td colspan="2" align="left">
-                <input type="button" id="addProductSpec" class="t-button" value="@T("Admin.Catalog.Products.SpecificationAttributes.AddButton")" />
+                <input type="button" id="addProductSpec" class="k-button" value="@T("Admin.Catalog.Products.SpecificationAttributes.AddButton")" />
             </td>
         </tr>
     </table>

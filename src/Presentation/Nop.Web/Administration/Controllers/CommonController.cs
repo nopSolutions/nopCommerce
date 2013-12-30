@@ -24,8 +24,8 @@ using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Security;
-using Telerik.Web.Mvc;
 
 namespace Nop.Admin.Controllers
 {
@@ -518,14 +518,14 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult SeNames(GridCommand command, UrlRecordListModel model)
+        [HttpPost]
+        public ActionResult SeNames(DataSourceRequest command, UrlRecordListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
             var urlRecords = _urlRecordService.GetAllUrlRecords(model.SeName, command.Page - 1, command.PageSize);
-            var gridModel = new GridModel<UrlRecordModel>
+            var gridModel = new DataSourceResult
             {
                 Data = urlRecords.Select(x =>
                 {
@@ -551,10 +551,7 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = urlRecords.TotalCount
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return Json(gridModel);
         }
 
         [HttpPost]
@@ -590,14 +587,14 @@ namespace Nop.Admin.Controllers
             return PartialView();
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult PopularSearchTermsReport(GridCommand command)
+        [HttpPost]
+        public ActionResult PopularSearchTermsReport(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
             var searchTermRecordLines = _searchTermService.GetStats(command.Page - 1, command.PageSize);
-            var gridModel = new GridModel<SearchTermReportLineModel>
+            var gridModel = new DataSourceResult
             {
                 Data = searchTermRecordLines.Select(x =>
                 {
@@ -609,10 +606,7 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = searchTermRecordLines.TotalCount
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return Json(gridModel);
         }
 
         #endregion

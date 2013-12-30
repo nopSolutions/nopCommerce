@@ -32,7 +32,7 @@ using Nop.Services.Vendors;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
-using Telerik.Web.Mvc;
+using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Admin.Controllers
 {
@@ -719,8 +719,8 @@ namespace Nop.Admin.Controllers
             return View(model);
 		}
 
-		[GridAction(EnableCustomBinding = true)]
-		public ActionResult OrderList(GridCommand command, OrderListModel model)
+		[HttpPost]
+		public ActionResult OrderList(DataSourceRequest command, OrderListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -746,7 +746,7 @@ namespace Nop.Admin.Controllers
                 startDateValue, endDateValue, orderStatus,
                 paymentStatus, shippingStatus, model.CustomerEmail, model.OrderGuid,
                 command.Page - 1, command.PageSize);
-            var gridModel = new GridModel<OrderModel>
+            var gridModel = new DataSourceResult
             {
                 Data = orders.Select(x =>
                 {
@@ -767,7 +767,6 @@ namespace Nop.Admin.Controllers
             };
 
             //summary report
-            //implemented as a workaround described here: http://www.telerik.com/community/forums/aspnet-mvc/grid/gridmodel-aggregates-how-to-use.aspx
             var reportSummary = _orderReportService.GetOrderAverageReportLine(model.StoreId,
                 model.VendorId, orderStatus,  paymentStatus, shippingStatus, 
                 startDateValue, endDateValue, model.CustomerEmail);
@@ -778,14 +777,13 @@ namespace Nop.Admin.Controllers
             if (primaryStoreCurrency == null)
                 throw new Exception("Cannot load primary store currency");
 
-		    var aggregator = new OrderModel()
-		    {
+            gridModel.ExtraData = new OrderAggreratorModel()
+            {
                 aggregatorprofit = _priceFormatter.FormatPrice(profit, true, false),
                 aggregatorshipping = _priceFormatter.FormatShippingPrice(reportSummary.SumShippingExclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, false),
                 aggregatortax = _priceFormatter.FormatPrice(reportSummary.SumTax, true, false),
-		        aggregatortotal = _priceFormatter.FormatPrice(reportSummary.SumOrders, true, false)
-		    };
-		    gridModel.Aggregates = aggregator;
+                aggregatortotal = _priceFormatter.FormatPrice(reportSummary.SumOrders, true, false)
+            };
 			return new JsonResult
 			{
 				Data = gridModel
@@ -1780,8 +1778,8 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult AddProductToOrder(GridCommand command, OrderModel.AddOrderProductModel model)
+        [HttpPost]
+        public ActionResult AddProductToOrder(DataSourceRequest command, OrderModel.AddOrderProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -1790,7 +1788,7 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null)
                 return Content("");
 
-            var gridModel = new GridModel();
+            var gridModel = new DataSourceResult();
             var products = _productService.SearchProducts(categoryIds: new List<int>() {model.SearchCategoryId},
                 manufacturerId: model.SearchManufacturerId,
                 productType: model.SearchProductTypeId > 0 ? (ProductType?)model.SearchProductTypeId : null,
@@ -1810,10 +1808,8 @@ namespace Nop.Admin.Controllers
                 return productModel;
             });
             gridModel.Total = products.TotalCount;
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
         public ActionResult AddProductToOrderDetails(int orderId, int productId)
@@ -2236,8 +2232,8 @@ namespace Nop.Admin.Controllers
             return View(model);
 		}
 
-		[GridAction(EnableCustomBinding = true)]
-        public ActionResult ShipmentListSelect(GridCommand command, ShipmentListModel model)
+		[HttpPost]
+        public ActionResult ShipmentListSelect(DataSourceRequest command, ShipmentListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -2258,7 +2254,7 @@ namespace Nop.Admin.Controllers
                 model.CountryId, model.StateProvinceId, model.City, model.TrackingNumber, 
                 startDateValue, endDateValue, 
                 command.Page - 1, command.PageSize);
-            var gridModel = new GridModel<ShipmentModel>
+            var gridModel = new DataSourceResult
             {
                 Data = shipments.Select(shipment => PrepareShipmentModel(shipment, false)),
                 Total = shipments.TotalCount
@@ -2268,9 +2264,9 @@ namespace Nop.Admin.Controllers
 				Data = gridModel
 			};
 		}
-        
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult ShipmentsByOrder(int orderId, GridCommand command)
+
+        [HttpPost]
+        public ActionResult ShipmentsByOrder(int orderId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -2293,20 +2289,18 @@ namespace Nop.Admin.Controllers
             foreach (var shipment in shipments)
                 shipmentModels.Add(PrepareShipmentModel(shipment, false));
 
-            var model = new GridModel<ShipmentModel>
+            var gridModel = new DataSourceResult
             {
                 Data = shipmentModels,
                 Total = shipmentModels.Count
             };
 
-            return new JsonResult
-            {
-                Data = model
-            };
+
+            return Json(gridModel);
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult ShipmentsItemsByShipmentId(int shipmentId, GridCommand command)
+        [HttpPost]
+        public ActionResult ShipmentsItemsByShipmentId(int shipmentId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -2329,16 +2323,13 @@ namespace Nop.Admin.Controllers
 
             //shipments
             var shipmentModel = PrepareShipmentModel(shipment, true);
-            var model = new GridModel<ShipmentModel.ShipmentItemModel>
+            var gridModel = new DataSourceResult
             {
                 Data = shipmentModel.Items,
                 Total = shipmentModel.Items.Count
             };
 
-            return new JsonResult
-            {
-                Data = model
-            };
+            return Json(gridModel);
         }
 
         public ActionResult AddShipment(int orderId)
@@ -2793,8 +2784,8 @@ namespace Nop.Admin.Controllers
 
         #region Order notes
         
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult OrderNotesSelect(int orderId, GridCommand command)
+        [HttpPost]
+        public ActionResult OrderNotesSelect(int orderId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -2822,16 +2813,13 @@ namespace Nop.Admin.Controllers
                 });
             }
 
-            var model = new GridModel<OrderModel.OrderNote>
+            var gridModel = new DataSourceResult
             {
                 Data = orderNoteModels,
                 Total = orderNoteModels.Count
             };
 
-            return new JsonResult
-            {
-                Data = model
-            };
+            return Json(gridModel);
         }
         
         [ValidateInput(false)]
@@ -2868,9 +2856,9 @@ namespace Nop.Admin.Controllers
 
             return Json(new { Result = true }, JsonRequestBehavior.AllowGet);
         }
-        
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult OrderNoteDelete(int orderId, int orderNoteId, GridCommand command)
+
+        [HttpPost]
+        public ActionResult OrderNoteDelete(int id, int orderId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -2883,12 +2871,12 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null)
                 return RedirectToAction("Edit", "Order", new { id = orderId });
 
-            var orderNote = order.OrderNotes.FirstOrDefault(on => on.Id == orderNoteId);
+            var orderNote = order.OrderNotes.FirstOrDefault(on => on.Id == id);
             if (orderNote == null)
                 throw new ArgumentException("No order note found with the specified id");
             _orderService.DeleteOrderNote(orderNote);
 
-            return OrderNotesSelect(orderId, command);
+            return Json(null);
         }
 
         #endregion
@@ -2896,7 +2884,7 @@ namespace Nop.Admin.Controllers
         #region Reports
 
         [NonAction]
-        protected GridModel<BestsellersReportLineModel> GetBestsellersBriefReportModel(int pageIndex,
+        protected DataSourceResult GetBestsellersBriefReportModel(int pageIndex,
             int pageSize, int orderBy)
         {
             //a vendor should have access only to his products
@@ -2910,7 +2898,7 @@ namespace Nop.Admin.Controllers
                 pageIndex: pageIndex,
                 pageSize: pageSize,
                 showHidden: true);
-            var gridModel = new GridModel<BestsellersReportLineModel>
+            var gridModel = new DataSourceResult
             {
                 Data = items.Select(x =>
                 {
@@ -2936,18 +2924,16 @@ namespace Nop.Admin.Controllers
 
             return PartialView();
         }
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult BestsellersBriefReportByQuantityList(GridCommand command)
+        [HttpPost]
+        public ActionResult BestsellersBriefReportByQuantityList(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return Content("");
 
             var gridModel = GetBestsellersBriefReportModel(command.Page - 1,
                 command.PageSize, 1);
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
         public ActionResult BestsellersBriefReportByAmount()
         {
@@ -2956,18 +2942,16 @@ namespace Nop.Admin.Controllers
 
             return PartialView();
         }
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult BestsellersBriefReportByAmountList(GridCommand command)
+        [HttpPost]
+        public ActionResult BestsellersBriefReportByAmountList(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return Content("");
 
             var gridModel = GetBestsellersBriefReportModel(command.Page - 1,
                 command.PageSize, 2);
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
 
@@ -3009,8 +2993,8 @@ namespace Nop.Admin.Controllers
 
             return View(model);
         }
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult BestsellersReportList(GridCommand command, BestsellersReportModel model)
+        [HttpPost]
+        public ActionResult BestsellersReportList(DataSourceRequest command, BestsellersReportModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return Content("");
@@ -3042,7 +3026,7 @@ namespace Nop.Admin.Controllers
                 pageIndex: command.Page - 1,
                 pageSize: command.PageSize,
                 showHidden: true);
-            var gridModel = new GridModel<BestsellersReportLineModel>
+            var gridModel = new DataSourceResult
             {
                 Data = items.Select(x =>
                 {
@@ -3059,10 +3043,8 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = items.TotalCount
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
 
@@ -3075,8 +3057,8 @@ namespace Nop.Admin.Controllers
             var model = new NeverSoldReportModel();
             return View(model);
         }
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult NeverSoldReportList(GridCommand command, NeverSoldReportModel model)
+        [HttpPost]
+        public ActionResult NeverSoldReportList(DataSourceRequest command, NeverSoldReportModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return Content("");
@@ -3095,7 +3077,7 @@ namespace Nop.Admin.Controllers
             var items = _orderReportService.ProductsNeverSold(vendorId,
                 startDateValue, endDateValue,
                 command.Page - 1, command.PageSize, true);
-            var gridModel = new GridModel<NeverSoldReportLineModel>
+            var gridModel = new DataSourceResult
             {
                 Data = items.Select(x =>
                     new NeverSoldReportLineModel()
@@ -3105,16 +3087,30 @@ namespace Nop.Admin.Controllers
                     }),
                 Total = items.TotalCount
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
 
-        [NonAction]
-        protected virtual IList<OrderAverageReportLineSummaryModel> GetOrderAverageReportModel()
+        [ChildActionOnly]
+        public ActionResult OrderAverageReport()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Content("");
+
+            return PartialView();
+        }
+        [HttpPost]
+        public ActionResult OrderAverageReportList(DataSourceRequest command)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Content("");
+
+            //a vendor does have access to this report
+            if (_workContext.CurrentVendor != null)
+                return Content("");
+
+
             var report = new List<OrderAverageReportLineSummary>();
             report.Add(_orderReportService.OrderAverageReport(0, OrderStatus.Pending));
             report.Add(_orderReportService.OrderAverageReport(0, OrderStatus.Processing));
@@ -3133,42 +3129,33 @@ namespace Nop.Admin.Controllers
                 };
             }).ToList();
 
-            return model;
-        }
-        [ChildActionOnly]
-        public ActionResult OrderAverageReport()
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return Content("");
-
-            var model = GetOrderAverageReportModel();
-            return PartialView(model);
-        }
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult OrderAverageReportList(GridCommand command)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return Content("");
-
-            //a vendor does have access to this report
-            if (_workContext.CurrentVendor != null)
-                return Content("");
-
-            var model = GetOrderAverageReportModel();
-            var gridModel = new GridModel<OrderAverageReportLineSummaryModel>
+            var gridModel = new DataSourceResult
             {
                 Data = model,
                 Total = model.Count
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
-        [NonAction]
-        protected virtual IList<OrderIncompleteReportLineModel> GetOrderIncompleteReportModel()
+        [ChildActionOnly]
+        public ActionResult OrderIncompleteReport()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Content("");
+
+            return PartialView();
+        }
+        [HttpPost]
+        public ActionResult OrderIncompleteReportList(DataSourceRequest command)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Content("");
+            
+            //a vendor does have access to this report
+            if (_workContext.CurrentVendor != null)
+                return Content("");
+
             var model = new List<OrderIncompleteReportLineModel>();
             //not paid
             var psPending = _orderReportService.GetOrderAverageReportLine(0, 0, null, PaymentStatus.Pending, null, null, null, null, true);
@@ -3194,37 +3181,14 @@ namespace Nop.Admin.Controllers
                 Count = osPending.CountOrders,
                 Total = _priceFormatter.FormatPrice(osPending.SumOrders, true, false)
             });
-            return model;
-        }
-        [ChildActionOnly]
-        public ActionResult OrderIncompleteReport()
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return Content("");
 
-            var model = GetOrderIncompleteReportModel();
-            return PartialView(model);
-        }
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult OrderIncompleteReportList(GridCommand command)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
-                return Content("");
-            
-            //a vendor does have access to this report
-            if (_workContext.CurrentVendor != null)
-                return Content("");
-
-            var model = GetOrderIncompleteReportModel();
-            var gridModel = new GridModel<OrderIncompleteReportLineModel>
+            var gridModel = new DataSourceResult
             {
                 Data = model,
                 Total = model.Count
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
         
         #endregion

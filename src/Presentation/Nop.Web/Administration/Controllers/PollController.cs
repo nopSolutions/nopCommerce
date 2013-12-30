@@ -9,7 +9,7 @@ using Nop.Services.Localization;
 using Nop.Services.Polls;
 using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
-using Telerik.Web.Mvc;
+using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Admin.Controllers
 {
@@ -58,14 +58,14 @@ namespace Nop.Admin.Controllers
             return View();
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult List(GridCommand command)
+        [HttpPost]
+        public ActionResult List(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
 
             var polls = _pollService.GetPolls(0, false, command.Page - 1, command.PageSize, true);
-            var gridModel = new GridModel<PollModel>
+            var gridModel = new DataSourceResult
             {
                 Data = polls.Select(x =>
                 {
@@ -79,10 +79,8 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = polls.TotalCount
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
         public ActionResult Create()
@@ -196,8 +194,8 @@ namespace Nop.Admin.Controllers
 
         #region Poll answer
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult PollAnswers(int pollId, GridCommand command)
+        [HttpPost]
+        public ActionResult PollAnswers(int pollId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
@@ -208,7 +206,7 @@ namespace Nop.Admin.Controllers
 
             var answers = poll.PollAnswers.OrderBy(x=>x.DisplayOrder).ToList();
 
-            var model = new GridModel<PollAnswerModel>
+            var gridModel = new DataSourceResult
             {
                 Data = answers.Select(x => 
                 {
@@ -223,24 +221,20 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = answers.Count
             };
-            return new JsonResult
-            {
-                Data = model
-            };
+
+            return Json(gridModel);
         }
 
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult PollAnswerUpdate(PollAnswerModel model, GridCommand command)
+        [HttpPost]
+        public ActionResult PollAnswerUpdate(PollAnswerModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
             
             if (!ModelState.IsValid)
             {
-                //display the first model error
-                var modelStateErrors = this.ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage);
-                return Content(modelStateErrors.FirstOrDefault());
+                return Json(new DataSourceResult() { Errors = ModelState.SerializeErrors() });
             }
 
             var pollAnswer = _pollService.GetPollAnswerById(model.Id);
@@ -251,20 +245,18 @@ namespace Nop.Admin.Controllers
             pollAnswer.DisplayOrder = model.DisplayOrder1;
             _pollService.UpdatePoll(pollAnswer.Poll);
 
-            return PollAnswers(pollAnswer.PollId, command);
+            return Json(null);
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult PollAnswerAdd(int pollId, PollAnswerModel model, GridCommand command)
+        [HttpPost]
+        public ActionResult PollAnswerAdd(int pollId, [Bind(Exclude = "Id")] PollAnswerModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
            
             if (!ModelState.IsValid)
             {
-                //display the first model error
-                var modelStateErrors = this.ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage);
-                return Content(modelStateErrors.FirstOrDefault());
+                return Json(new DataSourceResult() { Errors = ModelState.SerializeErrors() });
             }
 
             var poll = _pollService.GetPollById(pollId);
@@ -278,12 +270,12 @@ namespace Nop.Admin.Controllers
             });
             _pollService.UpdatePoll(poll);
 
-            return PollAnswers(poll.Id, command);
+            return Json(null);
         }
 
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult PollAnswerDelete(int id, GridCommand command)
+        [HttpPost]
+        public ActionResult PollAnswerDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
@@ -292,11 +284,10 @@ namespace Nop.Admin.Controllers
             if (pollAnswer == null)
                 throw new ArgumentException("No poll answer found with the specified id", "id");
 
-            int pollId = pollAnswer.PollId;
+            //int pollId = pollAnswer.PollId;
             _pollService.DeletePollAnswer(pollAnswer);
 
-
-            return PollAnswers(pollId, command);
+            return Json(null);
         }
 
         #endregion

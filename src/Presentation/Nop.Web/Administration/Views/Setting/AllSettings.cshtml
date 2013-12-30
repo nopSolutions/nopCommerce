@@ -1,11 +1,10 @@
-﻿@{
+﻿@using Nop.Services.Stores
+@{
     var gridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSize;
     
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.AllSettings").Text;
 }
-@using Telerik.Web.Mvc.UI;
-@using System.Linq;
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
@@ -20,50 +19,151 @@
     </tr>
     <tr>
         <td>
-            @(Html.Telerik().Grid<SettingModel>()
-                    .Name("settings-grid")
-                    .DataKeys(x =>
-                    {
-                        x.Add(y => y.Id).RouteKey("Id");
-                    })
-                    .Columns(columns =>
-                    {
-                        columns.Bound(x => x.Name);
-                        columns.Bound(x => x.Value);
-                        columns.Bound(x => x.Store).EditorTemplateName("Store");
-                        columns.Command(commands =>
-                        {
-                            commands.Edit().Text(T("Admin.Common.Edit").Text);
-                            commands.Delete().Text(T("Admin.Common.Delete").Text);
-                        }).Width(200);
+            <div id="settings-grid"></div>
 
-                    })
-                    .ToolBar(x => x.Insert())
-                    .Editable(x =>
-                    {
-                        x.Mode(GridEditMode.InLine);
-                    })
-                    .Filterable()
-                    .Pageable(settings => settings.PageSize(gridPageSize).Position(GridPagerPosition.Both))
-                    .DataBinding(dataBinding =>
-                    {
-                        dataBinding.Ajax().Select("AllSettings", "Setting")
-                            .Update("SettingUpdate", "Setting")
-                            .Delete("SettingDelete", "Setting")
-                            .Insert("SettingAdd", "Setting");
-                    })
-                    .ClientEvents(x => x.OnError("grid_onError").OnEdit("grid_onStoreEdit"))
-                    .EnableCustomBinding(true))
-            <script type="text/javascript">
-                function grid_onError(e) {
-                    alert(e.XMLHttpRequest.responseText);
-                    e.preventDefault();
-                }
-                
-                function grid_onStoreEdit(e) {
-                    $(e.form).find('#Store').data('tDropDownList').select(function (dataItem) {
-                        return dataItem.Value == e.dataItem['StoreId'];
+            <script>
+                $(document).ready(function () {
+                    $("#settings-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("AllSettings", "Setting"))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    contentType: "application/json"
+                                },
+                                create: {
+                                    url: "@Html.Raw(Url.Action("SettingAdd", "Setting"))",
+                                    type: "POST",
+                                    dataType: "json"
+                                },
+                                update: {
+                                    url:"@Html.Raw(Url.Action("SettingUpdate", "Setting"))",
+                                    type: "POST",
+                                    dataType: "json"
+                                },
+                                destroy: {
+                                    url: "@Html.Raw(Url.Action("SettingDelete", "Setting"))",
+                                    type: "POST",
+                                    dataType: "json"
+                                },
+                                parameterMap: function(data, operation) {
+                                    if (operation != "read") {
+                                        return data;
+                                    } else {
+                                        //for some reasons only such "Filter" data be parsed
+                                        return JSON.stringify(data);
+                                    }
+                                }
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors",
+                                model: {
+                                    id: "Id",
+                                    fields: {
+                                        Name: { editable: true, type: "string" },
+                                        Value: { editable: true, type: "string" },
+                                        Store: { editable: true, type: "string" },
+                                        StoreId: { editable: true, type: "number" },
+                                        Id: { editable: false, type: "number" }
+                                    }
+                                }
+                            },
+                            requestEnd: function (e) {
+                                if (e.type == "create" || e.type == "update") {
+                                    this.read();
+                                }
+                            },
+                            error: function (e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            pageSize: @(gridPageSize),
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true
+                        },
+                        toolbar: ["create"],
+                        editable: {
+                            confirmation: false,
+                            mode: "inline"
+                        },
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains",
+                                    eq: "Is equal to"
+                                }
+                            }
+                        },
+                        scrollable: false,
+                        columns: [{
+                            field: "Name",
+                            title: "@T("Admin.Configuration.Settings.AllSettings.Fields.Name")",
+                            width: 300,
+                            filterable: true
+                        }, {
+                            field: "Value",
+                            title: "@T("Admin.Configuration.Settings.AllSettings.Fields.Value")",
+                            width: 300,
+                            filterable: true
+                        }, {
+                            field: "StoreId",
+                            title: "@T("Admin.Configuration.Settings.AllSettings.Fields.StoreName")",
+                            width: 150,
+                            editor: storeDropDownEditor, 
+                            template: "#:Store#",
+                            filterable: false
+                        }, {
+                            command: [{
+                                name: "edit",
+                                text: "@T("Admin.Common.Edit")"
+                            }, {
+                                name: "destroy",
+                                text: "@T("Admin.Common.Delete")"
+                            }],
+                            width: 200,
+                            filterable: false
+                        }]
                     });
+                });
+                
+                //local datasource
+                var allStores = [
+                    {
+                        Id : 0,
+                        Name : "@T("Admin.Configuration.Settings.AllSettings.Fields.StoreName.AllStores")"
+                    }
+                    @{
+                        var storeService = EngineContext.Current.Resolve<IStoreService>();
+                        var allStores = storeService.GetAllStores();
+                    }
+                    @foreach (var store in allStores)
+                    {
+                        <text>
+                        , {
+                            Id: @(store.Id),
+                            Name: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(store.Name)))"
+                        }
+                        </text>
+                    }
+                ];
+
+                function storeDropDownEditor(container, options) {
+                    $('<input required data-text-field="Name" data-value-field="Id" data-bind="value:StoreId"/>')
+                        .appendTo(container)
+                        .kendoDropDownList({
+                            autoBind: false,
+                            dataSource: allStores
+                        });
                 }
             </script>
         </td>

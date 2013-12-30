@@ -6,7 +6,6 @@
 @model ShippingByWeightListModel
 @using Nop.Plugin.Shipping.ByWeight.Models;
 @using Nop.Web.Framework;
-@using Telerik.Web.Mvc.UI;
 @using Nop.Core.Infrastructure;
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "shipping-byweight-form" }))
 {
@@ -29,37 +28,94 @@
     <table class="adminContent">
         <tr>
             <td>
-                @(Html.Telerik().Grid<ShippingByWeightModel>()
-                      .Name("shipping-byweight-grid")
-                      .DataKeys(keys => keys.Add(x => x.Id).RouteKey("Id"))
-                      .Columns(columns =>
-                      {
-                          columns.Bound(x => x.StoreName).ReadOnly();
-                          columns.Bound(x => x.CountryName).ReadOnly();
-                          columns.Bound(x => x.StateProvinceName).ReadOnly();
-                          columns.Bound(x => x.Zip).ReadOnly();
-                          columns.Bound(x => x.ShippingMethodName).ReadOnly();
-                          columns.Bound(x => x.DataHtml)
-                              .Encoded(false);
-                          columns.Bound(x => x.Id)
-                              .Width(50)
-                              .Centered()
-                              .ClientTemplate("<input type='submit' value='" + @T("Admin.Common.Edit").Text + "' onclick=\"" + "javascript:OpenWindow('" + @Url.RouteUrl("Plugin.Shipping.ByWeight.EditPopup") + "?id=<#= Id #>&btnId=btnRefresh&formId=shipping-byweight-form', 800, 400, true); return false;\" class='t-button' />")
-                              .Title(T("Admin.Common.Edit").Text);
-                          columns.Command(commands =>
-                          {
-                              commands.Delete().Text(T("Admin.Common.Delete").Text);
-                          }).Title(T("Admin.Common.Delete").Text).Width(180);
+                <div id="shipping-byweight-grid"></div>
 
-                      })
-                      .DataBinding(dataBinding =>
-                      {
-                          dataBinding.Ajax()
-                              .Select("RatesList", "ShippingByWeight", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Shipping.ByWeight.Controllers" }, { "area", "" } })
-                              .Delete("RateDelete", "ShippingByWeight", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Shipping.ByWeight.Controllers" }, { "area", "" } });
-                      })
-                      .Pageable(settings => settings.PageSize(gridPageSize).Position(GridPagerPosition.Both))
-                      .EnableCustomBinding(true))
+                <script>
+                    $(document).ready(function () {
+                        $("#shipping-byweight-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("RatesList", "ShippingByWeight", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Shipping.ByWeight.Controllers" }, { "area", "" } }))",
+                                        type: "POST",
+                                        dataType: "json"
+                                    },
+                                    destroy: {
+                                        url: "@Html.Raw(Url.Action("RateDelete", "ShippingByWeight", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Shipping.ByWeight.Controllers" }, { "area", "" } }))",
+                                        type: "POST",
+                                        dataType: "json"
+                                    }
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors",
+                                    model: {
+                                        id: "Id"
+                                    }
+                                },
+                                requestEnd: function (e) {
+                                    if (e.type == "update") {
+                                        this.read();
+                                    }
+                                },
+                                error: function (e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                pageSize: @(gridPageSize),
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true
+                            },
+                            editable: {
+                                confirmation: false,
+                                mode: "inline"
+                            },
+                            scrollable: false,
+                            columns: [{
+                                field: "StoreName",
+                                title: "@T("Plugins.Shipping.ByWeight.Fields.Store")",
+                                width: 300
+                            }, {
+                                field: "CountryName",
+                                title: "@T("Plugins.Shipping.ByWeight.Fields.Country")",
+                                width: 200
+                            }, {
+                                field: "StateProvinceName",
+                                title: "@T("Plugins.Shipping.ByWeight.Fields.StateProvince")",
+                                width: 200
+                            }, {
+                                field: "Zip",
+                                title: "@T("Plugins.Shipping.ByWeight.Fields.Zip")",
+                                width: 200
+                            }, {
+                                field: "ShippingMethodName",
+                                title: "@T("Plugins.Shipping.ByWeight.Fields.ShippingMethod")",
+                                width: 200
+                            }, {
+                                field: "DataHtml",
+                                title: "@T("Plugins.Shipping.ByWeight.Fields.DataHtml")",
+                                width: 200,
+                                encoded: false
+                            }, {
+                                field: "Id",
+                                title: "@T("Admin.Common.Edit")",
+                                width: 100,
+                                template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.RouteUrl("Plugin.Shipping.ByWeight.EditPopup")?id=#=Id#&btnId=btnRefresh&formId=shipping-byweight-form', 800, 400, true); return false;\" class='k-button' />"
+                            },  {
+                                command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
+                                title: "@T("Admin.Common.Delete")",
+                                width: 100
+                            }]
+                        });
+                    });
+                </script>
             </td>
         </tr>
         <tr>
@@ -68,14 +124,15 @@
     var addNewUrl = Url.RouteUrl("Plugin.Shipping.ByWeight.AddPopup") + "?btnId=btnRefresh&formId=shipping-byweight-form";
                 }
                 <br />
-                <input type="submit" id="btnAddNewOption" name="btnAddNewOption" value="@T("Plugins.Shipping.ByWeight.AddRecord")" onclick="javascript:OpenWindow('@(addNewUrl)', 800, 400, true); return false;" class="t-button" />
+                <input type="submit" id="btnAddNewOption" name="btnAddNewOption" value="@T("Plugins.Shipping.ByWeight.AddRecord")" onclick="javascript:OpenWindow('@(addNewUrl)', 800, 400, true); return false;" class="k-button" />
                 <input type="submit" id="btnRefresh" name="btnRefresh" style="display: none" />
                 <script type="text/javascript">
                     $(document).ready(function () {
                         $('#btnRefresh').click(function () {
                             //refresh grid
-                            var optionsGrid = $("#shipping-byweight-grid");
-                            optionsGrid.data('tGrid').ajaxRequest();
+                            var optionsGrid = $("#shipping-byweight-grid").data('kendoGrid');
+                            //taxCountrystatezipGrid.dataSource.page(1); //new search. Set page size to 1
+                            optionsGrid.dataSource.read();
 
                             //return false to don't reload a page
                             return false;
@@ -101,7 +158,7 @@
         <tr>
             <td colspan="2">
                 <br/>
-                <input type="button" id="savegeneralsettings" class="t-button" value="@T("Admin.Common.Save")" />
+                <input type="button" id="savegeneralsettings" class="k-button" value="@T("Admin.Common.Save")" />
                 <script type="text/javascript">
                     $(function () {
                         $('#savegeneralsettings').click(function () {

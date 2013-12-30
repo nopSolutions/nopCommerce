@@ -1,30 +1,128 @@
 ﻿@model ProductModel
-@using Telerik.Web.Mvc.UI;
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
-@Html.Telerik().TabStrip().Name("product-edit").Items(x =>
-{
-    x.Add().Text(T("Admin.Catalog.Products.Info").Text).Content(TabInfo().ToHtmlString());
-    x.Add().Text(T("Admin.Common.SEO").Text).Content(TabSeo().ToHtmlString());
-    x.Add().Text(T("Admin.Catalog.Products.Pictures").Text).Content(TabPictures().ToHtmlString());
-    x.Add().Text(T("Admin.Catalog.Products.Categories").Text).Content(TabCategories().ToHtmlString());
-    x.Add().Text(T("Admin.Catalog.Products.Manufacturers").Text).Content(TabManufacturers().ToHtmlString());
-    x.Add().Text(T("Admin.Catalog.Products.SpecificationAttributes").Text).Content(TabSpecificationAttributes().ToHtmlString());
-    x.Add().Text(T("Admin.Catalog.Products.ProductVariantAttributes").Text).Content(TabProductAttributes().ToHtmlString());
-    x.Add().Text(T("Admin.Catalog.Products.TierPrices").Text).Content(TabTierPrices().ToHtmlString());
-    x.Add().Text(T("Admin.Catalog.Products.Discounts").Text).Content(TabDiscounts().ToHtmlString());
-    x.Add().Text(T("Admin.Catalog.Products.Acl").Text).Content(TabAcl().ToHtmlString());
-    x.Add().Text(T("Admin.Catalog.Products.Stores").Text).Content(TabStores().ToHtmlString());
-    x.Add().Text(T("Admin.Catalog.Products.RelatedProducts").Text).Content(TabRelatedProducts().ToHtmlString());
-    x.Add().Text(T("Admin.Catalog.Products.CrossSells").Text).Content(TabCrossSells().ToHtmlString());
-    x.Add().Text(T("Admin.Catalog.Products.AssociatedProducts").Text).Content(TabAssociatedProducts().ToHtmlString());
-    if (Model.Id > 0)
+<div id="product-edit">
+    <ul>
+        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+            @T("Admin.Catalog.Products.Info")
+        </li>
+        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+            @T("Admin.Common.SEO")
+        </li>
+        <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
+            @T("Admin.Catalog.Products.Pictures")
+        </li>
+        <li @Html.RenderSelectedTabIndex(3, GetSelectedTabIndex())>
+            @T("Admin.Catalog.Products.Categories")
+        </li>
+        <li @Html.RenderSelectedTabIndex(4, GetSelectedTabIndex())>
+            @T("Admin.Catalog.Products.Manufacturers")
+        </li>
+        <li @Html.RenderSelectedTabIndex(5, GetSelectedTabIndex())>
+            @T("Admin.Catalog.Products.SpecificationAttributes")
+        </li>
+        <li @Html.RenderSelectedTabIndex(6, GetSelectedTabIndex())>
+            @T("Admin.Catalog.Products.ProductVariantAttributes")
+        </li>
+        <li @Html.RenderSelectedTabIndex(7, GetSelectedTabIndex())>
+            @T("Admin.Catalog.Products.TierPrices")
+        </li>
+        <li @Html.RenderSelectedTabIndex(8, GetSelectedTabIndex())>
+            @T("Admin.Catalog.Products.Discounts")
+        </li>
+        <li @Html.RenderSelectedTabIndex(9, GetSelectedTabIndex())>
+            @T("Admin.Catalog.Products.Acl")
+        </li>
+        <li @Html.RenderSelectedTabIndex(10, GetSelectedTabIndex())>
+            @T("Admin.Catalog.Products.Stores")
+        </li>
+        <li @Html.RenderSelectedTabIndex(11, GetSelectedTabIndex())>
+            @T("Admin.Catalog.Products.RelatedProducts")
+        </li>
+        <li @Html.RenderSelectedTabIndex(12, GetSelectedTabIndex())>
+            @T("Admin.Catalog.Products.CrossSells")
+        </li>
+        <li @Html.RenderSelectedTabIndex(13, GetSelectedTabIndex())>
+            @T("Admin.Catalog.Products.AssociatedProducts")
+        </li>
+        @if (Model.Id > 0)
+        {
+            <li @Html.RenderSelectedTabIndex(14, GetSelectedTabIndex())>
+                @T("Admin.Catalog.Products.PurchasedWithOrders")
+            </li>
+        }
+    </ul>
+    <div>
+        @TabInfo()
+    </div>
+    <div>
+        @TabSeo()
+    </div>
+    <div>
+        @TabPictures()
+    </div>
+    <div>
+        @TabCategories()
+    </div>
+    <div>
+        @TabManufacturers()
+    </div>
+    <div>
+        @TabSpecificationAttributes()
+    </div>
+    <div>
+        @TabProductAttributes()
+    </div>
+    <div>
+        @TabTierPrices()
+    </div>
+    <div>
+        @TabDiscounts()
+    </div>
+    <div>
+        @TabAcl()
+    </div>
+    <div>
+        @TabStores()
+    </div>
+    <div>
+        @TabRelatedProducts()
+    </div>
+    <div>
+        @TabCrossSells()
+    </div>
+    <div>
+        @TabAssociatedProducts()
+    </div>
+    @if (Model.Id > 0)
     {
-        x.Add().Text(T("Admin.Catalog.Products.PurchasedWithOrders").Text).Content(TabPurchasedWithOrders().ToHtmlString());
+        <div>
+            @TabPurchasedWithOrders()
+        </div>
     }
-    //generate an event
-    EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "product-edit"));
-}).ClientEvents(events => events.OnSelect("telerik_on_tab_select")).SetSelectedTabIndex(GetSelectedTabIndex())
+</div>
+<script>
+    $(document).ready(function () {
+        $("#product-edit").kendoTabStrip({
+            animation: {
+                open: {
+                    effects: "fadeIn"
+                }
+            },
+            select: tabstrip_on_tab_select
+        });
+    });
+</script>
+
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "product-edit");
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}
 
 @*save selected tab index*@
 <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">

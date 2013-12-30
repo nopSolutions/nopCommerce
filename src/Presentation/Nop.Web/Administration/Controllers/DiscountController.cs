@@ -14,7 +14,7 @@ using Nop.Services.Logging;
 using Nop.Services.Security;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
-using Telerik.Web.Mvc;
+using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Admin.Controllers
 {
@@ -150,14 +150,14 @@ namespace Nop.Admin.Controllers
             return View();
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult List(GridCommand command)
+        [HttpPost]
+        public ActionResult List(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
 
             var discounts = _discountService.GetAllDiscounts(null, null, true);
-            var gridModel = new GridModel<DiscountModel>
+            var gridModel = new DataSourceResult
             {
                 Data = discounts.PagedForCommand(command).Select(x =>
                 {
@@ -167,10 +167,8 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = discounts.Count
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
         
         //create
@@ -390,8 +388,8 @@ namespace Nop.Admin.Controllers
 
         #region Discount usage history
         
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult UsageHistoryList(int discountId, GridCommand command)
+        [HttpPost]
+        public ActionResult UsageHistoryList(int discountId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
@@ -401,8 +399,8 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentException("No discount found with the specified id");
 
             var duh = _discountService.GetAllDiscountUsageHistory(discount.Id, null, null, command.Page - 1, command.PageSize);
-            
-            var model = new GridModel<DiscountModel.DiscountUsageHistoryModel>
+
+            var gridModel = new DataSourceResult
             {
                 Data = duh.Select(x =>
                 {
@@ -416,14 +414,12 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = duh.TotalCount
             };
-            return new JsonResult
-            {
-                Data = model
-            };
+
+            return Json(gridModel);
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult UsageHistoryDelete(int discountId, int id, GridCommand command)
+        [HttpPost]
+        public ActionResult UsageHistoryDelete(int discountId, int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
@@ -435,7 +431,7 @@ namespace Nop.Admin.Controllers
             var duh = _discountService.GetDiscountUsageHistoryById(id);
             if (duh != null)
                 _discountService.DeleteDiscountUsageHistory(duh);
-            return UsageHistoryList(discountId, command);
+            return Json(null);
         }
 
         #endregion

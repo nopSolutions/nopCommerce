@@ -1,6 +1,5 @@
 ﻿@model ProductModel.ProductVariantAttributeValueListModel
 
-@using Telerik.Web.Mvc.UI;
 @{    
     //page title
     ViewBag.Title = string.Format(T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.EditAttributeDetails").Text, Model.ProductVariantAttributeName, Model.ProductName);
@@ -19,63 +18,124 @@
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<ProductModel.ProductVariantAttributeValueModel>()
-                            .Name("pvav-grid")
-                            .DataKeys(x =>
+            <div id="pvav-grid"></div>
+
+            <script>
+                $(document).ready(function () {
+                    $("#pvav-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("ProductAttributeValueList", "Product", new { productVariantAttributeId = Model.ProductVariantAttributeId }))",
+                                    type: "POST",
+                                    dataType: "json"
+                                },
+                                destroy: {
+                                    url: "@Html.Raw(Url.Action("ProductAttributeValueDelete", "Product"))",
+                                    type: "POST",
+                                    dataType: "json"
+                                }
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors",
+                                model: {
+                                    id: "Id",
+                                    fields: {
+                                        Product2Name: { editable: false, type: "string" },
+                                        ProductId2: { editable: false, type: "number" }
+                                    }
+                                }
+                            },
+                            error: function(e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true,
+                            numeric: false,
+                            previousNext: false,
+                            info: false
+                        },
+                        editable: {
+                            confirmation: false,
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [
                             {
-                                x.Add(y => y.Id).RouteKey("pvavId");
-                                x.Add(y => y.ProductVariantAttributeId).RouteKey("productVariantAttributeId");
-                            })
-                            .Columns(columns =>
-                            {
-                                columns.Bound(x => x.AttributeValueTypeName);
-                                columns.Bound(x => x.Name);
-                                columns.Bound(x => x.AssociatedProductName);
-                                //TODO display localized values here
-                                columns.Bound(x => x.PriceAdjustmentStr)
-                                    .Centered();
-                                columns.Bound(x => x.WeightAdjustmentStr)
-                                    .Centered();
-                                columns.Bound(x => x.IsPreSelected)
-                                    .Template(
-                                        @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.IsPreSelected.ToString().ToLowerInvariant() + ".gif")" />
-                                    )
-                                    .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= IsPreSelected #>.gif' />")
-                                    .Centered();
-                                columns.Bound(x => x.PictureThumbnailUrl)
-                                    .Centered()
-                                    .ClientTemplate("<img  alt='' src='<#= PictureThumbnailUrl #>' />");
-                                columns.Bound(x => x.DisplayOrder)
-                                    .Centered();
-                                columns.Bound(x => x.Id)
-                                    .Width(50)
-                                    .Centered()
-                                    .ClientTemplate("<input type='submit' value='" + @T("Admin.Common.Edit").Text + "' onclick=\"" + "javascript:OpenWindow('" + @Url.Content("~/Admin/Product/ProductAttributeValueEditPopup/") + "<#= Id #>?btnId=btnRefresh&formId=productvariantattribute-form', 800, 500, true); return false;\" class='t-button' />")
-                                    .Title(T("Admin.Common.Edit").Text);
-                                columns.Command(commands =>
-                                {
-                                    commands.Delete().Text(T("Admin.Common.Delete").Text);
-                                })
-                                .Width(50)
-                                .Title(T("Admin.Common.Delete").Text);
-                            })
-                            .DataBinding(dataBinding =>
-                                dataBinding.Ajax()
-                                .Select("ProductAttributeValueList", "Product", new { productVariantAttributeId = Model.ProductVariantAttributeId })
-                                .Delete("ProductAttributeValueDelete", "Product"))
-                            .EnableCustomBinding(true))
+                                field: "AttributeValueTypeName",
+                                title: "@T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.AttributeValueType")",
+                                width: 150
+                            }, {
+                                field: "Name",
+                                title: "@T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.Name")",
+                                width: 200
+                            }, {
+                                field: "AssociatedProductName",
+                                title: "@T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.AssociatedProduct")",
+                                width: 200
+                            }, {
+                                field: "PriceAdjustmentStr",
+                                title: "@T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.PriceAdjustment")",
+                                width: 150
+                            }, {
+                                field: "WeightAdjustmentStr",
+                                title: "@T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.WeightAdjustment")",
+                                width: 150
+                            }, {
+                                field: "PriceAdjustmentStr",
+                                title: "@T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.PriceAdjustment")",
+                                width: 150
+                            }, {
+                                field: "IsPreSelected",
+                                title: "@T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.IsPreSelected")",
+                                width: 100,
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:center" },
+                                template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsPreSelected#.gif" />'
+                            }, {
+                                field: "PictureThumbnailUrl",
+                                title: "@T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.Picture")",
+                                template: '<img src="#=PictureThumbnailUrl#" />',
+                                width: 200
+                            },{
+                                field: "DisplayOrder",
+                                title: "@T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.DisplayOrder")",
+                                width: 100
+                            },{
+                                field: "Id",
+                                title: "@T("Admin.Common.Edit")",
+                                width: 100,
+                                template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/Product/ProductAttributeValueEditPopup/")#=Id#?btnId=btnRefresh&formId=productvariantattribute-form', 800, 500, true); return false;\" class='k-button' />"
+                            }, {
+                                command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
+                                title: "@T("Admin.Common.Delete")",
+                                width: 200
+                            }
+                        ]
+                    });
+                });
+            </script>
         </td>
     </tr>
     <tr>
         <td width="100%">
-            <input type="submit" id="btnAddNewValue" name="btnAddNewValue" value="@T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ProductAttributeValueCreatePopup", "Product", new { productAttributeAttributeId = Model.ProductVariantAttributeId, btnId = "btnRefresh", formId = "productvariantattribute-form" }))', 800, 500, true); return false;" class="t-button" />
+            <input type="submit" id="btnAddNewValue" name="btnAddNewValue" value="@T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ProductAttributeValueCreatePopup", "Product", new { productAttributeAttributeId = Model.ProductVariantAttributeId, btnId = "btnRefresh", formId = "productvariantattribute-form" }))', 800, 500, true); return false;" class="k-button" />
             <input type="submit" id="btnRefresh" name="btnRefresh" style="display: none" />
             <script type="text/javascript">
                 $(document).ready(function () {
                     $('#btnRefresh').click(function () {
                         //refresh grid
-                        var optionsGrid = $("#pvav-grid");
-                        optionsGrid.data('tGrid').ajaxRequest();
+                        var optionsGrid = $("#pvav-grid").data('kendoGrid');
+                        optionsGrid.dataSource.read();
 
                         //return false to don't reload a page
                         return false;

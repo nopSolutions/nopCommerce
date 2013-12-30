@@ -19,7 +19,6 @@ namespace Nop.Admin.Models.Directory
         public string SystemKeyword { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Measures.Weights.Fields.Ratio")]
-        [UIHint("Decimal8")]
         public decimal Ratio { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Measures.Weights.Fields.DisplayOrder")]

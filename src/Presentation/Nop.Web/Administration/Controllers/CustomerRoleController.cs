@@ -8,7 +8,7 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
-using Telerik.Web.Mvc;
+using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Admin.Controllers
 {
@@ -53,14 +53,14 @@ namespace Nop.Admin.Controllers
 			return View();
 		}
 
-		[HttpPost, GridAction(EnableCustomBinding = true)]
-		public ActionResult List(GridCommand command)
+		[HttpPost]
+		public ActionResult List(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
             
             var customerRoles = _customerService.GetAllCustomerRoles(true);
-            var gridModel = new GridModel<CustomerRoleModel>
+            var gridModel = new DataSourceResult
 			{
                 Data = customerRoles.Select(x => x.ToModel()),
                 Total = customerRoles.Count()

@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using System.Web.WebPages;
@@ -13,7 +14,6 @@ using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Mvc;
-using Telerik.Web.Mvc.UI;
 
 namespace Nop.Web.Framework
 {
@@ -48,22 +48,58 @@ namespace Nop.Web.Framework
             {
                 if (helper.ViewData.Model.Locales.Count > 1)
                 {
-                    var tabStrip = helper.Telerik().TabStrip().Name(name).Items(x =>
+                    var tabStrip = new StringBuilder();
+                    tabStrip.AppendLine(string.Format("<div id='{0}'>", name));
+                    tabStrip.AppendLine("<ul>");
+
+                    //default tab
+                    tabStrip.AppendLine("<li class='k-state-active'>");
+                    tabStrip.AppendLine("Standard");
+                    tabStrip.AppendLine("</li>");
+
+                    for (int i = 0; i < helper.ViewData.Model.Locales.Count; i++)
                     {
-                        x.Add().Text("Standard").Content(standardTemplate(helper.ViewData.Model).ToHtmlString()).Selected(true);
-                        for (int i = 0; i < helper.ViewData.Model.Locales.Count; i++)
-                        {
-                            var locale = helper.ViewData.Model.Locales[i];
-                            var language = EngineContext.Current.Resolve<ILanguageService>().GetLanguageById(locale.LanguageId);
-                            x.Add().Text(language.Name)
-                                .Content(localizedTemplate
-                                    (i).
-                                    ToHtmlString
-                                    ())
-                                .ImageUrl("~/Content/images/flags/" + language.FlagImageFileName);
-                        }
-                    }).ToHtmlString();
-                    writer.Write(tabStrip);
+                        //languages
+                        var locale = helper.ViewData.Model.Locales[i];
+                        var language = EngineContext.Current.Resolve<ILanguageService>().GetLanguageById(locale.LanguageId);
+
+                        tabStrip.AppendLine("<li>");
+                        var urlHelper = new UrlHelper(helper.ViewContext.RequestContext);
+                        var iconUrl = urlHelper.Content("~/Content/images/flags/" + language.FlagImageFileName);
+                        tabStrip.AppendLine(string.Format("<img class='k-image' alt='' src='{0}'>", iconUrl));
+                        tabStrip.AppendLine(HttpUtility.HtmlEncode(language.Name));
+                        tabStrip.AppendLine("</li>");
+                    }
+                    tabStrip.AppendLine("</ul>");
+
+
+
+                    //default tab
+                    tabStrip.AppendLine("<div>");
+                    tabStrip.AppendLine(standardTemplate(helper.ViewData.Model).ToHtmlString());
+                    tabStrip.AppendLine("</div>");
+
+                    for (int i = 0; i < helper.ViewData.Model.Locales.Count; i++)
+                    {
+                        //languages
+                        tabStrip.AppendLine("<div>");
+                        tabStrip.AppendLine(localizedTemplate(i).ToHtmlString());
+                        tabStrip.AppendLine("</div>");
+                    }
+                    tabStrip.AppendLine("</div>");
+                    tabStrip.AppendLine("<script>");
+                    tabStrip.AppendLine("$(document).ready(function() {");
+                    tabStrip.AppendLine(string.Format("$('#{0}').kendoTabStrip(", name));
+                    tabStrip.AppendLine("{");
+                    tabStrip.AppendLine("animation:  {");
+                    tabStrip.AppendLine("open: {");
+                    tabStrip.AppendLine("effects: \"fadeIn\"");
+                    tabStrip.AppendLine("}");
+                    tabStrip.AppendLine("}");
+                    tabStrip.AppendLine("});");
+                    tabStrip.AppendLine("});");
+                    tabStrip.AppendLine("</script>");
+                    writer.Write(new MvcHtmlString(tabStrip.ToString()));
                 }
                 else
                 {
@@ -72,53 +108,51 @@ namespace Nop.Web.Framework
             });
         }
 
-        public static MvcHtmlString DeleteConfirmation<T>(this HtmlHelper<T> helper, string buttonsSelector = null) where T : BaseNopEntityModel
+        public static MvcHtmlString DeleteConfirmation<T>(this HtmlHelper<T> helper, string buttonsSelector) where T : BaseNopEntityModel
         {
             return DeleteConfirmation<T>(helper, "", buttonsSelector);
         }
-        public static MvcHtmlString DeleteConfirmation<T>(this HtmlHelper<T> helper, string actionName, string buttonsSelector) where T : BaseNopEntityModel
+
+        public static MvcHtmlString DeleteConfirmation<T>(this HtmlHelper<T> helper, string actionName,
+            string buttonsSelector) where T : BaseNopEntityModel
         {
             if (String.IsNullOrEmpty(actionName))
                 actionName = "Delete";
 
-            var modalId = MvcHtmlString.Create(helper.ViewData.ModelMetadata.ModelType.Name.ToLower() + "-delete-confirmation").ToHtmlString();
-
-            //there's an issue in Telerik (ScriptRegistrar.Current implemenation)
-            //it's a little hack to ensure ScriptRegistrar.Current is loaded
-            helper.Telerik();
-
-            #region Write click events for button, if supplied
-
-            if (!string.IsNullOrEmpty(buttonsSelector))
-            {
-                var textWriter = new StringWriter();
-                IClientSideObjectWriter objectWriter = new ClientSideObjectWriterFactory().Create(buttonsSelector, "click", textWriter);
-                objectWriter.Start();
-                textWriter.Write("function(e){e.preventDefault();openModalWindow(\"" + modalId + "\");}");
-                objectWriter.Complete();
-                var value = textWriter.ToString();
-                ScriptRegistrar.Current.OnDocumentReadyStatements.Add(value);
-            }
-
-            #endregion
+            var modalId =  MvcHtmlString.Create(helper.ViewData.ModelMetadata.ModelType.Name.ToLower() + "-delete-confirmation")
+                .ToHtmlString();
 
             var deleteConfirmationModel = new DeleteConfirmationModel
             {
                 Id = helper.ViewData.Model.Id,
                 ControllerName = helper.ViewContext.RouteData.GetRequiredString("controller"),
-                ActionName = actionName
+                ActionName = actionName,
+                WindowId = modalId
             };
 
-            var window = helper.Telerik().Window().Name(modalId)
-                .Title(EngineContext.Current.Resolve<ILocalizationService>().GetResource("Admin.Common.AreYouSure"))
-                .Modal(true)
-                .Effects(x => x.Toggle())
-                .Resizable(x => x.Enabled(false))
-                .Buttons(x => x.Close())
-                .Visible(false)
-                .Content(helper.Partial("Delete", deleteConfirmationModel).ToHtmlString()).ToHtmlString();
+            var window = new StringBuilder();
+            window.AppendLine(string.Format("<div id='{0}' style='display:none;'>", modalId));
+            window.AppendLine(helper.Partial("Delete", deleteConfirmationModel).ToHtmlString());
+            window.AppendLine("</div>");
+            window.AppendLine("<script>");
+            window.AppendLine("$(document).ready(function() {");
+            window.AppendLine(string.Format("$('#{0}').click(function (e) ", buttonsSelector));
+            window.AppendLine("{");
+            window.AppendLine("e.preventDefault();");
+            window.AppendLine(string.Format("var window = $('#{0}');", modalId));
+            window.AppendLine("if (!window.data('kendoWindow')) {");
+            window.AppendLine("window.kendoWindow({");
+            window.AppendLine("modal: true,");
+            window.AppendLine(string.Format("title: '{0}',", EngineContext.Current.Resolve<ILocalizationService>().GetResource("Admin.Common.AreYouSure")));
+            window.AppendLine("actions: ['Close']");
+            window.AppendLine("});");
+            window.AppendLine("}");
+            window.AppendLine("window.data('kendoWindow').center().open();");
+            window.AppendLine("});");
+            window.AppendLine("});");
+            window.AppendLine("</script>");
 
-            return MvcHtmlString.Create(window);
+            return MvcHtmlString.Create(window.ToString());
         }
 
         public static MvcHtmlString NopLabelFor<TModel, TValue>(this HtmlHelper<TModel> helper, Expression<Func<TModel, TValue>> expression, bool displayHint = true)
@@ -218,33 +252,29 @@ namespace Nop.Web.Framework
             return MvcHtmlString.Create(result.ToString());
         }
 
-
         /// <summary>
-        /// Sets a selected tab index (used in admin area to store selected tab index)
+        /// Render CSS styles of selected index 
         /// </summary>
-        /// <param name="tabStripBuilder">TabStripBuilder</param>
-        /// <param name="index">Tab index</param>
-        /// <returns>TabStripBuilder</returns>
-        public static TabStripBuilder SetSelectedTabIndex(this TabStripBuilder tabStripBuilder, int index)
+        /// <param name="helper">HTML helper</param>
+        /// <param name="currentIndex">Current tab index (where appropriate CSS style should be rendred)</param>
+        /// <param name="indexToSelect">Tab index to select</param>
+        /// <returns>MvcHtmlString</returns>
+        public static MvcHtmlString RenderSelectedTabIndex(this HtmlHelper helper, int currentIndex, int indexToSelect)
         {
-            if (tabStripBuilder == null)
-                throw new ArgumentNullException("tabStripBuilder");
+            if (helper == null)
+                throw new ArgumentNullException("helper");
 
             //ensure it's not negative
-            if (index < 0)
-                index = 0;
-
-            //ensure tab has required number of tabs
-            //otherwise, nothing could be selected
-            var totalTabs = tabStripBuilder.ToComponent().Items.Count;
-            if (index >= totalTabs)
+            if (indexToSelect < 0)
+                indexToSelect = 0;
+            
+            //required validation
+            if (indexToSelect == currentIndex)
             {
-                index = 0;
+            return new MvcHtmlString(" class='k-state-active'");
             }
 
-            tabStripBuilder.SelectedIndex(index);
-
-            return tabStripBuilder;
+            return new MvcHtmlString("");
         }
 
         #endregion

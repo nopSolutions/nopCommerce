@@ -15,9 +15,8 @@ using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Services.Shipping;
-using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
-using Telerik.Web.Mvc;
+using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Admin.Controllers
 {
@@ -115,8 +114,8 @@ namespace Nop.Admin.Controllers
             return View();
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult Providers(GridCommand command)
+        [HttpPost]
+        public ActionResult Providers(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
@@ -130,20 +129,18 @@ namespace Nop.Admin.Controllers
                 tmp1.LogoUrl = shippingProvider.PluginDescriptor.GetLogoUrl(_webHelper);
                 shippingProvidersModel.Add(tmp1);
             }
-            shippingProvidersModel = shippingProvidersModel.ForCommand(command).ToList();
-            var gridModel = new GridModel<ShippingRateComputationMethodModel>
+            shippingProvidersModel = shippingProvidersModel.ToList();
+            var gridModel = new DataSourceResult
             {
                 Data = shippingProvidersModel,
                 Total = shippingProvidersModel.Count()
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult ProviderUpdate(ShippingRateComputationMethodModel model, GridCommand command)
+        [HttpPost]
+        public ActionResult ProviderUpdate([Bind(Exclude = "ConfigurationRouteValues")] ShippingRateComputationMethodModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
@@ -174,7 +171,7 @@ namespace Nop.Admin.Controllers
             //reset plugin cache
             _pluginFinder.ReloadPlugins();
 
-            return Providers(command);
+            return Json(null);
         }
 
         public ActionResult ConfigureProvider(string systemName)
@@ -209,26 +206,22 @@ namespace Nop.Admin.Controllers
             return View();
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult Methods(GridCommand command)
+        [HttpPost]
+        public ActionResult Methods(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             var shippingMethodsModel = _shippingService.GetAllShippingMethods()
                 .Select(x => x.ToModel())
-                .ForCommand(command)
                 .ToList();
-            var model = new GridModel<ShippingMethodModel>
+            var gridModel = new DataSourceResult
             {
                 Data = shippingMethodsModel,
                 Total = shippingMethodsModel.Count
             };
 
-            return new JsonResult
-            {
-                Data = model
-            };
+            return Json(gridModel);
         }
 
 
@@ -340,26 +333,22 @@ namespace Nop.Admin.Controllers
             return View();
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult DeliveryDates(GridCommand command)
+        [HttpPost]
+        public ActionResult DeliveryDates(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
             var deliveryDatesModel = _shippingService.GetAllDeliveryDates()
                 .Select(x => x.ToModel())
-                .ForCommand(command)
                 .ToList();
-            var model = new GridModel<DeliveryDateModel>
+            var gridModel = new DataSourceResult
             {
                 Data = deliveryDatesModel,
                 Total = deliveryDatesModel.Count
             };
 
-            return new JsonResult
-            {
-                Data = model
-            };
+            return Json(gridModel);
         }
 
 
@@ -470,8 +459,8 @@ namespace Nop.Admin.Controllers
             return View();
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult Warehouses(GridCommand command)
+        [HttpPost]
+        public ActionResult Warehouses(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
@@ -487,18 +476,14 @@ namespace Nop.Admin.Controllers
                                 };
                                 return warehouseModel;
                             })
-                .ForCommand(command)
                 .ToList();
-            var model = new GridModel<WarehouseModel>
+            var gridModel = new DataSourceResult
             {
                 Data = warehousesModel,
                 Total = warehousesModel.Count
             };
 
-            return new JsonResult
-            {
-                Data = model
-            };
+            return Json(gridModel);
         }
 
 

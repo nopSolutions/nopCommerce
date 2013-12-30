@@ -108,10 +108,6 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="Telerik.Web.Mvc, Version=2013.1.219.340, Culture=neutral, PublicKeyToken=29ac1a93ec063d92, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\TelerikMvcExtensions.2013.2.611\lib\net40\Telerik.Web.Mvc.dll</HintPath>
-    </Reference>
     <Reference Include="WebActivator, Version=1.5.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\WebActivator.1.5.2\lib\net40\WebActivator.dll</HintPath>
@@ -125,6 +121,13 @@
     <Compile Include="CheckAffiliateAttribute.cs" />
     <Compile Include="Controllers\ContollerExtensions.cs" />
     <Compile Include="Controllers\ParameterBasedOnFormNameAndValueAttribute.cs" />
+    <Compile Include="Kendoui\DataSourceRequest.cs" />
+    <Compile Include="Kendoui\DataSourceResult.cs" />
+    <Compile Include="Kendoui\Dynamic.cs" />
+    <Compile Include="Kendoui\Filter.cs" />
+    <Compile Include="Kendoui\QueryableExtensions.cs" />
+    <Compile Include="Menu\SiteMapNode.cs" />
+    <Compile Include="Menu\XmlSiteMap.cs" />
     <Compile Include="Seo\CustomUrlRecordEntityNameRequested.cs" />
     <Compile Include="Seo\WwwRequirementAttribute.cs" />
     <Compile Include="WebStoreContext.cs" />
@@ -180,8 +183,6 @@
     <Compile Include="Security\SslRequirement.cs" />
     <Compile Include="Security\NopHttpsRequirementAttribute.cs" />
     <Compile Include="StatefulStorage.cs" />
-    <Compile Include="TelerikLocalizationService.cs" />
-    <Compile Include="TelerikLocalizationServiceFactory.cs" />
     <Compile Include="Themes\IThemeProvider.cs" />
     <Compile Include="Themes\IThemeContext.cs" />
     <Compile Include="Themes\ThemeableBuildManagerViewEngine .cs" />
@@ -195,12 +196,6 @@
     <Compile Include="UI\Captcha\CaptchaValidatorAttribute.cs" />
     <Compile Include="UI\AsIsBundleOrderer.cs" />
     <Compile Include="UI\ResourceLocation.cs" />
-    <Compile Include="UI\Editor\NetAdvImageSettings.cs" />
-    <Compile Include="UI\Editor\NetAdvImageService.cs" />
-    <Compile Include="UI\Editor\INetAdvImageService.cs" />
-    <Compile Include="UI\Editor\NetAdvDirectoryService.cs" />
-    <Compile Include="UI\Editor\INetAdvDirectoryService.cs" />
-    <Compile Include="UI\Editor\NetAdvImage.cs" />
     <Compile Include="UI\LayoutExtensions.cs" />
     <Compile Include="UI\IPageHeadBuilder.cs" />
     <Compile Include="UI\NotifyType.cs" />
@@ -233,7 +228,9 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Compile Include="Kendoui\ModelStateExtensions.cs" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

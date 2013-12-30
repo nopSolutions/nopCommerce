@@ -1,5 +1,4 @@
 ﻿@model BlogSettingsModel
-@using Telerik.Web.Mvc.UI;
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.Blog").Text;
@@ -12,7 +11,7 @@
             @T("Admin.Configuration.Settings.Blog")
         </div>
         <div class="options">
-            <input type="submit" name="save" class="t-button" value="@T("Admin.Common.Save")" />
+            <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
         </div>
     </div>
     @Html.Action("StoreScopeConfiguration", "Setting")

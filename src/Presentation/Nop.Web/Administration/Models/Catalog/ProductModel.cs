@@ -419,7 +419,6 @@ namespace Nop.Admin.Models.Catalog
         public partial class ProductCategoryModel : BaseNopEntityModel
         {
             [NopResourceDisplayName("Admin.Catalog.Products.Categories.Fields.Category")]
-            [UIHint("ProductCategory")]
             public string Category { get; set; }
 
             public int ProductId { get; set; }
@@ -436,7 +435,6 @@ namespace Nop.Admin.Models.Catalog
         public partial class ProductManufacturerModel : BaseNopEntityModel
         {
             [NopResourceDisplayName("Admin.Catalog.Products.Manufacturers.Fields.Manufacturer")]
-            [UIHint("ProductManufacturer")]
             public string Manufacturer { get; set; }
 
             public int ProductId { get; set; }
@@ -597,13 +595,11 @@ namespace Nop.Admin.Models.Catalog
 
             public int CustomerRoleId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.CustomerRole")]
-            [UIHint("TierPriceCustomer")]
             public string CustomerRole { get; set; }
 
 
             public int StoreId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.Store")]
-            [UIHint("TierPriceStore")]
             public string Store { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.Quantity")]
@@ -622,7 +618,6 @@ namespace Nop.Admin.Models.Catalog
 
             public int ProductAttributeId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Fields.Attribute")]
-            [UIHint("ProductAttribute")]
             public string ProductAttribute { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Fields.TextPrompt")]
@@ -634,7 +629,6 @@ namespace Nop.Admin.Models.Catalog
 
             public int AttributeControlTypeId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Fields.AttributeControlType")]
-            [UIHint("AttributeControlType")]
             public string AttributeControlType { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Fields.DisplayOrder")]

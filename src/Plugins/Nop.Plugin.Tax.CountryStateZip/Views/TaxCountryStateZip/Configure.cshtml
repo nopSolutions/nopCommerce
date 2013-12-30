@@ -3,45 +3,122 @@
 
     var gridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSize;
 }
-@model Nop.Plugin.Tax.CountryStateZip.Models.TaxRateListModel
+@model TaxRateListModel
 @using Nop.Web.Framework;
-@using Telerik.Web.Mvc.UI;
 @using Nop.Plugin.Tax.CountryStateZip.Models;
 @using Nop.Core.Infrastructure;
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<TaxRateModel>()
-                    .Name("tax-countrystatezip-grid")
-                    .DataKeys(keys => keys.Add(x => x.Id).RouteKey("Id"))
-                    .Columns(columns =>
-                    {
-                        columns.Bound(x => x.StoreName).ReadOnly();
-                        columns.Bound(x => x.CountryName).ReadOnly();
-                        columns.Bound(x => x.StateProvinceName).ReadOnly();
-                        columns.Bound(x => x.Zip);
-                        columns.Bound(x => x.TaxCategoryName).ReadOnly();
-                        columns.Bound(x => x.Percentage).Format("{0:G29}");
-                        columns.Command(commands =>
-                        {
-                            commands.Edit().Text(T("Admin.Common.Edit").Text);
-                            commands.Delete().Text(T("Admin.Common.Delete").Text);
-                        }).Width(180);
+            <div id="tax-countrystatezip-grid"></div>
 
-                    })
-                    .Editable(x =>
-                    {
-                        x.Mode(GridEditMode.InLine);
-                    })
-                    .DataBinding(dataBinding =>
-                    {
-                        dataBinding.Ajax()
-                            .Select("RatesList", "TaxCountryStateZip", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Tax.CountryStateZip.Controllers" }, { "area", "" } })
-                            .Update("RateUpdate", "TaxCountryStateZip", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Tax.CountryStateZip.Controllers" }, { "area", "" } })
-                            .Delete("RateDelete", "TaxCountryStateZip", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Tax.CountryStateZip.Controllers" }, { "area", "" } });
-                    })
-                    .Pageable(settings => settings.PageSize(gridPageSize).Position(GridPagerPosition.Both))
-                    .EnableCustomBinding(true))
+            <script>
+                $(document).ready(function () {
+                    $("#tax-countrystatezip-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("RatesList", "TaxCountryStateZip", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Tax.CountryStateZip.Controllers" }, { "area", "" } }))",
+                                    type: "POST",
+                                    dataType: "json"
+                                },
+                                update: {
+                                    url:"@Html.Raw(Url.Action("RateUpdate", "TaxCountryStateZip", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Tax.CountryStateZip.Controllers" }, { "area", "" } }))",
+                                    type: "POST",
+                                    dataType: "json"
+                                },
+                                destroy: {
+                                    url: "@Html.Raw(Url.Action("RateDelete", "TaxCountryStateZip", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Tax.CountryStateZip.Controllers" }, { "area", "" } }))",
+                                    type: "POST",
+                                    dataType: "json"
+                                }
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors",
+                                model: {
+                                    id: "Id",
+                                    fields: {
+                                        StoreName: { editable: false, type: "string" },
+                                        CountryName: { editable: false, type: "string" },
+                                        StateProvinceName: { editable: false, type: "string" },
+                                        Zip: { editable: true, type: "string" },
+                                        TaxCategoryName: { editable: false, type: "string" },
+                                        IsPrimaryDimension: { editable: false, type: "boolean" },
+                                        Id: { editable: false, type: "number" }
+                                    }
+                                }
+                            },
+                            requestEnd: function (e) {
+                                if (e.type == "update") {
+                                    this.read();
+                                }
+                            },
+                            error: function (e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            pageSize: @(gridPageSize),
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true
+                        },
+                        editable: {
+                            confirmation: false,
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [{
+                            field: "StoreName",
+                            title: "@T("Plugins.Tax.CountryStateZip.Fields.Store")",
+                            width: 300
+                        }, {
+                            field: "CountryName",
+                            title: "@T("Plugins.Tax.CountryStateZip.Fields.Country")",
+                            width: 200
+                        }, {
+                            field: "StateProvinceName",
+                            title: "@T("Plugins.Tax.CountryStateZip.Fields.StateProvince")",
+                            width: 200
+                        }, {
+                            field: "Zip",
+                            title: "@T("Plugins.Tax.CountryStateZip.Fields.Zip")",
+                            width: 200
+                        }, {
+                            field: "TaxCategoryName",
+                            title: "@T("Plugins.Tax.CountryStateZip.Fields.TaxCategory")",
+                            width: 200
+                        }, {
+                            field: "Percentage",
+                            title: "@T("Plugins.Tax.CountryStateZip.Fields.Percentage")",
+                            width: 100,
+                            editor: function (container, options) {
+                                $('<input name="' + options.field + '"/>')
+                                        .appendTo(container)
+                                        .kendoNumericTextBox({
+                                            format: "{0:n4}",
+                                            decimals: 4
+                                        });
+                            }
+                        }, {
+                            command: [{
+                                name: "edit",
+                                text: "@T("Admin.Common.Edit")"
+                            }, {
+                                name: "destroy",
+                                text: "@T("Admin.Common.Delete")"
+                            }],
+                            width: 200
+                        }]
+                    });
+                });
+            </script>
         </td>
     </tr>
 </table>
@@ -134,7 +211,7 @@
         </tr>
         <tr>
             <td colspan="2" align="left">
-                <input type="button" id="addtaxrate" class="t-button" value="@T("Plugins.Tax.CountryStateZip.AddRecord")" />
+                <input type="button" id="addtaxrate" class="k-button" value="@T("Plugins.Tax.CountryStateZip.AddRecord")" />
             </td>
         </tr>
     </table>
@@ -148,8 +225,9 @@
                     data: $(this.form).serialize(),
                     dataType: 'json',
                     success: function (data) {
-                        var taxCountrystatezipGrid = $("#tax-countrystatezip-grid");
-                        taxCountrystatezipGrid.data('tGrid').ajaxRequest();
+                        var taxCountrystatezipGrid = $("#tax-countrystatezip-grid").data('kendoGrid');
+                        //taxCountrystatezipGrid.dataSource.page(1); //new search. Set page size to 1
+                        taxCountrystatezipGrid.dataSource.read();
                     },
                     error: function (xhr, ajaxOptions, thrownError) {
                         alert('Failed to add record.');

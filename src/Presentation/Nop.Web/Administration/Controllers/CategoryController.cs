@@ -18,9 +18,8 @@ using Nop.Services.Stores;
 using Nop.Services.Vendors;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
-using Telerik.Web.Mvc;
-using Telerik.Web.Mvc.UI;
 
 namespace Nop.Admin.Controllers
 {
@@ -138,6 +137,28 @@ namespace Nop.Admin.Controllers
             var picture = _pictureService.GetPictureById(category.PictureId);
             if (picture != null)
                 _pictureService.SetSeoFilename(picture.Id, _pictureService.GetPictureSeName(category.Name));
+        }
+
+        [NonAction]
+        protected void PrepareAllCategoriesModel(CategoryModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            model.AvailableCategories.Add(new SelectListItem()
+            {
+                Text = "[None]",
+                Value = "0"
+            });
+            var categories = _categoryService.GetAllCategories(showHidden: true);
+            foreach (var c in categories)
+            {
+                model.AvailableCategories.Add(new SelectListItem()
+                {
+                    Text = c.GetFormattedBreadCrumb(_categoryService),
+                    Value = c.Id.ToString()
+                });
+            }
         }
 
         [NonAction]
@@ -284,15 +305,15 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult List(GridCommand command, CategoryListModel model)
+        [HttpPost]
+        public ActionResult List(DataSourceRequest command, CategoryListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
 
             var categories = _categoryService.GetAllCategories(model.SearchCategoryName, 
                 command.Page - 1, command.PageSize, true);
-            var gridModel = new GridModel<CategoryModel>
+            var gridModel = new DataSourceResult
             {
                 Data = categories.Select(x =>
                 {
@@ -302,56 +323,30 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = categories.TotalCount
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return Json(gridModel);
         }
-
-        //ajax
-        public ActionResult AllCategories(string text, int selectedId)
-        {
-            var categories = _categoryService.GetAllCategories(showHidden: true);
-            categories.Insert(0, new Category { Name = "[None]", Id = 0 });
-            var selectList = new List<SelectListItem>();
-            foreach (var c in categories)
-                selectList.Add(new SelectListItem()
-                    {
-                         Value = c.Id.ToString(),
-                         Text = c.GetFormattedBreadCrumb(_categoryService),
-                         Selected = c.Id == selectedId
-                    });
-
-            //var selectList = new SelectList(categories, "Id", "Name", selectedId);
-            return new JsonResult { Data = selectList, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
-        }
-
+        
         public ActionResult Tree()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
 
-            var rootCategories = _categoryService.GetAllCategoriesByParentCategoryId(0, true);
-            return View(rootCategories);
+            return View();
         }
 
-        //ajax
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult TreeLoadChildren(TreeViewItem node)
+        [HttpPost,]
+        public ActionResult TreeLoadChildren(int id = 0)
         {
-            var parentId = !string.IsNullOrEmpty(node.Value) ? Convert.ToInt32(node.Value) : 0;
+            var categories = _categoryService.GetAllCategoriesByParentCategoryId(id, true)
+                .Select(x => new
+                             {
+                                 id = x.Id,
+                                 Name = x.Name,
+                                 hasChildren = _categoryService.GetAllCategoriesByParentCategoryId(x.Id, true).Count > 0,
+                                 imageUrl = Url.Content("~/Administration/Content/images/ico-content.png")
+                             });
 
-            var children = _categoryService.GetAllCategoriesByParentCategoryId(parentId, true).Select(x =>
-                new TreeViewItem
-                {
-                    Text = x.Name,
-                    Value = x.Id.ToString(),
-                    LoadOnDemand = _categoryService.GetAllCategoriesByParentCategoryId(x.Id, true).Count > 0,
-                    Enabled = true,
-                    ImageUrl = Url.Content("~/Administration/Content/images/ico-content.png")
-                });
-
-            return new JsonResult { Data = children };
+            return Json(categories);
         }
 
         #endregion
@@ -364,12 +359,12 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var model = new CategoryModel();
-            //parent categories
-            model.ParentCategories = new List<DropDownItem> { new DropDownItem { Text = "[None]", Value = "0" } };
             //locales
             AddLocales(_languageService, model.Locales);
             //templates
             PrepareTemplatesModel(model);
+            //categories
+            PrepareAllCategoriesModel(model);
             //discounts
             PrepareDiscountModel(model, null, true);
             //ACL
@@ -430,16 +425,8 @@ namespace Nop.Admin.Controllers
             //If we got this far, something failed, redisplay form
             //templates
             PrepareTemplatesModel(model);
-            //parent categories
-            model.ParentCategories = new List<DropDownItem> { new DropDownItem { Text = "[None]", Value = "0" } };
-            if (model.ParentCategoryId > 0)
-            {
-                var parentCategory = _categoryService.GetCategoryById(model.ParentCategoryId);
-                if (parentCategory != null && !parentCategory.Deleted)
-                    model.ParentCategories.Add(new DropDownItem { Text = parentCategory.GetFormattedBreadCrumb(_categoryService), Value = parentCategory.Id.ToString() });
-                else
-                    model.ParentCategoryId = 0;
-            }
+            //categories
+            PrepareAllCategoriesModel(model);
             //discounts
             PrepareDiscountModel(model, null, true);
             //ACL
@@ -460,16 +447,6 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("List");
 
             var model = category.ToModel();
-            //parent categories
-            model.ParentCategories = new List<DropDownItem> { new DropDownItem { Text = "[None]", Value = "0" } };
-            if (model.ParentCategoryId > 0)
-            {
-                var parentCategory = _categoryService.GetCategoryById(model.ParentCategoryId);
-                if (parentCategory != null && !parentCategory.Deleted)
-                    model.ParentCategories.Add(new DropDownItem { Text = parentCategory.GetFormattedBreadCrumb(_categoryService), Value = parentCategory.Id.ToString() });
-                else
-                    model.ParentCategoryId = 0;
-            }
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
@@ -482,6 +459,8 @@ namespace Nop.Admin.Controllers
             });
             //templates
             PrepareTemplatesModel(model);
+            //categories
+            PrepareAllCategoriesModel(model);
             //discounts
             PrepareDiscountModel(model, category, false);
             //ACL
@@ -567,18 +546,10 @@ namespace Nop.Admin.Controllers
 
 
             //If we got this far, something failed, redisplay form
-            //parent categories
-            model.ParentCategories = new List<DropDownItem> { new DropDownItem { Text = "[None]", Value = "0" } };
-            if (model.ParentCategoryId > 0)
-            {
-                var parentCategory = _categoryService.GetCategoryById(model.ParentCategoryId);
-                if (parentCategory != null && !parentCategory.Deleted)
-                    model.ParentCategories.Add(new DropDownItem { Text = parentCategory.GetFormattedBreadCrumb(_categoryService), Value = parentCategory.Id.ToString() });
-                else
-                    model.ParentCategoryId = 0;
-            }
             //templates
             PrepareTemplatesModel(model);
+            //categories
+            PrepareAllCategoriesModel(model);
             //discounts
             PrepareDiscountModel(model, category, true);
             //ACL
@@ -635,18 +606,17 @@ namespace Nop.Admin.Controllers
 
         #region Products
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult ProductList(GridCommand command, int categoryId)
+        [HttpPost]
+        public ActionResult ProductList(DataSourceRequest command, int categoryId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
 
             var productCategories = _categoryService.GetProductCategoriesByCategoryId(categoryId,
                 command.Page - 1, command.PageSize, true);
-            var model = new GridModel<CategoryModel.CategoryProductModel>
+            var gridModel = new DataSourceResult
             {
-                Data = productCategories
-                .Select(x =>
+                Data = productCategories.Select(x =>
                 {
                     return new CategoryModel.CategoryProductModel()
                     {
@@ -661,14 +631,10 @@ namespace Nop.Admin.Controllers
                 Total = productCategories.TotalCount
             };
 
-            return new JsonResult
-            {
-                Data = model
-            };
+            return Json(gridModel);
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult ProductUpdate(GridCommand command, CategoryModel.CategoryProductModel model)
+        public ActionResult ProductUpdate(CategoryModel.CategoryProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
@@ -681,11 +647,10 @@ namespace Nop.Admin.Controllers
             productCategory.DisplayOrder = model.DisplayOrder1;
             _categoryService.UpdateProductCategory(productCategory);
 
-            return ProductList(command, productCategory.CategoryId);
+            return Json(null);
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult ProductDelete(int id, GridCommand command)
+        public ActionResult ProductDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
@@ -694,10 +659,10 @@ namespace Nop.Admin.Controllers
             if (productCategory == null)
                 throw new ArgumentException("No product category mapping found with the specified id");
 
-            var categoryId = productCategory.CategoryId;
+            //var categoryId = productCategory.CategoryId;
             _categoryService.DeleteProductCategory(productCategory);
 
-            return ProductList(command, categoryId);
+            return Json(null);
         }
 
         public ActionResult ProductAddPopup(int categoryId)
@@ -733,13 +698,13 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult ProductAddPopupList(GridCommand command, CategoryModel.AddCategoryProductModel model)
+        [HttpPost]
+        public ActionResult ProductAddPopupList(DataSourceRequest command, CategoryModel.AddCategoryProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
 
-            var gridModel = new GridModel();
+            var gridModel = new DataSourceResult();
             var products = _productService.SearchProducts(
                 categoryIds: new List<int>() { model.SearchCategoryId },
                 manufacturerId: model.SearchManufacturerId,
@@ -753,10 +718,8 @@ namespace Nop.Admin.Controllers
                 );
             gridModel.Data = products.Select(x => x.ToModel());
             gridModel.Total = products.TotalCount;
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
         
         [HttpPost]

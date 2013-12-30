@@ -604,7 +604,7 @@ namespace Nop.Core
                 //That's why you get these nasty errors 
                 //i.e "Controller does not implement IController".
                 //The issue is described here: http://www.nopcommerce.com/boards/t/10969/nop-20-plugin.aspx?p=4#51318
-                //The solutino is to touch global.asax file
+                //The solution is to touch global.asax file
                 File.SetLastWriteTimeUtc(MapPath("~/global.asax"), DateTime.UtcNow);
                 return true;
             }

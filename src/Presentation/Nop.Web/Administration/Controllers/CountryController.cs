@@ -10,7 +10,7 @@ using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
-using Telerik.Web.Mvc;
+using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Admin.Controllers
 {
@@ -89,23 +89,20 @@ namespace Nop.Admin.Controllers
             return View();
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult CountryList(GridCommand command)
+        [HttpPost]
+        public ActionResult CountryList(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
 
             var countries = _countryService.GetAllCountries(true);
-            var model = new GridModel<CountryModel>
+            var gridModel = new DataSourceResult
             {
                 Data = countries.Select(x => x.ToModel()),
                 Total = countries.Count
             };
 
-            return new JsonResult
-            {
-                Data = model
-            };
+            return Json(gridModel);
         }
         
         public ActionResult Create()
@@ -268,26 +265,21 @@ namespace Nop.Admin.Controllers
 
         #region States / provinces
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult States(int countryId, GridCommand command)
+        [HttpPost]
+        public ActionResult States(int countryId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
 
-            var states = _stateProvinceService.GetStateProvincesByCountryId(countryId, true)
-                .Select(x => x.ToModel());
+            var states = _stateProvinceService.GetStateProvincesByCountryId(countryId, true);
 
-            var model = new GridModel<StateProvinceModel>
+            var gridModel = new DataSourceResult
             {
-                Data = states,
-                Total = states.Count()
+                Data = states.Select(x => x.ToModel()),
+                Total = states.Count
             };
-            return new JsonResult
-            {
-                Data = model
-            };
+            return Json(gridModel);
         }
-
 
         //create
         public ActionResult StateCreatePopup(int countryId)
@@ -379,8 +371,8 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult StateDelete(int id, GridCommand command)
+        [HttpPost]
+        public ActionResult StateDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
@@ -392,11 +384,10 @@ namespace Nop.Admin.Controllers
             if (_addressService.GetAddressTotalByStateProvinceId(state.Id) > 0)
                 return Content(_localizationService.GetResource("Admin.Configuration.Countries.States.CantDeleteWithAddresses"));
 
-            int countryId = state.CountryId;
+            //int countryId = state.CountryId;
             _stateProvinceService.DeleteStateProvince(state);
 
-
-            return States(countryId, command);
+            return Json(null);
         }
 
         [AcceptVerbs(HttpVerbs.Get)]

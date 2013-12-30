@@ -1,36 +1,90 @@
 ﻿@{
     Layout = "";
 }
-@using Nop.Plugin.Shipping.FixedRateShipping.Models;
-@using Telerik.Web.Mvc.UI;
-
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<FixedShippingRateModel>()
-                    .Name("Grid")
-                    .DataKeys(keys => keys.Add(x => x.ShippingMethodId).RouteKey("ShippingMethodId"))
-                    .Columns(columns =>
-                    {
-                        columns.Bound(x => x.ShippingMethodName).Width(300).ReadOnly();
-                        columns.Bound(x => x.Rate).Width(100);
-                        columns.Command(commands =>
-                        {
-                            commands.Edit().Text(T("Admin.Common.Edit").Text);
-                        }).Title(T("Admin.Common.Edit").Text).Width(100);
+            <div id="shipping-rate-grid"></div>
 
-                    })
-                    .Editable(x =>
-                    {
-                        x.Mode(GridEditMode.InLine);
-                    })
-                    .DataBinding(dataBinding =>
-                    {
-                        dataBinding.Ajax()
-                            .Select("Configure", "ShippingFixedRate", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Shipping.FixedRateShipping.Controllers" }, { "area", "" } })
-                            .Update("ShippingRateUpdate", "ShippingFixedRate", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Shipping.FixedRateShipping.Controllers" }, { "area", "" } });
-                    })
-                    .EnableCustomBinding(true))
+            <script>
+                $(document).ready(function () {
+                    $("#shipping-rate-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("Configure", "ShippingFixedRate", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Shipping.FixedRateShipping.Controllers" }, { "area", "" } }))",
+                                    type: "POST",
+                                    dataType: "json"
+                                },
+                                update: {
+                                    url:"@Html.Raw(Url.Action("ShippingRateUpdate", "ShippingFixedRate", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Shipping.FixedRateShipping.Controllers" }, { "area", "" } }))",
+                                    type: "POST",
+                                    dataType: "json"
+                                }
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors",
+                                model: {
+                                    id: "ShippingMethodId",
+                                    fields: {
+                                        ShippingMethodId: { editable: false, type: "number" },
+                                        ShippingMethodName: { editable: false, type: "string" },
+                                        Rate: { editable: true, type: "number" }
+                                    }
+                                }
+                            },
+                            requestEnd: function (e) {
+                                if (e.type == "update") {
+                                    this.read();
+                                }
+                            },
+                            error: function (e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true,
+                            numeric: false,
+                            previousNext: false,
+                            info: false
+                        },
+                        editable: {
+                            confirmation: false,
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [{
+                            field: "ShippingMethodName",
+                            title: "@T("Plugins.Shipping.FixedRateShipping.Fields.ShippingMethodName")",
+                            width: 400
+                        }, {
+                            field: "Rate",
+                            title: "@T("Plugins.Shipping.FixedRateShipping.Fields.Rate")",
+                            width: 200,
+                            editor: function (container, options) {
+                                $('<input name="' + options.field + '"/>')
+                                        .appendTo(container)
+                                        .kendoNumericTextBox({
+                                            format: "{0:n4}",
+                                            decimals: 4
+                                        });
+                            }
+                        }, {
+                            command: {name: "edit", text: "@T("Admin.Common.Edit")"},
+                            title: "@T("Admin.Common.Edit")",
+                            width: 150
+                        }]
+                    });
+                });
+            </script>
         </td>
     </tr>
 </table>

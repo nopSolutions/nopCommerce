@@ -1,51 +1,91 @@
 ﻿@model ProductModel
 
-@using Telerik.Web.Mvc.UI;
 @if (Model.Id > 0)
 { 
     <table class="adminContent">
         <tr>
             <td>
-                @(Html.Telerik().Grid<ProductModel.CrossSellProductModel>()
-                .Name("crosssellproducts-grid")
-                    .DataKeys(keys =>
-                    {
-                        keys.Add(x => x.Id);
-                    })
-                    .DataBinding(dataBinding =>
-                    {
-                        dataBinding.Ajax()
-                            .Select("CrossSellProductList", "Product", new { productId = Model.Id })
-                            .Delete("CrossSellProductDelete", "Product");
-                    })
-                    .Columns(columns =>
-                    {
-                        columns.Bound(x => x.Product2Name)
-                            .ReadOnly();
-                        columns.Bound(x => x.Id)
-                            .Template(x => Html.ActionLink(T("Admin.Common.View").Text, "Edit", "Product", new { id = x.ProductId2 }, new { }))
-                            .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/Product/Edit/") + "<#= ProductId2 #>\">" + T("Admin.Common.View").Text + "</a>")
-                            .Title(T("Admin.Common.View").Text)
-                            .ReadOnly();
-                        columns.Command(commands =>
-                        {
-                            commands.Delete().Text(T("Admin.Common.Delete").Text);
-                        })
-                        .Title(T("Admin.Common.Delete").Text).Width(50);
-                    })
-                    .EnableCustomBinding(true))
+                <div id="crosssellproducts-grid"></div>
+
+                <script>
+                    $(document).ready(function () {
+                        $("#crosssellproducts-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("CrossSellProductList", "Product", new { productId = Model.Id }))",
+                                        type: "POST",
+                                        dataType: "json"
+                                    },
+                                    destroy: {
+                                        url: "@Html.Raw(Url.Action("CrossSellProductDelete", "Product"))",
+                                        type: "POST",
+                                        dataType: "json"
+                                    }
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors",
+                                    model: {
+                                        id: "Id",
+                                        fields: {
+                                            Product2Name: { editable: false, type: "string" },
+                                            ProductId2: { editable: false, type: "number" }
+                                        }
+                                    }
+                                },
+                                error: function(e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true,
+                                numeric: false,
+                                previousNext: false,
+                                info: false
+                            },
+                            editable: {
+                                confirmation: false,
+                                mode: "inline"
+                            },
+                            scrollable: false,
+                            columns: [
+                                {
+                                    field: "Product2Name",
+                                    title: "@T("Admin.Catalog.Products.CrossSells.Fields.Product")"
+                                }, {
+                                    field: "ProductId2",
+                                    title: "@T("Admin.Common.View")",
+                                    width: 100,
+                                    template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId2#">@T("Admin.Common.View")</a>'
+                                }, {
+                                    command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
+                                    title: "@T("Admin.Common.Delete")",
+                                    width: 200
+                                }
+                            ]
+                        });
+                    });
+                </script>
             </td>
         </tr>
         <tr>
             <td width="100%">
-                <input type="submit" id="btnAddNewCrossSellProduct" name="btnAddNewCrossSellProduct" value="@T("Admin.Catalog.Products.CrossSells.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("CrossSellProductAddPopup", "Product", new { productId = Model.Id, btnId = "btnRefreshCrossSellProducts", formId = "product-form" }))    ', 800, 800, true); return false;" class="t-button" />
+                <input type="submit" id="btnAddNewCrossSellProduct" name="btnAddNewCrossSellProduct" value="@T("Admin.Catalog.Products.CrossSells.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("CrossSellProductAddPopup", "Product", new { productId = Model.Id, btnId = "btnRefreshCrossSellProducts", formId = "product-form" }))    ', 800, 800, true); return false;" class="k-button" />
                 <input type="submit" id="btnRefreshCrossSellProducts" name="btnRefreshCrossSellProducts" style="display: none" />
                 <script type="text/javascript">
                     $(document).ready(function () {
                         $('#btnRefreshCrossSellProducts').click(function () {
                             //refresh grid
-                            var optionsGrid = $("#crosssellproducts-grid");
-                            optionsGrid.data('tGrid').ajaxRequest();
+                            var optionsGrid = $("#crosssellproducts-grid").data('kendoGrid');
+                            optionsGrid.dataSource.read();
 
                             //return false to don't reload a page
                             return false;

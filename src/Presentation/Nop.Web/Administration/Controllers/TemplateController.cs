@@ -7,7 +7,7 @@ using Nop.Services.Catalog;
 using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
-using Telerik.Web.Mvc;
+using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Admin.Controllers
 {
@@ -51,8 +51,8 @@ namespace Nop.Admin.Controllers
             return View();
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult CategoryTemplates(GridCommand command)
+        [HttpPost]
+        public ActionResult CategoryTemplates(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
@@ -60,29 +60,24 @@ namespace Nop.Admin.Controllers
             var templatesModel = _categoryTemplateService.GetAllCategoryTemplates()
                 .Select(x => x.ToModel())
                 .ToList();
-            var model = new GridModel<CategoryTemplateModel>
+            var gridModel = new DataSourceResult
             {
                 Data = templatesModel,
                 Total = templatesModel.Count
             };
 
-            return new JsonResult
-            {
-                Data = model
-            };
+            return Json(gridModel);
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult CategoryTemplateUpdate(CategoryTemplateModel model, GridCommand command)
+        [HttpPost]
+        public ActionResult CategoryTemplateUpdate(CategoryTemplateModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
             {
-                //display the first model error
-                var modelStateErrors = this.ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage);
-                return Content(modelStateErrors.FirstOrDefault());
+                return Json(new DataSourceResult() { Errors = ModelState.SerializeErrors() });
             }
 
             var template = _categoryTemplateService.GetCategoryTemplateById(model.Id);
@@ -91,31 +86,29 @@ namespace Nop.Admin.Controllers
             template = model.ToEntity(template);
             _categoryTemplateService.UpdateCategoryTemplate(template);
 
-            return CategoryTemplates(command);
+            return Json(null);
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult CategoryTemplateAdd([Bind(Exclude = "Id")] CategoryTemplateModel model, GridCommand command)
+        [HttpPost]
+        public ActionResult CategoryTemplateAdd([Bind(Exclude = "Id")] CategoryTemplateModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
             {
-                //display the first model error
-                var modelStateErrors = this.ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage);
-                return Content(modelStateErrors.FirstOrDefault());
+                return Json(new DataSourceResult() { Errors = ModelState.SerializeErrors() });
             }
 
             var template = new CategoryTemplate();
             template = model.ToEntity(template);
             _categoryTemplateService.InsertCategoryTemplate(template);
 
-            return CategoryTemplates(command);
+            return Json(null);
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult CategoryTemplateDelete(int id, GridCommand command)
+        [HttpPost]
+        public ActionResult CategoryTemplateDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
@@ -126,7 +119,7 @@ namespace Nop.Admin.Controllers
 
             _categoryTemplateService.DeleteCategoryTemplate(template);
 
-            return CategoryTemplates(command);
+            return Json(null);
         }
 
         #endregion
@@ -141,8 +134,8 @@ namespace Nop.Admin.Controllers
             return View();
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult ManufacturerTemplates(GridCommand command)
+        [HttpPost]
+        public ActionResult ManufacturerTemplates(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
@@ -150,29 +143,24 @@ namespace Nop.Admin.Controllers
             var templatesModel = _manufacturerTemplateService.GetAllManufacturerTemplates()
                 .Select(x => x.ToModel())
                 .ToList();
-            var model = new GridModel<ManufacturerTemplateModel>
+            var gridModel = new DataSourceResult
             {
                 Data = templatesModel,
                 Total = templatesModel.Count
             };
 
-            return new JsonResult
-            {
-                Data = model
-            };
+            return Json(gridModel);
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult ManufacturerTemplateUpdate(ManufacturerTemplateModel model, GridCommand command)
+        [HttpPost]
+        public ActionResult ManufacturerTemplateUpdate(ManufacturerTemplateModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
             {
-                //display the first model error
-                var modelStateErrors = this.ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage);
-                return Content(modelStateErrors.FirstOrDefault());
+                return Json(new DataSourceResult() { Errors = ModelState.SerializeErrors() });
             }
 
             var template = _manufacturerTemplateService.GetManufacturerTemplateById(model.Id);
@@ -181,31 +169,29 @@ namespace Nop.Admin.Controllers
             template = model.ToEntity(template);
             _manufacturerTemplateService.UpdateManufacturerTemplate(template);
 
-            return ManufacturerTemplates(command);
+            return Json(null);
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult ManufacturerTemplateAdd([Bind(Exclude = "Id")] ManufacturerTemplateModel model, GridCommand command)
+        [HttpPost]
+        public ActionResult ManufacturerTemplateAdd([Bind(Exclude = "Id")] ManufacturerTemplateModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
             {
-                //display the first model error
-                var modelStateErrors = this.ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage);
-                return Content(modelStateErrors.FirstOrDefault());
+                return Json(new DataSourceResult() { Errors = ModelState.SerializeErrors() });
             }
 
             var template = new ManufacturerTemplate();
             template = model.ToEntity(template);
             _manufacturerTemplateService.InsertManufacturerTemplate(template);
 
-            return ManufacturerTemplates(command);
+            return Json(null);
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult ManufacturerTemplateDelete(int id, GridCommand command)
+        [HttpPost]
+        public ActionResult ManufacturerTemplateDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
@@ -216,7 +202,7 @@ namespace Nop.Admin.Controllers
 
             _manufacturerTemplateService.DeleteManufacturerTemplate(template);
 
-            return ManufacturerTemplates(command);
+            return Json(null);
         }
 
         #endregion
@@ -231,8 +217,8 @@ namespace Nop.Admin.Controllers
             return View();
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult ProductTemplates(GridCommand command)
+        [HttpPost]
+        public ActionResult ProductTemplates(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
@@ -240,7 +226,7 @@ namespace Nop.Admin.Controllers
             var templatesModel = _productTemplateService.GetAllProductTemplates()
                 .Select(x => x.ToModel())
                 .ToList();
-            var model = new GridModel<ProductTemplateModel>
+            var model = new DataSourceResult
             {
                 Data = templatesModel,
                 Total = templatesModel.Count
@@ -252,17 +238,15 @@ namespace Nop.Admin.Controllers
             };
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult ProductTemplateUpdate(ProductTemplateModel model, GridCommand command)
+        [HttpPost]
+        public ActionResult ProductTemplateUpdate(ProductTemplateModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
             {
-                //display the first model error
-                var modelStateErrors = this.ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage);
-                return Content(modelStateErrors.FirstOrDefault());
+                return Json(new DataSourceResult() { Errors = ModelState.SerializeErrors() });
             }
 
             var template = _productTemplateService.GetProductTemplateById(model.Id);
@@ -271,31 +255,29 @@ namespace Nop.Admin.Controllers
             template = model.ToEntity(template);
             _productTemplateService.UpdateProductTemplate(template);
 
-            return ProductTemplates(command);
+            return Json(null);
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult ProductTemplateAdd([Bind(Exclude = "Id")] ProductTemplateModel model, GridCommand command)
+        [HttpPost]
+        public ActionResult ProductTemplateAdd([Bind(Exclude = "Id")] ProductTemplateModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
             {
-                //display the first model error
-                var modelStateErrors = this.ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage);
-                return Content(modelStateErrors.FirstOrDefault());
+                return Json(new DataSourceResult() { Errors = ModelState.SerializeErrors() });
             }
 
             var template = new ProductTemplate();
             template = model.ToEntity(template);
             _productTemplateService.InsertProductTemplate(template);
 
-            return ProductTemplates(command);
+            return Json(null);
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult ProductTemplateDelete(int id, GridCommand command)
+        [HttpPost]
+        public ActionResult ProductTemplateDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
@@ -306,7 +288,7 @@ namespace Nop.Admin.Controllers
 
             _productTemplateService.DeleteProductTemplate(template);
 
-            return ProductTemplates(command);
+            return Json(null);
         }
 
         #endregion

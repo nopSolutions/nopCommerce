@@ -11,7 +11,7 @@ using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
-using Telerik.Web.Mvc;
+using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Admin.Controllers
 {
@@ -52,7 +52,7 @@ namespace Nop.Admin.Controllers
 
         [NonAction]
         protected void PrepareRecurringPaymentModel(RecurringPaymentModel model, 
-            RecurringPayment recurringPayment, bool includeHistory)
+            RecurringPayment recurringPayment)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -75,14 +75,6 @@ namespace Nop.Admin.Controllers
             model.CustomerEmail = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
             model.PaymentType = _paymentService.GetRecurringPaymentType(recurringPayment.InitialOrder.PaymentMethodSystemName).GetLocalizedEnum(_localizationService, _workContext);
             model.CanCancelRecurringPayment = _orderProcessingService.CanCancelRecurringPayment(_workContext.CurrentCustomer, recurringPayment);
-                    
-            if (includeHistory)
-                foreach (var rph in recurringPayment.RecurringPaymentHistory.OrderBy(x => x.CreatedOnUtc))
-                {
-                    var rphModel = new RecurringPaymentModel.RecurringPaymentHistoryModel();
-                    PrepareRecurringPaymentHistoryModel(rphModel, rph);
-                    model.History.Add(rphModel);
-                }
         }
 
         [NonAction]
@@ -124,27 +116,25 @@ namespace Nop.Admin.Controllers
             return View();
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult List(GridCommand command)
+        [HttpPost]
+        public ActionResult List(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageRecurringPayments))
                 return AccessDeniedView();
 
             var payments = _orderService.SearchRecurringPayments(0, 0, 0, null, command.Page - 1, command.PageSize, true);
-            var gridModel = new GridModel<RecurringPaymentModel>
+            var gridModel = new DataSourceResult
             {
                 Data = payments.Select(x =>
                 {
                     var m = new RecurringPaymentModel();
-                    PrepareRecurringPaymentModel(m, x, false);
+                    PrepareRecurringPaymentModel(m, x);
                     return m;
                 }),
                 Total = payments.TotalCount,
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
         //edit
@@ -159,7 +149,7 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("List");
 
             var model = new RecurringPaymentModel();
-            PrepareRecurringPaymentModel(model, payment, true);
+            PrepareRecurringPaymentModel(model, payment);
             return View(model);
         }
 
@@ -218,8 +208,8 @@ namespace Nop.Admin.Controllers
 
         #region History
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult HistoryList(int recurringPaymentId, GridCommand command)
+        [HttpPost]
+        public ActionResult HistoryList(int recurringPaymentId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageRecurringPayments))
                 return AccessDeniedView();
@@ -236,16 +226,13 @@ namespace Nop.Admin.Controllers
                     return m;
                 })
                 .ToList();
-            var model = new GridModel<RecurringPaymentModel.RecurringPaymentHistoryModel>
+            var gridModel = new DataSourceResult
             {
                 Data = historyModel,
                 Total = historyModel.Count
             };
 
-            return new JsonResult
-            {
-                Data = model
-            };
+            return Json(gridModel);
         }
 
         [HttpPost, ActionName("Edit")]
@@ -264,7 +251,7 @@ namespace Nop.Admin.Controllers
             {
                 _orderProcessingService.ProcessNextRecurringPayment(payment);
                 var model = new RecurringPaymentModel();
-                PrepareRecurringPaymentModel(model, payment, true);
+                PrepareRecurringPaymentModel(model, payment);
 
                 SuccessNotification(_localizationService.GetResource("Admin.RecurringPayments.NextPaymentProcessed"), false);
 
@@ -277,7 +264,7 @@ namespace Nop.Admin.Controllers
             {
                 //error
                 var model = new RecurringPaymentModel();
-                PrepareRecurringPaymentModel(model, payment, true);
+                PrepareRecurringPaymentModel(model, payment);
                 ErrorNotification(exc, false);
 
                 //selected tab
@@ -303,7 +290,7 @@ namespace Nop.Admin.Controllers
             {
                 var errors = _orderProcessingService.CancelRecurringPayment(payment);
                 var model = new RecurringPaymentModel();
-                PrepareRecurringPaymentModel(model, payment, true);
+                PrepareRecurringPaymentModel(model, payment);
                 if (errors.Count > 0)
                 {
                     foreach (var error in errors)
@@ -321,7 +308,7 @@ namespace Nop.Admin.Controllers
             {
                 //error
                 var model = new RecurringPaymentModel();
-                PrepareRecurringPaymentModel(model, payment, true);
+                PrepareRecurringPaymentModel(model, payment);
                 ErrorNotification(exc, false);
 
                 //selected tab

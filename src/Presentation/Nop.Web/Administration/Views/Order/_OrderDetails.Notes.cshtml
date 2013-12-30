@@ -1,31 +1,83 @@
 ﻿@model OrderModel
-@using Telerik.Web.Mvc.UI;
 
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<OrderModel.OrderNote>().Name("ordernotes-grid")
-        .DataKeys(keys =>
-        {
-            keys.Add(x => x.Id).RouteKey("orderNoteId");
-            keys.Add(x => x.OrderId).RouteKey("orderId");
-        })
-        .DataBinding(binding =>
-        {
-            binding.Ajax().Select("OrderNotesSelect", "Order", new { orderId = Model.Id })
-                .Delete("OrderNoteDelete", "Order");
-        })
-        .Columns(columns =>
-        {
-            columns.Bound(x => x.CreatedOn).Width(100);
-            columns.Bound(x => x.Note).Encoded(false).Width(500);
-            columns.Bound(x => x.DisplayToCustomer).Width(100);
-            columns.Command(commands =>
-            {
-                commands.Delete().Text(T("Admin.Common.Delete").Text);
-            }).Width(180).Title(T("Admin.Common.Delete").Text);
-        })
-        .EnableCustomBinding(true))
+            <div id="ordernotes-grid"></div>
+
+            <script>
+                $(document).ready(function () {
+                    $("#ordernotes-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("OrderNotesSelect", "Order", new { orderId = Model.Id }))",
+                                    type: "POST",
+                                    dataType: "json"
+                                },
+                                destroy: {
+                                    url: "@Html.Raw(Url.Action("OrderNoteDelete", "Order", new { orderId = Model.Id }))",
+                                    type: "POST",
+                                    dataType: "json"
+                                }
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors",
+                                model: {
+                                    id: "Id",
+                                    fields: {
+                                        //do not implicitly specify all fields
+                                        //we do it only for fields which implicitly require it
+                                        //otherwise, they'll be formatted wrong way
+                                        CreatedOn: {type: "date" }
+                                    }
+                                }
+                            },
+                            error: function(e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true,
+                            numeric: false,
+                            previousNext: false,
+                            info: false
+                        },
+                        editable: {
+                            confirmation: false,
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [{
+                            field: "CreatedOn",
+                            title: "@T("Admin.Orders.OrderNotes.Fields.CreatedOn")",
+                            width: 200,
+                            type: "date",
+                            format: "{0:G}"
+                        }, {
+                            field: "Note",
+                            title: "@T("Admin.Orders.OrderNotes.Fields.Note")",
+                            encoded: false
+                        },{
+                            field: "DisplayToCustomer",
+                            title: "@T("Admin.Orders.OrderNotes.Fields.DisplayToCustomer")",
+                            width: 200
+                        },  {
+                            command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
+                            title: "@T("Admin.Common.Delete")",
+                            width: 100
+                        }]
+                    });
+                });
+            </script>
         </td>
     </tr>
 </table>
@@ -55,7 +107,7 @@
     </tr>
     <tr>
         <td colspan="2" align="left">
-            <input type="button" id="addOrderNote" class="t-button" value="@T("Admin.Orders.OrderNotes.AddButton")" />
+            <input type="button" id="addOrderNote" class="k-button" value="@T("Admin.Orders.OrderNotes.AddButton")" />
         </td>
     </tr>
 </table>
@@ -72,8 +124,9 @@
                     url: "@(Url.Action("OrderNoteAdd", "Order"))",
                     data: { "DisplayToCustomer": orderNoteDisplayToCustomer, "message": orderNoteMessage, "orderId": @Model.Id },
                     success: function (data) {
-                        var ordernotesGrid = $("#ordernotes-grid");
-                        ordernotesGrid.data('tGrid').ajaxRequest();
+                        var ordernotesGrid = $("#ordernotes-grid").data('kendoGrid');
+                        //grid.dataSource.page(1); //new search. Set page size to 1
+                        ordernotesGrid.dataSource.read();
                         $('#addOrderNote').attr('disabled', false);
                     },
                     error:function (xhr, ajaxOptions, thrownError){

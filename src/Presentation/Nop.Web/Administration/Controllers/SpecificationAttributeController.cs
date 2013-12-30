@@ -8,7 +8,7 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
-using Telerik.Web.Mvc;
+using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Admin.Controllers
 {
@@ -91,23 +91,21 @@ namespace Nop.Admin.Controllers
             return View();
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult List(GridCommand command)
+        [HttpPost]
+        public ActionResult List(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
             var specificationAttributes = _specificationAttributeService
                 .GetSpecificationAttributes(command.Page - 1, command.PageSize);
-            var gridModel = new GridModel<SpecificationAttributeModel>
+            var gridModel = new DataSourceResult
             {
                 Data = specificationAttributes.Select(x => x.ToModel()),
                 Total = specificationAttributes.TotalCount
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
         
         //create
@@ -232,14 +230,14 @@ namespace Nop.Admin.Controllers
         #region Specification attribute options
 
         //list
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult OptionList(int specificationAttributeId, GridCommand command)
+        [HttpPost]
+        public ActionResult OptionList(int specificationAttributeId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
             var options = _specificationAttributeService.GetSpecificationAttributeOptionsBySpecificationAttribute(specificationAttributeId);
-            var gridModel = new GridModel<SpecificationAttributeOptionModel>
+            var gridModel = new DataSourceResult
             {
                 Data = options.Select(x => 
                     {
@@ -255,10 +253,8 @@ namespace Nop.Admin.Controllers
                     }),
                 Total = options.Count()
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
         //create
@@ -352,19 +348,19 @@ namespace Nop.Admin.Controllers
         }
 
         //delete
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult OptionDelete(int optionId, int specificationAttributeId, GridCommand command)
+        [HttpPost]
+        public ActionResult OptionDelete(int id, int specificationAttributeId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
 
-            var sao = _specificationAttributeService.GetSpecificationAttributeOptionById(optionId);
+            var sao = _specificationAttributeService.GetSpecificationAttributeOptionById(id);
             if (sao == null)
                 throw new ArgumentException("No specification attribute option found with the specified id");
 
             _specificationAttributeService.DeleteSpecificationAttributeOption(sao);
 
-            return OptionList(specificationAttributeId, command);
+            return Json(null);
         }
 
 

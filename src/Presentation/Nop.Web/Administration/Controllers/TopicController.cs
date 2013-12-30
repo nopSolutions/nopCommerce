@@ -8,7 +8,7 @@ using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Services.Topics;
 using Nop.Web.Framework.Controllers;
-using Telerik.Web.Mvc;
+using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Admin.Controllers
 {
@@ -148,8 +148,8 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult List(GridCommand command, TopicListModel model)
+        [HttpPost]
+        public ActionResult List(DataSourceRequest command, TopicListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTopics))
                 return AccessDeniedView();
@@ -165,15 +165,13 @@ namespace Nop.Admin.Controllers
             {
                 topic.Body = "";
             }
-            var gridModel = new GridModel<TopicModel>
+            var gridModel = new DataSourceResult
             {
                 Data = topicModels,
                 Total = topicModels.Count
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
         #endregion

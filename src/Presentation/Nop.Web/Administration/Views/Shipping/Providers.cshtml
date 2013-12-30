@@ -1,5 +1,4 @@
-﻿@using Telerik.Web.Mvc.UI
-@{    
+﻿@{    
     //page title
     ViewBag.Title = T("Admin.Configuration.Shipping.Providers").Text;
 }
@@ -12,51 +11,104 @@
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<ShippingRateComputationMethodModel>()
-                    .Name("shippingproviders-grid")
-                    .DataKeys(x =>
-                    {
-                        x.Add(y => y.SystemName).RouteKey("systemName");
-                    })
-                    .Columns(columns =>
-                    {
-                        columns.Bound(x => x.FriendlyName)
-                            .Width(250)
-                            .ReadOnly();
-                        columns.Bound(x => x.SystemName).Width(250).ReadOnly();
-                        columns.Bound(x => x.LogoUrl)
-                            .ClientTemplate("<img alt='' src='<#= LogoUrl #>' />")
-                            .Centered()
-                            .Width(150)
-                            .ReadOnly();
-                        columns.Bound(x => x.DisplayOrder).Width(100);
-                        columns.Bound(x => x.IsActive)
-                            .Template(
-                                @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.IsActive.ToString().ToLowerInvariant() + ".gif")" />
-                            )
-                            .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= IsActive #>.gif' />")
-                            .Centered()
-                            .Width(100);
-                        columns.Template(
-                                @<div>
-                                    @Html.ActionLink(T("Admin.Configuration.Shipping.Providers.Configure").Text, "ConfigureProvider", new { systemName = item.SystemName })
-                                </div>
-                            )
-                            .ClientTemplate("<a href=\"ConfigureProvider?systemName=<#= SystemName #>\">" + T("Admin.Configuration.Shipping.Providers.Configure").Text + "</a>")
-                            .Width(100)
-                            .Centered()
-                            .Title(T("Admin.Configuration.Shipping.Providers.Configure").Text);
-                        columns.Command(commands =>
-                        {
-                            commands.Edit().Text(T("Admin.Common.Edit").Text);
-                        }).Title(T("Admin.Common.Edit").Text).Width(100);
-                    })
-                    .DataBinding(dataBinding =>
-                    {
-                        dataBinding.Ajax().Select("Providers", "Shipping")
-                            .Update("ProviderUpdate", "Shipping");
-                    })
-                    .EnableCustomBinding(true))
+            <div id="shippingproviders-grid"></div>
+
+            <script>
+                $(document).ready(function () {
+                    $("#shippingproviders-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("Providers", "Shipping"))",
+                                    type: "POST",
+                                    dataType: "json"
+                                },
+                                update: {
+                                    url: "@Html.Raw(Url.Action("ProviderUpdate", "Shipping"))",
+                                    type: "POST",
+                                    dataType: "json"
+                                }
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors",
+                                model: {
+                                    id: "SystemName",
+                                    fields: {
+                                        FriendlyName: { editable: false, type: "string" },
+                                        SystemName: { editable: false, type: "string" },
+                                        LogoUrl: { editable: false, type: "string" },
+                                        DisplayOrder: { editable: true, type: "number" },
+                                        IsActive: { editable: true, type: "boolean" }
+                                    }
+                                }
+                            },
+                            requestEnd: function (e) {
+                                if (e.type == "update") {
+                                    this.read();
+                                }
+                            },
+                            error: function (e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true,
+                            numeric: false,
+                            previousNext: false,
+                            info: false
+                        },
+                        editable: {
+                            confirmation: false,
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [{
+                            field: "FriendlyName",
+                            title: "@T("Admin.Configuration.Payment.Methods.Fields.FriendlyName")",
+                            width: 250
+                        }, {
+                            field: "SystemName",
+                            title: "@T("Admin.Configuration.Payment.Methods.Fields.SystemName")",
+                            width: 250
+                        }, {
+                            field: "LogoUrl",
+                            title: "@T("Admin.Configuration.Payment.Methods.Fields.Logo")",
+                            width: 100,
+                            template: '<img src="#=LogoUrl#" />'
+                        }, {
+                            field: "DisplayOrder",
+                            title: "@T("Admin.Configuration.Shipping.Providers.Fields.DisplayOrder")",
+                            //integer format
+                            format: "{0:0}",
+                            width: 100
+                        }, {
+                            field: "IsActive",
+                            title: "@T("Admin.Configuration.Shipping.Providers.Fields.IsActive")",
+                            width: 100,
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
+                            template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsActive#.gif" />'
+                        }, {
+                            field: "SystemName",
+                            title: "@T("Admin.Configuration.Shipping.Providers.Configure")",
+                            width: 150,
+                            template: '<a href="ConfigureProvider?systemName=#=SystemName#">@T("Admin.Configuration.Shipping.Providers.Configure")</a>'
+                        }, {
+                            command: {name: "edit", text: "@T("Admin.Common.Edit")"},
+                            title: "@T("Admin.Common.Edit")",
+                            width: 150
+                        }]
+                    });
+                });
+            </script>
         </td>
     </tr>
 </table>

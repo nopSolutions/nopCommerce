@@ -9,7 +9,6 @@ using Nop.Admin.Validators.Catalog;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Mvc;
-using Telerik.Web.Mvc.UI;
 
 namespace Nop.Admin.Models.Catalog
 {
@@ -24,6 +23,7 @@ namespace Nop.Admin.Models.Catalog
             }
             Locales = new List<CategoryLocalizedModel>();
             AvailableCategoryTemplates = new List<SelectListItem>();
+            AvailableCategories = new List<SelectListItem>();
         }
 
         [NopResourceDisplayName("Admin.Catalog.Categories.Fields.Name")]
@@ -109,7 +109,7 @@ namespace Nop.Admin.Models.Catalog
         public int[] SelectedStoreIds { get; set; }
 
 
-        public IList<DropDownItem> ParentCategories { get; set; }
+        public IList<SelectListItem> AvailableCategories { get; set; }
 
 
         //discounts

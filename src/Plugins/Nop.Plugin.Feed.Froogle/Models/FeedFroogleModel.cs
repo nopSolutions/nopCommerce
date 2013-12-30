@@ -45,13 +45,8 @@ namespace Nop.Plugin.Feed.Froogle.Models
 
         public class GoogleProductModel : BaseNopModel
         {
-            //this attribute is required to disable editing
-            [ScaffoldColumn(false)]
             public int ProductId { get; set; }
 
-            //this attribute is required to disable editing
-            [ReadOnly(true)]
-            [ScaffoldColumn(false)]
             [NopResourceDisplayName("Plugins.Feed.Froogle.Products.ProductName")]
             public string ProductName { get; set; }
 

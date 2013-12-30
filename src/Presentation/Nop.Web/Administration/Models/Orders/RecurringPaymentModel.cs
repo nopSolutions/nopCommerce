@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using FluentValidation.Attributes;
 using Nop.Admin.Validators.Orders;
 using Nop.Web.Framework;
@@ -10,11 +9,6 @@ namespace Nop.Admin.Models.Orders
     [Validator(typeof(RecurringPaymentValidator))]
     public partial class RecurringPaymentModel : BaseNopEntityModel
     {
-        public RecurringPaymentModel()
-        {
-            History = new List<RecurringPaymentHistoryModel>();
-        }
-
         [NopResourceDisplayName("Admin.RecurringPayments.Fields.ID")]
         public override int Id { get; set; }
 
@@ -54,9 +48,6 @@ namespace Nop.Admin.Models.Orders
         public string PaymentType { get; set; }
         
         public bool CanCancelRecurringPayment { get; set; }
-
-
-        public IList<RecurringPaymentHistoryModel> History { get; set; }
 
         #region Nested classes
 

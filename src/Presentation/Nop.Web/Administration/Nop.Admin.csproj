@@ -123,10 +123,6 @@
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="Telerik.Web.Mvc, Version=2013.1.219.340, Culture=neutral, PublicKeyToken=29ac1a93ec063d92, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\packages\TelerikMvcExtensions.2013.2.611\lib\net40\Telerik.Web.Mvc.dll</HintPath>
-    </Reference>
     <Reference Include="WebGrease, Version=1.5.2.14234, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
@@ -141,14 +137,13 @@
     <Compile Include="Controllers\AffiliateController.cs" />
     <Compile Include="Controllers\CampaignController.cs" />
     <Compile Include="Controllers\BlogController.cs" />
+    <Compile Include="Controllers\JbimagesController.cs" />
     <Compile Include="Controllers\TemplateController.cs" />
     <Compile Include="Controllers\CommonController.cs" />
     <Compile Include="Controllers\VendorController.cs" />
     <Compile Include="Controllers\StoreController.cs" />
     <Compile Include="Controllers\ScheduleTaskController.cs" />
-    <Compile Include="Controllers\ImageBrowserController.cs" />
     <Compile Include="Controllers\ExternalAuthenticationController.cs" />
-    <Compile Include="Controllers\NetAdvImageController.cs" />
     <Compile Include="Controllers\WidgetController.cs" />
     <Compile Include="Controllers\OnlineCustomerController.cs" />
     <Compile Include="Controllers\PluginController.cs" />
@@ -189,9 +184,7 @@
     <Compile Include="HtmlExtensions.cs" />
     <Compile Include="Infrastructure\Cache\ModelCacheEventConsumer.cs" />
     <Compile Include="Infrastructure\DependencyRegistrar.cs" />
-    <Compile Include="Infrastructure\RouteProvider.cs" />
     <Compile Include="MappingExtensions.cs" />
-    <Compile Include="Infrastructure\AdminStartupTask.cs" />
     <Compile Include="Infrastructure\AutoMapperStartupTask.cs" />
     <Compile Include="Models\Catalog\AddProductVariantAttributeCombinationModel.cs" />
     <Compile Include="Models\Catalog\BulkEditProductModel.cs" />
@@ -613,12 +606,6 @@
     <Content Include="Views\Shared\_AdminPopupLayout.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Product\EditorTemplates\ProductCategory.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Product\EditorTemplates\ProductManufacturer.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Product\RelatedProductAddPopup.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -626,15 +613,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Category\ProductAddPopup.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Product\EditorTemplates\TierPriceCustomer.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Product\EditorTemplates\ProductAttribute.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Product\EditorTemplates\AttributeControlType.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Product\EditAttributeValues.cshtml" />
@@ -654,7 +632,6 @@
   <ItemGroup>
     <Content Include="Views\Shared\EditorTemplates\Decimal.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Double.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\Time.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shared\EditorTemplates\DateTime.cshtml" />
@@ -976,9 +953,6 @@
     <Content Include="Views\OnlineCustomer\List.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Measure\EditorTemplates\Decimal8.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\ExternalAuthentication\ConfigureMethod.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -1013,12 +987,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Plugin\ConfigureMiscPlugin.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Shared\EditorTemplates\RichEditor.Telerik.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\NetAdvImage\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Order\AddProductToOrder.cshtml" />
@@ -1084,9 +1052,6 @@
     <Content Include="Views\Store\List.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Setting\EditorTemplates\Store.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Setting\StoreScopeConfiguration.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -1115,9 +1080,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Order\_OrderDetails.Products.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Product\EditorTemplates\TierPriceStore.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Product\_CreateOrUpdate.Info.cshtml" />
@@ -1195,6 +1157,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Template\ProductTemplates.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Jbimages\Upload.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

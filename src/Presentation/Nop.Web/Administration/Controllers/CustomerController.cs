@@ -35,8 +35,8 @@ using Nop.Services.Tax;
 using Nop.Services.Vendors;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
-using Telerik.Web.Mvc;
 
 namespace Nop.Admin.Controllers
 {
@@ -312,8 +312,8 @@ namespace Nop.Admin.Controllers
             return View(listModel);
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult CustomerList(GridCommand command, CustomerListModel model,
+        [HttpPost]
+        public ActionResult CustomerList(DataSourceRequest command, CustomerListModel model,
             [ModelBinder(typeof(CommaSeparatedModelBinder))] int[] searchCustomerRoleIds)
         {
             //we use own own binder for searchCustomerRoleIds property 
@@ -341,15 +341,13 @@ namespace Nop.Admin.Controllers
                 loadOnlyWithShoppingCart: false,
                 pageIndex: command.Page - 1,
                 pageSize: command.PageSize);
-            var gridModel = new GridModel<CustomerModel>
+            var gridModel = new DataSourceResult
             {
                 Data = customers.Select(PrepareCustomerModelForList),
                 Total = customers.TotalCount
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
         
         public ActionResult Create()
@@ -1111,6 +1109,7 @@ namespace Nop.Admin.Controllers
 
                 var email = new QueuedEmail()
                 {
+                    Priority = 5,
                     EmailAccountId = emailAccount.Id,
                     FromName = emailAccount.DisplayName,
                     From = emailAccount.Email,
@@ -1181,7 +1180,7 @@ namespace Nop.Admin.Controllers
         
         #region Reward points history
 
-        [GridAction]
+        [HttpPost]
         public ActionResult RewardPointsHistorySelect(int customerId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
@@ -1202,15 +1201,13 @@ namespace Nop.Admin.Controllers
                         CreatedOn = _dateTimeHelper.ConvertToUserTime(rph.CreatedOnUtc, DateTimeKind.Utc)
                     });
             } 
-            var gridModel = new GridModel<CustomerModel.RewardPointsHistoryModel>
+            var gridModel = new DataSourceResult
             {
                 Data = model,
                 Total = model.Count
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
         [ValidateInput(false)]
@@ -1233,8 +1230,8 @@ namespace Nop.Admin.Controllers
         
         #region Addresses
 
-        [GridAction]
-        public ActionResult AddressesSelect(int customerId, GridCommand command)
+        [HttpPost]
+        public ActionResult AddressesSelect(int customerId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
@@ -1244,7 +1241,7 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentException("No customer found with the specified id", "customerId");
 
             var addresses = customer.Addresses.OrderByDescending(a => a.CreatedOnUtc).ThenByDescending(a => a.Id).ToList();
-            var gridModel = new GridModel<AddressModel>
+            var gridModel = new DataSourceResult
             {
                 Data = addresses.Select(x =>
                 {
@@ -1270,14 +1267,12 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = addresses.Count
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
-        [GridAction]
-        public ActionResult AddressDelete(int customerId, int addressId, GridCommand command)
+        [HttpPost]
+        public ActionResult AddressDelete(int id, int customerId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
@@ -1286,7 +1281,7 @@ namespace Nop.Admin.Controllers
             if (customer == null)
                 throw new ArgumentException("No customer found with the specified id", "customerId");
 
-            var address = customer.Addresses.FirstOrDefault(a => a.Id == addressId);
+            var address = customer.Addresses.FirstOrDefault(a => a.Id == id);
             if (address == null)
                 //No customer found with the specified id
                 return Content("No customer found with the specified id");
@@ -1295,7 +1290,7 @@ namespace Nop.Admin.Controllers
             //now delete the address record
             _addressService.DeleteAddress(address);
 
-            return AddressesSelect(customerId, command);
+            return Json(null);
         }
         
         public ActionResult AddressCreate(int customerId)
@@ -1515,15 +1510,15 @@ namespace Nop.Admin.Controllers
 
         #region Orders
         
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult OrderList(int customerId, GridCommand command)
+        [HttpPost]
+        public ActionResult OrderList(int customerId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
             var orders = _orderService.SearchOrders(customerId: customerId);
 
-            var model = new GridModel<CustomerModel.OrderModel>
+            var gridModel = new DataSourceResult
             {
                 Data = orders.PagedForCommand(command)
                     .Select(order =>
@@ -1544,10 +1539,8 @@ namespace Nop.Admin.Controllers
                 Total = orders.Count
             };
 
-            return new JsonResult
-            {
-                Data = model
-            };
+
+            return Json(gridModel);
         }
         
         #endregion
@@ -1581,8 +1574,8 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult ReportBestCustomersByOrderTotalList(GridCommand command, BestCustomersReportModel model)
+        [HttpPost]
+        public ActionResult ReportBestCustomersByOrderTotalList(DataSourceRequest command, BestCustomersReportModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return Content("");
@@ -1600,7 +1593,7 @@ namespace Nop.Admin.Controllers
 
             var items = _customerReportService.GetBestCustomersReport(startDateValue, endDateValue,
                 orderStatus, paymentStatus, shippingStatus, 1);
-            var gridModel = new GridModel<BestCustomerReportLineModel>
+            var gridModel = new DataSourceResult
             {
                 Data = items.Select(x =>
                 {
@@ -1619,13 +1612,11 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = items.Count
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult ReportBestCustomersByNumberOfOrdersList(GridCommand command, BestCustomersReportModel model)
+        [HttpPost]
+        public ActionResult ReportBestCustomersByNumberOfOrdersList(DataSourceRequest command, BestCustomersReportModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return Content("");
@@ -1643,7 +1634,7 @@ namespace Nop.Admin.Controllers
 
             var items = _customerReportService.GetBestCustomersReport(startDateValue, endDateValue,
                 orderStatus, paymentStatus, shippingStatus, 2);
-            var gridModel = new GridModel<BestCustomerReportLineModel>
+            var gridModel = new DataSourceResult
             {
                 Data = items.Select(x =>
                 {
@@ -1662,10 +1653,8 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = items.Count
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
         [ChildActionOnly]
@@ -1674,32 +1663,29 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return Content("");
 
-            var model = GetReportRegisteredCustomersModel();
-            return PartialView(model);
+            return PartialView();
         }
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult ReportRegisteredCustomersList(GridCommand command)
+        [HttpPost]
+        public ActionResult ReportRegisteredCustomersList(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return Content("");
 
             var model = GetReportRegisteredCustomersModel();
-            var gridModel = new GridModel<RegisteredCustomerReportLineModel>
+            var gridModel = new DataSourceResult
             {
                 Data = model,
                 Total = model.Count
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
         
         #endregion
 
         #region Current shopping cart/ wishlist
 
-        [GridAction(EnableCustomBinding = true)]
+        [HttpPost]
         public ActionResult GetCartList(int customerId, int cartTypeId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
@@ -1708,7 +1694,7 @@ namespace Nop.Admin.Controllers
             var customer = _customerService.GetCustomerById(customerId);
             var cart = customer.ShoppingCartItems.Where(x => x.ShoppingCartTypeId == cartTypeId).ToList();
 
-            var gridModel = new GridModel<ShoppingCartItemModel>()
+            var gridModel = new DataSourceResult
             {
                 Data = cart.Select(sci =>
                 {
@@ -1729,24 +1715,22 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = cart.Count
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
         #endregion
 
         #region Activity log
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult ListActivityLog(GridCommand command, int customerId)
+        [HttpPost]
+        public ActionResult ListActivityLog(DataSourceRequest command, int customerId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return Content("");
 
             var activityLog = _customerActivityService.GetAllActivities(null, null, customerId, 0, command.Page - 1, command.PageSize);
-            var gridModel = new GridModel<CustomerModel.ActivityLogModel>
+            var gridModel = new DataSourceResult
             {
                 Data = activityLog.Select(x =>
                 {
@@ -1762,10 +1746,8 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = activityLog.TotalCount
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
         #endregion

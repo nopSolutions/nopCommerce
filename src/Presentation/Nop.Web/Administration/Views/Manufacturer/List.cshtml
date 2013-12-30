@@ -1,5 +1,4 @@
 ﻿@model ManufacturerListModel
-@using Telerik.Web.Mvc.UI
 @{
     var gridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSize;
     
@@ -12,8 +11,8 @@
         @T("Admin.Catalog.Manufacturers")
     </div>
     <div class="options">
-        <a href="@Url.Action("Create")" class="t-button">@T("Admin.Common.AddNew")</a>
-        <a href="@Url.Action("ExportXml")" class="t-button">@T("Admin.Common.ExportToXml")</a>
+        <a href="@Url.Action("Create")" class="k-button">@T("Admin.Common.AddNew")</a>
+        <a href="@Url.Action("ExportXml")" class="k-button">@T("Admin.Common.ExportToXml")</a>
     </div>
 </div>
 <table width="100%">
@@ -27,7 +26,7 @@
     </tr>
     <tr>
         <td colspan="2">
-            <input type="button" id="btnSearch" class="t-button" value="@T("Admin.Common.Search")" />
+            <input type="button" id="btnSearch" class="k-button" value="@T("Admin.Common.Search")" />
         </td>
     </tr>
 </table>
@@ -35,59 +34,93 @@
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<ManufacturerModel>()
-                    .Name("manufacturers-grid")
-                    .ClientEvents(events => events
-                        .OnDataBinding("onDataBinding"))
-                    .Columns(columns =>
-                    {
-                        columns.Bound(x => x.Name).Width(300);
-                        columns.Bound(x => x.Published)
-                            .Template(
-                                @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.Published.ToString().ToLowerInvariant() + ".gif")" />
-                            )
-                            .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= Published #>.gif' />")
-                            .Centered()
-                            .Width(100);
-                        columns.Bound(x => x.DisplayOrder)
-                            .Width(100)
-                            .Centered();
-                        columns.Bound(x => x.Id)
-                            .Width(50)
-                            .Centered()
-                            .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
-                            .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
-                            .Title(T("Admin.Common.Edit").Text);
-                    })
-                    .Pageable(settings => settings.PageSize(gridPageSize).Position(GridPagerPosition.Both))
-                    .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "Manufacturer"))
-                    .EnableCustomBinding(true))
+            <div id="manufacturers-grid"></div>
+
+            <script>
+                $(document).ready(function () {
+                    $("#manufacturers-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("List", "Manufacturer"))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: additionalData
+                                }
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors"
+                            },
+                            error: function(e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            pageSize: @(gridPageSize),
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true
+                        },
+                        editable: {
+                            confirmation: false,
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [{
+                            field: "Name",
+                            title: "@T("Admin.Catalog.Manufacturers.Fields.Name")"
+                        }, {
+                            field: "Published",
+                            title: "@T("Admin.Catalog.Manufacturers.Fields.Published")",
+                            width: 100,
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
+                            template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Published#.gif" />'
+                        }, {
+                            field: "DisplayOrder",
+                            title: "@T("Admin.Catalog.Manufacturers.Fields.DisplayOrder")",
+                            width: 100
+                        }, {
+                            field: "Id",
+                            title: "@T("Admin.Common.Edit")",
+                            width: 100,
+                            template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
+                        }]
+                    });
+                });
+            </script>
+
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    //search button
+                    $('#btnSearch').click(function () {
+                        //search
+                        var grid = $('#manufacturers-grid').data('kendoGrid');
+                        grid.dataSource.page(1); //new search. Set page size to 1
+                        grid.dataSource.read();
+                        return false;
+                    });
+
+                    $("#@Html.FieldIdFor(model => model.SearchManufacturerName)").keydown(function (event) {
+                        if (event.keyCode == 13) {
+                            $("#btnSearch").click();
+                            return false;
+                        }
+                    });
+                });
+
+                function additionalData() {
+                    return {
+                        SearchManufacturerName: $('#@Html.FieldIdFor(model => model.SearchManufacturerName)').val()
+                    };
+                }
+            </script>
         </td>
     </tr>
 </table>
-<script type="text/javascript">
-    $(document).ready(function () {
-        //search button
-        $('#btnSearch').click(function () {
-            //search
-            var grid = $('#manufacturers-grid').data('tGrid');
-            grid.currentPage = 1; //new search. Set page size to 1
-            grid.ajaxRequest();
-            return false;
-        });
-
-        $("#@Html.FieldIdFor(model => model.SearchManufacturerName)").keydown(function (event) {
-            if (event.keyCode == 13) {
-                $("#btnSearch").click();
-                return false;
-            }
-        });
-    });
-
-    function onDataBinding(e) {
-        var searchModel = {
-            SearchManufacturerName: $('#@Html.FieldIdFor(model => model.SearchManufacturerName)').val()
-        };
-        e.data = searchModel;
-    }
-</script>

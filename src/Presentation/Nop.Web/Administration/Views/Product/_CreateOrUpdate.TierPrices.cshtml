@@ -1,48 +1,185 @@
-﻿@model ProductModel
+﻿@using Nop.Services.Customers
+@using Nop.Services.Stores
+@model ProductModel
 
-@using Telerik.Web.Mvc.UI;
 @if (Model.Id > 0)
 {
-    @(Html.Telerik().Grid<ProductModel.TierPriceModel>()
-            .Name("tierprices-grid")
-                .DataKeys(keys =>
+    <div id="tierprices-grid"></div>
+
+    <script>
+        $(document).ready(function () {
+            $("#tierprices-grid").kendoGrid({
+                dataSource: {
+                    type: "json",
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("TierPriceList", "Product", new { productId = Model.Id }))",
+                            type: "POST",
+                            dataType: "json"
+                        },
+                        create: {
+                            url: "@Html.Raw(Url.Action("TierPriceInsert", "Product", new { productId = Model.Id }))",
+                            type: "POST",
+                            dataType: "json"
+                        },
+                        update: {
+                            url:"@Html.Raw(Url.Action("TierPriceUpdate", "Product"))",
+                            type: "POST",
+                            dataType: "json"
+                        },
+                        destroy: {
+                            url: "@Html.Raw(Url.Action("TierPriceDelete", "Product"))",
+                            type: "POST",
+                            dataType: "json"
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors",
+                        model: {
+                            id: "Id",
+                            fields: {
+                                Store: { editable: true, type: "string" },
+                                StoreId: { editable: true, type: "number" },
+                                CustomerRole: { editable: true, type: "string" },
+                                CustomerRoleId: { editable: true, type: "number" },
+                                //ProductId: { editable: false, type: "number" },
+                                Quantity: { editable: true, type: "number" },
+                                Price1: { editable: true, type: "number" },
+                                Id: { editable: false, type: "number" }
+                            }
+                        }
+                    },
+                    requestEnd: function (e) {
+                        if (e.type == "create" || e.type == "update") {
+                            this.read();
+                        }
+                    },
+                    error: function (e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    numeric: false,
+                    previousNext: false,
+                    info: false
+                },
+                toolbar: ["create"],
+                editable: {
+                    confirmation: false,
+                    mode: "inline"
+                },
+                scrollable: false,
+                columns: [{
+                    field: "StoreId",
+                    title: "@T("Admin.Catalog.Products.TierPrices.Fields.Store")",
+                    width: 250,
+                    editor: storeDropDownEditor,
+                    template: "#:Store#"
+                },
                 {
-                    keys.Add(x => x.Id);
-                })
-                .DataBinding(dataBinding =>
+                    field: "CustomerRoleId",
+                    title: "@T("Admin.Catalog.Products.TierPrices.Fields.CustomerRole")",
+                    width: 250,
+                    editor: customerRoleDropDownEditor,
+                    template: "#:CustomerRole#"
+                },
+
                 {
-                    dataBinding.Ajax()
-                        .Select("TierPriceList", "Product", new { productId = Model.Id })
-                        .Insert("TierPriceInsert", "Product", new { productId = Model.Id })
-                        .Update("TierPriceUpdate", "Product")
-                        .Delete("TierPriceDelete", "Product");
-                })
-                .Columns(columns =>
-                {
-                    columns.Bound(x => x.Store)
-                        .Centered();
-                    columns.Bound(x => x.CustomerRole)
-                        .Centered();
-                    columns.Bound(x => x.Quantity)
-                        .Centered();
-                    columns.Bound(x => x.Price1)
-                        .Format("{0:G29}");
-                    columns.Command(commands =>
-                    {
-                        commands.Edit().Text(T("Admin.Common.Edit").Text);
-                        commands.Delete().Text(T("Admin.Common.Delete").Text);
-                    })
-                    .Width(180);
-                })
-                .ToolBar(commands => commands.Insert())
-                .ClientEvents(events => events.OnEdit("onTierPriceEdit"))
-                .EnableCustomBinding(true))
-    
-    <script type="text/javascript">
-        function onTierPriceEdit(e) {
-            $(e.form).find('#CustomerRole').data('tDropDownList').select(function (dataItem) {
-                return dataItem.Value == e.dataItem['CustomerRoleId'];
+                    field: "Quantity",
+                    title: "@T("Admin.Catalog.Products.TierPrices.Fields.Quantity")",
+                    width: 150,
+                    //integer format
+                    format: "{0:0}"
+                }, {
+                    field: "Price1",
+                    title: "@T("Admin.Catalog.Products.TierPrices.Fields.Price")",
+                    width: 150,
+                    editor: function (container, options) {
+                        $('<input name="' + options.field + '"/>')
+                                .appendTo(container)
+                                .kendoNumericTextBox({
+                                    format: "{0:n4}",
+                                    decimals: 4
+                                });
+                    }
+                },{
+                    command: [{
+                        name: "edit",
+                        text: "@T("Admin.Common.Edit")"
+                    }, {
+                        name: "destroy",
+                        text: "@T("Admin.Common.Delete")"
+                    }],
+                    width: 200
+                }]
             });
+        });
+
+        //local datasource
+        var allStores = [
+            {
+                Id : 0,
+                Name : "@T("Admin.Configuration.Settings.AllSettings.Fields.StoreName.AllStores")"
+            }
+            @{
+                var storeService = EngineContext.Current.Resolve<IStoreService>();
+                var allStores = storeService.GetAllStores();
+            }
+            @foreach (var store in allStores)
+            {
+                <text>
+                        , {
+                            Id: @(store.Id),
+                            Name: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(store.Name)))"
+                        }
+                        </text>
+            }
+        ];
+        
+        var allCustomerRoles = [
+            {
+                Id : 0,
+                Name : "@T("Admin.Catalog.Products.TierPrices.Fields.CustomerRole.All")"
+            }
+            @{
+                var customerService = EngineContext.Current.Resolve<ICustomerService>();
+                var allCustomerRoles = customerService.GetAllCustomerRoles(true);
+            }
+            @foreach (var customerRole in allCustomerRoles)
+            {
+                <text>
+                    , {
+            Id: @(customerRole.Id),
+            Name: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(customerRole.Name)))"
+        }
+        </text>
+            }
+        ];
+
+        function storeDropDownEditor(container, options) {
+            $('<input required data-text-field="Name" data-value-field="Id" data-bind="value:StoreId"/>')
+                .appendTo(container)
+                .kendoDropDownList({
+                    autoBind: false,
+                    dataSource: allStores
+                });
+        }
+
+        function customerRoleDropDownEditor(container, options) {
+            $('<input required data-text-field="Name" data-value-field="Id" data-bind="value:CustomerRoleId"/>')
+                .appendTo(container)
+                .kendoDropDownList({
+                    autoBind: false,
+                    dataSource: allCustomerRoles
+                });
         }
     </script>
 }

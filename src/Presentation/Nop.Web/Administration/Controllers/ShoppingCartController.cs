@@ -13,7 +13,7 @@ using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Web.Framework.Controllers;
-using Telerik.Web.Mvc;
+using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Admin.Controllers
 {
@@ -63,8 +63,8 @@ namespace Nop.Admin.Controllers
             return View();
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult CurrentCarts(GridCommand command)
+        [HttpPost]
+        public ActionResult CurrentCarts(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
                 return AccessDeniedView();
@@ -75,7 +75,7 @@ namespace Nop.Admin.Controllers
                 pageIndex: command.Page - 1,
                 pageSize: command.PageSize);
 
-            var gridModel = new GridModel<ShoppingCartModel>
+            var gridModel = new DataSourceResult
             {
                 Data = customers.Select(x =>
                 {
@@ -88,13 +88,11 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = customers.TotalCount
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
-        [GridAction(EnableCustomBinding = true)]
+        [HttpPost]
         public ActionResult GetCartDetails(int customerId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
@@ -103,7 +101,7 @@ namespace Nop.Admin.Controllers
             var customer = _customerService.GetCustomerById(customerId);
             var cart = customer.ShoppingCartItems.Where(x => x.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
 
-            var gridModel = new GridModel<ShoppingCartItemModel>()
+            var gridModel = new DataSourceResult
             {
                 Data = cart.Select(sci =>
                 {
@@ -124,10 +122,8 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = cart.Count
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
 
@@ -143,8 +139,8 @@ namespace Nop.Admin.Controllers
             return View();
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult CurrentWishlists(GridCommand command)
+        [HttpPost]
+        public ActionResult CurrentWishlists(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
                 return AccessDeniedView();
@@ -155,7 +151,7 @@ namespace Nop.Admin.Controllers
                 pageIndex: command.Page - 1,
                 pageSize: command.PageSize);
 
-            var gridModel = new GridModel<ShoppingCartModel>
+            var gridModel = new DataSourceResult
             {
                 Data = customers.Select(x =>
                 {
@@ -168,13 +164,11 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = customers.TotalCount
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
-        [GridAction(EnableCustomBinding = true)]
+        [HttpPost]
         public ActionResult GetWishlistDetails(int customerId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
@@ -183,7 +177,7 @@ namespace Nop.Admin.Controllers
             var customer = _customerService.GetCustomerById(customerId);
             var cart = customer.ShoppingCartItems.Where(x => x.ShoppingCartType == ShoppingCartType.Wishlist).ToList();
 
-            var gridModel = new GridModel<ShoppingCartItemModel>()
+            var gridModel = new DataSourceResult
             {
                 Data = cart.Select(sci =>
                 {
@@ -204,10 +198,8 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = cart.Count
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
         #endregion

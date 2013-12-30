@@ -7,9 +7,8 @@ using Nop.Core.Domain.Tax;
 using Nop.Services.Configuration;
 using Nop.Services.Security;
 using Nop.Services.Tax;
-using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
-using Telerik.Web.Mvc;
+using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Admin.Controllers
 {
@@ -51,27 +50,24 @@ namespace Nop.Admin.Controllers
             return View();
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult Providers(GridCommand command)
+        [HttpPost]
+        public ActionResult Providers(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
                 return AccessDeniedView();
 
             var taxProvidersModel = _taxService.LoadAllTaxProviders()
                 .Select(x => x.ToModel())
-                .ForCommand(command)
                 .ToList();
             foreach (var tpm in taxProvidersModel)
                 tpm.IsPrimaryTaxProvider = tpm.SystemName.Equals(_taxSettings.ActiveTaxProviderSystemName, StringComparison.InvariantCultureIgnoreCase);
-            var gridModel = new GridModel<TaxProviderModel>
+            var gridModel = new DataSourceResult
             {
                 Data = taxProvidersModel,
                 Total = taxProvidersModel.Count()
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+
+            return Json(gridModel);
         }
 
         public ActionResult ConfigureProvider(string systemName)
@@ -126,70 +122,62 @@ namespace Nop.Admin.Controllers
             return View();
         }
 
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult Categories(GridCommand command)
+        [HttpPost]
+        public ActionResult Categories(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
                 return AccessDeniedView();
 
             var categoriesModel = _taxCategoryService.GetAllTaxCategories()
                 .Select(x => x.ToModel())
-                .ForCommand(command)
                 .ToList();
-            var model = new GridModel<TaxCategoryModel>
+            var gridModel = new DataSourceResult
             {
                 Data = categoriesModel,
                 Total = categoriesModel.Count
             };
 
-            return new JsonResult
-            {
-                Data = model
-            };
+            return Json(gridModel);
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult CategoryUpdate(TaxCategoryModel model, GridCommand command)
+        [HttpPost]
+        public ActionResult CategoryUpdate(TaxCategoryModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
             {
-                //display the first model error
-                var modelStateErrors = this.ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage);
-                return Content(modelStateErrors.FirstOrDefault());
+                return Json(new DataSourceResult() { Errors = ModelState.SerializeErrors() });
             }
 
             var taxCategory = _taxCategoryService.GetTaxCategoryById(model.Id);
             taxCategory = model.ToEntity(taxCategory);
             _taxCategoryService.UpdateTaxCategory(taxCategory);
 
-            return Categories(command);
+            return Json(null);
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult CategoryAdd([Bind(Exclude = "Id")] TaxCategoryModel model, GridCommand command)
+        [HttpPost]
+        public ActionResult CategoryAdd([Bind(Exclude = "Id")] TaxCategoryModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
                 return AccessDeniedView();
 
             if (!ModelState.IsValid)
             {
-                //display the first model error
-                var modelStateErrors = this.ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage);
-                return Content(modelStateErrors.FirstOrDefault());
+                return Json(new DataSourceResult() { Errors = ModelState.SerializeErrors() });
             }
 
             var taxCategory = new TaxCategory();
             taxCategory = model.ToEntity(taxCategory);
             _taxCategoryService.InsertTaxCategory(taxCategory);
 
-            return Categories(command);
+            return Json(null);
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult CategoryDelete(int id, GridCommand command)
+        [HttpPost]
+        public ActionResult CategoryDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
                 return AccessDeniedView();
@@ -199,7 +187,7 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentException("No tax category found with the specified id");
             _taxCategoryService.DeleteTaxCategory(taxCategory);
 
-            return Categories(command);
+            return Json(null);
         }
 
         #endregion

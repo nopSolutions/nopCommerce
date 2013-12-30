@@ -11,10 +11,10 @@
             @T("Admin.System.QueuedEmails.EditQueuedEmailDetails") @Html.ActionLink("(" + T("Admin.System.QueuedEmails.BackToList") + ")", "List")
         </div>
         <div class="options">
-            <input type="submit" name="requeue" class="t-button" value="@T("Admin.System.QueuedEmails.Requeue")" />
-            <input type="submit" name="save" class="t-button" value="@T("Admin.Common.Save")" />
-            <input type="submit" name="save-continue" class="t-button" value="@T("Admin.Common.SaveContinue")" />
-            <span id="queuedEmail-delete" class="t-button">@T("Admin.Common.Delete")</span>
+            <input type="submit" name="requeue" class="k-button" value="@T("Admin.System.QueuedEmails.Requeue")" />
+            <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
+            <input type="submit" name="save-continue" class="k-button" value="@T("Admin.Common.SaveContinue")" />
+            <span id="queuedEmail-delete" class="k-button">@T("Admin.Common.Delete")</span>
         </div>
     </div>
     @Html.Partial("_CreateOrUpdate", Model)

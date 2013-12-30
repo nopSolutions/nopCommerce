@@ -1,5 +1,4 @@
 ﻿@model NewsLetterSubscriptionListModel
-@using Telerik.Web.Mvc.UI
 @{
     var gridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSize;
     
@@ -12,8 +11,8 @@
         @T("Admin.Promotions.newsLetterSubscriptions")
     </div>
     <div class="options">
-        <a href="@Url.Action("ExportCsv")" class="t-button">@T("Admin.Common.ExportToCsv")</a>
-        <input type="submit" id="importcsv" name="importcsv" class="t-button" value="@T("Admin.Common.ImportFromCsv")" />
+        <a href="@Url.Action("ExportCsv")" class="k-button">@T("Admin.Common.ExportToCsv")</a>
+        <input type="submit" id="importcsv" name="importcsv" class="k-button" value="@T("Admin.Common.ImportFromCsv")" />
     </div>
 </div>
 <table width="100%">
@@ -27,7 +26,7 @@
     </tr>
     <tr>
         <td colspan="2">
-            <input type="button" id="btnSearch" class="t-button" value="@T("Admin.Common.Search")" />
+            <input type="button" id="btnSearch" class="k-button" value="@T("Admin.Common.Search")" />
         </td>
     </tr>
 </table>
@@ -36,50 +35,110 @@
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<NewsLetterSubscriptionModel>()
-                        .Name("newsLetterSubscriptions-grid")
-                        .DataKeys(x =>
-                        {
-                            x.Add(y => y.Id).RouteKey("Id");
-                        })
-                        .Columns(columns =>
-                        {
-                            columns.Bound(x => x.Email)
-                                .Width(300);
-                            columns.Bound(x => x.Active)
-                            .Template(
-                                @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.Active.ToString().ToLowerInvariant() + ".gif")" />
-                            )
-                            .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= Active #>.gif' />")
-                            .Centered()
-                            .Width(100);
-                            columns.Bound(x => x.CreatedOn)
-                                .ReadOnly()
-                                .Width(150);
-                            columns.Command(commands =>
-                            {
-                                commands.Edit().Text(T("Admin.Common.Edit").Text);
-                                commands.Delete().Text(T("Admin.Common.Delete").Text);
-                            }).Width(180);
+            <div id="newsletter-subscriptions-grid"></div>
 
-                        })
-                        .Pageable(settings => settings.PageSize(gridPageSize).Position(GridPagerPosition.Both))
-                        .DataBinding(dataBinding => dataBinding.Ajax()
-                            .Select("SubscriptionList", "NewsLetterSubscription")
-                            .Update("SubscriptionUpdate", "NewsLetterSubscription")
-                            .Delete("SubscriptionDelete", "NewsLetterSubscription"))
-                            .ClientEvents(events => events.OnDataBinding("onDataBinding"))
-                            .ClientEvents(x => x.OnError("grid_onError"))
-                        .EnableCustomBinding(true))
+            <script>
+                $(document).ready(function() {
+                    $("#newsletter-subscriptions-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("SubscriptionList", "NewsLetterSubscription"))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: additionalData
+                                },
+                                update: {
+                                    url: "@Html.Raw(Url.Action("SubscriptionUpdate", "NewsLetterSubscription"))",
+                                    type: "POST",
+                                    dataType: "json"
+                                },
+                                destroy: {
+                                    url: "@Html.Raw(Url.Action("SubscriptionDelete", "NewsLetterSubscription"))",
+                                    type: "POST",
+                                    dataType: "json"
+                                }
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors",
+                                model: {
+                                    id: "Id",
+                                    fields: {
+                                        Email: { editable: true, type: "string" },
+                                        Active: { editable: true, type: "boolean" },
+                                        CreatedOn: { editable: false, type: "date" }
+                                    }
+                                }
+                            },
+                            requestEnd: function(e) {
+                                if (e.type == "update") {
+                                    this.read();
+                                }
+                            },
+                            error: function(e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            pageSize: @(gridPageSize),
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true
+                        },
+                        editable: {
+                            confirmation: false,
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [
+                            {
+                                field: "Email",
+                                title: "@T("Admin.Promotions.NewsLetterSubscriptions.Fields.Email")",
+                                width: 300
+                            }, {
+                                field: "Active",
+                                title: "@T("Admin.Promotions.NewsLetterSubscriptions.Fields.Active")",
+                                width: 100,
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:center" },
+                                template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Active#.gif" />'
+                            }, {
+                                field: "CreatedOn",
+                                title: "@T("Admin.Promotions.NewsLetterSubscriptions.Fields.CreatedOn")",
+                                width: 200,
+                                type: "date",
+                                format: "{0:G}"
+                            }, {
+                                command: [
+                                    {
+                                        name: "edit",
+                                        text: "@T("Admin.Common.Edit")"
+                                    }, {
+                                        name: "destroy",
+                                        text: "@T("Admin.Common.Delete")"
+                                    }
+                                ],
+                                width: 200
+                            }
+                        ]
+                    });
+                });
+            </script>
         </td>
     </tr>
 </table>
 <script type="text/javascript">
     $(document).ready(function () {
         $('#btnSearch').click(function () {
-            var grid = $('#newsLetterSubscriptions-grid').data('tGrid');
-            grid.currentPage = 1; //new search. Set page size to 1
-            grid.ajaxRequest();
+            var grid = $('#newsletter-subscriptions-grid').data('kendoGrid');
+            grid.dataSource.page(1); //new search. Set page size to 1
+            grid.dataSource.read();
             return false;
         });
 
@@ -91,26 +150,18 @@
         });
     });
 
-    function onDataBinding(e) {
-        var searchModel = {
+    function additionalData() {
+        return {
             SearchEmail: $('#@Html.FieldIdFor(model => model.SearchEmail)').val()
         };
-        e.data = searchModel;
-    }
-
-    function grid_onError(e) {
-        alert(e.XMLHttpRequest.responseText);
-        e.preventDefault();
     }
 </script>
+
 @*import emails form*@
-@{Html.Telerik().Window()
-        .Name("importcsv-window")
-        .Title(T("Admin.Common.ImportFromCsv").Text)
-        .Content(@<text>
+<div id="importcsv-window" style="display:none;">
     @using (Html.BeginForm("ImportCsv", "NewsLetterSubscription", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
-        <table style="text-align: left;">
+        <table style="text-align:left;">
             <tr>
                 <td>
                     @T("Admin.Common.CsvFile"):
@@ -121,25 +172,26 @@
             </tr>
             <tr>
                 <td colspan="2">
-                    <input type="submit" class="t-button" value="@T("Admin.Common.ImportFromCsv")" />
+                    <input type="submit" class="k-button" value="@T("Admin.Common.ImportFromCsv")" />
                 </td>
             </tr>
         </table>
     }
-    </text>)
-        .Width(400)
-        .Scrollable(false)
-        .Draggable(true)
-        .Modal(true)
-        .Visible(false)
-        .Render();
-}
+</div>
 <script type="text/javascript">
     $(document).ready(function () {
-
         $("#importcsv").click(function (e) {
             e.preventDefault();
-            $('#importcsv-window').data('tWindow').center().open();
+            var window = $("#importcsv-window");
+            if (!window.data("kendoWindow")) {
+                window.kendoWindow({
+                    modal: true,
+                    width: "400px",
+                    title: "@T("Admin.Common.ImportFromCsv")",
+                    actions: ["Close"]
+                });
+            }
+            window.data('kendoWindow').center().open();
         });
     });
 </script>

@@ -1,5 +1,5 @@
 ﻿using Nop.Core.Plugins;
-using Telerik.Web.Mvc.UI;
+using Nop.Web.Framework.Menu;
 
 namespace Nop.Web.Framework.Web
 {
@@ -14,7 +14,7 @@ namespace Nop.Web.Framework.Web
         /// <summary>
         /// Build menu item
         /// </summary>
-        /// <param name="menuItemBuilder">Menu item builder</param>
-        void BuildMenuItem(MenuItemBuilder menuItemBuilder);
+        /// <returns>Site map item</returns>
+        SiteMapNode BuildMenuItem();
     }
 }

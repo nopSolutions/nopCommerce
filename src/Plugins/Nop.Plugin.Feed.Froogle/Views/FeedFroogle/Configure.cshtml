@@ -1,20 +1,43 @@
 ﻿@{
     Layout = "";
 
-    Html.AddCssFileParts("~/Plugins/Feed.Froogle/Content/styles.css");  
+    Html.AddCssFileParts("~/Plugins/Feed.Froogle/Content/styles.css");
 }
 @model FeedFroogleModel
+@using Nop.Core.Infrastructure
 @using Nop.Plugin.Feed.Froogle.Models;
 @using Nop.Web.Framework;
-@using Telerik.Web.Mvc.UI;
 @using Nop.Web.Framework.UI;
 @using (Html.BeginForm())
 {
-    @Html.Telerik().TabStrip().Name("googlebase-configure").Items(x =>
-    {
-        x.Add().Text(T("Plugins.Feed.Froogle.General").Text).Content(TabGeneral().ToHtmlString()).Selected(true);
-        x.Add().Text(T("Plugins.Feed.Froogle.Override").Text).Content(TabOverride().ToHtmlString());
-    })
+    <div id="googlebase-configure">
+        <ul>
+            <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+                @T("Plugins.Feed.Froogle.General")
+            </li>
+            <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+                @T("Plugins.Feed.Froogle.Override")
+            </li>
+        </ul>
+        <div>
+            @TabGeneral()
+        </div>
+        <div>
+            @TabOverride()
+        </div>
+    </div>
+    <script>
+        $(document).ready(function() {
+            $("#googlebase-configure").kendoTabStrip({
+                animation: {
+                    open: {
+                        effects: "fadeIn"
+                    }
+                },
+                select: tabstrip_on_tab_select
+            });
+        });
+    </script>
 }
 @helper TabGeneral()
 {
@@ -22,12 +45,15 @@
         <tr>
             <td colspan="2">
                 <ul>
-                    <li>At least two unique product identifiers are required. So each of your product should
-                        have manufacturer (brand) and MPN (manufacturer part number) specified</li>
+                    <li>
+                        At least two unique product identifiers are required. So each of your product should
+                        have manufacturer (brand) and MPN (manufacturer part number) specified
+                    </li>
                     <li>Specify default tax values in your Google Merchant Center account settings</li>
                     <li>Specify default shipping values in your Google Merchant Center account settings</li>
-                    <li>In order to get more info about required fields look at the following article <a
-                        href="http://www.google.com/support/merchants/bin/answer.py?answer=188494" target="_blank">http://www.google.com/support/merchants/bin/answer.py?answer=188494</a> </li>
+                    <li>
+                        In order to get more info about required fields look at the following article <a href="http://www.google.com/support/merchants/bin/answer.py?answer=188494" target="_blank">http://www.google.com/support/merchants/bin/answer.py?answer=188494</a>
+                    </li>
                 </ul>
             </td>
         </tr>
@@ -82,10 +108,10 @@
                     @for (int i = 0; i <= Model.GeneratedFiles.Count - 1; i++)
                     {
                         var generatedFile = Model.GeneratedFiles[i];
-                        @generatedFile.StoreName <text>-</text> <a href="@generatedFile.FileUrl" target="_blank">@generatedFile.FileUrl</a> 
+                        @generatedFile.StoreName <text>-</text> <a href="@generatedFile.FileUrl" target="_blank">@generatedFile.FileUrl</a>
                         if (i != Model.GeneratedFiles.Count - 1)
                         {
-                        <br />
+                            <br />
                         }
                     }
                 </td>
@@ -93,8 +119,8 @@
         }
         <tr>
             <td colspan="2" width="100%">
-                <input type="submit" name="save" class="t-button" value="@T("Admin.Common.Save")" />
-                <input type="submit" name="generate" class="t-button" value="@T("Plugins.Feed.Froogle.Generate")" />
+                <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
+                <input type="submit" name="generate" class="k-button" value="@T("Plugins.Feed.Froogle.Generate")" />
             </td>
         </tr>
         @if (!String.IsNullOrEmpty(Model.GenerateFeedResult))
@@ -110,14 +136,17 @@
                 </td>
             </tr>
         }
-    </table>        
+    </table>
 }
 @helper TabOverride()
-{ 
+{
+    var gridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSize;
+
     <table class="adminContent froogle">
         <tr>
-            <td colspan="2">You can download the list of allowed Google product category attributes <a href="http://www.google.com/support/merchants/bin/answer.py?answer=160081"
-                target="_blank">here</a>
+            <td colspan="2">
+                You can download the list of allowed Google product category attributes <a href="http://www.google.com/support/merchants/bin/answer.py?answer=160081"
+                                                                                           target="_blank">here</a>
             </td>
         </tr>
         <tr class="adminSeparator">
@@ -127,45 +156,110 @@
         </tr>
         <tr>
             <td>
-                @(Html.Telerik().Grid<FeedFroogleModel.GoogleProductModel>()
-                    .Name("froogleproducts-grid")
-                    .DataKeys(keys =>
-                    {
-                        keys.Add(x => x.ProductId).RouteKey("ProductId");
-                    })
-                    .DataBinding(dataBinding =>
-                    {
-                        dataBinding.Ajax()
-                            .Select("GoogleProductList", "FeedFroogle", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Feed.Froogle.Controllers" }, { "area", "" } })
-                            .Update("GoogleProductUpdate", "FeedFroogle", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Feed.Froogle.Controllers" }, { "area", "" } });
-                    })
-                    .Columns(columns =>
-                    {
-                        columns.Bound(x => x.ProductId).ReadOnly().Visible(false);
-                        columns.Bound(x => x.ProductName).ReadOnly();
-                        columns.Bound(x => x.GoogleCategory).Visible(false);
-                        columns.Bound(x => x.Gender).Visible(false);
-                        columns.Bound(x => x.AgeGroup).Visible(false);
-                        columns.Bound(x => x.Color).Visible(false);
-                        columns.Bound(x => x.GoogleSize).Visible(false);
-                    })
-                    .ClientRowTemplate(grid => "<div class='product-info'>" +
-                            "<#= ProductName #>" +
-                            "</div>" +
-                            "<div class='google-info'>" +
-                            "<dl>" +
-                            string.Format("<dt>{0}:</dt><dd><#= GoogleCategory #></dd>", T("Plugins.Feed.Froogle.Products.GoogleCategory").Text) +
-                            string.Format("<dt>{0}:</dt><dd><#= Gender #></dd>", T("Plugins.Feed.Froogle.Products.Gender").Text) +
-                            string.Format("<dt>{0}:</dt><dd><#= AgeGroup #></dd>", T("Plugins.Feed.Froogle.Products.AgeGroup").Text) +
-                            string.Format("<dt>{0}:</dt><dd><#= Color #></dd>", T("Plugins.Feed.Froogle.Products.Color").Text) +
-                            string.Format("<dt>{0}:</dt><dd><#= GoogleSize #></dd>", T("Plugins.Feed.Froogle.Products.Size").Text) +
-                            "</dl>" +
-                            "</div>" +
-                            "<div class='commands'>" + grid.EditButton(null) + "</div>" +
-                            "</div>")
-                    .Editable(editing => editing.Mode(GridEditMode.PopUp))
-                    .Pageable(settings => settings.PageSize(15).Position(GridPagerPosition.Both))
-                    .EnableCustomBinding(true))
+                <script id="google-popup-editor" type="text/x-kendo-template">
+                    <div class="editor-label"><label for="GoogleCategory">@T("Plugins.Feed.Froogle.Products.GoogleCategory")</label></div>
+                    <div class="editor-field"><input name="GoogleCategory" /></div>
+
+                    <div class="editor-label"><label for="Gender">@T("Plugins.Feed.Froogle.Products.Gender")</label></div>
+                    <div class="editor-field"><input name="Gender" /></div>
+
+                    <div class="editor-label"><label for="AgeGroup">@T("Plugins.Feed.Froogle.Products.AgeGroup")</label></div>
+                    <div class="editor-field"><input name="AgeGroup" /></div>
+
+                    <div class="editor-label"><label for="Color">@T("Plugins.Feed.Froogle.Products.Color")</label></div>
+                    <div class="editor-field"><input name="Color" /></div>
+
+                    <div class="editor-label"><label for="GoogleSize">@T("Plugins.Feed.Froogle.Products.Size")</label></div>
+                    <div class="editor-field"><input name="GoogleSize" /></div>
+                </script>
+
+                <div id="froogleproducts-grid"></div>
+
+                <script>
+                    $(document).ready(function() {
+                        $("#froogleproducts-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("GoogleProductList", "FeedFroogle", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Feed.Froogle.Controllers" }, { "area", "" } }))",
+                                        type: "POST",
+                                        dataType: "json"
+                                    },
+                                    update: {
+                                        url: "@Html.Raw(Url.Action("GoogleProductUpdate", "FeedFroogle", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Feed.Froogle.Controllers" }, { "area", "" } }))",
+                                        type: "POST",
+                                        dataType: "json"
+                                    }
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors",
+                                    model: {
+                                        id: "Id",
+                                        fields: {
+                                            ProductId: { editable: false, type: "number" },
+                                            ProductName: { editable: false, type: "string" },
+                                            GoogleCategory: { editable: true, type: "string" },
+                                            Gender: { editable: true, type: "string" },
+                                            AgeGroup: { editable: true, type: "string" },
+                                            Color: { editable: true, type: "string" },
+                                            GoogleSize: { editable: true, type: "string" },
+                                            Id: { editable: false, type: "number" }
+                                        }
+                                    }
+                                },
+                                requestEnd: function(e) {
+                                    if (e.type == "update") {
+                                        this.read();
+                                    }
+                                },
+                                error: function(e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                pageSize: @(gridPageSize),
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true
+                            },
+                            editable: {
+                                confirmation: false,
+                                mode: "popup",
+                                template: kendo.template($("#google-popup-editor").html())
+                            },
+                            scrollable: false,
+                            columns: [{
+                                field: "ProductName",
+                                title: "@T("Plugins.Feed.Froogle.Products.ProductName")",
+                                width: 300
+                            }, {
+                                field: "Id",
+                                title: "Data",
+                                width: 300,
+                                template: '<div class="google-info">' +
+                                    '<dl>' +
+                                    '<dt>@T("Plugins.Feed.Froogle.Products.GoogleCategory"):</dt><dd># if(GoogleCategory !== null) {# #:GoogleCategory# #}  #</dd>' +
+                                    '<dt>@T("Plugins.Feed.Froogle.Products.Gender"):</dt><dd># if(Gender !== null) {# #:Gender# #}  #</dd>' +
+                                    '<dt>@T("Plugins.Feed.Froogle.Products.AgeGroup"):</dt><dd># if(AgeGroup !== null) {# #:AgeGroup# #}  #</dd>' +
+                                    '<dt>@T("Plugins.Feed.Froogle.Products.Color"):</dt><dd># if(Color !== null) {# #:Color# #}  #</dd>' +
+                                    '<dt>@T("Plugins.Feed.Froogle.Products.Size"):</dt><dd># if(GoogleSize !== null) {# #:GoogleSize# #}  #</dd>' +
+                                    '</dl>' +
+                                    '</div>'
+                            }, {
+                                command: {name: "edit", text: "@T("Admin.Common.Edit")"},
+                                title: "@T("Admin.Common.Edit")",
+                                width: 150
+                            }
+                            ]
+                        });
+                    });
+                </script>
             </td>
         </tr>
     </table>
