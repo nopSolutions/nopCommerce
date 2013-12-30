@@ -372,7 +372,10 @@
                                     }, {
                                         field: "IsFeaturedProduct",
                                         title: "@T("Admin.Catalog.Manufacturers.Products.Fields.IsFeaturedProduct")",
-                                        width: 150
+                                        width: 150,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsFeaturedProduct#.gif" />'
                                     }, {
                                         field: "DisplayOrder1",
                                         title: "@T("Admin.Catalog.Manufacturers.Products.Fields.DisplayOrder")",

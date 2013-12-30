@@ -101,8 +101,11 @@
                             //vendor cannot edit this field
                             <text>{
                             field: "IsFeaturedProduct",
-                                        title: "@T("Admin.Catalog.Products.Categories.Fields.IsFeaturedProduct")",
-                        width: 200
+                            title: "@T("Admin.Catalog.Products.Categories.Fields.IsFeaturedProduct")",
+                            width: 200,
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
+                            template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsFeaturedProduct#.gif" />'
                     },</text>
                         }
                         
