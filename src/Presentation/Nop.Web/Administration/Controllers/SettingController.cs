@@ -2427,7 +2427,8 @@ namespace Nop.Admin.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult AllSettings(DataSourceRequest command)
+        public ActionResult AllSettings(DataSourceRequest command,
+            Nop.Web.Framework.Kendoui.Filter filter = null)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -2456,6 +2457,8 @@ namespace Nop.Admin.Controllers
                                 };
                                 return settingModel;
                             })
+                .AsQueryable()
+                .Filter(filter)
                 .ToList();
 
             var gridModel = new DataSourceResult

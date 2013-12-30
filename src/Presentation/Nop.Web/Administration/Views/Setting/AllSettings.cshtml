@@ -30,7 +30,8 @@
                                 read: {
                                     url: "@Html.Raw(Url.Action("AllSettings", "Setting"))",
                                     type: "POST",
-                                    dataType: "json"
+                                    dataType: "json",
+                                    contentType: "application/json"
                                 },
                                 create: {
                                     url: "@Html.Raw(Url.Action("SettingAdd", "Setting"))",
@@ -47,7 +48,14 @@
                                     type: "POST",
                                     dataType: "json"
                                 },
-                                contentType: "application/json"
+                                parameterMap: function(data, operation) {
+                                    if (operation != "read") {
+                                        return data;
+                                    } else {
+                                        //for some reasons only such "Filter" data be parsed
+                                        return JSON.stringify(data);
+                                    }
+                                }
                             },
                             schema: {
                                 data: "Data",
@@ -87,21 +95,33 @@
                             confirmation: false,
                             mode: "inline"
                         },
+                        filterable: {
+                            extra: false,
+                            operators: {
+                                string: {
+                                    contains: "Contains",
+                                    eq: "Is equal to"
+                                }
+                            }
+                        },
                         scrollable: false,
                         columns: [{
                             field: "Name",
                             title: "@T("Admin.Configuration.Settings.AllSettings.Fields.Name")",
-                            width: 300
+                            width: 300,
+                            filterable: true
                         }, {
                             field: "Value",
                             title: "@T("Admin.Configuration.Settings.AllSettings.Fields.Value")",
-                            width: 300
+                            width: 300,
+                            filterable: true
                         }, {
                             field: "StoreId",
                             title: "@T("Admin.Configuration.Settings.AllSettings.Fields.StoreName")",
                             width: 150,
                             editor: storeDropDownEditor, 
-                            template: "#:Store#"
+                            template: "#:Store#",
+                            filterable: false
                         }, {
                             command: [{
                                 name: "edit",
@@ -110,7 +130,8 @@
                                 name: "destroy",
                                 text: "@T("Admin.Common.Delete")"
                             }],
-                            width: 200
+                            width: 200,
+                            filterable: false
                         }]
                     });
                 });

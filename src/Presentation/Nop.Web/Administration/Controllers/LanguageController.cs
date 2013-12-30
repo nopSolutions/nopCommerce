@@ -319,7 +319,8 @@ namespace Nop.Admin.Controllers
 		}
 
         [HttpPost]
-		public ActionResult Resources(int languageId, DataSourceRequest command)
+		public ActionResult Resources(int languageId, DataSourceRequest command,
+            Nop.Web.Framework.Kendoui.Filter filter = null)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
@@ -337,7 +338,9 @@ namespace Nop.Admin.Controllers
                         Name = x.Key,
                         Value = x.Value.Value,
                     })
-                .ToList();
+                    .AsQueryable()
+                    .Filter(filter)
+                    .ToList();
             
             var gridModel = new DataSourceResult
             {
