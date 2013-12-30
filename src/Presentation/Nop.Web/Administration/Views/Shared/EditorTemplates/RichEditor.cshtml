@@ -1,25 +1,25 @@
 ﻿@model String
+@using Nop.Services.Security
 @using Nop.Web.Framework.UI;
 @{
     //we do not bundle this script file (does not work for some reasons in bundle)
     Html.AddScriptParts("~/Content/tinymce/tinymce.min.js", true);
-
-    //set useDefaultImagePlugin to 'true' if you want to move back to a standard image plugin 		    
-    //bool useDefaultImagePlugin = true;
-    //var imagePluginName = useDefaultImagePlugin ? "image" : "netadvimage";
+    
+    var permissionService = EngineContext.Current.Resolve<IPermissionService>();
+    var canUploadPictures = permissionService.Authorize(StandardPermissionProvider.HtmlEditorManagePictures);
 }
 <script>
     $(document).ready(function() {
         tinymce.init({
-            selector: "#@ViewData.TemplateInfo.GetFullHtmlFieldName(string.Empty)",
+            selector: "#@ViewData.TemplateInfo.GetFullHtmlFieldId(string.Empty)",
             height: 350,
             width: 790,
             plugins: [
                 "advlist autolink lists link image charmap print preview anchor",
                 "searchreplace visualblocks code fullscreen",
-                "insertdatetime media table contextmenu paste"
+                "insertdatetime media table contextmenu paste@(canUploadPictures ? " jbimages" : null)"
             ],
-            toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
+            toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image@(canUploadPictures ? " jbimages" : null)"
         });
     });
 </script>

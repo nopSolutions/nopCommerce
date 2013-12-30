@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+	<title>{#jbimages_dlg.title}</title>
+	<script type="text/javascript" src="../../tiny_mce_popup.js"></script>
+	<script type="text/javascript" src="js/dialog.js"></script>
+
+	<link href="css/dialog.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+
+	<form class="form-inline" id="upl" name="upl" action="ci/index.php/upload/{#jbimages_dlg.lang_id}" method="post" enctype="multipart/form-data" target="upload_target" onsubmit="jbImagesDialog.inProgress();">
+		
+		<h2>{#jbimages_dlg.select_an_image}</h2>
+		
+		<div id="upload_in_progress" class="upload_infobar"><img src="img/spinner.gif" width="16" height="16" class="spinner">{#jbimages_dlg.upload_in_progress}&hellip; <div id="upload_additional_info"></div></div>
+		<div id="upload_infobar" class="upload_infobar"></div>	
+		
+		<p id="upload_form_container">
+			<input id="uploader" name="userfile" type="file" class="jbFileBox" onChange="document.upl.submit(); jbImagesDialog.inProgress();" size="8">
+			<button type="submit" class="btn">{#jbimages_dlg.upload}</button>
+		</p>
+		
+		<p id="the_plugin_name"><a href="http://justboil.me/" target="_blank" title="JustBoil.me Images - a TinyMCE Images Upload Plugin">JustBoil.me Images Plugin</a></p>
+		<div id="close_link"><a href="#" onclick="tinyMCEPopup.close(); return false;">Close [&times;]</a></div>
+	
+	</form>
+
+	<iframe id="upload_target" name="upload_target" src="ci/index.php/blank"></iframe>
+
+</body>
+</html>
