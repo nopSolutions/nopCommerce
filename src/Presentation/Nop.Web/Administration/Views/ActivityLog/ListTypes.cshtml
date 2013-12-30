@@ -76,13 +76,9 @@
                                 }, {
                                     field: "Enabled",
                                     headerTemplate: "@T("Admin.Configuration.ActivityLog.ActivityLogType.Fields.Enabled")&nbsp<input id='mastercheckbox' type='checkbox' />",
-                                    headerAttributes: {
-                                        style: "text-align:center"
-                                    },
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
                                     template: "<input name='checkbox_activity_types' value='#=Id#' type='checkbox' class='checkboxGroups' # if(Enabled) {# checked='checked' #}  # />",
-                                    attributes: {
-                                        style: "text-align:center"
-                                    },
                                     width: 100
                                 }
                             ]

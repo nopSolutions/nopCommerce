@@ -56,13 +56,9 @@
                         columns: [{
                             field: "Id",
                             headerTemplate: "<input id='mastercheckbox' type='checkbox'/>",
-                            headerAttributes: {
-                                style: "text-align:center"
-                            },
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
                             template: "<input type='checkbox' value='#=Id#' class='checkboxGroups'/>",
-                            attributes: {
-                                style: "text-align:center"
-                            },
                             width: 50
                         }, {
                             field: "Name",
@@ -72,11 +68,15 @@
                             field: "AllowsBilling",
                             title: "@T("Admin.Configuration.Countries.Fields.AllowsBilling")",
                             width: 100,
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
                             template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=AllowsBilling#.gif" />'
                         }, {
                             field: "AllowsShipping",
                             title: "@T("Admin.Configuration.Countries.Fields.AllowsShipping")",
                             width: 100,
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
                             template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=AllowsShipping#.gif" />'
                         }, {
                             field: "TwoLetterIsoCode",
@@ -94,6 +94,8 @@
                             field: "SubjectToVat",
                             title: "@T("Admin.Configuration.Countries.Fields.SubjectToVat")",
                             width: 100,
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
                             template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=SubjectToVat#.gif" />'
                         }, {
                             field: "NumberOfStates",
@@ -104,9 +106,11 @@
                             title: "@T("Admin.Configuration.Countries.Fields.DisplayOrder")",
                             width: 100
                         }, {
-                            field: "SubjectToVat",
+                            field: "Published",
                             title: "@T("Admin.Configuration.Countries.Fields.Published")",
                             width: 100,
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
                             template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Published#.gif" />'
                         }, {
                             field: "Id",
