@@ -1158,6 +1158,9 @@
   <ItemGroup>
     <Content Include="Views\Template\ProductTemplates.cshtml" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Jbimages\Upload.cshtml" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

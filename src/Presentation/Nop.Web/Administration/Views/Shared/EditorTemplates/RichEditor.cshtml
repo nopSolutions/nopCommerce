@@ -19,7 +19,9 @@
                 "searchreplace visualblocks code fullscreen",
                 "insertdatetime media table contextmenu paste@(canUploadPictures ? " jbimages" : null)"
             ],
-            toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image@(canUploadPictures ? " jbimages" : null)"
+            toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image@(canUploadPictures ? " jbimages" : null)",
+            //"relative_urls" required by jbimages plugin to be set to "false"
+            relative_urls: false
         });
     });
 </script>

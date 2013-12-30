@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Web;
 using System.Web.Mvc;
+using Nop.Core;
 using Nop.Services.Media;
 using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
@@ -15,57 +17,68 @@ namespace Nop.Admin.Controllers
     public partial class JbimagesController : BaseNopController
     {
         private readonly IPermissionService _permissionService;
+        private readonly IWebHelper _webHelper;
 
-        public JbimagesController(IPermissionService permissionService)
+        public JbimagesController(IPermissionService permissionService,
+            IWebHelper webHelper)
         {
             this._permissionService = permissionService;
+            this._webHelper = webHelper;
+        }
+
+        [NonAction]
+        protected IList<string> GetAllowedFileTypes()
+        {
+            return new List<string>()
+                   {".gif", ".jpg", ".jpeg", ".png", ".bmp"};
         }
 
         [HttpPost]
         public ActionResult Upload()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.HtmlEditorManagePictures))
-                return Content("No access to this functionality");
-            //if (!_permissionService.Authorize(StandardPermissionProvider.UploadPictures))
-            //    return Json(new { success = false, error = "You do not have required permissions" }, "text/plain");
+            {
+                ViewData["resultCode"] = "failed";
+                ViewData["result"] = "No access to this functionality";
+                return View();
+            }
 
-            //we process it distinct ways based on a browser
-            //find more info here http://stackoverflow.com/questions/4884920/mvc3-valums-ajax-file-upload
-            //Stream stream = null;
-            //var fileName = "";
-            //var contentType = "";
-            //if (String.IsNullOrEmpty(Request["qqfile"]))
-            //{
-            //    // IE
-            //    HttpPostedFileBase httpPostedFile = Request.Files[0];
-            //    if (httpPostedFile == null)
-            //        throw new ArgumentException("No file uploaded");
-            //    stream = httpPostedFile.InputStream;
-            //    fileName = Path.GetFileName(httpPostedFile.FileName);
-            //    contentType = httpPostedFile.ContentType;
-            //}
-            //else
-            //{
-            //    //Webkit, Mozilla
-            //    stream = Request.InputStream;
-            //    fileName = Request["qqfile"];
-            //}
+            if (Request.Files.Count == 0)
+                throw new Exception("No file uploaded");
 
-            //var fileBinary = new byte[stream.Length];
-            //stream.Read(fileBinary, 0, fileBinary.Length);
+            var uploadFile = Request.Files[0];
+            if (uploadFile == null)
+            {
+                ViewData["resultCode"] = "failed";
+                ViewData["result"] = "No file name provided";
+                return View();
+            }
 
-            //var fileExtension = Path.GetExtension(fileName);
-            //if (!String.IsNullOrEmpty(fileExtension))
-            //    fileExtension = fileExtension.ToLowerInvariant();
+            var fileName = Path.GetFileName(uploadFile.FileName);
+            if (String.IsNullOrEmpty(fileName))
+            {
+                ViewData["resultCode"] = "failed";
+                ViewData["result"] = "No file name provided";
+                return View();
+            }
 
-            var absoluteUrl = "http://www.nopcommerce.com/App_Themes/darkOrange/images/logo.png";
-            return Content(string.Format("<script>top.$('.mce-btn.mce-open').parent().find('.mce-textbox').val('{0}');</script>", absoluteUrl));
+            var directory = "~/content/images/uploaded/";
+            var filePath = Path.Combine(_webHelper.MapPath(directory), fileName);
 
-            //when returning JSON the mime-type must be set to text/plain
-            //otherwise some browsers will pop-up a "Save As" dialog.
-            //return Json(new { success = true, pictureId = picture.Id,
-            //    imageUrl = _pictureService.GetPictureUrl(picture, 100) },
-            //    "text/plain");
+            var fileExtension = Path.GetExtension(filePath);
+            if (!GetAllowedFileTypes().Contains(fileExtension))
+            {
+                ViewData["resultCode"] = "failed";
+                ViewData["result"] = string.Format("Files with {0} extension cannot be uploaded", fileExtension);
+                return View();
+            }
+
+            uploadFile.SaveAs(filePath);
+
+            ViewData["resultCode"] = "success";
+            ViewData["result"] = "success";
+            ViewData["filename"] = this.Url.Content(string.Format("{0}{1}", directory, fileName));
+            return View();
         }
     }
 }
