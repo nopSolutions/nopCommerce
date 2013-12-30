@@ -143,7 +143,6 @@
     <Compile Include="Controllers\StoreController.cs" />
     <Compile Include="Controllers\ScheduleTaskController.cs" />
     <Compile Include="Controllers\ExternalAuthenticationController.cs" />
-    <Compile Include="Controllers\NetAdvImageController.cs" />
     <Compile Include="Controllers\WidgetController.cs" />
     <Compile Include="Controllers\OnlineCustomerController.cs" />
     <Compile Include="Controllers\PluginController.cs" />
@@ -184,7 +183,6 @@
     <Compile Include="HtmlExtensions.cs" />
     <Compile Include="Infrastructure\Cache\ModelCacheEventConsumer.cs" />
     <Compile Include="Infrastructure\DependencyRegistrar.cs" />
-    <Compile Include="Infrastructure\RouteProvider.cs" />
     <Compile Include="MappingExtensions.cs" />
     <Compile Include="Infrastructure\AutoMapperStartupTask.cs" />
     <Compile Include="Models\Catalog\AddProductVariantAttributeCombinationModel.cs" />
@@ -988,9 +986,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Plugin\ConfigureMiscPlugin.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\NetAdvImage\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Order\AddProductToOrder.cshtml" />

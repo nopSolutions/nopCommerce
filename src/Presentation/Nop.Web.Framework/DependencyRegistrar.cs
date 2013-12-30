@@ -53,7 +53,6 @@ using Nop.Web.Framework.EmbeddedViews;
 using Nop.Web.Framework.Mvc.Routes;
 using Nop.Web.Framework.Themes;
 using Nop.Web.Framework.UI;
-using Nop.Web.Framework.UI.Editor;
 
 namespace Nop.Web.Framework
 {
@@ -284,10 +283,6 @@ namespace Nop.Web.Framework
                 
             builder.RegisterType<EmbeddedViewResolver>().As<IEmbeddedViewResolver>().SingleInstance();
             builder.RegisterType<RoutePublisher>().As<IRoutePublisher>().SingleInstance();
-
-            //HTML Editor services
-            builder.RegisterType<NetAdvDirectoryService>().As<INetAdvDirectoryService>().InstancePerHttpRequest();
-            builder.RegisterType<NetAdvImageService>().As<INetAdvImageService>().InstancePerHttpRequest();
 
             //Register event consumers
             var consumers = typeFinder.FindClassesOfType(typeof(IConsumer<>)).ToList();
