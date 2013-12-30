@@ -107,8 +107,7 @@
                         url: "@Html.Raw(Url.Action("AffiliatedCustomerList", "Affiliate", new { affiliateId = Model.Id }))",
                         type: "POST",
                         dataType: "json"
-                    },
-                    contentType: "application/json"
+                    }
                 },
                 schema: {
                     data: "Data",
@@ -167,8 +166,7 @@
                             url: "@Html.Raw(Url.Action("AffiliatedOrderList", "Affiliate", new { affiliateId = Model.Id }))",
                             type: "POST",
                             dataType: "json"
-                        },
-                        contentType: "application/json"
+                        }
                     },
                     schema: {
                         data: "Data",

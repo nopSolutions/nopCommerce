@@ -568,8 +568,7 @@
                             url: "@Html.Raw(Url.Action("OrderList", "Customer", new { customerId = Model.Id }))",
                             type: "POST",
                             dataType: "json"
-                        },
-                        contentType: "application/json"
+                        }
                     },
                     schema: {
                         data: "Data",
@@ -648,8 +647,7 @@
                             url: "@Html.Raw(Url.Action("RewardPointsHistorySelect", "Customer", new { customerId = Model.Id }))",
                             type: "POST",
                             dataType: "json"
-                        },
-                        contentType: "application/json"
+                        }
                     },
                     schema: {
                         data: "Data",
@@ -770,8 +768,7 @@
                             url: "@Html.Raw(Url.Action("AddressDelete", "Customer", new { customerId = Model.Id }))",
                             type: "POST",
                             dataType: "json"
-                        },
-                        contentType: "application/json"
+                        }
                     },
                     schema: {
                         data: "Data",
@@ -856,8 +853,7 @@
                                         url: "@Html.Raw(Url.Action("GetCartList", "Customer", new { customerId = Model.Id, cartTypeId = (int)ShoppingCartType.ShoppingCart }))",
                                         type: "POST",
                                         dataType: "json"
-                                    },
-                                    contentType: "application/json"
+                                    }
                                 },
                                 schema: {
                                     data: "Data",
@@ -936,8 +932,7 @@
                                         url: "@Html.Raw(Url.Action("GetCartList", "Customer", new { customerId = Model.Id, cartTypeId = (int)ShoppingCartType.Wishlist }))",
                                         type: "POST",
                                         dataType: "json"
-                                    },
-                                    contentType: "application/json"
+                                    }
                                 },
                                 schema: {
                                     data: "Data",
@@ -1018,8 +1013,7 @@
                                         url: "@Html.Raw(Url.Action("ListActivityLog", "Customer", new { customerId = Model.Id }))",
                                         type: "POST",
                                         dataType: "json"
-                                    },
-                                    contentType: "application/json"
+                                    }
                                 },
                                 schema: {
                                     data: "Data",

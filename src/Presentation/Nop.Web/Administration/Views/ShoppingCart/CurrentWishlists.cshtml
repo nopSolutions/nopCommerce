@@ -29,8 +29,7 @@
                                         url: "@Html.Raw(Url.Action("CurrentWishlists", "ShoppingCart"))",
                                         type: "POST",
                                         dataType: "json"
-                                    },
-                                    contentType: "application/json"
+                                    }
                                 },
                                 schema: {
                                     data: "Data",
@@ -77,8 +76,7 @@
                                         url: "@Html.Raw(Url.Action("GetWishlistDetails", "ShoppingCart"))?customerId="+e.data.CustomerId,
                                         type: "POST",
                                         dataType: "json"
-                                    },
-                                    contentType: "application/json"
+                                    }
                                 },
                                 schema: {
                                     data: "Data",

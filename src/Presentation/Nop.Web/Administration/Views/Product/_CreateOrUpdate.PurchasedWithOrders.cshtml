@@ -19,8 +19,7 @@
                         url: "@Html.Raw(Url.Action("PurchasedWithOrders", "Product", new { productId = Model.Id }))",
                         type: "POST",
                         dataType: "json"
-                    },
-                    contentType: "application/json"
+                    }
                 },
                 schema: {
                     data: "Data",

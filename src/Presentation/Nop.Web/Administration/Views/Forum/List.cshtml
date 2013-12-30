@@ -27,8 +27,7 @@
                                     url: "@Html.Raw(Url.Action("ForumGroupList", "Forum"))",
                                     type: "POST",
                                     dataType: "json"
-                                },
-                                contentType: "application/json"
+                                }
                             },
                             schema: {
                                 data: "Data",
@@ -88,8 +87,7 @@
                                     url: "@Html.Raw(Url.Action("ForumList", "Forum"))?forumGroupId=" + e.data.Id,
                                     type: "POST",
                                     dataType: "json"
-                                },
-                                contentType: "application/json"
+                                }
                             },
                             schema: {
                                 data: "Data",
