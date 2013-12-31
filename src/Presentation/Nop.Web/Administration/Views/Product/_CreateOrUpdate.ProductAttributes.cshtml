@@ -173,7 +173,7 @@ else
                     field: "ViewEditUrl",
                     title: "@T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values")",
                     width: 150,
-                    template: "<a href='#=ViewEditUrl#\'>#:ViewEditText#</a>"
+                    template: "# if(ViewEditUrl !== null) {# <a href='#=ViewEditUrl#\'>#:ViewEditText#</a> #}  #"
                 },{
                     command: [{
                         name: "edit",
