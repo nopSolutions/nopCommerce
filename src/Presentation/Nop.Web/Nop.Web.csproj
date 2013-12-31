@@ -411,17 +411,17 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="App_Data\SqlServer.Indexes.sql" />
-    <Content Include="Content\editors\BBEditor\ed.js" />
-    <Content Include="Content\editors\BBEditor\images\bold.gif" />
-    <Content Include="Content\editors\BBEditor\images\code.gif" />
-    <Content Include="Content\editors\BBEditor\images\italic.gif" />
-    <Content Include="Content\editors\BBEditor\images\link.gif" />
-    <Content Include="Content\editors\BBEditor\images\ordered.gif" />
-    <Content Include="Content\editors\BBEditor\images\picture.gif" />
-    <Content Include="Content\editors\BBEditor\images\quote.gif" />
-    <Content Include="Content\editors\BBEditor\images\underline.gif" />
-    <Content Include="Content\editors\BBEditor\images\unlink.gif" />
-    <Content Include="Content\editors\BBEditor\images\unordered.gif" />
+    <Content Include="Content\BBEditor\ed.js" />
+    <Content Include="Content\BBEditor\images\bold.gif" />
+    <Content Include="Content\BBEditor\images\code.gif" />
+    <Content Include="Content\BBEditor\images\italic.gif" />
+    <Content Include="Content\BBEditor\images\link.gif" />
+    <Content Include="Content\BBEditor\images\ordered.gif" />
+    <Content Include="Content\BBEditor\images\picture.gif" />
+    <Content Include="Content\BBEditor\images\quote.gif" />
+    <Content Include="Content\BBEditor\images\underline.gif" />
+    <Content Include="Content\BBEditor\images\unlink.gif" />
+    <Content Include="Content\BBEditor\images\unordered.gif" />
     <Content Include="Content\fancybox\blank.gif" />
     <Content Include="Content\fancybox\fancybox-x.png" />
     <Content Include="Content\fancybox\fancybox-y.png" />

@@ -13,11 +13,11 @@ var webRoot;
 
 function edToolbar(obj) {
     document.write("<div class=\"toolbar\">");
-    document.write("<img class=\"button\" src=\"" + webRoot + "editors/BBEditor/images/bold.gif\" name=\"btnBold\" onClick=\"doAddTags('[b]','[/b]','" + obj + "')\">");
-    document.write("<img class=\"button\" src=\"" + webRoot + "editors/BBEditor/images/italic.gif\" name=\"btnItalic\" onClick=\"doAddTags('[i]','[/i]','" + obj + "')\">");
-    document.write("<img class=\"button\" src=\"" + webRoot + "editors/BBEditor/images/underline.gif\" name=\"btnUnderline\" onClick=\"doAddTags('[u]','[/u]','" + obj + "')\">");
-    document.write("<img class=\"button\" src=\"" + webRoot + "editors/BBEditor/images/link.gif\" name=\"btnLink\" onClick=\"doURL('" + obj + "')\">");
-    document.write("<img class=\"button\" src=\"" + webRoot + "editors/BBEditor/images/code.gif\" name=\"btnCode\" onClick=\"doAddTags('[code]','[/code]','" + obj + "')\">");
+    document.write("<img class=\"button\" src=\"" + webRoot + "BBEditor/images/bold.gif\" name=\"btnBold\" onClick=\"doAddTags('[b]','[/b]','" + obj + "')\">");
+    document.write("<img class=\"button\" src=\"" + webRoot + "BBEditor/images/italic.gif\" name=\"btnItalic\" onClick=\"doAddTags('[i]','[/i]','" + obj + "')\">");
+    document.write("<img class=\"button\" src=\"" + webRoot + "BBEditor/images/underline.gif\" name=\"btnUnderline\" onClick=\"doAddTags('[u]','[/u]','" + obj + "')\">");
+    document.write("<img class=\"button\" src=\"" + webRoot + "BBEditor/images/link.gif\" name=\"btnLink\" onClick=\"doURL('" + obj + "')\">");
+    document.write("<img class=\"button\" src=\"" + webRoot + "BBEditor/images/code.gif\" name=\"btnCode\" onClick=\"doAddTags('[code]','[/code]','" + obj + "')\">");
     document.write("</div>");
 }
 
