@@ -620,7 +620,7 @@ namespace Nop.Web.Controllers
             if (_vendorSettings.ShowVendorOnProductDetailsPage)
             {
                 var vendor = _vendorService.GetVendorById(product.VendorId);
-                if (vendor != null && vendor.Active)
+                if (vendor != null && !vendor.Deleted && vendor.Active)
                 {
                     model.ShowVendor = true;
                     model.VendorModel.Id = vendor.Id;
@@ -1772,7 +1772,7 @@ namespace Nop.Web.Controllers
         public ActionResult Vendor(int vendorId, CatalogPagingFilteringModel command)
         {
             var vendor = _vendorService.GetVendorById(vendorId);
-            if (vendor == null || vendor.Deleted)
+            if (vendor == null || vendor.Deleted || !vendor.Active)
                 return InvokeHttp404();
 
             //Vendor is active?
@@ -1962,7 +1962,7 @@ namespace Nop.Web.Controllers
             if (_vendorSettings.VendorsBlockItemsToDisplay == 0)
                 return Content("");
 
-            string cacheKey = ModelCacheEventConsumer.MANUFACTURER_NAVIGATION_MODEL_KEY;
+            string cacheKey = ModelCacheEventConsumer.VENDOR_NAVIGATION_MODEL_KEY;
             var cacheModel = _cacheManager.Get(cacheKey, () =>
             {
                 var vendors = _vendorService.GetAllVendors(pageSize: _vendorSettings.VendorsBlockItemsToDisplay);

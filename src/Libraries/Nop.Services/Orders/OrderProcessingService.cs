@@ -1331,7 +1331,7 @@ namespace Nop.Services.Orders
                             {
                                 //not found. load by Id
                                 vendor = _vendorService.GetVendorById(vendorId);
-                                if (vendor != null)
+                                if (vendor != null && !vendor.Deleted && vendor.Active)
                                 {
                                     vendors.Add(vendor);
                                 }
