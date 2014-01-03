@@ -600,6 +600,8 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Customer.Email", customer.Email));
             tokens.Add(new Token("Customer.Username", customer.Username));
             tokens.Add(new Token("Customer.FullName", customer.GetFullName()));
+            tokens.Add(new Token("Customer.FirstName", customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName)));
+            tokens.Add(new Token("Customer.LastName", customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName)));
             tokens.Add(new Token("Customer.VatNumber", customer.GetAttribute<string>(SystemCustomerAttributeNames.VatNumber)));
             tokens.Add(new Token("Customer.VatNumberStatus", ((VatNumberStatus)customer.GetAttribute<int>(SystemCustomerAttributeNames.VatNumberStatusId)).ToString()));
 
@@ -812,8 +814,10 @@ namespace Nop.Services.Messages
                 "%GiftCard.CouponCode%",
                 "%GiftCard.Message%",
                 "%Customer.Email%", 
-                "%Customer.Username%", 
-                "%Customer.FullName%", 
+                "%Customer.Username%",
+                "%Customer.FullName%",
+                "%Customer.FirstName%",
+                "%Customer.LastName%",
                 "%Customer.VatNumber%",
                 "%Customer.VatNumberStatus%", 
                 "%Customer.PasswordRecoveryURL%", 
