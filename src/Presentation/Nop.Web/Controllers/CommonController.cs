@@ -698,6 +698,10 @@ namespace Nop.Web.Controllers
                 //disabled
                 return Content("");
 
+            //ignore search engines because some pages could be indexed with the EU cookie as description
+            if (_workContext.CurrentCustomer.IsSearchEngineAccount())
+                return Content("");
+
             if (_workContext.CurrentCustomer.GetAttribute<bool>("EuCookieLaw.Accepted", _storeContext.CurrentStore.Id))
                 //already accepted
                 return Content("");
