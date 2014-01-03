@@ -87,11 +87,11 @@ namespace Nop.Web.Extensions
                             links.Append("<li class=\"individual-page\">");
                             if (model.UseRouteLinks)
                             {
-                                links.Append(html.RouteLink((i + 1).ToString(), model.RouteActionName, (object)model.RouteValues, new { title = String.Format(localizationService.GetResource("Pager.PageLinkTitle").ToString(), (i + 1).ToString()) }));
+                                links.Append(html.RouteLink((i + 1).ToString(), model.RouteActionName, (object)model.RouteValues, new { title = String.Format(localizationService.GetResource("Pager.PageLinkTitle"), (i + 1)) }));
                             }
                             else
                             {
-                                links.Append(html.ActionLink((i + 1).ToString(), model.RouteActionName, (object)model.RouteValues, new { title = String.Format(localizationService.GetResource("Pager.PageLinkTitle").ToString(), (i + 1).ToString()) }));
+                                links.Append(html.ActionLink((i + 1).ToString(), model.RouteActionName, (object)model.RouteValues, new { title = String.Format(localizationService.GetResource("Pager.PageLinkTitle"), (i + 1)) }));
                             }
                             links.Append("</li>");
                         }
