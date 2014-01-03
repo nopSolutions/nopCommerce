@@ -168,10 +168,10 @@
                     }
                     @if (Model.ZipPostalCodeEnabled)
                     {
-                        <div
+                        <div>
                             @Html.LabelFor(model => model.ZipPostalCode)
                             @Html.EditorFor(model => model.ZipPostalCode)
-                            @Html.ValidationMessageFor(model => model.ZipPostalCode)>
+                            @Html.ValidationMessageFor(model => model.ZipPostalCode)
                         </div>
                     }
                     @if (Model.CityEnabled)
