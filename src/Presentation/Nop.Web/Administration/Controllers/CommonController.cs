@@ -582,7 +582,7 @@ namespace Nop.Admin.Controllers
         public ActionResult PopularSearchTermsReport()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
+                return Content("");
 
             return PartialView();
         }
