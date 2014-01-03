@@ -1563,15 +1563,34 @@ namespace Nop.Admin.Controllers
             if (orderItem == null)
                 throw new ArgumentException("No order item found with the specified id");
 
-            _orderService.DeleteOrderItem(orderItem);
+            if (_giftCardService.GetGiftCardsByPurchasedWithOrderItemId(orderItem.Id).Count > 0)
+            {
+                //we cannot delete an order item with associated gift cards
+                //a store owner should delete them first
 
-            var model = new OrderModel();
-            PrepareOrderDetailsModel(model, order);
+                var model = new OrderModel();
+                PrepareOrderDetailsModel(model, order);
 
-            //selected tab
-            SaveSelectedTabIndex(persistForTheNextRequest: false);
+                ErrorNotification("This order item has an associated gift card record. Please delete it first.", false);
 
-            return View(model);
+                //selected tab
+                SaveSelectedTabIndex(persistForTheNextRequest: false);
+
+                return View(model);
+
+            }
+            else
+            {
+                _orderService.DeleteOrderItem(orderItem);
+
+                var model = new OrderModel();
+                PrepareOrderDetailsModel(model, order);
+
+                //selected tab
+                SaveSelectedTabIndex(persistForTheNextRequest: false);
+
+                return View(model);
+            }
         }
 
         [HttpPost, ActionName("Edit")]
