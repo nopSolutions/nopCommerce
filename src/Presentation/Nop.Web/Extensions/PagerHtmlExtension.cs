@@ -25,7 +25,7 @@ namespace Nop.Web.Extensions
             var links = new StringBuilder();
             if (model.ShowTotalSummary && (model.TotalPages > 0))
             {
-                links.Append("<li>");
+                links.Append("<li class=\"total-summary\">");
                 links.Append(string.Format(model.CurrentPageText, model.PageIndex + 1, model.TotalPages, model.TotalRecords));
                 links.Append("</li>");
             }
@@ -33,16 +33,12 @@ namespace Nop.Web.Extensions
             {
                 if (model.ShowFirst)
                 {
+                    //first page
                     if ((model.PageIndex >= 3) && (model.TotalPages > model.IndividualPagesDisplayedCount))
                     {
-                        //if (model.ShowIndividualPages)
-                        //{
-                        //    links.Append("&nbsp;");
-                        //}
-
                         model.RouteValues.page = 1;
 
-                        links.Append("<li>");
+                        links.Append("<li class=\"first-page\">");
                         if (model.UseRouteLinks)
                         {
                             links.Append(html.RouteLink(model.FirstButtonText, model.RouteActionName, (object)model.RouteValues, new { title = localizationService.GetResource("Pager.FirstPageTitle") }));
@@ -52,20 +48,16 @@ namespace Nop.Web.Extensions
                             links.Append(html.ActionLink(model.FirstButtonText, model.RouteActionName, (object)model.RouteValues, new { title = localizationService.GetResource("Pager.FirstPageTitle") }));
                         }
                         links.Append("</li>");
-
-                        //if ((model.ShowIndividualPages || (model.ShowPrevious && (model.PageIndex > 0))) || model.ShowLast)
-                        //{
-                        //    links.Append("&nbsp;...&nbsp;");
-                        //}
                     }
                 }
                 if (model.ShowPrevious)
                 {
+                    //previous page
                     if (model.PageIndex > 0)
                     {
                         model.RouteValues.page = (model.PageIndex);
 
-                        links.Append("<li>");
+                        links.Append("<li class=\"previous-page\">");
                         if (model.UseRouteLinks)
                         {
                             links.Append(html.RouteLink(model.PreviousButtonText, model.RouteActionName, (object)model.RouteValues, new { title = localizationService.GetResource("Pager.PreviousPageTitle") }));
@@ -75,27 +67,24 @@ namespace Nop.Web.Extensions
                             links.Append(html.ActionLink(model.PreviousButtonText, model.RouteActionName, (object)model.RouteValues, new { title = localizationService.GetResource("Pager.PreviousPageTitle") }));
                         }
                         links.Append("</li>");
-                        //if ((model.ShowIndividualPages || model.ShowLast) || (model.ShowNext && ((model.PageIndex + 1) < model.TotalPages)))
-                        //{
-                        //    links.Append("&nbsp;");
-                        //}
                     }
                 }
                 if (model.ShowIndividualPages)
                 {
+                    //individual pages
                     int firstIndividualPageIndex = model.GetFirstIndividualPageIndex();
                     int lastIndividualPageIndex = model.GetLastIndividualPageIndex();
                     for (int i = firstIndividualPageIndex; i <= lastIndividualPageIndex; i++)
                     {
                         if (model.PageIndex == i)
                         {
-                            links.AppendFormat("<li><span>{0}</span></li>", (i + 1).ToString());
+                            links.AppendFormat("<li class=\"current-page\"><span>{0}</span></li>", (i + 1));
                         }
                         else
                         {
                             model.RouteValues.page = (i + 1);
 
-                            links.Append("<li>");
+                            links.Append("<li class=\"individual-page\">");
                             if (model.UseRouteLinks)
                             {
                                 links.Append(html.RouteLink((i + 1).ToString(), model.RouteActionName, (object)model.RouteValues, new { title = String.Format(localizationService.GetResource("Pager.PageLinkTitle").ToString(), (i + 1).ToString()) }));
@@ -106,24 +95,16 @@ namespace Nop.Web.Extensions
                             }
                             links.Append("</li>");
                         }
-                        //if (i < lastIndividualPageIndex)
-                        //{
-                        //    links.Append("&nbsp;");
-                        //}
                     }
                 }
                 if (model.ShowNext)
                 {
+                    //next page
                     if ((model.PageIndex + 1) < model.TotalPages)
                     {
-                        //if (model.ShowIndividualPages)
-                        //{
-                        //    links.Append("&nbsp;");
-                        //}
-
                         model.RouteValues.page = (model.PageIndex + 2);
-                        
-                        links.Append("<li>");
+
+                        links.Append("<li class=\"next-page\">");
                         if (model.UseRouteLinks)
                         {
                             links.Append(html.RouteLink(model.NextButtonText, model.RouteActionName, (object)model.RouteValues, new { title = localizationService.GetResource("Pager.NextPageTitle") }));
@@ -137,16 +118,12 @@ namespace Nop.Web.Extensions
                 }
                 if (model.ShowLast)
                 {
+                    //last page
                     if (((model.PageIndex + 3) < model.TotalPages) && (model.TotalPages > model.IndividualPagesDisplayedCount))
                     {
-                        //if (model.ShowIndividualPages || (model.ShowNext && ((model.PageIndex + 1) < model.TotalPages)))
-                        //{
-                        //    links.Append("&nbsp;...&nbsp;");
-                        //}
-
                         model.RouteValues.page = model.TotalPages;
 
-                        links.Append("<li>");
+                        links.Append("<li class=\"last-page\">");
                         if (model.UseRouteLinks)
                         {
                             links.Append(html.RouteLink(model.LastButtonText, model.RouteActionName, (object)model.RouteValues, new { title = localizationService.GetResource("Pager.LastPageTitle") }));
