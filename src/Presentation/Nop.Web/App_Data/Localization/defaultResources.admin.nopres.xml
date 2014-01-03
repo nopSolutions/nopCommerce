@@ -2078,7 +2078,7 @@
                     </Children>
                   </LocaleResource>
                   <LocaleResource Name="ImportFromExcelTip">
-                    <Value>Imported products are distinguished by SKU. If some SKU already exists, then an appropriate product will be updated.</Value>
+                    <Value>Imported products are distinguished by SKU. If the SKU already exists, then its corresponding product will be updated.</Value>
                   </LocaleResource>
                   <LocaleResource Name="SearchProductName">
                     <Value>Product name</Value>
@@ -5033,18 +5033,18 @@
                     </Children>
                   </LocaleResource>
                   <LocaleResource Name="InvoiceFooterTextColumn1">
-                    <Value>Invoice footer text (column 1)</Value>
+                    <Value>Invoice footer text (left column)</Value>
                     <Children>
                       <LocaleResource Name="Hint">
-                        <Value>Enter the text that will appear at the bottom of generated invoices (column 1).</Value>
+                        <Value>Enter the text that will appear at the bottom of generated invoices (column left column).</Value>
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
                   <LocaleResource Name="InvoiceFooterTextColumn2">
-                    <Value>Invoice footer text (column 2)</Value>
+                    <Value>Invoice footer text (right column)</Value>
                     <Children>
                       <LocaleResource Name="Hint">
-                        <Value>Enter the text that will appear at the bottom of generated invoices (column 2).</Value>
+                        <Value>Enter the text that will appear at the bottom of generated invoices (right column).</Value>
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
