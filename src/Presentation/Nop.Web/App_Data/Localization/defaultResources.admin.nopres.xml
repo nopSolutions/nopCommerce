@@ -5036,7 +5036,7 @@
                     <Value>Invoice footer text (left column)</Value>
                     <Children>
                       <LocaleResource Name="Hint">
-                        <Value>Enter the text that will appear at the bottom of generated invoices (column left column).</Value>
+                        <Value>Enter the text that will appear at the bottom of generated invoices (left column).</Value>
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
