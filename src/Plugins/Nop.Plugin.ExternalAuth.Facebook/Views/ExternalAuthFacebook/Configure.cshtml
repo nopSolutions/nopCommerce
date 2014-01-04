@@ -3,11 +3,13 @@
 }
 @model Nop.Plugin.ExternalAuth.Facebook.Models.ConfigurationModel
 @using Nop.Web.Framework;
+@Html.Action("StoreScopeConfiguration", "Setting", new { area = "Admin" })
 @using (Html.BeginForm())
 {
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ClientKeyIdentifier_OverrideForStore, model => model.ClientKeyIdentifier, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ClientKeyIdentifier):
             </td>
             <td class="adminData">
@@ -17,6 +19,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ClientSecret_OverrideForStore, model => model.ClientSecret, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ClientSecret):
             </td>
             <td class="adminData">

@@ -7,6 +7,7 @@ using Nop.Plugin.ExternalAuth.Facebook.Models;
 using Nop.Services.Authentication.External;
 using Nop.Services.Configuration;
 using Nop.Services.Security;
+using Nop.Services.Stores;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 
@@ -15,30 +16,33 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
     public class ExternalAuthFacebookController : Controller
     {
         private readonly ISettingService _settingService;
-        private readonly FacebookExternalAuthSettings _facebookExternalAuthSettings;
         private readonly IOAuthProviderFacebookAuthorizer _oAuthProviderFacebookAuthorizer;
         private readonly IOpenAuthenticationService _openAuthenticationService;
         private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
         private readonly IPermissionService _permissionService;
         private readonly IStoreContext _storeContext;
+        private readonly IStoreService _storeService;
+        private readonly IWorkContext _workContext;
         private readonly IPluginFinder _pluginFinder;
 
         public ExternalAuthFacebookController(ISettingService settingService,
-            FacebookExternalAuthSettings facebookExternalAuthSettings,
             IOAuthProviderFacebookAuthorizer oAuthProviderFacebookAuthorizer,
             IOpenAuthenticationService openAuthenticationService,
             ExternalAuthenticationSettings externalAuthenticationSettings,
             IPermissionService permissionService,
             IStoreContext storeContext,
+            IStoreService storeService,
+            IWorkContext workContext,
             IPluginFinder pluginFinder)
         {
             this._settingService = settingService;
-            this._facebookExternalAuthSettings = facebookExternalAuthSettings;
             this._oAuthProviderFacebookAuthorizer = oAuthProviderFacebookAuthorizer;
             this._openAuthenticationService = openAuthenticationService;
             this._externalAuthenticationSettings = externalAuthenticationSettings;
             this._permissionService = permissionService;
             this._storeContext = storeContext;
+            this._storeService = storeService;
+            this._workContext = workContext;
             this._pluginFinder = pluginFinder;
         }
         
@@ -49,10 +53,21 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageExternalAuthenticationMethods))
                 return Content("Access denied");
 
+            //load settings for a chosen store scope
+            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var facebookExternalAuthSettings = _settingService.LoadSetting<FacebookExternalAuthSettings>(storeScope);
+
             var model = new ConfigurationModel();
-            model.ClientKeyIdentifier = _facebookExternalAuthSettings.ClientKeyIdentifier;
-            model.ClientSecret = _facebookExternalAuthSettings.ClientSecret;
-            
+            model.ClientKeyIdentifier = facebookExternalAuthSettings.ClientKeyIdentifier;
+            model.ClientSecret = facebookExternalAuthSettings.ClientSecret;
+
+            model.ActiveStoreScopeConfiguration = storeScope;
+            if (storeScope > 0)
+            {
+                model.ClientKeyIdentifier_OverrideForStore = _settingService.SettingExists(facebookExternalAuthSettings, x => x.ClientKeyIdentifier, storeScope);
+                model.ClientSecret_OverrideForStore = _settingService.SettingExists(facebookExternalAuthSettings, x => x.ClientSecret, storeScope);
+            }
+
             return View("Nop.Plugin.ExternalAuth.Facebook.Views.ExternalAuthFacebook.Configure", model);
         }
 
@@ -66,13 +81,32 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
 
             if (!ModelState.IsValid)
                 return Configure();
-            
+
+            //load settings for a chosen store scope
+            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var facebookExternalAuthSettings = _settingService.LoadSetting<FacebookExternalAuthSettings>(storeScope);
+
             //save settings
-            _facebookExternalAuthSettings.ClientKeyIdentifier = model.ClientKeyIdentifier;
-            _facebookExternalAuthSettings.ClientSecret = model.ClientSecret;
-            _settingService.SaveSetting(_facebookExternalAuthSettings);
-            
-            return View("Nop.Plugin.ExternalAuth.Facebook.Views.ExternalAuthFacebook.Configure", model);
+            facebookExternalAuthSettings.ClientKeyIdentifier = model.ClientKeyIdentifier;
+            facebookExternalAuthSettings.ClientSecret = model.ClientSecret;
+
+            /* We do not clear cache after each setting update.
+             * This behavior can increase performance because cached settings will not be cleared 
+             * and loaded from database after each update */
+            if (model.ClientKeyIdentifier_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(facebookExternalAuthSettings, x => x.ClientKeyIdentifier, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(facebookExternalAuthSettings, x => x.ClientKeyIdentifier, storeScope);
+
+            if (model.ClientSecret_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(facebookExternalAuthSettings, x => x.ClientSecret, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(facebookExternalAuthSettings, x => x.ClientSecret, storeScope);
+
+            //now clear settings cache
+            _settingService.ClearCache();
+
+            return Configure();
         }
 
         [ChildActionOnly]
