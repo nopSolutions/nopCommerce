@@ -9779,6 +9779,15 @@ namespace Nop.Services.Installation
                 },
                 new ScheduleTask()
                 {
+                    Name = "Clear log",
+                    //60 minutes
+                    Seconds = 3600,
+                    Type = "Nop.Services.Logging.ClearLogTask, Nop.Services",
+                    Enabled = false,
+                    StopOnError = false,
+                },
+                new ScheduleTask()
+                {
                     Name = "Update currency exchange rates",
                     Seconds = 900,
                     Type = "Nop.Services.Directory.UpdateExchangeRateTask, Nop.Services",

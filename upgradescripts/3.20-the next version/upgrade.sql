@@ -94,3 +94,13 @@ DEALLOCATE cur_existinglanguage
 DROP TABLE #LocaleStringResourceTmp
 GO
 
+--'Clear log' schedule task (disabled by default)
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[ScheduleTask]
+		WHERE [Type] = N'Nop.Services.Logging.ClearLogTask, Nop.Services')
+BEGIN
+	INSERT [dbo].[ScheduleTask] ([Name], [Seconds], [Type], [Enabled], [StopOnError])
+	VALUES (N'Clear log', 3600, N'Nop.Services.Logging.ClearLogTask, Nop.Services', 0, 0)
+END
+GO
