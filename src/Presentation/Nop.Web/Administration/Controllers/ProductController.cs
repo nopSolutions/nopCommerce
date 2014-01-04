@@ -1860,7 +1860,18 @@ namespace Nop.Admin.Controllers
                 showHidden: true
                 );
             var gridModel = new DataSourceResult();
-            gridModel.Data = products.Select(x => x.ToModel());
+            gridModel.Data = products.Select(x =>
+            {
+                var productModel = x.ToModel();
+                //display already associated products
+                var parentGroupedProduct = _productService.GetProductById(x.ParentGroupedProductId);
+                if (parentGroupedProduct != null)
+                {
+                    productModel.AssociatedToProductId = x.ParentGroupedProductId;
+                    productModel.AssociatedToProductName = parentGroupedProduct.Name;
+                }
+                return productModel;
+            });
             gridModel.Total = products.TotalCount;
 
             return Json(gridModel);

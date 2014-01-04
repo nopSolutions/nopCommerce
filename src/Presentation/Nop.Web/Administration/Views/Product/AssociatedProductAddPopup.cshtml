@@ -135,7 +135,8 @@
                                 width: 50
                             }, {
                                 field: "Name",
-                                title: "@T("Admin.Catalog.Products.Fields.Name")"
+                                title: "@T("Admin.Catalog.Products.Fields.Name")",
+                                template: "#:Name# # if(AssociatedToProductName !== null) {# <br /><i>@T("Admin.Catalog.Products.Fields.AssociatedToProductName"): #:AssociatedToProductName#</i> #}  #"
                             }, {
                                 field: "Published",
                                 title: "@T("Admin.Catalog.Products.Fields.Published")",
