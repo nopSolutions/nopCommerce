@@ -200,5 +200,19 @@ namespace Nop.Admin.Controllers
 
             return Json(new { Result = true });
         }
+
+        [HttpPost, ActionName("List")]
+        [FormValueRequired("delete-all")]
+        public ActionResult DeleteAll()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageQueue))
+                return AccessDeniedView();
+
+            _queuedEmailService.DeleteAllEmails();
+
+            SuccessNotification(_localizationService.GetResource("Admin.System.QueuedEmails.DeletedAll"));
+            return RedirectToAction("List");
+        }
+
 	}
 }

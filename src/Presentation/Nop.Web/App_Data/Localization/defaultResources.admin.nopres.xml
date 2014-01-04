@@ -10653,6 +10653,9 @@
               <LocaleResource Name="Requeue">
                 <Value>Requeue</Value>
               </LocaleResource>
+              <LocaleResource Name="DeleteAll">
+                <Value>Delete all</Value>
+              </LocaleResource>
               <LocaleResource Name="DeleteSelected">
                 <Value>Delete selected</Value>
               </LocaleResource>
@@ -10855,6 +10858,9 @@
               </LocaleResource>
               <LocaleResource Name="Deleted">
                 <Value>The queued email has been deleted successfully.</Value>
+              </LocaleResource>
+              <LocaleResource Name="DeletedAll">
+                <Value>All queued emails have been deleted successfully.</Value>
               </LocaleResource>
               <LocaleResource Name="Requeued">
                 <Value>The queued email has been requeued successfully.</Value>

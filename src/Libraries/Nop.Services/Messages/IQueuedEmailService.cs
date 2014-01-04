@@ -56,5 +56,10 @@ namespace Nop.Services.Messages
             string toEmail, DateTime? createdFromUtc, DateTime? createdToUtc, 
             bool loadNotSentItemsOnly, int maxSendTries,
             bool loadNewest, int pageIndex, int pageSize);
+
+        /// <summary>
+        /// Delete all queued emails
+        /// </summary>
+        void DeleteAllEmails();
     }
 }

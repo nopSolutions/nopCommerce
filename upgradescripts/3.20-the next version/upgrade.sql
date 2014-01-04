@@ -20,6 +20,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.InvoiceFooterTextColumn2.Hint">
     <Value>Enter the text that will appear at the bottom of generated invoices (right column).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.QueuedEmails.DeleteAll">
+    <Value>Delete all</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.QueuedEmails.DeletedAll">
+    <Value>All queued emails have been deleted successfully.</Value>
+  </LocaleResource>
 </Language>
 '
 

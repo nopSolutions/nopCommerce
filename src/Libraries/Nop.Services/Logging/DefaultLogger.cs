@@ -31,12 +31,15 @@ namespace Nop.Services.Logging
         /// Ctor
         /// </summary>
         /// <param name="logRepository">Log repository</param>
-        /// <param name="webHelper">Web helper</param>>
-        /// <param name="dbContext">DB context</param>>
+        /// <param name="webHelper">Web helper</param>
+        /// <param name="dbContext">DB context</param>
         /// <param name="dataProvider">WeData provider</param>
         /// <param name="commonSettings">Common settings</param>
-        public DefaultLogger(IRepository<Log> logRepository, IWebHelper webHelper,
-            IDbContext dbContext, IDataProvider dataProvider, CommonSettings commonSettings)
+        public DefaultLogger(IRepository<Log> logRepository, 
+            IWebHelper webHelper,
+            IDbContext dbContext, 
+            IDataProvider dataProvider, 
+            CommonSettings commonSettings)
         {
             this._logRepository = logRepository;
             this._webHelper = webHelper;
