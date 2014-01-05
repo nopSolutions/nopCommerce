@@ -10,7 +10,7 @@ namespace Nop.Core.Infrastructure.DependencyManagement
     /// </summary>
     public class ContainerConfigurer
     {
-        public virtual void Configure(IEngine engine, ContainerManager containerManager, EventBroker broker, NopConfig configuration)
+        public virtual void Configure(IEngine engine, ContainerManager containerManager, NopConfig configuration)
         {
             //other dependencies
             containerManager.AddComponentInstance<NopConfig>(configuration, "nop.configuration");
@@ -33,9 +33,6 @@ namespace Nop.Core.Infrastructure.DependencyManagement
                 foreach (var dependencyRegistrar in drInstances)
                     dependencyRegistrar.Register(x, typeFinder);
             });
-
-            //event broker
-            containerManager.AddComponentInstance(broker);
         }
     }
 }
