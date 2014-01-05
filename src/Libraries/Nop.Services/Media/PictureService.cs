@@ -77,19 +77,38 @@ namespace Nop.Services.Media
         /// </summary>
         /// <param name="originalSize">The original picture size</param>
         /// <param name="targetSize">The target picture size (longest side)</param>
+        /// <param name="resizeType">Resize type</param>
         /// <returns></returns>
-        protected virtual Size CalculateDimensions(Size originalSize, int targetSize)
+        protected virtual Size CalculateDimensions(Size originalSize, int targetSize, 
+            ResizeType resizeType = ResizeType.LongestSide)
         {
             var newSize = new Size();
-            if (originalSize.Height > originalSize.Width) // portrait 
+            switch (resizeType)
             {
-                newSize.Width = (int)(originalSize.Width * (float)(targetSize / (float)originalSize.Height));
-                newSize.Height = targetSize;
-            }
-            else // landscape or square
-            {
-                newSize.Height = (int)(originalSize.Height * (float)(targetSize / (float)originalSize.Width));
-                newSize.Width = targetSize;
+                case ResizeType.LongestSide:
+                    if (originalSize.Height > originalSize.Width)
+                    {
+                        // portrait 
+                        newSize.Width = (int)(originalSize.Width * (float)(targetSize / (float)originalSize.Height));
+                        newSize.Height = targetSize;
+                    }
+                    else 
+                    {
+                        // landscape or square
+                        newSize.Height = (int)(originalSize.Height * (float)(targetSize / (float)originalSize.Width));
+                        newSize.Width = targetSize;
+                    }
+                    break;
+                case ResizeType.Width:
+                    newSize.Height = (int)(originalSize.Height * (float)(targetSize / (float)originalSize.Width));
+                    newSize.Width = targetSize;
+                    break;
+                case ResizeType.Height:
+                    newSize.Width = (int)(originalSize.Width * (float)(targetSize / (float)originalSize.Height));
+                    newSize.Height = targetSize;
+                    break;
+                default:
+                    throw new Exception("Not supported ResizeType");
             }
             return newSize;
         }
@@ -836,5 +855,15 @@ namespace Nop.Services.Media
         }
 
         #endregion
+    }
+
+    /// <summary>
+    /// Resize types
+    /// </summary>
+    public enum ResizeType
+    {
+        LongestSide,
+        Width,
+        Height
     }
 }
