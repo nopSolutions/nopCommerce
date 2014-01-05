@@ -19,8 +19,9 @@ namespace Nop.Services.Orders
         /// <summary>
         /// Gets all checkout attributes
         /// </summary>
+        /// <param name="storeId">Store identifier</param>
         /// <returns>Checkout attribute collection</returns>
-        IList<CheckoutAttribute> GetAllCheckoutAttributes();
+        IList<CheckoutAttribute> GetAllCheckoutAttributes(int storeId = 0);
 
         /// <summary>
         /// Gets a checkout attribute 

@@ -26,6 +26,21 @@ set @resources='
   <LocaleResource Name="Admin.System.QueuedEmails.DeletedAll">
     <Value>All queued emails have been deleted successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Stores">
+	<Value>Stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Fields.LimitedToStores">
+	<Value>Limited to stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Fields.LimitedToStores.Hint">
+	<Value>Determines whether the attribute is available only at certain stores.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Fields.AvailableStores">
+	<Value>Stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Fields.AvailableStores.Hint">
+	<Value>Select stores for which the attribute will be shown.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -109,4 +124,24 @@ BEGIN
 	INSERT [dbo].[ScheduleTask] ([Name], [Seconds], [Type], [Enabled], [StopOnError])
 	VALUES (N'Clear log', 3600, N'Nop.Services.Logging.ClearLogTask, Nop.Services', 0, 0)
 END
+GO
+
+--delete checkout attributes. now they store specific
+DELETE FROM [GenericAttribute]
+WHERE [KeyGroup] = N'Customer' and [Key] = N'CheckoutAttributes'
+GO
+--Store mapping for checkout attributes
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[CheckoutAttribute]') and NAME='LimitedToStores')
+BEGIN
+	ALTER TABLE [CheckoutAttribute]
+	ADD [LimitedToStores] bit NULL
+END
+GO
+
+UPDATE [CheckoutAttribute]
+SET [LimitedToStores] = 0
+WHERE [LimitedToStores] IS NULL
+GO
+
+ALTER TABLE [CheckoutAttribute] ALTER COLUMN [LimitedToStores] bit NOT NULL
 GO

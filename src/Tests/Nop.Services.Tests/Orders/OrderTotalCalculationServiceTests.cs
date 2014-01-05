@@ -107,8 +107,11 @@ namespace Nop.Services.Tests.Orders
                 _genericAttributeService,
                 _localizationService,
                 _addressService,
-                _shippingSettings, pluginFinder, 
-                _eventPublisher, _shoppingCartSettings,
+                _shippingSettings,
+                pluginFinder, 
+                _storeContext,
+                _eventPublisher, 
+                _shoppingCartSettings,
                 cacheManager);
             
 

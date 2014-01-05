@@ -350,6 +350,22 @@
                           </LocaleResource>
                         </Children>
                       </LocaleResource>
+                      <LocaleResource Name="LimitedToStores">
+                        <Value>Limited to stores</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Determines whether the attribute is available only at certain stores.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="AvailableStores">
+                        <Value>Stores</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Select stores for which the attribute will be shown.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
                     </Children>
                   </LocaleResource>
                   <LocaleResource Name="Values">
@@ -420,6 +436,9 @@
                         <Value>You need to save the checkout attribute before you can add values for this checkout attribute page.</Value>
                       </LocaleResource>
                     </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="Stores">
+                    <Value>Stores</Value>
                   </LocaleResource>
                   <LocaleResource Name="Added">
                     <Value>The new attribute has been added successfully.</Value>

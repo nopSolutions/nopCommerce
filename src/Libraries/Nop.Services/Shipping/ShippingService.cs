@@ -54,6 +54,7 @@ namespace Nop.Services.Shipping
         private readonly IAddressService _addressService;
         private readonly ShippingSettings _shippingSettings;
         private readonly IPluginFinder _pluginFinder;
+        private readonly IStoreContext _storeContext;
         private readonly IEventPublisher _eventPublisher;
         private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly ICacheManager _cacheManager;
@@ -77,6 +78,7 @@ namespace Nop.Services.Shipping
         /// <param name="addressService">Address service</param>
         /// <param name="shippingSettings">Shipping settings</param>
         /// <param name="pluginFinder">Plugin finder</param>
+        /// <param name="storeContext">Store context</param>
         /// <param name="eventPublisher">Event published</param>
         /// <param name="shoppingCartSettings">Shopping cart settings</param>
         /// <param name="cacheManager">Cache manager</param>
@@ -92,6 +94,7 @@ namespace Nop.Services.Shipping
             IAddressService addressService,
             ShippingSettings shippingSettings,
             IPluginFinder pluginFinder,
+            IStoreContext storeContext,
             IEventPublisher eventPublisher,
             ShoppingCartSettings shoppingCartSettings,
             ICacheManager cacheManager)
@@ -108,6 +111,7 @@ namespace Nop.Services.Shipping
             this._addressService = addressService;
             this._shippingSettings = shippingSettings;
             this._pluginFinder = pluginFinder;
+            this._storeContext = storeContext;
             this._eventPublisher = eventPublisher;
             this._shoppingCartSettings = shoppingCartSettings;
             this._cacheManager = cacheManager;
@@ -491,7 +495,7 @@ namespace Nop.Services.Shipping
             //checkout attributes
             if (customer != null)
             {
-                var checkoutAttributesXml = customer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes, _genericAttributeService);
+                var checkoutAttributesXml = customer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes, _genericAttributeService, _storeContext.CurrentStore.Id);
                 if (!String.IsNullOrEmpty(checkoutAttributesXml))
                 {
                     var caValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(checkoutAttributesXml);

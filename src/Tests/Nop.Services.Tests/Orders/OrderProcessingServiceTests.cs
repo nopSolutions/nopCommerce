@@ -140,6 +140,7 @@ namespace Nop.Services.Tests.Orders
                 _addressService,
                 _shippingSettings, 
                 pluginFinder, 
+                _storeContext,
                 _eventPublisher, 
                 _shoppingCartSettings,
                 cacheManager);

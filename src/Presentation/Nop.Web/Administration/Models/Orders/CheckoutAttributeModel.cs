@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
 using FluentValidation.Attributes;
+using Nop.Admin.Models.Stores;
 using Nop.Admin.Validators.Orders;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Localization;
@@ -49,6 +50,14 @@ namespace Nop.Admin.Models.Orders
         
 
         public IList<CheckoutAttributeLocalizedModel> Locales { get; set; }
+
+
+        //Store mapping
+        [NopResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Fields.LimitedToStores")]
+        public bool LimitedToStores { get; set; }
+        [NopResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Fields.AvailableStores")]
+        public List<StoreModel> AvailableStores { get; set; }
+        public int[] SelectedStoreIds { get; set; }
 
     }
 

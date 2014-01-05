@@ -5,6 +5,7 @@ using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Events;
+using Nop.Services.Stores;
 
 namespace Nop.Services.Orders
 {
@@ -18,7 +19,10 @@ namespace Nop.Services.Orders
         /// <summary>
         /// Key for caching
         /// </summary>
-        private const string CHECKOUTATTRIBUTES_ALL_KEY = "Nop.checkoutattribute.all";
+        /// <remarks>
+        /// {0} : store ID
+        /// </remarks>
+        private const string CHECKOUTATTRIBUTES_ALL_KEY = "Nop.checkoutattribute.all-{0}";
         /// <summary>
         /// Key for caching
         /// </summary>
@@ -54,6 +58,7 @@ namespace Nop.Services.Orders
 
         private readonly IRepository<CheckoutAttribute> _checkoutAttributeRepository;
         private readonly IRepository<CheckoutAttributeValue> _checkoutAttributeValueRepository;
+        private readonly IStoreMappingService _storeMappingService;
         private readonly IEventPublisher _eventPublisher;
         private readonly ICacheManager _cacheManager;
         
@@ -67,16 +72,19 @@ namespace Nop.Services.Orders
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="checkoutAttributeRepository">Checkout attribute repository</param>
         /// <param name="checkoutAttributeValueRepository">Checkout attribute value repository</param>
+        /// <param name="storeMappingService">Store mapping service</param>
         /// <param name="eventPublisher">Event published</param>
         public CheckoutAttributeService(ICacheManager cacheManager,
             IRepository<CheckoutAttribute> checkoutAttributeRepository,
             IRepository<CheckoutAttributeValue> checkoutAttributeValueRepository,
+            IStoreMappingService storeMappingService,
             IEventPublisher eventPublisher)
         {
-            _cacheManager = cacheManager;
-            _checkoutAttributeRepository = checkoutAttributeRepository;
-            _checkoutAttributeValueRepository = checkoutAttributeValueRepository;
-            _eventPublisher = eventPublisher;
+            this._cacheManager = cacheManager;
+            this._checkoutAttributeRepository = checkoutAttributeRepository;
+            this._checkoutAttributeValueRepository = checkoutAttributeValueRepository;
+            this._storeMappingService = storeMappingService;
+            this._eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -106,15 +114,22 @@ namespace Nop.Services.Orders
         /// <summary>
         /// Gets all checkout attributes
         /// </summary>
+        /// <param name="storeId">Store identifier</param>
         /// <returns>Checkout attribute collection</returns>
-        public virtual IList<CheckoutAttribute> GetAllCheckoutAttributes()
+        public virtual IList<CheckoutAttribute> GetAllCheckoutAttributes(int storeId = 0)
         {
-            return _cacheManager.Get(CHECKOUTATTRIBUTES_ALL_KEY, () =>
+            string key = string.Format(CHECKOUTATTRIBUTES_ALL_KEY, storeId);
+            return _cacheManager.Get(key, () =>
             {
                 var query = from ca in _checkoutAttributeRepository.Table
                             orderby ca.DisplayOrder
                             select ca;
                 var checkoutAttributes = query.ToList();
+                if (storeId > 0)
+                {
+                    //store mapping
+                    checkoutAttributes = checkoutAttributes.Where(ca => _storeMappingService.Authorize(ca)).ToList();
+                }
                 return checkoutAttributes;
             });
         }

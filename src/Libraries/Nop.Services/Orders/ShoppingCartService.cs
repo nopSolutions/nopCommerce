@@ -143,9 +143,9 @@ namespace Nop.Services.Orders
                     .Where(x => x.StoreId == storeId)
                     .ToList();
 
-                var checkoutAttributesXml = customer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes, _genericAttributeService);
+                var checkoutAttributesXml = customer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes, _genericAttributeService, storeId);
                 checkoutAttributesXml = _checkoutAttributeParser.EnsureOnlyActiveAttributes(checkoutAttributesXml, cart);
-                _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.CheckoutAttributes, checkoutAttributesXml);
+                _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.CheckoutAttributes, checkoutAttributesXml, storeId);
             }
 
             //event notification
@@ -689,7 +689,7 @@ namespace Nop.Services.Orders
                 var ca1Collection = _checkoutAttributeParser.ParseCheckoutAttributes(checkoutAttributes);
 
                 //existing checkout attributes
-                var ca2Collection = _checkoutAttributeService.GetAllCheckoutAttributes();
+                var ca2Collection = _checkoutAttributeService.GetAllCheckoutAttributes(_storeContext.CurrentStore.Id);
                 if (!shoppingCart.RequiresShipping())
                 {
                     //remove attributes which require shippable products

@@ -1,13 +1,14 @@
 using System.Collections.Generic;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Stores;
 
 namespace Nop.Core.Domain.Orders
 {
     /// <summary>
     /// Represents a checkout attribute
     /// </summary>
-    public partial class CheckoutAttribute : BaseEntity, ILocalizedEntity
+    public partial class CheckoutAttribute : BaseEntity, ILocalizedEntity, IStoreMappingSupported
     {
         private ICollection<CheckoutAttributeValue> _checkoutAttributeValues;
 
@@ -50,6 +51,11 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets the display order
         /// </summary>
         public int DisplayOrder { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the entity is limited/restricted to certain stores
+        /// </summary>
+        public bool LimitedToStores { get; set; }
         
         /// <summary>
         /// Gets the attribute control type

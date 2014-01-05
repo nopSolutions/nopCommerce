@@ -11,6 +11,7 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
 using Nop.Services.Security;
+using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
@@ -34,18 +35,27 @@ namespace Nop.Admin.Controllers
         private readonly MeasureSettings _measureSettings;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IPermissionService _permissionService;
+        private readonly IStoreService _storeService;
+        private readonly IStoreMappingService _storeMappingService;
 
         #endregion
 
         #region Constructors
 
         public CheckoutAttributeController(ICheckoutAttributeService checkoutAttributeService,
-            ILanguageService languageService, ILocalizedEntityService localizedEntityService,
-            ILocalizationService localizationService, ITaxCategoryService taxCategoryService,
-            IWorkContext workContext, ICurrencyService currencyService, 
-            ICustomerActivityService customerActivityService, CurrencySettings currencySettings,
-            IMeasureService measureService, MeasureSettings measureSettings,
-            IPermissionService permissionService)
+            ILanguageService languageService, 
+            ILocalizedEntityService localizedEntityService,
+            ILocalizationService localizationService,
+            ITaxCategoryService taxCategoryService,
+            IWorkContext workContext, 
+            ICurrencyService currencyService, 
+            ICustomerActivityService customerActivityService, 
+            CurrencySettings currencySettings,
+            IMeasureService measureService, 
+            MeasureSettings measureSettings,
+            IPermissionService permissionService,
+            IStoreService storeService,
+            IStoreMappingService storeMappingService)
         {
             this._checkoutAttributeService = checkoutAttributeService;
             this._languageService = languageService;
@@ -59,6 +69,8 @@ namespace Nop.Admin.Controllers
             this._measureService = measureService;
             this._measureSettings = measureSettings;
             this._permissionService = permissionService;
+            this._storeService = storeService;
+            this._storeMappingService = storeMappingService;
         }
 
         #endregion
@@ -95,7 +107,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected void PrepareCheckoutAttributeModel(CheckoutAttributeModel model, CheckoutAttribute checkoutAttribute, bool excludeProperties)
+        protected void PrepareTaxCategories(CheckoutAttributeModel model, CheckoutAttribute checkoutAttribute, bool excludeProperties)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -105,6 +117,52 @@ namespace Nop.Admin.Controllers
             model.AvailableTaxCategories.Add(new SelectListItem() { Text = "---", Value = "0" });
             foreach (var tc in taxCategories)
                 model.AvailableTaxCategories.Add(new SelectListItem() { Text = tc.Name, Value = tc.Id.ToString(), Selected = checkoutAttribute != null && !excludeProperties && tc.Id == checkoutAttribute.TaxCategoryId });
+        }
+
+        [NonAction]
+        private void PrepareStoresMappingModel(CheckoutAttributeModel model, CheckoutAttribute checkoutAttribute, bool excludeProperties)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            model.AvailableStores = _storeService
+                .GetAllStores()
+                .Select(s => s.ToModel())
+                .ToList();
+            if (!excludeProperties)
+            {
+                if (checkoutAttribute != null)
+                {
+                    model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(checkoutAttribute);
+                }
+                else
+                {
+                    model.SelectedStoreIds = new int[0];
+                }
+            }
+        }
+
+        [NonAction]
+        protected void SaveStoreMappings(CheckoutAttribute checkoutAttribute, CheckoutAttributeModel model)
+        {
+            var existingStoreMappings = _storeMappingService.GetStoreMappings(checkoutAttribute);
+            var allStores = _storeService.GetAllStores();
+            foreach (var store in allStores)
+            {
+                if (model.SelectedStoreIds != null && model.SelectedStoreIds.Contains(store.Id))
+                {
+                    //new role
+                    if (existingStoreMappings.Count(sm => sm.StoreId == store.Id) == 0)
+                        _storeMappingService.InsertStoreMapping(checkoutAttribute, store.Id);
+                }
+                else
+                {
+                    //removed role
+                    var storeMappingToDelete = existingStoreMappings.FirstOrDefault(sm => sm.StoreId == store.Id);
+                    if (storeMappingToDelete != null)
+                        _storeMappingService.DeleteStoreMapping(storeMappingToDelete);
+                }
+            }
         }
 
         #endregion
@@ -154,7 +212,10 @@ namespace Nop.Admin.Controllers
             var model = new CheckoutAttributeModel();
             //locales
             AddLocales(_languageService, model.Locales);
-            PrepareCheckoutAttributeModel(model, null, true);
+            //tax categories
+            PrepareTaxCategories(model, null, true);
+            //Stores
+            PrepareStoresMappingModel(model, null, false);
             return View(model);
         }
 
@@ -168,7 +229,10 @@ namespace Nop.Admin.Controllers
             {
                 var checkoutAttribute = model.ToEntity();
                 _checkoutAttributeService.InsertCheckoutAttribute(checkoutAttribute);
+                //locales
                 UpdateAttributeLocales(checkoutAttribute, model);
+                //Stores
+                SaveStoreMappings(checkoutAttribute, model);
 
                 //activity log
                 _customerActivityService.InsertActivity("AddNewCheckoutAttribute", _localizationService.GetResource("ActivityLog.AddNewCheckoutAttribute"), checkoutAttribute.Name);
@@ -178,7 +242,11 @@ namespace Nop.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            PrepareCheckoutAttributeModel(model, null, true);
+
+            //tax categories
+            PrepareTaxCategories(model, null, true);
+            //Stores
+            PrepareStoresMappingModel(model, null, true);
             return View(model);
         }
 
@@ -200,7 +268,10 @@ namespace Nop.Admin.Controllers
                 locale.Name = checkoutAttribute.GetLocalized(x => x.Name, languageId, false, false);
                 locale.TextPrompt = checkoutAttribute.GetLocalized(x => x.TextPrompt, languageId, false, false);
             });
-            PrepareCheckoutAttributeModel(model, checkoutAttribute, false);
+            //tax categories
+            PrepareTaxCategories(model, checkoutAttribute, false);
+            //Stores
+            PrepareStoresMappingModel(model, checkoutAttribute, false);
 
             return View(model);
         }
@@ -220,8 +291,10 @@ namespace Nop.Admin.Controllers
             {
                 checkoutAttribute = model.ToEntity(checkoutAttribute);
                 _checkoutAttributeService.UpdateCheckoutAttribute(checkoutAttribute);
-
+                //locales
                 UpdateAttributeLocales(checkoutAttribute, model);
+                //Stores
+                SaveStoreMappings(checkoutAttribute, model);
 
                 //activity log
                 _customerActivityService.InsertActivity("EditCheckoutAttribute", _localizationService.GetResource("ActivityLog.EditCheckoutAttribute"), checkoutAttribute.Name);
@@ -241,7 +314,12 @@ namespace Nop.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            PrepareCheckoutAttributeModel(model, checkoutAttribute, true);
+
+            //tax categories
+            PrepareTaxCategories(model, checkoutAttribute, true);
+            //Stores
+            PrepareStoresMappingModel(model, checkoutAttribute, true);
+
             return View(model);
         }
 

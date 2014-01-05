@@ -551,6 +551,19 @@ namespace Nop.Services.Orders
                         throw new NopException(string.Format("Country '{0}' is not allowed for billing", billingAddress.Country.Name));
                 }
 
+                //checkout attributes
+                string checkoutAttributeDescription, checkoutAttributesXml;
+                if (!processPaymentRequest.IsRecurringPayment)
+                {
+                    checkoutAttributesXml = customer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes, processPaymentRequest.StoreId);
+                    checkoutAttributeDescription = _checkoutAttributeFormatter.FormatAttributes(checkoutAttributesXml, customer);
+                }
+                else
+                {
+                    checkoutAttributesXml = initialOrder.CheckoutAttributesXml;
+                    checkoutAttributeDescription = initialOrder.CheckoutAttributeDescription;
+                }
+
                 //load and validate customer shopping cart
                 IList<ShoppingCartItem> cart = null;
                 if (!processPaymentRequest.IsRecurringPayment)
@@ -565,8 +578,8 @@ namespace Nop.Services.Orders
                         throw new NopException("Cart is empty");
 
                     //validate the entire shopping cart
-                    var warnings = _shoppingCartService.GetShoppingCartWarnings(cart, 
-                        customer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes), 
+                    var warnings = _shoppingCartService.GetShoppingCartWarnings(cart,
+                        checkoutAttributesXml,
                         true);
                     if (warnings.Count > 0)
                     {
@@ -627,19 +640,6 @@ namespace Nop.Services.Orders
                 else
                 {
                     customerTaxDisplayType = initialOrder.CustomerTaxDisplayType;
-                }
-
-                //checkout attributes
-                string checkoutAttributeDescription, checkoutAttributesXml;
-                if (!processPaymentRequest.IsRecurringPayment)
-                {
-                    checkoutAttributesXml = customer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes);
-                    checkoutAttributeDescription = _checkoutAttributeFormatter.FormatAttributes(checkoutAttributesXml, customer);
-                }
-                else
-                {
-                    checkoutAttributesXml = initialOrder.CheckoutAttributesXml;
-                    checkoutAttributeDescription = initialOrder.CheckoutAttributeDescription;
                 }
 
                 //applied discount (used to store discount usage history)

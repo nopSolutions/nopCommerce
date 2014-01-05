@@ -258,7 +258,7 @@ namespace Nop.Web.Controllers
             model.IsEditable = isEditable;
             model.ShowProductImages = _shoppingCartSettings.ShowProductImagesOnShoppingCart;
             model.ShowSku = _catalogSettings.ShowProductSku;
-            var checkoutAttributesXml = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes, _genericAttributeService);
+            var checkoutAttributesXml = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes, _genericAttributeService, _storeContext.CurrentStore.Id);
             model.CheckoutAttributeInfo = _checkoutAttributeFormatter.FormatAttributes(checkoutAttributesXml, _workContext.CurrentCustomer);
             bool minOrderSubtotalAmountOk = _orderProcessingService.ValidateMinOrderSubtotalAmount(cart);
             if (!minOrderSubtotalAmountOk)
@@ -289,7 +289,7 @@ namespace Nop.Web.Controllers
 
             #region Checkout attributes
 
-            var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes();
+            var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes(_storeContext.CurrentStore.Id);
             if (!cart.RequiresShipping())
             {
                 //remove attributes which require shippable products
@@ -337,7 +337,7 @@ namespace Nop.Web.Controllers
 
 
                 //set already selected attributes
-                string selectedCheckoutAttributes = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes, _genericAttributeService);
+                string selectedCheckoutAttributes = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes, _genericAttributeService, _storeContext.CurrentStore.Id);
                 switch (attribute.AttributeControlType)
                 {
                     case AttributeControlType.DropdownList:
@@ -754,7 +754,7 @@ namespace Nop.Web.Controllers
                 //1. "terms of service" are enabled
                 //2. we have at least one checkout attribute
                 //3. min order sub-total is OK
-                var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes();
+                var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes(_storeContext.CurrentStore.Id);
                 if (!cart.RequiresShipping())
                 {
                     //remove attributes which require shippable products
@@ -812,7 +812,7 @@ namespace Nop.Web.Controllers
         protected void ParseAndSaveCheckoutAttributes(List<ShoppingCartItem> cart, FormCollection form)
         {
             string selectedAttributes = "";
-            var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes();
+            var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes(_storeContext.CurrentStore.Id);
             if (!cart.RequiresShipping())
             {
                 //remove attributes which require shippable products
@@ -921,7 +921,7 @@ namespace Nop.Web.Controllers
             }
 
             //save checkout attributes
-            _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.CheckoutAttributes, selectedAttributes);
+            _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.CheckoutAttributes, selectedAttributes, _storeContext.CurrentStore.Id);
         }
 
         #endregion
@@ -1743,7 +1743,7 @@ namespace Nop.Web.Controllers
             ParseAndSaveCheckoutAttributes(cart, form);
 
             //validate attributes
-            string checkoutAttributes = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes, _genericAttributeService);
+            string checkoutAttributes = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes, _genericAttributeService, _storeContext.CurrentStore.Id);
             var checkoutAttributeWarnings = _shoppingCartService.GetShoppingCartWarnings(cart, checkoutAttributes, true);
             if (checkoutAttributeWarnings.Count > 0)
             {

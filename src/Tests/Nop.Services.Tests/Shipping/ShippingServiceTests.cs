@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
+using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
+using Nop.Core.Domain.Stores;
 using Nop.Core.Plugins;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -35,6 +37,8 @@ namespace Nop.Services.Tests.Shipping
         private IShippingService _shippingService;
         private ShoppingCartSettings _shoppingCartSettings;
         private IProductService _productService;
+        private Store _store;
+        private IStoreContext _storeContext;
 
         [SetUp]
         public new void SetUp()
@@ -62,6 +66,10 @@ namespace Nop.Services.Tests.Shipping
             _addressService = MockRepository.GenerateMock<IAddressService>();
             _genericAttributeService = MockRepository.GenerateMock<IGenericAttributeService>();
 
+            _store = new Store() { Id = 1 };
+            _storeContext = MockRepository.GenerateMock<IStoreContext>();
+            _storeContext.Expect(x => x.CurrentStore).Return(_store);
+
             _shoppingCartSettings = new ShoppingCartSettings();
             _shippingService = new ShippingService(_shippingMethodRepository,
                 _deliveryDateRepository,
@@ -74,7 +82,8 @@ namespace Nop.Services.Tests.Shipping
                 _localizationService,
                 _addressService,
                 _shippingSettings, 
-                pluginFinder, 
+                pluginFinder,
+                _storeContext,
                 _eventPublisher,
                 _shoppingCartSettings,
                 cacheManager);

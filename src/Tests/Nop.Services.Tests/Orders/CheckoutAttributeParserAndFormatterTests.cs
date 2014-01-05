@@ -12,6 +12,7 @@ using Nop.Services.Directory;
 using Nop.Services.Events;
 using Nop.Services.Media;
 using Nop.Services.Orders;
+using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Tests;
 using NUnit.Framework;
@@ -25,6 +26,7 @@ namespace Nop.Services.Tests.Orders
         private IRepository<CheckoutAttribute> _checkoutAttributeRepo;
         private IRepository<CheckoutAttributeValue> _checkoutAttributeValueRepo;
         private IEventPublisher _eventPublisher;
+        private IStoreMappingService _storeMappingService;
         private ICheckoutAttributeService _checkoutAttributeService;
         private ICheckoutAttributeParser _checkoutAttributeParser;
         private IWorkContext _workContext;
@@ -130,12 +132,15 @@ namespace Nop.Services.Tests.Orders
 
             var cacheManager = new NopNullCache();
 
+            _storeMappingService = MockRepository.GenerateMock<IStoreMappingService>();
+
             _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
             _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
 
             _checkoutAttributeService = new CheckoutAttributeService(cacheManager,
                 _checkoutAttributeRepo,
                 _checkoutAttributeValueRepo,
+                _storeMappingService,
                 _eventPublisher);
 
             _checkoutAttributeParser = new CheckoutAttributeParser(_checkoutAttributeService);

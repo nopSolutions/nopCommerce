@@ -544,7 +544,7 @@ namespace Nop.Services.Customers
             //clear checkout attributes
             if (clearCheckoutAttributes)
             {
-                _genericAttributeService.SaveAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.CheckoutAttributes, null);
+                _genericAttributeService.SaveAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.CheckoutAttributes, null, storeId);
             }
 
             //clear reward points flag
