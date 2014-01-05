@@ -25,7 +25,7 @@
             </td>
         </tr>
         <tr>
-            <td colspan="2" width="100%">
+            <td colspan="2">
                 <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
             </td>
         </tr>
@@ -51,14 +51,14 @@
             </td>
         </tr>
         <tr>
-            <td colspan="2" width="100%">
+            <td colspan="2">
                 <input type="submit" name="test-sms" class="k-button" value="@T("Plugins.Sms.Verizon.SendTest")" />
             </td>
         </tr>
         @if (!String.IsNullOrEmpty(Model.TestSmsResult))
         {
             <tr>
-                <td colspan="2" width="100%" style="color: red">
+                <td colspan="2" style="color: red">
                     @Model.TestSmsResult
                 </td>
             </tr>
