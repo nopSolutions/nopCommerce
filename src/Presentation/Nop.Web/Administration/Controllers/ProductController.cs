@@ -2514,11 +2514,43 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null)
                 vendorId = _workContext.CurrentVendor.Id;
 
-            var allVariants = _productService.GetLowStockProducts(vendorId);
+            IList<Product> products;
+            IList<ProductVariantAttributeCombination> combinations;
+            _productService.GetLowStockProducts(vendorId, out products, out combinations);
+
+            var models = new List<LowStockProductModel>();
+            //products
+            foreach (var product in products)
+            {
+                var lowStockModel = new LowStockProductModel()
+                {
+                    Id = product.Id,
+                    Name = product.Name,
+                    ManageInventoryMethod = product.ManageInventoryMethod.GetLocalizedEnum(_localizationService, _workContext.WorkingLanguage.Id),
+                    StockQuantity = product.StockQuantity,
+                    Published = product.Published
+                };
+                models.Add(lowStockModel);
+            }
+            //combinations
+            foreach (var combination in combinations)
+            {
+                var product = combination.Product;
+                var lowStockModel = new LowStockProductModel()
+                {
+                    Id = product.Id,
+                    Name = product.Name,
+                    Attributes = _productAttributeFormatter.FormatAttributes(product, combination.AttributesXml, _workContext.CurrentCustomer, "<br />", true, true, true, false),
+                    ManageInventoryMethod = product.ManageInventoryMethod.GetLocalizedEnum(_localizationService, _workContext.WorkingLanguage.Id),
+                    StockQuantity = combination.StockQuantity,
+                    Published = product.Published
+                };
+                models.Add(lowStockModel);
+            }
             var gridModel = new DataSourceResult
             {
-                Data = allVariants.PagedForCommand(command).Select(x => x.ToModel()),
-                Total = allVariants.Count
+                Data = models.PagedForCommand(command),
+                Total = models.Count
             };
 
             return Json(gridModel);

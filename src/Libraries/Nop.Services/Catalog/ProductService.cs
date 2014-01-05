@@ -932,8 +932,11 @@ namespace Nop.Services.Catalog
         /// Get low stock products
         /// </summary>
         /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
-        /// <returns>Result</returns>
-        public virtual IList<Product> GetLowStockProducts(int vendorId)
+        /// <param name="products">Low stock products</param>
+        /// <param name="combinations">Low stock  attribute combinations</param>
+        public virtual void GetLowStockProducts(int vendorId,
+            out IList<Product> products, 
+            out IList<ProductVariantAttributeCombination> combinations)
         {
             //Track inventory for product
             var query1 = from p in _productRepository.Table
@@ -943,7 +946,7 @@ namespace Nop.Services.Catalog
                          p.MinStockQuantity >= p.StockQuantity &&
                          (vendorId == 0 || p.VendorId == vendorId)
                          select p;
-            var products1 = query1.ToList();
+            products = query1.ToList();
 
             //Track inventory for product by product attributes
             var query2 = from p in _productRepository.Table
@@ -952,19 +955,8 @@ namespace Nop.Services.Catalog
                          p.ManageInventoryMethodId == (int)ManageInventoryMethod.ManageStockByAttributes &&
                          pvac.StockQuantity <= 0 &&
                          (vendorId == 0 || p.VendorId == vendorId)
-                         select p;
-            //only distinct products (group by ID)
-            //if we use standard Distinct() method, then all fields will be compared (low performance)
-            query2 = from p in query2
-                    group p by p.Id into pGroup
-                    orderby pGroup.Key
-                    select pGroup.FirstOrDefault();
-            var products2 = query2.ToList();
-
-            var result = new List<Product>();
-            result.AddRange(products1);
-            result.AddRange(products2);
-            return result;
+                         select pvac;
+            combinations = query2.ToList();
         }
         
         /// <summary>

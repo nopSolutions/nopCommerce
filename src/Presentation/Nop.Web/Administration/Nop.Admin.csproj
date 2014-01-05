@@ -187,6 +187,7 @@
     <Compile Include="MappingExtensions.cs" />
     <Compile Include="Infrastructure\AutoMapperStartupTask.cs" />
     <Compile Include="Models\Catalog\AddProductVariantAttributeCombinationModel.cs" />
+    <Compile Include="Models\Catalog\LowStockProductModel.cs" />
     <Compile Include="Models\Catalog\BulkEditProductModel.cs" />
     <Compile Include="Models\Catalog\BulkEditListModel.cs" />
     <Compile Include="Models\Catalog\CategoryListModel.cs" />

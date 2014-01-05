@@ -22,7 +22,7 @@
                 <div id="products-grid"></div>
 
                 <script>
-                    $(document).ready(function () {
+                    $(document).ready(function() {
                         $("#products-grid").kendoGrid({
                             dataSource: {
                                 type: "json",
@@ -56,41 +56,35 @@
                                 mode: "inline"
                             },
                             scrollable: false,
-                            columns: [{
-                                field: "Name",
-                                title: "@T("Admin.Catalog.Products.Fields.Name")",
-                                width: 300
-                            }, {
-                                field: "Sku",
-                                title: "@T("Admin.Catalog.Products.Fields.Sku")",
-                                width: 100
-                            },{
-                                field: "Price",
-                                title: "@T("Admin.Catalog.Products.Fields.Price")",
-                                width: 150,
-                                //if not a grouped product, then display
-                                template: "# if(ProductTypeId != @((int)ProductType.GroupedProduct)) {# #:Price# #}  #"
-                            },{
-                                field: "StockQuantity",
-                                title: "@T("Admin.Catalog.Products.Fields.StockQuantity")",
-                                width: 100,
-                                //if not a grouped product
-                                //AND "manage inventory" is "Track inventory"
-                                //then display
-                                template: "# if(ProductTypeId != @((int)ProductType.GroupedProduct) && ManageInventoryMethodId == @((int)ManageInventoryMethod.ManageStock)) {# #:StockQuantity# #}  #"
-                            },{
-                                field: "Published",
-                                title: "@T("Admin.Catalog.Products.Fields.Published")",
-                                width: 100,
-                                headerAttributes: { style: "text-align:center" },
-                                attributes: { style: "text-align:center" },
-                                template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Published#.gif" />'
-                            }, {
-                                field: "Id",
-                                title: "@T("Admin.Common.Edit")",
-                                width: 100,
-                                template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
-                            }]
+                            columns: [
+                                {
+                                    field: "Name",
+                                    title: "@T("Admin.Catalog.Products.Fields.Name")",
+                                    width: 300,
+                                    //if not a grouped product, then display
+                                    template: "#:Name# # if(Attributes !== null) {# <br /><i> #=Attributes# </i> #} #"
+                                }, {
+                                    field: "ManageInventoryMethod",
+                                    title: "@T("Admin.Catalog.Products.Fields.ManageInventoryMethod")",
+                                    width: 150
+                                }, {
+                                    field: "StockQuantity",
+                                    title: "@T("Admin.Catalog.Products.Fields.StockQuantity")",
+                                    width: 100
+                                }, {
+                                    field: "Published",
+                                    title: "@T("Admin.Catalog.Products.Fields.Published")",
+                                    width: 100,
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Published#.gif" />'
+                                }, {
+                                    field: "Id",
+                                    title: "@T("Admin.Common.Edit")",
+                                    width: 100,
+                                    template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
+                                }
+                            ]
                         });
                     });
                 </script>
