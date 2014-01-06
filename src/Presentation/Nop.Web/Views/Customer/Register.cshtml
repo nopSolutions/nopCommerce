@@ -334,7 +334,7 @@
                 <div class="accept-privacy-policy">
                     <input id="accept-privacy-policy" type="checkbox" name="accept-privacy-policy" />
                     <label for="accept-privacy-policy">@T("Account.Fields.AcceptPrivacyPolicy")</label>
-                    <a class="read" href='@Url.RouteUrl("Topic", new { SystemName = "privacyinfo" })'>@T("Account.Fields.AcceptPrivacyPolicy.Read")</a>
+                    <a class="read" href='@Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("privacyinfo") })'>@T("Account.Fields.AcceptPrivacyPolicy.Read")</a>
                 </div>
             }
             <div class="buttons">

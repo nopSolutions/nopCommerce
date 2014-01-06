@@ -41,6 +41,11 @@ namespace Nop.Web.Infrastructure
                             new { controller = "Blog", action = "BlogPost" },
                             new[] { "Nop.Web.Controllers" });
 
+            routes.MapLocalizedRoute("Topic",
+                            "{SeName}",
+                            new { controller = "Topic", action = "TopicDetails" },
+                            new[] { "Nop.Web.Controllers" });
+
 
 
             //the last route. it's used when none of registered routes could be used for the current request

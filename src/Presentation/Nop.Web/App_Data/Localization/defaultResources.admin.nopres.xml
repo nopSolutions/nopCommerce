@@ -7444,7 +7444,7 @@
                     <Value>Search engine friendly page name</Value>
                     <Children>
                       <LocaleResource Name="Hint">
-                        <Value>Set a search engine friendly page name e.g. 'The Best Computers' to make your page name '##-the-best-computers.aspx' (## represents the category ID). The default is the name of category.</Value>
+                        <Value>Set a search engine friendly page name e.g. 'some-topic-name' to make your page URL 'http://www.yourStore.com/some-topic-name'. Leave empty to generate it automatically based on the title of the topic.</Value>
                       </LocaleResource>
                     </Children>
                   </LocaleResource>

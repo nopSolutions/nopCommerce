@@ -223,7 +223,7 @@ namespace Nop.Web.Controllers
             if (topic == null)
                 return RedirectToRoutePermanent("HomePage");
 
-            return RedirectToRoutePermanent("Topic", new { systemName = topic.SystemName });
+            return RedirectToRoutePermanent("Topic", new { SeName = topic.GetSeName() });
         }
 
         public ActionResult RedirectForumGroup(string id, bool idIncludesSename = true)

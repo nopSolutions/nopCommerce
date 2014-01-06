@@ -62,6 +62,10 @@ namespace Nop.Admin.Models.Topics
         [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.MetaTitle")]
         [AllowHtml]
         public string MetaTitle { get; set; }
+
+        [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.SeName")]
+        [AllowHtml]
+        public string SeName { get; set; }
         
         public IList<TopicLocalizedModel> Locales { get; set; }
     }
@@ -89,5 +93,9 @@ namespace Nop.Admin.Models.Topics
         [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.MetaTitle")]
         [AllowHtml]
         public string MetaTitle { get; set; }
+
+        [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.SeName")]
+        [AllowHtml]
+        public string SeName { get; set; }
     }
 }

@@ -108,7 +108,7 @@ namespace Nop.Services.Seo
             var topics = _topicService.GetAllTopics(_storeContext.CurrentStore.Id).ToList().FindAll(t => t.IncludeInSitemap);
             foreach (var topic in topics)
             {
-                var url = urlHelper.RouteUrl("Topic", new { SystemName = topic.SystemName.ToLowerInvariant() }, "http");
+                var url = urlHelper.RouteUrl("Topic", new { SeName = topic.GetSeName() }, "http");
                 var updateFrequency = UpdateFrequency.Weekly;
                 var updateTime = DateTime.UtcNow;
                 WriteUrlLocation(url, updateFrequency, updateTime);

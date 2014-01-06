@@ -5,6 +5,7 @@ using Nop.Admin.Models.Topics;
 using Nop.Core.Domain.Topics;
 using Nop.Services.Localization;
 using Nop.Services.Security;
+using Nop.Services.Seo;
 using Nop.Services.Stores;
 using Nop.Services.Topics;
 using Nop.Web.Framework.Controllers;
@@ -24,15 +25,20 @@ namespace Nop.Admin.Controllers
         private readonly IPermissionService _permissionService;
         private readonly IStoreService _storeService;
         private readonly IStoreMappingService _storeMappingService;
+        private readonly IUrlRecordService _urlRecordService;
 
         #endregion Fields
 
         #region Constructors
 
-        public TopicController(ITopicService topicService, ILanguageService languageService,
-            ILocalizedEntityService localizedEntityService, ILocalizationService localizationService,
-            IPermissionService permissionService, IStoreService storeService,
-            IStoreMappingService storeMappingService)
+        public TopicController(ITopicService topicService,
+            ILanguageService languageService,
+            ILocalizedEntityService localizedEntityService, 
+            ILocalizationService localizationService,
+            IPermissionService permissionService, 
+            IStoreService storeService,
+            IStoreMappingService storeMappingService,
+            IUrlRecordService urlRecordService)
         {
             this._topicService = topicService;
             this._languageService = languageService;
@@ -41,6 +47,7 @@ namespace Nop.Admin.Controllers
             this._permissionService = permissionService;
             this._storeService = storeService;
             this._storeMappingService = storeMappingService;
+            this._urlRecordService = urlRecordService;
         }
 
         #endregion
@@ -76,6 +83,10 @@ namespace Nop.Admin.Controllers
                                                            x => x.MetaTitle,
                                                            localized.MetaTitle,
                                                            localized.LanguageId);
+
+                //search engine name
+                var seName = topic.ValidateSeName(localized.SeName, localized.Title, false);
+                _urlRecordService.SaveSlug(topic, seName, localized.LanguageId);
             }
         }
 
@@ -206,6 +217,9 @@ namespace Nop.Admin.Controllers
 
                 var topic = model.ToEntity();
                 _topicService.InsertTopic(topic);
+                //search engine name
+                model.SeName = topic.ValidateSeName(model.SeName, topic.Title ?? topic.SystemName, true);
+                _urlRecordService.SaveSlug(topic, model.SeName, 0);
                 //Stores
                 SaveStoreMappings(topic, model);
                 //locales
@@ -233,7 +247,7 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("List");
 
             var model = topic.ToModel();
-            model.Url = Url.RouteUrl("Topic", new { SystemName = topic.SystemName }, "http");
+            model.Url = Url.RouteUrl("Topic", new { SeName = topic.GetSeName() }, "http");
             //Store
             PrepareStoresMappingModel(model, topic, false);
             //locales
@@ -244,6 +258,7 @@ namespace Nop.Admin.Controllers
                 locale.MetaKeywords = topic.GetLocalized(x => x.MetaKeywords, languageId, false, false);
                 locale.MetaDescription = topic.GetLocalized(x => x.MetaDescription, languageId, false, false);
                 locale.MetaTitle = topic.GetLocalized(x => x.MetaTitle, languageId, false, false);
+                locale.SeName = topic.GetSeName(languageId, false, false);
             });
 
             return View(model);
@@ -260,8 +275,6 @@ namespace Nop.Admin.Controllers
                 //No topic found with the specified id
                 return RedirectToAction("List");
 
-            model.Url = Url.RouteUrl("Topic", new { SystemName = topic.SystemName }, "http");
-
             if (!model.IsPasswordProtected)
             {
                 model.Password = null;
@@ -271,6 +284,9 @@ namespace Nop.Admin.Controllers
             {
                 topic = model.ToEntity(topic);
                 _topicService.UpdateTopic(topic);
+                //search engine name
+                model.SeName = topic.ValidateSeName(model.SeName, topic.Title ?? topic.SystemName, true);
+                _urlRecordService.SaveSlug(topic, model.SeName, 0);
                 //Stores
                 SaveStoreMappings(topic, model);
                 //locales
@@ -293,6 +309,8 @@ namespace Nop.Admin.Controllers
 
 
             //If we got this far, something failed, redisplay form
+
+            model.Url = Url.RouteUrl("Topic", new { SeName = topic.GetSeName() }, "http");
 
             //Store
             PrepareStoresMappingModel(model, topic, true);

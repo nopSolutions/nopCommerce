@@ -196,6 +196,15 @@
                            @Html.ValidationMessageFor(model => model.Locales[item].MetaTitle)
                        </td>
                    </tr>
+                <tr>
+                    <td class="adminTitle">
+                        @Html.NopLabelFor(model => model.Locales[item].SeName):
+                    </td>
+                    <td class="adminData">
+                        @Html.EditorFor(model => model.Locales[item].SeName)
+                        @Html.ValidationMessageFor(model => model.Locales[item].SeName)
+                    </td>
+                </tr>
                    <tr>
                        <td colspan="2">
                            @Html.HiddenFor(model => model.Locales[item].LanguageId)
@@ -231,6 +240,15 @@
                            @Html.ValidationMessageFor(model => model.MetaTitle)
                        </td>
                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            @Html.NopLabelFor(model => model.SeName):
+                        </td>
+                        <td class="adminData">
+                            @Html.EditorFor(x => x.SeName)
+                            @Html.ValidationMessageFor(model => model.SeName)
+                        </td>
+                    </tr>
                </table>))
 }
 

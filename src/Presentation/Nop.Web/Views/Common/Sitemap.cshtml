@@ -21,7 +21,7 @@
                     <ul>
                         @foreach (var item in Model.Topics)
                         { 
-                            <li><a href="@Url.RouteUrl("Topic", new { SystemName = item.SystemName.ToLowerInvariant() })">@item.Title</a></li>
+                            <li><a href="@Url.RouteUrl("Topic", new { Sename = Html.GetTopicSeName(item.SystemName) })">@item.Title</a></li>
                         }
                     </ul>
                 </div>

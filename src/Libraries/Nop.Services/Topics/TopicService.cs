@@ -70,7 +70,7 @@ namespace Nop.Services.Topics
         /// <param name="systemName">The topic system name</param>
         /// <param name="storeId">Store identifier</param>
         /// <returns>Topic</returns>
-        public virtual Topic GetTopicBySystemName(string systemName, int storeId)
+        public virtual Topic GetTopicBySystemName(string systemName)
         {
             if (String.IsNullOrEmpty(systemName))
                 return null;
@@ -78,26 +78,6 @@ namespace Nop.Services.Topics
             var query = _topicRepository.Table;
             query = query.Where(t => t.SystemName == systemName);
             query = query.OrderBy(t => t.Id);
-
-            //Store mapping
-            if (storeId > 0)
-            {
-                query = from t in query
-                        join sm in _storeMappingRepository.Table
-                        on new { c1 = t.Id, c2 = "Topic" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into t_sm
-                        from sm in t_sm.DefaultIfEmpty()
-                        where !t.LimitedToStores || storeId == sm.StoreId
-                        select t;
-
-                //only distinct items (group by ID)
-                query = from t in query
-                        group t by t.Id
-                        into tGroup
-                        orderby tGroup.Key
-                        select tGroup.FirstOrDefault();
-                query = query.OrderBy(t => t.Id);
-            }
-
             return query.FirstOrDefault();
         }
 

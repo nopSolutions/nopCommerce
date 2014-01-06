@@ -25,9 +25,8 @@ namespace Nop.Services.Topics
         /// Gets a topic
         /// </summary>
         /// <param name="systemName">The topic system name</param>
-        /// <param name="storeId">Store identifier</param>
         /// <returns>Topic</returns>
-        Topic GetTopicBySystemName(string systemName, int storeId);
+        Topic GetTopicBySystemName(string systemName);
 
         /// <summary>
         /// Gets all topics

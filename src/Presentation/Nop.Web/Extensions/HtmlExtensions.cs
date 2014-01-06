@@ -1,17 +1,50 @@
-﻿using System;
+﻿using Nop.Core;
+using Nop.Core.Caching;
+using Nop.Core.Infrastructure;
+using Nop.Services.Localization;
+using Nop.Services.Seo;
+using Nop.Services.Topics;
+using Nop.Web.Framework.UI.Paging;
+using Nop.Web.Infrastructure.Cache;
+using Nop.Web.Models.Boards;
+using Nop.Web.Models.Common;
+using System;
 using System.Text;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
-using Nop.Core.Infrastructure;
-using Nop.Services.Localization;
-using Nop.Web.Framework.UI.Paging;
-using Nop.Web.Models.Boards;
-using Nop.Web.Models.Common;
 
 namespace Nop.Web.Extensions
 {
-    public static class PagerHtmlExtension
+    public static class HtmlExtensions
     {
+        /// <summary>
+        /// BBCode editor
+        /// </summary>
+        /// <typeparam name="TModel">Model</typeparam>
+        /// <param name="html">HTML Helper</param>
+        /// <param name="name">Name</param>
+        /// <returns>Editor</returns>
+        public static MvcHtmlString BBCodeEditor<TModel>(this HtmlHelper<TModel> html, string name)
+        {
+            var sb = new StringBuilder();
+
+            var storeLocation = EngineContext.Current.Resolve<IWebHelper>().GetStoreLocation();
+            string bbEditorWebRoot = String.Format("{0}Content/", storeLocation);
+
+            sb.AppendFormat("<script src=\"{0}Content/BBEditor/ed.js\" type=\"text/javascript\"></script>", storeLocation);
+            sb.Append(Environment.NewLine);
+            sb.Append("<script language=\"javascript\" type=\"text/javascript\">");
+            sb.Append(Environment.NewLine);
+            sb.AppendFormat("    var webRoot = '{0}';", bbEditorWebRoot);
+            sb.Append(Environment.NewLine);
+            sb.AppendFormat("    edToolbar('{0}');", name);
+            sb.Append(Environment.NewLine);
+            sb.Append("</script>");
+            sb.Append(Environment.NewLine);
+
+            return MvcHtmlString.Create(sb.ToString());
+        }
+
         //we have two pagers:
         //The first one can have custom routes
         //The second one just adds query string parameter
@@ -145,7 +178,7 @@ namespace Nop.Web.Extensions
         }
         public static MvcHtmlString ForumTopicSmallPager<TModel>(this HtmlHelper<TModel> html, ForumTopicRowModel model)
         {
-            var localizationService= EngineContext.Current.Resolve<ILocalizationService>();
+            var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
 
             var forumTopicId = model.Id;
             var forumTopicSlug = model.SeName;
@@ -187,7 +220,6 @@ namespace Nop.Web.Extensions
             }
             return MvcHtmlString.Create(string.Empty);
         }
-
         public static Pager Pager(this HtmlHelper helper, IPageableModel pagination)
         {
             return new Pager(pagination, helper.ViewContext);
@@ -204,5 +236,33 @@ namespace Nop.Web.Extensions
 
             return helper.Pager(dataSource);
         }
+
+        /// <summary>
+        /// Get topic system name
+        /// </summary>
+        /// <typeparam name="T">T</typeparam>
+        /// <param name="html">HTML helper</param>
+        /// <param name="systemName">System name</param>
+        /// <returns>Topic SEO Name</returns>
+        public static string GetTopicSeName<T>(this HtmlHelper<T> html, string systemName)
+        {
+            var workContext = EngineContext.Current.Resolve<IWorkContext>();
+
+            //static cache manager
+            var cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
+            var cacheKey = string.Format(ModelCacheEventConsumer.TOPIC_SENAME_BY_SYSTEMNAME, systemName, workContext.WorkingLanguage.Id);
+            var cachedSeName = cacheManager.Get(cacheKey, () =>
+            {
+                var topicService = EngineContext.Current.Resolve<ITopicService>();
+                var topic = topicService.GetTopicBySystemName(systemName);
+                if (topic == null)
+                    return "";
+
+                return topic.GetSeName();
+            });
+            return cachedSeName;
+        }
+
     }
 }
+

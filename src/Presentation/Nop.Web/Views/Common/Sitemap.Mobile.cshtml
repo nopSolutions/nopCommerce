@@ -18,7 +18,7 @@
                 {
                     <div class="topic-box">
                         <div class="item">
-                            <a href="@Url.RouteUrl("Topic", new { SystemName = item.SystemName.ToLowerInvariant() })">@item.Title</a>
+                            <a href="@Url.RouteUrl("Topic", new { Sename = Html.GetTopicSeName(item.SystemName) })">@item.Title</a>
                         </div>
                     </div>
                 }

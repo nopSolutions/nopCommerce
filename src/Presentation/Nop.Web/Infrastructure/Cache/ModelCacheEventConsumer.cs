@@ -276,12 +276,29 @@ namespace Nop.Web.Infrastructure.Cache
         /// Key for TopicModel caching
         /// </summary>
         /// <remarks>
+        /// {0} : topic system name
+        /// {1} : language id
+        /// {2} : store id
+        /// </remarks>
+        public const string TOPIC_MODEL_BY_SYSTEMNAME_KEY = "Nop.pres.topic.details.bysystemname-{0}-{1}-{2}";
+        /// <summary>
+        /// Key for TopicModel caching
+        /// </summary>
+        /// <remarks>
         /// {0} : topic id
         /// {1} : language id
         /// {2} : store id
         /// </remarks>
-        public const string TOPIC_MODEL_KEY = "Nop.pres.topic.details-{0}-{1}-{2}";
-        public const string TOPIC_PATTERN_KEY = "Nop.pres.topic.details";
+        public const string TOPIC_MODEL_BY_ID_KEY = "Nop.pres.topic.details.byid-{0}-{1}-{2}";
+        /// <summary>
+        /// Key for TopicModel caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : topic system name
+        /// {1} : language id
+        /// </remarks>
+        public const string TOPIC_SENAME_BY_SYSTEMNAME = "Nop.pres.topic.sename.bysystemname-{0}-{1}";
+        public const string TOPIC_PATTERN_KEY = "Nop.pres.topic";
 
         /// <summary>
         /// Key for CategoryTemplate caching

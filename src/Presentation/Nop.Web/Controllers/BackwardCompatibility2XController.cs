@@ -1,8 +1,10 @@
 ﻿using System.Web.Mvc;
+using Nop.Core;
 using Nop.Services.Blogs;
 using Nop.Services.Catalog;
 using Nop.Services.News;
 using Nop.Services.Seo;
+using Nop.Services.Topics;
 
 namespace Nop.Web.Controllers
 {
@@ -15,19 +17,25 @@ namespace Nop.Web.Controllers
         private readonly IManufacturerService _manufacturerService;
         private readonly INewsService _newsService;
         private readonly IBlogService _blogService;
+        private readonly ITopicService _topicService;
+
         #endregion
 
 		#region Constructors
 
         public BackwardCompatibility2XController(IProductService productService,
-            ICategoryService categoryService, IManufacturerService manufacturerService,
-            INewsService newsService, IBlogService blogService)
+            ICategoryService categoryService, 
+            IManufacturerService manufacturerService,
+            INewsService newsService, 
+            IBlogService blogService,
+            ITopicService topicService)
         {
             this._productService = productService;
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
             this._newsService = newsService;
             this._blogService = blogService;
+            this._topicService = topicService;
         }
 
 		#endregion
@@ -90,6 +98,15 @@ namespace Nop.Web.Controllers
                 return RedirectToRoutePermanent("HomePage");
 
             return RedirectToRoutePermanent("BlogPost", new { SeName = blogPost.GetSeName(blogPost.LanguageId, ensureTwoPublishedLanguages: false) });
+        }
+        //in versions 2.00-3.20 we had SystemName in topic URLs
+        public ActionResult RedirectTopicBySystemName(string systemName)
+        {
+            var topic = _topicService.GetTopicBySystemName(systemName);
+            if (topic == null)
+                return RedirectToRoutePermanent("HomePage");
+
+            return RedirectToRoutePermanent("Topic", new { SeName = topic.GetSeName() });
         }
 
         #endregion

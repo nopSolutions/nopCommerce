@@ -1,4 +1,5 @@
 using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Stores;
 
 namespace Nop.Core.Domain.Topics
@@ -6,7 +7,7 @@ namespace Nop.Core.Domain.Topics
     /// <summary>
     /// Represents a topic
     /// </summary>
-    public partial class Topic : BaseEntity, ILocalizedEntity, IStoreMappingSupported
+    public partial class Topic : BaseEntity, ILocalizedEntity, ISlugSupported, IStoreMappingSupported
     {
         /// <summary>
         /// Gets or sets the name

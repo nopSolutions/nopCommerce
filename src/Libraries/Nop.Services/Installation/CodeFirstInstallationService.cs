@@ -4527,6 +4527,20 @@ namespace Nop.Services.Installation
                                };
             topics.ForEach(t => _topicRepository.Insert(t));
 
+
+            //search engine names
+            foreach (var topic in topics)
+            {
+                _urlRecordRepository.Insert(new UrlRecord()
+                {
+                    EntityId = topic.Id,
+                    EntityName = "Topic",
+                    LanguageId = 0,
+                    IsActive = true,
+                    Slug = topic.ValidateSeName("", !String.IsNullOrEmpty(topic.Title) ? topic.Title : topic.SystemName, true)
+                });
+            }
+
         }
 
         protected virtual void InstallSettings()
@@ -9831,8 +9845,8 @@ namespace Nop.Services.Installation
             InstallCustomersAndUsers(defaultUserEmail, defaultUserPassword);
             InstallEmailAccounts();
             InstallMessageTemplates();
-            InstallTopics();
             InstallSettings();
+            InstallTopics();
             InstallLocaleResources();
             InstallActivityLogTypes();
             HashDefaultCustomerPassword(defaultUserEmail, defaultUserPassword);

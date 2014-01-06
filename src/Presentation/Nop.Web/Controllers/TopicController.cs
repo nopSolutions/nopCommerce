@@ -1,7 +1,11 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Caching;
+using Nop.Core.Domain.Topics;
 using Nop.Services.Localization;
+using Nop.Services.Seo;
+using Nop.Services.Stores;
 using Nop.Services.Topics;
 using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Topics;
@@ -17,6 +21,7 @@ namespace Nop.Web.Controllers
         private readonly IStoreContext _storeContext;
         private readonly ILocalizationService _localizationService;
         private readonly ICacheManager _cacheManager;
+        private readonly IStoreMappingService _storeMappingService;
 
         #endregion
 
@@ -26,13 +31,15 @@ namespace Nop.Web.Controllers
             ILocalizationService localizationService,
             IWorkContext workContext, 
             IStoreContext storeContext,
-            ICacheManager cacheManager)
+            ICacheManager cacheManager,
+            IStoreMappingService storeMappingService)
         {
             this._topicService = topicService;
             this._workContext = workContext;
             this._storeContext = storeContext;
             this._localizationService = localizationService;
             this._cacheManager = cacheManager;
+            this._storeMappingService = storeMappingService;
         }
 
         #endregion
@@ -40,12 +47,10 @@ namespace Nop.Web.Controllers
         #region Utilities
 
         [NonAction]
-        protected TopicModel PrepareTopicModel(string systemName)
+        protected TopicModel PrepareTopicModel(Topic topic)
         {
-            //load by store
-            var topic = _topicService.GetTopicBySystemName(systemName, _storeContext.CurrentStore.Id);
             if (topic == null)
-                return null;
+                throw new ArgumentNullException("topic");
 
             var model = new TopicModel()
             {
@@ -58,6 +63,7 @@ namespace Nop.Web.Controllers
                 MetaKeywords = topic.GetLocalized(x => x.MetaKeywords),
                 MetaDescription = topic.GetLocalized(x => x.MetaDescription),
                 MetaTitle = topic.GetLocalized(x => x.MetaTitle),
+                SeName = topic.GetSeName(),
             };
             return model;
         }
@@ -66,10 +72,20 @@ namespace Nop.Web.Controllers
 
         #region Methods
 
-        public ActionResult TopicDetails(string systemName)
+        public ActionResult TopicDetails(int topicId)
         {
-            var cacheKey = string.Format(ModelCacheEventConsumer.TOPIC_MODEL_KEY, systemName, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
-            var cacheModel = _cacheManager.Get(cacheKey, () => PrepareTopicModel(systemName));
+            var cacheKey = string.Format(ModelCacheEventConsumer.TOPIC_MODEL_BY_ID_KEY, topicId, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
+            var cacheModel = _cacheManager.Get(cacheKey, () =>
+            {
+                var topic = _topicService.GetTopicById(topicId);
+                if (topic == null)
+                    return null;
+                //Store mapping
+                if (!_storeMappingService.Authorize(topic))
+                    return null;
+                return PrepareTopicModel(topic);
+            }
+            );
 
             if (cacheModel == null)
                 return RedirectToRoute("HomePage");
@@ -78,8 +94,18 @@ namespace Nop.Web.Controllers
 
         public ActionResult TopicDetailsPopup(string systemName)
         {
-            var cacheKey = string.Format(ModelCacheEventConsumer.TOPIC_MODEL_KEY, systemName, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
-            var cacheModel = _cacheManager.Get(cacheKey, () => PrepareTopicModel(systemName));
+            var cacheKey = string.Format(ModelCacheEventConsumer.TOPIC_MODEL_BY_SYSTEMNAME_KEY, systemName, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
+            var cacheModel = _cacheManager.Get(cacheKey, () =>
+            {
+                //load by store
+                var topic = _topicService.GetTopicBySystemName(systemName);
+                if (topic == null)
+                    return null;
+                //Store mapping
+                if (!_storeMappingService.Authorize(topic))
+                    return null;
+                return PrepareTopicModel(topic);
+            });
 
             if (cacheModel == null)
                 return RedirectToRoute("HomePage");
@@ -91,8 +117,18 @@ namespace Nop.Web.Controllers
         [ChildActionOnly]
         public ActionResult TopicBlock(string systemName)
         {
-            var cacheKey = string.Format(ModelCacheEventConsumer.TOPIC_MODEL_KEY, systemName, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
-            var cacheModel = _cacheManager.Get(cacheKey, () => PrepareTopicModel(systemName));
+            var cacheKey = string.Format(ModelCacheEventConsumer.TOPIC_MODEL_BY_SYSTEMNAME_KEY, systemName, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
+            var cacheModel = _cacheManager.Get(cacheKey, () =>
+            {
+                //load by store
+                var topic = _topicService.GetTopicBySystemName(systemName);
+                if (topic == null)
+                    return null;
+                //Store mapping
+                if (!_storeMappingService.Authorize(topic))
+                    return null;
+                return PrepareTopicModel(topic);
+            });
 
             if (cacheModel == null)
                 return Content("");

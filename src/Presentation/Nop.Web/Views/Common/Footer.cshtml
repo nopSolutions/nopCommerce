@@ -10,10 +10,10 @@
                 {
                     <li><a href="@Url.RouteUrl("Sitemap")">@T("Sitemap")</a></li>
                 }
-                <li><a href="@Url.RouteUrl("Topic", new {SystemName = "shippinginfo"})">@T("ShippingReturns")</a></li>
-                <li><a href="@Url.RouteUrl("Topic", new {SystemName = "privacyinfo"})">@T("PrivacyNotice")</a></li>
-                <li><a href="@Url.RouteUrl("Topic", new {SystemName = "conditionsofUse"})">@T("ConditionsOfUse")</a></li>
-                <li><a href="@Url.RouteUrl("Topic", new {SystemName = "aboutus"})">@T("AboutUs")</a></li>
+                <li><a href="@Url.RouteUrl("Topic", new {SeName = Html.GetTopicSeName("shippinginfo") })">@T("ShippingReturns")</a></li>
+                <li><a href="@Url.RouteUrl("Topic", new {SeName = Html.GetTopicSeName("privacyinfo") })">@T("PrivacyNotice")</a></li>
+                <li><a href="@Url.RouteUrl("Topic", new {SeName = Html.GetTopicSeName("conditionsofuse") })">@T("ConditionsOfUse")</a></li>
+                <li><a href="@Url.RouteUrl("Topic", new {SeName = Html.GetTopicSeName("aboutus") })">@T("AboutUs")</a></li>
                 <li><a href="@Url.RouteUrl("ContactUs")">@T("ContactUs")</a></li>
             </ul>
         </div>
