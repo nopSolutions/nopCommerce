@@ -59,6 +59,14 @@
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
+                @Html.NopLabelFor(model => model.OrderId)
+            </td>
+            <td class="adminData">
+                <a href="@Url.Action("Edit", "Order", new {Id = Model.OrderId})">@Model.OrderId - @T("Admin.Common.View")</a>
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.NopLabelFor(model => model.TrackingNumber):
             </td>
             <td class="adminData">
