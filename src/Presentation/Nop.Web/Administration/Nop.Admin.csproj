@@ -371,7 +371,6 @@
     <Content Include="Content\images\admin-header-bg.gif" />
     <Content Include="Content\images\admin-menu-bg.gif" />
     <Content Include="Content\images\ajax-loading.gif" />
-    <Content Include="Content\images\background.gif" />
     <Content Include="Content\images\blue_button_bg.gif" />
     <Content Include="Content\images\active-true.gif" />
     <Content Include="Content\images\error-message.gif" />
