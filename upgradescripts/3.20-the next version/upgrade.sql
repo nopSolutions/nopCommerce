@@ -47,6 +47,9 @@ set @resources='
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.SeName.Hint">
 	<Value>Set a search engine friendly page name e.g. ''some-topic-name'' to make your page URL ''http://www.yourStore.com/some-topic-name''. Leave empty to generate it automatically based on the title of the topic.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.OrderID.Hint">
+	<Value>The order associated to this shipment.</Value>
+  </LocaleResource>
 </Language>
 '
 

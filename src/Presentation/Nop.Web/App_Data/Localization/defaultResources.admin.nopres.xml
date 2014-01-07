@@ -9602,6 +9602,11 @@
               </LocaleResource>
               <LocaleResource Name="OrderID">
                 <Value>Order #</Value>
+                <Children>
+                  <LocaleResource Name="Hint">
+                    <Value>The order associated to this shipment.</Value>
+                  </LocaleResource>
+                </Children>
               </LocaleResource>
               <LocaleResource Name="PrintPackagingSlip">
                 <Value>Print packaging slip</Value>
