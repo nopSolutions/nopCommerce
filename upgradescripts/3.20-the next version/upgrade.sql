@@ -50,6 +50,12 @@ set @resources='
   <LocaleResource Name="Admin.Orders.Shipments.OrderID.Hint">
 	<Value>The order associated to this shipment.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.AllowAddingOnlyExistingAttributeCombinations">
+	<Value>Allow only existing attribute combinations</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.AllowAddingOnlyExistingAttributeCombinations.Hint">
+	<Value>Check to allow adding to the cart/wishlist only attribute combinations that exist and have stock greater than zero. In this case you have to create all existing product attribute combinations that you have in stock.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -292,3 +298,18 @@ IF EXISTS (
 DROP PROCEDURE [temp_topic_generate_sename]
 GO
 
+--New column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Product]') and NAME='AllowAddingOnlyExistingAttributeCombinations')
+BEGIN
+	ALTER TABLE [Product]
+	ADD [AllowAddingOnlyExistingAttributeCombinations] bit NULL
+END
+GO
+
+UPDATE [Product]
+SET [AllowAddingOnlyExistingAttributeCombinations] = 0
+WHERE [AllowAddingOnlyExistingAttributeCombinations] IS NULL
+GO
+
+ALTER TABLE [Product] ALTER COLUMN [AllowAddingOnlyExistingAttributeCombinations] bit NOT NULL
+GO

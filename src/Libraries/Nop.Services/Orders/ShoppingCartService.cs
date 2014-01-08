@@ -385,15 +385,31 @@ namespace Nop.Services.Orders
                             var combination = product
                                 .ProductVariantAttributeCombinations
                                 .FirstOrDefault(x => _productAttributeParser.AreProductAttributesEqual(x.AttributesXml, selectedAttributes));
-                            if (combination != null &&
-                                !combination.AllowOutOfStockOrders &&
-                                combination.StockQuantity < quantity)
+                            if (combination != null)
                             {
-                                int maximumQuantityCanBeAdded = combination.StockQuantity;
-                                if (maximumQuantityCanBeAdded <= 0)
+                                //combination exists
+                                //let's check stock level
+                                if (!combination.AllowOutOfStockOrders && combination.StockQuantity < quantity)
+                                {
+                                    int maximumQuantityCanBeAdded = combination.StockQuantity;
+                                    if (maximumQuantityCanBeAdded <= 0)
+                                    {
+                                        warnings.Add(_localizationService.GetResource("ShoppingCart.OutOfStock"));
+                                    }
+                                    else
+                                    {
+                                        warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.QuantityExceedsStock"), maximumQuantityCanBeAdded));
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                //combination doesn't exist
+                                if (product.AllowAddingOnlyExistingAttributeCombinations)
+                                {
+                                    //maybe, is it better  to display something like "No such product/combination" message?
                                     warnings.Add(_localizationService.GetResource("ShoppingCart.OutOfStock"));
-                                else
-                                    warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.QuantityExceedsStock"), maximumQuantityCanBeAdded));
+                                }
                             }
                         }
                         break;

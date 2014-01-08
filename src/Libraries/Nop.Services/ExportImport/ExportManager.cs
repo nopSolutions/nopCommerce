@@ -277,6 +277,7 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("OrderMinimumQuantity", null, product.OrderMinimumQuantity.ToString());
                 xmlWriter.WriteElementString("OrderMaximumQuantity", null, product.OrderMaximumQuantity.ToString());
                 xmlWriter.WriteElementString("AllowedQuantities", null, product.AllowedQuantities);
+                xmlWriter.WriteElementString("AllowAddingOnlyExistingAttributeCombinations", null, product.AllowAddingOnlyExistingAttributeCombinations.ToString());
                 xmlWriter.WriteElementString("DisableBuyButton", null, product.DisableBuyButton.ToString());
                 xmlWriter.WriteElementString("DisableWishlistButton", null, product.DisableWishlistButton.ToString());
                 xmlWriter.WriteElementString("AvailableForPreOrder", null, product.AvailableForPreOrder.ToString());
@@ -512,6 +513,7 @@ namespace Nop.Services.ExportImport
                     "OrderMinimumQuantity",
                     "OrderMaximumQuantity",
                     "AllowedQuantities",
+                    "AllowAddingOnlyExistingAttributeCombinations",
                     "DisableBuyButton",
                     "DisableWishlistButton",
                     "AvailableForPreOrder",
@@ -714,6 +716,9 @@ namespace Nop.Services.ExportImport
                     col++;
 
                     worksheet.Cells[row, col].Value = p.AllowedQuantities;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = p.AllowAddingOnlyExistingAttributeCombinations;
                     col++;
 
                     worksheet.Cells[row, col].Value = p.DisableBuyButton;

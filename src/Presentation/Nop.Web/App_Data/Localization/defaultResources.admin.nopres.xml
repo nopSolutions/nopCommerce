@@ -1407,6 +1407,14 @@
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
+                  <LocaleResource Name="AllowAddingOnlyExistingAttributeCombinations">
+                    <Value>Allow only existing attribute combinations</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Check to allow adding to the cart/wishlist only attribute combinations that exist and have stock greater than zero. In this case you have to create all existing product attribute combinations that you have in stock.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
                   <LocaleResource Name="AllowBackInStockSubscriptions">
                     <Value>Allow back in stock subscriptions</Value>
                     <Children>

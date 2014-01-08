@@ -167,8 +167,7 @@ namespace Nop.Services.Catalog
             var result = new List<int>();
             if (!String.IsNullOrWhiteSpace(product.AllowedQuantities))
             {
-                product
-                    .AllowedQuantities
+                product.AllowedQuantities
                     .Split(new [] {','}, StringSplitOptions.RemoveEmptyEntries)
                     .ToList()
                     .ForEach(qtyStr =>

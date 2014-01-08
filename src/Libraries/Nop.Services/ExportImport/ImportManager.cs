@@ -132,6 +132,7 @@ namespace Nop.Services.ExportImport
                     "OrderMinimumQuantity",
                     "OrderMaximumQuantity",
                     "AllowedQuantities",
+                    "AllowAddingOnlyExistingAttributeCombinations",
                     "DisableBuyButton",
                     "DisableWishlistButton",
                     "AvailableForPreOrder",
@@ -227,6 +228,7 @@ namespace Nop.Services.ExportImport
                     int orderMinimumQuantity = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "OrderMinimumQuantity")].Value);
                     int orderMaximumQuantity = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "OrderMaximumQuantity")].Value);
                     string allowedQuantities = worksheet.Cells[iRow, GetColumnIndex(properties, "AllowedQuantities")].Value as string;
+                    bool allowAddingOnlyExistingAttributeCombinations = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "AllowAddingOnlyExistingAttributeCombinations")].Value);
                     bool disableBuyButton = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "DisableBuyButton")].Value);
                     bool disableWishlistButton = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "DisableWishlistButton")].Value);
                     bool availableForPreOrder = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "AvailableForPreOrder")].Value);
@@ -327,6 +329,7 @@ namespace Nop.Services.ExportImport
                     product.OrderMinimumQuantity = orderMinimumQuantity;
                     product.OrderMaximumQuantity = orderMaximumQuantity;
                     product.AllowedQuantities = allowedQuantities;
+                    product.AllowAddingOnlyExistingAttributeCombinations = allowAddingOnlyExistingAttributeCombinations;
                     product.DisableBuyButton = disableBuyButton;
                     product.DisableWishlistButton = disableWishlistButton;
                     product.AvailableForPreOrder = availableForPreOrder;

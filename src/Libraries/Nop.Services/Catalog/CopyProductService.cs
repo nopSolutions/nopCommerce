@@ -186,6 +186,7 @@ namespace Nop.Services.Catalog
                 OrderMinimumQuantity = product.OrderMinimumQuantity,
                 OrderMaximumQuantity = product.OrderMaximumQuantity,
                 AllowedQuantities = product.AllowedQuantities,
+                AllowAddingOnlyExistingAttributeCombinations = product.AllowAddingOnlyExistingAttributeCombinations,
                 DisableBuyButton = product.DisableBuyButton,
                 DisableWishlistButton = product.DisableWishlistButton,
                 AvailableForPreOrder = product.AvailableForPreOrder,

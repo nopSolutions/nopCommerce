@@ -194,38 +194,38 @@
             var selectedManageInventoryMethodId = $("#@Html.FieldIdFor(model => model.ManageInventoryMethodId)").val();
             if (selectedManageInventoryMethodId == @(((int)ManageInventoryMethod.DontManageStock).ToString())) {
                 $('#pnlStockQuantity').hide();
-            $('#pnlDisplayStockAvailability').hide();
-            $('#pnlDisplayStockQuantity').hide();
-            $('#pnlMinStockQuantity').hide();
-            $('#pnlLowStockActivity').hide();
-            $('#pnlNotifyForQuantityBelow').hide();
-            $('#pnlAllowBackInStockSubscriptions').hide();            
-            $('#pnlBackorders').hide();
-        }
-        else if (selectedManageInventoryMethodId == @(((int)ManageInventoryMethod.ManageStock).ToString())) {
-        $('#pnlStockQuantity').show();
-        $('#pnlDisplayStockAvailability').show();
+                $('#pnlDisplayStockAvailability').hide();
+                $('#pnlDisplayStockQuantity').hide();
+                $('#pnlMinStockQuantity').hide();
+                $('#pnlLowStockActivity').hide();
+                $('#pnlNotifyForQuantityBelow').hide();
+                $('#pnlAllowBackInStockSubscriptions').hide();            
+                $('#pnlBackorders').hide();
+                $('#pnlAllowAddingOnlyExistingAttributeCombinations').hide();
+        } else if (selectedManageInventoryMethodId == @(((int)ManageInventoryMethod.ManageStock).ToString())) {
+            $('#pnlStockQuantity').show();
+            $('#pnlDisplayStockAvailability').show();
 
-        if ($('#@Html.FieldIdFor(model => model.DisplayStockAvailability)').is(':checked')) {
-            $('#pnlDisplayStockQuantity').show();
-        } 
-        else {
-            $('#pnlDisplayStockQuantity').hide();
-        }
+            if ($('#@Html.FieldIdFor(model => model.DisplayStockAvailability)').is(':checked')) {
+                $('#pnlDisplayStockQuantity').show();
+            } 
+            else {
+                $('#pnlDisplayStockQuantity').hide();
+            }
 
-        $('#pnlMinStockQuantity').show();
-        $('#pnlLowStockActivity').show();
-        $('#pnlNotifyForQuantityBelow').show();
-        $('#pnlBackorders').show();
-        var selectedBackorderModeId = $("#@Html.FieldIdFor(model => model.BackorderModeId)").val();
-        if (selectedBackorderModeId == @(((int)BackorderMode.NoBackorders).ToString())) {
+            $('#pnlMinStockQuantity').show();
+            $('#pnlLowStockActivity').show();
+            $('#pnlNotifyForQuantityBelow').show();
+            $('#pnlBackorders').show();
+            var selectedBackorderModeId = $("#@Html.FieldIdFor(model => model.BackorderModeId)").val();
+            if (selectedBackorderModeId == @(((int)BackorderMode.NoBackorders).ToString())) {
                 //no backorders
-                    $('#pnlAllowBackInStockSubscriptions').show();
-        }
-        else {
-        //backorders are enabled
-                     $('#pnlAllowBackInStockSubscriptions').hide();
-        }
+                $('#pnlAllowBackInStockSubscriptions').show();
+            } else {
+                //backorders are enabled
+                $('#pnlAllowBackInStockSubscriptions').hide();
+            }
+            $('#pnlAllowAddingOnlyExistingAttributeCombinations').hide();
         }
         else {
             $('#pnlStockQuantity').hide();
@@ -236,6 +236,7 @@
             $('#pnlNotifyForQuantityBelow').hide();
             $('#pnlAllowBackInStockSubscriptions').hide();
             $('#pnlBackorders').hide();
+            $('#pnlAllowAddingOnlyExistingAttributeCombinations').show();
         }
         }
         
@@ -1015,6 +1016,15 @@
         <td class="adminData">
             @Html.EditorFor(model => model.AllowedQuantities)
             @Html.ValidationMessageFor(model => model.AllowedQuantities)
+        </td>
+    </tr>
+    <tr id="pnlAllowAddingOnlyExistingAttributeCombinations">
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.AllowAddingOnlyExistingAttributeCombinations):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.AllowAddingOnlyExistingAttributeCombinations)
+            @Html.ValidationMessageFor(model => model.AllowAddingOnlyExistingAttributeCombinations)
         </td>
     </tr>
 </table>
