@@ -139,7 +139,7 @@
                     <text>
                         {
                             Id: @(category.Id),
-                            Name: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(category.GetFormattedBreadCrumb(categoryService))))"
+                            Name: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(category.GetFormattedBreadCrumb(allCategories))))"
                         }
                         </text>
                     if (i != allCategories.Count - 1)
