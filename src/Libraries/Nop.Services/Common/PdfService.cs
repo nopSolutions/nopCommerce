@@ -21,6 +21,7 @@ using Nop.Services.Media;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Stores;
+using Nop.Services.Configuration;
 
 namespace Nop.Services.Common
 {
@@ -45,6 +46,7 @@ namespace Nop.Services.Common
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IStoreService _storeService;
         private readonly IStoreContext _storeContext;
+        private readonly ISettingService _settingContext;
         private readonly IWebHelper _webHelper;
 
         private readonly CatalogSettings _catalogSettings;
@@ -63,13 +65,22 @@ namespace Nop.Services.Common
             IWorkContext workContext,
             IOrderService orderService,
             IPaymentService paymentService,
-            IDateTimeHelper dateTimeHelper, IPriceFormatter priceFormatter,
-            ICurrencyService currencyService, IMeasureService measureService,
-            IPictureService pictureService, IProductService productService, 
-            IProductAttributeParser productAttributeParser, IStoreService storeService,
-            IStoreContext storeContext, IWebHelper webHelper, 
-            CatalogSettings catalogSettings, CurrencySettings currencySettings,
-            MeasureSettings measureSettings, PdfSettings pdfSettings, TaxSettings taxSettings,
+            IDateTimeHelper dateTimeHelper,
+            IPriceFormatter priceFormatter,
+            ICurrencyService currencyService, 
+            IMeasureService measureService,
+            IPictureService pictureService,
+            IProductService productService, 
+            IProductAttributeParser productAttributeParser,
+            IStoreService storeService,
+            IStoreContext storeContext,
+            ISettingService settingContext,
+            IWebHelper webHelper, 
+            CatalogSettings catalogSettings, 
+            CurrencySettings currencySettings,
+            MeasureSettings measureSettings,
+            PdfSettings pdfSettings,
+            TaxSettings taxSettings,
             AddressSettings addressSettings)
         {
             this._localizationService = localizationService;
@@ -86,6 +97,7 @@ namespace Nop.Services.Common
             this._productAttributeParser = productAttributeParser;
             this._storeService = storeService;
             this._storeContext = storeContext;
+            this._settingContext = settingContext;
             this._webHelper = webHelper;
             this._currencySettings = currencySettings;
             this._catalogSettings = catalogSettings;
@@ -175,6 +187,12 @@ namespace Nop.Services.Common
 
             foreach (var order in orders)
             {
+                //by default _pdfSettings contains settings for the current active store
+                //and we need PdfSettings for the store which was used to place an order
+                //so let's load it based on a store of the current order
+                var pdfSettingsByStore = _settingContext.LoadSetting<PdfSettings>(order.StoreId);
+
+
                 var lang = _languageService.GetLanguageById(languageId == 0 ? order.CustomerLanguageId : languageId);
                 if (lang == null || !lang.Published)
                     lang = _workContext.WorkingLanguage;
@@ -182,7 +200,7 @@ namespace Nop.Services.Common
                 #region Header
 
                 //logo
-                var logoPicture = _pictureService.GetPictureById(_pdfSettings.LogoPictureId);
+                var logoPicture = _pictureService.GetPictureById(pdfSettingsByStore.LogoPictureId);
                 var logoExists = logoPicture != null;
 
                 //header
@@ -643,7 +661,7 @@ namespace Nop.Services.Common
 
                 #region Order notes
 
-                if (_pdfSettings.RenderOrderNotes)
+                if (pdfSettingsByStore.RenderOrderNotes)
                 {
                     var orderNotes = order.OrderNotes
                         .Where(on => on.DisplayToCustomer)
@@ -691,16 +709,16 @@ namespace Nop.Services.Common
 
                 #region Footer
 
-                if (!String.IsNullOrEmpty(_pdfSettings.InvoiceFooterTextColumn1) || !String.IsNullOrEmpty(_pdfSettings.InvoiceFooterTextColumn2))
+                if (!String.IsNullOrEmpty(pdfSettingsByStore.InvoiceFooterTextColumn1) || !String.IsNullOrEmpty(pdfSettingsByStore.InvoiceFooterTextColumn2))
                 {
-                    var column1Lines = String.IsNullOrEmpty(_pdfSettings.InvoiceFooterTextColumn1) ?
+                    var column1Lines = String.IsNullOrEmpty(pdfSettingsByStore.InvoiceFooterTextColumn1) ?
                         new List<string>() :
-                        _pdfSettings.InvoiceFooterTextColumn1
+                        pdfSettingsByStore.InvoiceFooterTextColumn1
                         .Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)
                         .ToList();
-                    var column2Lines = String.IsNullOrEmpty(_pdfSettings.InvoiceFooterTextColumn2) ?
+                    var column2Lines = String.IsNullOrEmpty(pdfSettingsByStore.InvoiceFooterTextColumn2) ?
                         new List<string>() :
-                        _pdfSettings.InvoiceFooterTextColumn2
+                        pdfSettingsByStore.InvoiceFooterTextColumn2
                         .Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)
                         .ToList();
                     if (column1Lines.Count > 0 || column2Lines.Count > 0)
