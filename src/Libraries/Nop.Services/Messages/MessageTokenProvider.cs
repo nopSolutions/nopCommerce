@@ -28,6 +28,7 @@ using Nop.Services.Media;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Seo;
+using Nop.Services.Stores;
 
 namespace Nop.Services.Messages
 {
@@ -41,12 +42,13 @@ namespace Nop.Services.Messages
         private readonly IEmailAccountService _emailAccountService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly ICurrencyService _currencyService;
-        private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
         private readonly IDownloadService _downloadService;
         private readonly IOrderService _orderService;
         private readonly IPaymentService _paymentService;
         private readonly IProductAttributeParser _productAttributeParser;
+        private readonly IStoreService _storeService;
+        private readonly IStoreContext _storeContext;
 
         private readonly MessageTemplatesSettings _templatesSettings;
         private readonly EmailAccountSettings _emailAccountSettings;
@@ -60,15 +62,24 @@ namespace Nop.Services.Messages
         #region Ctor
 
         public MessageTokenProvider(ILanguageService languageService,
-            ILocalizationService localizationService, IDateTimeHelper dateTimeHelper,
+            ILocalizationService localizationService, 
+            IDateTimeHelper dateTimeHelper,
             IEmailAccountService emailAccountService,
-            IPriceFormatter priceFormatter, ICurrencyService currencyService,IWebHelper webHelper,
-            IWorkContext workContext, IDownloadService downloadService,
-            IOrderService orderService, IPaymentService paymentService,
+            IPriceFormatter priceFormatter, 
+            ICurrencyService currencyService,
+            IWebHelper webHelper,
+            IWorkContext workContext,
+            IDownloadService downloadService,
+            IOrderService orderService,
+            IPaymentService paymentService,
+            IStoreService storeService,
+            IStoreContext storeContext,
             IProductAttributeParser productAttributeParser,
             MessageTemplatesSettings templatesSettings,
-            EmailAccountSettings emailAccountSettings, CatalogSettings catalogSettings,
-            TaxSettings taxSettings, IEventPublisher eventPublisher)
+            EmailAccountSettings emailAccountSettings, 
+            CatalogSettings catalogSettings,
+            TaxSettings taxSettings, 
+            IEventPublisher eventPublisher)
         {
             this._languageService = languageService;
             this._localizationService = localizationService;
@@ -76,12 +87,13 @@ namespace Nop.Services.Messages
             this._emailAccountService = emailAccountService;
             this._priceFormatter = priceFormatter;
             this._currencyService = currencyService;
-            this._webHelper = webHelper;
             this._workContext = workContext;
             this._downloadService = downloadService;
             this._orderService = orderService;
             this._paymentService = paymentService;
             this._productAttributeParser = productAttributeParser;
+            this._storeService = storeService;
+            this._storeContext = storeContext;
 
             this._templatesSettings = templatesSettings;
             this._emailAccountSettings = emailAccountSettings;
@@ -134,7 +146,7 @@ namespace Nop.Services.Messages
                 if (_downloadService.IsDownloadAllowed(orderItem))
                 {
                     //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
-                    string downloadUrl = string.Format("{0}download/getdownload/{1}", _webHelper.GetStoreLocation(false), orderItem.OrderItemGuid);
+                    string downloadUrl = string.Format("{0}download/getdownload/{1}", GetStoreUrl(order.StoreId), orderItem.OrderItemGuid);
                     string downloadLink = string.Format("<a class=\"link\" href=\"{0}\">{1}</a>", downloadUrl, _localizationService.GetResource("Messages.Order.Product(s).Download", languageId));
                     sb.AppendLine("&nbsp;&nbsp;(");
                     sb.AppendLine(downloadLink);
@@ -458,6 +470,22 @@ namespace Nop.Services.Messages
             return result;
         }
 
+        /// <summary>
+        /// Get store URL
+        /// </summary>
+        /// <param name="storeId">Store identifier; Pass 0 to load URL of the current store</param>
+        /// <param name="useSsl">Use SSL</param>
+        /// <returns></returns>
+        protected virtual string GetStoreUrl(int storeId = 0, bool useSsl = false)
+        {
+            var store = _storeService.GetStoreById(storeId) ?? _storeContext.CurrentStore;
+
+            if (store == null)
+                throw new Exception("No store could be loaded");
+
+            return useSsl ? store.SecureUrl : store.Url;
+        }
+
         #endregion
 
         #region Methods
@@ -529,7 +557,7 @@ namespace Nop.Services.Messages
             }
 
             //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
-            tokens.Add(new Token("Order.OrderURLForCustomer", string.Format("{0}orderdetails/{1}", _webHelper.GetStoreLocation(false), order.Id), true));
+            tokens.Add(new Token("Order.OrderURLForCustomer", string.Format("{0}orderdetails/{1}", GetStoreUrl(order.StoreId), order.Id), true));
 
             //event notification
             _eventPublisher.EntityTokensAdded(order, tokens);
@@ -540,7 +568,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Shipment.ShipmentNumber", shipment.Id.ToString()));
             tokens.Add(new Token("Shipment.TrackingNumber", shipment.TrackingNumber));
             tokens.Add(new Token("Shipment.Product(s)", ProductListToHtmlTable(shipment, languageId), true));
-            tokens.Add(new Token("Shipment.URLForCustomer", string.Format("{0}orderdetails/shipment/{1}", _webHelper.GetStoreLocation(false), shipment.Id), true));
+            tokens.Add(new Token("Shipment.URLForCustomer", string.Format("{0}orderdetails/shipment/{1}", GetStoreUrl(shipment.Order.StoreId), shipment.Id), true));
 
             //event notification
             _eventPublisher.EntityTokensAdded(shipment, tokens);
@@ -609,9 +637,9 @@ namespace Nop.Services.Messages
 
             //note: we do not use SEO friendly URLS because we can get errors caused by having .(dot) in the URL (from the email address)
             //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
-            string passwordRecoveryUrl = string.Format("{0}passwordrecovery/confirm?token={1}&email={2}", _webHelper.GetStoreLocation(false), customer.GetAttribute<string>(SystemCustomerAttributeNames.PasswordRecoveryToken), HttpUtility.UrlEncode(customer.Email));
-            string accountActivationUrl = string.Format("{0}customer/activation?token={1}&email={2}", _webHelper.GetStoreLocation(false), customer.GetAttribute<string>(SystemCustomerAttributeNames.AccountActivationToken), HttpUtility.UrlEncode(customer.Email));
-            var wishlistUrl = string.Format("{0}wishlist/{1}", _webHelper.GetStoreLocation(false), customer.CustomerGuid);
+            string passwordRecoveryUrl = string.Format("{0}passwordrecovery/confirm?token={1}&email={2}", GetStoreUrl(), customer.GetAttribute<string>(SystemCustomerAttributeNames.PasswordRecoveryToken), HttpUtility.UrlEncode(customer.Email));
+            string accountActivationUrl = string.Format("{0}customer/activation?token={1}&email={2}", GetStoreUrl(), customer.GetAttribute<string>(SystemCustomerAttributeNames.AccountActivationToken), HttpUtility.UrlEncode(customer.Email));
+            var wishlistUrl = string.Format("{0}wishlist/{1}", GetStoreUrl(), customer.CustomerGuid);
             tokens.Add(new Token("Customer.PasswordRecoveryURL", passwordRecoveryUrl, true));
             tokens.Add(new Token("Customer.AccountActivationURL", accountActivationUrl, true));
             tokens.Add(new Token("Wishlist.URLForCustomer", wishlistUrl, true));
@@ -627,10 +655,10 @@ namespace Nop.Services.Messages
 
             const string urlFormat = "{0}newsletter/subscriptionactivation/{1}/{2}";
 
-            var activationUrl = String.Format(urlFormat, _webHelper.GetStoreLocation(false), subscription.NewsLetterSubscriptionGuid, "true");
+            var activationUrl = String.Format(urlFormat, GetStoreUrl(), subscription.NewsLetterSubscriptionGuid, "true");
             tokens.Add(new Token("NewsLetterSubscription.ActivationUrl", activationUrl, true));
 
-            var deActivationUrl = String.Format(urlFormat, _webHelper.GetStoreLocation(false), subscription.NewsLetterSubscriptionGuid, "false");
+            var deActivationUrl = String.Format(urlFormat, GetStoreUrl(), subscription.NewsLetterSubscriptionGuid, "false");
             tokens.Add(new Token("NewsLetterSubscription.DeactivationUrl", deActivationUrl, true));
 
             //event notification
@@ -669,7 +697,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Product.StockQuantity", product.StockQuantity.ToString()));
 
             //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
-            var productUrl = string.Format("{0}{1}", _webHelper.GetStoreLocation(false), product.GetSeName());
+            var productUrl = string.Format("{0}{1}", GetStoreUrl(), product.GetSeName());
             tokens.Add(new Token("Product.ProductURLForCustomer", productUrl, true));
 
             //event notification
@@ -682,9 +710,9 @@ namespace Nop.Services.Messages
             //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
             string topicUrl = null;
             if (friendlyForumTopicPageIndex.HasValue && friendlyForumTopicPageIndex.Value > 1)
-                topicUrl = string.Format("{0}boards/topic/{1}/{2}/page/{3}", _webHelper.GetStoreLocation(false), forumTopic.Id, forumTopic.GetSeName(), friendlyForumTopicPageIndex.Value);
+                topicUrl = string.Format("{0}boards/topic/{1}/{2}/page/{3}", GetStoreUrl(), forumTopic.Id, forumTopic.GetSeName(), friendlyForumTopicPageIndex.Value);
             else
-                topicUrl = string.Format("{0}boards/topic/{1}/{2}", _webHelper.GetStoreLocation(false), forumTopic.Id, forumTopic.GetSeName());
+                topicUrl = string.Format("{0}boards/topic/{1}/{2}", GetStoreUrl(), forumTopic.Id, forumTopic.GetSeName());
             if (appendedPostIdentifierAnchor.HasValue && appendedPostIdentifierAnchor.Value > 0)
                 topicUrl = string.Format("{0}#{1}", topicUrl, appendedPostIdentifierAnchor.Value);
             tokens.Add(new Token("Forums.TopicURL", topicUrl, true));
@@ -706,7 +734,7 @@ namespace Nop.Services.Messages
         public virtual void AddForumTokens(IList<Token> tokens, Forum forum)
         {
             //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
-            var forumUrl = string.Format("{0}boards/forum/{1}/{2}", _webHelper.GetStoreLocation(false), forum.Id, forum.GetSeName());
+            var forumUrl = string.Format("{0}boards/forum/{1}/{2}", GetStoreUrl(), forum.Id, forum.GetSeName());
             tokens.Add(new Token("Forums.ForumURL", forumUrl, true));
             tokens.Add(new Token("Forums.ForumName", forum.Name));
 
@@ -727,7 +755,7 @@ namespace Nop.Services.Messages
         {
             tokens.Add(new Token("BackInStockSubscription.ProductName", subscription.Product.Name));
             //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
-            var productUrl = string.Format("{0}{1}", _webHelper.GetStoreLocation(false), subscription.Product.GetSeName());
+            var productUrl = string.Format("{0}{1}", GetStoreUrl(subscription.StoreId), subscription.Product.GetSeName());
             tokens.Add(new Token("BackInStockSubscription.ProductUrl", productUrl, true));
 
             //event notification
