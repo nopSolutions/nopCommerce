@@ -631,7 +631,8 @@ namespace Nop.Services.Shipping
                         {
                             //get shipping options which already exist for prior requested packages for this scrm (i.e. common options) ...
                             var intersection = scrmShippingOptions
-                                .Where(existingso => getShippingOptionResponse.ShippingOptions.Any(newso => newso.Name == existingso.Name));
+                                .Where(existingso => getShippingOptionResponse.ShippingOptions.Any(newso => newso.Name == existingso.Name))
+                                .ToList();
 
                             //and sum the rates
                             foreach (var existingso in intersection)
@@ -659,12 +660,15 @@ namespace Nop.Services.Shipping
                 }
 
                 // add this scrm's options to the result
-                foreach (var so in scrmShippingOptions)
+                if (scrmShippingOptions != null)
                 {
-                    so.ShippingRateComputationMethodSystemName = srcm.PluginDescriptor.SystemName;
-                    if (_shoppingCartSettings.RoundPricesDuringCalculation)
-                        so.Rate = Math.Round(so.Rate, 2);
-                    result.ShippingOptions.Add(so);
+                    foreach (var so in scrmShippingOptions)
+                    {
+                        so.ShippingRateComputationMethodSystemName = srcm.PluginDescriptor.SystemName;
+                        if (_shoppingCartSettings.RoundPricesDuringCalculation)
+                            so.Rate = Math.Round(so.Rate, 2);
+                        result.ShippingOptions.Add(so);
+                    }
                 }
             }
 
