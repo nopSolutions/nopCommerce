@@ -33,6 +33,9 @@ namespace Nop.Services.Directory
 
         protected virtual OmniResponse GetInformation(string ipAddress)
         {
+            if (String.IsNullOrEmpty(ipAddress))
+                return null;
+
             try
             {
                 var databasePath = _webHelper.MapPath("~/App_Data/GeoLite2-Country.mmdb");
