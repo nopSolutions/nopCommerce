@@ -1037,6 +1037,7 @@ namespace Nop.Services.ExportImport
                         "PurchaseOrderNumber",
                         "ShippingMethod",
                         "ShippingRateComputationMethodSystemName",
+                        "CustomValuesXml",
                         "VatNumber",
                         "CreatedOnUtc",
                         //billing address
