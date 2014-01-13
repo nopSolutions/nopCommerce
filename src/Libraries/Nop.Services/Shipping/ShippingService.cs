@@ -515,7 +515,7 @@ namespace Nop.Services.Shipping
         public virtual IList<GetShippingOptionRequest> CreateShippingOptionRequests(IList<ShoppingCartItem> cart, 
             Address shippingAddress)
         {
-            //if we always ship from the default shipping original, then there's only one request
+            //if we always ship from the default shipping origin, then there's only one request
             //if we ship from warehouses, then there could be several requests
 
 
@@ -558,7 +558,7 @@ namespace Nop.Services.Shipping
                     }
                     if (originAddress == null)
                     {
-                        //no warehouse address. in this case use the default hipping origin
+                        //no warehouse address. in this case use the default shipping origin
                         originAddress = _addressService.GetAddressById(_shippingSettings.ShippingOriginAddressId);
                     }
                     if (originAddress != null)
@@ -629,21 +629,19 @@ namespace Nop.Services.Shipping
                         }
                         else
                         {
-                            //get shipping options which already exist for prior requested packages for this scrm (i.e. common options) ...
-                            var intersection = scrmShippingOptions
+                            //get shipping options which already exist for prior requested packages for this scrm (i.e. common options)
+                            scrmShippingOptions = scrmShippingOptions
                                 .Where(existingso => getShippingOptionResponse.ShippingOptions.Any(newso => newso.Name == existingso.Name))
                                 .ToList();
 
                             //and sum the rates
-                            foreach (var existingso in intersection)
+                            foreach (var existingso in scrmShippingOptions)
                             {
                                 existingso.Rate += getShippingOptionResponse
                                     .ShippingOptions
                                     .First(newso => newso.Name == existingso.Name)
                                     .Rate;
                             }
-
-                            scrmShippingOptions = intersection.ToList();
                         }
                     }
                     else
