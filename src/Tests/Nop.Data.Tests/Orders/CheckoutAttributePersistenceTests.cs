@@ -21,7 +21,8 @@ namespace Nop.Data.Tests.Orders
                 IsTaxExempt = true,
                 TaxCategoryId = 1,
                 AttributeControlType = AttributeControlType.Datepicker,
-                DisplayOrder = 2
+                DisplayOrder = 2,
+                LimitedToStores = true
             };
 
             var fromDb = SaveAndLoadEntity(ca);
@@ -34,6 +35,7 @@ namespace Nop.Data.Tests.Orders
             fromDb.TaxCategoryId.ShouldEqual(1);
             fromDb.AttributeControlType.ShouldEqual(AttributeControlType.Datepicker);
             fromDb.DisplayOrder.ShouldEqual(2);
+            fromDb.LimitedToStores.ShouldEqual(true);
         }
 
         [Test]
