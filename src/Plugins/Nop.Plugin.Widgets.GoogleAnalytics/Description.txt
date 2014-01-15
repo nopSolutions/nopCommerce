@@ -1,5 +1,5 @@
 ﻿Group: Widgets
-FriendlyName: Google Analytics
+FriendlyName: Google Analytics or Universal Analytics
 SystemName: Widgets.GoogleAnalytics
 Version: 1.14
 SupportedVersions: 3.30
