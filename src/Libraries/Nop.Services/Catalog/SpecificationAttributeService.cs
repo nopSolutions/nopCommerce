@@ -166,6 +166,32 @@ namespace Nop.Services.Catalog
             return _specificationAttributeOptionRepository.GetById(specificationAttributeOptionId);
         }
 
+
+        /// <summary>
+        /// Get specification attribute options by identifiers
+        /// </summary>
+        /// <param name="specificationAttributeOptionIds">Identifiers</param>
+        /// <returns>Specification attribute options</returns>
+        public virtual IList<SpecificationAttributeOption> GetSpecificationAttributeOptionsByIds(int[] specificationAttributeOptionIds)
+        {
+            if (specificationAttributeOptionIds == null || specificationAttributeOptionIds.Length == 0)
+                return new List<SpecificationAttributeOption>();
+
+            var query = from sao in _specificationAttributeOptionRepository.Table
+                        where specificationAttributeOptionIds.Contains(sao.Id)
+                        select sao;
+            var specificationAttributeOptions = query.ToList();
+            //sort by passed identifiers
+            var sortedSpecificationAttributeOptions = new List<SpecificationAttributeOption>();
+            foreach (int id in specificationAttributeOptionIds)
+            {
+                var sao = specificationAttributeOptions.Find(x => x.Id == id);
+                if (sao != null)
+                    sortedSpecificationAttributeOptions.Add(sao);
+            }
+            return sortedSpecificationAttributeOptions;
+        }
+
         /// <summary>
         /// Gets a specification attribute option by specification attribute id
         /// </summary>

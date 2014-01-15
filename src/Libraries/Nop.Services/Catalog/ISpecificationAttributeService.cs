@@ -56,6 +56,13 @@ namespace Nop.Services.Catalog
         SpecificationAttributeOption GetSpecificationAttributeOptionById(int specificationAttributeOption);
 
         /// <summary>
+        /// Get specification attribute options by identifiers
+        /// </summary>
+        /// <param name="specificationAttributeOptionIds">Identifiers</param>
+        /// <returns>Specification attribute options</returns>
+        IList<SpecificationAttributeOption> GetSpecificationAttributeOptionsByIds(int[] specificationAttributeOptionIds);
+
+        /// <summary>
         /// Gets a specification attribute option by specification attribute id
         /// </summary>
         /// <param name="specificationAttributeId">The specification attribute identifier</param>
