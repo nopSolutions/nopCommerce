@@ -9,6 +9,7 @@ using Nop.Services.Common;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Security;
+using Nop.Services.Stores;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 
@@ -25,16 +26,23 @@ namespace Nop.Admin.Controllers
 	    private readonly IAddressService _addressService;
         private readonly IPermissionService _permissionService;
 	    private readonly ILocalizedEntityService _localizedEntityService;
-	    private readonly ILanguageService _languageService;
+        private readonly ILanguageService _languageService;
+        private readonly IStoreService _storeService;
+        private readonly IStoreMappingService _storeMappingService;
 
 	    #endregion
 
 		#region Constructors
 
         public CountryController(ICountryService countryService,
-            IStateProvinceService stateProvinceService, ILocalizationService localizationService,
-            IAddressService addressService, IPermissionService permissionService,
-            ILocalizedEntityService localizedEntityService, ILanguageService languageService)
+            IStateProvinceService stateProvinceService, 
+            ILocalizationService localizationService,
+            IAddressService addressService, 
+            IPermissionService permissionService,
+            ILocalizedEntityService localizedEntityService, 
+            ILanguageService languageService,
+            IStoreService storeService,
+            IStoreMappingService storeMappingService)
 		{
             this._countryService = countryService;
             this._stateProvinceService = stateProvinceService;
@@ -43,6 +51,8 @@ namespace Nop.Admin.Controllers
             this._permissionService = permissionService;
             this._localizedEntityService = localizedEntityService;
             this._languageService = languageService;
+            this._storeService = storeService;
+            this._storeMappingService = storeMappingService;
 		}
 
 		#endregion 
@@ -72,6 +82,53 @@ namespace Nop.Admin.Controllers
                                                                localized.LanguageId);
             }
         }
+
+        [NonAction]
+        private void PrepareStoresMappingModel(CountryModel model, Country country, bool excludeProperties)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            model.AvailableStores = _storeService
+                .GetAllStores()
+                .Select(s => s.ToModel())
+                .ToList();
+            if (!excludeProperties)
+            {
+                if (country != null)
+                {
+                    model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(country);
+                }
+                else
+                {
+                    model.SelectedStoreIds = new int[0];
+                }
+            }
+        }
+
+        [NonAction]
+        protected void SaveStoreMappings(Country country, CountryModel model)
+        {
+            var existingStoreMappings = _storeMappingService.GetStoreMappings(country);
+            var allStores = _storeService.GetAllStores();
+            foreach (var store in allStores)
+            {
+                if (model.SelectedStoreIds != null && model.SelectedStoreIds.Contains(store.Id))
+                {
+                    //new role
+                    if (existingStoreMappings.Count(sm => sm.StoreId == store.Id) == 0)
+                        _storeMappingService.InsertStoreMapping(country, store.Id);
+                }
+                else
+                {
+                    //removed role
+                    var storeMappingToDelete = existingStoreMappings.FirstOrDefault(sm => sm.StoreId == store.Id);
+                    if (storeMappingToDelete != null)
+                        _storeMappingService.DeleteStoreMapping(storeMappingToDelete);
+                }
+            }
+        }
+
         #endregion
 
         #region Countries
@@ -113,6 +170,8 @@ namespace Nop.Admin.Controllers
             var model = new CountryModel();
             //locales
             AddLocales(_languageService, model.Locales);
+            //Stores
+            PrepareStoresMappingModel(model, null, false);
             //default values
             model.Published = true;
             model.AllowsBilling = true;
@@ -132,12 +191,17 @@ namespace Nop.Admin.Controllers
                 _countryService.InsertCountry(country);
                 //locales
                 UpdateLocales(country, model);
+                //Stores
+                SaveStoreMappings(country, model);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Countries.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = country.Id }) : RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
+
+            //Stores
+            PrepareStoresMappingModel(model, null, true);
             return View(model);
         }
 
@@ -157,6 +221,8 @@ namespace Nop.Admin.Controllers
             {
                 locale.Name = country.GetLocalized(x => x.Name, languageId, false, false);
             });
+            //Stores
+            PrepareStoresMappingModel(model, country, false);
             return View(model);
         }
 
@@ -177,6 +243,8 @@ namespace Nop.Admin.Controllers
                 _countryService.UpdateCountry(country);
                 //locales
                 UpdateLocales(country, model);
+                //Stores
+                SaveStoreMappings(country, model);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Countries.Updated"));
 
@@ -194,6 +262,9 @@ namespace Nop.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
+
+            //Stores
+            PrepareStoresMappingModel(model, country, true);
             return View(model);
         }
 

@@ -56,6 +56,21 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Fields.AllowAddingOnlyExistingAttributeCombinations.Hint">
 	<Value>Check to allow adding to the cart/wishlist only attribute combinations that exist and have stock greater than zero. In this case you have to create all existing product attribute combinations that you have in stock.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Countries.Stores">
+	<Value>Stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Countries.Fields.LimitedToStores">
+	<Value>Limited to stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Countries.Fields.LimitedToStores.Hint">
+	<Value>Determines whether the country is available only at certain stores.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Countries.Fields.AvailableStores">
+	<Value>Stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Countries.Fields.AvailableStores.Hint">
+	<Value>Select stores for which the country will be shown.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -312,4 +327,20 @@ WHERE [AllowAddingOnlyExistingAttributeCombinations] IS NULL
 GO
 
 ALTER TABLE [Product] ALTER COLUMN [AllowAddingOnlyExistingAttributeCombinations] bit NOT NULL
+GO
+
+--Store mapping for countries
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Country]') and NAME='LimitedToStores')
+BEGIN
+	ALTER TABLE [Country]
+	ADD [LimitedToStores] bit NULL
+END
+GO
+
+UPDATE [Country]
+SET [LimitedToStores] = 0
+WHERE [LimitedToStores] IS NULL
+GO
+
+ALTER TABLE [Country] ALTER COLUMN [LimitedToStores] bit NOT NULL
 GO

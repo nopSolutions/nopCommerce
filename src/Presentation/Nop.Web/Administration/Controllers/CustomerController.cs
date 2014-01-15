@@ -386,7 +386,7 @@ namespace Nop.Admin.Controllers
             if (_customerSettings.CountryEnabled)
             {
                 model.AvailableCountries.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
-                foreach (var c in _countryService.GetAllCountries())
+                foreach (var c in _countryService.GetAllCountries(true))
                 {
                     model.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString() });
                 }
@@ -572,7 +572,7 @@ namespace Nop.Admin.Controllers
             if (_customerSettings.CountryEnabled)
             {
                 model.AvailableCountries.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
-                foreach (var c in _countryService.GetAllCountries())
+                foreach (var c in _countryService.GetAllCountries(true))
                 {
                     model.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == model.CountryId) });
                 }
@@ -663,7 +663,7 @@ namespace Nop.Admin.Controllers
             if (_customerSettings.CountryEnabled)
             {
                 model.AvailableCountries.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
-                foreach (var c in _countryService.GetAllCountries())
+                foreach (var c in _countryService.GetAllCountries(true))
                 {
                     model.AvailableCountries.Add(new SelectListItem()
                     {
@@ -917,7 +917,7 @@ namespace Nop.Admin.Controllers
             if (_customerSettings.CountryEnabled)
             {
                 model.AvailableCountries.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
-                foreach (var c in _countryService.GetAllCountries())
+                foreach (var c in _countryService.GetAllCountries(true))
                 {
                     model.AvailableCountries.Add(new SelectListItem()
                     {

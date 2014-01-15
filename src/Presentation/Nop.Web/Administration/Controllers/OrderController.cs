@@ -3003,7 +3003,7 @@ namespace Nop.Admin.Controllers
                 model.AvailableManufacturers.Add(new SelectListItem() { Text = m.Name, Value = m.Id.ToString() });
 
             //billing countries
-            foreach (var c in _countryService.GetAllCountriesForBilling())
+            foreach (var c in _countryService.GetAllCountriesForBilling(true))
             {
                 model.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString() });
             }

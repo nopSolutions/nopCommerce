@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
 using FluentValidation.Attributes;
+using Nop.Admin.Models.Stores;
 using Nop.Admin.Validators.Directory;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Localization;
@@ -52,6 +53,14 @@ namespace Nop.Admin.Models.Directory
         public int NumberOfStates { get; set; }
 
         public IList<CountryLocalizedModel> Locales { get; set; }
+
+
+        //Store mapping
+        [NopResourceDisplayName("Admin.Configuration.Countries.Fields.LimitedToStores")]
+        public bool LimitedToStores { get; set; }
+        [NopResourceDisplayName("Admin.Configuration.Countries.Fields.AvailableStores")]
+        public List<StoreModel> AvailableStores { get; set; }
+        public int[] SelectedStoreIds { get; set; }
     }
 
     public partial class CountryLocalizedModel : ILocalizedModelLocal

@@ -2992,6 +2992,22 @@
                   <LocaleResource Name="NumberOfStates">
                     <Value>Number of states</Value>
                   </LocaleResource>
+                  <LocaleResource Name="LimitedToStores">
+                    <Value>Limited to stores</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Determines whether the country is available only at certain stores.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="AvailableStores">
+                    <Value>Stores</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Select stores for which the country will be shown.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
                 </Children>
               </LocaleResource>
               <LocaleResource Name="Info">
@@ -3052,6 +3068,9 @@
                     <Value>You need to save the country before you can add states for this country page.</Value>
                   </LocaleResource>
                 </Children>
+              </LocaleResource>
+              <LocaleResource Name="Stores">
+                <Value>Stores</Value>
               </LocaleResource>
               <LocaleResource Name="Added">
                 <Value>The new country has been added successfully.</Value>

@@ -21,6 +21,7 @@ using Nop.Services.Logging;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Shipping;
+using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Web.Extensions;
 using Nop.Web.Framework.Controllers;
@@ -37,6 +38,7 @@ namespace Nop.Web.Controllers
 
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
+        private readonly IStoreMappingService _storeMappingService;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly ILocalizationService _localizationService;
         private readonly ITaxService _taxService;
@@ -70,6 +72,7 @@ namespace Nop.Web.Controllers
 
         public CheckoutController(IWorkContext workContext,
             IStoreContext storeContext,
+            IStoreMappingService storeMappingService,
             IShoppingCartService shoppingCartService, 
             ILocalizationService localizationService, 
             ITaxService taxService, 
@@ -97,6 +100,7 @@ namespace Nop.Web.Controllers
         {
             this._workContext = workContext;
             this._storeContext = storeContext;
+            this._storeMappingService = storeMappingService;
             this._shoppingCartService = shoppingCartService;
             this._localizationService = localizationService;
             this._taxService = taxService;
@@ -146,7 +150,12 @@ namespace Nop.Web.Controllers
         {
             var model = new CheckoutBillingAddressModel();
             //existing addresses
-            var addresses = _workContext.CurrentCustomer.Addresses.Where(a => a.Country == null || a.Country.AllowsBilling).ToList();
+            var addresses = _workContext.CurrentCustomer.Addresses
+                //allow billing
+                .Where(a => a.Country == null || a.Country.AllowsBilling)
+                //enabled for the current store
+                .Where(a => a.Country == null || _storeMappingService.Authorize(a.Country))
+                .ToList();
             foreach (var address in addresses)
             {
                 var addressModel = new AddressModel();
@@ -175,7 +184,12 @@ namespace Nop.Web.Controllers
         {
             var model = new CheckoutShippingAddressModel();
             //existing addresses
-            var addresses = _workContext.CurrentCustomer.Addresses.Where(a => a.Country == null || a.Country.AllowsShipping).ToList();
+            var addresses = _workContext.CurrentCustomer.Addresses
+                //allow shipping
+                .Where(a => a.Country == null || a.Country.AllowsShipping)
+                //enabled for the current store
+                .Where(a => a.Country == null || _storeMappingService.Authorize(a.Country))
+                .ToList();
             foreach (var address in addresses)
             {
                 var addressModel = new AddressModel();

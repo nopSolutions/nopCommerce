@@ -22,7 +22,8 @@ namespace Nop.Data.Tests.Directory
                 NumericIsoCode = 1,
                 SubjectToVat = true,
                 Published = true,
-                DisplayOrder = 1
+                DisplayOrder = 1,
+                LimitedToStores = true
             };
 
             var fromDb = SaveAndLoadEntity(country);
@@ -36,6 +37,7 @@ namespace Nop.Data.Tests.Directory
             fromDb.SubjectToVat.ShouldEqual(true);
             fromDb.Published.ShouldEqual(true);
             fromDb.DisplayOrder.ShouldEqual(1);
+            fromDb.LimitedToStores.ShouldEqual(true);
         }
 
         [Test]
