@@ -554,14 +554,24 @@ namespace Nop.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                var address = model.NewAddress.ToEntity();
-                address.CreatedOnUtc = DateTime.UtcNow;
-                //some validation
-                if (address.CountryId == 0)
-                    address.CountryId = null;
-                if (address.StateProvinceId == 0)
-                    address.StateProvinceId = null;
-                _workContext.CurrentCustomer.Addresses.Add(address);
+                //try to find an address with the same values (don't duplicate records)
+                var address = _workContext.CurrentCustomer.Addresses.ToList().FindAddress(
+                    model.NewAddress.FirstName, model.NewAddress.LastName, model.NewAddress.PhoneNumber,
+                    model.NewAddress.Email, model.NewAddress.FaxNumber, model.NewAddress.Company,
+                    model.NewAddress.Address1, model.NewAddress.Address2, model.NewAddress.City,
+                    model.NewAddress.StateProvinceId, model.NewAddress.ZipPostalCode, model.NewAddress.CountryId);
+                if (address == null)
+                {
+                    //address is not found. let's create a new one
+                    address = model.NewAddress.ToEntity();
+                    address.CreatedOnUtc = DateTime.UtcNow;
+                    //some validation
+                    if (address.CountryId == 0)
+                        address.CountryId = null;
+                    if (address.StateProvinceId == 0)
+                        address.StateProvinceId = null;
+                    _workContext.CurrentCustomer.Addresses.Add(address);
+                }
                 _workContext.CurrentCustomer.BillingAddress = address;
                 _customerService.UpdateCustomer(_workContext.CurrentCustomer);
 
@@ -639,14 +649,23 @@ namespace Nop.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                var address = model.NewAddress.ToEntity();
-                address.CreatedOnUtc = DateTime.UtcNow;
-                //some validation
-                if (address.CountryId == 0)
-                    address.CountryId = null;
-                if (address.StateProvinceId == 0)
-                    address.StateProvinceId = null;
-                _workContext.CurrentCustomer.Addresses.Add(address);
+                //try to find an address with the same values (don't duplicate records)
+                var address = _workContext.CurrentCustomer.Addresses.ToList().FindAddress(
+                    model.NewAddress.FirstName, model.NewAddress.LastName, model.NewAddress.PhoneNumber,
+                    model.NewAddress.Email, model.NewAddress.FaxNumber, model.NewAddress.Company,
+                    model.NewAddress.Address1, model.NewAddress.Address2, model.NewAddress.City,
+                    model.NewAddress.StateProvinceId, model.NewAddress.ZipPostalCode, model.NewAddress.CountryId);
+                if (address == null)
+                {
+                    address = model.NewAddress.ToEntity();
+                    address.CreatedOnUtc = DateTime.UtcNow;
+                    //some validation
+                    if (address.CountryId == 0)
+                        address.CountryId = null;
+                    if (address.StateProvinceId == 0)
+                        address.StateProvinceId = null;
+                    _workContext.CurrentCustomer.Addresses.Add(address);
+                }
                 _workContext.CurrentCustomer.ShippingAddress = address;
                 _customerService.UpdateCustomer(_workContext.CurrentCustomer);
 
