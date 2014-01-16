@@ -78,24 +78,31 @@ namespace Nop.Admin.Controllers
         #region Utilities
 
         [NonAction]
-        protected PluginModel PreparePluginModel(PluginDescriptor pluginDescriptor)
+        protected PluginModel PreparePluginModel(PluginDescriptor pluginDescriptor, 
+            bool prepareLocales = true, bool prepareStores = true)
         {
             var pluginModel = pluginDescriptor.ToModel();
             //logo
             pluginModel.LogoUrl = pluginDescriptor.GetLogoUrl(_webHelper);
 
-            //locales
-            AddLocales(_languageService, pluginModel.Locales, (locale, languageId) =>
+            if (prepareLocales)
             {
-                locale.FriendlyName = pluginDescriptor.Instance().GetLocalizedFriendlyName(_localizationService, languageId, false);
-            });
-            //stores
-            pluginModel.AvailableStores = _storeService
-                .GetAllStores()
-                .Select(s => s.ToModel())
-                .ToList();
-            pluginModel.SelectedStoreIds = pluginDescriptor.LimitedToStores.ToArray();
-            pluginModel.LimitedToStores = pluginDescriptor.LimitedToStores.Count > 0;
+                //locales
+                AddLocales(_languageService, pluginModel.Locales, (locale, languageId) =>
+                {
+                    locale.FriendlyName = pluginDescriptor.Instance().GetLocalizedFriendlyName(_localizationService, languageId, false);
+                });
+            }
+            if (prepareStores)
+            {
+                //stores
+                pluginModel.AvailableStores = _storeService
+                    .GetAllStores()
+                    .Select(s => s.ToModel())
+                    .ToList();
+                pluginModel.SelectedStoreIds = pluginDescriptor.LimitedToStores.ToArray();
+                pluginModel.LimitedToStores = pluginDescriptor.LimitedToStores.Count > 0;
+            }
 
 
             //configuration URLs
@@ -180,19 +187,6 @@ namespace Nop.Admin.Controllers
             return pluginModel;
         }
 
-        [NonAction]
-        protected DataSourceResult PreparePluginListModel()
-        {
-            var pluginDescriptors = _pluginFinder.GetPluginDescriptors(false);
-            return new DataSourceResult
-            {
-                Data = pluginDescriptors.Select(x => PreparePluginModel(x))
-                .OrderBy(x => x.Group)
-                .ThenBy(x => x.DisplayOrder).ToList(),
-                Total = pluginDescriptors.Count()
-            };
-        }
-
         #endregion
 
         #region Methods
@@ -210,18 +204,24 @@ namespace Nop.Admin.Controllers
             return View();
         }
 
-        [HttpPost]
-        public ActionResult ListSelect(DataSourceRequest command)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
-                return AccessDeniedView();
+	    [HttpPost]
+	    public ActionResult ListSelect(DataSourceRequest command)
+	    {
+	        if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+	            return AccessDeniedView();
 
-            var gridModel = PreparePluginListModel();
+	        var pluginDescriptors = _pluginFinder.GetPluginDescriptors(false).ToList();
+	        var gridModel = new DataSourceResult
+            {
+                Data = pluginDescriptors.Select(x => PreparePluginModel(x, false, false))
+                .OrderBy(x => x.Group)
+                .ToList(),
+                Total = pluginDescriptors.Count()
+            };
+	        return Json(gridModel);
+	    }
 
-            return Json(gridModel);
-        }
-        
-        public ActionResult Install(string systemName)
+	    public ActionResult Install(string systemName)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();
