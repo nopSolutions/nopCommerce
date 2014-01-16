@@ -13,7 +13,7 @@ namespace Nop.Services.Messages
 {
     public partial interface IMessageTokenProvider
     {
-        void AddStoreTokens(IList<Token> tokens, Store store);
+        void AddStoreTokens(IList<Token> tokens, Store store, EmailAccount emailAccount);
 
         void AddOrderTokens(IList<Token> tokens, Order order, int languageId);
 

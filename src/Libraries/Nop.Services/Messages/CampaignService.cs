@@ -148,7 +148,7 @@ namespace Nop.Services.Messages
                     continue;
 
                 var tokens = new List<Token>();
-                _messageTokenProvider.AddStoreTokens(tokens, _storeContext.CurrentStore);
+                _messageTokenProvider.AddStoreTokens(tokens, _storeContext.CurrentStore, emailAccount);
                 _messageTokenProvider.AddNewsLetterSubscriptionTokens(tokens, subscription);
                 if (customer != null)
                     _messageTokenProvider.AddCustomerTokens(tokens, customer);
@@ -188,7 +188,7 @@ namespace Nop.Services.Messages
                 throw new ArgumentNullException("emailAccount");
 
             var tokens = new List<Token>();
-            _messageTokenProvider.AddStoreTokens(tokens, _storeContext.CurrentStore);
+            _messageTokenProvider.AddStoreTokens(tokens, _storeContext.CurrentStore, emailAccount);
             var customer = _customerService.GetCustomerByEmail(email);
             if (customer != null)
                 _messageTokenProvider.AddCustomerTokens(tokens, customer);
