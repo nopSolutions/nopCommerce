@@ -497,6 +497,8 @@ namespace Nop.Services.Messages
             var defaultEmailAccount = _emailAccountService.GetEmailAccountById(_emailAccountSettings.DefaultEmailAccountId);
             if (defaultEmailAccount == null)
                 defaultEmailAccount = _emailAccountService.GetAllEmailAccounts().FirstOrDefault();
+            if (defaultEmailAccount == null)
+                throw new ArgumentException("Email account cannot be loaded");
             tokens.Add(new Token("Store.Email", defaultEmailAccount.Email));
 
             //event notification
