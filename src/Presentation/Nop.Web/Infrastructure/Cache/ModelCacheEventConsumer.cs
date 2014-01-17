@@ -107,7 +107,11 @@ namespace Nop.Web.Infrastructure.Cache
         IConsumer<EntityDeleted<ManufacturerTemplate>>,
         IConsumer<EntityInserted<ProductTemplate>>,
         IConsumer<EntityUpdated<ProductTemplate>>,
-        IConsumer<EntityDeleted<ProductTemplate>>
+        IConsumer<EntityDeleted<ProductTemplate>>,
+        //checkout attributes
+        IConsumer<EntityInserted<CheckoutAttribute>>,
+        IConsumer<EntityUpdated<CheckoutAttribute>>,
+        IConsumer<EntityDeleted<CheckoutAttribute>>
     {
         /// <summary>
         /// Key for categories on the search page
@@ -433,7 +437,7 @@ namespace Nop.Web.Infrastructure.Cache
         /// {1} : language ID
         /// </remarks>
         public const string POLL_BY_SYSTEMNAME__MODEL_KEY = "Nop.pres.poll.systemname-{0}-{1}";
-        public const string POLLS_PATTERN_KEY = "Nop.pres.poll.";
+        public const string POLLS_PATTERN_KEY = "Nop.pres.poll";
 
         /// <summary>
         /// Key for blog tag list model
@@ -451,7 +455,7 @@ namespace Nop.Web.Infrastructure.Cache
         /// {1} : current store ID
         /// </remarks>
         public const string BLOG_MONTHS_MODEL_KEY = "Nop.pres.blog.months-{0}-{1}";
-        public const string BLOG_PATTERN_KEY = "Nop.pres.blog.";
+        public const string BLOG_PATTERN_KEY = "Nop.pres.blog";
 
         /// <summary>
         /// Key for home page news
@@ -461,7 +465,7 @@ namespace Nop.Web.Infrastructure.Cache
         /// {1} : current store ID
         /// </remarks>
         public const string HOMEPAGE_NEWSMODEL_KEY = "Nop.pres.news.homepage-{0}-{1}";
-        public const string NEWS_PATTERN_KEY = "Nop.pres.news.";
+        public const string NEWS_PATTERN_KEY = "Nop.pres.news";
         
         /// <summary>
         /// Key for states by country id
@@ -472,7 +476,7 @@ namespace Nop.Web.Infrastructure.Cache
         /// {0} : language ID
         /// </remarks>
         public const string STATEPROVINCES_BY_COUNTRY_MODEL_KEY = "Nop.pres.stateprovinces.bycountry-{0}-{1}-{2}";
-        public const string STATEPROVINCES_PATTERN_KEY = "Nop.pres.stateprovinces.";
+        public const string STATEPROVINCES_PATTERN_KEY = "Nop.pres.stateprovinces";
 
         /// <summary>
         /// Key for available languages
@@ -481,7 +485,7 @@ namespace Nop.Web.Infrastructure.Cache
         /// {0} : current store ID
         /// </remarks>
         public const string AVAILABLE_LANGUAGES_MODEL_KEY = "Nop.pres.languages.all-{0}";
-        public const string AVAILABLE_LANGUAGES_PATTERN_KEY = "Nop.pres.languages.";
+        public const string AVAILABLE_LANGUAGES_PATTERN_KEY = "Nop.pres.languages";
 
         /// <summary>
         /// Key for available currencies
@@ -491,8 +495,18 @@ namespace Nop.Web.Infrastructure.Cache
         /// {0} : current store ID
         /// </remarks>
         public const string AVAILABLE_CURRENCIES_MODEL_KEY = "Nop.pres.currencies.all-{0}-{1}";
-        public const string AVAILABLE_CURRENCIES_PATTERN_KEY = "Nop.pres.currencies.";
+        public const string AVAILABLE_CURRENCIES_PATTERN_KEY = "Nop.pres.currencies";
 
+        /// <summary>
+        /// Key for caching of a value indicating whether we have checkout attributes
+        /// </summary>
+        /// <remarks>
+        /// {0} : current store ID
+        /// {1} : true - all attributes, false - only shippable attributes
+        /// </remarks>
+        public const string CHECKOUTATTRIBUTES_EXIST_KEY = "Nop.pres.checkoutattributes.exist-{0}-{1}";
+        public const string CHECKOUTATTRIBUTES_PATTERN_KEY = "Nop.pres.checkoutattributes";
+        
         private readonly ICacheManager _cacheManager;
         
         public ModelCacheEventConsumer()
@@ -916,5 +930,20 @@ namespace Nop.Web.Infrastructure.Cache
         {
             _cacheManager.RemoveByPattern(PRODUCT_TEMPLATE_PATTERN_KEY);
         }
+
+        //checkout attributes
+        public void HandleEvent(EntityInserted<CheckoutAttribute> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityUpdated<CheckoutAttribute> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityDeleted<CheckoutAttribute> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
+        }
+        
     }
 }

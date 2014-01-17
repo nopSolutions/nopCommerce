@@ -750,20 +750,29 @@ namespace Nop.Web.Controllers
                 decimal subtotal = _currencyService.ConvertFromPrimaryStoreCurrency(subtotalBase, _workContext.WorkingCurrency);
                 model.SubTotal = _priceFormatter.FormatPrice(subtotal);
 
-                //a customer should visit the shopping cart page before going to checkout if:
+                var requiresShipping = cart.RequiresShipping();
+                //a customer should visit the shopping cart page (hide checkout button) before going to checkout if:
                 //1. "terms of service" are enabled
-                //2. we have at least one checkout attribute
-                //3. min order sub-total is OK
-                var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes(_storeContext.CurrentStore.Id);
-                if (!cart.RequiresShipping())
-                {
-                    //remove attributes which require shippable products
-                    checkoutAttributes = checkoutAttributes.RemoveShippableAttributes();
-                }
+                //2. min order sub-total is OK
+                //3. we have at least one checkout attribute
+                var checkoutAttributesExistCacheKey = string.Format(ModelCacheEventConsumer.CHECKOUTATTRIBUTES_EXIST_KEY,
+                    _storeContext.CurrentStore.Id, requiresShipping);
+                var checkoutAttributesExist = _cacheManager.Get(checkoutAttributesExistCacheKey,
+                    () =>
+                    {
+                        var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes(_storeContext.CurrentStore.Id);
+                        if (!requiresShipping)
+                        {
+                            //remove attributes which require shippable products
+                            checkoutAttributes = checkoutAttributes.RemoveShippableAttributes();
+                        }
+                        return checkoutAttributes.Count > 0;
+                    });
+
                 bool minOrderSubtotalAmountOk = _orderProcessingService.ValidateMinOrderSubtotalAmount(cart);
-                model.DisplayCheckoutButton = !_orderSettings.TermsOfServiceOnShoppingCartPage && 
-                    checkoutAttributes.Count == 0 &&
-                    minOrderSubtotalAmountOk;
+                model.DisplayCheckoutButton = !_orderSettings.TermsOfServiceOnShoppingCartPage &&
+                    minOrderSubtotalAmountOk && 
+                    !checkoutAttributesExist;
 
                 //products. sort descending (recently added products)
                 foreach (var sci in cart
