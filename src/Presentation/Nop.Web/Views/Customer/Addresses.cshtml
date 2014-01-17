@@ -66,23 +66,34 @@
                         }
                         @if (address.CityEnabled || address.StateProvinceEnabled || address.ZipPostalCodeEnabled)
                         {
+                            var cityStateZip = "";
+                            if (address.CityEnabled)
+                            {
+                                cityStateZip = address.City;
+                                if (address.StateProvinceEnabled || address.ZipPostalCodeEnabled)
+                                {
+                                    cityStateZip += ",";
+                                }
+                            }
+                            if (address.StateProvinceEnabled)
+                            {
+                                if (!String.IsNullOrEmpty(cityStateZip))
+                                {
+                                    cityStateZip += " ";
+                                }
+                                cityStateZip += address.StateProvinceName;
+                            }
+                            if (address.ZipPostalCodeEnabled)
+                            {
+                                if (!String.IsNullOrEmpty(cityStateZip))
+                                {
+                                    cityStateZip += " ";
+                                }
+                                cityStateZip += address.ZipPostalCode;
+                            }
+                            
                             <li class="city-state-zip">
-                                @if (address.CityEnabled)
-                                {
-                                    @address.City
-                                }
-                                @if (address.CityEnabled && (address.StateProvinceEnabled || address.ZipPostalCodeEnabled))
-                                {
-                                    <text>,</text>
-                                }
-                                @if (address.StateProvinceEnabled)
-                                {
-                                    @address.StateProvinceName
-                                }
-                                @if (address.ZipPostalCodeEnabled)
-                                {
-                                    @address.ZipPostalCode
-                                }
+                                @cityStateZip
                             </li>
                         }
                         @if (address.CountryEnabled && !String.IsNullOrEmpty(address.CountryName))
