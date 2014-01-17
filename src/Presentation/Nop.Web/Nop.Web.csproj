@@ -1863,7 +1863,6 @@
     <Content Include="Content\install\style.css" />
     <Content Include="Content\install\style.rtl.css" />
     <Content Include="Content\samples\category_accessories.jpg" />
-    <Content Include="Content\samples\category_accessories_apparel.jpg" />
     <Content Include="Content\samples\category_apparel_shoes.jpeg" />
     <Content Include="Content\samples\category_book.jpeg" />
     <Content Include="Content\samples\category_camera_photo.jpeg" />
@@ -1872,13 +1871,9 @@
     <Content Include="Content\samples\category_desktops.jpg" />
     <Content Include="Content\samples\category_digital_downloads.jpeg" />
     <Content Include="Content\samples\category_electronics.jpeg" />
-    <Content Include="Content\samples\category_games.jpg" />
     <Content Include="Content\samples\category_gift_cards.jpeg" />
-    <Content Include="Content\samples\category_jeans.jpg" />
     <Content Include="Content\samples\category_jewelry.jpeg" />
     <Content Include="Content\samples\category_notebooks.jpg" />
-    <Content Include="Content\samples\category_shirts.jpg" />
-    <Content Include="Content\samples\category_shoes.jpg" />
     <Content Include="Content\samples\category_software.jpg" />
     <Content Include="Content\samples\product_AdobePhotoshop.jpeg" />
     <Content Include="Content\samples\product_5giftcart.jpeg" />

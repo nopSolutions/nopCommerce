@@ -4672,8 +4672,8 @@ namespace Nop.Services.Installation
                     DisplayTierPricesWithDiscounts = true,
                     IgnoreDiscounts = false,
                     IgnoreFeaturedProducts = false,
-                    DefaultCategoryPageSizeOptions = "4, 2, 8, 12",
-                    DefaultManufacturerPageSizeOptions = "4, 2, 8, 12",
+                    DefaultCategoryPageSizeOptions = "8, 4, 12",
+                    DefaultManufacturerPageSizeOptions = "8, 4, 12",
                     ProductsByTagAllowCustomersToSelectPageSize = true,
                     ProductsByTagPageSizeOptions = "8, 4, 12",
                     MaximumBackInStockSubscriptions = 200,
@@ -4997,7 +4997,7 @@ namespace Nop.Services.Installation
             {
                 PageSize = 15,
                 AllowCustomersToSelectPageSize = true,
-                PageSizeOptions = "4, 2, 8, 12",
+                PageSizeOptions = "8, 4, 12",
                 VendorsBlockItemsToDisplay = 0,
                 ShowVendorOnProductDetailsPage = true,
             });
@@ -5198,7 +5198,7 @@ namespace Nop.Services.Installation
                 MetaDescription = "Books category description",
                 PageSize = 4,
                 AllowCustomersToSelectPageSize = true,
-                PageSizeOptions = "4, 2, 8, 12",
+                PageSizeOptions = "8, 4, 12",
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_book.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Book"), true).Id,
                 PriceRanges = "-25;25-50;50-;",
                 IncludeInTopMenu = true,
@@ -5216,7 +5216,7 @@ namespace Nop.Services.Installation
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 4,
                 AllowCustomersToSelectPageSize = true,
-                PageSizeOptions = "4, 2, 8, 12",
+                PageSizeOptions = "8, 4, 12",
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_computers.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Computers"), true).Id,
                 IncludeInTopMenu = true,
                 Published = true,
@@ -5234,7 +5234,7 @@ namespace Nop.Services.Installation
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 4,
                 AllowCustomersToSelectPageSize = true,
-                PageSizeOptions = "4, 2, 8, 12",
+                PageSizeOptions = "8, 4, 12",
                 ParentCategoryId = categoryComputers.Id,
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_desktops.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Desktops"), true).Id,
                 PriceRanges = "-1000;1000-1200;1200-;",
@@ -5254,7 +5254,7 @@ namespace Nop.Services.Installation
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 4,
                 AllowCustomersToSelectPageSize = true,
-                PageSizeOptions = "4, 2, 8, 12",
+                PageSizeOptions = "8, 4, 12",
                 ParentCategoryId = categoryComputers.Id,
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_notebooks.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Notebooks"), true).Id,
                 IncludeInTopMenu = true,
@@ -5273,7 +5273,7 @@ namespace Nop.Services.Installation
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 4,
                 AllowCustomersToSelectPageSize = true,
-                PageSizeOptions = "4, 2, 8, 12",
+                PageSizeOptions = "8, 4, 12",
                 ParentCategoryId = categoryComputers.Id,
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_accessories.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Accessories"), true).Id,
                 IncludeInTopMenu = true,
@@ -5289,11 +5289,11 @@ namespace Nop.Services.Installation
 
             var categorySoftware = new Category
             {
-                Name = "Software",
+                Name = "Software & Games",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 4,
                 AllowCustomersToSelectPageSize = true,
-                PageSizeOptions = "4, 2, 8, 12",
+                PageSizeOptions = "8, 4, 12",
                 ParentCategoryId = categoryComputers.Id,
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_software.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Software"), true).Id,
                 IncludeInTopMenu = true,
@@ -5305,34 +5305,14 @@ namespace Nop.Services.Installation
             allCategories.Add(categorySoftware);
             _categoryRepository.Insert(categorySoftware);
 
-
-            var categoryGames = new Category
-            {
-                Name = "Games",
-                CategoryTemplateId = categoryTemplateInGridAndLines.Id,
-                PageSize = 4,
-                AllowCustomersToSelectPageSize = true,
-                PageSizeOptions = "4, 2, 8, 12",
-                ParentCategoryId = categoryComputers.Id,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_games.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Games"), true).Id,
-                IncludeInTopMenu = true,
-                Published = true,
-                DisplayOrder = 4,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allCategories.Add(categoryGames);
-            _categoryRepository.Insert(categoryGames);
-
-
-
+            
             var categoryElectronics = new Category
             {
                 Name = "Electronics",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 4,
                 AllowCustomersToSelectPageSize = true,
-                PageSizeOptions = "4, 2, 8, 12",
+                PageSizeOptions = "8, 4, 12",
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_electronics.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Electronics"), true).Id,
                 IncludeInTopMenu = true,
                 Published = true,
@@ -5350,7 +5330,7 @@ namespace Nop.Services.Installation
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 4,
                 AllowCustomersToSelectPageSize = true,
-                PageSizeOptions = "4, 2, 8, 12",
+                PageSizeOptions = "8, 4, 12",
                 ParentCategoryId = categoryElectronics.Id,
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_camera_photo.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Camera, photo"), true).Id,
                 PriceRanges = "-500;500-;",
@@ -5370,7 +5350,7 @@ namespace Nop.Services.Installation
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 4,
                 AllowCustomersToSelectPageSize = true,
-                PageSizeOptions = "4, 2, 8, 12",
+                PageSizeOptions = "8, 4, 12",
                 ParentCategoryId = categoryElectronics.Id,
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_cell_phones.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Cell phones"), true).Id,
                 IncludeInTopMenu = true,
@@ -5389,7 +5369,7 @@ namespace Nop.Services.Installation
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 4,
                 AllowCustomersToSelectPageSize = true,
-                PageSizeOptions = "4, 2, 8, 12",
+                PageSizeOptions = "8, 4, 12",
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_apparel_shoes.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Apparel & Shoes"), true).Id,
                 IncludeInTopMenu = true,
                 Published = true,
@@ -5401,84 +5381,6 @@ namespace Nop.Services.Installation
             _categoryRepository.Insert(categoryApparelShoes);
 
 
-            var categoryShirts = new Category
-            {
-                Name = "Shirts",
-                CategoryTemplateId = categoryTemplateInGridAndLines.Id,
-                PageSize = 4,
-                AllowCustomersToSelectPageSize = true,
-                PageSizeOptions = "4, 2, 8, 12",
-                ParentCategoryId = categoryApparelShoes.Id,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_shirts.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Shirts"), true).Id,
-                PriceRanges = "-20;20-;",
-                IncludeInTopMenu = true,
-                Published = true,
-                DisplayOrder = 1,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allCategories.Add(categoryShirts);
-            _categoryRepository.Insert(categoryShirts);
-
-
-            var categoryJeans = new Category
-            {
-                Name = "Jeans",
-                CategoryTemplateId = categoryTemplateInGridAndLines.Id,
-                PageSize = 4,
-                AllowCustomersToSelectPageSize = true,
-                PageSizeOptions = "4, 2, 8, 12",
-                ParentCategoryId = categoryApparelShoes.Id,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_jeans.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Jeans"), true).Id,
-                PriceRanges = "-20;20-;",
-                IncludeInTopMenu = true,
-                Published = true,
-                DisplayOrder = 2,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allCategories.Add(categoryJeans);
-            _categoryRepository.Insert(categoryJeans);
-
-
-            var categoryShoes = new Category
-            {
-                Name = "Shoes",
-                CategoryTemplateId = categoryTemplateInGridAndLines.Id,
-                PageSize = 4,
-                AllowCustomersToSelectPageSize = true,
-                PageSizeOptions = "4, 2, 8, 12",
-                ParentCategoryId = categoryApparelShoes.Id,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_shoes.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Shoes"), true).Id,
-                PriceRanges = "-20;20-;",
-                IncludeInTopMenu = true,
-                Published = true,
-                DisplayOrder = 3,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allCategories.Add(categoryShoes);
-            _categoryRepository.Insert(categoryShoes);
-
-
-            var categoryAccessoriesShoes = new Category
-            {
-                Name = "Apparel accessories",
-                CategoryTemplateId = categoryTemplateInGridAndLines.Id,
-                PageSize = 4,
-                AllowCustomersToSelectPageSize = true,
-                PageSizeOptions = "4, 2, 8, 12",
-                ParentCategoryId = categoryApparelShoes.Id,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_accessories_apparel.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Apparel accessories"), true).Id,
-                PriceRanges = "-30;30-;",
-                IncludeInTopMenu = true,
-                Published = true,
-                DisplayOrder = 4,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allCategories.Add(categoryAccessoriesShoes);
-            _categoryRepository.Insert(categoryAccessoriesShoes);
 
 
             var categoryDigitalDownloads = new Category
@@ -5487,7 +5389,7 @@ namespace Nop.Services.Installation
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 4,
                 AllowCustomersToSelectPageSize = true,
-                PageSizeOptions = "4, 2, 8, 12",
+                PageSizeOptions = "8, 4, 12",
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_digital_downloads.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Digital downloads"), true).Id,
                 IncludeInTopMenu = true,
                 Published = true,
@@ -5505,7 +5407,7 @@ namespace Nop.Services.Installation
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 4,
                 AllowCustomersToSelectPageSize = true,
-                PageSizeOptions = "4, 2, 8, 12",
+                PageSizeOptions = "8, 4, 12",
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_jewelry.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Jewelry"), true).Id,
                 PriceRanges = "0-500;500-700;700-3000;",
                 IncludeInTopMenu = true,
@@ -5523,7 +5425,7 @@ namespace Nop.Services.Installation
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 4,
                 AllowCustomersToSelectPageSize = true,
-                PageSizeOptions = "4, 2, 8, 12",
+                PageSizeOptions = "8, 4, 12",
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_gift_cards.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Gift Cards"), true).Id,
                 IncludeInTopMenu = true,
                 Published = true,
@@ -5562,7 +5464,7 @@ namespace Nop.Services.Installation
                 ManufacturerTemplateId = manufacturerTemplateInGridAndLines.Id,
                 PageSize = 4,
                 AllowCustomersToSelectPageSize = true,
-                PageSizeOptions = "4, 2, 8, 12",
+                PageSizeOptions = "8, 4, 12",
                 Published = true,
                 DisplayOrder = 2,
                 CreatedOnUtc = DateTime.UtcNow,
@@ -5578,7 +5480,7 @@ namespace Nop.Services.Installation
                 ManufacturerTemplateId = manufacturerTemplateInGridAndLines.Id,
                 PageSize = 4,
                 AllowCustomersToSelectPageSize = true,
-                PageSizeOptions = "4, 2, 8, 12",
+                PageSizeOptions = "8, 4, 12",
                 Published = true,
                 DisplayOrder = 5,
                 CreatedOnUtc = DateTime.UtcNow,
@@ -5879,7 +5781,7 @@ namespace Nop.Services.Installation
             productRockabillyPolka.ProductVariantAttributes.Add(pvaRockabillyPolka1);
             productRockabillyPolka.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Shirts"),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
                 DisplayOrder = 1,
             });
             productRockabillyPolka.ProductPictures.Add(new ProductPicture()
@@ -6046,7 +5948,7 @@ namespace Nop.Services.Installation
             productAdidasShoe.ProductVariantAttributes.Add(pvaAdidasShoe2);
             productAdidasShoe.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Shoes"),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
                 DisplayOrder = 1,
             });
             productAdidasShoe.ProductPictures.Add(new ProductPicture()
@@ -6098,7 +6000,7 @@ namespace Nop.Services.Installation
             allProducts.Add(productAdobePhotoshop);
             productAdobePhotoshop.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Software"),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Software & Games"),
                 DisplayOrder = 1,
             });
             productAdobePhotoshop.ProductPictures.Add(new ProductPicture()
@@ -6209,7 +6111,7 @@ namespace Nop.Services.Installation
 
             productArrow.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Shirts"),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
                 DisplayOrder = 1,
             });
             productArrow.ProductPictures.Add(new ProductPicture()
@@ -6997,7 +6899,7 @@ namespace Nop.Services.Installation
             allProducts.Add(productCorel);
             productCorel.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Software"),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Software & Games"),
                 DisplayOrder = 1,
             });
             productCorel.ProductPictures.Add(new ProductPicture()
@@ -7052,7 +6954,7 @@ namespace Nop.Services.Installation
 
             productCustomTShirt.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Shirts"),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
                 DisplayOrder = 1,
             });
             productCustomTShirt.ProductPictures.Add(new ProductPicture()
@@ -7306,7 +7208,7 @@ namespace Nop.Services.Installation
             productEtnies.ProductVariantAttributes.Add(pvaEtnies2);
             productEtnies.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Shoes"),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
                 DisplayOrder = 1,
             });
             productEtnies.ProductPictures.Add(new ProductPicture()
@@ -7353,7 +7255,7 @@ namespace Nop.Services.Installation
             allProducts.Add(productLeatherHandbag);
             productLeatherHandbag.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Apparel accessories"),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
                 DisplayOrder = 1,
             });
             productLeatherHandbag.ProductPictures.Add(new ProductPicture()
@@ -7706,7 +7608,7 @@ namespace Nop.Services.Installation
             productHat.ProductVariantAttributes.Add(pvaHat1);
             productHat.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Apparel accessories"),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
                 DisplayOrder = 1,
             });
             productHat.ProductPictures.Add(new ProductPicture()
@@ -7818,7 +7720,7 @@ namespace Nop.Services.Installation
 
             productLeviJeans.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Jeans"),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
                 DisplayOrder = 1,
             });
             productLeviJeans.ProductPictures.Add(new ProductPicture()
@@ -7870,7 +7772,7 @@ namespace Nop.Services.Installation
             allProducts.Add(productBaseball);
             productBaseball.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Games"),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Software & Games"),
                 DisplayOrder = 1,
             });
             productBaseball.ProductPictures.Add(new ProductPicture()
@@ -7917,7 +7819,7 @@ namespace Nop.Services.Installation
             allProducts.Add(productMedalOfHonor);
             productMedalOfHonor.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Games"),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Software & Games"),
                 DisplayOrder = 1,
             });
             productMedalOfHonor.ProductPictures.Add(new ProductPicture()
@@ -8011,7 +7913,7 @@ namespace Nop.Services.Installation
             allProducts.Add(productGolfBelt);
             productGolfBelt.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Apparel accessories"),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
                 DisplayOrder = 1,
             });
             productGolfBelt.ProductPictures.Add(new ProductPicture()
@@ -8105,7 +8007,7 @@ namespace Nop.Services.Installation
             allProducts.Add(productSunglasses);
             productSunglasses.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Apparel accessories"),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
                 DisplayOrder = 1,
             });
             productSunglasses.ProductPictures.Add(new ProductPicture()
@@ -8374,7 +8276,7 @@ namespace Nop.Services.Installation
             allProducts.Add(productDenimShort);
             productDenimShort.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Jeans"),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
                 DisplayOrder = 1,
             });
             productDenimShort.ProductPictures.Add(new ProductPicture()
@@ -8473,7 +8375,7 @@ namespace Nop.Services.Installation
             allProducts.Add(productWoW);
             productWoW.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Games"),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Software & Games"),
                 DisplayOrder = 1,
             });
             productWoW.ProductPictures.Add(new ProductPicture()
@@ -8520,7 +8422,7 @@ namespace Nop.Services.Installation
             allProducts.Add(productSoccer);
             productSoccer.ProductCategories.Add(new ProductCategory()
             {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Games"),
+                Category = _categoryRepository.Table.Single(c => c.Name == "Software & Games"),
                 DisplayOrder = 1,
             });
             productSoccer.ProductPictures.Add(new ProductPicture()
