@@ -5223,6 +5223,14 @@
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
+                  <LocaleResource Name="AutomaticallyDetectLanguage">
+                    <Value>Automatically detect language</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Check to automatically detect language based on a customer browser settings.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
                   <LocaleResource Name="LoadAllLocaleRecordsOnStartup">
                     <Value>Load all locale resources on startup</Value>
                     <Children>

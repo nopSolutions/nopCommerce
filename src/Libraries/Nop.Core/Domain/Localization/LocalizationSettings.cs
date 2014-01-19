@@ -20,6 +20,11 @@ namespace Nop.Core.Domain.Localization
         public bool SeoFriendlyUrlsForLanguagesEnabled { get; set; }
 
         /// <summary>
+        /// A value indicating whether we should detect the current language by a customer region (browser settings)
+        /// </summary>
+        public bool AutomaticallyDetectLanguage { get; set; }
+
+        /// <summary>
         /// A value indicating whether to load all LocaleStringResource records on application startup
         /// </summary>
         public bool LoadAllLocaleRecordsOnStartup { get; set; }

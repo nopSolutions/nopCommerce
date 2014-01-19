@@ -618,6 +618,15 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.NopLabelFor(model => model.LocalizationSettings.AutomaticallyDetectLanguage):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.LocalizationSettings.AutomaticallyDetectLanguage)
+                @Html.ValidationMessageFor(model => model.LocalizationSettings.AutomaticallyDetectLanguage)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.NopLabelFor(model => model.LocalizationSettings.LoadAllLocaleRecordsOnStartup):
             </td>
             <td class="adminData">

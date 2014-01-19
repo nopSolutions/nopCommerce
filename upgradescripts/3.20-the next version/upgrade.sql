@@ -71,6 +71,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Countries.Fields.AvailableStores.Hint">
 	<Value>Select stores for which the country will be shown.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.AutomaticallyDetectLanguage">
+	<Value>Automatically detect language</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.AutomaticallyDetectLanguage.Hint">
+	<Value>Check to automatically detect language based on a customer browser settings.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -343,4 +349,12 @@ WHERE [LimitedToStores] IS NULL
 GO
 
 ALTER TABLE [Country] ALTER COLUMN [LimitedToStores] bit NOT NULL
+GO
+
+--a new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'localizationsettings.automaticallydetectlanguage')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'localizationsettings.automaticallydetectlanguage', N'false', 0)
+END
 GO

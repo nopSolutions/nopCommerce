@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
 using System.Web;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
@@ -110,6 +111,53 @@ namespace Nop.Web.Framework
                 _httpContext.Response.Cookies.Remove(CustomerCookieName);
                 _httpContext.Response.Cookies.Add(cookie);
             }
+        }
+
+        protected virtual Language GetLanguageFromUrl()
+        {
+            if (_httpContext == null || _httpContext.Request == null)
+                return null;
+
+            string virtualPath = _httpContext.Request.AppRelativeCurrentExecutionFilePath;
+            string applicationPath = _httpContext.Request.ApplicationPath;
+            if (!virtualPath.IsLocalizedUrl(applicationPath, false))
+                return null;
+
+            var seoCode = virtualPath.GetLanguageSeoCodeFromUrl(applicationPath, false);
+            if (String.IsNullOrEmpty(seoCode))
+                return null;
+
+            var language = _languageService
+                .GetAllLanguages()
+                .FirstOrDefault(l => seoCode.Equals(l.UniqueSeoCode, StringComparison.InvariantCultureIgnoreCase));
+            if (language != null && language.Published)
+            {
+                return language;
+            }
+
+            return null;
+        }
+
+        protected virtual Language GetLanguageFromBrowserSettings()
+        {
+            if (_httpContext == null ||
+                _httpContext.Request == null ||
+                _httpContext.Request.UserLanguages == null)
+                return null;
+
+            var userLanguage = _httpContext.Request.UserLanguages.FirstOrDefault();
+            if (String.IsNullOrEmpty(userLanguage))
+                return null;
+
+            var language = _languageService
+                .GetAllLanguages()
+                .FirstOrDefault(l => userLanguage.Equals(l.LanguageCulture, StringComparison.InvariantCultureIgnoreCase));
+            if (language != null && language.Published)
+            {
+                return language;
+            }
+
+            return null;
         }
 
         #endregion
@@ -248,35 +296,38 @@ namespace Nop.Web.Framework
         {
             get
             {
-                //get language from URL (if possible)
+                Language detectedLanguage = null;
                 if (_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
                 {
-                    if (_httpContext != null)
+                    //get language from URL
+                    detectedLanguage = GetLanguageFromUrl();
+                }
+                if (detectedLanguage == null && _localizationSettings.AutomaticallyDetectLanguage)
+                {
+                    //get language from browser settings
+                    //but we do it only once
+                    if (!this.CurrentCustomer.GetAttribute<bool>(SystemCustomerAttributeNames.LanguageAutomaticallyDetected, 
+                        _genericAttributeService, _storeContext.CurrentStore.Id))
                     {
-                        string virtualPath = _httpContext.Request.AppRelativeCurrentExecutionFilePath;
-                        string applicationPath = _httpContext.Request.ApplicationPath;
-                        if (virtualPath.IsLocalizedUrl(applicationPath, false))
+                        detectedLanguage = GetLanguageFromBrowserSettings();
+                        if (detectedLanguage != null)
                         {
-                            var seoCode = virtualPath.GetLanguageSeoCodeFromUrl(applicationPath, false);
-                            if (!String.IsNullOrEmpty(seoCode))
-                            {
-                                var langByCulture = _languageService.GetAllLanguages()
-                                    .FirstOrDefault(l => seoCode.Equals(l.UniqueSeoCode, StringComparison.InvariantCultureIgnoreCase));
-                                if (langByCulture != null && langByCulture.Published)
-                                {
-                                    //the language is found. now we need to save it
-                                    if (this.CurrentCustomer.GetAttribute<int>(SystemCustomerAttributeNames.LanguageId,
-                                        _genericAttributeService, _storeContext.CurrentStore.Id) != langByCulture.Id)
-                                    {
-                                        _genericAttributeService.SaveAttribute(this.CurrentCustomer,
-                                            SystemCustomerAttributeNames.LanguageId,
-                                            langByCulture.Id, _storeContext.CurrentStore.Id);
-                                    }
-                                }
-                            }
+                            _genericAttributeService.SaveAttribute(this.CurrentCustomer, SystemCustomerAttributeNames.LanguageAutomaticallyDetected,
+                                 true, _storeContext.CurrentStore.Id);
                         }
                     }
                 }
+                if (detectedLanguage != null)
+                {
+                    //the language is detected. now we need to save it
+                    if (this.CurrentCustomer.GetAttribute<int>(SystemCustomerAttributeNames.LanguageId,
+                        _genericAttributeService, _storeContext.CurrentStore.Id) != detectedLanguage.Id)
+                    {
+                        _genericAttributeService.SaveAttribute(this.CurrentCustomer, SystemCustomerAttributeNames.LanguageId,
+                            detectedLanguage.Id, _storeContext.CurrentStore.Id);
+                    }
+                }
+
                 var allLanguages = _languageService.GetAllLanguages(storeId: _storeContext.CurrentStore.Id);
                 if (allLanguages.Count > 0)
                 {
