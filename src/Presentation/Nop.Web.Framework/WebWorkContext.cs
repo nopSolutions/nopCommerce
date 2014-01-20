@@ -14,6 +14,7 @@ using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
+using Nop.Services.Stores;
 using Nop.Services.Vendors;
 using Nop.Web.Framework.Localization;
 
@@ -44,6 +45,7 @@ namespace Nop.Web.Framework
         private readonly CurrencySettings _currencySettings;
         private readonly LocalizationSettings _localizationSettings;
         private readonly IWebHelper _webHelper;
+        private readonly IStoreMappingService _storeMappingService;
 
         private Customer _cachedCustomer;
         private Customer _originalCustomerIfImpersonated;
@@ -61,9 +63,11 @@ namespace Nop.Web.Framework
             ILanguageService languageService,
             ICurrencyService currencyService,
             IGenericAttributeService genericAttributeService,
-            TaxSettings taxSettings, CurrencySettings currencySettings,
+            TaxSettings taxSettings, 
+            CurrencySettings currencySettings,
             LocalizationSettings localizationSettings,
-            IWebHelper webHelper)
+            IWebHelper webHelper,
+            IStoreMappingService storeMappingService)
         {
             this._httpContext = httpContext;
             this._customerService = customerService;
@@ -77,6 +81,7 @@ namespace Nop.Web.Framework
             this._currencySettings = currencySettings;
             this._localizationSettings = localizationSettings;
             this._webHelper = webHelper;
+            this._storeMappingService = storeMappingService;
         }
 
         #endregion
@@ -130,7 +135,7 @@ namespace Nop.Web.Framework
             var language = _languageService
                 .GetAllLanguages()
                 .FirstOrDefault(l => seoCode.Equals(l.UniqueSeoCode, StringComparison.InvariantCultureIgnoreCase));
-            if (language != null && language.Published)
+            if (language != null && language.Published && _storeMappingService.Authorize(language))
             {
                 return language;
             }
@@ -152,7 +157,7 @@ namespace Nop.Web.Framework
             var language = _languageService
                 .GetAllLanguages()
                 .FirstOrDefault(l => userLanguage.Equals(l.LanguageCulture, StringComparison.InvariantCultureIgnoreCase));
-            if (language != null && language.Published)
+            if (language != null && language.Published && _storeMappingService.Authorize(language))
             {
                 return language;
             }
