@@ -460,6 +460,7 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.EndDateUtc, mo => mo.Ignore());
             //customer roles
             Mapper.CreateMap<CustomerRole, CustomerRoleModel>()
+                .ForMember(dest => dest.PurchasedWithProductName, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             Mapper.CreateMap<CustomerRoleModel, CustomerRole>()
                 .ForMember(dest => dest.PermissionRecords, mo => mo.Ignore());

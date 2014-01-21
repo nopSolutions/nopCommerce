@@ -7662,6 +7662,23 @@
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
+                  <LocaleResource Name="PurchasedWithProduct">
+                    <Value>Purchased with product</Value>
+                    <Children>
+                      <LocaleResource Name="Choose">
+                        <Value>Choose product</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="Hint">
+                        <Value>A customer is added to this customer role once a specified product is purchased (paid). Please note that in case of refund or order cancellation you have to manually remove a customer from this role.</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="Remove">
+                        <Value>Remove</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="Registered">
+                        <Value>You cannot specify "Purchased with product" value for "Registered" customer role</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
                   <LocaleResource Name="SystemName">
                     <Value>System name</Value>
                     <Children>

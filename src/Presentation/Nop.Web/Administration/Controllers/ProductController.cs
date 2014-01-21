@@ -3018,7 +3018,11 @@ namespace Nop.Admin.Controllers
             {
                 Data = values.Select(x =>
                 {
-                    var associatedProduct = _productService.GetProductById(x.AssociatedProductId);
+                    Product associatedProduct = null;
+                    if (x.AttributeValueType == AttributeValueType.AssociatedToProduct)
+                    {
+                        associatedProduct = _productService.GetProductById(x.AssociatedProductId);
+                    }
                     var pictureThumbnailUrl = _pictureService.GetPictureUrl(x.PictureId, 75, false);
                     //little hack here. Grid is rendered wrong way with <inmg> without "src" attribute
                     if (String.IsNullOrEmpty(pictureThumbnailUrl))

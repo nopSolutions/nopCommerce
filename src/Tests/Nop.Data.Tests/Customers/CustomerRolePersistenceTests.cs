@@ -21,6 +21,7 @@ namespace Nop.Data.Tests.Customers
             fromDb.TaxExempt.ShouldEqual(true);
             fromDb.Active.ShouldEqual(true);
             fromDb.IsSystemRole.ShouldEqual(true);
+            fromDb.PurchasedWithProductId.ShouldEqual(1);
             fromDb.SystemName.ShouldEqual("Administrators");
         }
 
@@ -56,7 +57,8 @@ namespace Nop.Data.Tests.Customers
                 TaxExempt = true,
                 Active = true,
                 IsSystemRole = true,
-                SystemName = "Administrators"
+                SystemName = "Administrators",
+                PurchasedWithProductId = 1
             };
         }
     }

@@ -261,7 +261,7 @@ namespace Nop.Services.Orders
         /// Set IsActivated value for purchase gift cards for particular order
         /// </summary>
         /// <param name="order">Order</param>
-        /// <param name="activate">A value indicating whether to activate gift cards; true - actuvate, false - deactivate</param>
+        /// <param name="activate">A value indicating whether to activate gift cards; true - activate, false - deactivate</param>
         protected virtual void SetActivatedValueForPurchasedGiftCards(Order order, bool activate)
         {
             var giftCards = _giftCardService.GetAllGiftCards(order.Id, null, null, !activate, "", 0, int.MaxValue);
@@ -393,6 +393,78 @@ namespace Nop.Services.Orders
                _orderSettings.GiftCards_Deactivated_OrderStatusId == (int)order.OrderStatus)
             {
                 SetActivatedValueForPurchasedGiftCards(order, false);
+            }
+        }
+
+        /// <summary>
+        /// Process order paid status
+        /// </summary>
+        /// <param name="order">Order</param>
+        protected virtual void ProcessOrderPaid(Order order)
+        {
+            if (order == null)
+                throw new ArgumentNullException("order");
+
+            //raise event
+            _eventPublisher.PublishOrderPaid(order);
+
+            //order paid email notification
+            if (order.OrderTotal != decimal.Zero)
+            {
+                //we should not send it for free ($0 total) orders?
+                //remove this "if" statement if you want to send it in this case
+                _workflowMessageService.SendOrderPaidStoreOwnerNotification(order, _localizationSettings.DefaultAdminLanguageId);
+            }
+
+            //customer roles with "purchased with product" specified
+            ProcessCustomerRolesWithPurchasedProductSpecified(order, true);
+        }
+
+        /// <summary>
+        /// Process customer roles with "Purchased with Product" property configured
+        /// </summary>
+        /// <param name="order">Order</param>
+        /// <param name="add">A value indicating whether to add configured customer role; true - add, false - remove</param>
+        protected virtual void ProcessCustomerRolesWithPurchasedProductSpecified(Order order, bool add)
+        {
+            if (order == null)
+                throw new ArgumentNullException("order");
+
+            //purchased product IDs
+            //UNDONE: should we add associated (bundled) products to this list?
+            var purchasedProductIds = order.OrderItems.Select(oi => oi.ProductId).ToList();
+
+            //list of customer roles
+            var customerRoles = _customerService
+                .GetAllCustomerRoles(true)
+                .Where(cr => purchasedProductIds.Contains(cr.PurchasedWithProductId))
+                .ToList();
+
+            if (customerRoles.Count > 0)
+            {
+                var customer = order.Customer;
+                foreach (var customerRole in customerRoles)
+                {
+                    if (customer.CustomerRoles.Count(cr => cr.Id == customerRole.Id) == 0)
+                    {
+                        //not in the list yet
+                        if (add)
+                        {
+                            //add
+                            customer.CustomerRoles.Add(customerRole);
+                        }
+                    }
+                    else
+                    {
+                        //already in the list
+                        if (!add)
+                        {
+                            //remove
+                            customer.CustomerRoles.Remove(customerRole);
+                        }
+                    }
+                }
+                _customerService.UpdateCustomer(customer);
             }
         }
 
@@ -1375,16 +1447,7 @@ namespace Nop.Services.Orders
 
                         if (order.PaymentStatus == PaymentStatus.Paid)
                         {
-                            //raise event
-                            _eventPublisher.PublishOrderPaid(order);
-
-                            //order paid email notification
-                            if (order.OrderTotal != decimal.Zero)
-                            {
-                                //we should not send it for free ($0 total) orders?
-                                //remove this "if" statement if you want to send it in this case
-                                _workflowMessageService.SendOrderPaidStoreOwnerNotification(order, _localizationSettings.DefaultAdminLanguageId);
-                            }
+                            ProcessOrderPaid(order);
                         }
                         #endregion
                     }
@@ -1942,11 +2005,7 @@ namespace Nop.Services.Orders
      
                     if (order.PaymentStatus == PaymentStatus.Paid)
                     {
-                        //raise event
-                        _eventPublisher.PublishOrderPaid(order);
-
-                        //order paid email notification
-                        _workflowMessageService.SendOrderPaidStoreOwnerNotification(order, _localizationSettings.DefaultAdminLanguageId);
+                        ProcessOrderPaid(order);
                     }
                 }
             }
@@ -2034,11 +2093,7 @@ namespace Nop.Services.Orders
    
             if (order.PaymentStatus == PaymentStatus.Paid)
             {
-                //raise event
-                _eventPublisher.PublishOrderPaid(order);
-
-                //order paid email notification
-                _workflowMessageService.SendOrderPaidStoreOwnerNotification(order, _localizationSettings.DefaultAdminLanguageId);
+                ProcessOrderPaid(order);
             }
         }
 

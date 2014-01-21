@@ -77,6 +77,21 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.AutomaticallyDetectLanguage.Hint">
 	<Value>Check to automatically detect language based on a customer browser settings.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct">
+	<Value>Purchased with product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct.Hint">
+	<Value>A customer is added to this customer role once a specified product is purchased (paid). Please note that in case of refund or order cancellation you have to manually remove a customer from this role.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct.Choose">
+	<Value>Choose product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct.Remove">
+	<Value>Remove</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct.Registered">
+	<Value>You cannot specify "Purchased with product" value for "Registered" customer role</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -357,4 +372,21 @@ BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'localizationsettings.automaticallydetectlanguage', N'false', 0)
 END
+GO
+
+
+--New "customer role" column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[CustomerRole]') and NAME='PurchasedWithProductId')
+BEGIN
+	ALTER TABLE [CustomerRole]
+	ADD [PurchasedWithProductId] int NULL
+END
+GO
+
+UPDATE [CustomerRole]
+SET [PurchasedWithProductId] = 0
+WHERE [PurchasedWithProductId] IS NULL
+GO
+
+ALTER TABLE [CustomerRole] ALTER COLUMN [PurchasedWithProductId] int NOT NULL
 GO
