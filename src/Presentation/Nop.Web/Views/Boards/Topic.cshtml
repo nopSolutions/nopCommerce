@@ -7,12 +7,6 @@
 
     Html.AddTitleParts(Model.Subject);
 }
-<script type="text/javascript">
-    function handleTopicWatch(context) {
-        $('#watch-topic-top').text(context.Text);
-        $('#watch-topic-bottom').text(context.Text);
-    }
-</script>
 @Html.Action("ForumBreadcrumb", new { forumTopicId = Model.Id })
 @Html.Partial("_SearchBox")
 <div class="page forum-topic-page">
@@ -37,11 +31,26 @@
             @Html.RouteLink(T("Forum.Reply").Text, "PostCreate", new { id = Model.Id }, new { @class = "reply-topic-link-button" })
             @if (Model.IsCustomerAllowedToSubscribe)
             {
-                @Ajax.RouteLink(Model.WatchTopicText,
-                                "TopicWatch",
-                                new { id = Model.Id },
-                                new AjaxOptions { HttpMethod = "Post", OnSuccess = "handleTopicWatch" },
-                                new { id = "watch-topic-top", @class = "watch-topic-link-button" })
+                <a class="watch-topic-link-button" href="#" id="watch-topic-top">@Model.WatchTopicText</a>
+                <script type="text/javascript">
+                    $(function () {
+                        $('#watch-topic-top').click(function () {
+                            $.ajax({
+                                cache: false,
+                                type: 'POST',
+                                url: '@Url.RouteUrl("TopicWatch", new { id = Model.Id })',
+                                dataType: 'json',
+                                success: function (data) {
+                                    $('#watch-topic-top').text(data.Text);
+                                    $('#watch-topic-bottom').text(data.Text);
+                                },
+                                error: function (xhr, ajaxOptions, thrownError) {
+                                    alert('Failed to watch');
+                                }
+                            });
+                        });
+                    });
+                </script>
             }
         </div>
         <div class="pager upper">
@@ -72,11 +81,26 @@
         @Html.RouteLink(T("Forum.Reply").Text, "PostCreate", new { id = Model.Id }, new { @class = "reply-topic-link-button" })
         @if (Model.IsCustomerAllowedToSubscribe)
         {
-            @Ajax.RouteLink(Model.WatchTopicText,
-                            "TopicWatch",
-                            new { id = Model.Id },
-                            new AjaxOptions { HttpMethod = "Post", OnSuccess = "handleTopicWatch" },
-                            new { id = "watch-topic-bottom", @class = "watch-topic-link-button" })
+            <a class="watch-topic-link-button" href="#" id="watch-topic-bottom">@Model.WatchTopicText</a>
+                <script type="text/javascript">
+                    $(function () {
+                        $('#watch-topic-bottom').click(function () {
+                            $.ajax({
+                                cache: false,
+                                type: 'POST',
+                                url: '@Url.RouteUrl("TopicWatch", new { id = Model.Id })',
+                                dataType: 'json',
+                                success: function (data) {
+                                    $('#watch-topic-top').text(data.Text);
+                                    $('#watch-topic-bottom').text(data.Text);
+                                },
+                                error: function (xhr, ajaxOptions, thrownError) {
+                                    alert('Failed to watch');
+                                }
+                            });
+                        });
+                    });
+                </script>
         }
     </div>
     <div class="pager lower">

@@ -289,7 +289,7 @@ namespace Nop.Web.Controllers
             var model = PrepareCurrencySelectorModel();
             return PartialView(model);
         }
-        public ActionResult CurrencySelected(int customerCurrency, string returnUrl = "")
+        public ActionResult SetCurrency(int customerCurrency, string returnUrl = "")
         {
             var currency = _currencyService.GetCurrencyById(customerCurrency);
             if (currency != null)
@@ -311,7 +311,7 @@ namespace Nop.Web.Controllers
             var model = PrepareTaxTypeSelectorModel();
             return PartialView(model);
         }
-        public ActionResult TaxTypeSelected(int customerTaxType, string returnUrl = "")
+        public ActionResult SetTaxType(int customerTaxType, string returnUrl = "")
         {
             var taxDisplayType = (TaxDisplayType)Enum.ToObject(typeof(TaxDisplayType), customerTaxType);
             _workContext.TaxDisplayType = taxDisplayType;
@@ -610,30 +610,17 @@ namespace Nop.Web.Controllers
                 .ToList();
             return PartialView(model);
         }
-        public ActionResult StoreThemeSelected(string themeName)
+        public ActionResult SetStoreTheme(string themeName, string returnUrl = "")
         {
             _themeContext.WorkingDesktopTheme = themeName;
             
-            var model = new StoreThemeSelectorModel();
-            var currentTheme = _themeProvider.GetThemeConfiguration(_themeContext.WorkingDesktopTheme);
-            model.CurrentStoreTheme = new StoreThemeModel()
-            {
-                Name = currentTheme.ThemeName,
-                Title = currentTheme.ThemeTitle
-            };
-            model.AvailableStoreThemes = _themeProvider.GetThemeConfigurations()
-                //do not display themes for mobile devices
-                .Where(x => !x.MobileTheme)
-                .Select(x =>
-                {
-                    return new StoreThemeModel()
-                    {
-                        Name = x.ThemeName,
-                        Title = x.ThemeTitle
-                    };
-                })
-                .ToList();
-            return PartialView("StoreThemeSelector", model);
+            //url referrer
+            if (String.IsNullOrEmpty(returnUrl))
+                returnUrl = _webHelper.GetUrlReferrer();
+            //home page
+            if (String.IsNullOrEmpty(returnUrl))
+                returnUrl = Url.RouteUrl("HomePage");
+            return Redirect(returnUrl);
         }
 
         //favicon

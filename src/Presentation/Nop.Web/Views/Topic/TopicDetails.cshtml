@@ -34,35 +34,48 @@
     if (isPopup != null && isPopup == true)
     {
         Layout = "~/Views/Shared/_RootPopup.cshtml";
-    }    
+    }
+    
+    
+    
     <script type="text/javascript">
+        $(function () {
+            $('#button-password').click(function () {
+                var topicId = $("#@Html.FieldIdFor(model => model.Id)").val();
+                var password = $('#password').val();
+                $.ajax({
+                    cache: false,
+                    type: 'POST',
+                    url: '@Url.RouteUrl("TopicAuthenticate")',
+                    data: { "id": topicId, "password": password },
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.Authenticated) {
+                            $('#ph-title .page-title h1').html(data.Title);
+                            if ($('#ph-title .page-title h1').text().length == 0) {
+                                $('#ph-title').hide();
+                            }
+                            $('#ph-topic .page-body').html(data.Body);
+                            $('#ph-password').hide();
+                            $('#ph-topic').show();
+                        }
+                        else {
+                            $('#password-error').text(data.Error);
+                            $('#ph-password #password').select().focus();
+                        }
+                    }
+                });
+                return false;
+            });
+        });
+
         $(document).ready(function () {
             $('#ph-topic').hide();
             $('#ph-password #password').select().focus();
         });
-        function OnAuthenticateSuccess(context) {
-            if (context.Authenticated) {
-                $('#ph-title .page-title h1').html(context.Title);
-                if ($('#ph-title .page-title h1').text().length == 0) {
-                    $('#ph-title').hide();
-                }
-                $('#ph-topic .page-body').html(context.Body);
-                $('#ph-password').hide();
-                $('#ph-topic').show();
-            }
-            else {
-                $('#password-error').text(context.Error);
-                $('#ph-password #password').select().focus();
-            }
-        }
     </script>
     <div class="topic-password" id="ph-password">
-        @using (Ajax.BeginRouteForm("TopicAuthenticate", new AjaxOptions
-        {
-            HttpMethod = "Post",
-            OnSuccess = "OnAuthenticateSuccess",
-            LoadingElementId = "authenticate-progress"
-        }))
+        @using (Html.BeginRouteForm("TopicAuthenticate"))
         {
             @Html.HiddenFor(model => model.Id)
             <div class="enter-password-title">
@@ -70,8 +83,7 @@
             </div>
             <div class="enter-password-form">
                 @Html.Password("password")
-                <input type="submit" value="@T("Topic.Button")" class="button-1 topic-password-button" />
-                <span id="authenticate-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
+                <input type="submit" id="button-password" value="@T("Topic.Button")" class="button-1 topic-password-button" />
             </div>
             <div class="password-error">
                 <span id="password-error"></span>

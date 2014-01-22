@@ -740,8 +740,6 @@
     <Content Include="Scripts\jquery.tmpl.min.js" />
     <Content Include="Scripts\jquery.mobile-1.3.2.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
-    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
-    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\kendo\2013.3.1119\cultures\kendo.culture.af-ZA.min.js" />
     <Content Include="Scripts\kendo\2013.3.1119\cultures\kendo.culture.af.min.js" />
     <Content Include="Scripts\kendo\2013.3.1119\cultures\kendo.culture.am-ET.min.js" />
@@ -2321,7 +2319,6 @@
     <Content Include="Views\Shared\_Root.Head.cshtml" />
     <Content Include="Views\Shared\_Root.Head.Mobile.cshtml" />
     <Content Include="Views\Shared\_Notifications.Mobile.cshtml" />
-    <Content Include="Views\Topic\TopicBlock.Mobile.cshtml" />
     <Content Include="Views\Catalog\ProductTagsAll.cshtml" />
     <Content Include="Views\Catalog\ProductTagsAll.Mobile.cshtml" />
     <Content Include="Views\ShoppingCart\_DiscountBox.cshtml" />

@@ -2,37 +2,44 @@
 @using Nop.Web.Models.Topics;
 @if (Model.IsPasswordProtected)
 {
-    <script type="text/javascript">    
+    <script type="text/javascript">
+        $(function () {
+            $('#button-password-@Model.Id').click(function () {
+                var topicId = $("#@Html.FieldIdFor(model => model.Id)").val();
+                var password = $('#password-@Model.Id').val();
+                $.ajax({
+                    cache: false,
+                    type: 'POST',
+                    url: '@Url.RouteUrl("TopicAuthenticate")',
+                    data: { "id": topicId, "password": password },
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.Authenticated) {
+                            $('#ph-title-@Model.Id .topic-html-content-title h2.topic-html-content-header').html(data.Title);
+                            if ($('#ph-title-@Model.Id .topic-html-content-title h2.topic-html-content-header').text().length == 0) {
+                                $('#ph-title-@Model.Id').hide();
+                            }
+                            $('#ph-topic-@Model.Id .topic-html-content-body').html(data.Body);
+                            $('#ph-password-@Model.Id').hide();
+                            $('#ph-topic-@Model.Id').show();
+                        }
+                        else {
+                            $('#password-error-@Model.Id').text(data.Error);
+                            $('#ph-password-@Model.Id #password-@Model.Id').select().focus();
+                        }
+                    }
+                });
+                return false;
+            });
+        });
+
         $(document).ready(function () {
-            $('#ph-topic-@Model.Id').hide();            
+            $('#ph-topic-@Model.Id').hide();
             $('#ph-password-@Model.Id #password-@Model.Id').select().focus();
-        });    
-        function OnAuthenticateSuccess@(Model.Id)(context) {
-            if (context.Authenticated)
-            {
-                $('#ph-title-@Model.Id .topic-html-content-title h2.topic-html-content-header').html(context.Title);
-                if ($('#ph-title-@Model.Id .topic-html-content-title h2.topic-html-content-header').text().length == 0)
-                {
-                    $('#ph-title-@Model.Id').hide();
-                }
-                $('#ph-topic-@Model.Id .topic-html-content-body').html(context.Body);
-                $('#ph-password-@Model.Id').hide();
-                $('#ph-topic-@Model.Id').show();
-            }
-            else
-            {
-                $('#password-error-@Model.Id').text(context.Error);
-                $('#ph-password-@Model.Id #password-@Model.Id').select().focus();
-            }
-        }
+        });
     </script>
     <div class="topic-password" id="ph-password-@Model.Id">
-        @using (Ajax.BeginRouteForm("TopicAuthenticate", new AjaxOptions
-        {
-            HttpMethod = "Post",
-            OnSuccess = "OnAuthenticateSuccess" + @Model.Id,
-            LoadingElementId = "authenticate-progress-" + @Model.Id
-        }))
+        @using (Html.BeginRouteForm("TopicAuthenticate"))
         {
             @Html.HiddenFor(model => model.Id)
             <div class="enter-password-title">
@@ -40,8 +47,7 @@
             </div>
             <div class="enter-password-form">
                 @Html.Password("password", null, new { id = "password-" + @Model.Id })
-                <input type="submit" value="@T("Topic.Button")" class="button-1 topic-password-button" />
-                <span id="authenticate-progress-@Model.Id" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
+                <input type="submit" id="button-password-@Model.Id" value="@T("Topic.Button")" class="button-1 topic-password-button" />
             </div>
             <div class="password-error">
                 <span id="password-error-@Model.Id"></span>

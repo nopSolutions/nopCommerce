@@ -630,7 +630,7 @@ namespace Nop.Web.Infrastructure
                             new[] { "Nop.Web.Controllers" });
             routes.MapLocalizedRoute("ChangeCurrency",
                             "changecurrency/{customercurrency}",
-                            new { controller = "Common", action = "CurrencySelected" },
+                            new { controller = "Common", action = "SetCurrency" },
                             new { customercurrency = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
             routes.MapLocalizedRoute("ChangeLanguage",
@@ -640,7 +640,7 @@ namespace Nop.Web.Infrastructure
                             new[] { "Nop.Web.Controllers" });
             routes.MapLocalizedRoute("ChangeTaxType",
                             "changetaxtype/{customertaxtype}",
-                            new { controller = "Common", action = "TaxTypeSelected" },
+                            new { controller = "Common", action = "SetTaxType" },
                             new { customertaxtype = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
             routes.MapRoute("EuCookieLawAccept",

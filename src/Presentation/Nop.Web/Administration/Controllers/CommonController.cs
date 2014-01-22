@@ -476,14 +476,21 @@ namespace Nop.Admin.Controllers
                 .ToList();
             return PartialView(model);
         }
-        public ActionResult LanguageSelected(int customerlanguage)
+        public ActionResult SetLanguage(int langid, string returnUrl = "")
         {
-            var language = _languageService.GetLanguageById(customerlanguage);
+            var language = _languageService.GetLanguageById(langid);
             if (language != null)
             {
                 _workContext.WorkingLanguage = language;
             }
-            return Content("Changed");
+
+            //url referrer
+            if (String.IsNullOrEmpty(returnUrl))
+                returnUrl = _webHelper.GetUrlReferrer();
+            //home page
+            if (String.IsNullOrEmpty(returnUrl))
+                returnUrl = Url.Action("Index", "Home", new { area = "Admin" });
+            return Redirect(returnUrl);
         }
 
         public ActionResult ClearCache()
