@@ -92,6 +92,21 @@ set @resources='
   <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct.Registered">
 	<Value>You cannot specify "Purchased with product" value for "Registered" customer role</Value>
   </LocaleResource>
+  <LocaleResource Name="Common.OK">
+	<Value>OK</Value>
+  </LocaleResource>
+  <LocaleResource Name="EUCookieLaw.OK">
+	<Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="EUCookieLaw.Cancel">
+	<Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="EUCookieLaw.Description2">
+	<Value>Cookies help us deliver our services. By using our services, you agree to our use of cookies.</Value>
+  </LocaleResource>
+  <LocaleResource Name="EUCookieLaw.LearnMore">
+	<Value>Learn more</Value>
+  </LocaleResource>
 </Language>
 '
 

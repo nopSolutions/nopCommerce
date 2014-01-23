@@ -1336,6 +1336,9 @@
       <LocaleResource Name="Notification">
         <Value>Notification</Value>
       </LocaleResource>
+      <LocaleResource Name="OK">
+        <Value>OK</Value>
+      </LocaleResource>
       <LocaleResource Name="Remove">
         <Value>Remove</Value>
       </LocaleResource>
@@ -1947,20 +1950,20 @@
   </LocaleResource>
   <LocaleResource Name="EUCookieLaw">
     <Children>
-      <LocaleResource Name="Title">
-        <Value>Your cookie settings</Value>
+      <LocaleResource Name="CannotBrowse">
+        <Value>You cannot browse this site until you accept cookies</Value>
       </LocaleResource>
       <LocaleResource Name="Description">
         <Value>On 26 May 2011, the rules about cookies on websites changed. This site uses cookies. One or more of the cookies we use is essential for parts of this website to operate and has already been set. You may delete and block all cookies from this site, but parts of the site will not work. To find out more about cookies used on this website and how to delete cookies, see our privacy policy</Value>
       </LocaleResource>
-      <LocaleResource Name="OK">
-        <Value>OK</Value>
+      <LocaleResource Name="Description2">
+        <Value>Cookies help us deliver our services. By using our services, you agree to our use of cookies.</Value>
       </LocaleResource>
-      <LocaleResource Name="Cancel">
-        <Value>Cancel</Value>
+      <LocaleResource Name="LearnMore">
+        <Value>Learn more</Value>
       </LocaleResource>
-      <LocaleResource Name="CannotBrowse">
-        <Value>You cannot browse this site until you accept cookies</Value>
+      <LocaleResource Name="Title">
+        <Value>Your cookie settings</Value>
       </LocaleResource>
     </Children>
   </LocaleResource>

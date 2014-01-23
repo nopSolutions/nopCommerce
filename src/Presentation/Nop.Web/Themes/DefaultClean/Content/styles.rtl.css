@@ -217,11 +217,6 @@ td.fieldname{font-size:12px;}
 .sitemap-page li{float:right;margin:3px 10px;width:150px;border-bottom:1px dotted #ADACAC;list-style:none;}
 
 
-/* EU COOKIE LAW */
-.eu-cookie-law{text-align:right;}
-a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
-
-
 /* PAGER */
 .pager{zoom:1;}
 .pager:after{content:".";display:block;clear:both;height:0;font-size:0;line-height:0;visibility:hidden;}
@@ -296,6 +291,16 @@ a.eu-cookie-privacyinfo-tag{color:#B80709 !important;text-decoration:underline;}
 .bar-notification p.content{padding:0px 10px;margin:10px 0px;}
 .bar-notification p.content a{text-decoration:underline;color:#FFFFFF;}
 .bar-notification p.content a:hover{text-decoration:none;color:#FFFFFF;}
+
+
+/* EU COOKIE LAW */
+.eu-cookie-bar-notification{display:none;left:0;position:fixed;bottom:0;width:100%;z-index:100000;background:none repeat scroll 0 0 #F6F6F4;border-top:3px solid #FFFFFF !important;color:#5C5B5B;margin:0px;}
+.eu-cookie-bar-notification .content{padding:0px 10px;margin:10px 0px;zoom:1;}
+.eu-cookie-bar-notification .content:after{content:".";display:block;clear:both;height:0;font-size:0;line-height:0;visibility:hidden;}
+.eu-cookie-bar-notification .content .text{float:right;padding-top:5px;}
+.eu-cookie-bar-notification .content .ok-button{float:right;margin-right:10px;}
+.eu-cookie-bar-notification .content a.learn-more{float:right;margin-right:10px;padding-top:5px;text-decoration:underline;color:#5C5B5B;}
+.eu-cookie-bar-notification .content a.learn-more:hover{text-decoration:none;color:#5C5B5B;}
 
 
 /* ORDER SUMMARY, SHOPPING CART, WISHLIST */
