@@ -111,7 +111,9 @@ namespace Nop.Web.Infrastructure.Cache
         //checkout attributes
         IConsumer<EntityInserted<CheckoutAttribute>>,
         IConsumer<EntityUpdated<CheckoutAttribute>>,
-        IConsumer<EntityDeleted<CheckoutAttribute>>
+        IConsumer<EntityDeleted<CheckoutAttribute>>,
+        //shopping cart items
+        IConsumer<EntityUpdated<ShoppingCartItem>>
     {
         /// <summary>
         /// Key for categories on the search page
@@ -943,6 +945,12 @@ namespace Nop.Web.Infrastructure.Cache
         public void HandleEvent(EntityDeleted<CheckoutAttribute> eventMessage)
         {
             _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
+        }
+
+        //shopping cart items
+        public void HandleEvent(EntityUpdated<ShoppingCartItem> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(CART_PICTURE_PATTERN_KEY);
         }
         
     }
