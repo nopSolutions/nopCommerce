@@ -39,7 +39,6 @@ namespace Nop.Services.Messages
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
         private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IEmailAccountService _emailAccountService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly ICurrencyService _currencyService;
         private readonly IWorkContext _workContext;
@@ -51,7 +50,6 @@ namespace Nop.Services.Messages
         private readonly IStoreContext _storeContext;
 
         private readonly MessageTemplatesSettings _templatesSettings;
-        private readonly EmailAccountSettings _emailAccountSettings;
         private readonly CatalogSettings _catalogSettings;
         private readonly TaxSettings _taxSettings;
 
@@ -64,10 +62,8 @@ namespace Nop.Services.Messages
         public MessageTokenProvider(ILanguageService languageService,
             ILocalizationService localizationService, 
             IDateTimeHelper dateTimeHelper,
-            IEmailAccountService emailAccountService,
             IPriceFormatter priceFormatter, 
             ICurrencyService currencyService,
-            IWebHelper webHelper,
             IWorkContext workContext,
             IDownloadService downloadService,
             IOrderService orderService,
@@ -76,7 +72,6 @@ namespace Nop.Services.Messages
             IStoreContext storeContext,
             IProductAttributeParser productAttributeParser,
             MessageTemplatesSettings templatesSettings,
-            EmailAccountSettings emailAccountSettings, 
             CatalogSettings catalogSettings,
             TaxSettings taxSettings, 
             IEventPublisher eventPublisher)
@@ -84,7 +79,6 @@ namespace Nop.Services.Messages
             this._languageService = languageService;
             this._localizationService = localizationService;
             this._dateTimeHelper = dateTimeHelper;
-            this._emailAccountService = emailAccountService;
             this._priceFormatter = priceFormatter;
             this._currencyService = currencyService;
             this._workContext = workContext;
@@ -96,7 +90,6 @@ namespace Nop.Services.Messages
             this._storeContext = storeContext;
 
             this._templatesSettings = templatesSettings;
-            this._emailAccountSettings = emailAccountSettings;
             this._catalogSettings = catalogSettings;
             this._taxSettings = taxSettings;
             this._eventPublisher = eventPublisher;
