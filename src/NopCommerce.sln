@@ -11,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{A340B280
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{7881B112-7843-4542-B1F7-F99553FB9BB7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Web", "Presentation\Nop.Web\Nop.Web.csproj", "{4F1F649C-1020-45BE-A487-F416D9297FF3}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Core", "Libraries\Nop.Core\Nop.Core.csproj", "{6BDA8332-939F-45B7-A25E-7A797260AE59}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Data", "Libraries\Nop.Data\Nop.Data.csproj", "{CCD7F2C9-6A2C-4CF0-8E89-076B8FC0F144}"
@@ -40,8 +42,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.Payments.Manual", "Plugins\Nop.Plugin.Payments.Manual\Nop.Plugin.Payments.Manual.csproj", "{9A7B9344-6AD0-4828-876D-0BF14C177148}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.DiscountRules.HadSpentAmount", "Plugins\Nop.Plugin.DiscountRules.HadSpentAmount\Nop.Plugin.DiscountRules.HadSpentAmount.csproj", "{C4FFB99C-8A99-47E2-B863-3586AE2CF9C9}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Web", "Presentation\Nop.Web\Nop.Web.csproj", "{4F1F649C-1020-45BE-A487-F416D9297FF3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Web.Framework", "Presentation\Nop.Web.Framework\Nop.Web.Framework.csproj", "{75FD4163-333C-4DD5-854D-2EF294E45D94}"
 EndProject
