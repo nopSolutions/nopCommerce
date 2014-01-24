@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
+using System.Web;
 using System.Web.Configuration;
 using System.Web.Mvc;
 using Nop.Admin.Models.Common;
@@ -51,6 +52,7 @@ namespace Nop.Admin.Controllers
         private readonly IPermissionService _permissionService;
         private readonly ILocalizationService _localizationService;
         private readonly ISearchTermService _searchTermService;
+        private readonly HttpContextBase _httpContext;
 
         #endregion
 
@@ -72,7 +74,8 @@ namespace Nop.Admin.Controllers
             IStoreContext storeContext,
             IPermissionService permissionService, 
             ILocalizationService localizationService,
-            ISearchTermService searchTermService)
+            ISearchTermService searchTermService,
+            HttpContextBase httpContext)
         {
             this._paymentService = paymentService;
             this._shippingService = shippingService;
@@ -91,6 +94,7 @@ namespace Nop.Admin.Controllers
             this._permissionService = permissionService;
             this._localizationService = localizationService;
             this._searchTermService = searchTermService;
+            this._httpContext = httpContext;
         }
 
         #endregion
@@ -123,6 +127,14 @@ namespace Nop.Admin.Controllers
             model.ServerLocalTime = DateTime.Now;
             model.UtcTime = DateTime.UtcNow;
             model.HttpHost = _webHelper.ServerVariables("HTTP_HOST");
+            foreach (var key in _httpContext.Request.ServerVariables.AllKeys)
+            {
+                model.ServerVariables.Add(new SystemInfoModel.ServerVariableModel()
+                {
+                    Name = key,
+                    Value = _httpContext.Request.ServerVariables[key]
+                });
+            }
             //Environment.GetEnvironmentVariable("USERNAME");
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {

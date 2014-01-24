@@ -11173,6 +11173,14 @@
                   </LocaleResource>
                 </Children>
               </LocaleResource>
+              <LocaleResource Name="ServerVariables">
+                <Value>Server variables</Value>
+                <Children>
+                  <LocaleResource Name="Hint">
+                    <Value>A list of server variables</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
               <LocaleResource Name="LoadedAssemblies">
                 <Value>Loaded assemblies</Value>
                 <Children>

@@ -11,13 +11,23 @@
 </div>
 
 <script type="text/javascript">
-    function toggleAndChangeText() {
+    function toggleLoadedAssemblies() {
         $('#pnlLoadedAssemblies').toggle();
         if ($('#pnlLoadedAssemblies').css('display') == 'none') {
-            $('#loadedAssembliesTag').html('@T("Admin.Common.Show")');
+            $('#loadedAssembliesShowHide').html('@T("Admin.Common.Show")');
         }
         else {
-            $('#loadedAssembliesTag').html('@T("Admin.Common.Hide")');
+            $('#loadedAssembliesShowHide').html('@T("Admin.Common.Hide")');
+        }
+    }
+
+    function toggleLoadedServerVariables() {
+        $('#pnlServerVariables').toggle();
+        if ($('#pnlServerVariables').css('display') == 'none') {
+            $('#serverVariablesShowHide').html('@T("Admin.Common.Show")');
+        }
+        else {
+            $('#serverVariablesShowHide').html('@T("Admin.Common.Hide")');
         }
     }
 </script>
@@ -88,10 +98,25 @@
     </tr>
     <tr>
         <td class="adminTitle">
+            @Html.NopLabelFor(model => model.ServerVariables):
+        </td>
+        <td class="adminData">
+            <a id="serverVariablesShowHide" href="javascript:toggleLoadedServerVariables();">@T("Admin.Common.Show")</a>
+            <div id="pnlServerVariables" style="display:none">
+                @foreach (var serverVariable in Model.ServerVariables)
+                {
+                    @serverVariable.Name<text>:</text> @serverVariable.Value
+                    <br />
+                }
+            </div>
+</td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
             @Html.NopLabelFor(model => model.LoadedAssemblies):
         </td>
         <td class="adminData">
-            <a id="loadedAssembliesTag" href="javascript:toggleAndChangeText();">@T("Admin.Common.Show")</a>
+            <a id="loadedAssembliesShowHide" href="javascript:toggleLoadedAssemblies();">@T("Admin.Common.Show")</a>
             <div id="pnlLoadedAssemblies" style="display:none">
                 @foreach (var assembly in Model.LoadedAssemblies)
                 {

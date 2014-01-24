@@ -107,6 +107,12 @@ set @resources='
   <LocaleResource Name="EUCookieLaw.LearnMore">
 	<Value>Learn more</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.ServerVariables">
+	<Value>Server variables</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.ServerVariables.Hint">
+	<Value>A list of server variables</Value>
+  </LocaleResource>
 </Language>
 '
 
