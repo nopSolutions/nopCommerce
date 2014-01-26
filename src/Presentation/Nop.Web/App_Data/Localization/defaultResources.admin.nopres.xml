@@ -3682,7 +3682,7 @@
                       <LocaleResource Name="DisplayOrder">
                         <Value>Display order</Value>
                       </LocaleResource>
-                      <LocaleResource Name="IsPrimaryWeight">
+                      <LocaleResource Name="IsPrimaryDimension">
                         <Value>Is primary dimension</Value>
                       </LocaleResource>
                       <LocaleResource Name="MarkAsPrimaryDimension">

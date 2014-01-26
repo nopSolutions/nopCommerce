@@ -113,6 +113,12 @@ set @resources='
   <LocaleResource Name="Admin.System.SystemInfo.ServerVariables.Hint">
 	<Value>A list of server variables</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Measures.Dimensions.Fields.IsPrimaryWeight">
+	<Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Measures.Dimensions.Fields.IsPrimaryDimension">
+	<Value>Is primary dimension</Value>
+  </LocaleResource>
 </Language>
 '
 

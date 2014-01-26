@@ -23,7 +23,7 @@ namespace Nop.Admin.Models.Directory
         [NopResourceDisplayName("Admin.Configuration.Measures.Dimensions.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Measures.Dimensions.Fields.IsPrimaryWeight")]
+        [NopResourceDisplayName("Admin.Configuration.Measures.Dimensions.Fields.IsPrimaryDimension")]
         public bool IsPrimaryDimension { get; set; }
     }
 }
