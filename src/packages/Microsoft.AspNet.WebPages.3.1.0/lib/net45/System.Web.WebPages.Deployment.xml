@@ -1,0 +1,231 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>System.Web.WebPages.Deployment</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.Internal.Web.Utils.CommonResources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Internal.Web.Utils.CommonResources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Internal.Web.Utils.CommonResources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Internal.Web.Utils.CommonResources.Argument_Cannot_Be_Null_Or_Empty">
+            <summary>
+              Looks up a localized string similar to Value cannot be null or an empty string..
+            </summary>
+        </member>
+        <member name="P:Microsoft.Internal.Web.Utils.CommonResources.Argument_Must_Be_Between">
+            <summary>
+              Looks up a localized string similar to Value must be between {0} and {1}..
+            </summary>
+        </member>
+        <member name="P:Microsoft.Internal.Web.Utils.CommonResources.Argument_Must_Be_Enum_Member">
+            <summary>
+              Looks up a localized string similar to Value must be a value from the &quot;{0}&quot; enumeration..
+            </summary>
+        </member>
+        <member name="P:Microsoft.Internal.Web.Utils.CommonResources.Argument_Must_Be_GreaterThan">
+            <summary>
+              Looks up a localized string similar to Value must be greater than {0}..
+            </summary>
+        </member>
+        <member name="P:Microsoft.Internal.Web.Utils.CommonResources.Argument_Must_Be_GreaterThanOrEqualTo">
+            <summary>
+              Looks up a localized string similar to Value must be greater than or equal to {0}..
+            </summary>
+        </member>
+        <member name="P:Microsoft.Internal.Web.Utils.CommonResources.Argument_Must_Be_LessThan">
+            <summary>
+              Looks up a localized string similar to Value must be less than {0}..
+            </summary>
+        </member>
+        <member name="P:Microsoft.Internal.Web.Utils.CommonResources.Argument_Must_Be_LessThanOrEqualTo">
+            <summary>
+              Looks up a localized string similar to Value must be less than or equal to {0}..
+            </summary>
+        </member>
+        <member name="P:Microsoft.Internal.Web.Utils.CommonResources.Argument_Must_Be_Null_Or_Non_Empty">
+            <summary>
+              Looks up a localized string similar to Value cannot be an empty string. It must either be null or a non-empty string..
+            </summary>
+        </member>
+        <member name="M:System.Web.WebPages.Deployment.AssemblyUtils.GetVersionFromBin(System.String,Microsoft.Internal.Web.Utils.IFileSystem,System.Func{System.String,System.Reflection.AssemblyName})">
+            <summary>
+            Returns the version of a System.Web.WebPages.Deployment.dll if it is present in the bin and matches the name and 
+            public key token of the current assembly.
+            </summary>
+            <returns>Version from bin if present, null otherwise.</returns>
+        </member>
+        <member name="M:System.Web.WebPages.Deployment.BuildManagerWrapper.ReadCachedFile(System.String)">
+            <summary>
+            Reads a special cached file from %WindDir%\Microsoft.NET\Framework\vx.x\ASP.NET Temporary Files\&lt;x&gt;\&lt;y&gt;\UserCache that is 
+            available across AppDomain recycles.
+            </summary>
+        </member>
+        <member name="M:System.Web.WebPages.Deployment.BuildManagerWrapper.CreateCachedFile(System.String)">
+            <summary>
+            Creates or opens a special cached file that is created under  %WindDir%\Microsoft.NET\Framework\vx.x\ASP.NET Temporary Files\&lt;x&gt;\&lt;y&gt;\UserCache that is 
+            available across AppDomain recycles.
+            </summary>
+        </member>
+        <member name="T:System.Web.WebPages.Deployment.Resources.ConfigurationResources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Deployment.Resources.ConfigurationResources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Deployment.Resources.ConfigurationResources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Deployment.Resources.ConfigurationResources.InstallPathNotFound">
+            <summary>
+              Looks up a localized string similar to The &quot;InstallPath&quot; name was not found in the Web Pages registry key &quot;{0}&quot;..
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Deployment.Resources.ConfigurationResources.WebPagesImplicitVersionFailure">
+             <summary>
+               Looks up a localized string similar to Could not determine which version of ASP.NET Web Pages to use.
+            
+            In order to use this site, specify a version in the site’s web.config file. For more information, see the following article on the Microsoft support site: http://go.microsoft.com/fwlink/?LinkId=254126.
+             </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Deployment.Resources.ConfigurationResources.WebPagesRegistryKeyDoesNotExist">
+            <summary>
+              Looks up a localized string similar to The Web Pages registry key &quot;{0}&quot; does not exist..
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Deployment.Resources.ConfigurationResources.WebPagesVersionChanges">
+            <summary>
+              Looks up a localized string similar to Changes were detected in the Web Pages runtime version that require your application to be recompiled. Refresh your browser window to continue..
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Deployment.Resources.ConfigurationResources.WebPagesVersionConflict">
+            <summary>
+              Looks up a localized string similar to Conflicting versions of ASP.NET Web Pages detected: specified version is &quot;{0}&quot;, but the version in bin is &quot;{1}&quot;. To continue, remove files from the application&apos;s bin directory or remove the version specification in web.config..
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Deployment.Resources.ConfigurationResources.WebPagesVersionNotFound">
+            <summary>
+              Looks up a localized string similar to Specified Web Pages version &quot;{0}&quot; could not be found. Update your web.config to specify a different version. Current version: &quot;{1}&quot;..
+            </summary>
+        </member>
+        <member name="F:System.Web.WebPages.Deployment.WebPagesDeployment.ForceRecompilationFile">
+            <summary>
+            File name for a temporary file that we drop in bin to force recompilation.
+            </summary>
+        </member>
+        <member name="M:System.Web.WebPages.Deployment.WebPagesDeployment.GetVersionWithoutEnabledCheck(System.String)">
+            <param name="path">Physical or virtual path to a directory where we need to determine the version of WebPages to be used.</param>
+            <remarks>
+            In a non-hosted scenario, this method would only look at a web.config that is present at the current path. Any config settings at an
+            ancestor directory would not be considered.
+            If we are unable to determine a version, we would assume that this is a v1 app.
+            </remarks>
+        </member>
+        <member name="M:System.Web.WebPages.Deployment.WebPagesDeployment.GetObsoleteVersionInternal(System.String,System.Collections.Specialized.NameValueCollection,Microsoft.Internal.Web.Utils.IFileSystem)">
+            <remarks>
+            This is meant to test an obsolete method. Don't use this!
+            </remarks>
+        </member>
+        <member name="M:System.Web.WebPages.Deployment.WebPagesDeployment.IsEnabled(System.String)">
+            <summary>
+            Determines if Asp.Net Web Pages is enabled.
+            Web Pages is enabled if there's a webPages:Enabled key in AppSettings is set to "true" or if there's a cshtml file in the current path
+            and the key is not present.
+            </summary>
+            <param name="path">The path at which to determine if web pages is enabled.</param>
+            <remarks>
+            In a non-hosted scenario, this method would only look at a web.config that is present at the current path. Any config settings at an
+            ancestor directory would not be considered.
+            </remarks>
+        </member>
+        <member name="M:System.Web.WebPages.Deployment.WebPagesDeployment.IsExplicitlyDisabled(System.String)">
+            <remarks>
+            In a non-hosted scenario, this method would only look at a web.config that is present at the current path. Any config settings at an
+            ancestor directory would not be considered.
+            </remarks>
+        </member>
+        <member name="M:System.Web.WebPages.Deployment.WebPagesDeployment.GetEnabled(System.Collections.Specialized.NameValueCollection)">
+            <summary>
+            Returns the value for webPages:Enabled AppSetting value in web.config.
+            </summary>
+        </member>
+        <member name="M:System.Web.WebPages.Deployment.WebPagesDeployment.GetVersionInternal(System.Collections.Specialized.NameValueCollection,System.Version,System.Version)">
+            <summary>
+            Returns the version of WebPages to be used for a specified path.
+            </summary>
+            <remarks>
+            This method would always returns a value regardless of web pages is explicitly disabled (via config) or implicitly disabled (by virtue of not having a cshtml file) at 
+            the specified path.
+            </remarks>
+        </member>
+        <member name="M:System.Web.WebPages.Deployment.WebPagesDeployment.GetAssemblyPath(System.Version)">
+            <summary>
+            Gets full path to a folder that contains ASP.NET WebPages assemblies for a given version. Used by
+            WebMatrix and Visual Studio so they know what to copy to an app's Bin folder or deploy to a hoster. 
+            </summary>
+        </member>
+        <member name="M:System.Web.WebPages.Deployment.WebPagesDeployment.GetBinDirectory(System.String)">
+            <summary>
+            HttpRuntime.BinDirectory is unavailable in design time and throws if we try to access it. To workaround this, if we aren't hosted,
+            we will assume that the path that was passed to us is the application root.
+            </summary>
+            <param name="path"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Web.WebPages.Deployment.WebPagesDeployment.GetPreviousRuntimeVersion(System.Web.WebPages.Deployment.IBuildManager)">
+            <summary>
+            Reads a previously persisted version number from build manager's cached directory.
+            </summary>
+            <returns>Null if a previous version number does not exist or is not a valid version number, read version number otherwise.</returns>
+        </member>
+        <member name="M:System.Web.WebPages.Deployment.WebPagesDeployment.PersistRuntimeVersion(System.Web.WebPages.Deployment.IBuildManager,System.Version)">
+            <summary>
+            Persists the version number in a file under the build manager's cached directory.
+            </summary>
+        </member>
+        <member name="M:System.Web.WebPages.Deployment.WebPagesDeployment.ForceRecompile(Microsoft.Internal.Web.Utils.IFileSystem,System.String)">
+            <summary>
+            Forces recompilation of the application by dropping a file under bin.
+            </summary>
+            <param name="fileSystem">File system instance used to write a file to bin directory.</param>
+            <param name="binDirectory">Path to bin directory of the application</param>
+        </member>
+        <member name="M:System.Web.WebPages.Deployment.WebPagesDeployment.GetCachedFileName">
+            <summary>
+            Name of the the temporary file used by BuildManager.CreateCachedFile / BuildManager.ReadCachedFile where we cache WebPages's version number. 
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="F:System.Web.WebPages.Deployment.PreApplicationStartCode.ToolingIndicatorKey">
+            <summary>
+            Key used to indicate to tooling that the compile exception we throw to refresh the app domain originated from us so that they can deal with it correctly. 
+            </summary>
+        </member>
+        <member name="M:System.Web.WebPages.Deployment.PreApplicationStartCode.InvalidateCompilationResultsIfVersionChanged(System.Web.WebPages.Deployment.IBuildManager,Microsoft.Internal.Web.Utils.IFileSystem,System.String,System.Version)">
+            <summary>
+            WebPages stores the version to be compiled against in AppSettings as &gt;add key="webpages:version" value="1.0" /&lt;. 
+            Changing values AppSettings does not cause recompilation therefore we could run into a state where we have files compiled against v1 but the application is 
+            currently v2.
+            </summary>
+        </member>
+    </members>
+</doc>

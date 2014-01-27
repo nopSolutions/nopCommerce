@@ -1,0 +1,587 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>System.Web.Helpers</name>
+    </assembly>
+    <members>
+        <member name="M:System.Web.Helpers.Chart.#ctor(System.Int32,System.Int32,System.String,System.String)">
+            <param name="width">Chart width in pixels.</param>
+            <param name="height">Chart height in pixels.</param>
+            <param name="theme">String containing chart theme definition. Chart's theme defines properties like colors, positions, etc.
+            This parameter is primarily meant for one of the predefined Chart themes, however any valid chart theme is acceptable.</param>
+            <param name="themePath">Path to a file containing definition of chart theme, default is none.</param>
+            <remarks>Both the theme and themePath parameters can be specified. In this case, the Chart class applies the theme xml first 
+            followed by the content of file at themePath.
+            </remarks>
+            <example>
+            Chart(100, 100, theme: ChartTheme.Blue)
+            Chart(100, 100, theme: ChartTheme.Vanilla, themePath: "my-theme.xml")
+            Chart(100, 100, theme: ".... definition inline ...." ) 
+            Chart(100, 100, themePath: "my-theme.xml")
+            Any valid theme definition can be used as content of the file specified in themePath
+            </example>
+        </member>
+        <member name="M:System.Web.Helpers.Chart.AddLegend(System.String,System.String)">
+            <param name="title">Legend title.</param>
+            <param name="name">Legend name.</param>
+        </member>
+        <member name="M:System.Web.Helpers.Chart.AddSeries(System.String,System.String,System.String,System.String,System.String,System.Int32,System.Collections.IEnumerable,System.String,System.Collections.IEnumerable,System.String)">
+            <param name="name">Series name.</param>
+            <param name="chartType">Chart type (see: SeriesChartType).</param>
+            <param name="chartArea">Chart area where the series is displayed.</param>
+            <param name="axisLabel">Axis label for the series.</param>
+            <param name="legend">Legend for the series.</param>
+            <param name="markerStep">Axis marker step.</param>
+            <param name="xValue">X data source, if data-binding the series.</param>
+            <param name="xField">Column for the X data points, if data-binding the series.</param>
+            <param name="yValues">Y data source(s), if data-binding the series.</param>
+            <param name="yFields">Column(s) for the Y data points, if data-binding the series.</param>
+        </member>
+        <member name="M:System.Web.Helpers.Chart.AddTitle(System.String,System.String)">
+            <param name="text">Title text.</param>
+            <param name="name">Title name.</param>
+        </member>
+        <member name="M:System.Web.Helpers.Chart.SetXAxis(System.String,System.Double,System.Double)">
+            <param name="title">Title for X-axis</param>
+            <param name="min">The minimum value on X-axis. Default 0</param>
+            <param name="max">The maximum value on X-axis. Default NaN</param>
+        </member>
+        <member name="M:System.Web.Helpers.Chart.SetYAxis(System.String,System.Double,System.Double)">
+            <param name="title">Title for Y-axis</param>
+            <param name="min">The minimum value on Y-axis. Default 0</param>
+            <param name="max">The maximum value on Y-axis. Default NaN</param>
+        </member>
+        <member name="M:System.Web.Helpers.Chart.DataBindCrossTable(System.Collections.IEnumerable,System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            Data-binds the chart by grouping values in a series.  The series will be created by the chart.
+            </summary>
+            <param name="dataSource">Chart data source.</param>
+            <param name="groupByField">Column which series should be grouped by.</param>
+            <param name="xField">Column for the X data points.</param>
+            <param name="yFields">Column(s) for the Y data points, separated by comma.</param>
+            <param name="otherFields"></param>
+            <param name="pointSortOrder">Sort order (see: PointSortOrder).</param>
+        </member>
+        <member name="M:System.Web.Helpers.Chart.DataBindTable(System.Collections.IEnumerable,System.String)">
+            <summary>
+            Data-binds the chart using a data source, with multiple y values supported.  The series will be created by the chart.
+            </summary>
+            <param name="dataSource">Chart data source.</param>
+            <param name="xField">Column for the X data points.</param>
+        </member>
+        <member name="M:System.Web.Helpers.Chart.GetBytes(System.String)">
+            <summary>
+            Get the bytes for the chart image.
+            </summary>
+            <param name="format">Image format (see: ChartImageFormat).</param>
+        </member>
+        <member name="M:System.Web.Helpers.Chart.GetFromCache(System.String)">
+            <summary>
+            Loads a chart from the cache. This can be used to render from an image handler.
+            </summary>
+            <param name="key">Cache key.</param>
+        </member>
+        <member name="M:System.Web.Helpers.Chart.Save(System.String,System.String)">
+            <summary>
+            Saves the chart image to a file.
+            </summary>
+            <param name="path">File path.</param>
+            <param name="format">Chart image format (see: ChartImageFormat).</param>
+        </member>
+        <member name="M:System.Web.Helpers.Chart.SaveToCache(System.String,System.Int32,System.Boolean)">
+            <summary>
+            Saves the chart in cache.  This can be used to render from an image handler.
+            </summary>
+            <param name="key">Cache key.  Uses new GUID by default.</param>
+            <param name="minutesToCache">Number of minutes to save in cache.</param>
+            <param name="slidingExpiration">Whether a sliding expiration policy is used.</param>
+            <returns>Cache key.</returns>
+        </member>
+        <member name="M:System.Web.Helpers.Chart.SaveXml(System.String)">
+            <summary>
+            Saves the chart to the specified template file.
+            </summary>
+            <param name="path">XML template file path.</param>
+        </member>
+        <member name="M:System.Web.Helpers.Chart.SaveXml(System.Web.HttpContextBase,System.String)">
+            <summary>
+            Saves the chart to the specified template file.
+            </summary>
+            <param name="httpContext">The <see cref="T:System.Web.HttpContextBase"/>.</param>
+            <param name="path">XML template file path.</param>
+        </member>
+        <member name="M:System.Web.Helpers.Chart.Write(System.String)">
+            <summary>
+            Writes the chart image to the response stream.  This can be used to render from an image handler.
+            </summary>
+            <param name="format">Image format (see: ChartImageFormat).</param>
+        </member>
+        <member name="M:System.Web.Helpers.Chart.WriteFromCache(System.String,System.String)">
+            <summary>
+            Writes a chart stored in cache to the response stream.  This can be used to render from an image handler.
+            </summary>
+            <param name="key">Cache key.</param>
+            <param name="format">Image format (see: ChartImageFormat).</param>
+        </member>
+        <member name="M:System.Web.Helpers.Chart.ConvertStringToChartImageFormat(System.String)">
+            <summary>
+            Method to convert a string to a ChartImageFormat.
+            The chart image needs to be normalized to allow for alternate names such as 'jpg', 'xpng' etc 
+            to be mapped to their appropriate ChartImageFormat.
+            </summary>
+        </member>
+        <member name="M:System.Web.Helpers.VirtualPathUtil.MapPath(System.Web.HttpContextBase,System.String)">
+            <summary>
+            Resolves and maps a path (physical or virtual) to a physical path on the server. 
+            </summary>
+            <param name="httpContext">The <see cref="T:System.Web.HttpContextBase"/>.</param>
+            <param name="path">Either a physical rooted path or a virtual path to be mapped.
+            Physical paths are returned without modifications. Virtual paths are resolved relative to the current executing page.
+            </param>
+            <remarks>Result of this call should not be shown to the user (e.g. in an exception message) since
+            it could be security sensitive. But we need to pass this result to the file APIs like File.WriteAllBytes
+            which will show it if exceptions are raised from them. Unfortunately VirtualPathProvider doesn't have
+            APIs for writing so we can't use that.</remarks>
+        </member>
+        <member name="M:System.Web.Helpers.VirtualPathUtil.ResolvePath(System.String)">
+            <summary>
+            Resolves path relative to the current executing page
+            </summary>
+        </member>
+        <member name="T:Microsoft.Internal.Web.Utils.DynamicHelper">
+            <summary>
+            Helper to evaluate different method on dynamic objects
+            </summary>
+        </member>
+        <member name="T:System.Web.Helpers.DynamicJavaScriptConverter">
+            <summary>
+            Converter that knows how to get the member values from a dynamic object.
+            </summary>
+        </member>
+        <member name="T:System.Web.Helpers.ServerInfo">
+            <summary>
+            Provides various info about ASP.NET server.
+            </summary>
+        </member>
+        <member name="F:System.Web.Helpers.ServerInfo.Style">
+            <remarks>
+            todo: figure out right place for this
+            </remarks>
+        </member>
+        <member name="M:System.Web.Helpers.ServerInfo.GetHtml">
+            <summary>
+            Generates HTML required to display server information.
+            </summary>
+            <remarks>
+            HTML generated is XHTML 1.0 compliant but not XHTML 1.1 or HTML5 compliant. The reason is that we
+            generate &lt;style&gt; tag inside &lt;body&gt; tag, which is not allowed. This is by design for now since ServerInfo
+            is debugging aid and should not be used as a permanent part of any web page. 
+            </remarks>
+        </member>
+        <member name="M:System.Web.Helpers.ServerInfo.PrintInfoSection(System.Text.StringBuilder,System.String,System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Renders a table section printing out rows and columns.
+            </summary>
+        </member>
+        <member name="M:System.Web.Helpers.ServerInfo.InsertWhiteSpace(System.String)">
+            <summary>
+            Inserts spaces after ',' and ';' so table can be rendered properly.
+            </summary>
+        </member>
+        <member name="T:System.Web.Helpers.Resources.HelpersResources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:System.Web.Helpers.Resources.HelpersResources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:System.Web.Helpers.Resources.HelpersResources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:System.Web.Helpers.Resources.HelpersResources.Chart_ArgumentConversionFailed">
+            <summary>
+              Looks up a localized string similar to Argument conversion to type &quot;{0}&quot; failed..
+            </summary>
+        </member>
+        <member name="P:System.Web.Helpers.Resources.HelpersResources.Chart_ExceptionDataBindSeriesToString">
+            <summary>
+              Looks up a localized string similar to A series cannot be data-bound to a string object..
+            </summary>
+        </member>
+        <member name="P:System.Web.Helpers.Resources.HelpersResources.Chart_ThemeFileNotFound">
+            <summary>
+              Looks up a localized string similar to The theme file &quot;{0}&quot; could not be found..
+            </summary>
+        </member>
+        <member name="P:System.Web.Helpers.Resources.HelpersResources.Crypto_NotSupportedHashAlg">
+            <summary>
+              Looks up a localized string similar to The hash algorithm &apos;{0}&apos; is not supported, valid values are: sha256, sha1, md5.
+            </summary>
+        </member>
+        <member name="P:System.Web.Helpers.Resources.HelpersResources.Image_IncorrectImageFormat">
+            <summary>
+              Looks up a localized string similar to &quot;{0}&quot; is invalid image format. Valid values are image format names like: &quot;JPEG&quot;, &quot;BMP&quot;, &quot;GIF&quot;, &quot;PNG&quot;, etc..
+            </summary>
+        </member>
+        <member name="P:System.Web.Helpers.Resources.HelpersResources.Json_UnableToConvertType">
+            <summary>
+              Looks up a localized string similar to Unable to convert to &quot;{0}&quot;. Use Json.Decode&lt;T&gt; instead..
+            </summary>
+        </member>
+        <member name="P:System.Web.Helpers.Resources.HelpersResources.ObjectInfo_PreviousDisplayed">
+            <summary>
+              Looks up a localized string similar to Previously Displayed.
+            </summary>
+        </member>
+        <member name="P:System.Web.Helpers.Resources.HelpersResources.ObjectInfo_PropertyThrewException">
+            <summary>
+              Looks up a localized string similar to Accessing a property threw an exception: .
+            </summary>
+        </member>
+        <member name="P:System.Web.Helpers.Resources.HelpersResources.PathUtils_IncorrectPath">
+            <summary>
+              Looks up a localized string similar to File path &quot;{0}&quot; is invalid..
+            </summary>
+        </member>
+        <member name="P:System.Web.Helpers.Resources.HelpersResources.ServerInfo_AdditionalInfo">
+            <summary>
+              Looks up a localized string similar to Additional server information is available when the page is running with high trust..
+            </summary>
+        </member>
+        <member name="P:System.Web.Helpers.Resources.HelpersResources.ServerInfo_EnvVars">
+            <summary>
+              Looks up a localized string similar to Environment Variables.
+            </summary>
+        </member>
+        <member name="P:System.Web.Helpers.Resources.HelpersResources.ServerInfo_Header">
+            <summary>
+              Looks up a localized string similar to ASP.NET Server Information.
+            </summary>
+        </member>
+        <member name="P:System.Web.Helpers.Resources.HelpersResources.ServerInfo_HttpRuntime">
+            <summary>
+              Looks up a localized string similar to HTTP Runtime Information.
+            </summary>
+        </member>
+        <member name="P:System.Web.Helpers.Resources.HelpersResources.ServerInfo_LegacyCAS">
+            <summary>
+              Looks up a localized string similar to Legacy Code Access Security.
+            </summary>
+        </member>
+        <member name="P:System.Web.Helpers.Resources.HelpersResources.ServerInfo_LegacyCasHelpInfo">
+            <summary>
+              Looks up a localized string similar to Legacy Code Access Security has been detected on your system. Microsoft WebPage features require the ASP.NET 4 Code Access Security model. For information about how to resolve this, contact your server administrator..
+            </summary>
+        </member>
+        <member name="P:System.Web.Helpers.Resources.HelpersResources.ServerInfo_NoValue">
+            <summary>
+              Looks up a localized string similar to no value.
+            </summary>
+        </member>
+        <member name="P:System.Web.Helpers.Resources.HelpersResources.ServerInfo_ServerConfigTable">
+            <summary>
+              Looks up a localized string similar to Server Configuration.
+            </summary>
+        </member>
+        <member name="P:System.Web.Helpers.Resources.HelpersResources.ServerInfo_ServerVars">
+            <summary>
+              Looks up a localized string similar to ASP.NET Server Variables.
+            </summary>
+        </member>
+        <member name="P:System.Web.Helpers.Resources.HelpersResources.WebGrid_ColumnNameOrFormatRequired">
+            <summary>
+              Looks up a localized string similar to The column name cannot be null or an empty string unless a custom format is specified..
+            </summary>
+        </member>
+        <member name="P:System.Web.Helpers.Resources.HelpersResources.WebGrid_ColumnNotFound">
+            <summary>
+              Looks up a localized string similar to Column &quot;{0}&quot; does not exist..
+            </summary>
+        </member>
+        <member name="P:System.Web.Helpers.Resources.HelpersResources.WebGrid_DataSourceBound">
+            <summary>
+              Looks up a localized string similar to The WebGrid instance is already bound to a data source..
+            </summary>
+        </member>
+        <member name="P:System.Web.Helpers.Resources.HelpersResources.WebGrid_NoDataSourceBound">
+            <summary>
+              Looks up a localized string similar to A data source must be bound before this operation can be performed..
+            </summary>
+        </member>
+        <member name="P:System.Web.Helpers.Resources.HelpersResources.WebGrid_NotSupportedIfPagingIsDisabled">
+            <summary>
+              Looks up a localized string similar to This operation is not supported when paging is disabled for the &quot;WebGrid&quot; object..
+            </summary>
+        </member>
+        <member name="P:System.Web.Helpers.Resources.HelpersResources.WebGrid_NotSupportedIfSortingIsDisabled">
+            <summary>
+              Looks up a localized string similar to This operation is not supported when sorting is disabled for the &quot;WebGrid&quot; object..
+            </summary>
+        </member>
+        <member name="P:System.Web.Helpers.Resources.HelpersResources.WebGrid_PagerModeMustBeEnabled">
+            <summary>
+              Looks up a localized string similar to To use this argument, pager mode &quot;{0}&quot; must be enabled..
+            </summary>
+        </member>
+        <member name="P:System.Web.Helpers.Resources.HelpersResources.WebGrid_PropertySetterNotSupportedAfterDataBound">
+            <summary>
+              Looks up a localized string similar to This property cannot be set after the &quot;WebGrid&quot; object has been sorted or paged. Make sure that this property is set prior to invoking the &quot;Rows&quot; property directly or indirectly through other methods such as &quot;GetHtml&quot;, &quot;Pager&quot;, &quot;Table&quot;, etc..
+            </summary>
+        </member>
+        <member name="P:System.Web.Helpers.Resources.HelpersResources.WebGrid_RowCountNotSpecified">
+            <summary>
+              Looks up a localized string similar to A value for &quot;rowCount&quot; must be specified when &quot;autoSortAndPage&quot; is set to true and paging is enabled..
+            </summary>
+        </member>
+        <member name="P:System.Web.Helpers.Resources.HelpersResources.WebGrid_SelectLinkText">
+            <summary>
+              Looks up a localized string similar to Select.
+            </summary>
+        </member>
+        <member name="P:System.Web.Helpers.Resources.HelpersResources.WebImage_IncorrectColorName">
+            <summary>
+              Looks up a localized string similar to The &quot;fontColor&quot; value is invalid. Valid values are names like &quot;White&quot;, &quot;Black&quot;, or &quot;DarkBlue&quot;, or hexadecimal values in the form &quot;#RRGGBB&quot; or &quot;#RGB&quot;..
+            </summary>
+        </member>
+        <member name="P:System.Web.Helpers.Resources.HelpersResources.WebImage_IncorrectFontFamily">
+            <summary>
+              Looks up a localized string similar to The &quot;fontFamily&quot; value is invalid. Valid values are font family names like: &quot;Arial&quot;, &quot;Times New Roman&quot;, etc. Make sure that the font family you are trying to use is installed on the server..
+            </summary>
+        </member>
+        <member name="P:System.Web.Helpers.Resources.HelpersResources.WebImage_IncorrectFontStyle">
+            <summary>
+              Looks up a localized string similar to The &quot;fontStyle&quot; value is invalid. Valid values are: &quot;Regular&quot;, &quot;Bold&quot;, &quot;Italic&quot;, &quot;Underline&quot;, and &quot;Strikeout&quot;..
+            </summary>
+        </member>
+        <member name="P:System.Web.Helpers.Resources.HelpersResources.WebImage_IncorrectHorizontalAlignment">
+            <summary>
+              Looks up a localized string similar to The &quot;horizontalAlign&quot; value is invalid. Valid values are: &quot;Right&quot;, &quot;Left&quot;, and &quot;Center&quot;..
+            </summary>
+        </member>
+        <member name="P:System.Web.Helpers.Resources.HelpersResources.WebImage_IncorrectVerticalAlignment">
+            <summary>
+              Looks up a localized string similar to The &quot;verticalAlign&quot; value is invalid. Valid values are: &quot;Top&quot;, &quot;Bottom&quot;, and &quot;Middle&quot;..
+            </summary>
+        </member>
+        <member name="P:System.Web.Helpers.Resources.HelpersResources.WebImage_IncorrectWidthAndHeight">
+            <summary>
+              Looks up a localized string similar to Watermark width and height must both be positive or both be zero..
+            </summary>
+        </member>
+        <member name="P:System.Web.Helpers.Resources.HelpersResources.WebImage_InvalidImageContents">
+            <summary>
+              Looks up a localized string similar to An image could not be constructed from the content provided..
+            </summary>
+        </member>
+        <member name="P:System.Web.Helpers.Resources.HelpersResources.WebMail_InvalidPriority">
+            <summary>
+              Looks up a localized string similar to The &quot;priority&quot; value is invalid. Valid values are &quot;Low&quot;, &quot;Normal&quot; and &quot;High&quot;..
+            </summary>
+        </member>
+        <member name="P:System.Web.Helpers.Resources.HelpersResources.WebMail_ItemInCollectionIsNull">
+            <summary>
+              Looks up a localized string similar to A string in the collection is null or empty..
+            </summary>
+        </member>
+        <member name="P:System.Web.Helpers.Resources.HelpersResources.WebMail_SmtpServerNotSpecified">
+            <summary>
+              Looks up a localized string similar to &quot;SmtpServer&quot; was not specified..
+            </summary>
+        </member>
+        <member name="P:System.Web.Helpers.Resources.HelpersResources.WebMail_UnableToDetermineFrom">
+            <summary>
+              Looks up a localized string similar to No &quot;From&quot; email address was specified and a default value could not be assigned..
+            </summary>
+        </member>
+        <member name="T:System.Web.Helpers.PreComputedGridDataSource">
+            <summary>
+            Source wrapper for data provided by the user that is already sorted and paged. The user provides the WebGrid the rows to bind and additionally the total number of rows that 
+            are available.
+            </summary>
+        </member>
+        <member name="T:System.Web.Helpers.WebGridDataSource">
+            <summary>
+            Default data source that sorts results if a sort column is specified.
+            </summary>
+        </member>
+        <member name="M:System.Web.Helpers.WebGrid.#ctor(System.Collections.Generic.IEnumerable{System.Object},System.Collections.Generic.IEnumerable{System.String},System.String,System.Int32,System.Boolean,System.Boolean,System.String,System.String,System.String,System.String,System.String,System.String,System.String)">
+            <param name="source">Data source</param>
+            <param name="columnNames">Data source column names. Auto-populated by default.</param>
+            <param name="defaultSort">Default sort column.</param>
+            <param name="rowsPerPage">Number of rows per page.</param>
+            <param name="canPage"></param>
+            <param name="canSort"></param>
+            <param name="ajaxUpdateContainerId">ID for the grid's container element. This enables AJAX support.</param>
+            <param name="ajaxUpdateCallback">Callback function for the AJAX functionality once the update is complete</param>
+            <param name="fieldNamePrefix">Prefix for query string fields to support multiple grids.</param>
+            <param name="pageFieldName">Query string field name for page number.</param>
+            <param name="selectionFieldName">Query string field name for selected row number.</param>
+            <param name="sortFieldName">Query string field name for sort column.</param>
+            <param name="sortDirectionFieldName">Query string field name for sort direction.</param>
+        </member>
+        <member name="M:System.Web.Helpers.WebGrid.GetHtml(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Boolean,System.Boolean,System.String,System.Collections.Generic.IEnumerable{System.Web.Helpers.WebGridColumn},System.Collections.Generic.IEnumerable{System.String},System.Web.Helpers.WebGridPagerModes,System.String,System.String,System.String,System.String,System.Int32,System.Object)">
+            <summary>
+            Gets the HTML for a table with a pager.
+            </summary>
+            <param name="tableStyle">Table class for styling.</param>
+            <param name="headerStyle">Header row class for styling.</param>
+            <param name="footerStyle">Footer row class for styling.</param>
+            <param name="rowStyle">Row class for styling (odd rows only).</param>
+            <param name="alternatingRowStyle">Row class for styling (even rows only).</param>
+            <param name="selectedRowStyle">Selected row class for styling.</param>
+            <param name="displayHeader">Whether the header row should be displayed.</param>
+            <param name="caption">The string displayed as the table caption</param>
+            <param name="fillEmptyRows">Whether the table can add empty rows to ensure the rowsPerPage row count.</param>
+            <param name="emptyRowCellValue">Value used to populate empty rows. This property is only used when <paramref name="fillEmptyRows"/> is set</param>
+            <param name="columns">Column model for customizing column rendering.</param>
+            <param name="exclusions">Columns to exclude when auto-populating columns.</param>
+            <param name="mode">Modes for pager rendering.</param>
+            <param name="firstText">Text for link to first page.</param>
+            <param name="previousText">Text for link to previous page.</param>
+            <param name="nextText">Text for link to next page.</param>
+            <param name="lastText">Text for link to last page.</param>
+            <param name="numericLinksCount">Number of numeric links that should display.</param>
+            <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
+        </member>
+        <member name="M:System.Web.Helpers.WebGrid.Pager(System.Web.Helpers.WebGridPagerModes,System.String,System.String,System.String,System.String,System.Int32)">
+            <summary>
+            Gets the HTML for a pager.
+            </summary>
+            <param name="mode">Modes for pager rendering.</param>
+            <param name="firstText">Text for link to first page.</param>
+            <param name="previousText">Text for link to previous page.</param>
+            <param name="nextText">Text for link to next page.</param>
+            <param name="lastText">Text for link to last page.</param>
+            <param name="numericLinksCount">Number of numeric links that should display.</param>
+        </member>
+        <member name="M:System.Web.Helpers.WebGrid.Pager(System.Web.Helpers.WebGridPagerModes,System.String,System.String,System.String,System.String,System.Int32,System.Boolean)">
+            <param name="mode">Modes for pager rendering.</param>
+            <param name="firstText">Text for link to first page.</param>
+            <param name="previousText">Text for link to previous page.</param>
+            <param name="nextText">Text for link to next page.</param>
+            <param name="lastText">Text for link to last page.</param>
+            <param name="numericLinksCount">Number of numeric links that should display.</param>
+            <param name="explicitlyCalled">The Pager can be explicitly called by the public API or is called by the WebGrid when no footer is provided.
+            In the explicit scenario, we would need to render a container for the pager to allow identifying the pager links.
+            In the implicit scenario, the grid table would be the container.
+            </param>
+        </member>
+        <member name="M:System.Web.Helpers.WebGrid.Table(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Boolean,System.Boolean,System.String,System.Collections.Generic.IEnumerable{System.Web.Helpers.WebGridColumn},System.Collections.Generic.IEnumerable{System.String},System.Func{System.Object,System.Object},System.Object)">
+            <summary>
+            Gets the HTML for a table with a pager.
+            </summary>
+            <param name="tableStyle">Table class for styling.</param>
+            <param name="headerStyle">Header row class for styling.</param>
+            <param name="footerStyle">Footer row class for styling.</param>
+            <param name="rowStyle">Row class for styling (odd rows only).</param>
+            <param name="alternatingRowStyle">Row class for styling (even rows only).</param>
+            <param name="selectedRowStyle">Selected row class for styling.</param>
+            <param name="caption">The table caption</param>
+            <param name="displayHeader">Whether the header row should be displayed.</param>
+            <param name="fillEmptyRows">Whether the table can add empty rows to ensure the rowsPerPage row count.</param>
+            <param name="emptyRowCellValue">Value used to populate empty rows. This property is only used when <paramref name="fillEmptyRows"/> is set</param>
+            <param name="columns">Column model for customizing column rendering.</param>
+            <param name="exclusions">Columns to exclude when auto-populating columns.</param>
+            <param name="footer">Table footer template.</param>
+            <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
+        </member>
+        <member name="M:System.Web.Helpers.WebGrid.AddSorter``2(System.String,System.Linq.Expressions.Expression{System.Func{``0,``1}})">
+            <summary>
+            Adds a specific sort function for a given column.
+            </summary>
+            <typeparam name="TElement">The type of elements in the grid's source.</typeparam>
+            <typeparam name="TProperty">The column type, usually inferred from the keySelector function's return type.</typeparam>
+            <param name="columnName">The column name (as used for sorting)</param>
+            <param name="keySelector">The function used to select a key to sort by, for each element in the grid's source.</param>
+            <returns>The current grid, with the new custom sorter applied.</returns>
+            <example>
+            <code>
+            var grid = new WebGrid(items)
+                .AddSorter("Manager.Name", (Employee x) => (x == null || x.Manager == null) ? null : x.Manager.Name);
+            </code>
+            </example>
+        </member>
+        <member name="M:System.Web.Helpers.WebGrid.EnsureColumnIsSortable(System.Collections.Generic.IEnumerable{System.Web.Helpers.WebGridColumn})">
+            <param name="columns">The set of columns that are rendered to the client.</param>
+        </member>
+        <member name="M:System.Web.Helpers.WebImage.AddTextWatermark(System.String,System.String,System.Int32,System.String,System.String,System.String,System.String,System.Int32,System.Int32)">
+            <summary>
+            Adds text watermark to a WebImage.
+            </summary>
+            <param name="text">Text to use as a watermark.</param>
+            <param name="fontColor">Watermark color. Can be specified as a string (e.g. "White") or as a hex value (e.g. "#00FF00").</param>
+            <param name="fontSize">Font size in points.</param>
+            <param name="fontStyle">Font style: bold, italics, etc.</param>
+            <param name="fontFamily">Font family name: e.g. Microsoft Sans Serif</param>
+            <param name="horizontalAlign">Horizontal alignment for watermark text. Can be "right", "left", or "center".</param>
+            <param name="verticalAlign">Vertical alignment for watermark text. Can be "top", "bottom", or "middle".</param>
+            <param name="opacity">Watermark text opacity. Should be between 0 and 100.</param>
+            <param name="padding">Size of padding around watermark text in pixels.</param>
+            <returns>Modified WebImage instance with added watermark.</returns>
+        </member>
+        <member name="M:System.Web.Helpers.WebImage.AddImageWatermark(System.Web.Helpers.WebImage,System.Int32,System.Int32,System.String,System.String,System.Int32,System.Int32)">
+            <summary>
+            Adds image watermark to an image.
+            </summary>
+            <param name="watermarkImage">Image to use as a watermark.</param>
+            <param name="width">Width of watermark.</param>
+            <param name="height">Height of watermark.</param>
+            <param name="horizontalAlign">Horizontal alignment for watermark image. Can be "right", "left", or "center".</param>
+            <param name="verticalAlign">Vertical alignment for watermark image. Can be "top", "bottom", or "middle".</param>
+            <param name="opacity">Watermark text opacity. Should be between 0 and 100.</param>
+            <param name="padding">Size of padding around watermark image in pixels.</param>
+            <returns>Modified WebImage instance with added watermark.</returns>
+        </member>
+        <member name="M:System.Web.Helpers.WebImage.AddImageWatermark(System.String,System.Int32,System.Int32,System.String,System.String,System.Int32,System.Int32)">
+            <summary>
+            Adds image watermark to an image.
+            </summary>
+            <param name="watermarkImageFilePath">File to read watermark image from.</param>
+            <param name="width">Width of watermark.</param>
+            <param name="height">Height of watermark.</param>
+            <param name="horizontalAlign">Horizontal alignment for watermark image. Can be "right", "left", or "center".</param>
+            <param name="verticalAlign">Vertical alignment for watermark image. Can be "top", "bottom", or "middle".</param>
+            <param name="opacity">Watermark text opacity. Should be between 0 and 100.</param>
+            <param name="padding">Size of padding around watermark image in pixels.</param>
+            <returns>WebImage instance with added watermark.</returns>
+        </member>
+        <member name="M:System.Web.Helpers.WebImage.Save(System.String,System.String,System.Boolean)">
+            <param name="filePath">If no filePath is specified, the method falls back to the file name if the image was constructed from a file or 
+            the file name on the client (the browser machine) if the image was built off GetImageFromRequest
+            </param>
+            <param name="imageFormat">The format the image is saved in</param>
+            <param name="forceCorrectExtension">Appends a well known extension to the filePath based on the imageFormat specified. 
+            If the filePath uses a valid extension, no change is made.
+            e.g. format: "jpg", filePath: "foo.txt". Image saved at = "foo.txt.jpeg"
+                 format: "png", filePath: "foo.png". Image saved at = "foo.txt.png"
+            </param>
+        </member>
+        <member name="M:System.Web.Helpers.WebImage.ValidateImageContent(System.Byte[],System.String)">
+            <summary>
+            Constructs a System.Drawing.Image instance from the content which validates the contents of the image.
+            </summary>
+            <exception cref="T:System.ArgumentException">When an Image construction fails.</exception>
+        </member>
+        <member name="M:System.Web.Helpers.WebImage.GetBitmapFromImage(System.Drawing.Image,System.Int32,System.Int32,System.Boolean)">
+            <remarks>Caller has to dispose of returned Bitmap object.</remarks>
+        </member>
+        <member name="F:System.Web.Helpers.WebMail._actionableHeaders">
+            <summary>
+            MailMessage dictates that headers values that have equivalent properties would be discarded or overwritten. The list of values is available at 
+            http://msdn.microsoft.com/en-us/library/system.net.mail.mailmessage.aspx
+            </summary>
+        </member>
+        <member name="M:System.Web.Helpers.WebMail.TryParseHeader(System.String,System.String@,System.String@)">
+            <summary>
+            Parses a SMTP Mail header of the format "name: value"
+            </summary>
+            <returns>True if the header was parsed.</returns>
+        </member>
+    </members>
+</doc>

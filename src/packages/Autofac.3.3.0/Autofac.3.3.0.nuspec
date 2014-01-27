@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>Autofac</id>
+    <version>3.3.0</version>
+    <title>Autofac</title>
+    <authors>Autofac Contributors</authors>
+    <owners>Autofac Contributors</owners>
+    <licenseUrl>http://www.opensource.org/licenses/mit-license.php</licenseUrl>
+    <projectUrl>http://autofac.org/</projectUrl>
+    <iconUrl>http://code.google.com/p/autofac/logo</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Base assemblies for the Autofac Inversion of Control Container</description>
+    <summary>Autofac is an IoC container for Microsoft .NET. It manages the dependencies between classes so that applications stay easy to change as they grow in size and complexity.</summary>
+    <language>en-US</language>
+  </metadata>
+</package>

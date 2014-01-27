@@ -1,0 +1,1039 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>System.Web.WebPages</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.Internal.Web.Utils.CommonResources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Internal.Web.Utils.CommonResources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Internal.Web.Utils.CommonResources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Internal.Web.Utils.CommonResources.Argument_Cannot_Be_Null_Or_Empty">
+            <summary>
+              Looks up a localized string similar to Value cannot be null or an empty string..
+            </summary>
+        </member>
+        <member name="P:Microsoft.Internal.Web.Utils.CommonResources.Argument_Must_Be_Between">
+            <summary>
+              Looks up a localized string similar to Value must be between {0} and {1}..
+            </summary>
+        </member>
+        <member name="P:Microsoft.Internal.Web.Utils.CommonResources.Argument_Must_Be_Enum_Member">
+            <summary>
+              Looks up a localized string similar to Value must be a value from the &quot;{0}&quot; enumeration..
+            </summary>
+        </member>
+        <member name="P:Microsoft.Internal.Web.Utils.CommonResources.Argument_Must_Be_GreaterThan">
+            <summary>
+              Looks up a localized string similar to Value must be greater than {0}..
+            </summary>
+        </member>
+        <member name="P:Microsoft.Internal.Web.Utils.CommonResources.Argument_Must_Be_GreaterThanOrEqualTo">
+            <summary>
+              Looks up a localized string similar to Value must be greater than or equal to {0}..
+            </summary>
+        </member>
+        <member name="P:Microsoft.Internal.Web.Utils.CommonResources.Argument_Must_Be_LessThan">
+            <summary>
+              Looks up a localized string similar to Value must be less than {0}..
+            </summary>
+        </member>
+        <member name="P:Microsoft.Internal.Web.Utils.CommonResources.Argument_Must_Be_LessThanOrEqualTo">
+            <summary>
+              Looks up a localized string similar to Value must be less than or equal to {0}..
+            </summary>
+        </member>
+        <member name="P:Microsoft.Internal.Web.Utils.CommonResources.Argument_Must_Be_Null_Or_Non_Empty">
+            <summary>
+              Looks up a localized string similar to Value cannot be an empty string. It must either be null or a non-empty string..
+            </summary>
+        </member>
+        <member name="T:System.Collections.Generic.CollectionExtensions">
+            <summary>
+            Helper extension methods for fast use of collections.
+            </summary>
+        </member>
+        <member name="M:System.Collections.Generic.CollectionExtensions.AppendAndReallocate``1(``0[],``0)">
+            <summary>
+            Return a new array with the value added to the end. Slow and best suited to long lived arrays with few writes relative to reads.
+            </summary>
+        </member>
+        <member name="M:System.Collections.Generic.CollectionExtensions.AsArray``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Return the enumerable as an Array, copying if required. Optimized for common case where it is an Array. 
+            Avoid mutating the return value.
+            </summary>
+        </member>
+        <member name="M:System.Collections.Generic.CollectionExtensions.AsCollection``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Return the enumerable as a Collection of T, copying if required. Optimized for the common case where it is 
+            a Collection of T and avoiding a copy if it implements IList of T. Avoid mutating the return value.
+            </summary>
+        </member>
+        <member name="M:System.Collections.Generic.CollectionExtensions.AsIList``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Return the enumerable as a IList of T, copying if required. Avoid mutating the return value.
+            </summary>
+        </member>
+        <member name="M:System.Collections.Generic.CollectionExtensions.AsList``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Return the enumerable as a List of T, copying if required. Optimized for common case where it is an List of T 
+            or a ListWrapperCollection of T. Avoid mutating the return value.
+            </summary>
+        </member>
+        <member name="M:System.Collections.Generic.CollectionExtensions.RemoveFrom``1(System.Collections.Generic.List{``0},System.Int32)">
+            <summary>
+            Remove values from the list starting at the index start.
+            </summary>
+        </member>
+        <member name="M:System.Collections.Generic.CollectionExtensions.SingleDefaultOrError``2(System.Collections.Generic.IList{``0},System.Action{``1},``1)">
+            <summary>
+            Return the only value from list, the type's default value if empty, or call the errorAction for 2 or more.
+            </summary>
+        </member>
+        <member name="M:System.Collections.Generic.CollectionExtensions.SingleOfTypeDefaultOrError``3(System.Collections.Generic.IList{``0},System.Action{``2},``2)">
+            <summary>
+            Returns a single value in list matching type TMatch if there is only one, null if there are none of type TMatch or calls the
+            errorAction with errorArg1 if there is more than one.
+            </summary>
+        </member>
+        <member name="M:System.Collections.Generic.CollectionExtensions.ToArrayWithoutNulls``1(System.Collections.Generic.ICollection{``0})">
+            <summary>
+            Convert an ICollection to an array, removing null values. Fast path for case where there are no null values.
+            </summary>
+        </member>
+        <member name="M:System.Collections.Generic.CollectionExtensions.ToDictionaryFast``2(``1[],System.Func{``1,``0},System.Collections.Generic.IEqualityComparer{``0})">
+            <summary>
+            Convert the array to a Dictionary using the keySelector to extract keys from values and the specified comparer. Optimized for array input.
+            </summary>
+        </member>
+        <member name="M:System.Collections.Generic.CollectionExtensions.ToDictionaryFast``2(System.Collections.Generic.IList{``1},System.Func{``1,``0},System.Collections.Generic.IEqualityComparer{``0})">
+            <summary>
+            Convert the list to a Dictionary using the keySelector to extract keys from values and the specified comparer. Optimized for IList of T input with fast path for array.
+            </summary>
+        </member>
+        <member name="M:System.Collections.Generic.CollectionExtensions.ToDictionaryFast``2(System.Collections.Generic.IEnumerable{``1},System.Func{``1,``0},System.Collections.Generic.IEqualityComparer{``0})">
+            <summary>
+            Convert the enumerable to a Dictionary using the keySelector to extract keys from values and the specified comparer. Fast paths for array and IList of T.
+            </summary>
+        </member>
+        <member name="M:System.Collections.Generic.CollectionExtensions.ToDictionaryFastNoCheck``2(System.Collections.Generic.IList{``1},System.Func{``1,``0},System.Collections.Generic.IEqualityComparer{``0})">
+            <summary>
+            Convert the list to a Dictionary using the keySelector to extract keys from values and the specified comparer. Optimized for IList of T input. No checking for other types.
+            </summary>
+        </member>
+        <member name="T:System.Collections.Generic.Empty`1">
+            <summary>
+            Helper to provide empty instances with minimal allocation.
+            </summary>
+        </member>
+        <member name="P:System.Collections.Generic.Empty`1.Array">
+            <summary>
+            Returns a zero length array of type. Only allocates once per distinct type.
+            </summary>
+        </member>
+        <member name="T:System.Collections.ObjectModel.ListWrapperCollection`1">
+            <summary>
+            A class that inherits from Collection of T but also exposes its underlying data as List of T for performance.
+            </summary>
+        </member>
+        <member name="T:System.Web.PathHelpers">
+            <summary>
+            Helpers for working with IO paths.
+            </summary>
+        </member>
+        <member name="M:System.Web.PathHelpers.EndsWithExtension(System.String,System.String)">
+            <summary>
+            Returns whether the path has the specified file extension.
+            </summary>
+        </member>
+        <member name="M:System.Web.WebPages.ApplicationPart.ResolveVirtualPath(System.String,System.String,System.String)">
+            <summary>
+            Expands a virtual path by replacing a leading "@" with the application part root
+            or combining it with the specified baseVirtualPath
+            </summary>
+        </member>
+        <member name="M:System.Web.WebPages.WebPageExecutingBase.NormalizeLayoutPagePath(System.String)">
+            <summary>
+            Normalizes path relative to the current virtual path and throws if a file does not exist at the location.
+            </summary>
+        </member>
+        <member name="T:System.Web.WebPages.BrowserOverrideStore">
+            <summary>
+            The current BrowserOverrideStore is used to get and set the user agent of a request.
+            For an example see CookieBasedBrowserOverrideStore.
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.BrowserOverrideStores.Current">
+            <summary>
+            The current BrowserOverrideStore
+            </summary>
+        </member>
+        <member name="T:System.Web.WebPages.BrowserOverride">
+            <summary>
+            BrowserOverrides can be used by BrowserHelpers to override the browser for a particular request.
+            </summary>
+        </member>
+        <member name="T:System.Web.WebPages.BuildManagerWrapper">
+            <summary>
+            Wraps the caching and instantiation of paths of the BuildManager. 
+            In case of precompiled non-updateable sites, the only way to verify if a file exists is to call BuildManager.GetObjectFactory. However this method is less performant than
+            VirtualPathProvider.FileExists which is used for all other scenarios. In this class, we optimize for the first scenario by storing the results of GetObjectFactory for a 
+            long duration.
+            </summary>
+        </member>
+        <member name="M:System.Web.WebPages.BuildManagerWrapper.Exists(System.String)">
+            <summary>
+            Determines if a page exists in the website. 
+            This method switches between a long duration cache or a short duration FileExistenceCache depending on whether the site is precompiled. 
+            This is an optimization because BuildManager.GetObjectFactory is comparably slower than performing VirtualPathFactory.Exists
+            </summary>
+        </member>
+        <member name="M:System.Web.WebPages.BuildManagerWrapper.IsNonUpdatablePrecompiledApp">
+            <summary>
+            An app's is precompiled for our purposes if 
+            (a) it has a PreCompiledApp.config file in the site root, 
+            (b) The PreCompiledApp.config says that the app is not Updatable.
+            </summary>
+            <remarks>
+            This code is based on System.Web.DynamicData.Misc.IsNonUpdatablePrecompiledAppNoCache (DynamicData)
+            </remarks>
+        </member>
+        <member name="M:System.Web.WebPages.BuildManagerWrapper.ExistsInVpp(System.String)">
+            <summary>
+            Determines if a site exists in the VirtualPathProvider.
+            Results of hits are cached for a very short amount of time in the FileExistenceCache.
+            </summary>
+        </member>
+        <member name="M:System.Web.WebPages.BuildManagerWrapper.GetObjectFactory(System.String)">
+            <summary>
+            Determines if an ObjectFactory exists for the virtualPath. 
+            The BuildManager complains if we pass in extensions that aren't registered for compilation. So we ensure that the virtual path is not 
+            extensionless and that it is one of the extension
+            </summary>
+        </member>
+        <member name="M:System.Web.WebPages.BuildManagerWrapper.IsPathExtensionSupported(System.String)">
+            <summary>
+            Determines if the extension is one of the extensions registered with WebPageHttpHandler. 
+            </summary>
+        </member>
+        <member name="M:System.Web.WebPages.BuildManagerWrapper.GetKeyFromVirtualPath(System.String)">
+            <summary>
+            Creates a reasonably unique key for a given virtual path by concatenating it with a Guid.
+            </summary>
+        </member>
+        <member name="T:System.Web.WebPages.CookieBrowserOverrideStore">
+            <summary>
+            The default BrowserOverrideStore. Gets overridden user agent for a request from a cookie.
+            Creates a cookie to set the overridden user agent.
+            </summary>
+        </member>
+        <member name="M:System.Web.WebPages.CookieBrowserOverrideStore.#ctor">
+            <summary>
+            Creates the BrowserOverrideStore setting any browser override cookie to expire in 7 days.
+            </summary>
+        </member>
+        <member name="M:System.Web.WebPages.CookieBrowserOverrideStore.#ctor(System.Int32)">
+            <summary>
+            Constructor to control the expiration of the browser override cookie.
+            </summary>
+        </member>
+        <member name="M:System.Web.WebPages.CookieBrowserOverrideStore.GetOverriddenUserAgent(System.Web.HttpContextBase)">
+            <summary>
+            Looks for a user agent by searching for the browser override cookie. If no cookie is found
+            returns null.
+            </summary>
+        </member>
+        <member name="M:System.Web.WebPages.CookieBrowserOverrideStore.SetOverriddenUserAgent(System.Web.HttpContextBase,System.String)">
+            <summary>
+            Adds a browser override cookie with the set user agent to the response of the current request.
+            If the user agent is null the browser override cookie is set to expire, otherwise its expiration is set
+            to daysToExpire, specified when CookieBasedOverrideStore is created.
+            </summary>
+        </member>
+        <member name="T:System.Web.WebPages.DisplayInfo">
+            <summary>
+            DisplayInfo wraps the resolved file path and IDisplayMode for a request and path.
+            The returned IDisplayMode can be used to resolve other page elements for the request.
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.DisplayInfo.DisplayMode">
+            <summary>
+            The Display Mode used to resolve a virtual path.
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.DisplayInfo.FilePath">
+            <summary>
+            Resolved path of a file that exists.
+            </summary>
+        </member>
+        <member name="M:System.Web.WebPages.DisplayModeProvider.GetAvailableDisplayModesForContext(System.Web.HttpContextBase,System.Web.WebPages.IDisplayMode)">
+            <summary>
+            Returns any IDisplayMode that can handle the given request.
+            </summary>
+        </member>
+        <member name="M:System.Web.WebPages.DisplayModeProvider.GetDisplayInfoForVirtualPath(System.String,System.Web.HttpContextBase,System.Func{System.String,System.Boolean},System.Web.WebPages.IDisplayMode)">
+            <summary>
+            Returns DisplayInfo from the first IDisplayMode in Modes that can handle the given request and locate the virtual path.
+            If currentDisplayMode is not null and RequireConsistentDisplayMode is set to true the search for DisplayInfo will only
+            start with the currentDisplayMode.
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.DisplayModeProvider.RequireConsistentDisplayMode">
+            <summary>
+            Restricts the search for Display Info to Display Modes either equal to or following the current
+            Display Mode in Modes. For example, a page being rendered in the Default Display Mode will not
+            display Mobile partial views in order to achieve a consistent look and feel.
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.DisplayModeProvider.Modes">
+            <summary>
+            All Display Modes that are available to handle a request.
+            </summary>
+        </member>
+        <member name="T:System.Web.WebPages.BrowserHelpers">
+            <summary>
+            Extension methods used to determine what browser a visitor wants to be seen as using.
+            </summary>
+        </member>
+        <member name="F:System.Web.WebPages.BrowserHelpers.DesktopUserAgent">
+            <summary>
+            Stock IE6 user agent string
+            </summary>
+        </member>
+        <member name="F:System.Web.WebPages.BrowserHelpers.MobileUserAgent">
+            <summary>
+            Stock Windows Mobile 6.0 user agent string
+            </summary>
+        </member>
+        <member name="M:System.Web.WebPages.BrowserHelpers.ClearOverriddenBrowser(System.Web.HttpContextBase)">
+            <summary>
+            Clears the set browser for the request. After clearing the browser the overridden browser will be the browser for the request.
+            </summary>
+        </member>
+        <member name="M:System.Web.WebPages.BrowserHelpers.GetOverriddenBrowser(System.Web.HttpContextBase)">
+            <summary>
+            Gets the overridden browser for the request based on the overridden user agent.
+            If no overridden user agent is set, returns the browser for the request.
+            </summary>
+        </member>
+        <member name="M:System.Web.WebPages.BrowserHelpers.GetOverriddenBrowser(System.Web.HttpContextBase,System.Func{System.String,System.Web.HttpBrowserCapabilitiesBase})">
+            <summary>
+            Internal GetOverriddenBrowser overload to allow the browser creation function to changed. Defaults to CreateOverridenBrowser if createBrowser is null.
+            </summary>
+        </member>
+        <member name="M:System.Web.WebPages.BrowserHelpers.GetOverriddenUserAgent(System.Web.HttpContextBase)">
+            <summary>
+            Gets the overridden user agent for the request. If no overridden user agent is set, returns the user agent for the request.
+            </summary>
+        </member>
+        <member name="M:System.Web.WebPages.BrowserHelpers.GetVaryByCustomStringForOverriddenBrowser(System.Web.HttpContext)">
+            <summary>
+            Gets a string that varies based upon the type of the browser. Can be used to override
+            System.Web.HttpApplication.GetVaryByCustomString to differentiate cache keys based on
+            the overridden browser.
+            </summary>
+        </member>
+        <member name="M:System.Web.WebPages.BrowserHelpers.GetVaryByCustomStringForOverriddenBrowser(System.Web.HttpContextBase)">
+            <summary>
+            Gets a string that varies based upon the type of the browser. Can be used to override
+            System.Web.HttpApplication.GetVaryByCustomString to differentiate cache keys based on
+            the overridden browser.
+            </summary>
+        </member>
+        <member name="M:System.Web.WebPages.BrowserHelpers.SetOverriddenBrowser(System.Web.HttpContextBase,System.Web.WebPages.BrowserOverride)">
+            <summary>
+            Sets the overridden user agent for the request using a BrowserOverride.
+            </summary>
+        </member>
+        <member name="M:System.Web.WebPages.BrowserHelpers.SetOverriddenBrowser(System.Web.HttpContextBase,System.String)">
+            <summary>
+            Sets the overridden user agent for the request using a string
+            </summary>
+        </member>
+        <member name="T:System.Web.Helpers.AntiForgeryConfig">
+            <summary>
+            Provides programmatic configuration for the anti-forgery token system.
+            </summary>
+        </member>
+        <member name="P:System.Web.Helpers.AntiForgeryConfig.AdditionalDataProvider">
+            <summary>
+            Specifies an object that can provide additional data to put into all
+            generated tokens and that can validate additional data in incoming
+            tokens.
+            </summary>
+        </member>
+        <member name="P:System.Web.Helpers.AntiForgeryConfig.CookieName">
+            <summary>
+            Specifies the name of the cookie that is used by the anti-forgery
+            system.
+            </summary>
+            <remarks>
+            If an explicit name is not provided, the system will automatically
+            generate a name.
+            </remarks>
+        </member>
+        <member name="P:System.Web.Helpers.AntiForgeryConfig.RequireSsl">
+            <summary>
+            Specifies whether SSL is required for the anti-forgery system
+            to operate. If this setting is 'true' and a non-SSL request
+            comes into the system, all anti-forgery APIs will fail.
+            </summary>
+        </member>
+        <member name="P:System.Web.Helpers.AntiForgeryConfig.SuppressXFrameOptionsHeader">
+            <summary>
+            Specifies whether to suppress the generation of X-Frame-Options header
+            which is used to prevent ClickJacking. By default, the X-Frame-Options
+            header is generated with the value SAMEORIGIN. If this setting is 'true', 
+            the X-Frame-Options header will not be generated for the response.
+            </summary>
+        </member>
+        <member name="P:System.Web.Helpers.AntiForgeryConfig.SuppressIdentityHeuristicChecks">
+            <summary>
+            Specifies whether the anti-forgery system should skip checking
+            for conditions that might indicate misuse of the system. Please
+            use caution when setting this switch, as improper use could open
+            security holes in the application.
+            </summary>
+            <remarks>
+            Setting this switch will disable several checks, including:
+            - Identity.IsAuthenticated = true without Identity.Name being set
+            - special-casing claims-based identities
+            </remarks>
+        </member>
+        <member name="P:System.Web.Helpers.AntiForgeryConfig.UniqueClaimTypeIdentifier">
+            <summary>
+            If claims-based authorization is in use, specifies the claim
+            type from the identity that is used to uniquely identify the
+            user. If this property is set, all claims-based identities
+            <em>must</em> return unique values for this claim type.
+            </summary>
+            <remarks>
+            If claims-based authorization is in use and this property has
+            not been set, the anti-forgery system will automatically look
+            for claim types "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+            and "http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/identityprovider".
+            </remarks>
+        </member>
+        <member name="T:System.Web.Helpers.IAntiForgeryAdditionalDataProvider">
+            <summary>
+            Allows providing or validating additional custom data for anti-forgery tokens.
+            For example, the developer could use this to supply a nonce when the token is
+            generated, then he could validate the nonce when the token is validated.
+            </summary>
+            <remarks>
+            The anti-forgery system already embeds the client's username within the
+            generated tokens. This interface provides and consumes <em>supplemental</em>
+            data. If an incoming anti-forgery token contains supplemental data but no
+            additional data provider is configured, the supplemental data will not be
+            validated.
+            </remarks>
+        </member>
+        <member name="M:System.Web.Helpers.IAntiForgeryAdditionalDataProvider.GetAdditionalData(System.Web.HttpContextBase)">
+            <summary>
+            Provides additional data to be stored for the anti-forgery tokens generated
+            during this request.
+            </summary>
+            <param name="context">Information about the current request.</param>
+            <returns>Supplemental data to embed within the anti-forgery token.</returns>
+        </member>
+        <member name="M:System.Web.Helpers.IAntiForgeryAdditionalDataProvider.ValidateAdditionalData(System.Web.HttpContextBase,System.String)">
+            <summary>
+            Validates additional data that was embedded inside an incoming anti-forgery
+            token.
+            </summary>
+            <param name="context">Information about the current request.</param>
+            <param name="additionalData">Supplemental data that was embedded within the token.</param>
+            <returns>True if the data is valid; false if the data is invalid.</returns>
+        </member>
+        <member name="T:System.Web.WebPages.IDisplayMode">
+            <summary>
+            An interface that provides DisplayInfo for a virtual path and request. An IDisplayMode may modify the virtual path before checking
+            if it exists. CanHandleContext is called to determine if the Display Mode is available to return display info for the request.
+            GetDisplayInfo should return null if the virtual path does not exist. For an example implementation, see DefaultDisplayMode.
+            DisplayModeId is used to cache the non-null result of a call to GetDisplayInfo and should be unique for each Display Mode. See
+            DisplayModes for the built-in Display Modes and their ids.
+            </summary>
+        </member>
+        <member name="T:System.Web.WebPages.DefaultDisplayMode">
+            <summary>
+            The <see cref="T:System.Web.WebPages.DefaultDisplayMode"/> can take any suffix and determine if there is a corresponding
+            file that exists given a path and request by transforming the path to contain the suffix.
+            Add a new DefaultDisplayMode to the Modes collection to handle a new suffix or inherit from
+            DefaultDisplayMode to provide custom logic to transform paths with a suffix.
+            </summary>
+        </member>
+        <member name="M:System.Web.WebPages.DefaultDisplayMode.GetDisplayInfo(System.Web.HttpContextBase,System.String,System.Func{System.String,System.Boolean})">
+            <summary>
+            Returns DisplayInfo with the transformed path if it exists.
+            </summary>
+        </member>
+        <member name="M:System.Web.WebPages.DefaultDisplayMode.TransformPath(System.String,System.String)">
+            <summary>
+            Transforms paths according to the following rules:
+            \some\path.blah\file.txt.zip -> \some\path.blah\file.txt.suffix.zip
+            \some\path.blah\file -> \some\path.blah\file.suffix
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.DefaultDisplayMode.ContextCondition">
+            <summary>
+            When set, the <see cref="T:System.Web.WebPages.DefaultDisplayMode"/> will only be available to return Display Info for a request
+            if the ContextCondition evaluates to true.
+            </summary>
+        </member>
+        <member name="T:System.Web.WebPages.FileExistenceCache">
+            <summary>
+            This class caches the result of VirtualPathProvider.FileExists for a short
+            period of time, and recomputes it if necessary.
+            
+            The default VPP MapPathBasedVirtualPathProvider caches the result of
+            the FileExists call with the appropriate dependencies, so it is less
+            expensive on subsequent calls, but it still needs to do MapPath which can 
+            take quite some time.
+            </summary>
+        </member>
+        <member name="T:System.Web.Helpers.AntiForgery">
+            <summary>
+            Provides access to the anti-forgery system, which provides protection against
+            Cross-site Request Forgery (XSRF, also called CSRF) attacks.
+            </summary>
+        </member>
+        <member name="M:System.Web.Helpers.AntiForgery.GetHtml">
+            <summary>
+            Generates an anti-forgery token for this request. This token can
+            be validated by calling the Validate() method.
+            </summary>
+            <returns>An HTML string corresponding to an &lt;input type="hidden"&gt;
+            element. This element should be put inside a &lt;form&gt;.</returns>
+            <remarks>
+            This method has a side effect: it may set a response cookie.
+            </remarks>
+        </member>
+        <member name="M:System.Web.Helpers.AntiForgery.GetTokens(System.String,System.String@,System.String@)">
+            <summary>
+            Generates an anti-forgery token pair (cookie and form token) for this request.
+            This method is similar to GetHtml(), but this method gives the caller control
+            over how to persist the returned values. To validate these tokens, call the
+            appropriate overload of Validate.
+            </summary>
+            <param name="oldCookieToken">The anti-forgery token - if any - that already existed
+            for this request. May be null. The anti-forgery system will try to reuse this cookie
+            value when generating a matching form token.</param>
+            <param name="newCookieToken">Will contain a new cookie value if the old cookie token
+            was null or invalid. If this value is non-null when the method completes, the caller
+            must persist this value in the form of a response cookie, and the existing cookie value
+            should be discarded. If this value is null when the method completes, the existing
+            cookie value was valid and needn't be modified.</param>
+            <param name="formToken">The value that should be stored in the &lt;form&gt;. The caller
+            should take care not to accidentally swap the cookie and form tokens.</param>
+            <remarks>
+            Unlike the GetHtml() method, this method has no side effect. The caller
+            is responsible for setting the response cookie and injecting the returned
+            form token as appropriate.
+            </remarks>
+        </member>
+        <member name="M:System.Web.Helpers.AntiForgery.Validate">
+            <summary>
+            Validates an anti-forgery token that was supplied for this request.
+            The anti-forgery token may be generated by calling GetHtml().
+            </summary>
+            <remarks>
+            Throws an HttpAntiForgeryException if validation fails.
+            </remarks>
+        </member>
+        <member name="M:System.Web.Helpers.AntiForgery.Validate(System.String,System.String)">
+            <summary>
+            Validates an anti-forgery token pair that was generated by the GetTokens method.
+            </summary>
+            <param name="cookieToken">The token that was supplied in the request cookie.</param>
+            <param name="formToken">The token that was supplied in the request form body.</param>
+            <remarks>
+            Throws an HttpAntiForgeryException if validation fails.
+            </remarks>
+        </member>
+        <member name="T:System.Web.WebPages.RequestBrowserOverrideStore">
+            <summary>
+            RequestBrowserOverrideStore simply returns the user agent of the current request.
+            </summary>
+        </member>
+        <member name="M:System.Web.WebPages.PropertyHelper.#ctor(System.Reflection.PropertyInfo)">
+            <summary>
+            Initializes a fast property helper. This constructor does not cache the helper.
+            </summary>
+        </member>
+        <member name="M:System.Web.WebPages.PropertyHelper.MakeFastPropertySetter``1(System.Reflection.PropertyInfo)">
+            <summary>
+            Creates a single fast property setter. The result is not cached.
+            </summary>
+            <param name="propertyInfo">propertyInfo to extract the getter for.</param>
+            <returns>a fast setter.</returns>
+            <remarks>This method is more memory efficient than a dynamically compiled lambda, and about the same speed.</remarks>
+        </member>
+        <member name="M:System.Web.WebPages.PropertyHelper.GetProperties(System.Object)">
+            <summary>
+            Creates and caches fast property helpers that expose getters for every public get property on the underlying type.
+            </summary>
+            <param name="instance">the instance to extract property accessors for.</param>
+            <returns>a cached array of all public property getters from the underlying type of this instance.</returns>
+        </member>
+        <member name="M:System.Web.WebPages.PropertyHelper.MakeFastPropertyGetter(System.Reflection.PropertyInfo)">
+            <summary>
+            Creates a single fast property getter. The result is not cached.
+            </summary>
+            <param name="propertyInfo">propertyInfo to extract the getter for.</param>
+            <returns>a fast getter.</returns>
+            <remarks>This method is more memory efficient than a dynamically compiled lambda, and about the same speed.</remarks>
+        </member>
+        <member name="M:System.Web.WebPages.TypeHelper.ObjectToDictionary(System.Object)">
+             <summary>
+             Given an object of anonymous type, add each property as a key and associated with its value to a dictionary.
+            
+             This helper will cache accessors and types, and is intended when the anonymous object is accessed multiple
+             times throughout the lifetime of the web application.
+             </summary>
+        </member>
+        <member name="M:System.Web.WebPages.TypeHelper.ObjectToDictionaryUncached(System.Object)">
+             <summary>
+             Given an object of anonymous type, add each property as a key and associated with its value to a dictionary.
+            
+             This helper will not cache accessors and types, and is intended when the anonymous object is accessed once
+             or very few times throughout the lifetime of the web application.
+             </summary>
+        </member>
+        <member name="M:System.Web.WebPages.TypeHelper.AddAnonymousObjectToDictionary(System.Collections.Generic.IDictionary{System.String,System.Object},System.Object)">
+            <summary>
+            Given an object of anonymous type, add each property as a key and associated with its value to the given dictionary.
+            </summary>
+        </member>
+        <member name="M:System.Web.WebPages.TypeHelper.IsAnonymousType(System.Type)">
+            <remarks>This code is copied from http://www.liensberger.it/web/blog/?p=191 </remarks>
+        </member>
+        <member name="M:System.Web.WebPages.UrlUtil.IsDisplayableType(System.Type)">
+            <summary>
+            Determines if a type is displayable as part of a Url path.
+            </summary>
+            <remarks>
+            If a type is a displayable type, then we format values of that type as part of the Url Path. If not, then
+            we attempt to create a RouteValueDictionary, and encode the value as key-value pairs in the query string.
+            
+            We determine if a type is displayable by whether or not it implements any interfaces. The built-in simple
+            types like Int32 implement IFormattable, which will be used to convert it to a string. 
+            
+            Primarily we do this check to allow anonymous types to represent key-value pairs (anonymous types don't 
+            implement any interfaces). 
+            </remarks>
+        </member>
+        <member name="P:System.Web.WebPages.RequestFieldValidatorBase.IgnoreUseUnvalidatedValues">
+            <summary>
+            Meant for unit tests that causes RequestFieldValidatorBase to basically ignore the unvalidated field requirement.
+            </summary>
+        </member>
+        <member name="T:System.Web.WebPages.ITemplateFile">
+            <summary>
+            An interface that provides information about the current executing file.
+            WebPageRenderingBase implements this type so that all pages excluding AppStart pages could be queried to identify the 
+            current executing file.
+            </summary>
+        </member>
+        <member name="T:System.Web.WebPages.StartPage">
+            <summary>
+            Wrapper class to be used by _pagestart.cshtml files to call into
+            the actual page.
+            Most of the properties and methods just delegate the call to ChildPage.XXX
+            </summary>
+        </member>
+        <member name="M:System.Web.WebPages.StartPage.GetStartPage(System.Web.WebPages.WebPageRenderingBase,System.String,System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Returns either the root-most init page, or the provided page itself if no init page is found
+            </summary>
+        </member>
+        <member name="T:System.Web.WebPages.DynamicPageDataDictionary`1">
+            <summary>
+            This is a wrapper around PageDataDictionary[[dynamic]] which allows dynamic
+            access (e.g. dict.Foo). Like PageDataDictionary, it returns null if the key is not found, 
+            instead of throwing an exception.
+            This class is intended to be used as DynamicPageDataDictionary[[dynamic]]
+            </summary>
+        </member>
+        <member name="M:System.Web.WebPages.Html.HtmlHelper.Raw(System.String)">
+            <summary>
+            Wraps HTML markup in an IHtmlString, which will enable HTML markup to be
+            rendered to the output without getting HTML encoded.
+            </summary>
+            <param name="value">HTML markup string.</param>
+            <returns>An IHtmlString that represents HTML markup.</returns>
+        </member>
+        <member name="M:System.Web.WebPages.Html.HtmlHelper.Raw(System.Object)">
+            <summary>
+            Wraps HTML markup from the string representation of an object in an IHtmlString,
+            which will enable HTML markup to be rendered to the output without getting HTML encoded.
+            </summary>
+            <param name="value">object with string representation as HTML markup</param>
+            <returns>An IHtmlString that represents HTML markup.</returns>
+        </member>
+        <member name="M:System.Web.WebPages.Html.HtmlHelper.AnonymousObjectToHtmlAttributes(System.Object)">
+            <summary>
+            Creates a dictionary of HTML attributes from the input object, 
+            translating underscores to dashes.
+            <example>
+            new { data_name="value" } will translate to the entry { "data-name" , "value" }
+            in the resulting dictionary.
+            </example>
+            </summary>
+            <param name="htmlAttributes">Anonymous object describing HTML attributes.</param>
+            <returns>A dictionary that represents HTML attributes.</returns>
+        </member>
+        <member name="T:System.Web.WebPages.Scope.ApplicationScopeStorageDictionary">
+            <summary>
+            The application level storage context that uses a static dictionary as a backing store.
+            </summary>
+        </member>
+        <member name="M:System.Web.WebPages.Scope.ScopeStorageDictionary.#ctor(System.Collections.Generic.IDictionary{System.Object,System.Object},System.Collections.Generic.IDictionary{System.Object,System.Object})">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Web.WebPages.Scope.ScopeStorageDictionary"/> class.
+            </summary>
+            <param name="baseScope">The base scope.</param>
+            <param name="backingStore">
+            The dictionary to use as a storage. Since the dictionary would be used as-is, we expect the implementer to 
+            use the same key-value comparison logic as we do here.
+            </param>
+        </member>
+        <member name="T:System.Web.WebPages.Scope.ScopeStorageComparer">
+            <summary>
+            Custom comparer for the context dictionaries
+            The comparer treats strings as a special case, performing case insesitive comparison. 
+            This guaratees that we remain consistent throughout the chain of contexts since PageData dictionary 
+            behaves in this manner.
+            </summary>
+        </member>
+        <member name="T:System.Web.WebPages.TemplateFileInfo">
+            <summary>
+            TemplateFileInfo specifies properties of a template such as VirtualPath. 
+            This type allows us to modify the behavior of ITemplateFile between releases without changing the interface.
+            </summary>
+        </member>
+        <member name="T:System.Web.WebPages.TemplateStack">
+            <summary>
+            Template stacks store a stack of template files. WebPageExecutingBase implements this type, so when executing Plan9 or Mvc WebViewPage,
+            the stack would contain instances of the page. 
+            The stack can be queried to identify properties of the current executing file such as the virtual path of the file.
+            </summary>
+        </member>
+        <member name="M:System.Web.WebPages.PathUtil.GetExtension(System.String)">
+            <summary>
+            Path.GetExtension performs a CheckInvalidPathChars(path) which blows up for paths that do not translate to valid physical paths but are valid paths in ASP.NET
+            This method is a near clone of Path.GetExtension without a call to CheckInvalidPathChars(path);
+            </summary>
+        </member>
+        <member name="M:System.Web.WebPages.PathUtil.IsSimpleName(System.String)">
+            <summary>
+            Determines true if the path is simply "MyPath", and not app-relative "~/MyPath" or absolute "/MyApp/MyPath" or relative "../Test/MyPath"
+            </summary>
+            <returns>True if it is a not app-relative, absolute or relative.</returns>
+        </member>
+        <member name="T:System.Web.WebPages.PageDataDictionary`1">
+            <summary>
+            This is a wrapper around Dictionary so that using PageData[key] returns null
+            if the key is not found, instead of throwing an exception.
+            </summary>
+        </member>
+        <member name="T:System.Web.WebPages.Resources.WebPageResources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.AntiForgeryToken_AdditionalDataCheckFailed">
+            <summary>
+              Looks up a localized string similar to The provided anti-forgery token failed a custom data check..
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.AntiForgeryToken_ClaimUidMismatch">
+            <summary>
+              Looks up a localized string similar to The provided anti-forgery token was meant for a different claims-based user than the current user..
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.AntiForgeryToken_CookieMissing">
+            <summary>
+              Looks up a localized string similar to The required anti-forgery cookie &quot;{0}&quot; is not present..
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.AntiForgeryToken_DeserializationFailed">
+            <summary>
+              Looks up a localized string similar to The anti-forgery token could not be decrypted. If this application is hosted by a Web Farm or cluster, ensure that all machines are running the same version of ASP.NET Web Pages and that the &lt;machineKey&gt; configuration specifies explicit encryption and validation keys. AutoGenerate cannot be used in a cluster..
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.AntiForgeryToken_FormFieldMissing">
+            <summary>
+              Looks up a localized string similar to The required anti-forgery form field &quot;{0}&quot; is not present..
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.AntiForgeryToken_SecurityTokenMismatch">
+            <summary>
+              Looks up a localized string similar to The anti-forgery cookie token and form field token do not match..
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.AntiForgeryToken_TokensSwapped">
+            <summary>
+              Looks up a localized string similar to Validation of the provided anti-forgery token failed. The cookie &quot;{0}&quot; and the form field &quot;{1}&quot; were swapped..
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.AntiForgeryToken_UsernameMismatch">
+            <summary>
+              Looks up a localized string similar to The provided anti-forgery token was meant for user &quot;{0}&quot;, but the current user is &quot;{1}&quot;..
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.AntiForgeryWorker_RequireSSL">
+            <summary>
+              Looks up a localized string similar to The anti-forgery system has the configuration value AntiForgeryConfig.RequireSsl = true, but the current request is not an SSL request..
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.ApplicationPart_ModuleAlreadyRegistered">
+            <summary>
+              Looks up a localized string similar to The assembly &quot;{0}&quot; is already registered..
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.ApplicationPart_ModuleAlreadyRegisteredForVirtualPath">
+            <summary>
+              Looks up a localized string similar to An application module is already registered for virtual path &quot;{0}&quot;..
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.ApplicationPart_ModuleCannotBeFound">
+            <summary>
+              Looks up a localized string similar to Unable to find an application module with the name &quot;{0}&quot;..
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.ApplicationPart_ModuleNotRegistered">
+            <summary>
+              Looks up a localized string similar to The assembly &quot;{0}&quot; is not a registered application module..
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.ApplicationPart_ResourceNotFound">
+            <summary>
+              Looks up a localized string similar to The resource file &quot;{0}&quot; could not be found..
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.ClaimUidExtractor_ClaimNotPresent">
+            <summary>
+              Looks up a localized string similar to A claim of type &apos;{0}&apos; was not present on the provided ClaimsIdentity..
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.ClaimUidExtractor_DefaultClaimsNotPresent">
+            <summary>
+              Looks up a localized string similar to A claim of type &apos;http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier&apos; or &apos;http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/identityprovider&apos; was not present on the provided ClaimsIdentity. To enable anti-forgery token support with claims-based authentication, please verify that the configured claims provider is providing both of these claims on the ClaimsIdentity instances it generates. If the configured claims provider instead uses a different claim type as a unique identif [rest of string was truncated]&quot;;.
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.DynamicDictionary_InvalidNumberOfIndexes">
+            <summary>
+              Looks up a localized string similar to Index length must be exactly one..
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.DynamicHttpApplicationState_UseOnlyStringOrIntToGet">
+            <summary>
+              Looks up a localized string similar to Index must be of type string or int when getting a value..
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.DynamicHttpApplicationState_UseOnlyStringToSet">
+            <summary>
+              Looks up a localized string similar to Index must be of type string when setting a value..
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.HtmlHelper_ConversionThrew">
+            <summary>
+              Looks up a localized string similar to The parameter conversion from type &quot;{0}&quot; to type &quot;{1}&quot; failed. See the inner exception for more information..
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.HtmlHelper_NoConverterExists">
+            <summary>
+              Looks up a localized string similar to The parameter conversion from type &quot;{0}&quot; to type &quot;{1}&quot; failed because no type converter can convert between these types..
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.HttpContextUnavailable">
+            <summary>
+              Looks up a localized string similar to An HttpContext is required to perform this operation. Check that this operation is being performed during a web request..
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.SessionState_InvalidValue">
+            <summary>
+              Looks up a localized string similar to Value &quot;{0}&quot; specified in &quot;{1}&quot; is an invalid value for the SessionState directive. Possible values are: &quot;{2}&quot;..
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.SessionState_TooManyValues">
+            <summary>
+              Looks up a localized string similar to At most one SessionState value can be declared per page..
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.StateStorage_RequestScopeNotAvailable">
+            <summary>
+              Looks up a localized string similar to RequestScope cannot be created when _AppStart is executing..
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.StateStorage_ScopeIsReadOnly">
+            <summary>
+              Looks up a localized string similar to Storage scope is read only..
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.StateStorage_StorageScopesCannotBeCreated">
+            <summary>
+              Looks up a localized string similar to Storage scopes cannot be created when _AppStart is executing..
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.TokenValidator_AuthenticatedUserWithoutUsername">
+            <summary>
+              Looks up a localized string similar to The provided identity of type &apos;{0}&apos; is marked IsAuthenticated = true but does not have a value for Name. By default, the anti-forgery system requires that all authenticated identities have a unique Name. If it is not possible to provide a unique Name for this identity, consider setting the static property AntiForgeryConfig.AdditionalDataProvider to an instance of a type that can provide some form of unique identifier for the current user..
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.UnobtrusiveJavascript_ValidationParameterCannotBeEmpty">
+            <summary>
+              Looks up a localized string similar to Validation parameter names in unobtrusive client validation rules cannot be empty. Client rule type: {0}.
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.UnobtrusiveJavascript_ValidationParameterMustBeLegal">
+            <summary>
+              Looks up a localized string similar to Validation parameter names in unobtrusive client validation rules must start with a lowercase letter and consist of only lowercase letters or digits. Validation parameter name: {0}, client rule type: {1}.
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.UnobtrusiveJavascript_ValidationTypeCannotBeEmpty">
+            <summary>
+              Looks up a localized string similar to Validation type names in unobtrusive client validation rules cannot be empty. Client rule type: {0}.
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.UnobtrusiveJavascript_ValidationTypeMustBeLegal">
+            <summary>
+              Looks up a localized string similar to Validation type names in unobtrusive client validation rules must consist of only lowercase letters. Invalid name: &quot;{0}&quot;, client rule type: {1}.
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.UnobtrusiveJavascript_ValidationTypeMustBeUnique">
+            <summary>
+              Looks up a localized string similar to Validation type names in unobtrusive client validation rules must be unique. The following validation type was seen more than once: {0}.
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.UrlData_ReadOnly">
+            <summary>
+              Looks up a localized string similar to The UrlData collection is read-only..
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.ValidationDefault_DataType">
+            <summary>
+              Looks up a localized string similar to Input format is invalid..
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.ValidationDefault_EqualsTo">
+            <summary>
+              Looks up a localized string similar to Values do not match..
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.ValidationDefault_FloatRange">
+            <summary>
+              Looks up a localized string similar to Value must be a decimal between {0} and {1}..
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.ValidationDefault_IntegerRange">
+            <summary>
+              Looks up a localized string similar to Value must be an integer between {0} and {1}..
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.ValidationDefault_Regex">
+            <summary>
+              Looks up a localized string similar to Value is invalid..
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.ValidationDefault_Required">
+            <summary>
+              Looks up a localized string similar to This field is required..
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.ValidationDefault_StringLength">
+            <summary>
+              Looks up a localized string similar to Max length: {0}..
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.ValidationDefault_StringLengthRange">
+            <summary>
+              Looks up a localized string similar to String must be between {0} and {1} characters..
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.WebPage_CannotRequestDirectly">
+            <summary>
+              Looks up a localized string similar to The file &quot;{0}&quot; cannot be requested directly because it calls the &quot;{1}&quot; method..
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.WebPage_FileNotSupported">
+            <summary>
+              Looks up a localized string similar to The following file could not be rendered because its extension &quot;{0}&quot; might not be supported: &quot;{1}&quot;..
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.WebPage_InvalidPageType">
+            <summary>
+              Looks up a localized string similar to The file &quot;{0}&quot; could not be rendered, because it does not exist or is not a valid page..
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.WebPage_LayoutPageNotFound">
+            <summary>
+              Looks up a localized string similar to The layout page &quot;{0}&quot; could not be found at the following path: &quot;{1}&quot;..
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.WebPage_RenderBodyAlreadyCalled">
+            <summary>
+              Looks up a localized string similar to The &quot;RenderBody&quot; method has already been called..
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.WebPage_RenderBodyNotCalled">
+            <summary>
+              Looks up a localized string similar to The &quot;RenderBody&quot; method has not been called for layout page &quot;{0}&quot;..
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.WebPage_SectionAleadyDefined">
+            <summary>
+              Looks up a localized string similar to Section already defined: &quot;{0}&quot;..
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.WebPage_SectionAleadyRendered">
+            <summary>
+              Looks up a localized string similar to The &quot;RenderSection&quot; method has already been called for the section named &quot;{0}&quot;..
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.WebPage_SectionNotDefined">
+            <summary>
+              Looks up a localized string similar to Section not defined: &quot;{0}&quot;..
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.WebPage_SectionsNotRendered">
+            <summary>
+              Looks up a localized string similar to The following sections have been defined but have not been rendered for the layout page &quot;{0}&quot;: &quot;{1}&quot;..
+            </summary>
+        </member>
+        <member name="P:System.Web.WebPages.Resources.WebPageResources.WebPageRoute_UnderscoreBlocked">
+            <summary>
+              Looks up a localized string similar to Files with leading underscores (&quot;_&quot;) cannot be served..
+            </summary>
+        </member>
+        <member name="M:System.Web.WebPages.WebPageBase.CreatePageFromVirtualPath(System.String,System.Web.HttpContextBase,System.Func{System.String,System.Boolean},System.Web.WebPages.DisplayModeProvider,System.Web.WebPages.IDisplayMode)">
+            <summary>
+            Attempts to create a WebPageBase instance from a virtualPath and wraps complex compiler exceptions with simpler messages
+            </summary>
+        </member>
+    </members>
+</doc>

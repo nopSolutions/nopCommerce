@@ -1,0 +1,34 @@
+﻿<?xml version="1.0"?>
+<configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
+
+  <!-- If runtime tag is absent -->
+  <runtime xdt:Transform="InsertIfMissing">
+    <assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
+    </assemblyBinding>
+  </runtime>
+
+  <!-- If runtime tag is present, but assembly binding tag is absent -->
+  <runtime>
+    <assemblyBinding xdt:Transform="InsertIfMissing" xmlns="urn:schemas-microsoft-com:asm.v1">
+    </assemblyBinding>
+  </runtime>
+
+  <!-- If the binding redirect is already present, the existing entry needs to be removed before inserting the new entry-->
+  <runtime>
+    <assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
+      <dependentAssembly xdt:Transform="Remove"
+          xdt:Locator="Condition(./_defaultNamespace:assemblyIdentity/@name='System.Web.Mvc')" >
+      </dependentAssembly>
+    </assemblyBinding>
+  </runtime>
+
+  <!-- Inserting the new binding redirect -->
+  <runtime>
+    <assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
+      <dependentAssembly xdt:Transform="Insert">
+        <assemblyIdentity name="System.Web.Mvc" publicKeyToken="31bf3856ad364e35"  />
+        <bindingRedirect oldVersion="1.0.0.0-5.1.0.0" newVersion="5.1.0.0" />
+      </dependentAssembly>
+    </assemblyBinding>
+  </runtime>
+</configuration>
