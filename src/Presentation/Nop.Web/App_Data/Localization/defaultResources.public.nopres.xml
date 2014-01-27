@@ -2648,6 +2648,9 @@
           <LocaleResource Name="CreatedOn">
             <Value>Created On</Value>
           </LocaleResource>
+          <LocaleResource Name="Download">
+            <Value>Download attached file</Value>
+          </LocaleResource>
           <LocaleResource Name="Note">
             <Value>Note</Value>
           </LocaleResource>

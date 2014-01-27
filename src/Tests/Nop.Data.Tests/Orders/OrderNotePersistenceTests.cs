@@ -18,6 +18,7 @@ namespace Nop.Data.Tests.Orders
             {
                 Order = GetTestOrder(),
                 Note = "Note1",
+                DownloadId = 1,
                 DisplayToCustomer= true,
                 CreatedOnUtc = new DateTime(2010, 01, 01),
             };
@@ -25,6 +26,7 @@ namespace Nop.Data.Tests.Orders
             var fromDb = SaveAndLoadEntity(on);
             fromDb.ShouldNotBeNull();
             fromDb.Note.ShouldEqual("Note1");
+            fromDb.DownloadId.ShouldEqual(1);
             fromDb.DisplayToCustomer.ShouldEqual(true);
             fromDb.CreatedOnUtc.ShouldEqual(new DateTime(2010, 01, 01));
 

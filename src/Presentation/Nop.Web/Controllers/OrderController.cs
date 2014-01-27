@@ -271,6 +271,8 @@ namespace Nop.Web.Controllers
             {
                 model.OrderNotes.Add(new OrderDetailsModel.OrderNote()
                 {
+                    Id = orderNote.Id,
+                    HasDownload = orderNote.DownloadId > 0,
                     Note = orderNote.FormatOrderNoteText(),
                     CreatedOn = _dateTimeHelper.ConvertToUserTime(orderNote.CreatedOnUtc, DateTimeKind.Utc)
                 });

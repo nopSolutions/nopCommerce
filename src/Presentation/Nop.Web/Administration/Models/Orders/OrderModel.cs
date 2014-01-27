@@ -191,11 +191,14 @@ namespace Nop.Admin.Models.Orders
 
 
         //order notes
-        [NopResourceDisplayName("Admin.Orders.OrderNotes.Fields.AddOrderNoteDisplayToCustomer")]
+        [NopResourceDisplayName("Admin.Orders.OrderNotes.Fields.DisplayToCustomer")]
         public bool AddOrderNoteDisplayToCustomer { get; set; }
-        [NopResourceDisplayName("Admin.Orders.OrderNotes.Fields.AddOrderNoteMessage")]
+        [NopResourceDisplayName("Admin.Orders.OrderNotes.Fields.Note")]
         [AllowHtml]
         public string AddOrderNoteMessage { get; set; }
+        [NopResourceDisplayName("Admin.Orders.OrderNotes.Fields.Download")]
+        [UIHint("Download")]
+        public int AddOrderNoteDownloadId { get; set; }
 
         //refund info
         [NopResourceDisplayName("Admin.Orders.Fields.PartialRefund.AmountToRefund")]
@@ -277,6 +280,10 @@ namespace Nop.Admin.Models.Orders
             public bool DisplayToCustomer { get; set; }
             [NopResourceDisplayName("Admin.Orders.OrderNotes.Fields.Note")]
             public string Note { get; set; }
+            [NopResourceDisplayName("Admin.Orders.OrderNotes.Fields.Download")]
+            public int DownloadId { get; set; }
+            [NopResourceDisplayName("Admin.Orders.OrderNotes.Fields.Download")]
+            public Guid DownloadGuid { get; set; }
             [NopResourceDisplayName("Admin.Orders.OrderNotes.Fields.CreatedOn")]
             public DateTime CreatedOn { get; set; }
         }

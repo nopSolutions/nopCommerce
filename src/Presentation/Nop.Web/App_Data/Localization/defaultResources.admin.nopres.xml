@@ -9352,28 +9352,38 @@
                 <Children>
                   <LocaleResource Name="DisplayToCustomer">
                     <Value>Display to customer</Value>
-                  </LocaleResource>
-                  <LocaleResource Name="Note">
-                    <Value>Note</Value>
-                  </LocaleResource>
-                  <LocaleResource Name="CreatedOn">
-                    <Value>Created on</Value>
-                  </LocaleResource>
-                  <LocaleResource Name="AddOrderNoteDisplayToCustomer">
-                    <Value>Display to customer</Value>
                     <Children>
                       <LocaleResource Name="Hint">
                         <Value>A value indicating whether to display this order note to a customer.</Value>
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
-                  <LocaleResource Name="AddOrderNoteMessage">
-                    <Value>Message</Value>
+                  <LocaleResource Name="Download">
+                    <Value>Attached file</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Upload a file attached to this order note.</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="Link">
+                        <Value>Download</Value>
+                        <Children>
+                          <LocaleResource Name="No">
+                            <Value>No file attached</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="Note">
+                    <Value>Note</Value>
                     <Children>
                       <LocaleResource Name="Hint">
                         <Value>Enter this order note message.</Value>
                       </LocaleResource>
                     </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="CreatedOn">
+                    <Value>Created on</Value>
                   </LocaleResource>
                 </Children>
               </LocaleResource>

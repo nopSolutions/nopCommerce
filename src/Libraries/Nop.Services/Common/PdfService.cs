@@ -700,6 +700,9 @@ namespace Nop.Services.Common
                             cell.AddElement(new Paragraph(HtmlHelper.ConvertHtmlToPlainText(orderNote.FormatOrderNoteText(), true, true), font));
                             cell.HorizontalAlignment = Element.ALIGN_LEFT;
                             notesTable.AddCell(cell);
+
+                            //should we display a link to downloadable files here?
+                            //I think, no. Onyway, PDFs are printable documents and links (files) are useful here
                         }
                         doc.Add(notesTable);
                     }

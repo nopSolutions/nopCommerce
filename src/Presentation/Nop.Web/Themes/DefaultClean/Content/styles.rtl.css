@@ -494,6 +494,8 @@ td.fieldname{font-size:12px;}
 .order-details-page .checkout-attributes{text-align:left;vertical-align:middle;padding:10px;height:auto;}
 .order-details-page .actions{margin:10px 0px 10px 0px;}
 .order-details-page .cart-total-left{color:#000;}
+.order-details-page .order-notes th.createdon{width:30%;}
+.order-details-page .order-notes .download a{color:#B80709;}
 
 
 /* SHIPMENTS */

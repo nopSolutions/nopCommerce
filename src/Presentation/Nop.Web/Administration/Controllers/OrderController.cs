@@ -2823,10 +2823,13 @@ namespace Nop.Admin.Controllers
             foreach (var orderNote in order.OrderNotes
                 .OrderByDescending(on => on.CreatedOnUtc))
             {
+                var download = _downloadService.GetDownloadById(orderNote.DownloadId);
                 orderNoteModels.Add(new OrderModel.OrderNote()
                 {
                     Id = orderNote.Id,
                     OrderId = orderNote.OrderId,
+                    DownloadId = orderNote.DownloadId,
+                    DownloadGuid = download != null ? download.DownloadGuid : Guid.Empty,
                     DisplayToCustomer = orderNote.DisplayToCustomer,
                     Note = orderNote.FormatOrderNoteText(),
                     CreatedOn = _dateTimeHelper.ConvertToUserTime(orderNote.CreatedOnUtc, DateTimeKind.Utc)
@@ -2843,7 +2846,7 @@ namespace Nop.Admin.Controllers
         }
         
         [ValidateInput(false)]
-        public ActionResult OrderNoteAdd(int orderId, bool displayToCustomer, string message)
+        public ActionResult OrderNoteAdd(int orderId, int downloadId, bool displayToCustomer, string message)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -2860,6 +2863,7 @@ namespace Nop.Admin.Controllers
             {
                 DisplayToCustomer = displayToCustomer,
                 Note = message,
+                DownloadId = downloadId,
                 CreatedOnUtc = DateTime.UtcNow,
             };
             order.OrderNotes.Add(orderNote);

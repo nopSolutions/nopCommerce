@@ -599,10 +599,10 @@
                     </colgroup>
                     <thead>
                         <tr>
-                            <th class="a-center createdon">
+                            <th class="a-left createdon">
                                 @T("Order.Notes.CreatedOn")
                             </th>
-                            <th class="a-center note">
+                            <th class="a-left note">
                                 @T("Order.Notes.Note")
                             </th>
                         </tr>
@@ -616,6 +616,12 @@
                                 </td>
                                 <td class="a-left note">
                                     @Html.Raw(item.Note)
+                                    @if (item.HasDownload)
+                                    {
+                                        <p class="download">
+                                            <a href="@Url.RouteUrl("GetOrderNoteFile", new { ordernoteid = item.Id })">@T("Order.Notes.Download")</a>
+                                        </p>
+                                    }
                                 </td>
                             </tr>
                         }

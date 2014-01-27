@@ -128,11 +128,8 @@ namespace Nop.Web.Controllers
 
             if (_customerSettings.DownloadableProductsValidateUser)
             {
-                if (_workContext.CurrentCustomer == null)
+                if (_workContext.CurrentCustomer == null || order.CustomerId != _workContext.CurrentCustomer.Id)
                     return new HttpUnauthorizedResult();
-
-                if (order.CustomerId != _workContext.CurrentCustomer.Id)
-                    return Content("This is not your order");
             }
 
             var download = _downloadService.GetDownloadById(orderItem.LicenseDownloadId.HasValue ? orderItem.LicenseDownloadId.Value : 0);
@@ -179,5 +176,36 @@ namespace Nop.Web.Controllers
             }
         }
 
+        public ActionResult GetOrderNoteFile(int orderNoteId)
+        {
+            var orderNote = _orderService.GetOrderNoteById(orderNoteId);
+            if (orderNote == null)
+                return InvokeHttp404();
+
+            var order = orderNote.Order;
+
+            if (_workContext.CurrentCustomer == null || order.CustomerId != _workContext.CurrentCustomer.Id)
+                return new HttpUnauthorizedResult();
+
+            var download = _downloadService.GetDownloadById(orderNote.DownloadId);
+            if (download == null)
+                return Content("Download is not available any more.");
+
+            if (download.UseDownloadUrl)
+            {
+                //return result
+                return new RedirectResult(download.DownloadUrl);
+            }
+            else
+            {
+                if (download.DownloadBinary == null)
+                    return Content("Download data is not available any more.");
+
+                //return result
+                string fileName = !String.IsNullOrWhiteSpace(download.Filename) ? download.Filename : orderNote.Id.ToString();
+                string contentType = !String.IsNullOrWhiteSpace(download.ContentType) ? download.ContentType : "application/octet-stream";
+                return new FileContentResult(download.DownloadBinary, contentType) { FileDownloadName = fileName + download.Extension };
+            }
+        }
     }
 }

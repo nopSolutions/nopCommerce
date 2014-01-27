@@ -119,6 +119,39 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Measures.Dimensions.Fields.IsPrimaryDimension">
 	<Value>Is primary dimension</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.OrderNotes.Fields.AddOrderNoteDisplayToCustomer">
+	<Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.OrderNotes.Fields.AddOrderNoteDisplayToCustomer.Hint">
+	<Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.OrderNotes.Fields.AddOrderNoteMessage">
+	<Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.OrderNotes.Fields.AddOrderNoteMessage.Hint">
+	<Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.OrderNotes.Fields.DisplayToCustomer.Hint">
+	<Value>A value indicating whether to display this order note to a customer.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.OrderNotes.Fields.Note.Hint">
+	<Value>Enter this order note message.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.OrderNotes.Fields.Download">
+	<Value>Attached file</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.OrderNotes.Fields.Download.Hint">
+	<Value>Upload a file attached to this order note.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.OrderNotes.Fields.Download.Link">
+	<Value>Download</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.OrderNotes.Fields.Download.Link.No">
+	<Value>No file attached</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.Notes.Download">
+	<Value>Download attached file</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -416,4 +449,20 @@ WHERE [PurchasedWithProductId] IS NULL
 GO
 
 ALTER TABLE [CustomerRole] ALTER COLUMN [PurchasedWithProductId] int NOT NULL
+GO
+
+--New column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[OrderNote]') and NAME='DownloadId')
+BEGIN
+	ALTER TABLE [OrderNote]
+	ADD [DownloadId] int NULL
+END
+GO
+
+UPDATE [OrderNote]
+SET [DownloadId] = 0
+WHERE [DownloadId] IS NULL
+GO
+
+ALTER TABLE [OrderNote] ALTER COLUMN [DownloadId] int NOT NULL
 GO

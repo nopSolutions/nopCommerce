@@ -493,6 +493,10 @@
                         <div class="ordernotes-box">
                             <div>@T("Order.Notes.CreatedOn"): @item.CreatedOn.ToString()</div>
                             <div>@T("Order.Notes.Note"): @Html.Raw(item.Note)</div>
+                            @if (item.HasDownload)
+                            {
+                                <div class="download"><a href="@Url.RouteUrl("GetOrderNoteFile", new { ordernoteid = item.Id })">@T("Order.Notes.Download")</a></div>
+                            }
                         </div>
                     </li>
                 }

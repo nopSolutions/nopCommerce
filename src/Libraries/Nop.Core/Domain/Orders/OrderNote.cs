@@ -18,6 +18,11 @@ namespace Nop.Core.Domain.Orders
         public string Note { get; set; }
 
         /// <summary>
+        /// Gets or sets the attached file (download) identifier
+        /// </summary>
+        public int DownloadId { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether a customer can see a note
         /// </summary>
         public bool DisplayToCustomer { get; set; }

@@ -91,6 +91,11 @@ namespace Nop.Web.Infrastructure
                             new { controller = "Customer", action = "UserAgreement" },
                             new { orderItemId = new GuidConstraint(false) },
                             new[] { "Nop.Web.Controllers" });
+            routes.MapRoute("GetOrderNoteFile",
+                            "download/ordernotefile/{ordernoteid}",
+                            new { controller = "Download", action = "GetOrderNoteFile" },
+                            new { ordernoteid = @"\d+" },
+                            new[] { "Nop.Web.Controllers" });
 
             //reviews
             routes.MapLocalizedRoute("ProductReviews",

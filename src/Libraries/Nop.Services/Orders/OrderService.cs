@@ -256,21 +256,6 @@ namespace Nop.Services.Orders
         }
 
         /// <summary>
-        /// Deletes an order note
-        /// </summary>
-        /// <param name="orderNote">The order note</param>
-        public virtual void DeleteOrderNote(OrderNote orderNote)
-        {
-            if (orderNote == null)
-                throw new ArgumentNullException("orderNote");
-
-            _orderNoteRepository.Delete(orderNote);
-
-            //event notification
-            _eventPublisher.EntityDeleted(orderNote);
-        }
-
-        /// <summary>
         /// Get an order by authorization transaction ID and payment method system name
         /// </summary>
         /// <param name="authorizationTransactionId">Authorization transaction ID</param>
@@ -390,7 +375,39 @@ namespace Nop.Services.Orders
         }
 
         #endregion
-        
+
+        #region Orders
+
+        /// <summary>
+        /// Gets an order note
+        /// </summary>
+        /// <param name="orderNoteId">The order note identifier</param>
+        /// <returns>Order note</returns>
+        public virtual OrderNote GetOrderNoteById(int orderNoteId)
+        {
+            if (orderNoteId == 0)
+                return null;
+
+            return _orderNoteRepository.GetById(orderNoteId);
+        }
+
+        /// <summary>
+        /// Deletes an order note
+        /// </summary>
+        /// <param name="orderNote">The order note</param>
+        public virtual void DeleteOrderNote(OrderNote orderNote)
+        {
+            if (orderNote == null)
+                throw new ArgumentNullException("orderNote");
+
+            _orderNoteRepository.Delete(orderNote);
+
+            //event notification
+            _eventPublisher.EntityDeleted(orderNote);
+        }
+
+        #endregion
+
         #region Recurring payments
 
         /// <summary>

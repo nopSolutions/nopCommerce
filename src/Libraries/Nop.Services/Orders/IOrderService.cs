@@ -80,12 +80,6 @@ namespace Nop.Services.Orders
         void UpdateOrder(Order order);
 
         /// <summary>
-        /// Deletes an order note
-        /// </summary>
-        /// <param name="orderNote">The order note</param>
-        void DeleteOrderNote(OrderNote orderNote);
-
-        /// <summary>
         /// Get an order by authorization transaction ID and payment method system name
         /// </summary>
         /// <param name="authorizationTransactionId">Authorization transaction ID</param>
@@ -133,6 +127,23 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="orderItem">The order item</param>
         void DeleteOrderItem(OrderItem orderItem);
+
+        #endregion
+
+        #region Orders
+
+        /// <summary>
+        /// Gets an order note
+        /// </summary>
+        /// <param name="orderNoteId">The order note identifier</param>
+        /// <returns>Order note</returns>
+        OrderNote GetOrderNoteById(int orderNoteId);
+
+        /// <summary>
+        /// Deletes an order note
+        /// </summary>
+        /// <param name="orderNote">The order note</param>
+        void DeleteOrderNote(OrderNote orderNote);
 
         #endregion
 

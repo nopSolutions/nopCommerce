@@ -91,8 +91,9 @@ namespace Nop.Web.Models.Order
             public string Amount { get; set; }
         }
 
-        public partial class OrderNote : BaseNopModel
+        public partial class OrderNote : BaseNopEntityModel
         {
+            public bool HasDownload { get; set; }
             public string Note { get; set; }
             public DateTime CreatedOn { get; set; }
         }
