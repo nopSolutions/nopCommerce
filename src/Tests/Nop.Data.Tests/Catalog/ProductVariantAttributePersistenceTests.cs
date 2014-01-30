@@ -17,6 +17,8 @@ namespace Nop.Data.Tests.Catalog
                           IsRequired = true,
                           AttributeControlType = AttributeControlType.DropdownList,
                           DisplayOrder = 1,
+                          ValidationMinLength = 2,
+                          ValidationMaxLength = 3,
                           Product = GetTestProduct(),
                           ProductAttribute = new ProductAttribute()
                           {
@@ -31,6 +33,8 @@ namespace Nop.Data.Tests.Catalog
             fromDb.IsRequired.ShouldEqual(true);
             fromDb.AttributeControlType.ShouldEqual(AttributeControlType.DropdownList);
             fromDb.DisplayOrder.ShouldEqual(1);
+            fromDb.ValidationMinLength.ShouldEqual(2);
+            fromDb.ValidationMaxLength.ShouldEqual(3);
 
             fromDb.Product.ShouldNotBeNull();
 

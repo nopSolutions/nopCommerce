@@ -4117,6 +4117,12 @@
       <LocaleResource Name="SKU">
         <Value>SKU</Value>
       </LocaleResource>
+      <LocaleResource Name="TextboxMinimumLength">
+        <Value>{0} : minimum length is {1} chars</Value>
+      </LocaleResource>
+      <LocaleResource Name="TextboxMaximumLength">
+        <Value>{0} : maximum length is {1} chars</Value>
+      </LocaleResource>
       <LocaleResource Name="Totals">
         <Value></Value>
         <Children>

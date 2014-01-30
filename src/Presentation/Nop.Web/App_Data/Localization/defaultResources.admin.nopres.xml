@@ -2259,6 +2259,30 @@
                           </LocaleResource>
                         </Children>
                       </LocaleResource>
+                      <LocaleResource Name="ValidationRules">
+                        <Value>Validation rules</Value>
+                        <Children>
+                          <LocaleResource Name="ViewLink">
+                            <Value>View/Edit rules</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="MinLength">
+                            <Value>Minimum length</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>Specify minimum length.</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="MaxLength">
+                            <Value>Maximum length</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>Specify maximum length.</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
                       <LocaleResource Name="Values">
                         <Value>Values</Value>
                         <Children>
@@ -2379,7 +2403,7 @@
                             <Value>Add/Edit values for [{0}] attribute. Product: {1}</Value>
                           </LocaleResource>
                           <LocaleResource Name="ViewLink">
-                            <Value>View/Edit value (Total: {0})</Value>
+                            <Value>View/Edit values (Total: {0})</Value>
                           </LocaleResource>
                         </Children>
                       </LocaleResource>

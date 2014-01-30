@@ -334,7 +334,18 @@ namespace Nop.Services.ExportImport
                     xmlWriter.WriteElementString("IsRequired", null, productVariantAttribute.IsRequired.ToString());
                     xmlWriter.WriteElementString("AttributeControlTypeId", null, productVariantAttribute.AttributeControlTypeId.ToString());
                     xmlWriter.WriteElementString("DisplayOrder", null, productVariantAttribute.DisplayOrder.ToString());
-
+                    //validation rules
+                    if (productVariantAttribute.ValidationRulesAllowed())
+                    {
+                        if (productVariantAttribute.ValidationMinLength.HasValue)
+                        {
+                            xmlWriter.WriteElementString("ValidationMinLength", null, productVariantAttribute.ValidationMinLength.Value.ToString());
+                        }
+                        if (productVariantAttribute.ValidationMaxLength.HasValue)
+                        {
+                            xmlWriter.WriteElementString("ValidationMaxLength", null, productVariantAttribute.ValidationMaxLength.Value.ToString());
+                        }
+                    }
 
 
                     xmlWriter.WriteStartElement("ProductVariantAttributeValues");

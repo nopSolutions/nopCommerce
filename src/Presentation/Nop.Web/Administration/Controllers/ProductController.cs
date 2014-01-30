@@ -2863,9 +2863,11 @@ namespace Nop.Admin.Controllers
 
                     if (x.ShouldHaveValues())
                     {
-                        pvaModel.ViewEditUrl = Url.Action("EditAttributeValues", "Product", new { productVariantAttributeId = x.Id });
-                        pvaModel.ViewEditText = string.Format(_localizationService.GetResource("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.ViewLink"), x.ProductVariantAttributeValues != null ? x.ProductVariantAttributeValues.Count : 0);
+                        pvaModel.ViewEditValuesUrl = Url.Action("EditAttributeValues", "Product", new { productVariantAttributeId = x.Id });
+                        pvaModel.ViewEditValuesText = string.Format(_localizationService.GetResource("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.ViewLink"), x.ProductVariantAttributeValues != null ? x.ProductVariantAttributeValues.Count : 0);
                     }
+                    
+                    pvaModel.ValidationRulesAllowed = x.ValidationRulesAllowed();
                     return pvaModel;
                 })
                 .ToList();
@@ -2960,6 +2962,75 @@ namespace Nop.Admin.Controllers
             _productAttributeService.DeleteProductVariantAttribute(pva);
 
             return Json(null);
+        }
+
+
+        //edit
+        public ActionResult ProductAttributeValidationRulesPopup(int id)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+                return AccessDeniedView();
+
+            var pva = _productAttributeService.GetProductVariantAttributeById(id);
+            if (pva == null)
+                //No attribute value found with the specified id
+                return RedirectToAction("List", "Product");
+
+            var product = _productService.GetProductById(pva.ProductId);
+            if (product == null)
+                throw new ArgumentException("No product found with the specified id");
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
+                return RedirectToAction("List", "Product");
+
+            var model = new ProductModel.ProductVariantAttributeModel()
+            {
+                //prepare only used properties
+                Id = pva.Id,
+                ValidationRulesAllowed = pva.ValidationRulesAllowed(),
+                AttributeControlTypeId = pva.AttributeControlTypeId,
+                ValidationMinLength = pva.ValidationMinLength,
+                ValidationMaxLength = pva.ValidationMaxLength,
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult ProductAttributeValidationRulesPopup(string btnId, string formId, ProductModel.ProductVariantAttributeModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+                return AccessDeniedView();
+
+            var pva = _productAttributeService.GetProductVariantAttributeById(model.Id);
+            if (pva == null)
+                //No attribute value found with the specified id
+                return RedirectToAction("List", "Product");
+
+            var product = _productService.GetProductById(pva.ProductId);
+            if (product == null)
+                throw new ArgumentException("No product found with the specified id");
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
+                return RedirectToAction("List", "Product");
+            
+            if (ModelState.IsValid)
+            {
+                pva.ValidationMinLength = model.ValidationMinLength;
+                pva.ValidationMaxLength = model.ValidationMaxLength;
+                _productAttributeService.UpdateProductVariantAttribute(pva);
+
+                ViewBag.RefreshPage = true;
+                ViewBag.btnId = btnId;
+                ViewBag.formId = formId;
+                return View(model);
+            }
+
+            //If we got this far, something failed, redisplay form
+            model.ValidationRulesAllowed = pva.ValidationRulesAllowed();
+            model.AttributeControlTypeId = pva.AttributeControlTypeId;
+            return View(model);
         }
 
         #endregion

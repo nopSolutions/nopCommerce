@@ -40,6 +40,23 @@ namespace Nop.Core.Domain.Catalog
         /// </summary>
         public int DisplayOrder { get; set; }
 
+        //validation fields
+
+        /// <summary>
+        /// Gets or sets the validation rule for minimum length (for textbox and multiline textbox)
+        /// </summary>
+        public int? ValidationMinLength { get; set; }
+
+        /// <summary>
+        /// Gets or sets the validation rule for maximum length (for textbox and multiline textbox)
+        /// </summary>
+        public int? ValidationMaxLength { get; set; }
+
+
+
+
+
+
         /// <summary>
         /// Gets the attribute control type
         /// </summary>

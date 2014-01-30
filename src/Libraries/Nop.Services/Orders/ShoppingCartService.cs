@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Data;
@@ -516,33 +517,78 @@ namespace Nop.Services.Orders
                 }
             }
 
-            if (warnings.Count == 0)
+            //validation rules
+            foreach (var pva in pva2Collection)
             {
-                //validate bundled products
-                var pvaValues = _productAttributeParser.ParseProductVariantAttributeValues(selectedAttributes);
-                foreach (var pvaValue in pvaValues)
+                if (!pva.ValidationRulesAllowed())
+                    continue;
+                
+                //minimum length
+                if (pva.ValidationMinLength.HasValue)
                 {
-                    if (pvaValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
+                    if (pva.AttributeControlType == AttributeControlType.TextBox ||
+                        pva.AttributeControlType == AttributeControlType.MultilineTextbox)
                     {
-                        //associated product (bundle)
-                        var associatedProduct = _productService.GetProductById(pvaValue.AssociatedProductId);
-                        if (associatedProduct != null)
+                        var valuesStr = _productAttributeParser.ParseValues(selectedAttributes, pva.Id);
+                        var enteredText = valuesStr.FirstOrDefault();
+                        int enteredTextLength = String.IsNullOrEmpty(enteredText) ? 0 : enteredText.Length;
+
+                        if (pva.ValidationMinLength.Value > enteredTextLength)
                         {
-                            var totalQty = quantity*pvaValue.Quantity;
-                            var associatedProductWarnings = GetShoppingCartItemWarnings(customer,
-                                shoppingCartType, associatedProduct, _storeContext.CurrentStore.Id,
-                                "", decimal.Zero, totalQty, false, true, true, true, true);
-                            foreach (var associatedProductWarning in associatedProductWarnings)
-                            {
-                                var paName = pvaValue.ProductVariantAttribute.ProductAttribute.GetLocalized(a => a.Name);
-                                var pvavName = pvaValue.GetLocalized(a => a.Name);
-                                warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.AssociatedAttributeWarning"), paName, pvavName, associatedProductWarning));
-                            }
+                            warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.TextboxMinimumLength"), pva.ProductAttribute.GetLocalized(a => a.Name), pva.ValidationMinLength.Value));
                         }
-                        else
+                    }
+                }
+
+                //maximum length
+                if (pva.ValidationMaxLength.HasValue)
+                {
+                    if (pva.AttributeControlType == AttributeControlType.TextBox ||
+                        pva.AttributeControlType == AttributeControlType.MultilineTextbox)
+                    {
+                        var valuesStr = _productAttributeParser.ParseValues(selectedAttributes, pva.Id);
+                        var enteredText = valuesStr.FirstOrDefault();
+                        int enteredTextLength = String.IsNullOrEmpty(enteredText) ? 0 : enteredText.Length;
+
+                        if (pva.ValidationMaxLength.Value < enteredTextLength)
                         {
-                            warnings.Add(string.Format("Associated product cannot be loaded - {0}", pvaValue.AssociatedProductId));
+                            warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.TextboxMaximumLength"), pva.ProductAttribute.GetLocalized(a => a.Name), pva.ValidationMaxLength.Value));
                         }
+                    }
+                }
+            }
+
+            if (warnings.Count > 0)
+                return warnings;
+
+            //validate bundled products
+            var pvaValues = _productAttributeParser.ParseProductVariantAttributeValues(selectedAttributes);
+            foreach (var pvaValue in pvaValues)
+            {
+                if (pvaValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
+                {
+                    //associated product (bundle)
+                    var associatedProduct = _productService.GetProductById(pvaValue.AssociatedProductId);
+                    if (associatedProduct != null)
+                    {
+                        var totalQty = quantity*pvaValue.Quantity;
+                        var associatedProductWarnings = GetShoppingCartItemWarnings(customer,
+                            shoppingCartType, associatedProduct, _storeContext.CurrentStore.Id,
+                            "", decimal.Zero, totalQty, false, true, true, true, true);
+                        foreach (var associatedProductWarning in associatedProductWarnings)
+                        {
+                            var paName = pvaValue.ProductVariantAttribute.ProductAttribute.GetLocalized(a => a.Name);
+                            var pvavName = pvaValue.GetLocalized(a => a.Name);
+                            warnings.Add(
+                                string.Format(
+                                    _localizationService.GetResource("ShoppingCart.AssociatedAttributeWarning"), paName,
+                                    pvavName, associatedProductWarning));
+                        }
+                    }
+                    else
+                    {
+                        warnings.Add(string.Format("Associated product cannot be loaded - {0}",
+                            pvaValue.AssociatedProductId));
                     }
                 }
             }

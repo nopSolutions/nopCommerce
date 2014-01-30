@@ -144,6 +144,7 @@ namespace Nop.Admin.Models.Catalog
         public int MaxNumberOfDownloads { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.DownloadExpirationDays")]
+        [UIHint("Int32Nullable")]
         public int? DownloadExpirationDays { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.DownloadActivationType")]
@@ -640,8 +641,20 @@ namespace Nop.Admin.Models.Catalog
             //in our case it's category.DisplayOrder
             public int DisplayOrder1 { get; set; }
 
-            public string ViewEditUrl { get; set; }
-            public string ViewEditText { get; set; }
+            public string ViewEditValuesUrl { get; set; }
+            public string ViewEditValuesText { get; set; }
+
+            //validation fields
+            [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.Attributes.ValidationRules")]
+            public bool ValidationRulesAllowed { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.Attributes.ValidationRules.MinLength")]
+            [UIHint("Int32Nullable")]
+            public int? ValidationMinLength { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.Attributes.ValidationRules.MaxLength")]
+            [UIHint("Int32Nullable")]
+            public int? ValidationMaxLength { get; set; }
         }
         public partial class ProductVariantAttributeValueListModel : BaseNopModel
         {

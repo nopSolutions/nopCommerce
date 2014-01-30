@@ -152,6 +152,30 @@ set @resources='
   <LocaleResource Name="Order.Notes.Download">
 	<Value>Download attached file</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductVariantAttributes.Attributes.ValidationRules">
+	<Value>Validation rules</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductVariantAttributes.Attributes.ValidationRules.ViewLink">
+	<Value>View/Edit rules</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductVariantAttributes.Attributes.ValidationRules.MinLength">
+	<Value>Minimum length</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductVariantAttributes.Attributes.ValidationRules.MinLength.Hint">
+	<Value>Specify minimum length.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductVariantAttributes.Attributes.ValidationRules.MaxLength">
+	<Value>Maximum length</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductVariantAttributes.Attributes.ValidationRules.MaxLength.Hint">
+	<Value>Specify maximum length.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.TextboxMinimumLength">
+	<Value>{0} : minimum length is {1} chars</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.TextboxMaximumLength">
+	<Value>{0} : maximum length is {1} chars</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -465,4 +489,18 @@ WHERE [DownloadId] IS NULL
 GO
 
 ALTER TABLE [OrderNote] ALTER COLUMN [DownloadId] int NOT NULL
+GO
+
+--New column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Product_ProductAttribute_Mapping]') and NAME='ValidationMinLength')
+BEGIN
+	ALTER TABLE [Product_ProductAttribute_Mapping]
+	ADD [ValidationMinLength] int NULL
+END
+GO
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Product_ProductAttribute_Mapping]') and NAME='ValidationMaxLength')
+BEGIN
+	ALTER TABLE [Product_ProductAttribute_Mapping]
+	ADD [ValidationMaxLength] int NULL
+END
 GO

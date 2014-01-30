@@ -48,9 +48,8 @@ else
 @helper TabAttributes()
 {
     <div id="productvariantattributes-grid"></div>
-
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             $("#productvariantattributes-grid").kendoGrid({
                 dataSource: {
                     type: "json",
@@ -66,7 +65,7 @@ else
                             dataType: "json"
                         },
                         update: {
-                            url:"@Html.Raw(Url.Action("ProductVariantAttributeUpdate", "Product"))",
+                            url: "@Html.Raw(Url.Action("ProductVariantAttributeUpdate", "Product"))",
                             type: "POST",
                             dataType: "json"
                         },
@@ -91,18 +90,19 @@ else
                                 AttributeControlTypeId: { editable: true, type: "number" },
                                 //ProductId: { editable: false, type: "number" },
                                 DisplayOrder1: { editable: true, type: "number" },
-                                ViewEditUrl: { editable: false, type: "string" },
-                                ViewEditText: { editable: false, type: "string" },
+                                ViewEditValuesUrl: { editable: false, type: "string" },
+                                ViewEditValuesText: { editable: false, type: "string" },
+                                ValidationRulesAllowed: { editable: false, type: "boolean" },
                                 Id: { editable: false, type: "number" }
                             }
                         }
                     },
-                    requestEnd: function (e) {
+                    requestEnd: function(e) {
                         if (e.type == "create" || e.type == "update") {
                             this.read();
                         }
                     },
-                    error: function (e) {
+                    error: function(e) {
                         display_kendoui_grid_error(e);
                         // Cancel the changes
                         this.cancelChanges();
@@ -137,53 +137,63 @@ else
                     mode: "inline"
                 },
                 scrollable: false,
-                columns: [{
-                    field: "ProductAttributeId",
-                    title: "@T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Fields.Attribute")",
-                    width: 250,
-                    editor: productAttributeDropDownEditor,
-                    template: "#:ProductAttribute#"
-                },{
-                    field: "TextPrompt",
-                    title: "@T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Fields.TextPrompt")",
-                    width: 150
-                },{
-                    field: "IsRequired",
-                    title: "@T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Fields.IsRequired")",
-                    width: 150,
-                    headerAttributes: { style: "text-align:center" },
-                    attributes: { style: "text-align:center" },
-                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsRequired#.gif" />'
-        },
-                {
-                    field: "AttributeControlTypeId",
-                    title: "@T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Fields.AttributeControlType")",
-                    width: 250,
-                    editor: attributeControlTypeDropDownEditor,
-                    template: "#:AttributeControlType#"
-                },
-
-                {
-                    field: "DisplayOrder1",
-                    title: "@T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Fields.DisplayOrder")",
-                    width: 150,
-                    //integer format
-                    format: "{0:0}"
-                }, {
-                    field: "ViewEditUrl",
-                    title: "@T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values")",
-                    width: 150,
-                    template: "# if(ViewEditUrl !== null) {# <a href='#=ViewEditUrl#\'>#:ViewEditText#</a> #}  #"
-                },{
-                    command: [{
-                        name: "edit",
-                        text: "@T("Admin.Common.Edit")"
+                columns: [
+                    {
+                        field: "ProductAttributeId",
+                        title: "@T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Fields.Attribute")",
+                        width: 250,
+                        editor: productAttributeDropDownEditor,
+                        template: "#:ProductAttribute#"
                     }, {
-                        name: "destroy",
-                        text: "@T("Admin.Common.Delete")"
-                    }],
-                    width: 200
-                }]
+                        field: "TextPrompt",
+                        title: "@T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Fields.TextPrompt")",
+                        width: 150
+                    }, {
+                        field: "IsRequired",
+                        title: "@T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Fields.IsRequired")",
+                        width: 150,
+                        headerAttributes: { style: "text-align:center" },
+                        attributes: { style: "text-align:center" },
+                        template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsRequired#.gif" />'
+                    },
+                    {
+                        field: "AttributeControlTypeId",
+                        title: "@T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Fields.AttributeControlType")",
+                        width: 250,
+                        editor: attributeControlTypeDropDownEditor,
+                        template: "#:AttributeControlType#"
+                    },
+                    {
+                        field: "DisplayOrder1",
+                        title: "@T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Fields.DisplayOrder")",
+                        width: 150,
+                        //integer format
+                        format: "{0:0}"
+                    }, {
+                        field: "ViewEditValuesUrl",
+                        title: "@T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values")",
+                        width: 150,
+                        template: "# if(ViewEditValuesUrl !== null) {# <a href='#=ViewEditValuesUrl#\'>#:ViewEditValuesText#</a> #}  #"
+                    },
+                    {
+                        field: "ValidationRulesAllowed",
+                        title: "@T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.ValidationRules")",
+                        width: 150,
+                        template: "# if(ValidationRulesAllowed) {# <a href='javascript:OpenWindow(\"@Url.Content("~/Admin/Product/ProductAttributeValidationRulesPopup/")#=Id#?btnId=btnRefreshProductAttributes&formId=product-form\", 800, 300, true);'>@T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.ValidationRules.ViewLink")</a> #}  #"
+                    },
+                    {
+                        command: [
+                            {
+                                name: "edit",
+                                text: "@T("Admin.Common.Edit")"
+                            }, {
+                                name: "destroy",
+                                text: "@T("Admin.Common.Delete")"
+                            }
+                        ],
+                        width: 200
+                    }
+                ]
             });
         });
 
@@ -197,11 +207,11 @@ else
             {
                 var productAttributes = allProductAttributes[i];
                 <text>
-                {
-                    Id: @(productAttributes.Id),
-                    Name: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(productAttributes.Name)))"
-                }
-                    </text>
+            {
+                Id: @(productAttributes.Id),
+                Name: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(productAttributes.Name)))"
+            }
+                </text>
                 if (i != allProductAttributes.Count - 1)
                 {
                     <text>,</text>
@@ -212,17 +222,17 @@ else
         var allAttributeControlTypes = [
             @{
                 var allAttributeControlTypes = (from act in AttributeControlType.DropdownList.ToSelectList()
-                                      select new {Id = act.Value, Name = act.Text}).ToList();
+                    select new {Id = act.Value, Name = act.Text}).ToList();
             }
             @for (int i = 0; i < allAttributeControlTypes.Count; i++)
             {
                 var attributeControlType = allAttributeControlTypes[i];
                 <text>
-                {
+            {
                 Id: @(attributeControlType.Id),
                 Name: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(attributeControlType.Name)))"
-                }
-                </text>
+            }
+            </text>
                 if (i != allAttributeControlTypes.Count - 1)
                 {
                     <text>,</text>
@@ -247,6 +257,19 @@ else
                     dataSource: allAttributeControlTypes
                 });
         }
+    </script>
+    <input type="submit" id="btnRefreshProductAttributes" name="btnRefreshProductAttributes" style="display: none" />
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#btnRefreshProductAttributes').click(function () {
+                //refresh grid
+                var grid = $("#productvariantattributes-grid").data('kendoGrid');
+                grid.dataSource.read();
+                
+                //return false to don't reload a page
+                return false;
+            });
+        });
     </script>
 }
 @helper TabAttributeCombinations()

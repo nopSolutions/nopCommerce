@@ -1163,6 +1163,12 @@
   <ItemGroup>
     <Content Include="Views\CustomerRole\AssociateProductToCustomerRolePopup.cshtml" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Product\ProductAttributeValidationRulesPopup.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\EditorTemplates\Int32Nullable.cshtml" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
