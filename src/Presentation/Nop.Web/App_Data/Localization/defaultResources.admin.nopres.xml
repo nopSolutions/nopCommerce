@@ -350,6 +350,22 @@
                           </LocaleResource>
                         </Children>
                       </LocaleResource>
+                      <LocaleResource Name="MinLength">
+                        <Value>Minimum length</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Specify minimum length.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="MaxLength">
+                        <Value>Maximum length</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Specify maximum length.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
                       <LocaleResource Name="LimitedToStores">
                         <Value>Limited to stores</Value>
                         <Children>

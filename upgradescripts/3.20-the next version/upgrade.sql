@@ -176,6 +176,18 @@ set @resources='
   <LocaleResource Name="ShoppingCart.TextboxMaximumLength">
 	<Value>{0} : maximum length is {1} chars</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Fields.MinLength">
+	<Value>Minimum length</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Fields.MinLength.Hint">
+	<Value>Specify minimum length.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Fields.MaxLength">
+	<Value>Maximum length</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Fields.MaxLength.Hint">
+	<Value>Specify maximum length.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -501,6 +513,18 @@ GO
 IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Product_ProductAttribute_Mapping]') and NAME='ValidationMaxLength')
 BEGIN
 	ALTER TABLE [Product_ProductAttribute_Mapping]
+	ADD [ValidationMaxLength] int NULL
+END
+GO
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[CheckoutAttribute]') and NAME='ValidationMinLength')
+BEGIN
+	ALTER TABLE [CheckoutAttribute]
+	ADD [ValidationMinLength] int NULL
+END
+GO
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[CheckoutAttribute]') and NAME='ValidationMaxLength')
+BEGIN
+	ALTER TABLE [CheckoutAttribute]
 	ADD [ValidationMaxLength] int NULL
 END
 GO

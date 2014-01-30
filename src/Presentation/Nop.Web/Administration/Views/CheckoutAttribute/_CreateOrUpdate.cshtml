@@ -59,19 +59,34 @@
             $(document).ready(function () {
 
                 $("#@Html.FieldIdFor(model => model.IsTaxExempt)").click(toggleTax);
+                $("#@Html.FieldIdFor(model => model.AttributeControlTypeId)").change(toggleAttributeControlType);
 
                 toggleTax();
+                toggleAttributeControlType();
             });
 
             function toggleTax() {
                 if ($('#@Html.FieldIdFor(model => model.IsTaxExempt)').is(':checked')) {
                     $('#pnlTaxCategory').hide();
-                }
-                else {
+                } else {
                     $('#pnlTaxCategory').show();
                 }
             }
-</script>
+
+            function toggleAttributeControlType() {
+                var selectedAttributeControlTypeId = $("#@Html.FieldIdFor(model => model.AttributeControlTypeId)").val();
+                if (selectedAttributeControlTypeId == @(((int) AttributeControlType.TextBox).ToString())) {
+                    $('#pnlValidationMinLength').show();
+                    $('#pnlValidationMaxLength').show();
+                } else if (selectedAttributeControlTypeId == @(((int) AttributeControlType.MultilineTextbox).ToString())) {
+                    $('#pnlValidationMinLength').show();
+                    $('#pnlValidationMaxLength').show();
+                } else {
+                    $('#pnlValidationMinLength').hide();
+                    $('#pnlValidationMaxLength').hide();
+                }
+            }
+        </script>
         
     @(Html.LocalizedEditor<CheckoutAttributeModel, CheckoutAttributeLocalizedModel>("checkoutattribute-localized",
     @<table class="adminContent">
@@ -176,7 +191,26 @@
                 @Html.ValidationMessageFor(model => model.DisplayOrder)
             </td>
         </tr>
+        <tr id="pnlValidationMinLength">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ValidationMinLength):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ValidationMinLength)
+                @Html.ValidationMessageFor(model => model.ValidationMinLength)
+            </td>
+        </tr>
+        <tr id="pnlValidationMaxLength">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ValidationMaxLength):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ValidationMaxLength)
+                @Html.ValidationMessageFor(model => model.ValidationMaxLength)
+            </td>
+        </tr>
     </table>
+        
     }
 @helper TabValues()
     { 

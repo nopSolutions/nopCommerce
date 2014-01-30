@@ -22,7 +22,9 @@ namespace Nop.Data.Tests.Orders
                 TaxCategoryId = 1,
                 AttributeControlType = AttributeControlType.Datepicker,
                 DisplayOrder = 2,
-                LimitedToStores = true
+                LimitedToStores = true,
+                ValidationMinLength = 3,
+                ValidationMaxLength = 4,
             };
 
             var fromDb = SaveAndLoadEntity(ca);
@@ -35,6 +37,8 @@ namespace Nop.Data.Tests.Orders
             fromDb.TaxCategoryId.ShouldEqual(1);
             fromDb.AttributeControlType.ShouldEqual(AttributeControlType.Datepicker);
             fromDb.DisplayOrder.ShouldEqual(2);
+            fromDb.ValidationMinLength.ShouldEqual(3);
+            fromDb.ValidationMaxLength.ShouldEqual(4);
             fromDb.LimitedToStores.ShouldEqual(true);
         }
 

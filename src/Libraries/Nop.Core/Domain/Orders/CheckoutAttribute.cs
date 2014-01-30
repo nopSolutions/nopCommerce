@@ -56,6 +56,25 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets a value indicating whether the entity is limited/restricted to certain stores
         /// </summary>
         public bool LimitedToStores { get; set; }
+
+
+
+        //validation fields
+
+        /// <summary>
+        /// Gets or sets the validation rule for minimum length (for textbox and multiline textbox)
+        /// </summary>
+        public int? ValidationMinLength { get; set; }
+
+        /// <summary>
+        /// Gets or sets the validation rule for maximum length (for textbox and multiline textbox)
+        /// </summary>
+        public int? ValidationMaxLength { get; set; }
+
+
+
+
+
         
         /// <summary>
         /// Gets the attribute control type

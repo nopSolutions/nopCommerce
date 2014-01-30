@@ -787,6 +787,45 @@ namespace Nop.Services.Orders
                         }
                     }
                 }
+
+                //now validation rules
+
+                //minimum length
+                foreach (var ca in ca2Collection)
+                {
+                    if (ca.ValidationMinLength.HasValue)
+                    {
+                        if (ca.AttributeControlType == AttributeControlType.TextBox ||
+                            ca.AttributeControlType == AttributeControlType.MultilineTextbox)
+                        {
+                            var valuesStr = _checkoutAttributeParser.ParseValues(checkoutAttributes, ca.Id);
+                            var enteredText = valuesStr.FirstOrDefault();
+                            int enteredTextLength = String.IsNullOrEmpty(enteredText) ? 0 : enteredText.Length;
+
+                            if (ca.ValidationMinLength.Value > enteredTextLength)
+                            {
+                                warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.TextboxMinimumLength"), ca.GetLocalized(a => a.Name), ca.ValidationMinLength.Value));
+                            }
+                        }
+                    }
+
+                    //maximum length
+                    if (ca.ValidationMaxLength.HasValue)
+                    {
+                        if (ca.AttributeControlType == AttributeControlType.TextBox ||
+                            ca.AttributeControlType == AttributeControlType.MultilineTextbox)
+                        {
+                            var valuesStr = _checkoutAttributeParser.ParseValues(checkoutAttributes, ca.Id);
+                            var enteredText = valuesStr.FirstOrDefault();
+                            int enteredTextLength = String.IsNullOrEmpty(enteredText) ? 0 : enteredText.Length;
+
+                            if (ca.ValidationMaxLength.Value < enteredTextLength)
+                            {
+                                warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.TextboxMaximumLength"), ca.GetLocalized(a => a.Name), ca.ValidationMaxLength.Value));
+                            }
+                        }
+                    }
+                }
             }
 
             return warnings;

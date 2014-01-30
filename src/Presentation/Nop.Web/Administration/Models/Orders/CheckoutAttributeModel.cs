@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using FluentValidation.Attributes;
 using Nop.Admin.Models.Stores;
@@ -47,6 +48,15 @@ namespace Nop.Admin.Models.Orders
 
         [NopResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
+
+
+        [NopResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Fields.MinLength")]
+        [UIHint("Int32Nullable")]
+        public int? ValidationMinLength { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Fields.MaxLength")]
+        [UIHint("Int32Nullable")]
+        public int? ValidationMaxLength { get; set; }
         
 
         public IList<CheckoutAttributeLocalizedModel> Locales { get; set; }
