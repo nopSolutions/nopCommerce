@@ -11,7 +11,7 @@ using Nop.Web.Framework.Controllers;
 namespace Nop.Admin.Controllers
 {
     /// <summary>
-    /// Controller used by jbimages (JustBoil.me) plugin (TimyMVC)
+    /// Controller used by jbimages (JustBoil.me) plugin (TimyMCE)
     /// </summary>
     [AdminAuthorize]
     public partial class JbimagesController : BaseNopController
