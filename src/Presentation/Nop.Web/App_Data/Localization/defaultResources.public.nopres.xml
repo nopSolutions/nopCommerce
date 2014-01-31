@@ -1301,17 +1301,20 @@
       </LocaleResource>
       <LocaleResource Name="FileUploader">
         <Children>
-          <LocaleResource Name="Upload">
-            <Value>Upload a file</Value>
+          <LocaleResource Name="Cancel">
+            <Value>Cancel</Value>
+          </LocaleResource>
+          <LocaleResource Name="Delete">
+            <Value>Delete</Value>
           </LocaleResource>
           <LocaleResource Name="DropFiles">
             <Value>Drop files here to upload</Value>
           </LocaleResource>
-          <LocaleResource Name="Cancel">
-            <Value>Cancel</Value>
+          <LocaleResource Name="Processing">
+            <Value>Processing dropped files...</Value>
           </LocaleResource>
-          <LocaleResource Name="Failed">
-            <Value>Failed</Value>
+          <LocaleResource Name="Retry">
+            <Value>Retry</Value>
           </LocaleResource>
         </Children>
       </LocaleResource>

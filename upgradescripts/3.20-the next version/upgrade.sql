@@ -188,6 +188,18 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Fields.MaxLength.Hint">
 	<Value>Specify maximum length.</Value>
   </LocaleResource>
+  <LocaleResource Name="Common.FileUploader.Failed">
+	<Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Common.FileUploader.Processing">
+	<Value>Processing dropped files...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Common.FileUploader.Delete">
+	<Value>Delete</Value>
+  </LocaleResource>
+  <LocaleResource Name="Common.FileUploader.Retry">
+	<Value>Retry</Value>
+  </LocaleResource>
 </Language>
 '
 

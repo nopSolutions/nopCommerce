@@ -448,8 +448,15 @@
     <Content Include="Content\farbtastic\wheel.png" />
     <Content Include="Content\files\ExportImport\Index.htm" />
     <Content Include="Content\files\Index.htm" />
-    <Content Include="Content\fileuploader\fileuploader.css" />
-    <Content Include="Content\fileuploader\images\fileuploader-loading.gif" />
+    <Content Include="Scripts\fineuploader\edit.gif" />
+    <Content Include="Scripts\fineuploader\fineuploader-4.2.2.css" />
+    <Content Include="Scripts\fineuploader\fineuploader-4.2.2.min.css" />
+    <Content Include="Scripts\fineuploader\loading.gif" />
+    <Content Include="Scripts\fineuploader\placeholders\not_available-generic.png" />
+    <Content Include="Scripts\fineuploader\placeholders\waiting-generic.png" />
+    <Content Include="Scripts\fineuploader\processing.gif" />
+    <Content Include="Scripts\fineuploader\templates\default.html" />
+    <Content Include="Scripts\fineuploader\templates\simple-thumbnails.html" />
     <Content Include="Content\jquery-ui-themes\smoothness\images\animated-overlay.gif" />
     <Content Include="Content\jquery-ui-themes\smoothness\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\jquery-ui-themes\smoothness\images\ui-bg_flat_75_ffffff_40x100.png" />
@@ -728,7 +735,11 @@
     <Content Include="Content\tinymce\skins\lightgray\fonts\tinymce.ttf" />
     <Content Include="Content\tinymce\skins\lightgray\fonts\tinymce.woff" />
     <Content Include="Content\tinymce\plugins\jbimages\readme" />
+    <Content Include="Scripts\fineuploader\LICENSE" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\fineuploader\iframe.xss.response-4.2.2.js" />
+    <Content Include="Scripts\fineuploader\jquery.fineuploader-4.2.2.js" />
+    <Content Include="Scripts\fineuploader\jquery.fineuploader-4.2.2.min.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <Content Include="Scripts\jquery-migrate-1.2.1.js" />
@@ -1944,7 +1955,6 @@
     <Content Include="FileNotFound.htm" />
     <Content Include="Global.asax" />
     <Content Include="license.txt" />
-    <Content Include="Scripts\fileuploader.js" />
     <Content Include="Scripts\public.ajaxcart.js" />
     <Content Include="Scripts\public.accordion.js" />
     <Content Include="Scripts\jquery.fancybox-1.3.4.pack.js" />
