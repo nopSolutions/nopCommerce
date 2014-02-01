@@ -57,6 +57,13 @@ namespace Nop.Admin.Models.Orders
         [NopResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Fields.MaxLength")]
         [UIHint("Int32Nullable")]
         public int? ValidationMaxLength { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Fields.FileAllowedExtensions")]
+        public string ValidationFileAllowedExtensions { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Fields.FileMaximumSize")]
+        [UIHint("Int32Nullable")]
+        public int? ValidationFileMaximumSize { get; set; }
         
 
         public IList<CheckoutAttributeLocalizedModel> Locales { get; set; }

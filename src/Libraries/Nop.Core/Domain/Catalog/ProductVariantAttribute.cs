@@ -52,6 +52,16 @@ namespace Nop.Core.Domain.Catalog
         /// </summary>
         public int? ValidationMaxLength { get; set; }
 
+        /// <summary>
+        /// Gets or sets the validation rule for file allowed extensions (for file upload)
+        /// </summary>
+        public string ValidationFileAllowedExtensions { get; set; }
+
+        /// <summary>
+        /// Gets or sets the validation rule for file maximum size in kilobytes (for file upload)
+        /// </summary>
+        public int? ValidationFileMaximumSize { get; set; }
+
 
 
 

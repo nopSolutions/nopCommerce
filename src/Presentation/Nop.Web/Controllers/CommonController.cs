@@ -770,6 +770,7 @@ namespace Nop.Web.Controllers
                                                    "/topic/authenticate",
                                                    "/viewpm",
                                                    "/uploadfileproductattribute",
+                                                   "/uploadfilecheckoutattribute",
                                                    "/wishlist",
                                                };
 

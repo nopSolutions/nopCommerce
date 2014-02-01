@@ -655,6 +655,13 @@ namespace Nop.Admin.Models.Catalog
             [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.Attributes.ValidationRules.MaxLength")]
             [UIHint("Int32Nullable")]
             public int? ValidationMaxLength { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.Attributes.ValidationRules.FileAllowedExtensions")]
+            public string ValidationFileAllowedExtensions { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.Attributes.ValidationRules.FileMaximumSize")]
+            [UIHint("Int32Nullable")]
+            public int? ValidationFileMaximumSize { get; set; }
         }
         public partial class ProductVariantAttributeValueListModel : BaseNopModel
         {

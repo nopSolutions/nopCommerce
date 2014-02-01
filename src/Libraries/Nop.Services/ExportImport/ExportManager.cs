@@ -345,6 +345,14 @@ namespace Nop.Services.ExportImport
                         {
                             xmlWriter.WriteElementString("ValidationMaxLength", null, productVariantAttribute.ValidationMaxLength.Value.ToString());
                         }
+                        if (String.IsNullOrEmpty(productVariantAttribute.ValidationFileAllowedExtensions))
+                        {
+                            xmlWriter.WriteElementString("ValidationFileAllowedExtensions", null, productVariantAttribute.ValidationFileAllowedExtensions);
+                        }
+                        if (productVariantAttribute.ValidationFileMaximumSize.HasValue)
+                        {
+                            xmlWriter.WriteElementString("ValidationFileMaximumSize", null, productVariantAttribute.ValidationFileMaximumSize.Value.ToString());
+                        }
                     }
 
 

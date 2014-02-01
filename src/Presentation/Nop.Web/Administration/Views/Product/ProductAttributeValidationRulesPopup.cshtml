@@ -51,6 +51,25 @@
                 @Html.ValidationMessageFor(model => model.ValidationMaxLength)
             </td>
         </tr>
+        <tr @(attributeControlType != AttributeControlType.FileUpload  ? Html.Raw("style='display: none;'") : null)>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ValidationFileAllowedExtensions):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ValidationFileAllowedExtensions)
+                @Html.ValidationMessageFor(model => model.ValidationFileAllowedExtensions)
+            </td>
+        </tr>
+        <tr @(attributeControlType != AttributeControlType.FileUpload ? Html.Raw("style='display: none;'") : null)>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ValidationFileMaximumSize):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ValidationFileMaximumSize)
+                @Html.ValidationMessageFor(model => model.ValidationFileMaximumSize)
+            </td>
+        </tr>
+
         <tr>
             <td colspan="2">
                 <input type="submit" class="k-button" value="@T("Admin.Common.Save")" />

@@ -1948,12 +1948,18 @@ namespace Nop.Admin.Controllers
                             var httpPostedFile = this.Request.Files[controlId];
                             if ((httpPostedFile != null) && (!String.IsNullOrEmpty(httpPostedFile.FileName)))
                             {
-                                int fileMaxSize = _catalogSettings.FileUploadMaximumSizeBytes;
-                                if (httpPostedFile.ContentLength > fileMaxSize)
+                                var fileSizeOk = true;
+                                if (attribute.ValidationFileMaximumSize.HasValue)
                                 {
-                                    warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.MaximumUploadedFileSize"), (int)(fileMaxSize / 1024)));
+                                    //compare in bytes
+                                    var maxFileSizeBytes = attribute.ValidationFileMaximumSize.Value * 1024;
+                                    if (httpPostedFile.ContentLength > maxFileSizeBytes)
+                                    {
+                                        warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.MaximumUploadedFileSize"), attribute.ValidationFileMaximumSize.Value));
+                                        fileSizeOk = false;
+                                    }
                                 }
-                                else
+                                if (fileSizeOk)
                                 {
                                     //save an uploaded file
                                     var download = new Download()

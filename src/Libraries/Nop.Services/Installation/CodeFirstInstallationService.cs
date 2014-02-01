@@ -4677,7 +4677,6 @@ namespace Nop.Services.Installation
                     ProductsByTagAllowCustomersToSelectPageSize = true,
                     ProductsByTagPageSizeOptions = "8, 4, 12",
                     MaximumBackInStockSubscriptions = 200,
-                    FileUploadMaximumSizeBytes = 1024 * 200, //200KB
                     TopCategoryMenuSubcategoryLevelsToDisplay = 1,
                     ManufacturersBlockItemsToDisplay = 5,
                 });

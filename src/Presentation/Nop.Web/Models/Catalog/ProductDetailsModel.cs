@@ -208,6 +208,7 @@ namespace Nop.Web.Models.Catalog
             /// Selected year value for datepicker
             /// </summary>
             public int? SelectedYear { get; set; }
+
             /// <summary>
             /// Allowed file extensions for customer uploaded files
             /// </summary>

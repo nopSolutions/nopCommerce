@@ -354,7 +354,7 @@
                         <Value>Minimum length</Value>
                         <Children>
                           <LocaleResource Name="Hint">
-                            <Value>Specify minimum length.</Value>
+                            <Value>Specify minimum length. Leave empty to skip this validation.</Value>
                           </LocaleResource>
                         </Children>
                       </LocaleResource>
@@ -362,7 +362,23 @@
                         <Value>Maximum length</Value>
                         <Children>
                           <LocaleResource Name="Hint">
-                            <Value>Specify maximum length.</Value>
+                            <Value>Specify maximum length. Leave empty to skip this validation.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="FileMaximumSize">
+                        <Value>Maximum file size (KB)</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Specify maximum file size in kilobytes. Leave empty to skip this validation.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="FileAllowedExtensions">
+                        <Value>Allowed file extensions</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Specify a comma-separated list of allowed file extensions. Leave empty to allow any file extension.</Value>
                           </LocaleResource>
                         </Children>
                       </LocaleResource>
@@ -2285,7 +2301,7 @@
                             <Value>Minimum length</Value>
                             <Children>
                               <LocaleResource Name="Hint">
-                                <Value>Specify minimum length.</Value>
+                                <Value>Specify minimum length. Leave empty to skip this validation.</Value>
                               </LocaleResource>
                             </Children>
                           </LocaleResource>
@@ -2293,7 +2309,23 @@
                             <Value>Maximum length</Value>
                             <Children>
                               <LocaleResource Name="Hint">
-                                <Value>Specify maximum length.</Value>
+                                <Value>Specify maximum length. Leave empty to skip this validation.</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="FileMaximumSize">
+                            <Value>Maximum file size (KB)</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>Specify maximum file size in kilobytes. Leave empty to skip this validation.</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="FileAllowedExtensions">
+                            <Value>Allowed file extensions</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>Specify a comma-separated list of allowed file extensions. Leave empty to allow any file extension.</Value>
                               </LocaleResource>
                             </Children>
                           </LocaleResource>

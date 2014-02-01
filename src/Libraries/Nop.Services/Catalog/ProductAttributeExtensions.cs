@@ -39,7 +39,8 @@ namespace Nop.Services.Catalog
                 return false;
 
             if (productVariantAttribute.AttributeControlType == AttributeControlType.TextBox ||
-                productVariantAttribute.AttributeControlType == AttributeControlType.MultilineTextbox)
+                productVariantAttribute.AttributeControlType == AttributeControlType.MultilineTextbox ||
+                productVariantAttribute.AttributeControlType == AttributeControlType.FileUpload)
                 return true;
 
             //other attribute controle types does not have validation

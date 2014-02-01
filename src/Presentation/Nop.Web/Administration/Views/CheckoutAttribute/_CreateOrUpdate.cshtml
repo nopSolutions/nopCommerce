@@ -78,12 +78,28 @@
                 if (selectedAttributeControlTypeId == @(((int) AttributeControlType.TextBox).ToString())) {
                     $('#pnlValidationMinLength').show();
                     $('#pnlValidationMaxLength').show();
+                    $('#pnlValidationFileMaximumSize').hide();
+                    $('#pnlValidationFileAllowedExtensions').hide();
                 } else if (selectedAttributeControlTypeId == @(((int) AttributeControlType.MultilineTextbox).ToString())) {
                     $('#pnlValidationMinLength').show();
                     $('#pnlValidationMaxLength').show();
+                    $('#pnlValidationFileMaximumSize').hide();
+                    $('#pnlValidationFileAllowedExtensions').hide();
+                } else if (selectedAttributeControlTypeId == @(((int) AttributeControlType.MultilineTextbox).ToString())) {
+                    $('#pnlValidationMinLength').show();
+                    $('#pnlValidationMaxLength').show();
+                    $('#pnlValidationFileMaximumSize').hide();
+                    $('#pnlValidationFileAllowedExtensions').hide();
+                } else if (selectedAttributeControlTypeId == @(((int) AttributeControlType.FileUpload).ToString())) {
+                    $('#pnlValidationMinLength').hide();
+                    $('#pnlValidationMaxLength').hide();
+                    $('#pnlValidationFileMaximumSize').show();
+                    $('#pnlValidationFileAllowedExtensions').show();
                 } else {
                     $('#pnlValidationMinLength').hide();
                     $('#pnlValidationMaxLength').hide();
+                    $('#pnlValidationFileMaximumSize').hide();
+                    $('#pnlValidationFileAllowedExtensions').hide();
                 }
             }
         </script>
@@ -207,6 +223,24 @@
             <td class="adminData">
                 @Html.EditorFor(model => model.ValidationMaxLength)
                 @Html.ValidationMessageFor(model => model.ValidationMaxLength)
+            </td>
+        </tr>
+        <tr id="pnlValidationFileAllowedExtensions">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ValidationFileAllowedExtensions):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ValidationFileAllowedExtensions)
+                @Html.ValidationMessageFor(model => model.ValidationFileAllowedExtensions)
+            </td>
+        </tr>
+        <tr id="pnlValidationFileMaximumSize">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ValidationFileMaximumSize):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ValidationFileMaximumSize)
+                @Html.ValidationMessageFor(model => model.ValidationFileMaximumSize)
             </td>
         </tr>
     </table>

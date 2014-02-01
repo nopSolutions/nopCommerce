@@ -305,6 +305,12 @@ namespace Nop.Web.Controllers
                     IsRequired = attribute.IsRequired,
                     AttributeControlType = attribute.AttributeControlType
                 };
+                if (!String.IsNullOrEmpty(attribute.ValidationFileAllowedExtensions))
+                {
+                    caModel.AllowedFileExtensions = attribute.ValidationFileAllowedExtensions
+                        .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                        .ToList();
+                }
 
                 if (attribute.ShouldHaveValues())
                 {
@@ -893,34 +899,13 @@ namespace Nop.Web.Controllers
                         break;
                     case AttributeControlType.FileUpload:
                         {
-                            var httpPostedFile = this.Request.Files[controlId];
-                            if ((httpPostedFile != null) && (!String.IsNullOrEmpty(httpPostedFile.FileName)))
+                            Guid downloadGuid;
+                            Guid.TryParse(form[controlId], out downloadGuid);
+                            var download = _downloadService.GetDownloadByGuid(downloadGuid);
+                            if (download != null)
                             {
-                                int fileMaxSize = _catalogSettings.FileUploadMaximumSizeBytes;
-                                if (httpPostedFile.ContentLength > fileMaxSize)
-                                {
-                                    //TODO display warning
-                                    //warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.MaximumUploadedFileSize"), (int)(fileMaxSize / 1024)));
-                                }
-                                else
-                                {
-                                    //save an uploaded file
-                                    var download = new Download()
-                                    {
-                                        DownloadGuid = Guid.NewGuid(),
-                                        UseDownloadUrl = false,
-                                        DownloadUrl = "",
-                                        DownloadBinary = httpPostedFile.GetDownloadBits(),
-                                        ContentType = httpPostedFile.ContentType,
-                                        Filename = System.IO.Path.GetFileNameWithoutExtension(httpPostedFile.FileName),
-                                        Extension = System.IO.Path.GetExtension(httpPostedFile.FileName),
-                                        IsNew = true
-                                    };
-                                    _downloadService.InsertDownload(download);
-                                    //save attribute
-                                    selectedAttributes = _checkoutAttributeParser.AddCheckoutAttribute(selectedAttributes,
-                                        attribute, download.DownloadGuid.ToString());
-                                }
+                                selectedAttributes = _checkoutAttributeParser.AddCheckoutAttribute(selectedAttributes,
+                                           attribute, download.DownloadGuid.ToString());
                             }
                         }
                         break;
@@ -1441,22 +1426,10 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult UploadFileProductAttribute(int productId, int productAttributeId)
+        public ActionResult UploadFileProductAttribute(int attributeId)
         {
-            var product = _productService.GetProductById(productId);
-            if (product == null || !product.Published || product.Deleted)
-            {
-                return Json(new
-                {
-                    success = false,
-                    downloadGuid = Guid.Empty,
-                }, "text/plain");
-            }
-            //ensure that this attribute belong to this product and has "file upload" type
-            var pva = _productAttributeService
-                .GetProductVariantAttributesByProductId(productId)
-                .FirstOrDefault(pa => pa.ProductAttributeId == productAttributeId);
-            if (pva == null || pva.AttributeControlType != AttributeControlType.FileUpload)
+            var attribute = _productAttributeService.GetProductVariantAttributeById(attributeId);
+            if (attribute == null || attribute.AttributeControlType != AttributeControlType.FileUpload)
             {
                 return Json(new
                 {
@@ -1494,17 +1467,104 @@ namespace Nop.Web.Controllers
             if (!String.IsNullOrEmpty(fileExtension))
                 fileExtension = fileExtension.ToLowerInvariant();
 
-            int fileMaxSize = _catalogSettings.FileUploadMaximumSizeBytes;
-            if (fileBinary.Length > fileMaxSize)
+            if (attribute.ValidationFileMaximumSize.HasValue)
             {
-                //when returning JSON the mime-type must be set to text/plain
-                //otherwise some browsers will pop-up a "Save As" dialog.
+                //compare in bytes
+                var maxFileSizeBytes = attribute.ValidationFileMaximumSize.Value * 1024;
+                if (fileBinary.Length > maxFileSizeBytes)
+                {
+                    //when returning JSON the mime-type must be set to text/plain
+                    //otherwise some browsers will pop-up a "Save As" dialog.
+                    return Json(new
+                    {
+                        success = false,
+                        message = string.Format(_localizationService.GetResource("ShoppingCart.MaximumUploadedFileSize"), attribute.ValidationFileMaximumSize.Value),
+                        downloadGuid = Guid.Empty,
+                    }, "text/plain");
+                }
+            }
+
+            var download = new Download()
+            {
+                DownloadGuid = Guid.NewGuid(),
+                UseDownloadUrl = false,
+                DownloadUrl = "",
+                DownloadBinary = fileBinary,
+                ContentType = contentType,
+                //we store filename without extension for downloads
+                Filename = Path.GetFileNameWithoutExtension(fileName),
+                Extension = fileExtension,
+                IsNew = true
+            };
+            _downloadService.InsertDownload(download);
+
+            //when returning JSON the mime-type must be set to text/plain
+            //otherwise some browsers will pop-up a "Save As" dialog.
+            return Json(new
+            {
+                success = true,
+                message = _localizationService.GetResource("ShoppingCart.FileUploaded"),
+                downloadGuid = download.DownloadGuid,
+            }, "text/plain");
+        }
+
+        [HttpPost]
+        public ActionResult UploadFileCheckoutAttribute(int attributeId)
+        {
+            var attribute = _checkoutAttributeService.GetCheckoutAttributeById(attributeId);
+            if (attribute == null || attribute.AttributeControlType != AttributeControlType.FileUpload)
+            {
                 return Json(new
                 {
                     success = false,
-                    message = string.Format(_localizationService.GetResource("ShoppingCart.MaximumUploadedFileSize"), (int)(fileMaxSize / 1024)),
                     downloadGuid = Guid.Empty,
                 }, "text/plain");
+            }
+
+            //we process it distinct ways based on a browser
+            //find more info here http://stackoverflow.com/questions/4884920/mvc3-valums-ajax-file-upload
+            Stream stream = null;
+            var fileName = "";
+            var contentType = "";
+            if (String.IsNullOrEmpty(Request["qqfile"]))
+            {
+                // IE
+                HttpPostedFileBase httpPostedFile = Request.Files[0];
+                if (httpPostedFile == null)
+                    throw new ArgumentException("No file uploaded");
+                stream = httpPostedFile.InputStream;
+                fileName = Path.GetFileName(httpPostedFile.FileName);
+                contentType = httpPostedFile.ContentType;
+            }
+            else
+            {
+                //Webkit, Mozilla
+                stream = Request.InputStream;
+                fileName = Request["qqfile"];
+            }
+
+            var fileBinary = new byte[stream.Length];
+            stream.Read(fileBinary, 0, fileBinary.Length);
+
+            var fileExtension = Path.GetExtension(fileName);
+            if (!String.IsNullOrEmpty(fileExtension))
+                fileExtension = fileExtension.ToLowerInvariant();
+
+            if (attribute.ValidationFileMaximumSize.HasValue)
+            {
+                //compare in bytes
+                var maxFileSizeBytes = attribute.ValidationFileMaximumSize.Value * 1024;
+                if (fileBinary.Length > maxFileSizeBytes)
+                {
+                    //when returning JSON the mime-type must be set to text/plain
+                    //otherwise some browsers will pop-up a "Save As" dialog.
+                    return Json(new
+                    {
+                        success = false,
+                        message = string.Format(_localizationService.GetResource("ShoppingCart.MaximumUploadedFileSize"), attribute.ValidationFileMaximumSize.Value),
+                        downloadGuid = Guid.Empty,
+                    }, "text/plain");
+                }
             }
 
             var download = new Download()

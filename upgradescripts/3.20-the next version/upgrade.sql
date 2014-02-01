@@ -162,13 +162,13 @@ set @resources='
 	<Value>Minimum length</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductVariantAttributes.Attributes.ValidationRules.MinLength.Hint">
-	<Value>Specify minimum length.</Value>
+	<Value>Specify minimum length. Leave empty to skip this validation.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductVariantAttributes.Attributes.ValidationRules.MaxLength">
 	<Value>Maximum length</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductVariantAttributes.Attributes.ValidationRules.MaxLength.Hint">
-	<Value>Specify maximum length.</Value>
+	<Value>Specify maximum length. Leave empty to skip this validation.</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.TextboxMinimumLength">
 	<Value>{0} : minimum length is {1} chars</Value>
@@ -180,13 +180,13 @@ set @resources='
 	<Value>Minimum length</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Fields.MinLength.Hint">
-	<Value>Specify minimum length.</Value>
+	<Value>Specify minimum length. Leave empty to skip this validation.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Fields.MaxLength">
 	<Value>Maximum length</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Fields.MaxLength.Hint">
-	<Value>Specify maximum length.</Value>
+	<Value>Specify maximum length. Leave empty to skip this validation.</Value>
   </LocaleResource>
   <LocaleResource Name="Common.FileUploader.Failed">
 	<Value></Value>
@@ -199,6 +199,30 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Common.FileUploader.Retry">
 	<Value>Retry</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductVariantAttributes.Attributes.ValidationRules.FileAllowedExtensions">
+	<Value>Allowed file extensions</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductVariantAttributes.Attributes.ValidationRules.FileAllowedExtensions.Hint">
+	<Value>Specify a comma-separated list of allowed file extensions. Leave empty to allow any file extension.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductVariantAttributes.Attributes.ValidationRules.FileMaximumSize">
+	<Value>Maximum file size (KB)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductVariantAttributes.Attributes.ValidationRules.FileMaximumSize.Hint">
+	<Value>Specify maximum file size in kilobytes. Leave empty to skip this validation.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Fields.FileAllowedExtensions">
+	<Value>Allowed file extensions</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Fields.FileAllowedExtensions.Hint">
+	<Value>Specify a comma-separated list of allowed file extensions. Leave empty to allow any file extension.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Fields.FileMaximumSize">
+	<Value>Maximum file size (KB)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Fields.FileMaximumSize.Hint">
+	<Value>Specify maximum file size in kilobytes. Leave empty to skip this validation.</Value>
   </LocaleResource>
 </Language>
 '
@@ -539,4 +563,36 @@ BEGIN
 	ALTER TABLE [CheckoutAttribute]
 	ADD [ValidationMaxLength] int NULL
 END
+GO
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Product_ProductAttribute_Mapping]') and NAME='ValidationFileAllowedExtensions')
+BEGIN
+	ALTER TABLE [Product_ProductAttribute_Mapping]
+	ADD [ValidationFileAllowedExtensions] nvarchar(MAX) NULL
+END
+GO
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Product_ProductAttribute_Mapping]') and NAME='ValidationFileMaximumSize')
+BEGIN
+	ALTER TABLE [Product_ProductAttribute_Mapping]
+	ADD [ValidationFileMaximumSize] int NULL
+END
+GO
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[CheckoutAttribute]') and NAME='ValidationFileAllowedExtensions')
+BEGIN
+	ALTER TABLE [CheckoutAttribute]
+	ADD [ValidationFileAllowedExtensions] nvarchar(MAX) NULL
+END
+GO
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[CheckoutAttribute]') and NAME='ValidationFileMaximumSize')
+BEGIN
+	ALTER TABLE [CheckoutAttribute]
+	ADD [ValidationFileMaximumSize] int NULL
+END
+GO
+
+DELETE FROM [Setting]
+WHERE [name] = N'catalogsettings.fileuploadallowedextensions'
+GO
+
+DELETE FROM [Setting]
+WHERE [name] = N'catalogsettings.fileuploadmaximumsizebytes'
 GO

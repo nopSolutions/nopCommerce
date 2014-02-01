@@ -174,9 +174,15 @@ namespace Nop.Web.Infrastructure
                             new[] { "Nop.Web.Controllers" });
             //product attributes with "upload file" type
             routes.MapLocalizedRoute("UploadFileProductAttribute",
-                            "uploadfileproductattribute/{productId}/{productAttributeId}",
+                            "uploadfileproductattribute/{attributeId}",
                             new { controller = "ShoppingCart", action = "UploadFileProductAttribute" },
-                            new { productId = @"\d+", productAttributeId = @"\d+" },
+                            new { attributeId = @"\d+" },
+                            new[] { "Nop.Web.Controllers" });
+            //checkout attributes with "upload file" type
+            routes.MapLocalizedRoute("UploadFileCheckoutAttribute",
+                            "uploadfilecheckoutattribute/{attributeId}",
+                            new { controller = "ShoppingCart", action = "UploadFileCheckoutAttribute" },
+                            new { attributeId = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
             
             //checkout

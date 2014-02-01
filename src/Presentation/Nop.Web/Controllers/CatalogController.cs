@@ -859,8 +859,13 @@ namespace Nop.Web.Controllers
                     TextPrompt = attribute.TextPrompt,
                     IsRequired = attribute.IsRequired,
                     AttributeControlType = attribute.AttributeControlType,
-                    AllowedFileExtensions = _catalogSettings.FileUploadAllowedExtensions,
                 };
+                if (!String.IsNullOrEmpty(attribute.ValidationFileAllowedExtensions))
+                {
+                    pvaModel.AllowedFileExtensions = attribute.ValidationFileAllowedExtensions
+                        .Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries)
+                        .ToList();
+                }
 
                 if (attribute.ShouldHaveValues())
                 {

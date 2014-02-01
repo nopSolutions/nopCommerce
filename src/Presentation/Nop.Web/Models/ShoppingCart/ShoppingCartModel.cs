@@ -91,6 +91,7 @@ namespace Nop.Web.Models.ShoppingCart
         {
             public CheckoutAttributeModel()
             {
+                AllowedFileExtensions = new List<string>();
                 Values = new List<CheckoutAttributeValueModel>();
             }
 
@@ -114,6 +115,11 @@ namespace Nop.Web.Models.ShoppingCart
             /// Selected year value for datepicker
             /// </summary>
             public int? SelectedYear { get; set; }
+
+            /// <summary>
+            /// Allowed file extensions for customer uploaded files
+            /// </summary>
+            public IList<string> AllowedFileExtensions { get; set; }
 
             public AttributeControlType AttributeControlType { get; set; }
 
