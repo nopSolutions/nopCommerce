@@ -4859,6 +4859,8 @@ namespace Nop.Services.Installation
                     TermsOfServiceOnOrderConfirmPage = false,
                     OnePageCheckoutEnabled = true,
                     OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab = false,
+                    DisableBillingAddressCheckoutStep = false,
+                    DisableOrderCompletedPage = false,
                     AttachPdfInvoiceToOrderPlacedEmail = false,
                     AttachPdfInvoiceToOrderCompletedEmail = false,
                     ReturnRequestsEnabled = true,

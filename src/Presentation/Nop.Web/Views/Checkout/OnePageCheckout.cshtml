@@ -12,6 +12,29 @@
     //title
     Html.AddTitleParts(T("PageTitle.Checkout").Text);
 }
+@{
+    //step numbers
+    int billingAddressStepNumber = 1;
+    int shippingAddressStepNumber = 2;
+    int shippingMethodStepNumber = 3;
+    int paymentMethodStepNumber = 4;
+    int paymentInfoStepNumber = 5;
+    int confirmOrderStepNumber = 6;
+    if (!Model.ShippingRequired)
+    {
+        paymentMethodStepNumber = paymentMethodStepNumber - 2;
+        paymentInfoStepNumber = paymentInfoStepNumber - 2;
+        confirmOrderStepNumber = confirmOrderStepNumber - 2;
+    }
+    if (Model.DisableBillingAddressCheckoutStep)
+    {
+        shippingAddressStepNumber--;
+        shippingMethodStepNumber--;
+        paymentMethodStepNumber--;
+        paymentInfoStepNumber--;
+        confirmOrderStepNumber--;
+    }
+}
 <div class="page checkout-page">
     <div class="page-title">
         <h1>@T("Checkout")</h1>
@@ -20,7 +43,7 @@
         <ol class="opc" id="checkout-steps">
             <li id="opc-billing" class="tab-section allow">
                 <div class="step-title">
-                    <span class="number">1</span>
+                    <span class="number">@billingAddressStepNumber</span>
                     <h2>@T("Checkout.BillingAddress")</h2>
                 </div>
                 <div id="checkout-step-billing" class="step a-item" style="display: none;">
@@ -31,7 +54,7 @@
                     </div>
                     </form>
                     <script type="text/javascript">
-                        Billing.init('#co-billing-form', '@(storeLocation)checkout/OpcSaveBilling/');
+                        Billing.init('#co-billing-form', '@(storeLocation)checkout/OpcSaveBilling/', @(Model.DisableBillingAddressCheckoutStep.ToString().ToLowerInvariant()));
                         if ($("#billing-address-select").length > 0) {
                             Billing.newAddress(!$('#billing-address-select').val());
                         }
@@ -46,7 +69,7 @@
             {
                 <li id="opc-shipping" class="tab-section">
                     <div class="step-title">
-                        <span class="number">2</span>
+                        <span class="number">@shippingAddressStepNumber</span>
                         <h2>@T("Checkout.ShippingAddress")</h2>
                     </div>
                     <div id="checkout-step-shipping" class="step a-item" style="display: none;">
@@ -71,7 +94,7 @@
                 </li>
                 <li id="opc-shipping_method" class="tab-section">
                     <div class="step-title">
-                        <span class="number">3</span>
+                        <span class="number">@shippingMethodStepNumber</span>
                         <h2>@T("Checkout.ShippingMethod")</h2>
                     </div>
                     <div id="checkout-step-shipping-method" class="step a-item" style="display: none;">
@@ -94,7 +117,7 @@
             }
             <li id="opc-payment_method" class="tab-section">
                 <div class="step-title">
-                    <span class="number">@(Model.ShippingRequired ? "4" : "2")</span>
+                    <span class="number">@paymentMethodStepNumber</span>
                     <h2>@T("Checkout.PaymentMethod")</h2>
                 </div>
                 <div id="checkout-step-payment-method" class="step a-item" style="display: none;">
@@ -116,7 +139,7 @@
             </li>
             <li id="opc-payment_info" class="tab-section">
                 <div class="step-title">
-                    <span class="number">@(Model.ShippingRequired ? "5" : "3")</span>
+                    <span class="number">@paymentInfoStepNumber</span>
                     <h2>@T("Checkout.PaymentInfo")</h2>
                 </div>
                 <div id="checkout-step-payment-info" class="step a-item" style="display: none;">
@@ -138,7 +161,7 @@
             </li>
             <li id="opc-confirm_order" class="tab-section">
                 <div class="step-title">
-                    <span class="number">@(Model.ShippingRequired ? "6" : "4")</span>
+                    <span class="number">@confirmOrderStepNumber</span>
                     <h2>@T("Checkout.ConfirmOrder")</h2>
                 </div>
                 <div id="checkout-step-confirm-order" class="step a-item" style="display: none;">
@@ -161,7 +184,11 @@
     <script type="text/javascript">
         Accordion.init('checkout-steps', '.step-title', true);
         Accordion.openSection('#opc-billing');
-
         Checkout.init('@(storeLocation)cart/');
+        if (Billing.disableBillingAddressCheckoutStep)
+        {
+            Accordion.hideSection('#opc-billing');
+            Billing.save();
+        }
     </script>
 </div>

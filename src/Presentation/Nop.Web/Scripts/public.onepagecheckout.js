@@ -108,10 +108,12 @@ var Checkout = {
 var Billing = {
     form: false,
     saveUrl: false,
+    disableBillingAddressCheckoutStep: false,
 
-    init: function (form, saveUrl) {
+    init: function (form, saveUrl, disableBillingAddressCheckoutStep) {
         this.form = form;
         this.saveUrl = saveUrl;
+        this.disableBillingAddressCheckoutStep = disableBillingAddressCheckoutStep;
     },
 
     newAddress: function (isNew) {
@@ -151,6 +153,20 @@ var Billing = {
     },
 
     nextStep: function (response) {
+        //ensure that response.wrong_billing_address is set
+        //if not set, "true" is the default value
+        if (typeof response.wrong_billing_address == 'undefined') {
+            response.wrong_billing_address = false;
+        }
+        if (Billing.disableBillingAddressCheckoutStep) {
+            if (response.wrong_billing_address) {
+                Accordion.showSection('#opc-billing');
+            } else {
+                Accordion.hideSection('#opc-billing');
+            }
+        }
+
+
         if (response.error) {
             if ((typeof response.message) == 'string') {
                 alert(response.message);

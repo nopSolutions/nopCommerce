@@ -5696,6 +5696,14 @@
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
+                  <LocaleResource Name="DisableBillingAddressCheckoutStep">
+                    <Value>Disable "Billing address" step</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Check to disable "Billing address" step during checkout. Billing address will be pre-filled and saved using the default registration data (this option cannot be used with guest checkout enabled). Also ensure that appropriate address fields that cannot be pre-filled are not required (or disabled).</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
                   <LocaleResource Name="DisableOrderCompletedPage">
                     <Value>Disable "Order completed" page</Value>
                     <Children>

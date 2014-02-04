@@ -46,6 +46,11 @@ namespace Nop.Core.Domain.Orders
         public bool OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether "Billing address" step should be skipped
+        /// </summary>
+        public bool DisableBillingAddressCheckoutStep { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether "Order completed" page should be skipped
         /// </summary>
         public bool DisableOrderCompletedPage { get; set; }

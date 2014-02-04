@@ -224,6 +224,12 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Fields.FileMaximumSize.Hint">
 	<Value>Specify maximum file size in kilobytes. Leave empty to skip this validation.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.DisableBillingAddressCheckoutStep">
+	<Value>Disable "Billing address" step</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.DisableBillingAddressCheckoutStep.Hint">
+	<Value>Check to disable "Billing address" step during checkout. Billing address will be pre-filled and saved using the default registration data (this option cannot be used with guest checkout enabled). Also ensure that appropriate address fields that cannot be pre-filled are not required (or disabled).</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -595,4 +601,12 @@ GO
 
 DELETE FROM [Setting]
 WHERE [name] = N'catalogsettings.fileuploadmaximumsizebytes'
+GO
+
+--a new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'ordersettings.disablebillingaddresscheckoutstep')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'ordersettings.disablebillingaddresscheckoutstep', N'false', 0)
+END
 GO

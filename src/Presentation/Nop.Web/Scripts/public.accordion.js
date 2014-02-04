@@ -59,6 +59,16 @@ var Accordion = {
         $(contents[0]).hide();
     },
 
+    hideSection: function (section) {
+        var section = $(section);
+        section.hide();
+    },
+
+    showSection: function (section) {
+        var section = $(section);
+        section.show();
+    },
+
     openNextSection: function (setAllow) {
         for (section in this.sections) {
             var nextIndex = parseInt(section) + 1;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -24,6 +25,7 @@ using Nop.Services.Shipping;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Web.Extensions;
+using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Security;
 using Nop.Web.Models.Checkout;
@@ -535,6 +537,23 @@ namespace Nop.Web.Controllers
 
             //model
             var model = PrepareBillingAddressModel(prePopulateNewAddressWithCustomerFields: true);
+
+            //check whether "billing address" step is enabled
+            if (_orderSettings.DisableBillingAddressCheckoutStep)
+            {
+                if (model.ExistingAddresses.Any())
+                {
+                    //choose the first one
+                    return SelectBillingAddress(model.ExistingAddresses.First().Id);
+                }
+                else
+                {
+                    TryValidateModel(model);
+                    TryValidateModel(model.NewAddress);
+                    return NewBillingAddress(model);
+                }
+            }
+
             return View(model);
         }
         public ActionResult SelectBillingAddress(int addressId)
@@ -1225,6 +1244,7 @@ namespace Nop.Web.Controllers
             var model = new OnePageCheckoutModel()
             {
                 ShippingRequired = cart.RequiresShipping(),
+                DisableBillingAddressCheckoutStep = _orderSettings.DisableBillingAddressCheckoutStep
             };
             return View(model);
         }
@@ -1286,7 +1306,8 @@ namespace Nop.Web.Controllers
                             {
                                 name = "billing",
                                 html = this.RenderPartialViewToString("OpcBillingAddress", billingAddressModel)
-                            }
+                            },
+                            wrong_billing_address = true,
                         });
                     }
 
