@@ -394,7 +394,10 @@ namespace Nop.Services.Orders
             }
 
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
+            {
                 discountAmountInclTax = Math.Round(discountAmountInclTax, 2);
+                discountAmountExclTax = Math.Round(discountAmountExclTax, 2);
+            }
 
             if (includingTax)
             {
@@ -407,7 +410,6 @@ namespace Nop.Services.Orders
                 discountAmount = discountAmountExclTax;
             }
 
-            //round
             if (subTotalWithDiscount < decimal.Zero)
                 subTotalWithDiscount = decimal.Zero;
 
