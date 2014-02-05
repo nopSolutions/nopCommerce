@@ -6,7 +6,7 @@ using Nop.Data;
 
 namespace Nop.Services.Common
 {
-    public static class GenericAttributeExtentions
+    public static class GenericAttributeExtensions
     {
         /// <summary>
         /// Get an attribute of an entity

@@ -9,7 +9,7 @@ using Nop.Core.Plugins;
 
 namespace Nop.Services.Localization
 {
-    public static class LocalizationExtentions
+    public static class LocalizationExtensions
     {
         /// <summary>
         /// Get localized property of an entity

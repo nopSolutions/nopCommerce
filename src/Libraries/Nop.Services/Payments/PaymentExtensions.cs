@@ -15,7 +15,7 @@ namespace Nop.Services.Payments
     /// <summary>
     /// Payment extensions
     /// </summary>
-    public static class PaymentExtentions
+    public static class PaymentExtensions
     {
         /// <summary>
         /// Is payment method active?

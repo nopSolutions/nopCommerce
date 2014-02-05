@@ -4,7 +4,7 @@ using Nop.Core.Domain.Discounts;
 
 namespace Nop.Services.Discounts
 {
-    public static class DiscountExtentions
+    public static class DiscountExtensions
     {
         /// <summary>
         /// Gets the discount amount for the specified value

@@ -3,7 +3,7 @@ using System.IO;
 
 namespace Nop.Core.Plugins
 {
-    public static class PluginExtentions
+    public static class PluginExtensions
     {
         public static string GetLogoUrl(this PluginDescriptor pluginDescriptor, IWebHelper webHelper)
         {

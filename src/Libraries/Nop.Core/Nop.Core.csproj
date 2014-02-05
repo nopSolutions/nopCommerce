@@ -101,7 +101,7 @@
     <Compile Include="Domain\Common\AddressSettings.cs" />
     <Compile Include="Domain\Common\FulltextSearchMode.cs" />
     <Compile Include="Domain\Common\GenericAttribute.cs" />
-    <Compile Include="Domain\Customers\CustomerExtentions.cs" />
+    <Compile Include="Domain\Customers\CustomerExtensions.cs" />
     <Compile Include="Domain\Stores\StoreExtensions.cs" />
     <Compile Include="Domain\Stores\IStoreMappingSupported.cs" />
     <Compile Include="Domain\Stores\StoreMapping.cs" />
@@ -284,7 +284,7 @@
     <Compile Include="Html\ResolveLinksHelper.cs" />
     <Compile Include="PersistentCollection.cs" />
     <Compile Include="Plugins\BasePlugin.cs" />
-    <Compile Include="Plugins\PluginExtentions.cs" />
+    <Compile Include="Plugins\PluginExtensions.cs" />
     <Compile Include="Plugins\PluginFileParser.cs" />
     <Compile Include="Plugins\PluginManager.cs" />
     <Compile Include="Plugins\PluginDescriptor.cs" />

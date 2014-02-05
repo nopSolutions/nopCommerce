@@ -5,7 +5,7 @@ using Nop.Core.Domain.Common;
 
 namespace Nop.Services.Common
 {
-    public static class AddressExtentions
+    public static class AddressExtensions
     {
         /// <summary>
         /// Find an address

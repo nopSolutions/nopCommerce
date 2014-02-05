@@ -4,7 +4,7 @@ using Nop.Core.Domain.Shipping;
 
 namespace Nop.Services.Shipping
 {
-    public static class ShippingExtentions
+    public static class ShippingExtensions
     {
         public static bool IsShippingRateComputationMethodActive(this IShippingRateComputationMethod srcm,
             ShippingSettings shippingSettings)

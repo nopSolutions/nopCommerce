@@ -3,7 +3,7 @@ using Nop.Core.Domain.Customers;
 
 namespace Nop.Services.Authentication.External
 {
-    public static class OpenAuthenticationExtentions
+    public static class OpenAuthenticationExtensions
     {
         public static bool IsMethodActive(this IExternalAuthenticationMethod method,
             ExternalAuthenticationSettings settings)

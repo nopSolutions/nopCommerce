@@ -3,7 +3,7 @@ using System.Web;
 
 namespace Nop.Core.Fakes
 {
-    public static class Extentions
+    public static class Extensions
     {
         /// <summary>
         /// Indicates whether this context is fake

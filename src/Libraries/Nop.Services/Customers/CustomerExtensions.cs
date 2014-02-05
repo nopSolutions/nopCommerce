@@ -10,7 +10,7 @@ using Nop.Services.Localization;
 
 namespace Nop.Services.Customers
 {
-    public static class CustomerExtentions
+    public static class CustomerExtensions
     {
         /// <summary>
         /// Get full name
