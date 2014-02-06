@@ -50,6 +50,8 @@ namespace Nop.Web.Framework
         private Customer _cachedCustomer;
         private Customer _originalCustomerIfImpersonated;
         private Vendor _cachedVendor;
+        private Language _cachedLanguage;
+        private Currency _cachedCurrency;
 
         #endregion
 
@@ -301,6 +303,9 @@ namespace Nop.Web.Framework
         {
             get
             {
+                if (_cachedLanguage != null)
+                    return _cachedLanguage;
+                
                 Language detectedLanguage = null;
                 if (_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
                 {
@@ -334,23 +339,24 @@ namespace Nop.Web.Framework
                 }
 
                 var allLanguages = _languageService.GetAllLanguages(storeId: _storeContext.CurrentStore.Id);
-                if (allLanguages.Count > 0)
+                //find current customer language
+                var languageId = this.CurrentCustomer.GetAttribute<int>(SystemCustomerAttributeNames.LanguageId,
+                    _genericAttributeService, _storeContext.CurrentStore.Id);
+                var language = allLanguages.FirstOrDefault(x => x.Id == languageId);
+                if (language == null)
                 {
-                    //find current customer language
-                    foreach (var lang in allLanguages)
-                    {
-                        if (this.CurrentCustomer.GetAttribute<int>(SystemCustomerAttributeNames.LanguageId,
-                            _genericAttributeService, _storeContext.CurrentStore.Id) == lang.Id)
-                        {
-                            return lang;
-                        }
-                    }
+                    //it not specified, then return the first (filtered by current store) found one
+                    language = allLanguages.FirstOrDefault();
+                }
+                if (language == null)
+                {
                     //it not specified, then return the first found one
-                    return allLanguages.FirstOrDefault();
+                    language = _languageService.GetAllLanguages().FirstOrDefault();
                 }
 
-                //if not found in languages filtered by the current store, then return any language
-                return _languageService.GetAllLanguages().FirstOrDefault();
+                //cache
+                _cachedLanguage = language;
+                return _cachedLanguage;
             }
             set
             {
@@ -358,6 +364,9 @@ namespace Nop.Web.Framework
                 _genericAttributeService.SaveAttribute(this.CurrentCustomer,
                     SystemCustomerAttributeNames.LanguageId,
                     languageId, _storeContext.CurrentStore.Id);
+
+                //reset cache
+                _cachedLanguage = null;
             }
         }
 
@@ -368,6 +377,9 @@ namespace Nop.Web.Framework
         {
             get
             {
+                if (_cachedCurrency != null)
+                    return _cachedCurrency;
+                
                 //return primary store currency when we're in admin area/mode
                 if (this.IsAdmin)
                 {
@@ -377,24 +389,24 @@ namespace Nop.Web.Framework
                 }
 
                 var allCurrencies = _currencyService.GetAllCurrencies(storeId: _storeContext.CurrentStore.Id);
-                if (allCurrencies.Count > 0)
+                //find current customer language
+                var currencyId = this.CurrentCustomer.GetAttribute<int>(SystemCustomerAttributeNames.CurrencyId,
+                    _genericAttributeService, _storeContext.CurrentStore.Id);
+                var currency = allCurrencies.FirstOrDefault(x => x.Id == currencyId);
+                if (currency == null)
                 {
-                    //find current customer language
-                    var customerCurrencyId = this.CurrentCustomer.GetAttribute<int>(SystemCustomerAttributeNames.CurrencyId,
-                        _genericAttributeService, _storeContext.CurrentStore.Id);
-                    foreach (var currency in allCurrencies)
-                    {
-                        if (customerCurrencyId == currency.Id)
-                        {
-                            return currency;
-                        }
-                    }
+                    //it not specified, then return the first (filtered by current store) found one
+                    currency = allCurrencies.FirstOrDefault();
+                }
+                if (currency == null)
+                {
                     //it not specified, then return the first found one
-                    return allCurrencies.FirstOrDefault();
+                    currency = _currencyService.GetAllCurrencies().FirstOrDefault();
                 }
 
-                //if not found in languages filtered by the current store, then return any language
-                return _currencyService.GetAllCurrencies().FirstOrDefault();
+                //cache
+                _cachedCurrency = currency;
+                return _cachedCurrency;
             }
             set
             {
@@ -402,6 +414,9 @@ namespace Nop.Web.Framework
                 _genericAttributeService.SaveAttribute(this.CurrentCustomer,
                     SystemCustomerAttributeNames.CurrencyId,
                     currencyId, _storeContext.CurrentStore.Id);
+
+                //reset cache
+                _cachedCurrency = null;
             }
         }
 
