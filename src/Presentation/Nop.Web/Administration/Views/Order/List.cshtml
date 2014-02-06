@@ -39,7 +39,7 @@
                 @Html.NopLabelFor(model => model.EndDate):
             </td>
             <td class="adminData">
-                @Html.EditorFor(model => Model.EndDate)
+                @Html.EditorFor(model => model.EndDate)
             </td>
         </tr>
         <tr>
@@ -47,7 +47,7 @@
                 @Html.NopLabelFor(model => model.CustomerEmail):
             </td>
             <td class="adminData">
-                @Html.EditorFor(model => Model.CustomerEmail)
+                @Html.EditorFor(model => model.CustomerEmail)
             </td>
         </tr>
         <tr @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
@@ -95,7 +95,7 @@
                 @Html.NopLabelFor(model => model.OrderGuid):
             </td>
             <td class="adminData">
-                @Html.EditorFor(model => Model.OrderGuid)
+                @Html.EditorFor(model => model.OrderGuid)
             </td>
         </tr>
         <tr>
@@ -103,7 +103,7 @@
                 @Html.NopLabelFor(model => model.GoDirectlyToNumber):
             </td>
             <td class="adminData">
-                @Html.EditorFor(model => Model.GoDirectlyToNumber)
+                @Html.EditorFor(model => model.GoDirectlyToNumber)
                 <input type="submit" name="go-to-order-by-number" class="k-button" value="@T("Admin.Common.Go")" />
             </td>
         </tr>

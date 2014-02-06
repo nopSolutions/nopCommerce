@@ -44,7 +44,7 @@
                 @Html.NopLabelFor(model => model.SearchEmail):
             </td>
             <td class="adminData">
-                @Html.EditorFor(model => Model.SearchEmail)
+                @Html.EditorFor(model => model.SearchEmail)
             </td>
         </tr>
         @if (Model.UsernamesEnabled)
@@ -54,7 +54,7 @@
                     @Html.NopLabelFor(model => model.SearchUsername):
                 </td>
                 <td class="adminData">
-                    @Html.EditorFor(model => Model.SearchUsername)
+                    @Html.EditorFor(model => model.SearchUsername)
                 </td>
             </tr>
         }
@@ -63,7 +63,7 @@
                 @Html.NopLabelFor(model => model.SearchFirstName):
             </td>
             <td class="adminData">
-                @Html.EditorFor(model => Model.SearchFirstName)
+                @Html.EditorFor(model => model.SearchFirstName)
             </td>
         </tr>
         <tr>
@@ -71,7 +71,7 @@
                 @Html.NopLabelFor(model => model.SearchLastName):
             </td>
             <td class="adminData">
-                @Html.EditorFor(model => Model.SearchLastName)
+                @Html.EditorFor(model => model.SearchLastName)
             </td>
         </tr>
         @if (Model.DateOfBirthEnabled)
@@ -95,8 +95,8 @@
                 dayOfBirthValues.Add(new SelectListItem() { Text = i.ToString(CultureInfo.InvariantCulture), Value = i.ToString(CultureInfo.InvariantCulture) });
             }
                     }
-                    @Html.DropDownListFor(model => Model.SearchMonthOfBirth, monthOfBirthValues)
-                    @Html.DropDownListFor(model => Model.SearchDayOfBirth, dayOfBirthValues)
+                    @Html.DropDownListFor(model => model.SearchMonthOfBirth, monthOfBirthValues)
+                    @Html.DropDownListFor(model => model.SearchDayOfBirth, dayOfBirthValues)
                 </td>
             </tr>
         }
@@ -108,7 +108,7 @@
                     @Html.NopLabelFor(model => model.SearchCompany):
                 </td>
                 <td class="adminData">
-                    @Html.EditorFor(model => Model.SearchCompany)
+                    @Html.EditorFor(model => model.SearchCompany)
                 </td>
             </tr>
         }        
@@ -119,7 +119,7 @@
                     @Html.NopLabelFor(model => model.SearchPhone):
                 </td>
                 <td class="adminData">
-                    @Html.EditorFor(model => Model.SearchPhone)
+                    @Html.EditorFor(model => model.SearchPhone)
                 </td>
             </tr>
         }
@@ -130,7 +130,7 @@
                     @Html.NopLabelFor(model => model.SearchZipPostalCode):
                 </td>
                 <td class="adminData">
-                    @Html.EditorFor(model => Model.SearchZipPostalCode)
+                    @Html.EditorFor(model => model.SearchZipPostalCode)
                 </td>
             </tr>
         } 

@@ -26,14 +26,14 @@
 <div id="copyproduct-window" style="display:none;">
     @using (Html.BeginForm("CopyProduct", "Product"))
     {
-        @Html.HiddenFor(model => Model.CopyProductModel.Id)
+        @Html.HiddenFor(model => model.CopyProductModel.Id)
         <table style="text-align: left;">
             <tr>
                 <td>
                     @Html.NopLabelFor(model => model.CopyProductModel.Name):
                 </td>
                 <td>
-                    @Html.EditorFor(model => Model.CopyProductModel.Name)
+                    @Html.EditorFor(model => model.CopyProductModel.Name)
                 </td>
             </tr>
             <tr>
@@ -41,7 +41,7 @@
                     @Html.NopLabelFor(model => model.CopyProductModel.Published):
                 </td>
                 <td>
-                    @Html.EditorFor(model => Model.CopyProductModel.Published)
+                    @Html.EditorFor(model => model.CopyProductModel.Published)
                 </td>
             </tr>
             <tr>
@@ -49,7 +49,7 @@
                     @Html.NopLabelFor(model => model.CopyProductModel.CopyImages):
                 </td>
                 <td>
-                    @Html.EditorFor(model => Model.CopyProductModel.CopyImages)
+                    @Html.EditorFor(model => model.CopyProductModel.CopyImages)
                 </td>
             </tr>
             <tr>

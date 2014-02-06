@@ -82,7 +82,7 @@
                 @Html.NopLabelFor(model => model.Locales[item].BccEmailAddresses):
             </td>
             <td class="adminData">
-                @Html.EditorFor(model => Model.Locales[item].BccEmailAddresses)
+                @Html.EditorFor(model => model.Locales[item].BccEmailAddresses)
                 @Html.ValidationMessageFor(model => model.Locales[item].BccEmailAddresses)
             </td>
         </tr>
@@ -91,7 +91,7 @@
                 @Html.NopLabelFor(model => model.Locales[item].Subject):
             </td>
             <td class="adminData">
-                @Html.EditorFor(model => Model.Locales[item].Subject)
+                @Html.EditorFor(model => model.Locales[item].Subject)
                 @Html.ValidationMessageFor(model => model.Locales[item].Subject)
             </td>
         </tr>
@@ -100,7 +100,7 @@
                 @Html.NopLabelFor(model => model.Locales[item].Body):
             </td>
             <td class="adminData">
-                @Html.EditorFor(model => Model.Locales[item].Body, "RichEditor")
+                @Html.EditorFor(model => model.Locales[item].Body, "RichEditor")
                 @Html.ValidationMessageFor(model => model.Locales[item].Body)
             </td>
         </tr>
@@ -109,7 +109,7 @@
                 @Html.NopLabelFor(model => model.Locales[item].EmailAccountId):
             </td>
             <td class="adminData">
-                @Html.DropDownListFor(model => Model.Locales[item].EmailAccountId, new SelectList(Model.AvailableEmailAccounts, "Id", "DisplayName", Model.Locales[item].EmailAccountId))
+                @Html.DropDownListFor(model => model.Locales[item].EmailAccountId, new SelectList(Model.AvailableEmailAccounts, "Id", "DisplayName", Model.Locales[item].EmailAccountId))
                 @Html.ValidationMessageFor(model => model.Locales[item].EmailAccountId)
             </td>
         </tr>
