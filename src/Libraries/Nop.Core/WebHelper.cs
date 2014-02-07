@@ -53,6 +53,7 @@ namespace Nop.Core
             if (_httpContext == null || _httpContext.Request == null)
                 return string.Empty;
 
+            var result = "";
             if (_httpContext.Request.Headers != null)
             {
                 //look for the X-Forwarded-For (XFF) HTTP header field
@@ -67,19 +68,27 @@ namespace Nop.Core
                 if (!String.IsNullOrEmpty(xff))
                 {
                     string lastIp = xff.Split(new char[] { ',' }).FirstOrDefault();
-                    if (!String.IsNullOrEmpty(lastIp))
-                    {
-                        return lastIp;
-                    }
+                    result = lastIp;
                 }
             }
 
-            if (_httpContext.Request.UserHostAddress != null)
+            if (String.IsNullOrEmpty(result) && _httpContext.Request.UserHostAddress != null)
             {
-                return _httpContext.Request.UserHostAddress;
+                result = _httpContext.Request.UserHostAddress;
             }
 
-            return string.Empty;
+            //some validation
+            if (result == "::1")
+                result = "127.0.0.1";
+            //remove port
+            if (!String.IsNullOrEmpty(result))
+            {
+                int index = result.IndexOf(":", StringComparison.InvariantCultureIgnoreCase);
+                if (index > 0)
+                    result = result.Substring(0, index); 
+            }
+            return result;
+            
         }
 
         /// <summary>

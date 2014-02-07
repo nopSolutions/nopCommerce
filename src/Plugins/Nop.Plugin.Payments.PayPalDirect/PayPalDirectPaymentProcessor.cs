@@ -130,9 +130,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
             req.DoDirectPaymentRequest.Version = GetApiVersion();
             var details = new DoDirectPaymentRequestDetailsType();
             req.DoDirectPaymentRequest.DoDirectPaymentRequestDetails = details;
-            details.IPAddress = _webHelper.GetCurrentIpAddress();
-            if (details.IPAddress == "::1")
-                details.IPAddress = "127.0.0.1";
+            details.IPAddress = _webHelper.GetCurrentIpAddress() ?? "";
             if (authorizeOnly)
                 details.PaymentAction = PaymentActionCodeType.Authorization;
             else
