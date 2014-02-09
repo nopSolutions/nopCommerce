@@ -335,7 +335,7 @@ namespace Nop.Services.Messages
             //tokens
             var tokens = new List<Token>();
             _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
-            _messageTokenProvider.AddOrderTokens(tokens, order, languageId);
+            _messageTokenProvider.AddOrderTokens(tokens, order, languageId, vendor.Id);
             _messageTokenProvider.AddCustomerTokens(tokens, order.Customer);
 
             //event notification

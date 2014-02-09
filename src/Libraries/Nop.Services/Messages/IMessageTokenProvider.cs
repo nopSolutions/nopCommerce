@@ -15,7 +15,7 @@ namespace Nop.Services.Messages
     {
         void AddStoreTokens(IList<Token> tokens, Store store, EmailAccount emailAccount);
 
-        void AddOrderTokens(IList<Token> tokens, Order order, int languageId);
+        void AddOrderTokens(IList<Token> tokens, Order order, int languageId, int vendorId = 0);
 
         void AddShipmentTokens(IList<Token> tokens, Shipment shipment, int languageId);
 
