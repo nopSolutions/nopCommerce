@@ -48,5 +48,18 @@ namespace Nop.Plugin.Shipping.UPS.Models
         [NopResourceDisplayName("Plugins.Shipping.UPS.Fields.AvailableCarrierServices")]
         public IList<string> AvailableCarrierServices { get; set; }
         public string[] CheckedCarrierServices { get; set; }
+
+        [NopResourceDisplayName("Plugins.Shipping.UPS.Fields.PassDimensions")]
+        public bool PassDimensions { get; set; }
+
+        [NopResourceDisplayName("Plugins.Shipping.UPS.Fields.PackingPackageVolume")]
+        public int PackingPackageVolume { get; set; }
+
+        public int PackingType { get; set; }
+        [NopResourceDisplayName("Plugins.Shipping.UPS.Fields.PackingType")]
+        public SelectList PackingTypeValues { get; set; }
+
+        [NopResourceDisplayName("Plugins.Shipping.UPS.Fields.Tracing")]
+        public bool Tracing { get; set; }
     }
 }

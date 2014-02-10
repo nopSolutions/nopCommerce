@@ -85,6 +85,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="PackingType.cs" />
     <Compile Include="UPSShipmentTracker.cs" />
     <Compile Include="Domain\UPSCustomerClassification.cs" />
     <Compile Include="Domain\UPSPackagingType.cs" />

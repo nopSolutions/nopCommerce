@@ -24,5 +24,13 @@ namespace Nop.Plugin.Shipping.UPS
         public string CarrierServicesOffered { get; set; }
 
         public bool InsurePackage { get; set; }
+
+        public bool PassDimensions { get; set; }
+
+        public int PackingPackageVolume { get; set; }
+
+        public PackingType PackingType { get; set; }
+
+        public bool Tracing { get; set; }
     }
 }

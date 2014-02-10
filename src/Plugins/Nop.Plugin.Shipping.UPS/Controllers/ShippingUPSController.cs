@@ -5,6 +5,7 @@ using Nop.Core;
 using Nop.Plugin.Shipping.UPS.Domain;
 using Nop.Plugin.Shipping.UPS.Models;
 using Nop.Services.Configuration;
+using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 
 namespace Nop.Plugin.Shipping.UPS.Controllers
@@ -31,6 +32,10 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
             model.Password = _upsSettings.Password;
             model.AdditionalHandlingCharge = _upsSettings.AdditionalHandlingCharge;
             model.InsurePackage = _upsSettings.InsurePackage;
+            model.PackingPackageVolume = _upsSettings.PackingPackageVolume;
+            model.PackingType = Convert.ToInt32(_upsSettings.PackingType);
+            model.PackingTypeValues = _upsSettings.PackingType.ToSelectList();
+            model.PassDimensions = _upsSettings.PassDimensions;
 
             foreach (UPSCustomerClassification customerClassification in Enum.GetValues(typeof(UPSCustomerClassification)))
             {
@@ -100,6 +105,10 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
             _upsSettings.CustomerClassification = (UPSCustomerClassification)Enum.Parse(typeof(UPSCustomerClassification), model.CustomerClassification);
             _upsSettings.PickupType = (UPSPickupType)Enum.Parse(typeof(UPSPickupType), model.PickupType);
             _upsSettings.PackagingType = (UPSPackagingType)Enum.Parse(typeof(UPSPackagingType), model.PackagingType);
+            _upsSettings.PackingPackageVolume = model.PackingPackageVolume;
+            _upsSettings.PackingType = (PackingType)model.PackingType;
+            _upsSettings.PassDimensions = model.PassDimensions;
+            _upsSettings.Tracing = model.Tracing;
 
 
             // Save selected services

@@ -1,5 +1,5 @@
 ﻿//------------------------------------------------------------------------------
-// Contributor(s): mb 10/20/2010. 
+// Contributor(s): mb 10/20/2010, New York 02/08/2014
 //------------------------------------------------------------------------------
 
 using System;
@@ -38,7 +38,6 @@ namespace Nop.Plugin.Shipping.UPS
         private const string MEASUREWEIGHTSYSTEMKEYWORD = "lb";
         private const string MEASUREDIMENSIONSYSTEMKEYWORD = "inches";
 
-
         #endregion
 
         #region Fields
@@ -54,14 +53,20 @@ namespace Nop.Plugin.Shipping.UPS
         private readonly ILogger _logger;
         private readonly ILocalizationService _localizationService;
 
+        private StringBuilder _traceMessages;
+
         #endregion
 
         #region Ctor
         public UPSComputationMethod(IMeasureService measureService,
-            IShippingService shippingService, ISettingService settingService,
-            UPSSettings upsSettings, ICountryService countryService,
-            ICurrencyService currencyService, CurrencySettings currencySettings,
-            IOrderTotalCalculationService orderTotalCalculationService, ILogger logger,
+            IShippingService shippingService,
+            ISettingService settingService,
+            UPSSettings upsSettings, 
+            ICountryService countryService,
+            ICurrencyService currencyService,
+            CurrencySettings currencySettings,
+            IOrderTotalCalculationService orderTotalCalculationService,
+            ILogger logger,
             ILocalizationService localizationService)
         {
             this._measureService = measureService;
@@ -74,6 +79,8 @@ namespace Nop.Plugin.Shipping.UPS
             this._orderTotalCalculationService = orderTotalCalculationService;
             this._logger = logger;
             this._localizationService = localizationService;
+
+            this._traceMessages = new StringBuilder();
         }
         #endregion
 
@@ -83,40 +90,10 @@ namespace Nop.Plugin.Shipping.UPS
             GetShippingOptionRequest getShippingOptionRequest, UPSCustomerClassification customerClassification,
             UPSPickupType pickupType, UPSPackagingType packagingType)
         {
-            var usedMeasureWeight = _measureService.GetMeasureWeightBySystemKeyword(MEASUREWEIGHTSYSTEMKEYWORD);
-            if (usedMeasureWeight == null)
-                throw new NopException(string.Format("UPS shipping service. Could not load \"{0}\" measure weight", MEASUREWEIGHTSYSTEMKEYWORD));
-
-            var usedMeasureDimension = _measureService.GetMeasureDimensionBySystemKeyword(MEASUREDIMENSIONSYSTEMKEYWORD);
-            if (usedMeasureDimension == null)
-                throw new NopException(string.Format("UPS shipping service. Could not load \"{0}\" measure dimension", MEASUREDIMENSIONSYSTEMKEYWORD));
-
-            int length = Convert.ToInt32(Math.Ceiling(_measureService.ConvertFromPrimaryMeasureDimension(getShippingOptionRequest.GetTotalLength(), usedMeasureDimension)));
-            int height = Convert.ToInt32(Math.Ceiling(_measureService.ConvertFromPrimaryMeasureDimension(getShippingOptionRequest.GetTotalHeight(), usedMeasureDimension)));
-            int width = Convert.ToInt32(Math.Ceiling(_measureService.ConvertFromPrimaryMeasureDimension(getShippingOptionRequest.GetTotalWidth(), usedMeasureDimension)));
-            int weight = Convert.ToInt32(Math.Ceiling(_measureService.ConvertFromPrimaryMeasureWeight(_shippingService.GetShoppingCartTotalWeight(getShippingOptionRequest.Items), usedMeasureWeight)));
-            if (length < 1)
-                length = 1;
-            if (height < 1)
-                height = 1;
-            if (width < 1)
-                width = 1;
-            if (weight < 1)
-                weight = 1;
-
             string zipPostalCodeFrom = getShippingOptionRequest.ZipPostalCodeFrom;
             string zipPostalCodeTo = getShippingOptionRequest.ShippingAddress.ZipPostalCode;
             string countryCodeFrom = getShippingOptionRequest.CountryFrom.TwoLetterIsoCode;
             string countryCodeTo = getShippingOptionRequest.ShippingAddress.Country.TwoLetterIsoCode;
-
-
-            decimal orderSubTotalDiscountAmount = decimal.Zero;
-            Discount orderSubTotalAppliedDiscount = null;
-            decimal subTotalWithoutDiscountBase = decimal.Zero;
-            decimal subTotalWithDiscountBase = decimal.Zero;
-            _orderTotalCalculationService.GetShoppingCartSubTotal(getShippingOptionRequest.Items,
-                out orderSubTotalDiscountAmount, out orderSubTotalAppliedDiscount,
-                out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
 
             var sb = new StringBuilder();
             sb.Append("<?xml version='1.0'?>");
@@ -168,34 +145,98 @@ namespace Nop.Plugin.Shipping.UPS
             sb.Append("<Code>03</Code>");
             sb.Append("</Service>");
 
+            string currencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
+
+            //get subTotalWithoutDiscountBase, for use as insured value (when Settings.InsurePackage)
+            //(note: prior versions used "with discount", but "without discount" better reflects true value to insure.)
+            decimal orderSubTotalDiscountAmount = decimal.Zero;
+            Discount orderSubTotalAppliedDiscount = null;
+            decimal subTotalWithoutDiscountBase = decimal.Zero;
+            decimal subTotalWithDiscountBase = decimal.Zero;
+            _orderTotalCalculationService.GetShoppingCartSubTotal(getShippingOptionRequest.Items,
+                out orderSubTotalDiscountAmount, out orderSubTotalAppliedDiscount,
+                out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
+
+            if (_upsSettings.Tracing)
+                _traceMessages.AppendLine(" Packing Type: " + _upsSettings.PackingType.ToString());
+
+            switch (_upsSettings.PackingType)
+            {
+                case PackingType.PackByOneItemPerPackage:
+                    SetIndividualPackageLineItemsOneItemPerPackage(sb, getShippingOptionRequest, packagingType, currencyCode);
+                    break;
+                case PackingType.PackByVolume:
+                    SetIndividualPackageLineItemsCubicRootDimensions(sb, getShippingOptionRequest, packagingType, subTotalWithoutDiscountBase, currencyCode);
+                    break;
+                case PackingType.PackByDimensions:
+                default:
+                    SetIndividualPackageLineItems(sb, getShippingOptionRequest, packagingType, subTotalWithoutDiscountBase, currencyCode);
+                    break;
+            }
+
+            sb.Append("</Shipment>");
+            sb.Append("</RatingServiceSelectionRequest>");
+
+            return sb.ToString();
+        }
+
+        private void AppendPackageRequest(StringBuilder sb, UPSPackagingType packagingType, decimal length, decimal height, decimal width, decimal weight, decimal insuranceAmount, string currencyCode)
+        {
+            if (_upsSettings.Tracing)
+                _traceMessages.AppendFormat(" Package: LxHxW={0}x{1}x{2}; Weight={3}; Insured={4} {5}.", length, height, width, weight, insuranceAmount, currencyCode).AppendLine();
+
+            sb.Append("<Package>");
+            sb.Append("<PackagingType>");
+            sb.AppendFormat("<Code>{0}</Code>", GetPackagingTypeCode(packagingType));
+            sb.Append("</PackagingType>");
+            sb.Append("<Dimensions>");
+            sb.AppendFormat("<Length>{0}</Length>", length);
+            sb.AppendFormat("<Width>{0}</Width>", width);
+            sb.AppendFormat("<Height>{0}</Height>", height);
+            sb.Append("</Dimensions>");
+            sb.Append("<PackageWeight>");
+            sb.AppendFormat("<Weight>{0}</Weight>", weight);
+            sb.Append("</PackageWeight>");
+
+            if (insuranceAmount > Decimal.Zero)
+            {
+                sb.Append("<PackageServiceOptions>");
+                sb.Append("<InsuredValue>");
+                sb.AppendFormat("<CurrencyCode>{0}</CurrencyCode>", currencyCode);
+                sb.AppendFormat("<MonetaryValue>{0}</MonetaryValue>", insuranceAmount);
+                sb.Append("</InsuredValue>");
+                sb.Append("</PackageServiceOptions>");
+            }
+
+            sb.Append("</Package>");
+        }
+
+        private void SetIndividualPackageLineItems(StringBuilder sb, GetShippingOptionRequest getShippingOptionRequest, UPSPackagingType packagingType, decimal orderSubTotal, string currencyCode)
+        {
+            // Rate request setup - Total Dimensions of Shopping Cart Items determines number of packages
+
+            var usedMeasureWeight = GetUsedMeasureWeight();
+            var usedMeasureDimension = GetUsedMeasureDimension();
+            int length = ConvertFromPrimaryMeasureDimension(getShippingOptionRequest.GetTotalLength(), usedMeasureDimension);
+            int height = ConvertFromPrimaryMeasureDimension(getShippingOptionRequest.GetTotalHeight(), usedMeasureDimension);
+            int width = ConvertFromPrimaryMeasureDimension(getShippingOptionRequest.GetTotalWidth(), usedMeasureDimension);
+            int weight = ConvertFromPrimaryMeasureWeight(_shippingService.GetShoppingCartTotalWeight(getShippingOptionRequest.Items), usedMeasureWeight);
+            if (length < 1)
+                length = 1;
+            if (height < 1)
+                height = 1;
+            if (width < 1)
+                width = 1;
+            if (weight < 1)
+                weight = 1;
 
             if ((!IsPackageTooHeavy(weight)) && (!IsPackageTooLarge(length, height, width)))
             {
-                sb.Append("<Package>");
-                sb.Append("<PackagingType>");
-                sb.AppendFormat("<Code>{0}</Code>", GetPackagingTypeCode(packagingType));
-                sb.Append("</PackagingType>");
-                sb.Append("<Dimensions>");
-                sb.AppendFormat("<Length>{0}</Length>", length);
-                sb.AppendFormat("<Width>{0}</Width>", width);
-                sb.AppendFormat("<Height>{0}</Height>", height);
-                sb.Append("</Dimensions>");
-                sb.Append("<PackageWeight>");
-                sb.AppendFormat("<Weight>{0}</Weight>", weight);
-                sb.Append("</PackageWeight>");
+                if (!_upsSettings.PassDimensions)
+                    length = width = height = 0;
 
-                if (_upsSettings.InsurePackage)
-                {
-                    //The maximum declared amount per package: 50000 USD.
-                    int packageInsurancePrice = Convert.ToInt32(subTotalWithDiscountBase);
-                    sb.Append("<PackageServiceOptions>");
-                    sb.Append("<InsuredValue>");
-                    sb.AppendFormat("<CurrencyCode>{0}</CurrencyCode>", _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode);
-                    sb.AppendFormat("<MonetaryValue>{0}</MonetaryValue>", packageInsurancePrice);
-                    sb.Append("</InsuredValue>");
-                    sb.Append("</PackageServiceOptions>");
-                }
-                sb.Append("</Package>");
+                int insuranceAmount = _upsSettings.InsurePackage ? Convert.ToInt32(orderSubTotal) : 0;
+                AppendPackageRequest(sb, packagingType, length, height, width, weight, insuranceAmount, currencyCode);
             }
             else
             {
@@ -227,43 +268,151 @@ namespace Nop.Plugin.Shipping.UPS
                 if (length2 < 1)
                     length2 = 1;
 
+                if (!_upsSettings.PassDimensions)
+                    length2 = width2 = height2 = 0;
+
                 //The maximum declared amount per package: 50000 USD.
-                int packageInsurancePrice = Convert.ToInt32(subTotalWithDiscountBase / totalPackages);
+                int insuranceAmountPerPackage = _upsSettings.InsurePackage ? Convert.ToInt32(orderSubTotal / totalPackages) : 0;
 
                 for (int i = 0; i < totalPackages; i++)
                 {
-                    sb.Append("<Package>");
-                    sb.Append("<PackagingType>");
-                    sb.AppendFormat("<Code>{0}</Code>", GetPackagingTypeCode(packagingType));
-                    sb.Append("</PackagingType>");
-                    sb.Append("<Dimensions>");
-                    sb.AppendFormat("<Length>{0}</Length>", length2);
-                    sb.AppendFormat("<Width>{0}</Width>", width2);
-                    sb.AppendFormat("<Height>{0}</Height>", height2);
-                    sb.Append("</Dimensions>");
-                    sb.Append("<PackageWeight>");
-                    sb.AppendFormat("<Weight>{0}</Weight>", weight2);
-                    sb.Append("</PackageWeight>");
-
-                    if (_upsSettings.InsurePackage)
-                    {
-                        sb.Append("<PackageServiceOptions>");
-                        sb.Append("<InsuredValue>");
-                        sb.AppendFormat("<CurrencyCode>{0}</CurrencyCode>", _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode);
-                        sb.AppendFormat("<MonetaryValue>{0}</MonetaryValue>", packageInsurancePrice);
-                        sb.Append("</InsuredValue>");
-                        sb.Append("</PackageServiceOptions>");
-                    }
-
-                    sb.Append("</Package>");
+                    AppendPackageRequest(sb, packagingType, length2, height2, width2, weight2, insuranceAmountPerPackage, currencyCode);
                 }
             }
+        }
 
+        private void SetIndividualPackageLineItemsOneItemPerPackage(StringBuilder sb, GetShippingOptionRequest getShippingOptionRequest, UPSPackagingType packagingType, string currencyCode)
+        {
+            // Rate request setup - each Shopping Cart Item is a separate package
 
-            sb.Append("</Shipment>");
-            sb.Append("</RatingServiceSelectionRequest>");
-            string requestString = sb.ToString();
-            return requestString;
+            var usedMeasureWeight = GetUsedMeasureWeight();
+            var usedMeasureDimension = GetUsedMeasureDimension();
+
+            foreach (var sci in getShippingOptionRequest.Items)
+            {
+                int length = ConvertFromPrimaryMeasureDimension(sci.Product.Length, usedMeasureDimension);
+                int height = ConvertFromPrimaryMeasureDimension(sci.Product.Height, usedMeasureDimension);
+                int width = ConvertFromPrimaryMeasureDimension(sci.Product.Width, usedMeasureDimension);
+                int weight = ConvertFromPrimaryMeasureWeight(sci.Product.Weight, usedMeasureWeight);
+                if (length < 1)
+                    length = 1;
+                if (height < 1)
+                    height = 1;
+                if (width < 1)
+                    width = 1;
+                if (weight < 1)
+                    weight = 1;
+
+                //The maximum declared amount per package: 50000 USD.
+                //TODO: Currently using Product.Price - should we use GetUnitPrice() instead?
+                // Convert.ToInt32(_priceCalculationService.GetUnitPrice(sci, includeDiscounts:false))
+                //One could argue that the insured value should be based on Cost rather than Price.
+                //GetUnitPrice handles Attribute Adjustments and also Customer Entered Price.
+                //But, even with includeDiscounts:false, it could apply a "discount" from Tier pricing.
+                int insuranceAmountPerPackage = _upsSettings.InsurePackage ? Convert.ToInt32(sci.Product.Price) : 0;
+
+                for (int j = 0; j < sci.Quantity; j++)
+                {
+                    AppendPackageRequest(sb, packagingType, length, height, width, weight, insuranceAmountPerPackage, currencyCode);
+                }
+            }
+        }
+
+        private void SetIndividualPackageLineItemsCubicRootDimensions(StringBuilder sb, GetShippingOptionRequest getShippingOptionRequest, UPSPackagingType packagingType, decimal orderSubTotal, string currencyCode)
+        {
+            // Rate request setup - Total Volume of Shopping Cart Items determines number of packages
+
+            //Dimensional weight is based on volume (the amount of space a package
+            //occupies in relation to its actual weight). If the cubic size of your
+            //package measures three cubic feet (5,184 cubic inches or 84,951
+            //cubic centimetres) or greater, you will be charged the greater of the
+            //dimensional weight or the actual weight.
+            //This algorithm devides total package volume by the UPS settings PackingPackageVolume
+            //so that no package requires dimensional weight; this could result in an under-charge.
+
+            var usedMeasureWeight = GetUsedMeasureWeight();
+            var usedMeasureDimension = GetUsedMeasureDimension();
+
+            int totalPackagesDims;
+            int length;
+            int height;
+            int width;
+
+            if (getShippingOptionRequest.Items.Count == 1 && getShippingOptionRequest.Items[0].Quantity == 1)
+            {
+                totalPackagesDims = 1;
+                var product = getShippingOptionRequest.Items[0].Product;
+                length = ConvertFromPrimaryMeasureDimension(product.Length, usedMeasureDimension);
+                height = ConvertFromPrimaryMeasureDimension(product.Height, usedMeasureDimension);
+                width = ConvertFromPrimaryMeasureDimension(product.Width, usedMeasureDimension);
+            }
+            else
+            {
+                decimal totalVolume = 0;
+                foreach (var item in getShippingOptionRequest.Items)
+                {
+                    var product = item.Product;
+                    int productLength = ConvertFromPrimaryMeasureDimension(product.Length, usedMeasureDimension);
+                    int productHeight = ConvertFromPrimaryMeasureDimension(product.Height, usedMeasureDimension);
+                    int productWidth = ConvertFromPrimaryMeasureDimension(product.Width, usedMeasureDimension);
+                    totalVolume += item.Quantity * (productHeight * productWidth * productLength);
+                }
+
+                int dimension;
+                if (totalVolume == 0)
+                {
+                    dimension = 0;
+                    totalPackagesDims = 1;
+                }
+                else
+                {
+                    // cubic inches
+                    int packageVolume = _upsSettings.PackingPackageVolume;
+                    if (packageVolume <= 0)
+                        packageVolume = 5184;
+
+                    // cube root (floor)
+                    dimension = Convert.ToInt32(Math.Floor(Math.Pow(Convert.ToDouble(packageVolume), (double)(1.0 / 3.0))));
+                    if (IsPackageTooLarge(dimension, dimension, dimension))
+                        throw new NopException("upsSettings.PackingPackageVolume exceeds max package size");
+
+                    // adjust packageVolume for dimensions calculated
+                    packageVolume = dimension * dimension * dimension;
+
+                    totalPackagesDims = Convert.ToInt32(Math.Ceiling(totalVolume / packageVolume));
+                }
+
+                length = width = height = dimension;
+            }
+            if (length < 1)
+                length = 1;
+            if (height < 1)
+                height = 1;
+            if (width < 1)
+                width = 1;
+
+            int weight = ConvertFromPrimaryMeasureWeight(_shippingService.GetShoppingCartTotalWeight(getShippingOptionRequest.Items), usedMeasureWeight);
+            if (weight < 1)
+                weight = 1;
+
+            int totalPackagesWeights = 1;
+            if (IsPackageTooHeavy(weight))
+            {
+                totalPackagesWeights = Convert.ToInt32(Math.Ceiling((decimal)weight / (decimal)MAXPACKAGEWEIGHT));
+            }
+
+            int totalPackages = totalPackagesDims > totalPackagesWeights ? totalPackagesDims : totalPackagesWeights;
+
+            int weightPerPackage = weight / totalPackages;
+
+            //The maximum declared amount per package: 50000 USD.
+            int insuranceAmountPerPackage = _upsSettings.InsurePackage ? Convert.ToInt32(orderSubTotal / totalPackages) : 0;
+
+            for (int i = 0; i < totalPackages; i++)
+            {
+                AppendPackageRequest(sb, packagingType, length, height, width, weightPerPackage, insuranceAmountPerPackage, currencyCode);
+            }
+
         }
 
         private string DoRequest(string url, string requestString)
@@ -410,6 +559,33 @@ namespace Nop.Plugin.Shipping.UPS
                 return false;
         }
 
+        private MeasureWeight GetUsedMeasureWeight()
+        {
+            var usedMeasureWeight = _measureService.GetMeasureWeightBySystemKeyword(MEASUREWEIGHTSYSTEMKEYWORD);
+            if (usedMeasureWeight == null)
+                throw new NopException("UPS shipping service. Could not load \"{0}\" measure weight", MEASUREWEIGHTSYSTEMKEYWORD);
+            return usedMeasureWeight;
+        }
+
+        private MeasureDimension GetUsedMeasureDimension()
+        {
+            var usedMeasureDimension = _measureService.GetMeasureDimensionBySystemKeyword(MEASUREDIMENSIONSYSTEMKEYWORD);
+            if (usedMeasureDimension == null)
+                throw new NopException("UPS shipping service. Could not load \"{0}\" measure dimension", MEASUREDIMENSIONSYSTEMKEYWORD);
+
+            return usedMeasureDimension;
+        }
+
+        private int ConvertFromPrimaryMeasureDimension(decimal quantity, MeasureDimension usedMeasureDimension)
+        {
+            return Convert.ToInt32(Math.Ceiling(_measureService.ConvertFromPrimaryMeasureDimension(quantity, usedMeasureDimension)));
+        }
+
+        private int ConvertFromPrimaryMeasureWeight(decimal quantity, MeasureWeight usedMeasureWeighht)
+        {
+            return Convert.ToInt32(Math.Ceiling(_measureService.ConvertFromPrimaryMeasureWeight(quantity, usedMeasureWeighht)));
+        }
+
         private List<ShippingOption> ParseResponse(string response, ref string error)
         {
             var shippingOptions = new List<ShippingOption>();
@@ -540,24 +716,42 @@ namespace Nop.Plugin.Shipping.UPS
                 getShippingOptionRequest.CountryFrom = _countryService.GetAllCountries().FirstOrDefault();
             }
 
-            string requestString = CreateRequest(_upsSettings.AccessKey, _upsSettings.Username, _upsSettings.Password, getShippingOptionRequest,
-                _upsSettings.CustomerClassification, _upsSettings.PickupType, _upsSettings.PackagingType);
-            string responseXml = DoRequest(_upsSettings.Url, requestString);
-            string error = "";
-            var shippingOptions = ParseResponse(responseXml, ref error);
-            if (String.IsNullOrEmpty(error))
+            try
             {
-                foreach (var shippingOption in shippingOptions)
+                string requestString = CreateRequest(_upsSettings.AccessKey, _upsSettings.Username, _upsSettings.Password, getShippingOptionRequest,
+                    _upsSettings.CustomerClassification, _upsSettings.PickupType, _upsSettings.PackagingType);
+                if (_upsSettings.Tracing)
+                    _traceMessages.AppendLine("Request:").AppendLine(requestString);
+
+                string responseXml = DoRequest(_upsSettings.Url, requestString);
+                if (_upsSettings.Tracing)
+                    _traceMessages.AppendLine("Response:").AppendLine(responseXml);
+
+                string error = "";
+                var shippingOptions = ParseResponse(responseXml, ref error);
+                if (String.IsNullOrEmpty(error))
                 {
-                    if (!shippingOption.Name.ToLower().StartsWith("ups"))
-                        shippingOption.Name = string.Format("UPS {0}", shippingOption.Name);
-                    shippingOption.Rate += _upsSettings.AdditionalHandlingCharge;
-                    response.ShippingOptions.Add(shippingOption);
+                    foreach (var shippingOption in shippingOptions)
+                    {
+                        if (!shippingOption.Name.ToLower().StartsWith("ups"))
+                            shippingOption.Name = string.Format("UPS {0}", shippingOption.Name);
+                        shippingOption.Rate += _upsSettings.AdditionalHandlingCharge;
+                        response.ShippingOptions.Add(shippingOption);
+                    }
+                }
+                else
+                {
+                    response.AddError(error);
                 }
             }
-            else
+            finally
             {
-                response.AddError(error);
+                if (_upsSettings.Tracing && _traceMessages.Length > 0)
+                {
+                    string shortMessage = String.Format("UPS Get Shipping Options for customer {0}.  {1} item(s) in cart",
+                        getShippingOptionRequest.Customer.Email, getShippingOptionRequest.Items.Count);
+                    _logger.Information(shortMessage, new Exception(_traceMessages.ToString()), getShippingOptionRequest.Customer);
+                }
             }
 
             return response;
@@ -585,7 +779,7 @@ namespace Nop.Plugin.Shipping.UPS
             controllerName = "ShippingUPS";
             routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Shipping.UPS.Controllers" }, { "area", null } };
         }
-        
+
         /// <summary>
         /// Install plugin
         /// </summary>
@@ -601,7 +795,9 @@ namespace Nop.Plugin.Shipping.UPS
                 CustomerClassification = UPSCustomerClassification.Retail,
                 PickupType = UPSPickupType.OneTimePickup,
                 PackagingType = UPSPackagingType.ExpressBox,
-
+                PackingPackageVolume = 5184,
+                PackingType = PackingType.PackByDimensions,
+                PassDimensions = true,
             };
             _settingService.SaveSetting(settings);
 
@@ -634,6 +830,18 @@ namespace Nop.Plugin.Shipping.UPS
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Tracker.NotDelivered", "Not delivered");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Tracker.Booked", "Booked");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Tracker.Delivered", "Delivered");
+            //packing
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.PassDimensions", "Pass dimensions");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.PassDimensions.Hint", "Check if you want to pass package dimensions when requesting rates.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.PackingType", "Packing type");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.PackingType.Hint", "Choose preferred packing type.");
+            this.AddOrUpdatePluginLocaleResource("Enums.Nop.Plugin.Shipping.UPS.PackingType.PackByDimensions", "Pack by dimensions");
+            this.AddOrUpdatePluginLocaleResource("Enums.Nop.Plugin.Shipping.UPS.PackingType.PackByOneItemPerPackage", "Pack by one item per package");
+            this.AddOrUpdatePluginLocaleResource("Enums.Nop.Plugin.Shipping.UPS.PackingType.PackByVolume", "Pack by volume");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.PackingPackageVolume", "Package volume");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.PackingPackageVolume.Hint", "Enter your package volume.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.Tracing", "Tracing");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.Tracing.Hint", "Check if you want to record plugin tracing in System Log.  Warning: The entire request and response XML will be logged (including AccessKey/UserName,Password).  Do not leave this enabled in a production environment.");
 
             base.Install();
         }
@@ -675,6 +883,19 @@ namespace Nop.Plugin.Shipping.UPS
             this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Tracker.NotDelivered");
             this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Tracker.Booked");
             this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Tracker.Delivered");
+            //packing
+            this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.PassDimensions");
+            this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.PassDimensions.Hint");
+            this.DeletePluginLocaleResource("Enums.Nop.Plugin.Shipping.UPS.PackingType.PackByDimensions");
+            this.DeletePluginLocaleResource("Enums.Nop.Plugin.Shipping.UPS.PackingType.PackByOneItemPerPackage");
+            this.DeletePluginLocaleResource("Enums.Nop.Plugin.Shipping.UPS.PackingType.PackByVolume");
+            this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.PackingType");
+            this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.PackingType.Hint");
+            this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.PackingPackageVolume");
+            this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.PackingPackageVolume.Hint");
+            //tracing
+            this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.Tracing");
+            this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.Tracing.Hint");
 
             base.Uninstall();
         }

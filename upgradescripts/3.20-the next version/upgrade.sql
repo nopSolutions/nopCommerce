@@ -230,6 +230,39 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Order.DisableBillingAddressCheckoutStep.Hint">
 	<Value>Check to disable "Billing address" step during checkout. Billing address will be pre-filled and saved using the default registration data (this option cannot be used with guest checkout enabled). Also ensure that appropriate address fields that cannot be pre-filled are not required (or disabled).</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.PassDimensions">
+	<Value>Pass dimensions</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.PassDimensions.Hint">
+	<Value>Check if you want to pass package dimensions when requesting rates.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.PackingType">
+	<Value>Packing type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.PackingType.Hint">
+	<Value>Choose preferred packing type.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Plugin.Shipping.UPS.PackingType.PackByDimensions">
+	<Value>Pack by dimensions</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Plugin.Shipping.UPS.PackingType.PackByOneItemPerPackage">
+	<Value>Pack by one item per package</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Plugin.Shipping.UPS.PackingType.PackByVolume">
+	<Value>Pack by volume</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.PackingPackageVolume">
+	<Value>Package volume</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.PackingPackageVolume.Hint">
+	<Value>Enter your package volume.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.Tracing">
+	<Value>Tracing</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.Tracing.Hint">
+	<Value>Check if you want to record plugin tracing in System Log.  Warning: The entire request and response XML will be logged (including AccessKey/UserName,Password).  Do not leave this enabled in a production environment.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -608,5 +641,34 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'ordersettings.disablebil
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'ordersettings.disablebillingaddresscheckoutstep', N'false', 0)
+END
+GO
+
+--new UPS settings
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'upssettings.passdimensions')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'upssettings.passdimensions', N'true', 0)
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'upssettings.packingtype')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'upssettings.packingtype', N'0', 0)
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'upssettings.packingpackagevolume')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'upssettings.packingpackagevolume', N'5184', 0)
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'upssettings.tracing')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'upssettings.tracing', N'false', 0)
 END
 GO
