@@ -3526,7 +3526,7 @@
                 <Value>Language resources</Value>
                 <Children>
                   <LocaleResource Name="Description">
-                    <Value>To find text or a specific resource (by name), you can apply a filter via the funnel icon in the "Value" or "Resource name" column headers.</Value>
+                    <Value>To find text or a specific resource (by name), you can apply a filter via the funnel icon in the "Value" or "Resource name" column headers (case sensitive).</Value>
                   </LocaleResource>
                   <LocaleResource Name="View">
                     <Value>View string resources</Value>
@@ -3977,7 +3977,7 @@
                 <Value>All settings (advanced)</Value>
                 <Children>
                   <LocaleResource Name="Description">
-                    <Value>To find text or a specific setting (by name), you can apply a filter via the funnel icon in the "Value" or "Setting name" column headers.</Value>
+                    <Value>To find text or a specific setting (by name), you can apply a filter via the funnel icon in the "Value" or "Setting name" column headers (case sensitive).</Value>
                   </LocaleResource>
                   <LocaleResource Name="Fields">
                     <Children>
