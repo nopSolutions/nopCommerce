@@ -1,19 +1,10 @@
 ﻿@model ProductDetailsModel
 @using Nop.Core.Domain.Media
-@using Nop.Core;
 @using Nop.Core.Infrastructure;
 @using Nop.Web.Models.Catalog;
 @{
-    Html.AddScriptParts("~/Scripts/slimbox2.js");
-    var supportRtl = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Rtl;
-    if (supportRtl)
-    {
-        Html.AddCssFileParts("~/Content/slimbox2/slimbox2-rtl.css");
-    }
-    else
-    {
-        Html.AddCssFileParts("~/Content/slimbox2/slimbox2.css");
-    }
+    Html.AddScriptParts("~/Scripts/jquery.magnific-popup.js");
+    Html.AddCssFileParts("~/Content/magnific-popup/magnific-popup.css");
 
     int productPerRow = EngineContext.Current.Resolve<MediaSettings>().ProductThumbPerRowOnProductDetailsPage;
 }
@@ -21,9 +12,21 @@
     <div class="picture">
         @if (Model.DefaultPictureZoomEnabled)
         {
-            <a href="@Model.DefaultPictureModel.FullSizeImageUrl" rel="lightbox-pd" title="@Model.Name" id="main-product-img-lightbox-anchor-@Model.Id">
+            <a href="@Model.DefaultPictureModel.FullSizeImageUrl" title="@Model.Name" id="main-product-img-lightbox-anchor-@Model.Id">
                 <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" itemprop="image" id="main-product-img-@Model.Id" />
             </a>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#main-product-img-lightbox-anchor-@Model.Id').magnificPopup(
+                    {
+                        type: 'image',
+                        removalDelay: 300,
+                        gallery: {
+                            enabled: true
+                        }
+                    });
+                });
+            </script>
         }
         else
         {
@@ -41,7 +44,7 @@
                 {
                 @Html.Raw("<div>")
                 }
-                <a href="@picture.FullSizeImageUrl" rel="lightbox-p" title="@Model.Name">
+                <a class="thumb-popup-link" href="@picture.FullSizeImageUrl" title="@Model.Name">
                     <img src="@picture.ImageUrl" alt="@picture.AlternateText" title="@picture.Title" />
                 </a>
                 if ((i % productPerRow == (productPerRow - 1)) ||
@@ -52,5 +55,17 @@
                 }
             }
         </div>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('.thumb-popup-link').magnificPopup(
+                {
+                    type: 'image',
+                    removalDelay: 300,
+                    gallery: {
+                        enabled: true
+                    }
+                });
+            });
+        </script>
     }
 </div>

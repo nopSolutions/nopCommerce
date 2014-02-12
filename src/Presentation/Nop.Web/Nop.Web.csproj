@@ -448,6 +448,7 @@
     <Content Include="Content\farbtastic\wheel.png" />
     <Content Include="Content\files\ExportImport\Index.htm" />
     <Content Include="Content\files\Index.htm" />
+    <Content Include="Content\magnific-popup\magnific-popup.css" />
     <Content Include="Content\tinymce\license.txt" />
     <Content Include="Content\tinymce\plugins\advlist\plugin.min.js" />
     <Content Include="Content\tinymce\plugins\anchor\plugin.min.js" />
@@ -698,12 +699,6 @@
     <Content Include="Content\kendo\2013.3.1119\Uniform\slider-v.gif" />
     <Content Include="Content\kendo\2013.3.1119\Uniform\sprite.png" />
     <Content Include="Content\kendo\2013.3.1119\Uniform\sprite_2x.png" />
-    <Content Include="Content\slimbox2\closelabel.gif" />
-    <Content Include="Content\slimbox2\loading.gif" />
-    <Content Include="Content\slimbox2\nextlabel.gif" />
-    <Content Include="Content\slimbox2\prevlabel.gif" />
-    <Content Include="Content\slimbox2\slimbox2-rtl.css" />
-    <Content Include="Content\slimbox2\slimbox2.css" />
     <Content Include="Content\tagit\jquery.tagit.css" />
     <Content Include="Content\tinymce\plugins\jbimages\css\dialog-v4.css" />
     <Content Include="Content\tinymce\plugins\jbimages\css\dialog.css" />
@@ -745,6 +740,7 @@
     <Content Include="Scripts\jquery-migrate-1.2.1.min.js" />
     <Content Include="Scripts\jquery-ui-1.10.3.custom.js" />
     <Content Include="Scripts\jquery-ui-1.10.3.custom.min.js" />
+    <Content Include="Scripts\jquery.magnific-popup.js" />
     <Content Include="Scripts\jquery.mobile-1.3.2.js" />
     <Content Include="Scripts\jquery.mobile-1.3.2.min.js" />
     <Content Include="Scripts\jquery.tmpl.min.js" />
@@ -1959,7 +1955,6 @@
     <Content Include="Scripts\jquery.fancybox-1.3.4.pack.js" />
     <Content Include="Scripts\public.onepagecheckout.js" />
     <Content Include="Scripts\public.common.js" />
-    <Content Include="Scripts\slimbox2.js" />
     <Content Include="Themes\DefaultClean\Content\images\ajax_loader_large.gif" />
     <Content Include="Themes\DefaultClean\Content\images\ajax_loader_small.gif" />
     <Content Include="Themes\DefaultClean\Content\images\bbeditor-button-bg.gif" />
