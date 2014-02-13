@@ -100,10 +100,8 @@ namespace Nop.Services.Messages
             return email.Id;
         }
 
-        protected virtual MessageTemplate GetLocalizedActiveMessageTemplate(string messageTemplateName, 
-            int languageId, int storeId)
+        protected virtual MessageTemplate GetActiveMessageTemplate(string messageTemplateName, int storeId)
         {
-            //TODO remove languageId parameter
             var messageTemplate = _messageTemplateService.GetMessageTemplateByName(messageTemplateName, storeId);
 
             //no template found
@@ -171,7 +169,7 @@ namespace Nop.Services.Messages
             var store = _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetLocalizedActiveMessageTemplate("NewCustomer.Notification", languageId, store.Id);
+            var messageTemplate = GetActiveMessageTemplate("NewCustomer.Notification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -207,7 +205,7 @@ namespace Nop.Services.Messages
             var store = _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetLocalizedActiveMessageTemplate("Customer.WelcomeMessage", languageId, store.Id);
+            var messageTemplate = GetActiveMessageTemplate("Customer.WelcomeMessage", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -243,7 +241,7 @@ namespace Nop.Services.Messages
             var store = _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetLocalizedActiveMessageTemplate("Customer.EmailValidationMessage", languageId, store.Id);
+            var messageTemplate = GetActiveMessageTemplate("Customer.EmailValidationMessage", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -280,7 +278,7 @@ namespace Nop.Services.Messages
             var store = _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetLocalizedActiveMessageTemplate("Customer.PasswordRecovery", languageId, store.Id);
+            var messageTemplate = GetActiveMessageTemplate("Customer.PasswordRecovery", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -325,7 +323,7 @@ namespace Nop.Services.Messages
             var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetLocalizedActiveMessageTemplate("OrderPlaced.VendorNotification", languageId, store.Id);
+            var messageTemplate = GetActiveMessageTemplate("OrderPlaced.VendorNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -362,7 +360,7 @@ namespace Nop.Services.Messages
             var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetLocalizedActiveMessageTemplate("OrderPlaced.StoreOwnerNotification", languageId, store.Id);
+            var messageTemplate = GetActiveMessageTemplate("OrderPlaced.StoreOwnerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -399,7 +397,7 @@ namespace Nop.Services.Messages
             var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetLocalizedActiveMessageTemplate("OrderPaid.StoreOwnerNotification", languageId, store.Id);
+            var messageTemplate = GetActiveMessageTemplate("OrderPaid.StoreOwnerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -439,7 +437,7 @@ namespace Nop.Services.Messages
             var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetLocalizedActiveMessageTemplate("OrderPlaced.CustomerNotification", languageId, store.Id);
+            var messageTemplate = GetActiveMessageTemplate("OrderPlaced.CustomerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -482,7 +480,7 @@ namespace Nop.Services.Messages
             var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetLocalizedActiveMessageTemplate("ShipmentSent.CustomerNotification", languageId, store.Id);
+            var messageTemplate = GetActiveMessageTemplate("ShipmentSent.CustomerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -524,7 +522,7 @@ namespace Nop.Services.Messages
             var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetLocalizedActiveMessageTemplate("ShipmentDelivered.CustomerNotification", languageId, store.Id);
+            var messageTemplate = GetActiveMessageTemplate("ShipmentDelivered.CustomerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -565,7 +563,7 @@ namespace Nop.Services.Messages
             var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetLocalizedActiveMessageTemplate("OrderCompleted.CustomerNotification", languageId, store.Id);
+            var messageTemplate = GetActiveMessageTemplate("OrderCompleted.CustomerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -604,7 +602,7 @@ namespace Nop.Services.Messages
             var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetLocalizedActiveMessageTemplate("OrderCancelled.CustomerNotification", languageId, store.Id);
+            var messageTemplate = GetActiveMessageTemplate("OrderCancelled.CustomerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -643,7 +641,7 @@ namespace Nop.Services.Messages
             var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetLocalizedActiveMessageTemplate("Customer.NewOrderNote", languageId, store.Id);
+            var messageTemplate = GetActiveMessageTemplate("Customer.NewOrderNote", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -681,7 +679,7 @@ namespace Nop.Services.Messages
             var store = _storeService.GetStoreById(recurringPayment.InitialOrder.StoreId) ?? _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetLocalizedActiveMessageTemplate("RecurringPaymentCancelled.StoreOwnerNotification", languageId, store.Id);
+            var messageTemplate = GetActiveMessageTemplate("RecurringPaymentCancelled.StoreOwnerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -724,7 +722,7 @@ namespace Nop.Services.Messages
             var store = _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetLocalizedActiveMessageTemplate("NewsLetterSubscription.ActivationMessage", languageId, store.Id);
+            var messageTemplate = GetActiveMessageTemplate("NewsLetterSubscription.ActivationMessage", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -772,7 +770,7 @@ namespace Nop.Services.Messages
             var store = _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetLocalizedActiveMessageTemplate("Service.EmailAFriend", languageId, store.Id);
+            var messageTemplate = GetActiveMessageTemplate("Service.EmailAFriend", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -815,7 +813,7 @@ namespace Nop.Services.Messages
             var store = _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetLocalizedActiveMessageTemplate("Wishlist.EmailAFriend", languageId, store.Id);
+            var messageTemplate = GetActiveMessageTemplate("Wishlist.EmailAFriend", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -858,7 +856,7 @@ namespace Nop.Services.Messages
             var store = _storeService.GetStoreById(orderItem.Order.StoreId) ?? _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetLocalizedActiveMessageTemplate("NewReturnRequest.StoreOwnerNotification", languageId, store.Id);
+            var messageTemplate = GetActiveMessageTemplate("NewReturnRequest.StoreOwnerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -896,7 +894,7 @@ namespace Nop.Services.Messages
             var store = _storeService.GetStoreById(orderItem.Order.StoreId) ?? _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetLocalizedActiveMessageTemplate("ReturnRequestStatusChanged.CustomerNotification", languageId, store.Id);
+            var messageTemplate = GetActiveMessageTemplate("ReturnRequestStatusChanged.CustomerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -940,7 +938,7 @@ namespace Nop.Services.Messages
             }
             var store = _storeContext.CurrentStore;
 
-            var messageTemplate = GetLocalizedActiveMessageTemplate("Forums.NewForumTopic", languageId, store.Id);
+            var messageTemplate = GetActiveMessageTemplate("Forums.NewForumTopic", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -983,7 +981,7 @@ namespace Nop.Services.Messages
 
             var store = _storeContext.CurrentStore;
 
-            var messageTemplate = GetLocalizedActiveMessageTemplate("Forums.NewForumPost", languageId, store.Id);
+            var messageTemplate = GetActiveMessageTemplate("Forums.NewForumPost", store.Id);
             if (messageTemplate == null )
             {
                 return 0;
@@ -1024,7 +1022,7 @@ namespace Nop.Services.Messages
 
             var store = _storeService.GetStoreById(privateMessage.StoreId) ?? _storeContext.CurrentStore;
 
-            var messageTemplate = GetLocalizedActiveMessageTemplate("Customer.NewPM", languageId, store.Id);
+            var messageTemplate = GetActiveMessageTemplate("Customer.NewPM", store.Id);
             if (messageTemplate == null )
             {
                 return 0;
@@ -1073,7 +1071,7 @@ namespace Nop.Services.Messages
 
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetLocalizedActiveMessageTemplate("GiftCard.Notification", languageId, store.Id);
+            var messageTemplate = GetActiveMessageTemplate("GiftCard.Notification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -1109,7 +1107,7 @@ namespace Nop.Services.Messages
             var store = _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetLocalizedActiveMessageTemplate("Product.ProductReview", languageId, store.Id);
+            var messageTemplate = GetActiveMessageTemplate("Product.ProductReview", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -1145,7 +1143,7 @@ namespace Nop.Services.Messages
             var store = _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetLocalizedActiveMessageTemplate("QuantityBelow.StoreOwnerNotification", languageId, store.Id);
+            var messageTemplate = GetActiveMessageTemplate("QuantityBelow.StoreOwnerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -1183,7 +1181,7 @@ namespace Nop.Services.Messages
             var store = _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetLocalizedActiveMessageTemplate("NewVATSubmitted.StoreOwnerNotification", languageId, store.Id);
+            var messageTemplate = GetActiveMessageTemplate("NewVATSubmitted.StoreOwnerNotification", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -1221,7 +1219,7 @@ namespace Nop.Services.Messages
             var store = _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetLocalizedActiveMessageTemplate("Blog.BlogComment", languageId, store.Id);
+            var messageTemplate = GetActiveMessageTemplate("Blog.BlogComment", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -1257,7 +1255,7 @@ namespace Nop.Services.Messages
             var store = _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetLocalizedActiveMessageTemplate("News.NewsComment", languageId, store.Id);
+            var messageTemplate = GetActiveMessageTemplate("News.NewsComment", store.Id);
             if (messageTemplate == null)
                 return 0;
 
@@ -1293,7 +1291,7 @@ namespace Nop.Services.Messages
             var store = _storeService.GetStoreById(subscription.StoreId) ?? _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
-            var messageTemplate = GetLocalizedActiveMessageTemplate("Customer.BackInStock", languageId, store.Id);
+            var messageTemplate = GetActiveMessageTemplate("Customer.BackInStock", store.Id);
             if (messageTemplate == null)
                 return 0;
 
