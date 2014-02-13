@@ -25,6 +25,7 @@ using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Seo;
+using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Web.Extensions;
 using Nop.Web.Framework.Controllers;
@@ -32,7 +33,6 @@ using Nop.Web.Framework.Security;
 using Nop.Web.Framework.UI.Captcha;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.Customer;
-using Nop.Services.Stores;
 
 namespace Nop.Web.Controllers
 {

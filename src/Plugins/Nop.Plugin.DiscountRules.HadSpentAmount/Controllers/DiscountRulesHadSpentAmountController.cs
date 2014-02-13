@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Globalization;
 using System.Linq;
-using System.Threading;
 using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Discounts;

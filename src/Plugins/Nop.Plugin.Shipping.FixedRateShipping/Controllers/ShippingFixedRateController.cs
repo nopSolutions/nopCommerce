@@ -1,14 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Threading;
 using System.Web.Mvc;
 using Nop.Core;
 using Nop.Plugin.Shipping.FixedRateShipping.Models;
 using Nop.Services.Configuration;
 using Nop.Services.Security;
 using Nop.Services.Shipping;
-using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 

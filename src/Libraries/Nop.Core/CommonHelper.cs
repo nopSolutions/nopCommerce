@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Configuration;
 using System.Globalization;
 using System.Reflection;
 using System.Security.Cryptography;

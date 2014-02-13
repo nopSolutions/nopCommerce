@@ -1,12 +1,11 @@
-﻿using System;
+﻿//code from Telerik MVC Extensions
+using System;
 using System.IO;
 using System.Linq;
 using System.Web.Routing;
 using System.Xml;
 using Nop.Core;
 using Nop.Core.Infrastructure;
-
-//code from Telerik MVC Extensions
 using Nop.Services.Localization;
 using Nop.Services.Security;
 

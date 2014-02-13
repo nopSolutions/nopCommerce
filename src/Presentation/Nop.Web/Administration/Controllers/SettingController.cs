@@ -1,4 +1,8 @@
-﻿using Nop.Admin.Models.Common;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web.Mvc;
+using Nop.Admin.Models.Common;
 using Nop.Admin.Models.Settings;
 using Nop.Admin.Models.Stores;
 using Nop.Core;
@@ -36,10 +40,6 @@ using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Themes;
 using Nop.Web.Framework.UI.Captcha;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web.Mvc;
 
 namespace Nop.Admin.Controllers
 {
