@@ -109,6 +109,13 @@
             </summary>
             <param name="message">A message that describes the error.</param>
         </member>
+        <member name="M:MaxMind.GeoIP2.Exceptions.GeoIP2Exception.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MaxMind.GeoIP2.Exceptions.GeoIP2Exception"/> class.
+            </summary>
+            <param name="message">A message that describes the error.</param>
+            <param name="innerException">The inner exception.</param>
+        </member>
         <member name="M:MaxMind.GeoIP2.Exceptions.AddressNotFoundException.#ctor(System.String)">
             <summary>
             Initializes a new instance of the <see cref="T:MaxMind.GeoIP2.Exceptions.AddressNotFoundException"/> class.
