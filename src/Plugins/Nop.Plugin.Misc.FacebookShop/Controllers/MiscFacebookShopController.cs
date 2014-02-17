@@ -474,10 +474,11 @@ namespace Nop.Plugin.Misc.FacebookShop.Controllers
 
                     //prepare picture model
                     int pictureSize = 125;
+                    var picture = _pictureService.GetPictureById(x.PictureId);
                     subCatModel.PictureModel = new PictureModel()
                         {
-                            FullSizeImageUrl = _pictureService.GetPictureUrl(x.PictureId),
-                            ImageUrl = _pictureService.GetPictureUrl(x.PictureId, pictureSize),
+                            FullSizeImageUrl = _pictureService.GetPictureUrl(picture),
+                            ImageUrl = _pictureService.GetPictureUrl(picture, pictureSize),
                             Title = string.Format(_localizationService.GetResource("Media.Category.ImageLinkTitleFormat"), subCatName),
                             AlternateText = string.Format(_localizationService.GetResource("Media.Category.ImageAlternateTextFormat"), subCatName)
                         };

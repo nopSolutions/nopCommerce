@@ -1274,10 +1274,11 @@ namespace Nop.Web.Controllers
                     var categoryPictureCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_PICTURE_MODEL_KEY, x.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
                     subCatModel.PictureModel = _cacheManager.Get(categoryPictureCacheKey, () =>
                     {
+                        var picture = _pictureService.GetPictureById(x.PictureId);
                         var pictureModel = new PictureModel()
                         {
-                            FullSizeImageUrl = _pictureService.GetPictureUrl(x.PictureId),
-                            ImageUrl = _pictureService.GetPictureUrl(x.PictureId, pictureSize),
+                            FullSizeImageUrl = _pictureService.GetPictureUrl(picture),
+                            ImageUrl = _pictureService.GetPictureUrl(picture, pictureSize),
                             Title = string.Format(_localizationService.GetResource("Media.Category.ImageLinkTitleFormat"), subCatName),
                             AlternateText = string.Format(_localizationService.GetResource("Media.Category.ImageAlternateTextFormat"), subCatName)
                         };
@@ -1447,10 +1448,11 @@ namespace Nop.Web.Controllers
                     var categoryPictureCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_PICTURE_MODEL_KEY, x.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
                     catModel.PictureModel = _cacheManager.Get(categoryPictureCacheKey, () =>
                     {
+                        var picture = _pictureService.GetPictureById(x.PictureId);
                         var pictureModel = new PictureModel()
                         {
-                            FullSizeImageUrl = _pictureService.GetPictureUrl(x.PictureId),
-                            ImageUrl = _pictureService.GetPictureUrl(x.PictureId, pictureSize),
+                            FullSizeImageUrl = _pictureService.GetPictureUrl(picture),
+                            ImageUrl = _pictureService.GetPictureUrl(picture, pictureSize),
                             Title = string.Format(_localizationService.GetResource("Media.Category.ImageLinkTitleFormat"), catModel.Name),
                             AlternateText = string.Format(_localizationService.GetResource("Media.Category.ImageAlternateTextFormat"), catModel.Name)
                         };
@@ -1718,10 +1720,11 @@ namespace Nop.Web.Controllers
                 var manufacturerPictureCacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_PICTURE_MODEL_KEY, manufacturer.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
                 modelMan.PictureModel = _cacheManager.Get(manufacturerPictureCacheKey, () =>
                 {
+                    var picture = _pictureService.GetPictureById(manufacturer.PictureId);
                     var pictureModel = new PictureModel()
                     {
-                        FullSizeImageUrl = _pictureService.GetPictureUrl(manufacturer.PictureId),
-                        ImageUrl = _pictureService.GetPictureUrl(manufacturer.PictureId, pictureSize),
+                        FullSizeImageUrl = _pictureService.GetPictureUrl(picture),
+                        ImageUrl = _pictureService.GetPictureUrl(picture, pictureSize),
                         Title = string.Format(_localizationService.GetResource("Media.Manufacturer.ImageLinkTitleFormat"), modelMan.Name),
                         AlternateText = string.Format(_localizationService.GetResource("Media.Manufacturer.ImageAlternateTextFormat"), modelMan.Name)
                     };
