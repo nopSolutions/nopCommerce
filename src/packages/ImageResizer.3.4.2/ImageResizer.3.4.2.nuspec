@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>ImageResizer</id>
+    <version>3.4.2</version>
+    <title>ImageResizer</title>
+    <authors>Nathanael Jones,  Imazen</authors>
+    <owners>Nathanael Jones,  Imazen</owners>
+    <licenseUrl>http://imageresizing.net/licenses/freedom</licenseUrl>
+    <projectUrl>http://imageresizing.net/</projectUrl>
+    <iconUrl>http://imageresizing.net/images/logos/ImageIconPSD100.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Lightweight HttpModule, REST API, and managed API for *safe* and highly-optimized server-side image processing. 
+
+Docs: http://imageresizing.net/
+
+Support: http://imageresizing.net/support
+
+Works with .NET 2, 3, 3.5, 4, 4.5, ASP.NET WebForms, MVC 1-4, WebAPI, Routing, IIS 5, 5.1, 6, 7, 7.5, &amp; 8 and nearly all CMSes.
+
+Use ether the URL API: image.jpg?width=100&amp;height=100 *or* the Managed API: ImageBuilder.Current.Build(source,dest,settings).
+
+ImageResizer provides incredible quality and highly-optimized image processing - by default. Don't leak memory by using System.Drawing directly or create horrible previews with GetThumbnailImage. Add the ImageResizer.Plugins.DiskCache package to serve dynamic images as fast as static ones. 
+
+With this library, you can create beautiful image galleries, product thumbnails, and fast, scalable websites *without* sacrificing agility or responsive web design.
+
+## Functionality in this package
+
+The ImageResizer core package lets you: 
+
+1. Decode jpeg, png, gif, tiff, and bmp files from uploads, streams, byte arrays, and files. 
+
+2. Pre-rotate or flip (based on gravity sensor OR manual angle).
+
+3. Apply manual cropping in either source or screen coordinates.
+
+4. Efficiently apply width and/or height constraints, using any of several constraint modes: max, pad, crop, or stretch. Provides the highest quality image resampling (bicubic 2-pass) available on the windows platform.
+
+5. Rotate, flip, add borders, padding, margins, with custom colors.
+
+3. Re-compress into jpeg (with adjustable compression) or lossless png form -  as a byte array, stream, or file.
+
+All through a REST API and Managed API with a symmetrical command set. 
+
+URL rewriting, custom authorization, 404 fallbacks, gradient generation, exif stripping, size limiting, and cache-control customization are also included in the core DLL.
+
+## 30+ plugins available
+
+Search 'ImageResizer' on nuget.org, or visit imageresizing.net to see 40+ plugins, including WPF, WIC, FreeImage, OpenCV, AForge &amp; Ghostscript (PDF) integrations. You'll also find  plugins for disk caching, memory caching, Microsoft SQL blob support, Amazon CloudFront, S3, Azure Blob Storage, MongoDB GridFS, automatic whitespace trimming, automatic white balance, octree 8-bit gif/png quantization and transparency dithering, animated gif resizing, watermark &amp; text overlay support, content aware image resizing / seam carving (based on CAIR), grayscale, sepia, histogram, alpha, contrast, saturation, brightness, hue, Guassian blur, noise removal, and smart sharpen filters, psd editing &amp; rendering, raw (CR2, NEF, DNG, etc.) file exposure, .webp (weppy) support, image batch processing &amp; compression into .zip archives, red eye auto-correction,  face detection, and secure (signed!) remote HTTP image processing. Most datastore plugins support the Virtual Path Provider system, and can be used for non-image files as well.
+
+
+
+## Third-party integration
+
+Third parties have made some excellent UI wrappers and plugins, including Eksponent CropUp, FluentExtensions, jQuery NailThumb, WebCropImage, and mindrevolution's ResponsivePresets. Check out our own StudioJS for an amazing image editing studio based on the REST API.</description>
+    <summary>Lightweight HttpModule, REST API, &amp; managed API for *safe* server-side image processing.</summary>
+    <releaseNotes />
+    <copyright />
+    <language />
+    <tags>ImageResizer image resize crop rotate jpeg jpg gif png server-safe-imaging nuget-needs-tokenization nuget-needs-markdown-descriptions imaging</tags>
+  </metadata>
+</package>

@@ -5,6 +5,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using ImageResizer;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
@@ -78,9 +79,10 @@ namespace Nop.Services.Media
         /// <param name="originalSize">The original picture size</param>
         /// <param name="targetSize">The target picture size (longest side)</param>
         /// <param name="resizeType">Resize type</param>
+        /// <param name="ensureSizePositive">A value indicatingh whether we should ensure that size values are positive</param>
         /// <returns></returns>
         protected virtual Size CalculateDimensions(Size originalSize, int targetSize, 
-            ResizeType resizeType = ResizeType.LongestSide)
+            ResizeType resizeType = ResizeType.LongestSide, bool ensureSizePositive = true)
         {
             var newSize = new Size();
             switch (resizeType)
@@ -110,6 +112,15 @@ namespace Nop.Services.Media
                 default:
                     throw new Exception("Not supported ResizeType");
             }
+
+            if (ensureSizePositive)
+            {
+                if (newSize.Width < 1)
+                    newSize.Width = 1;
+                if (newSize.Height < 1)
+                    newSize.Height = 1;
+            }
+
             return newSize;
         }
         
@@ -140,44 +151,6 @@ namespace Nop.Services.Media
                     break;
             }
             return lastPart;
-        }
-
-        /// <summary>
-        /// Returns the first ImageCodecInfo instance with the specified mime type.
-        /// </summary>
-        /// <param name="mimeType">Mime type</param>
-        /// <returns>ImageCodecInfo</returns>
-        protected virtual ImageCodecInfo GetImageCodecInfoFromMimeType(string mimeType)
-        {
-            var info = ImageCodecInfo.GetImageEncoders();
-            foreach (var ici in info)
-                if (ici.MimeType.Equals(mimeType, StringComparison.OrdinalIgnoreCase)) 
-                    return ici;
-            return null;
-        }
-
-        /// <summary>
-        /// Returns the first ImageCodecInfo instance with the specified extension.
-        /// </summary>
-        /// <param name="fileExt">File extension</param>
-        /// <returns>ImageCodecInfo</returns>
-        protected virtual ImageCodecInfo GetImageCodecInfoFromExtension(string fileExt)
-        {
-            fileExt = fileExt.TrimStart(".".ToCharArray()).ToLower().Trim();
-            switch (fileExt)
-            {
-                case "jpg":
-                case "jpeg":
-                    return GetImageCodecInfoFromMimeType("image/jpeg");
-                case "png":
-                    return GetImageCodecInfoFromMimeType("image/png");
-                case "gif":
-                    //use png codec for gif to preserve transparency
-                    //return GetImageCodecInfoFromMimeType("image/gif");
-                    return GetImageCodecInfoFromMimeType("image/png");
-                default:
-                    return GetImageCodecInfoFromMimeType("image/jpeg");
-            }
         }
 
         /// <summary>
@@ -251,39 +224,14 @@ namespace Nop.Services.Media
         /// <returns>Picture binary or throws an exception</returns>
         protected virtual byte[] ValidatePicture(byte[] pictureBinary, string mimeType)
         {
-            using (var stream1 = new MemoryStream(pictureBinary))
+            var destStream = new MemoryStream();
+            ImageBuilder.Current.Build(pictureBinary, destStream, new ResizeSettings()
             {
-                using (var b = new Bitmap(stream1))
-                {
-                    var maxSize = _mediaSettings.MaximumImageSize;
-                    if ((b.Height <= maxSize) && (b.Width <= maxSize))
-                        return pictureBinary;
-                    
-                    var newSize = CalculateDimensions(b.Size, maxSize);
-                    using (var newBitMap = new Bitmap(newSize.Width, newSize.Height))
-                    {
-                        using (var g = Graphics.FromImage(newBitMap))
-                        {
-                            g.SmoothingMode = SmoothingMode.HighQuality;
-                            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                            g.CompositingQuality =CompositingQuality.HighQuality;
-                            g.PixelOffsetMode = PixelOffsetMode.HighQuality;
-                            g.DrawImage(b, 0, 0, newSize.Width, newSize.Height);
-
-                            using (var stream2 = new MemoryStream())
-                            {
-                                var ep = new EncoderParameters();
-                                ep.Param[0] = new EncoderParameter(Encoder.Quality, _mediaSettings.DefaultImageQuality);
-                                ImageCodecInfo ici = GetImageCodecInfoFromMimeType(mimeType);
-                                if (ici == null)
-                                    ici = GetImageCodecInfoFromMimeType("image/jpeg");
-                                newBitMap.Save(stream2, ici, ep);
-                                return stream2.GetBuffer();
-                            }
-                        }
-                    }
-                }
-            }
+                MaxWidth = _mediaSettings.MaximumImageSize,
+                MaxHeight = _mediaSettings.MaximumImageSize,
+                Quality = _mediaSettings.DefaultImageQuality
+            });
+            return destStream.ToArray();
         }
         
         /// <summary>
@@ -447,28 +395,16 @@ namespace Nop.Services.Media
                     {
                         var newSize = CalculateDimensions(b.Size, targetSize);
 
-                        if (newSize.Width < 1)
-                            newSize.Width = 1;
-                        if (newSize.Height < 1)
-                            newSize.Height = 1;
-
-                        using (var newBitMap = new Bitmap(newSize.Width, newSize.Height))
+                        var destStream = new MemoryStream();
+                        ImageBuilder.Current.Build(b, destStream, new ResizeSettings()
                         {
-                            using (var g = Graphics.FromImage(newBitMap))
-                            {
-                                g.SmoothingMode = SmoothingMode.HighQuality;
-                                g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                                g.CompositingQuality = CompositingQuality.HighQuality;
-                                g.PixelOffsetMode = PixelOffsetMode.HighQuality;
-                                g.DrawImage(b, 0, 0, newSize.Width, newSize.Height);
-                                var ep = new EncoderParameters();
-                                ep.Param[0] = new EncoderParameter(Encoder.Quality, _mediaSettings.DefaultImageQuality);
-                                ImageCodecInfo ici = GetImageCodecInfoFromExtension(fileExtension);
-                                if (ici == null)
-                                    ici = GetImageCodecInfoFromMimeType("image/jpeg");
-                                newBitMap.Save(thumbFilePath, ici, ep);
-                            }
-                        }
+                            Width = newSize.Width,
+                            Height = newSize.Height,
+                            Scale = ScaleMode.Both,
+                            Quality = _mediaSettings.DefaultImageQuality
+                        });
+                        var destBinary = destStream.ToArray();
+                        File.WriteAllBytes(thumbFilePath, destBinary);
                     }
                 }
                 var url = GetThumbUrl(thumbFileName, storeLocation);
@@ -576,30 +512,20 @@ namespace Nop.Services.Media
                                 //bitmap could not be loaded for some reasons
                                 return url;
                             }
+
                             var newSize = CalculateDimensions(b.Size, targetSize);
 
-                            if (newSize.Width < 1)
-                                newSize.Width = 1;
-                            if (newSize.Height < 1)
-                                newSize.Height = 1;
-
-                            using (var newBitMap = new Bitmap(newSize.Width, newSize.Height))
+                            var destStream = new MemoryStream();
+                            ImageBuilder.Current.Build(b, destStream, new ResizeSettings()
                             {
-                                using (var g = Graphics.FromImage(newBitMap))
-                                {
-                                    g.SmoothingMode = SmoothingMode.HighQuality;
-                                    g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                                    g.CompositingQuality = CompositingQuality.HighQuality;
-                                    g.PixelOffsetMode = PixelOffsetMode.HighQuality;
-                                    g.DrawImage(b, 0, 0, newSize.Width, newSize.Height);
-                                    var ep = new EncoderParameters();
-                                    ep.Param[0] = new EncoderParameter(Encoder.Quality, _mediaSettings.DefaultImageQuality);
-                                    ImageCodecInfo ici = GetImageCodecInfoFromExtension(lastPart);
-                                    if (ici == null)
-                                        ici = GetImageCodecInfoFromMimeType("image/jpeg");
-                                    newBitMap.Save(thumbFilePath, ici, ep);
-                                }
-                            }
+                                Width = newSize.Width,
+                                Height = newSize.Height,
+                                Scale = ScaleMode.Both,
+                                Quality = _mediaSettings.DefaultImageQuality
+                            });
+                            var destBinary = destStream.ToArray();
+                            File.WriteAllBytes(thumbFilePath, destBinary);
+
                             b.Dispose();
                         }
                     }
@@ -855,15 +781,5 @@ namespace Nop.Services.Media
         }
 
         #endregion
-    }
-
-    /// <summary>
-    /// Resize types
-    /// </summary>
-    public enum ResizeType
-    {
-        LongestSide,
-        Width,
-        Height
     }
 }
