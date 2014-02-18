@@ -106,7 +106,7 @@
 .order-summary-content .cart .cart-item-row .totalprice,.wishlist-content .cart .cart-item-row .totalprice{color:Green;}
 .order-summary-content .cart .cart-item-row .remove,.wishlist-content .cart .cart-item-row .remove{}
 .order-summary-content .cart .cart-item-row .qty-input,.wishlist-content .cart .cart-item-row .qty-input{}
-.order-summary-content .cart-footer{}
+.order-summary-content .cart-footer{}re
 .order-summary-content .total-info{margin:0;}
 .cart-total-left{text-align:left;vertical-align:top;font-weight:700;}
 .cart-total-left-below{text-align:left;vertical-align:top;height:30px;}
@@ -208,6 +208,8 @@
 
 /* REGISTRATION */
 .registration-page{}
+.registration-page ul.option-list{display:inline-block;}
+.registration-page ul.option-list li{list-style:none;display:inline-block;}
 .registration-page .page-body{}
 .registration-page .section-body{text-align:left;padding:10px;border:1px solid #d7d7d7;height:auto;}
 .registration-page .accept-privacy-policy{}
@@ -384,6 +386,8 @@
 .forum-subscriptions-page .no-data{}
 .forum-subscriptions-page .buttons{}
 .customer-info-page{}
+.customer-info-page ul.option-list{display:inline-block;}
+.customer-info-page ul.option-list li{list-style:none;display:inline-block;}
 .customer-info-page .buttons{}
 .my-account-home-page{}
 .order-list-page{}

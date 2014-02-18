@@ -37,6 +37,7 @@ using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
+using Nop.Core.Domain.Catalog;
 
 namespace Nop.Admin.Controllers
 {
@@ -77,6 +78,8 @@ namespace Nop.Admin.Controllers
         private readonly IOpenAuthenticationService _openAuthenticationService;
         private readonly AddressSettings _addressSettings;
         private readonly IStoreService _storeService;
+        private readonly ICustomerAttributeParser _customerAttributeParser;
+        private readonly ICustomerAttributeService _customerAttributeService;
 
         #endregion
 
@@ -112,8 +115,10 @@ namespace Nop.Admin.Controllers
             ForumSettings forumSettings,
             IForumService forumService, 
             IOpenAuthenticationService openAuthenticationService,
-            AddressSettings addressSettings, 
-            IStoreService storeService)
+            AddressSettings addressSettings,
+            IStoreService storeService,
+            ICustomerAttributeParser customerAttributeParser,
+            ICustomerAttributeService customerAttributeService)
         {
             this._customerService = customerService;
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
@@ -147,6 +152,8 @@ namespace Nop.Admin.Controllers
             this._openAuthenticationService = openAuthenticationService;
             this._addressSettings = addressSettings;
             this._storeService = storeService;
+            this._customerAttributeParser = customerAttributeParser;
+            this._customerAttributeService = customerAttributeService;
         }
 
         #endregion
@@ -262,7 +269,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        private void PrepareVendorsModel(CustomerModel model)
+        protected void PrepareVendorsModel(CustomerModel model)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -281,6 +288,154 @@ namespace Nop.Admin.Controllers
                     Value = vendor.Id.ToString()
                 });
             }
+        }
+
+        [NonAction]
+        protected void PrepareCustomerAttributeModel(CustomerModel model, Customer customer)
+        {
+            var customerAttributes = _customerAttributeService.GetAllCustomerAttributes();
+            foreach (var attribute in customerAttributes)
+            {
+                var caModel = new CustomerModel.CustomerAttributeModel()
+                {
+                    Id = attribute.Id,
+                    Name = attribute.Name,
+                    IsRequired = attribute.IsRequired,
+                    AttributeControlType = attribute.AttributeControlType,
+                };
+
+                if (attribute.ShouldHaveValues())
+                {
+                    //values
+                    var caValues = _customerAttributeService.GetCustomerAttributeValues(attribute.Id);
+                    foreach (var caValue in caValues)
+                    {
+                        var caValueModel = new CustomerModel.CustomerAttributeValueModel()
+                        {
+                            Id = caValue.Id,
+                            Name = caValue.Name,
+                            IsPreSelected = caValue.IsPreSelected
+                        };
+                        caModel.Values.Add(caValueModel);
+                    }
+                }
+
+
+                //set already selected attributes
+                if (customer != null)
+                {
+                    string selectedCustomerAttributes = customer.GetAttribute<string>(SystemCustomerAttributeNames.CustomCustomerAttributes, _genericAttributeService);
+                    switch (attribute.AttributeControlType)
+                    {
+                        case AttributeControlType.DropdownList:
+                        case AttributeControlType.RadioList:
+                        case AttributeControlType.Checkboxes:
+                        {
+                            if (!String.IsNullOrEmpty(selectedCustomerAttributes))
+                            {
+                                //clear default selection
+                                foreach (var item in caModel.Values)
+                                    item.IsPreSelected = false;
+
+                                //select new values
+                                var selectedCaValues = _customerAttributeParser.ParseCustomerAttributeValues(selectedCustomerAttributes);
+                                foreach (var caValue in selectedCaValues)
+                                    foreach (var item in caModel.Values)
+                                        if (caValue.Id == item.Id)
+                                            item.IsPreSelected = true;
+                            }
+                        }
+                            break;
+                        case AttributeControlType.TextBox:
+                        case AttributeControlType.MultilineTextbox:
+                        {
+                            if (!String.IsNullOrEmpty(selectedCustomerAttributes))
+                            {
+                                var enteredText = _customerAttributeParser.ParseValues(selectedCustomerAttributes, attribute.Id);
+                                if (enteredText.Count > 0)
+                                    caModel.DefaultValue = enteredText[0];
+                            }
+                        }
+                            break;
+                        case AttributeControlType.ColorSquares:
+                        case AttributeControlType.Datepicker:
+                        case AttributeControlType.FileUpload:
+                        default:
+                            //not supported attribute control types
+                            break;
+                    }
+                }
+
+                model.CustomerAttributes.Add(caModel);
+            }
+        }
+
+        [NonAction]
+        protected string ParseCustomCustomerAttributes(Customer customer, FormCollection form)
+        {
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+
+            if (form == null)
+                throw new ArgumentNullException("form");
+
+            string selectedAttributes = "";
+            var customerAttributes = _customerAttributeService.GetAllCustomerAttributes();
+            foreach (var attribute in customerAttributes)
+            {
+                string controlId = string.Format("customer_attribute_{0}", attribute.Id);
+                switch (attribute.AttributeControlType)
+                {
+                    case AttributeControlType.DropdownList:
+                    case AttributeControlType.RadioList:
+                        {
+                            var ctrlAttributes = form[controlId];
+                            if (!String.IsNullOrEmpty(ctrlAttributes))
+                            {
+                                int selectedAttributeId = int.Parse(ctrlAttributes);
+                                if (selectedAttributeId > 0)
+                                    selectedAttributes = _customerAttributeParser.AddCustomerAttribute(selectedAttributes,
+                                        attribute, selectedAttributeId.ToString());
+                            }
+                        }
+                        break;
+                    case AttributeControlType.Checkboxes:
+                        {
+                            var cblAttributes = form[controlId];
+                            if (!String.IsNullOrEmpty(cblAttributes))
+                            {
+                                foreach (var item in cblAttributes.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                                {
+                                    int selectedAttributeId = int.Parse(item);
+                                    if (selectedAttributeId > 0)
+                                        selectedAttributes = _customerAttributeParser.AddCustomerAttribute(selectedAttributes,
+                                            attribute, selectedAttributeId.ToString());
+                                }
+                            }
+                        }
+                        break;
+                    case AttributeControlType.TextBox:
+                    case AttributeControlType.MultilineTextbox:
+                        {
+                            var ctrlAttributes = form[controlId];
+                            if (!String.IsNullOrEmpty(ctrlAttributes))
+                            {
+                                string enteredText = ctrlAttributes.Trim();
+                                selectedAttributes = _customerAttributeParser.AddCustomerAttribute(selectedAttributes,
+                                    attribute, enteredText);
+                            }
+                        }
+                        break;
+                    case AttributeControlType.Datepicker:
+                    case AttributeControlType.ColorSquares:
+                    case AttributeControlType.FileUpload:
+                    //not supported customer attributes
+                    default:
+                        break;
+                }
+            }
+
+            return selectedAttributes;
         }
 
         #endregion
@@ -370,6 +525,8 @@ namespace Nop.Admin.Controllers
             model.SelectedCustomerRoleIds = new int[0];
             //vendors
             PrepareVendorsModel(model);
+            //customer attrivutes
+            PrepareCustomerAttributeModel(model, null);
             //form fields
             model.GenderEnabled = _customerSettings.GenderEnabled;
             model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
@@ -414,7 +571,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
-        public ActionResult Create(CustomerModel model, bool continueEditing)
+        public ActionResult Create(CustomerModel model, bool continueEditing, FormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
@@ -489,7 +646,10 @@ namespace Nop.Admin.Controllers
                 if (_customerSettings.FaxEnabled)
                     _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.Fax, model.Fax);
 
-
+                //custom customer attributes
+                var customerAttributes = ParseCustomCustomerAttributes(customer, form);
+                _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.CustomCustomerAttributes, customerAttributes);
+                    
                 //password
                 if (!String.IsNullOrWhiteSpace(model.Password))
                 {
@@ -557,6 +717,8 @@ namespace Nop.Admin.Controllers
                 .ToList();
             //vendors
             PrepareVendorsModel(model);
+            //customer attrivutes
+            PrepareCustomerAttributeModel(model, null);
             //form fields
             model.GenderEnabled = _customerSettings.GenderEnabled;
             model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
@@ -613,6 +775,9 @@ namespace Nop.Admin.Controllers
             //vendors
             model.VendorId = customer.VendorId;
             PrepareVendorsModel(model);
+            //customer attrivutes
+            PrepareCustomerAttributeModel(model, customer);
+            //other properties and form fields
             model.AdminComment = customer.AdminComment;
             model.IsTaxExempt = customer.IsTaxExempt;
             model.Active = customer.Active;
@@ -694,7 +859,7 @@ namespace Nop.Admin.Controllers
                 .Select(cr => cr.ToModel())
                 .ToList();
             model.SelectedCustomerRoleIds = customer.CustomerRoles.Select(cr => cr.Id).ToArray();
-            //reward points gistory
+            //reward points history
             model.DisplayRewardPointsHistory = _rewardPointsSettings.Enabled;
             model.AddRewardPointsValue = 0;
             model.AddRewardPointsMessage = "Some comment here...";
@@ -706,7 +871,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
-        public ActionResult Edit(CustomerModel model, bool continueEditing)
+        public ActionResult Edit(CustomerModel model, bool continueEditing, FormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
@@ -814,6 +979,10 @@ namespace Nop.Admin.Controllers
                     if (_customerSettings.FaxEnabled)
                         _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.Fax, model.Fax);
 
+                    //custom customer attributes
+                    var customerAttributes = ParseCustomCustomerAttributes(customer, form);
+                    _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.CustomCustomerAttributes, customerAttributes);
+                    
 
                     //customer roles
                     foreach (var customerRole in allCustomerRoles)
@@ -901,6 +1070,8 @@ namespace Nop.Admin.Controllers
             model.LastVisitedPage = customer.GetAttribute<string>(SystemCustomerAttributeNames.LastVisitedPage);
             //vendors
             PrepareVendorsModel(model);
+            //customer attrivutes
+            PrepareCustomerAttributeModel(model, customer);
             //form fields
             model.GenderEnabled = _customerSettings.GenderEnabled;
             model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
@@ -946,7 +1117,7 @@ namespace Nop.Admin.Controllers
                 .GetAllCustomerRoles(true)
                 .Select(cr => cr.ToModel())
                 .ToList();
-            //reward points gistory
+            //reward points history
             model.DisplayRewardPointsHistory = _rewardPointsSettings.Enabled;
             model.AddRewardPointsValue = 0;
             model.AddRewardPointsMessage = "Some comment here...";

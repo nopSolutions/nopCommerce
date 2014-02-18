@@ -659,11 +659,15 @@ td.fieldname{font-size:12px;}
 .registration-page .page-title{}
 .registration-page .page-body{margin:0;padding:0;color:#555;background-color:inherit;}
 .registration-page .gender{display:inline-block;}
+.registration-page ul.option-list{display:inline-block;}
+.registration-page ul.option-list li{list-style:none;display:inline-block;}
+.registration-page ul.option-list li label{width:auto;margin-right:0px;}
 .registration-page .vat-note{display:block;}
 .registration-page .accept-privacy-policy{float:right;margin-bottom:5px;margin-top:5px;clear:both;}
 .registration-page .accept-privacy-policy .read{text-decoration:underline;}
 .registration-page .buttons{margin-bottom:5px;margin-top:5px;clear:both;}
 .registration-page .message-error {margin-bottom:20px;}
+.registration-page textarea{height:100px;width:500px;border:solid 1px #E3E3E3;vertical-align:top;}
 .registration-result-page{}
 .registration-result-page .page-title{}
 .registration-result-page .page-body{margin:0;padding:0;color:#555;background-color:inherit;}
@@ -897,13 +901,16 @@ td.fieldname{font-size:12px;}
 .forum-subscriptions-page .buttons{margin-bottom:5px;margin-top:5px;text-align:right;}
 .customer-info-page{}
 .customer-info-page .gender{display:inline-block;}
+.customer-info-page ul.option-list{display:inline-block;}
+.customer-info-page ul.option-list li{list-style:none;display:inline-block;}
+.customer-info-page ul.option-list li label{width:auto;margin-right:0px;}
 .customer-info-page .vat-status{}
 .customer-info-page .vat-note{display:block;}
 .customer-info-page .buttons{margin-bottom:5px;margin-top:5px;text-align:center;}
 .customer-info-page .message-error {margin-bottom:20px;}
+.customer-info-page textarea{height:100px;width:500px;border:solid 1px #E3E3E3;vertical-align:top;}
 .username-available-status{color:green;padding-right:5px;}
 .username-not-available-status{color:red;padding-right:5px;}
-.account-signature-text{height:100px;width:500px;border:solid 1px #E3E3E3;vertical-align:top;}
 .order-list-page{}
 .order-list-page .recurring-payments{padding:10px 10px 5px 0;width:100%;clear:both;}
 .order-list-page .recurring-payments .recurring-payments-box{text-align:right;padding:10px;height:auto;}

@@ -20,7 +20,8 @@ namespace Nop.Web.Framework
             return current.Skip((command.Page - 1) * command.PageSize).Take(command.PageSize);
         }
 
-        public static SelectList ToSelectList<TEnum>(this TEnum enumObj, bool markCurrentAsSelected = true) where TEnum : struct
+        public static SelectList ToSelectList<TEnum>(this TEnum enumObj, 
+            bool markCurrentAsSelected = true, int[] valuesToExclude = null) where TEnum : struct
         {
             if (!typeof(TEnum).IsEnum) throw new ArgumentException("An Enumeration type is required.", "enumObj");
 
@@ -28,6 +29,7 @@ namespace Nop.Web.Framework
             var workContext = EngineContext.Current.Resolve<IWorkContext>();
 
             var values = from TEnum enumValue in Enum.GetValues(typeof(TEnum))
+                         where valuesToExclude == null || !valuesToExclude.Contains(Convert.ToInt32(enumValue))
                          select new { ID = Convert.ToInt32(enumValue), Name = enumValue.GetLocalizedEnum(localizationService, workContext) };
             object selectedValue = null;
             if (markCurrentAsSelected)

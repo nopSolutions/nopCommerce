@@ -420,6 +420,10 @@
                 </td>
             </tr>
         }
+        @if (Model.CustomerAttributes.Count > 0)
+        {
+            @Html.Partial("_CustomerAttributes", Model.CustomerAttributes)
+        }
         <tr>
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.AdminComment):

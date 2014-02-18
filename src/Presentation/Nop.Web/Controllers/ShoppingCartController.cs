@@ -826,6 +826,12 @@ namespace Nop.Web.Controllers
         [NonAction]
         protected void ParseAndSaveCheckoutAttributes(List<ShoppingCartItem> cart, FormCollection form)
         {
+            if (cart == null)
+                throw new ArgumentNullException("cart");
+
+            if (form == null)
+                throw new ArgumentNullException("form");
+
             string selectedAttributes = "";
             var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes(_storeContext.CurrentStore.Id);
             if (!cart.RequiresShipping())

@@ -183,6 +183,26 @@ namespace Nop.Admin
 
         #endregion
 
+        #region Customer attributes
+
+        //attributes
+        public static CustomerAttributeModel ToModel(this CustomerAttribute entity)
+        {
+            return Mapper.Map<CustomerAttribute, CustomerAttributeModel>(entity);
+        }
+
+        public static CustomerAttribute ToEntity(this CustomerAttributeModel model)
+        {
+            return Mapper.Map<CustomerAttributeModel, CustomerAttribute>(model);
+        }
+
+        public static CustomerAttribute ToEntity(this CustomerAttributeModel model, CustomerAttribute destination)
+        {
+            return Mapper.Map(model, destination);
+        }
+
+        #endregion
+
         #region Languages
 
         public static LanguageModel ToModel(this Language entity)

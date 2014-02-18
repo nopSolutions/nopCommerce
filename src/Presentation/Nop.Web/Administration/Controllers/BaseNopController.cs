@@ -154,7 +154,7 @@ namespace Nop.Admin.Controllers
         /// <param name="persistForTheNextRequest">A value indicating whether a message should be persisted for the next request</param>
         protected void SaveSelectedTabIndex(int? index = null, bool persistForTheNextRequest = true)
         {
-            //keep this method synchornized with
+            //keep this method synchronized with
             //"GetSelectedTabIndex" method of \Nop.Web.Framework\ViewEngines\Razor\WebViewPage.cs
             if (!index.HasValue)
             {

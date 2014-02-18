@@ -7682,6 +7682,119 @@
       <LocaleResource Name="Customers">
         <Value>Customers</Value>
         <Children>
+              <LocaleResource Name="CustomerAttributes">
+                <Value>Custom customer attributes</Value>
+                <Children>
+                  <LocaleResource Name="AddNew">
+                    <Value>Add a new customer attribute</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="BackToList">
+                    <Value>back to customer attribute list</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Description">
+                    <Value>If the default form fields are not enough for your needs, then you can manage additional customer attributes below.</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="EditAttributeDetails">
+                    <Value>Edit customer attribute details</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Info">
+                    <Value>Attribute info</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Fields">
+                    <Children>
+                      <LocaleResource Name="Name">
+                        <Value>Name</Value>
+                        <Children>
+                          <LocaleResource Name="Required">
+                            <Value>Please provide a name.</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="Hint">
+                            <Value>The name of the customer attribute.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="IsRequired">
+                        <Value>Required</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>When an attribute is required, the customer must choose an appropriate attribute value before they can continue.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="AttributeControlType">
+                        <Value>Control type</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Choose how to display your attribute values.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="DisplayOrder">
+                        <Value>Display order</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>The customer attribute display order. 1 represents the first item in the list.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="Values">
+                    <Value>Attribute values</Value>
+                    <Children>
+                      <LocaleResource Name="AddNew">
+                        <Value>Add a new customer value</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="EditValueDetails">
+                        <Value>Edit customer value details</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="Fields">
+                        <Children>
+                          <LocaleResource Name="Name">
+                            <Value>Name</Value>
+                            <Children>
+                              <LocaleResource Name="Required">
+                                <Value>Please provide a name.</Value>
+                              </LocaleResource>
+                              <LocaleResource Name="Hint">
+                                <Value>The name of the customer value.</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="IsPreSelected">
+                            <Value>Pre-selected</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>Determines whether this attribute value is pre selected for the customer.</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                          <LocaleResource Name="DisplayOrder">
+                            <Value>Display order</Value>
+                            <Children>
+                              <LocaleResource Name="Hint">
+                                <Value>The display order of the attribute value. 1 represents the first item in attribute value list.</Value>
+                              </LocaleResource>
+                            </Children>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="SaveBeforeEdit">
+                        <Value>You need to save the customer attribute before you can add values for this customer attribute page.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="Added">
+                    <Value>The new attribute has been added successfully.</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Deleted">
+                    <Value>The attribute has been deleted successfully.</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Updated">
+                    <Value>The attribute has been updated successfully.</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
           <LocaleResource Name="CustomerRoles">
             <Value>Customer roles</Value>
             <Children>

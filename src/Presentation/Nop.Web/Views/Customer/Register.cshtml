@@ -256,18 +256,25 @@
                     </div>
                 </div>
             }
-            @if (Model.NewsletterEnabled)
+            @if (Model.NewsletterEnabled || Model.CustomerAttributes.Count > 0)
             {
                 <div class="fieldset">
                     <div class="title">
                         <strong>@T("Account.Options")</strong>
                     </div>
                     <div class="form-fields">
-                        <div class="inputs">
-                            @Html.LabelFor(model => model.Newsletter, new { }, ":")
-                            @Html.EditorFor(model => model.Newsletter)
-                            @Html.ValidationMessageFor(model => model.Newsletter)
-                        </div>
+                        @if (Model.NewsletterEnabled)
+                        {
+                            <div class="inputs">
+                                @Html.LabelFor(model => model.Newsletter, new {}, ":")
+                                @Html.EditorFor(model => model.Newsletter)
+                                @Html.ValidationMessageFor(model => model.Newsletter)
+                            </div>
+                        }
+                        @if (Model.CustomerAttributes.Count > 0)
+                        {
+                            @Html.Partial("_CustomerAttributes", Model.CustomerAttributes)
+                        }
                     </div>
                 </div>
             }

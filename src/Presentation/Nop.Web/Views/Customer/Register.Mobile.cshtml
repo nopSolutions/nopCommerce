@@ -222,17 +222,24 @@
                     }
                 </div>
             }
-            @if (Model.NewsletterEnabled)
+            @if (Model.NewsletterEnabled || Model.CustomerAttributes.Count > 0)
             {
                 <div class="section-title">
                     @T("Account.Options")
                 </div>
                 <div class="section-body">
-                    <div>
-                        @Html.LabelFor(model => model.Newsletter)
-                        @Html.EditorFor(model => model.Newsletter)
-                        @Html.ValidationMessageFor(model => model.Newsletter)
-                    </div>
+                    @if (Model.NewsletterEnabled)
+                    {
+                        <div>
+                            @Html.LabelFor(model => model.Newsletter)
+                            @Html.EditorFor(model => model.Newsletter)
+                            @Html.ValidationMessageFor(model => model.Newsletter)
+                        </div>
+                    }
+                    @if (Model.CustomerAttributes.Count > 0)
+                    {
+                        @Html.Partial("_CustomerAttributes", Model.CustomerAttributes)
+                    }
                 </div>
             }
             @if (Model.AllowCustomersToSetTimeZone)

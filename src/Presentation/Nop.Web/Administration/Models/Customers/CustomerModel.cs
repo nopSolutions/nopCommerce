@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using FluentValidation.Attributes;
 using Nop.Admin.Validators.Customers;
+using Nop.Core.Domain.Catalog;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
 
@@ -14,14 +15,15 @@ namespace Nop.Admin.Models.Customers
     {
         public CustomerModel()
         {
-            AvailableTimeZones = new List<SelectListItem>();
-            SendEmail = new SendEmailModel();
-            SendPm = new SendPmModel();
-            AvailableCustomerRoles = new List<CustomerRoleModel>();
-            AssociatedExternalAuthRecords = new List<AssociatedExternalAuthModel>();
-            AvailableCountries = new List<SelectListItem>();
-            AvailableStates = new List<SelectListItem>();
-            AvailableVendors = new List<SelectListItem>();
+            this.AvailableTimeZones = new List<SelectListItem>();
+            this.SendEmail = new SendEmailModel();
+            this.SendPm = new SendPmModel();
+            this.AvailableCustomerRoles = new List<CustomerRoleModel>();
+            this.AssociatedExternalAuthRecords = new List<AssociatedExternalAuthModel>();
+            this.AvailableCountries = new List<SelectListItem>();
+            this.AvailableStates = new List<SelectListItem>();
+            this.AvailableVendors = new List<SelectListItem>();
+            this.CustomerAttributes = new List<CustomerAttributeModel>();
         }
 
         public bool AllowUsersToChangeUsernames { get; set; }
@@ -106,8 +108,8 @@ namespace Nop.Admin.Models.Customers
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.Fax")]
         [AllowHtml]
         public string Fax { get; set; }
-        
 
+        public List<CustomerAttributeModel> CustomerAttributes { get; set; }
 
 
 
@@ -283,6 +285,36 @@ namespace Nop.Admin.Models.Customers
             [NopResourceDisplayName("Admin.Customers.Customers.ActivityLog.CreatedOn")]
             public DateTime CreatedOn { get; set; }
         }
+
+        public partial class CustomerAttributeModel : BaseNopEntityModel
+        {
+            public CustomerAttributeModel()
+            {
+                Values = new List<CustomerAttributeValueModel>();
+            }
+
+            public string Name { get; set; }
+
+            public bool IsRequired { get; set; }
+
+            /// <summary>
+            /// Selected value for textboxes
+            /// </summary>
+            public string DefaultValue { get; set; }
+
+            public AttributeControlType AttributeControlType { get; set; }
+
+            public IList<CustomerAttributeValueModel> Values { get; set; }
+
+        }
+
+        public partial class CustomerAttributeValueModel : BaseNopEntityModel
+        {
+            public string Name { get; set; }
+
+            public bool IsPreSelected { get; set; }
+        }
+
         #endregion
     }
 }

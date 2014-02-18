@@ -269,6 +269,93 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Languages.Resources.Description">
 	<Value>To find text or a specific resource (by name), you can apply a filter via the funnel icon in the "Value" or "Resource name" column headers (case sensitive).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerAttributes">
+	<Value>Custom customer attributes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerAttributes.AddNew">
+	<Value>Add a new customer attribute</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerAttributes.BackToList">
+	<Value>back to customer attribute list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerAttributes.Description">
+	<Value>If the default form fields are not enough for your needs, then you can manage additional customer attributes below.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerAttributes.EditAttributeDetails">
+	<Value>Edit customer attribute details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerAttributes.Info">
+	<Value>Attribute info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerAttributes.Added">
+	<Value>The new attribute has been added successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerAttributes.Deleted">
+	<Value>The attribute has been deleted successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerAttributes.Updated">
+	<Value>The attribute has been updated successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerAttributes.Fields.Name">
+	<Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerAttributes.Fields.Name.Required">
+	<Value>Please provide a name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerAttributes.Fields.Name.Hint">
+	<Value>The name of the customer attribute.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerAttributes.Fields.IsRequired">
+	<Value>Required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerAttributes.Fields.IsRequired.Hint">
+	<Value>When an attribute is required, the customer must choose an appropriate attribute value before they can continue.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerAttributes.Fields.AttributeControlType">
+	<Value>Control type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerAttributes.Fields.AttributeControlType.Hint">
+	<Value>Choose how to display your attribute values.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerAttributes.Fields.DisplayOrder">
+	<Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerAttributes.Fields.DisplayOrder.Hint">
+	<Value>The customer attribute display order. 1 represents the first item in the list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerAttributes.Values">
+	<Value>Attribute values</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerAttributes.Values.AddNew">
+	<Value>Add a new customer value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerAttributes.Values.EditValueDetails">
+	<Value>Edit customer value details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerAttributes.SaveBeforeEdit">
+	<Value>You need to save the customer attribute before you can add values for this customer attribute page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerAttributes.Values.Fields.Name">
+	<Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerAttributes.Values.Fields.Name.Required">
+	<Value>Please provide a name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerAttributes.Values.Fields.Name.Hint">
+	<Value>The name of the customer value.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerAttributes.Values.Fields.IsPreSelected">
+	<Value>Pre-selected</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerAttributes.Values.Fields.IsPreSelected.Hint">
+	<Value>Determines whether this attribute value is pre selected for the customer.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerAttributes.Values.Fields.DisplayOrder">
+	<Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerAttributes.Values.Fields.DisplayOrder.Hint">
+	<Value>The display order of the attribute value. 1 represents the first item in attribute value list.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -677,4 +764,51 @@ BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'upssettings.tracing', N'false', 0)
 END
+GO
+
+--customer attributes
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[CustomerAttribute]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+BEGIN
+CREATE TABLE [dbo].[CustomerAttribute](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Name] nvarchar(400) NOT NULL,
+	[IsRequired] [bit] NOT NULL,
+	[AttributeControlTypeId] [int] NOT NULL,
+	[DisplayOrder] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON)
+)
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[CustomerAttributeValue]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+BEGIN
+CREATE TABLE [dbo].[CustomerAttributeValue](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[CustomerAttributeId] [int] NOT NULL,
+	[Name] nvarchar(400) NOT NULL,
+	[IsPreSelected] [bit] NOT NULL,
+	[DisplayOrder] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON)
+)
+END
+GO
+
+
+IF EXISTS (SELECT 1
+           FROM   sys.objects
+           WHERE  name = 'CustomerAttributeValue_CustomerAttribute'
+           AND parent_object_id = Object_id('CustomerAttributeValue')
+           AND Objectproperty(object_id,N'IsForeignKey') = 1)
+ALTER TABLE dbo.CustomerAttributeValue
+DROP CONSTRAINT CustomerAttributeValue_CustomerAttribute
+GO
+ALTER TABLE [dbo].[CustomerAttributeValue]  WITH CHECK ADD  CONSTRAINT [CustomerAttributeValue_CustomerAttribute] FOREIGN KEY([CustomerAttributeId])
+REFERENCES [dbo].[CustomerAttribute] ([Id])
+ON DELETE CASCADE
 GO

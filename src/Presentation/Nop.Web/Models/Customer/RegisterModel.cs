@@ -16,6 +16,7 @@ namespace Nop.Web.Models.Customer
             this.AvailableTimeZones = new List<SelectListItem>();
             this.AvailableCountries = new List<SelectListItem>();
             this.AvailableStates = new List<SelectListItem>();
+            this.CustomerAttributes = new List<CustomerAttributeModel>();
         }
 
         [NopResourceDisplayName("Account.Fields.Email")]
@@ -130,5 +131,7 @@ namespace Nop.Web.Models.Customer
         public bool DisplayVatNumber { get; set; }
 
         public bool DisplayCaptcha { get; set; }
+
+        public IList<CustomerAttributeModel> CustomerAttributes { get; set; }
     }
 }
