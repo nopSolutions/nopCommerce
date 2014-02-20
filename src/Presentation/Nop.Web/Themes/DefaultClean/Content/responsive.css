@@ -114,5 +114,8 @@
     .forum-edit-page .page-title { width: 95%; padding: 0 2%; }
     .forum-edit-page .inputs input[type="text"], .forum-edit-page .inputs textarea, .forum-edit-page .inputs .toolbar { max-width: 95%; margin-left: 0; }
     .forum-search-page .basic-search input[type="text"] { width: 95% }
+        /* CUSTOMER ACCOUNT PAGES */
+    .account-signature-text { width: 100% }
+    .customer-info-page textarea{width:auto;}
 
 }
