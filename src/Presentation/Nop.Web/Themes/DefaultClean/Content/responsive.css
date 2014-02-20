@@ -141,5 +141,7 @@
     .order-progress ul { display: inline-block; width: 100%; text-align: center; }
     .order-progress ul li { display: inline-block; float: none; margin: 0; width: 60px; }
     .order-progress ul li a { display: block; padding-bottom: 30px !important; background-position: 50% 70% !important; }
+        /* CHECKOUT */
+    .checkout-data .section input[type="text"], .checkout-data .section select { max-width: 100% }
 
 }
