@@ -14,6 +14,8 @@
     }
 
     //add main CSS file
+    Html.AppendCssFileParts("~/Themes/DefaultClean/Content/responsive.css");
+    
     var supportRtl = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Rtl;
     if (supportRtl)
     {
@@ -23,5 +25,4 @@
     {
         Html.AppendCssFileParts("~/Themes/DefaultClean/Content/styles.css");
     }
-    Html.AppendCssFileParts("~/Themes/DefaultClean/Content/responsive.css");
 }
