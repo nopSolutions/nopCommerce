@@ -61,4 +61,6 @@
     /* PRODUCTS IN GRID - TEMPLATE */
     .home-page-product-grid{display: inline-block;text-align: center;width: 100%;}
     .home-page-product-grid.product-grid .item-box{float: none;display: inline-block;}
+    /*NEWSLETTER*/
+    .newsletter-subscribe-block input{max-width: 100%;}
 }
