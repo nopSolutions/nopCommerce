@@ -63,4 +63,17 @@
     .home-page-product-grid.product-grid .item-box{float: none;display: inline-block;}
     /*NEWSLETTER*/
     .newsletter-subscribe-block input{max-width: 100%;}
+    /* CATALOG PAGES */
+    .sub-category-grid .sub-category-item, .manufacturer-grid .manufacturer-item { width: auto; height: 170px; margin: 2px; }
+    .sub-category-grid .item-box, .manufacturer-grid .item-box { width: 33% }
+    .sub-category-grid a img, .manufacturer-grid a img, .home-page-category-grid a img { max-width: 100% }
+    .product-sorting, .product-page-size, .price-range-filter { margin-left: 0; margin-bottom: 5px; margin-right: 10px; }
+    .product-page-size { margin: 0; text-align: left; }
+    .pager { margin-right: 5px }
+    /* PRODUCTS IN GRID - TEMPLATE */
+    .product-grid .item-box { margin: 0 0 0 3%; width: 30%; max-width: 164px;padding: 0; }
+    .product-grid .product-item { width: auto;}
+    .product-grid .product-item .picture { width: auto; height: auto; }
+    .product-grid .product-item .picture img { max-width: 100% }
+
 }
