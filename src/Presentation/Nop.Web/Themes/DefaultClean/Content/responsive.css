@@ -1,1 +1,13 @@
-﻿
+﻿/*=====================================================
+    
+    TABLETS LANDSCAPE & NETBOOKS
+
+=====================================================*/
+@media screen and (max-width: 940px) and (min-width: 769px) {
+    /* MASTER PAGE WRAPPERS */
+    .master-wrapper-page, .master-wrapper-content, .master-wrapper-main { width: 100% }
+    .master-wrapper-content { margin: 15px 0 0 0 }
+    .master-wrapper-main .center-1 { width: 100% }
+    .master-wrapper-main .side-2 { width: 170px }
+    .master-wrapper-main .center-2 { width: auto; margin-left: 180px; float: none; display: table; }
+}
