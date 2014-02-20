@@ -85,4 +85,10 @@
     .product-list .product-item .picture { margin-right: 15px; margin-bottom: 10px; }
     .product-list .product-item .buttons {padding-top: 5px;}
     .product-list .product-item .details {padding-left: 10px;}
+        /* PRODUCT DETAILS PAGE */
+    .product-details-page .gallery{max-width: 100%;width: auto;margin: 0 auto;float: none;display: table;}
+    .product-details-page .gallery .picture img{max-width: 100%;}
+    .product-details-page .overview{max-width: 100%;width: auto;margin: 20px auto;float: none;display: table;}
+    .product-details-page .attributes select{width: 100%;max-width: 100%;}
+
 }
