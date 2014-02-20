@@ -117,5 +117,7 @@
         /* CUSTOMER ACCOUNT PAGES */
     .account-signature-text { width: 100% }
     .customer-info-page textarea{width:auto;}
+        /* COMPARE PRODUCTS */
+    .compare-products-table td img { max-width: 100% }
 
 }
