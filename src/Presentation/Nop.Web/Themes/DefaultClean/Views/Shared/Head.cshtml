@@ -12,7 +12,7 @@
     {
         Html.AppendCssFileParts("~/Themes/DefaultClean/Content/ie7.css");
     }
-    
+
     //add main CSS file
     var supportRtl = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Rtl;
     if (supportRtl)
@@ -23,4 +23,5 @@
     {
         Html.AppendCssFileParts("~/Themes/DefaultClean/Content/styles.css");
     }
+    Html.AppendCssFileParts("~/Themes/DefaultClean/Content/responsive.css");
 }

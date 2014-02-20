@@ -1581,6 +1581,7 @@
     <Content Include="Themes\DefaultClean\Content\images\top-menu-list-image-hover.png" />
     <Content Include="Themes\DefaultClean\Content\images\top-menu-list-image.png" />
     <Content Include="Themes\DefaultClean\Content\images\top-menu-triangle.png" />
+    <Content Include="Themes\DefaultClean\Content\responsive.css" />
     <Content Include="Themes\Mobile\Content\jquery.mobile-1.3.2.css" />
     <Content Include="Themes\Mobile\Content\jquery.mobile-1.3.2.min.css" />
     <Content Include="Themes\Mobile\Content\jquery.mobile.structure-1.3.2.css" />
