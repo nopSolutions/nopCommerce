@@ -92,5 +92,10 @@
     .product-details-page .attributes select{width: 100%;max-width: 100%;}
         /* PRODUCT REVIEWS PAGE */
     .product-reviews-page .write-review .review-title, .product-reviews-page .write-review .review-text { width: 100% }
+        /* CONTACTS */
+    .contact-page .inputs-left { float: none }
+    .contact-page .inputs { float: none }
+    .contact-page .inputs .input-box { width: 100% }
+    .contact-page .enquiry { width: 250px }
 
 }
