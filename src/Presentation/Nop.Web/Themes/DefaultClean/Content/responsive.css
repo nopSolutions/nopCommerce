@@ -97,5 +97,7 @@
     .contact-page .inputs { float: none }
     .contact-page .inputs .input-box { width: 100% }
     .contact-page .enquiry { width: 250px }
+    /* SEARCH */
+    .search-page .search-text { width: 260px }
 
 }
