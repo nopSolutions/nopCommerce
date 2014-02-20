@@ -41,7 +41,7 @@
 @media screen and (max-width: 768px) and (min-width: 481px) {
         /* MASTER PAGE WRAPPERS */
     .master-wrapper-page, .master-wrapper-content, .master-wrapper-main { width: 100% }
-    .master-wrapper-content {margin: 15px 0 0 0; zoom: 1 }
+    .master-wrapper-content {margin: 5px 0 0 0; zoom: 1 }
     .master-wrapper-content:after { content: "."; display: block; clear: both; height: 0; font-size: 0; line-height: 0; visibility: hidden; }
     .master-wrapper-main .center-1 { width: 100% }
     .master-wrapper-main .side-2 { width: 145px }
@@ -51,5 +51,11 @@
     .master-wrapper-main .rightside-3 { width: 145px; float: right; margin-top: 0; }
     /* TOPICS */
     .topic-html-content-title{clear: none}
-
+    /* HEADER AND MENU */
+    .header{height: auto}
+    .header-logo{float: none;margin: 0 auto;width: 310px;}
+    .header-links-wrapper{float: none;margin: 0 auto;display: table;}
+    .search-box{float: none;margin: 0 auto;display: table;}
+    .tax-display-type-selector, .language-selector, .currency-selector { display: inline-block; float: none; margin: 0 5px; }
+    .header-selectors-wrapper{ float: none; text-align: center}
 }
