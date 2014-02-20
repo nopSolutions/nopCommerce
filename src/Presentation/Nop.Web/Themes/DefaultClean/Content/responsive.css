@@ -14,5 +14,15 @@
     /* TOPICS */
     .topic-html-content-title{clear: none}
 
+    /* PRODUCT DETAILS PAGE */
+    .product-details-page .gallery{width: 50%;margin: 25px 0 15px 0;}
+    .product-details-page .overview{float: left;width: 43%;margin: 5px 0;padding: 10px 3%;}
+    .product-details-page .attributes select{max-width: 100%;}
+
+
+
+
+
+
 
 }
