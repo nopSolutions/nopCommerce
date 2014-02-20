@@ -82,12 +82,14 @@
                         @if (Model.IsEditable)
                         {
                             <td class="remove-from-cart">
+                                <span class="td-title">@T("ShoppingCart.Remove"):</span>
                                 <input type="checkbox" name="removefromcart" value="@(item.Id)" />
                             </td>
                         }
                         @if (Model.ShowSku)
                         {
                             <td class="sku nobr">
+                                <span class="td-title">@T("ShoppingCart.SKU"):</span>
                                 @item.Sku
                             </td>
                         }
@@ -132,23 +134,25 @@
                             }
                         </td>
                         <td class="unit-price nobr">
+                            <span class="td-title">@T("ShoppingCart.UnitPrice"):</span>
                             <span class="product-unit-price">@item.UnitPrice</span>
                         </td>
                         <td class="qty nobr">
+                            <span class="td-title">@T("ShoppingCart.Quantity"):</span>
                             @if (Model.IsEditable)
                             {
                                 if (item.AllowedQuantities.Count > 0)
                                 {
-                                <select name="itemquantity@(item.Id)" class="qty-dropdown">
-                                    @foreach (var qty in item.AllowedQuantities)
-                                    {
-                                        <option selected="@qty.Selected" value="@qty.Value">@qty.Value</option>
-                                    }
-                                </select>
+                                    <select name="itemquantity@(item.Id)" class="qty-dropdown">
+                                        @foreach (var qty in item.AllowedQuantities)
+                                        {
+                                            <option selected="@qty.Selected" value="@qty.Value">@qty.Value</option>
+                                        }
+                                    </select>
                                 }
                                 else
                                 {
-                                <input name="itemquantity@(item.Id)" type="text" value="@(item.Quantity)" class="qty-input" />
+                                    <input name="itemquantity@(item.Id)" type="text" value="@(item.Quantity)" class="qty-input" />
                                 }
 
                             }
@@ -158,6 +162,7 @@
                             }
                         </td>
                         <td class="subtotal nobr end">
+                            <span class="td-title">@T("ShoppingCart.ItemTotal"):</span>
                             <span class="product-subtotal">@item.SubTotal</span>
                             @if (!String.IsNullOrEmpty(item.Discount))
                             {
