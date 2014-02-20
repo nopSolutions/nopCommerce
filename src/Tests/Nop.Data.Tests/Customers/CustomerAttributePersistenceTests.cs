@@ -16,10 +16,7 @@ namespace Nop.Data.Tests.Customers
             var ca = new CustomerAttribute()
             {
                 Name = "Name 1",
-                IsEnabled = true,
                 IsRequired = true,
-                IsSystem = true,
-                SystemName = "SystemName 1",
                 AttributeControlType = AttributeControlType.Datepicker,
                 DisplayOrder = 2
             };
@@ -27,10 +24,7 @@ namespace Nop.Data.Tests.Customers
             var fromDb = SaveAndLoadEntity(ca);
             fromDb.ShouldNotBeNull();
             fromDb.Name.ShouldEqual("Name 1");
-            fromDb.IsEnabled.ShouldEqual(true);
             fromDb.IsRequired.ShouldEqual(true);
-            fromDb.IsSystem.ShouldEqual(true);
-            fromDb.SystemName.ShouldEqual("SystemName 1");
             fromDb.AttributeControlType.ShouldEqual(AttributeControlType.Datepicker);
             fromDb.DisplayOrder.ShouldEqual(2);
         }
@@ -41,10 +35,7 @@ namespace Nop.Data.Tests.Customers
             var ca = new CustomerAttribute()
             {
                 Name = "Name 1",
-                IsEnabled = true,
                 IsRequired = true,
-                IsSystem = true,
-                SystemName = "SystemName 1",
                 AttributeControlType = AttributeControlType.Datepicker,
                 DisplayOrder = 2
             };

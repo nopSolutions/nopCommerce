@@ -20,11 +20,8 @@ namespace Nop.Data.Tests.Customers
                         CustomerAttribute = new CustomerAttribute()
                         {
                             Name = "Name 1",
-                            IsEnabled = true,
                             IsRequired = true,
-                            IsSystem = true,
-                            SystemName = "SystemName 1",
-                            AttributeControlType = AttributeControlType.Datepicker,
+                            AttributeControlType = AttributeControlType.DropdownList,
                             DisplayOrder = 2
                         }
                     };
