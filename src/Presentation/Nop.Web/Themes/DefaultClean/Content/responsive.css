@@ -125,5 +125,21 @@
     .email-a-friend-page .inputs { width: 85% }
     .email-a-friend-page .friend-email, .email-a-friend-page .your-email, .email-a-friend-page .personal-message { max-width: 95% }
     .email-a-friend-page .personal-message { width: 280px }
+    /* ORDER SUMMARY, SHOPPING CART, WISHLIST */
+    .order-summary-content .cart thead, .wishlist-content .cart thead {margin-bottom: 10px}
+    .order-summary-content .cart td, .wishlist-content .cart td { padding: 5px 2px !important }
+    .order-summary-content .cart .cart-item-row td.product, .wishlist-content .cart .cart-item-row td.product { padding: 0 10px !important }
+    .nobr { white-space: normal !important }
+    .order-summary-content .cart-collaterals { padding: 0; width: auto; zoom: 1; display: table; }
+    .order-summary-content .cart-collaterals:after { content: "."; display: block; clear: both; height: 0; font-size: 0; line-height: 0; visibility: hidden; }
+    .order-summary-content .deals { margin-right: 3px; width: 170px; }
+    .order-summary-content .coupon-box, .order-summary-content .giftcard-box { padding: 3px }
+    .order-summary-content .shipping { margin-right: 3px; width: 255px; }
+    .estimate-shipping { padding: 3px }
+    .order-summary-content .totals { width: 295px; padding-top: 0; display: table; }
+    .order-progress { height: auto }
+    .order-progress ul { display: inline-block; width: 100%; text-align: center; }
+    .order-progress ul li { display: inline-block; float: none; margin: 0; width: 60px; }
+    .order-progress ul li a { display: block; padding-bottom: 30px !important; background-position: 50% 70% !important; }
 
 }
