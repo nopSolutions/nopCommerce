@@ -46,11 +46,6 @@
         @Html.Widget("left_side_column_after")
     }
 </div>
-<div class="center-3">
-    @Html.Widget("main_column_before")
-    @RenderBody()
-    @Html.Widget("main_column_after")
-</div>
 <div class="rightside-3">
     @if (IsSectionDefined("right"))
     {
@@ -60,8 +55,13 @@
     {
         @Html.Widget("right_side_column_before")
         @Html.Action("NewsletterBox", "Newsletter")
-        @Html.Action("RecentlyViewedProductsBlock", "Catalog", new { productThumbPictureSize = 32 })   
+        @Html.Action("RecentlyViewedProductsBlock", "Catalog", new { productThumbPictureSize = 32 })
         @Html.Action("PollBlock", "Poll", new { systemKeyword = "RightColumnPoll" })
         @Html.Widget("right_side_column_after")
     }
+</div>
+<div class="center-3">
+    @Html.Widget("main_column_before")
+    @RenderBody()
+    @Html.Widget("main_column_after")
 </div>
