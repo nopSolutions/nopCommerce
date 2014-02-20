@@ -19,7 +19,10 @@
     .product-details-page .overview{float: left;width: 43%;margin: 5px 0;padding: 10px 3%;}
     .product-details-page .attributes select{max-width: 100%;}
 
-
+    /* CONTACTS */
+    .contact-page .inputs-right { margin-left: 25px }
+    .contact-page .email, .contact-page .fullname { width: 215px }
+    .contact-page .enquiry { width: 280px }
 
 
 
