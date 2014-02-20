@@ -10,4 +10,9 @@
     .master-wrapper-main .center-1 { width: 100% }
     .master-wrapper-main .side-2 { width: 170px }
     .master-wrapper-main .center-2 { width: auto; margin-left: 180px; float: none; display: table; }
+
+    /* TOPICS */
+    .topic-html-content-title{clear: none}
+
+
 }
