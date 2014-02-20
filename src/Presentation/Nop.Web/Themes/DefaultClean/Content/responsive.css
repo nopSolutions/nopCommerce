@@ -24,6 +24,10 @@
     .contact-page .email, .contact-page .fullname { width: 215px }
     .contact-page .enquiry { width: 280px }
 
+     /* EMAIL A FRIEND */
+    .email-a-friend-page .inputs-left, .email-a-friend-page .inputs-right { width: 50% }
+    .email-a-friend-page .inputs { width: 85% }
+    .email-a-friend-page .friend-email, .email-a-friend-page .your-email, .email-a-friend-page .personal-message { max-width: 100% }
 
 
 
