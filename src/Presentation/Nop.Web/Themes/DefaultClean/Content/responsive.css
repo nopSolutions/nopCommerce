@@ -119,5 +119,11 @@
     .customer-info-page textarea{width:auto;}
         /* COMPARE PRODUCTS */
     .compare-products-table td img { max-width: 100% }
+        /* EMAIL A FRIEND */
+    .email-a-friend-page .page-body { padding: 0 }
+    .email-a-friend-page .inputs-left, .email-a-friend-page .inputs-right { width: 50% }
+    .email-a-friend-page .inputs { width: 85% }
+    .email-a-friend-page .friend-email, .email-a-friend-page .your-email, .email-a-friend-page .personal-message { max-width: 95% }
+    .email-a-friend-page .personal-message { width: 280px }
 
 }
