@@ -99,5 +99,8 @@
     .contact-page .enquiry { width: 250px }
     /* SEARCH */
     .search-page .search-text { width: 260px }
+        /* LOGIN */
+    .login-page .new-wrapper, .login-page .returning-wrapper { width: 45%; padding: 10px 2%; }
+    .login-page .email, .login-page .username, .login-page .password { max-width: 100% }
 
 }
