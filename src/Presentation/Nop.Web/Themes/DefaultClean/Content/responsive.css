@@ -192,4 +192,13 @@
     .footer-disclaimer { padding: 0 10px; margin-top: 5px; }
     .footer-store-theme { padding: 0 10px 10px 10px }
 
+
+        /* PRODUCTS IN GRID - TEMPLATE */
+    .product-grid {text-align: center;display: inline-block;width: 100%;}
+    .product-grid .title,.also-purchased-products-grid .title{margin-bottom: 15px;}
+    .product-grid .item-box {display: inline-block;float: none}
+    .product-grid .product-item { width: auto;height: auto;}
+    .product-grid .product-item .picture { width: auto; height: auto; }
+    .product-grid .product-item .picture img { max-width: 100% }
+
 }
