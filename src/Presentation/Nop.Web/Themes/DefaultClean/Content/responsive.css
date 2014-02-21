@@ -253,5 +253,9 @@
     .search-page .search-text { width: 96%; padding: 5px 0 5px 2%; }
     /* CONTACTS */
     .contact-page .inputs-left, .contact-page .inputs, .contact-page .inputs .input-box, .contact-page .enquiry, .contact-page .fullname, .contact-page .email { width: 100% }
+    /* LOGIN */
+    .login-page .new-wrapper, .login-page .returning-wrapper { float: none; max-width: 93%; width: 300px; padding: 10px 3%; min-height: inherit; margin: 0 auto 15px auto; }
+    .login-page .new-wrapper:after, .login-page .returning-wrapper:after { content: "."; display: block; clear: both; height: 0; font-size: 0; line-height: 0; visibility: hidden; }
+    .login-page .email, .login-page .username, .login-page .password { max-width: 100% }
 
 }
