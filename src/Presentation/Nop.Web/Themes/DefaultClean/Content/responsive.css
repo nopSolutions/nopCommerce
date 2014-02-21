@@ -60,7 +60,8 @@
     .header-selectors-wrapper{ float: none; text-align: center}
     /* PRODUCTS IN GRID - TEMPLATE */
     .home-page-product-grid{display: inline-block;text-align: center;width: 100%;}
-    .home-page-product-grid.product-grid .item-box{float: none;display: inline-block;width:auto;}
+    .home-page-product-grid.product-grid .item-box{float: none;display: inline-block;width:auto;margin-bottom: 15px}
+    .home-page-product-grid.product-grid .product-item{height: auto}
     /* NEWSLETTER*/
     .newsletter-subscribe-block input{max-width: 100%;}
     /* CATALOG PAGES */
@@ -71,7 +72,7 @@
     .product-page-size { margin: 0; text-align: left; }
     .pager { margin-right: 5px }
     /* PRODUCTS IN GRID - TEMPLATE */
-    .product-grid .item-box { margin: 0 0 0 3%; width: 30%; min-width: 135px;padding: 0; }
+    .product-grid .item-box { margin: 0 0 0 3%; width: 30%; min-width: 135px;max-width: 155px;padding: 0; }
     .product-grid .product-item { width: auto;height: 285px;}
     .product-grid .product-item .picture { width: auto; height: auto; }
     .product-grid .product-item .picture img { max-width: 100% }
@@ -88,9 +89,9 @@
         /* PRODUCT DETAILS PAGE */
     .product-details-page .gallery{max-width: 100%;width: auto;margin: 0 auto;float: none;display: table;}
     .product-details-page .gallery .picture img{max-width: 100%;}
-    .product-details-page .overview{max-width: 100%;width: auto;margin: 20px auto;float: none;display: table;}
+    .product-details-page .overview{max-width: 100%;width: auto;margin: 20px 0;float: none;}
     .product-details-page .attributes select{width: 100%;max-width: 100%;}
-    .related-products-grid,.also-purchased-products-grid{ text-align: center;display: inline-block}
+    .related-products-grid,.also-purchased-products-grid{ text-align: center;display: inline-block;width: 100%;}
     .related-products-grid .title,.also-purchased-products-grid .title{margin-bottom: 15px;}
     .related-products-grid .item-box,.also-purchased-products-grid .item-box{ display: inline-block;float: none}
         /* PRODUCT REVIEWS PAGE */
