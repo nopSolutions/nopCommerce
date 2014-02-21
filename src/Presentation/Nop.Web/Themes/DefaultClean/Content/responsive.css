@@ -305,5 +305,7 @@
     .order-details-page .order-details-area td:after { content: "."; display: block; clear: both; height: 0; font-size: 0; line-height: 0; visibility: hidden; }
     .order-details-page .title { padding-top: 0 }
     .order-details-page .order-overview .order-details { float: none }
+        /* PRODUCT REVIEWS PAGE */
+    .product-reviews-page .write-review .review-title, .product-reviews-page .write-review .review-text { width: 100% }
 
 }
