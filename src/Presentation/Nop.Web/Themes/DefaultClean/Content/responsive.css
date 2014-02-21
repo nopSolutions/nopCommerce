@@ -234,5 +234,9 @@
     .block-account-navigation a.inactive { padding: 0; background: none; border-bottom: 1px dotted; }
     .block-account-navigation a.active { padding: 0; background: none; margin-bottom: 0; }
     .block-account-navigation .title { display: none }
+    /* CUSTOMER ACCOUNT PAGES */
+    .account-page .page-title { padding: 0 10px; width: auto; }
+    .account-signature-text { width: 100% }
+    .customer-info-page textarea{width:100%;}
 
 }
