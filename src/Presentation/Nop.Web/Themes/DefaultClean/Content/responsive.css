@@ -156,7 +156,8 @@
 =====================================================*/
 @media screen and (max-width: 480px) {
         /* MASTER PAGE WRAPPERS */
-    .master-wrapper-page, .master-wrapper-content, .master-wrapper-main .center-1 { width: 100% }
+    .master-wrapper-page, .master-wrapper-content, .master-wrapper-main .center-1 {width: 100%;}
+    .master-wrapper-page{margin: 15px auto 0;}
     .master-wrapper-content{margin: 15px 0 0 0}
     .master-wrapper-main .side-2 { margin: 0; width: 100%; }
     .master-wrapper-main .side-2  > * { display: none }
