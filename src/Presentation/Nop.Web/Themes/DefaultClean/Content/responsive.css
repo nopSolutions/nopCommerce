@@ -168,7 +168,7 @@
     .topic-html-content-title{clear: none}
     /* HEADER AND MENU */
     .header{height: auto}
-    .header-logo{float: none;margin: 0 auto;width: 310px;}
+    .header-logo { margin: 0 auto; display: table; float: none; }
     .header-links-wrapper{float: none;margin: 0 auto;display: table;}
     .tax-display-type-selector, .language-selector, .currency-selector { display: inline-block; float: none; margin: 0 5px; }
     .header-selectors-wrapper{ float: none; text-align: center}
