@@ -261,5 +261,32 @@
     .email-a-friend-page .inputs-left, .email-a-friend-page .inputs-right { width: 50% }
     .email-a-friend-page .inputs { width: 85% }
     .email-a-friend-page .friend-email, .email-a-friend-page .your-email, .email-a-friend-page .personal-message { max-width: 100% }
+    /* ORDER SUMMARY, SHOPPING CART, WISHLIST */
+    .order-summary-content .cart, .wishlist-content .cart { display: inline-block; width: 100%; text-align: center; }
+    .order-summary-content .cart tbody, .wishlist-content .cart tbody { display: inline-block; width: 100%; text-align: center; }
+    .order-summary-content .cart .cart-item-row, .wishlist-content .cart .cart-item-row { display: inline-block; border: 1px solid #c5c5c5; margin: 0px 3px 10px 3px; min-width: 130px; width: 46%; }
+    .order-summary-content .cart .cart-item-row td, .wishlist-content .cart .cart-item-row td { display: block; padding: 5px; }
+    .order-summary-content .cart .cart-header-row, .wishlist-content .cart .cart-header-row { display: none }
+    .wishlist-content .cart .cart-item-row td.remove-from-cart { border-bottom: none; padding-bottom: 0; }
+    .wishlist-content .cart .cart-item-row td.add-to-cart { padding-top: 0 }
+    .wishlist-page .share-info a.share-link { word-break: break-word }
+    .order-summary-content .cart .cart-item-row td.product-picture, .wishlist-content .cart .cart-item-row td.product-picture { border-bottom: none; padding-bottom: 0; display: block; }
+    .order-summary-content .cart .cart-item-row td.product, .wishlist-content .cart .cart-item-row td.product { border-bottom: none; text-align: center; line-height: normal; padding: 0 10px 10px 10px; }
+    .order-summary-content .cart .cart-item-row td.unit-price, .wishlist-content .cart .cart-item-row td.unit-price { clear: both; border-top: 1px solid #c5c5c5; border-bottom: none; }
+    .order-summary-content .cart .cart-item-row td.qty, .wishlist-content .cart .cart-item-row td.qty { border-bottom: none }
+    .order-summary-content .cart .cart-item-row td.subtotal, .wishlist-content .cart .cart-item-row td.subtotal { border-bottom: none; text-align: center; }
+    .order-summary-content .cart .cart-item-row td.product-picture img, .wishlist-content .cart .cart-item-row td.product-picture img { }
+    .order-progress { height: auto }
+    .order-progress ul { display: inline-block; width: 100%; text-align: center; }
+    .order-progress ul li { display: inline-block; float: none; margin: 0; width: 60px; }
+    .order-progress ul li a { display: block; padding-bottom: 30px !important; background-position: 50% 70% !important; }
+    .order-summary-content .cart-collaterals { width: auto }
+    .order-summary-content .deals { margin-right: 3px; width: 170px; max-width: 100%; }
+    .order-summary-content .coupon-box, .order-summary-content .giftcard-box { padding: 3px }
+    .order-summary-content .shipping { margin-right: 3px; width: auto; max-width: 100%; }
+    .estimate-shipping { padding: 3px }
+    .estimate-shipping .shipping-options .estimate-shipping-button { display: block; margin: 0 auto; }
+    .order-summary-content .totals { width: 295px; display: table; padding-top: 15px; display: table; }
+    .order-summary-content .cart .cart-item-row td .td-title, .wishlist-content .cart .cart-item-row td .td-title { display: initial }
 
 }
