@@ -307,5 +307,9 @@
     .order-details-page .order-overview .order-details { float: none }
         /* PRODUCT REVIEWS PAGE */
     .product-reviews-page .write-review .review-title, .product-reviews-page .write-review .review-text { width: 100% }
+    /* MISC. CLASSES */
+    .fieldset .inputs label { margin-left: 0 }
+    input[type="text"], input[type="password"] { width: 120px }
+    .fieldset .inputs .gender { margin: 5px 0; display: block; }
 
 }
