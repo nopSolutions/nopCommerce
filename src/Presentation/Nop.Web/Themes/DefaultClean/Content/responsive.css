@@ -246,5 +246,10 @@
     .blogpost-page .new-comment .comment-text { width: 100% }
     .blogpost-page .blog-comment .comment-content { display: inline-block; margin-left: 0; }
     .blogpost-page .blog-comment .comment-info { max-width: 95%; padding: 5px 0 0 0; float: none; }
+    /* SEARCH */
+    .search-page .search-input { width: 94%; padding: 10px 2%; }
+    .search-page .inputs { width: 98%; padding: 1%; }
+    .search-page .search-input form, .search-page .search-input form .basic-search { width: 100% }
+    .search-page .search-text { width: 96%; padding: 5px 0 5px 2%; }
 
 }
