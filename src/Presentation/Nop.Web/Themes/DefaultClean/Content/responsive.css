@@ -290,5 +290,7 @@
     .order-summary-content .cart .cart-item-row td .td-title, .wishlist-content .cart .cart-item-row td .td-title { display: initial }
         /* ONE PAGE CHECKOUT */
     .opc .step select { max-width: 100% }
+    /* CHECKOUT */
+    .checkout-data .enter-address select { max-width: 100% }
 
 }
