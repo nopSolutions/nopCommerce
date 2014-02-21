@@ -175,6 +175,7 @@
     .header-selectors-wrapper{ float: none; text-align: center}
     .search-box{float: none;margin: 0 auto;display: table;width: 80%;text-align: center;}
     input[type="text"].search-box-text { width:60%;}
+    .header-menu a{font-size: 1em}
         /* HOMEPAGE */
     .home-page-product-grid{display: inline-block;text-align: center;width: 100%;}
     .home-page-product-grid.product-grid .item-box{float: none;display: inline-block;width:auto;margin-bottom: 15px}
