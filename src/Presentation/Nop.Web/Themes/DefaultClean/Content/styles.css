@@ -497,6 +497,7 @@ td.fieldname{font-size:12px;}
 .order-details-page .cart-total-left{color:#000;}
 .order-details-page .order-notes th.createdon{width:30%;}
 .order-details-page .order-notes .download a{color:#B80709;}
+.order-details-page .data-table td .td-title{display: none}
 
 
 /* SHIPMENTS */
