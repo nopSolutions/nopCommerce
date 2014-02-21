@@ -257,5 +257,9 @@
     .login-page .new-wrapper, .login-page .returning-wrapper { float: none; max-width: 93%; width: 300px; padding: 10px 3%; min-height: inherit; margin: 0 auto 15px auto; }
     .login-page .new-wrapper:after, .login-page .returning-wrapper:after { content: "."; display: block; clear: both; height: 0; font-size: 0; line-height: 0; visibility: hidden; }
     .login-page .email, .login-page .username, .login-page .password { max-width: 100% }
+    /* EMAIL A FRIEND */
+    .email-a-friend-page .inputs-left, .email-a-friend-page .inputs-right { width: 50% }
+    .email-a-friend-page .inputs { width: 85% }
+    .email-a-friend-page .friend-email, .email-a-friend-page .your-email, .email-a-friend-page .personal-message { max-width: 100% }
 
 }
