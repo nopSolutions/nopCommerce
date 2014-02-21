@@ -90,6 +90,9 @@
     .product-details-page .gallery .picture img{max-width: 100%;}
     .product-details-page .overview{max-width: 100%;width: auto;margin: 20px auto;float: none;display: table;}
     .product-details-page .attributes select{width: 100%;max-width: 100%;}
+    .related-products-grid,.also-purchased-products-grid{ text-align: center;display: inline-block}
+    .related-products-grid .title,.also-purchased-products-grid .title{margin-bottom: 15px;}
+    .related-products-grid .item-box,.also-purchased-products-grid .item-box{ display: inline-block;float: none}
         /* PRODUCT REVIEWS PAGE */
     .product-reviews-page .write-review .review-title, .product-reviews-page .write-review .review-text { width: 100% }
         /* CONTACTS */
