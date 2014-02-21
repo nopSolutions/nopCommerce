@@ -178,5 +178,18 @@
     .home-page-product-grid{display: inline-block;text-align: center;width: 100%;}
     .home-page-product-grid.product-grid .item-box{float: none;display: inline-block;width:auto;margin-bottom: 15px}
     .home-page-product-grid.product-grid .product-item{height: auto}
+        /* FOOTER */
+    .footer { margin: 15px 0 0 0; padding: 0; width: 100%; }
+    .footer-menu-wrapper { padding: 15px }
+    .footer-menu-wrapper .column{width: auto;float: none; margin-left: 0; text-align: center; border: none; padding-left: 0; }
+    .footer-menu-wrapper .column h3 { word-wrap: break-word }
+    .footer-menu-wrapper .column ul { display: inline-block; width: 100%; text-align: center; margin-top: 10px; margin-bottom: 20px; }
+    .footer-menu-wrapper .column ul li { margin: 0 7px; display: inline-block; padding-left: 10px; }
+    .footer-menu-wrapper .column.customer-service { margin-right: 0 }
+    .footer-menu-wrapper .column.follow-us { margin-bottom: 5px }
+    .footer-menu-wrapper .column.follow-us li { display: inline-block; float: none; width: auto; }
+    .footer-poweredby { padding: 10px 10px 0 10px; margin-top: 0; }
+    .footer-disclaimer { padding: 0 10px; margin-top: 5px; }
+    .footer-store-theme { padding: 0 10px 10px 10px }
 
 }
