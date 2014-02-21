@@ -238,5 +238,9 @@
     .account-page .page-title { padding: 0 10px; width: auto; }
     .account-signature-text { width: 100% }
     .customer-info-page textarea{width:100%;}
+        /* NEWS */
+    .news-item-page .new-comment .comment-title, .news-item-page .new-comment .comment-text { width: 100% }
+    .news-item-page .news-comment .comment-info { max-width: 95%; padding: 5px 0 0 0; float: none; }
+    .news-item-page .news-comment .comment-content { margin-left: 0; display: inline-block; }
 
 }
