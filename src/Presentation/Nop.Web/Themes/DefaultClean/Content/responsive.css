@@ -207,5 +207,15 @@
     .product-sorting, .product-page-size, .price-range-filter { margin-left: 0; margin-bottom: 5px;}
     .product-page-size { margin: 0; text-align: left; }
     .pager { margin-right: 5px }
+        /* PRODUCTS IN LINES - TEMPLATE */
+    .product-list .product-item .add-info {padding-bottom: 10px;text-align: left; zoom: 1; position: static;float: none; display: table;}
+    .product-list .product-item .add-info:after { content: "."; display: block; clear: both; height: 0; font-size: 0; line-height: 0; visibility: hidden; }
+    .product-list .product-item .buttons .product-box-detail-button { float: none; margin: 0; }
+    .product-list .product-item .product-rating-box { margin: 0; display: table; padding-left: 0;}
+    .product-list .product-item .description {display: table; margin: 10px 5px 10px 10px; padding: 0; }
+    .product-list .product-item .picture img { margin-right: 10px }
+    .product-list .product-item .picture { margin-right: 15px; margin-bottom: 10px; }
+    .product-list .product-item .buttons {padding-top: 5px;}
+    .product-list .product-item .details {padding-left: 10px;}
 
 }
