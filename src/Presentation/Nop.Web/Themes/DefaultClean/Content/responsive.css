@@ -242,5 +242,9 @@
     .news-item-page .new-comment .comment-title, .news-item-page .new-comment .comment-text { width: 100% }
     .news-item-page .news-comment .comment-info { max-width: 95%; padding: 5px 0 0 0; float: none; }
     .news-item-page .news-comment .comment-content { margin-left: 0; display: inline-block; }
+        /* BLOGS */
+    .blogpost-page .new-comment .comment-text { width: 100% }
+    .blogpost-page .blog-comment .comment-content { display: inline-block; margin-left: 0; }
+    .blogpost-page .blog-comment .comment-info { max-width: 95%; padding: 5px 0 0 0; float: none; }
 
 }
