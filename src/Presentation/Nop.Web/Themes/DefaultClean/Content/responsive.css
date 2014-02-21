@@ -292,5 +292,18 @@
     .opc .step select { max-width: 100% }
     /* CHECKOUT */
     .checkout-data .enter-address select { max-width: 100% }
+    /* ORDER DETAILS */
+    .order-details-page .section { padding: 0 }
+    .order-details-page .data-table { border: none }
+    .order-details-page .data-table thead { display: none }
+    .order-details-page .data-table tr { display: inline-block; border: 1px solid #c5c5c5; margin: 0px 3px 10px 3px; min-width: 130px; width: 46%; }
+    .order-details-page .data-table td { display: block; text-align: center !important; }
+    .order-details-page .data-table td .td-title { display: initial }
+    .order-details-page .order-details-area { border: none; margin: 0; padding: 0; }
+    .order-details-page .order-details-area ul { margin: 0 }
+    .order-details-page .order-details-area td { display: block; width: auto; zoom: 1; border: 1px solid #EEE; margin: 5px 10px 5px 0; padding: 15px; float: left; }
+    .order-details-page .order-details-area td:after { content: "."; display: block; clear: both; height: 0; font-size: 0; line-height: 0; visibility: hidden; }
+    .order-details-page .title { padding-top: 0 }
+    .order-details-page .order-overview .order-details { float: none }
 
 }
