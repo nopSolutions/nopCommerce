@@ -200,6 +200,9 @@ set @resources='
   <LocaleResource Name="Common.FileUploader.Retry">
 	<Value>Retry</Value>
   </LocaleResource>
+  <LocaleResource Name="Common.FileUploader.Upload">
+	<Value>Upload a file</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductVariantAttributes.Attributes.ValidationRules.FileAllowedExtensions">
 	<Value>Allowed file extensions</Value>
   </LocaleResource>

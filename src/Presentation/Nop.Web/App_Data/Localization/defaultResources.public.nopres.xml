@@ -1316,6 +1316,9 @@
           <LocaleResource Name="Retry">
             <Value>Retry</Value>
           </LocaleResource>
+          <LocaleResource Name="Upload">
+            <Value>Upload a file</Value>
+          </LocaleResource>
         </Children>
       </LocaleResource>
       <LocaleResource Name="Hide">
