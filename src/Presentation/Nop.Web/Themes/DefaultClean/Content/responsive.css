@@ -17,7 +17,6 @@
     .product-details-page .gallery{width: 50%;margin: 25px 0 15px 0;}
     .product-details-page .gallery .picture img{max-width: 100%;}
     .product-details-page .overview{float: left;width: 41%;margin:5px 0 5px 2%;padding: 10px 3%;}
-    .product-details-page .attributes select{max-width: 100%;}
     /* CONTACTS */
     .contact-page .inputs-right { margin-left: 25px }
     .contact-page .email, .contact-page .fullname { width: 215px }
@@ -91,7 +90,6 @@
     .product-details-page .gallery{max-width: 100%;width: auto;margin: 0 auto;float: none;display: table;}
     .product-details-page .gallery .picture img{max-width: 100%;}
     .product-details-page .overview{max-width: 100%;width: auto;margin: 20px 0;float: none;}
-    .product-details-page .attributes select{width: 100%;max-width: 100%;}
     .related-products-grid,.also-purchased-products-grid{ text-align: center;display: inline-block;width: 100%;}
     .related-products-grid .title,.also-purchased-products-grid .title{margin-bottom: 15px;}
     .related-products-grid .item-box,.also-purchased-products-grid .item-box{ display: inline-block;float: none}
@@ -227,7 +225,6 @@
     .product-details-page .gallery{max-width: 100%;width: auto;margin: 0 auto;float: none;display: table;}
     .product-details-page .gallery .picture img{max-width: 100%;}
     .product-details-page .overview{max-width: 100%;width: auto;margin: 20px 0;float: none;}
-    .product-details-page .attributes select{width: 100%;max-width: 100%;}
     .related-products-grid,.also-purchased-products-grid{ text-align: center;display: inline-block;width: 100%;}
     .related-products-grid .title,.also-purchased-products-grid .title{margin-bottom: 15px;}
     .related-products-grid .item-box,.also-purchased-products-grid .item-box{ display: inline-block;float: none}
