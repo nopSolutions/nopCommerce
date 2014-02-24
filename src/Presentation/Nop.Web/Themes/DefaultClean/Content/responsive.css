@@ -10,6 +10,8 @@
     .master-wrapper-main .center-1 { width: 100% }
     .master-wrapper-main .side-2 { width: 170px }
     .master-wrapper-main .center-2 { width: auto; margin-left: 180px; float: none; display: table; }
+    /* HEADER AND MENU */
+.flyout-cart { display: none !important }
 
     /* PRODUCT DETAILS PAGE */
     .product-details-page .gallery{width: 50%;margin: 25px 0 15px 0;}
@@ -28,7 +30,6 @@
     .email-a-friend-page .friend-email, .email-a-friend-page .your-email, .email-a-friend-page .personal-message { max-width: 100% }
 /* NAVIGATIONS */
 .block-recently-viewed-products li a{display: table}
-
 
 }
 
