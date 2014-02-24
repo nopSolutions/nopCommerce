@@ -58,6 +58,8 @@
     .search-box{float: none;margin: 0 auto;display: table;}
     .tax-display-type-selector, .language-selector, .currency-selector { display: inline-block; float: none; margin: 0 5px; }
     .header-selectors-wrapper{ float: none; text-align: center}
+    .flyout-cart { display: none !important }
+
     /* PRODUCTS IN GRID - TEMPLATE */
     .home-page-product-grid{display: inline-block;text-align: center;width: 100%;}
     .home-page-product-grid.product-grid .item-box{float: none;display: inline-block;width:auto;margin-bottom: 15px}
