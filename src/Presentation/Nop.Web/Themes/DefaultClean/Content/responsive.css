@@ -228,6 +228,7 @@
     .related-products-grid .title,.also-purchased-products-grid .title{margin-bottom: 15px;}
     .related-products-grid .item-box,.also-purchased-products-grid .item-box{ display: inline-block;float: none}
     /* NAVIGATIONS */
+.block-recently-viewed-products li a{display: table}
     .master-wrapper-main .side-2 .block-account-navigation { display: block; margin-bottom: 0; border-bottom: none; }
     .block-account-navigation .listbox { padding: 5px 0 13px 0; margin: 0 15px; border-radius: 0; border-bottom: 3px double #B4ACAC; background: none; }
     .block-account-navigation .listbox ul { display: inline-block; width: 100%; text-align: center; }
