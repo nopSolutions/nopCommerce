@@ -178,6 +178,7 @@
     .home-page-product-grid{display: inline-block;text-align: center;width: 100%;}
     .home-page-product-grid.product-grid .item-box{float: none;display: inline-block;width:auto;margin-bottom: 15px}
     .home-page-product-grid.product-grid .product-item{height: auto}
+    .theme-default .nivoSlider{box-shadow: 0px 6px 8px -5px #4a4a4a !important}
     /* FOOTER */
     .footer { margin: 15px 0 0 0; padding: 0; width: 100%; }
     .footer-menu-wrapper { padding: 15px }
