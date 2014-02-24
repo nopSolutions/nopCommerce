@@ -318,6 +318,7 @@
     .forum-edit-page .inputs input[type="text"], .forum-edit-page .inputs textarea, .forum-edit-page .inputs .toolbar { max-width: 95%; margin-left: 0; }
     .forum-search-page .basic-search input[type="text"] { width: 95% }
     .forum-search-page .inputs select { max-width: 95% }
+    .topic-header{height: auto}
     /* COMPARE PRODUCTS */
     .compare-products-table {background-color: #fff;}
     .compare-products-table td img { max-width: 100% }
