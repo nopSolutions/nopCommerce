@@ -40,7 +40,7 @@
     .master-wrapper-page, .master-wrapper-content, .master-wrapper-main { width: 100% }
     .master-wrapper-content {margin: 5px 0 0 0; zoom: 1 }
     .master-wrapper-content:after { content: "."; display: block; clear: both; height: 0; font-size: 0; line-height: 0; visibility: hidden; }
-    .master-wrapper-main .center-1 {width: 98%;padding: 0 1%;}
+    .master-wrapper-main .center-1 {width: 98%;padding:10px 1%;}
     .master-wrapper-main .side-2 { width: 145px }
     .master-wrapper-main .center-2 { width: auto; margin-left: 155px; float: none; display: table; }
     .master-wrapper-main .leftside-3 { width: 145px; margin: 0; }
