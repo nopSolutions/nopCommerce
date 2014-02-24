@@ -209,6 +209,16 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.ResponsiveDesignSupported_OverrideForStore, model => model.StoreInformationSettings.ResponsiveDesignSupported, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.StoreInformationSettings.ResponsiveDesignSupported):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.StoreInformationSettings.ResponsiveDesignSupported)
+                @Html.ValidationMessageFor(model => model.StoreInformationSettings.ResponsiveDesignSupported)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.MobileDevicesSupported_OverrideForStore, model => model.StoreInformationSettings.MobileDevicesSupported, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.StoreInformationSettings.MobileDevicesSupported):
             </td>

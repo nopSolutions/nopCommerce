@@ -39,6 +39,10 @@ namespace Nop.Admin.Models.Settings
                 this.AvailableStoreThemesForMobileDevices = new List<ThemeConfigurationModel>();
             }
 
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.ResponsiveDesignSupported")]
+            public bool ResponsiveDesignSupported { get; set; }
+            public bool ResponsiveDesignSupported_OverrideForStore { get; set; }
+
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.MobileDevicesSupported")]
             public bool MobileDevicesSupported { get; set; }
             public bool MobileDevicesSupported_OverrideForStore { get; set; }

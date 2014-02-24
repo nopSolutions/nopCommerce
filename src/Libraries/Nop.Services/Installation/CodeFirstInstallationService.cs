@@ -4774,6 +4774,7 @@ namespace Nop.Services.Installation
                     StoreClosedAllowForAdmins = false,
                     DefaultStoreThemeForDesktops = "DefaultClean",
                     AllowCustomerToSelectTheme = true,
+                    ResponsiveDesignSupported = true,
                     MobileDevicesSupported = false,
                     DefaultStoreThemeForMobileDevices = "Mobile",
                     EmulateMobileDevice = false,

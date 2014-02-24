@@ -5078,6 +5078,14 @@
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
+                  <LocaleResource Name="ResponsiveDesignSupported">
+                    <Value>Responsive design supported</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Check to enable responsive design. Also note that your graphical theme should also support it.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
                   <LocaleResource Name="MobileDevicesSupported">
                     <Value>Mobile devices supported</Value>
                     <Children>

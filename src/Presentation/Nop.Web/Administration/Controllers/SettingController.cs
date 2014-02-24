@@ -1898,6 +1898,7 @@ namespace Nop.Admin.Controllers
                 })
                 .ToList();
             model.StoreInformationSettings.AllowCustomerToSelectTheme = storeInformationSettings.AllowCustomerToSelectTheme;
+            model.StoreInformationSettings.ResponsiveDesignSupported = storeInformationSettings.ResponsiveDesignSupported;
             model.StoreInformationSettings.MobileDevicesSupported = storeInformationSettings.MobileDevicesSupported;
             //mobile device themes
             model.StoreInformationSettings.DefaultStoreThemeForMobileDevices = storeInformationSettings.DefaultStoreThemeForMobileDevices;
@@ -1927,6 +1928,7 @@ namespace Nop.Admin.Controllers
             //override settings
             if (storeScope > 0)
             {
+                model.StoreInformationSettings.ResponsiveDesignSupported_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.ResponsiveDesignSupported, storeScope);
                 model.StoreInformationSettings.MobileDevicesSupported_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.MobileDevicesSupported, storeScope);
                 model.StoreInformationSettings.StoreClosed_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.StoreClosed, storeScope);
                 model.StoreInformationSettings.StoreClosedAllowForAdmins_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.StoreClosedAllowForAdmins, storeScope);
@@ -2044,6 +2046,7 @@ namespace Nop.Admin.Controllers
             storeInformationSettings.StoreClosedAllowForAdmins = model.StoreInformationSettings.StoreClosedAllowForAdmins;
             storeInformationSettings.DefaultStoreThemeForDesktops = model.StoreInformationSettings.DefaultStoreThemeForDesktops;
             storeInformationSettings.AllowCustomerToSelectTheme = model.StoreInformationSettings.AllowCustomerToSelectTheme;
+            storeInformationSettings.ResponsiveDesignSupported = model.StoreInformationSettings.ResponsiveDesignSupported;
             //store whether MobileDevicesSupported setting has been changed (requires application restart)
             bool mobileDevicesSupportedChanged = storeInformationSettings.MobileDevicesSupported !=
                                                  model.StoreInformationSettings.MobileDevicesSupported;
@@ -2060,6 +2063,11 @@ namespace Nop.Admin.Controllers
             /* We do not clear cache after each setting update.
              * This behavior can increase performance because cached settings will not be cleared 
              * and loaded from database after each update */
+            if (model.StoreInformationSettings.ResponsiveDesignSupported_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(storeInformationSettings, x => x.ResponsiveDesignSupported, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(storeInformationSettings, x => x.ResponsiveDesignSupported, storeScope);
+
             if (model.StoreInformationSettings.MobileDevicesSupported_OverrideForStore || storeScope == 0)
                 _settingService.SaveSetting(storeInformationSettings, x => x.MobileDevicesSupported, storeScope, false);
             else if (storeScope > 0)

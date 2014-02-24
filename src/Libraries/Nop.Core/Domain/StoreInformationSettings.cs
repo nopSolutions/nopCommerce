@@ -30,6 +30,11 @@ namespace Nop.Core.Domain
         public bool MobileDevicesSupported { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether responsive design supported (a graphical theme should also support it)
+        /// </summary>
+        public bool ResponsiveDesignSupported { get; set; }
+
+        /// <summary>
         /// Gets or sets a default store theme used by mobile devices (if enabled)
         /// </summary>
         public string DefaultStoreThemeForMobileDevices { get; set; }

@@ -359,6 +359,12 @@ set @resources='
   <LocaleResource Name="Admin.Customers.CustomerAttributes.Values.Fields.DisplayOrder.Hint">
 	<Value>The display order of the attribute value. 1 represents the first item in attribute value list.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.ResponsiveDesignSupported">
+	<Value>Responsive design supported</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.ResponsiveDesignSupported.Hint">
+	<Value>Check to enable responsive design. Also note that your graphical theme should also support it.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -814,4 +820,12 @@ GO
 ALTER TABLE [dbo].[CustomerAttributeValue]  WITH CHECK ADD  CONSTRAINT [CustomerAttributeValue_CustomerAttribute] FOREIGN KEY([CustomerAttributeId])
 REFERENCES [dbo].[CustomerAttribute] ([Id])
 ON DELETE CASCADE
+GO
+
+--a new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'storeinformationsettings.responsivedesignsupported')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'storeinformationsettings.responsivedesignsupported', N'true', 0)
+END
 GO
