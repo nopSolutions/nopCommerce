@@ -313,6 +313,8 @@
     input[type="text"], input[type="password"] { width: 120px }
     .fieldset .inputs .gender { margin: 5px 0; display: block; }
     /* FORUM TOPIC */
+    .forum-topic-page .post-content{margin-left: auto}
+    .forum-topic-page .post-content .posttime{display: table}
     .forum-topic-page .title { overflow: hidden; height: auto; background: #737373; /* Old browsers */background: -moz-linear-gradient(top, #737373 0%, #5b5b5b 46%, #434343 57%, #363636 100%); /* FF3.6+ */background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#737373), color-stop(46%,#5b5b5b), color-stop(57%,#434343), color-stop(100%,#363636)); /* Chrome,Safari4+ */background: -webkit-linear-gradient(top, #737373 0%,#5b5b5b 46%,#434343 57%,#363636 100%); /* Chrome10+,Safari5.1+ */background: -o-linear-gradient(top, #737373 0%,#5b5b5b 46%,#434343 57%,#363636 100%); /* Opera 11.10+ */background: -ms-linear-gradient(top, #737373 0%,#5b5b5b 46%,#434343 57%,#363636 100%); /* IE10+ */background: linear-gradient(to bottom, #737373 0%,#5b5b5b 46%,#434343 57%,#363636 100%); /* W3C */filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#737373', endColorstr='#363636',GradientType=0 ); /* IE6-9 */ }
     .forum-edit-page .page-title { width: 95%; padding: 0 2%; }
     .forum-edit-page .inputs input[type="text"], .forum-edit-page .inputs textarea, .forum-edit-page .inputs .toolbar { max-width: 95%; margin-left: 0; }
