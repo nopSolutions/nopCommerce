@@ -146,6 +146,8 @@
     .order-progress ul li a { display: block; padding-bottom: 30px !important; background-position: 50% 70% !important; }
         /* CHECKOUT */
     .checkout-data .section input[type="text"], .checkout-data .section select { max-width: 100% }
+    /* NAVIGATIONS */
+.block-recently-viewed-products li a{display: table}
 
 }
 /*=====================================================
