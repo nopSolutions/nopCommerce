@@ -76,7 +76,7 @@ ul.language-list li:hover{cursor:pointer;}
 .header-links ul li{list-style:none outside none;display:inline;padding-right:2px;margin-left:10px;float:left;}
 .header-links a{color:#AF0304;text-decoration:none;float:left;}
 .header-links a:hover{color:#AF0304;text-decoration:underline;}
-.header-links a.account{color:#AF0304;}
+.header-links a.account{color:#AF0304;padding-left: 10px;padding-bottom: 5px;}
 .admin-header-links{padding:5px;margin-bottom:-15px; text-align:center;}
 .admin-header-links .administration{font-weight:bold;}
 .admin-header-links .impersonate{display:block; color:#E44097; margin-bottom:10px;}
