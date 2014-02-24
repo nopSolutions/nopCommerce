@@ -299,6 +299,7 @@
                                 @if (Model.ShowSku)
                                 {
                                     <td class="a-left sku">
+                                        <span class="td-title">@T("Order.Product(s).SKU"):</span>
                                         @item.Sku
                                     </td>
                                 }
@@ -319,12 +320,15 @@
                                     }
                                 </td>
                                 <td class="a-right price">
+                                    <span class="td-title">@T("Order.Product(s).Price"):</span>
                                     @item.UnitPrice
                                 </td>
                                 <td class="a-center quantity">
+                                    <span class="td-title">@T("Order.Product(s).Quantity"):</span>
                                     @item.Quantity
                                 </td>
                                 <td class="a-right total">
+                                    <span class="td-title">@T("Order.Product(s).Total"):</span>
                                     @item.SubTotal
                                 </td>
                             </tr>
