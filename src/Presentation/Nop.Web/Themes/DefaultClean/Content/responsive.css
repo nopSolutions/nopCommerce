@@ -225,6 +225,7 @@
     .product-specs-box .data-table { margin: 0 }
     .product-details-page .attributes select, .product-details-page .attributes .textbox, .product-details-page textarea { max-width: 90% }
     /* NAVIGATIONS */
+    .block-account-navigation a{white-space: normal}
     .block-recently-viewed-products li a{display: table}
     .master-wrapper-main .side-2 .block-account-navigation { display: block; margin-bottom: 0; border-bottom: none; }
     .block-account-navigation .listbox { padding: 5px 0 13px 0; margin: 0 15px; border-radius: 0; border-bottom: 3px double #B4ACAC; background: none; }
