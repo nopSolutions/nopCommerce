@@ -104,6 +104,7 @@
                         pageable: {
                             refresh: true
                         },
+                        sortable: true,
                         toolbar: ["create"],
                         editable: {
                             confirmation: false,
@@ -123,12 +124,14 @@
                             field: "Name",
                             title: "@T("Admin.Configuration.Languages.Resources.Fields.Name")",
                             width: 300,
-                            filterable: true
+                            filterable: true,
+                            sortable: true
                         }, {
                             field: "Value",
                             title: "@T("Admin.Configuration.Languages.Resources.Fields.Value")",
                             width: 300,
-                            filterable: true
+                            filterable: true,
+                            sortable: true
 
                         }, {
                             command: [{

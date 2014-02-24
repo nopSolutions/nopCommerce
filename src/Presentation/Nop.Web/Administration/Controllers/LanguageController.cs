@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -320,7 +321,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost]
 		public ActionResult Resources(int languageId, DataSourceRequest command,
-            Nop.Web.Framework.Kendoui.Filter filter = null)
+            Nop.Web.Framework.Kendoui.Filter filter = null, IEnumerable<Sort> sort = null)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
@@ -340,12 +341,12 @@ namespace Nop.Admin.Controllers
                     })
                     .AsQueryable()
                     .Filter(filter)
-                    .ToList();
+                    .Sort(sort);
             
             var gridModel = new DataSourceResult
             {
                 Data = resources.PagedForCommand(command),
-                Total = resources.Count
+                Total = resources.Count()
             };
 
             return Json(gridModel);

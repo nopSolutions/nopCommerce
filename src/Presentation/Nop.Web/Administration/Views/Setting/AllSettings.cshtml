@@ -90,6 +90,7 @@
                         pageable: {
                             refresh: true
                         },
+                        sortable: true,
                         toolbar: ["create"],
                         editable: {
                             confirmation: false,
@@ -109,19 +110,22 @@
                             field: "Name",
                             title: "@T("Admin.Configuration.Settings.AllSettings.Fields.Name")",
                             width: 300,
-                            filterable: true
+                            filterable: true,
+                            sortable: true
                         }, {
                             field: "Value",
                             title: "@T("Admin.Configuration.Settings.AllSettings.Fields.Value")",
                             width: 300,
-                            filterable: true
+                            filterable: true,
+                            sortable: true
                         }, {
                             field: "StoreId",
                             title: "@T("Admin.Configuration.Settings.AllSettings.Fields.StoreName")",
                             width: 150,
                             editor: storeDropDownEditor, 
                             template: "#:Store#",
-                            filterable: false
+                            filterable: false,
+                            sortable: false
                         }, {
                             command: [{
                                 name: "edit",
