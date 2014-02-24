@@ -180,6 +180,8 @@
     .header-menu a{font-size: 1em}
     .header-links ul{text-align: center;display: inline-block;}
     .header-links ul li{float: none;display: inline-block;}
+    .flyout-cart { display: none !important }
+
         /* HOMEPAGE */
     .home-page-product-grid{display: inline-block;text-align: center;width: 100%;}
     .home-page-product-grid.product-grid .item-box{float: none;display: inline-block;width:auto;margin-bottom: 15px}
