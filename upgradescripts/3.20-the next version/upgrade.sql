@@ -335,7 +335,7 @@ set @resources='
   <LocaleResource Name="Admin.Customers.CustomerAttributes.Values.EditValueDetails">
 	<Value>Edit customer value details</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Customers.CustomerAttributes.SaveBeforeEdit">
+  <LocaleResource Name="Admin.Customers.CustomerAttributes.Values.SaveBeforeEdit">
 	<Value>You need to save the customer attribute before you can add values for this customer attribute page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.CustomerAttributes.Values.Fields.Name">
