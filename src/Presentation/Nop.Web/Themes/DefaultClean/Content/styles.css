@@ -44,7 +44,7 @@ input[type="text"]:disabled{background:none repeat scroll 0 0 #FFF;}
 .master-wrapper-main .center-2{float:left;width:710px;min-height:400px;padding:10px;margin:10px 0 10px 10px;background:#FFF;display:inline;border-radius:5px;}
 /* three column master page */
 .master-wrapper-main .leftside-3{float:left;width:190px;margin:10px 0;display:inline;}
-.master-wrapper-main .center-3{width:auto;min-height:400px;padding:10px;margin:0 190px;background:#FFF;border-radius:5px;}
+.master-wrapper-main .center-3{float:left;width:510px;min-height:400px;padding:10px;margin:10px;background:#FFF;display:inline;overflow:hidden;border-radius:5px;}
 .master-wrapper-main .rightside-3{float:right;width:190px;margin:10px 0;display:inline;}
 
 
