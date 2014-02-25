@@ -166,7 +166,8 @@
     .master-wrapper-main .center-3{width:98%;padding:0 1%;margin:0;min-height:180px;}
     /* HEADER AND MENU */
     .header{height:auto;}
-    .header-logo{margin:0 auto;display:table;float:none;}
+    .header-logo{float:none;}
+    a.logo{width:100%;max-width:310px;margin:0 auto;background-size:contain;}
     .header-links-wrapper{float:none;margin:0 auto;display:table;}
     .tax-display-type-selector,.language-selector,.currency-selector{display:inline-block;float:none;margin:0 5px;}
     .header-selectors-wrapper{float:none;text-align:center;}
