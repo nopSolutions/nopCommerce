@@ -60,7 +60,9 @@ input[type="text"]:disabled{background:none repeat scroll 0 0 #FFF;}
 .header .ico-cart:hover *,.header .ico-wishlist:hover *{text-decoration:underline;cursor:pointer;}
 .header .ico-cart span,.header .ico-wishlist span{float:left;}
 .header-logo{margin-top:5px;float:left;text-align:left;}
-a.logo{background:url("images/logo.gif") no-repeat scroll 0 0 transparent;display:block;width:310px;height:60px;text-decoration:none;}.header-selectors-wrapper{text-align:right;float:right;margin-top:10px;clear:both;}
+.header-logo a{display:table;margin:0 auto;}
+.header-logo a img{max-width:100%;}
+.header-selectors-wrapper{text-align:right;float:right;margin-top:10px;clear:both;}
 .currency-selector{float:right;}
 .language-selector{float:right;}
 .tax-display-type-selector{float:right;}
