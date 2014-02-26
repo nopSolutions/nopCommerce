@@ -148,7 +148,7 @@ namespace Nop.Services.Orders
         /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
         /// <param name="os">Order status; null to load all orders</param>
         /// <param name="ps">Order payment status; null to load all orders</param>
-        /// <param name="ss">Order shippment status; null to load all orders</param>
+        /// <param name="ss">Order shipment status; null to load all orders</param>
         /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
         /// <param name="orderGuid">Search by order GUID (Global unique identifier) or part of GUID. Leave empty to load all orders.</param>
         /// <param name="pageIndex">Page index</param>
@@ -319,7 +319,7 @@ namespace Nop.Services.Orders
         /// <param name="createdToUtc">Order created date to (UTC); null to load all records</param>
         /// <param name="os">Order status; null to load all records</param>
         /// <param name="ps">Order payment status; null to load all records</param>
-        /// <param name="ss">Order shippment status; null to load all records</param>
+        /// <param name="ss">Order shipment status; null to load all records</param>
         /// <param name="loadDownloableProductsOnly">Value indicating whether to load downloadable products only</param>
         /// <returns>Order collection</returns>
         public virtual IList<OrderItem> GetAllOrderItems(int? orderId,
