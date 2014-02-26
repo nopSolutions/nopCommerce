@@ -365,6 +365,18 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.ResponsiveDesignSupported.Hint">
 	<Value>Check to enable responsive design. Also note that your graphical theme should also support it.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.PrintPackagingSlip.NoShipments">
+	<Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.NoShipmentsSelected">
+	<Value>No shipments selected</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.DeliverySelected">
+	<Value>Set as delivered (selected)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.ShipSelected">
+	<Value>Set as shipped (selected)</Value>
+  </LocaleResource>
 </Language>
 '
 

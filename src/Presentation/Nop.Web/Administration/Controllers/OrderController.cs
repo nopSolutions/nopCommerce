@@ -2757,7 +2757,7 @@ namespace Nop.Admin.Controllers
             //ensure that we at least one shipment selected
             if (shipments.Count == 0)
             {
-                ErrorNotification(_localizationService.GetResource("Admin.Orders.Shipments.PrintPackagingSlip.NoShipments"));
+                ErrorNotification(_localizationService.GetResource("Admin.Orders.Shipments.NoShipmentsSelected"));
                 return RedirectToAction("ShipmentList");
             }
 
@@ -2793,7 +2793,7 @@ namespace Nop.Admin.Controllers
             //ensure that we at least one shipment selected
             if (shipments.Count == 0)
             {
-                ErrorNotification(_localizationService.GetResource("Admin.Orders.Shipments.PrintPackagingSlip.NoShipments"));
+                ErrorNotification(_localizationService.GetResource("Admin.Orders.Shipments.NoShipmentsSelected"));
                 return RedirectToAction("ShipmentList");
             }
 
@@ -2806,6 +2806,68 @@ namespace Nop.Admin.Controllers
             return File(bytes, "application/pdf", "packagingslips.pdf");
         }
 
+        public ActionResult SetAsShippedSelected(ICollection<int> selectedIds)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
+            var shipments = new List<Shipment>();
+            if (selectedIds != null)
+            {
+                shipments.AddRange(_shipmentService.GetShipmentsByIds(selectedIds.ToArray()));
+            }
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                shipments = shipments.Where(s => HasAccessToShipment(s)).ToList();
+            }
+            
+            foreach (var shipment in shipments)
+            {
+                try
+                {
+                    _orderProcessingService.Ship(shipment, true);
+                }
+                catch
+                {
+                    //ignore any exception
+                }
+            }
+
+            return Json(new { Result = true });
+        }
+
+        public ActionResult SetAsDeliveredSelected(ICollection<int> selectedIds)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
+            var shipments = new List<Shipment>();
+            if (selectedIds != null)
+            {
+                shipments.AddRange(_shipmentService.GetShipmentsByIds(selectedIds.ToArray()));
+            }
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                shipments = shipments.Where(s => HasAccessToShipment(s)).ToList();
+            }
+
+            foreach (var shipment in shipments)
+            {
+                try
+                {
+                    _orderProcessingService.Deliver(shipment, true);
+                }
+                catch
+                {
+                    //ignore any exception
+                }
+            }
+
+            return Json(new { Result = true });
+        }
+        
         #endregion
 
         #region Order notes

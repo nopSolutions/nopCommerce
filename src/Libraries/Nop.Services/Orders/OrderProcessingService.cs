@@ -1790,6 +1790,9 @@ namespace Nop.Services.Orders
             if (order == null)
                 throw new Exception("Order cannot be loaded");
 
+            if (!shipment.ShippedDateUtc.HasValue)
+                throw new Exception("This shipment is not shipped yet");
+
             if (shipment.DeliveryDateUtc.HasValue)
                 throw new Exception("This shipment is already delivered");
 

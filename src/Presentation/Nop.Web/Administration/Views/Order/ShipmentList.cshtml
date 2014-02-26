@@ -17,6 +17,8 @@
         <div class="options">
             <a href="@Url.Action("PdfPackagingSlipAll")" class="k-button">@T("Admin.Orders.Shipments.PrintPackagingSlip.All")</a>
             <input type="button" id="exportpackagingslips-selected" class="k-button" value="@T("Admin.Orders.Shipments.PrintPackagingSlip.Selected")" />
+            <input type="button" id="ship-selected" class="k-button" value="@T("Admin.Orders.Shipments.ShipSelected")" />
+            <input type="button" id="deliver-selected" class="k-button" value="@T("Admin.Orders.Shipments.DeliverySelected")" />
         </div>
     </div>
     <table width="100%">
@@ -278,6 +280,60 @@
                 e.preventDefault();
                 //redirect to required URL
                 setLocation('@(Url.Action("PdfPackagingSlipSelected", "Order"))?selectedIds=' + selectedIds.join(","));
+                return false;
+            });
+        
+            //"ship selected" button
+            $('#ship-selected').click(function(e) {
+                e.preventDefault();
+
+                var postData = {
+                    selectedIds: selectedIds
+                };
+
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: "@(Url.Action("SetAsShippedSelected", "Order"))",
+                    data: postData,
+                    complete: function(data) {
+                        //reload grid
+                        var grid = $('#shipments-grid').data('kendoGrid');
+                        //grid.dataSource.page(1); //new search. Set page size to 1
+                        grid.dataSource.read();
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert(thrownError);
+                    },
+                    traditional: true
+                });
+                return false;
+            });
+
+            //"deliver selected" button
+            $('#deliver-selected').click(function(e) {
+                e.preventDefault();
+
+                var postData = {
+                    selectedIds: selectedIds
+                };
+
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: "@(Url.Action("SetAsDeliveredSelected", "Order"))",
+                    data: postData,
+                    complete: function(data) {
+                        //reload grid
+                        var grid = $('#shipments-grid').data('kendoGrid');
+                        //grid.dataSource.page(1); //new search. Set page size to 1
+                        grid.dataSource.read();
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert(thrownError);
+                    },
+                    traditional: true
+                });
                 return false;
             });
 

@@ -9787,6 +9787,9 @@
               <LocaleResource Name="Deleted">
                 <Value>The shipment has been deleted successfully.</Value>
               </LocaleResource>
+              <LocaleResource Name="DeliverySelected">
+                <Value>Set as delivered (selected)</Value>
+              </LocaleResource>
               <LocaleResource Name="DeliveryDate">
                 <Value>Date delivered</Value>
                 <Children>
@@ -9863,6 +9866,9 @@
               <LocaleResource Name="NoProductsSelected">
                 <Value>No products selected</Value>
               </LocaleResource>
+              <LocaleResource Name="NoShipmentsSelected">
+                <Value>No shipments selected</Value>
+              </LocaleResource>
               <LocaleResource Name="OrderID">
                 <Value>Order #</Value>
                 <Children>
@@ -9876,9 +9882,6 @@
                 <Children>
                   <LocaleResource Name="All">
                     <Value>Print packaging slips (all)</Value>
-                  </LocaleResource>
-                  <LocaleResource Name="NoShipments">
-                    <Value>No shipments selected</Value>
                   </LocaleResource>
                   <LocaleResource Name="Selected">
                     <Value>Print packaging slips (selected)</Value>
@@ -9927,6 +9930,9 @@
                     <Value>Not yet</Value>
                   </LocaleResource>
                 </Children>
+              </LocaleResource>
+              <LocaleResource Name="ShipSelected">
+                <Value>Set as shipped (selected)</Value>
               </LocaleResource>
               <LocaleResource Name="TotalWeight">
                 <Value>Total weight</Value>
