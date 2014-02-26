@@ -829,3 +829,12 @@ BEGIN
 	VALUES (N'storeinformationsettings.responsivedesignsupported', N'true', 0)
 END
 GO
+
+--remove some overridden settings that should not exist for stores
+DELETE FROM [Setting]
+WHERE [name] = N'ordersettings.returnrequestactions' AND [StoreId] > 0
+GO
+
+DELETE FROM [Setting]
+WHERE [name] = N'ordersettings.returnrequestreasons' AND [StoreId] > 0
+GO

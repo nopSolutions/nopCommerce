@@ -1464,17 +1464,6 @@ namespace Nop.Admin.Controllers
                 else if (storeScope > 0)
                     _settingService.DeleteSetting(orderSettings, x => x.ReturnRequestsEnabled, storeScope);
 
-                //parse return request actions
-                orderSettings.ReturnRequestActions.Clear();
-                foreach (var returnAction in model.ReturnRequestActionsParsed.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-                    orderSettings.ReturnRequestActions.Add(returnAction);
-                _settingService.SaveSetting(orderSettings, x => x.ReturnRequestActions, storeScope, false);
-                //parse return request reasons
-                orderSettings.ReturnRequestReasons.Clear();
-                foreach (var returnReason in model.ReturnRequestReasonsParsed.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-                    orderSettings.ReturnRequestReasons.Add(returnReason);
-                _settingService.SaveSetting(orderSettings, x => x.ReturnRequestReasons, storeScope, false);
-
                 if (model.NumberOfDaysReturnRequestAvailable_OverrideForStore || storeScope == 0)
                     _settingService.SaveSetting(orderSettings, x => x.NumberOfDaysReturnRequestAvailable, storeScope, false);
                 else if (storeScope > 0)
@@ -1483,11 +1472,32 @@ namespace Nop.Admin.Controllers
                 _settingService.SaveSetting(orderSettings, x => x.GiftCards_Activated_OrderStatusId, 0, false);
                 _settingService.SaveSetting(orderSettings, x => x.GiftCards_Deactivated_OrderStatusId, 0, false);
 
-
                 if (model.ReturnRequestsEnabled_OverrideForStore || storeScope == 0)
                     _settingService.SaveSetting(orderSettings, x => x.ReturnRequestsEnabled, storeScope, false);
                 else if (storeScope > 0)
                     _settingService.DeleteSetting(orderSettings, x => x.ReturnRequestsEnabled, storeScope);
+
+                //parse return request actions
+                orderSettings.ReturnRequestActions.Clear();
+                if (model.ReturnRequestActionsParsed != null)
+                {
+                    foreach (var returnAction in model.ReturnRequestActionsParsed.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                        orderSettings.ReturnRequestActions.Add(returnAction);
+                }
+                //note that we do not store this setting for a store (cannot be overridden)
+                //pass 0 as "storeScope" parameter
+                _settingService.SaveSetting(orderSettings, x => x.ReturnRequestActions, 0, false);
+                //parse return request reasons
+                orderSettings.ReturnRequestReasons.Clear();
+                if (model.ReturnRequestReasonsParsed != null)
+                {
+                    foreach (var returnReason in model.ReturnRequestReasonsParsed.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                        orderSettings.ReturnRequestReasons.Add(returnReason);
+                }
+                //note that we do not store this setting for a store (cannot be overridden)
+                //pass 0 as "storeScope" parameter
+                _settingService.SaveSetting(orderSettings, x => x.ReturnRequestReasons, 0, false);
+
 
                 //now clear settings cache
                 _settingService.ClearCache();
