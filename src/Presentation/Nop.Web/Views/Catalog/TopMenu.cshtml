@@ -1,9 +1,12 @@
 ﻿@model TopMenuModel
+@using Nop.Core.Domain
+@using Nop.Core.Infrastructure
 @using Nop.Web.Models.Catalog;
 @{
     var isRtl = this.ShouldUseRtlTheme();
+    var supportResponsive = EngineContext.Current.Resolve<StoreInformationSettings>().ResponsiveDesignSupported;
 }
-@helper RenderCategoryLine(CategorySimpleModel category, int level)
+@helper RenderCategoryLine(CategorySimpleModel category, int level, bool responsiveMobileMenu)
 {
     <li>
         <a href="@Url.RouteUrl("Category", new { SeName = category.SeName })">@category.Name
@@ -21,11 +24,14 @@
             }
             if (category.SubCategories.Count > 0)
             {
-                <span class="expand">&nbsp;</span>
+                if (responsiveMobileMenu)
+                {
+                    <span class="expand">&nbsp;</span>
+                }
                 <ul class="sublist @levelClass">
                     @foreach (var subCategory in  category.SubCategories)
                     {
-                        @RenderCategoryLine(subCategory, level + 1)
+                        @RenderCategoryLine(subCategory, level + 1, responsiveMobileMenu)
                     }
                 </ul>
             }
@@ -39,7 +45,7 @@
     {
         foreach (var category in Model.Categories)
         {
-            @RenderCategoryLine(category, 0)
+            @RenderCategoryLine(category, 0, false)
         }
     }
     else
@@ -67,48 +73,6 @@
     @Html.Widget("header_menu_after")
 </ul>
 
-<div id="mob-menu-button">
-    <a href="">
-        <span class="icon"><span class="line"></span><span class="line"></span><span class="line"></span></span>
-        <span>@T("Menu")</span>
-    </a>
-</div>
-<ul class="mob-top-menu">
-    @Html.Widget("header_menu_before")
-
-    @if (Model.Categories.Count > 0)
-    {
-        foreach (var category in Model.Categories)
-        {
-            @RenderCategoryLine(category, 0)
-        }
-    }
-    else
-    {
-        //no categories to display?
-        //in this cae let's diplay some default menu items
-        <li><a href="@Url.RouteUrl("HomePage")">@T("HomePage")</a></li>
-        if (Model.RecentlyAddedProductsEnabled)
-        {
-            <li>
-                <a href="@Url.RouteUrl("RecentlyAddedProducts")">@T("Products.NewProducts")</a>
-            </li>
-        }
-        <li><a href="@Url.RouteUrl("ProductSearch")">@T("Search")</a> </li>
-        <li><a href="@Url.RouteUrl("CustomerInfo")">@T("Account.MyAccount")</a></li>
-        if (Model.BlogEnabled)
-        {
-            <li><a href="@Url.RouteUrl("Blog")">@T("Blog")</a></li>
-        }
-        if (Model.ForumEnabled)
-        {
-            <li><a href="@Url.RouteUrl("Boards")">@T("Forum.Forums")</a></li>
-        }
-        <li><a href="@Url.RouteUrl("ContactUs")">@T("ContactUs")</a></li>
-    }
-    @Html.Widget("header_menu_after")
-</ul>
-
 <script type="text/javascript">
     $('li', '.top-menu').on('mouseenter', function () {
         $('a', $(this)).first().addClass('hover');
@@ -119,30 +83,53 @@
         $('.sublist', $(this)).first().addClass('active');
         $('.top-menu-triangle', $(this)).addClass('active');
     });
+
     $('li', '.top-menu').on('mouseleave', function () {
         $('a', $(this)).first().removeClass('hover');
         $('.sublist', $(this)).first().removeClass('active');
         $('.top-menu-triangle', $(this)).removeClass('active');
     });
 
-    $('a', $('#mob-menu-button')).toggle(function () {
-        $('.mob-top-menu').addClass('show');
-    },
-    function () {
-        $('.mob-top-menu').removeClass('show');
-    }
-);
-
-    $(function ($) {
-        $('.expand').click(function () {
-            var parent = $(this).parent();
-            if (parent.hasClass('active')) {
-                $(".sublist:first", parent).hide();
-                parent.removeClass('active');
-            } else {
-                $(".sublist:first", parent).show();
-                parent.addClass('active');
-            }
-        });
-    });
 </script>
+
+@if (supportResponsive)
+{
+    <div id="mob-menu-button">
+        <a href="">
+            <span class="icon"><span class="line"></span><span class="line"></span><span class="line"></span></span>
+            <span>@T("Categories")</span>
+        </a>
+    </div>
+    <ul class="mob-top-menu">
+        @Html.Widget("mob_header_menu_before")
+        @foreach (var category in Model.Categories)
+        {
+            @RenderCategoryLine(category, 0, true)
+        }
+        @*do not display default menu items when we don't have any category to display*@ 
+        @Html.Widget("mob_header_menu_after")
+    </ul>
+
+    <script type="text/javascript">
+        $('a', $('#mob-menu-button')).toggle(function() {
+                $('.mob-top-menu').addClass('show');
+            },
+            function() {
+                $('.mob-top-menu').removeClass('show');
+            }
+        );
+
+        $(function($) {
+            $('.mob-top-menu .expand').click(function () {
+                var parent = $(this).parent();
+                if (parent.hasClass('active')) {
+                    $(".sublist:first", parent).hide();
+                    parent.removeClass('active');
+                } else {
+                    $(".sublist:first", parent).show();
+                    parent.addClass('active');
+                }
+            });
+        });
+    </script>
+}

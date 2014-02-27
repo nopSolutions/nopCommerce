@@ -92,6 +92,7 @@ ul.language-list li:hover{cursor:pointer;}
 .header-menu .top-menu li:last-child{background:none;}
 .header-menu .top-menu li a{min-height:20px;display:block;line-height:20px;text-transform:uppercase;margin-bottom:9px;white-space:nowrap;padding:0 5px;}
 .header-menu .top-menu li a.hover{background:#696969;}
+.header-menu .top-menu li .expand{display:none;}
 .header-menu .top-menu li .sublist{position:absolute;background-color:#404040;background-image:url(images/top-menu-background.png);background-repeat:no-repeat;border:3px double #696969;margin-right:-10px;z-index:9;display:none;margin-right:-15px;white-space:nowrap;}
 .header-menu .top-menu li .sublist.active{display:block}
 .header-menu .top-menu li .sublist.firstLevel{}
@@ -102,6 +103,9 @@ ul.language-list li:hover{cursor:pointer;}
 .header-menu .top-menu-triangle.active{display:none;}
 .header-menu .top-menu-triangle{background:url(images/top-menu-triangle.png) no-repeat;margin-top:-9px;margin-right:10px;width:10px;height:5px;position:absolute;z-index:10;display:none;}
 .header-menu .top-menu-triangle.active{display:block;}
+/* mobile top menu*/
+#mob-menu-button {display:none;}
+.mob-top-menu{display:none;}
 /* search box */
 .search-text{border:1px solid #eee;vertical-align:top;padding:5px 5px 5px 0;font-size:12px;width:100%;}
 .search-box{background:none repeat scroll 0 0 #F6F6F4;float:left;clear:left;width:auto;display:inline;padding:7px 7px 5px;-o-border-radius:3px;-icab-border-radius:3px;-khtml-border-radius:3px;-moz-border-radius:3px;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;}
