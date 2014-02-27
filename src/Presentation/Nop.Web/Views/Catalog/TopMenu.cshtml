@@ -123,10 +123,10 @@
             $('.mob-top-menu .expand').click(function () {
                 var parent = $(this).parent();
                 if (parent.hasClass('active')) {
-                    $(".sublist:first", parent).hide();
+                    $(".sublist:first", parent).hide(300);
                     parent.removeClass('active');
                 } else {
-                    $(".sublist:first", parent).show();
+                    $(".sublist:first", parent).show(300);
                     parent.addClass('active');
                 }
             });
