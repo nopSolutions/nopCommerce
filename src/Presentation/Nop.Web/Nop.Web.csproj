@@ -1576,6 +1576,8 @@
     <Content Include="Scripts\kendo\2013.3.1119\cultures\kendo.culture.af.min.js.map" />
     <None Include="Scripts\_references.js" />
     <Content Include="Themes\DefaultClean\Content\images\free-shipping.png" />
+    <Content Include="Themes\DefaultClean\Content\images\mobile-menu-collapse.png" />
+    <Content Include="Themes\DefaultClean\Content\images\mobile-menu-expand.png" />
     <Content Include="Themes\DefaultClean\Content\images\top-menu-background.png" />
     <Content Include="Themes\DefaultClean\Content\images\top-menu-divider.png" />
     <Content Include="Themes\DefaultClean\Content\images\top-menu-list-image-hover.png" />
@@ -2382,11 +2384,11 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>False</UseIIS>
+          <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>15536</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:2451/</IISUrl>
+          <IISUrl>http://localhost:15654/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
