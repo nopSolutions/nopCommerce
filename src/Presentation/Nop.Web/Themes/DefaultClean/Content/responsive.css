@@ -184,7 +184,7 @@
     .mob-top-menu{display:block;overflow:hidden;height:auto;max-height:0px;transition:max-height 500ms ease-in-out 0s;-moz-transition:max-height 500ms ease-in-out 0s;-webkit-transition:max-height 500ms ease-in-out 0s;-o-transition:max-height 500ms ease-in-out 0s;}
     .mob-top-menu.show {max-height:9999px;transition:max-height 500ms ease-in-out 0s;-moz-transition:max-height 500ms ease-in-out 0s;-webkit-transition:max-height 500ms ease-in-out 0s;-o-transition:max-height 500ms ease-in-out 0s;}
     .mob-top-menu ul{float:left;display:block;padding:0;margin:0;}
-    .mob-top-menu li{float:left;display:block;width:100% !important;padding:0 !important;margin:0;list-style-type:none;cursor:pointer;position:relative;}
+    .mob-top-menu li{float:left;display:block;width:100% !important;padding:0 !important;margin:0;list-style-type:none;cursor:pointer;position:relative;border-top:1px solid #696969;}
     .mob-top-menu li a{display:block;padding:15px 10px;font-size:14px;text-transform:uppercase;float:left;}
     .mob-top-menu li .sublist a{text-transform:none;}
     .mob-top-menu li .expand{background:url(images/mobile-menu-collapse.png) center center no-repeat;display:block;cursor:pointer;width:49px;height:49px;float:right;}
