@@ -50,8 +50,7 @@
     }
     else
     {
-        //no categories to display?
-        //in this cae let's diplay some default menu items
+        //no categories to display? in this case let's diplay some default menu items (should we?)
         <li><a href="@Url.RouteUrl("HomePage")">@T("HomePage")</a></li>
         if (Model.RecentlyAddedProductsEnabled)
         {
@@ -94,42 +93,45 @@
 
 @if (supportResponsive)
 {
-    <div id="mob-menu-button">
-        <a href="">
-            <span class="icon"><span class="line"></span><span class="line"></span><span class="line"></span></span>
-            <span>@T("Categories")</span>
-        </a>
-    </div>
-    <ul class="mob-top-menu">
-        @Html.Widget("mob_header_menu_before")
-        @foreach (var category in Model.Categories)
-        {
-            @RenderCategoryLine(category, 0, true)
-        }
-        @*do not display default menu items when we don't have any category to display*@ 
-        @Html.Widget("mob_header_menu_after")
-    </ul>
-
-    <script type="text/javascript">
-        $('a', $('#mob-menu-button')).toggle(function() {
-                $('.mob-top-menu').addClass('show');
-            },
-            function() {
-                $('.mob-top-menu').removeClass('show');
+    if (Model.Categories.Count > 0)
+    {
+        <div id="mob-menu-button">
+            <a href="">
+                <span class="icon"><span class="line"></span><span class="line"></span><span class="line"></span></span>
+                <span>@T("Categories")</span>
+            </a>
+        </div>
+        <ul class="mob-top-menu">
+            @Html.Widget("mob_header_menu_before")
+            @foreach (var category in Model.Categories)
+            {
+                @RenderCategoryLine(category, 0, true)
             }
-        );
+            @*do not display default menu items when we don't have any category to display*@ 
+            @Html.Widget("mob_header_menu_after")
+        </ul>
 
-        $(function($) {
-            $('.mob-top-menu .expand').click(function () {
-                var parent = $(this).parent();
-                if (parent.hasClass('active')) {
-                    $(".sublist:first", parent).hide(300);
-                    parent.removeClass('active');
-                } else {
-                    $(".sublist:first", parent).show(300);
-                    parent.addClass('active');
+        <script type="text/javascript">
+            $('a', $('#mob-menu-button')).toggle(function() {
+                    $('.mob-top-menu').addClass('show');
+                },
+                function() {
+                    $('.mob-top-menu').removeClass('show');
                 }
+            );
+
+            $(function($) {
+                $('.mob-top-menu .expand').click(function() {
+                    var parent = $(this).parent();
+                    if (parent.hasClass('active')) {
+                        $(".sublist:first", parent).hide(300);
+                        parent.removeClass('active');
+                    } else {
+                        $(".sublist:first", parent).show(300);
+                        parent.addClass('active');
+                    }
+                });
             });
-        });
-    </script>
+        </script>
+    }
 }
