@@ -147,9 +147,6 @@
                         var grid = $('#countries-grid').data('kendoGrid');
                         grid.dataSource.page(1); //new search. Set page size to 1
                         grid.dataSource.read();
-                        //clear selected checkboxes
-                        $('.checkboxGroups').attr('checked', false).change();
-                        selectedIds = [];
                     },
                     error:function (xhr, ajaxOptions, thrownError){
                         alert(thrownError);
@@ -177,9 +174,6 @@
                         var grid = $('#countries-grid').data('kendoGrid');
                         grid.dataSource.page(1); //new search. Set page size to 1
                         grid.dataSource.read();
-                        //clear selected checkboxes
-                        $('.checkboxGroups').attr('checked', false).change();
-                        selectedIds = [];
                     },
                     error:function (xhr, ajaxOptions, thrownError){
                         alert(thrownError);
