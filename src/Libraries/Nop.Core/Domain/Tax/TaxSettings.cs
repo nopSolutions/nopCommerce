@@ -56,6 +56,11 @@ namespace Nop.Core.Domain.Tax
         public bool HideTaxInOrderSummary { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether we should always exclude tax from order subtotal (no matter of selected tax dispay type)
+        /// </summary>
+        public bool ForceTaxExclusionFromOrderSubtotal { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether shipping price is taxable
         /// </summary>
         public bool ShippingIsTaxable { get; set; }

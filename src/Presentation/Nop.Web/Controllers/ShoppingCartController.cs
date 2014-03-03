@@ -749,12 +749,13 @@ namespace Nop.Web.Controllers
                 Discount orderSubTotalAppliedDiscount = null;
                 decimal subTotalWithoutDiscountBase = decimal.Zero;
                 decimal subTotalWithDiscountBase = decimal.Zero;
-                _orderTotalCalculationService.GetShoppingCartSubTotal(cart,
+                var includingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax && !_taxSettings.ForceTaxExclusionFromOrderSubtotal;
+                _orderTotalCalculationService.GetShoppingCartSubTotal(cart, includingTax,
                     out orderSubTotalDiscountAmountBase, out orderSubTotalAppliedDiscount,
                     out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
                 subtotalBase = subTotalWithoutDiscountBase;
                 decimal subtotal = _currencyService.ConvertFromPrimaryStoreCurrency(subtotalBase, _workContext.WorkingCurrency);
-                model.SubTotal = _priceFormatter.FormatPrice(subtotal);
+                model.SubTotal = _priceFormatter.FormatPrice(subtotal, false, _workContext.WorkingCurrency, _workContext.WorkingLanguage, includingTax);
 
                 var requiresShipping = cart.RequiresShipping();
                 //a customer should visit the shopping cart page (hide checkout button) before going to checkout if:
@@ -2011,22 +2012,25 @@ namespace Nop.Web.Controllers
                 Discount orderSubTotalAppliedDiscount = null;
                 decimal subTotalWithoutDiscountBase = decimal.Zero;
                 decimal subTotalWithDiscountBase = decimal.Zero;
+                var includingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax && !_taxSettings.ForceTaxExclusionFromOrderSubtotal;
                 _orderTotalCalculationService.GetShoppingCartSubTotal(cart,
+                    _workContext.TaxDisplayType == TaxDisplayType.IncludingTax && !_taxSettings.ForceTaxExclusionFromOrderSubtotal,
                     out orderSubTotalDiscountAmountBase, out orderSubTotalAppliedDiscount,
                     out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
                 subtotalBase = subTotalWithoutDiscountBase;
-                    decimal subtotal = _currencyService.ConvertFromPrimaryStoreCurrency(subtotalBase, _workContext.WorkingCurrency);
-                    model.SubTotal = _priceFormatter.FormatPrice(subtotal);
-                    if (orderSubTotalDiscountAmountBase > decimal.Zero)
-                    {
-                        decimal orderSubTotalDiscountAmount = _currencyService.ConvertFromPrimaryStoreCurrency(orderSubTotalDiscountAmountBase, _workContext.WorkingCurrency);
-                        model.SubTotalDiscount = _priceFormatter.FormatPrice(-orderSubTotalDiscountAmount);
-                        model.AllowRemovingSubTotalDiscount = orderSubTotalAppliedDiscount != null &&
-                            orderSubTotalAppliedDiscount.RequiresCouponCode &&
-                            !String.IsNullOrEmpty(orderSubTotalAppliedDiscount.CouponCode) &&
-                            model.IsEditable;
-                    }
-                
+                decimal subtotal = _currencyService.ConvertFromPrimaryStoreCurrency(subtotalBase, _workContext.WorkingCurrency);
+                model.SubTotal = _priceFormatter.FormatPrice(subtotal, true, _workContext.WorkingCurrency, _workContext.WorkingLanguage, includingTax);
+
+                if (orderSubTotalDiscountAmountBase > decimal.Zero)
+                {
+                    decimal orderSubTotalDiscountAmount =_currencyService.ConvertFromPrimaryStoreCurrency(orderSubTotalDiscountAmountBase, _workContext.WorkingCurrency);
+                    model.SubTotalDiscount = _priceFormatter.FormatPrice(-orderSubTotalDiscountAmount, true, _workContext.WorkingCurrency, _workContext.WorkingLanguage, includingTax);
+                    model.AllowRemovingSubTotalDiscount = orderSubTotalAppliedDiscount != null &&
+                                                          orderSubTotalAppliedDiscount.RequiresCouponCode &&
+                                                          !String.IsNullOrEmpty(orderSubTotalAppliedDiscount.CouponCode) &&
+                                                          model.IsEditable;
+                }
+
 
                 //shipping info
                 model.RequiresShipping = cart.RequiresShipping();

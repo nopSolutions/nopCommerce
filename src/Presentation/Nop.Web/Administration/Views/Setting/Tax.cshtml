@@ -152,6 +152,16 @@
                 @Html.ValidationMessageFor(model => model.HideTaxInOrderSummary)
             </td>
         </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ForceTaxExclusionFromOrderSubtotal_OverrideForStore, model => model.ForceTaxExclusionFromOrderSubtotal, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.ForceTaxExclusionFromOrderSubtotal):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ForceTaxExclusionFromOrderSubtotal)
+                @Html.ValidationMessageFor(model => model.ForceTaxExclusionFromOrderSubtotal)
+            </td>
+        </tr>
         <tr class="adminSeparator">
             <td colspan="2">
                 <hr />

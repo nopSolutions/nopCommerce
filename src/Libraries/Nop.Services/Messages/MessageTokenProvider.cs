@@ -226,30 +226,52 @@ namespace Nop.Services.Messages
 
                 #region Totals
 
+                //subtotal
                 string cusSubTotal = string.Empty;
                 bool dislaySubTotalDiscount = false;
                 string cusSubTotalDiscount = string.Empty;
+                if (_workContext.TaxDisplayType == TaxDisplayType.IncludingTax && !_taxSettings.ForceTaxExclusionFromOrderSubtotal)
+                {
+                    //including tax
+
+                    //subtotal
+                    var orderSubtotalInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderSubtotalInclTax, order.CurrencyRate);
+                    cusSubTotal = _priceFormatter.FormatPrice(orderSubtotalInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, language, true);
+                    //discount (applied to order subtotal)
+                    var orderSubTotalDiscountInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderSubTotalDiscountInclTax, order.CurrencyRate);
+                    if (orderSubTotalDiscountInclTaxInCustomerCurrency > decimal.Zero)
+                    {
+                        cusSubTotalDiscount = _priceFormatter.FormatPrice(-orderSubTotalDiscountInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, language, true);
+                        dislaySubTotalDiscount = true;
+                    }
+                }
+                else
+                {
+                    //exсluding tax
+
+                    //subtotal
+                    var orderSubtotalExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderSubtotalExclTax, order.CurrencyRate);
+                    cusSubTotal = _priceFormatter.FormatPrice(orderSubtotalExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, language, false);
+                    //discount (applied to order subtotal)
+                    var orderSubTotalDiscountExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderSubTotalDiscountExclTax, order.CurrencyRate);
+                    if (orderSubTotalDiscountExclTaxInCustomerCurrency > decimal.Zero)
+                    {
+                        cusSubTotalDiscount = _priceFormatter.FormatPrice(-orderSubTotalDiscountExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, language, false);
+                        dislaySubTotalDiscount = true;
+                    }
+                }
+                
+                //shipping, payment method fee
                 string cusShipTotal = string.Empty;
                 string cusPaymentMethodAdditionalFee = string.Empty;
                 var taxRates = new SortedDictionary<decimal, decimal>();
                 string cusTaxTotal = string.Empty;
                 string cusDiscount = string.Empty;
                 string cusTotal = string.Empty;
-                //subtotal, shipping, payment method fee
                 switch (order.CustomerTaxDisplayType)
                 {
                     case TaxDisplayType.ExcludingTax:
                         {
-                            //subtotal
-                            var orderSubtotalExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderSubtotalExclTax, order.CurrencyRate);
-                            cusSubTotal = _priceFormatter.FormatPrice(orderSubtotalExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, language, false);
-                            //discount (applied to order subtotal)
-                            var orderSubTotalDiscountExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderSubTotalDiscountExclTax, order.CurrencyRate);
-                            if (orderSubTotalDiscountExclTaxInCustomerCurrency > decimal.Zero)
-                            {
-                                cusSubTotalDiscount = _priceFormatter.FormatPrice(-orderSubTotalDiscountExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, language, false);
-                                dislaySubTotalDiscount = true;
-                            }
                             //shipping
                             var orderShippingExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderShippingExclTax, order.CurrencyRate);
                             cusShipTotal = _priceFormatter.FormatShippingPrice(orderShippingExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, language, false);
@@ -260,16 +282,6 @@ namespace Nop.Services.Messages
                         break;
                     case TaxDisplayType.IncludingTax:
                         {
-                            //subtotal
-                            var orderSubtotalInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderSubtotalInclTax, order.CurrencyRate);
-                            cusSubTotal = _priceFormatter.FormatPrice(orderSubtotalInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, language, true);
-                            //discount (applied to order subtotal)
-                            var orderSubTotalDiscountInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderSubTotalDiscountInclTax, order.CurrencyRate);
-                            if (orderSubTotalDiscountInclTaxInCustomerCurrency > decimal.Zero)
-                            {
-                                cusSubTotalDiscount = _priceFormatter.FormatPrice(-orderSubTotalDiscountInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, language, true);
-                                dislaySubTotalDiscount = true;
-                            }
                             //shipping
                             var orderShippingInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderShippingInclTax, order.CurrencyRate);
                             cusShipTotal = _priceFormatter.FormatShippingPrice(orderShippingInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, language, true);

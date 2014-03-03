@@ -48,6 +48,10 @@ namespace Nop.Admin.Models.Settings
         public bool HideTaxInOrderSummary { get; set; }
         public bool HideTaxInOrderSummary_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Tax.ForceTaxExclusionFromOrderSubtotal")]
+        public bool ForceTaxExclusionFromOrderSubtotal { get; set; }
+        public bool ForceTaxExclusionFromOrderSubtotal_OverrideForStore { get; set; }
+
 
 
 

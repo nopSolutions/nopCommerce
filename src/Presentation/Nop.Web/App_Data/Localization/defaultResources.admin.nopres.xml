@@ -6194,6 +6194,14 @@
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
+                  <LocaleResource Name="ForceTaxExclusionFromOrderSubtotal">
+                    <Value>Force tax exlusion from order subtotal</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Check to always exclude tax from order subtotal (no matter of selected tax dispay type). This setting effects only pages where order totals are displayed.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
                   <LocaleResource Name="ShippingIsTaxable">
                     <Value>Shipping is taxable</Value>
                     <Children>

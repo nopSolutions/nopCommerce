@@ -102,7 +102,7 @@ namespace Nop.Plugin.Shipping.Fedex
             decimal subTotalWithoutDiscountBase = decimal.Zero;
             decimal subTotalWithDiscountBase = decimal.Zero;
             _orderTotalCalculationService.GetShoppingCartSubTotal(getShippingOptionRequest.Items,
-                out orderSubTotalDiscountAmount, out orderSubTotalAppliedDiscount,
+                false, out orderSubTotalDiscountAmount, out orderSubTotalAppliedDiscount,
                 out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
             subTotalBase = subTotalWithDiscountBase;
 

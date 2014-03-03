@@ -554,6 +554,7 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.DisplayTaxRates_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.HideZeroTax_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.HideTaxInOrderSummary_OverrideForStore, mo => mo.Ignore())
+                .ForMember(dest => dest.ForceTaxExclusionFromOrderSubtotal_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.TaxBasedOn_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.DefaultTaxAddress_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.ShippingIsTaxable_OverrideForStore, mo => mo.Ignore())

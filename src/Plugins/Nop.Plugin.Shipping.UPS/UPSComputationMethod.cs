@@ -154,7 +154,7 @@ namespace Nop.Plugin.Shipping.UPS
             decimal subTotalWithoutDiscountBase = decimal.Zero;
             decimal subTotalWithDiscountBase = decimal.Zero;
             _orderTotalCalculationService.GetShoppingCartSubTotal(getShippingOptionRequest.Items,
-                out orderSubTotalDiscountAmount, out orderSubTotalAppliedDiscount,
+                false, out orderSubTotalDiscountAmount, out orderSubTotalAppliedDiscount,
                 out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
 
             if (_upsSettings.Tracing)

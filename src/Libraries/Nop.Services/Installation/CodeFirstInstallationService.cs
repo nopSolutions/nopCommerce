@@ -4915,6 +4915,7 @@ namespace Nop.Services.Installation
                     DisplayTaxRates = false,
                     PricesIncludeTax = false,
                     AllowCustomersToSelectTaxDisplayType = false,
+                    ForceTaxExclusionFromOrderSubtotal = false,
                     HideZeroTax = false,
                     HideTaxInOrderSummary = false,
                     ShippingIsTaxable = false,

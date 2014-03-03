@@ -377,6 +377,12 @@ set @resources='
   <LocaleResource Name="Admin.Orders.Shipments.ShipSelected">
 	<Value>Set as shipped (selected)</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.ForceTaxExclusionFromOrderSubtotal">
+	<Value>Force tax exlusion from order subtotal</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.ForceTaxExclusionFromOrderSubtotal.Hint">
+	<Value>Check to always exclude tax from order subtotal (no matter of selected tax dispay type). This setting effects only pages where order totals are displayed.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -849,4 +855,12 @@ GO
 
 DELETE FROM [Setting]
 WHERE [name] = N'ordersettings.returnrequestreasons' AND [StoreId] > 0
+GO
+
+--a new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'taxsettings.forcetaxexclusionfromordersubtotal')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'taxsettings.forcetaxexclusionfromordersubtotal', N'false', 0)
+END
 GO

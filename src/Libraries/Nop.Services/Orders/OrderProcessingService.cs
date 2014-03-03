@@ -2660,9 +2660,9 @@ namespace Nop.Services.Orders
                 Discount orderSubTotalAppliedDiscount = null;
                 decimal subTotalWithoutDiscountBase = decimal.Zero;
                 decimal subTotalWithDiscountBase = decimal.Zero;
-                _orderTotalCalculationService.GetShoppingCartSubTotal(cart,
+                _orderTotalCalculationService.GetShoppingCartSubTotal(cart, false,
                     out orderSubTotalDiscountAmountBase, out orderSubTotalAppliedDiscount,
-                out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
+                    out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
 
                 if (subTotalWithoutDiscountBase < _orderSettings.MinOrderSubtotalAmount)
                     return false;

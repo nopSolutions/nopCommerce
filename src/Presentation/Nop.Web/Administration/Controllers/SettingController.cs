@@ -712,6 +712,7 @@ namespace Nop.Admin.Controllers
                 model.DisplayTaxRates_OverrideForStore = _settingService.SettingExists(taxSettings, x => x.DisplayTaxRates, storeScope);
                 model.HideZeroTax_OverrideForStore = _settingService.SettingExists(taxSettings, x => x.HideZeroTax, storeScope);
                 model.HideTaxInOrderSummary_OverrideForStore = _settingService.SettingExists(taxSettings, x => x.HideTaxInOrderSummary, storeScope);
+                model.ForceTaxExclusionFromOrderSubtotal_OverrideForStore = _settingService.SettingExists(taxSettings, x => x.ForceTaxExclusionFromOrderSubtotal, storeScope);
                 model.TaxBasedOn_OverrideForStore = _settingService.SettingExists(taxSettings, x => x.TaxBasedOn, storeScope);
                 model.DefaultTaxAddress_OverrideForStore = _settingService.SettingExists(taxSettings, x => x.DefaultTaxAddressId, storeScope);
                 model.ShippingIsTaxable_OverrideForStore = _settingService.SettingExists(taxSettings, x => x.ShippingIsTaxable, storeScope);
@@ -822,6 +823,11 @@ namespace Nop.Admin.Controllers
                 _settingService.SaveSetting(taxSettings, x => x.HideTaxInOrderSummary, storeScope, false);
             else if (storeScope > 0)
                 _settingService.DeleteSetting(taxSettings, x => x.HideTaxInOrderSummary, storeScope);
+
+            if (model.ForceTaxExclusionFromOrderSubtotal_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(taxSettings, x => x.ForceTaxExclusionFromOrderSubtotal, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(taxSettings, x => x.ForceTaxExclusionFromOrderSubtotal, storeScope);
             
             if (model.TaxBasedOn_OverrideForStore || storeScope == 0)
                 _settingService.SaveSetting(taxSettings, x => x.TaxBasedOn, storeScope, false);
