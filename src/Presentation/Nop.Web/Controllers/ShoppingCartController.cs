@@ -2023,7 +2023,7 @@ namespace Nop.Web.Controllers
                 if (orderSubTotalDiscountAmountBase > decimal.Zero)
                 {
                     decimal orderSubTotalDiscountAmount =_currencyService.ConvertFromPrimaryStoreCurrency(orderSubTotalDiscountAmountBase, _workContext.WorkingCurrency);
-                    model.SubTotalDiscount = _priceFormatter.FormatPrice(-orderSubTotalDiscountAmount, true, _workContext.WorkingCurrency, _workContext.WorkingLanguage, includingTax);
+                    model.SubTotalDiscount = _priceFormatter.FormatPrice(-orderSubTotalDiscountAmount, true, _workContext.WorkingCurrency, _workContext.WorkingLanguage, subTotalIncludingTax);
                     model.AllowRemovingSubTotalDiscount = orderSubTotalAppliedDiscount != null &&
                                                           orderSubTotalAppliedDiscount.RequiresCouponCode &&
                                                           !String.IsNullOrEmpty(orderSubTotalAppliedDiscount.CouponCode) &&
