@@ -109,16 +109,7 @@ namespace Nop.Services.Catalog
         public string FormatPrice(decimal price, bool showCurrency, Currency targetCurrency)
         {
             var language = _workContext.WorkingLanguage;
-            bool priceIncludesTax = false;
-            switch (_workContext.TaxDisplayType)
-            {
-                case TaxDisplayType.ExcludingTax:
-                    priceIncludesTax = false;
-                    break;
-                case TaxDisplayType.IncludingTax:
-                    priceIncludesTax = true;
-                    break;
-            }
+            bool priceIncludesTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
             return FormatPrice(price, showCurrency, targetCurrency, language, priceIncludesTax);
         }
 
@@ -133,16 +124,7 @@ namespace Nop.Services.Catalog
         {
             var targetCurrency = _workContext.WorkingCurrency;
             var language = _workContext.WorkingLanguage;
-            bool priceIncludesTax = false;
-            switch (_workContext.TaxDisplayType)
-            {
-                case TaxDisplayType.ExcludingTax:
-                    priceIncludesTax = false;
-                    break;
-                case TaxDisplayType.IncludingTax:
-                    priceIncludesTax = true;
-                    break;
-            }
+            bool priceIncludesTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
             return FormatPrice(price, showCurrency, targetCurrency, language, priceIncludesTax, showTax);
         }
 
@@ -164,19 +146,8 @@ namespace Nop.Services.Catalog
                 currency = new Currency();
                 currency.CurrencyCode = currencyCode;
             }
-            bool priceIncludesTax = false;
-            switch (_workContext.TaxDisplayType)
-            {
-                case TaxDisplayType.ExcludingTax:
-                    priceIncludesTax = false;
-                    break;
-                case TaxDisplayType.IncludingTax:
-                    priceIncludesTax = true;
-                    break;
-            }
-
-            return FormatPrice(price, showCurrency, currency, 
-                language, priceIncludesTax, showTax);
+            bool priceIncludesTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
+            return FormatPrice(price, showCurrency, currency, language, priceIncludesTax, showTax);
         }
 
         /// <summary>
@@ -267,16 +238,7 @@ namespace Nop.Services.Catalog
         {
             var targetCurrency = _workContext.WorkingCurrency;
             var language = _workContext.WorkingLanguage;
-            bool priceIncludesTax = false;
-            switch (_workContext.TaxDisplayType)
-            {
-                case TaxDisplayType.ExcludingTax:
-                    priceIncludesTax = false;
-                    break;
-                case TaxDisplayType.IncludingTax:
-                    priceIncludesTax = true;
-                    break;
-            }
+            bool priceIncludesTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
             return FormatShippingPrice(price, showCurrency, targetCurrency, language, priceIncludesTax);
         }
 
@@ -345,16 +307,7 @@ namespace Nop.Services.Catalog
         {
             var targetCurrency = _workContext.WorkingCurrency;
             var language = _workContext.WorkingLanguage;
-            bool priceIncludesTax = false;
-            switch (_workContext.TaxDisplayType)
-            {
-                case TaxDisplayType.ExcludingTax:
-                    priceIncludesTax = false;
-                    break;
-                case TaxDisplayType.IncludingTax:
-                    priceIncludesTax = true;
-                    break;
-            }
+            bool priceIncludesTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
             return FormatPaymentMethodAdditionalFee(price, showCurrency, targetCurrency, 
                 language, priceIncludesTax);
         }

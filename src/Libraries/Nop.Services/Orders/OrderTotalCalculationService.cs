@@ -508,16 +508,7 @@ namespace Nop.Services.Orders
         /// <returns>Shipping total</returns>
         public virtual decimal? GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart)
         {
-            bool includingTax = false;
-            switch (_workContext.TaxDisplayType)
-            {
-                case TaxDisplayType.ExcludingTax:
-                    includingTax = false;
-                    break;
-                case TaxDisplayType.IncludingTax:
-                    includingTax = true;
-                    break;
-            }
+            bool includingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
             return GetShoppingCartShippingTotal(cart, includingTax);
         }
 

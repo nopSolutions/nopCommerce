@@ -749,13 +749,13 @@ namespace Nop.Web.Controllers
                 Discount orderSubTotalAppliedDiscount = null;
                 decimal subTotalWithoutDiscountBase = decimal.Zero;
                 decimal subTotalWithDiscountBase = decimal.Zero;
-                var includingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax && !_taxSettings.ForceTaxExclusionFromOrderSubtotal;
-                _orderTotalCalculationService.GetShoppingCartSubTotal(cart, includingTax,
+                var subTotalIncludingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax && !_taxSettings.ForceTaxExclusionFromOrderSubtotal;
+                _orderTotalCalculationService.GetShoppingCartSubTotal(cart, subTotalIncludingTax,
                     out orderSubTotalDiscountAmountBase, out orderSubTotalAppliedDiscount,
                     out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
                 subtotalBase = subTotalWithoutDiscountBase;
                 decimal subtotal = _currencyService.ConvertFromPrimaryStoreCurrency(subtotalBase, _workContext.WorkingCurrency);
-                model.SubTotal = _priceFormatter.FormatPrice(subtotal, false, _workContext.WorkingCurrency, _workContext.WorkingLanguage, includingTax);
+                model.SubTotal = _priceFormatter.FormatPrice(subtotal, false, _workContext.WorkingCurrency, _workContext.WorkingLanguage, subTotalIncludingTax);
 
                 var requiresShipping = cart.RequiresShipping();
                 //a customer should visit the shopping cart page (hide checkout button) before going to checkout if:
@@ -2012,13 +2012,13 @@ namespace Nop.Web.Controllers
                 Discount orderSubTotalAppliedDiscount = null;
                 decimal subTotalWithoutDiscountBase = decimal.Zero;
                 decimal subTotalWithDiscountBase = decimal.Zero;
-                var includingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax && !_taxSettings.ForceTaxExclusionFromOrderSubtotal;
-                _orderTotalCalculationService.GetShoppingCartSubTotal(cart, includingTax,
+                var subTotalIncludingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax && !_taxSettings.ForceTaxExclusionFromOrderSubtotal;
+                _orderTotalCalculationService.GetShoppingCartSubTotal(cart, subTotalIncludingTax,
                     out orderSubTotalDiscountAmountBase, out orderSubTotalAppliedDiscount,
                     out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
                 subtotalBase = subTotalWithoutDiscountBase;
                 decimal subtotal = _currencyService.ConvertFromPrimaryStoreCurrency(subtotalBase, _workContext.WorkingCurrency);
-                model.SubTotal = _priceFormatter.FormatPrice(subtotal, true, _workContext.WorkingCurrency, _workContext.WorkingLanguage, includingTax);
+                model.SubTotal = _priceFormatter.FormatPrice(subtotal, true, _workContext.WorkingCurrency, _workContext.WorkingLanguage, subTotalIncludingTax);
 
                 if (orderSubTotalDiscountAmountBase > decimal.Zero)
                 {

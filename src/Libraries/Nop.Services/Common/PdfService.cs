@@ -395,20 +395,17 @@ namespace Nop.Services.Common
 
                     //price
                     string unitPrice = string.Empty;
-                    switch (order.CustomerTaxDisplayType)
+                    if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
                     {
-                        case TaxDisplayType.ExcludingTax:
-                            {
-                                var unitPriceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceExclTax, order.CurrencyRate);
-                                unitPrice = _priceFormatter.FormatPrice(unitPriceExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, false);
-                            }
-                            break;
-                        case TaxDisplayType.IncludingTax:
-                            {
-                                var unitPriceInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceInclTax, order.CurrencyRate);
-                                unitPrice = _priceFormatter.FormatPrice(unitPriceInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, true);
-                            }
-                            break;
+                        //including tax
+                        var unitPriceInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceInclTax, order.CurrencyRate);
+                        unitPrice = _priceFormatter.FormatPrice(unitPriceInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, true);
+                    }
+                    else
+                    {
+                        //excluding tax
+                        var unitPriceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceExclTax, order.CurrencyRate);
+                        unitPrice = _priceFormatter.FormatPrice(unitPriceExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, false);
                     }
                     cell = new PdfPCell(new Phrase(unitPrice, font));
                     cell.HorizontalAlignment = Element.ALIGN_LEFT;
@@ -420,21 +417,18 @@ namespace Nop.Services.Common
                     productsTable.AddCell(cell);
 
                     //total
-                    string subTotal = string.Empty;
-                    switch (order.CustomerTaxDisplayType)
+                    string subTotal = string.Empty; 
+                    if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
                     {
-                        case TaxDisplayType.ExcludingTax:
-                            {
-                                var priceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.PriceExclTax, order.CurrencyRate);
-                                subTotal = _priceFormatter.FormatPrice(priceExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, false);
-                            }
-                            break;
-                        case TaxDisplayType.IncludingTax:
-                            {
-                                var priceInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.PriceInclTax, order.CurrencyRate);
-                                subTotal = _priceFormatter.FormatPrice(priceInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, true);
-                            }
-                            break;
+                        //including tax
+                        var priceInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.PriceInclTax, order.CurrencyRate);
+                        subTotal = _priceFormatter.FormatPrice(priceInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, true);
+                    }
+                    else
+                    {
+                        //excluding tax
+                        var priceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.PriceExclTax, order.CurrencyRate);
+                        subTotal = _priceFormatter.FormatPrice(priceExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, false);
                     }
                     cell = new PdfPCell(new Phrase(subTotal, font));
                     cell.HorizontalAlignment = Element.ALIGN_LEFT;
@@ -517,56 +511,50 @@ namespace Nop.Services.Common
                 //shipping
                 if (order.ShippingStatus != ShippingStatus.ShippingNotRequired)
                 {
-                    switch (order.CustomerTaxDisplayType)
+                    if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
                     {
-                        case TaxDisplayType.ExcludingTax:
-                            {
-                                var orderShippingExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderShippingExclTax, order.CurrencyRate);
-                                string orderShippingExclTaxStr = _priceFormatter.FormatShippingPrice(orderShippingExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, false);
+                        //including tax
+                        var orderShippingInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderShippingInclTax, order.CurrencyRate);
+                        string orderShippingInclTaxStr = _priceFormatter.FormatShippingPrice(orderShippingInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, true);
 
-                                var p = new Paragraph(String.Format("{0} {1}", _localizationService.GetResource("PDFInvoice.Shipping", lang.Id), orderShippingExclTaxStr), font);
-                                p.Alignment = Element.ALIGN_RIGHT;
-                                doc.Add(p);
-                            }
-                            break;
-                        case TaxDisplayType.IncludingTax:
-                            {
-                                var orderShippingInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderShippingInclTax, order.CurrencyRate);
-                                string orderShippingInclTaxStr = _priceFormatter.FormatShippingPrice(orderShippingInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, true);
+                        var p = new Paragraph(String.Format("{0} {1}", _localizationService.GetResource("PDFInvoice.Shipping", lang.Id), orderShippingInclTaxStr), font);
+                        p.Alignment = Element.ALIGN_RIGHT;
+                        doc.Add(p);
+                    }
+                    else
+                    {
+                        //excluding tax
+                        var orderShippingExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderShippingExclTax, order.CurrencyRate);
+                        string orderShippingExclTaxStr = _priceFormatter.FormatShippingPrice(orderShippingExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, false);
 
-                                var p = new Paragraph(String.Format("{0} {1}", _localizationService.GetResource("PDFInvoice.Shipping", lang.Id), orderShippingInclTaxStr), font);
-                                p.Alignment = Element.ALIGN_RIGHT;
-                                doc.Add(p);
-                            }
-                            break;
+                        var p = new Paragraph(String.Format("{0} {1}", _localizationService.GetResource("PDFInvoice.Shipping", lang.Id), orderShippingExclTaxStr), font);
+                        p.Alignment = Element.ALIGN_RIGHT;
+                        doc.Add(p);
                     }
                 }
 
                 //payment fee
                 if (order.PaymentMethodAdditionalFeeExclTax > decimal.Zero)
                 {
-                    switch (order.CustomerTaxDisplayType)
+                    if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
                     {
-                        case TaxDisplayType.ExcludingTax:
-                            {
-                                var paymentMethodAdditionalFeeExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.PaymentMethodAdditionalFeeExclTax, order.CurrencyRate);
-                                string paymentMethodAdditionalFeeExclTaxStr = _priceFormatter.FormatPaymentMethodAdditionalFee(paymentMethodAdditionalFeeExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, false);
+                        //including tax
+                        var paymentMethodAdditionalFeeInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.PaymentMethodAdditionalFeeInclTax, order.CurrencyRate);
+                        string paymentMethodAdditionalFeeInclTaxStr = _priceFormatter.FormatPaymentMethodAdditionalFee(paymentMethodAdditionalFeeInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, true);
 
-                                var p = new Paragraph(String.Format("{0} {1}", _localizationService.GetResource("PDFInvoice.PaymentMethodAdditionalFee", lang.Id), paymentMethodAdditionalFeeExclTaxStr), font);
-                                p.Alignment = Element.ALIGN_RIGHT;
-                                doc.Add(p);
-                            }
-                            break;
-                        case TaxDisplayType.IncludingTax:
-                            {
-                                var paymentMethodAdditionalFeeInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.PaymentMethodAdditionalFeeInclTax, order.CurrencyRate);
-                                string paymentMethodAdditionalFeeInclTaxStr = _priceFormatter.FormatPaymentMethodAdditionalFee(paymentMethodAdditionalFeeInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, true);
+                        var p = new Paragraph(String.Format("{0} {1}", _localizationService.GetResource("PDFInvoice.PaymentMethodAdditionalFee", lang.Id), paymentMethodAdditionalFeeInclTaxStr), font);
+                        p.Alignment = Element.ALIGN_RIGHT;
+                        doc.Add(p);
+                    }
+                    else
+                    {
+                        //excluding tax
+                        var paymentMethodAdditionalFeeExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.PaymentMethodAdditionalFeeExclTax, order.CurrencyRate);
+                        string paymentMethodAdditionalFeeExclTaxStr = _priceFormatter.FormatPaymentMethodAdditionalFee(paymentMethodAdditionalFeeExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, false);
 
-                                var p = new Paragraph(String.Format("{0} {1}", _localizationService.GetResource("PDFInvoice.PaymentMethodAdditionalFee", lang.Id), paymentMethodAdditionalFeeInclTaxStr), font);
-                                p.Alignment = Element.ALIGN_RIGHT;
-                                doc.Add(p);
-                            }
-                            break;
+                        var p = new Paragraph(String.Format("{0} {1}", _localizationService.GetResource("PDFInvoice.PaymentMethodAdditionalFee", lang.Id), paymentMethodAdditionalFeeExclTaxStr), font);
+                        p.Alignment = Element.ALIGN_RIGHT;
+                        doc.Add(p);
                     }
                 }
 

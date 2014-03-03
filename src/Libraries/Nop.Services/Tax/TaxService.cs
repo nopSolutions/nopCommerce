@@ -260,16 +260,7 @@ namespace Nop.Services.Tax
         public virtual decimal GetProductPrice(Product product, decimal price,
             Customer customer, out decimal taxRate)
         {
-            bool includingTax = false;
-            switch (_workContext.TaxDisplayType)
-            {
-                case TaxDisplayType.ExcludingTax:
-                    includingTax = false;
-                    break;
-                case TaxDisplayType.IncludingTax:
-                    includingTax = true;
-                    break;
-            }
+            bool includingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
             return GetProductPrice(product, price, includingTax, customer, out taxRate);
         }
 
@@ -367,16 +358,7 @@ namespace Nop.Services.Tax
         /// <returns>Price</returns>
         public virtual decimal GetShippingPrice(decimal price, Customer customer)
         {
-            bool includingTax = false;
-            switch (_workContext.TaxDisplayType)
-            {
-                case TaxDisplayType.ExcludingTax:
-                    includingTax = false;
-                    break;
-                case TaxDisplayType.IncludingTax:
-                    includingTax = true;
-                    break;
-            }
+            bool includingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
             return GetShippingPrice(price, includingTax, customer);
         }
 
@@ -427,16 +409,7 @@ namespace Nop.Services.Tax
         /// <returns>Price</returns>
         public virtual decimal GetPaymentMethodAdditionalFee(decimal price, Customer customer)
         {
-            bool includingTax = false;
-            switch (_workContext.TaxDisplayType)
-            {
-                case TaxDisplayType.ExcludingTax:
-                    includingTax = false;
-                    break;
-                case TaxDisplayType.IncludingTax:
-                    includingTax = true;
-                    break;
-            }
+            bool includingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
             return GetPaymentMethodAdditionalFee(price, includingTax, customer);
         }
 
@@ -499,16 +472,7 @@ namespace Nop.Services.Tax
         /// <returns>Price</returns>
         public virtual decimal GetCheckoutAttributePrice(CheckoutAttributeValue cav, Customer customer)
         {
-            bool includingTax = false;
-            switch (_workContext.TaxDisplayType)
-            {
-                case TaxDisplayType.ExcludingTax:
-                    includingTax = false;
-                    break;
-                case TaxDisplayType.IncludingTax:
-                    includingTax = true;
-                    break;
-            }
+            bool includingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
             return GetCheckoutAttributePrice(cav, includingTax, customer);
         }
 
