@@ -154,7 +154,7 @@ namespace Nop.Web.Controllers
 
 
             //order subtotal
-            if (_workContext.TaxDisplayType == TaxDisplayType.IncludingTax && !_taxSettings.ForceTaxExclusionFromOrderSubtotal)
+            if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax && !_taxSettings.ForceTaxExclusionFromOrderSubtotal)
             {
                 //including tax
 

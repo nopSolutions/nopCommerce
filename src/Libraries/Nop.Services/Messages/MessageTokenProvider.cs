@@ -230,7 +230,7 @@ namespace Nop.Services.Messages
                 string cusSubTotal = string.Empty;
                 bool dislaySubTotalDiscount = false;
                 string cusSubTotalDiscount = string.Empty;
-                if (_workContext.TaxDisplayType == TaxDisplayType.IncludingTax && !_taxSettings.ForceTaxExclusionFromOrderSubtotal)
+                if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax && !_taxSettings.ForceTaxExclusionFromOrderSubtotal)
                 {
                     //including tax
 

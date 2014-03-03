@@ -463,7 +463,7 @@ namespace Nop.Services.Common
                 //subtotal
                 doc.Add(new Paragraph(" "));
                 //order subtotal
-                if (_workContext.TaxDisplayType == TaxDisplayType.IncludingTax && !_taxSettings.ForceTaxExclusionFromOrderSubtotal)
+                if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax && !_taxSettings.ForceTaxExclusionFromOrderSubtotal)
                 {
                     //including tax
 
@@ -490,7 +490,7 @@ namespace Nop.Services.Common
                 if (order.OrderSubTotalDiscountExclTax > decimal.Zero)
                 {
                     //order subtotal
-                    if (_workContext.TaxDisplayType == TaxDisplayType.IncludingTax && !_taxSettings.ForceTaxExclusionFromOrderSubtotal)
+                    if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax && !_taxSettings.ForceTaxExclusionFromOrderSubtotal)
                     {
                         //including tax
 
