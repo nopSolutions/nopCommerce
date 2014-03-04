@@ -2348,6 +2348,16 @@
           </LocaleResource>
         </Children>
       </LocaleResource>
+      <LocaleResource Name="TaxShipping">
+        <Children>
+          <LocaleResource Name="InclTax">
+            <Value><![CDATA[All prices are entered including tax. Excluding <a href="{0}">shipping</a>]]></Value>
+          </LocaleResource>
+          <LocaleResource Name="ExclTax">
+            <Value><![CDATA[All prices are entered excluding tax. Excluding <a href="{0}">shipping</a>]]></Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
     </Children>
   </LocaleResource>
   <LocaleResource Name="GiftCardAttribute">
@@ -3534,6 +3544,16 @@
           </LocaleResource>
           <LocaleResource Name="WithDiscount">
             <Value>Your price</Value>
+          </LocaleResource>
+          <LocaleResource Name="TaxShipping">
+            <Children>
+              <LocaleResource Name="InclTax">
+                <Value><![CDATA[excluding <a href="{0}">shipping</a>]]></Value>
+              </LocaleResource>
+              <LocaleResource Name="ExclTax">
+                <Value><![CDATA[excluding <a href="{0}">shipping</a>]]></Value>
+              </LocaleResource>
+            </Children>
           </LocaleResource>
         </Children>
       </LocaleResource>

@@ -175,5 +175,17 @@ namespace Nop.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ManufacturersBlockItemsToDisplay")]
         public int ManufacturersBlockItemsToDisplay { get; set; }
         public bool ManufacturersBlockItemsToDisplay_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.DisplayTaxShippingInfoFooter")]
+        public bool DisplayTaxShippingInfoFooter { get; set; }
+        public bool DisplayTaxShippingInfoFooter_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.DisplayTaxShippingInfoProductDetailsPage")]
+        public bool DisplayTaxShippingInfoProductDetailsPage { get; set; }
+        public bool DisplayTaxShippingInfoProductDetailsPage_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.DisplayTaxShippingInfoProductBoxes")]
+        public bool DisplayTaxShippingInfoProductBoxes { get; set; }
+        public bool DisplayTaxShippingInfoProductBoxes_OverrideForStore { get; set; }
     }
 }

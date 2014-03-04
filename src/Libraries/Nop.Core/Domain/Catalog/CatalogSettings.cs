@@ -252,5 +252,20 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the value indicating how many manufacturers to display in manufacturers block
         /// </summary>
         public int ManufacturersBlockItemsToDisplay { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to display information about shipping and tax in the footer (used in Germany)
+        /// </summary>
+        public bool DisplayTaxShippingInfoFooter { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to display information about shipping and tax on product details pages (used in Germany)
+        /// </summary>
+        public bool DisplayTaxShippingInfoProductDetailsPage { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to display information about shipping and tax in product boxes (used in Germany)
+        /// </summary>
+        public bool DisplayTaxShippingInfoProductBoxes { get; set; }
     }
 }

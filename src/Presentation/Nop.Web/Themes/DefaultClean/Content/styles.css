@@ -119,6 +119,8 @@ ul.language-list li:hover{cursor:pointer;}
 /* FOOTER */
 .footer{/*border-top: 2px solid #666666;*/clear:both;height:auto;margin:0 0 30px;padding:15px 10px;background:none repeat scroll 0 0 #FFFFFF;}
 .footer a{text-decoration:none;color:#555555;}
+.footer-tax-shipping{font-size:11px;}
+.footer-tax-shipping a{text-decoration:underline;}
 .footer-disclaimer{font-size:11px;}
 .footer-poweredby{padding-top:10px;border-top:1px solid #EEEEEE;clear:both;font-size:11px;}
 .footer-store-theme{margin:0 100px 0 10px;font-size:11px;}
@@ -548,6 +550,8 @@ td.fieldname{font-size:12px;}
 .product-grid .product-item .prices .price{margin:0px;display:block;}
 .product-grid .product-item .prices .actual-price{color:#B80709;}
 .product-grid .product-item .prices .old-price{color:#5C5B5B;text-decoration:line-through;}
+.product-grid .product-item .prices .tax-shipping-info{font-size:11px;}
+.product-grid .product-item .prices .tax-shipping-info a{text-decoration:underline;}
 .product-grid .product-item .buttons{vertical-align:middle;position:static;margin-top:5px;text-align:left;}
 .product-box-add-to-cart-button{padding:3px 7px;cursor:pointer;background:#7DB72F;background:-webkit-gradient(linear,left top,left bottom,from(#7DB72F),to(#4E7D0E));background:-moz-linear-gradient(top,#7DB72F,#4E7D0E);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#7DB72F',endColorstr='#4E7D0E');color:#fff;text-shadow:none;border-color:#999;border:0 none;font-weight:700;}
 .product-box-add-to-cart-button:hover{color:#fff;}
@@ -570,6 +574,8 @@ td.fieldname{font-size:12px;}
 .product-list .product-item .prices .price{margin:0px;display:block;}
 .product-list .product-item .prices .actual-price{color:#B80709;}
 .product-list .product-item .prices .old-price{color:#5C5B5B;text-decoration:line-through;}
+.product-list .product-item .prices .tax-shipping-info{font-size:11px;}
+.product-list .product-item .prices .tax-shipping-info a{text-decoration:underline;}
 .product-list .product-item .buttons{padding-top:20px;}
 
 
@@ -993,6 +999,8 @@ td.fieldname{font-size:12px;}
 .product-details-page .prices .product-price span{color:#B80709;font-size:20px;}
 .product-details-page .prices .old-product-price{color:#5C5B5B;}
 .product-details-page .prices .old-product-price span{text-decoration:line-through;}
+.product-details-page .prices .tax-shipping-info{font-size:11px;}
+.product-details-page .prices .tax-shipping-info a{text-decoration:underline;}
 .product-details-page .customer-entered-price{margin-bottom:10px;}
 .product-details-page .add-to-cart{padding-top:10px;}
 .product-details-page .add-to-cart .enter-price-input{width:60px;}

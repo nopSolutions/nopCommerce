@@ -990,6 +990,9 @@ namespace Nop.Admin.Controllers
                 model.IgnoreFeaturedProducts_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.IgnoreFeaturedProducts, storeScope);
                 model.TopCategoryMenuSubcategoryLevelsToDisplay_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.TopCategoryMenuSubcategoryLevelsToDisplay, storeScope);
                 model.ManufacturersBlockItemsToDisplay_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ManufacturersBlockItemsToDisplay, storeScope);
+                model.DisplayTaxShippingInfoFooter_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.DisplayTaxShippingInfoFooter, storeScope);
+                model.DisplayTaxShippingInfoProductDetailsPage_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.DisplayTaxShippingInfoProductDetailsPage, storeScope);
+                model.DisplayTaxShippingInfoProductBoxes_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.DisplayTaxShippingInfoProductBoxes, storeScope);
             }
             return View(model);
         }
@@ -1212,6 +1215,21 @@ namespace Nop.Admin.Controllers
                 _settingService.SaveSetting(catalogSettings, x => x.ManufacturersBlockItemsToDisplay, storeScope, false);
             else if (storeScope > 0)
                 _settingService.DeleteSetting(catalogSettings, x => x.ManufacturersBlockItemsToDisplay, storeScope);
+
+            if (model.DisplayTaxShippingInfoFooter_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(catalogSettings, x => x.DisplayTaxShippingInfoFooter, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(catalogSettings, x => x.DisplayTaxShippingInfoFooter, storeScope);
+
+            if (model.DisplayTaxShippingInfoProductDetailsPage_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(catalogSettings, x => x.DisplayTaxShippingInfoProductDetailsPage, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(catalogSettings, x => x.DisplayTaxShippingInfoProductDetailsPage, storeScope);
+
+            if (model.DisplayTaxShippingInfoProductBoxes_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(catalogSettings, x => x.DisplayTaxShippingInfoProductBoxes, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(catalogSettings, x => x.DisplayTaxShippingInfoProductBoxes, storeScope);
 
             //now clear settings cache
             _settingService.ClearCache();

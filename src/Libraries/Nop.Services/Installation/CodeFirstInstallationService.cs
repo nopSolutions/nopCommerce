@@ -4679,6 +4679,9 @@ namespace Nop.Services.Installation
                     MaximumBackInStockSubscriptions = 200,
                     TopCategoryMenuSubcategoryLevelsToDisplay = 1,
                     ManufacturersBlockItemsToDisplay = 5,
+                    DisplayTaxShippingInfoFooter = false,
+                    DisplayTaxShippingInfoProductDetailsPage = false,
+                    DisplayTaxShippingInfoProductBoxes = false
                 });
 
             settingService.SaveSetting(new LocalizationSettings()

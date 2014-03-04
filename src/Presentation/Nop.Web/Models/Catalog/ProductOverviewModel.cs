@@ -43,6 +43,11 @@ namespace Nop.Web.Models.Catalog
             public DateTime? PreOrderAvailabilityStartDateTimeUtc { get; set; }
 
             public bool ForceRedirectionAfterAddingToCart { get; set; }
+
+            /// <summary>
+            /// A value indicating whether we should display tax/shipping info (used in Germany)
+            /// </summary>
+            public bool DisplayTaxShippingInfo { get; set; }
         }
 
 		#endregion

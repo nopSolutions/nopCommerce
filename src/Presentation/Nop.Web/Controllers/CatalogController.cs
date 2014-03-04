@@ -503,6 +503,14 @@ namespace Nop.Web.Controllers
                                                     priceModel.Price = _priceFormatter.FormatPrice(finalPrice);
                                                 }
                                             }
+
+
+                                            //property for German market
+                                            //we display tax/shipping info only with "shipping enabled" for this product
+                                            //we also ensure this it's not free shipping
+                                            priceModel.DisplayTaxShippingInfo = _catalogSettings.DisplayTaxShippingInfoProductBoxes
+                                                && product.IsShipEnabled &&
+                                                !product.IsFreeShipping;
                                         }
                                     }
                                 }
@@ -751,6 +759,13 @@ namespace Nop.Web.Controllers
 
                         model.ProductPrice.PriceValue = finalPriceWithoutDiscount;
                         model.ProductPrice.PriceWithDiscountValue = finalPriceWithDiscount;
+                        
+                        //property for German market
+                        //we display tax/shipping info only with "shipping enabled" for this product
+                        //we also ensure this it's not free shipping
+                        model.ProductPrice.DisplayTaxShippingInfo = _catalogSettings.DisplayTaxShippingInfoProductDetailsPage
+                            && product.IsShipEnabled && 
+                            !product.IsFreeShipping;
 
                         //currency code
                         model.ProductPrice.CurrencyCode = _workContext.WorkingCurrency.CurrencyCode;

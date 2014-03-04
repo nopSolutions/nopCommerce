@@ -4388,6 +4388,30 @@
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
+                  <LocaleResource Name="DisplayTaxShippingInfoFooter">
+                    <Value>Display tax/shipping info (footer)</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Check to display tax and shipping info in the footer. This option is used in Germany.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="DisplayTaxShippingInfoProductDetailsPage">
+                    <Value>Display tax/shipping info (product details page)</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Check to display tax and shipping info on product details pages. This option is used in Germany.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="DisplayTaxShippingInfoProductBoxes">
+                    <Value>Display tax/shipping info (product boxes)</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Check to display tax and shipping info in product boxes (catalog pages). This option is used in Germany.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
                 </Children>
               </LocaleResource>
               <LocaleResource Name="CustomerUser">

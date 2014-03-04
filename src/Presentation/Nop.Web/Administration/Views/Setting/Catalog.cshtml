@@ -536,5 +536,35 @@
                 @Html.ValidationMessageFor(model => model.IgnoreFeaturedProducts)
             </td>
         </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.DisplayTaxShippingInfoFooter_OverrideForStore, model => model.DisplayTaxShippingInfoFooter, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.DisplayTaxShippingInfoFooter):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.DisplayTaxShippingInfoFooter)
+                @Html.ValidationMessageFor(model => model.DisplayTaxShippingInfoFooter)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.DisplayTaxShippingInfoProductDetailsPage_OverrideForStore, model => model.DisplayTaxShippingInfoProductDetailsPage, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.DisplayTaxShippingInfoProductDetailsPage):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.DisplayTaxShippingInfoProductDetailsPage)
+                @Html.ValidationMessageFor(model => model.DisplayTaxShippingInfoProductDetailsPage)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.DisplayTaxShippingInfoProductBoxes_OverrideForStore, model => model.DisplayTaxShippingInfoProductBoxes, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.DisplayTaxShippingInfoProductBoxes):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.DisplayTaxShippingInfoProductBoxes)
+                @Html.ValidationMessageFor(model => model.DisplayTaxShippingInfoProductBoxes)
+            </td>
+        </tr>
     </table>
 }

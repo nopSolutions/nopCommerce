@@ -1,4 +1,7 @@
 ﻿@model ProductDetailsModel.ProductPriceModel
+@using Nop.Core
+@using Nop.Core.Domain.Tax
+@using Nop.Core.Infrastructure
 @using Nop.Web.Models.Catalog;
 @using System.Globalization;
 @using System.Text.RegularExpressions;
@@ -77,6 +80,15 @@
                         @Html.Raw(Model.PriceWithDiscount)
                     }
                 </span>
+            </div>
+         }
+         if (Model.DisplayTaxShippingInfo)
+         {
+             var inclTax = EngineContext.Current.Resolve<IWorkContext>().TaxDisplayType == TaxDisplayType.IncludingTax;
+             //tax info is already included in the price (incl/excl tax). that's why we display only shipping info here
+             //of course, you can modify appropriate locales to include VAT info there
+            <div class="tax-shipping-info">
+                @T(inclTax ? "Products.Price.TaxShipping.InclTax" : "Products.Price.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("shippinginfo") }))
             </div>
          }
          if (!String.IsNullOrEmpty(Model.CurrencyCode))

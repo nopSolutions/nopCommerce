@@ -383,6 +383,36 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Tax.ForceTaxExclusionFromOrderSubtotal.Hint">
 	<Value>Check to always exclude tax from order subtotal (no matter of selected tax dispay type). This setting effects only pages where order totals are displayed.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayTaxShippingInfoFooter">
+	<Value>Display tax/shipping info (footer)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayTaxShippingInfoFooter.Hint">
+	<Value>Check to display tax and shipping info in the footer. This option is used in Germany.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayTaxShippingInfoProductDetailsPage">
+	<Value>Display tax/shipping info (product details page)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayTaxShippingInfoProductDetailsPage.Hint">
+	<Value>Check to display tax and shipping info on product details pages. This option is used in Germany.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayTaxShippingInfoProductBoxes">
+	<Value>Display tax/shipping info (product boxes)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayTaxShippingInfoProductBoxes.Hint">
+	<Value>Check to display tax and shipping info in product boxes (catalog pages). This option is used in Germany.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Footer.TaxShipping.InclTax">
+	<Value><![CDATA[All prices are entered including tax. Excluding <a href="{0}">shipping</a>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Footer.TaxShipping.ExclTax">
+	<Value><![CDATA[All prices are entered excluding tax. Excluding <a href="{0}">shipping</a>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Price.TaxShipping.InclTax">
+	<Value><![CDATA[excluding <a href="{0}">shipping</a>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Price.TaxShipping.ExclTax">
+	<Value><![CDATA[excluding <a href="{0}">shipping</a>]]></Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -862,5 +892,29 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'taxsettings.forcetaxexcl
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'taxsettings.forcetaxexclusionfromordersubtotal', N'false', 0)
+END
+GO
+
+--a new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.displaytaxshippinginfofooter')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'catalogsettings.displaytaxshippinginfofooter', N'false', 0)
+END
+GO
+
+--a new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.displaytaxshippinginfoproductdetailspage')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'catalogsettings.displaytaxshippinginfoproductdetailspage', N'false', 0)
+END
+GO
+
+--a new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.displaytaxshippinginfoproductboxes')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'catalogsettings.displaytaxshippinginfoproductboxes', N'false', 0)
 END
 GO

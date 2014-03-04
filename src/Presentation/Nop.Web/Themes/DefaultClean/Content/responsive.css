@@ -208,7 +208,7 @@
     .footer-menu-wrapper .column.follow-us{margin-bottom:5px;}
     .footer-menu-wrapper .column.follow-us li{display:inline-block;float:none;width:auto;}
     .footer-poweredby{padding:10px 10px 0 10px;margin-top:0;}
-    .footer-disclaimer{padding:0 10px;margin-top:5px;}
+    .footer-tax-shipping,.footer-disclaimer{padding:0 10px;margin-top:5px;}
     .footer-store-theme{padding:0 10px 10px 10px;}
     /* PRODUCTS IN GRID - TEMPLATE */
     .product-grid{text-align:center;display:inline-block;width:100%;}

@@ -436,7 +436,8 @@ namespace Nop.Web.Controllers
                 AllowPrivateMessages = _workContext.CurrentCustomer.IsRegistered() && _forumSettings.AllowPrivateMessages,
                 NewsEnabled = _newsSettings.Enabled,
                 RecentlyViewedProductsEnabled = _catalogSettings.RecentlyViewedProductsEnabled,
-                RecentlyAddedProductsEnabled = _catalogSettings.RecentlyAddedProductsEnabled
+                RecentlyAddedProductsEnabled = _catalogSettings.RecentlyAddedProductsEnabled,
+                DisplayTaxShippingInfoFooter = _catalogSettings.DisplayTaxShippingInfoFooter
             };
 
             return PartialView(model);
