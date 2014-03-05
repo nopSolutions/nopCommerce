@@ -16,6 +16,7 @@ using Nop.Services.Shipping;
 using Nop.Services.Stores;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
+using Nop.Web.Framework.Mvc;
 
 namespace Nop.Plugin.Shipping.ByWeight.Controllers
 {
