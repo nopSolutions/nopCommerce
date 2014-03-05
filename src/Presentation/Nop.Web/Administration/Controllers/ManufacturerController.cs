@@ -538,7 +538,7 @@ namespace Nop.Admin.Controllers
             productManufacturer.DisplayOrder = model.DisplayOrder1;
             _manufacturerService.UpdateProductManufacturer(productManufacturer);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         [HttpPost]
@@ -554,7 +554,7 @@ namespace Nop.Admin.Controllers
             //var manufacturerId = productManufacturer.ManufacturerId;
             _manufacturerService.DeleteProductManufacturer(productManufacturer);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         public ActionResult ProductAddPopup(int manufacturerId)

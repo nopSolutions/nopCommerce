@@ -1121,7 +1121,7 @@ namespace Nop.Admin.Controllers
                 _categoryService.InsertProductCategory(productCategory);
             }
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         [HttpPost]
@@ -1153,7 +1153,7 @@ namespace Nop.Admin.Controllers
             }
             _categoryService.UpdateProductCategory(productCategory);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         [HttpPost]
@@ -1180,7 +1180,7 @@ namespace Nop.Admin.Controllers
 
             _categoryService.DeleteProductCategory(productCategory);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         #endregion
@@ -1264,7 +1264,7 @@ namespace Nop.Admin.Controllers
                 _manufacturerService.InsertProductManufacturer(productManufacturer);
             }
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         [HttpPost]
@@ -1296,7 +1296,7 @@ namespace Nop.Admin.Controllers
             }
             _manufacturerService.UpdateProductManufacturer(productManufacturer);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         [HttpPost]
@@ -1323,7 +1323,7 @@ namespace Nop.Admin.Controllers
 
             _manufacturerService.DeleteProductManufacturer(productManufacturer);
 
-            return Json(null);
+            return new NullJsonResult();
         }
         
         #endregion
@@ -1393,7 +1393,7 @@ namespace Nop.Admin.Controllers
             relatedProduct.DisplayOrder = model.DisplayOrder;
             _productService.UpdateRelatedProduct(relatedProduct);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         [HttpPost]
@@ -1420,7 +1420,7 @@ namespace Nop.Admin.Controllers
 
             _productService.DeleteRelatedProduct(relatedProduct);
 
-            return Json(null);
+            return new NullJsonResult();
         }
         
         public ActionResult RelatedProductAddPopup(int productId)
@@ -1598,7 +1598,7 @@ namespace Nop.Admin.Controllers
 
             _productService.DeleteCrossSellProduct(crossSellProduct);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         public ActionResult CrossSellProductAddPopup(int productId)
@@ -1778,7 +1778,7 @@ namespace Nop.Admin.Controllers
             associatedProduct.DisplayOrder = model.DisplayOrder;
             _productService.UpdateProduct(associatedProduct);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         [HttpPost]
@@ -1800,7 +1800,7 @@ namespace Nop.Admin.Controllers
             product.ParentGroupedProductId = 0;
             _productService.UpdateProduct(product);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         public ActionResult AssociatedProductAddPopup(int productId)
@@ -2008,7 +2008,7 @@ namespace Nop.Admin.Controllers
             productPicture.DisplayOrder = model.DisplayOrder;
             _productService.UpdateProductPicture(productPicture);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         [HttpPost]
@@ -2037,7 +2037,7 @@ namespace Nop.Admin.Controllers
             var picture = _pictureService.GetPictureById(pictureId);
             _pictureService.DeletePicture(picture);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         #endregion
@@ -2148,7 +2148,7 @@ namespace Nop.Admin.Controllers
             psa.DisplayOrder = model.DisplayOrder;
             _specificationAttributeService.UpdateProductSpecificationAttribute(psa);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         [HttpPost]
@@ -2175,7 +2175,7 @@ namespace Nop.Admin.Controllers
 
             _specificationAttributeService.DeleteProductSpecificationAttribute(psa);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         #endregion
@@ -2230,7 +2230,7 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentException("No product tag found with the specified id");
             _productTagService.DeleteProductTag(tag);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         //edit
@@ -2657,7 +2657,7 @@ namespace Nop.Admin.Controllers
                 }
             }
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         [HttpPost]
@@ -2682,7 +2682,7 @@ namespace Nop.Admin.Controllers
                     }
                 }
             }
-            return Json(null);
+            return new NullJsonResult();
         }
 
         #endregion
@@ -2769,7 +2769,7 @@ namespace Nop.Admin.Controllers
             //update "HasTierPrices" property
             _productService.UpdateHasTierPricesProperty(product);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         [HttpPost]
@@ -2796,7 +2796,7 @@ namespace Nop.Admin.Controllers
             tierPrice.Price = model.Price1;
             _productService.UpdateTierPrice(tierPrice);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         [HttpPost]
@@ -2823,7 +2823,7 @@ namespace Nop.Admin.Controllers
             //update "HasTierPrices" property
             _productService.UpdateHasTierPricesProperty(product);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         #endregion
@@ -2908,7 +2908,7 @@ namespace Nop.Admin.Controllers
             };
             _productAttributeService.InsertProductVariantAttribute(pva);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         [HttpPost]
@@ -2936,7 +2936,7 @@ namespace Nop.Admin.Controllers
             pva.DisplayOrder = model.DisplayOrder1;
             _productAttributeService.UpdateProductVariantAttribute(pva);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         [HttpPost]
@@ -2961,7 +2961,7 @@ namespace Nop.Admin.Controllers
 
             _productAttributeService.DeleteProductVariantAttribute(pva);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
 
@@ -3431,7 +3431,7 @@ namespace Nop.Admin.Controllers
 
             _productAttributeService.DeleteProductVariantAttributeValue(pvav);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
 
@@ -3616,7 +3616,7 @@ namespace Nop.Admin.Controllers
             pvac.OverriddenPrice = model.OverriddenPrice;
             _productAttributeService.UpdateProductVariantAttributeCombination(pvac);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         [HttpPost]
@@ -3640,7 +3640,7 @@ namespace Nop.Admin.Controllers
             var productId = pvac.ProductId;
             _productAttributeService.DeleteProductVariantAttributeCombination(pvac);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         //edit

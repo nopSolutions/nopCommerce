@@ -14,6 +14,7 @@ using Nop.Services.Stores;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
+using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Controllers
 {
@@ -342,7 +343,7 @@ namespace Nop.Admin.Controllers
             blogPost.CommentCount = blogPost.BlogComments.Count;
             _blogService.UpdateBlogPost(blogPost);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
 

@@ -18,6 +18,7 @@ using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
+using Nop.Web.Framework.Mvc;
 
 namespace Nop.Plugin.Feed.Froogle.Controllers
 {
@@ -245,8 +246,8 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
                 };
                 _googleService.InsertGoogleProductRecord(googleProduct);
             }
-            
-            return Json(null);
+
+            return new NullJsonResult();
         }
     }
 }

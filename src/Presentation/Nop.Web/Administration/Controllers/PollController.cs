@@ -10,6 +10,7 @@ using Nop.Services.Polls;
 using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
+using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Controllers
 {
@@ -245,7 +246,7 @@ namespace Nop.Admin.Controllers
             pollAnswer.DisplayOrder = model.DisplayOrder1;
             _pollService.UpdatePoll(pollAnswer.Poll);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         [HttpPost]
@@ -270,7 +271,7 @@ namespace Nop.Admin.Controllers
             });
             _pollService.UpdatePoll(poll);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
 
@@ -287,7 +288,7 @@ namespace Nop.Admin.Controllers
             //int pollId = pollAnswer.PollId;
             _pollService.DeletePollAnswer(pollAnswer);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         #endregion

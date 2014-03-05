@@ -129,6 +129,7 @@
     <Compile Include="Kendoui\QueryableExtensions.cs" />
     <Compile Include="Menu\SiteMapNode.cs" />
     <Compile Include="Menu\XmlSiteMap.cs" />
+    <Compile Include="Mvc\NullJsonResult.cs" />
     <Compile Include="Seo\CustomUrlRecordEntityNameRequested.cs" />
     <Compile Include="Seo\WwwRequirementAttribute.cs" />
     <Compile Include="WebStoreContext.cs" />

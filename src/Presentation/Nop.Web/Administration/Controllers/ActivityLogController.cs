@@ -9,6 +9,7 @@ using Nop.Services.Logging;
 using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
+using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Controllers
 {
@@ -141,7 +142,7 @@ namespace Nop.Admin.Controllers
             }
             _customerActivityService.DeleteActivity(activityLog);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         public ActionResult ClearAll()

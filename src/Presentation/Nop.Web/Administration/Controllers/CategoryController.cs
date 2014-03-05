@@ -647,7 +647,7 @@ namespace Nop.Admin.Controllers
             productCategory.DisplayOrder = model.DisplayOrder1;
             _categoryService.UpdateProductCategory(productCategory);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         public ActionResult ProductDelete(int id)
@@ -662,7 +662,7 @@ namespace Nop.Admin.Controllers
             //var categoryId = productCategory.CategoryId;
             _categoryService.DeleteProductCategory(productCategory);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         public ActionResult ProductAddPopup(int categoryId)

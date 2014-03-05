@@ -38,6 +38,7 @@ using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Localization;
+using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Themes;
 using Nop.Web.Framework.UI.Captcha;
 
@@ -2553,7 +2554,7 @@ namespace Nop.Admin.Controllers
             //activity log
             _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
 
-            return Json(null);
+            return new NullJsonResult();
         }
         [HttpPost]
         public ActionResult SettingAdd([Bind(Exclude = "Id")] SettingModel model)
@@ -2576,7 +2577,7 @@ namespace Nop.Admin.Controllers
             //activity log
             _customerActivityService.InsertActivity("AddNewSetting", _localizationService.GetResource("ActivityLog.AddNewSetting"), model.Name);
 
-            return Json(null);
+            return new NullJsonResult();
         }
         [HttpPost]
         public ActionResult SettingDelete(int id)
@@ -2592,7 +2593,7 @@ namespace Nop.Admin.Controllers
             //activity log
             _customerActivityService.InsertActivity("DeleteSetting", _localizationService.GetResource("ActivityLog.DeleteSetting"), setting.Name);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         #endregion

@@ -11,6 +11,7 @@ using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
+using Nop.Web.Framework.Mvc;
 
 namespace Nop.Plugin.Tax.CountryStateZip.Controllers
 {
@@ -134,7 +135,7 @@ namespace Nop.Plugin.Tax.CountryStateZip.Controllers
             taxRate.Percentage = model.Percentage;
             _taxRateService.UpdateTaxRate(taxRate);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         [HttpPost]
@@ -147,7 +148,7 @@ namespace Nop.Plugin.Tax.CountryStateZip.Controllers
             if (taxRate != null)
                 _taxRateService.DeleteTaxRate(taxRate);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         [HttpPost]

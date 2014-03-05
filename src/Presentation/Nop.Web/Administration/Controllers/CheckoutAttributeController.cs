@@ -15,6 +15,7 @@ using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
+using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Controllers
 {
@@ -546,7 +547,7 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentException("No checkout attribute value found with the specified id");
             _checkoutAttributeService.DeleteCheckoutAttributeValue(cav);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
 

@@ -14,6 +14,7 @@ using Nop.Services.Payments;
 using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
+using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Controllers
 {
@@ -122,8 +123,8 @@ namespace Nop.Admin.Controllers
             PluginFileParser.SavePluginDescriptionFile(pluginDescriptor);
             //reset plugin cache
             _pluginFinder.ReloadPlugins();
-            
-            return Json(null);
+
+            return new NullJsonResult();
         }
 
         public ActionResult ConfigureMethod(string systemName)

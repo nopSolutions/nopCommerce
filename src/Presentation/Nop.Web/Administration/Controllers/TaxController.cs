@@ -9,6 +9,7 @@ using Nop.Services.Security;
 using Nop.Services.Tax;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
+using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Controllers
 {
@@ -155,7 +156,7 @@ namespace Nop.Admin.Controllers
             taxCategory = model.ToEntity(taxCategory);
             _taxCategoryService.UpdateTaxCategory(taxCategory);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         [HttpPost]
@@ -173,7 +174,7 @@ namespace Nop.Admin.Controllers
             taxCategory = model.ToEntity(taxCategory);
             _taxCategoryService.InsertTaxCategory(taxCategory);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         [HttpPost]
@@ -187,7 +188,7 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentException("No tax category found with the specified id");
             _taxCategoryService.DeleteTaxCategory(taxCategory);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         #endregion

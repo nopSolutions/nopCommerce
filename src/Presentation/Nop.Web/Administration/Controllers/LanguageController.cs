@@ -383,7 +383,7 @@ namespace Nop.Admin.Controllers
             resource.ResourceValue = model.Value;
             _localizationService.UpdateLocaleStringResource(resource);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         [HttpPost]
@@ -414,7 +414,8 @@ namespace Nop.Admin.Controllers
             {
                 return Content(string.Format(_localizationService.GetResource("Admin.Configuration.Languages.Resources.NameAlreadyExists"), model.Name));
             }
-            return Json(null);
+
+            return new NullJsonResult();
         }
         
         [HttpPost]
@@ -427,8 +428,8 @@ namespace Nop.Admin.Controllers
             if (resource == null)
                 throw new ArgumentException("No resource found with the specified id");
             _localizationService.DeleteLocaleStringResource(resource);
-            
-            return Json(null);
+
+            return new NullJsonResult();
         }
 
         #endregion

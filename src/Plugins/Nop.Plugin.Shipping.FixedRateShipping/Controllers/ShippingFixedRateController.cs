@@ -7,6 +7,7 @@ using Nop.Services.Security;
 using Nop.Services.Shipping;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
+using Nop.Web.Framework.Mvc;
 
 namespace Nop.Plugin.Shipping.FixedRateShipping.Controllers
 {
@@ -75,7 +76,7 @@ namespace Nop.Plugin.Shipping.FixedRateShipping.Controllers
 
             _settingService.SetSetting(string.Format("ShippingRateComputationMethod.FixedRate.Rate.ShippingMethodId{0}", shippingMethodId), rate);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         [NonAction]

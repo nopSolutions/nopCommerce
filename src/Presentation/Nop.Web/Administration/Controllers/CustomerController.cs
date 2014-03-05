@@ -1461,7 +1461,7 @@ namespace Nop.Admin.Controllers
             //now delete the address record
             _addressService.DeleteAddress(address);
 
-            return Json(null);
+            return new NullJsonResult();
         }
         
         public ActionResult AddressCreate(int customerId)

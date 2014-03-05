@@ -8,6 +8,7 @@ using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
+using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Controllers
 {
@@ -86,7 +87,7 @@ namespace Nop.Admin.Controllers
             template = model.ToEntity(template);
             _categoryTemplateService.UpdateCategoryTemplate(template);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         [HttpPost]
@@ -104,7 +105,7 @@ namespace Nop.Admin.Controllers
             template = model.ToEntity(template);
             _categoryTemplateService.InsertCategoryTemplate(template);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         [HttpPost]
@@ -119,7 +120,7 @@ namespace Nop.Admin.Controllers
 
             _categoryTemplateService.DeleteCategoryTemplate(template);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         #endregion
@@ -169,7 +170,7 @@ namespace Nop.Admin.Controllers
             template = model.ToEntity(template);
             _manufacturerTemplateService.UpdateManufacturerTemplate(template);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         [HttpPost]
@@ -187,7 +188,7 @@ namespace Nop.Admin.Controllers
             template = model.ToEntity(template);
             _manufacturerTemplateService.InsertManufacturerTemplate(template);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         [HttpPost]
@@ -202,7 +203,7 @@ namespace Nop.Admin.Controllers
 
             _manufacturerTemplateService.DeleteManufacturerTemplate(template);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         #endregion
@@ -255,7 +256,7 @@ namespace Nop.Admin.Controllers
             template = model.ToEntity(template);
             _productTemplateService.UpdateProductTemplate(template);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         [HttpPost]
@@ -273,7 +274,7 @@ namespace Nop.Admin.Controllers
             template = model.ToEntity(template);
             _productTemplateService.InsertProductTemplate(template);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         [HttpPost]
@@ -288,7 +289,7 @@ namespace Nop.Admin.Controllers
 
             _productTemplateService.DeleteProductTemplate(template);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         #endregion

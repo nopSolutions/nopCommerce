@@ -9,6 +9,7 @@ using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
+using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Controllers
 {
@@ -87,7 +88,7 @@ namespace Nop.Admin.Controllers
             weight = model.ToEntity(weight);
             _measureService.UpdateMeasureWeight(weight);
 
-            return Json(null);
+            return new NullJsonResult();
         }
         
         [HttpPost]
@@ -105,7 +106,7 @@ namespace Nop.Admin.Controllers
             weight = model.ToEntity(weight);
             _measureService.InsertMeasureWeight(weight);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         [HttpPost]
@@ -123,7 +124,7 @@ namespace Nop.Admin.Controllers
 
             _measureService.DeleteMeasureWeight(weight);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         public ActionResult MarkAsPrimaryWeight(int id)
@@ -187,8 +188,8 @@ namespace Nop.Admin.Controllers
             var dimension = _measureService.GetMeasureDimensionById(model.Id);
             dimension = model.ToEntity(dimension);
             _measureService.UpdateMeasureDimension(dimension);
-            
-            return Json(null);
+
+            return new NullJsonResult();
         }
 
         [HttpPost]
@@ -206,7 +207,7 @@ namespace Nop.Admin.Controllers
             dimension = model.ToEntity(dimension);
             _measureService.InsertMeasureDimension(dimension);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         [HttpPost]
@@ -224,7 +225,7 @@ namespace Nop.Admin.Controllers
 
             _measureService.DeleteMeasureDimension(dimension);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         public ActionResult MarkAsPrimaryDimension(int id)

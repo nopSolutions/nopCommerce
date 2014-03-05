@@ -14,6 +14,7 @@ using Nop.Services.Stores;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
+using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Controllers
 {
@@ -355,7 +356,7 @@ namespace Nop.Admin.Controllers
             newsItem.CommentCount = newsItem.NewsComments.Count;
             _newsService.UpdateNews(newsItem);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
 

@@ -7,6 +7,7 @@ using Nop.Services.Security;
 using Nop.Services.Tax;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
+using Nop.Web.Framework.Mvc;
 
 namespace Nop.Plugin.Tax.FixedRate.Controllers
 {
@@ -75,7 +76,7 @@ namespace Nop.Plugin.Tax.FixedRate.Controllers
 
             _settingService.SetSetting(string.Format("Tax.TaxProvider.FixedRate.TaxCategoryId{0}", taxCategoryId), rate);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         [NonAction]

@@ -9,6 +9,7 @@ using Nop.Services.Security;
 using Nop.Services.Tasks;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
+using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Controllers
 {
@@ -112,8 +113,8 @@ namespace Nop.Admin.Controllers
             scheduleTask.Enabled = model.Enabled;
             scheduleTask.StopOnError = model.StopOnError;
             _scheduleTaskService.UpdateTask(scheduleTask);
-            
-            return Json(null);
+
+            return new NullJsonResult();
         }
 
         public ActionResult RunNow(int id)

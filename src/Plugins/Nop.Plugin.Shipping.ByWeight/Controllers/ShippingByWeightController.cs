@@ -166,7 +166,7 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
             if (sbw != null)
                 _shippingByWeightService.DeleteShippingByWeightRecord(sbw);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         //add

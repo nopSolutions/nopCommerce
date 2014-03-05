@@ -2968,7 +2968,7 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentException("No order note found with the specified id");
             _orderService.DeleteOrderNote(orderNote);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         #endregion

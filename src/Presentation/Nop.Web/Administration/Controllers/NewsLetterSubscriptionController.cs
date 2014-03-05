@@ -12,6 +12,7 @@ using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
+using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Controllers
 {
@@ -87,7 +88,7 @@ namespace Nop.Admin.Controllers
             subscription.Active = model.Active;
             _newsLetterSubscriptionService.UpdateNewsLetterSubscription(subscription);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
         [HttpPost]
@@ -101,7 +102,7 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentException("No subscription found with the specified id");
             _newsLetterSubscriptionService.DeleteNewsLetterSubscription(subscription);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
 		public ActionResult ExportCsv(NewsLetterSubscriptionListModel model)

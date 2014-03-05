@@ -10,6 +10,7 @@ using Nop.Services.Logging;
 using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
+using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Controllers
 {
@@ -374,7 +375,7 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentException("No customer attribute value found with the specified id");
             _customerAttributeService.DeleteCustomerAttributeValue(cav);
 
-            return Json(null);
+            return new NullJsonResult();
         }
 
 
