@@ -265,7 +265,8 @@ img.mfp-img {
     height: auto;
     z-index: -1;
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
-    background: #444444; }
+    /*modified background property by nopCommerce team*/
+    background: #ffffff; }
   .mfp-figure small {
     color: #bdbdbd;
     display: block;
