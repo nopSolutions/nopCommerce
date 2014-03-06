@@ -2,7 +2,7 @@
 
 --new locale resources
 declare @resources xml
---a resource will be delete if its value is empty
+--a resource will be deleted if its value is empty
 set @resources='
 <Language>
   <LocaleResource Name="Admin.Catalog.Products.List.ImportFromExcelTip">

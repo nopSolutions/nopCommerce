@@ -405,10 +405,7 @@
     <Content Include="App_Data\Localization\Installation\installation.vi.xml" />
     <Content Include="App_Data\Localization\Installation\installation.zhs.xml" />
     <Content Include="App_Data\SqlServer.StoredProcedures.sql" />
-    <Content Include="App_Data\Localization\defaultResources.admin.nopres.xml">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="App_Data\Localization\defaultResources.public.nopres.xml">
+    <Content Include="App_Data\Localization\defaultResources.nopres.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="App_Data\SqlServer.Indexes.sql" />
