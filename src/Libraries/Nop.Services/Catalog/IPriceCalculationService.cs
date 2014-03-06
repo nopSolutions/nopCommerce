@@ -30,39 +30,15 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="customer">The customer</param>
-        /// <param name="includeDiscounts">A value indicating whether include discounts or not for final price computation</param>
-        /// <returns>Final price</returns>
-        decimal GetFinalPrice(Product product,
-            Customer customer, 
-            bool includeDiscounts);
-
-        /// <summary>
-        /// Gets the final price
-        /// </summary>
-        /// <param name="product">Product</param>
-        /// <param name="customer">The customer</param>
-        /// <param name="additionalCharge">Additional charge</param>
-        /// <param name="includeDiscounts">A value indicating whether include discounts or not for final price computation</param>
-        /// <returns>Final price</returns>
-        decimal GetFinalPrice(Product product, 
-            Customer customer, 
-            decimal additionalCharge, 
-            bool includeDiscounts);
-
-        /// <summary>
-        /// Gets the final price
-        /// </summary>
-        /// <param name="product">Product</param>
-        /// <param name="customer">The customer</param>
         /// <param name="additionalCharge">Additional charge</param>
         /// <param name="includeDiscounts">A value indicating whether include discounts or not for final price computation</param>
         /// <param name="quantity">Shopping cart item quantity</param>
         /// <returns>Final price</returns>
         decimal GetFinalPrice(Product product,
             Customer customer,
-            decimal additionalCharge, 
-            bool includeDiscounts, 
-            int quantity);
+            decimal additionalCharge = decimal.Zero, 
+            bool includeDiscounts = true, 
+            int quantity = 1);
 
 
 

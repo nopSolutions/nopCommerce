@@ -42,9 +42,7 @@ namespace Nop.Services.Catalog
         /// <returns>Currency string without exchange rate</returns>
         protected string GetCurrencyString(decimal amount)
         {
-            bool showCurrency = true;
-            var targetCurrency = _workContext.WorkingCurrency;
-            return GetCurrencyString(amount, showCurrency, targetCurrency);
+            return GetCurrencyString(amount, true, _workContext.WorkingCurrency);
         }
 
         /// <summary>
@@ -94,9 +92,7 @@ namespace Nop.Services.Catalog
         /// <returns>Price</returns>
         public string FormatPrice(decimal price)
         {
-            bool showCurrency = true;
-            var targetCurrency = _workContext.WorkingCurrency;
-            return FormatPrice(price, showCurrency, targetCurrency);
+            return FormatPrice(price, true, _workContext.WorkingCurrency);
         }
 
         /// <summary>
@@ -108,9 +104,8 @@ namespace Nop.Services.Catalog
         /// <returns>Price</returns>
         public string FormatPrice(decimal price, bool showCurrency, Currency targetCurrency)
         {
-            var language = _workContext.WorkingLanguage;
             bool priceIncludesTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
-            return FormatPrice(price, showCurrency, targetCurrency, language, priceIncludesTax);
+            return FormatPrice(price, showCurrency, targetCurrency, _workContext.WorkingLanguage, priceIncludesTax);
         }
 
         /// <summary>
@@ -122,10 +117,8 @@ namespace Nop.Services.Catalog
         /// <returns>Price</returns>
         public string FormatPrice(decimal price, bool showCurrency, bool showTax)
         {
-            var targetCurrency = _workContext.WorkingCurrency;
-            var language = _workContext.WorkingLanguage;
             bool priceIncludesTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
-            return FormatPrice(price, showCurrency, targetCurrency, language, priceIncludesTax, showTax);
+            return FormatPrice(price, showCurrency, _workContext.WorkingCurrency, _workContext.WorkingLanguage, priceIncludesTax, showTax);
         }
 
         /// <summary>
@@ -162,12 +155,7 @@ namespace Nop.Services.Catalog
         public string FormatPrice(decimal price, bool showCurrency,
             string currencyCode, Language language, bool priceIncludesTax)
         {
-            var currency = _currencyService.GetCurrencyByCode(currencyCode);
-            if (currency == null)
-            {
-                currency = new Currency();
-                currency.CurrencyCode = currencyCode;
-            }
+            var currency = _currencyService.GetCurrencyByCode(currencyCode) ?? new Currency() { CurrencyCode = currencyCode };
             return FormatPrice(price, showCurrency, currency, language, priceIncludesTax);
         }
 
@@ -183,9 +171,8 @@ namespace Nop.Services.Catalog
         public string FormatPrice(decimal price, bool showCurrency, 
             Currency targetCurrency, Language language, bool priceIncludesTax)
         {
-            bool showTax = _taxSettings.DisplayTaxSuffix;
             return FormatPrice(price, showCurrency, targetCurrency, language, 
-                priceIncludesTax, showTax);
+                priceIncludesTax, _taxSettings.DisplayTaxSuffix);
         }
 
         /// <summary>
@@ -236,10 +223,8 @@ namespace Nop.Services.Catalog
         /// <returns>Price</returns>
         public string FormatShippingPrice(decimal price, bool showCurrency)
         {
-            var targetCurrency = _workContext.WorkingCurrency;
-            var language = _workContext.WorkingLanguage;
             bool priceIncludesTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
-            return FormatShippingPrice(price, showCurrency, targetCurrency, language, priceIncludesTax);
+            return FormatShippingPrice(price, showCurrency, _workContext.WorkingCurrency, _workContext.WorkingLanguage, priceIncludesTax);
         }
 
         /// <summary>
@@ -286,12 +271,7 @@ namespace Nop.Services.Catalog
         public string FormatShippingPrice(decimal price, bool showCurrency, 
             string currencyCode, Language language, bool priceIncludesTax)
         {
-            var currency = _currencyService.GetCurrencyByCode(currencyCode);
-            if (currency == null)
-            {
-                currency = new Currency();
-                currency.CurrencyCode = currencyCode;
-            }
+            var currency = _currencyService.GetCurrencyByCode(currencyCode) ?? new Currency() { CurrencyCode = currencyCode };
             return FormatShippingPrice(price, showCurrency, currency, language, priceIncludesTax);
         }
 
@@ -305,11 +285,9 @@ namespace Nop.Services.Catalog
         /// <returns>Price</returns>
         public string FormatPaymentMethodAdditionalFee(decimal price, bool showCurrency)
         {
-            var targetCurrency = _workContext.WorkingCurrency;
-            var language = _workContext.WorkingLanguage;
             bool priceIncludesTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
-            return FormatPaymentMethodAdditionalFee(price, showCurrency, targetCurrency, 
-                language, priceIncludesTax);
+            return FormatPaymentMethodAdditionalFee(price, showCurrency, _workContext.WorkingCurrency, 
+                _workContext.WorkingLanguage, priceIncludesTax);
         }
 
         /// <summary>
@@ -357,12 +335,7 @@ namespace Nop.Services.Catalog
         public string FormatPaymentMethodAdditionalFee(decimal price, bool showCurrency, 
             string currencyCode, Language language, bool priceIncludesTax)
         {
-            var currency = _currencyService.GetCurrencyByCode(currencyCode);
-            if (currency == null)
-            {
-                currency = new Currency();
-                currency.CurrencyCode = currencyCode;
-            }
+            var currency = _currencyService.GetCurrencyByCode(currencyCode) ?? new Currency() {CurrencyCode = currencyCode};
             return FormatPaymentMethodAdditionalFee(price, showCurrency, currency, 
                 language, priceIncludesTax);
         }

@@ -208,39 +208,8 @@ namespace Nop.Services.Catalog
         public virtual decimal GetFinalPrice(Product product, 
             bool includeDiscounts)
         {
-            var customer = _workContext.CurrentCustomer;
-            return GetFinalPrice(product, customer, includeDiscounts);
-        }
-
-        /// <summary>
-        /// Gets the final price
-        /// </summary>
-        /// <param name="product">Product</param>
-        /// <param name="customer">The customer</param>
-        /// <param name="includeDiscounts">A value indicating whether include discounts or not for final price computation</param>
-        /// <returns>Final price</returns>
-        public virtual decimal GetFinalPrice(Product product, 
-            Customer customer, 
-            bool includeDiscounts)
-        {
-            return GetFinalPrice(product, customer, decimal.Zero, includeDiscounts);
-        }
-
-        /// <summary>
-        /// Gets the final price
-        /// </summary>
-        /// <param name="product">Product</param>
-        /// <param name="customer">The customer</param>
-        /// <param name="additionalCharge">Additional charge</param>
-        /// <param name="includeDiscounts">A value indicating whether include discounts or not for final price computation</param>
-        /// <returns>Final price</returns>
-        public virtual decimal GetFinalPrice(Product product, 
-            Customer customer, 
-            decimal additionalCharge, 
-            bool includeDiscounts)
-        {
-            return GetFinalPrice(product, customer, additionalCharge, 
-                includeDiscounts, 1);
+            return GetFinalPrice(product, _workContext.CurrentCustomer,
+                includeDiscounts: includeDiscounts);
         }
 
         /// <summary>
@@ -254,9 +223,9 @@ namespace Nop.Services.Catalog
         /// <returns>Final price</returns>
         public virtual decimal GetFinalPrice(Product product, 
             Customer customer,
-            decimal additionalCharge, 
-            bool includeDiscounts, 
-            int quantity)
+            decimal additionalCharge = decimal.Zero, 
+            bool includeDiscounts = true, 
+            int quantity = 1)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
