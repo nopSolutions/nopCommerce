@@ -413,6 +413,9 @@ set @resources='
   <LocaleResource Name="Products.Price.TaxShipping.ExclTax">
 	<Value><![CDATA[excluding <a href="{0}">shipping</a>]]></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Description2">
+	<Value>Also note that some attribute control types that support custom user input (e.g. file upload, texboxes, date picker) are useless with attribute combinations</Value>
+  </LocaleResource>
 </Language>
 '
 
