@@ -77,6 +77,8 @@ namespace Nop.Data
         public virtual void InitConnectionFactory()
         {
             var connectionFactory = new SqlConnectionFactory();
+            //TODO fix compilation warning (below)
+            #pragma warning disable 0618
             Database.DefaultConnectionFactory = connectionFactory;
         }
 

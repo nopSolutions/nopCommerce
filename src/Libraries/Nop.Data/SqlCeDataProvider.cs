@@ -15,6 +15,8 @@ namespace Nop.Data
         public virtual void InitConnectionFactory()
         {
             var connectionFactory = new SqlCeConnectionFactory("System.Data.SqlServerCe.4.0");
+            //TODO fix compilation warning (below)
+            #pragma warning disable 0618
             Database.DefaultConnectionFactory = connectionFactory;
         }
 
