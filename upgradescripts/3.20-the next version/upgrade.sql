@@ -918,3 +918,11 @@ BEGIN
 	VALUES (N'catalogsettings.displaytaxshippinginfoproductboxes', N'false', 0)
 END
 GO
+
+--a new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.enabledynamicskumpngtinupdate')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'catalogsettings.enabledynamicskumpngtinupdate', N'false', 0)
+END
+GO

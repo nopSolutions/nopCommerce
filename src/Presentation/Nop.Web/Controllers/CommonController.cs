@@ -767,6 +767,7 @@ namespace Nop.Web.Controllers
                                                    "/returnrequest",
                                                    "/sendpm",
                                                    "/sentupdate",
+                                                   "/shoppingcart/productdetails_attributechange",
                                                    "/subscribenewsletter",
                                                    "/topic/authenticate",
                                                    "/viewpm",

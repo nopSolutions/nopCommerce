@@ -710,6 +710,7 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.DefaultManufacturerPageSizeOptions, mo => mo.Ignore())
                 .ForMember(dest => dest.MaximumBackInStockSubscriptions, mo => mo.Ignore())
                 .ForMember(dest => dest.DisplayTierPricesWithDiscounts, mo => mo.Ignore())
+                .ForMember(dest => dest.EnableDynamicSkuMpnGtinUpdate, mo => mo.Ignore())
                 .ForMember(dest => dest.CompareProductsNumber, mo => mo.Ignore());
             Mapper.CreateMap<RewardPointsSettings, RewardPointsSettingsModel>()
                 .ForMember(dest => dest.PrimaryStoreCurrencyCode, mo => mo.Ignore())

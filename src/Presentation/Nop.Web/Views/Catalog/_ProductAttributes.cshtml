@@ -6,9 +6,11 @@
 @using System.Globalization;
 @using Nop.Services.Security;
 @{
+    var productId = Model.Any() ? Model.First().ProductId : 0;
     //dynamic price update support
     var hidePrices = !EngineContext.Current.Resolve<IPermissionService>().Authorize(StandardPermissionProvider.DisplayPrices);
     var dynamicPriceUpdate = EngineContext.Current.Resolve<CatalogSettings>().EnableDynamicPriceUpdate;
+    var dynamicSkuMpnGtinUpdate = EngineContext.Current.Resolve<CatalogSettings>().EnableDynamicSkuMpnGtinUpdate;
     var priceAdjustmentTableScripts = new StringBuilder();
     var priceAttributeScripts = new StringBuilder();
     string priceAdjustmentTableName = "";
@@ -193,35 +195,60 @@
     //dynamic price update support
     if (dynamicPriceUpdate && !hidePrices)
     {
-    <script type="text/javascript">
-        //Price adjustment table
-        var @(priceAdjustmentTableName) = new Array();
-        //Price adjustment table initialize
-        @Html.Raw(priceAdjustmentTableScripts.ToString())
-        //Price adjustment function
-        function @(priceAdjustmentFuncName)() {
-            var sum = 0;
-            for(var i in @(priceAdjustmentTableName)) {
-                var ctrl = $('#' + i);
-                if((ctrl.is(':radio') && ctrl.is(':checked')) || (ctrl.is(':checkbox') && ctrl.is(':checked'))) {
-                    sum += @(priceAdjustmentTableName)[i];
-                }
-                else if(ctrl.is('select')) {
-                    var idx = $('#' + i + " option").index($('#' + i + " option:selected"));
-                    if(idx != -1) {
-                        sum += @(priceAdjustmentTableName)[i][idx];
+        <script type="text/javascript">
+            //Price adjustment table
+            var @(priceAdjustmentTableName) = new Array();
+            //Price adjustment table initialize
+            @Html.Raw(priceAdjustmentTableScripts.ToString())
+
+            //Price adjustment function
+            function @(priceAdjustmentFuncName)() {
+                var sum = 0;
+                for (var i in @(priceAdjustmentTableName)) {
+                    var ctrl = $('#' + i);
+                    if ((ctrl.is(':radio') && ctrl.is(':checked')) || (ctrl.is(':checkbox') && ctrl.is(':checked'))) {
+                        sum += @(priceAdjustmentTableName)[i];
+                    } else if (ctrl.is('select')) {
+                        var idx = $('#' + i + " option").index($('#' + i + " option:selected"));
+                        if (idx != -1) {
+                            sum += @(priceAdjustmentTableName)[i][idx];
+                        }
                     }
                 }
-        }
-        var res = (@(priceVarName) + sum).toFixed(2);
-            $(".@(priceVarClass)").text(res);
-        }
-        //Price attributes handlers
-        $(document).ready(function() {
-            @(priceAdjustmentFuncName)();
-            @Html.Raw(priceAttributeScripts.ToString())
-        });
-    </script>
+                var res = (@(priceVarName) + sum).toFixed(2);
+                $(".@(priceVarClass)").text(res);
+
+                @if (dynamicSkuMpnGtinUpdate)
+                {
+                    <text>
+                //load updated sku/mpn/gtin
+                $.ajax({
+                    cache: false,
+                    url: '@Url.Action("ProductDetails_AttributeChange", "ShoppingCart", new {productId = productId})',
+                    data: $('#product-details-form').serialize(),
+                    type: 'post',
+                    success: function(data) {
+                        if (data.sku) {
+                            $('#sku-@productId').text(data.sku);
+                        }
+                        if (data.mpn) {
+                            $('#mpn-@productId').text(data.mpn);
+                        }
+                        if (data.gtin) {
+                            $('#gtin-@productId').text(data.gtin);
+                        }
+                    }
+                });
+                    </text>
+                }
+            }
+            
+            //Price attributes handlers
+            $(document).ready(function() {
+                @(priceAdjustmentFuncName)();
+                @Html.Raw(priceAttributeScripts.ToString())
+            });
+        </script>
     }
     //attribute picture update
     if (!String.IsNullOrEmpty(pictureAttributeScripts.ToString()))
