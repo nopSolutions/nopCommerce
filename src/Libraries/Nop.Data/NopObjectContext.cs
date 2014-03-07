@@ -50,6 +50,7 @@ namespace Nop.Data
             base.OnModelCreating(modelBuilder);
         }
 
+
         /// <summary>
         /// Attach an entity to the context or return an already attached entity (if it was already attached)
         /// </summary>
@@ -73,7 +74,7 @@ namespace Nop.Data
                 return alreadyAttached;
             }
         }
-        
+
         #endregion
 
         #region Methods
@@ -106,79 +107,32 @@ namespace Nop.Data
         /// <returns>Entities</returns>
         public IList<TEntity> ExecuteStoredProcedureList<TEntity>(string commandText, params object[] parameters) where TEntity : BaseEntity, new()
         {
-            //HACK: Entity Framework Code First doesn't support doesn't support output parameters
-            //That's why we have to manually create command and execute it.
-            //just wait until EF Code First starts support them
-            //
-            //More info: http://weblogs.asp.net/dwahlin/archive/2011/09/23/using-entity-framework-code-first-with-stored-procedures-that-have-output-parameters.aspx
-
-            bool hasOutputParameters = false;
-            if (parameters != null)
+            //add parameters to command
+            if (parameters != null && parameters.Length > 0)
             {
-                foreach (var p in parameters)
+                for (int i = 0; i <= parameters.Length - 1; i++)
                 {
-                    var outputP = p as DbParameter;
-                    if (outputP == null)
-                        continue;
+                    var p = parameters[i] as DbParameter;
+                    if (p == null)
+                        throw new Exception("Not support parameter type");
 
-                    if (outputP.Direction == ParameterDirection.InputOutput ||
-                        outputP.Direction == ParameterDirection.Output)
-                        hasOutputParameters = true;
+                    commandText += i == 0 ? " " : ", ";
+
+                    commandText += "@" + p.ParameterName;
+                    if (p.Direction == ParameterDirection.InputOutput || p.Direction == ParameterDirection.Output)
+                    {
+                        //output parameter
+                        commandText += " output";
+                    }
                 }
             }
 
+            var result = this.Database.SqlQuery<TEntity>(commandText, parameters).ToList();
 
+            for (int i = 0; i < result.Count; i++)
+                result[i] = AttachEntityToContext(result[i]);
 
-            var context = ((IObjectContextAdapter)(this)).ObjectContext;
-            if (!hasOutputParameters)
-            {
-                //no output parameters
-                var result = this.Database.SqlQuery<TEntity>(commandText, parameters).ToList();
-                for (int i = 0; i < result.Count; i++)
-                    result[i] = AttachEntityToContext(result[i]);
-                        
-                return result;
-                
-                //var result = context.ExecuteStoreQuery<TEntity>(commandText, parameters).ToList();
-                //foreach (var entity in result)
-                //    Set<TEntity>().Attach(entity);
-                //return result;
-            }
-            else
-            {
-
-                //var connection = context.Connection;
-                var connection = this.Database.Connection;
-                //Don't close the connection after command execution
-
-
-                //open the connection for use
-                if (connection.State == ConnectionState.Closed)
-                    connection.Open();
-                //create a command object
-                using (var cmd = connection.CreateCommand())
-                {
-                    //command to execute
-                    cmd.CommandText = commandText;
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    // move parameters to command object
-                    if (parameters != null)
-                        foreach (var p in parameters)
-                            cmd.Parameters.Add(p);
-
-                    //database call
-                    var reader = cmd.ExecuteReader();
-                    //return reader.DataReaderToObjectList<TEntity>();
-                    var result = context.Translate<TEntity>(reader).ToList();
-                    for (int i = 0; i < result.Count; i++)
-                        result[i] = AttachEntityToContext(result[i]);
-                    //close up the reader, we're done saving results
-                    reader.Close();
-                    return result;
-                }
-
-            }
+            return result;
         }
 
         /// <summary>
@@ -227,6 +181,5 @@ namespace Nop.Data
         }
 
         #endregion
-
     }
 }
