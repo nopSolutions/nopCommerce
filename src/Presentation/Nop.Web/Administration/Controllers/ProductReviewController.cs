@@ -15,8 +15,7 @@ using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Admin.Controllers
 {
-    [AdminAuthorize]
-    public partial class ProductReviewController : BaseNopController
+    public partial class ProductReviewController : BaseAdminController
     {
         #region Fields
 

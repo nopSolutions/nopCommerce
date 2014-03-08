@@ -20,7 +20,7 @@ using Nop.Web.Models.Profile;
 namespace Nop.Web.Controllers
 {
     [NopHttpsRequirement(SslRequirement.No)]
-    public partial class ProfileController : BaseNopController
+    public partial class ProfileController : BasePublicController
     {
         private readonly IForumService _forumService;
         private readonly ILocalizationService _localizationService;

@@ -11,8 +11,7 @@ using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Admin.Controllers
 {
-    [AdminAuthorize]
-    public partial class ForumController : BaseNopController
+    public partial class ForumController : BaseAdminController
     {
         private readonly IForumService _forumService;
         private readonly IDateTimeHelper _dateTimeHelper;

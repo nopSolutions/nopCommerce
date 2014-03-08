@@ -9,12 +9,10 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Common;
 using Nop.Services.Configuration;
-using Nop.Web.Framework.Controllers;
 
 namespace Nop.Admin.Controllers
 {
-    [AdminAuthorize]
-    public partial class HomeController : BaseNopController
+    public partial class HomeController : BaseAdminController
     {
         #region Fields
         private readonly IStoreContext _storeContext;

@@ -11,8 +11,7 @@ namespace Nop.Admin.Controllers
     /// <summary>
     /// Controller used by jbimages (JustBoil.me) plugin (TimyMCE)
     /// </summary>
-    [AdminAuthorize]
-    public partial class JbimagesController : BaseNopController
+    public partial class JbimagesController : BaseAdminController
     {
         private readonly IPermissionService _permissionService;
         private readonly IWebHelper _webHelper;

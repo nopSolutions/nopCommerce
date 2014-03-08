@@ -7,7 +7,7 @@ using Nop.Services.Topics;
 
 namespace Nop.Web.Controllers
 {
-    public partial class BackwardCompatibility2XController : BaseNopController
+    public partial class BackwardCompatibility2XController : BasePublicController
     {
 		#region Fields
 

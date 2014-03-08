@@ -13,8 +13,7 @@ using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Admin.Controllers
 {
-	[AdminAuthorize]
-	public partial class QueuedEmailController : BaseNopController
+	public partial class QueuedEmailController : BaseAdminController
 	{
 		private readonly IQueuedEmailService _queuedEmailService;
         private readonly IDateTimeHelper _dateTimeHelper;

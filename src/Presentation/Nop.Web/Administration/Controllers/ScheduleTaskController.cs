@@ -7,14 +7,12 @@ using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Services.Tasks;
-using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Controllers
 {
-	[AdminAuthorize]
-    public partial class ScheduleTaskController : BaseNopController
+    public partial class ScheduleTaskController : BaseAdminController
 	{
 		#region Fields
 

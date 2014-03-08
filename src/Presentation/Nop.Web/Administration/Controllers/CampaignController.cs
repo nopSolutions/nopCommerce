@@ -15,8 +15,7 @@ using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Admin.Controllers
 {
-	[AdminAuthorize]
-	public partial class CampaignController : BaseNopController
+	public partial class CampaignController : BaseAdminController
 	{
         private readonly ICampaignService _campaignService;
         private readonly IDateTimeHelper _dateTimeHelper;

@@ -1,28 +1,95 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Web.Mvc;
-using System.Web.Routing;
 using Nop.Core;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Infrastructure;
+using Nop.Services.Common;
 using Nop.Services.Logging;
-using Nop.Web.Framework;
-using Nop.Web.Framework.Security;
-using Nop.Web.Framework.Seo;
+using Nop.Services.Stores;
 using Nop.Web.Framework.UI;
 
-namespace Nop.Web.Controllers
+namespace Nop.Web.Framework.Controllers
 {
-    [CustomerLastActivity]
+    /// <summary>
+    /// Base controller
+    /// </summary>
     [StoreIpAddress]
+    [CustomerLastActivity]
     [StoreLastVisitedPage]
-    [CheckAffiliate]
-    [StoreClosed]
-    [PublicStoreAllowNavigation]
-    [LanguageSeoCode]
-    [NopHttpsRequirement(SslRequirement.NoMatter)]
-    [WwwRequirement]
-    public abstract partial class BaseNopController : Controller
+    public abstract class BaseController : Controller
     {
+        /// <summary>
+        /// Render partial view to string
+        /// </summary>
+        /// <returns>Result</returns>
+        public virtual string RenderPartialViewToString()
+        {
+            return RenderPartialViewToString(null, null);
+        }
+        /// <summary>
+        /// Render partial view to string
+        /// </summary>
+        /// <param name="viewName">View name</param>
+        /// <returns>Result</returns>
+        public virtual string RenderPartialViewToString(string viewName)
+        {
+            return RenderPartialViewToString(viewName, null);
+        }
+        /// <summary>
+        /// Render partial view to string
+        /// </summary>
+        /// <param name="model">Model</param>
+        /// <returns>Result</returns>
+        public virtual string RenderPartialViewToString(object model)
+        {
+            return RenderPartialViewToString(null, model);
+        }
+        /// <summary>
+        /// Render partial view to string
+        /// </summary>
+        /// <param name="viewName">View name</param>
+        /// <param name="model">Model</param>
+        /// <returns>Result</returns>
+        public virtual string RenderPartialViewToString(string viewName, object model)
+        {
+            //Original source code: http://craftycodeblog.com/2010/05/15/asp-net-mvc-render-partial-view-to-string/
+            if (string.IsNullOrEmpty(viewName))
+                viewName = this.ControllerContext.RouteData.GetRequiredString("action");
+
+            this.ViewData.Model = model;
+
+            using (var sw = new StringWriter())
+            {
+                ViewEngineResult viewResult = System.Web.Mvc.ViewEngines.Engines.FindPartialView(this.ControllerContext, viewName);
+                var viewContext = new ViewContext(this.ControllerContext, viewResult.View, this.ViewData, this.TempData, sw);
+                viewResult.View.Render(viewContext, sw);
+
+                return sw.GetStringBuilder().ToString();
+            }
+        }
+
+
+        /// <summary>
+        /// Get active store scope (for multi-store configuration mode)
+        /// </summary>
+        /// <param name="storeService">Store service</param>
+        /// <param name="workContext">Work context</param>
+        /// <returns>Store ID; 0 if we are in a shared mode</returns>
+        public virtual int GetActiveStoreScopeConfiguration(IStoreService storeService, IWorkContext workContext)
+        {
+            //ensure that we have 2 (or more) stores
+            if (storeService.GetAllStores().Count < 2)
+                return 0;
+
+
+            var storeId = workContext.CurrentCustomer.GetAttribute<int>(SystemCustomerAttributeNames.AdminAreaStoreScopeConfiguration);
+            var store = storeService.GetStoreById(storeId);
+            return store != null ? store.Id : 0;
+        }
+
+
         /// <summary>
         /// Log exception
         /// </summary>
@@ -87,20 +154,5 @@ namespace Nop.Web.Controllers
                 ((List<string>)ViewData[dataKey]).Add(message);
             }
         }
-
-        protected virtual ActionResult InvokeHttp404()
-        {
-            // Call target Controller and pass the routeData.
-            IController errorController = EngineContext.Current.Resolve<Nop.Web.Controllers.CommonController>();
-
-            var routeData = new RouteData();
-            routeData.Values.Add("controller", "Common");
-            routeData.Values.Add("action", "PageNotFound");
-
-            errorController.Execute(new RequestContext(this.HttpContext, routeData));
-
-            return new EmptyResult();
-        }
-
     }
 }

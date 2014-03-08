@@ -16,7 +16,7 @@ using Nop.Web.Framework.Mvc;
 namespace Nop.Plugin.Tax.CountryStateZip.Controllers
 {
     [AdminAuthorize]
-    public class TaxCountryStateZipController : Controller
+    public class TaxCountryStateZipController : BasePluginController
     {
         private readonly ITaxCategoryService _taxCategoryService;
         private readonly ICountryService _countryService;

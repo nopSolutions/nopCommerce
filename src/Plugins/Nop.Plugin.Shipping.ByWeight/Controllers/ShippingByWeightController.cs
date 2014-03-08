@@ -21,7 +21,7 @@ using Nop.Web.Framework.Mvc;
 namespace Nop.Plugin.Shipping.ByWeight.Controllers
 {
     [AdminAuthorize]
-    public class ShippingByWeightController : Controller
+    public class ShippingByWeightController : BasePluginController
     {
         private readonly IShippingService _shippingService;
         private readonly IStoreService _storeService;

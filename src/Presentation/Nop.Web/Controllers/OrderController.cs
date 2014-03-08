@@ -25,7 +25,7 @@ using Nop.Web.Models.Order;
 
 namespace Nop.Web.Controllers
 {
-    public partial class OrderController : BaseNopController
+    public partial class OrderController : BasePublicController
     {
 		#region Fields
 

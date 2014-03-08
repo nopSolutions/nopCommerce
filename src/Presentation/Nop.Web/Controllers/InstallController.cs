@@ -19,7 +19,7 @@ using Nop.Web.Models.Install;
 
 namespace Nop.Web.Controllers
 {
-    public partial class InstallController : BaseNopController
+    public partial class InstallController : BasePublicController
     {
         #region Fields
 

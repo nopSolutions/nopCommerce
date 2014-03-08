@@ -30,8 +30,7 @@ using Nop.Web.Framework.Security;
 
 namespace Nop.Admin.Controllers
 {
-    [AdminAuthorize]
-    public partial class CommonController : BaseNopController
+    public partial class CommonController : BaseAdminController
     {
         #region Fields
 

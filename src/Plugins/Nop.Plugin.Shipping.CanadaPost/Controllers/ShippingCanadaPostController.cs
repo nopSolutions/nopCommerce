@@ -6,7 +6,7 @@ using Nop.Web.Framework.Controllers;
 namespace Nop.Plugin.Shipping.CanadaPost.Controllers
 {
     [AdminAuthorize]
-    public class ShippingCanadaPostController : Controller
+    public class ShippingCanadaPostController : BasePluginController
     {
         private readonly CanadaPostSettings _canadaPostSettings;
         private readonly ISettingService _settingService;

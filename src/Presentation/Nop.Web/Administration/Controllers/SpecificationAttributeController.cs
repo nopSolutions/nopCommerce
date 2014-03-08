@@ -13,8 +13,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Controllers
 {
-    [AdminAuthorize]
-    public partial class SpecificationAttributeController : BaseNopController
+    public partial class SpecificationAttributeController : BaseAdminController
     {
         #region Fields
 

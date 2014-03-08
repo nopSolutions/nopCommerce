@@ -3,12 +3,10 @@ using System.IO;
 using System.Web;
 using System.Web.Mvc;
 using Nop.Services.Media;
-using Nop.Web.Framework.Controllers;
 
 namespace Nop.Admin.Controllers
 {
-    [AdminAuthorize]
-    public partial class PictureController : BaseNopController
+    public partial class PictureController : BaseAdminController
     {
         private readonly IPictureService _pictureService;
 

@@ -11,7 +11,7 @@ using Nop.Web.Framework.Controllers;
 namespace Nop.Plugin.DiscountRules.HasAllProducts.Controllers
 {
     [AdminAuthorize]
-    public class DiscountRulesHasAllProductsController : Controller
+    public class DiscountRulesHasAllProductsController : BasePluginController
     {
         private readonly IDiscountService _discountService;
         private readonly ISettingService _settingService;

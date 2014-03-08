@@ -31,14 +31,13 @@ using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Services.Vendors;
 using Nop.Web.Framework;
-using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Controllers;
 
 namespace Nop.Admin.Controllers
 {
-    [AdminAuthorize]
-    public partial class ProductController : BaseNopController
+    public partial class ProductController : BaseAdminController
     {
         #region Fields
 

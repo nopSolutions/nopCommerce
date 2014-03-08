@@ -12,7 +12,7 @@ using Nop.Web.Models.Topics;
 
 namespace Nop.Web.Controllers
 {
-    public partial class TopicController : BaseNopController
+    public partial class TopicController : BasePublicController
     {
         #region Fields
 

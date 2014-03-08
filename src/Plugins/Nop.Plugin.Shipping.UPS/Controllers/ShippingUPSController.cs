@@ -11,7 +11,7 @@ using Nop.Web.Framework.Controllers;
 namespace Nop.Plugin.Shipping.UPS.Controllers
 {
     [AdminAuthorize]
-    public class ShippingUPSController : Controller
+    public class ShippingUPSController : BasePluginController
     {
         private readonly UPSSettings _upsSettings;
         private readonly ISettingService _settingService;

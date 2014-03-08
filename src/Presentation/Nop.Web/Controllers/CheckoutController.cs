@@ -32,7 +32,7 @@ using Nop.Web.Models.Common;
 namespace Nop.Web.Controllers
 {
     [NopHttpsRequirement(SslRequirement.Yes)]
-    public partial class CheckoutController : BaseNopController
+    public partial class CheckoutController : BasePublicController
     {
 		#region Fields
 
@@ -992,7 +992,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("CheckoutPaymentMethod");
 
             var paymentControllerType = paymentMethod.GetControllerType();
-            var paymentController = DependencyResolver.Current.GetService(paymentControllerType) as BaseNopPaymentController;
+            var paymentController = DependencyResolver.Current.GetService(paymentControllerType) as BasePaymentController;
             var warnings = paymentController.ValidatePaymentForm(form);
             foreach (var warning in warnings)
                 ModelState.AddModelError("", warning);
@@ -1656,7 +1656,7 @@ namespace Nop.Web.Controllers
                     throw new Exception("Payment method is not selected");
 
                 var paymentControllerType = paymentMethod.GetControllerType();
-                var paymentController = DependencyResolver.Current.GetService(paymentControllerType) as BaseNopPaymentController;
+                var paymentController = DependencyResolver.Current.GetService(paymentControllerType) as BasePaymentController;
                 var warnings = paymentController.ValidatePaymentForm(form);
                 foreach (var warning in warnings)
                     ModelState.AddModelError("", warning);

@@ -7,14 +7,12 @@ using Nop.Core.Domain.Tax;
 using Nop.Services.Configuration;
 using Nop.Services.Security;
 using Nop.Services.Tax;
-using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Controllers
 {
-	[AdminAuthorize]
-    public partial class TaxController : BaseNopController
+    public partial class TaxController : BaseAdminController
 	{
 		#region Fields
 

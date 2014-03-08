@@ -10,14 +10,12 @@ using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Security;
-using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Controllers
 {
-	[AdminAuthorize]
-	public partial class NewsLetterSubscriptionController : BaseNopController
+	public partial class NewsLetterSubscriptionController : BaseAdminController
 	{
 		private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
 		private readonly IDateTimeHelper _dateTimeHelper;

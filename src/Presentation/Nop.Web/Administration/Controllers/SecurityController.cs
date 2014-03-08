@@ -10,12 +10,10 @@ using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Security;
-using Nop.Web.Framework.Controllers;
 
 namespace Nop.Admin.Controllers
 {
-	[AdminAuthorize]
-    public partial class SecurityController : BaseNopController
+    public partial class SecurityController : BaseAdminController
 	{
 		#region Fields
 

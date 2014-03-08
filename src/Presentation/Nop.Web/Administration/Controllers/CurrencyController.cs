@@ -16,8 +16,7 @@ using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Admin.Controllers
 {
-    [AdminAuthorize]
-    public partial class CurrencyController :  BaseNopController
+    public partial class CurrencyController :  BaseAdminController
     {
         #region Fields
 

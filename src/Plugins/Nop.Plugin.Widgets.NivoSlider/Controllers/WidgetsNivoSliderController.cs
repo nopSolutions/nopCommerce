@@ -10,7 +10,7 @@ using Nop.Web.Framework.Controllers;
 
 namespace Nop.Plugin.Widgets.NivoSlider.Controllers
 {
-    public class WidgetsNivoSliderController : Controller
+    public class WidgetsNivoSliderController : BasePluginController
     {
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;

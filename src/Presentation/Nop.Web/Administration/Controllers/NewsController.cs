@@ -18,8 +18,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Controllers
 {
-	[AdminAuthorize]
-    public partial class NewsController : BaseNopController
+    public partial class NewsController : BaseAdminController
 	{
 		#region Fields
 

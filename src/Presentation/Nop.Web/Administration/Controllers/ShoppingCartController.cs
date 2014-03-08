@@ -12,13 +12,11 @@ using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
-using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Admin.Controllers
 {
-    [AdminAuthorize]
-    public partial class ShoppingCartController : BaseNopController
+    public partial class ShoppingCartController : BaseAdminController
     {
         #region Fields
 

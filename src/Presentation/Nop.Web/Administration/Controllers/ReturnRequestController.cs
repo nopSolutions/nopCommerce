@@ -18,8 +18,7 @@ using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Admin.Controllers
 {
-    [AdminAuthorize]
-    public partial class ReturnRequestController : BaseNopController
+    public partial class ReturnRequestController : BaseAdminController
     {
         #region Fields
 

@@ -15,8 +15,7 @@ using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Admin.Controllers
 {
-    [AdminAuthorize]
-    public partial class LogController : BaseNopController
+    public partial class LogController : BaseAdminController
     {
         private readonly ILogger _logger;
         private readonly IWorkContext _workContext;

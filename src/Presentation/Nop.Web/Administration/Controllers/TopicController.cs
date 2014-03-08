@@ -13,8 +13,7 @@ using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Admin.Controllers
 {
-    [AdminAuthorize]
-    public partial class TopicController : BaseNopController
+    public partial class TopicController : BaseAdminController
     {
         #region Fields
 

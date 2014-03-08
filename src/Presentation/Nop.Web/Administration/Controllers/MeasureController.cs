@@ -7,14 +7,12 @@ using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Security;
-using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Controllers
 {
-	[AdminAuthorize]
-    public partial class MeasureController : BaseNopController
+    public partial class MeasureController : BaseAdminController
 	{
 		#region Fields
 

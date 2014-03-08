@@ -15,7 +15,7 @@ using Nop.Web.Framework.Controllers;
 
 namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
 {
-    public class WidgetsGoogleAnalyticsController : Controller
+    public class WidgetsGoogleAnalyticsController : BasePluginController
     {
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;

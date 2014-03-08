@@ -130,7 +130,7 @@
   <ItemGroup>
     <Compile Include="AdminAreaRegistration.cs" />
     <Compile Include="Controllers\ActivityLogController.cs" />
-    <Compile Include="Controllers\BaseNopController.cs" />
+    <Compile Include="Controllers\BaseAdminController.cs" />
     <Compile Include="Controllers\CategoryController.cs" />
     <Compile Include="Controllers\CustomerAttributeController.cs" />
     <Compile Include="Controllers\CheckoutAttributeController.cs" />

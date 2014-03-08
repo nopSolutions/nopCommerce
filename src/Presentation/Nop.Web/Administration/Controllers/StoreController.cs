@@ -12,8 +12,7 @@ using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Admin.Controllers
 {
-    [AdminAuthorize]
-    public partial class StoreController : BaseNopController
+    public partial class StoreController : BaseAdminController
     {
         private readonly IStoreService _storeService;
         private readonly ISettingService _settingService;

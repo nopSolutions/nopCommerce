@@ -10,7 +10,7 @@ using Nop.Web.Framework.Controllers;
 namespace Nop.Plugin.Sms.Verizon.Controllers
 {
     [AdminAuthorize]
-    public class SmsVerizonController : Controller
+    public class SmsVerizonController : BasePluginController
     {
         private readonly VerizonSettings _verizonSettings;
         private readonly ISettingService _settingService;

@@ -9,7 +9,7 @@ using Nop.Web.Framework.Controllers;
 
 namespace Nop.Plugin.Payments.CashOnDelivery.Controllers
 {
-    public class PaymentCashOnDeliveryController : BaseNopPaymentController
+    public class PaymentCashOnDeliveryController : BasePaymentController
     {
         private readonly IWorkContext _workContext;
         private readonly IStoreService _storeService;

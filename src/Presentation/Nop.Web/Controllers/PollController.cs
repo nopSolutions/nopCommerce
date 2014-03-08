@@ -14,7 +14,7 @@ using Nop.Web.Models.Polls;
 
 namespace Nop.Web.Controllers
 {
-    public partial class PollController : BaseNopController
+    public partial class PollController : BasePublicController
     {
         #region Fields
 

@@ -14,7 +14,7 @@ using Nop.Web.Framework.Controllers;
 
 namespace Nop.Plugin.Payments.AuthorizeNet.Controllers
 {
-    public class PaymentAuthorizeNetController : BaseNopPaymentController
+    public class PaymentAuthorizeNetController : BasePaymentController
     {
         private readonly IWorkContext _workContext;
         private readonly IStoreService _storeService;

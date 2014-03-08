@@ -4,12 +4,10 @@ using System.Web;
 using System.Web.Mvc;
 using Nop.Core.Domain.Media;
 using Nop.Services.Media;
-using Nop.Web.Framework.Controllers;
 
 namespace Nop.Admin.Controllers
 {
-    [AdminAuthorize]
-    public partial class DownloadController : BaseNopController
+    public partial class DownloadController : BaseAdminController
     {
         private readonly IDownloadService _downloadService;
 

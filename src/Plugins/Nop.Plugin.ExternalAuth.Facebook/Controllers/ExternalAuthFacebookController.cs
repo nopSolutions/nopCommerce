@@ -13,7 +13,7 @@ using Nop.Web.Framework.Controllers;
 
 namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
 {
-    public class ExternalAuthFacebookController : Controller
+    public class ExternalAuthFacebookController : BasePluginController
     {
         private readonly ISettingService _settingService;
         private readonly IOAuthProviderFacebookAuthorizer _oAuthProviderFacebookAuthorizer;

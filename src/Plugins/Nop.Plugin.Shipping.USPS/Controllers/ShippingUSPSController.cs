@@ -9,7 +9,7 @@ using Nop.Web.Framework.Controllers;
 namespace Nop.Plugin.Shipping.USPS.Controllers
 {
     [AdminAuthorize]
-    public class ShippingUSPSController : Controller
+    public class ShippingUSPSController : BasePluginController
     {
         private readonly USPSSettings _uspsSettings;
         private readonly ISettingService _settingService;

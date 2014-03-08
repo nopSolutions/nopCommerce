@@ -20,8 +20,7 @@ using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Admin.Controllers
 {
-    [AdminAuthorize]
-    public partial class GiftCardController : BaseNopController
+    public partial class GiftCardController : BaseAdminController
     {
         #region Fields
 

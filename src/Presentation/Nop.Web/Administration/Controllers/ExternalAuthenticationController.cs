@@ -14,8 +14,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Controllers
 {
-	[AdminAuthorize]
-    public partial class ExternalAuthenticationController : BaseNopController
+    public partial class ExternalAuthenticationController : BaseAdminController
 	{
 		#region Fields
 

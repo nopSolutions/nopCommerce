@@ -10,7 +10,7 @@ using Nop.Web.Framework.Controllers;
 namespace Nop.Plugin.Shipping.Fedex.Controllers
 {
     [AdminAuthorize]
-    public class ShippingFedexController : Controller
+    public class ShippingFedexController : BasePluginController
     {
         private readonly FedexSettings _fedexSettings;
         private readonly ISettingService _settingService;

@@ -6,10 +6,11 @@ using Nop.Plugin.ExternalAuth.OpenId.Core;
 using Nop.Plugin.ExternalAuth.OpenId.Models;
 using Nop.Services.Authentication.External;
 using Nop.Web.Framework;
+using Nop.Web.Framework.Controllers;
 
 namespace Nop.Plugin.ExternalAuth.OpenId.Controllers
 {
-    public class ExternalAuthOpenIdController : Controller
+    public class ExternalAuthOpenIdController : BasePluginController
     {
         private readonly IOpenIdProviderAuthorizer _openIdProviderAuthorizer;
         private readonly IOpenAuthenticationService _openAuthenticationService;

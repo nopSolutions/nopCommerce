@@ -14,8 +14,7 @@ using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Admin.Controllers
 {
-	[AdminAuthorize]
-	public partial class EmailAccountController : BaseNopController
+	public partial class EmailAccountController : BaseAdminController
 	{
         private readonly IEmailAccountService _emailAccountService;
         private readonly ILocalizationService _localizationService;

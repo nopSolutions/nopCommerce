@@ -12,7 +12,7 @@ using Nop.Web.Framework.Mvc;
 namespace Nop.Plugin.Shipping.FixedRateShipping.Controllers
 {
     [AdminAuthorize]
-    public class ShippingFixedRateController : Controller
+    public class ShippingFixedRateController : BasePluginController
     {
         private readonly IShippingService _shippingService;
         private readonly ISettingService _settingService;

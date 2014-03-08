@@ -38,7 +38,7 @@ using Nop.Web.Models.Customer;
 
 namespace Nop.Web.Controllers
 {
-    public partial class CustomerController : BaseNopController
+    public partial class CustomerController : BasePublicController
     {
         #region Fields
         private readonly IAuthenticationService _authenticationService;

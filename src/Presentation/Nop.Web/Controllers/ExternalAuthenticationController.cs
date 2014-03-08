@@ -7,7 +7,7 @@ using Nop.Web.Models.Customer;
 
 namespace Nop.Web.Controllers
 {
-    public partial class ExternalAuthenticationController : BaseNopController
+    public partial class ExternalAuthenticationController : BasePublicController
     {
 		#region Fields
 

@@ -41,8 +41,7 @@ using Nop.Core.Domain.Catalog;
 
 namespace Nop.Admin.Controllers
 {
-    [AdminAuthorize]
-    public partial class CustomerController : BaseNopController
+    public partial class CustomerController : BaseAdminController
     {
         #region Fields
 

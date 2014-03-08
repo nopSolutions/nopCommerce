@@ -16,8 +16,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Controllers
 {
-	[AdminAuthorize]
-    public partial class CountryController : BaseNopController
+    public partial class CountryController : BaseAdminController
 	{
 		#region Fields
 

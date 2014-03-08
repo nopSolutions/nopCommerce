@@ -12,7 +12,7 @@ using Nop.Web.Framework.Mvc;
 namespace Nop.Plugin.Tax.FixedRate.Controllers
 {
     [AdminAuthorize]
-    public class TaxFixedRateController : Controller
+    public class TaxFixedRateController : BasePluginController
     {
         private readonly ITaxCategoryService _taxCategoryService;
         private readonly ISettingService _settingService;

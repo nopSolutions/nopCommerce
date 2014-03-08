@@ -9,7 +9,7 @@ using Nop.Web.Infrastructure.Cache;
 
 namespace Nop.Web.Controllers
 {
-    public partial class CountryController : BaseNopController
+    public partial class CountryController : BasePublicController
 	{
 		#region Fields
 

@@ -19,8 +19,7 @@ using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Admin.Controllers
 {
-	[AdminAuthorize]
-    public partial class CustomerRoleController : BaseNopController
+    public partial class CustomerRoleController : BaseAdminController
 	{
 		#region Fields
 

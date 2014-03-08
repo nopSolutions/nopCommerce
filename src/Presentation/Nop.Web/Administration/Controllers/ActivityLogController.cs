@@ -13,8 +13,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Controllers
 {
-    [AdminAuthorize]
-    public partial class ActivityLogController : BaseNopController
+    public partial class ActivityLogController : BaseAdminController
     {
         #region Fields
 

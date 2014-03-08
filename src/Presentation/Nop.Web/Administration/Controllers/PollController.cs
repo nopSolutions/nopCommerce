@@ -14,8 +14,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Controllers
 {
-	[AdminAuthorize]
-    public partial class PollController : BaseNopController
+    public partial class PollController : BaseAdminController
 	{
 		#region Fields
 

@@ -22,7 +22,7 @@ using Nop.Web.Framework.Security;
 namespace Nop.Plugin.Misc.FacebookShop.Controllers
 {
     [NopHttpsRequirement(SslRequirement.NoMatter)]
-    public class MiscFacebookShopController : Controller
+    public class MiscFacebookShopController : BasePluginController
     {
         #region Fields
 

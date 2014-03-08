@@ -19,8 +19,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Controllers
 {
-    [AdminAuthorize]
-    public partial class DiscountController : BaseNopController
+    public partial class DiscountController : BaseAdminController
     {
         #region Fields
 

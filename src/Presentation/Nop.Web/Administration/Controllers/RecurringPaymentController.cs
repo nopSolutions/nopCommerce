@@ -15,8 +15,7 @@ using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Admin.Controllers
 {
-    [AdminAuthorize]
-    public partial class RecurringPaymentController : BaseNopController
+    public partial class RecurringPaymentController : BaseAdminController
     {
         #region Fields
 

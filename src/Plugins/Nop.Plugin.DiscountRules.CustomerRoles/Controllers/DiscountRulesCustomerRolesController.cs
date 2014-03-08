@@ -12,7 +12,7 @@ using Nop.Web.Framework.Controllers;
 namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
 {
     [AdminAuthorize]
-    public class DiscountRulesCustomerRolesController : Controller
+    public class DiscountRulesCustomerRolesController : BasePluginController
     {
         private readonly IDiscountService _discountService;
         private readonly ICustomerService _customerService;

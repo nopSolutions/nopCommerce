@@ -45,7 +45,7 @@ using Nop.Web.Models.Media;
 
 namespace Nop.Web.Controllers
 {
-    public partial class CatalogController : BaseNopController
+    public partial class CatalogController : BasePublicController
     {
 		#region Fields
 

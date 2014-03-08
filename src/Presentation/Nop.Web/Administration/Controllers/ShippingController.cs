@@ -21,8 +21,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Controllers
 {
-	[AdminAuthorize]
-    public partial class ShippingController : BaseNopController
+    public partial class ShippingController : BaseAdminController
 	{
 		#region Fields
 

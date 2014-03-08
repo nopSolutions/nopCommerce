@@ -119,7 +119,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CheckAffiliateAttribute.cs" />
-    <Compile Include="Controllers\ContollerExtensions.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\BasePluginController.cs" />
     <Compile Include="Controllers\ParameterBasedOnFormNameAndValueAttribute.cs" />
     <Compile Include="Kendoui\DataSourceRequest.cs" />
     <Compile Include="Kendoui\DataSourceResult.cs" />
@@ -148,7 +149,7 @@
     <Compile Include="StoreClosedAttribute.cs" />
     <Compile Include="StoreLastVisitedPageAttribute.cs" />
     <Compile Include="RemotePost.cs" />
-    <Compile Include="Controllers\BaseNopPaymentController.cs" />
+    <Compile Include="Controllers\BasePaymentController.cs" />
     <Compile Include="Controllers\FormValueRequiredAttribute.cs" />
     <Compile Include="EmbeddedViews\EmbeddedResourceVirtualFile.cs" />
     <Compile Include="EmbeddedViews\EmbeddedViewMetadata.cs" />

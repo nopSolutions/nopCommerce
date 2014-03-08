@@ -14,7 +14,7 @@ using Nop.Web.Framework.Controllers;
 
 namespace Nop.Plugin.Payments.Manual.Controllers
 {
-    public class PaymentManualController : BaseNopPaymentController
+    public class PaymentManualController : BasePaymentController
     {
         private readonly IWorkContext _workContext;
         private readonly IStoreService _storeService;

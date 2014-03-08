@@ -6,7 +6,7 @@ using Nop.Web.Framework.Controllers;
 namespace Nop.Plugin.Shipping.AustraliaPost.Controllers
 {
     [AdminAuthorize]
-    public class ShippingAustraliaPostController : Controller
+    public class ShippingAustraliaPostController : BasePluginController
     {
         private readonly AustraliaPostSettings _australiaPostSettings;
         private readonly ISettingService _settingService;

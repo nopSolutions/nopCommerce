@@ -20,13 +20,11 @@ using Nop.Services.Security;
 using Nop.Services.Shipping;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
-using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Admin.Controllers
 {
-	[AdminAuthorize]
-    public partial class PluginController : BaseNopController
+    public partial class PluginController : BaseAdminController
 	{
 		#region Fields
 

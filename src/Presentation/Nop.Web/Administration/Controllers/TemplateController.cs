@@ -6,14 +6,12 @@ using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;
 using Nop.Services.Localization;
 using Nop.Services.Security;
-using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Controllers
 {
-    [AdminAuthorize]
-    public partial class TemplateController : BaseNopController
+    public partial class TemplateController : BaseAdminController
     {
         #region Fields
 

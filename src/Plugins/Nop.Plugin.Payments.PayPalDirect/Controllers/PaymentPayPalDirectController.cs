@@ -20,7 +20,7 @@ using Nop.Web.Framework.Controllers;
 
 namespace Nop.Plugin.Payments.PayPalDirect.Controllers
 {
-    public class PaymentPayPalDirectController : BaseNopPaymentController
+    public class PaymentPayPalDirectController : BasePaymentController
     {
         private readonly IWorkContext _workContext;
         private readonly IStoreService _storeService;

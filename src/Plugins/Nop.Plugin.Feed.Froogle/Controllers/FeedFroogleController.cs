@@ -23,7 +23,7 @@ using Nop.Web.Framework.Mvc;
 namespace Nop.Plugin.Feed.Froogle.Controllers
 {
     [AdminAuthorize]
-    public class FeedFroogleController : Controller
+    public class FeedFroogleController : BasePluginController
     {
         private readonly IGoogleService _googleService;
         private readonly IProductService _productService;

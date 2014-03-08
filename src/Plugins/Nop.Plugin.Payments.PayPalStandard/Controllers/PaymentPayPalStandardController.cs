@@ -17,7 +17,7 @@ using Nop.Web.Framework.Controllers;
 
 namespace Nop.Plugin.Payments.PayPalStandard.Controllers
 {
-    public class PaymentPayPalStandardController : BaseNopPaymentController
+    public class PaymentPayPalStandardController : BasePaymentController
     {
         private readonly IWorkContext _workContext;
         private readonly IStoreService _storeService;

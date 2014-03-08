@@ -12,7 +12,7 @@ using Nop.Web.Framework.Controllers;
 namespace Nop.Plugin.DiscountRules.HadSpentAmount.Controllers
 {
     [AdminAuthorize]
-    public class DiscountRulesHadSpentAmountController : Controller
+    public class DiscountRulesHadSpentAmountController : BasePluginController
     {
         private readonly IDiscountService _discountService;
         private readonly ISettingService _settingService;
