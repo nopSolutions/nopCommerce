@@ -39,6 +39,7 @@ namespace Nop.Admin.Models.Orders
         public string CustomerInfo { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.CustomerEmail")]
         public string CustomerEmail { get; set; }
+        public string CustomerFullName { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.CustomerIP")]
         public string CustomerIp { get; set; }
 

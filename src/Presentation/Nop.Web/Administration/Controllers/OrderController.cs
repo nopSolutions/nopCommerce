@@ -759,6 +759,7 @@ namespace Nop.Admin.Controllers
                         PaymentStatus = x.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext),
                         ShippingStatus = x.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext),
                         CustomerEmail = x.BillingAddress.Email,
+                        CustomerFullName = string.Format("{0} {1}", x.BillingAddress.FirstName, x.BillingAddress.LastName),
                         CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
                     };
                 }),
