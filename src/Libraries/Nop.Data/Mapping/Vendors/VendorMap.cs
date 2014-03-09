@@ -12,6 +12,9 @@ namespace Nop.Data.Mapping.Vendors
 
             this.Property(v => v.Name).IsRequired().HasMaxLength(400);
             this.Property(v => v.Email).HasMaxLength(400);
+            this.Property(v => v.MetaKeywords).HasMaxLength(400);
+            this.Property(v => v.MetaTitle).HasMaxLength(400);
+            this.Property(v => v.PageSizeOptions).HasMaxLength(200);
         }
     }
 }

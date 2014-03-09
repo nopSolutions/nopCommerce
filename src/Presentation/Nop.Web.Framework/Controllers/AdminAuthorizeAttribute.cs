@@ -12,7 +12,13 @@ namespace Nop.Web.Framework.Controllers
     {
         private readonly bool _dontValidate = false;
 
-        public AdminAuthorizeAttribute(bool dontValidate = false)
+
+        public AdminAuthorizeAttribute()
+            : this(false)
+        {
+        }
+
+        public AdminAuthorizeAttribute(bool dontValidate)
         {
             this._dontValidate = dontValidate;
         }

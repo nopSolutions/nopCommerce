@@ -155,6 +155,14 @@ namespace Nop.Web.Framework.Seo
                             data.Values["SeName"] = urlRecord.Slug;
                         }
                         break;
+                    case "vendor":
+                        {
+                            data.Values["controller"] = "Catalog";
+                            data.Values["action"] = "Vendor";
+                            data.Values["vendorid"] = urlRecord.EntityId;
+                            data.Values["SeName"] = urlRecord.Slug;
+                        }
+                        break;
                     case "newsitem":
                         {
                             data.Values["controller"] = "News";

@@ -44,6 +44,12 @@ namespace Nop.Web.Infrastructure
             routes.MapLocalizedRoute("", "t/{SystemName}",
                 new { controller = "BackwardCompatibility2X", action = "RedirectTopicBySystemName" },
                 new[] { "Nop.Web.Controllers" });
+
+            //vendors
+            routes.MapLocalizedRoute("", "vendor/{vendorId}/{SeName}",
+                new { controller = "BackwardCompatibility2X", action = "RedirectVendorById", SeName = UrlParameter.Optional },
+                new { vendorId = @"\d+" },
+                new[] { "Nop.Web.Controllers" });
         }
 
         public int Priority

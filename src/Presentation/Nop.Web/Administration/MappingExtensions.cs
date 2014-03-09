@@ -22,6 +22,7 @@ using Nop.Admin.Models.Stores;
 using Nop.Admin.Models.Tax;
 using Nop.Admin.Models.Templates;
 using Nop.Admin.Models.Topics;
+using Nop.Admin.Models.Vendors;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -84,6 +85,25 @@ namespace Nop.Admin
         }
 
         public static Manufacturer ToEntity(this ManufacturerModel model, Manufacturer destination)
+        {
+            return Mapper.Map(model, destination);
+        }
+
+        #endregion
+
+        #region Vendor
+
+        public static VendorModel ToModel(this Vendor entity)
+        {
+            return Mapper.Map<Vendor, VendorModel>(entity);
+        }
+
+        public static Vendor ToEntity(this VendorModel model)
+        {
+            return Mapper.Map<VendorModel, Vendor>(model);
+        }
+
+        public static Vendor ToEntity(this VendorModel model, Vendor destination)
         {
             return Mapper.Map(model, destination);
         }

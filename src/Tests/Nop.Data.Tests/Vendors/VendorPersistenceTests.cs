@@ -18,6 +18,13 @@ namespace Nop.Data.Tests.Vendors
                 AdminComment = "AdminComment 1",
                 Active = true,
                 Deleted = true,
+                DisplayOrder = 2,
+                MetaKeywords = "Meta keywords",
+                MetaDescription = "Meta description",
+                MetaTitle = "Meta title",
+                PageSize = 4,
+                AllowCustomersToSelectPageSize = true,
+                PageSizeOptions = "4, 2, 8, 12",
             };
 
             var fromDb = SaveAndLoadEntity(vendor);
@@ -28,6 +35,13 @@ namespace Nop.Data.Tests.Vendors
             fromDb.AdminComment.ShouldEqual("AdminComment 1");
             fromDb.Active.ShouldEqual(true);
             fromDb.Deleted.ShouldEqual(true);
+            fromDb.DisplayOrder.ShouldEqual(2);
+            fromDb.MetaKeywords.ShouldEqual("Meta keywords");
+            fromDb.MetaDescription.ShouldEqual("Meta description");
+            fromDb.MetaTitle.ShouldEqual("Meta title");
+            fromDb.PageSize.ShouldEqual(4);
+            fromDb.AllowCustomersToSelectPageSize.ShouldEqual(true);
+            fromDb.PageSizeOptions.ShouldEqual("4, 2, 8, 12");
         }
     }
 }

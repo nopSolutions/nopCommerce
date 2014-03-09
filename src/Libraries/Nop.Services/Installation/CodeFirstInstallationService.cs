@@ -4854,9 +4854,7 @@ namespace Nop.Services.Installation
             
             settingService.SaveSetting(new VendorSettings()
             {
-                PageSize = 15,
-                AllowCustomersToSelectPageSize = true,
-                PageSizeOptions = "8, 4, 12",
+                DefaultVendorPageSizeOptions = "8, 4, 12",
                 VendorsBlockItemsToDisplay = 0,
                 ShowVendorOnProductDetailsPage = true,
             });

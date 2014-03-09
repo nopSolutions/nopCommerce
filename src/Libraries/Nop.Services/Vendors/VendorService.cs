@@ -74,9 +74,9 @@ namespace Nop.Services.Vendors
         {
             var query = _vendorRepository.Table;
             if (!showHidden)
-                query = query.Where(a => a.Active);
-            query = query.Where(a => !a.Deleted);
-            query = query.OrderBy(a => a.Name);
+                query = query.Where(v => v.Active);
+            query = query.Where(v => !v.Deleted);
+            query = query.OrderBy(v => v.DisplayOrder).ThenBy(v => v.Name);
 
             var vendors = new PagedList<Vendor>(query, pageIndex, pageSize);
             return vendors;

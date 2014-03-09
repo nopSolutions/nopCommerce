@@ -631,9 +631,13 @@ namespace Nop.Web.Controllers
                 if (vendor != null && !vendor.Deleted && vendor.Active)
                 {
                     model.ShowVendor = true;
-                    model.VendorModel.Id = vendor.Id;
-                    model.VendorModel.Name = vendor.Name;
-                    model.VendorModel.SeName = SeoExtensions.GetSeName(vendor.Name);
+
+                    model.VendorModel = new VendorBriefInfoModel()
+                    {
+                        Id = vendor.Id,
+                        Name = vendor.GetLocalized(x => x.Name),
+                        SeName = vendor.GetSeName(),
+                    };
                 }
             }
 
@@ -1813,9 +1817,12 @@ namespace Nop.Web.Controllers
             var model = new VendorModel()
             {
                 Id = vendor.Id,
-                Name = vendor.Name,
-                Description = vendor.Description,
-                SeName = SeoExtensions.GetSeName(vendor.Name)
+                Name = vendor.GetLocalized(x => x.Name),
+                Description = vendor.GetLocalized(x => x.Description),
+                MetaKeywords = vendor.GetLocalized(x => x.MetaKeywords),
+                MetaDescription = vendor.GetLocalized(x => x.MetaDescription),
+                MetaTitle = vendor.GetLocalized(x => x.MetaTitle),
+                SeName = vendor.GetSeName(),
             };
 
 
@@ -1868,9 +1875,9 @@ namespace Nop.Web.Controllers
 
             //page size
             model.PagingFilteringContext.AllowCustomersToSelectPageSize = false;
-            if (_vendorSettings.AllowCustomersToSelectPageSize && _vendorSettings.PageSizeOptions != null)
+            if (vendor.AllowCustomersToSelectPageSize && vendor.PageSizeOptions != null)
             {
-                var pageSizes = _vendorSettings.PageSizeOptions.Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                var pageSizes = vendor.PageSizeOptions.Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
                 if (pageSizes.Any())
                 {
@@ -1929,10 +1936,10 @@ namespace Nop.Web.Controllers
             else
             {
                 //customer is not allowed to select a page size
-                command.PageSize = _vendorSettings.PageSize;
+                command.PageSize = vendor.PageSize;
             }
 
-            if (command.PageSize <= 0) command.PageSize = _vendorSettings.PageSize;
+            if (command.PageSize <= 0) command.PageSize = vendor.PageSize;
 
 
             //products
@@ -1969,9 +1976,12 @@ namespace Nop.Web.Controllers
                 var vendorModel = new VendorModel()
                 {
                     Id = vendor.Id,
-                    Name = vendor.Name,
-                    Description = vendor.Description,
-                    SeName = SeoExtensions.GetSeName(vendor.Name)
+                    Name = vendor.GetLocalized(x => x.Name),
+                    Description = vendor.GetLocalized(x => x.Description),
+                    MetaKeywords = vendor.GetLocalized(x => x.MetaKeywords),
+                    MetaDescription = vendor.GetLocalized(x => x.MetaDescription),
+                    MetaTitle = vendor.GetLocalized(x => x.MetaTitle),
+                    SeName = vendor.GetSeName(),
                 };
                 model.Add(vendorModel);
             }
@@ -1999,8 +2009,8 @@ namespace Nop.Web.Controllers
                     model.Vendors.Add(new VendorBriefInfoModel()
                     {
                         Id = vendor.Id,
-                        Name = vendor.Name,
-                        SeName = SeoExtensions.GetSeName(vendor.Name),
+                        Name = vendor.GetLocalized(x => x.Name),
+                        SeName = vendor.GetSeName(),
                     });
                 }
                 return model;

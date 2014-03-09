@@ -16,7 +16,7 @@
             <ul data-role="listview" data-inset="true" data-filter="false">
                 @foreach (var item in Model)
                 {
-                    <li><a href="@Url.RouteUrl("Vendor", new { vendorId = item.Id, SeName = item.SeName })">@item.Name</a></li>
+                    <li><a href="@Url.RouteUrl("Vendor", new { SeName = item.SeName })">@item.Name</a></li>
                 }
             </ul>
         }

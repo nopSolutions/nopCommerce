@@ -6,6 +6,7 @@ using Nop.Core.Domain.Vendors;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Security;
+using Nop.Services.Seo;
 using Nop.Services.Vendors;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
@@ -20,6 +21,10 @@ namespace Nop.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IVendorService _vendorService;
         private readonly IPermissionService _permissionService;
+        private readonly IUrlRecordService _urlRecordService;
+        private readonly ILanguageService _languageService;
+        private readonly ILocalizedEntityService _localizedEntityService;
+        private readonly VendorSettings _vendorSettings;
 
         #endregion
 
@@ -28,12 +33,20 @@ namespace Nop.Admin.Controllers
         public VendorController(ICustomerService customerService, 
             ILocalizationService localizationService,
             IVendorService vendorService, 
-            IPermissionService permissionService)
+            IPermissionService permissionService,
+            IUrlRecordService urlRecordService,
+            ILanguageService languageService,
+            ILocalizedEntityService localizedEntityService,
+            VendorSettings vendorSettings)
         {
             this._customerService = customerService;
             this._localizationService = localizationService;
             this._vendorService = vendorService;
             this._permissionService = permissionService;
+            this._urlRecordService = urlRecordService;
+            this._languageService = languageService;
+            this._localizedEntityService = localizedEntityService;
+            this._vendorSettings = vendorSettings;
         }
 
         #endregion
@@ -41,29 +54,41 @@ namespace Nop.Admin.Controllers
         #region Utilities
 
         [NonAction]
-        protected void PrepareVendorModel(VendorModel model, Vendor vendor, bool excludeProperties)
+        protected void UpdateLocales(Vendor vendor, VendorModel model)
         {
-            if (model == null)
-                throw new ArgumentNullException("model");
-
-            if (vendor != null)
+            foreach (var localized in model.Locales)
             {
-                model.Id = vendor.Id;
-                model.AssociatedCustomerEmails = _customerService
-                    .GetAllCustomers(vendorId: vendor.Id)
-                    .Select(c => c.Email)
-                    .ToList();
-                if (!excludeProperties)
-                {
-                    model.Name = vendor.Name;
-                    model.Email = vendor.Email;
-                    model.Description = vendor.Description;
-                    model.AdminComment = vendor.AdminComment;
-                    model.Active = vendor.Active;
-                }
+                _localizedEntityService.SaveLocalizedValue(vendor,
+                                                               x => x.Name,
+                                                               localized.Name,
+                                                               localized.LanguageId);
+
+                _localizedEntityService.SaveLocalizedValue(vendor,
+                                                           x => x.Description,
+                                                           localized.Description,
+                                                           localized.LanguageId);
+
+                _localizedEntityService.SaveLocalizedValue(vendor,
+                                                           x => x.MetaKeywords,
+                                                           localized.MetaKeywords,
+                                                           localized.LanguageId);
+
+                _localizedEntityService.SaveLocalizedValue(vendor,
+                                                           x => x.MetaDescription,
+                                                           localized.MetaDescription,
+                                                           localized.LanguageId);
+
+                _localizedEntityService.SaveLocalizedValue(vendor,
+                                                           x => x.MetaTitle,
+                                                           localized.MetaTitle,
+                                                           localized.LanguageId);
+
+                //search engine name
+                var seName = vendor.ValidateSeName(localized.SeName, localized.Name, false);
+                _urlRecordService.SaveSlug(vendor, seName, localized.LanguageId);
             }
         }
-        
+
         #endregion
 
         #region Methods
@@ -93,9 +118,8 @@ namespace Nop.Admin.Controllers
             {
                 Data = vendors.Select(x =>
                 {
-                    var m = new VendorModel();
-                    PrepareVendorModel(m, x, false);
-                    return m;
+                    var vendorModel = x.ToModel();
+                    return vendorModel;
                 }),
                 Total = vendors.TotalCount,
             };
@@ -110,8 +134,16 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
                 return AccessDeniedView();
 
+
             var model = new VendorModel();
-            PrepareVendorModel(model, null, false);
+            //locales
+            AddLocales(_languageService, model.Locales);
+            //default values
+            model.PageSize = 4;
+            model.Active = true;
+            model.AllowCustomersToSelectPageSize = true;
+            model.PageSizeOptions = _vendorSettings.DefaultVendorPageSizeOptions;
+
             //default value
             model.Active = true;
             return View(model);
@@ -126,21 +158,19 @@ namespace Nop.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var vendor = new Vendor();
-
-                vendor.Name = model.Name;
-                vendor.Email = model.Email;
-                vendor.Description = model.Description;
-                vendor.AdminComment = model.AdminComment;
-                vendor.Active = model.Active;
+                var vendor = model.ToEntity();
                 _vendorService.InsertVendor(vendor);
+                //search engine name
+                model.SeName = vendor.ValidateSeName(model.SeName, vendor.Name, true);
+                _urlRecordService.SaveSlug(vendor, model.SeName, 0);
+                //locales
+                UpdateLocales(vendor, model);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Vendors.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = vendor.Id }) : RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
-            PrepareVendorModel(model, null, true);
             return View(model);
         }
 
@@ -156,8 +186,23 @@ namespace Nop.Admin.Controllers
                 //No vendor found with the specified id
                 return RedirectToAction("List");
 
-            var model = new VendorModel();
-            PrepareVendorModel(model, vendor, false);
+            var model = vendor.ToModel();
+            //locales
+            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            {
+                locale.Name = vendor.GetLocalized(x => x.Name, languageId, false, false);
+                locale.Description = vendor.GetLocalized(x => x.Description, languageId, false, false);
+                locale.MetaKeywords = vendor.GetLocalized(x => x.MetaKeywords, languageId, false, false);
+                locale.MetaDescription = vendor.GetLocalized(x => x.MetaDescription, languageId, false, false);
+                locale.MetaTitle = vendor.GetLocalized(x => x.MetaTitle, languageId, false, false);
+                locale.SeName = vendor.GetSeName(languageId, false, false);
+            });
+            //associated customer emails
+            model.AssociatedCustomerEmails = _customerService
+                    .GetAllCustomers(vendorId: vendor.Id)
+                    .Select(c => c.Email)
+                    .ToList();
+
             return View(model);
         }
 
@@ -174,19 +219,35 @@ namespace Nop.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                vendor.Name = model.Name;
-                vendor.Email = model.Email;
-                vendor.Description = model.Description;
-                vendor.AdminComment = model.AdminComment;
-                vendor.Active = model.Active;
+                vendor = model.ToEntity(vendor);
                 _vendorService.UpdateVendor(vendor);
+                //search engine name
+                model.SeName = vendor.ValidateSeName(model.SeName, vendor.Name, true);
+                _urlRecordService.SaveSlug(vendor, model.SeName, 0);
+                //locales
+                UpdateLocales(vendor, model);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Vendors.Updated"));
-                return continueEditing ? RedirectToAction("Edit", vendor.Id) : RedirectToAction("List");
+                if (continueEditing)
+                {
+                    //selected tab
+                    SaveSelectedTabIndex();
+
+                    return RedirectToAction("Edit", vendor.Id);
+                }
+                else
+                {
+                    return RedirectToAction("List");
+                }
             }
 
             //If we got this far, something failed, redisplay form
-            PrepareVendorModel(model, vendor, true);
+
+            //associated customer emails
+            model.AssociatedCustomerEmails = _customerService
+                    .GetAllCustomers(vendorId: vendor.Id)
+                    .Select(c => c.Email)
+                    .ToList();
             return View(model);
         }
 

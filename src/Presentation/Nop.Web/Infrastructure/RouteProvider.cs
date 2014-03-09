@@ -606,12 +606,6 @@ namespace Nop.Web.Infrastructure
                             new { controller = "BackwardCompatibility2X", action = "RedirectProductTagsAll" },
                             new[] { "Nop.Web.Controllers" });
             #endregion
-            //vendors
-            routes.MapLocalizedRoute("Vendor",
-                            "vendor/{vendorId}/{SeName}",
-                            new { controller = "Catalog", action = "Vendor", SeName = UrlParameter.Optional },
-                            new { vendorId = @"\d+" },
-                            new[] { "Nop.Web.Controllers" });
 
 
             //product search

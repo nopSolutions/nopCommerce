@@ -416,6 +416,57 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Description2">
 	<Value>Also note that some attribute control types that support custom user input (e.g. file upload, texboxes, date picker) are useless with attribute combinations</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Info">
+    <Value>Vendor Info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.AllowCustomersToSelectPageSize">
+    <Value>Allow customers to select page size</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.AllowCustomersToSelectPageSize.Hint">
+    <Value>Whether customers are allowed to select the page size from a predefined list of options.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.MetaDescription">
+    <Value>Meta description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.MetaDescription.Hint">
+    <Value>Meta description to be added to vendor page header.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.MetaKeywords">
+    <Value>Meta keywords</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.MetaKeywords.Hint">
+    <Value>Meta keywords to be added to vendor page header.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.MetaTitle">
+    <Value>Meta title</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.MetaTitle.Hint">
+    <Value>Override the page title. The default is the name of the vendor.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.PageSize">
+    <Value>Page size</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.PageSize.Hint">
+    <Value>Set the page size for products in this vendor e.g. ''4'' products per page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.PageSizeOptions">
+    <Value>Page Size options (comma separated)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.PageSizeOptions.Hint">
+    <Value>Comma separated list of page size options (e.g. 10, 5, 15, 20). First option is the default page size if none are selected.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.SeName">
+    <Value>Search engine friendly page name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.SeName.Hint">
+    <Value>Set a search engine friendly page name e.g. ''the-best-vendor'' to make your page URL ''http://www.yourStore.com/the-best-vendor''. Leave empty to generate it automatically based on the name of the vendor.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.DisplayOrder.Hint">
+    <Value>Set the vendor''s display order. 1 represents the top of the list.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -928,4 +979,243 @@ BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'catalogsettings.enabledynamicskumpngtinupdate', N'false', 0)
 END
+GO
+
+--New columns for vendor
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Vendor]') and NAME='MetaKeywords')
+BEGIN
+	ALTER TABLE [Vendor]
+	ADD [MetaKeywords] nvarchar(400) NULL
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Vendor]') and NAME='MetaDescription')
+BEGIN
+	ALTER TABLE [Vendor]
+	ADD [MetaDescription] nvarchar(MAX) NULL
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Vendor]') and NAME='MetaTitle')
+BEGIN
+	ALTER TABLE [Vendor]
+	ADD [MetaTitle] nvarchar(400) NULL
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Vendor]') and NAME='PageSize')
+BEGIN
+	ALTER TABLE [Vendor]
+	ADD [PageSize] int NULL
+END
+GO
+
+UPDATE [Vendor]
+SET [PageSize] = 4
+WHERE [PageSize] IS NULL
+GO
+
+ALTER TABLE [Vendor] ALTER COLUMN [PageSize] int NOT NULL
+GO
+
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Vendor]') and NAME='AllowCustomersToSelectPageSize')
+BEGIN
+	ALTER TABLE [Vendor]
+	ADD [AllowCustomersToSelectPageSize] bit NULL
+END
+GO
+
+UPDATE [Vendor]
+SET [AllowCustomersToSelectPageSize] = 1
+WHERE [AllowCustomersToSelectPageSize] IS NULL
+GO
+
+ALTER TABLE [Vendor] ALTER COLUMN [AllowCustomersToSelectPageSize] bit NOT NULL
+GO
+
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Vendor]') and NAME='PageSizeOptions')
+BEGIN
+	ALTER TABLE [Vendor]
+	ADD [PageSizeOptions] nvarchar(200) NULL
+END
+GO
+
+UPDATE [Vendor]
+SET [PageSizeOptions] = N'8, 4, 12'
+WHERE [PageSizeOptions] IS NULL
+GO
+
+
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Vendor]') and NAME='DisplayOrder')
+BEGIN
+	ALTER TABLE [Vendor]
+	ADD [DisplayOrder] int NULL
+END
+GO
+
+UPDATE [Vendor]
+SET [DisplayOrder] = 1
+WHERE [DisplayOrder] IS NULL
+GO
+
+ALTER TABLE [Vendor] ALTER COLUMN [DisplayOrder] int NOT NULL
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'vendorsettings.defaultvendorpagesizeoptions')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'vendorsettings.defaultvendorpagesizeoptions', N'8, 4, 12', 0)
+END
+GO
+
+DELETE FROM [Setting]
+WHERE [name] = N'vendorsettings.pagesize'
+GO
+
+DELETE FROM [Setting]
+WHERE [name] = N'vendorsettings.allowcustomerstoselectpagesize'
+GO
+
+DELETE FROM [Setting]
+WHERE [name] = N'vendorsettings.pagesizeoptions'
+GO
+
+
+
+
+--vendor SEO names
+IF EXISTS (
+		SELECT *
+		FROM sys.objects
+		WHERE object_id = OBJECT_ID(N'[temp_vendor_generate_sename]') AND OBJECTPROPERTY(object_id,N'IsProcedure') = 1)
+DROP PROCEDURE [dbo].[temp_vendor_generate_sename]
+GO
+CREATE PROCEDURE [dbo].[temp_vendor_generate_sename]
+(
+	@entity_id int,
+    @vendor_name nvarchar(1000),
+    @result nvarchar(1000) OUTPUT
+)
+AS
+BEGIN
+	--get current name
+	DECLARE @sql nvarchar(4000)
+	
+	--if name is empty, we exit
+	IF (@vendor_name is null or @vendor_name = N'')
+		RETURN
+    
+    --generate se name    
+	DECLARE @new_sename nvarchar(1000)
+    SET @new_sename = ''
+    --ensure only allowed chars
+    DECLARE @allowed_se_chars varchar(4000)
+    --Note for store owners: add more chars below if want them to be supported when migrating your data
+    SET @allowed_se_chars = N'abcdefghijklmnopqrstuvwxyz1234567890 _-'
+    DECLARE @l int
+    SET @l = len(@vendor_name)
+    DECLARE @p int
+    SET @p = 1
+    WHILE @p <= @l
+    BEGIN
+		DECLARE @c nvarchar(1)
+        SET @c = substring(@vendor_name, @p, 1)
+        IF CHARINDEX(@c,@allowed_se_chars) > 0
+        BEGIN
+			SET @new_sename = @new_sename + @c
+		END
+		SET @p = @p + 1
+	END
+	--replace spaces with '-'
+	SELECT @new_sename = REPLACE(@new_sename,' ','-');
+    WHILE CHARINDEX('--',@new_sename) > 0
+		SELECT @new_sename = REPLACE(@new_sename,'--','-');
+    WHILE CHARINDEX('__',@new_sename) > 0
+		SELECT @new_sename = REPLACE(@new_sename,'__','_');
+    --ensure not empty
+    IF (@new_sename is null or @new_sename = '')
+		SELECT @new_sename = ISNULL(CAST(@entity_id AS nvarchar(max)), '0');
+    --lowercase
+	SELECT @new_sename = LOWER(@new_sename)
+	--ensure this sename is not reserved
+	WHILE (1=1)
+	BEGIN
+		DECLARE @sename_is_already_reserved bit
+		SET @sename_is_already_reserved = 0
+		SET @sql = 'IF EXISTS (SELECT 1 FROM [UrlRecord] WHERE [Slug] = @sename)
+					BEGIN
+						SELECT @sename_is_already_reserved = 1
+					END'
+		EXEC sp_executesql @sql,N'@sename nvarchar(1000), @sename_is_already_reserved nvarchar(4000) OUTPUT',@new_sename,@sename_is_already_reserved OUTPUT
+		
+		IF (@sename_is_already_reserved > 0)
+		BEGIN
+			--add some digit to the end in this case
+			SET @new_sename = @new_sename + '-1'
+		END
+		ELSE
+		BEGIN
+			BREAK
+		END
+	END
+	
+	--return
+    SET @result = @new_sename
+END
+GO
+
+
+
+--update [sename] column for vendors
+BEGIN
+	DECLARE @sename_existing_entity_id int
+	DECLARE cur_sename_existing_entity CURSOR FOR
+	SELECT [Id]
+	FROM [Vendor]
+	OPEN cur_sename_existing_entity
+	FETCH NEXT FROM cur_sename_existing_entity INTO @sename_existing_entity_id
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+		DECLARE @sename nvarchar(1000)	
+		SET @sename = null -- clear cache (variable scope)
+		
+		DECLARE @table_name nvarchar(1000)	
+		SET @table_name = N'Vendor'
+		
+		DECLARE @vendor_name nvarchar(1000)
+		SET @vendor_name = null -- clear cache (variable scope)
+		SELECT @vendor_name = [Name] FROM [Vendor] WHERE [Id] = @sename_existing_entity_id
+		
+		--main sename
+		EXEC	[dbo].[temp_vendor_generate_sename]
+				@entity_id = @sename_existing_entity_id,
+				@vendor_name = @vendor_name,
+				@result = @sename OUTPUT
+				
+		IF EXISTS(SELECT 1 FROM [UrlRecord] WHERE [LanguageId]=0 AND [EntityId]=@sename_existing_entity_id AND [EntityName]=@table_name)
+		BEGIN
+			UPDATE [UrlRecord]
+			SET [Slug] = @sename
+			WHERE [LanguageId]=0 AND [EntityId]=@sename_existing_entity_id AND [EntityName]=@table_name
+		END
+		ELSE
+		BEGIN
+			INSERT INTO [UrlRecord] ([EntityId], [EntityName], [Slug], [IsActive], [LanguageId])
+			VALUES (@sename_existing_entity_id, @table_name, @sename, 1, 0)
+		END		
+
+		--fetch next identifier
+		FETCH NEXT FROM cur_sename_existing_entity INTO @sename_existing_entity_id
+	END
+	CLOSE cur_sename_existing_entity
+	DEALLOCATE cur_sename_existing_entity
+END
+GO
+
+--drop temporary procedures & functions
+IF EXISTS (
+		SELECT *
+		FROM sys.objects
+		WHERE object_id = OBJECT_ID(N'[temp_vendor_generate_sename]') AND OBJECTPROPERTY(object_id,N'IsProcedure') = 1)
+DROP PROCEDURE [temp_vendor_generate_sename]
 GO

@@ -1,7 +1,7 @@
 ﻿@model VendorModel
 @{
     Layout = "~/Views/Shared/_Root.cshtml";
-    Html.AddTitleParts(Model.Name);
+    Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Name);
 }
 @using Nop.Web.Models.Catalog;
 @using Nop.Web.Extensions;

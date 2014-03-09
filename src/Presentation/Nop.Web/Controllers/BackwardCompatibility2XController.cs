@@ -4,6 +4,7 @@ using Nop.Services.Catalog;
 using Nop.Services.News;
 using Nop.Services.Seo;
 using Nop.Services.Topics;
+using Nop.Services.Vendors;
 
 namespace Nop.Web.Controllers
 {
@@ -17,6 +18,7 @@ namespace Nop.Web.Controllers
         private readonly INewsService _newsService;
         private readonly IBlogService _blogService;
         private readonly ITopicService _topicService;
+        private readonly IVendorService _vendorService;
 
         #endregion
 
@@ -27,7 +29,8 @@ namespace Nop.Web.Controllers
             IManufacturerService manufacturerService,
             INewsService newsService, 
             IBlogService blogService,
-            ITopicService topicService)
+            ITopicService topicService,
+            IVendorService vendorService)
         {
             this._productService = productService;
             this._categoryService = categoryService;
@@ -35,6 +38,7 @@ namespace Nop.Web.Controllers
             this._newsService = newsService;
             this._blogService = blogService;
             this._topicService = topicService;
+            this._vendorService = vendorService;
         }
 
 		#endregion
@@ -107,7 +111,15 @@ namespace Nop.Web.Controllers
 
             return RedirectToRoutePermanent("Topic", new { SeName = topic.GetSeName() });
         }
+        //in versions 3.00-3.20 we had ID in vendor URLs
+        public ActionResult RedirectVendorById(int vendorId)
+        {
+            var vendor = _vendorService.GetVendorById(vendorId);
+            if (vendor == null)
+                return RedirectToRoutePermanent("HomePage");
 
+            return RedirectToRoutePermanent("Vendor", new { SeName = vendor.GetSeName() });
+        }
         #endregion
     }
 }

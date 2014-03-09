@@ -397,7 +397,7 @@ namespace Nop.Admin.Controllers
                 _urlRecordService.SaveSlug(category, model.SeName, 0);
                 //locales
                 UpdateLocales(category, model);
-                //disounts
+                //discounts
                 var allDiscounts = _discountService.GetAllDiscounts(DiscountType.AssignedToCategories, null, true);
                 foreach (var discount in allDiscounts)
                 {

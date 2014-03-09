@@ -9711,6 +9711,12 @@
   <LocaleResource Name="Admin.Vendors.Fields.AdminComment.Hint">
     <Value>Admin comment. For internal use.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.AllowCustomersToSelectPageSize">
+    <Value>Allow customers to select page size</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.AllowCustomersToSelectPageSize.Hint">
+    <Value>Whether customers are allowed to select the page size from a predefined list of options.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Fields.AssociatedCustomerEmails">
     <Value>Customers</Value>
   </LocaleResource>
@@ -9726,6 +9732,12 @@
   <LocaleResource Name="Admin.Vendors.Fields.Description.Hint">
     <Value>The description of the vendor.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.DisplayOrder.Hint">
+    <Value>Set the vendor's display order. 1 represents the top of the list.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Fields.Email">
     <Value>Email</Value>
   </LocaleResource>
@@ -9735,6 +9747,24 @@
   <LocaleResource Name="Admin.Vendors.Fields.Email.Required">
     <Value>Email is required.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.MetaDescription">
+    <Value>Meta description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.MetaDescription.Hint">
+    <Value>Meta description to be added to vendor page header.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.MetaKeywords">
+    <Value>Meta keywords</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.MetaKeywords.Hint">
+    <Value>Meta keywords to be added to vendor page header.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.MetaTitle">
+    <Value>Meta title</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.MetaTitle.Hint">
+    <Value>Override the page title. The default is the name of the vendor.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Fields.Name">
     <Value>Name</Value>
   </LocaleResource>
@@ -9743,6 +9773,27 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Fields.Name.Required">
     <Value>Please provide a name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.PageSize">
+    <Value>Page size</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.PageSize.Hint">
+    <Value>Set the page size for products in this vendor e.g. '4' products per page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.PageSizeOptions">
+    <Value>Page Size options (comma separated)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.PageSizeOptions.Hint">
+    <Value>Comma separated list of page size options (e.g. 10, 5, 15, 20). First option is the default page size if none are selected.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.SeName">
+    <Value>Search engine friendly page name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.SeName.Hint">
+    <Value>Set a search engine friendly page name e.g. 'the-best-vendor' to make your page URL 'http://www.yourStore.com/the-best-vendor'. Leave empty to generate it automatically based on the name of the vendor.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Info">
+    <Value>Vendor Info</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Updated">
     <Value>The vendor has been updated successfully.</Value>

@@ -241,9 +241,6 @@ namespace Nop.Admin.Controllers
             model.ActiveStoreScopeConfiguration = storeScope;
             if (storeScope > 0)
             {
-                model.PageSize_OverrideForStore = _settingService.SettingExists(vendorSettings, x => x.PageSize, storeScope);
-                model.AllowCustomersToSelectPageSize_OverrideForStore = _settingService.SettingExists(vendorSettings, x => x.AllowCustomersToSelectPageSize, storeScope);
-                model.PageSizeOptions_OverrideForStore = _settingService.SettingExists(vendorSettings, x => x.PageSizeOptions, storeScope);
                 model.VendorsBlockItemsToDisplay_OverrideForStore = _settingService.SettingExists(vendorSettings, x => x.VendorsBlockItemsToDisplay, storeScope);
                 model.ShowVendorOnProductDetailsPage_OverrideForStore = _settingService.SettingExists(vendorSettings, x => x.ShowVendorOnProductDetailsPage, storeScope);
             }
@@ -264,21 +261,7 @@ namespace Nop.Admin.Controllers
             /* We do not clear cache after each setting update.
              * This behavior can increase performance because cached settings will not be cleared 
              * and loaded from database after each update */
-            if (model.PageSize_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(vendorSettings, x => x.PageSize, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(vendorSettings, x => x.PageSize, storeScope);
-
-            if (model.AllowCustomersToSelectPageSize_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(vendorSettings, x => x.AllowCustomersToSelectPageSize, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(vendorSettings, x => x.AllowCustomersToSelectPageSize, storeScope);
-
-            if (model.PageSizeOptions_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(vendorSettings, x => x.PageSizeOptions, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(vendorSettings, x => x.PageSizeOptions, storeScope);
-
+            
             if (model.VendorsBlockItemsToDisplay_OverrideForStore || storeScope == 0)
                 _settingService.SaveSetting(vendorSettings, x => x.VendorsBlockItemsToDisplay, storeScope, false);
             else if (storeScope > 0)

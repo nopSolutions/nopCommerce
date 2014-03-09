@@ -22,6 +22,7 @@ using Nop.Admin.Models.Stores;
 using Nop.Admin.Models.Tax;
 using Nop.Admin.Models.Templates;
 using Nop.Admin.Models.Topics;
+using Nop.Admin.Models.Vendors;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -202,6 +203,16 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
                 .ForMember(dest => dest.UpdatedOnUtc, mo => mo.Ignore())
                 .ForMember(dest => dest.Deleted, mo => mo.Ignore());
+
+            //vendors
+            Mapper.CreateMap<Vendor, VendorModel>()
+                .ForMember(dest => dest.AssociatedCustomerEmails, mo => mo.Ignore())
+                .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                .ForMember(dest => dest.SeName, mo => mo.MapFrom(src => src.GetSeName(0, true, false)))
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+            Mapper.CreateMap<VendorModel, Vendor>()
+                .ForMember(dest => dest.Deleted, mo => mo.Ignore());
+
             //products
             Mapper.CreateMap<Product, ProductModel>()
                 .ForMember(dest => dest.ProductTypeName, mo => mo.Ignore())
@@ -632,13 +643,11 @@ namespace Nop.Admin.Infrastructure
             Mapper.CreateMap<BlogSettingsModel, BlogSettings>();
             Mapper.CreateMap<VendorSettings, VendorSettingsModel>()
                 .ForMember(dest => dest.ActiveStoreScopeConfiguration, mo => mo.Ignore())
-                .ForMember(dest => dest.PageSize_OverrideForStore, mo => mo.Ignore())
-                .ForMember(dest => dest.AllowCustomersToSelectPageSize_OverrideForStore, mo => mo.Ignore())
-                .ForMember(dest => dest.PageSizeOptions_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.VendorsBlockItemsToDisplay_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.ShowVendorOnProductDetailsPage_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
-            Mapper.CreateMap<VendorSettingsModel, VendorSettings>();
+            Mapper.CreateMap<VendorSettingsModel, VendorSettings>()
+                .ForMember(dest => dest.DefaultVendorPageSizeOptions, mo => mo.Ignore());
             Mapper.CreateMap<ShippingSettings, ShippingSettingsModel>()
                 .ForMember(dest => dest.ShippingOriginAddress, mo => mo.Ignore())
                 .ForMember(dest => dest.ActiveStoreScopeConfiguration, mo => mo.Ignore())
