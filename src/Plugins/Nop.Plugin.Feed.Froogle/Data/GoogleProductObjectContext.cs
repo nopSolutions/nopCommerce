@@ -59,6 +59,13 @@ namespace Nop.Plugin.Feed.Froogle.Data
         }
 
 
+        /// <summary>
+        /// Execute stores procedure and load a list of entities at the end
+        /// </summary>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <param name="commandText">Command text</param>
+        /// <param name="parameters">Parameters</param>
+        /// <returns>Entities</returns>
         public IList<TEntity> ExecuteStoredProcedureList<TEntity>(string commandText, params object[] parameters) where TEntity : BaseEntity, new()
         {
             throw new NotImplementedException();

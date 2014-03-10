@@ -129,8 +129,19 @@ namespace Nop.Data
 
             var result = this.Database.SqlQuery<TEntity>(commandText, parameters).ToList();
 
-            for (int i = 0; i < result.Count; i++)
-                result[i] = AttachEntityToContext(result[i]);
+            //performance hack applied as described here - http://www.nopcommerce.com/boards/t/25483/fix-very-important-speed-improvement.aspx
+            bool acd = this.Configuration.AutoDetectChangesEnabled;
+            try
+            {
+                this.Configuration.AutoDetectChangesEnabled = false;
+
+                for (int i = 0; i < result.Count; i++)
+                    result[i] = AttachEntityToContext(result[i]);
+            }
+            finally
+            {
+                this.Configuration.AutoDetectChangesEnabled = acd;
+            }
 
             return result;
         }
