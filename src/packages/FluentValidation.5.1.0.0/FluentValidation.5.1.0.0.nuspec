@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>FluentValidation</id>
+    <version>5.1.0.0</version>
+    <authors>Jeremy Skinner</authors>
+    <owners>Jeremy Skinner</owners>
+    <licenseUrl>http://fluentvalidation.codeplex.com/license</licenseUrl>
+    <projectUrl>http://fluentvalidation.codeplex.com/</projectUrl>
+    <iconUrl>http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=FluentValidation&amp;DownloadId=166226</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A validation library for .NET that uses a fluent interface to construct strongly-typed validation rules.</description>
+    <summary>A validation library for .NET that uses a fluent interface to construct strongly-typed validation rules.</summary>
+    <language>en-US</language>
+  </metadata>
+</package>

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>FluentValidation.MVC5</id>
+    <version>5.1.0.0</version>
+    <authors>Jeremy Skinner</authors>
+    <owners>Jeremy Skinner</owners>
+    <licenseUrl>http://fluentvalidation.codeplex.com/license</licenseUrl>
+    <projectUrl>http://fluentvalidation.codeplex.com/</projectUrl>
+    <iconUrl>http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=FluentValidation&amp;DownloadId=166226</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>ASP.NET MVC 5 integration for FluentValidation</description>
+    <summary>ASP.NET MVC 5 integration for FluentValidation</summary>
+    <language>en-US</language>
+    <dependencies>
+      <dependency id="FluentValidation" version="5.1.0.0" />
+    </dependencies>
+  </metadata>
+</package>
