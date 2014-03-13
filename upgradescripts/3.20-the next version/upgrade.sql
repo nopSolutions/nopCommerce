@@ -467,6 +467,24 @@ set @resources='
   <LocaleResource Name="Admin.Vendors.Fields.DisplayOrder.Hint">
     <Value>Set the vendor''s display order. 1 represents the top of the list.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AllowCustomersToSelectPageSize">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AllowCustomersToSelectPageSize.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.PageSize">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.PageSize.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.PageSizeOptions">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.PageSizeOptions.Hint">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 
