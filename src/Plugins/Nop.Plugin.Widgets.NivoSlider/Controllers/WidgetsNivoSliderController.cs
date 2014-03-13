@@ -68,6 +68,9 @@ namespace Nop.Plugin.Widgets.NivoSlider.Controllers
             model.Picture4Id = nivoSliderSettings.Picture4Id;
             model.Text4 = nivoSliderSettings.Text4;
             model.Link4 = nivoSliderSettings.Link4;
+            model.Picture5Id = nivoSliderSettings.Picture5Id;
+            model.Text5 = nivoSliderSettings.Text5;
+            model.Link5 = nivoSliderSettings.Link5;
             model.ActiveStoreScopeConfiguration = storeScope;
             if (storeScope > 0)
             {
@@ -83,6 +86,9 @@ namespace Nop.Plugin.Widgets.NivoSlider.Controllers
                 model.Picture4Id_OverrideForStore = _settingService.SettingExists(nivoSliderSettings, x => x.Picture4Id, storeScope);
                 model.Text4_OverrideForStore = _settingService.SettingExists(nivoSliderSettings, x => x.Text4, storeScope);
                 model.Link4_OverrideForStore = _settingService.SettingExists(nivoSliderSettings, x => x.Link4, storeScope);
+                model.Picture5Id_OverrideForStore = _settingService.SettingExists(nivoSliderSettings, x => x.Picture5Id, storeScope);
+                model.Text5_OverrideForStore = _settingService.SettingExists(nivoSliderSettings, x => x.Text5, storeScope);
+                model.Link5_OverrideForStore = _settingService.SettingExists(nivoSliderSettings, x => x.Link5, storeScope);
             }
 
             return View("Nop.Plugin.Widgets.NivoSlider.Views.WidgetsNivoSlider.Configure", model);
@@ -108,6 +114,9 @@ namespace Nop.Plugin.Widgets.NivoSlider.Controllers
             nivoSliderSettings.Picture4Id = model.Picture4Id;
             nivoSliderSettings.Text4 = model.Text4;
             nivoSliderSettings.Link4 = model.Link4;
+            nivoSliderSettings.Picture5Id = model.Picture5Id;
+            nivoSliderSettings.Text5 = model.Text5;
+            nivoSliderSettings.Link5 = model.Link5;
 
             /* We do not clear cache after each setting update.
              * This behavior can increase performance because cached settings will not be cleared 
@@ -171,6 +180,21 @@ namespace Nop.Plugin.Widgets.NivoSlider.Controllers
                 _settingService.SaveSetting(nivoSliderSettings, x => x.Link4, storeScope, false);
             else if (storeScope > 0)
                 _settingService.DeleteSetting(nivoSliderSettings, x => x.Link4, storeScope);
+
+            if (model.Picture5Id_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(nivoSliderSettings, x => x.Picture5Id, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(nivoSliderSettings, x => x.Picture5Id, storeScope);
+
+            if (model.Text5_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(nivoSliderSettings, x => x.Text5, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(nivoSliderSettings, x => x.Text5, storeScope);
+
+            if (model.Link5_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(nivoSliderSettings, x => x.Link5, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(nivoSliderSettings, x => x.Link5, storeScope);
             
             //now clear settings cache
             _settingService.ClearCache();
@@ -200,8 +224,13 @@ namespace Nop.Plugin.Widgets.NivoSlider.Controllers
             model.Text4 = nivoSliderSettings.Text4;
             model.Link4 = nivoSliderSettings.Link4;
 
+            model.Picture5Url = GetPictureUrl(nivoSliderSettings.Picture5Id);
+            model.Text5 = nivoSliderSettings.Text5;
+            model.Link5 = nivoSliderSettings.Link5;
+
             if (string.IsNullOrEmpty(model.Picture1Url) && string.IsNullOrEmpty(model.Picture2Url) &&
-                string.IsNullOrEmpty(model.Picture3Url) && string.IsNullOrEmpty(model.Picture4Url))
+                string.IsNullOrEmpty(model.Picture3Url) && string.IsNullOrEmpty(model.Picture4Url) &&
+                string.IsNullOrEmpty(model.Picture5Url))
                 //no pictures uploaded
                 return Content("");
             

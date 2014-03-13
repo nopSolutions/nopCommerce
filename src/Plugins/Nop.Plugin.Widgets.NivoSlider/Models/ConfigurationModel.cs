@@ -61,5 +61,18 @@ namespace Nop.Plugin.Widgets.NivoSlider.Models
         [AllowHtml]
         public string Link4 { get; set; }
         public bool Link4_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Plugins.Widgets.NivoSlider.Picture")]
+        [UIHint("Picture")]
+        public int Picture5Id { get; set; }
+        public bool Picture5Id_OverrideForStore { get; set; }
+        [NopResourceDisplayName("Plugins.Widgets.NivoSlider.Text")]
+        [AllowHtml]
+        public string Text5 { get; set; }
+        public bool Text5_OverrideForStore { get; set; }
+        [NopResourceDisplayName("Plugins.Widgets.NivoSlider.Link")]
+        [AllowHtml]
+        public string Link5 { get; set; }
+        public bool Link5_OverrideForStore { get; set; }
     }
 }

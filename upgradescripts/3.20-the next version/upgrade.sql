@@ -485,6 +485,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Vendor.PageSizeOptions.Hint">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Widgets.NivoSlider.Picture5">
+    <Value>Picture 5</Value>
+  </LocaleResource>
 </Language>
 '
 

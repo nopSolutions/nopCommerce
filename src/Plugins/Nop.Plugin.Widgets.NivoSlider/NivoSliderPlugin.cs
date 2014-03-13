@@ -100,6 +100,7 @@ namespace Nop.Plugin.Widgets.NivoSlider
             this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.NivoSlider.Picture2", "Picture 2");
             this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.NivoSlider.Picture3", "Picture 3");
             this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.NivoSlider.Picture4", "Picture 4");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.NivoSlider.Picture5", "Picture 5");
             this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.NivoSlider.Picture", "Picture");
             this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.NivoSlider.Picture.Hint", "Upload picture.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.NivoSlider.Text", "Comment");
@@ -123,6 +124,7 @@ namespace Nop.Plugin.Widgets.NivoSlider
             this.DeletePluginLocaleResource("Plugins.Widgets.NivoSlider.Picture2");
             this.DeletePluginLocaleResource("Plugins.Widgets.NivoSlider.Picture3");
             this.DeletePluginLocaleResource("Plugins.Widgets.NivoSlider.Picture4");
+            this.DeletePluginLocaleResource("Plugins.Widgets.NivoSlider.Picture5");
             this.DeletePluginLocaleResource("Plugins.Widgets.NivoSlider.Picture");
             this.DeletePluginLocaleResource("Plugins.Widgets.NivoSlider.Picture.Hint");
             this.DeletePluginLocaleResource("Plugins.Widgets.NivoSlider.Text");
