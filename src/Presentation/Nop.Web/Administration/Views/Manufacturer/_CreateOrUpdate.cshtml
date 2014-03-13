@@ -63,7 +63,24 @@
 <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
 
 @helper TabInfo()
-    { 
+    {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#@Html.FieldIdFor(model => model.AllowCustomersToSelectPageSize)").click(togglePageSize);
+            togglePageSize();
+        });
+
+        function togglePageSize() {
+            if ($('#@Html.FieldIdFor(model => model.AllowCustomersToSelectPageSize)').is(':checked')) {
+                $('#pnlPageSize').hide();
+                $('#pnlPageSizeOptions').show();
+            } else {
+                $('#pnlPageSize').show();
+                $('#pnlPageSizeOptions').hide();
+            }
+        }
+    </script>
+        
     @(Html.LocalizedEditor<ManufacturerModel, ManufacturerLocalizedModel>("manufacturer-info-localized",
                 @<table class="adminContent">
                     <tr>
@@ -138,6 +155,33 @@
             <td class="adminData">
                 @Html.EditorFor(x => x.PriceRanges)
                 @Html.ValidationMessageFor(model => model.PriceRanges)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AllowCustomersToSelectPageSize):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(x => x.AllowCustomersToSelectPageSize)
+                @Html.ValidationMessageFor(model => model.AllowCustomersToSelectPageSize)
+            </td>
+        </tr>
+        <tr id="pnlPageSize">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.PageSize):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(x => x.PageSize)
+                @Html.ValidationMessageFor(model => model.PageSize)
+            </td>
+        </tr>
+        <tr id="pnlPageSizeOptions">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.PageSizeOptions):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(x => x.PageSizeOptions)
+                @Html.ValidationMessageFor(model => model.PageSizeOptions)
             </td>
         </tr>
         <tr>
@@ -244,55 +288,7 @@
                            @Html.ValidationMessageFor(model => model.SeName)
                        </td>
                    </tr>
-               </table>)) 
-        
-
-<script type="text/javascript">
-    $(document).ready(function () {
-        $("#@Html.FieldIdFor(model => model.AllowCustomersToSelectPageSize)").click(togglePageSize);
-        togglePageSize();
-    });
-
-    function togglePageSize() {
-        if ($('#@Html.FieldIdFor(model => model.AllowCustomersToSelectPageSize)').is(':checked')) {
-            $('#pnlPageSize').hide();
-            $('#pnlPageSizeOptions').show();
-        } else {
-            $('#pnlPageSize').show();
-            $('#pnlPageSizeOptions').hide();
-        }
-    }
-</script>
-
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.AllowCustomersToSelectPageSize):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(x => x.AllowCustomersToSelectPageSize)
-                @Html.ValidationMessageFor(model => model.AllowCustomersToSelectPageSize)
-            </td>
-        </tr>
-        <tr id="pnlPageSize">
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.PageSize):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(x => x.PageSize)
-                @Html.ValidationMessageFor(model => model.PageSize)
-            </td>
-        </tr>
-        <tr id="pnlPageSizeOptions">
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.PageSizeOptions):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(x => x.PageSizeOptions)
-                @Html.ValidationMessageFor(model => model.PageSizeOptions)
-            </td>
-        </tr>
-    </table>
+               </table>))
 }
 @helper TabProducts()
     {
