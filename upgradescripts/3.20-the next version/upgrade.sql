@@ -378,7 +378,7 @@ set @resources='
 	<Value>Set as shipped (selected)</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Tax.ForceTaxExclusionFromOrderSubtotal">
-	<Value>Force tax exlusion from order subtotal</Value>
+	<Value>Force tax exclusion from order subtotal</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Tax.ForceTaxExclusionFromOrderSubtotal.Hint">
 	<Value>Check to always exclude tax from order subtotal (no matter of selected tax dispay type). This setting effects only pages where order totals are displayed.</Value>
