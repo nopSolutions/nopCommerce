@@ -2530,7 +2530,7 @@
     <Value>Attribute combinations are useful when your 'Manage inventory method' is set to 'Track inventory by product attributes'</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Description2">
-    <Value>Also note that some attribute control types that support custom user input (e.g. file upload, texboxes, date picker) are useless with attribute combinations</Value>
+    <Value>Also note that some attribute control types that support custom user input (e.g. file upload, textboxes, date picker) are useless with attribute combinations</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.AllowOutOfStockOrders">
     <Value>Allow out of stock</Value>
