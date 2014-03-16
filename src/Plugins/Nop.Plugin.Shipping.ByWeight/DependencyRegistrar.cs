@@ -8,6 +8,7 @@ using Nop.Data;
 using Nop.Plugin.Shipping.ByWeight.Data;
 using Nop.Plugin.Shipping.ByWeight.Domain;
 using Nop.Plugin.Shipping.ByWeight.Services;
+using Nop.Web.Framework.Mvc;
 
 namespace Nop.Plugin.Shipping.ByWeight
 {
@@ -17,30 +18,8 @@ namespace Nop.Plugin.Shipping.ByWeight
         {
             builder.RegisterType<ShippingByWeightService>().As<IShippingByWeightService>().InstancePerHttpRequest();
 
-            //data layer
-            var dataSettingsManager = new DataSettingsManager();
-            var dataProviderSettings = dataSettingsManager.LoadSettings();
-
-            if (dataProviderSettings != null && dataProviderSettings.IsValid())
-            {
-                //register named context
-                builder.Register<IDbContext>(c => new ShippingByWeightObjectContext(dataProviderSettings.DataConnectionString))
-                    .Named<IDbContext>("nop_object_context_shipping_weight_zip")
-                    .InstancePerHttpRequest();
-
-                builder.Register<ShippingByWeightObjectContext>(c => new ShippingByWeightObjectContext(dataProviderSettings.DataConnectionString))
-                    .InstancePerHttpRequest();
-            }
-            else
-            {
-                //register named context
-                builder.Register<IDbContext>(c => new ShippingByWeightObjectContext(c.Resolve<DataSettings>().DataConnectionString))
-                    .Named<IDbContext>("nop_object_context_shipping_weight_zip")
-                    .InstancePerHttpRequest();
-
-                builder.Register<ShippingByWeightObjectContext>(c => new ShippingByWeightObjectContext(c.Resolve<DataSettings>().DataConnectionString))
-                    .InstancePerHttpRequest();
-            }
+            //data context
+            this.RegisterPluginDataContext<ShippingByWeightObjectContext>(builder, "nop_object_context_shipping_weight_zip");
 
             //override required repository with our custom context
             builder.RegisterType<EfRepository<ShippingByWeightRecord>>()

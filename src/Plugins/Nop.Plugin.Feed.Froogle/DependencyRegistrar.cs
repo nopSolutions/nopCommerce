@@ -8,6 +8,7 @@ using Nop.Data;
 using Nop.Plugin.Feed.Froogle.Data;
 using Nop.Plugin.Feed.Froogle.Domain;
 using Nop.Plugin.Feed.Froogle.Services;
+using Nop.Web.Framework.Mvc;
 
 namespace Nop.Plugin.Feed.Froogle
 {
@@ -17,30 +18,8 @@ namespace Nop.Plugin.Feed.Froogle
         {
             builder.RegisterType<GoogleService>().As<IGoogleService>().InstancePerHttpRequest();
 
-            //data layer
-            var dataSettingsManager = new DataSettingsManager();
-            var dataProviderSettings = dataSettingsManager.LoadSettings();
-
-            if (dataProviderSettings != null && dataProviderSettings.IsValid())
-            {
-                //register named context
-                builder.Register<IDbContext>(c => new GoogleProductObjectContext(dataProviderSettings.DataConnectionString))
-                    .Named<IDbContext>("nop_object_context_google_product")
-                    .InstancePerHttpRequest();
-
-                builder.Register<GoogleProductObjectContext>(c => new GoogleProductObjectContext(dataProviderSettings.DataConnectionString))
-                    .InstancePerHttpRequest();
-            }
-            else
-            {
-                //register named context
-                builder.Register<IDbContext>(c => new GoogleProductObjectContext(c.Resolve<DataSettings>().DataConnectionString))
-                    .Named<IDbContext>("nop_object_context_google_product")
-                    .InstancePerHttpRequest();
-
-                builder.Register<GoogleProductObjectContext>(c => new GoogleProductObjectContext(c.Resolve<DataSettings>().DataConnectionString))
-                    .InstancePerHttpRequest();
-            }
+            //data context
+            this.RegisterPluginDataContext<GoogleProductObjectContext>(builder, "nop_object_context_google_product");
 
             //override required repository with our custom context
             builder.RegisterType<EfRepository<GoogleProductRecord>>()

@@ -8,6 +8,7 @@ using Nop.Data;
 using Nop.Plugin.Tax.CountryStateZip.Data;
 using Nop.Plugin.Tax.CountryStateZip.Domain;
 using Nop.Plugin.Tax.CountryStateZip.Services;
+using Nop.Web.Framework.Mvc;
 
 namespace Nop.Plugin.Tax.CountryStateZip
 {
@@ -17,30 +18,8 @@ namespace Nop.Plugin.Tax.CountryStateZip
         {
             builder.RegisterType<TaxRateService>().As<ITaxRateService>().InstancePerHttpRequest();
 
-            //data layer
-            var dataSettingsManager = new DataSettingsManager();
-            var dataProviderSettings = dataSettingsManager.LoadSettings();
-
-            if (dataProviderSettings != null && dataProviderSettings.IsValid())
-            {
-                //register named context
-                builder.Register<IDbContext>(c => new TaxRateObjectContext(dataProviderSettings.DataConnectionString))
-                    .Named<IDbContext>("nop_object_context_tax_country_state_zip")
-                    .InstancePerHttpRequest();
-
-                builder.Register<TaxRateObjectContext>(c => new TaxRateObjectContext(dataProviderSettings.DataConnectionString))
-                    .InstancePerHttpRequest();
-            }
-            else
-            {
-                //register named context
-                builder.Register<IDbContext>(c => new TaxRateObjectContext(c.Resolve<DataSettings>().DataConnectionString))
-                    .Named<IDbContext>("nop_object_context_tax_country_state_zip")
-                    .InstancePerHttpRequest();
-
-                builder.Register<TaxRateObjectContext>(c => new TaxRateObjectContext(c.Resolve<DataSettings>().DataConnectionString))
-                    .InstancePerHttpRequest();
-            }
+            //data context
+            this.RegisterPluginDataContext<TaxRateObjectContext>(builder, "nop_object_context_tax_country_state_zip");
 
             //override required repository with our custom context
             builder.RegisterType<EfRepository<TaxRate>>()
