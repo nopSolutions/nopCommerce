@@ -4524,6 +4524,8 @@ namespace Nop.Services.Installation
                     DisplayTierPricesWithDiscounts = true,
                     IgnoreDiscounts = false,
                     IgnoreFeaturedProducts = false,
+                    IgnoreAcl = false,
+                    IgnoreStoreLimitations = false,
                     DefaultCategoryPageSizeOptions = "8, 4, 12",
                     DefaultManufacturerPageSizeOptions = "8, 4, 12",
                     ProductsByTagAllowCustomersToSelectPageSize = true,

@@ -224,14 +224,24 @@ namespace Nop.Core.Domain.Catalog
         public bool DisplayTierPricesWithDiscounts { get; set; }
         
         /// <summary>
-        /// Gets or sets a value indicating whether to ignore discounts (side-wide)
+        /// Gets or sets a value indicating whether to ignore discounts (side-wide). It can significantly improve performance when enabled.
         /// </summary>
         public bool IgnoreDiscounts { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to ignore featured products (side-wide)
+        /// Gets or sets a value indicating whether to ignore featured products (side-wide). It can significantly improve performance when enabled.
         /// </summary>
         public bool IgnoreFeaturedProducts { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to ignore ACL rules (side-wide). It can significantly improve performance when enabled.
+        /// </summary>
+        public bool IgnoreAcl { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to ignore "limit per store" rules (side-wide). It can significantly improve performance when enabled.
+        /// </summary>
+        public bool IgnoreStoreLimitations { get; set; }
 
         /// <summary>
         /// Gets or sets the default value to use for Category page size options (for new Categories)

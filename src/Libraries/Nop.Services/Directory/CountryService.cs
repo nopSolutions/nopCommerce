@@ -4,6 +4,7 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Stores;
 using Nop.Services.Events;
@@ -36,6 +37,7 @@ namespace Nop.Services.Directory
         private readonly IRepository<Country> _countryRepository;
         private readonly IRepository<StoreMapping> _storeMappingRepository;
         private readonly IStoreContext _storeContext;
+        private readonly CatalogSettings _catalogSettings;
         private readonly IEventPublisher _eventPublisher;
         private readonly ICacheManager _cacheManager;
 
@@ -50,17 +52,20 @@ namespace Nop.Services.Directory
         /// <param name="countryRepository">Country repository</param>
         /// <param name="storeMappingRepository">Store mapping repository</param>
         /// <param name="storeContext">Store context</param>
+        /// <param name="catalogSettings">Catalog settings</param>
         /// <param name="eventPublisher">Event published</param>
         public CountryService(ICacheManager cacheManager,
             IRepository<Country> countryRepository,
             IRepository<StoreMapping> storeMappingRepository,
             IStoreContext storeContext,
+            CatalogSettings catalogSettings,
             IEventPublisher eventPublisher)
         {
             this._cacheManager = cacheManager;
             this._countryRepository = countryRepository;
             this._storeMappingRepository = storeMappingRepository;
             this._storeContext = storeContext;
+            this._catalogSettings = catalogSettings;
             this._eventPublisher = eventPublisher;
         }
 
@@ -100,7 +105,7 @@ namespace Nop.Services.Directory
                     query = query.Where(c => c.Published);
                 query = query.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Name);
 
-                if (!showHidden)
+                if (!showHidden && !_catalogSettings.IgnoreStoreLimitations)
                 {
                     //Store mapping
                     var currentStoreId = _storeContext.CurrentStore.Id;

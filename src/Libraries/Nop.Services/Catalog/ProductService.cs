@@ -60,6 +60,7 @@ namespace Nop.Services.Catalog
         private readonly IStoreContext _storeContext;
         private readonly LocalizationSettings _localizationSettings;
         private readonly CommonSettings _commonSettings;
+        private readonly CatalogSettings _catalogSettings;
         private readonly IEventPublisher _eventPublisher;
 
         #endregion
@@ -90,6 +91,7 @@ namespace Nop.Services.Catalog
         /// <param name="storeContext">Store context</param>
         /// <param name="localizationSettings">Localization settings</param>
         /// <param name="commonSettings">Common settings</param>
+        /// <param name="catalogSettings">Catalog settings</param>
         /// <param name="eventPublisher">Event published</param>
         public ProductService(ICacheManager cacheManager,
             IRepository<Product> productRepository,
@@ -106,9 +108,13 @@ namespace Nop.Services.Catalog
             IProductAttributeParser productAttributeParser,
             ILanguageService languageService,
             IWorkflowMessageService workflowMessageService,
-            IDataProvider dataProvider, IDbContext dbContext,
-            IWorkContext workContext, IStoreContext storeContext,
-            LocalizationSettings localizationSettings, CommonSettings commonSettings,
+            IDataProvider dataProvider, 
+            IDbContext dbContext,
+            IWorkContext workContext,
+            IStoreContext storeContext,
+            LocalizationSettings localizationSettings, 
+            CommonSettings commonSettings,
+            CatalogSettings catalogSettings,
             IEventPublisher eventPublisher)
         {
             this._cacheManager = cacheManager;
@@ -132,6 +138,7 @@ namespace Nop.Services.Catalog
             this._storeContext= storeContext;
             this._localizationSettings = localizationSettings;
             this._commonSettings = commonSettings;
+            this._catalogSettings = catalogSettings;
             this._eventPublisher = eventPublisher;
         }
 
@@ -453,7 +460,7 @@ namespace Nop.Services.Catalog
 
                 var pStoreId = _dataProvider.GetParameter();
                 pStoreId.ParameterName = "StoreId";
-                pStoreId.Value = storeId;
+                pStoreId.Value = !_catalogSettings.IgnoreStoreLimitations ? storeId : 0;
                 pStoreId.DbType = DbType.Int32;
 
                 var pVendorId = _dataProvider.GetParameter();
@@ -726,7 +733,7 @@ namespace Nop.Services.Catalog
                             select p;
                 }
 
-                if (!showHidden)
+                if (!showHidden && !_catalogSettings.IgnoreAcl)
                 {
                     //ACL (access control list)
                     query = from p in query
@@ -737,7 +744,7 @@ namespace Nop.Services.Catalog
                             select p;
                 }
 
-                if (storeId > 0)
+                if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
                 {
                     //Store mapping
                     query = from p in query

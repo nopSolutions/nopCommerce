@@ -126,30 +126,6 @@ namespace Nop.Services.Localization
                 if (!showHidden)
                     query = query.Where(l => l.Published);
                 query = query.OrderBy(l => l.DisplayOrder);
-
-                //Store mapping
-                //usually we don't have more than 2-3 languages
-                //and the code below could generate too complex and heavy SQL code
-                //so let's load all languages here
-                //and then filter them using "_storeMappingService".
-                //if (storeId > 0)
-                //{
-                //    query = from l in query
-                //            join sm in _storeMappingRepository.Table
-                //            on new { c1 = l.Id, c2 = "Language" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into l_sm
-                //            from sm in l_sm.DefaultIfEmpty()
-                //            where !l.LimitedToStores || storeId == sm.StoreId
-                //            select l;
-
-                //    //only distinct languages (group by ID)
-                //    query = from l in query
-                //            group l by l.Id
-                //            into lGroup
-                //            orderby lGroup.Key
-                //            select lGroup.FirstOrDefault();
-                //    query = query.OrderBy(l => l.DisplayOrder);
-                //}
-                
                 return query.ToList();
             });
 

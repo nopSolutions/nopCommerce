@@ -4,6 +4,7 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Stores;
 
 namespace Nop.Services.Stores
@@ -35,6 +36,7 @@ namespace Nop.Services.Stores
         private readonly IRepository<StoreMapping> _storeMappingRepository;
         private readonly IStoreContext _storeContext;
         private readonly ICacheManager _cacheManager;
+        private readonly CatalogSettings _catalogSettings;
 
         #endregion
 
@@ -46,12 +48,16 @@ namespace Nop.Services.Stores
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="storeContext">Store context</param>
         /// <param name="storeMappingRepository">Store mapping repository</param>
-        public StoreMappingService(ICacheManager cacheManager, IStoreContext storeContext,
-            IRepository<StoreMapping> storeMappingRepository)
+        /// <param name="catalogSettings">Catalog settings</param>
+        public StoreMappingService(ICacheManager cacheManager, 
+            IStoreContext storeContext,
+            IRepository<StoreMapping> storeMappingRepository,
+            CatalogSettings catalogSettings)
         {
             this._cacheManager = cacheManager;
             this._storeContext = storeContext;
             this._storeMappingRepository = storeMappingRepository;
+            this._catalogSettings = catalogSettings;
         }
 
         #endregion
@@ -220,6 +226,9 @@ namespace Nop.Services.Stores
 
             if (storeId == 0)
                 //return true if no store specified/found
+                return true;
+
+            if (_catalogSettings.IgnoreStoreLimitations)
                 return true;
 
             if (!entity.LimitedToStores)

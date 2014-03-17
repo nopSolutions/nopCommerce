@@ -488,6 +488,18 @@ set @resources='
   <LocaleResource Name="Plugins.Widgets.NivoSlider.Picture5">
     <Value>Picture 5</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.IgnoreAcl">
+    <Value>Ignore ACL rules (sitewide)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.IgnoreAcl.Hint">
+    <Value>Check to ignore ACL rules configured for entities (sitewide). Recommended to enable this setting if you don''t use it. It can significantly improve performance.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.IgnoreStoreLimitations">
+    <Value>Ignore "limit per store" rules (sitewide)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.IgnoreStoreLimitations.Hint">
+    <Value>Check to ignore "limit per store" rules configured for entities (sitewide). Recommended to enable this setting if you have only one store or don''t use it. It can significantly improve performance.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1239,4 +1251,19 @@ IF EXISTS (
 		FROM sys.objects
 		WHERE object_id = OBJECT_ID(N'[temp_vendor_generate_sename]') AND OBJECTPROPERTY(object_id,N'IsProcedure') = 1)
 DROP PROCEDURE [temp_vendor_generate_sename]
+GO
+
+--new setings
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.ignoreacl')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'catalogsettings.ignoreacl', N'false', 0)
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.ignorestorelimitations')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'catalogsettings.ignorestorelimitations', N'false', 0)
+END
 GO

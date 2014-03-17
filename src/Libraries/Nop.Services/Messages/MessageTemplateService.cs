@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Caching;
 using Nop.Core.Data;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Stores;
 using Nop.Services.Events;
@@ -44,6 +45,7 @@ namespace Nop.Services.Messages
         private readonly ILanguageService _languageService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly ILocalizedEntityService _localizedEntityService;
+        private readonly CatalogSettings _catalogSettings;
         private readonly IEventPublisher _eventPublisher;
         private readonly ICacheManager _cacheManager;
 
@@ -60,6 +62,7 @@ namespace Nop.Services.Messages
         /// <param name="localizedEntityService">Localized entity service</param>
         /// <param name="storeMappingService">Store mapping service</param>
         /// <param name="messageTemplateRepository">Message template repository</param>
+        /// <param name="catalogSettings">Catalog settings</param>
         /// <param name="eventPublisher">Event published</param>
         public MessageTemplateService(ICacheManager cacheManager,
             IRepository<StoreMapping> storeMappingRepository,
@@ -67,6 +70,7 @@ namespace Nop.Services.Messages
             ILocalizedEntityService localizedEntityService,
             IStoreMappingService storeMappingService,
             IRepository<MessageTemplate> messageTemplateRepository,
+            CatalogSettings catalogSettings,
             IEventPublisher eventPublisher)
         {
             this._cacheManager = cacheManager;
@@ -75,6 +79,7 @@ namespace Nop.Services.Messages
             this._localizedEntityService = localizedEntityService;
             this._storeMappingService = storeMappingService;
             this._messageTemplateRepository = messageTemplateRepository;
+            this._catalogSettings = catalogSettings;
             this._eventPublisher = eventPublisher;
         }
 
@@ -163,27 +168,18 @@ namespace Nop.Services.Messages
                 var query = _messageTemplateRepository.Table;
                 query = query.Where(t => t.Name == messageTemplateName);
                 query = query.OrderBy(t => t.Id);
+                query = query.OrderBy(t => t.Id);
+                var templates = query.ToList();
 
-                //Store mapping
+                //store mapping
                 if (storeId > 0)
                 {
-                    query = from t in query
-                            join sm in _storeMappingRepository.Table
-                            on new { c1 = t.Id, c2 = "MessageTemplate" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into t_sm
-                            from sm in t_sm.DefaultIfEmpty()
-                            where !t.LimitedToStores || storeId == sm.StoreId
-                            select t;
-
-                    //only distinct items (group by ID)
-                    query = from t in query
-                            group t by t.Id
-                            into tGroup
-                            orderby tGroup.Key
-                            select tGroup.FirstOrDefault();
-                    query = query.OrderBy(t => t.Id);
+                    templates = templates
+                        .Where(t => _storeMappingService.Authorize(t, storeId))
+                        .ToList();
                 }
 
-                return query.FirstOrDefault();
+                return templates.FirstOrDefault();
             });
 
         }
@@ -202,7 +198,7 @@ namespace Nop.Services.Messages
                 query = query.OrderBy(t => t.Name);
 
                 //Store mapping
-                if (storeId > 0)
+                if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
                 {
                     query = from t in query
                             join sm in _storeMappingRepository.Table

@@ -3996,6 +3996,18 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.IgnoreFeaturedProducts.Hint">
     <Value>Check to ignore featured products (sitewide). It can significantly improve performance.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.IgnoreAcl">
+    <Value>Ignore ACL rules (sitewide)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.IgnoreAcl.Hint">
+    <Value>Check to ignore ACL rules configured for entities (sitewide). Recommended to enable this setting if you don't use it. It can significantly improve performance.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.IgnoreStoreLimitations">
+    <Value>Ignore "limit per store" rules (sitewide)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.IgnoreStoreLimitations.Hint">
+    <Value>Check to ignore "limit per store" rules configured for entities (sitewide). Recommended to enable this setting if you have only one store or don't use it. It can significantly improve performance.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.IncludeFullDescriptionInCompareProducts">
     <Value>Include full description in compare products</Value>
   </LocaleResource>

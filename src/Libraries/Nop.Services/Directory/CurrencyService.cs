@@ -150,30 +150,6 @@ namespace Nop.Services.Directory
                 if (!showHidden)
                     query = query.Where(c => c.Published);
                 query = query.OrderBy(c => c.DisplayOrder);
-
-                //Store mapping
-                //usually we don't have more than 2-3 currencies
-                //and the code below could generate too complex and heavy SQL code
-                //so let's load all currencies here
-                //and then filter them using "_storeMappingService".
-                //if (storeId > 0)
-                //{
-                //    query = from c in query
-                //            join sm in _storeMappingRepository.Table
-                //            on new { c1 = c.Id, c2 = "Currency" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into c_sm
-                //            from sm in c_sm.DefaultIfEmpty()
-                //            where !c.LimitedToStores || storeId == sm.StoreId
-                //            select c;
-
-                //    //only distinct languages (group by ID)
-                //    query = from c in query
-                //            group c by c.Id
-                //            into cGroup
-                //            orderby cGroup.Key
-                //            select cGroup.FirstOrDefault();
-                //    query = query.OrderBy(c => c.DisplayOrder);
-                //}
-
                 return query.ToList();
             });
 

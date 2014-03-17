@@ -971,6 +971,8 @@ namespace Nop.Admin.Controllers
                 model.IncludeFullDescriptionInCompareProducts_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.IncludeFullDescriptionInCompareProducts, storeScope);
                 model.IgnoreDiscounts_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.IgnoreDiscounts, storeScope);
                 model.IgnoreFeaturedProducts_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.IgnoreFeaturedProducts, storeScope);
+                model.IgnoreAcl_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.IgnoreAcl, storeScope);
+                model.IgnoreStoreLimitations_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.IgnoreStoreLimitations, storeScope);
                 model.TopCategoryMenuSubcategoryLevelsToDisplay_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.TopCategoryMenuSubcategoryLevelsToDisplay, storeScope);
                 model.ManufacturersBlockItemsToDisplay_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ManufacturersBlockItemsToDisplay, storeScope);
                 model.DisplayTaxShippingInfoFooter_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.DisplayTaxShippingInfoFooter, storeScope);
@@ -1188,6 +1190,16 @@ namespace Nop.Admin.Controllers
                 _settingService.SaveSetting(catalogSettings, x => x.IgnoreFeaturedProducts, storeScope, false);
             else if (storeScope > 0)
                 _settingService.DeleteSetting(catalogSettings, x => x.IgnoreFeaturedProducts, storeScope);
+
+            if (model.IgnoreAcl_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(catalogSettings, x => x.IgnoreAcl, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(catalogSettings, x => x.IgnoreAcl, storeScope);
+
+            if (model.IgnoreStoreLimitations_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(catalogSettings, x => x.IgnoreStoreLimitations, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(catalogSettings, x => x.IgnoreStoreLimitations, storeScope);
 
             if (model.TopCategoryMenuSubcategoryLevelsToDisplay_OverrideForStore || storeScope == 0)
                 _settingService.SaveSetting(catalogSettings, x => x.TopCategoryMenuSubcategoryLevelsToDisplay, storeScope, false);

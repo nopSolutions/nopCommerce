@@ -5,6 +5,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Blogs;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Stores;
 using Nop.Services.Events;
 
@@ -20,7 +21,7 @@ namespace Nop.Services.Blogs
         private readonly IRepository<BlogPost> _blogPostRepository;
         private readonly IRepository<BlogComment> _blogCommentRepository;
         private readonly IRepository<StoreMapping> _storeMappingRepository;
-        private readonly ICacheManager _cacheManager;
+        private readonly CatalogSettings _catalogSettings;
         private readonly IEventPublisher _eventPublisher;
 
         #endregion
@@ -30,13 +31,13 @@ namespace Nop.Services.Blogs
         public BlogService(IRepository<BlogPost> blogPostRepository,
             IRepository<BlogComment> blogCommentRepository,
             IRepository<StoreMapping> storeMappingRepository,
-            ICacheManager cacheManager, 
+            CatalogSettings catalogSettings, 
             IEventPublisher eventPublisher)
         {
             this._blogPostRepository = blogPostRepository;
             this._blogCommentRepository = blogCommentRepository;
             this._storeMappingRepository = storeMappingRepository;
-            this._cacheManager = cacheManager;
+            this._catalogSettings = catalogSettings;
             this._eventPublisher = eventPublisher;
         }
 
@@ -100,7 +101,7 @@ namespace Nop.Services.Blogs
                 query = query.Where(b => !b.EndDateUtc.HasValue || b.EndDateUtc >= utcNow);
             }
 
-            if (storeId > 0)
+            if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
             {
                 //Store mapping
                 query = from bp in query

@@ -538,6 +538,26 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.IgnoreAcl_OverrideForStore, model => model.IgnoreAcl, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.IgnoreAcl):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.IgnoreAcl)
+                @Html.ValidationMessageFor(model => model.IgnoreAcl)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.IgnoreStoreLimitations_OverrideForStore, model => model.IgnoreStoreLimitations, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.IgnoreStoreLimitations):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.IgnoreStoreLimitations)
+                @Html.ValidationMessageFor(model => model.IgnoreStoreLimitations)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.OverrideStoreCheckboxFor(model => model.DisplayTaxShippingInfoFooter_OverrideForStore, model => model.DisplayTaxShippingInfoFooter, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.DisplayTaxShippingInfoFooter):
             </td>

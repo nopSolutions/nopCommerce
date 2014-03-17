@@ -168,6 +168,14 @@ namespace Nop.Admin.Models.Settings
         public bool IgnoreFeaturedProducts { get; set; }
         public bool IgnoreFeaturedProducts_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.IgnoreAcl")]
+        public bool IgnoreAcl { get; set; }
+        public bool IgnoreAcl_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.IgnoreStoreLimitations")]
+        public bool IgnoreStoreLimitations { get; set; }
+        public bool IgnoreStoreLimitations_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.TopCategoryMenuSubcategoryLevelsToDisplay")]
         public int TopCategoryMenuSubcategoryLevelsToDisplay { get; set; }
         public bool TopCategoryMenuSubcategoryLevelsToDisplay_OverrideForStore { get; set; }

@@ -82,6 +82,7 @@ namespace Nop.Services.Catalog
         private readonly ICacheManager _cacheManager;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IAclService _aclService;
+        private readonly CatalogSettings _catalogSettings;
 
         #endregion
         
@@ -101,6 +102,7 @@ namespace Nop.Services.Catalog
         /// <param name="eventPublisher">Event publisher</param>
         /// <param name="storeMappingService">Store mapping service</param>
         /// <param name="aclService">ACL service</param>
+        /// <param name="catalogSettings">Catalog settings</param>
         public CategoryService(ICacheManager cacheManager,
             IRepository<Category> categoryRepository,
             IRepository<ProductCategory> productCategoryRepository,
@@ -111,7 +113,8 @@ namespace Nop.Services.Catalog
             IStoreContext storeContext,
             IEventPublisher eventPublisher,
             IStoreMappingService storeMappingService,
-            IAclService aclService)
+            IAclService aclService,
+            CatalogSettings catalogSettings)
         {
             this._cacheManager = cacheManager;
             this._categoryRepository = categoryRepository;
@@ -124,6 +127,7 @@ namespace Nop.Services.Catalog
             this._eventPublisher = eventPublisher;
             this._storeMappingService = storeMappingService;
             this._aclService = aclService;
+            this._catalogSettings = catalogSettings;
         }
 
         #endregion
@@ -170,26 +174,31 @@ namespace Nop.Services.Catalog
             query = query.Where(c => !c.Deleted);
             query = query.OrderBy(c => c.ParentCategoryId).ThenBy(c => c.DisplayOrder);
             
-            if (!showHidden)
+            if (!showHidden && (!_catalogSettings.IgnoreAcl || !_catalogSettings.IgnoreStoreLimitations))
             {
-                //ACL (access control list)
-                var allowedCustomerRolesIds = _workContext.CurrentCustomer.CustomerRoles
-                    .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
-                query = from c in query
-                        join acl in _aclRepository.Table
-                        on new { c1 = c.Id, c2 = "Category" } equals new { c1 = acl.EntityId, c2 = acl.EntityName } into c_acl
-                        from acl in c_acl.DefaultIfEmpty()
-                        where !c.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
-                        select c;
-
-                //Store mapping
-                var currentStoreId = _storeContext.CurrentStore.Id;
-                query = from c in query
-                        join sm in _storeMappingRepository.Table
-                        on new { c1 = c.Id, c2 = "Category" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into c_sm
-                        from sm in c_sm.DefaultIfEmpty()
-                        where !c.LimitedToStores || currentStoreId == sm.StoreId
-                        select c;
+                if (!_catalogSettings.IgnoreAcl)
+                {
+                    //ACL (access control list)
+                    var allowedCustomerRolesIds = _workContext.CurrentCustomer.CustomerRoles
+                        .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
+                    query = from c in query
+                            join acl in _aclRepository.Table
+                            on new { c1 = c.Id, c2 = "Category" } equals new { c1 = acl.EntityId, c2 = acl.EntityName } into c_acl
+                            from acl in c_acl.DefaultIfEmpty()
+                            where !c.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
+                            select c;
+                }
+                if (!_catalogSettings.IgnoreStoreLimitations)
+                {
+                    //Store mapping
+                    var currentStoreId = _storeContext.CurrentStore.Id;
+                    query = from c in query
+                            join sm in _storeMappingRepository.Table
+                            on new { c1 = c.Id, c2 = "Category" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into c_sm
+                            from sm in c_sm.DefaultIfEmpty()
+                            where !c.LimitedToStores || currentStoreId == sm.StoreId
+                            select c;
+                }
 
                 //only distinct categories (group by ID)
                 query = from c in query
@@ -228,27 +237,31 @@ namespace Nop.Services.Catalog
                 query = query.Where(c => !c.Deleted);
                 query = query.OrderBy(c => c.DisplayOrder);
 
-                if (!showHidden)
+                if (!showHidden && (!_catalogSettings.IgnoreAcl || !_catalogSettings.IgnoreStoreLimitations))
                 {
-                    //ACL (access control list)
-                    var allowedCustomerRolesIds = _workContext.CurrentCustomer.CustomerRoles
-                        .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
-                    query = from c in query
-                            join acl in _aclRepository.Table
-                            on new { c1 = c.Id, c2 = "Category" } equals new { c1 = acl.EntityId, c2 = acl.EntityName } into c_acl
-                            from acl in c_acl.DefaultIfEmpty()
-                            where !c.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
-                            select c;
-
-                    //Store mapping
-                    var currentStoreId = _storeContext.CurrentStore.Id;
-                    query = from c in query
-                            join sm in _storeMappingRepository.Table
-                            on new { c1 = c.Id, c2 = "Category" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into c_sm
-                            from sm in c_sm.DefaultIfEmpty()
-                            where !c.LimitedToStores || currentStoreId == sm.StoreId
-                            select c;
-
+                    if (!_catalogSettings.IgnoreAcl)
+                    {
+                        //ACL (access control list)
+                        var allowedCustomerRolesIds = _workContext.CurrentCustomer.CustomerRoles
+                            .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
+                        query = from c in query
+                                join acl in _aclRepository.Table
+                                on new { c1 = c.Id, c2 = "Category" } equals new { c1 = acl.EntityId, c2 = acl.EntityName } into c_acl
+                                from acl in c_acl.DefaultIfEmpty()
+                                where !c.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
+                                select c;
+                    }
+                    if (!_catalogSettings.IgnoreStoreLimitations)
+                    {
+                        //Store mapping
+                        var currentStoreId = _storeContext.CurrentStore.Id;
+                        query = from c in query
+                                join sm in _storeMappingRepository.Table
+                                on new { c1 = c.Id, c2 = "Category" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into c_sm
+                                from sm in c_sm.DefaultIfEmpty()
+                                where !c.LimitedToStores || currentStoreId == sm.StoreId
+                                select c;
+                    }
                     //only distinct categories (group by ID)
                     query = from c in query
                             group c by c.Id
@@ -401,29 +414,33 @@ namespace Nop.Services.Catalog
                             orderby pc.DisplayOrder
                             select pc;
 
-                if (!showHidden)
+                if (!showHidden && (!_catalogSettings.IgnoreAcl || !_catalogSettings.IgnoreStoreLimitations))
                 {
-                    //ACL (access control list)
-                    var allowedCustomerRolesIds = _workContext.CurrentCustomer.CustomerRoles
-                        .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
-                    query = from pc in query
-                            join c in _categoryRepository.Table on pc.CategoryId equals c.Id
-                            join acl in _aclRepository.Table
-                            on new { c1 = c.Id, c2 = "Category" } equals new { c1 = acl.EntityId, c2 = acl.EntityName } into c_acl
-                            from acl in c_acl.DefaultIfEmpty()
-                            where !c.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
-                            select pc;
-
-                    //Store mapping
-                    var currentStoreId = _storeContext.CurrentStore.Id;
-                    query = from pc in query
-                            join c in _categoryRepository.Table on pc.CategoryId equals c.Id
-                            join sm in _storeMappingRepository.Table
-                            on new { c1 = c.Id, c2 = "Category" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into c_sm
-                            from sm in c_sm.DefaultIfEmpty()
-                            where !c.LimitedToStores || currentStoreId == sm.StoreId
-                            select pc;
-
+                    if (!_catalogSettings.IgnoreAcl)
+                    {
+                        //ACL (access control list)
+                        var allowedCustomerRolesIds = _workContext.CurrentCustomer.CustomerRoles
+                            .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
+                        query = from pc in query
+                                join c in _categoryRepository.Table on pc.CategoryId equals c.Id
+                                join acl in _aclRepository.Table
+                                on new { c1 = c.Id, c2 = "Category" } equals new { c1 = acl.EntityId, c2 = acl.EntityName } into c_acl
+                                from acl in c_acl.DefaultIfEmpty()
+                                where !c.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
+                                select pc;
+                    }
+                    if (!_catalogSettings.IgnoreStoreLimitations)
+                    {
+                        //Store mapping
+                        var currentStoreId = _storeContext.CurrentStore.Id;
+                        query = from pc in query
+                                join c in _categoryRepository.Table on pc.CategoryId equals c.Id
+                                join sm in _storeMappingRepository.Table
+                                on new { c1 = c.Id, c2 = "Category" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into c_sm
+                                from sm in c_sm.DefaultIfEmpty()
+                                where !c.LimitedToStores || currentStoreId == sm.StoreId
+                                select pc;
+                    }
                     //only distinct categories (group by ID)
                     query = from c in query
                             group c by c.Id

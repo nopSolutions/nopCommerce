@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Data;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Stores;
 using Nop.Services.Events;
@@ -19,6 +20,7 @@ namespace Nop.Services.News
         private readonly IRepository<NewsItem> _newsItemRepository;
         private readonly IRepository<NewsComment> _newsCommentRepository;
         private readonly IRepository<StoreMapping> _storeMappingRepository;
+        private readonly CatalogSettings _catalogSettings;
         private readonly IEventPublisher _eventPublisher;
 
         #endregion
@@ -28,11 +30,13 @@ namespace Nop.Services.News
         public NewsService(IRepository<NewsItem> newsItemRepository, 
             IRepository<NewsComment> newsCommentRepository,
             IRepository<StoreMapping> storeMappingRepository,
+            CatalogSettings catalogSettings,
             IEventPublisher eventPublisher)
         {
             this._newsItemRepository = newsItemRepository;
             this._newsCommentRepository = newsCommentRepository;
             this._storeMappingRepository = storeMappingRepository;
+            this._catalogSettings = catalogSettings;
             this._eventPublisher = eventPublisher;
         }
 
@@ -93,7 +97,7 @@ namespace Nop.Services.News
             query = query.OrderByDescending(n => n.CreatedOnUtc);
 
             //Store mapping
-            if (storeId > 0)
+            if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
             {
                 query = from n in query
                         join sm in _storeMappingRepository.Table
