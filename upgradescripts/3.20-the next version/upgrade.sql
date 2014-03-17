@@ -267,10 +267,10 @@ set @resources='
 	<Value>Check if you want to record plugin tracing in System Log. Warning: The entire request and response XML will be logged (including AccessKey/UserName,Password). Do not leave this enabled in a production environment.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.AllSettings.Description">
-	<Value>To find text or a specific setting (by name), you can apply a filter via the funnel icon in the "Value" or "Setting name" column headers (case sensitive).</Value>
+	<Value>To find text or a specific setting (by name), you can apply a filter via the funnel icon in the "Value" or "Setting name" column headers.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Languages.Resources.Description">
-	<Value>To find text or a specific resource (by name), you can apply a filter via the funnel icon in the "Value" or "Resource name" column headers (case sensitive).</Value>
+	<Value>To find text or a specific resource (by name), you can apply a filter via the funnel icon in the "Value" or "Resource name" column headers.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.CustomerAttributes">
 	<Value>Custom customer attributes</Value>

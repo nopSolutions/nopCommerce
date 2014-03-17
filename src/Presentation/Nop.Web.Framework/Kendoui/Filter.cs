@@ -38,17 +38,17 @@ namespace Nop.Web.Framework.Kendoui
         /// Mapping of Kendo DataSource filtering operators to Dynamic Linq
         /// </summary>
         private static readonly IDictionary<string, string> operators = new Dictionary<string, string>
-    {
-        {"eq", "="},
-        {"neq", "!="},
-        {"lt", "<"},
-        {"lte", "<="},
-        {"gt", ">"},
-        {"gte", ">="},
-        {"startswith", "StartsWith"},
-        {"endswith", "EndsWith"},
-        {"contains", "Contains"}
-    };
+        {
+            {"eq", "="},
+            {"neq", "!="},
+            {"lt", "<"},
+            {"lte", "<="},
+            {"gt", ">"},
+            {"gte", ">="},
+            {"startswith", "StartsWith"},
+            {"endswith", "EndsWith"},
+            {"contains", "Contains"}
+        };
 
         /// <summary>
         /// Get a flattened list of all child filter expressions.
@@ -94,9 +94,25 @@ namespace Nop.Web.Framework.Kendoui
 
             string comparison = operators[Operator];
 
-            if (comparison == "StartsWith" || comparison == "EndsWith" || comparison == "Contains")
+            //original code below (case sensitive) commented
+            //if (comparison == "StartsWith" || comparison == "EndsWith" || comparison == "Contains")
+            //{
+            //    return String.Format("{0}.{1}(@{2})", Field, comparison, index);
+            //}
+
+            
+            //we ignore case
+            if (comparison == "Contains")
             {
-                return String.Format("{0}.{1}(@{2})", Field, comparison, index);
+                return String.Format("{0}.IndexOf(@{1}, System.StringComparison.InvariantCultureIgnoreCase) >= 0", Field, index);
+            }
+            if (comparison == "=")
+            {
+                comparison = "Equals";
+            }
+            if (comparison == "StartsWith" || comparison == "EndsWith" || comparison == "Equals")
+            {
+                return String.Format("{0}.{1}(@{2}, System.StringComparison.InvariantCultureIgnoreCase)", Field, comparison, index);
             }
 
             return String.Format("{0} {1} @{2}", Field, comparison, index);

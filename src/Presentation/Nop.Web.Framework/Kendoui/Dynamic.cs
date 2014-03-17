@@ -1,5 +1,7 @@
 ﻿//Copyright (C) Microsoft Corporation.  All rights reserved.
 
+//also some changes applied as described here - http://www.aaronlerch.com/blog/2008/12/15/case-insensitive-string-comparisons-with-linq-dynamic-query/
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -958,10 +960,12 @@ namespace Nop.Web.Framework.Kendoui
             return e;
         }
 
-        Expression ParseIdentifier() {
+        Expression ParseIdentifier()
+        {
             ValidateToken(TokenId.Identifier);
             object value;
-            if (keywords.TryGetValue(token.text, out value)) {
+            if (keywords.TryGetValue(token.text, out value))
+            {
                 if (value is Type) return ParseTypeAccess((Type)value);
                 if (value == (object)keywordIt) return ParseIt();
                 if (value == (object)keywordIif) return ParseIif();
@@ -970,20 +974,83 @@ namespace Nop.Web.Framework.Kendoui
                 return (Expression)value;
             }
             if (symbols.TryGetValue(token.text, out value) ||
-                externals != null && externals.TryGetValue(token.text, out value)) {
+                externals != null && externals.TryGetValue(token.text, out value))
+            {
                 Expression expr = value as Expression;
-                if (expr == null) {
+                if (expr == null)
+                {
                     expr = Expression.Constant(value);
                 }
-                else {
+                else
+                {
                     LambdaExpression lambda = expr as LambdaExpression;
                     if (lambda != null) return ParseLambdaInvocation(lambda);
                 }
                 NextToken();
                 return expr;
             }
+            // ADD THIS IF STATEMENT
+            if (ParseEnumType(out value))
+            {
+                Expression expr = Expression.Constant(value);
+                NextToken();
+                return expr;
+            }
             if (it != null) return ParseMemberAccess(null, it);
             throw ParseError(Res.UnknownIdentifier, token.text);
+        }
+
+        bool ParseEnumType(out object value)
+        {
+            value = null;
+
+            ValidateToken(TokenId.Identifier);
+            Type enumType = null;
+            int position = token.pos;
+            string typeName = token.text;
+            while (enumType == null)
+            {
+                // Loop until we stop processing identifiers and/or dots
+                enumType = Type.GetType(typeName, false, true);
+                if (enumType == null)
+                {
+                    NextToken();
+                    if (token.id == TokenId.Dot)
+                    {
+                        typeName += token.text;
+                        NextToken();
+                        if (token.id == TokenId.Identifier)
+                        {
+                            typeName += token.text;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+
+            if ((enumType != null) && IsEnumType(enumType))
+            {
+                NextToken();
+                ValidateToken(TokenId.Dot, Res.DotExpected);
+                NextToken();
+                ValidateToken(TokenId.Identifier, Res.IdentifierExpected);
+                value = Enum.Parse(enumType, token.text, true);
+                return true;
+            }
+            else
+            {
+                SetTextPos(position);
+                NextToken();
+            }
+
+            return false;
         }
 
         Expression ParseIt() {
@@ -1981,6 +2048,7 @@ namespace Nop.Web.Framework.Kendoui
 
     static class Res
     {
+        public const string DotExpected = "'.' expected";
         public const string DuplicateIdentifier = "The identifier '{0}' was defined more than once";
         public const string ExpressionTypeMismatch = "Expression of type '{0}' expected";
         public const string ExpressionExpected = "Expression expected";
