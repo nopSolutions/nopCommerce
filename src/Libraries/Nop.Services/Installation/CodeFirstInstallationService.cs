@@ -4746,6 +4746,7 @@ namespace Nop.Services.Installation
                     DisplayShipmentEventsToCustomers = false,
                     ReturnValidOptionsIfThereAreAny = true,
                     BypassShippingMethodSelectionIfOnlyOne = false,
+                    UseCubeRootMethod = true
                 });
 
             settingService.SaveSetting(new PaymentSettings()

@@ -502,9 +502,7 @@ namespace Nop.Services.Shipping
         public virtual void GetDimensions(IList<ShoppingCartItem> cart,
             out decimal width, out decimal length, out decimal height)
         {
-            //A value indicating whether dimensions are calculated based  on cube root of volume
-            bool useCubeRootMethod = true;
-            if (useCubeRootMethod)
+            if (_shippingSettings.UseCubeRootMethod)
             {
                 //cube root of volume
                 decimal totalVolume = 0;

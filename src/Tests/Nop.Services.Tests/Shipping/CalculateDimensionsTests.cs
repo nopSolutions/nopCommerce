@@ -45,6 +45,7 @@ namespace Nop.Services.Tests.Shipping
         public new void SetUp()
         {
             _shippingSettings = new ShippingSettings();
+            _shippingSettings.UseCubeRootMethod = true;
 
             _shippingMethodRepository = MockRepository.GenerateMock<IRepository<ShippingMethod>>();
             _deliveryDateRepository = MockRepository.GenerateMock<IRepository<DeliveryDate>>();

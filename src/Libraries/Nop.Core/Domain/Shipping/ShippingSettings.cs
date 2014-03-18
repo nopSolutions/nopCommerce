@@ -61,5 +61,10 @@ namespace Nop.Core.Domain.Shipping
         /// Gets or sets a value indicating whether we should bypass 'select shipping method' page if we have only one shipping method
         /// </summary>
         public bool BypassShippingMethodSelectionIfOnlyOne { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether dimensions are calculated based on cube root of volume
+        /// </summary>
+        public bool UseCubeRootMethod { get; set; }
     }
 }

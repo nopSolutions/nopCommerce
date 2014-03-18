@@ -1267,3 +1267,10 @@ BEGIN
 	VALUES (N'catalogsettings.ignorestorelimitations', N'false', 0)
 END
 GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'shippingsettings.usecuberootmethod')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'shippingsettings.usecuberootmethod', N'true', 0)
+END
+GO
