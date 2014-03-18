@@ -120,7 +120,7 @@ namespace Nop.Plugin.Shipping.ByWeight
                     continue;
                 subTotal += _priceCalculationService.GetSubTotal(shoppingCartItem, true);
             }
-            decimal weight = _shippingService.GetShoppingCartTotalWeight(getShippingOptionRequest.Items);
+            decimal weight = _shippingService.GetTotalWeight(getShippingOptionRequest.Items);
 
             var shippingMethods = _shippingService.GetAllShippingMethods(countryId);
             foreach (var shippingMethod in shippingMethods)

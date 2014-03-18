@@ -111,25 +111,7 @@ namespace Nop.Services.Tests.Shipping
             srcm.ShouldNotBeNull();
             (srcm.Count > 0).ShouldBeTrue();
         }
-
-        [Test]
-        public void Can_get_shoppingCartItem_totalWeight_without_attributes()
-        {
-            var sci = new ShoppingCartItem()
-            {
-                AttributesXml = "",
-                Quantity = 3,
-                Product = new Product()
-                {
-                    Weight = 1.5M,
-                    Height = 2.5M,
-                    Length = 3.5M,
-                    Width = 4.5M
-                }
-            };
-            _shippingService.GetShoppingCartItemTotalWeight(sci).ShouldEqual(4.5M);
-        }
-
+        
         [Test]
         public void Can_get_shoppingCart_totalWeight_without_attributes()
         {
@@ -158,7 +140,7 @@ namespace Nop.Services.Tests.Shipping
                 }
             };
             var cart = new List<ShoppingCartItem>() { sci1, sci2 };
-            _shippingService.GetShoppingCartTotalWeight(cart).ShouldEqual(50.5M);
+            _shippingService.GetTotalWeight(cart).ShouldEqual(50.5M);
         }
     }
 }

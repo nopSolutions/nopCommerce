@@ -217,10 +217,10 @@ namespace Nop.Plugin.Shipping.UPS
 
             var usedMeasureWeight = GetUsedMeasureWeight();
             var usedMeasureDimension = GetUsedMeasureDimension();
-            int length = ConvertFromPrimaryMeasureDimension(getShippingOptionRequest.GetTotalLength(), usedMeasureDimension);
-            int height = ConvertFromPrimaryMeasureDimension(getShippingOptionRequest.GetTotalHeight(), usedMeasureDimension);
-            int width = ConvertFromPrimaryMeasureDimension(getShippingOptionRequest.GetTotalWidth(), usedMeasureDimension);
-            int weight = ConvertFromPrimaryMeasureWeight(_shippingService.GetShoppingCartTotalWeight(getShippingOptionRequest.Items), usedMeasureWeight);
+            int length = ConvertFromPrimaryMeasureDimension(_shippingService.GetTotalLength(getShippingOptionRequest.Items), usedMeasureDimension);
+            int height = ConvertFromPrimaryMeasureDimension(_shippingService.GetTotalHeight(getShippingOptionRequest.Items), usedMeasureDimension);
+            int width = ConvertFromPrimaryMeasureDimension(_shippingService.GetTotalWidth(getShippingOptionRequest.Items), usedMeasureDimension);
+            int weight = ConvertFromPrimaryMeasureWeight(_shippingService.GetTotalWeight(getShippingOptionRequest.Items), usedMeasureWeight);
             if (length < 1)
                 length = 1;
             if (height < 1)
@@ -391,7 +391,7 @@ namespace Nop.Plugin.Shipping.UPS
             if (width < 1)
                 width = 1;
 
-            int weight = ConvertFromPrimaryMeasureWeight(_shippingService.GetShoppingCartTotalWeight(getShippingOptionRequest.Items), usedMeasureWeight);
+            int weight = ConvertFromPrimaryMeasureWeight(_shippingService.GetTotalWeight(getShippingOptionRequest.Items), usedMeasureWeight);
             if (weight < 1)
                 weight = 1;
 

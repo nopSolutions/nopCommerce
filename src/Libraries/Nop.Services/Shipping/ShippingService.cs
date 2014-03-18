@@ -465,32 +465,18 @@ namespace Nop.Services.Shipping
         }
 
         /// <summary>
-        /// Gets shopping cart item total weight
-        /// </summary>
-        /// <param name="shoppingCartItem">Shopping cart item</param>
-        /// <returns>Shopping cart item weight</returns>
-        public virtual decimal GetShoppingCartItemTotalWeight(ShoppingCartItem shoppingCartItem)
-        {
-            if (shoppingCartItem == null)
-                throw new ArgumentNullException("shoppingCartItem");
-
-            decimal totalWeight = GetShoppingCartItemWeight(shoppingCartItem) * shoppingCartItem.Quantity;
-            return totalWeight;
-        }
-
-        /// <summary>
         /// Gets shopping cart weight
         /// </summary>
         /// <param name="cart">Cart</param>
         /// <returns>Shopping cart weight</returns>
-        public virtual decimal GetShoppingCartTotalWeight(IList<ShoppingCartItem> cart)
+        public virtual decimal GetTotalWeight(IList<ShoppingCartItem> cart)
         {
             Customer customer = cart.GetCustomer();
 
             decimal totalWeight = decimal.Zero;
             //shopping cart items
             foreach (var shoppingCartItem in cart)
-                totalWeight += GetShoppingCartItemTotalWeight(shoppingCartItem);
+                totalWeight += GetShoppingCartItemWeight(shoppingCartItem) * shoppingCartItem.Quantity;
 
             //checkout attributes
             if (customer != null)
@@ -505,6 +491,107 @@ namespace Nop.Services.Shipping
             }
             return totalWeight;
         }
+
+        /// <summary>
+        /// Get dimensions
+        /// </summary>
+        /// <param name="cart">Shipping cart items</param>
+        /// <param name="width">Width</param>
+        /// <param name="length">Length</param>
+        /// <param name="height">Height</param>
+        public virtual void GetDimensions(IList<ShoppingCartItem> cart,
+            out decimal width, out decimal length, out decimal height)
+        {
+            //A value indicating whether dimensions are calculated based  on cube root of volume
+            bool useCubeRootMethod = true;
+            if (useCubeRootMethod)
+            {
+                //cube root of volume
+                decimal totalVolume = 0;
+                decimal maxProductWidth = 0;
+                decimal maxProductLength = 0;
+                decimal maxProductHeight = 0;
+                foreach (var shoppingCartItem in cart)
+                {
+                    var product = shoppingCartItem.Product;
+                    if (product != null)
+                    {
+                        totalVolume += shoppingCartItem.Quantity * product.Height * product.Width * product.Length;
+
+                        if (product.Width > maxProductWidth)
+                            maxProductWidth = product.Width;
+                        if (product.Length > maxProductLength)
+                            maxProductLength = product.Length;
+                        if (product.Height > maxProductHeight)
+                            maxProductHeight = product.Height;
+                    }
+                }
+                decimal dimension = Convert.ToDecimal(Math.Pow(Convert.ToDouble(totalVolume), (double)(1.0 / 3.0)));
+                length = width = height = dimension;
+
+                //sometimes we have products with sizes like 1x1x20
+                //that's why let's ensure that a maximum dimension is always preserved
+                //otherwise, shipping rate computation methods can return low rates
+                if (width < maxProductWidth)
+                    width = maxProductWidth;
+                if (length < maxProductLength)
+                    length = maxProductLength;
+                if (height < maxProductHeight)
+                    height = maxProductHeight;
+            }
+            else
+            {
+                //summarize all values (very inaccurate with multiple items)
+                width = length = height = decimal.Zero;
+                foreach (var shoppingCartItem in cart)
+                {
+                    var product = shoppingCartItem.Product;
+                    if (product != null)
+                    {
+                        width += product.Width * shoppingCartItem.Quantity;
+                        length += product.Length * shoppingCartItem.Quantity;
+                        height += product.Height * shoppingCartItem.Quantity;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets total width
+        /// </summary>
+        /// <param name="cart">Shipping cart items</param>
+        /// <returns>Total width</returns>
+        public virtual decimal GetTotalWidth(IList<ShoppingCartItem> cart)
+        {
+            decimal length, width, height = 0;
+            GetDimensions(cart, out width, out length, out height);
+            return width;
+        }
+
+        /// <summary>
+        /// Gets total length
+        /// </summary>
+        /// <param name="cart">Shipping cart items</param>
+        /// <returns>Total length</returns>
+        public virtual decimal GetTotalLength(IList<ShoppingCartItem> cart)
+        {
+            decimal length, width, height = 0;
+            GetDimensions(cart, out width, out length, out height);
+            return length;
+        }
+
+        /// <summary>
+        /// Gets total height
+        /// </summary>
+        /// <param name="cart">Shipping cart items</param>
+        /// <returns>Total height</returns>
+        public virtual decimal GetTotalHeight(IList<ShoppingCartItem> cart)
+        {
+            decimal length, width, height = 0;
+            GetDimensions(cart, out width, out length, out height);
+            return height;
+        }
+
 
         /// <summary>
         /// Create shipment packages (requests) from shopping cart

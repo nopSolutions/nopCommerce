@@ -78,7 +78,7 @@ namespace Nop.Plugin.Shipping.AustraliaPost
 
         private int GetWeight(GetShippingOptionRequest getShippingOptionRequest)
         {
-            var totalWeigth = _shippingService.GetShoppingCartTotalWeight(getShippingOptionRequest.Items);
+            var totalWeigth = _shippingService.GetTotalWeight(getShippingOptionRequest.Items);
 
             int value = Convert.ToInt32(Math.Ceiling(this._measureService.ConvertFromPrimaryMeasureWeight(totalWeigth, this.GatewayMeasureWeight)));
             return (value < MIN_WEIGHT ? MIN_WEIGHT : value);
@@ -86,19 +86,19 @@ namespace Nop.Plugin.Shipping.AustraliaPost
 
         private int GetLength(GetShippingOptionRequest getShippingOptionRequest)
         {
-            int value = Convert.ToInt32(Math.Ceiling(this._measureService.ConvertFromPrimaryMeasureDimension(getShippingOptionRequest.GetTotalLength(), this.GatewayMeasureDimension)));
+            int value = Convert.ToInt32(Math.Ceiling(this._measureService.ConvertFromPrimaryMeasureDimension(_shippingService.GetTotalLength(getShippingOptionRequest.Items), this.GatewayMeasureDimension)));
             return (value < MIN_LENGTH ? MIN_LENGTH : value);
         }
 
         private int GetWidth(GetShippingOptionRequest getShippingOptionRequest)
         {
-            int value = Convert.ToInt32(Math.Ceiling(this._measureService.ConvertFromPrimaryMeasureDimension(getShippingOptionRequest.GetTotalWidth(), this.GatewayMeasureDimension)));
+            int value = Convert.ToInt32(Math.Ceiling(this._measureService.ConvertFromPrimaryMeasureDimension(_shippingService.GetTotalWidth(getShippingOptionRequest.Items), this.GatewayMeasureDimension)));
             return (value < MIN_LENGTH ? MIN_LENGTH : value);
         }
 
         private int GetHeight(GetShippingOptionRequest getShippingOptionRequest)
         {
-            int value = Convert.ToInt32(Math.Ceiling(this._measureService.ConvertFromPrimaryMeasureDimension(getShippingOptionRequest.GetTotalHeight(), this.GatewayMeasureDimension)));
+            int value = Convert.ToInt32(Math.Ceiling(this._measureService.ConvertFromPrimaryMeasureDimension(_shippingService.GetTotalHeight(getShippingOptionRequest.Items), this.GatewayMeasureDimension)));
             return (value < MIN_LENGTH ? MIN_LENGTH : value);
         }
 

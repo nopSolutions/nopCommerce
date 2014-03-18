@@ -130,10 +130,10 @@ namespace Nop.Plugin.Shipping.USPS
                 throw new NopException("Primary dimension can't be loaded");
 
 
-            int length = Convert.ToInt32(Math.Ceiling(getShippingOptionRequest.GetTotalLength() / baseusedMeasureDimension.Ratio * usedMeasureDimension.Ratio));
-            int height = Convert.ToInt32(Math.Ceiling(getShippingOptionRequest.GetTotalHeight() / baseusedMeasureDimension.Ratio * usedMeasureDimension.Ratio));
-            int width = Convert.ToInt32(Math.Ceiling(getShippingOptionRequest.GetTotalWidth() / baseusedMeasureDimension.Ratio * usedMeasureDimension.Ratio));
-            int weight = Convert.ToInt32(Math.Ceiling(_shippingService.GetShoppingCartTotalWeight(getShippingOptionRequest.Items) / baseusedMeasureWeight.Ratio * usedMeasureWeight.Ratio));
+            int length = Convert.ToInt32(Math.Ceiling(_shippingService.GetTotalLength(getShippingOptionRequest.Items) / baseusedMeasureDimension.Ratio * usedMeasureDimension.Ratio));
+            int height = Convert.ToInt32(Math.Ceiling(_shippingService.GetTotalHeight(getShippingOptionRequest.Items) / baseusedMeasureDimension.Ratio * usedMeasureDimension.Ratio));
+            int width = Convert.ToInt32(Math.Ceiling(_shippingService.GetTotalWidth(getShippingOptionRequest.Items) / baseusedMeasureDimension.Ratio * usedMeasureDimension.Ratio));
+            int weight = Convert.ToInt32(Math.Ceiling(_shippingService.GetTotalWeight(getShippingOptionRequest.Items) / baseusedMeasureWeight.Ratio * usedMeasureWeight.Ratio));
             
 
             if (length < 1)

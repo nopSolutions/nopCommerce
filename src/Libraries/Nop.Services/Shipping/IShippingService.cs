@@ -135,6 +135,8 @@ namespace Nop.Services.Shipping
         void UpdateWarehouse(Warehouse warehouse);
 
 
+
+
         /// <summary>
         /// Gets shopping cart item weight (of one item)
         /// </summary>
@@ -143,19 +145,42 @@ namespace Nop.Services.Shipping
         decimal GetShoppingCartItemWeight(ShoppingCartItem shoppingCartItem);
 
         /// <summary>
-        /// Gets shopping cart item total weight
-        /// </summary>
-        /// <param name="shoppingCartItem">Shopping cart item</param>
-        /// <returns>Shopping cart item weight</returns>
-        decimal GetShoppingCartItemTotalWeight(ShoppingCartItem shoppingCartItem);
-
-        /// <summary>
         /// Gets shopping cart weight
         /// </summary>
         /// <param name="cart">Cart</param>
         /// <returns>Shopping cart weight</returns>
-        decimal GetShoppingCartTotalWeight(IList<ShoppingCartItem> cart);
-        
+        decimal GetTotalWeight(IList<ShoppingCartItem> cart);
+
+        /// <summary>
+        /// Get dimensions
+        /// </summary>
+        /// <param name="cart">Shipping cart items</param>
+        /// <param name="width">Width</param>
+        /// <param name="length">Length</param>
+        /// <param name="height">Height</param>
+        void GetDimensions(IList<ShoppingCartItem> cart, out decimal width, out decimal length, out decimal height);
+
+        /// <summary>
+        /// Gets total width
+        /// </summary>
+        /// <param name="cart">Shipping cart items</param>
+        /// <returns>Total width</returns>
+        decimal GetTotalWidth(IList<ShoppingCartItem> cart);
+
+        /// <summary>
+        /// Gets total length
+        /// </summary>
+        /// <param name="cart">Shipping cart items</param>
+        /// <returns>Total length</returns>
+        decimal GetTotalLength(IList<ShoppingCartItem> cart);
+
+        /// <summary>
+        /// Gets total height
+        /// </summary>
+        /// <param name="cart">Shipping cart items</param>
+        /// <returns>Total height</returns>
+        decimal GetTotalHeight(IList<ShoppingCartItem> cart);
+
         /// <summary>
         /// Create shipment packages (requests) from shopping cart
         /// </summary>

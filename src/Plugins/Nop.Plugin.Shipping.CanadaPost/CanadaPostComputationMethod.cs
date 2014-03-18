@@ -240,7 +240,7 @@ namespace Nop.Plugin.Shipping.CanadaPost
                 item.Quantity = sci.Quantity;
                 //Canada Post uses kg(s)
 
-                decimal unitWeight = _shippingService.GetShoppingCartItemTotalWeight(sci) / sci.Quantity;
+                decimal unitWeight = _shippingService.GetShoppingCartItemWeight(sci);
                 item.Weight = _measureService.ConvertFromPrimaryMeasureWeight(unitWeight, usedMeasureWeight);
                 item.Weight = Math.Round(item.Weight, 2);
                 if (item.Weight == decimal.Zero)
