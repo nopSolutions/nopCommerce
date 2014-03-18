@@ -427,40 +427,40 @@ namespace Nop.Services.Shipping
         {
             if (shoppingCartItem == null)
                 throw new ArgumentNullException("shoppingCartItem");
-            decimal weight = decimal.Zero;
-            if (shoppingCartItem.Product != null)
+
+            if (shoppingCartItem.Product == null)
+                return decimal.Zero;
+
+            //attribute weight
+            decimal attributesTotalWeight = decimal.Zero;
+            if (!String.IsNullOrEmpty(shoppingCartItem.AttributesXml))
             {
-                //attribute weight
-                decimal attributesTotalWeight = decimal.Zero;
-                if (!String.IsNullOrEmpty(shoppingCartItem.AttributesXml))
+                var pvaValues = _productAttributeParser.ParseProductVariantAttributeValues(shoppingCartItem.AttributesXml);
+                foreach (var pvaValue in pvaValues)
                 {
-                    var pvaValues = _productAttributeParser.ParseProductVariantAttributeValues(shoppingCartItem.AttributesXml);
-                    foreach (var pvaValue in pvaValues)
+                    switch (pvaValue.AttributeValueType)
                     {
-                        switch (pvaValue.AttributeValueType)
+                        case AttributeValueType.Simple:
                         {
-                            case AttributeValueType.Simple:
-                                {
-                                    //simple attribute
-                                    attributesTotalWeight += pvaValue.WeightAdjustment;
-                                }
-                                break;
-                            case AttributeValueType.AssociatedToProduct:
-                                {
-                                    //bundled product
-                                    var associatedProduct = _productService.GetProductById(pvaValue.AssociatedProductId);
-                                    if (associatedProduct != null)
-                                    {
-                                        attributesTotalWeight += associatedProduct.Weight * pvaValue.Quantity;
-                                    }
-                                }
-                                break;
+                            //simple attribute
+                            attributesTotalWeight += pvaValue.WeightAdjustment;
                         }
+                            break;
+                        case AttributeValueType.AssociatedToProduct:
+                        {
+                            //bundled product
+                            var associatedProduct = _productService.GetProductById(pvaValue.AssociatedProductId);
+                            if (associatedProduct != null && associatedProduct.IsShipEnabled)
+                            {
+                                attributesTotalWeight += associatedProduct.Weight*pvaValue.Quantity;
+                            }
+                        }
+                            break;
                     }
                 }
-
-                weight = shoppingCartItem.Product.Weight + attributesTotalWeight;
             }
+
+            var weight = shoppingCartItem.Product.Weight + attributesTotalWeight;
             return weight;
         }
 
@@ -515,14 +515,36 @@ namespace Nop.Services.Shipping
                     var product = shoppingCartItem.Product;
                     if (product != null)
                     {
-                        totalVolume += shoppingCartItem.Quantity * product.Height * product.Width * product.Length;
+                        var productWidth = product.Width;
+                        var productLength = product.Length;
+                        var productHeight = product.Height;
+                        //attributes
+                        if (!String.IsNullOrEmpty(shoppingCartItem.AttributesXml))
+                        {
+                            //bundled products (associated attributes)
+                            var pvaValues = _productAttributeParser.ParseProductVariantAttributeValues(shoppingCartItem.AttributesXml)
+                                .Where(x => x.AttributeValueType == AttributeValueType.AssociatedToProduct)
+                                .ToList();
+                            foreach (var pvaValue in pvaValues)
+                            {
+                                var associatedProduct = _productService.GetProductById(pvaValue.AssociatedProductId);
+                                if (associatedProduct != null && associatedProduct.IsShipEnabled)
+                                {
+                                    productWidth += associatedProduct.Width * pvaValue.Quantity;
+                                    productLength += associatedProduct.Length * pvaValue.Quantity;
+                                    productHeight += associatedProduct.Height * pvaValue.Quantity;
+                                }
+                            }
+                        }
 
-                        if (product.Width > maxProductWidth)
-                            maxProductWidth = product.Width;
-                        if (product.Length > maxProductLength)
-                            maxProductLength = product.Length;
-                        if (product.Height > maxProductHeight)
-                            maxProductHeight = product.Height;
+                        totalVolume += shoppingCartItem.Quantity * productHeight * productWidth * productLength;
+
+                        if (productWidth > maxProductWidth)
+                            maxProductWidth = productWidth;
+                        if (productLength > maxProductLength)
+                            maxProductLength = productLength;
+                        if (productHeight > maxProductHeight)
+                            maxProductHeight = productHeight;
                     }
                 }
                 decimal dimension = Convert.ToDecimal(Math.Pow(Convert.ToDouble(totalVolume), (double)(1.0 / 3.0)));
@@ -550,6 +572,24 @@ namespace Nop.Services.Shipping
                         width += product.Width * shoppingCartItem.Quantity;
                         length += product.Length * shoppingCartItem.Quantity;
                         height += product.Height * shoppingCartItem.Quantity;
+                        //attributes
+                        if (!String.IsNullOrEmpty(shoppingCartItem.AttributesXml))
+                        {
+                            //bundled products (associated attributes)
+                            var pvaValues = _productAttributeParser.ParseProductVariantAttributeValues(shoppingCartItem.AttributesXml)
+                                .Where(x => x.AttributeValueType == AttributeValueType.AssociatedToProduct)
+                                .ToList();
+                            foreach (var pvaValue in pvaValues)
+                            {
+                                var associatedProduct = _productService.GetProductById(pvaValue.AssociatedProductId);
+                                if (associatedProduct != null && associatedProduct.IsShipEnabled)
+                                {
+                                    width += associatedProduct.Width * pvaValue.Quantity;
+                                    length += associatedProduct.Length * pvaValue.Quantity;
+                                    height += associatedProduct.Height * pvaValue.Quantity;
+                                }
+                            }
+                        }
                     }
                 }
             }
