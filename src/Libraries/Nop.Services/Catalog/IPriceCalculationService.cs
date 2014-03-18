@@ -54,20 +54,11 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="customer">The customer</param>
-        /// <returns>Discount amount</returns>
-        decimal GetDiscountAmount(Product product, 
-            Customer customer);
-
-        /// <summary>
-        /// Gets discount amount
-        /// </summary>
-        /// <param name="product">Product</param>
-        /// <param name="customer">The customer</param>
         /// <param name="additionalCharge">Additional charge</param>
         /// <returns>Discount amount</returns>
         decimal GetDiscountAmount(Product product, 
-            Customer customer, 
-            decimal additionalCharge);
+            Customer customer,
+            decimal additionalCharge = decimal.Zero);
 
         /// <summary>
         /// Gets discount amount

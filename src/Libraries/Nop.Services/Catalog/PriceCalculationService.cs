@@ -274,19 +274,7 @@ namespace Nop.Services.Catalog
             var customer = _workContext.CurrentCustomer;
             return GetDiscountAmount(product, customer, decimal.Zero);
         }
-
-        /// <summary>
-        /// Gets discount amount
-        /// </summary>
-        /// <param name="product">Product</param>
-        /// <param name="customer">The customer</param>
-        /// <returns>Discount amount</returns>
-        public virtual decimal GetDiscountAmount(Product product, 
-            Customer customer)
-        {
-            return GetDiscountAmount(product, customer, decimal.Zero);
-        }
-
+        
         /// <summary>
         /// Gets discount amount
         /// </summary>
@@ -295,8 +283,8 @@ namespace Nop.Services.Catalog
         /// <param name="additionalCharge">Additional charge</param>
         /// <returns>Discount amount</returns>
         public virtual decimal GetDiscountAmount(Product product, 
-            Customer customer, 
-            decimal additionalCharge)
+            Customer customer,
+            decimal additionalCharge = decimal.Zero)
         {
             Discount appliedDiscount = null;
             return GetDiscountAmount(product, customer, additionalCharge, out appliedDiscount);
