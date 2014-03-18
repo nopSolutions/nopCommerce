@@ -148,8 +148,9 @@ namespace Nop.Services.Shipping
         /// Gets shopping cart weight
         /// </summary>
         /// <param name="cart">Cart</param>
+        /// <param name="includeCheckoutAttributes">A value indicating whether we should calculate weights of selected checkotu attributes</param>
         /// <returns>Shopping cart weight</returns>
-        decimal GetTotalWeight(IList<ShoppingCartItem> cart);
+        decimal GetTotalWeight(IList<ShoppingCartItem> cart, bool includeCheckoutAttributes = true);
 
         /// <summary>
         /// Get dimensions

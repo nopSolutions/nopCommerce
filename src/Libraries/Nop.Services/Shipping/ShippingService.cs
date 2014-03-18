@@ -468,8 +468,9 @@ namespace Nop.Services.Shipping
         /// Gets shopping cart weight
         /// </summary>
         /// <param name="cart">Cart</param>
+        /// <param name="includeCheckoutAttributes">A value indicating whether we should calculate weights of selected checkotu attributes</param>
         /// <returns>Shopping cart weight</returns>
-        public virtual decimal GetTotalWeight(IList<ShoppingCartItem> cart)
+        public virtual decimal GetTotalWeight(IList<ShoppingCartItem> cart, bool includeCheckoutAttributes = true)
         {
             Customer customer = cart.GetCustomer();
 
@@ -479,7 +480,7 @@ namespace Nop.Services.Shipping
                 totalWeight += GetShoppingCartItemWeight(shoppingCartItem) * shoppingCartItem.Quantity;
 
             //checkout attributes
-            if (customer != null)
+            if (customer != null && includeCheckoutAttributes)
             {
                 var checkoutAttributesXml = customer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes, _genericAttributeService, _storeContext.CurrentStore.Id);
                 if (!String.IsNullOrEmpty(checkoutAttributesXml))
