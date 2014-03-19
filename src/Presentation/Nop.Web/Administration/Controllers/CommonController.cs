@@ -11,6 +11,7 @@ using System.Web.Mvc;
 using Nop.Admin.Models.Common;
 using Nop.Core;
 using Nop.Core.Caching;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Plugins;
@@ -24,6 +25,7 @@ using Nop.Services.Payments;
 using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
+using Nop.Services.Stores;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Security;
@@ -51,6 +53,8 @@ namespace Nop.Admin.Controllers
         private readonly IPermissionService _permissionService;
         private readonly ILocalizationService _localizationService;
         private readonly ISearchTermService _searchTermService;
+        private readonly IStoreService _storeService;
+        private readonly CatalogSettings _catalogSettings;
         private readonly HttpContextBase _httpContext;
 
         #endregion
@@ -74,6 +78,8 @@ namespace Nop.Admin.Controllers
             IPermissionService permissionService, 
             ILocalizationService localizationService,
             ISearchTermService searchTermService,
+            IStoreService storeService,
+            CatalogSettings catalogSettings,
             HttpContextBase httpContext)
         {
             this._paymentService = paymentService;
@@ -93,6 +99,8 @@ namespace Nop.Admin.Controllers
             this._permissionService = permissionService;
             this._localizationService = localizationService;
             this._searchTermService = searchTermService;
+            this._storeService = storeService;
+            this._catalogSettings = catalogSettings;
             this._httpContext = httpContext;
         }
 
@@ -315,6 +323,24 @@ namespace Nop.Admin.Controllers
                         Level = SystemWarningLevel.Warning,
                         Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.IncompatiblePlugin"), pluginName )
                     });
+
+            //performance settings
+            if (!_catalogSettings.IgnoreStoreLimitations && _storeService.GetAllStores().Count == 1)
+            {
+                model.Add(new SystemWarningModel()
+                {
+                    Level = SystemWarningLevel.Warning,
+                    Text = _localizationService.GetResource("Admin.System.Warnings.Performance.IgnoreStoreLimitations")
+                });
+            }
+            if (!_catalogSettings.IgnoreAcl)
+            {
+                model.Add(new SystemWarningModel()
+                {
+                    Level = SystemWarningLevel.Warning,
+                    Text = _localizationService.GetResource("Admin.System.Warnings.Performance.IgnoreAcl")
+                });
+            }
 
             //validate write permissions (the same procedure like during installation)
             var dirPermissionsOk = true;

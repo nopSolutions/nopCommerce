@@ -500,6 +500,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.IgnoreStoreLimitations.Hint">
     <Value>Check to ignore "limit per store" rules configured for entities (sitewide). Recommended to enable this setting if you have only one store or don''t use it. It can significantly improve performance.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.Performance.IgnoreStoreLimitations">
+    <Value>Performance. You use only one store. Recommended to ignore store limitations (catalog settings)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.Performance.IgnoreAcl">
+    <Value>Performance. Recommended to ignore ACL rules if you don''t use them (catalog settings)</Value>
+  </LocaleResource>
 </Language>
 '
 

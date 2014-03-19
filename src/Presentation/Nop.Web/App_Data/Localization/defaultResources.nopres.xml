@@ -9657,6 +9657,12 @@
   <LocaleResource Name="Admin.System.Warnings.PaymentMethods.OK">
     <Value>Payment methods are OK</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.Performance.IgnoreStoreLimitations">
+    <Value>Performance. You use only one store. Recommended to ignore store limitations (catalog settings)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.Performance.IgnoreAcl">
+    <Value>Performance. Recommended to ignore ACL rules if you don't use them (catalog settings)</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.System.Warnings.PrimaryCurrency.NotSet">
     <Value>Primary store currency is not set</Value>
   </LocaleResource>
