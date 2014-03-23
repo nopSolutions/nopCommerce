@@ -506,6 +506,9 @@ set @resources='
   <LocaleResource Name="Admin.System.Warnings.Performance.IgnoreAcl">
     <Value>Performance. Recommended to ignore ACL rules if you don''t use them (catalog settings)</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.Hosts.Hint">
+    <Value>The comma separated list of possible HTTP_HOST values (for example, "yourstore.com,www.yourstore.com"). This property is required only when you run a multi-store solution to determine the current store.</Value>
+  </LocaleResource>
 </Language>
 '
 
