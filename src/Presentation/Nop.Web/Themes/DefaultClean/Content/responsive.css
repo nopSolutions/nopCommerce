@@ -27,6 +27,8 @@
     .email-a-friend-page .friend-email,.email-a-friend-page .your-email,.email-a-friend-page .personal-message{max-width:100%;}
     /* NAVIGATIONS */
     .block-recently-viewed-products li a{display:table;}
+    /* COMPARE PRODUCTS */
+	.compare-products-table td img{max-width:100%}
 }
 
 
