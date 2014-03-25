@@ -65,7 +65,6 @@ function display_kendoui_grid_error(e) {
     if (e.errors) {
         if ((typeof e.errors) == 'string') {
             //single error
-            alert('single error');
             //display the message
             alert(e.errors);
         } else {
