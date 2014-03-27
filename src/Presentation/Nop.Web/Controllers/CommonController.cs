@@ -85,23 +85,39 @@ namespace Nop.Web.Controllers
 
         #region Constructors
 
-        public CommonController(ICategoryService categoryService, IProductService productService,
-            IManufacturerService manufacturerService, ITopicService topicService,
+        public CommonController(ICategoryService categoryService,
+            IProductService productService,
+            IManufacturerService manufacturerService,
+            ITopicService topicService,
             ILanguageService languageService,
-            ICurrencyService currencyService, ILocalizationService localizationService,
-            IWorkContext workContext, IStoreContext storeContext,
-            IQueuedEmailService queuedEmailService, IEmailAccountService emailAccountService,
-            ISitemapGenerator sitemapGenerator, IThemeContext themeContext,
-            IThemeProvider themeProvider, IForumService forumService,
-            IGenericAttributeService genericAttributeService, IWebHelper webHelper,
-            IPermissionService permissionService, IMobileDeviceHelper mobileDeviceHelper,
-            HttpContextBase httpContext, ICacheManager cacheManager,
-            ICustomerActivityService customerActivityService, CustomerSettings customerSettings, 
-            TaxSettings taxSettings, CatalogSettings catalogSettings,
-            StoreInformationSettings storeInformationSettings, EmailAccountSettings emailAccountSettings,
-            CommonSettings commonSettings, BlogSettings blogSettings, 
-            NewsSettings newsSettings, ForumSettings forumSettings,
-            LocalizationSettings localizationSettings, CaptchaSettings captchaSettings)
+            ICurrencyService currencyService,
+            ILocalizationService localizationService,
+            IWorkContext workContext, 
+            IStoreContext storeContext,
+            IQueuedEmailService queuedEmailService, 
+            IEmailAccountService emailAccountService,
+            ISitemapGenerator sitemapGenerator,
+            IThemeContext themeContext,
+            IThemeProvider themeProvider,
+            IForumService forumService,
+            IGenericAttributeService genericAttributeService, 
+            IWebHelper webHelper,
+            IPermissionService permissionService,
+            IMobileDeviceHelper mobileDeviceHelper,
+            HttpContextBase httpContext, 
+            ICacheManager cacheManager,
+            ICustomerActivityService customerActivityService,
+            CustomerSettings customerSettings, 
+            TaxSettings taxSettings, 
+            CatalogSettings catalogSettings,
+            StoreInformationSettings storeInformationSettings,
+            EmailAccountSettings emailAccountSettings,
+            CommonSettings commonSettings, 
+            BlogSettings blogSettings, 
+            NewsSettings newsSettings,
+            ForumSettings forumSettings,
+            LocalizationSettings localizationSettings, 
+            CaptchaSettings captchaSettings)
         {
             this._categoryService = categoryService;
             this._productService = productService;
@@ -528,48 +544,56 @@ namespace Nop.Web.Controllers
             if (!_commonSettings.SitemapEnabled)
                 return RedirectToRoute("HomePage");
 
-            var model = new SitemapModel();
-            if (_commonSettings.SitemapIncludeCategories)
+            var customerRolesIds = _workContext.CurrentCustomer.CustomerRoles
+               .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
+            string cacheKey = string.Format(ModelCacheEventConsumer.SITEMAP_PAGE_MODEL_KEY, _workContext.WorkingLanguage.Id, string.Join(",", customerRolesIds), _storeContext.CurrentStore.Id);
+            var cachedModel = _cacheManager.Get(cacheKey, () =>
             {
-                var categories = _categoryService.GetAllCategories();
-                model.Categories = categories.Select(x => x.ToModel()).ToList();
-            }
-            if (_commonSettings.SitemapIncludeManufacturers)
-            {
-                var manufacturers = _manufacturerService.GetAllManufacturers();
-                model.Manufacturers = manufacturers.Select(x => x.ToModel()).ToList();
-            }
-            if (_commonSettings.SitemapIncludeProducts)
-            {
-                //limit product to 200 until paging is supported on this page
-                var products = _productService.SearchProducts(storeId: _storeContext.CurrentStore.Id, 
-                    visibleIndividuallyOnly: true,
-                    pageSize: 200);
-                model.Products = products.Select(product => new ProductOverviewModel()
+                var model = new SitemapModel();
+                if (_commonSettings.SitemapIncludeCategories)
                 {
-                    Id = product.Id,
-                    Name = product.GetLocalized(x => x.Name),
-                    ShortDescription = product.GetLocalized(x => x.ShortDescription),
-                    FullDescription = product.GetLocalized(x => x.FullDescription),
-                    SeName = product.GetSeName(),
-                }).ToList();
-            }
-            if (_commonSettings.SitemapIncludeTopics)
-            {
-                var topics = _topicService.GetAllTopics(_storeContext.CurrentStore.Id)
-                    .ToList()
-                    .FindAll(t => t.IncludeInSitemap);
-                model.Topics = topics.Select(topic => new TopicModel()
+                    var categories = _categoryService.GetAllCategories();
+                    model.Categories = categories.Select(x => x.ToModel()).ToList();
+                }
+                if (_commonSettings.SitemapIncludeManufacturers)
                 {
-                    Id = topic.Id,
-                    SystemName = topic.SystemName,
-                    IncludeInSitemap = topic.IncludeInSitemap,
-                    IsPasswordProtected = topic.IsPasswordProtected,
-                    Title = topic.GetLocalized(x => x.Title),
-                })
-                .ToList();
-            }
-            return View(model);
+                    var manufacturers = _manufacturerService.GetAllManufacturers();
+                    model.Manufacturers = manufacturers.Select(x => x.ToModel()).ToList();
+                }
+                if (_commonSettings.SitemapIncludeProducts)
+                {
+                    //limit product to 200 until paging is supported on this page
+                    var products = _productService.SearchProducts(storeId: _storeContext.CurrentStore.Id,
+                        visibleIndividuallyOnly: true,
+                        pageSize: 200);
+                    model.Products = products.Select(product => new ProductOverviewModel()
+                    {
+                        Id = product.Id,
+                        Name = product.GetLocalized(x => x.Name),
+                        ShortDescription = product.GetLocalized(x => x.ShortDescription),
+                        FullDescription = product.GetLocalized(x => x.FullDescription),
+                        SeName = product.GetSeName(),
+                    }).ToList();
+                }
+                if (_commonSettings.SitemapIncludeTopics)
+                {
+                    var topics = _topicService.GetAllTopics(_storeContext.CurrentStore.Id)
+                        .ToList()
+                        .FindAll(t => t.IncludeInSitemap);
+                    model.Topics = topics.Select(topic => new TopicModel()
+                    {
+                        Id = topic.Id,
+                        SystemName = topic.SystemName,
+                        IncludeInSitemap = topic.IncludeInSitemap,
+                        IsPasswordProtected = topic.IsPasswordProtected,
+                        Title = topic.GetLocalized(x => x.Title),
+                    })
+                    .ToList();
+                }
+                return model;
+            });
+
+            return View(cachedModel);
         }
 
         //SEO sitemap page
@@ -579,7 +603,13 @@ namespace Nop.Web.Controllers
             if (!_commonSettings.SitemapEnabled)
                 return RedirectToRoute("HomePage");
 
-            string siteMap = _sitemapGenerator.Generate(this.Url);
+             var customerRolesIds = _workContext.CurrentCustomer.CustomerRoles
+               .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
+            string cacheKey = string.Format(ModelCacheEventConsumer.SITEMAP_SEO_MODEL_KEY, _workContext.WorkingLanguage.Id, string.Join(",", customerRolesIds), _storeContext.CurrentStore.Id);
+            var siteMap = _cacheManager.Get(cacheKey, () =>
+            {
+                return _sitemapGenerator.Generate(this.Url);
+            });
             return Content(siteMap, "text/xml");
         }
 

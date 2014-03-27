@@ -51,6 +51,7 @@ namespace Nop.Web.Infrastructure.Cache
         IConsumer<EntityUpdated<ProductCategory>>,
         IConsumer<EntityDeleted<ProductCategory>>,
         //products
+        IConsumer<EntityInserted<Product>>,
         IConsumer<EntityUpdated<Product>>,
         IConsumer<EntityDeleted<Product>>,
         //product tags
@@ -68,6 +69,7 @@ namespace Nop.Web.Infrastructure.Cache
         IConsumer<EntityUpdated<ProductSpecificationAttribute>>,
         IConsumer<EntityDeleted<ProductSpecificationAttribute>>,
         //Topics
+        IConsumer<EntityInserted<Topic>>,
         IConsumer<EntityUpdated<Topic>>,
         IConsumer<EntityDeleted<Topic>>,
         //Orders
@@ -508,7 +510,27 @@ namespace Nop.Web.Infrastructure.Cache
         /// </remarks>
         public const string CHECKOUTATTRIBUTES_EXIST_KEY = "Nop.pres.checkoutattributes.exist-{0}-{1}";
         public const string CHECKOUTATTRIBUTES_PATTERN_KEY = "Nop.pres.checkoutattributes";
-        
+
+        /// <summary>
+        /// Key for sitemap on the sitemap page
+        /// </summary>
+        /// <remarks>
+        /// {0} : language id
+        /// {1} : roles of the current user
+        /// {2} : current store ID
+        /// </remarks>
+        public const string SITEMAP_PAGE_MODEL_KEY = "Nop.pres.sitemap.page-{0}-{1}-{2}";
+        /// <summary>
+        /// Key for sitemap on the sitemap SEO page
+        /// </summary>
+        /// <remarks>
+        /// {0} : language id
+        /// {1} : roles of the current user
+        /// {2} : current store ID
+        /// </remarks>
+        public const string SITEMAP_SEO_MODEL_KEY = "Nop.pres.sitemap.seo-{0}-{1}-{2}";
+        public const string SITEMAP_PATTERN_KEY = "Nop.pres.sitemap";
+
         private readonly ICacheManager _cacheManager;
         
         public ModelCacheEventConsumer()
@@ -591,6 +613,7 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(PRODUCTS_ALSO_PURCHASED_IDS_PATTERN_KEY); //depends on CatalogSettings.ProductsAlsoPurchasedNumber
             _cacheManager.RemoveByPattern(BLOG_PATTERN_KEY); //depends on BlogSettings.NumberOfTags
             _cacheManager.RemoveByPattern(NEWS_PATTERN_KEY); //depends on NewsSettings.MainPageNewsCount
+            _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY); //depends on distinct sitemap settings
 
         }
 
@@ -612,16 +635,19 @@ namespace Nop.Web.Infrastructure.Cache
         public void HandleEvent(EntityInserted<Manufacturer> eventMessage)
         {
             _cacheManager.RemoveByPattern(MANUFACTURER_NAVIGATION_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
         }
         public void HandleEvent(EntityUpdated<Manufacturer> eventMessage)
         {
             _cacheManager.RemoveByPattern(MANUFACTURER_NAVIGATION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_MANUFACTURERS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
         }
         public void HandleEvent(EntityDeleted<Manufacturer> eventMessage)
         {
             _cacheManager.RemoveByPattern(MANUFACTURER_NAVIGATION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_MANUFACTURERS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
         }
 
         //product manufacturers
@@ -649,6 +675,7 @@ namespace Nop.Web.Infrastructure.Cache
              _cacheManager.RemoveByPattern(CATEGORY_MENU_PATTERN_KEY);
              _cacheManager.RemoveByPattern(CATEGORY_CHILD_IDENTIFIERS_PATTERN_KEY);
              _cacheManager.RemoveByPattern(CATEGORY_HAS_SUBCATEGORIES_PATTERN_KEY);
+             _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
         }
         public void HandleEvent(EntityUpdated<Category> eventMessage)
         {
@@ -658,6 +685,7 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(CATEGORY_MENU_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_CHILD_IDENTIFIERS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_HAS_SUBCATEGORIES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
         }
         public void HandleEvent(EntityDeleted<Category> eventMessage)
         {
@@ -667,6 +695,7 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(CATEGORY_MENU_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_CHILD_IDENTIFIERS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_HAS_SUBCATEGORIES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
         }
 
         //product categories
@@ -696,6 +725,10 @@ namespace Nop.Web.Infrastructure.Cache
          }
 
         //products
+        public void HandleEvent(EntityInserted<Product> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
+        }
         public void HandleEvent(EntityUpdated<Product> eventMessage)
         {
             //_cacheManager.RemoveByPattern(PRODUCT_BREADCRUMB_PATTERN_KEY);
@@ -704,6 +737,7 @@ namespace Nop.Web.Infrastructure.Cache
             //_cacheManager.RemoveByPattern(CATEGORY_NUMBER_OF_PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTS_ALSO_PURCHASED_IDS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
         }
         public void HandleEvent(EntityDeleted<Product> eventMessage)
         {
@@ -712,6 +746,7 @@ namespace Nop.Web.Infrastructure.Cache
             //_cacheManager.RemoveByPattern(CATEGORY_NUMBER_OF_PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTS_ALSO_PURCHASED_IDS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
         }
         
         //product tags
@@ -766,13 +801,19 @@ namespace Nop.Web.Infrastructure.Cache
         }
 
         //Topics
+        public void HandleEvent(EntityInserted<Topic> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
+        }
         public void HandleEvent(EntityUpdated<Topic> eventMessage)
         {
             _cacheManager.RemoveByPattern(TOPIC_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
         }
         public void HandleEvent(EntityDeleted<Topic> eventMessage)
         {
             _cacheManager.RemoveByPattern(TOPIC_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
         }
         
         //Orders
