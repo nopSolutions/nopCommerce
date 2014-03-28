@@ -1,8 +1,10 @@
 @model Double
 @Html.TextBoxFor(model => model)
 <script>
-    $("#@ViewData.TemplateInfo.GetFullHtmlFieldId(string.Empty)").kendoNumericTextBox({
-        format: "#.0000",
-        decimals: 4 //always display 4 digits
+    $(document).ready(function() {
+        $("#@ViewData.TemplateInfo.GetFullHtmlFieldId(string.Empty)").kendoNumericTextBox({
+            format: "#.0000",
+            decimals: 4 //always display 4 digits
+        });
     });
 </script>
