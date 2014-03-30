@@ -2621,6 +2621,11 @@
               resource lookups using this strongly typed resource class.
             </summary>
         </member>
+        <member name="P:Autofac.Features.OpenGenerics.OpenGenericServiceBinderResources.ImplementorDoesntImplementService">
+            <summary>
+              Looks up a localized string similar to The type &apos;{0}&apos; does not implement the interface &apos;{1}&apos;..
+            </summary>
+        </member>
         <member name="P:Autofac.Features.OpenGenerics.OpenGenericServiceBinderResources.ImplementorMustBeOpenGenericTypeDefinition">
             <summary>
               Looks up a localized string similar to The implementation type &apos;{0}&apos; is not an open generic type definition..

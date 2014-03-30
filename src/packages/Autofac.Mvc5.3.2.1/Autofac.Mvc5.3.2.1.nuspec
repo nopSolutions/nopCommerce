@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>Autofac.Mvc5</id>
-    <version>3.2.0</version>
+    <version>3.2.1</version>
     <title>Autofac ASP.NET MVC 5.1 Integration</title>
     <authors>Autofac Contributors</authors>
     <owners>Autofac Contributors</owners>
@@ -14,7 +14,7 @@
     <summary>Provides an IControllerFactory implementation and other integration points for System.Web.Mvc.</summary>
     <language>en-US</language>
     <dependencies>
-      <dependency id="Autofac" version="[3.2.0, 4.0.0)" />
+      <dependency id="Autofac" version="[3.3.1, 4.0.0)" />
       <dependency id="Microsoft.AspNet.Mvc" version="[5.1.0, 5.2.0)" />
     </dependencies>
   </metadata>
