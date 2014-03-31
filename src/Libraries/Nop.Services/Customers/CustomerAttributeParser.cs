@@ -231,22 +231,22 @@ namespace Nop.Services.Customers
             var warnings = new List<string>();
 
             //ensure it's our attributes
-            var pva1Collection = ParseCustomerAttributes(selectedAttributes);
+            var cva1Collection = ParseCustomerAttributes(selectedAttributes);
 
-            //validate required product attributes (whether they're chosen/selected/entered)
-            var pva2Collection = _customerAttributeService.GetAllCustomerAttributes();
-            foreach (var pva2 in pva2Collection)
+            //validate required checkout attributes (whether they're chosen/selected/entered)
+            var cva2Collection = _customerAttributeService.GetAllCustomerAttributes();
+            foreach (var cva2 in cva2Collection)
             {
-                if (pva2.IsRequired)
+                if (cva2.IsRequired)
                 {
                     bool found = false;
-                    //selected product attributes
-                    foreach (var pva1 in pva1Collection)
+                    //selected checkout attributes
+                    foreach (var cva1 in cva1Collection)
                     {
-                        if (pva1.Id == pva2.Id)
+                        if (cva1.Id == cva2.Id)
                         {
-                            var pvaValuesStr = ParseValues(selectedAttributes, pva1.Id);
-                            foreach (string str1 in pvaValuesStr)
+                            var cvaValuesStr = ParseValues(selectedAttributes, cva1.Id);
+                            foreach (string str1 in cvaValuesStr)
                             {
                                 if (!String.IsNullOrEmpty(str1.Trim()))
                                 {
@@ -260,7 +260,7 @@ namespace Nop.Services.Customers
                     //if not found
                     if (!found)
                     {
-                        var notFoundWarning = string.Format(_localizationService.GetResource("ShoppingCart.SelectAttribute"), pva2.GetLocalized(a => a.Name));
+                        var notFoundWarning = string.Format(_localizationService.GetResource("ShoppingCart.SelectAttribute"), cva2.GetLocalized(a => a.Name));
 
                         warnings.Add(notFoundWarning);
                     }
