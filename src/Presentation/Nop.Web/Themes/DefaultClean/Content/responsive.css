@@ -17,6 +17,7 @@
     .product-details-page .gallery{width:50%;margin:25px 0 15px 0;}
     .product-details-page .gallery .picture img{max-width:100%;}
     .product-details-page .overview{float:left;width:41%;margin:5px 0 5px 2%;padding:10px 3%;}
+    .product-details-page .attributes select,.product-details-page .attributes .textbox,.product-details-page textarea{max-width:90%;}
     /* CONTACTS */
     .contact-page .inputs-right{margin-left:25px;}
     .contact-page .email,.contact-page .fullname{width:215px;}
