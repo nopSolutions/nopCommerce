@@ -51,6 +51,7 @@ namespace Nop.Web.Framework
         private Vendor _cachedVendor;
         private Language _cachedLanguage;
         private Currency _cachedCurrency;
+        private TaxDisplayType? _cachedTaxDisplayType;
 
         #endregion
 
@@ -426,15 +427,27 @@ namespace Nop.Web.Framework
         {
             get
             {
+                //cache
+                if (_cachedTaxDisplayType != null)
+                    return _cachedTaxDisplayType.Value;
+
+                TaxDisplayType taxDisplayType;
                 if (_taxSettings.AllowCustomersToSelectTaxDisplayType && this.CurrentCustomer != null)
                 {
-                    return (TaxDisplayType)this.CurrentCustomer.GetAttribute<int>(
+                    taxDisplayType = (TaxDisplayType) this.CurrentCustomer.GetAttribute<int>(
                         SystemCustomerAttributeNames.TaxDisplayTypeId,
                         _genericAttributeService,
                         _storeContext.CurrentStore.Id);
                 }
+                else
+                {
+                    taxDisplayType = _taxSettings.TaxDisplayType;
+                }
 
-                return _taxSettings.TaxDisplayType;
+                //cache
+                _cachedTaxDisplayType = taxDisplayType;
+                return _cachedTaxDisplayType.Value;
+
             }
             set
             {
@@ -444,6 +457,10 @@ namespace Nop.Web.Framework
                 _genericAttributeService.SaveAttribute(this.CurrentCustomer, 
                     SystemCustomerAttributeNames.TaxDisplayTypeId,
                     (int)value, _storeContext.CurrentStore.Id);
+
+                //reset cache
+                _cachedTaxDisplayType = null;
+
             }
         }
 
