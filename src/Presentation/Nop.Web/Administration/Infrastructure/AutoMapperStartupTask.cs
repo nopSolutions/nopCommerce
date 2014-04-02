@@ -662,7 +662,8 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             Mapper.CreateMap<ShippingSettingsModel, ShippingSettings>()
                 .ForMember(dest => dest.ActiveShippingRateComputationMethodSystemNames, mo => mo.Ignore())
-                .ForMember(dest => dest.ReturnValidOptionsIfThereAreAny, mo => mo.Ignore());
+                .ForMember(dest => dest.ReturnValidOptionsIfThereAreAny, mo => mo.Ignore())
+                .ForMember(dest => dest.UseCubeRootMethod, mo => mo.Ignore());
             Mapper.CreateMap<CatalogSettings, CatalogSettingsModel>()
                 .ForMember(dest => dest.ActiveStoreScopeConfiguration, mo => mo.Ignore())
                 .ForMember(dest => dest.ShowProductSku_OverrideForStore, mo => mo.Ignore())
