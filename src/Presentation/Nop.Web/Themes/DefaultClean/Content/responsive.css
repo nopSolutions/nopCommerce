@@ -94,7 +94,7 @@
     .related-products-grid .title,.also-purchased-products-grid .title{margin-bottom:15px;}
     .related-products-grid .item-box,.also-purchased-products-grid .item-box{display:inline-block;float:none;}
     .product-details-page .attributes .textbox,.product-details-page .giftcard .message,.product-details-page .attributes textarea{max-width:90%;width:250px;}
-    .product-details-page dd{width:260px;}
+    .product-details-page dd{width:240px;}
     /* NAVIGATIONS */
     .block-account-navigation a{white-space:normal;}
     /* PRODUCT REVIEWS PAGE */
