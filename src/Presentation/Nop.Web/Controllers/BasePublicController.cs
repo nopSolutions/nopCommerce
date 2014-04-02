@@ -9,7 +9,6 @@ using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Security;
 using Nop.Web.Framework.Seo;
-using Nop.Web.Framework.UI;
 
 namespace Nop.Web.Controllers
 {
