@@ -449,33 +449,37 @@ namespace Nop.Admin.Controllers
             {
                 model.IsShippable = true;
 
-                model.ShippingAddress = order.ShippingAddress.ToModel();
-                model.ShippingAddress.FirstNameEnabled = true;
-                model.ShippingAddress.FirstNameRequired = true;
-                model.ShippingAddress.LastNameEnabled = true;
-                model.ShippingAddress.LastNameRequired = true;
-                model.ShippingAddress.EmailEnabled = true;
-                model.ShippingAddress.EmailRequired = true;
-                model.ShippingAddress.CompanyEnabled = _addressSettings.CompanyEnabled;
-                model.ShippingAddress.CompanyRequired = _addressSettings.CompanyRequired;
-                model.ShippingAddress.CountryEnabled = _addressSettings.CountryEnabled;
-                model.ShippingAddress.StateProvinceEnabled = _addressSettings.StateProvinceEnabled;
-                model.ShippingAddress.CityEnabled = _addressSettings.CityEnabled;
-                model.ShippingAddress.CityRequired = _addressSettings.CityRequired;
-                model.ShippingAddress.StreetAddressEnabled = _addressSettings.StreetAddressEnabled;
-                model.ShippingAddress.StreetAddressRequired = _addressSettings.StreetAddressRequired;
-                model.ShippingAddress.StreetAddress2Enabled = _addressSettings.StreetAddress2Enabled;
-                model.ShippingAddress.StreetAddress2Required = _addressSettings.StreetAddress2Required;
-                model.ShippingAddress.ZipPostalCodeEnabled = _addressSettings.ZipPostalCodeEnabled;
-                model.ShippingAddress.ZipPostalCodeRequired = _addressSettings.ZipPostalCodeRequired;
-                model.ShippingAddress.PhoneEnabled = _addressSettings.PhoneEnabled;
-                model.ShippingAddress.PhoneRequired = _addressSettings.PhoneRequired;
-                model.ShippingAddress.FaxEnabled = _addressSettings.FaxEnabled;
-                model.ShippingAddress.FaxRequired = _addressSettings.FaxRequired;
+                model.PickUpInStore = order.PickUpInStore;
+                if (!order.PickUpInStore)
+                {
+                    model.ShippingAddress = order.ShippingAddress.ToModel();
+                    model.ShippingAddress.FirstNameEnabled = true;
+                    model.ShippingAddress.FirstNameRequired = true;
+                    model.ShippingAddress.LastNameEnabled = true;
+                    model.ShippingAddress.LastNameRequired = true;
+                    model.ShippingAddress.EmailEnabled = true;
+                    model.ShippingAddress.EmailRequired = true;
+                    model.ShippingAddress.CompanyEnabled = _addressSettings.CompanyEnabled;
+                    model.ShippingAddress.CompanyRequired = _addressSettings.CompanyRequired;
+                    model.ShippingAddress.CountryEnabled = _addressSettings.CountryEnabled;
+                    model.ShippingAddress.StateProvinceEnabled = _addressSettings.StateProvinceEnabled;
+                    model.ShippingAddress.CityEnabled = _addressSettings.CityEnabled;
+                    model.ShippingAddress.CityRequired = _addressSettings.CityRequired;
+                    model.ShippingAddress.StreetAddressEnabled = _addressSettings.StreetAddressEnabled;
+                    model.ShippingAddress.StreetAddressRequired = _addressSettings.StreetAddressRequired;
+                    model.ShippingAddress.StreetAddress2Enabled = _addressSettings.StreetAddress2Enabled;
+                    model.ShippingAddress.StreetAddress2Required = _addressSettings.StreetAddress2Required;
+                    model.ShippingAddress.ZipPostalCodeEnabled = _addressSettings.ZipPostalCodeEnabled;
+                    model.ShippingAddress.ZipPostalCodeRequired = _addressSettings.ZipPostalCodeRequired;
+                    model.ShippingAddress.PhoneEnabled = _addressSettings.PhoneEnabled;
+                    model.ShippingAddress.PhoneRequired = _addressSettings.PhoneRequired;
+                    model.ShippingAddress.FaxEnabled = _addressSettings.FaxEnabled;
+                    model.ShippingAddress.FaxRequired = _addressSettings.FaxRequired;
 
+                    model.ShippingAddressGoogleMapsUrl = string.Format("http://maps.google.com/maps?f=q&hl=en&ie=UTF8&oe=UTF8&geocode=&q={0}", Server.UrlEncode(order.ShippingAddress.Address1 + " " + order.ShippingAddress.ZipPostalCode + " " + order.ShippingAddress.City + " " + (order.ShippingAddress.Country != null ? order.ShippingAddress.Country.Name : "")));
+                }
                 model.ShippingMethod = order.ShippingMethod;
 
-                model.ShippingAddressGoogleMapsUrl = string.Format("http://maps.google.com/maps?f=q&hl=en&ie=UTF8&oe=UTF8&geocode=&q={0}", Server.UrlEncode(order.ShippingAddress.Address1 + " " + order.ShippingAddress.ZipPostalCode + " " + order.ShippingAddress.City + " " + (order.ShippingAddress.Country != null ? order.ShippingAddress.Country.Name : "")));
                 model.CanAddNewShipments = order.HasItemsToAddToShipment();
             }
 

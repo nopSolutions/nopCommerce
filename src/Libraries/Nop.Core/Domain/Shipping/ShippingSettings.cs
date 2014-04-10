@@ -16,6 +16,11 @@ namespace Nop.Core.Domain.Shipping
         public List<string> ActiveShippingRateComputationMethodSystemNames { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether customers can choose "Pick Up in Store" option during checkout
+        /// </summary>
+        public bool AllowPickUpInStore { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the system should use warehouse location when requesting shipping rates
         /// This is useful when you ship from multiple warehouses
         /// </summary>

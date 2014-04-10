@@ -5346,6 +5346,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Shipping">
     <Value>Shipping settings</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.AllowPickUpInStore">
+    <Value>"Pick Up in Store" enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.AllowPickUpInStore.Hint">
+    <Value>A value indicating whether "Pick Up in Store" option is enabled during checkout.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.BypassShippingMethodSelectionIfOnlyOne">
     <Value>Bypass shipping method page if there's only one</Value>
   </LocaleResource>
@@ -9965,6 +9971,15 @@
   </LocaleResource>
   <LocaleResource Name="Checkout.PaymentMethod">
     <Value>Payment method</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.PickUpInStore">
+    <Value>In-Store Pickup</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.PickUpInStore.Description">
+    <Value>Pick up your items at the store (put your store address here)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.PickUpInStore.MethodName">
+    <Value>In-Store Pickup</Value>
   </LocaleResource>
   <LocaleResource Name="Checkout.PlacedOrderDetails">
     <Value>Click here for order details.</Value>

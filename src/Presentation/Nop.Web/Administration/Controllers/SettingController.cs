@@ -547,6 +547,7 @@ namespace Nop.Admin.Controllers
             model.ActiveStoreScopeConfiguration = storeScope;
             if (storeScope > 0)
             {
+                model.AllowPickUpInStore_OverrideForStore = _settingService.SettingExists(shippingSettings, x => x.AllowPickUpInStore, storeScope);
                 model.UseWarehouseLocation_OverrideForStore = _settingService.SettingExists(shippingSettings, x => x.UseWarehouseLocation, storeScope);
                 model.FreeShippingOverXEnabled_OverrideForStore = _settingService.SettingExists(shippingSettings, x => x.FreeShippingOverXEnabled, storeScope);
                 model.FreeShippingOverXValue_OverrideForStore = _settingService.SettingExists(shippingSettings, x => x.FreeShippingOverXValue, storeScope);
@@ -601,6 +602,11 @@ namespace Nop.Admin.Controllers
             /* We do not clear cache after each setting update.
              * This behavior can increase performance because cached settings will not be cleared 
              * and loaded from database after each update */
+            if (model.AllowPickUpInStore_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(shippingSettings, x => x.AllowPickUpInStore, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(shippingSettings, x => x.AllowPickUpInStore, storeScope);
+
             if (model.UseWarehouseLocation_OverrideForStore || storeScope == 0)
                 _settingService.SaveSetting(shippingSettings, x => x.UseWarehouseLocation, storeScope, false);
             else if (storeScope > 0)

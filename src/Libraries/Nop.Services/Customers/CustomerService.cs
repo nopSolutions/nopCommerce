@@ -558,6 +558,7 @@ namespace Nop.Services.Customers
             {
                 _genericAttributeService.SaveAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.SelectedShippingOption, null, storeId);
                 _genericAttributeService.SaveAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.OfferedShippingOptions, null, storeId);
+                _genericAttributeService.SaveAttribute<bool>(customer, SystemCustomerAttributeNames.SelectedPickUpInStore, false, storeId);
             }
 
             //clear selected payment method

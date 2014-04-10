@@ -112,7 +112,11 @@ namespace Nop.Web.Controllers
             if (order.ShippingStatus != ShippingStatus.ShippingNotRequired)
             {
                 model.IsShippable = true;
-                model.ShippingAddress.PrepareModel(order.ShippingAddress, false, _addressSettings);
+                model.PickUpInStore = order.PickUpInStore;
+                if (!order.PickUpInStore)
+                {
+                    model.ShippingAddress.PrepareModel(order.ShippingAddress, false, _addressSettings);
+                }
                 model.ShippingMethod = order.ShippingMethod;
    
 

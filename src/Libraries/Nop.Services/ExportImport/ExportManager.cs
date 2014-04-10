@@ -1054,6 +1054,7 @@ namespace Nop.Services.ExportImport
                         "AffiliateId",
                         "PaymentMethodSystemName",
                         "PurchaseOrderNumber",
+                        "ShippingPickUpInStore",
                         "ShippingMethod",
                         "ShippingRateComputationMethodSystemName",
                         "CustomValuesXml",
@@ -1174,6 +1175,9 @@ namespace Nop.Services.ExportImport
                         col++;
 
                         worksheet.Cells[row, col].Value = order.PurchaseOrderNumber;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = order.PickUpInStore;
                         col++;
 
                         worksheet.Cells[row, col].Value = order.ShippingMethod;

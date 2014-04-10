@@ -3848,22 +3848,22 @@ namespace Nop.Services.Installation
                                 {
                                     new ShippingMethod
                                         {
-                                            Name = "In-Store Pickup",
-                                            Description ="Pick up your items at the store",
-                                            DisplayOrder = 0
-                                        },
-                                    new ShippingMethod
-                                        {
-                                            Name = "By Ground",
+                                            Name = "Ground",
                                             Description ="Compared to other shipping methods, like by flight or over seas, ground shipping is carried out closer to the earth",
                                             DisplayOrder = 1
                                         },
                                     new ShippingMethod
                                         {
-                                            Name = "By Air",
+                                            Name = "Next Day Air",
                                             Description ="The one day air shipping",
                                             DisplayOrder = 3
                                         },
+                                    new ShippingMethod
+                                        {
+                                            Name = "2nd Day Air",
+                                            Description ="The two day air shipping",
+                                            DisplayOrder = 3
+                                        }
                                 };
             shippingMethods.ForEach(sm => _shippingMethodRepository.Insert(sm));
 
@@ -4735,6 +4735,7 @@ namespace Nop.Services.Installation
             settingService.SaveSetting(new ShippingSettings()
                 {
                     ActiveShippingRateComputationMethodSystemNames = new List<string>() { "Shipping.FixedRate" },
+                    AllowPickUpInStore = false,
                     UseWarehouseLocation = false,
                     FreeShippingOverXEnabled = false,
                     FreeShippingOverXValue = decimal.Zero,

@@ -25,7 +25,6 @@ namespace Nop.Core.Domain.Customers
         //Other attributes
         public static string DiscountCouponCode { get { return "DiscountCouponCode"; } }
         public static string GiftCardCouponCodes { get { return "GiftCardCouponCodes"; } }
-        public static string CheckoutAttributes { get { return "CheckoutAttributes"; } }
         public static string AvatarPictureId { get { return "AvatarPictureId"; } }
         public static string ForumPostCount { get { return "ForumPostCount"; } }
         public static string Signature { get { return "Signature"; } }
@@ -43,6 +42,9 @@ namespace Nop.Core.Domain.Customers
         public static string LanguageAutomaticallyDetected { get { return "LanguageAutomaticallyDetected"; } }
         public static string SelectedPaymentMethod { get { return "SelectedPaymentMethod"; } }
         public static string SelectedShippingOption { get { return "SelectedShippingOption"; } }
+        //value indicating whether customer chose "pick up in store" option
+        public static string SelectedPickUpInStore { get { return "SelectedPickUpInStore"; } }
+        public static string CheckoutAttributes { get { return "CheckoutAttributes"; } }
         public static string OfferedShippingOptions { get { return "OfferedShippingOptions"; } }
         public static string LastContinueShoppingPage { get { return "LastContinueShoppingPage"; } }
         public static string NotifiedAboutNewPrivateMessages { get { return "NotifiedAboutNewPrivateMessages"; } }

@@ -201,6 +201,15 @@ var Shipping = {
         }
     },
 
+    togglePickUpInStore: function (pickupInStoreInput) {
+        if (pickupInStoreInput.checked) {
+            $('#shipping-addresses-form').hide();
+        }
+        else {
+            $('#shipping-addresses-form').show();
+        }
+    },
+
     resetSelectedAddress: function () {
         var selectElement = $('#shipping-address-select');
         if (selectElement) {

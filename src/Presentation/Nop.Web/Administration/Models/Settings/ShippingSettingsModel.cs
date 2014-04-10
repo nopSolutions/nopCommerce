@@ -8,6 +8,10 @@ namespace Nop.Admin.Models.Settings
     {
         public int ActiveStoreScopeConfiguration { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.AllowPickUpInStore")]
+        public bool AllowPickUpInStore { get; set; }
+        public bool AllowPickUpInStore_OverrideForStore { get; set; }
+    
         [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.UseWarehouseLocation")]
         public bool UseWarehouseLocation { get; set; }
         public bool UseWarehouseLocation_OverrideForStore { get; set; }

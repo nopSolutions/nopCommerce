@@ -585,9 +585,20 @@ namespace Nop.Web.Controllers
                 {
                     model.OrderReviewData.IsShippable = true;
 
-                    var shippingAddress = _workContext.CurrentCustomer.ShippingAddress;
-                    if (shippingAddress != null)
-                        model.OrderReviewData.ShippingAddress.PrepareModel(shippingAddress, false, _addressSettings);
+                    if (_shippingSettings.AllowPickUpInStore)
+                    {
+                        model.OrderReviewData.SelectedPickUpInStore = _workContext.CurrentCustomer.GetAttribute<bool>(SystemCustomerAttributeNames.SelectedPickUpInStore, _storeContext.CurrentStore.Id);
+                    }
+
+                    if (!model.OrderReviewData.SelectedPickUpInStore)
+                    {
+                        var shippingAddress = _workContext.CurrentCustomer.ShippingAddress;
+                        if (shippingAddress != null)
+                        {
+                            model.OrderReviewData.ShippingAddress.PrepareModel(shippingAddress, false, _addressSettings);
+                        }
+                    }
+                    
                     
                     //selected shipping method
                     var shippingOption = _workContext.CurrentCustomer.GetAttribute<ShippingOption>(SystemCustomerAttributeNames.SelectedShippingOption, _storeContext.CurrentStore.Id);

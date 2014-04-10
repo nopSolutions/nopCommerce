@@ -90,6 +90,11 @@ namespace Nop.Core.Domain.Orders
         public int? ShippingAddressId { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether a customer chose "pick up in store" shipping option
+        /// </summary>
+        public bool PickUpInStore { get; set; }
+
+        /// <summary>
         /// Gets or sets an order status identifier
         /// </summary>
         public int OrderStatusId { get; set; }

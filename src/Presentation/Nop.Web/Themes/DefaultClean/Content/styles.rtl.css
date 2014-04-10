@@ -412,6 +412,8 @@ td.fieldname{font-size:12px;}
 .checkout-data .enter-address{border:1px solid #EEE;height:auto;padding:10px;}
 .checkout-data .enter-address label{display:inline-block;width:95px;}
 .checkout-data .enter-address .buttons{margin-top:10px;}
+.checkout-data .pickup-in-store{border:1px solid #EEE;height:auto;padding:10px;}
+.checkout-data .pickup-in-store .description{font-style:italic;}
 .checkout-data .shipping-method{text-align:right;border:1px solid #EEE;height:auto;}
 .checkout-data .shipping-method li{text-align:right;vertical-align:text-top;padding:5px 0 0 5px;list-style:none;}
 .checkout-data .shipping-method .method-name{font-weight:700;}

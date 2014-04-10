@@ -56,43 +56,46 @@
                     }
                 </div>
             }
-            <div class="shipping-address">
-                <div class="section-title">
-                    @T("Order.Shipments.ShippingAddress")
+            @if (!Model.Order.PickUpInStore)
+            {
+                <div class="shipping-address">
+                    <div class="section-title">
+                        @T("Order.Shipments.ShippingAddress")
+                    </div>
+                    <div class="name">
+                        @Model.Order.ShippingAddress.FirstName @Model.Order.ShippingAddress.LastName
+                    </div>
+                    <div class="email">
+                        @T("Order.Shipments.Email"): @Model.Order.ShippingAddress.Email</div>
+                    <div class="phone">
+                        @T("Order.Shipments.Phone"): @Model.Order.ShippingAddress.PhoneNumber</div>
+                    <div class="fax">
+                        @T("Order.Shipments.Fax"): @Model.Order.ShippingAddress.FaxNumber</div>
+                    @if (!String.IsNullOrEmpty(Model.Order.ShippingAddress.Company))
+                    {
+                        <div class="company">
+                            @Model.Order.ShippingAddress.Company
+                        </div>
+                    }
+                    <div class="address1">
+                        @Model.Order.ShippingAddress.Address1</div>
+                    @if (!String.IsNullOrEmpty(Model.Order.ShippingAddress.Address2))
+                    {
+                        <div class="address2">
+                            @Model.Order.ShippingAddress.Address2
+                        </div>
+                    }
+                    <div class="city-state-zip">
+                        @Model.Order.ShippingAddress.City, @Model.Order.ShippingAddress.StateProvinceName
+                        @Model.Order.ShippingAddress.ZipPostalCode</div>
+                    @if (!String.IsNullOrEmpty(Model.Order.ShippingAddress.CountryName))
+                    {
+                        <div class="country">
+                            @Model.Order.ShippingAddress.CountryName
+                        </div>
+                    }
                 </div>
-                <div class="name">
-                    @Model.Order.ShippingAddress.FirstName @Model.Order.ShippingAddress.LastName
-                </div>
-                <div class="email">
-                    @T("Order.Shipments.Email"): @Model.Order.ShippingAddress.Email</div>
-                <div class="phone">
-                    @T("Order.Shipments.Phone"): @Model.Order.ShippingAddress.PhoneNumber</div>
-                <div class="fax">
-                    @T("Order.Shipments.Fax"): @Model.Order.ShippingAddress.FaxNumber</div>
-                @if (!String.IsNullOrEmpty(Model.Order.ShippingAddress.Company))
-                {
-                    <div class="company">
-                        @Model.Order.ShippingAddress.Company
-                    </div>
-                }
-                <div class="address1">
-                    @Model.Order.ShippingAddress.Address1</div>
-                @if (!String.IsNullOrEmpty(Model.Order.ShippingAddress.Address2))
-                {
-                    <div class="address2">
-                        @Model.Order.ShippingAddress.Address2
-                    </div>
-                }
-                <div class="city-state-zip">
-                    @Model.Order.ShippingAddress.City, @Model.Order.ShippingAddress.StateProvinceName
-                    @Model.Order.ShippingAddress.ZipPostalCode</div>
-                @if (!String.IsNullOrEmpty(Model.Order.ShippingAddress.CountryName))
-                {
-                    <div class="country">
-                        @Model.Order.ShippingAddress.CountryName
-                    </div>
-                }
-            </div>
+            }
         </div>
         @if (Model.Items.Count > 0)
         {

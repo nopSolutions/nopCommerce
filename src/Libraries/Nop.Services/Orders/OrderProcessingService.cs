@@ -539,8 +539,6 @@ namespace Nop.Services.Orders
             {
                 #region Order details (customer, addresses, totals)
 
-
-
                 //Recurring orders. Load initial order
                 Order initialOrder = _orderService.GetOrderById(processPaymentRequest.InitialOrderId);
                 if (processPaymentRequest.IsRecurringPayment)
@@ -766,20 +764,28 @@ namespace Nop.Services.Orders
                 }
                 Address shippingAddress = null;
                 string shippingMethodName = "", shippingRateComputationMethodSystemName = "";
+                bool pickUpInStore = false;
                 if (shoppingCartRequiresShipping)
                 {
                     if (!processPaymentRequest.IsRecurringPayment)
                     {
-                        if (customer.ShippingAddress == null)
-                            throw new NopException("Shipping address is not provided");
+                        pickUpInStore = customer.GetAttribute<bool>(SystemCustomerAttributeNames.SelectedPickUpInStore, processPaymentRequest.StoreId);
 
-                        if (!CommonHelper.IsValidEmail(customer.ShippingAddress.Email))
-                            throw new NopException("Email is not valid");
+                        if (!pickUpInStore)
+                        {
+                            if (customer.ShippingAddress == null)
+                                throw new NopException("Shipping address is not provided");
 
-                        //clone shipping address
-                        shippingAddress = (Address)customer.ShippingAddress.Clone();
-                        if (shippingAddress.Country != null && !shippingAddress.Country.AllowsShipping)
-                            throw new NopException(string.Format("Country '{0}' is not allowed for shipping", shippingAddress.Country.Name));
+                            if (!CommonHelper.IsValidEmail(customer.ShippingAddress.Email))
+                                throw new NopException("Email is not valid");
+
+                            //clone shipping address
+                            shippingAddress = (Address) customer.ShippingAddress.Clone();
+                            if (shippingAddress.Country != null && !shippingAddress.Country.AllowsShipping)
+                            {
+                                throw new NopException(string.Format("Country '{0}' is not allowed for shipping", shippingAddress.Country.Name));
+                            }
+                        }
 
                         var shippingOption = customer.GetAttribute<ShippingOption>(SystemCustomerAttributeNames.SelectedShippingOption, processPaymentRequest.StoreId);
                         if (shippingOption != null)
@@ -790,13 +796,20 @@ namespace Nop.Services.Orders
                     }
                     else
                     {
-                        if (initialOrder.ShippingAddress == null)
-                            throw new NopException("Shipping address is not available");
+                        pickUpInStore = initialOrder.PickUpInStore;
 
-                        //clone billing address
-                        shippingAddress = (Address)initialOrder.ShippingAddress.Clone();
-                        if (shippingAddress.Country != null && !shippingAddress.Country.AllowsShipping)
-                            throw new NopException(string.Format("Country '{0}' is not allowed for shipping", shippingAddress.Country.Name));
+                        if (!pickUpInStore)
+                        {
+                            if (initialOrder.ShippingAddress == null)
+                                throw new NopException("Shipping address is not available");
+
+                            //clone shipping address
+                            shippingAddress = (Address) initialOrder.ShippingAddress.Clone();
+                            if (shippingAddress.Country != null && !shippingAddress.Country.AllowsShipping)
+                            {
+                                throw new NopException(string.Format("Country '{0}' is not allowed for shipping", shippingAddress.Country.Name));
+                            }
+                        }
 
                         shippingMethodName = initialOrder.ShippingMethod;
                         shippingRateComputationMethodSystemName = initialOrder.ShippingRateComputationMethodSystemName;
@@ -1083,6 +1096,7 @@ namespace Nop.Services.Orders
                             ShippingAddress = shippingAddress,
                             ShippingStatus = shippingStatus,
                             ShippingMethod = shippingMethodName,
+                            PickUpInStore = pickUpInStore,
                             ShippingRateComputationMethodSystemName = shippingRateComputationMethodSystemName,
                             CustomValuesXml = processPaymentRequest.SerializeCustomValues(),
                             VatNumber = vatNumber,
