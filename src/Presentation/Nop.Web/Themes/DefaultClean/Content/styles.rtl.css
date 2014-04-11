@@ -971,6 +971,7 @@ td.fieldname{font-size:12px;}
 .product-details-page .full-description{border:1px solid #eee;clear:both;color:#555;margin-bottom:.3em;padding:5px;}
 .product-details-page .full-description ul,.product-details-page .full-description ol{margin-right:25px;}
 .product-details-page .back-in-stock-subscription{margin-top:10px;margin-bottom:10px;}
+.product-details-page .back-in-stock-subscription a.subscribe-button:hover{text-decoration:none;}
 .product-details-page .email-a-friend{margin:10px 0 10px 5px;float:right;}
 .product-details-page .compare-products{margin:10px 0 10px 0px;float:right;}
 .product-details-page .product-share-button{margin-top:10px;margin-bottom:10px;clear:both;}

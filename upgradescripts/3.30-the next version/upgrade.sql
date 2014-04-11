@@ -20,6 +20,9 @@ set @resources='
   <LocaleResource Name="Checkout.PickUpInStore.MethodName">
     <Value>In-Store Pickup</Value>
   </LocaleResource>
+  <LocaleResource Name="BackInStockSubscriptions.OnlyRegistered">
+    <Value>Only registered customers can use this feature</Value>
+  </LocaleResource>
 </Language>
 '
 

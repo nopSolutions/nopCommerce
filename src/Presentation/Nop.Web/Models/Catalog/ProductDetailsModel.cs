@@ -59,7 +59,6 @@ namespace Nop.Web.Models.Catalog
 
         public string StockAvailability { get; set; }
 
-        public bool IsCurrentCustomerRegistered { get; set; }
         public bool DisplayBackInStockSubscription { get; set; }
         public bool BackInStockAlreadySubscribed { get; set; }
 

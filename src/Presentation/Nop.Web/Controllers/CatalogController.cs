@@ -621,7 +621,6 @@ namespace Nop.Web.Controllers
                 Gtin = product.Gtin,
                 StockAvailability = product.FormatStockMessage(_localizationService),
                 HasSampleDownload = product.IsDownload && product.HasSampleDownload,
-                IsCurrentCustomerRegistered = _workContext.CurrentCustomer.IsRegistered(),
             };
 
             //vendor

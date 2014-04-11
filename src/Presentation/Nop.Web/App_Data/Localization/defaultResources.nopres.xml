@@ -9820,7 +9820,7 @@
     <Value>Notify me when available</Value>
   </LocaleResource>
   <LocaleResource Name="BackInStockSubscriptions.OnlyRegistered">
-    <Value>Only registered customers can used this feature</Value>
+    <Value>Only registered customers can use this feature</Value>
   </LocaleResource>
   <LocaleResource Name="BackInStockSubscriptions.PopupTitle">
     <Value>Receive an email when this arrives in stock</Value>
