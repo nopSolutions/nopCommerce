@@ -641,6 +641,7 @@ namespace Nop.Admin.Controllers
                 DeliveryDate = shipment.DeliveryDateUtc.HasValue ? _dateTimeHelper.ConvertToUserTime(shipment.DeliveryDateUtc.Value, DateTimeKind.Utc).ToString() : _localizationService.GetResource("Admin.Orders.Shipments.DeliveryDate.NotYet"),
                 DeliveryDateUtc = shipment.DeliveryDateUtc,
                 CanDeliver = shipment.ShippedDateUtc.HasValue && !shipment.DeliveryDateUtc.HasValue,
+                AdminComment = shipment.AdminComment,
             };
 
             if (prepareProducts)
@@ -2493,6 +2494,7 @@ namespace Nop.Admin.Controllers
                 if (shipment == null)
                 {
                     var trackingNumber = form["TrackingNumber"];
+                    var adminComment = form["AdminComment"];
                     shipment = new Shipment()
                     {
                         OrderId = order.Id,
@@ -2500,6 +2502,7 @@ namespace Nop.Admin.Controllers
                         TotalWeight = null,
                         ShippedDateUtc = null,
                         DeliveryDateUtc = null,
+                        AdminComment = adminComment,
                         CreatedOnUtc = DateTime.UtcNow,
                     };
                 }
@@ -2587,6 +2590,28 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("List");
 
             shipment.TrackingNumber = model.TrackingNumber;
+            _shipmentService.UpdateShipment(shipment);
+
+            return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
+        }
+
+        [HttpPost, ActionName("ShipmentDetails")]
+        [FormValueRequired("setadmincomment")]
+        public ActionResult SetShipmentAdminComment(ShipmentModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
+            var shipment = _shipmentService.GetShipmentById(model.Id);
+            if (shipment == null)
+                //No shipment found with the specified id
+                return RedirectToAction("List");
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && !HasAccessToShipment(shipment))
+                return RedirectToAction("List");
+
+            shipment.AdminComment = model.AdminComment;
             _shipmentService.UpdateShipment(shipment);
 
             return RedirectToAction("ShipmentDetails", new { id = shipment.Id });

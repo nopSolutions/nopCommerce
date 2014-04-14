@@ -38,6 +38,11 @@ namespace Nop.Core.Domain.Shipping
         public DateTime? DeliveryDateUtc { get; set; }
 
         /// <summary>
+        /// Gets or sets the admin comment
+        /// </summary>
+        public string AdminComment { get; set; }
+
+        /// <summary>
         /// Gets or sets the entity creation date
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }

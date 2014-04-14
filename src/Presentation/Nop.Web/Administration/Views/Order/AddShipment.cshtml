@@ -25,6 +25,14 @@
                 @Html.EditorFor(model => model.TrackingNumber)
             </td>
         </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AdminComment):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AdminComment)
+            </td>
+        </tr>
     </table>
     <table class="adminContent">
         <tr>

@@ -23,6 +23,7 @@ namespace Nop.Data.Tests.Shipping
                 TotalWeight = 9.87M,
                 ShippedDateUtc = new DateTime(2010, 01, 01),
                 DeliveryDateUtc = new DateTime(2010, 01, 02),
+                AdminComment = "AdminComment 1",
                 CreatedOnUtc = new DateTime(2010, 01, 03),
             };
 
@@ -32,6 +33,7 @@ namespace Nop.Data.Tests.Shipping
             fromDb.TotalWeight.ShouldEqual(9.87M);
             fromDb.ShippedDateUtc.ShouldEqual(new DateTime(2010, 01, 01));
             fromDb.DeliveryDateUtc.ShouldEqual(new DateTime(2010, 01, 02));
+            fromDb.AdminComment.ShouldEqual("AdminComment 1");
             fromDb.CreatedOnUtc.ShouldEqual(new DateTime(2010, 01, 03));
         }
 

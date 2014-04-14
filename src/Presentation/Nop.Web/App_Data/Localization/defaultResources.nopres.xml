@@ -8337,6 +8337,15 @@
   <LocaleResource Name="Admin.Orders.Shipments.AddNew.Title">
     <Value>Add a new shipment to order #{0}</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.AdminComment">
+    <Value>Admin comment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.AdminComment.Hint">
+    <Value>Admin comment. For internal use.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.AdminComment.Button">
+    <Value>Set admin comment</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.BackToOrder">
     <Value>back to order details</Value>
   </LocaleResource>

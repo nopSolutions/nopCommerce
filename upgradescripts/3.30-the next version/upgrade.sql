@@ -23,6 +23,15 @@ set @resources='
   <LocaleResource Name="BackInStockSubscriptions.OnlyRegistered">
     <Value>Only registered customers can use this feature</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.AdminComment">
+    <Value>Admin comment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.AdminComment.Hint">
+    <Value>Admin comment. For internal use.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.AdminComment.Button">
+    <Value>Set admin comment</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -119,4 +128,12 @@ WHERE [PickUpInStore] IS NULL
 GO
 
 ALTER TABLE [Order] ALTER COLUMN [PickUpInStore] bit NOT NULL
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Shipment]') and NAME='AdminComment')
+BEGIN
+	ALTER TABLE [Shipment]
+	ADD [AdminComment] nvarchar(MAX) NULL
+END
 GO
