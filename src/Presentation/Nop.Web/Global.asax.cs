@@ -232,12 +232,9 @@ namespace Nop.Web
             {
                 //public store
                 var workContext = EngineContext.Current.Resolve<IWorkContext>();
-                if (workContext.CurrentCustomer != null && workContext.WorkingLanguage != null)
-                {
-                    var culture = new CultureInfo(workContext.WorkingLanguage.LanguageCulture);
-                    Thread.CurrentThread.CurrentCulture = culture;
-                    Thread.CurrentThread.CurrentUICulture = culture;
-                }
+                var culture = new CultureInfo(workContext.WorkingLanguage.LanguageCulture);
+                Thread.CurrentThread.CurrentCulture = culture;
+                Thread.CurrentThread.CurrentUICulture = culture;
             }
         }
 

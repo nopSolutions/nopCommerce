@@ -34,8 +34,7 @@ namespace Nop.Web.Framework
                     if (affiliate != null && !affiliate.Deleted && affiliate.Active)
                     {
                         var workContext = EngineContext.Current.Resolve<IWorkContext>();
-                        if (workContext.CurrentCustomer != null &&
-                            workContext.CurrentCustomer.AffiliateId != affiliate.Id)
+                        if (workContext.CurrentCustomer.AffiliateId != affiliate.Id)
                         {
                             workContext.CurrentCustomer.AffiliateId = affiliate.Id;
                             var customerService = EngineContext.Current.Resolve<ICustomerService>();
