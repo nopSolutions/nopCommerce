@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -56,15 +57,25 @@ namespace Nop.Core
             var result = "";
             if (_httpContext.Request.Headers != null)
             {
-                //look for the X-Forwarded-For (XFF) HTTP header field
-                //it's used for identifying the originating IP address of a client connecting to a web server through an HTTP proxy or load balancer. 
+                //The X-Forwarded-For (XFF) HTTP header field is a de facto standard
+                //for identifying the originating IP address of a client
+                //connecting to a web server through an HTTP proxy or load balancer.
+                var forwardedHttpHeader = "X-FORWARDED-FOR";
+                if (!String.IsNullOrEmpty(ConfigurationManager.AppSettings["ForwardedHTTPheader"]))
+                {
+                    //but in some cases server use other HTTP header
+                    //in these cases an administrator can specify a custom Forwarded HTTP header
+                    forwardedHttpHeader = ConfigurationManager.AppSettings["ForwardedHTTPheader"];
+                }
+                    
+                //it's used for identifying the originating IP address of a client connecting to a web server
+                //through an HTTP proxy or load balancer. 
                 string xff = _httpContext.Request.Headers.AllKeys
-                    .Where(x => "X-FORWARDED-FOR".Equals(x, StringComparison.InvariantCultureIgnoreCase))
+                    .Where(x => forwardedHttpHeader.Equals(x, StringComparison.InvariantCultureIgnoreCase))
                     .Select(k => _httpContext.Request.Headers[k])
                     .FirstOrDefault();
 
                 //if you want to exclude private IP addresses, then see http://stackoverflow.com/questions/2577496/how-can-i-get-the-clients-ip-address-in-asp-net-mvc
-
                 if (!String.IsNullOrEmpty(xff))
                 {
                     string lastIp = xff.Split(new char[] { ',' }).FirstOrDefault();
