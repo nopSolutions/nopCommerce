@@ -11,7 +11,7 @@
             @T("Order.OrderInformation")</h1>
     </div>
     <div class="page-body">
-        @Html.Widget("mobile_orderdetails_page_top")
+        @Html.Widget("mobile_orderdetails_page_top", Model.Id)
         <div class="order-overview">
             <div>
                 <strong>@T("Order.Order#")@Model.Id</strong>
@@ -25,7 +25,7 @@
             <div>
                 @T("Order.OrderStatus"): @Model.OrderStatus
             </div>
-            @Html.Widget("mobile_orderdetails_page_overview")
+            @Html.Widget("mobile_orderdetails_page_overview", Model.Id)
         </div>
         <div class="order-details-box">
             <div class="billing-info">
@@ -230,7 +230,7 @@
                 </div>
             }
         </div>
-        @Html.Widget("mobile_orderdetails_page_beforeproducts")
+        @Html.Widget("mobile_orderdetails_page_beforeproducts", Model.Id)
         @if (Model.Items.Count > 0)
         {
             <div class="section-title">
@@ -285,7 +285,7 @@
             <a href="@Url.RouteUrl("ReturnRequest", new { orderId = Model.Id })" data-role="button">@T("Order.ReturnItems")</a>
                 }
         }
-        @Html.Widget("mobile_orderdetails_page_afterproducts")
+        @Html.Widget("mobile_orderdetails_page_afterproducts", Model.Id)
         <div class="total-info">
             <table class="cart-total">
                 <tbody>
@@ -505,6 +505,6 @@
                 }
             </ul>
         }
-        @Html.Widget("mobile_orderdetails_page_bottom")
+        @Html.Widget("mobile_orderdetails_page_bottom", Model.Id)
     </div>
 </div>

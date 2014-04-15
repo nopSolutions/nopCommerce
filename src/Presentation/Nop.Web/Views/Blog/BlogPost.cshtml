@@ -20,7 +20,7 @@
         <div class="post-date">
             @Model.CreatedOn.ToString("D")
         </div>
-        @Html.Widget("blogpost_page_before_body")
+        @Html.Widget("blogpost_page_before_body", Model.Id)
         <div class="post-body">
             @Html.Raw(Model.Body)
         </div>
@@ -41,7 +41,7 @@
                 </ul>
             </div>
         }
-        @Html.Widget("blogpost_page_before_comments")
+        @Html.Widget("blogpost_page_before_comments", Model.Id)
         @if (Model.AllowComments)
         {
             <div class="fieldset new-comment">
@@ -114,12 +114,12 @@
                                 @Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(comment.CommentText, false, true, false, false, false, false))
                             </div>
                         </div>
-                        @Html.Widget("blogpost_page_inside_comment")
+                        @Html.Widget("blogpost_page_inside_comment", comment.Id)
                     </div>
                 }
             </div>
                 }
         }
-        @Html.Widget("blogpost_page_after_comments")
+        @Html.Widget("blogpost_page_after_comments", Model.Id)
     </div>
 </div>

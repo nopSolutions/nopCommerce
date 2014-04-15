@@ -386,9 +386,9 @@ namespace Nop.Web.Framework
             return MvcHtmlString.Create(string.Concat(daysList, monthsList, yearsList));
         }
 
-        public static MvcHtmlString Widget(this HtmlHelper helper, string widgetZone)
+        public static MvcHtmlString Widget(this HtmlHelper helper, string widgetZone, object additionalData = null)
         {
-            return helper.Action("WidgetsByZone", "Widget", new { widgetZone = widgetZone });
+            return helper.Action("WidgetsByZone", "Widget", new { widgetZone = widgetZone, additionalData = additionalData });
         }
 
         /// <summary>

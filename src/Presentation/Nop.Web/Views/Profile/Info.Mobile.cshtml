@@ -22,7 +22,7 @@
                 </div>
             </div>  
         }
-        @Html.Widget("mobile_profile_page_info_userdetails")
+        @Html.Widget("mobile_profile_page_info_userdetails", Model.Id)
     </div>
     <div class="user-stats">
         <div class="title">
@@ -46,6 +46,6 @@
                 @T("Profile.DateOfBirth"): <span class="profile-stat-value">@Model.DateOfBirth</span>
             </div>
         }
-        @Html.Widget("mobile_profile_page_info_userstats")
+        @Html.Widget("mobile_profile_page_info_userstats", Model.Id)
     </div>
 </div>

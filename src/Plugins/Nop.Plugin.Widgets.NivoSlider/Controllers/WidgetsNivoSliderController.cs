@@ -203,7 +203,7 @@ namespace Nop.Plugin.Widgets.NivoSlider.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult PublicInfo(string widgetZone)
+        public ActionResult PublicInfo(string widgetZone, object additionalData = null)
         {
             var nivoSliderSettings = _settingService.LoadSetting<NivoSliderSettings>(_storeContext.CurrentStore.Id);
 

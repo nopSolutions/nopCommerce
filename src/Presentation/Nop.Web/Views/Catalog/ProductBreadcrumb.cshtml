@@ -7,7 +7,7 @@
 }
 <div class="breadcrumb">
     <ul>
-        @Html.Widget("productbreadcrumb_before")
+        @Html.Widget("productbreadcrumb_before", Model.ProductId)
         <li>
             <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">
                 <a href="@Url.RouteUrl("HomePage")" itemprop="url">
@@ -30,7 +30,7 @@
         <li>
             <strong class="current-item">@Model.ProductName</strong>
             @*<strong class="current-item"><a href="@Url.RouteUrl("Product", new { SeName = Model.ProductSeName })" itemprop="url">@Model.ProductName</a></strong>*@
-            @Html.Widget("productbreadcrumb_after")
+            @Html.Widget("productbreadcrumb_after", Model.ProductId)
         </li>
     </ul>
 </div>

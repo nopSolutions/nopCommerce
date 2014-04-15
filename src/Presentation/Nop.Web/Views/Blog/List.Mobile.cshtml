@@ -62,7 +62,7 @@
                             @string.Format(T("Blog.CommentsLink").Text, item.NumberOfComments)
                         </a>
                     }
-                    @Html.Widget("mobile_bloglist_page_inside_post")
+                    @Html.Widget("mobile_bloglist_page_inside_post", item.Id)
                 </div>
             }
         </div>

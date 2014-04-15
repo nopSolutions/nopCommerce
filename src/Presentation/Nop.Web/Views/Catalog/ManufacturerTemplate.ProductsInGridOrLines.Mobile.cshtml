@@ -12,7 +12,7 @@
         <h1>@Model.Name</h1>
     </div>
     <div class="page-body">
-        @Html.Widget("mobile_manufacturerdetails_top")
+        @Html.Widget("mobile_manufacturerdetails_top", Model.Id)
         @*description*@
         @if (!String.IsNullOrWhiteSpace(Model.Description))
         {
@@ -20,7 +20,7 @@
                 @Html.Raw(Model.Description)
             </div>
         }
-        @Html.Widget("mobile_manufacturerdetails_before_featured_products")
+        @Html.Widget("mobile_manufacturerdetails_before_featured_products", Model.Id)
         @*featured products*@
         @if (Model.FeaturedProducts.Count > 0)
         {
@@ -40,7 +40,7 @@
                 </div>
             </div>
         }
-        @Html.Widget("mobile_manufacturerdetails_before_product_list")
+        @Html.Widget("mobile_manufacturerdetails_before_product_list", Model.Id)
         @*product list*@
         @if (Model.Products.Count > 0)
         {
@@ -58,6 +58,6 @@
         <div class="pager">
             @Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber")
         </div>
-        @Html.Widget("mobile_manufacturerdetails_bottom")
+        @Html.Widget("mobile_manufacturerdetails_bottom", Model.Id)
     </div>
 </div>

@@ -12,7 +12,7 @@
         <a href="@Url.RouteUrl("Product", new { SeName = Model.ProductSeName })">@Model.ProductName</a>
     </div>
     <div class="page-body">
-        @Html.Widget("mobile_productreviews_page_top")
+        @Html.Widget("mobile_productreviews_page_top", Model.ProductId)
         @if (Model.AddProductReview.SuccessfullyAdded)
         {
             <div class="result">
@@ -108,13 +108,13 @@
                                     </div>
                                 </div>
                                 @Html.Partial("_ProductReviewHelpfulness", review.Helpfulness, new ViewDataDictionary())
-                                @Html.Widget("mobile_productreviews_page_inside_review")
+                                @Html.Widget("mobile_productreviews_page_inside_review", review.Id)
                             </div>
                         </li>
                     }
                 </ul>
             </div>
         }
-        @Html.Widget("mobile_productreviews_page_bottom")
+        @Html.Widget("mobile_productreviews_page_bottom", Model.ProductId)
     </div>
 </div>

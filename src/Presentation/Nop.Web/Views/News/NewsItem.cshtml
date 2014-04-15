@@ -16,11 +16,11 @@
         <div class="news-date">
             @Model.CreatedOn.ToString("D")
         </div>
-        @Html.Widget("newsitem_page_before_body")
+        @Html.Widget("newsitem_page_before_body", Model.Id)
         <div class="news-body">
             @Html.Raw(Model.Full)
         </div>
-        @Html.Widget("newsitem_page_before_comments")
+        @Html.Widget("newsitem_page_before_comments", Model.Id)
         @if (Model.AllowComments)
         {
             <div class="fieldset new-comment">
@@ -101,12 +101,12 @@
                                 <p class="comment-text">@Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(comment.CommentText, false, true, false, false, false, false))</p>
                             </div>
                         </div>
-                        @Html.Widget("newsitem_page_inside_comment")
+                        @Html.Widget("newsitem_page_inside_comment", comment.Id)
                     </div>
                 }
             </div>
                 }
         }
-        @Html.Widget("newsitem_page_after_comments")
+        @Html.Widget("newsitem_page_after_comments", Model.Id)
     </div>
 </div>

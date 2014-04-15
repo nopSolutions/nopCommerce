@@ -12,7 +12,7 @@
         <h1>@Model.Name</h1>
     </div>
     <div class="page-body">
-        @Html.Widget("mobile_vendordetails_top")
+        @Html.Widget("mobile_vendordetails_top", Model.Id)
         @*description*@
         @if (!String.IsNullOrWhiteSpace(Model.Description))
         {
@@ -20,7 +20,7 @@
                 @Html.Raw(Model.Description)
             </div>
         }
-        @Html.Widget("mobile_vendordetails_before_product_list")
+        @Html.Widget("mobile_vendordetails_before_product_list", Model.Id)
         @*product list*@
         @if (Model.Products.Count > 0)
         {
@@ -38,6 +38,6 @@
         <div class="pager">
             @Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber")
         </div>
-        @Html.Widget("mobile_vendordetails_bottom")
+        @Html.Widget("mobile_vendordetails_bottom", Model.Id)
     </div>
 </div>

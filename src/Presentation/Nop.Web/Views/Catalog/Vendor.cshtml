@@ -21,7 +21,7 @@
         <h1>@Model.Name</h1>
     </div>
     <div class="page-body">
-        @Html.Widget("vendordetails_top")
+        @Html.Widget("vendordetails_top", Model.Id)
         @*description*@
         @if (!String.IsNullOrWhiteSpace(Model.Description))
         {
@@ -87,6 +87,6 @@
         <div class="pager">
             @Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber")
         </div>
-        @Html.Widget("vendordetails_bottom")
+        @Html.Widget("vendordetails_bottom", Model.Id)
     </div>
 </div>

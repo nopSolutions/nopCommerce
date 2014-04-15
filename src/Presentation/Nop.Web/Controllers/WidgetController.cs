@@ -30,7 +30,7 @@ namespace Nop.Web.Controllers
         #region Methods
 
         [ChildActionOnly]
-        public ActionResult WidgetsByZone(string widgetZone)
+        public ActionResult WidgetsByZone(string widgetZone, object additionalData = null)
         {
             //model
             var model = new List<RenderWidgetModel>();
@@ -44,6 +44,12 @@ namespace Nop.Web.Controllers
                 string controllerName;
                 RouteValueDictionary routeValues;
                 widget.GetDisplayWidgetRoute(widgetZone, out actionName, out controllerName, out routeValues);
+                if (additionalData != null)
+                {
+                    if (routeValues == null)
+                        routeValues = new RouteValueDictionary();
+                    routeValues.Add("additionalData", additionalData);
+                }
                 widgetModel.ActionName = actionName;
                 widgetModel.ControllerName = controllerName;
                 widgetModel.RouteValues = routeValues;

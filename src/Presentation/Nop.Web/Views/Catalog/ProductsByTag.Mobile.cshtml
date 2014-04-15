@@ -14,7 +14,7 @@
         <h1>@String.Format(T("Products.Tags.ProductsTaggedWith").Text, Model.TagName)</h1>
     </div>
     <div class="page-body">
-        @Html.Widget("mobile_productsbytag_top")
+        @Html.Widget("mobile_productsbytag_top", Model.Id)
         @*product list*@
         @if (Model.Products.Count > 0)
         {
@@ -32,6 +32,6 @@
         <div class="pager">
             @Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber")
         </div>
-        @Html.Widget("mobile_productsbytag_bottom")
+        @Html.Widget("mobile_productsbytag_bottom", Model.Id)
     </div>
 </div>

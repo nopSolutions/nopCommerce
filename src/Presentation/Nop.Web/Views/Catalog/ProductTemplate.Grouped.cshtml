@@ -21,15 +21,15 @@
 @Html.Action("ProductBreadcrumb", "Catalog", new { productId = Model.Id })
 <div class="page product-details-page">
     <div class="page-body">
-        @Html.Widget("productdetails_top")
+        @Html.Widget("productdetails_top", Model.Id)
         @using (Html.BeginRouteForm("Product", new { SeName = Model.SeName }, FormMethod.Post, new { id = "product-details-form" }))
         {
             <div itemscope itemtype="http://schema.org/Product" data-productid="@Model.Id">
                 <div class="product-essential">
-                    @Html.Widget("productdetails_before_pictures")
+                    @Html.Widget("productdetails_before_pictures", Model.Id)
                     <!--product pictures-->
                     @Html.Partial("_ProductDetailsPictures", Model)
-                    @Html.Widget("productdetails_after_pictures")
+                    @Html.Widget("productdetails_after_pictures", Model.Id)
                     <div class="overview">
                         <div class="product-name">
                             <h1 itemprop="name">
@@ -42,7 +42,7 @@
                                 @Html.Raw(Model.ShortDescription)
                             </div>
                         }
-                        @Html.Widget("productdetails_overview_top")
+                        @Html.Widget("productdetails_overview_top", Model.Id)
                         <!--product manufacturers-->
                         @Html.Action("ProductManufacturers", "Catalog", new { productId = Model.Id })
                         <!--product reviews-->
@@ -50,7 +50,7 @@
                         @Html.Action("ProductEmailAFriendButton", "Catalog", new { productId = Model.Id })
                         @Html.Action("CompareProductsButton", "Catalog", new { productId = Model.Id })
                         @Html.Action("ShareButton", "Catalog")
-                        @Html.Widget("productdetails_overview_bottom")
+                        @Html.Widget("productdetails_overview_bottom", Model.Id)
                     </div>
                     @if (!String.IsNullOrEmpty(Model.FullDescription))
                     {
@@ -59,7 +59,7 @@
                         </div>
                     }
                 </div>
-                @Html.Widget("productdetails_before_collateral")
+                @Html.Widget("productdetails_before_collateral", Model.Id)
                 <div class="product-collateral">
                     <!--associated products-->
                     <div class="product-variant-list">
@@ -129,6 +129,6 @@
                 </div>
             </div>
         }
-        @Html.Widget("productdetails_bottom")
+        @Html.Widget("productdetails_bottom", Model.Id)
     </div>
 </div>

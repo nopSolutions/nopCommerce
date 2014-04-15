@@ -29,7 +29,7 @@
                     </div>
                     <a href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })" class="read-more">
                         @T("News.MoreInfo")</a>
-                    @Html.Widget("newslist_page_inside_item")
+                    @Html.Widget("newslist_page_inside_item", item.Id)
                 </div>
             }
         </div>

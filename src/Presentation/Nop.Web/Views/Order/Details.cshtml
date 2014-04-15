@@ -30,7 +30,7 @@
         </div>
     }
     <div class="page-body">
-        @Html.Widget("orderdetails_page_top")
+        @Html.Widget("orderdetails_page_top", Model.Id)
         <div class="order-overview">
             <div class="order-number">
                 <strong>@T("Order.Order#")@Model.Id</strong>
@@ -42,7 +42,7 @@
             <div class="order-total">
                 @T("Order.OrderTotal"): <strong>@Model.OrderTotal</strong>
             </div>
-            @Html.Widget("orderdetails_page_overview")
+            @Html.Widget("orderdetails_page_overview", Model.Id)
         </div>
         <div class="order-details-area">
             <table>
@@ -255,7 +255,7 @@
                 </tbody>
             </table>
         </div>
-        @Html.Widget("orderdetails_page_beforeproducts")
+        @Html.Widget("orderdetails_page_beforeproducts", Model.Id)
         @if (Model.Items.Count > 0)
         {
             <div class="section products">
@@ -359,7 +359,7 @@
                 }
             </div>
         }
-        @Html.Widget("orderdetails_page_afterproducts")
+        @Html.Widget("orderdetails_page_afterproducts", Model.Id)
         <div class="total-info">
             <table class="cart-total">
                 <tbody>
@@ -637,6 +637,6 @@
             </div>
             }
         }
-        @Html.Widget("orderdetails_page_bottom")
+        @Html.Widget("orderdetails_page_bottom", Model.Id)
     </div>
 </div>

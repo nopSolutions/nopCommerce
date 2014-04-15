@@ -8,7 +8,7 @@
 }
 <div class="page product-details-page">
     <div class="page-body">
-        @Html.Widget("mobile_productdetails_top")
+        @Html.Widget("mobile_productdetails_top", Model.Id)
         @*we add enctype = "multipart/form-data" because "File upload" attribute control type requries it*@
         @using (Html.BeginRouteForm("Product", new RouteValueDictionary() { { "SeName", Model.SeName } }, FormMethod.Post, new Dictionary<string, Object> { { "data-ajax", "false" }, { "enctype", "multipart/form-data" }, { "id", "product-details-form" } }))
         {
@@ -23,9 +23,9 @@
                             @Html.Raw(Model.ShortDescription)
                         </div>
                     }
-                    @Html.Widget("mobile_productdetails_before_pictures")
+                    @Html.Widget("mobile_productdetails_before_pictures", Model.Id)
                     @Html.Partial("_ProductDetailsPictures", Model)
-                    @Html.Widget("mobile_productdetails_after_pictures")
+                    @Html.Widget("mobile_productdetails_after_pictures", Model.Id)
                     @Html.Action("ProductManufacturers", "Catalog", new { productId = Model.Id })
                     @Html.Action("ProductReviewOverview", "Catalog", new { productId = Model.Id })
                     @Html.Action("ProductEmailAFriendButton", "Catalog", new { productId = Model.Id })
@@ -77,6 +77,6 @@
                 @Html.Action("RelatedProducts", "Catalog", new { productId = Model.Id })
             </div>
         }
-        @Html.Widget("mobile_productdetails_bottom")
+        @Html.Widget("mobile_productdetails_bottom", Model.Id)
     </div>
 </div>

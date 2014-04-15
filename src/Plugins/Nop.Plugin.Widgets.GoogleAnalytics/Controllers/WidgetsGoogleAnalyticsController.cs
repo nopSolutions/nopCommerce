@@ -109,7 +109,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult PublicInfo(string widgetZone)
+        public ActionResult PublicInfo(string widgetZone, object additionalData = null)
         {
             string globalScript = "";
             var routeData = ((System.Web.UI.Page)this.HttpContext.CurrentHandler).RouteData;

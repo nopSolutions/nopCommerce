@@ -70,5 +70,5 @@
         <input type="button" id="add-to-wishlist-button-@Model.ProductId" value="@T("ShoppingCart.AddToWishlist")" onclick="AjaxCart.addproducttocart_details_mobile('@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.ProductId, shoppingCartTypeId = (int)ShoppingCartType.Wishlist })', '#product-details-form', '@Url.RouteUrl("Wishlist")');return false;" />
             }
     }
-    @Html.Widget("mobile_productdetails_add_info")
+    @Html.Widget("mobile_productdetails_add_info", Model.ProductId)
 </div>
