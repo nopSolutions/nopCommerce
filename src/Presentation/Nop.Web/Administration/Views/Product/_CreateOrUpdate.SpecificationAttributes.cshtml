@@ -128,30 +128,30 @@
         <strong>@T("Admin.Catalog.Products.SpecificationAttributes.AddNew")</strong>
     </p>
     <script type="text/javascript">
-        $(function() {
+        $(document).ready(function() {
             $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeId)").change(function() {
                 var selectedItem = $(this).val();
                 var ddlSpecOptions = $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeOptionId)")
                 $.ajax({
-                    cache:false,
+                    cache: false,
                     type: "GET",
                     url: "@(Url.Action("GetOptionsByAttributeId", "SpecificationAttribute"))",
                     data: { "attributeId": selectedItem },
-                    success: function (data) {
+                    success: function(data) {
                         ddlSpecOptions.html('');
                         $.each(data, function(id, option) {
                             ddlSpecOptions.append($('<option></option>').val(option.id).html(option.name));
                         });
                     },
-                    error:function (xhr, ajaxOptions, thrownError){
+                    error: function(xhr, ajaxOptions, thrownError) {
                         alert('Failed to retrieve specification options.');
-                    }  
+                    }
                 });
             });
         });
 
-        $(document).ready(function () {
-            $('#addProductSpec').click(function () {
+        $(document).ready(function() {
+            $('#addProductSpec').click(function() {
                 var specificationAttributeOptionId = $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeOptionId)").val();
                 var customValue = $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.CustomValue)").val();
                 var allowFiltering = $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.AllowFiltering)").is(':checked');
@@ -163,19 +163,19 @@
                 } else {
                     $('#addProductSpec').attr('disabled', true);
                     $.ajax({
-                        cache:false,
+                        cache: false,
                         type: "POST",
                         url: "@(Url.Action("ProductSpecificationAttributeAdd", "Product"))",
                         data: { "specificationAttributeOptionId": specificationAttributeOptionId, "customValue": customValue, "allowFiltering": allowFiltering, "showOnProductPage": showOnProductPage, "displayOrder": displayOrder, "productId": @(Model.Id) },
-                        success: function (data) {
+                        success: function(data) {
                             var grid = $("#specificationattributes-grid").data('kendoGrid');
                             grid.dataSource.read();
                             $('#addProductSpec').attr('disabled', false);
                         },
-                        error:function (xhr, ajaxOptions, thrownError){
+                        error: function(xhr, ajaxOptions, thrownError) {
                             alert('Failed to add specification attribute.');
                             $('#addProductSpec').attr('disabled', false);
-                        }  
+                        }
                     });
                 }
             });

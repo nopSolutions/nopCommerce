@@ -104,27 +104,27 @@
         if (Model.CountryEnabled && Model.StateProvinceEnabled)
         {
     <script type="text/javascript">
-             $(function() {
-                    $("#@Html.FieldIdFor(model => model.CountryId)").change(function() {
-                        var selectedItem = $(this).val();
-                        var ddlStates = $("#@Html.FieldIdFor(model => model.StateProvinceId)");
-                        $.ajax({
-                            cache:false,
-                            type: "GET",
-                            url: "@(Url.Action("GetStatesByCountryId", "Country"))",
-                            data: { "countryId": selectedItem, "addEmptyStateIfRequired": "true" },
-                            success: function (data) {
-                                ddlStates.html('');
-                                $.each(data, function(id, option) {
-                                    ddlStates.append($('<option></option>').val(option.id).html(option.name));
-                                });
-                            },
-                            error:function (xhr, ajaxOptions, thrownError){
-                                alert('Failed to retrieve states.');
-                            }  
+        $(document).ready(function() {
+            $("#@Html.FieldIdFor(model => model.CountryId)").change(function() {
+                var selectedItem = $(this).val();
+                var ddlStates = $("#@Html.FieldIdFor(model => model.StateProvinceId)");
+                $.ajax({
+                    cache: false,
+                    type: "GET",
+                    url: "@(Url.Action("GetStatesByCountryId", "Country"))",
+                    data: { "countryId": selectedItem, "addEmptyStateIfRequired": "true" },
+                    success: function(data) {
+                        ddlStates.html('');
+                        $.each(data, function(id, option) {
+                            ddlStates.append($('<option></option>').val(option.id).html(option.name));
                         });
-                    });
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert('Failed to retrieve states.');
+                    }
                 });
+            });
+        });
     </script>
         }
     <table class="adminContent customer-info-tab">
