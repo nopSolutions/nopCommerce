@@ -6,7 +6,6 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Nop.Core.Infrastructure;
-using Nop.Services.Common;
 
 namespace Nop.Web.Framework.Themes
 {
@@ -17,7 +16,6 @@ namespace Nop.Web.Framework.Themes
         internal Func<string, string> GetExtensionThunk;
 
         private readonly string[] _emptyLocations = null;
-        private readonly string _mobileViewModifier = "Mobile";
 
         #endregion
 
@@ -32,7 +30,7 @@ namespace Nop.Web.Framework.Themes
 
         #region Utilities
 
-        protected virtual string GetPath(ControllerContext controllerContext, string[] locations, string[] areaLocations, string locationsPropertyName, string name, string controllerName, string theme, string cacheKeyPrefix, bool useCache, bool mobile, out string[] searchedLocations)
+        protected virtual string GetPath(ControllerContext controllerContext, string[] locations, string[] areaLocations, string locationsPropertyName, string name, string controllerName, string theme, string cacheKeyPrefix, bool useCache, out string[] searchedLocations)
         {
             searchedLocations = _emptyLocations;
             if (string.IsNullOrEmpty(name))
@@ -44,12 +42,6 @@ namespace Nop.Web.Framework.Themes
             //little hack to get nop's admin area to be in /Administration/ instead of /Nop/Admin/ or Areas/Admin/
             if (!string.IsNullOrEmpty(areaName) && areaName.Equals("admin", StringComparison.InvariantCultureIgnoreCase))
             {
-                //admin area does not support mobile devices
-                if (mobile)
-                {
-                    searchedLocations = new string[0];
-                    return string.Empty;
-                }
                 var newLocations = areaLocations.ToList();
                 newLocations.Insert(0, "~/Administration/Views/{1}/{0}.cshtml");
                 newLocations.Insert(0, "~/Administration/Views/{1}/{0}.vbhtml");
@@ -151,15 +143,10 @@ namespace Nop.Web.Framework.Themes
             return true;
         }
 
-        protected virtual string GetCurrentTheme(bool mobile)
+        protected virtual string GetCurrentTheme()
         {
             var themeContext = EngineContext.Current.Resolve<IThemeContext>();
-            if (mobile)
-                //mobile theme
-                return themeContext.WorkingMobileTheme;
-            else
-                //desktop theme
-                return themeContext.WorkingDesktopTheme;
+            return themeContext.WorkingThemeName;
         }
 
         protected virtual string GetAreaName(RouteData routeData)
@@ -187,7 +174,7 @@ namespace Nop.Web.Framework.Themes
             return null;
         }
 
-        protected virtual ViewEngineResult FindThemeableView(ControllerContext controllerContext, string viewName, string masterName, bool useCache, bool mobile)
+        protected virtual ViewEngineResult FindThemeableView(ControllerContext controllerContext, string viewName, string masterName, bool useCache)
         {
             string[] strArray;
             string[] strArray2;
@@ -199,10 +186,10 @@ namespace Nop.Web.Framework.Themes
             {
                 throw new ArgumentException("View name cannot be null or empty.", "viewName");
             }
-            var theme = GetCurrentTheme(mobile);
+            var theme = GetCurrentTheme();
             string requiredString = controllerContext.RouteData.GetRequiredString("controller");
-            string str2 = this.GetPath(controllerContext, this.ViewLocationFormats, this.AreaViewLocationFormats, "ViewLocationFormats", viewName, requiredString, theme, "View", useCache, mobile, out strArray);
-            string str3 = this.GetPath(controllerContext, this.MasterLocationFormats, this.AreaMasterLocationFormats, "MasterLocationFormats", masterName, requiredString, theme, "Master", useCache, mobile, out strArray2);
+            string str2 = this.GetPath(controllerContext, this.ViewLocationFormats, this.AreaViewLocationFormats, "ViewLocationFormats", viewName, requiredString, theme, "View", useCache, out strArray);
+            string str3 = this.GetPath(controllerContext, this.MasterLocationFormats, this.AreaMasterLocationFormats, "MasterLocationFormats", masterName, requiredString, theme, "Master", useCache, out strArray2);
             if (!string.IsNullOrEmpty(str2) && (!string.IsNullOrEmpty(str3) || string.IsNullOrEmpty(masterName)))
             {
                 return new ViewEngineResult(this.CreateView(controllerContext, str2, str3), this);
@@ -215,7 +202,7 @@ namespace Nop.Web.Framework.Themes
 
         }
 
-        protected virtual ViewEngineResult FindThemeablePartialView(ControllerContext controllerContext, string partialViewName, bool useCache, bool mobile)
+        protected virtual ViewEngineResult FindThemeablePartialView(ControllerContext controllerContext, string partialViewName, bool useCache)
         {
             string[] strArray;
             if (controllerContext == null)
@@ -226,9 +213,9 @@ namespace Nop.Web.Framework.Themes
             {
                 throw new ArgumentException("Partial view name cannot be null or empty.", "partialViewName");
             }
-            var theme = GetCurrentTheme(mobile);
+            var theme = GetCurrentTheme();
             string requiredString = controllerContext.RouteData.GetRequiredString("controller");
-            string str2 = this.GetPath(controllerContext, this.PartialViewLocationFormats, this.AreaPartialViewLocationFormats, "PartialViewLocationFormats", partialViewName, requiredString, theme, "Partial", useCache, mobile, out strArray);
+            string str2 = this.GetPath(controllerContext, this.PartialViewLocationFormats, this.AreaPartialViewLocationFormats, "PartialViewLocationFormats", partialViewName, requiredString, theme, "Partial", useCache, out strArray);
             if (string.IsNullOrEmpty(str2))
             {
                 return new ViewEngineResult(strArray);
@@ -243,38 +230,14 @@ namespace Nop.Web.Framework.Themes
 
         public override ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName, bool useCache)
         {
-            var mobileDeviceHelper = EngineContext.Current.Resolve<IMobileDeviceHelper>();
-            bool useMobileDevice = mobileDeviceHelper.IsMobileDevice(controllerContext.HttpContext)
-                && mobileDeviceHelper.MobileDevicesSupported()
-                && !mobileDeviceHelper.CustomerDontUseMobileVersion();
-
-            string overrideViewName = useMobileDevice ?
-                string.Format("{0}.{1}", viewName, _mobileViewModifier)
-                : viewName;
-
-            ViewEngineResult result = FindThemeableView(controllerContext, overrideViewName, masterName, useCache, useMobileDevice);
-            // If we're looking for a Mobile view and couldn't find it try again without modifying the viewname
-            if (useMobileDevice && (result == null || result.View == null))
-                result = FindThemeableView(controllerContext, viewName, masterName, useCache, false);
+            ViewEngineResult result = FindThemeableView(controllerContext, viewName, masterName, useCache);
             return result;
 
         }
 
         public override ViewEngineResult FindPartialView(ControllerContext controllerContext, string partialViewName, bool useCache)
         {
-            var mobileDeviceHelper = EngineContext.Current.Resolve<IMobileDeviceHelper>();
-            bool useMobileDevice = mobileDeviceHelper.IsMobileDevice(controllerContext.HttpContext)
-                && mobileDeviceHelper.MobileDevicesSupported()
-                && !mobileDeviceHelper.CustomerDontUseMobileVersion();
-
-            string overrideViewName = useMobileDevice ?
-                string.Format("{0}.{1}", partialViewName, _mobileViewModifier)
-                : partialViewName;
-
-            ViewEngineResult result = FindThemeablePartialView(controllerContext, overrideViewName, useCache, useMobileDevice);
-            // If we're looking for a Mobile view and couldn't find it try again without modifying the viewname
-            if (useMobileDevice && (result == null || result.View == null))
-                result = FindThemeablePartialView(controllerContext, partialViewName, useCache, false);
+            ViewEngineResult result = FindThemeablePartialView(controllerContext, partialViewName, useCache);
             return result;
         }
     

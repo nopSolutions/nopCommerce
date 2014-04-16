@@ -21,11 +21,9 @@
         $(document).ready(function () {
 
             $("#@Html.FieldIdFor(model => model.StoreInformationSettings.StoreClosed)").click(toggleStoreClosed);
-            $("#@Html.FieldIdFor(model => model.StoreInformationSettings.MobileDevicesSupported)").click(toggleMobileDevicesSupported);
             $("#@Html.FieldIdFor(model => model.SecuritySettings.CaptchaEnabled)").click(toggleReCaptcha);
 
             toggleStoreClosed();
-            toggleMobileDevicesSupported();
             toggleReCaptcha();
         });
 
@@ -35,15 +33,6 @@
             }
             else {
                 $('#pnlStoreClosedAllowForAdmins').hide();
-            }
-        }
-
-        function toggleMobileDevicesSupported() {
-            if ($('#@Html.FieldIdFor(model => model.StoreInformationSettings.MobileDevicesSupported)').is(':checked')) {
-                $('#pnlDefaultStoreThemeForMobileDevices').show();
-            }
-            else {
-                $('#pnlDefaultStoreThemeForMobileDevices').hide();
             }
         }
 
@@ -171,17 +160,17 @@
         </tr>
         <tr>
             <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.DefaultStoreThemeForDesktops_OverrideForStore, model => model.StoreInformationSettings.DefaultStoreThemeForDesktops, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.StoreInformationSettings.DefaultStoreThemeForDesktops):
+                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.DefaultStoreTheme_OverrideForStore, model => model.StoreInformationSettings.DefaultStoreTheme, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.StoreInformationSettings.DefaultStoreTheme):
             </td>
             <td class="adminData">
                 <ul class="clearer" style="list-style: none;">
-                    @foreach (var theme in Model.StoreInformationSettings.AvailableStoreThemesForDesktops)
+                    @foreach (var theme in Model.StoreInformationSettings.AvailableStoreThemes)
                     {
                         <li style="float: left; width: 210px;">
                             <p style="float: left; padding-top: 55px;">
-                                <input type="radio" name="@Html.FieldNameFor(x => x.StoreInformationSettings.DefaultStoreThemeForDesktops)" value="@theme.ThemeName" id="id_image_@theme.ThemeName"
-                                       @if (theme.ThemeName == Model.StoreInformationSettings.DefaultStoreThemeForDesktops) { <text> checked="checked" </text>   }>
+                                <input type="radio" name="@Html.FieldNameFor(x => x.StoreInformationSettings.DefaultStoreTheme)" value="@theme.ThemeName" id="id_image_@theme.ThemeName"
+                                       @if (theme.ThemeName == Model.StoreInformationSettings.DefaultStoreTheme) { <text> checked="checked" </text>   }>
                             </p>
                             <p style="float: left;">
                                 <label for="id_image_@theme.ThemeName">
@@ -193,8 +182,8 @@
                         </li>
                     }
                 </ul>
-                @Html.ValidationMessageFor(model => model.StoreInformationSettings.DefaultStoreThemeForDesktops)
-                <em>@T("Admin.Configuration.Settings.GeneralCommon.DefaultStoreThemeForDesktops.GetMore") <a href="http://www.nopcommerce.com/extensions/4/templates-and-themes.aspx" target="_blank">http://www.nopcommerce.com/extensions/4/templates-and-themes.aspx</a></em>
+                @Html.ValidationMessageFor(model => model.StoreInformationSettings.DefaultStoreTheme)
+                <em>@T("Admin.Configuration.Settings.GeneralCommon.DefaultStoreTheme.GetMore") <a href="http://www.nopcommerce.com/extensions/4/templates-and-themes.aspx" target="_blank">http://www.nopcommerce.com/extensions/4/templates-and-themes.aspx</a></em>
             </td>
         </tr>
         <tr>
@@ -215,47 +204,6 @@
             <td class="adminData">
                 @Html.EditorFor(model => model.StoreInformationSettings.ResponsiveDesignSupported)
                 @Html.ValidationMessageFor(model => model.StoreInformationSettings.ResponsiveDesignSupported)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.MobileDevicesSupported_OverrideForStore, model => model.StoreInformationSettings.MobileDevicesSupported, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.StoreInformationSettings.MobileDevicesSupported):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.StoreInformationSettings.MobileDevicesSupported)
-                @Html.ValidationMessageFor(model => model.StoreInformationSettings.MobileDevicesSupported)
-            </td>
-        </tr>
-        <tr id="pnlDefaultStoreThemeForMobileDevices">
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.DefaultStoreThemeForMobileDevices_OverrideForStore, model => model.StoreInformationSettings.DefaultStoreThemeForMobileDevices, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.StoreInformationSettings.DefaultStoreThemeForMobileDevices):
-            </td>
-            <td class="adminData">
-                
-                <ul style="list-style: none;">
-                    @foreach (var theme in Model.StoreInformationSettings.AvailableStoreThemesForMobileDevices)
-                    {
-                        <li style="float: left; width: 210px;">
-                            <p style="float: left; padding-top: 55px;">
-                                <input type="radio" name="@Html.FieldNameFor(x => x.StoreInformationSettings.DefaultStoreThemeForMobileDevices)" value="@theme.ThemeName" id="id_image_@theme.ThemeName"
-                                    @if (theme.ThemeName == Model.StoreInformationSettings.DefaultStoreThemeForMobileDevices)
-                                    {
-                                        <text>checked="checked"</text>
-                                    }>
-                            </p>
-                            <p style="float: left;">
-                                <label for="id_image_@theme.ThemeName">
-                                    <img src="@Url.Content(theme.PreviewImageUrl)" alt="@theme.PreviewText" title="@theme.PreviewText" width="175">
-                                    <br/>
-                                    <label style="text-align:center;font-weight:bold;width:170px;">@theme.ThemeTitle</label>
-                                </label>
-                            </p>
-                        </li>
-                    }
-                </ul>
-                @Html.ValidationMessageFor(model => model.StoreInformationSettings.DefaultStoreThemeForMobileDevices)
             </td>
         </tr>
         <tr>

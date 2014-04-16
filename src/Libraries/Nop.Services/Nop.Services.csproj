@@ -168,10 +168,8 @@
     <Compile Include="Common\IFulltextService.cs" />
     <Compile Include="Common\IGenericAttributeService.cs" />
     <Compile Include="Common\GenericAttributeService.cs" />
-    <Compile Include="Common\IMobileDeviceHelper.cs" />
     <Compile Include="Common\KeepAliveTask.cs" />
     <Compile Include="Common\GenericAttributeExtensions.cs" />
-    <Compile Include="Common\MobileDeviceHelper.cs" />
     <Compile Include="Common\IMiscPlugin.cs" />
     <Compile Include="Common\IPdfService.cs" />
     <Compile Include="Common\PdfService.cs" />

@@ -72,10 +72,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\EntityFramework.SqlServerCompact.6.1.0\lib\net45\EntityFramework.SqlServerCompact.dll</HintPath>
     </Reference>
-    <Reference Include="FiftyOne.Foundation, Version=2.1.19.4, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\51Degrees.mobi.2.1.19.4\lib\NET40\FiftyOne.Foundation.dll</HintPath>
-    </Reference>
     <Reference Include="FluentValidation, Version=5.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\FluentValidation.5.1.0.0\lib\Net40\FluentValidation.dll</HintPath>
@@ -755,10 +751,7 @@
     <Content Include="Scripts\jquery-ui-1.10.3.custom.js" />
     <Content Include="Scripts\jquery-ui-1.10.3.custom.min.js" />
     <Content Include="Scripts\jquery.magnific-popup.js" />
-    <Content Include="Scripts\jquery.mobile-1.3.2.js" />
-    <Content Include="Scripts\jquery.mobile-1.3.2.min.js" />
     <Content Include="Scripts\jquery.tmpl.min.js" />
-    <Content Include="Scripts\jquery.mobile-1.3.2.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\kendo\2014.1.318\cultures\kendo.culture.af-ZA.min.js" />
     <Content Include="Scripts\kendo\2014.1.318\cultures\kendo.culture.af.min.js" />
@@ -1181,7 +1174,6 @@
     <Content Include="Scripts\kendo\2014.1.318\kendo.view.min.js" />
     <Content Include="Scripts\kendo\2014.1.318\kendo.web.min.js" />
     <Content Include="Scripts\kendo\2014.1.318\kendo.window.min.js" />
-    <Content Include="Scripts\public.common.mobile.js" />
     <Content Include="Scripts\tag-it.js" />
     <Content Include="Scripts\tag-it.min.js" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
@@ -1261,17 +1253,9 @@
     <Content Include="Themes\DefaultClean\Content\images\top-menu-list-image.png" />
     <Content Include="Themes\DefaultClean\Content\images\top-menu-triangle.png" />
     <Content Include="Themes\DefaultClean\Content\responsive.css" />
-    <Content Include="Themes\Mobile\Content\jquery.mobile-1.3.2.css" />
-    <Content Include="Themes\Mobile\Content\jquery.mobile-1.3.2.min.css" />
-    <Content Include="Themes\Mobile\Content\jquery.mobile.structure-1.3.2.css" />
-    <Content Include="Themes\Mobile\Content\jquery.mobile.structure-1.3.2.min.css" />
-    <Content Include="Themes\Mobile\Content\jquery.mobile.theme-1.3.2.css" />
-    <Content Include="Themes\Mobile\Content\jquery.mobile.theme-1.3.2.min.css" />
-    <Content Include="Themes\Mobile\preview.jpg" />
     <Content Include="Themes\DefaultClean\Content\images\star-x-active.png" />
     <Content Include="Themes\DefaultClean\Content\images\star-x-inactive.png" />
     <Content Include="Themes\DefaultClean\preview.jpg" />
-    <Content Include="Themes\Mobile\Content\images\ajax-loader.gif" />
     <Content Include="Content\Images\default-avatar.jpg" />
     <Content Include="Content\Images\flags\ad.png" />
     <Content Include="Content\Images\flags\ae.png" />
@@ -1521,12 +1505,6 @@
     <Content Include="Content\Images\flags\zm.png" />
     <Content Include="Content\Images\flags\zw.png" />
     <Content Include="Themes\DefaultClean\Content\images\ico-close-notification-bar.png" />
-    <Content Include="Themes\Mobile\Content\images\icons-18-black.png" />
-    <Content Include="Themes\Mobile\Content\images\icons-18-white.png" />
-    <Content Include="Themes\Mobile\Content\images\icons-36-black.png" />
-    <Content Include="Themes\Mobile\Content\images\icons-36-white.png" />
-    <Content Include="Themes\Mobile\Content\images\star-x-active.png" />
-    <Content Include="Themes\Mobile\Content\images\star-x-inactive.png" />
     <Content Include="Themes\DefaultClean\Content\images\bullet-left.gif" />
     <Content Include="Themes\DefaultClean\Content\images\bullet-right.gif" />
     <Content Include="Themes\DefaultClean\Content\styles.rtl.css" />
@@ -1658,10 +1636,6 @@
     <Content Include="Themes\DefaultClean\Content\images\progress-step-active.gif" />
     <Content Include="Themes\DefaultClean\Content\images\progress-step-inactive.gif" />
     <Content Include="Themes\DefaultClean\Content\styles.css" />
-    <Content Include="Themes\Mobile\Content\images\ico-forum-post-high.gif" />
-    <Content Include="Themes\Mobile\Content\images\ico-forum-post.gif" />
-    <Content Include="Themes\Mobile\Content\images\ico-forum.gif" />
-    <Content Include="Themes\Mobile\Content\styles.css" />
     <Content Include="Themes\print.css" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -1703,125 +1677,11 @@
     <Content Include="Views\Catalog\BackInStockSubscribePopup.cshtml" />
     <Content Include="Views\Customer\BackInStockSubscriptions.cshtml" />
     <Content Include="App_Data\Pdf\FreeSerif.ttf" />
-    <Content Include="Views\Shared\_Root.Mobile.cshtml" />
-    <Content Include="Views\Home\Index.Mobile.cshtml" />
-    <Content Include="Themes\Mobile\theme.config">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Themes\Mobile\Views\Shared\Head.Mobile.cshtml" />
-    <Content Include="Themes\Mobile\Views\Web.config" />
     <Content Include="Views\Common\StoreThemeSelector.cshtml" />
-    <Content Include="Views\Catalog\CategoryNavigation.Mobile.cshtml" />
-    <Content Include="Views\Catalog\CategoryTemplate.ProductsInGridOrLines.Mobile.cshtml" />
-    <Content Include="Views\Catalog\_ProductBox.Mobile.cshtml" />
-    <Content Include="Views\Catalog\ProductTemplate.Grouped.Mobile.cshtml" />
-    <Content Include="Views\Catalog\ProductTemplate.Simple.Mobile.cshtml" />
-    <Content Include="Views\Catalog\ProductEmailAFriendButton.Mobile.cshtml" />
-    <Content Include="Views\Catalog\ProductReviewOverview.Mobile.cshtml" />
-    <Content Include="Views\Catalog\SearchBox.Mobile.cshtml" />
-    <Content Include="Views\Catalog\Search.Mobile.cshtml" />
-    <Content Include="Views\Catalog\ManufacturerNavigation.Mobile.cshtml" />
-    <Content Include="Views\Catalog\ManufacturerTemplate.ProductsInGridOrLines.Mobile.cshtml" />
-    <Content Include="Views\Catalog\ProductsByTag.Mobile.cshtml" />
-    <Content Include="Views\Catalog\_ProductDetailsPictures.Mobile.cshtml" />
-    <Content Include="Views\Catalog\_ProductAttributes.Mobile.cshtml" />
-    <Content Include="Views\Catalog\_GiftCardInfo.Mobile.cshtml" />
-    <Content Include="Views\Catalog\_ProductPrice.Mobile.cshtml" />
-    <Content Include="Views\Catalog\_AddToCart.Mobile.cshtml" />
-    <Content Include="Views\ShoppingCart\Cart.Mobile.cshtml" />
-    <Content Include="Views\ShoppingCart\Wishlist.Mobile.cshtml" />
-    <Content Include="Views\Catalog\ProductReviews.Mobile.cshtml" />
-    <Content Include="Views\Catalog\ProductEmailAFriend.Mobile.cshtml" />
-    <Content Include="Views\Common\HeaderLinks.Mobile.cshtml" />
-    <Content Include="Views\Common\ContactUs.Mobile.cshtml" />
-    <Content Include="Views\Blog\List.Mobile.cshtml" />
-    <Content Include="Views\Blog\BlogPost.Mobile.cshtml" />
-    <Content Include="Views\News\List.Mobile.cshtml" />
-    <Content Include="Views\News\NewsItem.Mobile.cshtml" />
-    <Content Include="Views\Customer\Login.Mobile.cshtml" />
-    <Content Include="Views\Customer\RegisterResult.Mobile.cshtml" />
-    <Content Include="Views\Customer\Register.Mobile.cshtml" />
-    <Content Include="Views\Customer\AccountActivation.Mobile.cshtml" />
-    <Content Include="Views\Customer\MyAccountNavigation.Mobile.cshtml" />
-    <Content Include="Views\Customer\Info.Mobile.cshtml" />
-    <Content Include="Views\Profile\Index.Mobile.cshtml" />
-    <Content Include="Views\Profile\Info.Mobile.cshtml" />
-    <Content Include="Views\Customer\Addresses.Mobile.cshtml" />
-    <Content Include="Views\Customer\AddressAdd.Mobile.cshtml" />
-    <Content Include="Views\Customer\AddressEdit.Mobile.cshtml" />
-    <Content Include="Views\Shared\_CreateOrUpdateAddress.Mobile.cshtml" />
-    <Content Include="Views\Customer\ChangePassword.Mobile.cshtml" />
-    <Content Include="Views\Customer\Avatar.Mobile.cshtml" />
-    <Content Include="Views\Customer\UserAgreement.Mobile.cshtml" />
-    <Content Include="Views\Catalog\RecentlyViewedProducts.Mobile.cshtml" />
-    <Content Include="Views\Catalog\RecentlyAddedProducts.Mobile.cshtml" />
-    <Content Include="Views\Catalog\ManufacturerAll.Mobile.cshtml" />
-    <Content Include="Views\Customer\DownloadableProducts.Mobile.cshtml" />
-    <Content Include="Views\Customer\RewardPoints.Mobile.cshtml" />
-    <Content Include="Views\Customer\ReturnRequests.Mobile.cshtml" />
-    <Content Include="Views\Customer\PasswordRecovery.Mobile.cshtml" />
-    <Content Include="Views\Customer\PasswordRecoveryConfirm.Mobile.cshtml" />
-    <Content Include="Views\Newsletter\SubscriptionActivation.Mobile.cshtml" />
-    <Content Include="Views\Common\ChangeDeviceBlock.Mobile.cshtml" />
-    <Content Include="Views\Common\ChangeDeviceBlock.cshtml" />
-    <Content Include="Views\Customer\Orders.Mobile.cshtml" />
-    <Content Include="Views\ReturnRequest\ReturnRequest.Mobile.cshtml" />
-    <Content Include="Views\Order\Details.Mobile.cshtml" />
-    <Content Include="Views\Common\Footer.Mobile.cshtml" />
-    <Content Include="Views\Topic\TopicDetails.Mobile.cshtml" />
-    <Content Include="Views\ShoppingCart\OrderSummary.Mobile.cshtml" />
-    <Content Include="Views\ShoppingCart\OrderTotals.Mobile.cshtml" />
-    <Content Include="Views\ShoppingCart\EmailWishlist.Mobile.cshtml" />
-    <Content Include="Views\Checkout\BillingAddress.Mobile.cshtml" />
-    <Content Include="Views\Checkout\ShippingAddress.Mobile.cshtml" />
-    <Content Include="Views\Checkout\ShippingMethod.Mobile.cshtml" />
-    <Content Include="Views\Checkout\PaymentMethod.Mobile.cshtml" />
-    <Content Include="Views\Checkout\PaymentInfo.Mobile.cshtml" />
-    <Content Include="Views\Checkout\Confirm.Mobile.cshtml" />
-    <Content Include="Views\Checkout\Completed.Mobile.cshtml" />
-    <Content Include="Views\Common\Sitemap.Mobile.cshtml" />
-    <Content Include="Views\Boards\ActiveDiscussions.Mobile.cshtml" />
-    <Content Include="Views\Boards\Forum.Mobile.cshtml" />
-    <Content Include="Views\Boards\ForumGroup.Mobile.cshtml" />
-    <Content Include="Views\Boards\Index.Mobile.cshtml" />
-    <Content Include="Views\Boards\PostCreate.Mobile.cshtml" />
-    <Content Include="Views\Boards\PostEdit.Mobile.cshtml" />
-    <Content Include="Views\Boards\Search.Mobile.cshtml" />
-    <Content Include="Views\Boards\Topic.Mobile.cshtml" />
-    <Content Include="Views\Boards\TopicCreate.Mobile.cshtml" />
-    <Content Include="Views\Boards\TopicEdit.Mobile.cshtml" />
-    <Content Include="Views\Boards\TopicMove.Mobile.cshtml" />
-    <Content Include="Views\PrivateMessages\Index.Mobile.cshtml" />
-    <Content Include="Views\PrivateMessages\SendPM.Mobile.cshtml" />
-    <Content Include="Views\PrivateMessages\ViewPM.Mobile.cshtml" />
-    <Content Include="Views\PrivateMessages\Inbox.Mobile.cshtml" />
-    <Content Include="Views\PrivateMessages\SentItems.Mobile.cshtml" />
-    <Content Include="Views\Catalog\RelatedProducts.Mobile.cshtml" />
-    <Content Include="Views\Catalog\ProductsAlsoPurchased.Mobile.cshtml" />
-    <Content Include="Views\Customer\MyAccount.Mobile.cshtml" />
-    <Content Include="Views\Customer\BackInStockSubscriptions.Mobile.cshtml" />
-    <Content Include="Views\Customer\ForumSubscriptions.Mobile.cshtml" />
-    <Content Include="Views\Boards\_SearchBox.Mobile.cshtml" />
-    <Content Include="Views\Boards\_ForumGroup.Mobile.cshtml" />
-    <Content Include="Views\Boards\_ActiveTopics.Mobile.cshtml" />
-    <Content Include="Views\Boards\_ForumPost.Mobile.cshtml" />
-    <Content Include="Views\Boards\_CreateUpdateTopic.Mobile.cshtml" />
-    <Content Include="Views\Boards\_CreateUpdatePost.Mobile.cshtml" />
-    <Content Include="Views\Catalog\CompareProductsButton.Mobile.cshtml" />
-    <Content Include="Views\Catalog\CompareProducts.Mobile.cshtml" />
-    <Content Include="Views\Catalog\_BackInStockSubscription.Mobile.cshtml" />
-    <Content Include="Views\Catalog\BackInStockSubscribePopup.Mobile.cshtml" />
-    <Content Include="Views\Common\ConfigButton.Mobile.cshtml" />
-    <Content Include="Views\Common\Config.Mobile.cshtml" />
-    <Content Include="Views\Common\LanguageSelector.Mobile.cshtml" />
-    <Content Include="Views\Common\TaxTypeSelector.Mobile.cshtml" />
-    <Content Include="Views\Common\CurrencySelector.Mobile.cshtml" />
-    <Content Include="Views\Common\Config.cshtml" />
-    <Content Include="Views\Customer\MyAccount.cshtml" />
-    <Content Include="Views\Catalog\HomepageProducts.Mobile.cshtml" />
     <Content Include="Views\Shared\_Notifications.cshtml" />
     <Content Include="Views\Customer\_CustomerAttributes.cshtml" />
-    <Content Include="Views\Customer\_CustomerAttributes.Mobile.cshtml" />
+    <Content Include="Views\Boards\BlogPost.Mobile.cshtml" />
+    <Content Include="Views\Boards\List.Mobile.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Plugins\bin\" />
@@ -1872,7 +1732,6 @@
     <Content Include="Content\samples\product_BattleOfLa_1.zip" />
     <Content Include="Content\samples\product_PokerFace_1.zip" />
     <Content Include="Content\samples\product_SingleLadies_1.zip" />
-    <Content Include="51Degrees.mobi.config" />
     <Content Include="Views\Customer\Login.cshtml" />
     <Content Include="Views\Customer\Register.cshtml" />
     <Content Include="Views\Customer\RegisterResult.cshtml" />
@@ -2001,29 +1860,17 @@
     <Content Include="Views\Common\Favicon.cshtml" />
     <Content Include="Views\Customer\ForumSubscriptions.cshtml" />
     <Content Include="Views\Order\ShipmentDetails.cshtml" />
-    <Content Include="Views\Order\ShipmentDetails.Mobile.cshtml" />
-    <Content Include="Views\Catalog\_ProductReviewHelpfulness.Mobile.cshtml" />
     <Content Include="Views\Common\JavaScriptDisabledWarning.cshtml" />
     <Content Include="Views\Shared\_Root.Head.cshtml" />
-    <Content Include="Views\Shared\_Root.Head.Mobile.cshtml" />
-    <Content Include="Views\Shared\_Notifications.Mobile.cshtml" />
     <Content Include="Views\Catalog\ProductTagsAll.cshtml" />
-    <Content Include="Views\Catalog\ProductTagsAll.Mobile.cshtml" />
     <Content Include="Views\ShoppingCart\_DiscountBox.cshtml" />
     <Content Include="Views\ShoppingCart\_GiftCardBox.cshtml" />
-    <Content Include="Views\ShoppingCart\_DiscountBox.Mobile.cshtml" />
-    <Content Include="Views\ShoppingCart\_GiftCardBox.Mobile.cshtml" />
     <Content Include="Views\ShoppingCart\_ButtonPaymentMethod.cshtml" />
     <Content Include="Views\ShoppingCart\_OrderReviewData.cshtml" />
-    <Content Include="Views\ShoppingCart\_OrderReviewData.Mobile.cshtml" />
     <Content Include="Views\Common\StoreClosed.cshtml" />
-    <Content Include="Views\Common\StoreClosed.Mobile.cshtml" />
-    <Content Include="Views\ShoppingCart\_CheckoutAttributes.Mobile.cshtml" />
     <Content Include="Themes\DefaultClean\Views\Shared\Head.cshtml" />
     <Content Include="Views\Common\AdminHeaderLinks.cshtml" />
     <Content Include="Views\Common\PageNotFound.cshtml" />
-    <Content Include="Views\Common\PageNotFound.Mobile.cshtml" />
-    <Content Include="Views\Common\EuCookieLaw.Mobile.cshtml" />
     <Content Include="Views\Common\EuCookieLaw.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -2033,19 +1880,10 @@
     <Content Include="Views\Catalog\VendorNavigation.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Catalog\VendorNavigation.Mobile.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Catalog\Vendor.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Catalog\Vendor.Mobile.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Catalog\VendorAll.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Catalog\VendorAll.Mobile.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

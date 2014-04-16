@@ -27,10 +27,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
         {
             return new List<string>()
             { 
-                //desktop version (you can also replace it with "head_html_tag")
-                "body_end_html_tag_before", 
-                //mobile version
-                "mobile_body_end_html_tag_before" 
+                "body_end_html_tag_before"
             };
         }
 

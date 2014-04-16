@@ -1914,11 +1914,10 @@ namespace Nop.Admin.Controllers
             var storeInformationSettings = _settingService.LoadSetting<StoreInformationSettings>(storeScope);
             model.StoreInformationSettings.StoreClosed = storeInformationSettings.StoreClosed;
             model.StoreInformationSettings.StoreClosedAllowForAdmins = storeInformationSettings.StoreClosedAllowForAdmins;
-            //desktop themes
-            model.StoreInformationSettings.DefaultStoreThemeForDesktops = storeInformationSettings.DefaultStoreThemeForDesktops;
-            model.StoreInformationSettings.AvailableStoreThemesForDesktops = _themeProvider
+            //themes
+            model.StoreInformationSettings.DefaultStoreTheme = storeInformationSettings.DefaultStoreTheme;
+            model.StoreInformationSettings.AvailableStoreThemes = _themeProvider
                 .GetThemeConfigurations()
-                .Where(x => !x.MobileTheme)
                 .Select(x =>
                 {
                     return new GeneralCommonSettingsModel.StoreInformationSettingsModel.ThemeConfigurationModel()
@@ -1928,31 +1927,12 @@ namespace Nop.Admin.Controllers
                         PreviewImageUrl = x.PreviewImageUrl,
                         PreviewText = x.PreviewText,
                         SupportRtl = x.SupportRtl,
-                        Selected = x.ThemeName.Equals(storeInformationSettings.DefaultStoreThemeForDesktops, StringComparison.InvariantCultureIgnoreCase)
+                        Selected = x.ThemeName.Equals(storeInformationSettings.DefaultStoreTheme, StringComparison.InvariantCultureIgnoreCase)
                     };
                 })
                 .ToList();
             model.StoreInformationSettings.AllowCustomerToSelectTheme = storeInformationSettings.AllowCustomerToSelectTheme;
             model.StoreInformationSettings.ResponsiveDesignSupported = storeInformationSettings.ResponsiveDesignSupported;
-            model.StoreInformationSettings.MobileDevicesSupported = storeInformationSettings.MobileDevicesSupported;
-            //mobile device themes
-            model.StoreInformationSettings.DefaultStoreThemeForMobileDevices = storeInformationSettings.DefaultStoreThemeForMobileDevices;
-            model.StoreInformationSettings.AvailableStoreThemesForMobileDevices = _themeProvider
-                .GetThemeConfigurations()
-                .Where(x => x.MobileTheme)
-                .Select(x =>
-                {
-                    return new GeneralCommonSettingsModel.StoreInformationSettingsModel.ThemeConfigurationModel()
-                    {
-                        ThemeTitle = x.ThemeTitle,
-                        ThemeName = x.ThemeName,
-                        PreviewImageUrl = x.PreviewImageUrl,
-                        PreviewText = x.PreviewText,
-                        SupportRtl = x.SupportRtl,
-                        Selected = x.ThemeName.Equals(storeInformationSettings.DefaultStoreThemeForMobileDevices, StringComparison.InvariantCultureIgnoreCase)
-                    };
-                })
-                .ToList();
             //EU Cookie law
             model.StoreInformationSettings.DisplayEuCookieLawWarning = storeInformationSettings.DisplayEuCookieLawWarning;
             //social pages
@@ -1964,11 +1944,9 @@ namespace Nop.Admin.Controllers
             if (storeScope > 0)
             {
                 model.StoreInformationSettings.ResponsiveDesignSupported_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.ResponsiveDesignSupported, storeScope);
-                model.StoreInformationSettings.MobileDevicesSupported_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.MobileDevicesSupported, storeScope);
                 model.StoreInformationSettings.StoreClosed_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.StoreClosed, storeScope);
                 model.StoreInformationSettings.StoreClosedAllowForAdmins_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.StoreClosedAllowForAdmins, storeScope);
-                model.StoreInformationSettings.DefaultStoreThemeForDesktops_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.DefaultStoreThemeForDesktops, storeScope);
-                model.StoreInformationSettings.DefaultStoreThemeForMobileDevices_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.DefaultStoreThemeForMobileDevices, storeScope);
+                model.StoreInformationSettings.DefaultStoreTheme_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.DefaultStoreTheme, storeScope);
                 model.StoreInformationSettings.AllowCustomerToSelectTheme_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.AllowCustomerToSelectTheme, storeScope);
                 model.StoreInformationSettings.DisplayEuCookieLawWarning_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.DisplayEuCookieLawWarning, storeScope);
                 model.StoreInformationSettings.FacebookLink_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.FacebookLink, storeScope);
@@ -2079,14 +2057,9 @@ namespace Nop.Admin.Controllers
             var storeInformationSettings = _settingService.LoadSetting<StoreInformationSettings>(storeScope);
             storeInformationSettings.StoreClosed = model.StoreInformationSettings.StoreClosed;
             storeInformationSettings.StoreClosedAllowForAdmins = model.StoreInformationSettings.StoreClosedAllowForAdmins;
-            storeInformationSettings.DefaultStoreThemeForDesktops = model.StoreInformationSettings.DefaultStoreThemeForDesktops;
+            storeInformationSettings.DefaultStoreTheme = model.StoreInformationSettings.DefaultStoreTheme;
             storeInformationSettings.AllowCustomerToSelectTheme = model.StoreInformationSettings.AllowCustomerToSelectTheme;
             storeInformationSettings.ResponsiveDesignSupported = model.StoreInformationSettings.ResponsiveDesignSupported;
-            //store whether MobileDevicesSupported setting has been changed (requires application restart)
-            bool mobileDevicesSupportedChanged = storeInformationSettings.MobileDevicesSupported !=
-                                                 model.StoreInformationSettings.MobileDevicesSupported;
-            storeInformationSettings.MobileDevicesSupported = model.StoreInformationSettings.MobileDevicesSupported;
-            storeInformationSettings.DefaultStoreThemeForMobileDevices = model.StoreInformationSettings.DefaultStoreThemeForMobileDevices;
             //EU Cookie law
             storeInformationSettings.DisplayEuCookieLawWarning = model.StoreInformationSettings.DisplayEuCookieLawWarning;
             //social pages
@@ -2103,11 +2076,6 @@ namespace Nop.Admin.Controllers
             else if (storeScope > 0)
                 _settingService.DeleteSetting(storeInformationSettings, x => x.ResponsiveDesignSupported, storeScope);
 
-            if (model.StoreInformationSettings.MobileDevicesSupported_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(storeInformationSettings, x => x.MobileDevicesSupported, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(storeInformationSettings, x => x.MobileDevicesSupported, storeScope);
-
             if (model.StoreInformationSettings.StoreClosed_OverrideForStore || storeScope == 0)
                 _settingService.SaveSetting(storeInformationSettings, x => x.StoreClosed, storeScope, false);
             else if (storeScope > 0)
@@ -2118,15 +2086,10 @@ namespace Nop.Admin.Controllers
             else if (storeScope > 0)
                 _settingService.DeleteSetting(storeInformationSettings, x => x.StoreClosedAllowForAdmins, storeScope);
 
-            if (model.StoreInformationSettings.DefaultStoreThemeForDesktops_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(storeInformationSettings, x => x.DefaultStoreThemeForDesktops, storeScope, false);
+            if (model.StoreInformationSettings.DefaultStoreTheme_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(storeInformationSettings, x => x.DefaultStoreTheme, storeScope, false);
             else if (storeScope > 0)
-                _settingService.DeleteSetting(storeInformationSettings, x => x.DefaultStoreThemeForDesktops, storeScope);
-
-            if (model.StoreInformationSettings.DefaultStoreThemeForMobileDevices_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(storeInformationSettings, x => x.DefaultStoreThemeForMobileDevices, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(storeInformationSettings, x => x.DefaultStoreThemeForMobileDevices, storeScope);
+                _settingService.DeleteSetting(storeInformationSettings, x => x.DefaultStoreTheme, storeScope);
 
             if (model.StoreInformationSettings.AllowCustomerToSelectTheme_OverrideForStore || storeScope == 0)
                 _settingService.SaveSetting(storeInformationSettings, x => x.AllowCustomerToSelectTheme, storeScope, false);
@@ -2323,13 +2286,6 @@ namespace Nop.Admin.Controllers
 
             //activity log
             _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
-
-            if (mobileDevicesSupportedChanged)
-            {
-                //MobileDevicesSupported setting has been changed
-                //restart application
-                _webHelper.RestartAppDomain();
-            }
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
 

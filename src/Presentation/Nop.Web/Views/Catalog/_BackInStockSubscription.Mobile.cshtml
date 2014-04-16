@@ -1,8 +1,0 @@
-﻿@model ProductDetailsModel
-@using Nop.Web.Models.Catalog;
-@if (Model.DisplayBackInStockSubscription)
-{
-    <div class="back-in-stock-subscription">
-        <a href="@Url.RouteUrl("BackInStockSubscribePopup", new { productId = Model.Id })" data-role="button" data-ajax="false">@T("BackInStockSubscriptions.NotifyMeWhenAvailable")</a>
-    </div>
-}

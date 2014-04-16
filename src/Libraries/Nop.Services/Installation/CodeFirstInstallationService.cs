@@ -4626,12 +4626,9 @@ namespace Nop.Services.Installation
                 {
                     StoreClosed = false,
                     StoreClosedAllowForAdmins = false,
-                    DefaultStoreThemeForDesktops = "DefaultClean",
+                    DefaultStoreTheme = "DefaultClean",
                     AllowCustomerToSelectTheme = true,
                     ResponsiveDesignSupported = true,
-                    MobileDevicesSupported = false,
-                    DefaultStoreThemeForMobileDevices = "Mobile",
-                    EmulateMobileDevice = false,
                     DisplayMiniProfilerInPublicStore = false,
                     DisplayEuCookieLawWarning = false,
                     FacebookLink = "http://www.facebook.com/nopCommerce",

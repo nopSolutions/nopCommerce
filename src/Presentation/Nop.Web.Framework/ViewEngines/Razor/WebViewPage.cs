@@ -132,7 +132,7 @@ namespace Nop.Web.Framework.ViewEngines.Razor
                 //ensure that the active theme also supports it
                 var themeProvider = EngineContext.Current.Resolve<IThemeProvider>();
                 var themeContext = EngineContext.Current.Resolve<IThemeContext>();
-                supportRtl = themeProvider.GetThemeConfiguration(themeContext.WorkingDesktopTheme).SupportRtl;
+                supportRtl = themeProvider.GetThemeConfiguration(themeContext.WorkingThemeName).SupportRtl;
             }
             return supportRtl;
         }

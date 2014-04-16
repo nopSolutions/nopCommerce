@@ -1,7 +1,7 @@
 ﻿@using Nop.Core.Infrastructure
 @using Nop.Web.Framework.Themes
 @{
-    var currentThemeName = EngineContext.Current.Resolve<IThemeContext>().WorkingDesktopTheme;
+    var currentThemeName = EngineContext.Current.Resolve<IThemeContext>().WorkingThemeName;
     var logoPath = "~/Themes/" + currentThemeName + "/Content/images/logo.gif";
 }
 

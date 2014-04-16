@@ -64,8 +64,6 @@ namespace Nop.Web.Controllers
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IWebHelper _webHelper;
         private readonly IPermissionService _permissionService;
-        private readonly IMobileDeviceHelper _mobileDeviceHelper;
-        private readonly HttpContextBase _httpContext;
         private readonly ICacheManager _cacheManager;
         private readonly ICustomerActivityService _customerActivityService;
 
@@ -103,8 +101,6 @@ namespace Nop.Web.Controllers
             IGenericAttributeService genericAttributeService, 
             IWebHelper webHelper,
             IPermissionService permissionService,
-            IMobileDeviceHelper mobileDeviceHelper,
-            HttpContextBase httpContext, 
             ICacheManager cacheManager,
             ICustomerActivityService customerActivityService,
             CustomerSettings customerSettings, 
@@ -137,8 +133,6 @@ namespace Nop.Web.Controllers
             this._genericAttributeService = genericAttributeService;
             this._webHelper = webHelper;
             this._permissionService = permissionService;
-            this._mobileDeviceHelper = mobileDeviceHelper;
-            this._httpContext = httpContext;
             this._cacheManager = cacheManager;
             this._customerActivityService = customerActivityService;
 
@@ -621,15 +615,13 @@ namespace Nop.Web.Controllers
                 return Content("");
 
             var model = new StoreThemeSelectorModel();
-            var currentTheme = _themeProvider.GetThemeConfiguration(_themeContext.WorkingDesktopTheme);
+            var currentTheme = _themeProvider.GetThemeConfiguration(_themeContext.WorkingThemeName);
             model.CurrentStoreTheme = new StoreThemeModel()
             {
                 Name = currentTheme.ThemeName,
                 Title = currentTheme.ThemeTitle
             };
             model.AvailableStoreThemes = _themeProvider.GetThemeConfigurations()
-                //do not display themes for mobile devices
-                .Where(x => !x.MobileTheme)
                 .Select(x =>
                 {
                     return new StoreThemeModel()
@@ -643,7 +635,7 @@ namespace Nop.Web.Controllers
         }
         public ActionResult SetStoreTheme(string themeName, string returnUrl = "")
         {
-            _themeContext.WorkingDesktopTheme = themeName;
+            _themeContext.WorkingThemeName = themeName;
             
             //url referrer
             if (String.IsNullOrEmpty(returnUrl))
@@ -677,35 +669,6 @@ namespace Nop.Web.Controllers
                 FaviconUrl = _webHelper.GetStoreLocation() + faviconFileName
             };
             return PartialView(model);
-        }
-
-        /// <summary>
-        /// Change presentation layer (desktop or mobile version)
-        /// </summary>
-        /// <param name="dontUseMobileVersion">True - use desktop version; false - use version for mobile devices</param>
-        /// <returns>Action result</returns>
-        public ActionResult ChangeDevice(bool dontUseMobileVersion)
-        {
-            _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
-                SystemCustomerAttributeNames.DontUseMobileVersion, dontUseMobileVersion, _storeContext.CurrentStore.Id);
-
-            string returnurl = _webHelper.GetUrlReferrer();
-            if (String.IsNullOrEmpty(returnurl))
-                returnurl = Url.RouteUrl("HomePage");
-            return Redirect(returnurl);
-        }
-        [ChildActionOnly]
-        public ActionResult ChangeDeviceBlock()
-        {
-            if (!_mobileDeviceHelper.MobileDevicesSupported())
-                //mobile devices support is disabled
-                return Content("");
-
-            if (!_mobileDeviceHelper.IsMobileDevice(_httpContext))
-                //request is made by a desktop computer
-                return Content("");
-
-            return View();
         }
         
         //EU Cookie law

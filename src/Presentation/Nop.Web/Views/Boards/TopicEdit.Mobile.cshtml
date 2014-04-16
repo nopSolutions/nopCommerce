@@ -1,8 +1,0 @@
-﻿@model EditForumTopicModel
-@using Nop.Web.Models.Boards;
-@{    
-    Layout = "~/Views/Shared/_Root.cshtml";
-
-    Html.AddTitleParts(T("Forum.PageTitle.TopicEdit").Text);    
-}
-@Html.Partial("_CreateUpdateTopic", Model)

@@ -126,7 +126,6 @@
     <Content Include="Notes.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Views\PaymentManual\PaymentInfo.Mobile.cshtml" />
     <None Include="packages.config" />
     <None Include="web.config" />
   </ItemGroup>

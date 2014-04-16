@@ -4770,20 +4770,14 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DefaultMetaKeywords.Hint">
     <Value>The default meta keywords for pages in your store. You can override these for individual categories / products / manufacturer pages.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DefaultStoreThemeForDesktops">
-    <Value>Desktop store theme</Value>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DefaultStoreTheme">
+    <Value>Default store theme</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DefaultStoreThemeForDesktops.GetMore">
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DefaultStoreTheme.GetMore">
     <Value>You can get more themes on</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DefaultStoreThemeForDesktops.Hint">
-    <Value>The public store theme for desktops. You can download themes from the extensions page at www.nopcommerce.com.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DefaultStoreThemeForMobileDevices">
-    <Value>Mobile store theme</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DefaultStoreThemeForMobileDevices.Hint">
-    <Value>The public store theme for mobile devices. You can download themes from the extensions page at www.nopcommerce.com.</Value>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DefaultStoreTheme.Hint">
+    <Value>The public store theme. You can download themes from the extensions page at www.nopcommerce.com.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DefaultTitle">
     <Value>Default title</Value>
@@ -4910,12 +4904,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.LocalizationSettings">
     <Value>Localization settings</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.MobileDevicesSupported">
-    <Value>Mobile devices supported</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.MobileDevicesSupported.Hint">
-    <Value>Check to enable mobile devices support.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.PageTitleSeoAdjustment">
     <Value>Page title SEO adjustment</Value>
@@ -11091,12 +11079,6 @@
   <LocaleResource Name="Messages.Order.TotalDiscount">
     <Value>Discount:</Value>
   </LocaleResource>
-  <LocaleResource Name="Mobile.ViewFullSite">
-    <Value>View Full Site</Value>
-  </LocaleResource>
-  <LocaleResource Name="Mobile.ViewMobileVersion">
-    <Value>View mobile version</Value>
-  </LocaleResource>
   <LocaleResource Name="News">
     <Value>News</Value>
   </LocaleResource>
@@ -12516,9 +12498,6 @@
   <LocaleResource Name="ShoppingCart.HeaderQuantity">
     <Value>({0})</Value>
   </LocaleResource>
-  <LocaleResource Name="ShoppingCart.HeaderQuantity.Mobile">
-    <Value>({0})</Value>
-  </LocaleResource>
   <LocaleResource Name="ShoppingCart.ItemTotal">
     <Value>Total</Value>
   </LocaleResource>
@@ -12787,9 +12766,6 @@
     <Value>Enter your email</Value>
   </LocaleResource>
   <LocaleResource Name="Wishlist.HeaderQuantity">
-    <Value>({0})</Value>
-  </LocaleResource>
-  <LocaleResource Name="Wishlist.HeaderQuantity.Mobile">
     <Value>({0})</Value>
   </LocaleResource>
   <LocaleResource Name="Wishlist.UpdateCart">

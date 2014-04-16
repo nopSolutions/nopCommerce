@@ -48,8 +48,7 @@ namespace Nop.Core.Domain.Customers
         public static string OfferedShippingOptions { get { return "OfferedShippingOptions"; } }
         public static string LastContinueShoppingPage { get { return "LastContinueShoppingPage"; } }
         public static string NotifiedAboutNewPrivateMessages { get { return "NotifiedAboutNewPrivateMessages"; } }
-        public static string WorkingDesktopThemeName { get { return "WorkingDesktopThemeName"; } }
-        public static string DontUseMobileVersion { get { return "DontUseMobileVersion"; } }
+        public static string WorkingThemeName { get { return "WorkingThemeName"; } }
         public static string TaxDisplayTypeId { get { return "TaxDisplayTypeId"; } }
         public static string UseRewardPointsDuringCheckout { get { return "UseRewardPointsDuringCheckout"; } }
     }

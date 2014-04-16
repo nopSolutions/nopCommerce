@@ -18,11 +18,8 @@ namespace Nop.Web.Framework.Themes
         private readonly StoreInformationSettings _storeInformationSettings;
         private readonly IThemeProvider _themeProvider;
 
-        private bool _desktopThemeIsCached;
-        private string _cachedDesktopThemeName;
-
-        private bool _mobileThemeIsCached;
-        private string _cachedMobileThemeName;
+        private bool _themeIsCached;
+        private string _cachedThemeName;
 
         public ThemeContext(IWorkContext workContext,
             IStoreContext storeContext,
@@ -38,39 +35,39 @@ namespace Nop.Web.Framework.Themes
         }
 
         /// <summary>
-        /// Get or set current theme for desktops
+        /// Get or set current theme system name
         /// </summary>
-        public string WorkingDesktopTheme
+        public string WorkingThemeName
         {
             get
             {
-                if (_desktopThemeIsCached)
-                    return _cachedDesktopThemeName;
+                if (_themeIsCached)
+                    return _cachedThemeName;
 
                 string theme = "";
                 if (_storeInformationSettings.AllowCustomerToSelectTheme)
                 {
                     if (_workContext.CurrentCustomer != null)
-                        theme = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.WorkingDesktopThemeName, _genericAttributeService, _storeContext.CurrentStore.Id);
+                        theme = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.WorkingThemeName, _genericAttributeService, _storeContext.CurrentStore.Id);
                 }
 
                 //default store theme
                 if (string.IsNullOrEmpty(theme))
-                    theme = _storeInformationSettings.DefaultStoreThemeForDesktops;
+                    theme = _storeInformationSettings.DefaultStoreTheme;
 
                 //ensure that theme exists
                 if (!_themeProvider.ThemeConfigurationExists(theme))
                 {
                     var themeInstance = _themeProvider.GetThemeConfigurations()
-                        .FirstOrDefault(x => !x.MobileTheme);
+                        .FirstOrDefault();
                     if (themeInstance == null)
-                        throw new Exception("No desktop theme could be loaded");
+                        throw new Exception("No theme could be loaded");
                     theme = themeInstance.ThemeName;
                 }
                 
                 //cache theme
-                this._cachedDesktopThemeName = theme;
-                this._desktopThemeIsCached = true;
+                this._cachedThemeName = theme;
+                this._themeIsCached = true;
                 return theme;
             }
             set
@@ -81,40 +78,10 @@ namespace Nop.Web.Framework.Themes
                 if (_workContext.CurrentCustomer == null)
                     return;
 
-                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.WorkingDesktopThemeName, value, _storeContext.CurrentStore.Id);
+                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.WorkingThemeName, value, _storeContext.CurrentStore.Id);
 
                 //clear cache
-                this._desktopThemeIsCached = false;
-            }
-        }
-
-        /// <summary>
-        /// Get current theme for mobile (e.g. Mobile)
-        /// </summary>
-        public string WorkingMobileTheme
-        {
-            get
-            {
-                if (_mobileThemeIsCached)
-                    return _cachedMobileThemeName;
-
-                //default store theme
-                string theme = _storeInformationSettings.DefaultStoreThemeForMobileDevices;
-
-                //ensure that theme exists
-                if (!_themeProvider.ThemeConfigurationExists(theme))
-                {
-                    var themeInstance = _themeProvider.GetThemeConfigurations()
-                        .FirstOrDefault(x => x.MobileTheme);
-                    if (themeInstance == null)
-                        throw new Exception("No mobile theme could be loaded");
-                    theme = themeInstance.ThemeName;
-                }
-
-                //cache theme
-                this._cachedMobileThemeName = theme;
-                this._mobileThemeIsCached = true;
-                return theme;
+                this._themeIsCached = false;
             }
         }
     }

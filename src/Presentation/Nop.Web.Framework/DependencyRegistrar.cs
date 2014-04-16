@@ -273,7 +273,6 @@ namespace Nop.Web.Framework
 
             builder.RegisterType<ExportManager>().As<IExportManager>().InstancePerHttpRequest();
             builder.RegisterType<ImportManager>().As<IImportManager>().InstancePerHttpRequest();
-            builder.RegisterType<MobileDeviceHelper>().As<IMobileDeviceHelper>().InstancePerHttpRequest();
             builder.RegisterType<PdfService>().As<IPdfService>().InstancePerHttpRequest();
             builder.RegisterType<ThemeProvider>().As<IThemeProvider>().InstancePerHttpRequest();
             builder.RegisterType<ThemeContext>().As<IThemeContext>().InstancePerHttpRequest();

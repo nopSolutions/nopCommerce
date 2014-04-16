@@ -16,8 +16,6 @@ namespace Nop.Web.Framework.Themes
                 ThemeTitle = attribute == null ? string.Empty : attribute.Value;
                 attribute = node.Attributes["supportRTL"];
                 SupportRtl = attribute == null ? false : bool.Parse(attribute.Value);
-                attribute = node.Attributes["mobileTheme"];
-                MobileTheme = attribute == null ? false : bool.Parse(attribute.Value);
                 attribute = node.Attributes["previewImageUrl"];
                 PreviewImageUrl = attribute == null ? string.Empty : attribute.Value;
                 attribute = node.Attributes["previewText"];
@@ -34,8 +32,6 @@ namespace Nop.Web.Framework.Themes
         public string PreviewText { get; protected set; }
 
         public bool SupportRtl { get; protected set; }
-
-        public bool MobileTheme { get; protected set; }
 
         public string ThemeName { get; protected set; }
 

@@ -127,7 +127,6 @@ ul.language-list li:hover{cursor:pointer;}
 .footer-poweredby{padding-top:10px;border-top:1px solid #EEEEEE;clear:both;font-size:11px;}
 .footer-store-theme{margin:0 100px 0 10px;font-size:11px;}
 .store-theme-list{background:#e3e3e3;border:solid 1px #3a3a3a;}
-.change-device{clear:both;text-align:left;}
 .footer-menu-wrapper{zoom:1;padding:20px;overflow:auto;background:none repeat scroll 0 0 #F6F6F4;border-radius:4px;-o-border-radius:4px;-icab-border-radius:4px;-khtml-border-radius:4px;-moz-border-radius:4px;-webkit-border-radius:4px;-moz-border-radius:4px;}
 .footer-menu-wrapper:after{content:".";display:block;clear:both;height:0;font-size:0;line-height:0;visibility:hidden;}
 .footer-menu-wrapper .column{float:right;text-align:right;width:25%;}

@@ -35,17 +35,12 @@ namespace Nop.Admin.Models.Settings
         {
             public StoreInformationSettingsModel()
             {
-                this.AvailableStoreThemesForDesktops = new List<ThemeConfigurationModel>();
-                this.AvailableStoreThemesForMobileDevices = new List<ThemeConfigurationModel>();
+                this.AvailableStoreThemes = new List<ThemeConfigurationModel>();
             }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.ResponsiveDesignSupported")]
             public bool ResponsiveDesignSupported { get; set; }
             public bool ResponsiveDesignSupported_OverrideForStore { get; set; }
-
-            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.MobileDevicesSupported")]
-            public bool MobileDevicesSupported { get; set; }
-            public bool MobileDevicesSupported_OverrideForStore { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.StoreClosed")]
             public bool StoreClosed { get; set; }
@@ -55,17 +50,11 @@ namespace Nop.Admin.Models.Settings
             public bool StoreClosedAllowForAdmins { get; set; }
             public bool StoreClosedAllowForAdmins_OverrideForStore { get; set; }
 
-            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DefaultStoreThemeForDesktops")]
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DefaultStoreTheme")]
             [AllowHtml]
-            public string DefaultStoreThemeForDesktops { get; set; }
-            public bool DefaultStoreThemeForDesktops_OverrideForStore { get; set; }
-            public IList<ThemeConfigurationModel> AvailableStoreThemesForDesktops { get; set; }
-
-            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DefaultStoreThemeForMobileDevices")]
-            [AllowHtml]
-            public string DefaultStoreThemeForMobileDevices { get; set; }
-            public bool DefaultStoreThemeForMobileDevices_OverrideForStore { get; set; }
-            public IList<ThemeConfigurationModel> AvailableStoreThemesForMobileDevices { get; set; }
+            public string DefaultStoreTheme { get; set; }
+            public bool DefaultStoreTheme_OverrideForStore { get; set; }
+            public IList<ThemeConfigurationModel> AvailableStoreThemes { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.AllowCustomerToSelectTheme")]
             public bool AllowCustomerToSelectTheme { get; set; }

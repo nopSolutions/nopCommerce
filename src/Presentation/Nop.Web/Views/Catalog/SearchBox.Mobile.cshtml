@@ -1,8 +1,0 @@
-﻿<div class="search-box">
-    @using (Html.BeginRouteForm("ProductSearch", FormMethod.Get))
-    {
-        <label for="small-searchterms" class="ui-hidden-accessible">@T("Search"):</label>
-        <input type="search" name="q" id="small-searchterms"  placeholder="@T("Search.SearchBox.Tooltip")"  />
-        @Html.Widget("mobile_searchbox")
-    }
-</div>

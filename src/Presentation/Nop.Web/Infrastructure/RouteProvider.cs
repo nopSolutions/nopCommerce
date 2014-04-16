@@ -629,10 +629,6 @@ namespace Nop.Web.Infrastructure
                             "country/getstatesbycountryid/",
                             new { controller = "Country", action = "GetStatesByCountryId" },
                             new[] { "Nop.Web.Controllers" });
-            routes.MapLocalizedRoute("ChangeDevice",
-                            "changedevice/{dontusemobileversion}",
-                            new { controller = "Common", action = "ChangeDevice" },
-                            new[] { "Nop.Web.Controllers" });
             routes.MapLocalizedRoute("ChangeCurrency",
                             "changecurrency/{customercurrency}",
                             new { controller = "Common", action = "SetCurrency" },

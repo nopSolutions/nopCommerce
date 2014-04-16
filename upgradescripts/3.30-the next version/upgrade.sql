@@ -32,6 +32,48 @@ set @resources='
   <LocaleResource Name="Admin.Orders.Shipments.AdminComment.Button">
     <Value>Set admin comment</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DefaultStoreThemeForMobileDevices">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DefaultStoreThemeForMobileDevices.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.MobileDevicesSupported">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.MobileDevicesSupported.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Mobile.ViewFullSite">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Mobile.ViewMobileVersion">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.HeaderQuantity.Mobile">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Wishlist.HeaderQuantity.Mobile">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DefaultStoreThemeForDesktops">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DefaultStoreThemeForDesktops.GetMore">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DefaultStoreThemeForDesktops.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DefaultStoreTheme">
+    <Value>Default store theme</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DefaultStoreTheme.GetMore">
+    <Value>You can get more themes on</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DefaultStoreTheme.Hint">
+    <Value>The public store theme. You can download themes from the extensions page at www.nopcommerce.com.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -136,4 +178,27 @@ BEGIN
 	ALTER TABLE [Shipment]
 	ADD [AdminComment] nvarchar(MAX) NULL
 END
+GO
+
+--delete some settings
+DELETE FROM [Setting]
+WHERE [name] = N'storeinformationsettings.emulatemobiledevice'
+GO
+
+DELETE FROM [Setting]
+WHERE [name] = N'storeinformationsettings.mobiledevicessupported'
+GO
+
+DELETE FROM [Setting]
+WHERE [name] = N'storeinformationsettings.defaultstorethemeformobiledevices'
+GO
+
+UPDATE [GenericAttribute]
+SET [key] = N'WorkingThemeName'
+WHERE [key] = N'WorkingDesktopThemeName'
+GO
+
+UPDATE [Setting]
+SET [name] = N'storeinformationsettings.defaultstoretheme'
+WHERE [name] = N'storeinformationsettings.defaultstorethemefordesktops'
 GO

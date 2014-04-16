@@ -15,9 +15,9 @@ namespace Nop.Core.Domain
         public bool StoreClosedAllowForAdmins { get; set; }
 
         /// <summary>
-        /// Gets or sets a default store theme for desktops
+        /// Gets or sets a default store theme
         /// </summary>
-        public string DefaultStoreThemeForDesktops { get; set; }
+        public string DefaultStoreTheme { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether customers are allowed to select a theme
@@ -25,24 +25,9 @@ namespace Nop.Core.Domain
         public bool AllowCustomerToSelectTheme { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether mobile devices supported
-        /// </summary>
-        public bool MobileDevicesSupported { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether responsive design supported (a graphical theme should also support it)
         /// </summary>
         public bool ResponsiveDesignSupported { get; set; }
-
-        /// <summary>
-        /// Gets or sets a default store theme used by mobile devices (if enabled)
-        /// </summary>
-        public string DefaultStoreThemeForMobileDevices { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether all requests will be handled as mobile devices (used for testing)
-        /// </summary>
-        public bool EmulateMobileDevice { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether mini profiler should be displayed in public store (used for debugging)
