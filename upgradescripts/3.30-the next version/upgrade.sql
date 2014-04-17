@@ -74,6 +74,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DefaultStoreTheme.Hint">
     <Value>The public store theme. You can download themes from the extensions page at www.nopcommerce.com.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NewsletterTickedByDefault">
+    <Value>Newsletter ticked by default</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NewsletterTickedByDefault.Hint">
+    <Value>A value indicating whether ''Newsletter'' checkbox is ticked by default on the registration page.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -201,4 +207,12 @@ GO
 UPDATE [Setting]
 SET [name] = N'storeinformationsettings.defaultstoretheme'
 WHERE [name] = N'storeinformationsettings.defaultstorethemefordesktops'
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'customersettings.newslettertickedbydefault')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'customersettings.newslettertickedbydefault', N'true', 0)
+END
 GO

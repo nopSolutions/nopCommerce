@@ -4458,6 +4458,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NewsletterEnabled.Hint">
     <Value>Set if 'Newsletter' is enabled</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NewsletterTickedByDefault">
+    <Value>Newsletter ticked by default</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NewsletterTickedByDefault.Hint">
+    <Value>A value indicating whether 'Newsletter' checkbox is ticked by default on the registration page.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NotifyNewCustomerRegistration">
     <Value>Notify about new customer registration</Value>
   </LocaleResource>

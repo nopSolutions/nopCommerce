@@ -68,6 +68,9 @@ namespace Nop.Admin.Models.Settings
             [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.NewsletterEnabled")]
             public bool NewsletterEnabled { get; set; }
 
+            [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.NewsletterTickedByDefault")]
+            public bool NewsletterTickedByDefault { get; set; }
+
             [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.HideNewsletterBlock")]
             public bool HideNewsletterBlock { get; set; }
 

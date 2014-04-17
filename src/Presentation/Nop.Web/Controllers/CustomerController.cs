@@ -717,7 +717,7 @@ namespace Nop.Web.Controllers
             var model = new RegisterModel();
             PrepareCustomerRegisterModel(model, false);
             //enable newsletter by default
-            model.Newsletter = true;
+            model.Newsletter = _customerSettings.NewsletterTickedByDefault;
 
             return View(model);
         }

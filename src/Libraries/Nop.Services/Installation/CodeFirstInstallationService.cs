@@ -4580,6 +4580,7 @@ namespace Nop.Services.Installation
                     FaxEnabled = false,
                     AcceptPrivacyPolicyEnabled = false,
                     NewsletterEnabled = true,
+                    NewsletterTickedByDefault = true,
                     HideNewsletterBlock = false,
                     OnlineCustomerMinutes = 20,
                     StoreLastVisitedPage = false,
