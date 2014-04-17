@@ -16,6 +16,7 @@
     $(document).ready(function() {
         tinymce.init({
             selector: "#@ViewData.TemplateInfo.GetFullHtmlFieldId(string.Empty)",
+            fontsize_formats: "8pt 9pt 10pt 11pt 12pt 26pt 36pt",
             height: 350,
             width: 790,
             plugins: [
@@ -23,7 +24,7 @@
                 "searchreplace visualblocks code fullscreen",
                 "insertdatetime media table contextmenu paste@(canUploadPictures ? " jbimages" : null)"
             ],
-            toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image@(canUploadPictures ? " jbimages" : null)",
+            toolbar: "insertfile undo redo | styleselect | fontselect | fontsizeselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image@(canUploadPictures ? " jbimages" : null)",
             //"relative_urls" required by jbimages plugin to be set to "false"
             //but in this case it'll break existing links (e.g. message template tokens)
             relative_urls: true
