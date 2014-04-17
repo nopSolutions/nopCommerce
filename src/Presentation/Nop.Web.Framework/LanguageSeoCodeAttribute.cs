@@ -52,7 +52,8 @@ namespace Nop.Web.Framework
             //add language code to URL
             var workContext = EngineContext.Current.Resolve<IWorkContext>();
             pageUrl = pageUrl.AddLanguageSeoCodeToRawUrl(applicationPath, workContext.WorkingLanguage);
-            filterContext.Result = new RedirectResult(pageUrl);
+            //301 (permanent) redirection
+            filterContext.Result = new RedirectResult(pageUrl, true);
         }
     }
 }

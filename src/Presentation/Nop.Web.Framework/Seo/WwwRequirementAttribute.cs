@@ -41,7 +41,9 @@ namespace Nop.Web.Framework.Seo
                         if (!startsWith3W)
                         {
                             url = url.Replace("https://", "https://www.");
-                            filterContext.Result = new RedirectResult(url);
+
+                            //301 (permanent) redirection
+                            filterContext.Result = new RedirectResult(url, true);
                         }
                     }
                     else
@@ -50,7 +52,9 @@ namespace Nop.Web.Framework.Seo
                         if (!startsWith3W)
                         {
                             url = url.Replace("http://", "http://www.");
-                            filterContext.Result = new RedirectResult(url);
+
+                            //301 (permanent) redirection
+                            filterContext.Result = new RedirectResult(url, true);
                         }
                     }
                 }
@@ -66,7 +70,9 @@ namespace Nop.Web.Framework.Seo
                         if (startsWith3W)
                         {
                             url = url.Replace("https://www.", "https://");
-                            filterContext.Result = new RedirectResult(url);
+
+                            //301 (permanent) redirection
+                            filterContext.Result = new RedirectResult(url, true);
                         }
                     }
                     else
@@ -75,7 +81,9 @@ namespace Nop.Web.Framework.Seo
                         if (startsWith3W)
                         {
                             url = url.Replace("http://www.", "http://");
-                            filterContext.Result = new RedirectResult(url);
+
+                            //301 (permanent) redirection
+                            filterContext.Result = new RedirectResult(url, true);
                         }
                     }
                 }

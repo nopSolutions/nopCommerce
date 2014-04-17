@@ -49,7 +49,9 @@ namespace Nop.Web.Framework.Security
                                 //redirect to HTTPS version of page
                                 //string url = "https://" + filterContext.HttpContext.Request.Url.Host + filterContext.HttpContext.Request.RawUrl;
                                 string url = webHelper.GetThisPageUrl(true, true);
-                                filterContext.Result = new RedirectResult(url);
+
+                                //301 (permanent) redirection
+                                filterContext.Result = new RedirectResult(url, true);
                             }
                         }
                     }
@@ -63,7 +65,8 @@ namespace Nop.Web.Framework.Security
                             //redirect to HTTP version of page
                             //string url = "http://" + filterContext.HttpContext.Request.Url.Host + filterContext.HttpContext.Request.RawUrl;
                             string url = webHelper.GetThisPageUrl(true, false);
-                            filterContext.Result = new RedirectResult(url);
+                            //301 (permanent) redirection
+                            filterContext.Result = new RedirectResult(url, true);
                         }
                     }
                     break;
