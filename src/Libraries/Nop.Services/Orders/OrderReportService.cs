@@ -374,9 +374,13 @@ namespace Nop.Services.Orders
                                 (!o.Deleted)
                           select orderItem.ProductId).Distinct();
 
+            int simpleProductTypeId = (int)ProductType.SimpleProduct;
+
             var query2 = from p in _productRepository.Table
                          orderby p.Name
                          where (!query1.Contains(p.Id)) &&
+                             //include only simple products
+                               (p.ProductTypeId == simpleProductTypeId) &&
                                (!p.Deleted) &&
                                (vendorId == 0 || p.VendorId == vendorId) &&
                                (showHidden || p.Published)
