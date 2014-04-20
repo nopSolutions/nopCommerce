@@ -1680,8 +1680,6 @@
     <Content Include="Views\Common\StoreThemeSelector.cshtml" />
     <Content Include="Views\Shared\_Notifications.cshtml" />
     <Content Include="Views\Customer\_CustomerAttributes.cshtml" />
-    <Content Include="Views\Boards\BlogPost.Mobile.cshtml" />
-    <Content Include="Views\Boards\List.Mobile.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Plugins\bin\" />
