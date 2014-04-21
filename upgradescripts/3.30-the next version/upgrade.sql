@@ -80,6 +80,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NewsletterTickedByDefault.Hint">
     <Value>A value indicating whether ''Newsletter'' checkbox is ticked by default on the registration page.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.DynamicPriceUpdateAjax">
+    <Value>Use AJAX to dynamically update prices</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.DynamicPriceUpdateAjax.Hint">
+    <Value>Check if you want to dynamically update prices using AJAX. This settings calculates prices more carefully (consider attribute combinations, discounts). It also updates SKU, MPN, GTIN values overridden in attribute combinations. But this method can slightly affect performance.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -215,4 +221,10 @@ BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'customersettings.newslettertickedbydefault', N'true', 0)
 END
+GO
+
+--rename setting
+UPDATE [Setting]
+SET [name] = N'catalogsettings.dynamicpriceupdateajax'
+WHERE [name] = N'catalogsettings.enabledynamicskumpngtinupdate'
 GO

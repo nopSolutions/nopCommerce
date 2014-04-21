@@ -179,9 +179,9 @@ namespace Nop.Core.Domain.Catalog
         public bool EnableDynamicPriceUpdate { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether we should dynamically load SKU/MPN/GTIN for appropriate attribute combinations when changing product attributes. This option works only with "EnableDynamicPriceUpdate" enabled
+        /// Gets or sets a value indicating whether we should load new price using AJAX when changing product attributes. This option works only with "EnableDynamicPriceUpdate" enabled
         /// </summary>
-        public bool EnableDynamicSkuMpnGtinUpdate { get; set; }
+        public bool DynamicPriceUpdateAjax { get; set; }
 
         /// <summary>
         /// Gets or sets a number of product tags that appear in the tag cloud

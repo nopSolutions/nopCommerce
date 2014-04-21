@@ -727,7 +727,6 @@ namespace Nop.Web.Controllers
             #region Product price
 
             model.ProductPrice.ProductId = product.Id;
-            model.ProductPrice.DynamicPriceUpdate = _catalogSettings.EnableDynamicPriceUpdate;
             if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
             {
                 model.ProductPrice.HidePrices = false;

@@ -698,6 +698,7 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.ProductsAlsoPurchasedEnabled_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.ProductsAlsoPurchasedNumber_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.EnableDynamicPriceUpdate_OverrideForStore, mo => mo.Ignore())
+                .ForMember(dest => dest.DynamicPriceUpdateAjax_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.NumberOfProductTags_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.ProductsByTagPageSize_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.ProductsByTagAllowCustomersToSelectPageSize_OverrideForStore, mo => mo.Ignore())
@@ -723,7 +724,6 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.DefaultManufacturerPageSizeOptions, mo => mo.Ignore())
                 .ForMember(dest => dest.MaximumBackInStockSubscriptions, mo => mo.Ignore())
                 .ForMember(dest => dest.DisplayTierPricesWithDiscounts, mo => mo.Ignore())
-                .ForMember(dest => dest.EnableDynamicSkuMpnGtinUpdate, mo => mo.Ignore())
                 .ForMember(dest => dest.CompareProductsNumber, mo => mo.Ignore());
             Mapper.CreateMap<RewardPointsSettings, RewardPointsSettingsModel>()
                 .ForMember(dest => dest.PrimaryStoreCurrencyCode, mo => mo.Ignore())

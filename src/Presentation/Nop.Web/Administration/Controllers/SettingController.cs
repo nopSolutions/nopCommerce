@@ -969,6 +969,7 @@ namespace Nop.Admin.Controllers
                 model.ProductsAlsoPurchasedEnabled_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ProductsAlsoPurchasedEnabled, storeScope);
                 model.ProductsAlsoPurchasedNumber_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ProductsAlsoPurchasedNumber, storeScope);
                 model.EnableDynamicPriceUpdate_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.EnableDynamicPriceUpdate, storeScope);
+                model.DynamicPriceUpdateAjax_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.DynamicPriceUpdateAjax, storeScope);
                 model.NumberOfProductTags_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.NumberOfProductTags, storeScope);
                 model.ProductsByTagPageSize_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ProductsByTagPageSize, storeScope);
                 model.ProductsByTagAllowCustomersToSelectPageSize_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ProductsByTagAllowCustomersToSelectPageSize, storeScope);
@@ -1156,6 +1157,11 @@ namespace Nop.Admin.Controllers
                 _settingService.SaveSetting(catalogSettings, x => x.EnableDynamicPriceUpdate, storeScope, false);
             else if (storeScope > 0)
                 _settingService.DeleteSetting(catalogSettings, x => x.EnableDynamicPriceUpdate, storeScope);
+
+            if (model.DynamicPriceUpdateAjax_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(catalogSettings, x => x.DynamicPriceUpdateAjax, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(catalogSettings, x => x.DynamicPriceUpdateAjax, storeScope);
             
             if (model.NumberOfProductTags_OverrideForStore || storeScope == 0)
                 _settingService.SaveSetting(catalogSettings, x => x.NumberOfProductTags, storeScope, false);

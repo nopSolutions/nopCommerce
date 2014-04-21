@@ -257,6 +257,7 @@ namespace Nop.Services.Catalog
             {
                 result = result + additionalCharge;
             }
+
             if (result < decimal.Zero)
                 result = decimal.Zero;
             return result;
@@ -367,61 +368,90 @@ namespace Nop.Services.Catalog
             if (shoppingCartItem == null)
                 throw new ArgumentNullException("shoppingCartItem");
 
-            var customer = shoppingCartItem.Customer;
-            decimal finalPrice = decimal.Zero;
-            var product = shoppingCartItem.Product;
+            return GetUnitPrice(shoppingCartItem.Product, 
+                shoppingCartItem.Customer,
+                shoppingCartItem.ShoppingCartType, 
+                shoppingCartItem.Quantity,
+                shoppingCartItem.AttributesXml,
+                shoppingCartItem.CustomerEnteredPrice, 
+                includeDiscounts);
+        }
 
-            if (product != null)
+        /// <summary>
+        /// Gets the shopping cart unit price (one item)
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="customer">Customer</param>
+        /// <param name="shoppingCartType">Shopping cart type</param>
+        /// <param name="quantity">Quantity</param>
+        /// <param name="attributesXml">Product atrributes (XML format)</param>
+        /// <param name="customerEnteredPrice">Customer entered price (if specified)</param>
+        /// <param name="includeDiscounts">A value indicating whether include discounts or not for price computation</param>
+        /// <returns>Shopping cart unit price (one item)</returns>
+        public virtual decimal GetUnitPrice(Product product,
+            Customer customer, 
+            ShoppingCartType shoppingCartType,
+            int quantity,
+            string attributesXml,
+            decimal customerEnteredPrice,
+            bool includeDiscounts)
+        {
+            if (product == null)
+                throw new ArgumentNullException("product");
+
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+
+            decimal finalPrice = decimal.Zero;
+
+            var combination = _productAttributeParser.FindProductVariantAttributeCombination(product, attributesXml);
+            if (combination != null && combination.OverriddenPrice.HasValue)
             {
-                var combination = _productAttributeParser.FindProductVariantAttributeCombination(product, shoppingCartItem.AttributesXml);
-                if (combination != null && combination.OverriddenPrice.HasValue)
+                finalPrice = combination.OverriddenPrice.Value;
+            }
+            else
+            {
+                //summarize price of all attributes
+                decimal attributesTotalPrice = decimal.Zero;
+                var pvaValues = _productAttributeParser.ParseProductVariantAttributeValues(attributesXml);
+                if (pvaValues != null)
                 {
-                    finalPrice = combination.OverriddenPrice.Value;
+                    foreach (var pvaValue in pvaValues)
+                    {
+                        attributesTotalPrice += GetProductVariantAttributeValuePriceAdjustment(pvaValue);
+                    }
+                }
+
+                //get price of a product (with previously calculated price of all attributes)
+                if (product.CustomerEntersPrice)
+                {
+                    finalPrice = customerEnteredPrice;
                 }
                 else
                 {
-                    //summarize price of all attributes
-                    decimal attributesTotalPrice = decimal.Zero;
-                    var pvaValues = _productAttributeParser.ParseProductVariantAttributeValues(shoppingCartItem.AttributesXml);
-                    if (pvaValues != null)
+                    var qty = 0;
+                    if (_shoppingCartSettings.GroupTierPricesForDistinctShoppingCartItems)
                     {
-                        foreach (var pvaValue in pvaValues)
+                        //the same products with distinct product attributes could be stored as distinct "ShoppingCartItem" records
+                        //so let's find how many of the current products are in the cart
+                        qty = customer.ShoppingCartItems
+                            .Where(x => x.ProductId == product.Id)
+                            .Where(x => x.ShoppingCartType == shoppingCartType)
+                            .Sum(x => x.Quantity);
+                        if (qty == 0)
                         {
-                            attributesTotalPrice += GetProductVariantAttributeValuePriceAdjustment(pvaValue);
+                            qty = quantity;
                         }
-                    }
-
-                    //get price of a product (with previously calculated price of all attributes)
-                    if (product.CustomerEntersPrice)
-                    {
-                        finalPrice = shoppingCartItem.CustomerEnteredPrice;
                     }
                     else
                     {
-                        var qty = 0;
-                        if (_shoppingCartSettings.GroupTierPricesForDistinctShoppingCartItems)
-                        {
-                            //the same products with distinct product attributes could be stored as distinct "ShoppingCartItem" records
-                            //so let's find how many of the current products are in the cart
-                            qty = customer.ShoppingCartItems
-                                .Where(x => x.ProductId == shoppingCartItem.ProductId)
-                                .Where(x => x.ShoppingCartTypeId == shoppingCartItem.ShoppingCartTypeId)
-                                .Sum(x => x.Quantity);
-                            if (qty == 0)
-                            {
-                                qty = shoppingCartItem.Quantity;
-                            }
-                        }
-                        else
-                        {
-                            qty = shoppingCartItem.Quantity;
-                        }
-                        finalPrice = GetFinalPrice(product,
-                            customer,
-                            attributesTotalPrice,
-                            includeDiscounts,
-                            qty);
+                        qty = quantity;
                     }
+                    finalPrice = GetFinalPrice(product,
+                        customer,
+                        attributesTotalPrice,
+                        includeDiscounts,
+                        qty);
                 }
             }
 

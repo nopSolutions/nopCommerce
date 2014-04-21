@@ -1474,12 +1474,27 @@ namespace Nop.Web.Controllers
             string sku = product.FormatSku(attributeXml, _productAttributeParser);
             string mpn = product.FormatMpn(attributeXml, _productAttributeParser);
             string gtin = product.FormatGtin(attributeXml, _productAttributeParser);
-            
+
+
+            string price = "";
+            if (!product.CustomerEntersPrice)
+            {
+                //we do not calculate price of "customer enters price" option is enabled
+                string attributes = ParseProductAttributes(product, form);
+                decimal finalPrice = _priceCalculationService.GetUnitPrice(product, _workContext.CurrentCustomer,
+                    ShoppingCartType.ShoppingCart, 1, attributes, 0, true);
+                decimal taxRate = decimal.Zero;
+                decimal finalPriceWithDiscountBase = _taxService.GetProductPrice(product, finalPrice, out taxRate);
+                decimal finalPriceWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceWithDiscountBase, _workContext.WorkingCurrency);
+                price = _priceFormatter.FormatPrice(finalPriceWithDiscount);
+            }
+
             return Json(new
             {
                 gtin = gtin,
                 mpn = mpn,
-                sku = sku
+                sku = sku,
+                price = price
             });
         }
 

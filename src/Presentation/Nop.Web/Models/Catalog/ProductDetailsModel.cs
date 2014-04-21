@@ -138,8 +138,6 @@ namespace Nop.Web.Models.Catalog
 
             public bool HidePrices { get; set; }
 
-            public bool DynamicPriceUpdate { get; set; }
-
             /// <summary>
             /// A value indicating whether we should display tax/shipping info (used in Germany)
             /// </summary>

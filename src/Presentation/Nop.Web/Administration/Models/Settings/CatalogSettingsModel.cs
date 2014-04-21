@@ -136,6 +136,10 @@ namespace Nop.Admin.Models.Settings
         public bool EnableDynamicPriceUpdate { get; set; }
         public bool EnableDynamicPriceUpdate_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.DynamicPriceUpdateAjax")]
+        public bool DynamicPriceUpdateAjax { get; set; }
+        public bool DynamicPriceUpdateAjax_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.NumberOfProductTags")]
         public int NumberOfProductTags { get; set; }
         public bool NumberOfProductTags_OverrideForStore { get; set; }

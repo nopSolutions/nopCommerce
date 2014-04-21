@@ -4512,7 +4512,7 @@ namespace Nop.Services.Installation
                     ProductsAlsoPurchasedEnabled = true,
                     ProductsAlsoPurchasedNumber = 3,
                     EnableDynamicPriceUpdate = false,
-                    EnableDynamicSkuMpnGtinUpdate = false,
+                    DynamicPriceUpdateAjax = false,
                     NumberOfProductTags = 15,
                     ProductsByTagPageSize = 4,
                     IncludeShortDescriptionInCompareProducts = false,

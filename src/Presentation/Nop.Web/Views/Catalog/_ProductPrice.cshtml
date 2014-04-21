@@ -1,15 +1,20 @@
 ﻿@model ProductDetailsModel.ProductPriceModel
 @using Nop.Core
+@using Nop.Core.Domain.Catalog
 @using Nop.Core.Domain.Tax
 @using Nop.Core.Infrastructure
 @using Nop.Web.Models.Catalog;
 @using System.Globalization;
 @using System.Text.RegularExpressions;
 @{
-    string pattern = "(?<val>(\\d+[\\s\\,\\.]?)+)";
-    string replacement = String.Format("<span class=\"price-val-for-dyn-upd-{0}\">${{val}}</span> ", Model.ProductId);  
+    var dynamicPriceUpdate = EngineContext.Current.Resolve<CatalogSettings>().EnableDynamicPriceUpdate;
+    var dynamicPriceUpdateAjax = EngineContext.Current.Resolve<CatalogSettings>().DynamicPriceUpdateAjax;
+    var dynamicPriceUpdateSupported = dynamicPriceUpdate && !dynamicPriceUpdateAjax;
+
+    string dynamicPricePattern = "(?<val>(\\d+[\\s\\,\\.]?)+)";
+    string dynamicPriceReplacement = String.Format("<span class=\"price-val-for-dyn-upd-{0}\">${{val}}</span> ", Model.ProductId);  
 }
-@if (Model.DynamicPriceUpdate)
+@if (dynamicPriceUpdateSupported)
 {
     <script type="text/javascript">
         var priceValForDynUpd_@(Model.ProductId) = @(((float)(Model.PriceValue != Model.PriceWithDiscountValue ? Model.PriceWithDiscountValue : Model.PriceValue)).ToString(new CultureInfo("en-US")));
@@ -52,10 +57,10 @@
             }
             
             @*render price*@
-            <span @if (String.IsNullOrWhiteSpace(Model.PriceWithDiscount)) { <text>itemprop="price"</text> } >
-                @if (Model.DynamicPriceUpdate && !Model.HidePrices && String.IsNullOrWhiteSpace(Model.PriceWithDiscount))
+            <span @if (String.IsNullOrWhiteSpace(Model.PriceWithDiscount)) { <text> itemprop="price" class="price-value-@(Model.ProductId)" </text>  }>
+                @if (dynamicPriceUpdateSupported && !Model.HidePrices && String.IsNullOrWhiteSpace(Model.PriceWithDiscount))
                 {
-                    @Html.Raw(Regex.Replace(Model.Price, pattern, replacement))
+                    @Html.Raw(Regex.Replace(Model.Price, dynamicPricePattern, dynamicPriceReplacement))
                 }
                 else
                 {
@@ -70,10 +75,10 @@
             @*discounted price*@
             <div class="product-price discounted-price">
                 <label>@T("Products.Price.WithDiscount"):</label>
-                <span itemprop="price">
-                    @if (Model.DynamicPriceUpdate && !Model.HidePrices)
+                <span itemprop="price" class="price-value-@(Model.ProductId)">
+                    @if (dynamicPriceUpdateSupported && !Model.HidePrices)
                     {
-                        @Html.Raw(Regex.Replace(Model.PriceWithDiscount, pattern, replacement))
+                        @Html.Raw(Regex.Replace(Model.PriceWithDiscount, dynamicPricePattern, dynamicPriceReplacement))
                     }
                     else
                     {
