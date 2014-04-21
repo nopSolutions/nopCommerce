@@ -37,5 +37,9 @@ namespace Nop.Core.Domain.Catalog
         /// Color squares
         /// </summary>
         ColorSquares = 40,
+        /// <summary>
+        /// Read-only checkboxes
+        /// </summary>
+        ReadonlyCheckboxes = 50,
     }
 }

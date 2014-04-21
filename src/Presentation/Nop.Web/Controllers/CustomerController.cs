@@ -387,6 +387,12 @@ namespace Nop.Web.Controllers
                             }
                         }
                         break;
+                    case AttributeControlType.ReadonlyCheckboxes:
+                        {
+                            //do nothing
+                            //values are already pre-set
+                        }
+                        break;
                     case AttributeControlType.TextBox:
                     case AttributeControlType.MultilineTextbox:
                         {
@@ -604,6 +610,20 @@ namespace Nop.Web.Controllers
                                             selectedAttributes = _customerAttributeParser.AddCustomerAttribute(selectedAttributes,
                                                 attribute, selectedAttributeId.ToString());
                                 }
+                            }
+                        }
+                        break;
+                    case AttributeControlType.ReadonlyCheckboxes:
+                        {
+                            //load read-only (already server-side selected) values
+                            var cvaValues = _customerAttributeService.GetCustomerAttributeValues(attribute.Id);
+                            foreach (var selectedAttributeId in cvaValues
+                                .Where(pvav => pvav.IsPreSelected)
+                                .Select(pvav => pvav.Id)
+                                .ToList())
+                            {
+                                selectedAttributes = _customerAttributeParser.AddCustomerAttribute(selectedAttributes,
+                                            attribute, selectedAttributeId.ToString());
                             }
                         }
                         break;

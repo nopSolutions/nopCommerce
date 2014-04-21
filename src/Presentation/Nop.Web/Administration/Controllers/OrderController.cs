@@ -1918,6 +1918,20 @@ namespace Nop.Admin.Controllers
                             }
                         }
                         break;
+                    case AttributeControlType.ReadonlyCheckboxes:
+                        {
+                            //load read-only (already server-side selected) values
+                            var pvaValues = _productAttributeService.GetProductVariantAttributeValues(attribute.Id);
+                            foreach (var selectedAttributeId in pvaValues
+                                .Where(pvav => pvav.IsPreSelected)
+                                .Select(pvav => pvav.Id)
+                                .ToList())
+                            {
+                                selectedAttributes = _productAttributeParser.AddProductAttribute(selectedAttributes,
+                                    attribute, selectedAttributeId.ToString());
+                            }
+                        }
+                        break;
                     case AttributeControlType.TextBox:
                     case AttributeControlType.MultilineTextbox:
                         {

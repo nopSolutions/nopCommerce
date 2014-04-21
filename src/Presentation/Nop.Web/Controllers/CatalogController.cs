@@ -950,6 +950,12 @@ namespace Nop.Web.Controllers
                                 }
                             }
                             break;
+                        case AttributeControlType.ReadonlyCheckboxes:
+                            {
+                                //do nothing
+                                //values are already pre-set
+                            }
+                            break;
                         case AttributeControlType.TextBox:
                         case AttributeControlType.MultilineTextbox:
                             {

@@ -64,12 +64,13 @@
                             }
                             break;
                         case AttributeControlType.Checkboxes:
+                        case AttributeControlType.ReadonlyCheckboxes:
                             {
                         <ul class="option-list">
                             @foreach (var pvaValue in attribute.Values)
                             {                                    
                                 <li>
-                                    <input id="@(controlId)_@(pvaValue.Id)" type="checkbox" name="@(controlId)" value="@pvaValue.Id" checked="@pvaValue.IsPreSelected" />
+                                    <input id="@(controlId)_@(pvaValue.Id)" type="checkbox" name="@(controlId)" value="@pvaValue.Id" checked="@pvaValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? " disabled=\"disabled\"" : null) />
                                     <label for="@(controlId)_@(pvaValue.Id)">@pvaValue.Name @(!String.IsNullOrEmpty(pvaValue.PriceAdjustment) ? " [" + pvaValue.PriceAdjustment + "]" : null)</label>
                                 </li>
                             }
@@ -249,6 +250,7 @@
                     }
                     break;
                 case AttributeControlType.Checkboxes:
+                case AttributeControlType.ReadonlyCheckboxes:
                     {
                         foreach (var pvaValue in attribute.Values)
                         {
@@ -425,6 +427,7 @@
                 }
                 break;
             case AttributeControlType.Checkboxes:
+            case AttributeControlType.ReadonlyCheckboxes:
                 {
                     foreach (var pvaValue in attribute.Values)
                     {

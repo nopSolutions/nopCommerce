@@ -10299,6 +10299,9 @@
   <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.AttributeControlType.RadioList">
     <Value>Radio button list</Value>
   </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.AttributeControlType.ReadonlyCheckboxes">
+    <Value>Read-only checkboxes</Value>
+  </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.AttributeControlType.TextBox">
     <Value>Textbox</Value>
   </LocaleResource>

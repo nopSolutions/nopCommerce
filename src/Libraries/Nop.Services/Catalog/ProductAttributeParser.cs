@@ -332,7 +332,6 @@ namespace Nop.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException("product");
 
-            //let's get all possible
             var allProductVariantAttributes = _productAttributeService.GetProductVariantAttributesByProductId(product.Id);
             var allPossibleAttributeCombinations = new List<List<ProductVariantAttribute>>();
             for (int counter = 0; counter < (1 << allProductVariantAttributes.Count); ++counter)
@@ -364,7 +363,8 @@ namespace Nop.Services.Catalog
 
                     //checkboxes could have several values ticked
                     var allPossibleCheckboxCombinations = new List<List<ProductVariantAttributeValue>>();
-                    if (pva.AttributeControlType == AttributeControlType.Checkboxes)
+                    if (pva.AttributeControlType == AttributeControlType.Checkboxes ||
+                        pva.AttributeControlType == AttributeControlType.ReadonlyCheckboxes)
                     {
                         for (int counter = 0; counter < (1 << pvaValues.Count); ++counter)
                         {
@@ -384,7 +384,8 @@ namespace Nop.Services.Catalog
                     if (attributesXml.Count == 0)
                     {
                         //first set of values
-                        if (pva.AttributeControlType == AttributeControlType.Checkboxes)
+                        if (pva.AttributeControlType == AttributeControlType.Checkboxes ||
+                            pva.AttributeControlType == AttributeControlType.ReadonlyCheckboxes)
                         {
                             //checkboxes could have several values ticked
                             foreach (var checkboxCombination in allPossibleCheckboxCombinations)
@@ -414,7 +415,8 @@ namespace Nop.Services.Catalog
                     {
                         //next values. let's "append" them to already generated attribute combinations in XML format
                         var attributesXmlTmp = new List<string>();
-                        if (pva.AttributeControlType == AttributeControlType.Checkboxes)
+                        if (pva.AttributeControlType == AttributeControlType.Checkboxes ||
+                            pva.AttributeControlType == AttributeControlType.ReadonlyCheckboxes)
                         {
                             //checkboxes could have several values ticked
                             foreach (var str1 in attributesXml)
