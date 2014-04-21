@@ -5,288 +5,11 @@
 @using System.Text;
 @using System.Globalization;
 @using Nop.Services.Security;
-@{
-    var productId = Model.Any() ? Model.First().ProductId : 0;
-    //dynamic price update support
-    var hidePrices = !EngineContext.Current.Resolve<IPermissionService>().Authorize(StandardPermissionProvider.DisplayPrices);
-    var dynamicPriceUpdate = EngineContext.Current.Resolve<CatalogSettings>().EnableDynamicPriceUpdate;
-    var dynamicSkuMpnGtinUpdate = EngineContext.Current.Resolve<CatalogSettings>().EnableDynamicSkuMpnGtinUpdate;
-    var priceAdjustmentTableScripts = new StringBuilder();
-    var priceAttributeScripts = new StringBuilder();
-    string priceAdjustmentTableName = "";
-    string priceAdjustmentFuncName = "";
-    string priceVarName = "";
-    string priceVarClass = "";
-    if (dynamicPriceUpdate && !hidePrices)
-    {
-        foreach (var attribute in Model)
-        {
-            string controlId = string.Format("product_attribute_{0}_{1}_{2}", attribute.ProductId, attribute.ProductAttributeId, attribute.Id);
-
-            priceAdjustmentTableName = string.Format("priceAdjustmentTable_{0}", attribute.ProductId);
-            priceAdjustmentFuncName = string.Format("adjustPrice_{0}", attribute.ProductId);
-            priceVarName = string.Format("priceValForDynUpd_{0}", attribute.ProductId);
-            priceVarClass = string.Format("price-val-for-dyn-upd-{0}", attribute.ProductId);
-
-            switch (attribute.AttributeControlType)
-            {
-                case AttributeControlType.DropdownList:
-                    {
-                        priceAdjustmentTableScripts.AppendFormat("{0}['{1}'] = new Array(", priceAdjustmentTableName, controlId);
-                        priceAttributeScripts.AppendFormat("$('#{0}').change(function(){{{1}();}});\n", controlId, priceAdjustmentFuncName);
-                        int numberOfJsArrayItems = 0;
-                        if (!attribute.IsRequired)
-                        {
-                            priceAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0},", decimal.Zero);
-                            numberOfJsArrayItems++;
-                        }
-
-                        foreach (var pvaValue in attribute.Values)
-                        {
-                            priceAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0},", (float)pvaValue.PriceAdjustmentValue);
-                            numberOfJsArrayItems++;
-                        }
-
-                        //If you create an array with a single numeric parameter, that number is used for specifying the number of elements in this array.
-                        //so have a little hack here (we need at least two elements)
-                        if (numberOfJsArrayItems == 1)
-                        {
-                            priceAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0},", decimal.Zero);
-                        }
-                        priceAdjustmentTableScripts.Length -= 1;
-                        priceAdjustmentTableScripts.Append(");\n");
-                    }
-                    break;
-                case AttributeControlType.RadioList:
-                case AttributeControlType.ColorSquares:
-                    {
-                        foreach (var pvaValue in attribute.Values)
-                        {
-                            priceAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0}['{1}_{2}'] = {3};\n", priceAdjustmentTableName, controlId, pvaValue.Id, (float)pvaValue.PriceAdjustmentValue);
-                            priceAttributeScripts.AppendFormat("$('#{0}_{1}').click(function(){{{2}();}});\n", controlId, pvaValue.Id, priceAdjustmentFuncName);
-                        }
-                    }
-                    break;
-                case AttributeControlType.Checkboxes:
-                    {
-                        foreach (var pvaValue in attribute.Values)
-                        {
-                            priceAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0}['{1}_{2}'] = {3};\n", priceAdjustmentTableName, controlId, pvaValue.Id, (float)pvaValue.PriceAdjustmentValue);
-                            priceAttributeScripts.AppendFormat("$('#{0}_{1}').click(function(){{{2}();}});\n", controlId, pvaValue.Id, priceAdjustmentFuncName);
-                        }
-                    }
-                    break;
-                default:
-                    break;
-            }
-
-        }
-    }
 
 
 
-    //attribute picture update
-    var pictureAdjustmentTableScripts = new StringBuilder();
-    var pictureAttributeScripts = new StringBuilder();
-    string pictureAdjustmentTableName = "";
-    string pictureAdjustmentFuncName = "";
-    string pictureDefaultSizePrefix = "defaultsize";
-    string pictureFullSizePrefix = "fullsize";
-    var pictureSizes = new string[] { pictureDefaultSizePrefix, pictureFullSizePrefix };
-    foreach (var attribute in Model)
-    {
-        string controlId = string.Format("product_attribute_{0}_{1}_{2}", attribute.ProductId, attribute.ProductAttributeId, attribute.Id);
-
-        pictureAdjustmentTableName = string.Format("productAttributeValueAdjustmentTable_{0}", attribute.ProductId);
-        pictureAdjustmentFuncName = string.Format("adjustProductAttributeValuePicture_{0}", attribute.ProductId);
-
-        switch (attribute.AttributeControlType)
-        {
-            case AttributeControlType.DropdownList:
-                {
-                    pictureAttributeScripts.AppendFormat("$('#{0}').change(function(){{{1}('{2}',{3});}});\n", controlId, pictureAdjustmentFuncName, controlId, attribute.ProductId);
-
-                    foreach (var pictureSize in pictureSizes)
-                    {
-                        pictureAdjustmentTableScripts.AppendFormat("{0}['{1}_{2}'] = new Array(", pictureAdjustmentTableName, controlId, pictureSize);
-                        int numberOfJsArrayItems = 0;
-                        if (!attribute.IsRequired)
-                        {
-                            pictureAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "'{0}',", "");
-                            numberOfJsArrayItems++;
-                        }
-                        foreach (var pvaValue in attribute.Values)
-                        {
-                            var pictureUrl = pvaValue.PictureUrl;
-                            if (pictureSize == pictureDefaultSizePrefix)
-                            {
-                                pictureUrl = pvaValue.PictureUrl;
-                            } 
-                            else if (pictureSize == pictureFullSizePrefix)
-                            {
-                                pictureUrl = pvaValue.FullSizePictureUrl;
-                            }
-                            
-                            pictureAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "'{0}',", pictureUrl);
-                            numberOfJsArrayItems++;
-                        }
-                        //If you create an array with a single numeric parameter, that number is used for specifying the number of elements in this array.
-                        //so have a little hack here (we need at least two elements)
-                        if (numberOfJsArrayItems == 1)
-                        {
-                            pictureAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "'{0}',", "");
-                        }
-                        pictureAdjustmentTableScripts.Length -= 1;
-                        pictureAdjustmentTableScripts.Append(");\n");
-                    }
-                }
-                break;
-            case AttributeControlType.RadioList:
-            case AttributeControlType.ColorSquares:
-                {
-                    foreach (var pvaValue in attribute.Values)
-                    {
-                        pictureAttributeScripts.AppendFormat("$('#{0}_{1}').click(function(){{{2}('{3}_{4}',{5});}});\n", controlId, pvaValue.Id, pictureAdjustmentFuncName, controlId, pvaValue.Id, attribute.ProductId);
-                        foreach (var pictureSize in pictureSizes)
-                        {
-                            var pictureUrl = pvaValue.PictureUrl;
-                            if (pictureSize == pictureDefaultSizePrefix)
-                            {
-                                pictureUrl = pvaValue.PictureUrl;
-                            }
-                            else if (pictureSize == pictureFullSizePrefix)
-                            {
-                                pictureUrl = pvaValue.FullSizePictureUrl;
-                            }
-                            pictureAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0}['{1}_{2}_{3}'] = '{4}';\n", pictureAdjustmentTableName, controlId, pvaValue.Id, pictureSize, pictureUrl);
-                        }
-                    }
-                }
-                break;
-            case AttributeControlType.Checkboxes:
-                {
-                    foreach (var pvaValue in attribute.Values)
-                    {
-                        pictureAttributeScripts.AppendFormat("$('#{0}_{1}').click(function(){{{2}('{3}_{4}',{5});}});\n", controlId, pvaValue.Id, pictureAdjustmentFuncName, controlId, pvaValue.Id, attribute.ProductId);
-                        foreach (var pictureSize in pictureSizes)
-                        {
-                            var pictureUrl = pvaValue.PictureUrl;
-                            if (pictureSize == pictureDefaultSizePrefix)
-                            {
-                                pictureUrl = pvaValue.PictureUrl;
-                            }
-                            else if (pictureSize == pictureFullSizePrefix)
-                            {
-                                pictureUrl = pvaValue.FullSizePictureUrl;
-                            }
-                            pictureAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0}['{1}_{2}_{3}'] = '{4}';\n", pictureAdjustmentTableName, controlId, pvaValue.Id, pictureSize, pictureUrl);
-                        }
-                    }
-                }
-                break;
-            default:
-                break;
-        }
-
-    }
-}
 @if (Model.Count > 0)
 {
-    //dynamic price update support
-    if (dynamicPriceUpdate && !hidePrices)
-    {
-        <script type="text/javascript">
-            //Price adjustment table
-            var @(priceAdjustmentTableName) = new Array();
-            //Price adjustment table initialize
-            @Html.Raw(priceAdjustmentTableScripts.ToString())
-
-            //Price adjustment function
-            function @(priceAdjustmentFuncName)() {
-                var sum = 0;
-                for (var i in @(priceAdjustmentTableName)) {
-                    var ctrl = $('#' + i);
-                    if ((ctrl.is(':radio') && ctrl.is(':checked')) || (ctrl.is(':checkbox') && ctrl.is(':checked'))) {
-                        sum += @(priceAdjustmentTableName)[i];
-                    } else if (ctrl.is('select')) {
-                        var idx = $('#' + i + " option").index($('#' + i + " option:selected"));
-                        if (idx != -1) {
-                            sum += @(priceAdjustmentTableName)[i][idx];
-                        }
-                    }
-                }
-                var res = (@(priceVarName) + sum).toFixed(2);
-                $(".@(priceVarClass)").text(res);
-
-                @if (dynamicSkuMpnGtinUpdate)
-                {
-                    <text>
-                //load updated sku/mpn/gtin
-                $.ajax({
-                    cache: false,
-                    url: '@Url.Action("ProductDetails_AttributeChange", "ShoppingCart", new {productId = productId})',
-                    data: $('#product-details-form').serialize(),
-                    type: 'post',
-                    success: function(data) {
-                        if (data.sku) {
-                            $('#sku-@productId').text(data.sku);
-                        }
-                        if (data.mpn) {
-                            $('#mpn-@productId').text(data.mpn);
-                        }
-                        if (data.gtin) {
-                            $('#gtin-@productId').text(data.gtin);
-                        }
-                    }
-                });
-                    </text>
-                }
-            }
-            
-            //Price attributes handlers
-            $(document).ready(function() {
-                @(priceAdjustmentFuncName)();
-                @Html.Raw(priceAttributeScripts.ToString())
-            });
-        </script>
-    }
-    //attribute picture update
-    if (!String.IsNullOrEmpty(pictureAttributeScripts.ToString()))
-    {
-    <script type="text/javascript">
-            
-        //Picture adjustment table
-        var @(pictureAdjustmentTableName) = new Array();
-        //Picture adjustment table initialize
-        @Html.Raw(pictureAdjustmentTableScripts.ToString())
-        //Picture adjustment function
-        function @(pictureAdjustmentFuncName)(controlId, productId) {
-            var ctrl = $('#' + controlId);
-            var pictureDefaultSizeUrl = '';
-            var pictureFullSizeUrl = '';
-            if((ctrl.is(':radio') && ctrl.is(':checked')) || (ctrl.is(':checkbox') && ctrl.is(':checked'))) {
-                pictureDefaultSizeUrl = @(pictureAdjustmentTableName)[controlId + '_@(pictureDefaultSizePrefix)'];
-                pictureFullSizeUrl = @(pictureAdjustmentTableName)[controlId + '_@(pictureFullSizePrefix)'];
-            } else if(ctrl.is('select')) {
-                var idx = $('#' + controlId + " option").index($('#' + controlId + " option:selected"));
-                if(idx != -1) {
-                    pictureDefaultSizeUrl = @(pictureAdjustmentTableName)[controlId + '_@(pictureDefaultSizePrefix)'][idx];
-                    pictureFullSizeUrl = @(pictureAdjustmentTableName)[controlId + '_@(pictureFullSizePrefix)'][idx];
-                }
-            }
-            if (typeof pictureDefaultSizeUrl == 'string' && pictureDefaultSizeUrl != '') {
-                $('#main-product-img-' + productId).attr("src", pictureDefaultSizeUrl);
-            }
-            if (typeof pictureFullSizeUrl == 'string' && pictureFullSizeUrl != '') {
-                $('#main-product-img-lightbox-anchor-' + productId).attr("href", pictureFullSizeUrl);
-            }
-        }
-        // Picture attributes handlers
-        $(document).ready(function() {
-            @Html.Raw(pictureAttributeScripts.ToString())
-        });
-    </script>
-    }
     <div class="attributes">
         <dl>
             @foreach (var attribute in Model)
@@ -465,4 +188,291 @@
             }
         </dl>
     </div>
+}
+
+@if (Model.Count > 0)
+{
+    //dynamic price update support
+    var hidePrices = !EngineContext.Current.Resolve<IPermissionService>().Authorize(StandardPermissionProvider.DisplayPrices);
+    var dynamicPriceUpdate = EngineContext.Current.Resolve<CatalogSettings>().EnableDynamicPriceUpdate;
+    var dynamicSkuMpnGtinUpdate = EngineContext.Current.Resolve<CatalogSettings>().EnableDynamicSkuMpnGtinUpdate;
+    var priceAdjustmentTableScripts = new StringBuilder();
+    var priceAttributeScripts = new StringBuilder();
+    string priceAdjustmentTableName = "";
+    string priceAdjustmentFuncName = "";
+    string priceVarName = "";
+    string priceVarClass = "";
+    if (dynamicPriceUpdate && !hidePrices)
+    {
+        foreach (var attribute in Model)
+        {
+            string controlId = string.Format("product_attribute_{0}_{1}_{2}", attribute.ProductId, attribute.ProductAttributeId, attribute.Id);
+
+            priceAdjustmentTableName = string.Format("priceAdjustmentTable_{0}", attribute.ProductId);
+            priceAdjustmentFuncName = string.Format("adjustPrice_{0}", attribute.ProductId);
+            priceVarName = string.Format("priceValForDynUpd_{0}", attribute.ProductId);
+            priceVarClass = string.Format("price-val-for-dyn-upd-{0}", attribute.ProductId);
+
+            switch (attribute.AttributeControlType)
+            {
+                case AttributeControlType.DropdownList:
+                    {
+                        priceAdjustmentTableScripts.AppendFormat("{0}['{1}'] = new Array(", priceAdjustmentTableName, controlId);
+                        priceAttributeScripts.AppendFormat("$('#{0}').change(function(){{{1}();}});\n", controlId, priceAdjustmentFuncName);
+                        int numberOfJsArrayItems = 0;
+                        if (!attribute.IsRequired)
+                        {
+                            priceAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0},", decimal.Zero);
+                            numberOfJsArrayItems++;
+                        }
+
+                        foreach (var pvaValue in attribute.Values)
+                        {
+                            priceAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0},", (float)pvaValue.PriceAdjustmentValue);
+                            numberOfJsArrayItems++;
+                        }
+
+                        //If you create an array with a single numeric parameter, that number is used for specifying the number of elements in this array.
+                        //so have a little hack here (we need at least two elements)
+                        if (numberOfJsArrayItems == 1)
+                        {
+                            priceAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0},", decimal.Zero);
+                        }
+                        priceAdjustmentTableScripts.Length -= 1;
+                        priceAdjustmentTableScripts.Append(");\n");
+                    }
+                    break;
+                case AttributeControlType.RadioList:
+                case AttributeControlType.ColorSquares:
+                    {
+                        foreach (var pvaValue in attribute.Values)
+                        {
+                            priceAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0}['{1}_{2}'] = {3};\n", priceAdjustmentTableName, controlId, pvaValue.Id, (float)pvaValue.PriceAdjustmentValue);
+                            priceAttributeScripts.AppendFormat("$('#{0}_{1}').click(function(){{{2}();}});\n", controlId, pvaValue.Id, priceAdjustmentFuncName);
+                        }
+                    }
+                    break;
+                case AttributeControlType.Checkboxes:
+                    {
+                        foreach (var pvaValue in attribute.Values)
+                        {
+                            priceAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0}['{1}_{2}'] = {3};\n", priceAdjustmentTableName, controlId, pvaValue.Id, (float)pvaValue.PriceAdjustmentValue);
+                            priceAttributeScripts.AppendFormat("$('#{0}_{1}').click(function(){{{2}();}});\n", controlId, pvaValue.Id, priceAdjustmentFuncName);
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+        }
+    }
+
+    var productId = Model.Any() ? Model.First().ProductId : 0;
+    if (dynamicPriceUpdate && !hidePrices)
+    {
+        <script type="text/javascript">
+            //Price adjustment table
+            var @(priceAdjustmentTableName) = new Array();
+            //Price adjustment table initialize
+            @Html.Raw(priceAdjustmentTableScripts.ToString())
+
+            //Price adjustment function
+            function @(priceAdjustmentFuncName)() {
+                var sum = 0;
+                for (var i in @(priceAdjustmentTableName)) {
+                    var ctrl = $('#' + i);
+                    if ((ctrl.is(':radio') && ctrl.is(':checked')) || (ctrl.is(':checkbox') && ctrl.is(':checked'))) {
+                        sum += @(priceAdjustmentTableName)[i];
+                    } else if (ctrl.is('select')) {
+                        var idx = $('#' + i + " option").index($('#' + i + " option:selected"));
+                        if (idx != -1) {
+                            sum += @(priceAdjustmentTableName)[i][idx];
+                        }
+                    }
+                }
+                var res = (@(priceVarName) + sum).toFixed(2);
+                $(".@(priceVarClass)").text(res);
+
+                @if (dynamicSkuMpnGtinUpdate)
+                {
+                    <text>
+                //load updated sku/mpn/gtin
+                $.ajax({
+                    cache: false,
+                    url: '@Url.Action("ProductDetails_AttributeChange", "ShoppingCart", new {productId = productId})',
+                    data: $('#product-details-form').serialize(),
+                    type: 'post',
+                    success: function(data) {
+                        if (data.sku) {
+                            $('#sku-@productId').text(data.sku);
+                        }
+                        if (data.mpn) {
+                            $('#mpn-@productId').text(data.mpn);
+                        }
+                        if (data.gtin) {
+                            $('#gtin-@productId').text(data.gtin);
+                        }
+                    }
+                });
+                    </text>
+                }
+            }
+            
+            //Price attributes handlers
+            $(document).ready(function() {
+                @(priceAdjustmentFuncName)();
+                @Html.Raw(priceAttributeScripts.ToString())
+            });
+        </script>
+    }
+}
+
+
+
+
+
+
+@if (Model.Count > 0)
+{
+    //attribute picture update
+    var pictureAdjustmentTableScripts = new StringBuilder();
+    var pictureAttributeScripts = new StringBuilder();
+    string pictureAdjustmentTableName = "";
+    string pictureAdjustmentFuncName = "";
+    string pictureDefaultSizePrefix = "defaultsize";
+    string pictureFullSizePrefix = "fullsize";
+    var pictureSizes = new string[] { pictureDefaultSizePrefix, pictureFullSizePrefix };
+    foreach (var attribute in Model)
+    {
+        string controlId = string.Format("product_attribute_{0}_{1}_{2}", attribute.ProductId, attribute.ProductAttributeId, attribute.Id);
+
+        pictureAdjustmentTableName = string.Format("productAttributeValueAdjustmentTable_{0}", attribute.ProductId);
+        pictureAdjustmentFuncName = string.Format("adjustProductAttributeValuePicture_{0}", attribute.ProductId);
+
+        switch (attribute.AttributeControlType)
+        {
+            case AttributeControlType.DropdownList:
+                {
+                    pictureAttributeScripts.AppendFormat("$('#{0}').change(function(){{{1}('{2}',{3});}});\n", controlId, pictureAdjustmentFuncName, controlId, attribute.ProductId);
+
+                    foreach (var pictureSize in pictureSizes)
+                    {
+                        pictureAdjustmentTableScripts.AppendFormat("{0}['{1}_{2}'] = new Array(", pictureAdjustmentTableName, controlId, pictureSize);
+                        int numberOfJsArrayItems = 0;
+                        if (!attribute.IsRequired)
+                        {
+                            pictureAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "'{0}',", "");
+                            numberOfJsArrayItems++;
+                        }
+                        foreach (var pvaValue in attribute.Values)
+                        {
+                            var pictureUrl = pvaValue.PictureUrl;
+                            if (pictureSize == pictureDefaultSizePrefix)
+                            {
+                                pictureUrl = pvaValue.PictureUrl;
+                            }
+                            else if (pictureSize == pictureFullSizePrefix)
+                            {
+                                pictureUrl = pvaValue.FullSizePictureUrl;
+                            }
+
+                            pictureAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "'{0}',", pictureUrl);
+                            numberOfJsArrayItems++;
+                        }
+                        //If you create an array with a single numeric parameter, that number is used for specifying the number of elements in this array.
+                        //so have a little hack here (we need at least two elements)
+                        if (numberOfJsArrayItems == 1)
+                        {
+                            pictureAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "'{0}',", "");
+                        }
+                        pictureAdjustmentTableScripts.Length -= 1;
+                        pictureAdjustmentTableScripts.Append(");\n");
+                    }
+                }
+                break;
+            case AttributeControlType.RadioList:
+            case AttributeControlType.ColorSquares:
+                {
+                    foreach (var pvaValue in attribute.Values)
+                    {
+                        pictureAttributeScripts.AppendFormat("$('#{0}_{1}').click(function(){{{2}('{3}_{4}',{5});}});\n", controlId, pvaValue.Id, pictureAdjustmentFuncName, controlId, pvaValue.Id, attribute.ProductId);
+                        foreach (var pictureSize in pictureSizes)
+                        {
+                            var pictureUrl = pvaValue.PictureUrl;
+                            if (pictureSize == pictureDefaultSizePrefix)
+                            {
+                                pictureUrl = pvaValue.PictureUrl;
+                            }
+                            else if (pictureSize == pictureFullSizePrefix)
+                            {
+                                pictureUrl = pvaValue.FullSizePictureUrl;
+                            }
+                            pictureAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0}['{1}_{2}_{3}'] = '{4}';\n", pictureAdjustmentTableName, controlId, pvaValue.Id, pictureSize, pictureUrl);
+                        }
+                    }
+                }
+                break;
+            case AttributeControlType.Checkboxes:
+                {
+                    foreach (var pvaValue in attribute.Values)
+                    {
+                        pictureAttributeScripts.AppendFormat("$('#{0}_{1}').click(function(){{{2}('{3}_{4}',{5});}});\n", controlId, pvaValue.Id, pictureAdjustmentFuncName, controlId, pvaValue.Id, attribute.ProductId);
+                        foreach (var pictureSize in pictureSizes)
+                        {
+                            var pictureUrl = pvaValue.PictureUrl;
+                            if (pictureSize == pictureDefaultSizePrefix)
+                            {
+                                pictureUrl = pvaValue.PictureUrl;
+                            }
+                            else if (pictureSize == pictureFullSizePrefix)
+                            {
+                                pictureUrl = pvaValue.FullSizePictureUrl;
+                            }
+                            pictureAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0}['{1}_{2}_{3}'] = '{4}';\n", pictureAdjustmentTableName, controlId, pvaValue.Id, pictureSize, pictureUrl);
+                        }
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+    }
+    
+    if (!String.IsNullOrEmpty(pictureAttributeScripts.ToString()))
+    {
+    <script type="text/javascript">
+            
+        //Picture adjustment table
+        var @(pictureAdjustmentTableName) = new Array();
+        //Picture adjustment table initialize
+        @Html.Raw(pictureAdjustmentTableScripts.ToString())
+        //Picture adjustment function
+        function @(pictureAdjustmentFuncName)(controlId, productId) {
+            var ctrl = $('#' + controlId);
+            var pictureDefaultSizeUrl = '';
+            var pictureFullSizeUrl = '';
+            if((ctrl.is(':radio') && ctrl.is(':checked')) || (ctrl.is(':checkbox') && ctrl.is(':checked'))) {
+                pictureDefaultSizeUrl = @(pictureAdjustmentTableName)[controlId + '_@(pictureDefaultSizePrefix)'];
+                pictureFullSizeUrl = @(pictureAdjustmentTableName)[controlId + '_@(pictureFullSizePrefix)'];
+            } else if(ctrl.is('select')) {
+                var idx = $('#' + controlId + " option").index($('#' + controlId + " option:selected"));
+                if(idx != -1) {
+                    pictureDefaultSizeUrl = @(pictureAdjustmentTableName)[controlId + '_@(pictureDefaultSizePrefix)'][idx];
+                    pictureFullSizeUrl = @(pictureAdjustmentTableName)[controlId + '_@(pictureFullSizePrefix)'][idx];
+                }
+            }
+            if (typeof pictureDefaultSizeUrl == 'string' && pictureDefaultSizeUrl != '') {
+                $('#main-product-img-' + productId).attr("src", pictureDefaultSizeUrl);
+            }
+            if (typeof pictureFullSizeUrl == 'string' && pictureFullSizeUrl != '') {
+                $('#main-product-img-lightbox-anchor-' + productId).attr("href", pictureFullSizeUrl);
+            }
+        }
+        // Picture attributes handlers
+        $(document).ready(function() {
+            @Html.Raw(pictureAttributeScripts.ToString())
+        });
+    </script>
+    }
 }
