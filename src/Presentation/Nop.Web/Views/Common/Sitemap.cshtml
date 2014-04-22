@@ -11,23 +11,33 @@
         <h1>@T("Sitemap")</h1>
     </div>
     <div class="page-body">
-        @if (Model.Topics.Count > 0)
-        {
-            <div class="entity">
-                <div class="entity-title">
-                    <h2>@T("Sitemap.Topics")</h2>
-                </div>
-                <div class="entity-body">
-                    <ul>
-                        @foreach (var item in Model.Topics)
-                        { 
-                            <li><a href="@Url.RouteUrl("Topic", new { Sename = Html.GetTopicSeName(item.SystemName) })">@item.Title</a></li>
+        <div class="entity">
+            <div class="entity-body">
+                <ul>
+                    <li><a href="@Url.RouteUrl("ProductSearch")">@T("Search")</a> </li>
+                    @if (Model.NewsEnabled)
+                    {
+                        <li><a href="@Url.RouteUrl("NewsArchive")">@T("News")</a></li>
+                    }
+                    @if (Model.BlogEnabled)
+                    {
+                        <li><a href="@Url.RouteUrl("Blog")">@T("Blog")</a></li>
+                    }
+                    @if (Model.ForumEnabled)
+                    {
+                        <li><a href="@Url.RouteUrl("Boards")">@T("Forum.Forums")</a></li>
+                    }
+                    <li><a href="@Url.RouteUrl("CustomerInfo")" class="account">@T("Account.MyAccount")</a></li>
+                    @if (Model.Topics.Count > 0)
+                    {
+                        foreach (var item in Model.Topics)
+                        {
+                            <li><a href="@Url.RouteUrl("Topic", new {Sename = Html.GetTopicSeName(item.SystemName)})">@item.Title</a></li>
                         }
-                    </ul>
-                </div>
-
+                    }
+                </ul>
             </div>
-        }
+        </div>
         @if (Model.Categories.Count > 0)
         {
             <div class="entity">

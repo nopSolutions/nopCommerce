@@ -18,5 +18,9 @@ namespace Nop.Web.Models.Common
         public IList<CategoryModel> Categories { get; set; }
         public IList<ManufacturerModel> Manufacturers { get; set; }
         public IList<TopicModel> Topics { get; set; }
+
+        public bool NewsEnabled { get; set; }
+        public bool BlogEnabled { get; set; }
+        public bool ForumEnabled { get; set; }
     }
 }

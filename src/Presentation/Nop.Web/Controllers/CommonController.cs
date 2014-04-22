@@ -543,7 +543,12 @@ namespace Nop.Web.Controllers
             string cacheKey = string.Format(ModelCacheEventConsumer.SITEMAP_PAGE_MODEL_KEY, _workContext.WorkingLanguage.Id, string.Join(",", customerRolesIds), _storeContext.CurrentStore.Id);
             var cachedModel = _cacheManager.Get(cacheKey, () =>
             {
-                var model = new SitemapModel();
+                var model = new SitemapModel()
+                {
+                    BlogEnabled = _blogSettings.Enabled,
+                    ForumEnabled = _forumSettings.ForumsEnabled,
+                    NewsEnabled = _newsSettings.Enabled,    
+                };
                 if (_commonSettings.SitemapIncludeCategories)
                 {
                     var categories = _categoryService.GetAllCategories();

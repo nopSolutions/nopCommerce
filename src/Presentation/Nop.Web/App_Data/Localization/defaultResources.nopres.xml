@@ -12678,9 +12678,6 @@
   <LocaleResource Name="Sitemap.Products">
     <Value>Products</Value>
   </LocaleResource>
-  <LocaleResource Name="Sitemap.Topics">
-    <Value>Topics</Value>
-  </LocaleResource>
   <LocaleResource Name="StoreClosed">
     <Value>This store is currently closed</Value>
   </LocaleResource>

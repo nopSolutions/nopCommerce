@@ -89,6 +89,9 @@ set @resources='
   <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.AttributeControlType.ReadonlyCheckboxes">
     <Value>Read-only checkboxes</Value>
   </LocaleResource>
+  <LocaleResource Name="Sitemap.Topics">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 
