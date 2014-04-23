@@ -9336,6 +9336,18 @@
   <LocaleResource Name="Admin.System.QueuedEmails.Fields.Priority.Required">
     <Value>Enter priority.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.QueuedEmails.Fields.ReplyTo">
+    <Value>ReplyTo</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.QueuedEmails.Fields.ReplyTo.Hint">
+    <Value>ReplyTo address (optional).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.QueuedEmails.Fields.ReplyToName">
+    <Value>ReplyTo name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.QueuedEmails.Fields.ReplyToName.Hint">
+    <Value>ReplyTo name (optional).</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.System.QueuedEmails.Fields.SentOn">
     <Value>Sent on</Value>
   </LocaleResource>

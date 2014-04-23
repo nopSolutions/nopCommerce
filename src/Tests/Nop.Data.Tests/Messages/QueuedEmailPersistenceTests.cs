@@ -18,6 +18,8 @@ namespace Nop.Data.Tests.Messages
                 FromName = "FromName",
                 To = "To",
                 ToName = "ToName",
+                ReplyTo = "ReplyTo",
+                ReplyToName = "ReplyToName",
                 CC = "CC",
                 Bcc = "Bcc",
                 Subject = "Subject",
@@ -49,6 +51,8 @@ namespace Nop.Data.Tests.Messages
             fromDb.FromName.ShouldEqual("FromName");
             fromDb.To.ShouldEqual("To");
             fromDb.ToName.ShouldEqual("ToName");
+            fromDb.ReplyTo.ShouldEqual("ReplyTo");
+            fromDb.ReplyToName.ShouldEqual("ReplyToName");
             fromDb.CC.ShouldEqual("CC");
             fromDb.Bcc.ShouldEqual("Bcc");
             fromDb.Subject.ShouldEqual("Subject");
@@ -57,6 +61,7 @@ namespace Nop.Data.Tests.Messages
             fromDb.AttachmentFileName.ShouldEqual("some file name");
             fromDb.CreatedOnUtc.ShouldEqual(new DateTime(2010, 01, 01));
             fromDb.SentTries.ShouldEqual(5);
+            fromDb.SentOnUtc.ShouldNotBeNull();
             fromDb.SentOnUtc.Value.ShouldEqual(new DateTime(2010, 02, 02));
 
             fromDb.EmailAccount.ShouldNotBeNull();

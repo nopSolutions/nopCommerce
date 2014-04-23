@@ -23,40 +23,28 @@ namespace Nop.Services.Messages
         /// <param name="fromName">From display name</param>
         /// <param name="toAddress">To address</param>
         /// <param name="toName">To display name</param>
+        /// <param name="replyTo">ReplyTo address</param>
+        /// <param name="replyToName">ReplyTo display name</param>
         /// <param name="bcc">BCC addresses list</param>
         /// <param name="cc">CC addresses list</param>
         /// <param name="attachmentFilePath">Attachment file path</param>
         /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
         public void SendEmail(EmailAccount emailAccount, string subject, string body,
             string fromAddress, string fromName, string toAddress, string toName,
-            IEnumerable<string> bcc = null, IEnumerable<string> cc = null,
-            string attachmentFilePath = null, string attachmentFileName = null)
-        {
-            SendEmail(emailAccount, subject, body, 
-                new MailAddress(fromAddress, fromName), new MailAddress(toAddress, toName),
-                bcc, cc, attachmentFilePath, attachmentFileName);
-        }
-
-        /// <summary>
-        /// Sends an email
-        /// </summary>
-        /// <param name="emailAccount">Email account to use</param>
-        /// <param name="subject">Subject</param>
-        /// <param name="body">Body</param>
-        /// <param name="from">From address</param>
-        /// <param name="to">To address</param>
-        /// <param name="bcc">BCC addresses list</param>
-        /// <param name="cc">CC addresses list</param>
-        /// <param name="attachmentFilePath">Attachment file path</param>
-        /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
-        public virtual void SendEmail(EmailAccount emailAccount, string subject, string body,
-            MailAddress from, MailAddress to,
+             string replyTo = null, string replyToName = null,
             IEnumerable<string> bcc = null, IEnumerable<string> cc = null,
             string attachmentFilePath = null, string attachmentFileName = null)
         {
             var message = new MailMessage();
-            message.From = from;
-            message.To.Add(to);
+            //from, to, reply to
+            message.From = new MailAddress(fromAddress, fromName);
+            message.To.Add(new MailAddress(toAddress, toName));
+            if (!String.IsNullOrEmpty(replyTo))
+            {
+                message.ReplyToList.Add(new MailAddress(replyTo, replyToName));
+            }
+
+            //BCC
             if (bcc != null)
             {
                 foreach (var address in bcc.Where(bccValue => !String.IsNullOrWhiteSpace(bccValue)))
@@ -64,6 +52,8 @@ namespace Nop.Services.Messages
                     message.Bcc.Add(address.Trim());
                 }
             }
+
+            //CC
             if (cc != null)
             {
                 foreach (var address in cc.Where(ccValue => !String.IsNullOrWhiteSpace(ccValue)))
@@ -71,6 +61,8 @@ namespace Nop.Services.Messages
                     message.CC.Add(address.Trim());
                 }
             }
+
+            //content
             message.Subject = subject;
             message.Body = body;
             message.IsBodyHtml = true;
@@ -90,6 +82,7 @@ namespace Nop.Services.Messages
                 message.Attachments.Add(attachment);
             }
 
+            //send email
             using (var smtpClient = new SmtpClient())
             {
                 smtpClient.UseDefaultCredentials = emailAccount.UseDefaultCredentials;
@@ -103,5 +96,6 @@ namespace Nop.Services.Messages
                 smtpClient.Send(message);
             }
         }
+
     }
 }

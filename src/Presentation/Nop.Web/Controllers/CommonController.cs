@@ -511,6 +511,8 @@ namespace Nop.Web.Controllers
                     FromName = fromName,
                     To = emailAccount.Email,
                     ToName = emailAccount.DisplayName,
+                    ReplyTo = email,
+                    ReplyToName = fullName,
                     Priority = 5,
                     Subject = subject,
                     Body = body,

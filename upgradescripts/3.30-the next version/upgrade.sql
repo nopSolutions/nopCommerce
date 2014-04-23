@@ -92,6 +92,18 @@ set @resources='
   <LocaleResource Name="Sitemap.Topics">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.QueuedEmails.Fields.ReplyTo">
+    <Value>ReplyTo</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.QueuedEmails.Fields.ReplyTo.Hint">
+    <Value>ReplyTo address (optional).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.QueuedEmails.Fields.ReplyToName">
+    <Value>ReplyTo name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.QueuedEmails.Fields.ReplyToName.Hint">
+    <Value>ReplyTo name (optional).</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -233,4 +245,20 @@ GO
 UPDATE [Setting]
 SET [name] = N'catalogsettings.dynamicpriceupdateajax'
 WHERE [name] = N'catalogsettings.enabledynamicskumpngtinupdate'
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[QueuedEmail]') and NAME='ReplyTo')
+BEGIN
+	ALTER TABLE [QueuedEmail]
+	ADD [ReplyTo] nvarchar(500) NULL
+END
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[QueuedEmail]') and NAME='ReplyToName')
+BEGIN
+	ALTER TABLE [QueuedEmail]
+	ADD [ReplyToName] nvarchar(500) NULL
+END
 GO

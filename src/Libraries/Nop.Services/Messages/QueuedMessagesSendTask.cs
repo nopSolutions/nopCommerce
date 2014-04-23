@@ -40,9 +40,19 @@ namespace Nop.Services.Messages
 
                 try
                 {
-                    _emailSender.SendEmail(queuedEmail.EmailAccount, queuedEmail.Subject, queuedEmail.Body,
-                       queuedEmail.From, queuedEmail.FromName, queuedEmail.To, queuedEmail.ToName, bcc, cc,
-                       queuedEmail.AttachmentFilePath, queuedEmail.AttachmentFileName);
+                    _emailSender.SendEmail(queuedEmail.EmailAccount, 
+                        queuedEmail.Subject, 
+                        queuedEmail.Body,
+                       queuedEmail.From, 
+                       queuedEmail.FromName, 
+                       queuedEmail.To, 
+                       queuedEmail.ToName,
+                       queuedEmail.ReplyTo,
+                       queuedEmail.ReplyToName,
+                       bcc, 
+                       cc, 
+                       queuedEmail.AttachmentFilePath,
+                       queuedEmail.AttachmentFileName);
 
                     queuedEmail.SentOnUtc = DateTime.UtcNow;
                 }

@@ -152,6 +152,8 @@ namespace Nop.Admin.Controllers
                 FromName = queuedEmail.FromName,
                 To = queuedEmail.To,
                 ToName = queuedEmail.ToName,
+                ReplyTo = queuedEmail.ReplyTo,
+                ReplyToName = queuedEmail.ReplyToName,
                 CC = queuedEmail.CC,
                 Bcc = queuedEmail.Bcc,
                 Subject = queuedEmail.Subject,
@@ -164,7 +166,7 @@ namespace Nop.Admin.Controllers
             _queuedEmailService.InsertQueuedEmail(requeuedEmail);
 
             SuccessNotification(_localizationService.GetResource("Admin.System.QueuedEmails.Requeued"));
-            return RedirectToAction("Edit", requeuedEmail.Id);
+            return RedirectToAction("Edit", new { id = requeuedEmail.Id });
         }
 
 	    [HttpPost]

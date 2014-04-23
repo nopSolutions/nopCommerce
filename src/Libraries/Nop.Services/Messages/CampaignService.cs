@@ -196,9 +196,7 @@ namespace Nop.Services.Messages
             string subject = _tokenizer.Replace(campaign.Subject, tokens, false);
             string body = _tokenizer.Replace(campaign.Body, tokens, true);
 
-            var from = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
-            var to = new MailAddress(email);
-            _emailSender.SendEmail(emailAccount, subject, body, from, to);
+            _emailSender.SendEmail(emailAccount, subject, body, emailAccount.Email, emailAccount.DisplayName, email, null);
         }
     }
 }

@@ -33,6 +33,14 @@ namespace Nop.Admin.Models.Messages
         [AllowHtml]
         public string ToName { get; set; }
 
+        [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.ReplyTo")]
+        [AllowHtml]
+        public string ReplyTo { get; set; }
+
+        [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.ReplyToName")]
+        [AllowHtml]
+        public string ReplyToName { get; set; }
+
         [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.CC")]
         [AllowHtml]
         public string CC { get; set; }

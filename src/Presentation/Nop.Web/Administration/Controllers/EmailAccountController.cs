@@ -190,12 +190,9 @@ namespace Nop.Admin.Controllers
                 if (String.IsNullOrWhiteSpace(model.SendTestEmailTo))
                     throw new NopException("Enter test email address");
 
-
-                var from = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
-                var to = new MailAddress(model.SendTestEmailTo);
                 string subject = _storeContext.CurrentStore.Name + ". Testing email functionality.";
                 string body = "Email works fine.";
-                _emailSender.SendEmail(emailAccount, subject, body, from, to);
+                _emailSender.SendEmail(emailAccount, subject, body, emailAccount.Email, emailAccount.DisplayName, model.SendTestEmailTo, null);
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.EmailAccounts.SendTestEmail.Success"), false);
             }
             catch (Exception exc)

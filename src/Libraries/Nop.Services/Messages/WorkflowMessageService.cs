@@ -68,7 +68,8 @@ namespace Nop.Services.Messages
         protected virtual int SendNotification(MessageTemplate messageTemplate, 
             EmailAccount emailAccount, int languageId, IEnumerable<Token> tokens,
             string toEmailAddress, string toName,
-            string attachmentFilePath = null, string attachmentFileName = null)
+            string attachmentFilePath = null, string attachmentFileName = null,
+            string replyToEmailAddress = null, string replyToName = null)
         {
             //retrieve localized message template data
             var bcc = messageTemplate.GetLocalized((mt) => mt.BccEmailAddresses, languageId);
@@ -86,6 +87,8 @@ namespace Nop.Services.Messages
                 FromName = emailAccount.DisplayName,
                 To = toEmailAddress,
                 ToName = toName,
+                ReplyTo = replyToEmailAddress,
+                ReplyToName = replyToName,
                 CC = string.Empty,
                 Bcc = bcc,
                 Subject = subjectReplaced,

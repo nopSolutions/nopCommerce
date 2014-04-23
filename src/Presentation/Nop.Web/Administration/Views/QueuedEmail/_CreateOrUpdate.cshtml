@@ -50,6 +50,24 @@
     </tr>
     <tr>
         <td class="adminTitle">
+            @Html.NopLabelFor(model => model.ReplyTo):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.ReplyTo)
+            @Html.ValidationMessageFor(model => model.ReplyTo)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.ReplyToName):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.ReplyToName)
+            @Html.ValidationMessageFor(model => model.ReplyToName)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
             @Html.NopLabelFor(model => model.CC):
         </td>
         <td class="adminData">
