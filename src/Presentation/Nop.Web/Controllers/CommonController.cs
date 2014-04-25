@@ -394,13 +394,13 @@ namespace Nop.Web.Controllers
                 ShoppingCartEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart),
                 ShoppingCartItems = customer.ShoppingCartItems
                     .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                    .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
+                    .LimitPerStore(_storeContext.CurrentStore.Id)
                     .ToList()
                     .GetTotalProducts(),
                 WishlistEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableWishlist),
                 WishlistItems = customer.ShoppingCartItems
                     .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
-                    .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
+                    .LimitPerStore(_storeContext.CurrentStore.Id)
                     .ToList()
                     .GetTotalProducts(),
                 AllowPrivateMessages = customer.IsRegistered() && _forumSettings.AllowPrivateMessages,

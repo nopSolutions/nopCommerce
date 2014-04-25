@@ -757,7 +757,7 @@ namespace Nop.Web.Controllers
 
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
+                .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             model.TotalProducts = cart.GetTotalProducts();
             if (cart.Count > 0)
@@ -1170,7 +1170,7 @@ namespace Nop.Web.Controllers
             //first, try to find existing shopping cart item
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == cartType)
-                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
+                .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             var shoppingCartItem = _shoppingCartService.FindShoppingCartItemInTheCart(cart, cartType, product);
             //if we already have the same product in the cart, then use the total quantity to validate
@@ -1226,7 +1226,7 @@ namespace Nop.Web.Controllers
                             var updatetopwishlistsectionhtml = string.Format(_localizationService.GetResource("Wishlist.HeaderQuantity"),
                                  _workContext.CurrentCustomer.ShoppingCartItems
                                  .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
-                                 .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
+                                 .LimitPerStore(_storeContext.CurrentStore.Id)
                                  .ToList()
                                  .GetTotalProducts());
                             return Json(new
@@ -1258,7 +1258,7 @@ namespace Nop.Web.Controllers
                             var updatetopcartsectionhtml = string.Format(_localizationService.GetResource("ShoppingCart.HeaderQuantity"),
                                  _workContext.CurrentCustomer.ShoppingCartItems
                                  .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                                 .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
+                                 .LimitPerStore(_storeContext.CurrentStore.Id)
                                  .ToList()
                                  .GetTotalProducts());
                             var updateflyoutcartsectionhtml = _shoppingCartSettings.MiniShoppingCartEnabled
@@ -1315,7 +1315,7 @@ namespace Nop.Web.Controllers
             {
                 var cart = _workContext.CurrentCustomer.ShoppingCartItems
                     .Where(x => x.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                    .Where(x => x.StoreId == _storeContext.CurrentStore.Id)
+                    .LimitPerStore(_storeContext.CurrentStore.Id)
                     .ToList();
                 updatecartitem = cart.FirstOrDefault(x => x.Id == updatecartitemid);
                 //not found?
@@ -1384,7 +1384,7 @@ namespace Nop.Web.Controllers
             {
                 var cart = _workContext.CurrentCustomer.ShoppingCartItems
                     .Where(x => x.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                    .Where(x => x.StoreId == _storeContext.CurrentStore.Id)
+                    .LimitPerStore(_storeContext.CurrentStore.Id)
                     .ToList();
                 var otherCartItemWithSameParameters = _shoppingCartService.FindShoppingCartItemInTheCart(
                     cart, cartType, product, attributes, customerEnteredPriceConverted);
@@ -1439,7 +1439,7 @@ namespace Nop.Web.Controllers
                             var updatetopwishlistsectionhtml = string.Format(_localizationService.GetResource("Wishlist.HeaderQuantity"),
                                  _workContext.CurrentCustomer.ShoppingCartItems
                                  .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
-                                 .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
+                                 .LimitPerStore(_storeContext.CurrentStore.Id)
                                  .ToList()
                                  .GetTotalProducts());
                             return Json(new
@@ -1471,7 +1471,7 @@ namespace Nop.Web.Controllers
                             var updatetopcartsectionhtml = string.Format(_localizationService.GetResource("ShoppingCart.HeaderQuantity"),
                                  _workContext.CurrentCustomer.ShoppingCartItems
                                  .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                                 .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
+                                 .LimitPerStore(_storeContext.CurrentStore.Id)
                                  .ToList()
                                  .GetTotalProducts());
                             var updateflyoutcartsectionhtml = _shoppingCartSettings.MiniShoppingCartEnabled
@@ -1707,7 +1707,7 @@ namespace Nop.Web.Controllers
 
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
+                .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             var model = new ShoppingCartModel();
             PrepareShoppingCartModel(model, cart);
@@ -1719,7 +1719,7 @@ namespace Nop.Web.Controllers
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
+                .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             var model = new ShoppingCartModel();
             PrepareShoppingCartModel(model, cart, 
@@ -1740,7 +1740,7 @@ namespace Nop.Web.Controllers
 
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
+                .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
 
             var allIdsToRemove = form["removefromcart"] != null ? form["removefromcart"].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => int.Parse(x)).ToList() : new List<int>();
@@ -1773,7 +1773,7 @@ namespace Nop.Web.Controllers
             //updated cart
             cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
+                .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             var model = new ShoppingCartModel();
             PrepareShoppingCartModel(model, cart);
@@ -1810,7 +1810,7 @@ namespace Nop.Web.Controllers
             //get shopping cart item
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(x => x.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(x => x.StoreId == _storeContext.CurrentStore.Id)
+                .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             var sci = cart.FirstOrDefault(x => x.Id == sciId);
             if (sci == null)
@@ -1836,7 +1836,7 @@ namespace Nop.Web.Controllers
             //updated cart
             cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(x => x.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(x => x.StoreId == _storeContext.CurrentStore.Id)
+                .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             var model = new ShoppingCartModel();
             PrepareShoppingCartModel(model, cart);
@@ -1867,7 +1867,7 @@ namespace Nop.Web.Controllers
             //get shopping cart item
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(x => x.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(x => x.StoreId == _storeContext.CurrentStore.Id)
+                .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             var sci = cart.FirstOrDefault(x => x.Id == sciId);
             if (sci == null)
@@ -1882,7 +1882,7 @@ namespace Nop.Web.Controllers
             //updated cart
             cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(x => x.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(x => x.StoreId == _storeContext.CurrentStore.Id)
+                .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             var model = new ShoppingCartModel();
             PrepareShoppingCartModel(model, cart);
@@ -1912,7 +1912,7 @@ namespace Nop.Web.Controllers
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
+                .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
 
             //parse and save checkout attributes
@@ -1954,7 +1954,7 @@ namespace Nop.Web.Controllers
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
+                .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             
             //parse and save checkout attributes
@@ -1992,7 +1992,7 @@ namespace Nop.Web.Controllers
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
+                .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
 
             //parse and save checkout attributes
@@ -2032,7 +2032,7 @@ namespace Nop.Web.Controllers
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
+                .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             
             //parse and save checkout attributes
@@ -2099,7 +2099,7 @@ namespace Nop.Web.Controllers
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
+                .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             var model = new OrderTotalsModel();
             model.IsEditable = isEditable;
@@ -2264,7 +2264,7 @@ namespace Nop.Web.Controllers
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
+                .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             var model = new ShoppingCartModel();
 
@@ -2296,7 +2296,7 @@ namespace Nop.Web.Controllers
 
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
+                .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             PrepareShoppingCartModel(model, cart);
             return View(model);
@@ -2332,7 +2332,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("HomePage");
             var cart = customer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
-                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
+                .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             var model = new WishlistModel();
             PrepareWishlistModel(model, cart, !customerGuid.HasValue);
@@ -2350,7 +2350,7 @@ namespace Nop.Web.Controllers
 
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
-                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
+                .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
 
             var allIdsToRemove = form["removefromcart"] != null ? form["removefromcart"].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => int.Parse(x)).ToList() : new List<int>();
@@ -2382,7 +2382,7 @@ namespace Nop.Web.Controllers
             //updated wishlist
             cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
-                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
+                .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             var model = new WishlistModel();
             PrepareWishlistModel(model, cart);
@@ -2419,7 +2419,7 @@ namespace Nop.Web.Controllers
             //get shopping cart item
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(x => x.ShoppingCartType == ShoppingCartType.Wishlist)
-                .Where(x => x.StoreId == _storeContext.CurrentStore.Id)
+                .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             var sci = cart.FirstOrDefault(x => x.Id == sciId);
             if (sci == null)
@@ -2445,7 +2445,7 @@ namespace Nop.Web.Controllers
             //updated wishlist
             cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(x => x.ShoppingCartType == ShoppingCartType.Wishlist)
-                .Where(x => x.StoreId == _storeContext.CurrentStore.Id)
+                .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             var model = new WishlistModel();
             PrepareWishlistModel(model, cart);
@@ -2476,7 +2476,7 @@ namespace Nop.Web.Controllers
             //get wishlist cart item
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(x => x.ShoppingCartType == ShoppingCartType.Wishlist)
-                .Where(x => x.StoreId == _storeContext.CurrentStore.Id)
+                .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             var sci = cart.FirstOrDefault(x => x.Id == sciId);
             if (sci == null)
@@ -2491,7 +2491,7 @@ namespace Nop.Web.Controllers
             //updated wishlist
             cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(x => x.ShoppingCartType == ShoppingCartType.Wishlist)
-                .Where(x => x.StoreId == _storeContext.CurrentStore.Id)
+                .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             var model = new WishlistModel();
             PrepareWishlistModel(model, cart);
@@ -2517,7 +2517,7 @@ namespace Nop.Web.Controllers
 
             var pageCart = pageCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
-                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
+                .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
 
             var allWarnings = new List<string>();
@@ -2554,7 +2554,7 @@ namespace Nop.Web.Controllers
                 //no items added. redisplay the wishlist page
                 var cart = pageCustomer.ShoppingCartItems
                     .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
-                    .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
+                    .LimitPerStore(_storeContext.CurrentStore.Id)
                     .ToList();
                 var model = new WishlistModel();
                 PrepareWishlistModel(model, cart, !customerGuid.HasValue);
@@ -2588,7 +2588,7 @@ namespace Nop.Web.Controllers
 
             var pageCart = pageCustomer.ShoppingCartItems
                 .Where(x => x.ShoppingCartType == ShoppingCartType.Wishlist)
-                .Where(x => x.StoreId == _storeContext.CurrentStore.Id)
+                .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
 
             var sci = pageCart.FirstOrDefault(x => x.Id == sciId);
@@ -2618,7 +2618,7 @@ namespace Nop.Web.Controllers
                 //no items added. redisplay the wishlist page
                 var cart = pageCustomer.ShoppingCartItems
                     .Where(x => x.ShoppingCartType == ShoppingCartType.Wishlist)
-                    .Where(x => x.StoreId == _storeContext.CurrentStore.Id)
+                    .LimitPerStore(_storeContext.CurrentStore.Id)
                     .ToList();
                 var model = new WishlistModel();
                 PrepareWishlistModel(model, cart, !customerGuid.HasValue);
@@ -2634,7 +2634,7 @@ namespace Nop.Web.Controllers
 
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
-                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
+                .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
 
             if (cart.Count == 0)
@@ -2658,7 +2658,7 @@ namespace Nop.Web.Controllers
 
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
-                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
+                .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             if (cart.Count == 0)
                 return RedirectToRoute("HomePage");

@@ -418,7 +418,7 @@ namespace Nop.Web.Controllers
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
+                .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
@@ -503,7 +503,7 @@ namespace Nop.Web.Controllers
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
+                .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
@@ -553,7 +553,7 @@ namespace Nop.Web.Controllers
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
+                .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
@@ -601,7 +601,7 @@ namespace Nop.Web.Controllers
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
+                .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
@@ -648,7 +648,7 @@ namespace Nop.Web.Controllers
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
+                .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
@@ -740,7 +740,7 @@ namespace Nop.Web.Controllers
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
+                .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
@@ -793,7 +793,7 @@ namespace Nop.Web.Controllers
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
+                .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
@@ -855,7 +855,7 @@ namespace Nop.Web.Controllers
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
+                .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
@@ -902,7 +902,7 @@ namespace Nop.Web.Controllers
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
+                .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
@@ -952,7 +952,7 @@ namespace Nop.Web.Controllers
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
+                .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
@@ -1001,7 +1001,7 @@ namespace Nop.Web.Controllers
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
+                .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
@@ -1053,7 +1053,7 @@ namespace Nop.Web.Controllers
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
+                .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
@@ -1075,7 +1075,7 @@ namespace Nop.Web.Controllers
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
+                .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
@@ -1264,7 +1264,7 @@ namespace Nop.Web.Controllers
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
+                .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
@@ -1298,7 +1298,7 @@ namespace Nop.Web.Controllers
                 //validation
                 var cart = _workContext.CurrentCustomer.ShoppingCartItems
                     .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
+                    .LimitPerStore(_storeContext.CurrentStore.Id)
                     .ToList();
                 if (cart.Count == 0)
                     throw new Exception("Your cart is empty");
@@ -1409,7 +1409,7 @@ namespace Nop.Web.Controllers
                 //validation
                 var cart = _workContext.CurrentCustomer.ShoppingCartItems
                     .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                    .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
+                    .LimitPerStore(_storeContext.CurrentStore.Id)
                     .ToList();
                 if (cart.Count == 0)
                     throw new Exception("Your cart is empty");
@@ -1568,7 +1568,7 @@ namespace Nop.Web.Controllers
                 //validation
                 var cart = _workContext.CurrentCustomer.ShoppingCartItems
                     .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                    .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
+                    .LimitPerStore(_storeContext.CurrentStore.Id)
                     .ToList();
                 if (cart.Count == 0)
                     throw new Exception("Your cart is empty");
@@ -1636,7 +1636,7 @@ namespace Nop.Web.Controllers
                 //validation
                 var cart = _workContext.CurrentCustomer.ShoppingCartItems
                     .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                    .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
+                    .LimitPerStore(_storeContext.CurrentStore.Id)
                     .ToList();
                 if (cart.Count == 0)
                     throw new Exception("Your cart is empty");
@@ -1711,7 +1711,7 @@ namespace Nop.Web.Controllers
                 //validation
                 var cart = _workContext.CurrentCustomer.ShoppingCartItems
                     .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                    .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
+                    .LimitPerStore(_storeContext.CurrentStore.Id)
                     .ToList();
                 if (cart.Count == 0)
                     throw new Exception("Your cart is empty");
@@ -1779,7 +1779,7 @@ namespace Nop.Web.Controllers
                 //validation
                 var cart = _workContext.CurrentCustomer.ShoppingCartItems
                     .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                    .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
+                    .LimitPerStore(_storeContext.CurrentStore.Id)
                     .ToList();
                 if (cart.Count == 0)
                     throw new Exception("Your cart is empty");

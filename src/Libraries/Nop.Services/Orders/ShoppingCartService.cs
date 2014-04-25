@@ -140,7 +140,7 @@ namespace Nop.Services.Orders
             {
                 var cart = customer.ShoppingCartItems
                     .Where(x => x.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                    .Where(x => x.StoreId == storeId)
+                    .LimitPerStore(storeId)
                     .ToList();
 
                 var checkoutAttributesXml = customer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes, _genericAttributeService, storeId);
@@ -190,7 +190,7 @@ namespace Nop.Services.Orders
 
             var cart = customer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == shoppingCartType)
-                .Where(sci => sci.StoreId == storeId)
+                .LimitPerStore(storeId)
                 .ToList();
 
             var warnings = new List<string>();
@@ -945,7 +945,7 @@ namespace Nop.Services.Orders
 
             var cart = customer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == shoppingCartType)
-                .Where(sci => sci.StoreId == storeId)
+                .LimitPerStore(storeId)
                 .ToList();
 
             var shoppingCartItem = FindShoppingCartItemInTheCart(cart,

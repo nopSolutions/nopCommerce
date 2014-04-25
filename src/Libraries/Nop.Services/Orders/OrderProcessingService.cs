@@ -640,7 +640,7 @@ namespace Nop.Services.Orders
                     //load shopping cart
                     cart = customer.ShoppingCartItems
                         .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                        .Where(sci => sci.StoreId == processPaymentRequest.StoreId)
+                        .LimitPerStore(processPaymentRequest.StoreId)
                         .ToList();
 
                     if (cart.Count == 0)

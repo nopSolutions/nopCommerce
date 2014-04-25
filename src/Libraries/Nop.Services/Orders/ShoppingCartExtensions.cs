@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.EnterpriseServices.Internal;
+using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
@@ -148,5 +150,14 @@ namespace Nop.Services.Orders
             return shoppingCart[0].Customer;
         }
 
+        public static IEnumerable<ShoppingCartItem> LimitPerStore(this IEnumerable<ShoppingCartItem> cart, int storeId)
+        {
+            //simply replace the following code with "return cart"
+            //if you want to share shopping carts between stores
+
+            //UNDONE the same "limit per store" logic should be done in
+            //HasAllProductsDiscountRequirementRule.cs and HasOneProductDiscountRequirementRule.cs files
+            return cart.Where(x => x.StoreId == storeId);
+        }
     }
 }

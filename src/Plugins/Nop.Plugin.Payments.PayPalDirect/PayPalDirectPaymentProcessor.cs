@@ -177,7 +177,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
             //    //individual items
                 //var cart = customer.ShoppingCartItems
                 //    .Where(x=>x.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                //    .Where(x=>x.StoreId == processPaymentRequest.StoreId)
+                //    .LimitPerStore(processPaymentRequest.StoreId)
                 //    .ToList();
             //    var cartItems = new PaymentDetailsItemType[cart.Count];
             //    for (int i = 0; i < cart.Count; i++)

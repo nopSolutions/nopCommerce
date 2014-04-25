@@ -2070,7 +2070,7 @@ namespace Nop.Web.Controllers
             {
                 var cart = _workContext.CurrentCustomer.ShoppingCartItems
                     .Where(x => x.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                    .Where(x => x.StoreId == _storeContext.CurrentStore.Id)
+                    .LimitPerStore(_storeContext.CurrentStore.Id)
                     .ToList();
                 updatecartitem = cart.FirstOrDefault(x => x.Id == updatecartitemid);
                 //not found?
@@ -2285,7 +2285,7 @@ namespace Nop.Web.Controllers
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .Where(sci => sci.StoreId == _storeContext.CurrentStore.Id)
+                .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
 
             var products = _productService.GetCrosssellProductsByShoppingCart(cart, _shoppingCartSettings.CrossSellsNumber);
