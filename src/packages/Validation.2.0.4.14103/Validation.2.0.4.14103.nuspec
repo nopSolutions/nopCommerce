@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>Validation</id>
+    <version>2.0.4.14103</version>
+    <title>Input and runtime validation</title>
+    <authors>Andrew Arnott</authors>
+    <owners>Andrew Arnott</owners>
+    <licenseUrl>http://opensource.org/licenses/MS-PL</licenseUrl>
+    <projectUrl>http://github.com/aarnott/Validation</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Method input validation and runtime checks that report errors or throw exceptions when failures are detected.
+			Check out the code snippets available at https://github.com/AArnott/Validation/tree/master/My%20Code%20Snippets and make your input validation even easier with auto-completion for quoted parameter names.</description>
+    <summary>Provides convenient methods and code snippets for validating input and running state.</summary>
+    <releaseNotes>v2.0.3 adds targetability of Xamarin MonoTouch and MonoAndroid.
+v2.0.2 corrects an error message and adds code snippets.
+v2.0.1 allows partially trusted callers.</releaseNotes>
+    <copyright>Copyright © Andrew Arnott</copyright>
+    <tags>InputValidation IntegrityCheck</tags>
+  </metadata>
+</package>
