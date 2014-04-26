@@ -76,7 +76,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\MiscFacebookShopController.cs" />
-    <Compile Include="Extensions\PagerHtmlExtension.cs" />
     <Compile Include="FacebookShopPlugin.cs" />
     <Compile Include="Infrastructure\Cache\ModelCacheEventConsumer.cs" />
     <Compile Include="Infrastructure\DependencyRegistrar.cs" />
