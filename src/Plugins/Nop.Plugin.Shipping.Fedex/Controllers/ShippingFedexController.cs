@@ -58,7 +58,7 @@ namespace Nop.Plugin.Shipping.Fedex.Controllers
                     }
                 }
 
-            return View("Nop.Plugin.Shipping.Fedex.Views.ShippingFedex.Configure", model);
+            return View("~/Plugins/Shipping.Fedex/Views/ShippingFedex/Configure.cshtml", model);
         }
 
         [HttpPost]

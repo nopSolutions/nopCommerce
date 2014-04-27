@@ -39,7 +39,7 @@ namespace Nop.Plugin.Shipping.FixedRateShipping.Controllers
         [ChildActionOnly]
         public ActionResult Configure()
         {
-            return View("Nop.Plugin.Shipping.FixedRateShipping.Views.ShippingFixedRate.Configure");
+            return View("~/Plugins/Shipping.FixedRateShipping/Views/ShippingFixedRate/Configure.cshtml");
         }
 
         [HttpPost]

@@ -83,7 +83,7 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
                 model.AdditionalFeePercentage_OverrideForStore = _settingService.SettingExists(payPalDirectPaymentSettings, x => x.AdditionalFeePercentage, storeScope);
             }
 
-            return View("Nop.Plugin.Payments.PayPalDirect.Views.PaymentPayPalDirect.Configure", model);
+            return View("~/Plugins/Payments.PayPalDirect/Views/PaymentPayPalDirect/Configure.cshtml", model);
         }
 
         [HttpPost]
@@ -215,7 +215,7 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
             if (selectedYear != null)
                 selectedYear.Selected = true;
 
-            return View("Nop.Plugin.Payments.PayPalDirect.Views.PaymentPayPalDirect.PaymentInfo", model);
+            return View("~/Plugins/Payments.PayPalDirect/Views/PaymentPayPalDirect/PaymentInfo.cshtml", model);
         }
 
         [NonAction]

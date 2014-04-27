@@ -33,7 +33,8 @@ namespace Nop.Plugin.Sms.Verizon.Controllers
             var model = new SmsVerizonModel();
             model.Enabled = _verizonSettings.Enabled;
             model.Email = _verizonSettings.Email;
-            return View("Nop.Plugin.SMS.Verizon.Views.SmsVerizon.Configure", model);
+
+            return View("~/Plugins/SMS.Verizon/Views/SmsVerizon/Configure.cshtml", model);
         }
 
         [ChildActionOnly]
@@ -51,7 +52,7 @@ namespace Nop.Plugin.Sms.Verizon.Controllers
             _verizonSettings.Email = model.Email;
             _settingService.SaveSetting(_verizonSettings);
 
-            return View("Nop.Plugin.SMS.Verizon.Views.SmsVerizon.Configure", model);
+            return Configure();
         }
 
         [ChildActionOnly]
@@ -89,7 +90,7 @@ namespace Nop.Plugin.Sms.Verizon.Controllers
                 model.TestSmsResult = exc.ToString();
             }
 
-            return View("Nop.Plugin.SMS.Verizon.Views.SmsVerizon.Configure", model);
+            return View("~/Plugins/SMS.Verizon/Views/SmsVerizon/Configure.cshtml", model);
         }
     }
 }

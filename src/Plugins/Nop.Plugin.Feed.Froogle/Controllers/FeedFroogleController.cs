@@ -89,8 +89,8 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
                         FileUrl = string.Format("{0}content/files/exportimport/{1}-{2}", _webHelper.GetStoreLocation(false), store.Id, _froogleSettings.StaticFileName)
                     });
             }
-            
-            return View("Nop.Plugin.Feed.Froogle.Views.FeedFroogle.Configure", model);
+
+            return View("~/Plugins/Feed.Froogle/Views/FeedFroogle/Configure.cshtml", model);
         }
 
         [HttpPost]

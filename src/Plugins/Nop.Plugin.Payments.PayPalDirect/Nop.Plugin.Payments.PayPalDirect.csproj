@@ -123,11 +123,14 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Views\PaymentPayPalDirect\Configure.cshtml" />
-    <EmbeddedResource Include="Views\PaymentPayPalDirect\PaymentInfo.cshtml">
+    <Content Include="Views\PaymentPayPalDirect\Configure.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\PaymentPayPalDirect\PaymentInfo.cshtml">
       <SubType>
       </SubType>
-    </EmbeddedResource>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="logo.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -299,7 +302,9 @@
     <None Include="Web References\PayPalSvc\UpdateRecurringPaymentsProfileResponseType.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="web.config" />
+    <Content Include="web.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Description.txt">

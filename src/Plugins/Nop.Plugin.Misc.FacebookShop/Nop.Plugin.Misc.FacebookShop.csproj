@@ -76,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\MiscFacebookShopController.cs" />
+    <Compile Include="Extensions\PagerHtmlExtension.cs" />
     <Compile Include="FacebookShopPlugin.cs" />
     <Compile Include="Infrastructure\Cache\ModelCacheEventConsumer.cs" />
     <Compile Include="Infrastructure\DependencyRegistrar.cs" />
@@ -124,18 +125,42 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <EmbeddedResource Include="Views\MiscFacebookShop\Index.cshtml" />
-    <EmbeddedResource Include="Views\MiscFacebookShop\Layout.cshtml" />
-    <EmbeddedResource Include="Views\MiscFacebookShop\CategoryNavigation.cshtml" />
-    <EmbeddedResource Include="Views\MiscFacebookShop\Category.cshtml" />
-    <EmbeddedResource Include="Views\MiscFacebookShop\ProductBox.cshtml" />
-    <EmbeddedResource Include="Views\MiscFacebookShop\HomePageProducts.cshtml" />
-    <EmbeddedResource Include="Views\MiscFacebookShop\Footer.cshtml" />
-    <EmbeddedResource Include="Views\MiscFacebookShop\Header.cshtml" />
-    <EmbeddedResource Include="Views\MiscFacebookShop\SearchBox.cshtml" />
-    <EmbeddedResource Include="Views\MiscFacebookShop\Search.cshtml" />
-    <EmbeddedResource Include="Views\MiscFacebookShop\Configure.cshtml" />
-    <None Include="web.config" />
+    <Content Include="Views\MiscFacebookShop\Index.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\MiscFacebookShop\Layout.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\MiscFacebookShop\CategoryNavigation.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\MiscFacebookShop\Category.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\MiscFacebookShop\ProductBox.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\MiscFacebookShop\HomePageProducts.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\MiscFacebookShop\Footer.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\MiscFacebookShop\Header.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\MiscFacebookShop\SearchBox.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\MiscFacebookShop\Search.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\MiscFacebookShop\Configure.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="web.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Libraries\Nop.Core\Nop.Core.csproj">

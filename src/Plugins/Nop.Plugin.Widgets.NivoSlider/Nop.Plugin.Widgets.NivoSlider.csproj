@@ -90,10 +90,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Views\WidgetsNivoSlider\Configure.cshtml" />
+    <Content Include="Views\WidgetsNivoSlider\Configure.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Views\WidgetsNivoSlider\PublicInfo.cshtml" />
+    <Content Include="Views\WidgetsNivoSlider\PublicInfo.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\nivoslider\sample-images\banner1.jpg">
@@ -171,7 +175,9 @@
   <ItemGroup>
     <Content Include="Content\nivoslider\README" />
     <None Include="packages.config" />
-    <None Include="web.config" />
+    <Content Include="web.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Libraries\Nop.Core\Nop.Core.csproj">

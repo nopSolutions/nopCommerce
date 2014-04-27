@@ -91,7 +91,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                 model.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage_OverrideForStore = _settingService.SettingExists(payPalStandardPaymentSettings, x => x.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage, storeScope);
             }
 
-            return View("Nop.Plugin.Payments.PayPalStandard.Views.PaymentPayPalStandard.Configure", model);
+            return View("~/Plugins/Payments.PayPalStandard/Views/PaymentPayPalStandard/Configure.cshtml", model);
         }
 
         [HttpPost]
@@ -180,7 +180,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
         [ChildActionOnly]
         public ActionResult PaymentInfo()
         {
-            return View("Nop.Plugin.Payments.PayPalStandard.Views.PaymentPayPalStandard.PaymentInfo");
+            return View("~/Plugins/Payments.PayPalStandard/Views/PaymentPayPalStandard/PaymentInfo.cshtml");
         }
 
         [NonAction]

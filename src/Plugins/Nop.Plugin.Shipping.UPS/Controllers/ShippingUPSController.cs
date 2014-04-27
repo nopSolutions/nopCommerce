@@ -83,7 +83,7 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
                     }
                 }
 
-            return View("Nop.Plugin.Shipping.UPS.Views.ShippingUPS.Configure", model);
+            return View("~/Plugins/Shipping.UPS/Views/ShippingUPS/Configure.cshtml", model);
         }
 
         [HttpPost]

@@ -54,7 +54,7 @@ namespace Nop.Plugin.Payments.Manual.Controllers
                 model.AdditionalFeePercentage_OverrideForStore = _settingService.SettingExists(manualPaymentSettings, x => x.AdditionalFeePercentage, storeScope);
             }
 
-            return View("Nop.Plugin.Payments.Manual.Views.PaymentManual.Configure", model);
+            return View("~/Plugins/Payments.Manual/Views/PaymentManual/Configure.cshtml", model);
         }
 
         [HttpPost]
@@ -163,7 +163,7 @@ namespace Nop.Plugin.Payments.Manual.Controllers
             if (selectedYear != null)
                 selectedYear.Selected = true;
 
-            return View("Nop.Plugin.Payments.Manual.Views.PaymentManual.PaymentInfo", model);
+            return View("~/Plugins/Payments.Manual/Views/PaymentManual/PaymentInfo.cshtml", model);
         }
 
         [NonAction]

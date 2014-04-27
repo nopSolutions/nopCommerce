@@ -23,7 +23,8 @@ namespace Nop.Plugin.Shipping.AustraliaPost.Controllers
             var model = new AustraliaPostShippingModel();
             model.GatewayUrl = _australiaPostSettings.GatewayUrl;
             model.AdditionalHandlingCharge = _australiaPostSettings.AdditionalHandlingCharge;
-            return View("Nop.Plugin.Shipping.AustraliaPost.Views.ShippingAustraliaPost.Configure", model);
+
+            return View("~/Plugins/Shipping.AustraliaPost/Views/ShippingAustraliaPost/Configure.cshtml", model);
         }
 
         [HttpPost]
@@ -40,7 +41,7 @@ namespace Nop.Plugin.Shipping.AustraliaPost.Controllers
             _australiaPostSettings.AdditionalHandlingCharge = model.AdditionalHandlingCharge;
             _settingService.SaveSetting(_australiaPostSettings);
 
-            return View("Nop.Plugin.Shipping.AustraliaPost.Views.ShippingAustraliaPost.Configure", model);
+            return Configure();
         }
 
     }

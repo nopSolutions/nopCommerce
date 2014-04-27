@@ -1,8 +1,9 @@
 ﻿@model CategoryModel
 @{
-    Layout = "Nop.Plugin.Misc.FacebookShop.Views.MiscFacebookShop.Layout.cshtml";
+    Layout = "~/Plugins/Misc.FacebookShop/Views/MiscFacebookShop/Layout.cshtml";
 }
 @using Nop.Plugin.Misc.FacebookShop.Models;
+@using Nop.Plugin.Misc.FacebookShop.Extensions;
 <div class="page category-page">
     <div class="page-title">
         <h1>@Model.Name</h1>
@@ -44,7 +45,7 @@
                 @foreach (var item in Model.Products)
                 {
                     <div class="item-box">
-                        @Html.Partial("Nop.Plugin.Misc.FacebookShop.Views.MiscFacebookShop.ProductBox", item)
+                        @Html.Partial("~/Plugins/Misc.FacebookShop/Views/MiscFacebookShop/ProductBox.cshtml", item)
                     </div>
                 }
             </div>

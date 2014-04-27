@@ -34,7 +34,7 @@ namespace Nop.Plugin.ExternalAuth.OpenId.Controllers
         [ChildActionOnly]
         public ActionResult PublicInfo()
         {
-            return View("Nop.Plugin.ExternalAuth.OpenId.Views.ExternalAuthOpenId.PublicInfo");
+            return View("~/Plugins/ExternalAuth.OpenId/Views/ExternalAuthOpenId/PublicInfo.cshtml");
         }
 
         public ActionResult Login(string returnUrl)

@@ -62,8 +62,8 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
                 model.EcommerceScript_OverrideForStore = _settingService.SettingExists(googleAnalyticsSettings, x => x.EcommerceScript, storeScope);
                 model.EcommerceDetailScript_OverrideForStore = _settingService.SettingExists(googleAnalyticsSettings, x => x.EcommerceDetailScript, storeScope);
             }
-            
-            return View("Nop.Plugin.Widgets.GoogleAnalytics.Views.WidgetsGoogleAnalytics.Configure", model);
+
+            return View("~/Plugins/Widgets.GoogleAnalytics/Views/WidgetsGoogleAnalytics/Configure.cshtml", model);
         }
 
         [HttpPost]
@@ -139,7 +139,6 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
                 _logger.InsertLog(Core.Domain.Logging.LogLevel.Error, "Error creating scripts for google ecommerce tracking", ex.ToString());
             }
             return Content(globalScript);
-            //return View("Nop.Plugin.Widgets.GoogleAnalytics.Views.WidgetsGoogleAnalytics.PublicInfo", model);
         }
 
         private Order GetLastOrder()

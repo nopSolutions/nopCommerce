@@ -8,7 +8,7 @@ namespace Nop.Plugin.Misc.WebServices.Controllers
     {
         public ActionResult Configure()
         {
-            return View("Nop.Plugin.Misc.WebServices.Views.MiscWebServices.Configure");
+            return View("~/Plugins/Misc.WebServices/Views/MiscWebServices/Configure.cshtml");
         }
     }
 }

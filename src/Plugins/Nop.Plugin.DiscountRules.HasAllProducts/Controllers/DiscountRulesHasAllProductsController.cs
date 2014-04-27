@@ -52,7 +52,7 @@ namespace Nop.Plugin.DiscountRules.HasAllProducts.Controllers
             //add a prefix
             ViewData.TemplateInfo.HtmlFieldPrefix = string.Format("DiscountRulesHasAllProducts{0}", discountRequirementId.HasValue ? discountRequirementId.Value.ToString() : "0");
 
-            return View("Nop.Plugin.DiscountRules.HasAllProducts.Views.DiscountRulesHasAllProducts.Configure", model);
+            return View("~/Plugins/DiscountRules.HasAllProducts/Views/DiscountRulesHasAllProducts/Configure.cshtml", model);
         }
 
         [HttpPost]

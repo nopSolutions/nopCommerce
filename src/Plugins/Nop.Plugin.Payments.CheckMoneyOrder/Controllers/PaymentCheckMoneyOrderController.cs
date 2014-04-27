@@ -48,7 +48,7 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Controllers
                 model.AdditionalFeePercentage_OverrideForStore = _settingService.SettingExists(checkMoneyOrderPaymentSettings, x => x.AdditionalFeePercentage, storeScope);
             }
 
-            return View("Nop.Plugin.Payments.CheckMoneyOrder.Views.PaymentCheckMoneyOrder.Configure", model);
+            return View("~/Plugins/Payments.CheckMoneyOrder/Views/PaymentCheckMoneyOrder/Configure.cshtml", model);
         }
 
         [HttpPost]
@@ -102,7 +102,7 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Controllers
                 DescriptionText = checkMoneyOrderPaymentSettings.DescriptionText
             };
 
-            return View("Nop.Plugin.Payments.CheckMoneyOrder.Views.PaymentCheckMoneyOrder.PaymentInfo", model);
+            return View("~/Plugins/Payments.CheckMoneyOrder/Views/PaymentCheckMoneyOrder/PaymentInfo.cshtml", model);
         }
 
         [NonAction]

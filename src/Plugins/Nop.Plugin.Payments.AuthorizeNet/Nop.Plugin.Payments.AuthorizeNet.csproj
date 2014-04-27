@@ -198,8 +198,12 @@
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
     <None Include="Web References\net.authorize.api\Service.disco" />
-    <EmbeddedResource Include="Views\PaymentAuthorizeNet\Configure.cshtml" />
-    <EmbeddedResource Include="Views\PaymentAuthorizeNet\PaymentInfo.cshtml" />
+    <Content Include="Views\PaymentAuthorizeNet\Configure.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\PaymentAuthorizeNet\PaymentInfo.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="logo.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -220,7 +224,9 @@
     <None Include="Web References\net.authorize.api\ValidateCustomerPaymentProfileResponseType.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="web.config" />
+    <Content Include="web.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Description.txt">

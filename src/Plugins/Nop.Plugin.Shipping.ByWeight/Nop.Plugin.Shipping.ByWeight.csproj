@@ -133,7 +133,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Views\ShippingByWeight\Configure.cshtml" />
+    <Content Include="Views\ShippingByWeight\Configure.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="logo.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -141,10 +143,18 @@
     <Content Include="packages.config">
       <SubType>Designer</SubType>
     </Content>
-    <EmbeddedResource Include="Views\ShippingByWeight\EditPopup.cshtml" />
-    <EmbeddedResource Include="Views\ShippingByWeight\_CreateOrUpdate.cshtml" />
-    <EmbeddedResource Include="Views\ShippingByWeight\AddPopup.cshtml" />
-    <None Include="web.config" />
+    <Content Include="Views\ShippingByWeight\EditPopup.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\ShippingByWeight\_CreateOrUpdate.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\ShippingByWeight\AddPopup.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="web.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Description.txt">

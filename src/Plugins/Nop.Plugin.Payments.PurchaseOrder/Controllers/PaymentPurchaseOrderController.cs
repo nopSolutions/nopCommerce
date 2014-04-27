@@ -43,7 +43,7 @@ namespace Nop.Plugin.Payments.PurchaseOrder.Controllers
                 model.AdditionalFeePercentage_OverrideForStore = _settingService.SettingExists(purchaseOrderPaymentSettings, x => x.AdditionalFeePercentage, storeScope);
             }
 
-            return View("Nop.Plugin.Payments.PurchaseOrder.Views.PaymentPurchaseOrder.Configure", model);
+            return View("~/Plugins/Payments.PurchaseOrder/Views/PaymentPurchaseOrder/Configure.cshtml", model);
         }
 
         [HttpPost]
@@ -89,7 +89,8 @@ namespace Nop.Plugin.Payments.PurchaseOrder.Controllers
             //set postback values
             var form = this.Request.Form;
             model.PurchaseOrderNumber = form["PurchaseOrderNumber"];
-            return View("Nop.Plugin.Payments.PurchaseOrder.Views.PaymentPurchaseOrder.PaymentInfo", model);
+
+            return View("~/Plugins/Payments.PurchaseOrder/Views/PaymentPurchaseOrder/PaymentInfo.cshtml", model);
         }
 
         [NonAction]

@@ -77,8 +77,8 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
             var model = new ShippingByWeightListModel();
             //other settings
             model.LimitMethodsToCreated = _shippingByWeightSettings.LimitMethodsToCreated;
-            
-            return View("Nop.Plugin.Shipping.ByWeight.Views.ShippingByWeight.Configure", model);
+
+            return View("~/Plugins/Shipping.ByWeight/Views/ShippingByWeight/Configure.cshtml", model);
         }
 
         [HttpPost]
@@ -200,7 +200,7 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
             //states
             model.AvailableStates.Add(new SelectListItem() { Text = "*", Value = "0" });
 
-            return View("Nop.Plugin.Shipping.ByWeight.Views.ShippingByWeight.AddPopup", model);
+            return View("~/Plugins/Shipping.ByWeight/Views/ShippingByWeight/AddPopup.cshtml", model);
         }
         [HttpPost]
         public ActionResult AddPopup(string btnId, string formId, ShippingByWeightModel model)
@@ -227,7 +227,8 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
             ViewBag.RefreshPage = true;
             ViewBag.btnId = btnId;
             ViewBag.formId = formId;
-            return View("Nop.Plugin.Shipping.ByWeight.Views.ShippingByWeight.AddPopup", model);
+
+            return View("~/Plugins/Shipping.ByWeight/Views/ShippingByWeight/AddPopup.cshtml", model);
         }
 
         //edit
@@ -284,8 +285,8 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
             model.AvailableStates.Add(new SelectListItem() { Text = "*", Value = "0" });
             foreach (var s in states)
                 model.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (selectedState != null && s.Id == selectedState.Id) });
-            
-            return View("Nop.Plugin.Shipping.ByWeight.Views.ShippingByWeight.EditPopup", model);
+
+            return View("~/Plugins/Shipping.ByWeight/Views/ShippingByWeight/EditPopup.cshtml", model);
         }
         [HttpPost]
         public ActionResult EditPopup(string btnId, string formId, ShippingByWeightModel model)
@@ -314,7 +315,8 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
             ViewBag.RefreshPage = true;
             ViewBag.btnId = btnId;
             ViewBag.formId = formId;
-            return View("Nop.Plugin.Shipping.ByWeight.Views.ShippingByWeight.EditPopup", model);
+
+            return View("~/Plugins/Shipping.ByWeight/Views/ShippingByWeight/EditPopup.cshtml", model);
         }
     }
 }

@@ -74,8 +74,8 @@ namespace Nop.Plugin.Tax.CountryStateZip.Controllers
             var states = _stateProvinceService.GetStateProvincesByCountryId(countries.FirstOrDefault().Id);
             foreach (var s in states)
                 model.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString() });
-            
-            return View("Nop.Plugin.Tax.CountryStateZip.Views.TaxCountryStateZip.Configure", model);
+
+            return View("~/Plugins/Tax.CountryStateZip/Views/TaxCountryStateZip/Configure.cshtml", model);
         }
 
         [HttpPost]

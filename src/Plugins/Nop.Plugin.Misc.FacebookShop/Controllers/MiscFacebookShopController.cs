@@ -381,12 +381,12 @@ namespace Nop.Plugin.Misc.FacebookShop.Controllers
         [AdminAuthorize]
         public ActionResult Configure()
         {
-            return View("Nop.Plugin.Misc.FacebookShop.Views.MiscFacebookShop.Configure");
+            return View("~/Plugins/Misc.FacebookShop/Views/MiscFacebookShop/Configure.cshtml");
         }
 
         public ActionResult Index()
         {
-            return View("Nop.Plugin.Misc.FacebookShop.Views.MiscFacebookShop.Index");
+            return View("~/Plugins/Misc.FacebookShop/Views/MiscFacebookShop/Index.cshtml");
         }
 
         public ActionResult HomePageProducts()
@@ -396,7 +396,7 @@ namespace Nop.Plugin.Misc.FacebookShop.Controllers
             products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
 
             var model = PrepareProductOverviewModels(products).ToList();
-            return PartialView("Nop.Plugin.Misc.FacebookShop.Views.MiscFacebookShop.HomePageProducts", model);
+            return PartialView("~/Plugins/Misc.FacebookShop/Views/MiscFacebookShop/HomePageProducts.cshtml", model);
         }
 
         public ActionResult CategoryNavigation()
@@ -410,7 +410,7 @@ namespace Nop.Plugin.Misc.FacebookShop.Controllers
                 return PrepareCategorySimpleModels(0, null, 0, _catalogSettings.TopCategoryMenuSubcategoryLevelsToDisplay, true).ToList();
             });
 
-            return PartialView("Nop.Plugin.Misc.FacebookShop.Views.MiscFacebookShop.CategoryNavigation", model);
+            return PartialView("~/Plugins/Misc.FacebookShop/Views/MiscFacebookShop/CategoryNavigation.cshtml", model);
         }
 
         public ActionResult Category(int categoryId, CatalogPagingFilteringModel command)
@@ -506,7 +506,7 @@ namespace Nop.Plugin.Misc.FacebookShop.Controllers
 
             model.PagingFilteringContext.LoadPagedList(products);
 
-            return PartialView("Nop.Plugin.Misc.FacebookShop.Views.MiscFacebookShop.Category", model);
+            return PartialView("~/Plugins/Misc.FacebookShop/Views/MiscFacebookShop/Category.cshtml", model);
         }
         
         [ValidateInput(false)]
@@ -546,7 +546,8 @@ namespace Nop.Plugin.Misc.FacebookShop.Controllers
             }
 
             model.PagingFilteringContext.LoadPagedList(products);
-            return View("Nop.Plugin.Misc.FacebookShop.Views.MiscFacebookShop.Search", model);
+
+            return View("~/Plugins/Misc.FacebookShop/Views/MiscFacebookShop/Search.cshtml", model);
         }
 
         public ActionResult Footer()
@@ -556,7 +557,7 @@ namespace Nop.Plugin.Misc.FacebookShop.Controllers
                 StoreName = _storeContext.CurrentStore.GetLocalized(x => x.Name)
             };
 
-            return PartialView("Nop.Plugin.Misc.FacebookShop.Views.MiscFacebookShop.Footer", model);
+            return PartialView("~/Plugins/Misc.FacebookShop/Views/MiscFacebookShop/Footer.cshtml", model);
         }
 
         #endregion

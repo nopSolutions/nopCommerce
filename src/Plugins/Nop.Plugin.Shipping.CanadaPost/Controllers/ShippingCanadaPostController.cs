@@ -24,7 +24,8 @@ namespace Nop.Plugin.Shipping.CanadaPost.Controllers
             model.Url = _canadaPostSettings.Url;
             model.Port = _canadaPostSettings.Port;
             model.CustomerId = _canadaPostSettings.CustomerId;
-            return View("Nop.Plugin.Shipping.CanadaPost.Views.ShippingCanadaPost.Configure", model);
+
+            return View("~/Plugins/Shipping.CanadaPost/Views/ShippingCanadaPost/Configure.cshtml", model);
         }
 
         [HttpPost]
@@ -42,7 +43,7 @@ namespace Nop.Plugin.Shipping.CanadaPost.Controllers
             _canadaPostSettings.CustomerId = model.CustomerId;
             _settingService.SaveSetting(_canadaPostSettings);
 
-            return View("Nop.Plugin.Shipping.CanadaPost.Views.ShippingCanadaPost.Configure", model);
+            return View("~/Plugins/Shipping.CanadaPost/Views/ShippingCanadaPost/Configure.cshtml", model);
         }
 
     }

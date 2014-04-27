@@ -104,11 +104,16 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Views\PaymentPurchaseOrder\Configure.cshtml" />
-    <EmbeddedResource Include="Views\PaymentPurchaseOrder\PaymentInfo.cshtml" />
-    <EmbeddedResource Include="Views\PaymentPurchaseOrder\PaymentInfo.Mobile.cshtml" />
+    <Content Include="Views\PaymentPurchaseOrder\Configure.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\PaymentPurchaseOrder\PaymentInfo.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="packages.config" />
-    <None Include="web.config" />
+    <Content Include="web.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Description.txt">

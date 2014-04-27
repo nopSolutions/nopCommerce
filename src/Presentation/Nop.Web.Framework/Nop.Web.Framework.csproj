@@ -152,12 +152,6 @@
     <Compile Include="RemotePost.cs" />
     <Compile Include="Controllers\BasePaymentController.cs" />
     <Compile Include="Controllers\FormValueRequiredAttribute.cs" />
-    <Compile Include="EmbeddedViews\EmbeddedResourceVirtualFile.cs" />
-    <Compile Include="EmbeddedViews\EmbeddedViewMetadata.cs" />
-    <Compile Include="EmbeddedViews\EmbeddedViewResolver.cs" />
-    <Compile Include="EmbeddedViews\EmbeddedViewTable.cs" />
-    <Compile Include="EmbeddedViews\EmbeddedViewVirtualPathProvider.cs" />
-    <Compile Include="EmbeddedViews\IEmbeddedViewResolver.cs" />
     <Compile Include="Localization\LocalizedRoute.cs" />
     <Compile Include="Localization\LocalizedRouteExtensions.cs" />
     <Compile Include="Localization\LocalizedUrlExtenstions.cs" />

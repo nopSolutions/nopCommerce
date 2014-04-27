@@ -48,7 +48,7 @@ namespace Nop.Plugin.Payments.CashOnDelivery.Controllers
                 model.AdditionalFeePercentage_OverrideForStore = _settingService.SettingExists(cashOnDeliveryPaymentSettings, x => x.AdditionalFeePercentage, storeScope);
             }
 
-            return View("Nop.Plugin.Payments.CashOnDelivery.Views.PaymentCashOnDelivery.Configure", model);
+            return View("~/Plugins/Payments.CashOnDelivery/Views/PaymentCashOnDelivery/Configure.cshtml", model);
         }
 
         [HttpPost]
@@ -102,7 +102,7 @@ namespace Nop.Plugin.Payments.CashOnDelivery.Controllers
                 DescriptionText = cashOnDeliveryPaymentSettings.DescriptionText
             };
 
-            return View("Nop.Plugin.Payments.CashOnDelivery.Views.PaymentCashOnDelivery.PaymentInfo", model);
+            return View("~/Plugins/Payments.CashOnDelivery/Views/PaymentCashOnDelivery/PaymentInfo.cshtml", model);
         }
 
         [NonAction]

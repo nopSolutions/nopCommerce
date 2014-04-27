@@ -68,7 +68,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
                 model.ClientSecret_OverrideForStore = _settingService.SettingExists(facebookExternalAuthSettings, x => x.ClientSecret, storeScope);
             }
 
-            return View("Nop.Plugin.ExternalAuth.Facebook.Views.ExternalAuthFacebook.Configure", model);
+            return View("~/Plugins/ExternalAuth.Facebook/Views/ExternalAuthFacebook/Configure.cshtml", model);
         }
 
         [HttpPost]
@@ -112,7 +112,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
         [ChildActionOnly]
         public ActionResult PublicInfo()
         {
-            return View("Nop.Plugin.ExternalAuth.Facebook.Views.ExternalAuthFacebook.PublicInfo");
+            return View("~/Plugins/ExternalAuth.Facebook/Views/ExternalAuthFacebook/PublicInfo.cshtml");
         }
 
         [NonAction]

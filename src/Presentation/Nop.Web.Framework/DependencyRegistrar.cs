@@ -49,7 +49,6 @@ using Nop.Services.Tasks;
 using Nop.Services.Tax;
 using Nop.Services.Topics;
 using Nop.Services.Vendors;
-using Nop.Web.Framework.EmbeddedViews;
 using Nop.Web.Framework.Mvc.Routes;
 using Nop.Web.Framework.Themes;
 using Nop.Web.Framework.UI;
@@ -282,7 +281,6 @@ namespace Nop.Web.Framework
             builder.RegisterType<OpenAuthenticationService>().As<IOpenAuthenticationService>().InstancePerHttpRequest();
            
                 
-            builder.RegisterType<EmbeddedViewResolver>().As<IEmbeddedViewResolver>().SingleInstance();
             builder.RegisterType<RoutePublisher>().As<IRoutePublisher>().SingleInstance();
 
             //Register event consumers
