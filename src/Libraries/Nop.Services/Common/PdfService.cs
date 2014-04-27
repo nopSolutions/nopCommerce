@@ -982,7 +982,7 @@ namespace Nop.Services.Common
 
                 doc.Add(new Paragraph(String.Format("{0}. {1}", productNumber, productName), titleFont));
                 doc.Add(new Paragraph(" "));
-                doc.Add(new Paragraph(HtmlHelper.StripTags(HtmlHelper.ConvertHtmlToPlainText(productFullDescription)), font));
+                doc.Add(new Paragraph(HtmlHelper.StripTags(HtmlHelper.ConvertHtmlToPlainText(productFullDescription, decode: true)), font));
                 doc.Add(new Paragraph(" "));
 
                 if (product.ProductType == ProductType.SimpleProduct)
