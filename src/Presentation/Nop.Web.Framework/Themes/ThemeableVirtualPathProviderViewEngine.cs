@@ -44,9 +44,7 @@ namespace Nop.Web.Framework.Themes
             {
                 var newLocations = areaLocations.ToList();
                 newLocations.Insert(0, "~/Administration/Views/{1}/{0}.cshtml");
-                newLocations.Insert(0, "~/Administration/Views/{1}/{0}.vbhtml");
                 newLocations.Insert(0, "~/Administration/Views/Shared/{0}.cshtml");
-                newLocations.Insert(0, "~/Administration/Views/Shared/{0}.vbhtml");
                 areaLocations = newLocations.ToArray();
             }
 
