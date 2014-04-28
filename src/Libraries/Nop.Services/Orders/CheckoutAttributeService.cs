@@ -21,8 +21,9 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <remarks>
         /// {0} : store ID
+        /// {1} : >A value indicating whether we should exlude shippable attributes
         /// </remarks>
-        private const string CHECKOUTATTRIBUTES_ALL_KEY = "Nop.checkoutattribute.all-{0}";
+        private const string CHECKOUTATTRIBUTES_ALL_KEY = "Nop.checkoutattribute.all-{0}-{1}";
         /// <summary>
         /// Key for caching
         /// </summary>
@@ -115,10 +116,11 @@ namespace Nop.Services.Orders
         /// Gets all checkout attributes
         /// </summary>
         /// <param name="storeId">Store identifier</param>
+        /// <param name="excludeShippableAttributes">A value indicating whether we should exlude shippable attributes</param>
         /// <returns>Checkout attribute collection</returns>
-        public virtual IList<CheckoutAttribute> GetAllCheckoutAttributes(int storeId = 0)
+        public virtual IList<CheckoutAttribute> GetAllCheckoutAttributes(int storeId = 0, bool excludeShippableAttributes = false)
         {
-            string key = string.Format(CHECKOUTATTRIBUTES_ALL_KEY, storeId);
+            string key = string.Format(CHECKOUTATTRIBUTES_ALL_KEY, storeId, excludeShippableAttributes);
             return _cacheManager.Get(key, () =>
             {
                 var query = from ca in _checkoutAttributeRepository.Table
@@ -129,6 +131,11 @@ namespace Nop.Services.Orders
                 {
                     //store mapping
                     checkoutAttributes = checkoutAttributes.Where(ca => _storeMappingService.Authorize(ca)).ToList();
+                }
+                if (excludeShippableAttributes)
+                {
+                    //remove attributes which require shippable products
+                    checkoutAttributes = checkoutAttributes.RemoveShippableAttributes().ToList();
                 }
                 return checkoutAttributes;
             });

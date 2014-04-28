@@ -291,12 +291,7 @@ namespace Nop.Web.Controllers
 
             #region Checkout attributes
 
-            var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes(_storeContext.CurrentStore.Id);
-            if (!cart.RequiresShipping())
-            {
-                //remove attributes which require shippable products
-                checkoutAttributes = checkoutAttributes.RemoveShippableAttributes();
-            }
+            var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes(_storeContext.CurrentStore.Id, !cart.RequiresShipping());
             foreach (var attribute in checkoutAttributes)
             {
                 var caModel = new ShoppingCartModel.CheckoutAttributeModel()
@@ -786,12 +781,7 @@ namespace Nop.Web.Controllers
                 var checkoutAttributesExist = _cacheManager.Get(checkoutAttributesExistCacheKey,
                     () =>
                     {
-                        var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes(_storeContext.CurrentStore.Id);
-                        if (!requiresShipping)
-                        {
-                            //remove attributes which require shippable products
-                            checkoutAttributes = checkoutAttributes.RemoveShippableAttributes();
-                        }
+                        var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes(_storeContext.CurrentStore.Id, !requiresShipping);
                         return checkoutAttributes.Count > 0;
                     });
 
@@ -853,12 +843,7 @@ namespace Nop.Web.Controllers
                 throw new ArgumentNullException("form");
 
             string selectedAttributes = "";
-            var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes(_storeContext.CurrentStore.Id);
-            if (!cart.RequiresShipping())
-            {
-                //remove attributes which require shippable products
-                checkoutAttributes = checkoutAttributes.RemoveShippableAttributes();
-            }
+            var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes(_storeContext.CurrentStore.Id, !cart.RequiresShipping());
             foreach (var attribute in checkoutAttributes)
             {
                 string controlId = string.Format("checkout_attribute_{0}", attribute.Id);

@@ -750,12 +750,7 @@ namespace Nop.Services.Orders
                 var ca1Collection = _checkoutAttributeParser.ParseCheckoutAttributes(checkoutAttributes);
 
                 //existing checkout attributes
-                var ca2Collection = _checkoutAttributeService.GetAllCheckoutAttributes(_storeContext.CurrentStore.Id);
-                if (!shoppingCart.RequiresShipping())
-                {
-                    //remove attributes which require shippable products
-                    ca2Collection = ca2Collection.RemoveShippableAttributes();
-                }
+                var ca2Collection = _checkoutAttributeService.GetAllCheckoutAttributes(_storeContext.CurrentStore.Id, !shoppingCart.RequiresShipping());
                 foreach (var ca2 in ca2Collection)
                 {
                     if (ca2.IsRequired)
