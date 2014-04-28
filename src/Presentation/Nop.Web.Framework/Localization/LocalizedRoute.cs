@@ -116,18 +116,15 @@ namespace Nop.Web.Framework.Localization
         public override VirtualPathData GetVirtualPath(RequestContext requestContext, RouteValueDictionary values)
         {
             VirtualPathData data = base.GetVirtualPath(requestContext, values);
-            
-            if (DataSettingsHelper.DatabaseIsInstalled() && this.SeoFriendlyUrlsForLanguagesEnabled)
+
+            if (data != null && DataSettingsHelper.DatabaseIsInstalled() && this.SeoFriendlyUrlsForLanguagesEnabled)
             {
-                if (data != null)
+                string rawUrl = requestContext.HttpContext.Request.RawUrl;
+                string applicationPath = requestContext.HttpContext.Request.ApplicationPath;
+                if (rawUrl.IsLocalizedUrl(applicationPath, true))
                 {
-                    string rawUrl = requestContext.HttpContext.Request.RawUrl;
-                    string applicationPath = requestContext.HttpContext.Request.ApplicationPath;
-                    if (rawUrl.IsLocalizedUrl(applicationPath, true))
-                    {
-                        data.VirtualPath = string.Concat(rawUrl.GetLanguageSeoCodeFromUrl(applicationPath, true), "/",
-                                                         data.VirtualPath);
-                    }
+                    data.VirtualPath = string.Concat(rawUrl.GetLanguageSeoCodeFromUrl(applicationPath, true), "/",
+                        data.VirtualPath);
                 }
             }
             return data;
