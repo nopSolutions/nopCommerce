@@ -61,6 +61,9 @@ namespace Nop.Web.Controllers
                 return model;
             });
 
+            //no data?
+            if (cacheModel.Count == 0)
+                return Content("");
 
             //"RouteValues" property of widget models depends on "additionalData".
             //We need to clone the cached model before modifications (the updated one should not be cached)
@@ -82,6 +85,7 @@ namespace Nop.Web.Controllers
 
                 clonedModel.Add(clonedWidgetModel);
             }
+
             return PartialView(clonedModel);
         }
 
