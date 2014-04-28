@@ -345,10 +345,7 @@ namespace Nop.Web.Controllers
                             {
                                 #region Grouped product
 
-                                var associatedProducts = _productService.SearchProducts(
-                                    storeId: _storeContext.CurrentStore.Id,
-                                    visibleIndividuallyOnly: false,
-                                    parentGroupedProductId: product.Id);
+                                var associatedProducts = _productService.GetAssociatedProducts(product.Id, _storeContext.CurrentStore.Id);
 
                                 switch (associatedProducts.Count)
                                 {
@@ -1003,11 +1000,7 @@ namespace Nop.Web.Controllers
                 //ensure no circular references
                 if (!isAssociatedProduct)
                 {
-                    var associatedProducts = _productService.SearchProducts(
-                        storeId: _storeContext.CurrentStore.Id,
-                        visibleIndividuallyOnly: false,
-                        parentGroupedProductId: product.Id
-                        );
+                    var associatedProducts = _productService.GetAssociatedProducts(product.Id, _storeContext.CurrentStore.Id);
                     foreach (var associatedProduct in associatedProducts)
                         model.AssociatedProducts.Add(PrepareProductDetailsPageModel(associatedProduct, null, true));
                 }

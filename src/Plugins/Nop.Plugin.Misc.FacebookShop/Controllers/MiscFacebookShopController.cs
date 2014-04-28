@@ -171,10 +171,7 @@ namespace Nop.Plugin.Misc.FacebookShop.Controllers
                             {
                                 #region Grouped product
 
-                                var associatedProducts = _productService.SearchProducts(
-                                    storeId: _storeContext.CurrentStore.Id,
-                                    visibleIndividuallyOnly: false,
-                                    parentGroupedProductId: product.Id);
+                                var associatedProducts = _productService.GetAssociatedProducts(product.Id, _storeContext.CurrentStore.Id);
 
                                 switch (associatedProducts.Count)
                                 {

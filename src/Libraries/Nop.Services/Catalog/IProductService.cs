@@ -155,6 +155,17 @@ namespace Nop.Services.Catalog
             ProductSortingEnum orderBy = ProductSortingEnum.Position,
             bool showHidden = false);
 
+
+        /// <summary>
+        /// Gets associated products
+        /// </summary>
+        /// <param name="parentGroupedProductId">Parent product identifier (used with grouped products)</param>
+        /// <param name="storeId">Store identifier; 0 to load all records</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>Products</returns>
+        IList<Product> GetAssociatedProducts(int parentGroupedProductId,
+            int storeId = 0, bool showHidden = false);
+
         /// <summary>
         /// Update product review totals
         /// </summary>

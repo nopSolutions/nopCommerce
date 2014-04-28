@@ -188,11 +188,7 @@ namespace Nop.Plugin.Feed.Froogle
                         case ProductType.GroupedProduct:
                             {
                                 //grouped products could have several child products
-                                var associatedProducts = _productService.SearchProducts(
-                                    storeId: store.Id,
-                                    visibleIndividuallyOnly: false,
-                                    parentGroupedProductId: product1.Id
-                                    );
+                                var associatedProducts = _productService.GetAssociatedProducts(product1.Id, store.Id);
                                 productsToProcess.AddRange(associatedProducts);
                             }
                             break;

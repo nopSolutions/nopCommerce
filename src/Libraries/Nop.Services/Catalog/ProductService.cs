@@ -15,6 +15,8 @@ using Nop.Data;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
+using Nop.Services.Security;
+using Nop.Services.Stores;
 
 namespace Nop.Services.Catalog
 {
@@ -62,6 +64,8 @@ namespace Nop.Services.Catalog
         private readonly CommonSettings _commonSettings;
         private readonly CatalogSettings _catalogSettings;
         private readonly IEventPublisher _eventPublisher;
+        private readonly IAclService _aclService;
+        private readonly IStoreMappingService _storeMappingService;
 
         #endregion
 
@@ -93,6 +97,8 @@ namespace Nop.Services.Catalog
         /// <param name="commonSettings">Common settings</param>
         /// <param name="catalogSettings">Catalog settings</param>
         /// <param name="eventPublisher">Event published</param>
+        /// <param name="aclService">ACL service</param>
+        /// <param name="storeMappingService">Store mapping service</param>
         public ProductService(ICacheManager cacheManager,
             IRepository<Product> productRepository,
             IRepository<RelatedProduct> relatedProductRepository,
@@ -115,7 +121,9 @@ namespace Nop.Services.Catalog
             LocalizationSettings localizationSettings, 
             CommonSettings commonSettings,
             CatalogSettings catalogSettings,
-            IEventPublisher eventPublisher)
+            IEventPublisher eventPublisher,
+            IAclService aclService,
+            IStoreMappingService storeMappingService)
         {
             this._cacheManager = cacheManager;
             this._productRepository = productRepository;
@@ -140,6 +148,8 @@ namespace Nop.Services.Catalog
             this._commonSettings = commonSettings;
             this._catalogSettings = catalogSettings;
             this._eventPublisher = eventPublisher;
+            this._aclService = aclService;
+            this._storeMappingService = storeMappingService;
         }
 
         #endregion
@@ -834,7 +844,7 @@ namespace Nop.Services.Catalog
                 else if (orderBy == ProductSortingEnum.Position && manufacturerId > 0)
                 {
                     //manufacturer position
-                    query =
+                    query = 
                         query.OrderBy(p => p.ProductManufacturers.FirstOrDefault(pm => pm.ManufacturerId == manufacturerId).DisplayOrder);
                 }
                 else if (orderBy == ProductSortingEnum.Position && parentGroupedProductId > 0)
@@ -900,6 +910,51 @@ namespace Nop.Services.Catalog
             }
         }
 
+        /// <summary>
+        /// Gets associated products
+        /// </summary>
+        /// <param name="parentGroupedProductId">Parent product identifier (used with grouped products)</param>
+        /// <param name="storeId">Store identifier; 0 to load all records</param>
+         /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>Products</returns>
+        public virtual IList<Product> GetAssociatedProducts(int parentGroupedProductId,
+            int storeId = 0, bool showHidden = false)
+        {
+            var query = _productRepository.Table;
+            query = query.Where(x => x.ParentGroupedProductId == parentGroupedProductId);
+            if (!showHidden)
+            {
+                query = query.Where(x => x.Published);
+            }
+            if (!showHidden)
+            {
+                //The function 'CurrentUtcDateTime' is not supported by SQL Server Compact. 
+                //That's why we pass the date value
+                var nowUtc = DateTime.UtcNow;
+                //available dates
+                query = query.Where(p =>
+                    (!p.AvailableStartDateTimeUtc.HasValue || p.AvailableStartDateTimeUtc.Value < nowUtc) &&
+                    (!p.AvailableEndDateTimeUtc.HasValue || p.AvailableEndDateTimeUtc.Value > nowUtc));
+            }
+            query = query.Where(x => !x.Deleted);
+            query = query.OrderBy(x => x.DisplayOrder);
+
+            var products = query.ToList();
+
+            //ACLmapping
+            if (!showHidden)
+            {
+                products = products.Where(x => _aclService.Authorize(x)).ToList();
+            }
+            //Store mapping
+            if (!showHidden && storeId > 0)
+            {
+                products = products.Where(x => _storeMappingService.Authorize(x, storeId)).ToList();
+            }
+
+            return products;
+        }
+        
         /// <summary>
         /// Update product review totals
         /// </summary>

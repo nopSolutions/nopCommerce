@@ -500,7 +500,7 @@ namespace Nop.Services.Catalog
             //associated products
             if (copyAssociatedProducts)
             {
-                var associatedProducts = _productService.SearchProducts(parentGroupedProductId: product.Id, showHidden: true);
+                var associatedProducts = _productService.GetAssociatedProducts(product.Id, showHidden: true);
                 foreach (var associatedProduct in associatedProducts)
                 {
                     var associatedProductCopy = CopyProduct(associatedProduct, string.Format("Copy of {0}", associatedProduct.Name),
