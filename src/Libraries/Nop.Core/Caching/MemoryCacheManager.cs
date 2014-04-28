@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 namespace Nop.Core.Caching
 {
     /// <summary>
-    /// Represents a MemoryCacheCache
+    /// Represents a manager for caching between HTTP requests (long term caching)
     /// </summary>
     public partial class MemoryCacheManager : ICacheManager
     {

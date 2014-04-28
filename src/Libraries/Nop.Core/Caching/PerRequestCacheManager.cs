@@ -7,7 +7,7 @@ using System.Web;
 namespace Nop.Core.Caching
 {
     /// <summary>
-    /// Represents a NopStaticCache
+    /// Represents a manager for caching during an HTTP request (short term caching)
     /// </summary>
     public partial class PerRequestCacheManager : ICacheManager
     {
