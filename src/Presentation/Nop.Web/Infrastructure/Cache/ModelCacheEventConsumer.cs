@@ -531,6 +531,16 @@ namespace Nop.Web.Infrastructure.Cache
         public const string SITEMAP_SEO_MODEL_KEY = "Nop.pres.sitemap.seo-{0}-{1}-{2}";
         public const string SITEMAP_PATTERN_KEY = "Nop.pres.sitemap";
 
+        /// <summary>
+        /// Key for widget info
+        /// </summary>
+        /// <remarks>
+        /// {0} : current store ID
+        /// {1} : widget zone
+        /// </remarks>
+        public const string WIDGET_MODEL_KEY = "Nop.pres.widget-{0}-{1}";
+        public const string WIDGET_PATTERN_KEY = "Nop.pres.widget";
+
         private readonly ICacheManager _cacheManager;
         
         public ModelCacheEventConsumer()
@@ -614,6 +624,7 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(BLOG_PATTERN_KEY); //depends on BlogSettings.NumberOfTags
             _cacheManager.RemoveByPattern(NEWS_PATTERN_KEY); //depends on NewsSettings.MainPageNewsCount
             _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY); //depends on distinct sitemap settings
+            _cacheManager.RemoveByPattern(WIDGET_PATTERN_KEY); //depends on WidgetSettings and certain settings of widgets
 
         }
 
