@@ -30,6 +30,12 @@ namespace Nop.Services.Discounts
             return result;
         }
 
+        /// <summary>
+        /// Get preferred discount (with maximum discount value)
+        /// </summary>
+        /// <param name="discounts">A list of discounts to check</param>
+        /// <param name="amount">Amount</param>
+        /// <returns>Preferred discount</returns>
         public static Discount GetPreferredDiscount(this IList<Discount> discounts,
             decimal amount)
         {
@@ -48,6 +54,12 @@ namespace Nop.Services.Discounts
             return preferredDiscount;
         }
 
+        /// <summary>
+        /// Check whether a list of discounts already contains a certain discount intance
+        /// </summary>
+        /// <param name="discounts">A list of discounts</param>
+        /// <param name="discount">Discount to check</param>
+        /// <returns>Result</returns>
         public static bool ContainsDiscount(this IList<Discount> discounts,
             Discount discount)
         {
