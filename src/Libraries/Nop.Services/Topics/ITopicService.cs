@@ -25,8 +25,9 @@ namespace Nop.Services.Topics
         /// Gets a topic
         /// </summary>
         /// <param name="systemName">The topic system name</param>
+        /// <param name="storeId">Store identifier; pass 0 to ignore filtering by store and load the first one</param>
         /// <returns>Topic</returns>
-        Topic GetTopicBySystemName(string systemName);
+        Topic GetTopicBySystemName(string systemName, int storeId = 0);
 
         /// <summary>
         /// Gets all topics

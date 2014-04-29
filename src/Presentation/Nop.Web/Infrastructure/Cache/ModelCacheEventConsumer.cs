@@ -304,8 +304,9 @@ namespace Nop.Web.Infrastructure.Cache
         /// <remarks>
         /// {0} : topic system name
         /// {1} : language id
+        /// {2} : store id
         /// </remarks>
-        public const string TOPIC_SENAME_BY_SYSTEMNAME = "Nop.pres.topic.sename.bysystemname-{0}-{1}";
+        public const string TOPIC_SENAME_BY_SYSTEMNAME = "Nop.pres.topic.sename.bysystemname-{0}-{1}-{2}";
         public const string TOPIC_PATTERN_KEY = "Nop.pres.topic";
 
         /// <summary>

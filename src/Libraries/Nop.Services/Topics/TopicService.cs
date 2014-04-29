@@ -6,6 +6,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Topics;
 using Nop.Services.Events;
+using Nop.Services.Stores;
 
 namespace Nop.Services.Topics
 {
@@ -18,6 +19,7 @@ namespace Nop.Services.Topics
 
         private readonly IRepository<Topic> _topicRepository;
         private readonly IRepository<StoreMapping> _storeMappingRepository;
+        private readonly IStoreMappingService _storeMappingService;
         private readonly CatalogSettings _catalogSettings;
         private readonly IEventPublisher _eventPublisher;
 
@@ -27,11 +29,13 @@ namespace Nop.Services.Topics
 
         public TopicService(IRepository<Topic> topicRepository, 
             IRepository<StoreMapping> storeMappingRepository,
+            IStoreMappingService storeMappingService,
             CatalogSettings catalogSettings,
             IEventPublisher eventPublisher)
         {
             this._topicRepository = topicRepository;
             this._storeMappingRepository = storeMappingRepository;
+            this._storeMappingService = storeMappingService;
             this._catalogSettings = catalogSettings;
             this._eventPublisher = eventPublisher;
         }
@@ -72,8 +76,9 @@ namespace Nop.Services.Topics
         /// Gets a topic
         /// </summary>
         /// <param name="systemName">The topic system name</param>
+        /// <param name="storeId">Store identifier; pass 0 to ignore filtering by store and load the first one</param>
         /// <returns>Topic</returns>
-        public virtual Topic GetTopicBySystemName(string systemName)
+        public virtual Topic GetTopicBySystemName(string systemName, int storeId = 0)
         {
             if (String.IsNullOrEmpty(systemName))
                 return null;
@@ -81,7 +86,12 @@ namespace Nop.Services.Topics
             var query = _topicRepository.Table;
             query = query.Where(t => t.SystemName == systemName);
             query = query.OrderBy(t => t.Id);
-            return query.FirstOrDefault();
+            var topics = query.ToList();
+            if (storeId > 0)
+            {
+                topics = topics.Where(x => _storeMappingService.Authorize(x, storeId)).ToList();
+            }
+            return topics.FirstOrDefault();
         }
 
         /// <summary>

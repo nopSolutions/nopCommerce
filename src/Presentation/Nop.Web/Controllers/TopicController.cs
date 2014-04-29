@@ -98,11 +98,8 @@ namespace Nop.Web.Controllers
             var cacheModel = _cacheManager.Get(cacheKey, () =>
             {
                 //load by store
-                var topic = _topicService.GetTopicBySystemName(systemName);
+                var topic = _topicService.GetTopicBySystemName(systemName, _storeContext.CurrentStore.Id);
                 if (topic == null)
-                    return null;
-                //Store mapping
-                if (!_storeMappingService.Authorize(topic))
                     return null;
                 return PrepareTopicModel(topic);
             });
@@ -121,7 +118,7 @@ namespace Nop.Web.Controllers
             var cacheModel = _cacheManager.Get(cacheKey, () =>
             {
                 //load by store
-                var topic = _topicService.GetTopicBySystemName(systemName);
+                var topic = _topicService.GetTopicBySystemName(systemName, _storeContext.CurrentStore.Id);
                 if (topic == null)
                     return null;
                 //Store mapping

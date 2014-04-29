@@ -247,14 +247,15 @@ namespace Nop.Web.Extensions
         public static string GetTopicSeName<T>(this HtmlHelper<T> html, string systemName)
         {
             var workContext = EngineContext.Current.Resolve<IWorkContext>();
+            var storeContext = EngineContext.Current.Resolve<IStoreContext>();
 
             //static cache manager
             var cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
-            var cacheKey = string.Format(ModelCacheEventConsumer.TOPIC_SENAME_BY_SYSTEMNAME, systemName, workContext.WorkingLanguage.Id);
+            var cacheKey = string.Format(ModelCacheEventConsumer.TOPIC_SENAME_BY_SYSTEMNAME, systemName, workContext.WorkingLanguage.Id, storeContext.CurrentStore.Id);
             var cachedSeName = cacheManager.Get(cacheKey, () =>
             {
                 var topicService = EngineContext.Current.Resolve<ITopicService>();
-                var topic = topicService.GetTopicBySystemName(systemName);
+                var topic = topicService.GetTopicBySystemName(systemName, storeContext.CurrentStore.Id);
                 if (topic == null)
                     return "";
 
