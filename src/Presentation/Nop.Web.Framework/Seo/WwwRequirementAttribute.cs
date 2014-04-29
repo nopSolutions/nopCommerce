@@ -24,6 +24,10 @@ namespace Nop.Web.Framework.Seo
             if (!String.Equals(filterContext.HttpContext.Request.HttpMethod, "GET", StringComparison.OrdinalIgnoreCase))
                 return;
 
+            //ignore this rule for localhost
+            if (filterContext.HttpContext.Request.IsLocal)
+                return;
+
             if (!DataSettingsHelper.DatabaseIsInstalled())
                 return;
             var seoSettings = EngineContext.Current.Resolve<SeoSettings>();
