@@ -106,27 +106,7 @@ namespace Nop.Services.Catalog
             }
             return allowedDiscounts;
         }
-
-        /// <summary>
-        /// Gets a preferred discount
-        /// </summary>
-        /// <param name="product">Product</param>
-        /// <param name="customer">Customer</param>
-        /// <param name="additionalCharge">Additional charge</param>
-        /// <param name="quantity">Product quantity</param>
-        /// <returns>Preferred discount</returns>
-        protected virtual Discount GetPreferredDiscount(Product product,
-            Customer customer, decimal additionalCharge = decimal.Zero, int quantity = 1)
-        {
-            if (_catalogSettings.IgnoreDiscounts)
-                return null;
-
-            var allowedDiscounts = GetAllowedDiscounts(product, customer);
-            decimal finalPriceWithoutDiscount = GetFinalPrice(product, customer, additionalCharge, false, quantity);
-            var preferredDiscount = allowedDiscounts.GetPreferredDiscount(finalPriceWithoutDiscount);
-            return preferredDiscount;
-        }
-
+        
         /// <summary>
         /// Gets a tier price
         /// </summary>
@@ -332,12 +312,21 @@ namespace Nop.Services.Catalog
             if (product.CustomerEntersPrice)
                 return appliedDiscountAmount;
 
-            appliedDiscount = GetPreferredDiscount(product, customer, additionalCharge, quantity);
+            //discount are disabled
+            if (_catalogSettings.IgnoreDiscounts)
+                return appliedDiscountAmount;
+
+            var allowedDiscounts = GetAllowedDiscounts(product, customer);
+
+            //no discounts
+            if (allowedDiscounts.Count == 0)
+                return appliedDiscountAmount;
+
+            decimal finalPriceWithoutDiscount = GetFinalPrice(product, customer, additionalCharge, false, quantity);
+            appliedDiscount = allowedDiscounts.GetPreferredDiscount(finalPriceWithoutDiscount);
+
             if (appliedDiscount != null)
-            {
-                decimal finalPriceWithoutDiscount = GetFinalPrice(product, customer, additionalCharge, false, quantity);
                 appliedDiscountAmount = appliedDiscount.GetDiscountAmount(finalPriceWithoutDiscount);
-            }
 
             return appliedDiscountAmount;
         }
