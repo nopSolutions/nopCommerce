@@ -297,6 +297,14 @@ namespace Nop.Services.Tax
             decimal price, bool includingTax, Customer customer,
             bool priceIncludesTax, out decimal taxRate)
         {
+            //no need to calculate tax rate if passed "price" is 0
+            if (price == decimal.Zero)
+            {
+                taxRate = decimal.Zero;
+                return taxRate;
+            }
+
+
             bool isTaxable;
             GetTaxRate(product, taxCategoryId, customer, out taxRate, out isTaxable);
 
