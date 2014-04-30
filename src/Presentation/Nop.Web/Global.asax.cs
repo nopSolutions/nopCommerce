@@ -3,7 +3,6 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Web;
-using System.Web.Hosting;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.WebPages;
@@ -13,6 +12,7 @@ using Nop.Core.Data;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Common;
 using Nop.Core.Infrastructure;
+using Nop.Core.Infrastructure.DependencyManagement;
 using Nop.Services.Logging;
 using Nop.Services.Tasks;
 using Nop.Web.Framework;
@@ -141,9 +141,8 @@ namespace Nop.Web
             //dispose registered resources
             //we do not register AutofacRequestLifetimeHttpModule as IHttpModule 
             //because it disposes resources before this Application_EndRequest method is called
-            //and in this case the code above will throw an exception
-            //UPDATE: we cannot do it. For more info see the following forum topic - http://www.nopcommerce.com/boards/t/22456/30-changeset-3db3868edcf2-loaderlock-was-detected.aspx
-            //AutofacRequestLifetimeHttpModule.ContextEndRequest(sender, e);
+            //and in this case the code in Application_EndRequest of Global.asax will throw an exception
+            AutofacRequestLifetimeHttpModule.ContextEndRequest(sender, e);
         }
 
         protected void Application_AuthenticateRequest(object sender, EventArgs e)

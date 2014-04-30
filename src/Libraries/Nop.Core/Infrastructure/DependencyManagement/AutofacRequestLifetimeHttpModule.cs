@@ -69,9 +69,18 @@ namespace Nop.Core.Infrastructure.DependencyManagement
 
         public static void ContextEndRequest(object sender, EventArgs e)
         {
-            ILifetimeScope lifetimeScope = LifetimeScope;
-            if (lifetimeScope != null)
-                lifetimeScope.Dispose();
+            try
+            {
+                //try-catch here
+                //For more info see the following forum topic - http://www.nopcommerce.com/boards/t/22456/30-changeset-3db3868edcf2-loaderlock-was-detected.aspx
+
+                ILifetimeScope lifetimeScope = LifetimeScope;
+                if (lifetimeScope != null)
+                    lifetimeScope.Dispose();
+            }
+            catch (Exception exc)
+            {
+            }
         }
 
         static ILifetimeScope InitializeLifetimeScope(Action<ContainerBuilder> configurationAction, ILifetimeScope container)
