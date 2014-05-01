@@ -302,10 +302,6 @@ namespace Nop.Web.Infrastructure
             
 
             //customer
-            routes.MapLocalizedRoute("CustomerMyAccount",
-                            "customer/myaccount",
-                            new { controller = "Customer", action = "MyAccount" },
-                            new[] { "Nop.Web.Controllers" });
             routes.MapLocalizedRoute("CustomerInfo",
                             "customer/info",
                             new { controller = "Customer", action = "Info" },
