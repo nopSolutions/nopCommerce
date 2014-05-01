@@ -215,7 +215,7 @@ namespace Nop.Web.Framework.UI
             if (!bundleFiles.HasValue)
             {
                 //use setting if no value is specified
-                bundleFiles = _seoSettings.EnableJsBundling;
+                bundleFiles = _seoSettings.EnableJsBundling && BundleTable.EnableOptimizations;
             }
             if (bundleFiles.Value)
             {
@@ -316,7 +316,7 @@ namespace Nop.Web.Framework.UI
             if (!bundleFiles.HasValue)
             {
                 //use setting if no value is specified
-                bundleFiles = _seoSettings.EnableCssBundling;
+                bundleFiles = _seoSettings.EnableCssBundling && BundleTable.EnableOptimizations;
             }
             if (bundleFiles.Value)
             {
