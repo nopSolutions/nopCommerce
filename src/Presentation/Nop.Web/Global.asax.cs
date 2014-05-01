@@ -20,7 +20,6 @@ using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Routes;
 using Nop.Web.Framework.Themes;
 using StackExchange.Profiling;
-using StackExchange.Profiling.MVCHelpers;
 
 namespace Nop.Web
 {
@@ -87,11 +86,6 @@ namespace Nop.Web
             AreaRegistration.RegisterAllAreas();
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
-            //StackExchange profiler
-            if (CanPerformProfilingAction())
-            {
-                GlobalFilters.Filters.Add(new ProfilingActionFilter());
-            }
             
             //fluent validation
             DataAnnotationsModelValidatorProvider.AddImplicitRequiredAttributeForValueTypes = false;

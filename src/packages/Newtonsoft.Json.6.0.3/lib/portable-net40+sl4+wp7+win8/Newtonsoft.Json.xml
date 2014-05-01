@@ -162,6 +162,11 @@
             Get or set how floating point numbers, e.g. 1.0 and 9.9, are parsed when reading JSON text.
             </summary>
         </member>
+        <member name="P:Newtonsoft.Json.JsonReader.DateFormatString">
+            <summary>
+            Get or set how custom date formatted strings are parsed when reading JSON.
+            </summary>
+        </member>
         <member name="P:Newtonsoft.Json.JsonReader.MaxDepth">
             <summary>
             Gets or sets the maximum depth allowed when reading JSON. Reading past this depth will throw a <see cref="T:Newtonsoft.Json.JsonReaderException"/>.
@@ -1517,7 +1522,7 @@
             <summary>
             Ignore members where the member value is the same as the member's default value when serializing objects
             so that is is not written to JSON.
-            This option will ignore all default values (e.g. <c>null</c> for objects and nullable typesl; <c>0</c> for integers,
+            This option will ignore all default values (e.g. <c>null</c> for objects and nullable types; <c>0</c> for integers,
             decimals and floating point numbers; and <c>false</c> for booleans). The default value ignored can be changed by
             placing the <see cref="T:System.ComponentModel.DefaultValueAttribute"/> on the property.
             </summary>
@@ -2671,6 +2676,12 @@
             </summary>
             <value>The constructor handling.</value>
         </member>
+        <member name="P:Newtonsoft.Json.JsonSerializer.MetadataPropertyHandling">
+            <summary>
+            Gets or sets how metadata properties are used during deserialization.
+            </summary>
+            <value>The metadata properties handling.</value>
+        </member>
         <member name="P:Newtonsoft.Json.JsonSerializer.Converters">
             <summary>
             Gets a collection <see cref="T:Newtonsoft.Json.JsonConverter"/> that will be used during serialization.
@@ -2806,6 +2817,12 @@
             Gets or sets how type name writing and reading is handled by the serializer.
             </summary>
             <value>The type name handling.</value>
+        </member>
+        <member name="P:Newtonsoft.Json.JsonSerializerSettings.MetadataPropertyHandling">
+            <summary>
+            Gets or sets how metadata properties are used during deserialization.
+            </summary>
+            <value>The metadata properties handling.</value>
         </member>
         <member name="P:Newtonsoft.Json.JsonSerializerSettings.TypeNameAssemblyFormat">
             <summary>
@@ -5385,6 +5402,11 @@
             true if the next token was read successfully; false if there are no more tokens to read.
             </returns>
         </member>
+        <member name="P:Newtonsoft.Json.Linq.JTokenReader.Path">
+            <summary>
+            Gets the path of the current JSON token. 
+            </summary>
+        </member>
         <member name="T:Newtonsoft.Json.Linq.JTokenType">
             <summary>
             Specifies the type of token.
@@ -5711,6 +5733,21 @@
             All public and private fields are serialized. Members can be excluded using <see cref="T:Newtonsoft.Json.JsonIgnoreAttribute"/> or <see cref="!:NonSerializedAttribute"/>.
             This member serialization mode can also be set by marking the class with <see cref="!:SerializableAttribute"/>
             and setting IgnoreSerializableAttribute on <see cref="T:Newtonsoft.Json.Serialization.DefaultContractResolver"/> to false.
+            </summary>
+        </member>
+        <member name="T:Newtonsoft.Json.MetadataPropertyHandling">
+            <summary>
+            Specifies metadata property handling options for the <see cref="T:Newtonsoft.Json.JsonSerializer"/>.
+            </summary>
+        </member>
+        <member name="F:Newtonsoft.Json.MetadataPropertyHandling.Default">
+            <summary>
+            Read metadata properties located at the start of a JSON object.
+            </summary>
+        </member>
+        <member name="F:Newtonsoft.Json.MetadataPropertyHandling.ReadAhead">
+            <summary>
+            Read metadata properties located anywhere in a JSON object. Note that this setting will impact performance.
             </summary>
         </member>
         <member name="T:Newtonsoft.Json.MissingMemberHandling">
@@ -7441,27 +7478,6 @@
             <param name="value">The object to locate in the sequence</param>
             <param name="comparer">An equality comparer to compare values.</param>
             <returns>The zero-based index of the first occurrence of value within the entire sequence, if found; otherwise, –1.</returns>
-        </member>
-        <member name="M:Newtonsoft.Json.Utilities.ConvertUtils.Convert(System.Object,System.Globalization.CultureInfo,System.Type)">
-            <summary>
-            Converts the value to the specified type.
-            </summary>
-            <param name="initialValue">The value to convert.</param>
-            <param name="culture">The culture to use when converting.</param>
-            <param name="targetType">The type to convert the value to.</param>
-            <returns>The converted type.</returns>
-        </member>
-        <member name="M:Newtonsoft.Json.Utilities.ConvertUtils.TryConvert(System.Object,System.Globalization.CultureInfo,System.Type,System.Object@)">
-            <summary>
-            Converts the value to the specified type.
-            </summary>
-            <param name="initialValue">The value to convert.</param>
-            <param name="culture">The culture to use when converting.</param>
-            <param name="targetType">The type to convert the value to.</param>
-            <param name="convertedValue">The converted value if the conversion was successful or the default value of <c>T</c> if it failed.</param>
-            <returns>
-            	<c>true</c> if <c>initialValue</c> was converted successfully; otherwise, <c>false</c>.
-            </returns>
         </member>
         <member name="M:Newtonsoft.Json.Utilities.ConvertUtils.ConvertOrCast(System.Object,System.Globalization.CultureInfo,System.Type)">
             <summary>
