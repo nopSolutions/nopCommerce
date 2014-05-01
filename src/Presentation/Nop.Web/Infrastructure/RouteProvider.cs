@@ -14,10 +14,13 @@ namespace Nop.Web.Infrastructure
                             "",
                             new { controller = "Home", action = "Index"},
                             new[] { "Nop.Web.Controllers" });
-            //install
-            routes.MapRoute("Installation",
-                            "install",
-                            new { controller = "Install", action = "Index" },
+
+            //widgets
+            //we have this route for performance optimization because named routes are MUCH faster than usual Html.Action(...)
+            //and this route is highly used
+            routes.MapRoute("WidgetsByZone",
+                            "widgetsbyzone/",
+                            new { controller = "Widget", action = "WidgetsByZone" },
                             new[] { "Nop.Web.Controllers" });
 
             //products
@@ -593,6 +596,7 @@ namespace Nop.Web.Infrastructure
                             "producttag/all/",
                             new { controller = "Catalog", action = "ProductTagsAll" },
                             new[] { "Nop.Web.Controllers" });
+
             #region Product tag URL fix
             //in versions 2.00-2.65 we had typo in producttag URLs ("productag" instead of "producttag")
             //we should support old "buggy" URLs
@@ -616,12 +620,6 @@ namespace Nop.Web.Infrastructure
             routes.MapLocalizedRoute("ProductSearchAutoComplete",
                             "catalog/searchtermautocomplete",
                             new { controller = "Catalog", action = "SearchTermAutoComplete" },
-                            new[] { "Nop.Web.Controllers" });
-
-            //config
-            routes.MapLocalizedRoute("Config",
-                            "config",
-                            new { controller = "Common", action = "Config" },
                             new[] { "Nop.Web.Controllers" });
 
             //some AJAX links
@@ -663,6 +661,12 @@ namespace Nop.Web.Infrastructure
                             new { controller = "Common", action = "RobotsTextFile" },
                             new[] { "Nop.Web.Controllers" });
 
+            //install
+            routes.MapRoute("Installation",
+                            "install",
+                            new { controller = "Install", action = "Index" },
+                            new[] { "Nop.Web.Controllers" });
+            
             //page not found
             routes.MapLocalizedRoute("PageNotFound",
                             "page-not-found",

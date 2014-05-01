@@ -334,26 +334,6 @@ namespace Nop.Web.Controllers
                 returnUrl = Url.RouteUrl("HomePage");
             return Redirect(returnUrl);
         }
-
-        //Configuration page (used on mobile devices)
-        [ChildActionOnly]
-        public ActionResult ConfigButton()
-        {
-            var langModel = PrepareLanguageSelectorModel();
-            var currModel = PrepareCurrencySelectorModel();
-            var taxModel = PrepareTaxTypeSelectorModel();
-            //should we display the button?
-            if (langModel.AvailableLanguages.Count > 1 ||
-                currModel.AvailableCurrencies.Count > 1 ||
-                taxModel.Enabled)
-                return PartialView();
-            else
-                return Content("");
-        }
-        public ActionResult Config()
-        {
-            return View();
-        }
         
         //footer
         [ChildActionOnly]
