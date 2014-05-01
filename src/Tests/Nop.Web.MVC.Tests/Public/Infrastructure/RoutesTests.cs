@@ -96,7 +96,6 @@ namespace Nop.Web.MVC.Tests.Public.Infrastructure
             "~/passwordrecovery/".ShouldMapTo<CustomerController>(c => c.PasswordRecovery());
             "~/passwordrecovery/confirm".ShouldMapTo<CustomerController>(c => c.PasswordRecoveryConfirm(null, null));
 
-            "~/customer/myaccount/".ShouldMapTo<CustomerController>(c => c.MyAccount());
             "~/customer/info/".ShouldMapTo<CustomerController>(c => c.Info());
             "~/customer/addresses/".ShouldMapTo<CustomerController>(c => c.Addresses());
             "~/customer/orders/".ShouldMapTo<CustomerController>(c => c.Orders());
@@ -169,7 +168,6 @@ namespace Nop.Web.MVC.Tests.Public.Infrastructure
             "~/contactus".ShouldMapTo<CommonController>(c => c.ContactUs());
             "~/sitemap".ShouldMapTo<CommonController>(c => c.Sitemap());
             "~/sitemapseo".ShouldMapTo<CommonController>(c => c.SitemapSeo());
-            "~/config".ShouldMapTo<CommonController>(c => c.Config());
         }
 
         [Test]
