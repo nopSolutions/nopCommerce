@@ -55,32 +55,5 @@ namespace Nop.Core.Tests.Fakes
         {
             return FindClassesOfType(typeof(T), onlyConcreteClasses);
         }
-
-
-
-
-
-
-
-
-        public IEnumerable<Type> FindClassesOfType<T, TAssemblyAttribute>(bool onlyConcreteClasses = true) where TAssemblyAttribute : Attribute
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<Assembly> FindAssembliesWithAttribute<T>()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<Assembly> FindAssembliesWithAttribute<T>(IEnumerable<Assembly> assemblies)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<Assembly> FindAssembliesWithAttribute<T>(DirectoryInfo assemblyPath)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
