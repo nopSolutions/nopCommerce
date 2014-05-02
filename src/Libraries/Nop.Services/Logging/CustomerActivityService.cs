@@ -6,6 +6,7 @@ using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Logging;
 using Nop.Data;
 
@@ -71,6 +72,50 @@ namespace Nop.Services.Logging
 
         #endregion
 
+        #region Nested classes
+
+        [Serializable]
+        public class ActivityLogTypeForCaching
+        {
+            public int Id { get; set; }
+            public string SystemKeyword { get; set; }
+            public string Name { get; set; }
+            public bool Enabled { get; set; }
+        }
+
+        #endregion
+
+        #region Utitlies
+
+        /// <summary>
+        /// Gets all activity log types (class for caching)
+        /// </summary>
+        /// <returns>Activity log types</returns>
+        protected virtual IList<ActivityLogTypeForCaching> GetAllActivityTypesCached()
+        {
+            //cache
+            string key = string.Format(ACTIVITYTYPE_ALL_KEY);
+            return _cacheManager.Get(key, () =>
+            {
+                var result = new List<ActivityLogTypeForCaching>();
+                var activityLogTypes = GetAllActivityTypes();
+                foreach (var alt in activityLogTypes)
+                {
+                    var altForCaching = new ActivityLogTypeForCaching()
+                    {
+                        Id = alt.Id,
+                        SystemKeyword = alt.SystemKeyword,
+                        Name = alt.Name,
+                        Enabled = alt.Enabled
+                    };
+                    result.Add(altForCaching);
+                }
+                return result;
+            });
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -111,24 +156,20 @@ namespace Nop.Services.Logging
             _activityLogTypeRepository.Delete(activityLogType);
             _cacheManager.RemoveByPattern(ACTIVITYTYPE_PATTERN_KEY);
         }
-        
+
         /// <summary>
         /// Gets all activity log type items
         /// </summary>
         /// <returns>Activity log type collection</returns>
         public virtual IList<ActivityLogType> GetAllActivityTypes()
         {
-            string key = string.Format(ACTIVITYTYPE_ALL_KEY);
-            return _cacheManager.Get(key, () =>
-            {
-                var query = from alt in _activityLogTypeRepository.Table
-                            orderby alt.Name
-                            select alt;
-                var activityLogTypes = query.ToList();
-                return activityLogTypes;
-            });
+            var query = from alt in _activityLogTypeRepository.Table
+                orderby alt.Name
+                select alt;
+            var activityLogTypes = query.ToList();
+            return activityLogTypes;
         }
-        
+
         /// <summary>
         /// Gets an activity log type item
         /// </summary>
@@ -170,7 +211,7 @@ namespace Nop.Services.Logging
             if (customer == null)
                 return null;
 
-            var activityTypes = GetAllActivityTypes();
+            var activityTypes = GetAllActivityTypesCached();
             var activityType = activityTypes.ToList().Find(at => at.SystemKeyword == systemKeyword);
             if (activityType == null || !activityType.Enabled)
                 return null;
@@ -182,7 +223,7 @@ namespace Nop.Services.Logging
             
 
             var activity = new ActivityLog();
-            activity.ActivityLogType = activityType;
+            activity.ActivityLogTypeId = activityType.Id;
             activity.Customer = customer;
             activity.Comment = comment;
             activity.CreatedOnUtc = DateTime.UtcNow;

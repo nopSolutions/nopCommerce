@@ -89,7 +89,6 @@ namespace Nop.Admin.Controllers
 
 
             foreach (var at in _customerActivityService.GetAllActivityTypes()
-                .OrderBy(x=>x.Name)
                 .Select(x =>
                 {
                     return new SelectListItem()

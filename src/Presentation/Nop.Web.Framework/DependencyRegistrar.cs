@@ -244,7 +244,11 @@ namespace Nop.Web.Framework
             builder.RegisterType<TaxCategoryService>().As<ITaxCategoryService>().InstancePerHttpRequest();
 
             builder.RegisterType<DefaultLogger>().As<ILogger>().InstancePerHttpRequest();
-            builder.RegisterType<CustomerActivityService>().As<ICustomerActivityService>().InstancePerHttpRequest();
+
+            //pass MemoryCacheManager as cacheManager (cache settings between requests)
+            builder.RegisterType<CustomerActivityService>().As<ICustomerActivityService>()
+                .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
+                .InstancePerHttpRequest();
 
             if (!String.IsNullOrEmpty(ConfigurationManager.AppSettings["UseFastInstallationService"]) &&
                 Convert.ToBoolean(ConfigurationManager.AppSettings["UseFastInstallationService"]))
