@@ -30,7 +30,6 @@ using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Infrastructure;
-using Nop.Core.IO;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
@@ -4784,10 +4783,6 @@ namespace Nop.Services.Installation
                     EuVatUseWebService = false,
                     EuVatAssumeValid = false,
                     EuVatEmailAdminWhenNewVatSubmitted = false
-                });
-
-            settingService.SaveSetting(new FileSystemSettings()
-                {
                 });
 
             settingService.SaveSetting(new DateTimeSettings()

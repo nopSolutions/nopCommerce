@@ -221,7 +221,6 @@
     <Compile Include="Domain\StoreInformationSettings.cs" />
     <Compile Include="Data\IRepository.cs" />
     <Compile Include="Infrastructure\IStartupTask.cs" />
-    <Compile Include="IPersistentCollection.cs" />
     <Compile Include="IWebHelper.cs" />
     <Compile Include="Domain\Security\DefaultPermissionRecord.cs" />
     <Compile Include="Domain\Security\PermissionRecord.cs" />
@@ -284,7 +283,6 @@
     <Compile Include="Html\CodeFormatter\VisualBasicFormat.cs" />
     <Compile Include="Html\HtmlHelper.cs" />
     <Compile Include="Html\ResolveLinksHelper.cs" />
-    <Compile Include="PersistentCollection.cs" />
     <Compile Include="Plugins\BasePlugin.cs" />
     <Compile Include="Plugins\PluginExtensions.cs" />
     <Compile Include="Plugins\PluginFileParser.cs" />
@@ -323,11 +321,6 @@
     <Compile Include="Domain\Catalog\SpecificationAttribute.cs" />
     <Compile Include="Domain\Catalog\SpecificationAttributeOption.cs" />
     <Compile Include="Domain\Catalog\TierPrice.cs" />
-    <Compile Include="IO\FileSystemSettings.cs" />
-    <Compile Include="IO\FileSystemStorageProvider.cs" />
-    <Compile Include="IO\IStorageFile.cs" />
-    <Compile Include="IO\IStorageFolder.cs" />
-    <Compile Include="IO\IStorageProvider.cs" />
     <Compile Include="Domain\Customers\PasswordFormat.cs" />
     <Compile Include="NopVersion.cs" />
     <Compile Include="WebHelper.cs" />
