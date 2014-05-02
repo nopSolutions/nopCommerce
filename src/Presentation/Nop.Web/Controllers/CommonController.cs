@@ -263,6 +263,10 @@ namespace Nop.Web.Controllers
         public ActionResult LanguageSelector()
         {
             var model = PrepareLanguageSelectorModel();
+
+            if (model.AvailableLanguages.Count == 1)
+                Content("");
+
             return PartialView(model);
         }
         public ActionResult SetLanguage(int langid, string returnUrl = "")
@@ -297,6 +301,10 @@ namespace Nop.Web.Controllers
         public ActionResult CurrencySelector()
         {
             var model = PrepareCurrencySelectorModel();
+
+            if (model.AvailableCurrencies.Count == 1)
+                Content("");
+
             return PartialView(model);
         }
         public ActionResult SetCurrency(int customerCurrency, string returnUrl = "")

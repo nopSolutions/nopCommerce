@@ -8,7 +8,6 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Polls;
 using Nop.Services.Localization;
 using Nop.Services.Polls;
-using Nop.Web.Framework.Controllers;
 using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Polls;
 
@@ -167,6 +166,10 @@ namespace Nop.Web.Controllers
                 pollModel.AlreadyVoted = _pollService.AlreadyVoted(pollModel.Id, _workContext.CurrentCustomer.Id);
                 model.Add(pollModel);
             }
+
+            if (model.Count == 0)
+                Content("");
+
             return PartialView(model);
         }
 

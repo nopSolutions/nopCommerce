@@ -1479,6 +1479,9 @@ namespace Nop.Web.Controllers
                 })
                 .ToList();
 
+            if (listModel.Count == 0)
+                return Content("");
+            
             return PartialView(listModel);
         }
 
@@ -1785,6 +1788,9 @@ namespace Nop.Web.Controllers
                     return model;
                 });
 
+            if (cacheModel.Manufacturers.Count == 0)
+                return Content("");
+            
             return PartialView(cacheModel);
         }
 
@@ -2013,6 +2019,9 @@ namespace Nop.Web.Controllers
                 return model;
             });
 
+            if (cacheModel.Vendors.Count == 0)
+                return Content("");
+            
             return PartialView(cacheModel);
         }
 
@@ -2152,6 +2161,9 @@ namespace Nop.Web.Controllers
                 return model;
             });
 
+            if (cacheModel.Count == 0)
+                return Content("");
+            
             return PartialView(cacheModel);
         }
 
@@ -2174,6 +2186,10 @@ namespace Nop.Web.Controllers
                 throw new ArgumentException("No product found with the specified id");
 
             var model = PrepareProductSpecificationModel(product);
+
+            if (model.Count == 0)
+                return Content("");
+            
             return PartialView(model);
         }
 
@@ -2217,16 +2233,18 @@ namespace Nop.Web.Controllers
         public ActionResult RelatedProducts(int productId, int? productThumbPictureSize)
         {
             var products = new List<Product>();
-            var relatedProducts = _productService
-                .GetRelatedProductsByProductId1(productId);
+            var relatedProducts = _productService.GetRelatedProductsByProductId1(productId);
             foreach (var product in _productService.GetProductsByIds(relatedProducts.Select(x => x.ProductId2).ToArray()))
             {
                 //ensure has ACL permission and appropriate store mapping
                 if (_aclService.Authorize(product) && _storeMappingService.Authorize(product))
                     products.Add(product);
             }
+
+            if (products.Count == 0)
+                return Content("");
+
             var model = PrepareProductOverviewModels(products, true, true, productThumbPictureSize).ToList();
-            
             return PartialView(model);
         }
 
@@ -2249,6 +2267,10 @@ namespace Nop.Web.Controllers
             var products = _productService.GetProductsByIds(productIds);
             //ACL and store mapping
             products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
+
+            if (products.Count == 0)
+                return Content("");
+
             //prepare model
             var model = PrepareProductOverviewModels(products, true, true, productThumbPictureSize).ToList();
 
@@ -2285,6 +2307,9 @@ namespace Nop.Web.Controllers
             //ACL and store mapping
             products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
 
+            if (products.Count == 0)
+                return Content("");
+
 
             //Cross-sell products are dispalyed on the shopping cart page.
             //We know that the entire shopping cart page is not refresh
@@ -2301,33 +2326,39 @@ namespace Nop.Web.Controllers
         [NopHttpsRequirement(SslRequirement.No)]
         public ActionResult RecentlyViewedProducts()
         {
+            if (!_catalogSettings.RecentlyViewedProductsEnabled)
+                return Content("");
+
+            var products = _recentlyViewedProductsService.GetRecentlyViewedProducts(_catalogSettings.RecentlyViewedProductsNumber);
+
             var model = new List<ProductOverviewModel>();
-            if (_catalogSettings.RecentlyViewedProductsEnabled)
-            {
-                var products = _recentlyViewedProductsService.GetRecentlyViewedProducts(_catalogSettings.RecentlyViewedProductsNumber);
-                model.AddRange(PrepareProductOverviewModels(products));
-            }
+            model.AddRange(PrepareProductOverviewModels(products));
+
             return View(model);
         }
 
         [ChildActionOnly]
         public ActionResult RecentlyViewedProductsBlock(int? productThumbPictureSize, bool? preparePriceModel)
         {
-            var model = new List<ProductOverviewModel>();
-            if (_catalogSettings.RecentlyViewedProductsEnabled)
-            {
-                var preparePictureModel = productThumbPictureSize.HasValue;
-                var products = _recentlyViewedProductsService.GetRecentlyViewedProducts(_catalogSettings.RecentlyViewedProductsNumber);
-                
-                //ACL and store mapping
-                products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
+            if (!_catalogSettings.RecentlyViewedProductsEnabled)
+                return Content("");
 
-                //prepare model
-                model.AddRange(PrepareProductOverviewModels(products, 
-                    preparePriceModel.HasValue ? preparePriceModel.Value : false, 
-                    preparePictureModel, 
-                    productThumbPictureSize));
-            }
+            var preparePictureModel = productThumbPictureSize.HasValue;
+            var products = _recentlyViewedProductsService.GetRecentlyViewedProducts(_catalogSettings.RecentlyViewedProductsNumber);
+
+            //ACL and store mapping
+            products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
+
+            if (products.Count == 0)
+                return Content("");
+
+            //prepare model
+            var model = new List<ProductOverviewModel>();
+            model.AddRange(PrepareProductOverviewModels(products,
+                preparePriceModel.HasValue ? preparePriceModel.Value : false,
+                preparePictureModel,
+                productThumbPictureSize));
+
             return PartialView(model);
         }
 
@@ -2335,16 +2366,18 @@ namespace Nop.Web.Controllers
         [NopHttpsRequirement(SslRequirement.No)]
         public ActionResult RecentlyAddedProducts()
         {
+            if (!_catalogSettings.RecentlyAddedProductsEnabled)
+                return Content("");
+
+            var products = _productService.SearchProducts(
+                storeId: _storeContext.CurrentStore.Id,
+                visibleIndividuallyOnly: true,
+                orderBy: ProductSortingEnum.CreatedOn,
+                pageSize: _catalogSettings.RecentlyAddedProductsNumber);
+
             var model = new List<ProductOverviewModel>();
-            if (_catalogSettings.RecentlyAddedProductsEnabled)
-            {
-                var products = _productService.SearchProducts(
-                    storeId: _storeContext.CurrentStore.Id,
-                       visibleIndividuallyOnly: true,
-                    orderBy:ProductSortingEnum.CreatedOn,
-                    pageSize:_catalogSettings.RecentlyAddedProductsNumber);
-                model.AddRange(PrepareProductOverviewModels(products));
-            }
+            model.AddRange(PrepareProductOverviewModels(products));
+
             return View(model);
         }
 
@@ -2404,9 +2437,12 @@ namespace Nop.Web.Controllers
             var products = _productService.GetProductsByIds(report.Select(x => x.ProductId).ToArray());
             //ACL and store mapping
             products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
+
+            if (products.Count == 0)
+                return Content("");
+
             //prepare model
-            var model = PrepareProductOverviewModels(products, true, true, productThumbPictureSize)
-                .ToList();
+            var model = PrepareProductOverviewModels(products, true, true, productThumbPictureSize).ToList();
             return PartialView(model);
         }
 
@@ -2417,9 +2453,10 @@ namespace Nop.Web.Controllers
             //ACL and store mapping
             products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
 
-            var model = PrepareProductOverviewModels(products, true, true, productThumbPictureSize)
-                .ToList();
+            if (products.Count == 0)
+                return Content("");
 
+            var model = PrepareProductOverviewModels(products, true, true, productThumbPictureSize).ToList();
             return PartialView(model);
         }
 
@@ -2534,6 +2571,9 @@ namespace Nop.Web.Controllers
                     return model;
                 });
 
+            if (cacheModel.Count == 0)
+                return Content("");
+            
             return PartialView(cacheModel);
         }
 
@@ -2573,6 +2613,9 @@ namespace Nop.Web.Controllers
                 return model;
             });
 
+            if (cacheModel.Tags.Count == 0)
+                return Content("");
+            
             return PartialView(cacheModel);
         }
 
@@ -2908,6 +2951,7 @@ namespace Nop.Web.Controllers
         {
             if (!_catalogSettings.EmailAFriendEnabled)
                 return Content("");
+
             var model = new ProductEmailAFriendModel()
             {
                 ProductId = productId
