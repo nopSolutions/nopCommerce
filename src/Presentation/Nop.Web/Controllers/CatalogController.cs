@@ -2232,15 +2232,17 @@ namespace Nop.Web.Controllers
         [ChildActionOnly]
         public ActionResult RelatedProducts(int productId, int? productThumbPictureSize)
         {
-            var products = new List<Product>();
-            var relatedProducts = _productService.GetRelatedProductsByProductId1(productId);
-            foreach (var product in _productService.GetProductsByIds(relatedProducts.Select(x => x.ProductId2).ToArray()))
-            {
-                //ensure has ACL permission and appropriate store mapping
-                if (_aclService.Authorize(product) && _storeMappingService.Authorize(product))
-                    products.Add(product);
-            }
+            //load and cache report
+            var productIds = _cacheManager.Get(string.Format(ModelCacheEventConsumer.PRODUCTS_RELATED_IDS_KEY, productId, _storeContext.CurrentStore.Id),
+                () => 
+                    _productService.GetRelatedProductsByProductId1(productId).Select(x => x.ProductId2).ToArray()
+                    );
 
+            //load products
+            var products = _productService.GetProductsByIds(productIds);
+            //ACL and store mapping
+            products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
+            
             if (products.Count == 0)
                 return Content("");
 
