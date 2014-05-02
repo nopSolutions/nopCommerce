@@ -76,7 +76,7 @@
     <Value>Installera</Value>
   </LocaleResource>
   <LocaleResource Name="Installing">
-    <Value>Installerar nopComerce...</Value>
+    <Value>Installerar nopCommerce...</Value>
   </LocaleResource>
   <LocaleResource Name="PasswordsDoNotMatch">
     <Value>Lösenorden matchar inte</Value>
