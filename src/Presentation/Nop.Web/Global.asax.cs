@@ -53,12 +53,6 @@ namespace Nop.Web
 
         protected void Application_Start()
         {
-            //we use our own mobile devices support (".Mobile" is reserved). that's why we disable it.
-            var mobileDisplayMode = DisplayModeProvider.Instance.Modes
-                .FirstOrDefault(x => x.DisplayModeId == DisplayModeProvider.MobileDisplayModeId);
-            if (mobileDisplayMode != null)
-                DisplayModeProvider.Instance.Modes.Remove(mobileDisplayMode);
-
             //initialize engine context
             EngineContext.Initialize(false);
 
