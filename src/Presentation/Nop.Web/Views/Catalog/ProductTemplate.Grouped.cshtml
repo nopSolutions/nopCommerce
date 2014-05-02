@@ -124,7 +124,8 @@
                     </div>
                     @Html.Action("ProductSpecifications", "Catalog", new { productId = Model.Id })
                     @Html.Action("ProductTags", "Catalog", new { productId = Model.Id })
-                    @Html.Action("ProductsAlsoPurchased", "Catalog", new { productId = Model.Id })
+                    @*we do not display "also purchased" for grouped products
+                        @Html.Action("ProductsAlsoPurchased", "Catalog", new { productId = Model.Id })*@
                     @Html.Action("RelatedProducts", "Catalog", new { productId = Model.Id })
                 </div>
             </div>

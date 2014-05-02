@@ -316,10 +316,9 @@ namespace Nop.Services.Orders
                 throw new ArgumentException("Product ID is not specified");
 
             //this inner query should retrieve all orders that have contained the productID
-            var query1 = (from orderItem in _orderItemRepository.Table
-                          join p in _productRepository.Table on orderItem.ProductId equals p.Id
-                          where p.Id == productId
-                          select orderItem.OrderId).Distinct();
+            var query1 = from orderItem in _orderItemRepository.Table
+                          where orderItem.ProductId == productId
+                          select orderItem.OrderId;
 
             var query2 = from orderItem in _orderItemRepository.Table
                          join p in _productRepository.Table on orderItem.ProductId equals p.Id
