@@ -302,20 +302,20 @@ namespace Nop.Services.Orders
         }
 
         /// <summary>
-        /// Gets a list of products purchased by other customers who purchased the above
+        /// Gets a list of products (identifiers) purchased by other customers who purchased a specified product
         /// </summary>
         /// <param name="storeId">Store identifier</param>
         /// <param name="productId">Product identifier</param>
         /// <param name="recordsToReturn">Records to return</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Products</returns>
-        public virtual IList<Product> GetProductsAlsoPurchasedById(int storeId, int productId,
+        public virtual int[] GetAlsoPurchasedProductsIds(int storeId, int productId,
             int recordsToReturn = 5, bool showHidden = false)
         {
             if (productId == 0)
                 throw new ArgumentException("Product ID is not specified");
 
-            //this inner query should retrieve all orders that have contained the productID
+            //this inner query should retrieve all orders that contains a specified product ID
             var query1 = from orderItem in _orderItemRepository.Table
                           where orderItem.ProductId == productId
                           select orderItem.OrderId;
@@ -344,11 +344,12 @@ namespace Nop.Services.Orders
                 query3 = query3.Take(recordsToReturn);
 
             var report = query3.ToList();
-            var products = new List<Product>();
+            
+            var ids = new List<int>();
             foreach (var reportLine in report)
-                products.Add(_productService.GetProductById(reportLine.ProductId));
+                ids.Add(reportLine.ProductId);
 
-            return products;
+            return ids.ToArray();
         }
 
         /// <summary>
