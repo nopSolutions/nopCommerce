@@ -45,6 +45,7 @@ namespace Nop.Admin.Models.Orders
             public string ProductName { get; set; }
             public string Sku { get; set; }
             public string AttributeInfo { get; set; }
+            public string Warehouse { get; set; }
 
             //weight of one item (product)
             [NopResourceDisplayName("Admin.Orders.Shipments.Products.ItemWeight")]

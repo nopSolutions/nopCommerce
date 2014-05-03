@@ -70,14 +70,13 @@ namespace Nop.Admin.Controllers
         private readonly IGiftCardService _giftCardService;
         private readonly IDownloadService _downloadService;
         private readonly IShipmentService _shipmentService;
+	    private readonly IShippingService _shippingService;
         private readonly IStoreService _storeService;
         private readonly IVendorService _vendorService;
 
-        private readonly CatalogSettings _catalogSettings;
         private readonly CurrencySettings _currencySettings;
         private readonly TaxSettings _taxSettings;
         private readonly MeasureSettings _measureSettings;
-        private readonly PdfSettings _pdfSettings;
         private readonly AddressSettings _addressSettings;
         
         #endregion
@@ -114,13 +113,12 @@ namespace Nop.Admin.Controllers
             IGiftCardService giftCardService, 
             IDownloadService downloadService,
             IShipmentService shipmentService, 
+            IShippingService shippingService,
             IStoreService storeService, 
             IVendorService vendorService,
-            CatalogSettings catalogSettings, 
             CurrencySettings currencySettings, 
             TaxSettings taxSettings,
-            MeasureSettings measureSettings, 
-            PdfSettings pdfSettings, 
+            MeasureSettings measureSettings,
             AddressSettings addressSettings)
 		{
             this._orderService = orderService;
@@ -153,14 +151,13 @@ namespace Nop.Admin.Controllers
             this._giftCardService = giftCardService;
             this._downloadService = downloadService;
             this._shipmentService = shipmentService;
+            this._shippingService = shippingService;
             this._storeService = storeService;
             this._vendorService = vendorService;
 
-            this._catalogSettings = catalogSettings;
             this._currencySettings = currencySettings;
             this._taxSettings = taxSettings;
             this._measureSettings = measureSettings;
-            this._pdfSettings = pdfSettings;
             this._addressSettings = addressSettings;
 		}
         
@@ -658,6 +655,7 @@ namespace Nop.Admin.Controllers
                     var qtyOrdered = orderItem.Quantity;
                     var qtyInAllShipments = orderItem.GetTotalNumberOfItemsInAllShipment();
 
+                    var warehouse = _shippingService.GetWarehouseById(orderItem.Product.WarehouseId);
                     var shipmentItemModel = new ShipmentModel.ShipmentItemModel()
                     {
                         Id = shipmentItem.Id,
@@ -666,6 +664,7 @@ namespace Nop.Admin.Controllers
                         ProductName = orderItem.Product.Name,
                         Sku = orderItem.Product.FormatSku(orderItem.AttributesXml, _productAttributeParser),
                         AttributeInfo = orderItem.AttributeDescription,
+                        Warehouse = warehouse != null ? warehouse.Name : null,
                         ItemWeight = orderItem.ItemWeight.HasValue ? string.Format("{0:F2} [{1}]", orderItem.ItemWeight, baseWeightIn) : "",
                         ItemDimensions = string.Format("{0:F2} x {1:F2} x {2:F2} [{3}]", orderItem.Product.Length, orderItem.Product.Width, orderItem.Product.Height, baseDimensionIn),
                         QuantityOrdered = qtyOrdered,
@@ -2425,6 +2424,8 @@ namespace Nop.Admin.Controllers
                 if (maxQtyToAdd <= 0)
                     continue;
 
+                var warehouse = _shippingService.GetWarehouseById(orderItem.Product.WarehouseId);
+
                 var shipmentItemModel = new ShipmentModel.ShipmentItemModel()
                 {
                     OrderItemId = orderItem.Id,
@@ -2432,6 +2433,7 @@ namespace Nop.Admin.Controllers
                     ProductName = orderItem.Product.Name,
                     Sku = orderItem.Product.FormatSku(orderItem.AttributesXml, _productAttributeParser),
                     AttributeInfo = orderItem.AttributeDescription,
+                    Warehouse = warehouse != null ? warehouse.Name : null,
                     ItemWeight = orderItem.ItemWeight.HasValue ? string.Format("{0:F2} [{1}]", orderItem.ItemWeight, baseWeightIn) : "",
                     ItemDimensions = string.Format("{0:F2} x {1:F2} x {2:F2} [{3}]", orderItem.Product.Length, orderItem.Product.Width, orderItem.Product.Height, baseDimensionIn),
                     QuantityOrdered = qtyOrdered,

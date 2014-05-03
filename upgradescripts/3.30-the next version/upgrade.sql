@@ -104,6 +104,9 @@ set @resources='
   <LocaleResource Name="Admin.System.QueuedEmails.Fields.ReplyToName.Hint">
     <Value>ReplyTo name (optional).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.Products.Warehouse">
+    <Value>Warehouse</Value>
+  </LocaleResource>
 </Language>
 '
 

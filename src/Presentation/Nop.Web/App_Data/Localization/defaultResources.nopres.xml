@@ -8457,6 +8457,9 @@
   <LocaleResource Name="Admin.Orders.Shipments.Products.SKU">
     <Value>SKU</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.Products.Warehouse">
+    <Value>Warehouse</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.ShippedDate">
     <Value>Date shipped</Value>
   </LocaleResource>

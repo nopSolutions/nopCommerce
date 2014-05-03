@@ -139,11 +139,7 @@
         <tr>
             <td class="adminData">
                 <table class="tablestyle" border="1" cellspacing="0" style="width: 100%; border-collapse: collapse;">
-                    <col />
-                    <col />
-                    <col />
-                    <col />
-                    <col />
+
                     <thead>
                         <tr class="headerstyle">
                             <th align="center">
@@ -151,6 +147,9 @@
                             </th>
                             <th align="center">
                                 @T("Admin.Orders.Shipments.Products.SKU")
+                            </th>
+                            <th align="center">
+                                @T("Admin.Orders.Shipments.Products.Warehouse")
                             </th>
                             <th align="center">
                                 @T("Admin.Orders.Shipments.Products.ItemWeight")
@@ -167,8 +166,8 @@
                         @foreach (var item in Model.Items)
                         {
                             <tr>
-                                <td style="width: 70%;">
-                                    <div style="padding-left: 10px; padding-right: 10px; text-align: left;">
+                                <td style="width: 40%;">
+                                    <div style="padding-left: 10px; padding-right: 10px;">
                                         <em><a href="@Url.Action("Edit", "Product", new { id = item.ProductId })">@item.ProductName</a></em>
                                         @if (!String.IsNullOrEmpty(item.AttributeInfo))
                                         {
@@ -178,8 +177,13 @@
                                     </div>
                                 </td>
                                 <td style="width: 15%;">
-                                    <div style="padding-left: 10px; padding-right: 10px; text-align: left;">
+                                    <div style="padding-left: 10px; padding-right: 10px;">
                                         @item.Sku
+                                    </div>
+                                </td>
+                                <td style="width: 15%;">
+                                    <div style="padding-left: 10px; padding-right: 10px;">
+                                        @item.Warehouse
                                     </div>
                                 </td>
                                 <td align="center" style="width: 10%;">
@@ -188,7 +192,7 @@
                                 <td align="center" style="width: 10%;">
                                     @item.ItemDimensions
                                 </td>
-                                <td align="center" style="width: 15%;">
+                                <td align="center" style="width: 10%;">
                                     @item.QuantityInThisShipment
                                 </td>
                             </tr>
