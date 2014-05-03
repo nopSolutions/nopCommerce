@@ -13,6 +13,7 @@ using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
+using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -716,6 +717,11 @@ namespace Nop.Admin.Controllers
             foreach (var v in _vendorService.GetAllVendors(0, int.MaxValue, true))
                 model.AvailableVendors.Add(new SelectListItem() { Text = v.Name, Value = v.Id.ToString() });
 
+            //warehouses
+            model.AvailableWarehouses.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var w in _shippingService.GetAllWarehouses())
+                model.AvailableWarehouses.Add(new SelectListItem() { Text = w.Name, Value = w.Id.ToString() });
+
             //a vendor should have access only to orders with his products
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
 
@@ -745,10 +751,12 @@ namespace Nop.Admin.Controllers
             ShippingStatus? shippingStatus = model.ShippingStatusId > 0 ? (ShippingStatus?)(model.ShippingStatusId) : null;
 
             //load orders
-            var orders = _orderService.SearchOrders(model.StoreId, model.VendorId, 0, 0, 0,
-                startDateValue, endDateValue, orderStatus,
-                paymentStatus, shippingStatus, model.CustomerEmail, model.OrderGuid,
-                command.Page - 1, command.PageSize);
+            var orders = _orderService.SearchOrders(storeId: model.StoreId,
+                vendorId: model.VendorId, warehouseId: model.WarehouseId,
+                createdFromUtc: startDateValue, createdToUtc: endDateValue,
+                os: orderStatus, ps: paymentStatus, ss: shippingStatus, 
+                billingEmail: model.CustomerEmail, orderGuid: model.OrderGuid,
+                pageIndex: command.Page - 1, pageSize: command.PageSize);
             var gridModel = new DataSourceResult
             {
                 Data = orders.Select(x =>

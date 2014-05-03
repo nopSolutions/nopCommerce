@@ -107,6 +107,12 @@ set @resources='
   <LocaleResource Name="Admin.Orders.Shipments.Products.Warehouse">
     <Value>Warehouse</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.List.Warehouse">
+    <Value>Warehouse</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.List.Warehouse.Hint">
+    <Value>Load orders with products from a specified warehouse.</Value>
+  </LocaleResource>
 </Language>
 '
 

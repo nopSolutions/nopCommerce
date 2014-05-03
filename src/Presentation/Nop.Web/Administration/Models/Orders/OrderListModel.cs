@@ -16,6 +16,7 @@ namespace Nop.Admin.Models.Orders
             AvailableShippingStatuses = new List<SelectListItem>();
             AvailableStores = new List<SelectListItem>();
             AvailableVendors = new List<SelectListItem>();
+            AvailableWarehouses = new List<SelectListItem>();
         }
 
         [NopResourceDisplayName("Admin.Orders.List.StartDate")]
@@ -41,6 +42,8 @@ namespace Nop.Admin.Models.Orders
         public int StoreId { get; set; }
         [NopResourceDisplayName("Admin.Orders.List.Vendor")]
         public int VendorId { get; set; }
+        [NopResourceDisplayName("Admin.Orders.List.Warehouse")]
+        public int WarehouseId { get; set; }
 
         [NopResourceDisplayName("Admin.Orders.List.OrderGuid")]
         [AllowHtml]
@@ -58,5 +61,6 @@ namespace Nop.Admin.Models.Orders
         public IList<SelectListItem> AvailableShippingStatuses { get; set; }
         public IList<SelectListItem> AvailableStores { get; set; }
         public IList<SelectListItem> AvailableVendors { get; set; }
+        public IList<SelectListItem> AvailableWarehouses { get; set; }
     }
 }

@@ -8142,6 +8142,12 @@
   <LocaleResource Name="Admin.Orders.List.Vendor.Hint">
     <Value>Search by a specific vendor. You'll see orders with products from a specified vendor.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.List.Warehouse">
+    <Value>Warehouse</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.List.Warehouse.Hint">
+    <Value>Load orders with products from a specified warehouse.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Orders.OrderNotes">
     <Value>Order notes</Value>
   </LocaleResource>
