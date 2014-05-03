@@ -20,6 +20,7 @@ namespace Nop.Services.Shipping
         /// Search shipments
         /// </summary>
         /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
+        /// <param name="warehouseId">Warehouse identifier, only shipments with products from a specified warehouse will be loaded; 0 to load all orders</param>
         /// <param name="trackingNumber">Search by tracking number</param>
         /// <param name="shippingCountryId">Shipping country identifier; 0 to load all records</param>
         /// <param name="shippingStateId">Shipping state identifier; 0 to load all records</param>
@@ -29,13 +30,13 @@ namespace Nop.Services.Shipping
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Customer collection</returns>
-        IPagedList<Shipment> GetAllShipments(int vendorId,
-            int shippingCountryId,
-            int shippingStateId,
-            string shippingCity,
-            string trackingNumber,
-            DateTime? createdFromUtc, DateTime? createdToUtc,
-            int pageIndex, int pageSize);
+        IPagedList<Shipment> GetAllShipments(int vendorId = 0, int warehouseId = 0,
+            int shippingCountryId = 0,
+            int shippingStateId = 0,
+            string shippingCity = null,
+            string trackingNumber = null,
+            DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
+            int pageIndex = 0, int pageSize = int.MaxValue);
         
         /// <summary>
         /// Get shipment by identifiers

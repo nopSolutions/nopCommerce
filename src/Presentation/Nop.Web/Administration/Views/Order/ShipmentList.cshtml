@@ -71,6 +71,14 @@
             </td>
         </tr>
         <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.WarehouseId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownList("WarehouseId", Model.AvailableWarehouses)
+            </td>
+        </tr>
+        <tr>
             <td colspan="2">
                 <input type="button" id="btnSearch" class="k-button" value="@T("Admin.Common.Search")" />
             </td>
@@ -371,13 +379,14 @@
 
         function additionalData() {
             return {
-                    StartDate: $('#@Html.FieldIdFor(model => model.StartDate)').val(),
-                    EndDate: $('#@Html.FieldIdFor(model => model.EndDate)').val(),
-                    TrackingNumber: $('#@Html.FieldIdFor(model => model.TrackingNumber)').val(),
-                    CountryId: $('#@Html.FieldIdFor(model => model.CountryId)').val(),
-                    StateProvinceId: $('#@Html.FieldIdFor(model => model.StateProvinceId)').val(),
-                    City: $('#@Html.FieldIdFor(model => model.City)').val()
-                    };
+                StartDate: $('#@Html.FieldIdFor(model => model.StartDate)').val(),
+                EndDate: $('#@Html.FieldIdFor(model => model.EndDate)').val(),
+                TrackingNumber: $('#@Html.FieldIdFor(model => model.TrackingNumber)').val(),
+                CountryId: $('#@Html.FieldIdFor(model => model.CountryId)').val(),
+                StateProvinceId: $('#@Html.FieldIdFor(model => model.StateProvinceId)').val(),
+                City: $('#@Html.FieldIdFor(model => model.City)').val(),
+                WarehouseId: $('#@Html.FieldIdFor(model => model.WarehouseId)').val()
+            };
         }
     
         function onDataBound(e) {

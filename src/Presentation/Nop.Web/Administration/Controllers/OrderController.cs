@@ -2281,6 +2281,11 @@ namespace Nop.Admin.Controllers
             //states
             model.AvailableStates.Add(new SelectListItem() { Text = "*", Value = "0" });
 
+            //warehouses
+            model.AvailableWarehouses.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var w in _shippingService.GetAllWarehouses())
+                model.AvailableWarehouses.Add(new SelectListItem() { Text = w.Name, Value = w.Id.ToString() });
+
             return View(model);
 		}
 
@@ -2302,10 +2307,12 @@ namespace Nop.Admin.Controllers
                 vendorId = _workContext.CurrentVendor.Id;
 
             //load shipments
-            var shipments = _shipmentService.GetAllShipments(vendorId,
-                model.CountryId, model.StateProvinceId, model.City, model.TrackingNumber, 
-                startDateValue, endDateValue, 
-                command.Page - 1, command.PageSize);
+            var shipments = _shipmentService.GetAllShipments(vendorId: vendorId,
+                warehouseId: model.WarehouseId, shippingCountryId: model.CountryId, 
+                shippingStateId: model.StateProvinceId, shippingCity: model.City,
+                trackingNumber: model.TrackingNumber, 
+                createdFromUtc: startDateValue, createdToUtc: endDateValue, 
+                pageIndex: command.Page - 1, pageSize: command.PageSize);
             var gridModel = new DataSourceResult
             {
                 Data = shipments.Select(shipment => PrepareShipmentModel(shipment, false)),
@@ -2804,8 +2811,7 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null)
                 vendorId = _workContext.CurrentVendor.Id;
 
-            var shipments = _shipmentService.GetAllShipments(vendorId,
-                0, 0, null, null, null, null, 0, int.MaxValue).ToList();
+            var shipments = _shipmentService.GetAllShipments(vendorId: vendorId).ToList();
 
             //ensure that we at least one shipment selected
             if (shipments.Count == 0)

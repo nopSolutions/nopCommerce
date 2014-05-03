@@ -13,6 +13,7 @@ namespace Nop.Admin.Models.Orders
         {
             AvailableCountries = new List<SelectListItem>();
             AvailableStates = new List<SelectListItem>();
+            AvailableWarehouses = new List<SelectListItem>();
         }
 
         [NopResourceDisplayName("Admin.Orders.Shipments.List.StartDate")]
@@ -38,5 +39,10 @@ namespace Nop.Admin.Models.Orders
         [NopResourceDisplayName("Admin.Orders.Shipments.List.City")]
         [AllowHtml]
         public string City { get; set; }
+
+
+        [NopResourceDisplayName("Admin.Orders.Shipments.List.Warehouse")]
+        public int WarehouseId { get; set; }
+        public IList<SelectListItem> AvailableWarehouses { get; set; }
     }
 }
