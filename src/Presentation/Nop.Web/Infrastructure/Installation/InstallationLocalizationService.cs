@@ -52,9 +52,22 @@ namespace Nop.Web.Infrastructure.Installation
             if (language != null)
                 return language;
 
-            //if we got here, the language code is not found. let's return the default one
-            language = availableLanguages
-                .FirstOrDefault(l => l.IsDefault);
+            //let's find by current browser culture
+            if (httpContext.Request.UserLanguages != null)
+            {
+                var userLanguage = httpContext.Request.UserLanguages.FirstOrDefault();
+                if (!String.IsNullOrEmpty(userLanguage))
+                {
+                    //right. we do "StartsWith" (not "Equals") because we have shorten codes (not full culture names)
+                    language = availableLanguages
+                        .FirstOrDefault(l => userLanguage.StartsWith(l.Code, StringComparison.InvariantCultureIgnoreCase));
+                }
+            }
+            if (language != null)
+                return language;
+
+            //let's return the default one
+            language = availableLanguages.FirstOrDefault(l => l.IsDefault);
             if (language != null)
                 return language;
 
