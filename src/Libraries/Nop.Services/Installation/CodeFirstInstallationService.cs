@@ -4430,7 +4430,8 @@ namespace Nop.Services.Installation
                     DefaultMetaDescription = "",
                     ConvertNonWesternChars = false,
                     AllowUnicodeCharsInUrls = true,
-                    EnableJsBundling = true,
+                    //we disable bundling out of the box because it requires a lot of server resources
+                    EnableJsBundling = false,
                     EnableCssBundling = false,
                     CanonicalUrlsEnabled = false,
                     WwwRequirement = WwwRequirement.NoMatter,
