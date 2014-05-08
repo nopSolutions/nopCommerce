@@ -45,7 +45,7 @@ namespace Nop.Web.Framework.UI
 
         #region Utilities
 
-        protected virtual string GetBundleVirtualPath(string prefix, string postfix, string[] parts)
+        protected virtual string GetBundleVirtualPath(string prefix, string extension, string[] parts)
         {
             if (parts == null || parts.Length == 0)
                 throw new ArgumentException("parts");
@@ -70,7 +70,9 @@ namespace Nop.Web.Framework.UI
 
             var sb = new StringBuilder(prefix);
             sb.Append(hash);
-            sb.Append(postfix);
+            //we used "extension" when we had "runAllManagedModulesForAllRequests" set to "true" in web.config
+            //now we disabled it. hence we should not use "extension"
+            //sb.Append(extension);
             return sb.ToString();
         }
 
