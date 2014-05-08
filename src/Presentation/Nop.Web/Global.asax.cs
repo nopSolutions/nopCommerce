@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Threading;
 using System.Web;
 using System.Web.Mvc;
@@ -171,11 +172,16 @@ namespace Nop.Web
         
         protected void EnsureDatabaseIsInstalled()
         {
+            if (DataSettingsHelper.DatabaseIsInstalled())
+                return;
+
             var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+
+            if (webHelper.IsStaticResource(this.Request))
+                return;
+
             string installUrl = string.Format("{0}install", webHelper.GetStoreLocation());
-            if (!webHelper.IsStaticResource(this.Request) &&
-                !DataSettingsHelper.DatabaseIsInstalled() &&
-                !webHelper.GetThisPageUrl(false).StartsWith(installUrl, StringComparison.InvariantCultureIgnoreCase))
+            if (!webHelper.GetThisPageUrl(false).StartsWith(installUrl, StringComparison.InvariantCultureIgnoreCase))
             {
                 this.Response.Redirect(installUrl);
             }
