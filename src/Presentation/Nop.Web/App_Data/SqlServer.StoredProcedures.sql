@@ -485,7 +485,7 @@ BEGIN
 	END
 	
 	--min price
-	IF @PriceMin > 0
+	IF @PriceMin is not null
 	BEGIN
 		SET @sql = @sql + '
 		AND (
@@ -506,7 +506,7 @@ BEGIN
 	END
 	
 	--max price
-	IF @PriceMax > 0
+	IF @PriceMax is not null
 	BEGIN
 		SET @sql = @sql + '
 		AND (
