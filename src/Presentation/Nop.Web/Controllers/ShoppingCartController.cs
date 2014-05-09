@@ -1151,6 +1151,15 @@ namespace Nop.Web.Controllers
                 });
             }
 
+            if (product.ProductVariantAttributes.Count > 0)
+            {
+                //product has some attributes. let a customer see them
+                return Json(new
+                {
+                    redirect = Url.RouteUrl("Product", new { SeName = product.GetSeName() }),
+                });
+            }
+
             //get standard warnings without attribute validations
             //first, try to find existing shopping cart item
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
