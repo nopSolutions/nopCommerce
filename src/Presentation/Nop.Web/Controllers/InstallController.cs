@@ -39,6 +39,14 @@ namespace Nop.Web.Controllers
         #region Utilities
 
         /// <summary>
+        /// A value indicating whether we use MARS (Multiple Active Result Sets)
+        /// </summary>
+        protected bool UseMars
+        {
+            get { return false; }
+        }
+
+        /// <summary>
         /// Checks if the specified database exists, returns true if database exists
         /// </summary>
         /// <param name="connectionString">Connection string</param>
@@ -123,7 +131,10 @@ namespace Nop.Web.Controllers
                 builder.Password = password;
             }
             builder.PersistSecurityInfo = false;
-            builder.MultipleActiveResultSets = true;
+            if (this.UseMars)
+            {
+                builder.MultipleActiveResultSets = true;
+            }
             if (timeout > 0)
             {
                 builder.ConnectTimeout = timeout;
@@ -276,7 +287,10 @@ namespace Nop.Web.Controllers
                             //we know that MARS option is required when using Entity Framework
                             //let's ensure that it's specified
                             var sqlCsb = new SqlConnectionStringBuilder(model.DatabaseConnectionString);
-                            sqlCsb.MultipleActiveResultSets = true;
+                            if (this.UseMars)
+                            {
+                                sqlCsb.MultipleActiveResultSets = true;
+                            }
                             connectionString = sqlCsb.ToString();
                         }
                         else
