@@ -891,3 +891,11 @@ BEGIN
 	DROP TABLE #PageIndex
 END
 GO
+
+
+--more SQL indexes
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_PSAM_ProductId' and object_id=object_id(N'[Product_SpecificationAttribute_Mapping]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_PSAM_ProductId] ON [Product_SpecificationAttribute_Mapping] ([ProductId] ASC)
+END
+GO
