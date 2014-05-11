@@ -24,11 +24,20 @@ namespace Nop.Data
             this._context = context;
         }
 
+        /// <summary>
+        /// Get entity by identifier
+        /// </summary>
+        /// <param name="id">Identifier</param>
+        /// <returns>Entity</returns>
         public virtual T GetById(object id)
         {
             return this.Entities.Find(id);
         }
 
+        /// <summary>
+        /// Insert entity
+        /// </summary>
+        /// <param name="entity">Entity</param>
         public virtual void Insert(T entity)
         {
             try
@@ -54,6 +63,10 @@ namespace Nop.Data
             }
         }
 
+        /// <summary>
+        /// Update entity
+        /// </summary>
+        /// <param name="entity">Entity</param>
         public virtual void Update(T entity)
         {
             try
@@ -77,6 +90,10 @@ namespace Nop.Data
             }
         }
 
+        /// <summary>
+        /// Delete entity
+        /// </summary>
+        /// <param name="entity">Entity</param>
         public virtual void Delete(T entity)
         {
             try
@@ -102,6 +119,9 @@ namespace Nop.Data
             }
         }
 
+        /// <summary>
+        /// Gets a table
+        /// </summary>
         public virtual IQueryable<T> Table
         {
             get
@@ -110,6 +130,22 @@ namespace Nop.Data
             }
         }
 
+
+        /// <summary>
+        /// Gets a table with "no tracking" enabled (EF feature) Use it only when you load record(s) only for read-only operations
+        /// </summary>
+        public virtual IQueryable<T> TableNoTracking
+        {
+            get
+            {
+                return this.Entities.AsNoTracking();
+            }
+        }
+
+
+        /// <summary>
+        /// Entities
+        /// </summary>
         protected virtual IDbSet<T> Entities
         {
             get

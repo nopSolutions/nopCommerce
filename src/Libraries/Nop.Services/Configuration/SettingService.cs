@@ -81,7 +81,9 @@ namespace Nop.Services.Configuration
             string key = string.Format(SETTINGS_ALL_KEY);
             return _cacheManager.Get(key, () =>
             {
-                var query = from s in _settingRepository.Table
+                //we use no tracking here for performance optimization
+                //anyway records are loaded only for read-only operations
+                var query = from s in _settingRepository.TableNoTracking
                             orderby s.Name, s.StoreId
                             select s;
                 var settings = query.ToList();

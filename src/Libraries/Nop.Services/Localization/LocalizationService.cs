@@ -227,7 +227,9 @@ namespace Nop.Services.Localization
             string key = string.Format(LOCALSTRINGRESOURCES_ALL_KEY, languageId);
             return _cacheManager.Get(key, () =>
             {
-                var query = from l in _lsrRepository.Table
+                //we use no tracking here for performance optimization
+                //anyway records are loaded only for read-only operations
+                var query = from l in _lsrRepository.TableNoTracking
                             orderby l.ResourceName
                             where l.LanguageId == languageId
                             select l;
