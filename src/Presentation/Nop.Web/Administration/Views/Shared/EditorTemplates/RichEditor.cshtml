@@ -7,10 +7,6 @@
     
     var permissionService = EngineContext.Current.Resolve<IPermissionService>();
     var canUploadPictures = permissionService.Authorize(StandardPermissionProvider.HtmlEditorManagePictures);
-
-    //we have to temporary disable picture uploading
-    //because "jbimages" plugin require "relative_urls" settings set to "false".
-    canUploadPictures = false;
 }
 <script>
     $(document).ready(function() {
@@ -26,8 +22,10 @@
             ],
             toolbar: "insertfile undo redo | styleselect | fontselect | fontsizeselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image@(canUploadPictures ? " jbimages" : null)",
             //"relative_urls" required by jbimages plugin to be set to "false"
-            //but in this case it'll break existing links (e.g. message template tokens)
-            relative_urls: true
+            relative_urls: false,
+            //we should set "convert_urls" set to "false" (because of "relative_urls" requirement)
+            //otherwise, it'll break existing links when editing message template
+            convert_urls: false
         });
     });
 </script>
