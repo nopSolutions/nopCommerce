@@ -348,6 +348,16 @@
             <param name="keysToKeep"></param>
             <returns></returns>
         </member>
+        <member name="M:ImageResizer.ExtensionMethods.NameValueCollectionExtensions.MergeDefaults(System.Collections.Specialized.NameValueCollection,System.Collections.Specialized.NameValueCollection)">
+            <summary>
+            Creates and returns a new NameValueCollection instance that contains all of the
+            keys/values from 'q', and any keys/values from 'defaults' that 'q' does not already
+            contain.
+            </summary>
+            <param name="q">The settings specific to a particular query</param>
+            <param name="defaults">Default settings to use when not overridden by 'q'.</param>
+            <returns></returns>
+        </member>
         <member name="T:ImageResizer.ExtensionMethods.StreamExtensions">
             <summary>
             Provides extension methods for copying streams
@@ -1438,14 +1448,35 @@
         </member>
         <member name="T:ImageResizer.Plugins.Basic.Image404">
             <summary>
-            Redirects image 404 errors to a querystring-specified server-local location, while maintaining querystring values so layout isn't disrupted.
-            For example, missingimage.jpg?404=image.jpg&amp;width=200
-            with the default setting &lt;image404 baseDir="~/" /&gt; will redirect to ~/image.jpg?width=200.
-            You may also configure 'variables', which is the reccomended approach.
-            Ex. &lt;image404 propertyImageDefault="~/images/nophoto.png" /&gt; and use them like so: missingimage.jpg?404=propertImageDefault?width=200 -> ~/images/nophoto.png?width=200.
-            Querystring values in the variable value take precedence. For example, 
-            Ex. &lt;image404 propertyImageDefault="~/images/nophoto.png?format=png" /&gt; and missingimage.jpg?format=jpg&amp;404=propertImageDefault?width=200 -> ~/images/nophoto.png?format=png&amp;width=200.
+            Redirects image 404 errors to a querystring-specified server-local location,
+            while maintaining querystring values (by default) so layout isn't disrupted.
             </summary>
+            <remarks>
+            <para>
+            The image to use in place of missing images can be specified by the "404"
+            parameter in the querystring.  The "404" value can also refer to a named
+            value in the &lt;plugins&gt;/&lt;Image404&gt; setting in Web.config.
+            </para>
+            </remarks>
+            <example>
+            <para>
+            Using <c>&lt;img src="missingimage.jpg?404=image.jpg&amp;width=200" /&gt;</c>
+            with the default setting (<c>&lt;image404 baseDir="~/" /&gt;</c>) will
+            redirect to <c>~/image.jpg?width=200</c>.
+            </para>
+            <para>
+            You may also configure 'variables', which is the recommended approach.
+            For example, <c>&lt;image404 propertyImageDefault="~/images/nophoto.png" /&gt;</c>
+            in the config file, and <c>&lt;img src="missingimage.jpg?404=propertyImageDefault&amp;width=200" /&gt;</c>
+            will result in a redirect to <c>~/images/nophoto.png?width=200</c>.
+            Any querystring values in the config variable take precedence over
+            querystring values in the image querystring.  For example,
+            <c>&lt;image404 propertyImageDefault="~/images/nophoto.png?format=png" /&gt;</c>
+            in the config file and
+            <c>&lt;img src="missingimage.jpg?format=jpg&amp;404=propertImageDefault&amp;width=200" /&gt;</c>
+            will result in a redirect to <c>~/images/nophoto.png?format=png&amp;width=200</c>.
+            </para>
+            </example>
         </member>
         <member name="T:ImageResizer.Plugins.Basic.NoCacheHandler">
             <summary>
@@ -4466,6 +4497,22 @@
             </summary>
             <param name="queryString"></param>
         </member>
+        <member name="M:ImageResizer.ResizeSettings.#ctor(System.Collections.Specialized.NameValueCollection,System.Collections.Specialized.NameValueCollection)">
+            <summary>
+            Merges the specified collection with a set of defaults into a new
+            ResizeSettings instance.
+            </summary>
+            <param name="col"></param>
+            <param name="defaultSettings"></param>
+        </member>
+        <member name="M:ImageResizer.ResizeSettings.#ctor(System.String,System.Collections.Specialized.NameValueCollection)">
+            <summary>
+            Parses the specified querystring into name/value pairs and merges
+            it with defaultSettings in a new ResizeSettings instance.
+            </summary>
+            <param name="queryString"></param>
+            <param name="defaultSettings"></param>
+        </member>
         <member name="M:ImageResizer.ResizeSettings.#ctor(System.Int32,System.Int32,ImageResizer.FitMode,System.String)">
             <summary>
             Creates a new resize settings object with the specified resizing settings
@@ -4676,6 +4723,48 @@
             This can be set to any non-negative  value. Very useful for performing cropping when the original image size is unknown.
             0 indicates that the crop values are relative to the original size of the image.
             </summary>        
+        </member>
+        <member name="T:ImageResizer.Util.SeekableStreamWrapper">
+            <summary>
+            A Stream utility class that helps to provide seekability to any source
+            stream.
+            </summary>
+        </member>
+        <member name="M:ImageResizer.Util.SeekableStreamWrapper.FromStream(System.IO.Stream)">
+            <summary>
+            Returns a seekable stream for a given source stream.  If wrapped,
+            the source stream will be disposed when the returned stream is.
+            </summary>
+            <param name="sourceStream">The stream to wrap or return.</param>
+            <returns>If the source stream is already seekable, it is returned
+            unwrapped.  If not, it is wrapped in a <c>SeekableStreamWrapper</c>.</returns>
+        </member>
+        <member name="M:ImageResizer.Util.SeekableStreamWrapper.FromStream(System.IO.Stream,System.Boolean@)">
+            <summary>
+            Returns a seekable stream for a given source stream.  If wrapped,
+            the source stream will be disposed when the returned stream is.
+            </summary>
+            <param name="sourceStream">The stream to wrap or return.</param>
+            <param name="disposeStream">Whether to dispose the source stream
+            when the wrapper is disposed.  If a wrapper is created, this
+            parameter will be <c>true</c> on the return to ensure the wrapper
+            gets properly disposed.</param>
+            <returns>If the source stream is already seekable, it is returned
+            unwrapped.  If not, it is wrapped in a <c>SeekableStreamWrapper</c>.</returns>
+        </member>
+        <member name="M:ImageResizer.Util.SeekableStreamWrapper.Dispose(System.Boolean)">
+            <summary>
+            Disposes the seekable stream wrapper, and the wrapped stream if
+            originally requested.
+            </summary>
+            <param name="disposing"></param>
+        </member>
+        <member name="P:ImageResizer.Util.SeekableStreamWrapper.CanWrite">
+            <summary>
+            Gets whether the stream wrapper can be written to or not.
+            This is only <c>true</c> while the wrapper is being initialized, and
+            otherwise <c>false</c> for all other callers.
+            </summary>
         </member>
         <member name="M:ImageResizer.Util.StreamUtils.CopyTo(System.IO.Stream,System.IO.Stream)">
             <summary>
