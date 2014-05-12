@@ -31,6 +31,10 @@ namespace Nop.Web.Controllers
 
         public RedirectResult RemoveParameterAssociation(string returnUrl)
         {
+            //prevent open redirection attack
+            if (!Url.IsLocalUrl(returnUrl))
+                returnUrl = Url.RouteUrl("HomePage");
+
             ExternalAuthorizerHelper.RemoveParameters();
             return Redirect(returnUrl);
         }

@@ -7,10 +7,11 @@
     Html.AddTitleParts(T("PageTitle.Register").Text);
 
     //continue URL
+    var qs = this.Context.Request.QueryString["returnUrl"];
     var continueUrl = "";
-    if (!String.IsNullOrEmpty(this.Context.Request.QueryString["returnUrl"]))
+    if (!String.IsNullOrEmpty(qs) && Url.IsLocalUrl(qs))
     {
-        continueUrl = this.Context.Request.QueryString["returnUrl"];
+        continueUrl = qs;
     }
     else
     {
