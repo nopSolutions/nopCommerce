@@ -141,9 +141,11 @@ namespace Nop.Admin.Controllers
                 _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
                     SystemCustomerAttributeNames.AdminAreaStoreScopeConfiguration, storeid);
             }
+
             //home page
             if (String.IsNullOrEmpty(returnUrl))
-                returnUrl = Url.Action("Index", "Home");
+                returnUrl = Url.Action("Index", "Home", new { area = "Admin" });
+
             return Redirect(returnUrl);
         }
 
