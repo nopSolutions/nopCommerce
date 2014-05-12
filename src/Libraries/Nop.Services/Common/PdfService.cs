@@ -384,8 +384,11 @@ namespace Nop.Services.Common
                     cell = new PdfPCell();
                     cell.AddElement(new Paragraph(name, font));
                     cell.HorizontalAlignment = Element.ALIGN_LEFT;
-                    var attributesParagraph = new Paragraph(HtmlHelper.ConvertHtmlToPlainText(orderItem.AttributeDescription, true, true), attributesFont);
-                    cell.AddElement(attributesParagraph);
+                    if (!String.IsNullOrEmpty(orderItem.AttributeDescription))
+                    {
+                        var attributesParagraph = new Paragraph(HtmlHelper.ConvertHtmlToPlainText(orderItem.AttributeDescription, true, true), attributesFont);
+                        cell.AddElement(attributesParagraph);
+                    }
                     productsTable.AddCell(cell);
 
                     //SKU
@@ -912,8 +915,11 @@ namespace Nop.Services.Common
                     cell = new PdfPCell();
                     cell.AddElement(new Paragraph(name, font));
                     cell.HorizontalAlignment = Element.ALIGN_LEFT;
-                    var attributesParagraph = new Paragraph(HtmlHelper.ConvertHtmlToPlainText(orderItem.AttributeDescription, true, true), attributesFont);
-                    cell.AddElement(attributesParagraph);
+                    if (!String.IsNullOrEmpty(orderItem.AttributeDescription))
+                    {
+                        var attributesParagraph = new Paragraph(HtmlHelper.ConvertHtmlToPlainText(orderItem.AttributeDescription, true, true), attributesFont);
+                        cell.AddElement(attributesParagraph);
+                    }
                     productsTable.AddCell(cell);
 
                     //SKU
