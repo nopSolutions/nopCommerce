@@ -297,11 +297,6 @@
             Gets the global, application-wide container.
             </summary>
         </member>
-        <member name="F:Autofac.Integration.Mvc.RequestLifetimeScopeProvider.HttpRequestTag">
-            <summary>
-            Tag used to identify registrations that are scoped to the HTTP request level.
-            </summary>
-        </member>
         <member name="M:Autofac.Integration.Mvc.RequestLifetimeScopeProvider.#ctor(Autofac.ILifetimeScope)">
             <summary>
             Initializes a new instance of the <see cref="T:Autofac.Integration.Mvc.RequestLifetimeScopeProvider"/> class.
@@ -409,6 +404,9 @@
             <param name="registration">The registration to configure.</param>
             <param name="lifetimeScopeTags">Additional tags applied for matching lifetime scopes.</param>
             <returns>A registration builder allowing further configuration of the component.</returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="registration"/> is <see langword="null"/>.
+            </exception>
         </member>
         <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.RegisterControllers(Autofac.ContainerBuilder,System.Reflection.Assembly[])">
             <summary>

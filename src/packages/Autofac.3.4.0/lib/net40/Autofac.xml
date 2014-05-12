@@ -158,6 +158,17 @@
               Looks up a localized string similar to {0} ---&gt; {1} (See inner exception for details.).
             </summary>
         </member>
+        <member name="T:Autofac.Core.Lifetime.MatchingScopeLifetimeTags">
+            <summary>
+            Well-known tags used in setting up matching lifetime scopes.
+            </summary>
+        </member>
+        <member name="F:Autofac.Core.Lifetime.MatchingScopeLifetimeTags.RequestLifetimeScopeTag">
+            <summary>
+            Tag used in setting up per-request lifetime scope registrations
+            (e.g., per-HTTP-request or per-API-request).
+            </summary>
+        </member>
         <member name="T:Autofac.Core.Registration.IModuleRegistrar">
             <summary>
             Interface providing fluent syntax for chaining module registrations.
@@ -5521,6 +5532,22 @@
             appropriate lifetime is not available.
             </para>
             </remarks>
+        </member>
+        <member name="M:Autofac.RegistrationExtensions.InstancePerRequest``3(Autofac.Builder.IRegistrationBuilder{``0,``1,``2},System.Object[])">
+            <summary>
+            Share one instance of the component within the context of a single
+            web/HTTP/API request. Only available for integration that supports
+            per-request dependencies (e.g., MVC, Web API, web forms, etc.).
+            </summary>
+            <typeparam name="TLimit">Registration limit type.</typeparam>
+            <typeparam name="TStyle">Registration style.</typeparam>
+            <typeparam name="TActivatorData">Activator data type.</typeparam>
+            <param name="registration">The registration to configure.</param>
+            <param name="lifetimeScopeTags">Additional tags applied for matching lifetime scopes.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="registration"/> is <see langword="null"/>.
+            </exception>
         </member>
         <member name="T:Autofac.RegistrationExtensionsResources">
             <summary>
