@@ -141,9 +141,6 @@ namespace Nop.Admin.Controllers
                 _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
                     SystemCustomerAttributeNames.AdminAreaStoreScopeConfiguration, storeid);
             }
-            //url referrer
-            if (String.IsNullOrEmpty(returnUrl))
-                returnUrl = _webHelper.GetUrlReferrer();
             //home page
             if (String.IsNullOrEmpty(returnUrl))
                 returnUrl = Url.Action("Index", "Home");

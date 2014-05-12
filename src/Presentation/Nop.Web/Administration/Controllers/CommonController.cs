@@ -521,9 +521,6 @@ namespace Nop.Admin.Controllers
                 _workContext.WorkingLanguage = language;
             }
 
-            //url referrer
-            if (String.IsNullOrEmpty(returnUrl))
-                returnUrl = _webHelper.GetUrlReferrer();
             //home page
             if (String.IsNullOrEmpty(returnUrl))
                 returnUrl = Url.Action("Index", "Home", new { area = "Admin" });

@@ -277,9 +277,6 @@ namespace Nop.Web.Controllers
                 _workContext.WorkingLanguage = language;
             }
 
-            //url referrer
-            if (String.IsNullOrEmpty(returnUrl))
-                returnUrl = _webHelper.GetUrlReferrer();
             //home page
             if (String.IsNullOrEmpty(returnUrl))
                 returnUrl = Url.RouteUrl("HomePage");
@@ -313,9 +310,6 @@ namespace Nop.Web.Controllers
             if (currency != null)
                 _workContext.WorkingCurrency = currency;
 
-            //url referrer
-            if (String.IsNullOrEmpty(returnUrl))
-                returnUrl = _webHelper.GetUrlReferrer();
             //home page
             if (String.IsNullOrEmpty(returnUrl))
                 returnUrl = Url.RouteUrl("HomePage");
@@ -334,9 +328,6 @@ namespace Nop.Web.Controllers
             var taxDisplayType = (TaxDisplayType)Enum.ToObject(typeof(TaxDisplayType), customerTaxType);
             _workContext.TaxDisplayType = taxDisplayType;
 
-            //url referrer
-            if (String.IsNullOrEmpty(returnUrl))
-                returnUrl = _webHelper.GetUrlReferrer();
             //home page
             if (String.IsNullOrEmpty(returnUrl))
                 returnUrl = Url.RouteUrl("HomePage");
@@ -632,9 +623,6 @@ namespace Nop.Web.Controllers
         {
             _themeContext.WorkingThemeName = themeName;
             
-            //url referrer
-            if (String.IsNullOrEmpty(returnUrl))
-                returnUrl = _webHelper.GetUrlReferrer();
             //home page
             if (String.IsNullOrEmpty(returnUrl))
                 returnUrl = Url.RouteUrl("HomePage");
