@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Services.Events;
 using NUnit.Framework;
@@ -16,6 +17,7 @@ namespace Nop.Web.MVC.Tests.Events
         public void SetUp()
         {
             _engine = new NopEngine();
+            _engine.Initialize(new NopConfig());
             _eventPublisher = _engine.Resolve<IEventPublisher>();
         }
 

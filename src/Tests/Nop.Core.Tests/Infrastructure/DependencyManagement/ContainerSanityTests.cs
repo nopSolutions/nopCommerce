@@ -11,7 +11,7 @@ namespace Nop.Core.Tests.Infrastructure.DependencyManagement
         protected override IEngine CreateEngine()
         {
             var engine = new NopEngine();
-
+            engine.Initialize(new NopConfig());
             return engine;
         }
     }
