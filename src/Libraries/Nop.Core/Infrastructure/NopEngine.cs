@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 using Autofac;
 using Nop.Core.Configuration;
@@ -40,7 +39,7 @@ namespace Nop.Core.Infrastructure
         /// <summary>
         /// Register dependencies
         /// </summary>
-        /// <param name="config"></param>
+        /// <param name="config">Config</param>
         protected virtual void RegisterDependencies(NopConfig config)
         {
             var builder = new ContainerBuilder();

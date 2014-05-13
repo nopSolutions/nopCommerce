@@ -12,6 +12,7 @@ using Nop.Services.Authentication;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Stores;
 using Nop.Services.Vendors;
@@ -43,7 +44,7 @@ namespace Nop.Web.Framework
         private readonly TaxSettings _taxSettings;
         private readonly CurrencySettings _currencySettings;
         private readonly LocalizationSettings _localizationSettings;
-        private readonly IWebHelper _webHelper;
+        private readonly IUserAgentHelper _userAgentHelper;
         private readonly IStoreMappingService _storeMappingService;
 
         private Customer _cachedCustomer;
@@ -68,7 +69,7 @@ namespace Nop.Web.Framework
             TaxSettings taxSettings, 
             CurrencySettings currencySettings,
             LocalizationSettings localizationSettings,
-            IWebHelper webHelper,
+            IUserAgentHelper userAgentHelper,
             IStoreMappingService storeMappingService)
         {
             this._httpContext = httpContext;
@@ -82,7 +83,7 @@ namespace Nop.Web.Framework
             this._taxSettings = taxSettings;
             this._currencySettings = currencySettings;
             this._localizationSettings = localizationSettings;
-            this._webHelper = webHelper;
+            this._userAgentHelper = userAgentHelper;
             this._storeMappingService = storeMappingService;
         }
 
@@ -194,7 +195,7 @@ namespace Nop.Web.Framework
                 //or comment the following two lines of code in order to disable this functionality
                 if (customer == null || customer.Deleted || !customer.Active)
                 {
-                    if (_webHelper.IsSearchEngine(_httpContext))
+                    if (_userAgentHelper.IsSearchEngine())
                         customer = _customerService.GetCustomerBySystemName(SystemCustomerNames.SearchEngine);
                 }
 

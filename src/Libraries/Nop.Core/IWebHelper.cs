@@ -126,13 +126,6 @@ namespace Nop.Core
         void RestartAppDomain(bool makeRedirect = false, string redirectUrl = "");
         
         /// <summary>
-        /// Get a value indicating whether the request is made by search engine (web crawler)
-        /// </summary>
-        /// <param name="context">HTTP context</param>
-        /// <returns>Result</returns>
-        bool IsSearchEngine(HttpContextBase context);
-
-        /// <summary>
         /// Gets a value that indicates whether the client is being redirected to a new location
         /// </summary>
         bool IsRequestBeingRedirected { get; }

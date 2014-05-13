@@ -82,7 +82,10 @@ namespace Nop.Web.Framework
 
             //web helper
             builder.RegisterType<WebHelper>().As<IWebHelper>().InstancePerHttpRequest();
+            //user agent helper
+            builder.RegisterType<UserAgentHelper>().As<IUserAgentHelper>().InstancePerHttpRequest();
 
+            
             //controllers
             builder.RegisterControllers(typeFinder.GetAssemblies().ToArray());
 

@@ -52,6 +52,14 @@ namespace Nop.Core.Configuration
                     config.ThemeBasePath = attribute.Value;
             }
 
+            var userAgentStringsNode = section.SelectSingleNode("UserAgentStrings");
+            if (userAgentStringsNode != null && userAgentStringsNode.Attributes != null)
+            {
+                var attribute = userAgentStringsNode.Attributes["databasePath"];
+                if (attribute != null)
+                    config.UserAgentStringsPath = attribute.Value;
+            }
+
             return config;
         }
         
@@ -74,5 +82,10 @@ namespace Nop.Core.Configuration
         /// Indicates whether we should ignore startup tasks
         /// </summary>
         public bool IgnoreStartupTasks { get; private set; }
+
+        /// <summary>
+        /// Path to database with user agent strings
+        /// </summary>
+        public string UserAgentStringsPath { get; private set; }
     }
 }
