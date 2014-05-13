@@ -204,7 +204,6 @@ namespace Nop.Core.Infrastructure.DependencyManagement
             return scope.ResolveOptional(serviceType);
         }
         
-
         public void UpdateContainer(Action<ContainerBuilder> action)
         {
             var builder = new ContainerBuilder();

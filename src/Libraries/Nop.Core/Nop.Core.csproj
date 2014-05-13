@@ -228,7 +228,6 @@
     <Compile Include="Infrastructure\EngineContext.cs" />
     <Compile Include="Infrastructure\AppDomainTypeFinder.cs" />
     <Compile Include="Infrastructure\DependencyManagement\IDependencyRegistrar.cs" />
-    <Compile Include="Infrastructure\DependencyManagement\ContainerConfigurer.cs" />
     <Compile Include="Infrastructure\DependencyManagement\ContainerManager.cs" />
     <Compile Include="Infrastructure\IEngine.cs" />
     <Compile Include="Infrastructure\ITypeFinder.cs" />

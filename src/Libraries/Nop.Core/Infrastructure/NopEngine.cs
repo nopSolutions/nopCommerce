@@ -16,27 +16,9 @@ namespace Nop.Core.Infrastructure
 
         #endregion
 
-        #region Ctor
-
-        /// <summary>
-		/// Creates an instance of the content engine using default settings and configuration.
-		/// </summary>
-		public NopEngine() 
-            : this(new ContainerConfigurer())
-		{
-		}
-
-		public NopEngine(ContainerConfigurer configurer)
-		{
-            var config = ConfigurationManager.GetSection("NopConfig") as NopConfig;
-            InitializeContainer(configurer, config);
-		}
-        
-        #endregion
-
         #region Utilities
 
-        private void RunStartupTasks()
+        protected virtual void RunStartupTasks()
         {
             var typeFinder = _containerManager.Resolve<ITypeFinder>();
             var startUpTaskTypes = typeFinder.FindClassesOfType<IStartupTask>();
@@ -48,13 +30,32 @@ namespace Nop.Core.Infrastructure
             foreach (var startUpTask in startUpTasks)
                 startUpTask.Execute();
         }
-        
-        private void InitializeContainer(ContainerConfigurer configurer, NopConfig config)
+
+        protected virtual void RegisterDependencies(NopConfig config)
         {
             var builder = new ContainerBuilder();
-
             _containerManager = new ContainerManager(builder.Build());
-            configurer.Configure(this, _containerManager, config);
+
+            //other dependencies
+            _containerManager.AddComponentInstance<NopConfig>(config, "nop.configuration");
+            _containerManager.AddComponentInstance<IEngine>(this, "nop.engine");
+
+            //type finder
+            _containerManager.AddComponent<ITypeFinder, WebAppTypeFinder>("nop.typeFinder");
+
+            //register dependencies provided by other assemblies
+            var typeFinder = _containerManager.Resolve<ITypeFinder>();
+            _containerManager.UpdateContainer(x =>
+            {
+                var drTypes = typeFinder.FindClassesOfType<IDependencyRegistrar>();
+                var drInstances = new List<IDependencyRegistrar>();
+                foreach (var drType in drTypes)
+                    drInstances.Add((IDependencyRegistrar)Activator.CreateInstance(drType));
+                //sort
+                drInstances = drInstances.AsQueryable().OrderBy(t => t.Order).ToList();
+                foreach (var dependencyRegistrar in drInstances)
+                    dependencyRegistrar.Register(x, typeFinder);
+            });
         }
 
         #endregion
@@ -67,19 +68,15 @@ namespace Nop.Core.Infrastructure
         /// <param name="config">Config</param>
         public void Initialize(NopConfig config)
         {
-            //bool databaseInstalled = DataSettingsHelper.DatabaseIsInstalled();
-            //if (databaseInstalled)
-            //{
-            //    //startup tasks
-            //    RunStartupTasks();
-            //}
-
+            //register dependencies
+            RegisterDependencies(config);
 
             //startup tasks
             if (!config.IgnoreStartupTasks)
             {
                 RunStartupTasks();
             }
+
         }
 
         public T Resolve<T>() where T : class
