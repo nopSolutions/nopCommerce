@@ -224,7 +224,6 @@
     <Compile Include="IWebHelper.cs" />
     <Compile Include="Domain\Security\DefaultPermissionRecord.cs" />
     <Compile Include="Domain\Security\PermissionRecord.cs" />
-    <Compile Include="Infrastructure\DependencyManagement\ComponentLifeStyle.cs" />
     <Compile Include="Infrastructure\EngineContext.cs" />
     <Compile Include="Infrastructure\AppDomainTypeFinder.cs" />
     <Compile Include="Infrastructure\DependencyManagement\IDependencyRegistrar.cs" />

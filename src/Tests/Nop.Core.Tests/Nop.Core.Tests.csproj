@@ -106,7 +106,6 @@
     <Compile Include="Domain\Orders\GiftCardTests.cs" />
     <Compile Include="Domain\Shipping\ShippingOptionTypeConverterTests.cs" />
     <Compile Include="Fakes\FakeTypeFinder.cs" />
-    <Compile Include="Infrastructure\DependencyManagement\ContainerSanityTests.cs" />
     <Compile Include="Infrastructure\SingletonTests.cs" />
     <Compile Include="Infrastructure\TypeFinderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

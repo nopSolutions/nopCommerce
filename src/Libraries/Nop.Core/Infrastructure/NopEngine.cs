@@ -8,6 +8,9 @@ using Nop.Core.Infrastructure.DependencyManagement;
 
 namespace Nop.Core.Infrastructure
 {
+    /// <summary>
+    /// Engine
+    /// </summary>
     public class NopEngine : IEngine
     {
         #region Fields
@@ -18,6 +21,9 @@ namespace Nop.Core.Infrastructure
 
         #region Utilities
 
+        /// <summary>
+        /// Run startup tasks
+        /// </summary>
         protected virtual void RunStartupTasks()
         {
             var typeFinder = _containerManager.Resolve<ITypeFinder>();
@@ -31,31 +37,41 @@ namespace Nop.Core.Infrastructure
                 startUpTask.Execute();
         }
 
+        /// <summary>
+        /// Register dependencies
+        /// </summary>
+        /// <param name="config"></param>
         protected virtual void RegisterDependencies(NopConfig config)
         {
             var builder = new ContainerBuilder();
-            _containerManager = new ContainerManager(builder.Build());
+            var container = builder.Build();
 
-            //other dependencies
-            _containerManager.AddComponentInstance<NopConfig>(config, "nop.configuration");
-            _containerManager.AddComponentInstance<IEngine>(this, "nop.engine");
+            //we create new instance of ContainerBuilder
+            //because Build() or Update() method can only be called once on a ContainerBuilder.
 
-            //type finder
-            _containerManager.AddComponent<ITypeFinder, WebAppTypeFinder>("nop.typeFinder");
+
+            //dependencies
+            builder = new ContainerBuilder();
+            builder.RegisterInstance(config).As<NopConfig>().SingleInstance();
+            builder.RegisterInstance(this).As<IEngine>().SingleInstance();
+            builder.RegisterType<WebAppTypeFinder>().As<ITypeFinder>().SingleInstance();
+            builder.Update(container);
 
             //register dependencies provided by other assemblies
-            var typeFinder = _containerManager.Resolve<ITypeFinder>();
-            _containerManager.UpdateContainer(x =>
-            {
-                var drTypes = typeFinder.FindClassesOfType<IDependencyRegistrar>();
-                var drInstances = new List<IDependencyRegistrar>();
-                foreach (var drType in drTypes)
-                    drInstances.Add((IDependencyRegistrar)Activator.CreateInstance(drType));
-                //sort
-                drInstances = drInstances.AsQueryable().OrderBy(t => t.Order).ToList();
-                foreach (var dependencyRegistrar in drInstances)
-                    dependencyRegistrar.Register(x, typeFinder);
-            });
+            var typeFinder = container.Resolve<ITypeFinder>();
+            builder = new ContainerBuilder();
+            var drTypes = typeFinder.FindClassesOfType<IDependencyRegistrar>();
+            var drInstances = new List<IDependencyRegistrar>();
+            foreach (var drType in drTypes)
+                drInstances.Add((IDependencyRegistrar) Activator.CreateInstance(drType));
+            //sort
+            drInstances = drInstances.AsQueryable().OrderBy(t => t.Order).ToList();
+            foreach (var dependencyRegistrar in drInstances)
+                dependencyRegistrar.Register(builder, typeFinder);
+            builder.Update(container);
+
+
+            this._containerManager = new ContainerManager(container);
         }
 
         #endregion
@@ -79,16 +95,31 @@ namespace Nop.Core.Infrastructure
 
         }
 
+        /// <summary>
+        /// Resolve dependency
+        /// </summary>
+        /// <typeparam name="T">T</typeparam>
+        /// <returns></returns>
         public T Resolve<T>() where T : class
 		{
             return ContainerManager.Resolve<T>();
 		}
 
+        /// <summary>
+        ///  Resolve dependency
+        /// </summary>
+        /// <param name="type">Type</param>
+        /// <returns></returns>
         public object Resolve(Type type)
         {
             return ContainerManager.Resolve(type);
         }
         
+        /// <summary>
+        /// Resolve dependencies
+        /// </summary>
+        /// <typeparam name="T">T</typeparam>
+        /// <returns></returns>
         public T[] ResolveAll<T>()
         {
             return ContainerManager.ResolveAll<T>();
@@ -98,6 +129,9 @@ namespace Nop.Core.Infrastructure
 
         #region Properties
 
+        /// <summary>
+        /// Container manager
+        /// </summary>
         public ContainerManager ContainerManager
         {
             get { return _containerManager; }
