@@ -125,6 +125,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableJsBundling.Hint">
     <Value>Enable to combine (bundle) multiple JavaScript files into a single file. Don''t enable if you''re running nopCommerce in web farms or Windows Azure. Note that this functionality requires significant server resources (not recommended to use with cheap shared hosting plans).</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.AssociatedExternalAuth.YourAccountWillBeLinkedTo.Remove">
+    <Value>(remove)</Value>
+  </LocaleResource>
 </Language>
 '
 
