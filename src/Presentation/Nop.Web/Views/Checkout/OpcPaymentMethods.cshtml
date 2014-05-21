@@ -26,7 +26,9 @@
                             @if (!String.IsNullOrEmpty(paymentMethod.LogoUrl))
                             {
                                 <div class ="payment-logo">
-                                    <img src="@paymentMethod.LogoUrl" alt="@paymentMethodName" />
+                                    <label for="paymentmethod_@(i)">
+                                        <img src="@paymentMethod.LogoUrl" alt="@paymentMethodName" />
+                                    </label>
                                 </div>
                             }
                             <div class="payment-details">
