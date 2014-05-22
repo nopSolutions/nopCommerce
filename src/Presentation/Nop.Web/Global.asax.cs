@@ -92,6 +92,21 @@ namespace Nop.Web
                 TaskManager.Instance.Initialize();
                 TaskManager.Instance.Start();
             }
+
+            //log application start
+            if (databaseInstalled)
+            {
+                try
+                {
+                    //log
+                    var logger = EngineContext.Current.Resolve<ILogger>();
+                    logger.Information("Application started", null, null);
+                }
+                catch (Exception)
+                {
+                    //don't throw new exception if occurs
+                }
+            }
         }
 
         protected void Application_BeginRequest(object sender, EventArgs e)

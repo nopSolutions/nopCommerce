@@ -16,7 +16,70 @@ namespace Nop.Core
     /// </summary>
     public partial class WebHelper : IWebHelper
     {
+        #region Fields 
+
         private readonly HttpContextBase _httpContext;
+
+        #endregion
+
+        #region Utilities
+
+        protected virtual Boolean IsRequestAvailable(HttpContextBase httpContext)
+        {
+            if (httpContext == null)
+                return false;
+
+            try
+            {
+                if (httpContext.Request == null)
+                    return false;
+            }
+            catch (HttpException ex)
+            {
+                return false;
+            }
+
+            return true;
+        }
+        protected virtual bool TryWriteWebConfig()
+        {
+            try
+            {
+                // In medium trust, "UnloadAppDomain" is not supported. Touch web.config
+                // to force an AppDomain restart.
+                File.SetLastWriteTimeUtc(MapPath("~/web.config"), DateTime.UtcNow);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        protected virtual bool TryWriteGlobalAsax()
+        {
+            try
+            {
+                //When a new plugin is dropped in the Plugins folder and is installed into nopCommerce, 
+                //even if the plugin has registered routes for its controllers, 
+                //these routes will not be working as the MVC framework couldn't 
+                //find the new controller types and couldn't instantiate the requested controller. 
+                //That's why you get these nasty errors 
+                //i.e "Controller does not implement IController".
+                //The issue is described here: http://www.nopcommerce.com/boards/t/10969/nop-20-plugin.aspx?p=4#51318
+                //The solution is to touch global.asax file
+                File.SetLastWriteTimeUtc(MapPath("~/global.asax"), DateTime.UtcNow);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Ctor
@@ -36,9 +99,7 @@ namespace Nop.Core
             string referrerUrl = string.Empty;
 
             //URL referrer is null in some case (for example, in IE 8)
-            if (_httpContext != null &&
-                _httpContext.Request != null &&
-                _httpContext.Request.UrlReferrer != null)
+            if (IsRequestAvailable(_httpContext) && _httpContext.Request.UrlReferrer != null)
                 referrerUrl = _httpContext.Request.UrlReferrer.PathAndQuery;
 
             return referrerUrl;
@@ -50,7 +111,7 @@ namespace Nop.Core
         /// <returns>URL referrer</returns>
         public virtual string GetCurrentIpAddress()
         {
-            if (_httpContext == null || _httpContext.Request == null)
+            if (!IsRequestAvailable(_httpContext))
                 return string.Empty;
 
             var result = "";
@@ -121,7 +182,7 @@ namespace Nop.Core
         public virtual string GetThisPageUrl(bool includeQueryString, bool useSsl)
         {
             string url = string.Empty;
-            if (_httpContext == null || _httpContext.Request == null)
+            if (!IsRequestAvailable(_httpContext))
                 return url;
 
             if (includeQueryString)
@@ -149,7 +210,7 @@ namespace Nop.Core
         public virtual bool IsCurrentConnectionSecured()
         {
             bool useSsl = false;
-            if (_httpContext != null && _httpContext.Request != null)
+            if (IsRequestAvailable(_httpContext))
             {
                 useSsl = _httpContext.Request.IsSecureConnection;
                 //when your hosting uses a load balancer on their server then the Request.IsSecureConnection is never got set to true, use the statement below
@@ -171,7 +232,7 @@ namespace Nop.Core
 
             try
             {
-                if (_httpContext == null || _httpContext.Request == null)
+                if (!IsRequestAvailable(_httpContext))
                     return result;
 
                 //put this method is try-catch 
@@ -293,7 +354,7 @@ namespace Nop.Core
             string result = GetStoreHost(useSsl);
             if (result.EndsWith("/"))
                 result = result.Substring(0, result.Length - 1);
-            if (_httpContext != null && _httpContext.Request != null)
+            if (IsRequestAvailable(_httpContext))
                 result = result + _httpContext.Request.ApplicationPath;
             if (!result.EndsWith("/"))
                 result += "/";
@@ -541,7 +602,7 @@ namespace Nop.Core
         public virtual T QueryString<T>(string name)
         {
             string queryParam = null;
-            if (_httpContext != null && _httpContext.Request.QueryString[name] != null)
+            if (IsRequestAvailable(_httpContext) && _httpContext.Request.QueryString[name] != null)
                 queryParam = _httpContext.Request.QueryString[name];
 
             if (!String.IsNullOrEmpty(queryParam))
@@ -597,42 +658,6 @@ namespace Nop.Core
             }
         }
 
-        private bool TryWriteWebConfig()
-        {
-            try
-            {
-                // In medium trust, "UnloadAppDomain" is not supported. Touch web.config
-                // to force an AppDomain restart.
-                File.SetLastWriteTimeUtc(MapPath("~/web.config"), DateTime.UtcNow);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        private bool TryWriteGlobalAsax()
-        {
-            try
-            {
-                //When a new plugin is dropped in the Plugins folder and is installed into nopCommerce, 
-                //even if the plugin has registered routes for its controllers, 
-                //these routes will not be working as the MVC framework couldn't 
-                //find the new controller types and couldn't instantiate the requested controller. 
-                //That's why you get these nasty errors 
-                //i.e "Controller does not implement IController".
-                //The issue is described here: http://www.nopcommerce.com/boards/t/10969/nop-20-plugin.aspx?p=4#51318
-                //The solution is to touch global.asax file
-                File.SetLastWriteTimeUtc(MapPath("~/global.asax"), DateTime.UtcNow);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
         /// <summary>
         /// Gets a value that indicates whether the client is being redirected to a new location
         /// </summary>
@@ -661,5 +686,7 @@ namespace Nop.Core
                 _httpContext.Items["nop.IsPOSTBeingDone"] = value;
             }
         }
+
+        #endregion
     }
 }
