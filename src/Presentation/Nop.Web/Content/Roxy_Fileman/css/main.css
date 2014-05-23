@@ -1,0 +1,214 @@
+/*
+  RoxyFileman - web based file manager. Ready to use with CKEditor, TinyMCE. 
+  Can be easily integrated with any other WYSIWYG editor or CMS.
+
+  Copyright (C) 2013, RoxyFileman.com - Lyubomir Arsov. All rights reserved.
+  For licensing, see LICENSE.txt or http://RoxyFileman.com/license
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+  Contact: Lyubomir Arsov, liubo (at) web-lobby.com
+*/
+body{
+  font-family: Verdana;
+  font-size: 11px;
+  padding:0;
+  margin:0;
+  background:#FFF;
+  height:100%;
+  width:100%;
+}
+a{text-decoration:none;color:#DD7700;}
+ul{
+  list-style:none;
+  margin:0;
+  padding:0;
+}
+#wraper{
+  width:100%;
+  height:100%;
+}
+#wraper,#dlgNewDir,#dlgFileProp,#dlgAddFile,#menuDir,
+#menuFile,#pnlRenameFile,#pnlLoadingDirs,
+#pnlDirName,#pnlLoading,#pnlEmptyDir,
+#pnlSearchNoFiles,#pnlFileProp, #pnlDirList ul{
+  display:none;
+}
+.contextMenu a:hover,
+#pnlFileList .selected,#pnlFileList .selected:hover,
+#menuFile a:hover{
+  background-color: #000099 !important;
+  color:#FFF;
+}
+#pnlDirList .selected,#pnlDirList div.selected:hover{background-color: #DFD !important;}
+.dialog input,#fileUploads{width:97%;}
+.filesize{font-weight:bold;margin-top:4px;display:inline-block;}
+.pnlDragFile,.pnlDragDir{
+  background:#FFF;
+  opacity:0.8;
+  float:left;
+  width:auto !important;
+}
+#pnlStatus{
+  padding:5px;
+}
+.scrollPane{
+  height:400px;
+  overflow: auto;
+}
+.bottomLine{background:#DDD;border-top:1px solid #CCC;}
+.pale{opacity:0.5;}
+/* Search and order fields */
+#txtSearch,#ddlOrder{
+  border:1px solid #CCC;
+  border-radius:3px;
+}
+#txtSearch{
+  padding:0 22px 0 3px;
+  background:url(../images/search.png) no-repeat 87px center;
+  width:80px;
+  height:20px;
+}
+input[type=text]::-ms-clear { display: none; }
+/* END OF Search and order fields */
+
+/* Directory tree */
+.pnlDirs{
+  width:260px;
+  overflow:auto;
+  border-right:1px solid #DDD;
+}
+#pnlDirList{margin-left:4px;}
+#pnlDirList ul{padding:0 0 0 20px;}
+#pnlDirList .dir{
+  line-height:30px;
+  float:left;
+  margin-right:5px;
+}
+#pnlDirList .dirPlus{
+  float:left;
+  margin: 3px 3px 0 0;
+}
+#pnlDirList li,#pnlDirList div{
+  float:left;
+  clear:both;
+  width:98%;
+}
+#pnlDirList div{padding:3px;cursor:pointer;}
+#pnlLoadingDirs{margin-left:5px;}
+/* END OF Directory tree */
+
+/* File list */
+.pnlFiles{padding-left:4px;}
+#pnlFileList .icon{float:left;margin-right:3px;}
+#pnlFileList li{float:left;padding:3px;clear:both;width:98%;cursor:pointer;}
+#pnlFileList li:hover,#pnlDirList li div:hover{background:#FFFFCC !important;}
+#pnlFileList .size{float:right;margin-left:20px;}
+#pnlFileList .time{float:right;margin-left:15px;width:130px;}
+.imgPreview{max-width:300px;}
+/* END OF File list */
+
+/* Context menus */
+.contextMenu{
+  position:absolute;
+  background-color:#DDD;
+  border:1px solid #BBB;
+  min-width:100px;
+  font-weight: bold;
+  z-index:1000 !important;
+}
+.contextMenu a{
+  background-repeat:no-repeat;
+  background-position: 4px 6px;
+  padding: 5px 25px 5px 20px;
+  display:block;
+  color:#000;
+  text-decoration:none;
+}
+hr{margin:0;color:#AAA;}
+/* END OF Context menus */
+
+/* Buttons */
+.actions{padding:3px 0 10px 5px;}
+.actions input{
+  background-repeat:no-repeat;
+  background-position: 3px center;
+  padding:0 3px 0 18px;
+  height:22px;
+  font-size: 11px;
+  border:1px solid #CCC;
+  background-color: #EEE;
+  border-radius:3px;
+  margin-bottom: 3px;
+}
+.actions input[type=button]:hover,.actions input.selected{background-color: #DFD;cursor:pointer;}
+#btnAddDir, #mnuCreateDir{background-image:url(../images/folder-add.png);}
+#mnuDownloadDir{background-image:url(../images/folder-download.png);}
+#btnDeleteDir,#mnuDeleteDir{background-image:url(../images/folder-delete.png);}
+#btnAddFile{background-image:url(../images/file-add.png);}
+#btnDeleteFile,#mnuDeleteFile{background-image:url(../images/file-delete.png);}
+#btnDeleteFile{margin-right:15px;}
+#btnDownloadFile,#mnuDownload{background-image:url(../images/file-download.png);}
+#btnPreviewFile,#mnuPreview{background-image:url(../images/preview.png);}
+#btnSelectFile,#mnuSelectFile{background-image:url(../images/select.png);}
+#btnThumbView{background-image:url(../images/view-tile.png);background-position: center center;}
+#btnListView{background-image:url(../images/view-list.png);background-position: center center;}
+#btnRenameFile,#btnRenameDir,#mnuRenameDir,#mnuRenameFile{background-image:url(../images/rename.png);}
+#mnuDirCut,#mnuFileCut{background-image:url(../images/cut.png);}
+#mnuDirCopy,#mnuFileCopy{background-image:url(../images/copy.png);}
+#mnuDirPaste,#mnuFilePaste{background-image:url(../images/paste.png);}
+
+/* END OF Buttons */
+/* File list views */
+ul#pnlFileList.thumbView li{
+  /*
+  width:140px;
+  height: 140px;
+  */
+  float:left !important;
+  clear:none;
+  margin:0 6px 6px 0;
+  overflow:hidden;
+  padding:10px;
+  text-align:center;
+  vertical-align:middle;
+  border: 1px solid #EEE;
+  border-radius: 5px;
+  position:relative;
+  background:#EEE;
+}
+ul#pnlFileList.thumbView .name,ul#pnlFileList.thumbView .time{display:none;}
+ul#pnlFileList.thumbView .icon{
+  clear:both;
+  float:none;
+  margin:0 !important;
+  text-align:center;
+  vertical-align:middle;
+  background-position:center center;
+  background-repeat:no-repeat;
+  /*
+  width:140px;
+  height:120px;
+  */
+}
+ul#pnlFileList.thumbView .size{
+  display:block !important;
+  width:95% !important;
+  position:absolute;
+  bottom:5px;
+  margin:0;
+}
+/* END OF File list views */
+div.ui-tooltip {
+    max-width: 90%;
+}
