@@ -613,7 +613,7 @@
     <Content Include="Content\kendo\2014.1.318\Uniform\sprite.png" />
     <Content Include="Content\kendo\2014.1.318\Uniform\sprite_2x.png" />
     <Content Include="Content\magnific-popup\magnific-popup.css" />
-    <Content Include="Content\Roxy_Fileman\conf.txt" />
+    <Content Include="Content\Roxy_Fileman\conf.json" />
     <Content Include="Content\Roxy_Fileman\css\images\animated-overlay.gif" />
     <Content Include="Content\Roxy_Fileman\css\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\Roxy_Fileman\css\images\ui-bg_flat_75_ffffff_40x100.png" />
@@ -874,7 +874,10 @@
     <Content Include="Content\Roxy_Fileman\js\mini-main.js" />
     <Content Include="Content\Roxy_Fileman\js\tiny_mce_popup.js" />
     <Content Include="Content\Roxy_Fileman\js\utils.js" />
-    <Content Include="Content\Roxy_Fileman\lang\en.txt" />
+    <Content Include="Content\Roxy_Fileman\lang\bg.json" />
+    <Content Include="Content\Roxy_Fileman\lang\de.json" />
+    <Content Include="Content\Roxy_Fileman\lang\en.json" />
+    <Content Include="Content\Roxy_Fileman\LICENSE.txt" />
     <Content Include="Content\tinymce\license.txt" />
     <Content Include="Content\tinymce\plugins\advlist\plugin.min.js" />
     <Content Include="Content\tinymce\plugins\anchor\plugin.min.js" />
@@ -1006,6 +1009,7 @@
     <Content Include="Content\kendo\2014.1.318\images\kendoui.ttf" />
     <Content Include="App_Data\uas_20140512-01.ini" />
     <Content Include="Content\Roxy_Fileman\js\fileman-modified.zip" />
+    <Content Include="Content\Roxy_Fileman\lang\fr.json" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\fineuploader\iframe.xss.response-4.2.2.js" />
     <Content Include="Scripts\fineuploader\jquery.fineuploader-4.2.2.js" />

@@ -1,4 +1,4 @@
-﻿// wooncherk
+﻿//wooncherk contirbution
 
 using System;
 using System.Collections;
@@ -10,28 +10,48 @@ using System.IO.Compression;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
+using Nop.Services.Security;
 
 namespace Nop.Admin.Controllers
 {
+    /// <summary>
+    /// Controller for Roxy fileman (http://www.roxyfileman.com/) for TinyMCE editor
+    /// </summary>
     public class RoxyFilemanController : BaseAdminController
     {
         #region Fields
 
         private Dictionary<string, string> _settings = null;
         private Dictionary<string, string> _lang = null;
-        private HttpResponseBase _r = null;
-        private HttpContextBase _context = null;
-        private string confFile = "~/Content/Roxy_Fileman/conf.txt";
+        private string confFile = "~/Content/Roxy_Fileman/conf.json";
+        private string rootDirectory = "~/content/images/uploaded";
+
+        private readonly IPermissionService _permissionService;
+        private readonly HttpContextBase _context;
+        private readonly HttpResponseBase _r;
+        #endregion
+
+        #region Ctor
+
+        public RoxyFilemanController(IPermissionService permissionService, HttpContextBase context)
+        {
+            this._permissionService = permissionService;
+            this._context = context;
+            this._r = this._context.Response;
+        }
 
         #endregion
 
+        #region Methods
+
         public ActionResult ProcessRequest()
         {
-            _context = HttpContext;
-            _r = Response;
             string action = "DIRLIST";
 
-            //try
+            if (!_permissionService.Authorize(StandardPermissionProvider.HtmlEditorManagePictures))
+                _r.Write(GetErrorRes("You don't have required permission"));
+
+            try
             {
                 if (_context.Request["a"] != null)
                     action = (string)_context.Request["a"];
@@ -92,39 +112,47 @@ namespace Nop.Admin.Controllers
                 }
 
             }
-            //catch (Exception ex)
-            //{
-            //    if (action == "UPLOAD")
-            //    {
-            //        _r.Write("<script>");
-            //        _r.Write("parent.fileUploaded(" + GetErrorRes(LangRes("E_UploadNoFiles")) + ");");
-            //        _r.Write("</script>");
-            //    }
-            //    else
-            //    {
-            //        _r.Write(GetErrorRes(ex.Message));
-            //    }
-            //}
+            catch (Exception ex)
+            {
+                if (action == "UPLOAD")
+                {
+                    _r.Write("<script>");
+                    _r.Write("parent.fileUploaded(" + GetErrorRes(LangRes("E_UploadNoFiles")) + ");");
+                    _r.Write("</script>");
+                }
+                else
+                {
+                    _r.Write(GetErrorRes(ex.Message));
+                }
+            }
 
             return Content("");
         }
+        
+        #endregion
 
-        #region Helper methods
+        #region Utilities
 
         private string FixPath(string path)
         {
+            if (path == null)
+                path = "";
+
             if (!path.StartsWith("~"))
             {
                 if (!path.StartsWith("/"))
                     path = "/" + path;
                 path = "~" + path;
             }
+
+            if (!path.ToLowerInvariant().Contains(rootDirectory))
+                path = rootDirectory;
             return _context.Server.MapPath(path);
         }
 
         private string GetLangFile()
         {
-            return "~/Content/Roxy_Fileman/lang/en.txt";
+            return "~/Content/Roxy_Fileman/lang/en.json";
         }
 
         protected string LangRes(string name)
@@ -215,7 +243,7 @@ namespace Nop.Admin.Controllers
                 ret = (string)_context.Session[GetSetting("SESSION_PATH_KEY")];
 
             if (ret == "")
-                ret = _context.Server.MapPath("~/Images/uploaded/");
+                ret = _context.Server.MapPath(rootDirectory);
             else
                 ret = FixPath(ret);
             return ret;

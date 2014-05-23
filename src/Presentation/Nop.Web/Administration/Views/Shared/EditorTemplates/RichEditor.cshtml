@@ -1,4 +1,5 @@
 ﻿@model String
+@using Nop.Core
 @using Nop.Services.Security
 @using Nop.Web.Framework.UI;
 @{
@@ -6,12 +7,15 @@
     Html.AddScriptParts("~/Content/tinymce/tinymce.min.js", true);
     
     var permissionService = EngineContext.Current.Resolve<IPermissionService>();
-    var canUploadPictures = permissionService.Authorize(StandardPermissionProvider.HtmlEditorManagePictures);
+    var allowJbimages = false;
+    var allowRoxyFileman = permissionService.Authorize(StandardPermissionProvider.HtmlEditorManagePictures);
+
+    var random = CommonHelper.GenerateRandomInteger();
 }
 <script>
     $(document).ready(function () {
-        @* wooncherk *@
-        function RoxyFileBrowser(field_name, url, type, win) {
+        @* wooncherk contribution *@
+        function RoxyFileBrowser@(random)(field_name, url, type, win) {
             var roxyFileman = '@Url.Content("~/Content/Roxy_Fileman/index.html")';
             if (roxyFileman.indexOf("?") < 0) {
                 roxyFileman += "?type=" + type;
@@ -32,9 +36,8 @@
             }, { window: win, input: field_name });
             return false;
         }
-        @* wooncherk *@
 
-        tinymce.init({
+        tinyMCE.init({
             selector: "#@ViewData.TemplateInfo.GetFullHtmlFieldId(string.Empty)",
             fontsize_formats: "8pt 9pt 10pt 11pt 12pt 26pt 36pt",
             height: 350,
@@ -42,17 +45,20 @@
             plugins: [
                 "advlist autolink lists link image charmap print preview anchor",
                 "searchreplace visualblocks code fullscreen",
-                "insertdatetime media table contextmenu paste@(canUploadPictures ? " jbimages" : null)"
+                "insertdatetime media table contextmenu paste@(allowJbimages ? " jbimages" : null)"
             ],
-            toolbar: "insertfile undo redo | styleselect | fontselect | fontsizeselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image@(canUploadPictures ? " jbimages" : null)",
+            toolbar: "insertfile undo redo | styleselect | fontselect | fontsizeselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image@(allowJbimages ? " jbimages" : null)",
             //"relative_urls" required by jbimages plugin to be set to "false"
             relative_urls: false,
+            @if (allowRoxyFileman){
+                <text>
+                //picture manager
+                    file_browser_callback: RoxyFileBrowser@(random),
+                </text>
+            }
             //we should set "convert_urls" set to "false" (because of "relative_urls" requirement)
             //otherwise, it'll break existing links when editing message template
-            convert_urls: false,
-            @* wooncherk *@
-            file_browser_callback: RoxyFileBrowser
-            @* wooncherk *@
+            convert_urls: false
         });
     });
 </script>
