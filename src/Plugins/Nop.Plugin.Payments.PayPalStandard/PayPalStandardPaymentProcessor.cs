@@ -318,7 +318,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
             }
 
             //address
-            builder.AppendFormat("&address_override=1");
+            builder.AppendFormat("&address_override={0}", _paypalStandardPaymentSettings.AddressOverride ? "1" : "0");
             builder.AppendFormat("&first_name={0}", HttpUtility.UrlEncode(postProcessPaymentRequest.Order.BillingAddress.FirstName));
             builder.AppendFormat("&last_name={0}", HttpUtility.UrlEncode(postProcessPaymentRequest.Order.BillingAddress.LastName));
             builder.AppendFormat("&address1={0}", HttpUtility.UrlEncode(postProcessPaymentRequest.Order.BillingAddress.Address1));
@@ -479,6 +479,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
                 PdtToken= "Your PDT token here...",
                 PdtValidateOrderTotal = true,
                 EnableIpn = true,
+                AddressOverride = true,
             };
             _settingService.SaveSetting(settings);
 
@@ -503,6 +504,8 @@ namespace Nop.Plugin.Payments.PayPalStandard
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.EnableIpn.Hint2", "Leave blank to use the default IPN handler URL.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.IpnUrl", "IPN Handler");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.IpnUrl.Hint", "Specify IPN Handler.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.AddressOverride", "Address override");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.AddressOverride.Hint", "For people who already have PayPal accounts and whom you already prompted for a shipping address before they choose to pay with PayPal, you can use the entered address instead of the address the person has stored with PayPal.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage", "Return to order details page");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage.Hint", "Enable if a customer should be redirected to the order details page when he clicks \"return to store\" link on PayPal site WITHOUT completing a payment");
 
@@ -535,6 +538,8 @@ namespace Nop.Plugin.Payments.PayPalStandard
             this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.EnableIpn.Hint2");
             this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.IpnUrl");
             this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.IpnUrl.Hint");
+            this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.AddressOverride");
+            this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.AddressOverride.Hint");
             this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage");
             this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage.Hint");
             

@@ -128,6 +128,12 @@ set @resources='
   <LocaleResource Name="Account.AssociatedExternalAuth.YourAccountWillBeLinkedTo.Remove">
     <Value>(remove)</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalStandard.Fields.AddressOverride">
+    <Value>Address override</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalStandard.Fields.AddressOverride.Hint">
+    <Value>For people who already have PayPal accounts and whom you already prompted for a shipping address before they choose to pay with PayPal, you can use the entered address instead of the address the person has stored with PayPal.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -900,5 +906,13 @@ GO
 IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_PSAM_ProductId' and object_id=object_id(N'[Product_SpecificationAttribute_Mapping]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_PSAM_ProductId] ON [Product_SpecificationAttribute_Mapping] ([ProductId] ASC)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'paypalstandardpaymentsettings.addressoverride')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'paypalstandardpaymentsettings.addressoverride', N'true', 0)
 END
 GO

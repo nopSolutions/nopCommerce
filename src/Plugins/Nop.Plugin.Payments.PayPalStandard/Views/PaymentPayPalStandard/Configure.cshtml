@@ -171,7 +171,7 @@
                 @Html.ValidationMessageFor(model => model.EnableIpn)
             </td>
         </tr>
-		  <tr id="pnlIpnUrl">
+		<tr id="pnlIpnUrl">
             <td class="adminTitle">
                 @Html.OverrideStoreCheckboxFor(model => model.IpnUrl_OverrideForStore, model => model.IpnUrl, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.IpnUrl):
@@ -181,6 +181,16 @@
             <td class="adminData">
                 @Html.EditorFor(model => model.IpnUrl)
                 @Html.ValidationMessageFor(model => model.IpnUrl)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.AddressOverride_OverrideForStore, model => model.AddressOverride, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.AddressOverride):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AddressOverride)
+                @Html.ValidationMessageFor(model => model.AddressOverride)
             </td>
         </tr>
         <tr>

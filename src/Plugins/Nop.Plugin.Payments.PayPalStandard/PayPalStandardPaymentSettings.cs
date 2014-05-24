@@ -25,5 +25,9 @@ namespace Nop.Plugin.Payments.PayPalStandard
         /// WITHOUT completing a payment
         /// </summary>
         public bool ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage { get; set; }
+        /// <summary>
+        /// Enable PayPal address override
+        /// </summary>
+        public bool AddressOverride { get; set; }
     }
 }

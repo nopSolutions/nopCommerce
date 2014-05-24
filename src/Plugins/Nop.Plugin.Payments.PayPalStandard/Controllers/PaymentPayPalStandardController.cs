@@ -74,6 +74,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             model.PassProductNamesAndTotals = payPalStandardPaymentSettings.PassProductNamesAndTotals;
             model.EnableIpn = payPalStandardPaymentSettings.EnableIpn;
             model.IpnUrl = payPalStandardPaymentSettings.IpnUrl;
+            model.AddressOverride = payPalStandardPaymentSettings.AddressOverride;
             model.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage = payPalStandardPaymentSettings.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage;
 
             model.ActiveStoreScopeConfiguration = storeScope;
@@ -88,6 +89,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                 model.PassProductNamesAndTotals_OverrideForStore = _settingService.SettingExists(payPalStandardPaymentSettings, x => x.PassProductNamesAndTotals, storeScope);
                 model.EnableIpn_OverrideForStore = _settingService.SettingExists(payPalStandardPaymentSettings, x => x.EnableIpn, storeScope);
                 model.IpnUrl_OverrideForStore = _settingService.SettingExists(payPalStandardPaymentSettings, x => x.IpnUrl, storeScope);
+                model.AddressOverride_OverrideForStore = _settingService.SettingExists(payPalStandardPaymentSettings, x => x.AddressOverride, storeScope);
                 model.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage_OverrideForStore = _settingService.SettingExists(payPalStandardPaymentSettings, x => x.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage, storeScope);
             }
 
@@ -116,6 +118,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             payPalStandardPaymentSettings.PassProductNamesAndTotals = model.PassProductNamesAndTotals;
             payPalStandardPaymentSettings.EnableIpn = model.EnableIpn;
             payPalStandardPaymentSettings.IpnUrl = model.IpnUrl;
+            payPalStandardPaymentSettings.AddressOverride = model.AddressOverride;
             payPalStandardPaymentSettings.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage = model.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage;
 
             /* We do not clear cache after each setting update.
@@ -165,6 +168,11 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                 _settingService.SaveSetting(payPalStandardPaymentSettings, x => x.IpnUrl, storeScope, false);
             else if (storeScope > 0)
                 _settingService.DeleteSetting(payPalStandardPaymentSettings, x => x.IpnUrl, storeScope);
+
+            if (model.AddressOverride_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(payPalStandardPaymentSettings, x => x.AddressOverride, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(payPalStandardPaymentSettings, x => x.AddressOverride, storeScope);
 
             if (model.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage_OverrideForStore || storeScope == 0)
                 _settingService.SaveSetting(payPalStandardPaymentSettings, x => x.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage, storeScope, false);
