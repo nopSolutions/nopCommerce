@@ -1,4 +1,6 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Configuration;
+using System.Web.Mvc;
 using System.Web.Routing;
 using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Mvc.Routes;
@@ -10,6 +12,12 @@ namespace Nop.Web.Infrastructure
     {
         public void RegisterRoutes(RouteCollection routes)
         {
+            var supportPreviousNopcommerceVersions =
+                !String.IsNullOrEmpty(ConfigurationManager.AppSettings["SupportPreviousNopcommerceVersions"]) &&
+                Convert.ToBoolean(ConfigurationManager.AppSettings["SupportPreviousNopcommerceVersions"]);
+            if (!supportPreviousNopcommerceVersions)
+                return;
+
             //products
             routes.MapLocalizedRoute("", "p/{productId}/{SeName}",
                 new { controller = "BackwardCompatibility2X", action = "RedirectProductById", SeName = UrlParameter.Optional },
