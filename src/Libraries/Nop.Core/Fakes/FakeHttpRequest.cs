@@ -137,6 +137,7 @@ namespace Nop.Core.Fakes
         {
             get { return null; }
         }
+
         public override bool IsSecureConnection
         {
             get { return false; }
@@ -148,6 +149,11 @@ namespace Nop.Core.Fakes
             {
                 return false;
             }
+        }
+
+        public override string[] UserLanguages
+        {
+            get { return null; }
         }
     }
 }
