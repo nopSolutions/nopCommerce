@@ -14,6 +14,11 @@ namespace Nop.Core.Domain.Seo
         public string DefaultMetaKeywords { get; set; }
         public string DefaultMetaDescription { get; set; }
 
+        /// <summary>
+        /// A value indicating whether product META descriptions will be generated automatically (if not entered)
+        /// </summary>
+        public bool GenerateProductMetaDescription { get; set; }
+
         public bool ConvertNonWesternChars { get; set; }
         public bool AllowUnicodeCharsInUrls { get; set; }
 

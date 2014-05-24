@@ -42,6 +42,7 @@ using Nop.Web.Framework.UI.Captcha;
 using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Catalog;
 using Nop.Web.Models.Media;
+using Nop.Core.Domain.Seo;
 
 namespace Nop.Web.Controllers
 {
@@ -94,6 +95,7 @@ namespace Nop.Web.Controllers
         private readonly CustomerSettings _customerSettings;
         private readonly ICacheManager _cacheManager;
         private readonly CaptchaSettings _captchaSettings;
+        private readonly SeoSettings _seoSettings;
         
         #endregion
 
@@ -142,6 +144,7 @@ namespace Nop.Web.Controllers
             LocalizationSettings localizationSettings, 
             CustomerSettings customerSettings, 
             CaptchaSettings captchaSettings,
+            SeoSettings seoSettings,
             ICacheManager cacheManager)
         {
             this._categoryService = categoryService;
@@ -189,6 +192,7 @@ namespace Nop.Web.Controllers
             this._localizationSettings = localizationSettings;
             this._customerSettings = customerSettings;
             this._captchaSettings = captchaSettings;
+            this._seoSettings = seoSettings;
 
             this._cacheManager = cacheManager;
         }
@@ -619,6 +623,13 @@ namespace Nop.Web.Controllers
                 StockAvailability = product.FormatStockMessage(_localizationService),
                 HasSampleDownload = product.IsDownload && product.HasSampleDownload,
             };
+
+            //automatically generate product description?
+            if (_seoSettings.GenerateProductMetaDescription && String.IsNullOrEmpty(model.MetaDescription))
+            {
+                //based on short description
+                model.MetaDescription = model.ShortDescription;
+            }
 
             //vendor
             if (_vendorSettings.ShowVendorOnProductDetailsPage)

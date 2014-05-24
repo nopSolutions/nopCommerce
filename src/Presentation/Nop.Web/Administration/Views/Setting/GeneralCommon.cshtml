@@ -314,6 +314,16 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.GenerateProductMetaDescription_OverrideForStore, model => model.SeoSettings.GenerateProductMetaDescription, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.SeoSettings.GenerateProductMetaDescription):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SeoSettings.GenerateProductMetaDescription)
+                @Html.ValidationMessageFor(model => model.SeoSettings.GenerateProductMetaDescription)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.ConvertNonWesternChars_OverrideForStore, model => model.SeoSettings.ConvertNonWesternChars, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.SeoSettings.ConvertNonWesternChars):
             </td>

@@ -1968,6 +1968,7 @@ namespace Nop.Admin.Controllers
             model.SeoSettings.DefaultTitle = seoSettings.DefaultTitle;
             model.SeoSettings.DefaultMetaKeywords = seoSettings.DefaultMetaKeywords;
             model.SeoSettings.DefaultMetaDescription = seoSettings.DefaultMetaDescription;
+            model.SeoSettings.GenerateProductMetaDescription = seoSettings.GenerateProductMetaDescription;
             model.SeoSettings.ConvertNonWesternChars = seoSettings.ConvertNonWesternChars;
             model.SeoSettings.CanonicalUrlsEnabled = seoSettings.CanonicalUrlsEnabled;
             model.SeoSettings.WwwRequirement = (int)seoSettings.WwwRequirement;
@@ -1982,6 +1983,7 @@ namespace Nop.Admin.Controllers
                 model.SeoSettings.DefaultTitle_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.DefaultTitle, storeScope);
                 model.SeoSettings.DefaultMetaKeywords_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.DefaultMetaKeywords, storeScope);
                 model.SeoSettings.DefaultMetaDescription_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.DefaultMetaDescription, storeScope);
+                model.SeoSettings.GenerateProductMetaDescription_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.GenerateProductMetaDescription, storeScope);
                 model.SeoSettings.ConvertNonWesternChars_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.ConvertNonWesternChars, storeScope);
                 model.SeoSettings.CanonicalUrlsEnabled_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.CanonicalUrlsEnabled, storeScope);
                 model.SeoSettings.WwwRequirement_OverrideForStore = _settingService.SettingExists(seoSettings, x => x.WwwRequirement, storeScope);
@@ -2138,6 +2140,7 @@ namespace Nop.Admin.Controllers
             seoSettings.DefaultTitle = model.SeoSettings.DefaultTitle;
             seoSettings.DefaultMetaKeywords = model.SeoSettings.DefaultMetaKeywords;
             seoSettings.DefaultMetaDescription = model.SeoSettings.DefaultMetaDescription;
+            seoSettings.GenerateProductMetaDescription = model.SeoSettings.GenerateProductMetaDescription;
             seoSettings.ConvertNonWesternChars = model.SeoSettings.ConvertNonWesternChars;
             seoSettings.CanonicalUrlsEnabled = model.SeoSettings.CanonicalUrlsEnabled;
             seoSettings.WwwRequirement = (WwwRequirement)model.SeoSettings.WwwRequirement;
@@ -2171,6 +2174,11 @@ namespace Nop.Admin.Controllers
                 _settingService.SaveSetting(seoSettings, x => x.DefaultMetaDescription, storeScope, false);
             else if (storeScope > 0)
                 _settingService.DeleteSetting(seoSettings, x => x.DefaultMetaDescription, storeScope);
+
+            if (model.SeoSettings.GenerateProductMetaDescription_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(seoSettings, x => x.GenerateProductMetaDescription, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(seoSettings, x => x.GenerateProductMetaDescription, storeScope);
             
             if (model.SeoSettings.ConvertNonWesternChars_OverrideForStore || storeScope == 0)
                 _settingService.SaveSetting(seoSettings, x => x.ConvertNonWesternChars, storeScope, false);

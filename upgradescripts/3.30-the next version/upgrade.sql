@@ -134,6 +134,12 @@ set @resources='
   <LocaleResource Name="Plugins.Payments.PayPalStandard.Fields.AddressOverride.Hint">
     <Value>For people who already have PayPal accounts and whom you already prompted for a shipping address before they choose to pay with PayPal, you can use the entered address instead of the address the person has stored with PayPal.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GenerateProductMetaDescription">
+    <Value>Generate product META description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GenerateProductMetaDescription.Hint">
+    <Value>When enabled, product META descriptions will be automatically generated (if not specified on the product details page) based on product short description.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -914,5 +920,13 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'paypalstandardpaymentset
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'paypalstandardpaymentsettings.addressoverride', N'true', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'seosettings.generateproductmetadescription')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'seosettings.generateproductmetadescription', N'true', 0)
 END
 GO

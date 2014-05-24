@@ -4428,6 +4428,7 @@ namespace Nop.Services.Installation
                     DefaultTitle = "Your store",
                     DefaultMetaKeywords = "",
                     DefaultMetaDescription = "",
+                    GenerateProductMetaDescription = true,
                     ConvertNonWesternChars = false,
                     AllowUnicodeCharsInUrls = true,
                     //we disable bundling out of the box because it requires a lot of server resources
