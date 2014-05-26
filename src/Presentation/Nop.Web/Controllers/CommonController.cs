@@ -594,7 +594,7 @@ namespace Nop.Web.Controllers
 
         //SEO sitemap page
         [NopHttpsRequirement(SslRequirement.No)]
-        public ActionResult SitemapSeo()
+        public ActionResult SitemapXml()
         {
             if (!_commonSettings.SitemapEnabled)
                 return RedirectToRoute("HomePage");
@@ -778,6 +778,23 @@ namespace Nop.Web.Controllers
             var sb = new StringBuilder();
             sb.Append("User-agent: *");
             sb.Append(newLine);
+            //sitemaps
+            if (_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
+            {
+                //URLs are localizable. Append SEO code
+                foreach (var language in _languageService.GetAllLanguages(storeId: _storeContext.CurrentStore.Id))
+                {
+                    sb.AppendFormat("Sitemap: {0}{1}/sitemap.xml", _storeContext.CurrentStore.Url, language.UniqueSeoCode);
+                    sb.Append(newLine);
+                }
+            }
+            else
+            {
+                //localizable paths (without SEO code)
+                sb.AppendFormat("Sitemap: {0}sitemap.xml", _storeContext.CurrentStore.Url);
+                sb.Append(newLine);
+            }
+
             //usual paths
             foreach (var path in disallowPaths)
             {

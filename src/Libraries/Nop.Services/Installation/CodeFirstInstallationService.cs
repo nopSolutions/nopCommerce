@@ -4462,7 +4462,6 @@ namespace Nop.Services.Installation
                         "sentupdate", 
                         "news", 
                         "sitemap", 
-                        "sitemapseo", 
                         "search",
                         "config", 
                         "eucookielawaccept", 

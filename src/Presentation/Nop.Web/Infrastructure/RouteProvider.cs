@@ -572,14 +572,10 @@ namespace Nop.Web.Infrastructure
                             "t-popup/{SystemName}",
                             new { controller = "Topic", action = "TopicDetailsPopup" },
                             new[] { "Nop.Web.Controllers" });
-            //sitemaps
+            //sitemap
             routes.MapLocalizedRoute("Sitemap",
                             "sitemap",
                             new { controller = "Common", action = "Sitemap" },
-                            new[] { "Nop.Web.Controllers" });
-            routes.MapLocalizedRoute("SitemapSEO",
-                            "sitemapseo",
-                            new { controller = "Common", action = "SitemapSeo" },
                             new[] { "Nop.Web.Controllers" });
 
             //product tags
@@ -655,6 +651,12 @@ namespace Nop.Web.Infrastructure
             routes.MapRoute("robots.txt",
                             "robots.txt",
                             new { controller = "Common", action = "RobotsTextFile" },
+                            new[] { "Nop.Web.Controllers" });
+
+            //sitemap (XML)
+            routes.MapLocalizedRoute("sitemap.xml",
+                            "sitemap.xml",
+                            new { controller = "Common", action = "SitemapXml" },
                             new[] { "Nop.Web.Controllers" });
 
             //install

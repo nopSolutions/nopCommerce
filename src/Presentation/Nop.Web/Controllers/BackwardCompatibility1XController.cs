@@ -125,10 +125,6 @@ namespace Nop.Web.Controllers
                     {
                         return RedirectToRoutePermanent("Sitemap");
                     }
-                case "sitemapseo":
-                    {
-                        return RedirectToRoutePermanent("SitemapSEO");
-                    }
                 case "recentlyaddedproducts":
                     {
                         return RedirectToRoutePermanent("RecentlyAddedProducts");
