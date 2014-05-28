@@ -172,7 +172,7 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
                     });
             }
 
-            return View("Nop.Plugin.Feed.Froogle.Views.FeedFroogle.Configure", model);
+            return View("~/Plugins/Feed.Froogle/Views/FeedFroogle/Configure.cshtml", model);
         }
 
         [HttpPost]
