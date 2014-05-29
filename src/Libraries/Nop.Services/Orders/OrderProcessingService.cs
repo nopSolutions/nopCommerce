@@ -263,7 +263,8 @@ namespace Nop.Services.Orders
         /// <param name="activate">A value indicating whether to activate gift cards; true - activate, false - deactivate</param>
         protected virtual void SetActivatedValueForPurchasedGiftCards(Order order, bool activate)
         {
-            var giftCards = _giftCardService.GetAllGiftCards(order.Id, null, null, !activate, "", 0, int.MaxValue);
+            var giftCards = _giftCardService.GetAllGiftCards(purchasedWithOrderId: order.Id, 
+                isGiftCardActivated: !activate);
             foreach (var gc in giftCards)
             {
                 if (activate)

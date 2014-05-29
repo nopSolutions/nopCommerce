@@ -78,9 +78,10 @@ namespace Nop.Services.Orders
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Gift cards</returns>
-        public virtual IPagedList<GiftCard> GetAllGiftCards(int? purchasedWithOrderId,
-            DateTime? createdFromUtc, DateTime? createdToUtc, bool? isGiftCardActivated, 
-            string giftCardCouponCode, int pageIndex, int pageSize)
+        public virtual IPagedList<GiftCard> GetAllGiftCards(int? purchasedWithOrderId = null,
+            DateTime? createdFromUtc = null, DateTime? createdToUtc = null, 
+            bool? isGiftCardActivated = null, string giftCardCouponCode = null,
+            int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _giftCardRepository.Table;
             if (purchasedWithOrderId.HasValue)
@@ -161,7 +162,7 @@ namespace Nop.Services.Orders
             string[] couponCodes = customer.ParseAppliedGiftCardCouponCodes();
             foreach (var couponCode in couponCodes)
             {
-                var giftCards = GetAllGiftCards(null, null, null, true, couponCode, 0, int.MaxValue);
+                var giftCards = GetAllGiftCards(isGiftCardActivated: true, giftCardCouponCode: couponCode);
                 foreach (var gc in giftCards)
                 {
                     if (gc.IsGiftCardValid())

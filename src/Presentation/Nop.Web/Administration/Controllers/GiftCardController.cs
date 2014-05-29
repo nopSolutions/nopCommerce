@@ -106,8 +106,8 @@ namespace Nop.Admin.Controllers
                 isGiftCardActivated = true;
             else if (model.ActivatedId == 2)
                 isGiftCardActivated = false;
-            var giftCards = _giftCardService.GetAllGiftCards(null, null, null,
-                isGiftCardActivated, model.CouponCode, command.Page - 1, command.PageSize);
+            var giftCards = _giftCardService.GetAllGiftCards(isGiftCardActivated: isGiftCardActivated,
+                giftCardCouponCode: model.CouponCode, pageIndex: command.Page - 1, pageSize: command.PageSize);
             var gridModel = new DataSourceResult
             {
                 Data = giftCards.Select(x =>
