@@ -14,6 +14,7 @@ namespace Nop.Admin.Models.Localization
         public LanguageModel()
         {
             FlagFileNames = new List<string>();
+            AvailableCurrencies = new List<SelectListItem>();
         }
 
         [NopResourceDisplayName("Admin.Configuration.Languages.Fields.Name")]
@@ -36,6 +37,12 @@ namespace Nop.Admin.Models.Localization
 
         [NopResourceDisplayName("Admin.Configuration.Languages.Fields.Rtl")]
         public bool Rtl { get; set; }
+
+        //default currency
+        [NopResourceDisplayName("Admin.Configuration.Languages.Fields.DefaultCurrency")]
+        [AllowHtml]
+        public int DefaultCurrencyId { get; set; }
+        public IList<SelectListItem> AvailableCurrencies { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Languages.Fields.Published")]
         public bool Published { get; set; }

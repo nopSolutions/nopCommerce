@@ -140,6 +140,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GenerateProductMetaDescription.Hint">
     <Value>When enabled, product META descriptions will be automatically generated (if not specified on the product details page) based on product short description.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Fields.DefaultCurrency">
+    <Value>Default currency</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Fields.DefaultCurrency.Hint">
+    <Value>This property allows a store owner to specify a default currency for a language. If not specified, then the default currency display order will be used.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -929,4 +935,21 @@ BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'seosettings.generateproductmetadescription', N'true', 0)
 END
+GO
+
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Language]') and NAME='DefaultCurrencyId')
+BEGIN
+	ALTER TABLE [Language]
+	ADD [DefaultCurrencyId] int NULL
+END
+GO
+
+UPDATE [Language]
+SET [DefaultCurrencyId] = 0
+WHERE [DefaultCurrencyId] IS NULL
+GO
+
+ALTER TABLE [Language] ALTER COLUMN [DefaultCurrencyId] int NOT NULL
 GO

@@ -390,13 +390,19 @@ namespace Nop.Web.Framework
                 }
 
                 var allCurrencies = _currencyService.GetAllCurrencies(storeId: _storeContext.CurrentStore.Id);
-                //find a currency previously selected by a custoemer
+                //find a currency previously selected by a customer
                 var currencyId = this.CurrentCustomer.GetAttribute<int>(SystemCustomerAttributeNames.CurrencyId,
                     _genericAttributeService, _storeContext.CurrentStore.Id);
                 var currency = allCurrencies.FirstOrDefault(x => x.Id == currencyId);
                 if (currency == null)
                 {
-                    //it not specified, then return the first (filtered by current store) found one
+                    //it not found, then let's load the default currency for the current language (if specified)
+                    currencyId = this.WorkingLanguage.DefaultCurrencyId;
+                    currency = allCurrencies.FirstOrDefault(x => x.Id == currencyId);
+                }
+                if (currency == null)
+                {
+                    //it not found, then return the first (filtered by current store) found one
                     currency = allCurrencies.FirstOrDefault();
                 }
                 if (currency == null)

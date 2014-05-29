@@ -8,6 +8,7 @@ using Nop.Admin.Models.Localization;
 using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Localization;
+using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Services.Stores;
@@ -24,11 +25,11 @@ namespace Nop.Admin.Controllers
 
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
+        private readonly ICurrencyService _currencyService;
         private readonly IStoreService _storeService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IPermissionService _permissionService;
         private readonly IWebHelper _webHelper;
-        private readonly AdminAreaSettings _adminAreaSettings;
 
 		#endregion
 
@@ -36,19 +37,19 @@ namespace Nop.Admin.Controllers
 
 		public LanguageController(ILanguageService languageService,
             ILocalizationService localizationService,
+            ICurrencyService currencyService,
             IStoreService storeService, 
             IStoreMappingService storeMappingService,
             IPermissionService permissionService,
-            IWebHelper webHelper,
-            AdminAreaSettings adminAreaSettings)
+            IWebHelper webHelper)
 		{
 			this._localizationService = localizationService;
             this._languageService = languageService;
+            this._currencyService = currencyService;
             this._storeService = storeService;
             this._storeMappingService = storeMappingService;
             this._permissionService = permissionService;
             this._webHelper= webHelper;
-            this._adminAreaSettings = adminAreaSettings;
 		}
 
 		#endregion 
@@ -87,6 +88,29 @@ namespace Nop.Admin.Controllers
                 {
                     model.SelectedStoreIds = new int[0];
                 }
+            }
+        }
+
+        [NonAction]
+        private void PrepareCurrenciesModel(LanguageModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            //templates
+            model.AvailableCurrencies.Add(new SelectListItem()
+                {
+                    Text = "---",
+                    Value = "0"
+                });
+            var currencies = _currencyService.GetAllCurrencies(true);
+            foreach (var currency in currencies)
+            {
+                model.AvailableCurrencies.Add(new SelectListItem()
+                {
+                    Text = currency.Name,
+                    Value = currency.Id.ToString()
+                });
             }
         }
 
@@ -156,6 +180,8 @@ namespace Nop.Admin.Controllers
             var model = new LanguageModel();
             //Stores
             PrepareStoresMappingModel(model, null, false);
+            //currencies
+            PrepareCurrenciesModel(model);
             //flags
             PrepareFlagsModel(model);
             //default values
@@ -185,6 +211,8 @@ namespace Nop.Admin.Controllers
 
             //Stores
             PrepareStoresMappingModel(model, null, true);
+            //currencies
+            PrepareCurrenciesModel(model);
             //flags
             PrepareFlagsModel(model);
 
@@ -207,6 +235,8 @@ namespace Nop.Admin.Controllers
 		    var model = language.ToModel();
             //Stores
             PrepareStoresMappingModel(model, language, false);
+            //currencies
+            PrepareCurrenciesModel(model);
             //flags
             PrepareFlagsModel(model);
 
@@ -261,6 +291,8 @@ namespace Nop.Admin.Controllers
 
             //Stores
             PrepareStoresMappingModel(model, language, true);
+            //currencies
+            PrepareCurrenciesModel(model);
             //flags
             PrepareFlagsModel(model);
 

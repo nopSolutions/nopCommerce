@@ -18,6 +18,7 @@ namespace Nop.Data.Tests.Localization
                 UniqueSeoCode = "en",
                 FlagImageFileName = "us.png",
                 Rtl = true,
+                DefaultCurrencyId = 1,
                 Published = true,
                 LimitedToStores = true,
                 DisplayOrder = 1
@@ -30,6 +31,7 @@ namespace Nop.Data.Tests.Localization
             fromDb.UniqueSeoCode.ShouldEqual("en");
             fromDb.FlagImageFileName.ShouldEqual("us.png");
             fromDb.Rtl.ShouldEqual(true);
+            fromDb.DefaultCurrencyId.ShouldEqual(1);
             fromDb.Published.ShouldEqual(true);
             fromDb.LimitedToStores.ShouldEqual(true);
             fromDb.DisplayOrder.ShouldEqual(1);

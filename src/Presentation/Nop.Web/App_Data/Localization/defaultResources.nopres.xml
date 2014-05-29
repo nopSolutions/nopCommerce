@@ -3501,6 +3501,12 @@
   <LocaleResource Name="Admin.Configuration.Languages.Fields.AvailableStores.Hint">
     <Value>Select stores for which the language will be shown.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Fields.DefaultCurrency">
+    <Value>Default currency</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Fields.DefaultCurrency.Hint">
+    <Value>This property allows a store owner to specify a default currency for a language. If not specified, then the default currency display order will be used.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Languages.Fields.DisplayOrder">
     <Value>Display order</Value>
   </LocaleResource>

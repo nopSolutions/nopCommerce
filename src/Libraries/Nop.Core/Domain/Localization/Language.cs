@@ -41,6 +41,11 @@ namespace Nop.Core.Domain.Localization
         public bool LimitedToStores { get; set; }
 
         /// <summary>
+        /// Gets or sets the identifier of the default currency for this language; 0 is set when we use the default currency display order
+        /// </summary>
+        public int DefaultCurrencyId { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the language is published
         /// </summary>
         public bool Published { get; set; }

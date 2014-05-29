@@ -125,6 +125,15 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.NopLabelFor(model => model.DefaultCurrencyId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.DefaultCurrencyId, Model.AvailableCurrencies)
+                @Html.ValidationMessageFor(model => model.DefaultCurrencyId)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.NopLabelFor(model => model.Published):
             </td>
             <td class="adminData">
