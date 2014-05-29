@@ -16,6 +16,10 @@ namespace Nop.Admin.Models.Orders
         [AllowHtml]
         public string CouponCode { get; set; }
 
+        [NopResourceDisplayName("Admin.GiftCards.List.RecipientName")]
+        [AllowHtml]
+        public string RecipientName { get; set; }
+
         [NopResourceDisplayName("Admin.GiftCards.List.Activated")]
         public int ActivatedId { get; set; }
 

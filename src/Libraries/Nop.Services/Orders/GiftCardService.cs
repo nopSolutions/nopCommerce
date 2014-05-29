@@ -74,13 +74,15 @@ namespace Nop.Services.Orders
         /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
         /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
         /// <param name="isGiftCardActivated">Value indicating whether gift card is activated; null to load all records</param>
-        /// <param name="giftCardCouponCode">Gift card coupon code; null or string.empty to load all records</param>
+        /// <param name="giftCardCouponCode">Gift card coupon code; nullto load all records</param>
+        /// <param name="recipientName">Recipient name; null to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Gift cards</returns>
         public virtual IPagedList<GiftCard> GetAllGiftCards(int? purchasedWithOrderId = null,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null, 
             bool? isGiftCardActivated = null, string giftCardCouponCode = null,
+            string recipientName = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _giftCardRepository.Table;
@@ -94,6 +96,8 @@ namespace Nop.Services.Orders
                 query = query.Where(gc => gc.IsGiftCardActivated == isGiftCardActivated.Value);
             if (!String.IsNullOrEmpty(giftCardCouponCode))
                 query = query.Where(gc => gc.GiftCardCouponCode == giftCardCouponCode);
+            if (!String.IsNullOrWhiteSpace(recipientName))
+                query = query.Where(c => c.RecipientName.Contains(recipientName));
             query = query.OrderByDescending(gc => gc.CreatedOnUtc);
 
             var giftCards = new PagedList<GiftCard>(query, pageIndex, pageSize);

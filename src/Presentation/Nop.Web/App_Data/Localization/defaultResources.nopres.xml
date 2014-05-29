@@ -7626,6 +7626,12 @@
   <LocaleResource Name="Admin.GiftCards.List.CouponCode.Hint">
     <Value>A gift card coupon code. Leave empty to load all records.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.GiftCards.List.RecipientName">
+    <Value>Recipient name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GiftCards.List.RecipientName.Hint">
+    <Value>Search by recipient name. Leave empty to load all records.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.GiftCards.Updated">
     <Value>The gift card has been updated successfully.</Value>
   </LocaleResource>

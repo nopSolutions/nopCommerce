@@ -31,13 +31,15 @@ namespace Nop.Services.Orders
         /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
         /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
         /// <param name="isGiftCardActivated">Value indicating whether gift card is activated; null to load all records</param>
-        /// <param name="giftCardCouponCode">Gift card coupon code; null or string.empty to load all records</param>
+        /// <param name="giftCardCouponCode">Gift card coupon code; null to load all records</param>
+        /// <param name="recipientName">Recipient name; null to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Gift cards</returns>
         IPagedList<GiftCard> GetAllGiftCards(int? purchasedWithOrderId = null,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             bool? isGiftCardActivated = null, string giftCardCouponCode = null,
+            string recipientName = null,
             int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>

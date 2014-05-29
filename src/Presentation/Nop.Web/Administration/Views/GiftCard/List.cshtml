@@ -34,6 +34,14 @@
             </td>
         </tr>
         <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.RecipientName):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.RecipientName)
+            </td>
+        </tr>
+        <tr>
             <td colspan="2">
                 <input type="button" id="btnSearch" class="k-button" value="@T("Admin.Common.Search")" />
             </td>
@@ -92,6 +100,9 @@
                                 field: "GiftCardCouponCode",
                                 title: "@T("Admin.GiftCards.Fields.GiftCardCouponCode")"
                             }, {
+                                field: "RecipientName",
+                                title: "@T("Admin.GiftCards.Fields.RecipientName")"
+                            }, {
                                 field: "IsGiftCardActivated",
                                 title: "@T("Admin.GiftCards.Fields.IsGiftCardActivated")",
                                 width: 100,
@@ -136,7 +147,8 @@
                     function additionalData() {
                         return {
                             ActivatedId: $('#@Html.FieldIdFor(model => model.ActivatedId)').val(),
-                            CouponCode: $('#@Html.FieldIdFor(model => model.CouponCode)').val()
+                            CouponCode: $('#@Html.FieldIdFor(model => model.CouponCode)').val(),
+                            RecipientName: $('#@Html.FieldIdFor(model => model.RecipientName)').val()
                         };
                     }
 

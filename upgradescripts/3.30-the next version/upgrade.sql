@@ -146,6 +146,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Languages.Fields.DefaultCurrency.Hint">
     <Value>This property allows a store owner to specify a default currency for a language. If not specified, then the default currency display order will be used.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.GiftCards.List.RecipientName">
+    <Value>Recipient name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GiftCards.List.RecipientName.Hint">
+    <Value>Search by recipient name. Leave empty to load all records.</Value>
+  </LocaleResource>
 </Language>
 '
 
