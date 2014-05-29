@@ -386,7 +386,11 @@ namespace Nop.Web.Framework
                 {
                     var primaryStoreCurrency =  _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
                     if (primaryStoreCurrency != null)
+                    {
+                        //cache
+                        _cachedCurrency = primaryStoreCurrency;
                         return primaryStoreCurrency;
+                    }
                 }
 
                 var allCurrencies = _currencyService.GetAllCurrencies(storeId: _storeContext.CurrentStore.Id);
