@@ -103,11 +103,11 @@ namespace Nop.Services.Seo
         #region General
 
         /// <summary>
-        /// Get search engine name
+        /// Get search engine friendly name (slug)
         /// </summary>
         /// <typeparam name="T">Entity type</typeparam>
         /// <param name="entity">Entity</param>
-        /// <returns>Search engine name</returns>
+        /// <returns>Search engine  name (slug)</returns>
         public static string GetSeName<T>(this T entity)
             where T : BaseEntity, ISlugSupported
         {
@@ -116,14 +116,14 @@ namespace Nop.Services.Seo
         }
 
         /// <summary>
-        ///  Get search engine name
+        ///  Get search engine friendly name (slug)
         /// </summary>
         /// <typeparam name="T">Entity type</typeparam>
         /// <param name="entity">Entity</param>
         /// <param name="languageId">Language identifier</param>
         /// <param name="returnDefaultValue">A value indicating whether to return default value (if language specified one is not found)</param>
         /// <param name="ensureTwoPublishedLanguages">A value indicating whether to ensure that we have at least two published languages; otherwise, load only default value</param>
-        /// <returns>Search engine name</returns>
+        /// <returns>Search engine  name (slug)</returns>
         public static string GetSeName<T>(this T entity, int languageId, bool returnDefaultValue = true,
             bool ensureTwoPublishedLanguages = true)
             where T : BaseEntity, ISlugSupported
@@ -131,8 +131,23 @@ namespace Nop.Services.Seo
             if (entity == null)
                 throw new ArgumentNullException("entity");
 
-            string result = string.Empty;
             string entityName = typeof(T).Name;
+            return GetSeName(entity.Id, entityName, languageId, returnDefaultValue, ensureTwoPublishedLanguages);
+        }
+
+        /// <summary>
+        /// Get search engine friendly name (slug)
+        /// </summary>
+        /// <param name="entityId">Entity identifier</param>
+        /// <param name="entityName">Entity name</param>
+        /// <param name="languageId">Language identifier</param>
+        /// <param name="returnDefaultValue">A value indicating whether to return default value (if language specified one is not found)</param>
+        /// <param name="ensureTwoPublishedLanguages">A value indicating whether to ensure that we have at least two published languages; otherwise, load only default value</param>
+        /// <returns>Search engine  name (slug)</returns>
+        public static string GetSeName(int entityId, string entityName, int languageId, bool returnDefaultValue = true,
+            bool ensureTwoPublishedLanguages = true)
+        {
+            string result = string.Empty;
 
             var urlRecordService = EngineContext.Current.Resolve<IUrlRecordService>();
             if (languageId > 0)
@@ -148,13 +163,13 @@ namespace Nop.Services.Seo
                 //localized value
                 if (loadLocalizedValue)
                 {
-                    result = urlRecordService.GetActiveSlug(entity.Id, entityName, languageId);
+                    result = urlRecordService.GetActiveSlug(entityId, entityName, languageId);
                 }
             }
             //set default value if required
             if (String.IsNullOrEmpty(result) && returnDefaultValue)
             {
-                result = urlRecordService.GetActiveSlug(entity.Id, entityName, 0);
+                result = urlRecordService.GetActiveSlug(entityId, entityName, 0);
             }
 
             return result;

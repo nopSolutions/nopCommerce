@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using System;
+using System.Web;
 using System.Web.Routing;
 using Nop.Core;
 using Nop.Core.Data;
@@ -97,6 +98,7 @@ namespace Nop.Web.Framework.Seo
                     data.Values["action"] = "PageNotFound";
                     return data;
                 }
+                //ensre that URL record is active
                 if (!urlRecord.IsActive)
                 {
                     //URL record is not active. let's find the latest one
@@ -126,6 +128,21 @@ namespace Nop.Web.Framework.Seo
                         data.Values["action"] = "PageNotFound";
                         return data;
                     }
+                }
+
+                //ensure that the slug is the same for the current language
+                //otherwise, it can cause some issues when customers choose a new language but a slug stays the same
+                var workContext = EngineContext.Current.Resolve<IWorkContext>();
+                var slugForCurrentLanguage = SeoExtensions.GetSeName(urlRecord.EntityId, urlRecord.EntityName, workContext.WorkingLanguage.Id);
+                if (slug != null && !slug.Equals(slugForCurrentLanguage, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+                    var response = httpContext.Response;
+                    //response.Status = "302 Found";
+                    response.Status = "302 Moved Temporarily";
+                    response.RedirectLocation = string.Format("{0}{1}", webHelper.GetStoreLocation(false), slugForCurrentLanguage);
+                    response.End();
+                    return null;
                 }
 
                 //process URL
