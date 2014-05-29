@@ -79,7 +79,6 @@ namespace Nop.Admin.Controllers
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IProductAttributeFormatter _productAttributeFormatter;
         private readonly IProductAttributeParser _productAttributeParser;
-        private readonly CatalogSettings _catalogSettings;
         private readonly IDownloadService _downloadService;
 
         #endregion
@@ -124,7 +123,6 @@ namespace Nop.Admin.Controllers
             IShoppingCartService shoppingCartService,
             IProductAttributeFormatter productAttributeFormatter,
             IProductAttributeParser productAttributeParser,
-            CatalogSettings catalogSettings,
             IDownloadService downloadService)
         {
             this._productService = productService;
@@ -165,7 +163,6 @@ namespace Nop.Admin.Controllers
             this._shoppingCartService = shoppingCartService;
             this._productAttributeFormatter = productAttributeFormatter;
             this._productAttributeParser = productAttributeParser;
-            this._catalogSettings = catalogSettings;
             this._downloadService = downloadService;
         }
 

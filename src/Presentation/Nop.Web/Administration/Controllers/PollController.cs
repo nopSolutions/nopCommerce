@@ -23,7 +23,6 @@ namespace Nop.Admin.Controllers
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
-        private readonly AdminAreaSettings _adminAreaSettings;
 
 		#endregion
 
@@ -31,14 +30,13 @@ namespace Nop.Admin.Controllers
 
         public PollController(IPollService pollService, ILanguageService languageService,
             IDateTimeHelper dateTimeHelper, ILocalizationService localizationService,
-            IPermissionService permissionService, AdminAreaSettings adminAreaSettings)
+            IPermissionService permissionService)
         {
             this._pollService = pollService;
             this._languageService = languageService;
             this._dateTimeHelper = dateTimeHelper;
             this._localizationService = localizationService;
             this._permissionService = permissionService;
-            this._adminAreaSettings = adminAreaSettings;
 		}
 
 		#endregion 
