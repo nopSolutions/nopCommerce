@@ -147,6 +147,14 @@ namespace Nop.Admin.Models.Settings
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.EnableCssBundling")]
             public bool EnableCssBundling { get; set; }
             public bool EnableCssBundling_OverrideForStore { get; set; }
+
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.TwitterMetaTags")]
+            public bool TwitterMetaTags { get; set; }
+            public bool TwitterMetaTags_OverrideForStore { get; set; }
+
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.OpenGraphMetaTags")]
+            public bool OpenGraphMetaTags { get; set; }
+            public bool OpenGraphMetaTags_OverrideForStore { get; set; }
         }
 
         public partial class SecuritySettingsModel : BaseNopModel

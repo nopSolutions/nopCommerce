@@ -372,6 +372,26 @@
                 @Html.ValidationMessageFor(model => model.SeoSettings.EnableCssBundling)
             </td>
         </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.TwitterMetaTags_OverrideForStore, model => model.SeoSettings.TwitterMetaTags, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.SeoSettings.TwitterMetaTags):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SeoSettings.TwitterMetaTags)
+                @Html.ValidationMessageFor(model => model.SeoSettings.TwitterMetaTags)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.OpenGraphMetaTags_OverrideForStore, model => model.SeoSettings.OpenGraphMetaTags, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.SeoSettings.OpenGraphMetaTags):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SeoSettings.OpenGraphMetaTags)
+                @Html.ValidationMessageFor(model => model.SeoSettings.OpenGraphMetaTags)
+            </td>
+        </tr>
     </table>
 }
 @helper TabSecuritySettings()

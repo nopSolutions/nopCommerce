@@ -4431,11 +4431,13 @@ namespace Nop.Services.Installation
                     GenerateProductMetaDescription = true,
                     ConvertNonWesternChars = false,
                     AllowUnicodeCharsInUrls = true,
+                    CanonicalUrlsEnabled = false,
+                    WwwRequirement = WwwRequirement.NoMatter,
                     //we disable bundling out of the box because it requires a lot of server resources
                     EnableJsBundling = false,
                     EnableCssBundling = false,
-                    CanonicalUrlsEnabled = false,
-                    WwwRequirement = WwwRequirement.NoMatter,
+                    TwitterMetaTags = true,
+                    OpenGraphMetaTags = true,
                     ReservedUrlRecordSlugs = new List<string>()
                     {
                         "admin", 

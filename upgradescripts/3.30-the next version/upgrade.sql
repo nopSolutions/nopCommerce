@@ -152,6 +152,18 @@ set @resources='
   <LocaleResource Name="Admin.GiftCards.List.RecipientName.Hint">
     <Value>Search by recipient name. Leave empty to load all records.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.TwitterMetaTags">
+    <Value>Twitter META tags</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.TwitterMetaTags.Hint">
+    <Value>Check to generate Twitter META tags on the product details page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.OpenGraphMetaTags">
+    <Value>Open Graph META tags</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.OpenGraphMetaTags.Hint">
+    <Value>Check to generate Open Graph META tags on the product details page.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -958,4 +970,20 @@ WHERE [DefaultCurrencyId] IS NULL
 GO
 
 ALTER TABLE [Language] ALTER COLUMN [DefaultCurrencyId] int NOT NULL
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'seosettings.twittermetatags')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'seosettings.twittermetatags', N'true', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'seosettings.opengraphmetatags')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'seosettings.opengraphmetatags', N'true', 0)
+END
 GO

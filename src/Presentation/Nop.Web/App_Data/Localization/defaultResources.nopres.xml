@@ -4932,6 +4932,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.LocalizationSettings">
     <Value>Localization settings</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.OpenGraphMetaTags">
+    <Value>Open Graph META tags</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.OpenGraphMetaTags.Hint">
+    <Value>Check to generate Open Graph META tags on the product details page.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.PageTitleSeoAdjustment">
     <Value>Page title SEO adjustment</Value>
   </LocaleResource>
@@ -5009,6 +5015,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.TwitterLink.Hint">
     <Value>Specify your Twitter page URL. Leave empty if you have no such page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.TwitterMetaTags">
+    <Value>Twitter META tags</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.TwitterMetaTags.Hint">
+    <Value>Check to generate Twitter META tags on the product details page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.UseImagesForLanguageSelection">
     <Value>Use images for language selection</Value>

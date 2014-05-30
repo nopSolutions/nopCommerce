@@ -57,6 +57,14 @@ namespace Nop.Core.Domain.Seo
         /// </summary>
         public bool EnableCssBundling { get; set; }
         /// <summary>
+        /// A value indicating whether Twitter META tags should be generated
+        /// </summary>
+        public bool TwitterMetaTags { get; set; }
+        /// <summary>
+        /// A value indicating whether Open Graph META tags should be generated
+        /// </summary>
+        public bool OpenGraphMetaTags { get; set; }
+        /// <summary>
         /// Slugs (sename) reserved for some other needs
         /// </summary>
         public List<string> ReservedUrlRecordSlugs { get; set; }
