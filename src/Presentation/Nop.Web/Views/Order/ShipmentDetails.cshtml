@@ -41,9 +41,6 @@
                         @T("Order.Shipments.DeliveryDate.NotYet")
                     }
                 </li>
-                <li class="shipping-method">
-                    @T("Order.Shipments.ShippingMethod"): @Model.Order.ShippingMethod
-                </li>
                 @if (!String.IsNullOrEmpty(Model.TrackingNumber))
                 {
                     <li class="tracking-number">@T("Order.Shipments.TrackingNumber"):
