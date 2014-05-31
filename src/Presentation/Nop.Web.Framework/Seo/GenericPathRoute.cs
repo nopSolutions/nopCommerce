@@ -134,9 +134,8 @@ namespace Nop.Web.Framework.Seo
                 //otherwise, it can cause some issues when customers choose a new language but a slug stays the same
                 var workContext = EngineContext.Current.Resolve<IWorkContext>();
                 var slugForCurrentLanguage = SeoExtensions.GetSeName(urlRecord.EntityId, urlRecord.EntityName, workContext.WorkingLanguage.Id);
-                if (!String.IsNullOrEmpty(slug) &&
-                    !String.IsNullOrEmpty(slugForCurrentLanguage) && 
-                    !slug.Equals(slugForCurrentLanguage, StringComparison.InvariantCultureIgnoreCase))
+                if (!String.IsNullOrEmpty(slugForCurrentLanguage) && 
+                    !slugForCurrentLanguage.Equals(slug, StringComparison.InvariantCultureIgnoreCase))
                 {
                     //we should make not null or "" validation above because some entities does not have SeName for standard (ID=0) language (e.g. news, blog posts)
                     var webHelper = EngineContext.Current.Resolve<IWebHelper>();
