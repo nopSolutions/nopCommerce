@@ -352,36 +352,42 @@ namespace Nop.Web.Controllers
                 model.DeliveryDate = _dateTimeHelper.ConvertToUserTime(shipment.DeliveryDateUtc.Value, DateTimeKind.Utc);
             
             //tracking number and shipment information
-            model.TrackingNumber = shipment.TrackingNumber;
-            var srcm = _shippingService.LoadShippingRateComputationMethodBySystemName(order.ShippingRateComputationMethodSystemName);
-            if (srcm != null &&
-                srcm.PluginDescriptor.Installed &&
-                srcm.IsShippingRateComputationMethodActive(_shippingSettings))
+            if (!String.IsNullOrEmpty(shipment.TrackingNumber))
             {
-                var shipmentTracker = srcm.ShipmentTracker;
-                if (shipmentTracker != null)
+                model.TrackingNumber = shipment.TrackingNumber;
+                var srcm = _shippingService.LoadShippingRateComputationMethodBySystemName(order.ShippingRateComputationMethodSystemName);
+                if (srcm != null &&
+                    srcm.PluginDescriptor.Installed &&
+                    srcm.IsShippingRateComputationMethodActive(_shippingSettings))
                 {
-                    model.TrackingNumberUrl = shipmentTracker.GetUrl(shipment.TrackingNumber);
-                    if (_shippingSettings.DisplayShipmentEventsToCustomers)
+                    var shipmentTracker = srcm.ShipmentTracker;
+                    if (shipmentTracker != null)
                     {
-                        var shipmentEvents = shipmentTracker.GetShipmentEvents(shipment.TrackingNumber);
-                        if (shipmentEvents != null)
-                            foreach (var shipmentEvent in shipmentEvents)
+                        model.TrackingNumberUrl = shipmentTracker.GetUrl(shipment.TrackingNumber);
+                        if (_shippingSettings.DisplayShipmentEventsToCustomers)
+                        {
+                            var shipmentEvents = shipmentTracker.GetShipmentEvents(shipment.TrackingNumber);
+                            if (shipmentEvents != null)
                             {
-                                var shipmentStatusEventModel = new ShipmentDetailsModel.ShipmentStatusEventModel();
-                                var shipmentEventCountry = _countryService.GetCountryByTwoLetterIsoCode(shipmentEvent.CountryCode);
-                                shipmentStatusEventModel.Country = shipmentEventCountry != null
-                                                                       ? shipmentEventCountry.GetLocalized(x => x.Name)
-                                                                       : shipmentEvent.CountryCode;
-                                shipmentStatusEventModel.Date = shipmentEvent.Date;
-                                shipmentStatusEventModel.EventName = shipmentEvent.EventName;
-                                shipmentStatusEventModel.Location = shipmentEvent.Location;
-                                model.ShipmentStatusEvents.Add(shipmentStatusEventModel);
+                                foreach (var shipmentEvent in shipmentEvents)
+                                {
+                                    var shipmentStatusEventModel = new ShipmentDetailsModel.ShipmentStatusEventModel();
+                                    var shipmentEventCountry = _countryService.GetCountryByTwoLetterIsoCode(shipmentEvent.CountryCode);
+                                    shipmentStatusEventModel.Country = shipmentEventCountry != null
+                                                                           ? shipmentEventCountry.GetLocalized(x => x.Name)
+                                                                           : shipmentEvent.CountryCode;
+                                    shipmentStatusEventModel.Date = shipmentEvent.Date;
+                                    shipmentStatusEventModel.EventName = shipmentEvent.EventName;
+                                    shipmentStatusEventModel.Location = shipmentEvent.Location;
+                                    model.ShipmentStatusEvents.Add(shipmentStatusEventModel);
+                                }
                             }
+                        }
                     }
                 }
-            }
             
+            }
+
             //products in this shipment
             model.ShowSku = _catalogSettings.ShowProductSku;
             foreach (var shipmentItem in shipment.ShipmentItems)

@@ -51,6 +51,9 @@ namespace Nop.Plugin.Shipping.Fedex
         /// <returns>List of Shipment Events.</returns>
         public virtual IList<ShipmentStatusEvent> GetShipmentEvents(string trackingNumber)
         {
+            if (string.IsNullOrEmpty(trackingNumber))
+                return new List<ShipmentStatusEvent>();
+
             var result = new List<ShipmentStatusEvent>();
             try
             {

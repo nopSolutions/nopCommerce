@@ -89,6 +89,9 @@ namespace Nop.Services.Shipping.Tracking
         /// <returns>List of Shipment Events.</returns>
         public virtual IList<ShipmentStatusEvent> GetShipmentEvents(string trackingNumber)
         {
+            if (string.IsNullOrEmpty(trackingNumber))
+                return new List<ShipmentStatusEvent>();
+
             var tracker = GetTrackerByTrackingNumber(trackingNumber);
             if (tracker != null)
                 return tracker.GetShipmentEvents(trackingNumber);
