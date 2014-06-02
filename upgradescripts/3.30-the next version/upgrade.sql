@@ -164,6 +164,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.OpenGraphMetaTags.Hint">
     <Value>Check to generate Open Graph META tags on the product details page.</Value>
   </LocaleResource>
+  <LocaleResource Name="Menu">
+    <Value>Menu</Value>
+  </LocaleResource>
 </Language>
 '
 

@@ -11103,6 +11103,9 @@
   <LocaleResource Name="Media.Product.ImageLinkTitleFormat.Details">
     <Value>Picture of {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="Menu">
+    <Value>Menu</Value>
+  </LocaleResource>
   <LocaleResource Name="Messages.Order.GiftCardInfo">
     <Value>Gift card ({0}):</Value>
   </LocaleResource>
