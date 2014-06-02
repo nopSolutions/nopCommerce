@@ -79,7 +79,8 @@ namespace Nop.Admin.Controllers
         private readonly TaxSettings _taxSettings;
         private readonly MeasureSettings _measureSettings;
         private readonly AddressSettings _addressSettings;
-        
+	    private readonly ShippingSettings _shippingSettings;
+
         #endregion
 
         #region Ctor
@@ -120,7 +121,8 @@ namespace Nop.Admin.Controllers
             CurrencySettings currencySettings, 
             TaxSettings taxSettings,
             MeasureSettings measureSettings,
-            AddressSettings addressSettings)
+            AddressSettings addressSettings,
+            ShippingSettings shippingSettings)
 		{
             this._orderService = orderService;
             this._orderReportService = orderReportService;
@@ -160,6 +162,7 @@ namespace Nop.Admin.Controllers
             this._taxSettings = taxSettings;
             this._measureSettings = measureSettings;
             this._addressSettings = addressSettings;
+            this._shippingSettings = shippingSettings;
 		}
         
         #endregion
@@ -619,7 +622,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected ShipmentModel PrepareShipmentModel(Shipment shipment, bool prepareProducts)
+        protected ShipmentModel PrepareShipmentModel(Shipment shipment, bool prepareProducts, bool prepareShipmentEvent = false)
         {
             //measures
             var baseWeight = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId);
@@ -677,6 +680,42 @@ namespace Nop.Admin.Controllers
                     model.Items.Add(shipmentItemModel);
                 }
             }
+
+            if (prepareShipmentEvent && !String.IsNullOrEmpty(shipment.TrackingNumber))
+            {
+                var order = shipment.Order;
+                var srcm = _shippingService.LoadShippingRateComputationMethodBySystemName(order.ShippingRateComputationMethodSystemName);
+                if (srcm != null &&
+                    srcm.PluginDescriptor.Installed &&
+                    srcm.IsShippingRateComputationMethodActive(_shippingSettings))
+                {
+                    var shipmentTracker = srcm.ShipmentTracker;
+                    if (shipmentTracker != null)
+                    {
+                        //model.TrackingNumberUrl = shipmentTracker.GetUrl(shipment.TrackingNumber);
+                        if (_shippingSettings.DisplayShipmentEventsToStoreOwner)
+                        {
+                            var shipmentEvents = shipmentTracker.GetShipmentEvents(shipment.TrackingNumber);
+                            if (shipmentEvents != null)
+                            {
+                                foreach (var shipmentEvent in shipmentEvents)
+                                {
+                                    var shipmentStatusEventModel = new ShipmentModel.ShipmentStatusEventModel();
+                                    var shipmentEventCountry = _countryService.GetCountryByTwoLetterIsoCode(shipmentEvent.CountryCode);
+                                    shipmentStatusEventModel.Country = shipmentEventCountry != null
+                                        ? shipmentEventCountry.GetLocalized(x => x.Name)
+                                        : shipmentEvent.CountryCode;
+                                    shipmentStatusEventModel.Date = shipmentEvent.Date;
+                                    shipmentStatusEventModel.EventName = shipmentEvent.EventName;
+                                    shipmentStatusEventModel.Location = shipmentEvent.Location;
+                                    model.ShipmentStatusEvents.Add(shipmentStatusEventModel);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
             return model;
         }
 
@@ -2578,7 +2617,7 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null && !HasAccessToShipment(shipment))
                 return RedirectToAction("List");
 
-            var model = PrepareShipmentModel(shipment, true);
+            var model = PrepareShipmentModel(shipment, true, true);
             return View(model);
         }
 

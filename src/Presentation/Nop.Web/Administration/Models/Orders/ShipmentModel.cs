@@ -9,6 +9,7 @@ namespace Nop.Admin.Models.Orders
     {
         public ShipmentModel()
         {
+            this.ShipmentStatusEvents = new List<ShipmentStatusEventModel>();
             this.Items = new List<ShipmentItemModel>();
         }
         [NopResourceDisplayName("Admin.Orders.Shipments.ID")]
@@ -35,6 +36,8 @@ namespace Nop.Admin.Models.Orders
 
         public List<ShipmentItemModel> Items { get; set; }
 
+        public IList<ShipmentStatusEventModel> ShipmentStatusEvents { get; set; }
+
         #region Nested classes
 
         public partial class ShipmentItemModel : BaseNopEntityModel
@@ -59,6 +62,15 @@ namespace Nop.Admin.Models.Orders
             public int QuantityInThisShipment { get; set; }
             public int QuantityInAllShipments { get; set; }
         }
+
+        public partial class ShipmentStatusEventModel : BaseNopModel
+        {
+            public string EventName { get; set; }
+            public string Location { get; set; }
+            public string Country { get; set; }
+            public DateTime? Date { get; set; }
+        }
+
         #endregion
     }
 }
