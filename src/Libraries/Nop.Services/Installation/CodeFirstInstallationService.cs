@@ -4735,7 +4735,7 @@ namespace Nop.Services.Installation
             settingService.SaveSetting(new ShippingSettings()
                 {
                     ActiveShippingRateComputationMethodSystemNames = new List<string>() { "Shipping.FixedRate" },
-                    AllowPickUpInStore = false,
+                    AllowPickUpInStore = true,
                     UseWarehouseLocation = false,
                     FreeShippingOverXEnabled = false,
                     FreeShippingOverXValue = decimal.Zero,

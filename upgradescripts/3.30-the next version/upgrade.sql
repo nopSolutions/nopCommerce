@@ -245,7 +245,7 @@ GO
 IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'shippingsettings.allowpickupinstore')
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
-	VALUES (N'shippingsettings.allowpickupinstore', N'false', 0)
+	VALUES (N'shippingsettings.allowpickupinstore', N'true', 0)
 END
 GO
 
