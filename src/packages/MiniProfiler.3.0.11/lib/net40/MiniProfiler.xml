@@ -259,6 +259,72 @@
             Gets a value indicating whether to keep things static and reusable.
             </summary>
         </member>
+        <member name="T:StackExchange.Profiling.SqlFormatters.VerboseSqlServerFormatter">
+            <summary>
+            Formats SQL server queries with a DECLARE up top for parameter values
+            </summary>
+        </member>
+        <member name="T:StackExchange.Profiling.SqlFormatters.SqlServerFormatter">
+            <summary>
+            Formats SQL server queries with a DECLARE up top for parameter values
+            </summary>
+        </member>
+        <member name="T:StackExchange.Profiling.SqlFormatters.ISqlFormatter">
+            <summary>
+            Takes a <c>SqlTiming</c> and returns a formatted SQL string, for parameter replacement, etc.
+            </summary>
+        </member>
+        <member name="M:StackExchange.Profiling.SqlFormatters.ISqlFormatter.FormatSql(System.String,System.Collections.Generic.List{StackExchange.Profiling.SqlTimingParameter},System.Data.IDbCommand)">
+            <summary>
+            Return SQL the way you want it to look on the in the trace. Usually used to format parameters.
+            </summary>
+        </member>
+        <member name="F:StackExchange.Profiling.SqlFormatters.SqlServerFormatter.ParamTranslator">
+            <summary>
+            Lookup a function for translating a parameter by parameter type
+            </summary>
+        </member>
+        <member name="F:StackExchange.Profiling.SqlFormatters.SqlServerFormatter.DontQuote">
+            <summary>
+            What data types should not be quoted when used in parameters
+            </summary>
+        </member>
+        <member name="M:StackExchange.Profiling.SqlFormatters.SqlServerFormatter.#cctor">
+            <summary>
+            Initialises static members of the <see cref="T:StackExchange.Profiling.SqlFormatters.SqlServerFormatter"/> class.
+            </summary>
+        </member>
+        <member name="M:StackExchange.Profiling.SqlFormatters.SqlServerFormatter.FormatSql(System.String,System.Collections.Generic.List{StackExchange.Profiling.SqlTimingParameter},System.Data.IDbCommand)">
+            <summary>
+            Formats the SQL in a SQL-Server friendly way, with DECLARE statements for the parameters up top.
+            </summary>
+        </member>
+        <member name="M:StackExchange.Profiling.SqlFormatters.SqlServerFormatter.TerminateSqlStatement(System.String)">
+            <summary>
+            This function is necessary to always return the sql statement terminated with a semicolon.
+            Since we're using semicolons, we should also add it to the end.
+            </summary>
+        </member>
+        <member name="M:StackExchange.Profiling.SqlFormatters.SqlServerFormatter.GenerateParamText(System.Text.StringBuilder,System.Collections.Generic.List{StackExchange.Profiling.SqlTimingParameter})">
+            <summary>
+            Generate formatter output text for all <paramref name="parameters"/>.
+            </summary>
+            <param name="buffer"><see cref="T:System.Text.StringBuilder"/> to use</param>
+            <param name="parameters">Parameters to evaluate</param>
+            <returns></returns>
+        </member>
+        <member name="M:StackExchange.Profiling.SqlFormatters.SqlServerFormatter.PrepareValue(StackExchange.Profiling.SqlTimingParameter)">
+            <summary>
+            Prepare the parameter value for use in SqlFormatter output
+            </summary>
+            <param name="parameter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StackExchange.Profiling.SqlFormatters.VerboseSqlServerFormatter.FormatSql(System.String,System.Collections.Generic.List{StackExchange.Profiling.SqlTimingParameter},System.Data.IDbCommand)">
+            <summary>
+            Formats the SQL in a SQL-Server friendly way, with DECLARE statements for the parameters up top.
+            </summary>
+        </member>
         <member name="T:StackExchange.Profiling.SqlTiming">
             <summary>
             Profiles a single SQL execution.
@@ -344,7 +410,7 @@
         </member>
         <member name="P:StackExchange.Profiling.SqlTimingParameter.Name">
             <summary>
-            Parameter name, e.g. "@routeName"
+            Parameter name, e.g. "routeName"
             </summary>
         </member>
         <member name="P:StackExchange.Profiling.SqlTimingParameter.Value">
@@ -360,6 +426,16 @@
         <member name="P:StackExchange.Profiling.SqlTimingParameter.Size">
             <summary>
             How large the type is, e.g. for string, size could be 4000
+            </summary>
+        </member>
+        <member name="P:StackExchange.Profiling.SqlTimingParameter.Direction">
+            <summary>
+            System.Data.ParameterDirection: "Input", "Output", "InputOutput", "ReturnValue"
+            </summary>
+        </member>
+        <member name="P:StackExchange.Profiling.SqlTimingParameter.IsNullable">
+            <summary>
+            Gets or sets a value that indicates whether the parameter accepts null values.
             </summary>
         </member>
         <member name="T:StackExchange.Profiling.Storage.DatabaseStorageBase">
@@ -420,6 +496,15 @@
             Returns a new <c>SqlServerDatabaseStorage</c> object that will insert into the database identified by connectionString.
             </summary>
             <param name="connectionString">The connection String.</param>
+        </member>
+        <member name="M:StackExchange.Profiling.Storage.DatabaseStorageBase.#ctor(System.Configuration.ConnectionStringSettings)">
+            <summary>
+            Initialises a new instance of the <see cref="T:StackExchange.Profiling.Storage.DatabaseStorageBase"/> class. 
+            Returns a new <c>SqlServerDatabaseStorage</c> object that will insert into the database identified by connection string settings.
+            </summary>
+            <param name="connectionStringSettings">
+            The connection string settings read from ConfigurationManager.ConnectionStrings["connection"]
+            </param>
         </member>
         <member name="M:StackExchange.Profiling.Storage.DatabaseStorageBase.Save(StackExchange.Profiling.MiniProfiler)">
             <summary>
@@ -557,10 +642,18 @@
         </member>
         <member name="M:StackExchange.Profiling.Storage.SqlServerStorage.#ctor(System.String)">
             <summary>
-            Initializes a new instance of the <see cref="T:StackExchange.Profiling.Storage.SqlServerStorage"/> class. 
+            Initializes a new instance of the <see cref="T:StackExchange.Profiling.Storage.SqlServerStorage"/> class with the specified connection string.
             </summary>
             <param name="connectionString">
-            The connection String.
+            The connection string to use.
+            </param>
+        </member>
+        <member name="M:StackExchange.Profiling.Storage.SqlServerStorage.#ctor(System.Configuration.ConnectionStringSettings)">
+            <summary>
+            Initializes a new instance of the <see cref="T:StackExchange.Profiling.Storage.SqlServerStorage"/> class with the specified connection string settings.
+            </summary>
+            <param name="connectionStringSettings">
+            The connection string settings read from ConfigurationManager.ConnectionStrings["connection"]
             </param>
         </member>
         <member name="M:StackExchange.Profiling.Storage.SqlServerStorage.Save(StackExchange.Profiling.MiniProfiler)">
@@ -1439,42 +1532,23 @@
             Every provider factory must have an Instance public field
             </summary>
         </member>
-        <member name="F:StackExchange.Profiling.Data.ProfiledDbProviderFactory._profiler">
-            <summary>
-            The profiler.
-            </summary>
-        </member>
         <member name="F:StackExchange.Profiling.Data.ProfiledDbProviderFactory._tail">
             <summary>
             The tail.
             </summary>
         </member>
-        <member name="M:StackExchange.Profiling.Data.ProfiledDbProviderFactory.#ctor">
+        <member name="M:StackExchange.Profiling.Data.ProfiledDbProviderFactory.#ctor(System.Data.Common.DbProviderFactory)">
             <summary>
-            Prevents a default instance of the <see cref="T:StackExchange.Profiling.Data.ProfiledDbProviderFactory"/> class from being created. 
-            Used for database provider APIS internally 
-            </summary>
-        </member>
-        <member name="M:StackExchange.Profiling.Data.ProfiledDbProviderFactory.InitProfiledDbProviderFactory(StackExchange.Profiling.Data.IDbProfiler,System.Data.Common.DbProviderFactory)">
-            <summary>
-            Allow to re-initialise the provider factory.
-            </summary>
-            <param name="profiler">The profiler.</param>
-            <param name="tail">The tail.</param>
-        </member>
-        <member name="M:StackExchange.Profiling.Data.ProfiledDbProviderFactory.#ctor(StackExchange.Profiling.Data.IDbProfiler,System.Data.Common.DbProviderFactory)">
-            <summary>
-            Initialises a new instance of the <see cref="T:StackExchange.Profiling.Data.ProfiledDbProviderFactory"/> class. 
+            Initialises a new instance of the <see cref="T:StackExchange.Profiling.Data.ProfiledDbProviderFactory"/> class.
             proxy provider factory
             </summary>
-            <param name="profiler">The profiler.</param>
             <param name="tail">The tail.</param>
         </member>
-        <member name="M:StackExchange.Profiling.Data.ProfiledDbProviderFactory.CreateDataSourceEnumerator">
+        <member name="M:StackExchange.Profiling.Data.ProfiledDbProviderFactory.#ctor">
             <summary>
-            create the data source enumerator.
+            Prevents a default instance of the <see cref="T:StackExchange.Profiling.Data.ProfiledDbProviderFactory"/> class from being created.
+            Used for database provider APIS internally
             </summary>
-            <returns>The <see cref="T:System.Data.Common.DbDataSourceEnumerator"/>.</returns>
         </member>
         <member name="M:StackExchange.Profiling.Data.ProfiledDbProviderFactory.CreateCommand">
             <summary>
@@ -1482,17 +1556,19 @@
             </summary>
             <returns>The <see cref="T:System.Data.Common.DbCommand"/>.</returns>
         </member>
+        <member name="M:StackExchange.Profiling.Data.ProfiledDbProviderFactory.CreateCommandBuilder">
+            <summary>
+            create the command builder.
+            </summary>
+            <returns>
+            The <see cref="T:System.Data.Common.DbCommandBuilder"/>.
+            </returns>
+        </member>
         <member name="M:StackExchange.Profiling.Data.ProfiledDbProviderFactory.CreateConnection">
             <summary>
             create the connection.
             </summary>
             <returns>The <see cref="T:System.Data.Common.DbConnection"/>.</returns>
-        </member>
-        <member name="M:StackExchange.Profiling.Data.ProfiledDbProviderFactory.CreateParameter">
-            <summary>
-            create the parameter.
-            </summary>
-            <returns>The <see cref="T:System.Data.Common.DbParameter"/>.</returns>
         </member>
         <member name="M:StackExchange.Profiling.Data.ProfiledDbProviderFactory.CreateConnectionStringBuilder">
             <summary>
@@ -1500,14 +1576,6 @@
             </summary>
             <returns>
             The <see cref="T:System.Data.Common.DbConnectionStringBuilder"/>.
-            </returns>
-        </member>
-        <member name="M:StackExchange.Profiling.Data.ProfiledDbProviderFactory.CreateCommandBuilder">
-            <summary>
-            create the command builder.
-            </summary>
-            <returns>
-            The <see cref="T:System.Data.Common.DbCommandBuilder"/>.
             </returns>
         </member>
         <member name="M:StackExchange.Profiling.Data.ProfiledDbProviderFactory.CreateDataAdapter">
@@ -1518,12 +1586,30 @@
             The <see cref="T:System.Data.Common.DbDataAdapter"/>.
             </returns>
         </member>
+        <member name="M:StackExchange.Profiling.Data.ProfiledDbProviderFactory.CreateDataSourceEnumerator">
+            <summary>
+            create the data source enumerator.
+            </summary>
+            <returns>The <see cref="T:System.Data.Common.DbDataSourceEnumerator"/>.</returns>
+        </member>
+        <member name="M:StackExchange.Profiling.Data.ProfiledDbProviderFactory.CreateParameter">
+            <summary>
+            create the parameter.
+            </summary>
+            <returns>The <see cref="T:System.Data.Common.DbParameter"/>.</returns>
+        </member>
         <member name="M:StackExchange.Profiling.Data.ProfiledDbProviderFactory.CreatePermission(System.Security.Permissions.PermissionState)">
             <summary>
             create the permission.
             </summary>
             <param name="state">The state.</param>
             <returns>The <see cref="T:System.Security.CodeAccessPermission"/>.</returns>
+        </member>
+        <member name="M:StackExchange.Profiling.Data.ProfiledDbProviderFactory.InitProfiledDbProviderFactory(System.Data.Common.DbProviderFactory)">
+            <summary>
+            Allow to re-initialise the provider factory.
+            </summary>
+            <param name="tail">The tail.</param>
         </member>
         <member name="P:StackExchange.Profiling.Data.ProfiledDbProviderFactory.CanCreateDataSourceEnumerator">
             <summary>
@@ -2348,6 +2434,11 @@
         <member name="P:StackExchange.Profiling.Data.ProfiledDbDataReader.RecordsAffected">
             <summary>
             Gets the records affected.
+            </summary>
+        </member>
+        <member name="P:StackExchange.Profiling.Data.ProfiledDbDataReader.WrappedReader">
+            <summary>
+            The <see cref="T:System.Data.Common.DbDataReader"/> that is being used
             </summary>
         </member>
         <member name="P:StackExchange.Profiling.Data.ProfiledDbDataReader.Item(System.String)">
@@ -3786,16 +3877,6 @@
             Formats any SQL query with inline parameters, optionally including the value type
             </summary>
         </member>
-        <member name="T:StackExchange.Profiling.SqlFormatters.ISqlFormatter">
-            <summary>
-            Takes a <c>SqlTiming</c> and returns a formatted SQL string, for parameter replacement, etc.
-            </summary>
-        </member>
-        <member name="M:StackExchange.Profiling.SqlFormatters.ISqlFormatter.FormatSql(System.String,System.Collections.Generic.List{StackExchange.Profiling.SqlTimingParameter})">
-            <summary>
-            Return SQL the way you want it to look on the in the trace. Usually used to format parameters.
-            </summary>
-        </member>
         <member name="M:StackExchange.Profiling.SqlFormatters.InlineFormatter.#ctor(System.Boolean)">
             <summary>
             Creates a new Inline SQL Formatter, optionally including the parameter type info 
@@ -3805,7 +3886,7 @@
             whether to include a comment after the value, indicating the type, e.g. <c>/* @myParam DbType.Int32 */</c>
             </param>
         </member>
-        <member name="M:StackExchange.Profiling.SqlFormatters.InlineFormatter.FormatSql(System.String,System.Collections.Generic.List{StackExchange.Profiling.SqlTimingParameter})">
+        <member name="M:StackExchange.Profiling.SqlFormatters.InlineFormatter.FormatSql(System.String,System.Collections.Generic.List{StackExchange.Profiling.SqlTimingParameter},System.Data.IDbCommand)">
             <summary>
             Formats the SQL in a generic friendly format, including the parameter type information 
             in a comment if it was specified in the InlineFormatter constructor
@@ -3814,21 +3895,6 @@
         <member name="M:StackExchange.Profiling.SqlFormatters.InlineFormatter.GetParameterValue(StackExchange.Profiling.SqlTimingParameter)">
             <summary>
             Returns a string representation of the parameter's value, including the type
-            </summary>
-        </member>
-        <member name="T:StackExchange.Profiling.SqlFormatters.SqlServerFormatter">
-            <summary>
-            Formats SQL server queries with a DECLARE up top for parameter values
-            </summary>
-        </member>
-        <member name="M:StackExchange.Profiling.SqlFormatters.SqlServerFormatter.#cctor">
-            <summary>
-            Initialises static members of the <see cref="T:StackExchange.Profiling.SqlFormatters.SqlServerFormatter"/> class.
-            </summary>
-        </member>
-        <member name="M:StackExchange.Profiling.SqlFormatters.SqlServerFormatter.FormatSql(System.String,System.Collections.Generic.List{StackExchange.Profiling.SqlTimingParameter})">
-            <summary>
-            Formats the SQL in a SQL-Server friendly way, with DECLARE statements for the parameters up top.
             </summary>
         </member>
         <member name="T:StackExchange.Profiling.SingletonProfilerProvider">
