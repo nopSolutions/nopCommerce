@@ -202,5 +202,68 @@
             </td>
         </tr>
     </table>
+    if (Model.ShipmentStatusEvents.Count > 0)
+    {
+        <table class="adminContent">
+            <tr>
+                <td class="adminData">
+                    <strong>@T("Admin.Orders.Shipments.ShipmentStatusEvents")</strong>
+                </td>
+            </tr>
+            <tr>
+                <td class="adminData">
+                    <table class="tablestyle" border="1" cellspacing="0" style="width:100%;border-collapse:collapse;">
+
+                        <thead>
+                            <tr class="headerstyle">
+                                <th align="center">
+                                    @T("Admin.Orders.Shipments.ShipmentStatusEvents.Event")
+                                </th>
+                                <th align="center">
+                                    @T("Admin.Orders.Shipments.ShipmentStatusEvents.Location")
+                                </th>
+                                <th align="center">
+                                    @T("Admin.Orders.Shipments.ShipmentStatusEvents.Country")
+                                </th>
+                                <th align="center">
+                                    @T("Admin.Orders.Shipments.ShipmentStatusEvents.Date")
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.ShipmentStatusEvents)
+                            {
+                                <tr>
+                                    <td style="width:40%;">
+                                        <div style="padding-left: 10px; padding-right: 10px;">
+                                            @item.EventName
+                                        </div>
+                                    </td>
+                                    <td style="width:20%;">
+                                        <div style="padding-left: 10px; padding-right: 10px;">
+                                            @item.Location
+                                        </div>
+                                    </td>
+                                    <td style="width:20%;">
+                                        <div style="padding-left: 10px; padding-right: 10px;">
+                                            @item.Country
+                                        </div>
+                                    </td>
+                                    <td style="width:20%;">
+                                        <div style="padding-left: 10px; padding-right: 10px;">
+                                            @if (item.Date.HasValue)
+                                            {
+                                                @item.Date.Value.ToString("D")
+                                            }
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    }
 }
 @Html.DeleteConfirmation("DeleteShipment", "shipment-delete")

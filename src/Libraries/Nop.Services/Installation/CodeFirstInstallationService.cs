@@ -4742,6 +4742,7 @@ namespace Nop.Services.Installation
                     FreeShippingOverXIncludingTax = false,
                     EstimateShippingEnabled = true,
                     DisplayShipmentEventsToCustomers = false,
+                    DisplayShipmentEventsToStoreOwner = false,
                     ReturnValidOptionsIfThereAreAny = true,
                     BypassShippingMethodSelectionIfOnlyOne = false,
                     UseCubeRootMethod = true

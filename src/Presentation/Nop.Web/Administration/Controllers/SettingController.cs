@@ -553,6 +553,7 @@ namespace Nop.Admin.Controllers
                 model.FreeShippingOverXIncludingTax_OverrideForStore = _settingService.SettingExists(shippingSettings, x => x.FreeShippingOverXIncludingTax, storeScope);
                 model.EstimateShippingEnabled_OverrideForStore = _settingService.SettingExists(shippingSettings, x => x.EstimateShippingEnabled, storeScope);
                 model.DisplayShipmentEventsToCustomers_OverrideForStore = _settingService.SettingExists(shippingSettings, x => x.DisplayShipmentEventsToCustomers, storeScope);
+                model.DisplayShipmentEventsToStoreOwner_OverrideForStore = _settingService.SettingExists(shippingSettings, x => x.DisplayShipmentEventsToStoreOwner, storeScope);
                 model.BypassShippingMethodSelectionIfOnlyOne_OverrideForStore = _settingService.SettingExists(shippingSettings, x => x.BypassShippingMethodSelectionIfOnlyOne, storeScope);
                 model.ShippingOriginAddress_OverrideForStore = _settingService.SettingExists(shippingSettings, x => x.ShippingOriginAddressId, storeScope);
             }
@@ -635,6 +636,11 @@ namespace Nop.Admin.Controllers
                 _settingService.SaveSetting(shippingSettings, x => x.DisplayShipmentEventsToCustomers, storeScope, false);
             else if (storeScope > 0)
                 _settingService.DeleteSetting(shippingSettings, x => x.DisplayShipmentEventsToCustomers, storeScope);
+
+            if (model.DisplayShipmentEventsToStoreOwner_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(shippingSettings, x => x.DisplayShipmentEventsToStoreOwner, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(shippingSettings, x => x.DisplayShipmentEventsToStoreOwner, storeScope);
 
             if (model.BypassShippingMethodSelectionIfOnlyOne_OverrideForStore || storeScope == 0)
                 _settingService.SaveSetting(shippingSettings, x => x.BypassShippingMethodSelectionIfOnlyOne, storeScope, false);

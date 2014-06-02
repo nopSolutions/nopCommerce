@@ -385,7 +385,6 @@ namespace Nop.Web.Controllers
                         }
                     }
                 }
-            
             }
 
             //products in this shipment

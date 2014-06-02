@@ -36,6 +36,10 @@ namespace Nop.Admin.Models.Settings
         public bool DisplayShipmentEventsToCustomers { get; set; }
         public bool DisplayShipmentEventsToCustomers_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.DisplayShipmentEventsToStoreOwner")]
+        public bool DisplayShipmentEventsToStoreOwner { get; set; }
+        public bool DisplayShipmentEventsToStoreOwner_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.BypassShippingMethodSelectionIfOnlyOne")]
         public bool BypassShippingMethodSelectionIfOnlyOne { get; set; }
         public bool BypassShippingMethodSelectionIfOnlyOne_OverrideForStore { get; set; }

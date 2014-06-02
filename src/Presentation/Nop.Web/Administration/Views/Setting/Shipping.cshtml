@@ -109,6 +109,16 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.DisplayShipmentEventsToStoreOwner_OverrideForStore, model => model.DisplayShipmentEventsToStoreOwner, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.DisplayShipmentEventsToStoreOwner):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.DisplayShipmentEventsToStoreOwner)
+                @Html.ValidationMessageFor(model => model.DisplayShipmentEventsToStoreOwner)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.OverrideStoreCheckboxFor(model => model.BypassShippingMethodSelectionIfOnlyOne_OverrideForStore, model => model.BypassShippingMethodSelectionIfOnlyOne, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.BypassShippingMethodSelectionIfOnlyOne):
             </td>

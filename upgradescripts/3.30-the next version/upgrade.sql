@@ -167,6 +167,33 @@ set @resources='
   <LocaleResource Name="Menu">
     <Value>Menu</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.DisplayShipmentEventsToCustomers">
+    <Value>Display shipment events (customers)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.DisplayShipmentEventsToCustomers.Hint">
+    <Value>Check if you want your customers to see shipment events on their shipment details pages (if supported by your shipping rate computation method).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.DisplayShipmentEventsToStoreOwner">
+    <Value>Display shipment events (store owner)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.DisplayShipmentEventsToStoreOwner.Hint">
+    <Value>Check if you want a store owner to see shipment events on the shipment details pages of admin area (if supported by your shipping rate computation method).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.ShipmentStatusEvents">
+    <Value>Shipment status events</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.ShipmentStatusEvents.Country">
+    <Value>Country</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.ShipmentStatusEvents.Date">
+    <Value>Date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.ShipmentStatusEvents.Event">
+    <Value>Event</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.ShipmentStatusEvents.Location">
+    <Value>Location</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -988,5 +1015,13 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'seosettings.opengraphmet
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'seosettings.opengraphmetatags', N'true', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'shippingsettings.displayshipmenteventstostoreowner')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'shippingsettings.displayshipmenteventstostoreowner', N'false', 0)
 END
 GO

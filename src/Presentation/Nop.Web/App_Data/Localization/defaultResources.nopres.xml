@@ -5386,10 +5386,16 @@
     <Value>Check to bypass a shipping method page during checkout if there's only one shipping method available.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.DisplayShipmentEventsToCustomers">
-    <Value>Display shipment events</Value>
+    <Value>Display shipment events (customers)</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.DisplayShipmentEventsToCustomers.Hint">
     <Value>Check if you want your customers to see shipment events on their shipment details pages (if supported by your shipping rate computation method).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.DisplayShipmentEventsToStoreOwner">
+    <Value>Display shipment events (store owner)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.DisplayShipmentEventsToStoreOwner.Hint">
+    <Value>Check if you want a store owner to see shipment events on the shipment details pages of admin area (if supported by your shipping rate computation method).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.EstimateShippingEnabled">
     <Value>Estimate shipping enabled</Value>
@@ -8504,6 +8510,21 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.Products.Warehouse">
     <Value>Warehouse</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.ShipmentStatusEvents">
+    <Value>Shipment status events</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.ShipmentStatusEvents.Country">
+    <Value>Country</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.ShipmentStatusEvents.Date">
+    <Value>Date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.ShipmentStatusEvents.Event">
+    <Value>Event</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.ShipmentStatusEvents.Location">
+    <Value>Location</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.ShippedDate">
     <Value>Date shipped</Value>
