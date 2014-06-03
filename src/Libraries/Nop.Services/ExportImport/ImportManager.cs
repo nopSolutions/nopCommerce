@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Web;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;
@@ -64,6 +65,16 @@ namespace Nop.Services.ExportImport
             return Convert.ToString(columnValue);
         }
 
+        protected virtual string GetMimeTypeFromFilePath(string filePath)
+        {
+            var mimeType = MimeMapping.GetMimeMapping(filePath);
+
+            //little hack here because MimeMapping does not contain all mappings (e.g. PNG)
+            if (mimeType == "application/octet-stream")
+                mimeType = "image/jpeg";
+
+            return mimeType;
+        }
         #endregion
 
         #region Methods
@@ -445,9 +456,10 @@ namespace Nop.Services.ExportImport
 
                         if (!pictureAlreadyExists)
                         {
+                            var mimeType = GetMimeTypeFromFilePath(picturePath);
                             product.ProductPictures.Add(new ProductPicture()
                             {
-                                Picture = _pictureService.InsertPicture(newPictureBinary, "image/jpeg", _pictureService.GetPictureSeName(name), true),
+                                Picture = _pictureService.InsertPicture(newPictureBinary, mimeType , _pictureService.GetPictureSeName(name), true),
                                 DisplayOrder = 1,
                             });
                             _productService.UpdateProduct(product);
