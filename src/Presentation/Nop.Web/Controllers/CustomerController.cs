@@ -1231,6 +1231,23 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
+        public ActionResult RemoveExternalAssociation(int id)
+        {
+            if (!_workContext.CurrentCustomer.IsRegistered())
+                return new HttpUnauthorizedResult();
+
+            //ensure it's our record
+            var ear = _openAuthenticationService.GetExternalIdentifiersFor(_workContext.CurrentCustomer)
+                .FirstOrDefault(x => x.Id == id);
+
+            if (ear == null)
+                return RedirectToAction("Info");
+
+            _openAuthenticationService.DeletExternalAuthenticationRecord(ear);
+
+            return RedirectToAction("Info");
+        }
+
         #endregion
 
         #region Addresses

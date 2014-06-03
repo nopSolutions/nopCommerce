@@ -200,6 +200,9 @@ set @resources='
   <LocaleResource Name="Account.AssociatedExternalAuth.AddMoreRecords">
     <Value>You can associate your account with some external authentication systems on the following page (login once using them):</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.AssociatedExternalAuth.Remove">
+    <Value>Remove</Value>
+  </LocaleResource>
 </Language>
 '
 
