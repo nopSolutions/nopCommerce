@@ -138,6 +138,46 @@
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.IgnoreAcl_OverrideForStore, model => model.IgnoreAcl, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.IgnoreAcl):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.IgnoreAcl)
+                @Html.ValidationMessageFor(model => model.IgnoreAcl)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.IgnoreStoreLimitations_OverrideForStore, model => model.IgnoreStoreLimitations, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.IgnoreStoreLimitations):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.IgnoreStoreLimitations)
+                @Html.ValidationMessageFor(model => model.IgnoreStoreLimitations)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.IgnoreDiscounts_OverrideForStore, model => model.IgnoreDiscounts, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.IgnoreDiscounts):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.IgnoreDiscounts)
+                @Html.ValidationMessageFor(model => model.IgnoreDiscounts)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.IgnoreFeaturedProducts_OverrideForStore, model => model.IgnoreFeaturedProducts, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.IgnoreFeaturedProducts):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.IgnoreFeaturedProducts)
+                @Html.ValidationMessageFor(model => model.IgnoreFeaturedProducts)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.OverrideStoreCheckboxFor(model => model.ShowProductSku_OverrideForStore, model => model.ShowProductSku, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ShowProductSku):
             </td>
@@ -534,46 +574,6 @@
             <td class="adminData">
                 @Html.EditorFor(model => model.IncludeFullDescriptionInCompareProducts)
                 @Html.ValidationMessageFor(model => model.IncludeFullDescriptionInCompareProducts)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.IgnoreDiscounts_OverrideForStore, model => model.IgnoreDiscounts, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.IgnoreDiscounts):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.IgnoreDiscounts)
-                @Html.ValidationMessageFor(model => model.IgnoreDiscounts)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.IgnoreFeaturedProducts_OverrideForStore, model => model.IgnoreFeaturedProducts, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.IgnoreFeaturedProducts):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.IgnoreFeaturedProducts)
-                @Html.ValidationMessageFor(model => model.IgnoreFeaturedProducts)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.IgnoreAcl_OverrideForStore, model => model.IgnoreAcl, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.IgnoreAcl):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.IgnoreAcl)
-                @Html.ValidationMessageFor(model => model.IgnoreAcl)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.IgnoreStoreLimitations_OverrideForStore, model => model.IgnoreStoreLimitations, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.IgnoreStoreLimitations):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.IgnoreStoreLimitations)
-                @Html.ValidationMessageFor(model => model.IgnoreStoreLimitations)
             </td>
         </tr>
         <tr>
