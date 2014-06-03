@@ -197,6 +197,9 @@ set @resources='
   <LocaleResource Name="Admin.Orders.Shipments.TrackingNumber.ViewOnline">
     <Value>View tracking info</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.AssociatedExternalAuth.AddMoreRecords">
+    <Value>You can associate your account with some external authentication systems on the following page (login once using them):</Value>
+  </LocaleResource>
 </Language>
 '
 

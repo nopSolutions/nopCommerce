@@ -923,6 +923,8 @@ td.fieldname{font-size:12px;}
 .customer-info-page .buttons{margin-bottom:5px;margin-top:5px;text-align:center;}
 .customer-info-page .message-error {margin-bottom:20px;}
 .customer-info-page textarea{height:100px;width:500px;border:solid 1px #E3E3E3;vertical-align:top;}
+.customer-info-page .add-more-external-records{margin-top:10px;}
+.customer-info-page .add-more-external-records a{color:#B80709;}
 .username-available-status{color:green;padding-right:5px;}
 .username-not-available-status{color:red;padding-right:5px;}
 .order-list-page{}

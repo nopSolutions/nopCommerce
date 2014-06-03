@@ -299,6 +299,9 @@ namespace Nop.Web.Controllers
             model.SignatureEnabled = _forumSettings.ForumsEnabled && _forumSettings.SignaturesEnabled;
 
             //external authentication
+            model.NumberOfExternalAuthenticationProviders = _openAuthenticationService
+                .LoadActiveExternalAuthenticationMethods(_storeContext.CurrentStore.Id)
+                .Count;
             foreach (var ear in _openAuthenticationService.GetExternalIdentifiersFor(customer))
             {
                 var authMethod = _openAuthenticationService.LoadExternalAuthenticationMethodBySystemName(ear.ProviderSystemName);

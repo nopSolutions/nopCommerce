@@ -130,53 +130,9 @@
                         }
                     }
                 </div>
-            </div>    
-                    if (Model.AssociatedExternalAuthRecords.Count > 0)
-                    {
-            <div class="fieldset">
-                <div class="title">
-                    <strong>@T("Account.AssociatedExternalAuth")</strong>
-                </div>
-                <table class="data-table">
-                    <colgroup>
-                        <col />
-                        <col />
-                        <col />
-                    </colgroup>
-                    <thead>
-                        <tr>
-                            <th class="a-center auth-method-name">
-                                @T("Account.AssociatedExternalAuth.AuthMethodName")
-                            </th>
-                            <th class="a-center email">
-                                @T("Account.AssociatedExternalAuth.Email")
-                            </th>
-                            <th class="a-center external-id">
-                                @T("Account.AssociatedExternalAuth.ExternalIdentifier")
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model.AssociatedExternalAuthRecords)
-                        {
-                            <tr>
-                                <td class="a-left auth-method-name">
-                                    @item.AuthMethodName
-                                </td>
-                                <td class="a-left email">
-                                    @item.Email
-                                </td>
-                                <td class="a-left external-id">
-                                    @CommonHelper.EnsureMaximumLength(item.ExternalIdentifier, 40, "...")
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
             </div>
-                    }
-                    if (Model.CompanyEnabled || Model.DisplayVatNumber)
-                    {
+            if (Model.CompanyEnabled || Model.DisplayVatNumber)
+            {
             <div class="fieldset">
                 <div class="title">
                     <strong>@T("Account.CompanyDetails")</strong>
@@ -364,6 +320,63 @@
                 </div>
             </div>
                     }
+
+            if (Model.NumberOfExternalAuthenticationProviders > 0)
+            {
+                <div class="fieldset">
+                    <div class="title">
+                        <strong>@T("Account.AssociatedExternalAuth")</strong>
+                    </div>
+                    @if (Model.AssociatedExternalAuthRecords.Count > 0)
+                    {
+                        //existing associated external records
+                        <table class="data-table">
+                            <colgroup>
+                                <col />
+                                <col />
+                                <col />
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th class="a-center auth-method-name">
+                                        @T("Account.AssociatedExternalAuth.AuthMethodName")
+                                    </th>
+                                    <th class="a-center email">
+                                        @T("Account.AssociatedExternalAuth.Email")
+                                    </th>
+                                    <th class="a-center external-id">
+                                        @T("Account.AssociatedExternalAuth.ExternalIdentifier")
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.AssociatedExternalAuthRecords)
+                                {
+                                    <tr>
+                                        <td class="a-left auth-method-name">
+                                            @item.AuthMethodName
+                                        </td>
+                                        <td class="a-left email">
+                                            @item.Email
+                                        </td>
+                                        <td class="a-left external-id">
+                                            @CommonHelper.EnsureMaximumLength(item.ExternalIdentifier, 40, "...")
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+
+                    @if (Model.NumberOfExternalAuthenticationProviders > Model.AssociatedExternalAuthRecords.Count)
+                    {
+                        //we can add more external records
+                        <div class="form-fields add-more-external-records">
+                            @T("Account.AssociatedExternalAuth.AddMoreRecords") <a href="@Url.RouteUrl("Login", null, "http")">@Url.RouteUrl("Login", null, "http")</a>
+                        </div>
+                    }
+                </div>
+            }
             <div class="buttons">
                 <input type="submit" value="@T("Common.Save")" name="save-info-button" class="button-1 save-customer-info-button" />
             </div>

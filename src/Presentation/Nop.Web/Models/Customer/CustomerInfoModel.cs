@@ -129,6 +129,7 @@ namespace Nop.Web.Models.Customer
         //external authentication
         [NopResourceDisplayName("Account.AssociatedExternalAuth")]
         public IList<AssociatedExternalAuthModel> AssociatedExternalAuthRecords { get; set; }
+        public int NumberOfExternalAuthenticationProviders { get; set; }
 
         public CustomerNavigationModel NavigationModel { get; set; }
 

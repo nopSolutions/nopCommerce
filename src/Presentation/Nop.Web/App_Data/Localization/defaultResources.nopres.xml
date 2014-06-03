@@ -15,6 +15,9 @@
   <LocaleResource Name="Account.AssociatedExternalAuth">
     <Value>External authentication</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.AssociatedExternalAuth.AddMoreRecords">
+    <Value>You can associate your account with some external authentication systems on the following page (login once using them):</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.AssociatedExternalAuth.AuthMethodName">
     <Value>Authentication method</Value>
   </LocaleResource>
