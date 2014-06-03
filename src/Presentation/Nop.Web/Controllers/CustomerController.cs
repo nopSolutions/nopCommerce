@@ -166,12 +166,6 @@ namespace Nop.Web.Controllers
         #region Utilities
 
         [NonAction]
-        protected bool IsCurrentUserRegistered()
-        {
-            return _workContext.CurrentCustomer.IsRegistered();
-        }
-
-        [NonAction]
         protected CustomerNavigationModel GetCustomerNavigationModel(Customer customer)
         {
             var model = new CustomerNavigationModel();
@@ -196,21 +190,6 @@ namespace Nop.Web.Controllers
                 return;
 
             _openAuthenticationService.AssociateExternalAccountWithUser(customer, parameters);
-        }
-
-        [NonAction]
-        protected bool UsernameIsValid(string username)
-        {
-            var result = true;
-
-            if (String.IsNullOrEmpty(username))
-            {
-                return false;
-            }
-
-            // other validation 
-
-            return result;
         }
 
         [NonAction]
@@ -1001,26 +980,21 @@ namespace Nop.Web.Controllers
             var usernameAvailable = false;
             var statusText = _localizationService.GetResource("Account.CheckUsernameAvailability.NotAvailable");
 
-            if (_customerSettings.UsernamesEnabled && username != null)
+            if (_customerSettings.UsernamesEnabled && !String.IsNullOrWhiteSpace(username))
             {
-                username = username.Trim();
-
-                if (UsernameIsValid(username))
+                if (_workContext.CurrentCustomer != null &&
+                    _workContext.CurrentCustomer.Username != null &&
+                    _workContext.CurrentCustomer.Username.Equals(username, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    if (_workContext.CurrentCustomer != null && 
-                        _workContext.CurrentCustomer.Username != null && 
-                        _workContext.CurrentCustomer.Username.Equals(username, StringComparison.InvariantCultureIgnoreCase))
+                    statusText = _localizationService.GetResource("Account.CheckUsernameAvailability.CurrentUsername");
+                }
+                else
+                {
+                    var customer = _customerService.GetCustomerByUsername(username);
+                    if (customer == null)
                     {
-                        statusText = _localizationService.GetResource("Account.CheckUsernameAvailability.CurrentUsername");
-                    }
-                    else
-                    {
-                        var customer = _customerService.GetCustomerByUsername(username);
-                        if (customer == null)
-                        {
-                            statusText = _localizationService.GetResource("Account.CheckUsernameAvailability.Available");
-                            usernameAvailable = true;
-                        }
+                        statusText = _localizationService.GetResource("Account.CheckUsernameAvailability.Available");
+                        usernameAvailable = true;
                     }
                 }
             }
@@ -1090,7 +1064,7 @@ namespace Nop.Web.Controllers
         [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult Info()
         {
-            if (!IsCurrentUserRegistered())
+            if (!_workContext.CurrentCustomer.IsRegistered())
                 return new HttpUnauthorizedResult();
 
             var customer = _workContext.CurrentCustomer;
@@ -1105,7 +1079,7 @@ namespace Nop.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Info(CustomerInfoModel model, FormCollection form)
         {
-            if (!IsCurrentUserRegistered())
+            if (!_workContext.CurrentCustomer.IsRegistered())
                 return new HttpUnauthorizedResult();
 
             var customer = _workContext.CurrentCustomer;
@@ -1261,7 +1235,7 @@ namespace Nop.Web.Controllers
         [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult Addresses()
         {
-            if (!IsCurrentUserRegistered())
+            if (!_workContext.CurrentCustomer.IsRegistered())
                 return new HttpUnauthorizedResult();
 
             var customer = _workContext.CurrentCustomer;
@@ -1286,7 +1260,7 @@ namespace Nop.Web.Controllers
         [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult AddressDelete(int addressId)
         {
-            if (!IsCurrentUserRegistered())
+            if (!_workContext.CurrentCustomer.IsRegistered())
                 return new HttpUnauthorizedResult();
 
             var customer = _workContext.CurrentCustomer;
@@ -1307,7 +1281,7 @@ namespace Nop.Web.Controllers
         [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult AddressAdd()
         {
-            if (!IsCurrentUserRegistered())
+            if (!_workContext.CurrentCustomer.IsRegistered())
                 return new HttpUnauthorizedResult();
 
             var customer = _workContext.CurrentCustomer;
@@ -1324,7 +1298,7 @@ namespace Nop.Web.Controllers
         [HttpPost]
         public ActionResult AddressAdd(CustomerAddressEditModel model)
         {
-            if (!IsCurrentUserRegistered())
+            if (!_workContext.CurrentCustomer.IsRegistered())
                 return new HttpUnauthorizedResult();
 
             var customer = _workContext.CurrentCustomer;
@@ -1357,7 +1331,7 @@ namespace Nop.Web.Controllers
         [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult AddressEdit(int addressId)
         {
-            if (!IsCurrentUserRegistered())
+            if (!_workContext.CurrentCustomer.IsRegistered())
                 return new HttpUnauthorizedResult();
 
             var customer = _workContext.CurrentCustomer;
@@ -1379,7 +1353,7 @@ namespace Nop.Web.Controllers
         [HttpPost]
         public ActionResult AddressEdit(CustomerAddressEditModel model, int addressId)
         {
-            if (!IsCurrentUserRegistered())
+            if (!_workContext.CurrentCustomer.IsRegistered())
                 return new HttpUnauthorizedResult();
 
             var customer = _workContext.CurrentCustomer;
@@ -1412,7 +1386,7 @@ namespace Nop.Web.Controllers
         [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult Orders()
         {
-            if (!IsCurrentUserRegistered())
+            if (!_workContext.CurrentCustomer.IsRegistered())
                 return new HttpUnauthorizedResult();
 
             var customer = _workContext.CurrentCustomer;
@@ -1424,7 +1398,7 @@ namespace Nop.Web.Controllers
         [FormValueRequired(FormValueRequirement.StartsWith, "cancelRecurringPayment")]
         public ActionResult CancelRecurringPayment(FormCollection form)
         {
-            if (!IsCurrentUserRegistered())
+            if (!_workContext.CurrentCustomer.IsRegistered())
                 return new HttpUnauthorizedResult();
 
             //get recurring payment identifier
@@ -1462,7 +1436,7 @@ namespace Nop.Web.Controllers
         [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult ReturnRequests()
         {
-            if (!IsCurrentUserRegistered())
+            if (!_workContext.CurrentCustomer.IsRegistered())
                 return new HttpUnauthorizedResult();
 
             var customer = _workContext.CurrentCustomer;
@@ -1505,7 +1479,7 @@ namespace Nop.Web.Controllers
         [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult DownloadableProducts()
         {
-            if (!IsCurrentUserRegistered())
+            if (!_workContext.CurrentCustomer.IsRegistered())
                 return new HttpUnauthorizedResult();
 
             var customer = _workContext.CurrentCustomer;
@@ -1564,7 +1538,7 @@ namespace Nop.Web.Controllers
         [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult RewardPoints()
         {
-            if (!IsCurrentUserRegistered())
+            if (!_workContext.CurrentCustomer.IsRegistered())
                 return new HttpUnauthorizedResult();
 
             if (!_rewardPointsSettings.Enabled)
@@ -1607,7 +1581,7 @@ namespace Nop.Web.Controllers
         [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult ChangePassword()
         {
-            if (!IsCurrentUserRegistered())
+            if (!_workContext.CurrentCustomer.IsRegistered())
                 return new HttpUnauthorizedResult();
 
             var customer = _workContext.CurrentCustomer;
@@ -1622,7 +1596,7 @@ namespace Nop.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult ChangePassword(ChangePasswordModel model)
         {
-            if (!IsCurrentUserRegistered())
+            if (!_workContext.CurrentCustomer.IsRegistered())
                 return new HttpUnauthorizedResult();
 
             var customer = _workContext.CurrentCustomer;
@@ -1659,7 +1633,7 @@ namespace Nop.Web.Controllers
         [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult Avatar()
         {
-            if (!IsCurrentUserRegistered())
+            if (!_workContext.CurrentCustomer.IsRegistered())
                 return new HttpUnauthorizedResult();
 
             if (!_customerSettings.AllowCustomersToUploadAvatars)
@@ -1681,7 +1655,7 @@ namespace Nop.Web.Controllers
         [FormValueRequired("upload-avatar")]
         public ActionResult UploadAvatar(CustomerAvatarModel model, HttpPostedFileBase uploadedFile)
         {
-            if (!IsCurrentUserRegistered())
+            if (!_workContext.CurrentCustomer.IsRegistered())
                 return new HttpUnauthorizedResult();
 
             if (!_customerSettings.AllowCustomersToUploadAvatars)
@@ -1742,7 +1716,7 @@ namespace Nop.Web.Controllers
         [FormValueRequired("remove-avatar")]
         public ActionResult RemoveAvatar(CustomerAvatarModel model, HttpPostedFileBase uploadedFile)
         {
-            if (!IsCurrentUserRegistered())
+            if (!_workContext.CurrentCustomer.IsRegistered())
                 return new HttpUnauthorizedResult();
 
             if (!_customerSettings.AllowCustomersToUploadAvatars)
