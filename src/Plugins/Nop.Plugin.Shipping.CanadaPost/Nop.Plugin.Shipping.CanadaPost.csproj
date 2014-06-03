@@ -102,6 +102,7 @@
     <Compile Include="Domain\Item.cs" />
     <Compile Include="Domain\Profile.cs" />
     <Compile Include="Domain\RequestResult.cs" />
+    <Compile Include="CanadaPostShipmentTracker.cs" />
     <Compile Include="Models\CanadaPostShippingModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

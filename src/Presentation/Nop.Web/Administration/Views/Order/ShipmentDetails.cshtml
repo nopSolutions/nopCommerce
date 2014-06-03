@@ -72,6 +72,11 @@
             <td class="adminData">
                 @Html.EditorFor(model => model.TrackingNumber)
                 <input type="submit" name="settrackingnumber" value="@T("Admin.Orders.Shipments.TrackingNumber.Button")" class="adminButton" />
+                
+                @if (!string.IsNullOrEmpty(Model.TrackingNumberUrl))
+                {
+                    <a href="@Model.TrackingNumberUrl" target="_blank" class="tracking-url">@T("Admin.Orders.Shipments.TrackingNumber.ViewOnline")</a>
+                }
             </td>
         </tr>
         <tr>

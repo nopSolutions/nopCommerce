@@ -692,7 +692,7 @@ namespace Nop.Admin.Controllers
                     var shipmentTracker = srcm.ShipmentTracker;
                     if (shipmentTracker != null)
                     {
-                        //model.TrackingNumberUrl = shipmentTracker.GetUrl(shipment.TrackingNumber);
+                        model.TrackingNumberUrl = shipmentTracker.GetUrl(shipment.TrackingNumber);
                         if (_shippingSettings.DisplayShipmentEventsToStoreOwner)
                         {
                             var shipmentEvents = shipmentTracker.GetShipmentEvents(shipment.TrackingNumber);

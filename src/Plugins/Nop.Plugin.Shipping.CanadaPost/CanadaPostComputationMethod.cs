@@ -437,7 +437,10 @@ namespace Nop.Plugin.Shipping.CanadaPost
         /// </summary>
         public IShipmentTracker ShipmentTracker
         {
-            get { return null; }
+            get
+            {
+                return new CanadaPostShipmentTracker();
+            }
         }
 
         #endregion

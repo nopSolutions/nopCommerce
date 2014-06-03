@@ -8556,6 +8556,9 @@
   <LocaleResource Name="Admin.Orders.Shipments.TrackingNumber.Button">
     <Value>Set tracking number</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.TrackingNumber.ViewOnline">
+    <Value>View tracking info</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.TrackingNumber.Hint">
     <Value>Set a tracking number of the current shipment.</Value>
   </LocaleResource>

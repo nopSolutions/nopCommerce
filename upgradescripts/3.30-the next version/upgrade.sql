@@ -194,6 +194,9 @@ set @resources='
   <LocaleResource Name="Admin.Orders.Shipments.ShipmentStatusEvents.Location">
     <Value>Location</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.TrackingNumber.ViewOnline">
+    <Value>View tracking info</Value>
+  </LocaleResource>
 </Language>
 '
 
