@@ -375,9 +375,18 @@ namespace Nop.Web.Framework
             if (endYear == null)
                 endYear = DateTime.UtcNow.Year;
 
-            for (int i = beginYear.Value; i <= endYear.Value; i++)
-                years.AppendFormat("<option value='{0}'{1}>{0}</option>", i,
-                    (selectedYear.HasValue && selectedYear.Value == i) ? " selected=\"selected\"" : null);
+            if (endYear > beginYear)
+            {
+                for (int i = beginYear.Value; i <= endYear.Value; i++)
+                    years.AppendFormat("<option value='{0}'{1}>{0}</option>", i,
+                        (selectedYear.HasValue && selectedYear.Value == i) ? " selected=\"selected\"" : null);
+            }
+            else
+            {
+                for (int i = beginYear.Value; i >= endYear.Value; i--)
+                    years.AppendFormat("<option value='{0}'{1}>{0}</option>", i,
+                        (selectedYear.HasValue && selectedYear.Value == i) ? " selected=\"selected\"" : null);
+            }
 
             daysList.InnerHtml = days.ToString();
             monthsList.InnerHtml = months.ToString();
