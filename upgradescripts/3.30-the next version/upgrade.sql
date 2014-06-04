@@ -203,6 +203,18 @@ set @resources='
   <LocaleResource Name="Account.AssociatedExternalAuth.Remove">
     <Value>Remove</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductVariantAttributes.Attributes.ValidationRules.DefaultValue">
+    <Value>Default value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductVariantAttributes.Attributes.ValidationRules.DefaultValue.Hint">
+    <Value>Enter default value for attribute.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Fields.DefaultValue">
+    <Value>Default value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Fields.DefaultValue.Hint">
+    <Value>Enter default value for attribute.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1032,5 +1044,21 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'shippingsettings.display
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'shippingsettings.displayshipmenteventstostoreowner', N'false', 0)
+END
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Product_ProductAttribute_Mapping]') and NAME='DefaultValue')
+BEGIN
+	ALTER TABLE [Product_ProductAttribute_Mapping]
+	ADD [DefaultValue] nvarchar(MAX) NULL
+END
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[CheckoutAttribute]') and NAME='DefaultValue')
+BEGIN
+	ALTER TABLE [CheckoutAttribute]
+	ADD [DefaultValue] nvarchar(MAX) NULL
 END
 GO

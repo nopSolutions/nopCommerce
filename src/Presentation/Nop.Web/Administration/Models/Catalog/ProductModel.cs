@@ -662,6 +662,9 @@ namespace Nop.Admin.Models.Catalog
             [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.Attributes.ValidationRules.FileMaximumSize")]
             [UIHint("Int32Nullable")]
             public int? ValidationFileMaximumSize { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.Attributes.ValidationRules.DefaultValue")]
+            public string DefaultValue { get; set; }
         }
         public partial class ProductVariantAttributeValueListModel : BaseNopModel
         {

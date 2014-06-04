@@ -197,7 +197,7 @@ namespace Nop.Web.Models.Catalog
             /// <summary>
             /// Selected value for textboxes
             /// </summary>
-            public string TextValue { get; set; }
+            public string DefaultValue { get; set; }
             /// <summary>
             /// Selected day value for datepicker
             /// </summary>

@@ -21,6 +21,7 @@ namespace Nop.Data.Tests.Catalog
                           ValidationMaxLength = 3,
                           ValidationFileAllowedExtensions = "ValidationFileAllowedExtensions 1",
                           ValidationFileMaximumSize = 4,
+                          DefaultValue = "DefaultValue 1",
                           Product = GetTestProduct(),
                           ProductAttribute = new ProductAttribute()
                           {
@@ -39,6 +40,7 @@ namespace Nop.Data.Tests.Catalog
             fromDb.ValidationMaxLength.ShouldEqual(3);
             fromDb.ValidationFileAllowedExtensions.ShouldEqual("ValidationFileAllowedExtensions 1");
             fromDb.ValidationFileMaximumSize.ShouldEqual(4);
+            fromDb.DefaultValue.ShouldEqual("DefaultValue 1");
 
             fromDb.Product.ShouldNotBeNull();
 

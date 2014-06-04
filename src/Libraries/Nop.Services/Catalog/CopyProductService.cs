@@ -370,7 +370,12 @@ namespace Nop.Services.Catalog
                     TextPrompt = productVariantAttribute.TextPrompt,
                     IsRequired = productVariantAttribute.IsRequired,
                     AttributeControlTypeId = productVariantAttribute.AttributeControlTypeId,
-                    DisplayOrder = productVariantAttribute.DisplayOrder
+                    DisplayOrder = productVariantAttribute.DisplayOrder,
+                    ValidationMinLength = productVariantAttribute.ValidationMinLength,
+                    ValidationMaxLength = productVariantAttribute.ValidationMaxLength,
+                    ValidationFileAllowedExtensions = productVariantAttribute.ValidationFileAllowedExtensions,
+                    ValidationFileMaximumSize = productVariantAttribute.ValidationFileMaximumSize,
+                    DefaultValue = productVariantAttribute.DefaultValue,
                 };
                 _productAttributeService.InsertProductVariantAttribute(productVariantAttributeCopy);
                 //save associated value (used for combinations copying)

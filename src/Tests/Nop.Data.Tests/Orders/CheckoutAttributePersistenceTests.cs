@@ -27,6 +27,7 @@ namespace Nop.Data.Tests.Orders
                 ValidationMaxLength = 4,
                 ValidationFileAllowedExtensions = "ValidationFileAllowedExtensions 1",
                 ValidationFileMaximumSize = 5,
+                DefaultValue = "DefaultValue 1",
             };
 
             var fromDb = SaveAndLoadEntity(ca);
@@ -43,6 +44,7 @@ namespace Nop.Data.Tests.Orders
             fromDb.ValidationMaxLength.ShouldEqual(4);
             fromDb.ValidationFileAllowedExtensions.ShouldEqual("ValidationFileAllowedExtensions 1");
             fromDb.ValidationFileMaximumSize.ShouldEqual(5);
+            fromDb.DefaultValue.ShouldEqual("DefaultValue 1");
             fromDb.LimitedToStores.ShouldEqual(true);
         }
 

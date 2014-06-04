@@ -884,6 +884,7 @@ namespace Nop.Web.Controllers
                     TextPrompt = attribute.TextPrompt,
                     IsRequired = attribute.IsRequired,
                     AttributeControlType = attribute.AttributeControlType,
+                    DefaultValue = updatecartitem != null ? null : attribute.DefaultValue,
                 };
                 if (!String.IsNullOrEmpty(attribute.ValidationFileAllowedExtensions))
                 {
@@ -971,7 +972,7 @@ namespace Nop.Web.Controllers
                                 {
                                     var enteredText = _productAttributeParser.ParseValues(updatecartitem.AttributesXml, attribute.Id);
                                     if (enteredText.Count > 0)
-                                        pvaModel.TextValue = enteredText[0];
+                                        pvaModel.DefaultValue = enteredText[0];
                                 }
                             }
                             break;

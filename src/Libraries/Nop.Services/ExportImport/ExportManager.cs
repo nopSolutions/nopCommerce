@@ -353,6 +353,7 @@ namespace Nop.Services.ExportImport
                         {
                             xmlWriter.WriteElementString("ValidationFileMaximumSize", null, productVariantAttribute.ValidationFileMaximumSize.Value.ToString());
                         }
+                        xmlWriter.WriteElementString("DefaultValue", null, productVariantAttribute.DefaultValue);
                     }
 
 

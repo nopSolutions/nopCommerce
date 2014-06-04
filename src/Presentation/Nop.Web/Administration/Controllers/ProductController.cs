@@ -2990,6 +2990,7 @@ namespace Nop.Admin.Controllers
                 ValidationMaxLength = pva.ValidationMaxLength,
                 ValidationFileAllowedExtensions = pva.ValidationFileAllowedExtensions,
                 ValidationFileMaximumSize = pva.ValidationFileMaximumSize,
+                DefaultValue = pva.DefaultValue,
             };
             return View(model);
         }
@@ -3019,6 +3020,7 @@ namespace Nop.Admin.Controllers
                 pva.ValidationMaxLength = model.ValidationMaxLength;
                 pva.ValidationFileAllowedExtensions = model.ValidationFileAllowedExtensions;
                 pva.ValidationFileMaximumSize = model.ValidationFileMaximumSize;
+                pva.DefaultValue = model.DefaultValue;
                 _productAttributeService.UpdateProductVariantAttribute(pva);
 
                 ViewBag.RefreshPage = true;

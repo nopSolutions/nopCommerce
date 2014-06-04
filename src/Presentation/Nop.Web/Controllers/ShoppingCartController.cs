@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -300,7 +299,8 @@ namespace Nop.Web.Controllers
                     Name = attribute.GetLocalized(x => x.Name),
                     TextPrompt = attribute.GetLocalized(x => x.TextPrompt),
                     IsRequired = attribute.IsRequired,
-                    AttributeControlType = attribute.AttributeControlType
+                    AttributeControlType = attribute.AttributeControlType,
+                    DefaultValue = attribute.DefaultValue
                 };
                 if (!String.IsNullOrEmpty(attribute.ValidationFileAllowedExtensions))
                 {
@@ -320,7 +320,7 @@ namespace Nop.Web.Controllers
                             Id = caValue.Id,
                             Name = caValue.GetLocalized(x => x.Name),
                             ColorSquaresRgb = caValue.ColorSquaresRgb,
-                            IsPreSelected = caValue.IsPreSelected
+                            IsPreSelected = caValue.IsPreSelected,
                         };
                         caModel.Values.Add(pvaValueModel);
 

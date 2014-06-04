@@ -69,7 +69,15 @@
                 @Html.ValidationMessageFor(model => model.ValidationFileMaximumSize)
             </td>
         </tr>
-
+        <tr @(attributeControlType != AttributeControlType.TextBox && attributeControlType != AttributeControlType.MultilineTextbox ? Html.Raw("style='display: none;'") : null)>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.DefaultValue):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.DefaultValue)
+                @Html.ValidationMessageFor(model => model.DefaultValue)
+            </td>
+        </tr>
         <tr>
             <td colspan="2">
                 <input type="submit" class="k-button" value="@T("Admin.Common.Save")" />
