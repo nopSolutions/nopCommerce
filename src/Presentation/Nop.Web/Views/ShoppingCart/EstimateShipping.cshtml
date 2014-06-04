@@ -71,7 +71,7 @@
                     }
                 </ul>
             }
-            @if (Model.Warnings.Count > 0)
+            else if (Model.Warnings.Count > 0)
             {
                 <div class="message-error">
                     <ul>

@@ -1979,6 +1979,18 @@ namespace Nop.Web.Controllers
                             soModel.Price = _priceFormatter.FormatShippingPrice(rate, true);
                             model.EstimateShipping.ShippingOptions.Add(soModel);
                         }
+
+                        //pickup in store?
+                        if (_shippingSettings.AllowPickUpInStore)
+                        {
+                            var soModel = new EstimateShippingModel.ShippingOptionModel()
+                            {
+                                Name = _localizationService.GetResource("Checkout.PickUpInStore"),
+                                Description = _localizationService.GetResource("Checkout.PickUpInStore.Description"),
+                                Price = _priceFormatter.FormatShippingPrice(decimal.Zero, true)
+                            };
+                            model.EstimateShipping.ShippingOptions.Add(soModel);
+                        }
                     }
                     else
                     {
