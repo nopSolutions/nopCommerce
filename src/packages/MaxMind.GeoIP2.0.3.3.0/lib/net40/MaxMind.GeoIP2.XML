@@ -233,6 +233,11 @@
             Constructor
             </summary>
         </member>
+        <member name="M:MaxMind.GeoIP2.Model.NamedEntity.#ctor(System.Nullable{System.Int32},System.Collections.Generic.Dictionary{System.String,System.String},System.Collections.Generic.List{System.String})">
+            <summary>
+            Constructor
+            </summary>
+        </member>
         <member name="M:MaxMind.GeoIP2.Model.NamedEntity.ToString">
             <summary>
             Returns a <see cref="T:System.String"/> that represents this instance.
@@ -264,6 +269,16 @@
             attribute is returned by all endpoints.
             </summary>
         </member>
+        <member name="M:MaxMind.GeoIP2.Model.City.#ctor">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Model.City.#ctor(System.Nullable{System.Int32},System.Nullable{System.Int32},System.Collections.Generic.Dictionary{System.String,System.String},System.Collections.Generic.List{System.String})">
+            <summary>
+            Constructor
+            </summary>
+        </member>
         <member name="P:MaxMind.GeoIP2.Model.City.Confidence">
             <summary>
             A value from 0-100 indicating MaxMind's confidence that the city
@@ -278,6 +293,16 @@
              This record is returned by all the end points.    
             </summary>
         </member>
+        <member name="M:MaxMind.GeoIP2.Model.Continent.#ctor">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Model.Continent.#ctor(System.String,System.Nullable{System.Int32},System.Collections.Generic.Dictionary{System.String,System.String},System.Collections.Generic.List{System.String})">
+            <summary>
+            Constructor
+            </summary>
+        </member>
         <member name="P:MaxMind.GeoIP2.Model.Continent.Code">
             <summary>
             A two character continent code like "NA" (North America) or "OC"
@@ -289,6 +314,16 @@
             Contains data for the country record associated with an IP address.
              
              This record is returned by all the end points.
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Model.Country.#ctor">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Model.Country.#ctor(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.Collections.Generic.Dictionary{System.String,System.String},System.Collections.Generic.List{System.String})">
+            <summary>
+            Constructor
             </summary>
         </member>
         <member name="P:MaxMind.GeoIP2.Model.Country.Confidence">
@@ -332,6 +367,16 @@
             Contains data for the location record associated with an IP address.
             
             This record is returned by all the end points except the Country end point.
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Model.Location.#ctor">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Model.Location.#ctor(System.Nullable{System.Int32},System.Nullable{System.Double},System.Nullable{System.Double},System.Nullable{System.Int32},System.String)">
+            <summary>
+            Constructor
             </summary>
         </member>
         <member name="M:MaxMind.GeoIP2.Model.Location.ToString">
@@ -387,6 +432,16 @@
             This record is returned by all the end points.
             </summary>
         </member>
+        <member name="M:MaxMind.GeoIP2.Model.MaxMind.#ctor">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Model.MaxMind.#ctor(System.Nullable{System.Int32})">
+            <summary>
+            Constructor
+            </summary>
+        </member>
         <member name="M:MaxMind.GeoIP2.Model.MaxMind.ToString">
             <summary>
             Returns a <see cref="T:System.String"/> that represents this instance.
@@ -405,6 +460,16 @@
             <summary>
             Contains data for the postal record associated with an IP address.
             This record is returned by all the end points except the Country end point.
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Model.Postal.#ctor">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Model.Postal.#ctor(System.String,System.Nullable{System.Int32})">
+            <summary>
+            Constructor
             </summary>
         </member>
         <member name="M:MaxMind.GeoIP2.Model.Postal.ToString">
@@ -441,6 +506,16 @@
             This record is returned by all the end points.
             </summary>
         </member>
+        <member name="M:MaxMind.GeoIP2.Model.RepresentedCountry.#ctor">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Model.RepresentedCountry.#ctor(System.String,System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.Collections.Generic.Dictionary{System.String,System.String},System.Collections.Generic.List{System.String})">
+            <summary>
+            Constructor
+            </summary>
+        </member>
         <member name="P:MaxMind.GeoIP2.Model.RepresentedCountry.Type">
             <summary>
             A string indicating the type of entity that is representing the
@@ -454,6 +529,16 @@
             Contains data for the subdivisions associated with an IP address.
             
             This record is returned by all the end points except the Country end point.
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Model.Subdivision.#ctor">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Model.Subdivision.#ctor(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.Collections.Generic.Dictionary{System.String,System.String},System.Collections.Generic.List{System.String})">
+            <summary>
+            Constructor
             </summary>
         </member>
         <member name="P:MaxMind.GeoIP2.Model.Subdivision.Confidence">
@@ -476,6 +561,16 @@
             <summary>
             Contains data for the traits record associated with an IP address.
             This record is returned by all the end points.
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Model.Traits.#ctor">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Model.Traits.#ctor(System.Nullable{System.Int32},System.String,System.String,System.String,System.Boolean,System.Boolean,System.String,System.String,System.String)">
+            <summary>
+            Constructor
             </summary>
         </member>
         <member name="M:MaxMind.GeoIP2.Model.Traits.ToString">
@@ -586,6 +681,11 @@
             Initializes a new instance of the <see cref="T:MaxMind.GeoIP2.Responses.AbstractCountryResponse"/> class.
             </summary>
         </member>
+        <member name="M:MaxMind.GeoIP2.Responses.AbstractCountryResponse.#ctor(MaxMind.GeoIP2.Model.Continent,MaxMind.GeoIP2.Model.Country,MaxMind.GeoIP2.Model.MaxMind,MaxMind.GeoIP2.Model.Country,MaxMind.GeoIP2.Model.RepresentedCountry,MaxMind.GeoIP2.Model.Traits)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MaxMind.GeoIP2.Responses.AbstractCountryResponse"/> class.
+            </summary>
+        </member>
         <member name="M:MaxMind.GeoIP2.Responses.AbstractCountryResponse.ToString">
             <summary>
             Returns a <see cref="T:System.String"/> that represents this instance.
@@ -638,6 +738,11 @@
             </summary>
         </member>
         <member name="M:MaxMind.GeoIP2.Responses.AbstractCityResponse.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:MaxMind.GeoIP2.Responses.AbstractCityResponse"/> class.
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Responses.AbstractCityResponse.#ctor(MaxMind.GeoIP2.Model.City,MaxMind.GeoIP2.Model.Continent,MaxMind.GeoIP2.Model.Country,MaxMind.GeoIP2.Model.Location,MaxMind.GeoIP2.Model.MaxMind,MaxMind.GeoIP2.Model.Postal,MaxMind.GeoIP2.Model.Country,MaxMind.GeoIP2.Model.RepresentedCountry,System.Collections.Generic.List{MaxMind.GeoIP2.Model.Subdivision},MaxMind.GeoIP2.Model.Traits)">
             <summary>
             Initializes a new instance of the <see cref="T:MaxMind.GeoIP2.Responses.AbstractCityResponse"/> class.
             </summary>
@@ -701,6 +806,16 @@
                  Services</a>
             </summary>
         </member>
+        <member name="M:MaxMind.GeoIP2.Responses.CityIspOrgResponse.#ctor">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Responses.CityIspOrgResponse.#ctor(MaxMind.GeoIP2.Model.City,MaxMind.GeoIP2.Model.Continent,MaxMind.GeoIP2.Model.Country,MaxMind.GeoIP2.Model.Location,MaxMind.GeoIP2.Model.MaxMind,MaxMind.GeoIP2.Model.Postal,MaxMind.GeoIP2.Model.Country,MaxMind.GeoIP2.Model.RepresentedCountry,System.Collections.Generic.List{MaxMind.GeoIP2.Model.Subdivision},MaxMind.GeoIP2.Model.Traits)">
+            <summary>
+            Constructor
+            </summary>
+        </member>
         <member name="T:MaxMind.GeoIP2.Responses.CityResponse">
             <summary>
             This class provides a model for the data returned by the GeoIP2 City end
@@ -711,6 +826,16 @@
             
             <a href="http://dev.maxmind.com/geoip/geoip2/web-services">GeoIP2 Web
                  Services</a>
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Responses.CityResponse.#ctor">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Responses.CityResponse.#ctor(MaxMind.GeoIP2.Model.City,MaxMind.GeoIP2.Model.Continent,MaxMind.GeoIP2.Model.Country,MaxMind.GeoIP2.Model.Location,MaxMind.GeoIP2.Model.MaxMind,MaxMind.GeoIP2.Model.Postal,MaxMind.GeoIP2.Model.Country,MaxMind.GeoIP2.Model.RepresentedCountry,System.Collections.Generic.List{MaxMind.GeoIP2.Model.Subdivision},MaxMind.GeoIP2.Model.Traits)">
+            <summary>
+            Constructor
             </summary>
         </member>
         <member name="T:MaxMind.GeoIP2.Responses.CountryResponse">
@@ -725,6 +850,16 @@
                  Services</a>
             </summary>
         </member>
+        <member name="M:MaxMind.GeoIP2.Responses.CountryResponse.#ctor">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Responses.CountryResponse.#ctor(MaxMind.GeoIP2.Model.Continent,MaxMind.GeoIP2.Model.Country,MaxMind.GeoIP2.Model.MaxMind,MaxMind.GeoIP2.Model.Country,MaxMind.GeoIP2.Model.RepresentedCountry,MaxMind.GeoIP2.Model.Traits)">
+            <summary>
+            Constructor
+            </summary>
+        </member>
         <member name="T:MaxMind.GeoIP2.Responses.OmniResponse">
             <summary>
             This class provides a model for the data returned by the GeoIP2 Omni end
@@ -735,6 +870,16 @@
             
             <a href="http://dev.maxmind.com/geoip/geoip2/web-services">GeoIP2 Web
                  Services</a>
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Responses.OmniResponse.#ctor">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Responses.OmniResponse.#ctor(MaxMind.GeoIP2.Model.City,MaxMind.GeoIP2.Model.Continent,MaxMind.GeoIP2.Model.Country,MaxMind.GeoIP2.Model.Location,MaxMind.GeoIP2.Model.MaxMind,MaxMind.GeoIP2.Model.Postal,MaxMind.GeoIP2.Model.Country,MaxMind.GeoIP2.Model.RepresentedCountry,System.Collections.Generic.List{MaxMind.GeoIP2.Model.Subdivision},MaxMind.GeoIP2.Model.Traits)">
+            <summary>
+            Constructor
             </summary>
         </member>
         <member name="T:MaxMind.GeoIP2.WebServiceClient">
