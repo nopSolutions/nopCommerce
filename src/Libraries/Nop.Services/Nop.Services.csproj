@@ -50,9 +50,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\ImageResizer.Plugins.PrettyGifs.3.4.3\lib\ImageResizer.Plugins.PrettyGifs.dll</HintPath>
     </Reference>
-    <Reference Include="itextsharp, Version=5.1.2.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\nopCommerceCustom\itextsharp.dll</HintPath>
+    <Reference Include="itextsharp">
+      <HintPath>..\..\packages\iTextSharp.5.5.1\lib\itextsharp.dll</HintPath>
     </Reference>
     <Reference Include="MaxMind.Db, Version=0.2.3.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

@@ -154,6 +154,7 @@
     <Content Include="Views\ExternalAuthOpenId\PublicInfo.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="app.config" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
