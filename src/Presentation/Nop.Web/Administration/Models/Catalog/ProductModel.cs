@@ -306,6 +306,9 @@ namespace Nop.Admin.Models.Catalog
         public DateTime? AvailableEndDateTimeUtc { get; set; }
 
 
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.DisplayOrder")]
+        public int DisplayOrder { get; set; }
+
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.Published")]
         public bool Published { get; set; }
 

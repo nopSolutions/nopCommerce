@@ -456,7 +456,9 @@ namespace Nop.Core.Domain.Catalog
         public DateTime? AvailableEndDateTimeUtc { get; set; }
 
         /// <summary>
-        /// Gets or sets a display order. This value is used when sorting associated products (used with "grouped" products)
+        /// Gets or sets a display order.
+        /// This value is used when sorting associated products (used with "grouped" products)
+        /// This value is used when sorting home page products
         /// </summary>
         public int DisplayOrder { get; set; }
 

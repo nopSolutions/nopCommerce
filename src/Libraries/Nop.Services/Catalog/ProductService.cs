@@ -179,7 +179,7 @@ namespace Nop.Services.Catalog
         public virtual IList<Product> GetAllProductsDisplayedOnHomePage()
         {
             var query = from p in _productRepository.Table
-                        orderby p.Name
+                        orderby p.DisplayOrder, p.Name
                         where p.Published &&
                         !p.Deleted &&
                         p.ShowOnHomePage

@@ -10,6 +10,10 @@
 <script type="text/javascript">
     $(document).ready(function () {
         
+        @if (!Model.IsLoggedInAsVendor)
+        {
+            <text>$("#@Html.FieldIdFor(model => model.ShowOnHomePage)").click(toggleShowOnHomePage);</text>
+        }
         $("#@Html.FieldIdFor(model => model.ProductTypeId)").change(toggleProductType);
         $("#@Html.FieldIdFor(model => model.RequireOtherProducts)").click(toggleRequireOtherProducts);
         $("#@Html.FieldIdFor(model => model.AvailableForPreOrder)").click(togglePreOrder);
@@ -26,6 +30,10 @@
         $("#@Html.FieldIdFor(model => model.BackorderModeId)").change(toggleManageStock);
         $("#@Html.FieldIdFor(model => model.DisplayStockAvailability)").click(toggleManageStock);
         
+        @if (!Model.IsLoggedInAsVendor)
+        {
+            <text>toggleShowOnHomePage();</text>
+        }
         toggleProductType();
         togglePreOrder();
         toggleRequireOtherProducts();
@@ -37,6 +45,15 @@
         toggleTax();
         toggleManageStock();
     });
+    
+    function toggleShowOnHomePage() {
+        if ($('#@Html.FieldIdFor(model => model.ShowOnHomePage)').is(':checked')) {
+            $('#pnlDisplayOrder').show();
+        }
+        else {
+            $('#pnlDisplayOrder').hide();
+        }
+    }
 
     function toggleProductType() {
         var selectedProductTypeId = $("#@Html.FieldIdFor(model => model.ProductTypeId)").val();
@@ -411,6 +428,15 @@
         <td class="adminData">
             @Html.EditorFor(model => model.ShowOnHomePage)
             @Html.ValidationMessageFor(model => model.ShowOnHomePage)
+        </td>
+    </tr>
+    <tr id="pnlDisplayOrder" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.DisplayOrder):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.DisplayOrder)
+            @Html.ValidationMessageFor(model => model.DisplayOrder)
         </td>
     </tr>
     <tr>

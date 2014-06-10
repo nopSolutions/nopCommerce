@@ -2010,6 +2010,12 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.DisableWishlistButton.Hint">
     <Value>Check to disable the wishlist button for this product.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.DisplayOrder.Hint">
+    <Value>Display order of the product. 1 represents the top of the list.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.DisplayStockAvailability">
     <Value>Display stock availability</Value>
   </LocaleResource>

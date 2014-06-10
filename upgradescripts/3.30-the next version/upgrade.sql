@@ -215,6 +215,12 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Fields.DefaultValue.Hint">
     <Value>Enter default value for attribute.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.DisplayOrder.Hint">
+    <Value>Display order of the product. 1 represents the top of the list.</Value>
+  </LocaleResource>
 </Language>
 '
 
