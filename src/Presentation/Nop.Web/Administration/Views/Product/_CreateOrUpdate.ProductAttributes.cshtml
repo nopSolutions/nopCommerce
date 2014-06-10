@@ -89,7 +89,7 @@ else
                                 AttributeControlType: { editable: true, type: "string" },
                                 AttributeControlTypeId: { editable: true, type: "number" },
                                 //ProductId: { editable: false, type: "number" },
-                                DisplayOrder1: { editable: true, type: "number" },
+                                DisplayOrder: { editable: true, type: "number" },
                                 ViewEditValuesUrl: { editable: false, type: "string" },
                                 ViewEditValuesText: { editable: false, type: "string" },
                                 ValidationRulesAllowed: { editable: false, type: "boolean" },
@@ -164,7 +164,7 @@ else
                         template: "#:AttributeControlType#"
                     },
                     {
-                        field: "DisplayOrder1",
+                        field: "DisplayOrder",
                         title: "@T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Fields.DisplayOrder")",
                         width: 150,
                         //integer format
@@ -315,11 +315,11 @@ else
                                     //ProductId: { editable: false, type: "number" },
                                     AttributesXml: { editable: false, type: "string" },
                                     Warnings: { editable: false, type: "string" },
-                                    StockQuantity1: { editable: true, type: "number" },
-                                    AllowOutOfStockOrders1: { editable: true, type: "boolean" },
-                                    Sku1: { editable: true, type: "string" },
-                                    ManufacturerPartNumber1: { editable: true, type: "string" },
-                                    Gtin1: { editable: true, type: "string" },
+                                    StockQuantity: { editable: true, type: "number" },
+                                    AllowOutOfStockOrders: { editable: true, type: "boolean" },
+                                    Sku: { editable: true, type: "string" },
+                                    ManufacturerPartNumber: { editable: true, type: "string" },
+                                    Gtin: { editable: true, type: "string" },
                                     OverriddenPrice: { editable: true, type: "number" },
                                     Id: { editable: false, type: "number" }
                                 }
@@ -358,28 +358,28 @@ else
                             template: "#=AttributesXml#<br /> # if(Warnings !== null) {# <span style=\"color: red\">#=Warnings#</span> #}  #",
                             encoded: false
                         }, {
-                            field: "StockQuantity1",
+                            field: "StockQuantity",
                             title: "@T("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.StockQuantity")",
                             width: 150,
                             //integer format
                             format: "{0:0}"
                         }, {
-                            field: "AllowOutOfStockOrders1",
+                            field: "AllowOutOfStockOrders",
                             title: "@T("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.AllowOutOfStockOrders")",
                             width: 150,
                             headerAttributes: { style: "text-align:center" },
                             attributes: { style: "text-align:center" },
-                            template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=AllowOutOfStockOrders1#.gif" />'
+                            template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=AllowOutOfStockOrders#.gif" />'
                         }, {
-                            field: "Sku1",
+                            field: "Sku",
                             title: "@T("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.Sku")",
                             width: 200
                         }, {
-                            field: "ManufacturerPartNumber1",
+                            field: "ManufacturerPartNumber",
                             title: "@T("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.ManufacturerPartNumber")",
                             width: 200
                         }, {
-                            field: "Gtin1",
+                            field: "Gtin",
                             title: "@T("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.Gtin")",
                             width: 200
                         }, {

@@ -624,7 +624,7 @@ namespace Nop.Admin.Controllers
                         ProductId = x.ProductId,
                         ProductName = _productService.GetProductById(x.ProductId).Name,
                         IsFeaturedProduct = x.IsFeaturedProduct,
-                        DisplayOrder1 = x.DisplayOrder
+                        DisplayOrder = x.DisplayOrder
                     };
                 }),
                 Total = productCategories.TotalCount
@@ -643,7 +643,7 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentException("No product category mapping found with the specified id");
 
             productCategory.IsFeaturedProduct = model.IsFeaturedProduct;
-            productCategory.DisplayOrder = model.DisplayOrder1;
+            productCategory.DisplayOrder = model.DisplayOrder;
             _categoryService.UpdateProductCategory(productCategory);
 
             return new NullJsonResult();

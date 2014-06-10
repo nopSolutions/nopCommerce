@@ -368,7 +368,7 @@
                                                 fields: {
                                                     ProductName: {editable: false, type: "string" },
                                                     IsFeaturedProduct: {editable: true, type: "boolean" },
-                                                    DisplayOrder1: {editable: true, type: "number" },
+                                                    DisplayOrder: {editable: true, type: "number" },
                                                     ProductId: {editable: false, type: "number" }
                                                 }
                                             }
@@ -407,7 +407,7 @@
                                         attributes: { style: "text-align:center" },
                                         template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsFeaturedProduct#.gif" />'
                                     }, {
-                                        field: "DisplayOrder1",
+                                        field: "DisplayOrder",
                                         title: "@T("Admin.Catalog.Categories.Products.Fields.DisplayOrder")",
                                         //integer format
                                         format: "{0:0}",

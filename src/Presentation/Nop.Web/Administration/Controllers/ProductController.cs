@@ -2724,7 +2724,7 @@ namespace Nop.Admin.Controllers
                         ProductId = x.ProductId,
                         CustomerRoleId = x.CustomerRoleId.HasValue ? x.CustomerRoleId.Value : 0,
                         Quantity = x.Quantity,
-                        Price1 = x.Price
+                        Price = x.Price
                     };
                 })
                 .ToList();
@@ -2758,7 +2758,7 @@ namespace Nop.Admin.Controllers
                 StoreId = model.StoreId,
                 CustomerRoleId = model.CustomerRoleId > 0 ? model.CustomerRoleId : (int?)null,
                 Quantity = model.Quantity,
-                Price = model.Price1
+                Price = model.Price
             };
             _productService.InsertTierPrice(tierPrice);
 
@@ -2789,7 +2789,7 @@ namespace Nop.Admin.Controllers
             tierPrice.StoreId = model.StoreId;
             tierPrice.CustomerRoleId = model.CustomerRoleId > 0 ? model.CustomerRoleId : (int?) null;
             tierPrice.Quantity = model.Quantity;
-            tierPrice.Price = model.Price1;
+            tierPrice.Price = model.Price;
             _productService.UpdateTierPrice(tierPrice);
 
             return new NullJsonResult();
@@ -2854,7 +2854,7 @@ namespace Nop.Admin.Controllers
                         IsRequired = x.IsRequired,
                         AttributeControlType = x.AttributeControlType.GetLocalizedEnum(_localizationService, _workContext),
                         AttributeControlTypeId = x.AttributeControlTypeId,
-                        DisplayOrder1 = x.DisplayOrder
+                        DisplayOrder = x.DisplayOrder
                     };
 
                     if (x.ShouldHaveValues())
@@ -2900,7 +2900,7 @@ namespace Nop.Admin.Controllers
                 TextPrompt = model.TextPrompt,
                 IsRequired = model.IsRequired,
                 AttributeControlTypeId = model.AttributeControlTypeId,
-                DisplayOrder = model.DisplayOrder1
+                DisplayOrder = model.DisplayOrder
             };
             _productAttributeService.InsertProductVariantAttribute(pva);
 
@@ -2929,7 +2929,7 @@ namespace Nop.Admin.Controllers
             pva.TextPrompt = model.TextPrompt;
             pva.IsRequired = model.IsRequired;
             pva.AttributeControlTypeId = model.AttributeControlTypeId;
-            pva.DisplayOrder = model.DisplayOrder1;
+            pva.DisplayOrder = model.DisplayOrder;
             _productAttributeService.UpdateProductVariantAttribute(pva);
 
             return new NullJsonResult();
@@ -3558,11 +3558,11 @@ namespace Nop.Admin.Controllers
                         Id = x.Id,
                         ProductId = x.ProductId,
                         AttributesXml = _productAttributeFormatter.FormatAttributes(x.Product, x.AttributesXml, _workContext.CurrentCustomer, "<br />", true, true, true, false),
-                        StockQuantity1 = x.StockQuantity,
-                        AllowOutOfStockOrders1 = x.AllowOutOfStockOrders,
-                        Sku1 = x.Sku,
-                        ManufacturerPartNumber1 = x.ManufacturerPartNumber,
-                        Gtin1 = x.Gtin,
+                        StockQuantity = x.StockQuantity,
+                        AllowOutOfStockOrders = x.AllowOutOfStockOrders,
+                        Sku = x.Sku,
+                        ManufacturerPartNumber = x.ManufacturerPartNumber,
+                        Gtin = x.Gtin,
                         OverriddenPrice = x.OverriddenPrice
                     };
                     //warnings
@@ -3606,11 +3606,11 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return Content("This is not your product");
 
-            pvac.StockQuantity = model.StockQuantity1;
-            pvac.AllowOutOfStockOrders = model.AllowOutOfStockOrders1;
-            pvac.Sku = model.Sku1;
-            pvac.ManufacturerPartNumber = model.ManufacturerPartNumber1;
-            pvac.Gtin = model.Gtin1;
+            pvac.StockQuantity = model.StockQuantity;
+            pvac.AllowOutOfStockOrders = model.AllowOutOfStockOrders;
+            pvac.Sku = model.Sku;
+            pvac.ManufacturerPartNumber = model.ManufacturerPartNumber;
+            pvac.Gtin = model.Gtin;
             pvac.OverriddenPrice = model.OverriddenPrice;
             _productAttributeService.UpdateProductVariantAttributeCombination(pvac);
 

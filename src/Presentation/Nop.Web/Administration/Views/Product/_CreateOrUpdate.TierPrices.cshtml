@@ -46,7 +46,7 @@
                                 CustomerRoleId: { editable: true, type: "number" },
                                 //ProductId: { editable: false, type: "number" },
                                 Quantity: { editable: true, type: "number" },
-                                Price1: { editable: true, type: "number" },
+                                Price: { editable: true, type: "number" },
                                 Id: { editable: false, type: "number" }
                             }
                         }
@@ -99,7 +99,7 @@
                     //integer format
                     format: "{0:0}"
                 }, {
-                    field: "Price1",
+                    field: "Price",
                     title: "@T("Admin.Catalog.Products.TierPrices.Fields.Price")",
                     width: 150,
                     editor: function (container, options) {

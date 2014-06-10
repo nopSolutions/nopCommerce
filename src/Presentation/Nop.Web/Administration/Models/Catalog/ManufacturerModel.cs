@@ -111,10 +111,7 @@ namespace Nop.Admin.Models.Catalog
             public bool IsFeaturedProduct { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Manufacturers.Products.Fields.DisplayOrder")]
-            //we don't name it DisplayOrder because Telerik has a small bug 
-            //"if we have one more editor with the same name on a page, it doesn't allow editing"
-            //in our case it's category.DisplayOrder
-            public int DisplayOrder1 { get; set; }
+            public int DisplayOrder { get; set; }
         }
 
         public partial class AddManufacturerProductModel : BaseNopModel

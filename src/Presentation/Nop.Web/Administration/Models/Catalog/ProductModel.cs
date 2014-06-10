@@ -610,10 +610,7 @@ namespace Nop.Admin.Models.Catalog
             public int Quantity { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.Price")]
-            //we don't name it Price because Telerik has a small bug 
-            //"if we have one more editor with the same name on a page, it doesn't allow editing"
-            //in our case it's productVariant.Price1
-            public decimal Price1 { get; set; }
+            public decimal Price { get; set; }
         }
 
         public partial class ProductVariantAttributeModel : BaseNopEntityModel
@@ -636,10 +633,7 @@ namespace Nop.Admin.Models.Catalog
             public string AttributeControlType { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Fields.DisplayOrder")]
-            //we don't name it DisplayOrder because Telerik has a small bug 
-            //"if we have one more editor with the same name on a page, it doesn't allow editing"
-            //in our case it's category.DisplayOrder
-            public int DisplayOrder1 { get; set; }
+            public int DisplayOrder { get; set; }
 
             public string ViewEditValuesUrl { get; set; }
             public string ViewEditValuesText { get; set; }
@@ -799,34 +793,19 @@ namespace Nop.Admin.Models.Catalog
             public string Warnings { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.StockQuantity")]
-            //we don't name it StockQuantity because Telerik has a small bug 
-            //"if we have one more editor with the same name on a page, it doesn't allow editing"
-            //in our case it's productVariant.StockQuantity1
-            public int StockQuantity1 { get; set; }
+            public int StockQuantity { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.AllowOutOfStockOrders")]
-            //we don't name it AllowOutOfStockOrders because Telerik has a small bug 
-            //"if we have one more editor with the same name on a page, it doesn't allow editing"
-            //in our case it's productVariant.AllowOutOfStockOrders1
-            public bool AllowOutOfStockOrders1 { get; set; }
+            public bool AllowOutOfStockOrders { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.Sku")]
-            //we don't name it StockQuantity because Telerik has a small bug 
-            //"if we have one more editor with the same name on a page, it doesn't allow editing"
-            //in our case it's productVariant.Sku1
-            public string Sku1 { get; set; }
+            public string Sku { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.ManufacturerPartNumber")]
-            //we don't name it StockQuantity because Telerik has a small bug 
-            //"if we have one more editor with the same name on a page, it doesn't allow editing"
-            //in our case it's productVariant.ManufacturerPartNumber1
-            public string ManufacturerPartNumber1 { get; set; }
+            public string ManufacturerPartNumber { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.Gtin")]
-            //we don't name it StockQuantity because Telerik has a small bug 
-            //"if we have one more editor with the same name on a page, it doesn't allow editing"
-            //in our case it's productVariant.Gtin1
-            public string Gtin1 { get; set; }
+            public string Gtin { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.OverriddenPrice")]
             [UIHint("DecimalNullable")]

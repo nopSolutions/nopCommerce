@@ -214,7 +214,7 @@ namespace Nop.Admin.Controllers
                         PollId = x.PollId,
                         Name = x.Name,
                         NumberOfVotes = x.NumberOfVotes,
-                        DisplayOrder1 = x.DisplayOrder
+                        DisplayOrder = x.DisplayOrder
                     };
                 }),
                 Total = answers.Count
@@ -240,7 +240,7 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentException("No poll answer found with the specified id", "id");
 
             pollAnswer.Name = model.Name;
-            pollAnswer.DisplayOrder = model.DisplayOrder1;
+            pollAnswer.DisplayOrder = model.DisplayOrder;
             _pollService.UpdatePoll(pollAnswer.Poll);
 
             return new NullJsonResult();
@@ -264,7 +264,7 @@ namespace Nop.Admin.Controllers
             poll.PollAnswers.Add(new PollAnswer 
             {
                 Name = model.Name,
-                DisplayOrder = model.DisplayOrder1
+                DisplayOrder = model.DisplayOrder
             });
             _pollService.UpdatePoll(poll);
 

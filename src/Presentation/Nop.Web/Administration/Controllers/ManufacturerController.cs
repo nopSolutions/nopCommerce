@@ -513,7 +513,7 @@ namespace Nop.Admin.Controllers
                         ProductId = x.ProductId,
                         ProductName = _productService.GetProductById(x.ProductId).Name,
                         IsFeaturedProduct = x.IsFeaturedProduct,
-                        DisplayOrder1 = x.DisplayOrder
+                        DisplayOrder = x.DisplayOrder
                     };
                 }),
                 Total = productManufacturers.TotalCount
@@ -534,7 +534,7 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentException("No product manufacturer mapping found with the specified id");
 
             productManufacturer.IsFeaturedProduct = model.IsFeaturedProduct;
-            productManufacturer.DisplayOrder = model.DisplayOrder1;
+            productManufacturer.DisplayOrder = model.DisplayOrder;
             _manufacturerService.UpdateProductManufacturer(productManufacturer);
 
             return new NullJsonResult();
