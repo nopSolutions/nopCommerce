@@ -119,11 +119,14 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct
                     else
                     {
                         //the first way (the quantity is not specified)
-                        int restrictedProductId = int.Parse(restrictedProduct);
-                        if (sci.ProductId == restrictedProductId)
+                        int restrictedProductId = 0;
+                        if (int.TryParse(restrictedProduct, out restrictedProductId))
                         {
-                            found = true;
-                            break;
+                            if (sci.ProductId == restrictedProductId)
+                            {
+                                found = true;
+                                break;
+                            }
                         }
                     }
                 }
