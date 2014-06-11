@@ -1508,9 +1508,8 @@ namespace Nop.Web.Controllers
             if (!product.CustomerEntersPrice)
             {
                 //we do not calculate price of "customer enters price" option is enabled
-                string attributes = ParseProductAttributes(product, form);
                 decimal finalPrice = _priceCalculationService.GetUnitPrice(product, _workContext.CurrentCustomer,
-                    ShoppingCartType.ShoppingCart, 1, attributes, 0, true);
+                    ShoppingCartType.ShoppingCart, 1, attributeXml, 0, true);
                 decimal taxRate = decimal.Zero;
                 decimal finalPriceWithDiscountBase = _taxService.GetProductPrice(product, finalPrice, out taxRate);
                 decimal finalPriceWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceWithDiscountBase, _workContext.WorkingCurrency);
