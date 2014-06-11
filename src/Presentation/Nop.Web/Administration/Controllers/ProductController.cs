@@ -980,7 +980,8 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("List");
         }
 
-        public ActionResult DeleteSelected(string selectedIds)
+        [HttpPost]
+        public ActionResult DeleteSelected(ICollection<int> selectedIds)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -988,11 +989,7 @@ namespace Nop.Admin.Controllers
             var products = new List<Product>();
             if (selectedIds != null)
             {
-                var ids = selectedIds
-                    .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(x => Convert.ToInt32(x))
-                    .ToArray();
-                products.AddRange(_productService.GetProductsByIds(ids));
+                products.AddRange(_productService.GetProductsByIds(selectedIds.ToArray()));
 
                 for (int i = 0; i < products.Count; i++)
                 {
@@ -1006,7 +1003,7 @@ namespace Nop.Admin.Controllers
                 }
             }
 
-            return RedirectToAction("List");
+            return Json(new { Result = true });
         }
 
         [HttpPost]

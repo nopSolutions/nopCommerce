@@ -287,14 +287,6 @@
             });
 
 
-            //"Print packaging slips (selected)" button
-            $('#exportpackagingslips-selected').click(function (e) {
-                e.preventDefault();
-                //redirect to required URL
-                setLocation('@(Url.Action("PdfPackagingSlipSelected", "Order"))?selectedIds=' + selectedIds.join(","));
-                return false;
-            });
-        
             //"ship selected" button
             $('#ship-selected').click(function(e) {
                 e.preventDefault();
@@ -409,3 +401,22 @@
    </script>
     
 }
+
+@*export selected (Excel). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
+@using (Html.BeginForm("PdfPackagingSlipSelected", "Order", FormMethod.Post, new { id = "pdf-packaging-slip-selected-form" }))
+{
+    <input type="hidden" id="selectedIds" name="selectedIds" value="" />
+}
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#exportpackagingslips-selected').click(function (e) {
+            e.preventDefault();
+            var ids = selectedIds.join(",");
+            $('#pdf-packaging-slip-selected-form #selectedIds').val(ids);
+            $('#pdf-packaging-slip-selected-form').submit();
+            return false;
+        });
+    });
+
+</script>

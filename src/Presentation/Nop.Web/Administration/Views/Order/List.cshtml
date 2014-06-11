@@ -272,38 +272,13 @@
                             return false;
                         });
 
-                        //"Print packaging slips (selected)" button
-                        $('#pdf-invoice-selected').click(function (e) {
-                            e.preventDefault();
-                            //redirect to required URL
-                            setLocation('@(Url.Action("PdfInvoiceSelected", "Order"))?selectedIds=' + selectedIds.join(","));
-                            return false;
-                        });
-
                         $("#@Html.FieldIdFor(model => model.CustomerEmail)").keydown(function (event) {
                             if (event.keyCode == 13) {
                                 $("#btnSearch").click();
                                 return false;
                             }
                         });
-
-                        //"Export Excel selected" button
-                        $('#exportexcel-selected').click(function (e) {
-                            e.preventDefault();
-                            //redirect to required URL
-                            setLocation('@(Url.Action("ExportExcelSelected", "Order"))?selectedIds=' + selectedIds.join(","));
-                            return false;
-                        });
-
-                        //"Export XML selected" button
-                        $('#exportxml-selected').click(function (e) {
-                            e.preventDefault();
-                            //redirect to required URL
-                            setLocation('@(Url.Action("ExportXmlSelected", "Order"))?selectedIds=' + selectedIds.join(","));
-                            return false;
-                        });
-
-
+                        
                         $('#mastercheckbox').click(function () {
                             $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
                         });
@@ -378,3 +353,61 @@
         </tr>
     </table>
 }
+
+
+@*export selected (XML). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
+@using (Html.BeginForm("ExportXmlSelected", "Order", FormMethod.Post, new { id = "export-xml-selected-form" }))
+{
+    <input type="hidden" id="selectedIds" name="selectedIds" value="" />
+}
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#exportxml-selected').click(function (e) {
+            e.preventDefault();
+            var ids = selectedIds.join(",");
+            $('#export-xml-selected-form #selectedIds').val(ids);
+            $('#export-xml-selected-form').submit();
+            return false;
+        });
+    });
+
+</script>
+
+@*export selected (Excel). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
+@using (Html.BeginForm("ExportExcelSelected", "Order", FormMethod.Post, new { id = "export-excel-selected-form" }))
+{
+    <input type="hidden" id="selectedIds" name="selectedIds" value="" />
+}
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#exportexcel-selected').click(function (e) {
+            e.preventDefault();
+            var ids = selectedIds.join(",");
+            $('#export-excel-selected-form #selectedIds').val(ids);
+            $('#export-excel-selected-form').submit();
+            return false;
+        });
+    });
+
+</script>
+
+@*Print packaging slips selected (XML). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
+@using (Html.BeginForm("PdfInvoiceSelected", "Order", FormMethod.Post, new { id = "pdf-invoice-selected-form" }))
+{
+    <input type="hidden" id="selectedIds" name="selectedIds" value="" />
+}
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#pdf-invoice-selected').click(function (e) {
+            e.preventDefault();
+            var ids = selectedIds.join(",");
+            $('#pdf-invoice-selected-form #selectedIds').val(ids);
+            $('#pdf-invoice-selected-form').submit();
+            return false;
+        });
+    });
+
+</script>
