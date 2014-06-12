@@ -102,6 +102,8 @@ namespace Nop.Services.Tests.Orders
 
             _shoppingCartSettings = new ShoppingCartSettings();
             _catalogSettings = new CatalogSettings();
+            
+            var cacheManager = new NopNullCache();
 
             _productService = MockRepository.GenerateMock<IProductService>();
 
@@ -111,8 +113,8 @@ namespace Nop.Services.Tests.Orders
             _productAttributeParser = MockRepository.GenerateMock<IProductAttributeParser>();
             _priceCalcService = new PriceCalculationService(_workContext, _storeContext,
                 _discountService, _categoryService, 
-                _productAttributeParser,_productService,
-                _shoppingCartSettings, _catalogSettings);
+                _productAttributeParser, _productService, 
+                cacheManager, _shoppingCartSettings, _catalogSettings);
 
             _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
             _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
@@ -127,7 +129,6 @@ namespace Nop.Services.Tests.Orders
             _deliveryDateRepository = MockRepository.GenerateMock<IRepository<DeliveryDate>>();
             _warehouseRepository = MockRepository.GenerateMock<IRepository<Warehouse>>();
             _logger = new NullLogger();
-            var cacheManager = new NopNullCache();
             _shippingService = new ShippingService(_shippingMethodRepository, 
                 _deliveryDateRepository,
                 _warehouseRepository,

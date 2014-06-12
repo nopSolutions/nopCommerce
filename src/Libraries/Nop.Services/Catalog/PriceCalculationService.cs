@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
+using Nop.Services.Catalog.Cache;
 using Nop.Services.Discounts;
 
 namespace Nop.Services.Catalog
@@ -23,6 +26,7 @@ namespace Nop.Services.Catalog
         private readonly ICategoryService _categoryService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IProductService _productService;
+        private readonly ICacheManager _cacheManager;
         private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly CatalogSettings _catalogSettings;
 
@@ -36,6 +40,7 @@ namespace Nop.Services.Catalog
             ICategoryService categoryService,
             IProductAttributeParser productAttributeParser, 
             IProductService productService,
+            ICacheManager cacheManager,
             ShoppingCartSettings shoppingCartSettings, 
             CatalogSettings catalogSettings)
         {
@@ -45,6 +50,7 @@ namespace Nop.Services.Catalog
             this._categoryService = categoryService;
             this._productAttributeParser = productAttributeParser;
             this._productService = productService;
+            this._cacheManager = cacheManager;
             this._shoppingCartSettings = shoppingCartSettings;
             this._catalogSettings = catalogSettings;
         }
@@ -210,37 +216,53 @@ namespace Nop.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException("product");
 
-            //initial price
-            decimal result = product.Price;
+            var cacheKey = string.Format(PriceCacheEventConsumer.PRODUCT_PRICE_MODEL_KEY,
+                product.Id, 
+                additionalCharge.ToString(CultureInfo.InvariantCulture),
+                includeDiscounts, 
+                quantity, 
+                string.Join(",", customer.CustomerRoles.Where(cr => cr.Active).Select(cr => cr.Id).ToList()),
+                _storeContext.CurrentStore.Id);
 
-            //special price
-            var specialPrice = GetSpecialPrice(product);
-            if (specialPrice.HasValue)
-                result = specialPrice.Value;
+            var cacheTime = _catalogSettings.CacheProductPrices ? 60 : 0;
 
-            //tier prices
-            if (product.HasTierPrices)
+            var cachedPrice = _cacheManager.Get(cacheKey, cacheTime, () =>
             {
-                decimal? tierPrice = GetMinimumTierPrice(product, customer, quantity);
-                if (tierPrice.HasValue)
-                    result = Math.Min(result, tierPrice.Value);
-            }
+                //initial price
+                decimal result = product.Price;
 
-            //discount + additional charge
-            if (includeDiscounts)
-            {
-                Discount appliedDiscount = null;
-                decimal discountAmount = GetDiscountAmount(product, customer, additionalCharge, quantity, out appliedDiscount);
-                result = result + additionalCharge - discountAmount;
-            }
-            else
-            {
-                result = result + additionalCharge;
-            }
+                //special price
+                var specialPrice = GetSpecialPrice(product);
+                if (specialPrice.HasValue)
+                    result = specialPrice.Value;
 
-            if (result < decimal.Zero)
-                result = decimal.Zero;
-            return result;
+                //tier prices
+                if (product.HasTierPrices)
+                {
+                    decimal? tierPrice = GetMinimumTierPrice(product, customer, quantity);
+                    if (tierPrice.HasValue)
+                        result = Math.Min(result, tierPrice.Value);
+                }
+
+                //discount + additional charge
+                if (includeDiscounts)
+                {
+                    Discount appliedDiscount = null;
+                    decimal discountAmount = GetDiscountAmount(product, customer, additionalCharge, quantity, out appliedDiscount);
+                    result = result + additionalCharge - discountAmount;
+                }
+                else
+                {
+                    result = result + additionalCharge;
+                }
+
+                if (result < decimal.Zero)
+                    result = decimal.Zero;
+                
+                return result;
+            });
+
+            return cachedPrice;
         }
 
 

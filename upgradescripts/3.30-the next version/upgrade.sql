@@ -221,6 +221,12 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Fields.DisplayOrder.Hint">
     <Value>Display order of the product. 1 represents the top of the list.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.CacheProductPrices">
+    <Value>Cache product prices</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.CacheProductPrices.Hint">
+    <Value>Check to ignore cache product prices. It can significantly improve performance. But you not should enable it if you use some complex discount or discount requirement rules.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1066,5 +1072,13 @@ IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[CheckoutAtt
 BEGIN
 	ALTER TABLE [CheckoutAttribute]
 	ADD [DefaultValue] nvarchar(MAX) NULL
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.cacheproductprices')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'catalogsettings.cacheproductprices', N'false', 0)
 END
 GO

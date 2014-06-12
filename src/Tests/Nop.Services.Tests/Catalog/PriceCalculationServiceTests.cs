@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
@@ -26,6 +27,7 @@ namespace Nop.Services.Tests.Catalog
         private IPriceCalculationService _priceCalcService;
         private ShoppingCartSettings _shoppingCartSettings;
         private CatalogSettings _catalogSettings;
+        private ICacheManager _cacheManager;
 
         private Store _store;
 
@@ -48,12 +50,15 @@ namespace Nop.Services.Tests.Catalog
             _shoppingCartSettings = new ShoppingCartSettings();
             _catalogSettings = new CatalogSettings();
 
+            _cacheManager = new NopNullCache();
+
             _priceCalcService = new PriceCalculationService(_workContext,
                 _storeContext, 
                 _discountService,
                 _categoryService,
                 _productAttributeParser,
-                _productService, 
+                _productService,
+                _cacheManager,
                 _shoppingCartSettings, 
                 _catalogSettings);
         }
@@ -71,7 +76,7 @@ namespace Nop.Services.Tests.Catalog
             };
 
             //customer
-            Customer customer = null;
+            var customer = new Customer();
 
             _priceCalcService.GetFinalPrice(product, customer, 0, false, 1).ShouldEqual(12.34M);
             _priceCalcService.GetFinalPrice(product, customer, 0, false, 2).ShouldEqual(12.34M);
@@ -106,7 +111,7 @@ namespace Nop.Services.Tests.Catalog
             product.HasTierPrices = true;
 
             //customer
-            Customer customer = null;
+            var customer = new Customer();
 
             _priceCalcService.GetFinalPrice(product, customer, 0, false, 1).ShouldEqual(12.34M);
             _priceCalcService.GetFinalPrice(product, customer, 0, false, 2).ShouldEqual(10);
@@ -196,7 +201,7 @@ namespace Nop.Services.Tests.Catalog
             };
 
             //customer
-            Customer customer = null;
+            var customer = new Customer();
 
             _priceCalcService.GetFinalPrice(product, customer, 5, false, 1).ShouldEqual(17.34M);
         }
@@ -214,7 +219,7 @@ namespace Nop.Services.Tests.Catalog
             };
 
             //customer
-            Customer customer = null;
+            var customer = new Customer();
 
             //discounts
             var discount1 = new Discount()
@@ -251,9 +256,9 @@ namespace Nop.Services.Tests.Catalog
             }; 
             
             _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToCategories)).Return(new List<Discount>());
-            
+
             //customer
-            Customer customer = null;
+            var customer = new Customer();
             //valid dates
             _priceCalcService.GetFinalPrice(product, customer, 0, true, 1).ShouldEqual(10.01M);
             
@@ -280,7 +285,7 @@ namespace Nop.Services.Tests.Catalog
             };
 
             //customer
-            Customer customer = null;
+            var customer = new Customer();
 
             //discounts
             var discount1 = new Discount()
@@ -345,7 +350,7 @@ namespace Nop.Services.Tests.Catalog
             };
 
             //customer
-            Customer customer = null;
+            var customer = new Customer();
 
             //discounts
             var discount1 = new Discount()

@@ -180,6 +180,10 @@ namespace Nop.Admin.Models.Settings
         public bool IgnoreStoreLimitations { get; set; }
         public bool IgnoreStoreLimitations_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.CacheProductPrices")]
+        public bool CacheProductPrices { get; set; }
+        public bool CacheProductPrices_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.TopCategoryMenuSubcategoryLevelsToDisplay")]
         public int TopCategoryMenuSubcategoryLevelsToDisplay { get; set; }
         public bool TopCategoryMenuSubcategoryLevelsToDisplay_OverrideForStore { get; set; }

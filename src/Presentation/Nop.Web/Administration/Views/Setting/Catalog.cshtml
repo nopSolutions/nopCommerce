@@ -178,6 +178,16 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.CacheProductPrices_OverrideForStore, model => model.CacheProductPrices, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.CacheProductPrices):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.CacheProductPrices)
+                @Html.ValidationMessageFor(model => model.CacheProductPrices)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.OverrideStoreCheckboxFor(model => model.ShowProductSku_OverrideForStore, model => model.ShowProductSku, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ShowProductSku):
             </td>

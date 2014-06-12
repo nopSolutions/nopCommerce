@@ -133,7 +133,6 @@ namespace Nop.Web.Framework
             builder.RegisterType<CompareProductsService>().As<ICompareProductsService>().InstancePerHttpRequest();
             builder.RegisterType<RecentlyViewedProductsService>().As<IRecentlyViewedProductsService>().InstancePerHttpRequest();
             builder.RegisterType<ManufacturerService>().As<IManufacturerService>().InstancePerHttpRequest();
-            builder.RegisterType<PriceCalculationService>().As<IPriceCalculationService>().InstancePerHttpRequest();
             builder.RegisterType<PriceFormatter>().As<IPriceFormatter>().InstancePerHttpRequest();
             builder.RegisterType<ProductAttributeFormatter>().As<IProductAttributeFormatter>().InstancePerLifetimeScope();
             builder.RegisterType<ProductAttributeParser>().As<IProductAttributeParser>().InstancePerHttpRequest();
@@ -170,6 +169,10 @@ namespace Nop.Web.Framework
                 .InstancePerHttpRequest();
             //pass MemoryCacheManager as cacheManager (cache settings between requests)
             builder.RegisterType<AclService>().As<IAclService>()
+                .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
+                .InstancePerHttpRequest();
+            //pass MemoryCacheManager as cacheManager (cache settings between requests)
+            builder.RegisterType<PriceCalculationService>().As<IPriceCalculationService>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
                 .InstancePerHttpRequest();
 

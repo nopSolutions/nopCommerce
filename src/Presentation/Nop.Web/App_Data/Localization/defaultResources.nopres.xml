@@ -3975,6 +3975,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.AllowProductViewModeChanging.Hint">
     <Value>Check to enable the option to change view mode on category/manufacturer details page.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.CacheProductPrices">
+    <Value>Cache product prices</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.CacheProductPrices.Hint">
+    <Value>Check to ignore cache product prices. It can significantly improve performance. But you not should enable it if you use some complex discount or discount requirement rules.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.CategoryBreadcrumbEnabled">
     <Value>Category breadcrumb enabled</Value>
   </LocaleResource>

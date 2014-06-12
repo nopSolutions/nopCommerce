@@ -4525,6 +4525,7 @@ namespace Nop.Services.Installation
                     IgnoreFeaturedProducts = false,
                     IgnoreAcl = false,
                     IgnoreStoreLimitations = false,
+                    CacheProductPrices = false,
                     DefaultCategoryPageSizeOptions = "8, 4, 12",
                     DefaultManufacturerPageSizeOptions = "8, 4, 12",
                     ProductsByTagAllowCustomersToSelectPageSize = true,
@@ -4534,7 +4535,7 @@ namespace Nop.Services.Installation
                     ManufacturersBlockItemsToDisplay = 5,
                     DisplayTaxShippingInfoFooter = false,
                     DisplayTaxShippingInfoProductDetailsPage = false,
-                    DisplayTaxShippingInfoProductBoxes = false
+                    DisplayTaxShippingInfoProductBoxes = false,
                 });
 
             settingService.SaveSetting(new LocalizationSettings()

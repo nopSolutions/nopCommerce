@@ -244,6 +244,11 @@ namespace Nop.Core.Domain.Catalog
         public bool IgnoreStoreLimitations { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to cache product prices. It can significantly improve performance when enabled.
+        /// </summary>
+        public bool CacheProductPrices { get; set; }
+
+        /// <summary>
         /// Gets or sets the default value to use for Category page size options (for new Categories)
         /// </summary>
         public string DefaultCategoryPageSizeOptions { get; set; }
