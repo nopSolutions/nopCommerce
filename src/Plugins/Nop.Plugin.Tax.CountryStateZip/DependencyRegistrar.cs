@@ -1,6 +1,5 @@
 using Autofac;
 using Autofac.Core;
-using Autofac.Integration.Mvc;
 using Nop.Core.Data;
 using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.DependencyManagement;
@@ -16,7 +15,7 @@ namespace Nop.Plugin.Tax.CountryStateZip
     {
         public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder)
         {
-            builder.RegisterType<TaxRateService>().As<ITaxRateService>().InstancePerHttpRequest();
+            builder.RegisterType<TaxRateService>().As<ITaxRateService>().InstancePerRequest();
 
             //data context
             this.RegisterPluginDataContext<TaxRateObjectContext>(builder, "nop_object_context_tax_country_state_zip");
@@ -25,7 +24,7 @@ namespace Nop.Plugin.Tax.CountryStateZip
             builder.RegisterType<EfRepository<TaxRate>>()
                 .As<IRepository<TaxRate>>()
                 .WithParameter(ResolvedParameter.ForNamed<IDbContext>("nop_object_context_tax_country_state_zip"))
-                .InstancePerHttpRequest();
+                .InstancePerRequest();
         }
 
         public int Order

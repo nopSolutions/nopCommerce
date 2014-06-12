@@ -1,6 +1,5 @@
 using Autofac;
 using Autofac.Core;
-using Autofac.Integration.Mvc;
 using Nop.Core.Data;
 using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.DependencyManagement;
@@ -16,7 +15,7 @@ namespace Nop.Plugin.Shipping.ByWeight
     {
         public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder)
         {
-            builder.RegisterType<ShippingByWeightService>().As<IShippingByWeightService>().InstancePerHttpRequest();
+            builder.RegisterType<ShippingByWeightService>().As<IShippingByWeightService>().InstancePerRequest();
 
             //data context
             this.RegisterPluginDataContext<ShippingByWeightObjectContext>(builder, "nop_object_context_shipping_weight_zip");
@@ -25,7 +24,7 @@ namespace Nop.Plugin.Shipping.ByWeight
             builder.RegisterType<EfRepository<ShippingByWeightRecord>>()
                 .As<IRepository<ShippingByWeightRecord>>()
                 .WithParameter(ResolvedParameter.ForNamed<IDbContext>("nop_object_context_shipping_weight_zip"))
-                .InstancePerHttpRequest();
+                .InstancePerRequest();
         }
 
         public int Order

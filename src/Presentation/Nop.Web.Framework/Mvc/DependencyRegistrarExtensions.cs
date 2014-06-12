@@ -1,6 +1,5 @@
 ﻿using System;
 using Autofac;
-using Autofac.Integration.Mvc;
 using Nop.Core.Data;
 using Nop.Core.Infrastructure.DependencyManagement;
 using Nop.Data;
@@ -32,20 +31,20 @@ namespace Nop.Web.Framework.Mvc
                 //register named context
                 builder.Register<IDbContext>(c => (IDbContext)Activator.CreateInstance(typeof(T), new object[] { dataProviderSettings.DataConnectionString }))
                     .Named<IDbContext>(contextName)
-                    .InstancePerHttpRequest();
+                    .InstancePerRequest();
 
                 builder.Register<T>(c => (T)Activator.CreateInstance(typeof(T), new object[] { dataProviderSettings.DataConnectionString }))
-                    .InstancePerHttpRequest();
+                    .InstancePerRequest();
             }
             else
             {
                 //register named context
                 builder.Register<IDbContext>(c => (T)Activator.CreateInstance(typeof(T), new object[] { c.Resolve<DataSettings>().DataConnectionString }))
                     .Named<IDbContext>(contextName)
-                    .InstancePerHttpRequest();
+                    .InstancePerRequest();
 
                 builder.Register<T>(c => (T)Activator.CreateInstance(typeof(T), new object[] { c.Resolve<DataSettings>().DataConnectionString }))
-                    .InstancePerHttpRequest();
+                    .InstancePerRequest();
             }
         }
     }

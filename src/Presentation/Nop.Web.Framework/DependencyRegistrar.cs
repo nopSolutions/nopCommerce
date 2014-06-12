@@ -66,24 +66,24 @@ namespace Nop.Web.Framework
                 (new HttpContextWrapper(HttpContext.Current) as HttpContextBase) :
                 (new FakeHttpContext("~/") as HttpContextBase))
                 .As<HttpContextBase>()
-                .InstancePerHttpRequest();
+                .InstancePerRequest();
             builder.Register(c => c.Resolve<HttpContextBase>().Request)
                 .As<HttpRequestBase>()
-                .InstancePerHttpRequest();
+                .InstancePerRequest();
             builder.Register(c => c.Resolve<HttpContextBase>().Response)
                 .As<HttpResponseBase>()
-                .InstancePerHttpRequest();
+                .InstancePerRequest();
             builder.Register(c => c.Resolve<HttpContextBase>().Server)
                 .As<HttpServerUtilityBase>()
-                .InstancePerHttpRequest();
+                .InstancePerRequest();
             builder.Register(c => c.Resolve<HttpContextBase>().Session)
                 .As<HttpSessionStateBase>()
-                .InstancePerHttpRequest();
+                .InstancePerRequest();
 
             //web helper
-            builder.RegisterType<WebHelper>().As<IWebHelper>().InstancePerHttpRequest();
+            builder.RegisterType<WebHelper>().As<IWebHelper>().InstancePerRequest();
             //user agent helper
-            builder.RegisterType<UserAgentHelper>().As<IUserAgentHelper>().InstancePerHttpRequest();
+            builder.RegisterType<UserAgentHelper>().As<IUserAgentHelper>().InstancePerRequest();
 
             
             //controllers
@@ -104,191 +104,191 @@ namespace Nop.Web.Framework
                 var dataProvider = efDataProviderManager.LoadDataProvider();
                 dataProvider.InitConnectionFactory();
 
-                builder.Register<IDbContext>(c => new NopObjectContext(dataProviderSettings.DataConnectionString)).InstancePerHttpRequest();
+                builder.Register<IDbContext>(c => new NopObjectContext(dataProviderSettings.DataConnectionString)).InstancePerRequest();
             }
             else
             {
-                builder.Register<IDbContext>(c => new NopObjectContext(dataSettingsManager.LoadSettings().DataConnectionString)).InstancePerHttpRequest();
+                builder.Register<IDbContext>(c => new NopObjectContext(dataSettingsManager.LoadSettings().DataConnectionString)).InstancePerRequest();
             }
 
 
-            builder.RegisterGeneric(typeof(EfRepository<>)).As(typeof(IRepository<>)).InstancePerHttpRequest();
+            builder.RegisterGeneric(typeof(EfRepository<>)).As(typeof(IRepository<>)).InstancePerRequest();
             
             //plugins
-            builder.RegisterType<PluginFinder>().As<IPluginFinder>().InstancePerHttpRequest();
+            builder.RegisterType<PluginFinder>().As<IPluginFinder>().InstancePerRequest();
 
             //cache manager
             builder.RegisterType<MemoryCacheManager>().As<ICacheManager>().Named<ICacheManager>("nop_cache_static").SingleInstance();
-            builder.RegisterType<PerRequestCacheManager>().As<ICacheManager>().Named<ICacheManager>("nop_cache_per_request").InstancePerHttpRequest();
+            builder.RegisterType<PerRequestCacheManager>().As<ICacheManager>().Named<ICacheManager>("nop_cache_per_request").InstancePerRequest();
 
 
             //work context
-            builder.RegisterType<WebWorkContext>().As<IWorkContext>().InstancePerHttpRequest();
+            builder.RegisterType<WebWorkContext>().As<IWorkContext>().InstancePerRequest();
             //store context
-            builder.RegisterType<WebStoreContext>().As<IStoreContext>().InstancePerHttpRequest();
+            builder.RegisterType<WebStoreContext>().As<IStoreContext>().InstancePerRequest();
 
             //services
-            builder.RegisterType<BackInStockSubscriptionService>().As<IBackInStockSubscriptionService>().InstancePerHttpRequest();
-            builder.RegisterType<CategoryService>().As<ICategoryService>().InstancePerHttpRequest();
-            builder.RegisterType<CompareProductsService>().As<ICompareProductsService>().InstancePerHttpRequest();
-            builder.RegisterType<RecentlyViewedProductsService>().As<IRecentlyViewedProductsService>().InstancePerHttpRequest();
-            builder.RegisterType<ManufacturerService>().As<IManufacturerService>().InstancePerHttpRequest();
-            builder.RegisterType<PriceFormatter>().As<IPriceFormatter>().InstancePerHttpRequest();
+            builder.RegisterType<BackInStockSubscriptionService>().As<IBackInStockSubscriptionService>().InstancePerRequest();
+            builder.RegisterType<CategoryService>().As<ICategoryService>().InstancePerRequest();
+            builder.RegisterType<CompareProductsService>().As<ICompareProductsService>().InstancePerRequest();
+            builder.RegisterType<RecentlyViewedProductsService>().As<IRecentlyViewedProductsService>().InstancePerRequest();
+            builder.RegisterType<ManufacturerService>().As<IManufacturerService>().InstancePerRequest();
+            builder.RegisterType<PriceFormatter>().As<IPriceFormatter>().InstancePerRequest();
             builder.RegisterType<ProductAttributeFormatter>().As<IProductAttributeFormatter>().InstancePerLifetimeScope();
-            builder.RegisterType<ProductAttributeParser>().As<IProductAttributeParser>().InstancePerHttpRequest();
-            builder.RegisterType<ProductAttributeService>().As<IProductAttributeService>().InstancePerHttpRequest();
-            builder.RegisterType<ProductService>().As<IProductService>().InstancePerHttpRequest();
-            builder.RegisterType<CopyProductService>().As<ICopyProductService>().InstancePerHttpRequest();
-            builder.RegisterType<SpecificationAttributeService>().As<ISpecificationAttributeService>().InstancePerHttpRequest();
-            builder.RegisterType<ProductTemplateService>().As<IProductTemplateService>().InstancePerHttpRequest();
-            builder.RegisterType<CategoryTemplateService>().As<ICategoryTemplateService>().InstancePerHttpRequest();
-            builder.RegisterType<ManufacturerTemplateService>().As<IManufacturerTemplateService>().InstancePerHttpRequest();
+            builder.RegisterType<ProductAttributeParser>().As<IProductAttributeParser>().InstancePerRequest();
+            builder.RegisterType<ProductAttributeService>().As<IProductAttributeService>().InstancePerRequest();
+            builder.RegisterType<ProductService>().As<IProductService>().InstancePerRequest();
+            builder.RegisterType<CopyProductService>().As<ICopyProductService>().InstancePerRequest();
+            builder.RegisterType<SpecificationAttributeService>().As<ISpecificationAttributeService>().InstancePerRequest();
+            builder.RegisterType<ProductTemplateService>().As<IProductTemplateService>().InstancePerRequest();
+            builder.RegisterType<CategoryTemplateService>().As<ICategoryTemplateService>().InstancePerRequest();
+            builder.RegisterType<ManufacturerTemplateService>().As<IManufacturerTemplateService>().InstancePerRequest();
             //pass MemoryCacheManager as cacheManager (cache settings between requests)
             builder.RegisterType<ProductTagService>().As<IProductTagService>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
-                .InstancePerHttpRequest();
+                .InstancePerRequest();
 
-            builder.RegisterType<AffiliateService>().As<IAffiliateService>().InstancePerHttpRequest();
-            builder.RegisterType<VendorService>().As<IVendorService>().InstancePerHttpRequest();
-            builder.RegisterType<AddressService>().As<IAddressService>().InstancePerHttpRequest();
-            builder.RegisterType<SearchTermService>().As<ISearchTermService>().InstancePerHttpRequest();
-            builder.RegisterType<GenericAttributeService>().As<IGenericAttributeService>().InstancePerHttpRequest();
-            builder.RegisterType<FulltextService>().As<IFulltextService>().InstancePerHttpRequest();
-            builder.RegisterType<MaintenanceService>().As<IMaintenanceService>().InstancePerHttpRequest();
+            builder.RegisterType<AffiliateService>().As<IAffiliateService>().InstancePerRequest();
+            builder.RegisterType<VendorService>().As<IVendorService>().InstancePerRequest();
+            builder.RegisterType<AddressService>().As<IAddressService>().InstancePerRequest();
+            builder.RegisterType<SearchTermService>().As<ISearchTermService>().InstancePerRequest();
+            builder.RegisterType<GenericAttributeService>().As<IGenericAttributeService>().InstancePerRequest();
+            builder.RegisterType<FulltextService>().As<IFulltextService>().InstancePerRequest();
+            builder.RegisterType<MaintenanceService>().As<IMaintenanceService>().InstancePerRequest();
 
 
-            builder.RegisterType<CustomerAttributeParser>().As<ICustomerAttributeParser>().InstancePerHttpRequest();
-            builder.RegisterType<CustomerAttributeService>().As<ICustomerAttributeService>().InstancePerHttpRequest();
-            builder.RegisterType<CustomerService>().As<ICustomerService>().InstancePerHttpRequest();
-            builder.RegisterType<CustomerRegistrationService>().As<ICustomerRegistrationService>().InstancePerHttpRequest();
-            builder.RegisterType<CustomerReportService>().As<ICustomerReportService>().InstancePerHttpRequest();
+            builder.RegisterType<CustomerAttributeParser>().As<ICustomerAttributeParser>().InstancePerRequest();
+            builder.RegisterType<CustomerAttributeService>().As<ICustomerAttributeService>().InstancePerRequest();
+            builder.RegisterType<CustomerService>().As<ICustomerService>().InstancePerRequest();
+            builder.RegisterType<CustomerRegistrationService>().As<ICustomerRegistrationService>().InstancePerRequest();
+            builder.RegisterType<CustomerReportService>().As<ICustomerReportService>().InstancePerRequest();
 
             //pass MemoryCacheManager as cacheManager (cache settings between requests)
             builder.RegisterType<PermissionService>().As<IPermissionService>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
-                .InstancePerHttpRequest();
+                .InstancePerRequest();
             //pass MemoryCacheManager as cacheManager (cache settings between requests)
             builder.RegisterType<AclService>().As<IAclService>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
-                .InstancePerHttpRequest();
+                .InstancePerRequest();
             //pass MemoryCacheManager as cacheManager (cache settings between requests)
             builder.RegisterType<PriceCalculationService>().As<IPriceCalculationService>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
-                .InstancePerHttpRequest();
+                .InstancePerRequest();
 
-            builder.RegisterType<GeoLookupService>().As<IGeoLookupService>().InstancePerHttpRequest();
-            builder.RegisterType<CountryService>().As<ICountryService>().InstancePerHttpRequest();
-            builder.RegisterType<CurrencyService>().As<ICurrencyService>().InstancePerHttpRequest();
-            builder.RegisterType<MeasureService>().As<IMeasureService>().InstancePerHttpRequest();
-            builder.RegisterType<StateProvinceService>().As<IStateProvinceService>().InstancePerHttpRequest();
+            builder.RegisterType<GeoLookupService>().As<IGeoLookupService>().InstancePerRequest();
+            builder.RegisterType<CountryService>().As<ICountryService>().InstancePerRequest();
+            builder.RegisterType<CurrencyService>().As<ICurrencyService>().InstancePerRequest();
+            builder.RegisterType<MeasureService>().As<IMeasureService>().InstancePerRequest();
+            builder.RegisterType<StateProvinceService>().As<IStateProvinceService>().InstancePerRequest();
 
-            builder.RegisterType<StoreService>().As<IStoreService>().InstancePerHttpRequest();
+            builder.RegisterType<StoreService>().As<IStoreService>().InstancePerRequest();
             //pass MemoryCacheManager as cacheManager (cache settings between requests)
             builder.RegisterType<StoreMappingService>().As<IStoreMappingService>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
-                .InstancePerHttpRequest();
+                .InstancePerRequest();
 
-            builder.RegisterType<DiscountService>().As<IDiscountService>().InstancePerHttpRequest();
+            builder.RegisterType<DiscountService>().As<IDiscountService>().InstancePerRequest();
 
 
             //pass MemoryCacheManager as cacheManager (cache settings between requests)
             builder.RegisterType<SettingService>().As<ISettingService>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
-                .InstancePerHttpRequest();
+                .InstancePerRequest();
             builder.RegisterSource(new SettingsSource());
 
             //pass MemoryCacheManager as cacheManager (cache locales between requests)
             builder.RegisterType<LocalizationService>().As<ILocalizationService>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
-                .InstancePerHttpRequest();
+                .InstancePerRequest();
 
             //pass MemoryCacheManager as cacheManager (cache locales between requests)
             builder.RegisterType<LocalizedEntityService>().As<ILocalizedEntityService>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
-                .InstancePerHttpRequest();
-            builder.RegisterType<LanguageService>().As<ILanguageService>().InstancePerHttpRequest();
+                .InstancePerRequest();
+            builder.RegisterType<LanguageService>().As<ILanguageService>().InstancePerRequest();
 
-            builder.RegisterType<DownloadService>().As<IDownloadService>().InstancePerHttpRequest();
-            builder.RegisterType<PictureService>().As<IPictureService>().InstancePerHttpRequest();
+            builder.RegisterType<DownloadService>().As<IDownloadService>().InstancePerRequest();
+            builder.RegisterType<PictureService>().As<IPictureService>().InstancePerRequest();
 
-            builder.RegisterType<MessageTemplateService>().As<IMessageTemplateService>().InstancePerHttpRequest();
-            builder.RegisterType<QueuedEmailService>().As<IQueuedEmailService>().InstancePerHttpRequest();
-            builder.RegisterType<NewsLetterSubscriptionService>().As<INewsLetterSubscriptionService>().InstancePerHttpRequest();
-            builder.RegisterType<CampaignService>().As<ICampaignService>().InstancePerHttpRequest();
-            builder.RegisterType<EmailAccountService>().As<IEmailAccountService>().InstancePerHttpRequest();
-            builder.RegisterType<WorkflowMessageService>().As<IWorkflowMessageService>().InstancePerHttpRequest();
-            builder.RegisterType<MessageTokenProvider>().As<IMessageTokenProvider>().InstancePerHttpRequest();
-            builder.RegisterType<Tokenizer>().As<ITokenizer>().InstancePerHttpRequest();
-            builder.RegisterType<EmailSender>().As<IEmailSender>().InstancePerHttpRequest();
+            builder.RegisterType<MessageTemplateService>().As<IMessageTemplateService>().InstancePerRequest();
+            builder.RegisterType<QueuedEmailService>().As<IQueuedEmailService>().InstancePerRequest();
+            builder.RegisterType<NewsLetterSubscriptionService>().As<INewsLetterSubscriptionService>().InstancePerRequest();
+            builder.RegisterType<CampaignService>().As<ICampaignService>().InstancePerRequest();
+            builder.RegisterType<EmailAccountService>().As<IEmailAccountService>().InstancePerRequest();
+            builder.RegisterType<WorkflowMessageService>().As<IWorkflowMessageService>().InstancePerRequest();
+            builder.RegisterType<MessageTokenProvider>().As<IMessageTokenProvider>().InstancePerRequest();
+            builder.RegisterType<Tokenizer>().As<ITokenizer>().InstancePerRequest();
+            builder.RegisterType<EmailSender>().As<IEmailSender>().InstancePerRequest();
 
-            builder.RegisterType<CheckoutAttributeFormatter>().As<ICheckoutAttributeFormatter>().InstancePerHttpRequest();
-            builder.RegisterType<CheckoutAttributeParser>().As<ICheckoutAttributeParser>().InstancePerHttpRequest();
-            builder.RegisterType<CheckoutAttributeService>().As<ICheckoutAttributeService>().InstancePerHttpRequest();
-            builder.RegisterType<GiftCardService>().As<IGiftCardService>().InstancePerHttpRequest();
-            builder.RegisterType<OrderService>().As<IOrderService>().InstancePerHttpRequest();
-            builder.RegisterType<OrderReportService>().As<IOrderReportService>().InstancePerHttpRequest();
-            builder.RegisterType<OrderProcessingService>().As<IOrderProcessingService>().InstancePerHttpRequest();
-            builder.RegisterType<OrderTotalCalculationService>().As<IOrderTotalCalculationService>().InstancePerHttpRequest();
-            builder.RegisterType<ShoppingCartService>().As<IShoppingCartService>().InstancePerHttpRequest();
+            builder.RegisterType<CheckoutAttributeFormatter>().As<ICheckoutAttributeFormatter>().InstancePerRequest();
+            builder.RegisterType<CheckoutAttributeParser>().As<ICheckoutAttributeParser>().InstancePerRequest();
+            builder.RegisterType<CheckoutAttributeService>().As<ICheckoutAttributeService>().InstancePerRequest();
+            builder.RegisterType<GiftCardService>().As<IGiftCardService>().InstancePerRequest();
+            builder.RegisterType<OrderService>().As<IOrderService>().InstancePerRequest();
+            builder.RegisterType<OrderReportService>().As<IOrderReportService>().InstancePerRequest();
+            builder.RegisterType<OrderProcessingService>().As<IOrderProcessingService>().InstancePerRequest();
+            builder.RegisterType<OrderTotalCalculationService>().As<IOrderTotalCalculationService>().InstancePerRequest();
+            builder.RegisterType<ShoppingCartService>().As<IShoppingCartService>().InstancePerRequest();
 
-            builder.RegisterType<PaymentService>().As<IPaymentService>().InstancePerHttpRequest();
+            builder.RegisterType<PaymentService>().As<IPaymentService>().InstancePerRequest();
 
-            builder.RegisterType<EncryptionService>().As<IEncryptionService>().InstancePerHttpRequest();
-            builder.RegisterType<FormsAuthenticationService>().As<IAuthenticationService>().InstancePerHttpRequest();
+            builder.RegisterType<EncryptionService>().As<IEncryptionService>().InstancePerRequest();
+            builder.RegisterType<FormsAuthenticationService>().As<IAuthenticationService>().InstancePerRequest();
 
 
             //pass MemoryCacheManager as cacheManager (cache settings between requests)
             builder.RegisterType<UrlRecordService>().As<IUrlRecordService>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
-                .InstancePerHttpRequest();
+                .InstancePerRequest();
 
-            builder.RegisterType<ShipmentService>().As<IShipmentService>().InstancePerHttpRequest();
-            builder.RegisterType<ShippingService>().As<IShippingService>().InstancePerHttpRequest();
+            builder.RegisterType<ShipmentService>().As<IShipmentService>().InstancePerRequest();
+            builder.RegisterType<ShippingService>().As<IShippingService>().InstancePerRequest();
 
-            builder.RegisterType<TaxCategoryService>().As<ITaxCategoryService>().InstancePerHttpRequest();
-            builder.RegisterType<TaxService>().As<ITaxService>().InstancePerHttpRequest();
-            builder.RegisterType<TaxCategoryService>().As<ITaxCategoryService>().InstancePerHttpRequest();
+            builder.RegisterType<TaxCategoryService>().As<ITaxCategoryService>().InstancePerRequest();
+            builder.RegisterType<TaxService>().As<ITaxService>().InstancePerRequest();
+            builder.RegisterType<TaxCategoryService>().As<ITaxCategoryService>().InstancePerRequest();
 
-            builder.RegisterType<DefaultLogger>().As<ILogger>().InstancePerHttpRequest();
+            builder.RegisterType<DefaultLogger>().As<ILogger>().InstancePerRequest();
 
             //pass MemoryCacheManager as cacheManager (cache settings between requests)
             builder.RegisterType<CustomerActivityService>().As<ICustomerActivityService>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
-                .InstancePerHttpRequest();
+                .InstancePerRequest();
 
             if (!String.IsNullOrEmpty(ConfigurationManager.AppSettings["UseFastInstallationService"]) &&
                 Convert.ToBoolean(ConfigurationManager.AppSettings["UseFastInstallationService"]))
             {
-                builder.RegisterType<SqlFileInstallationService>().As<IInstallationService>().InstancePerHttpRequest();
+                builder.RegisterType<SqlFileInstallationService>().As<IInstallationService>().InstancePerRequest();
             }
             else
             {
-                builder.RegisterType<CodeFirstInstallationService>().As<IInstallationService>().InstancePerHttpRequest();
+                builder.RegisterType<CodeFirstInstallationService>().As<IInstallationService>().InstancePerRequest();
             }
 
-            builder.RegisterType<ForumService>().As<IForumService>().InstancePerHttpRequest();
+            builder.RegisterType<ForumService>().As<IForumService>().InstancePerRequest();
 
-            builder.RegisterType<PollService>().As<IPollService>().InstancePerHttpRequest();
-            builder.RegisterType<BlogService>().As<IBlogService>().InstancePerHttpRequest();
-            builder.RegisterType<WidgetService>().As<IWidgetService>().InstancePerHttpRequest();
-            builder.RegisterType<TopicService>().As<ITopicService>().InstancePerHttpRequest();
-            builder.RegisterType<NewsService>().As<INewsService>().InstancePerHttpRequest();
+            builder.RegisterType<PollService>().As<IPollService>().InstancePerRequest();
+            builder.RegisterType<BlogService>().As<IBlogService>().InstancePerRequest();
+            builder.RegisterType<WidgetService>().As<IWidgetService>().InstancePerRequest();
+            builder.RegisterType<TopicService>().As<ITopicService>().InstancePerRequest();
+            builder.RegisterType<NewsService>().As<INewsService>().InstancePerRequest();
 
-            builder.RegisterType<DateTimeHelper>().As<IDateTimeHelper>().InstancePerHttpRequest();
-            builder.RegisterType<SitemapGenerator>().As<ISitemapGenerator>().InstancePerHttpRequest();
-            builder.RegisterType<PageHeadBuilder>().As<IPageHeadBuilder>().InstancePerHttpRequest();
+            builder.RegisterType<DateTimeHelper>().As<IDateTimeHelper>().InstancePerRequest();
+            builder.RegisterType<SitemapGenerator>().As<ISitemapGenerator>().InstancePerRequest();
+            builder.RegisterType<PageHeadBuilder>().As<IPageHeadBuilder>().InstancePerRequest();
 
-            builder.RegisterType<ScheduleTaskService>().As<IScheduleTaskService>().InstancePerHttpRequest();
+            builder.RegisterType<ScheduleTaskService>().As<IScheduleTaskService>().InstancePerRequest();
 
-            builder.RegisterType<ExportManager>().As<IExportManager>().InstancePerHttpRequest();
-            builder.RegisterType<ImportManager>().As<IImportManager>().InstancePerHttpRequest();
-            builder.RegisterType<PdfService>().As<IPdfService>().InstancePerHttpRequest();
-            builder.RegisterType<ThemeProvider>().As<IThemeProvider>().InstancePerHttpRequest();
-            builder.RegisterType<ThemeContext>().As<IThemeContext>().InstancePerHttpRequest();
+            builder.RegisterType<ExportManager>().As<IExportManager>().InstancePerRequest();
+            builder.RegisterType<ImportManager>().As<IImportManager>().InstancePerRequest();
+            builder.RegisterType<PdfService>().As<IPdfService>().InstancePerRequest();
+            builder.RegisterType<ThemeProvider>().As<IThemeProvider>().InstancePerRequest();
+            builder.RegisterType<ThemeContext>().As<IThemeContext>().InstancePerRequest();
 
 
-            builder.RegisterType<ExternalAuthorizer>().As<IExternalAuthorizer>().InstancePerHttpRequest();
-            builder.RegisterType<OpenAuthenticationService>().As<IOpenAuthenticationService>().InstancePerHttpRequest();
+            builder.RegisterType<ExternalAuthorizer>().As<IExternalAuthorizer>().InstancePerRequest();
+            builder.RegisterType<OpenAuthenticationService>().As<IOpenAuthenticationService>().InstancePerRequest();
            
                 
             builder.RegisterType<RoutePublisher>().As<IRoutePublisher>().SingleInstance();
@@ -303,7 +303,7 @@ namespace Nop.Web.Framework
                         var isMatch = type.IsGenericType && ((Type)criteria).IsAssignableFrom(type.GetGenericTypeDefinition());
                         return isMatch;
                     }, typeof(IConsumer<>)))
-                    .InstancePerHttpRequest();
+                    .InstancePerRequest();
             }
             builder.RegisterType<EventPublisher>().As<IEventPublisher>().SingleInstance();
             builder.RegisterType<SubscriptionService>().As<ISubscriptionService>().SingleInstance();
@@ -349,7 +349,7 @@ namespace Nop.Web.Framework
                     //DELETE FROM [Setting] WHERE [StoreId] > 0
                     return c.Resolve<ISettingService>().LoadSetting<TSettings>(currentStoreId);
                 })
-                .InstancePerHttpRequest()
+                .InstancePerRequest()
                 .CreateRegistration();
         }
 

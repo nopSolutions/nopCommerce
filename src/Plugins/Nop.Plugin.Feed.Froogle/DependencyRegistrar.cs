@@ -1,6 +1,5 @@
 using Autofac;
 using Autofac.Core;
-using Autofac.Integration.Mvc;
 using Nop.Core.Data;
 using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.DependencyManagement;
@@ -16,7 +15,7 @@ namespace Nop.Plugin.Feed.Froogle
     {
         public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder)
         {
-            builder.RegisterType<GoogleService>().As<IGoogleService>().InstancePerHttpRequest();
+            builder.RegisterType<GoogleService>().As<IGoogleService>().InstancePerRequest();
 
             //data context
             this.RegisterPluginDataContext<GoogleProductObjectContext>(builder, "nop_object_context_google_product");
@@ -25,7 +24,7 @@ namespace Nop.Plugin.Feed.Froogle
             builder.RegisterType<EfRepository<GoogleProductRecord>>()
                 .As<IRepository<GoogleProductRecord>>()
                 .WithParameter(ResolvedParameter.ForNamed<IDbContext>("nop_object_context_google_product"))
-                .InstancePerHttpRequest();
+                .InstancePerRequest();
         }
 
         public int Order
