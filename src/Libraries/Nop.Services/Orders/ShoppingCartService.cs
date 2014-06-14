@@ -514,6 +514,25 @@ namespace Nop.Services.Orders
                         warnings.Add(notFoundWarning);
                     }
                 }
+
+                if (pva2.AttributeControlType == AttributeControlType.ReadonlyCheckboxes)
+                {
+                    //customers cannot edit read-only attributes
+                    var allowedReadOnlyValueIds = _productAttributeService.GetProductVariantAttributeValues(pva2.Id)
+                        .Where(x => x.IsPreSelected)
+                        .Select(x => x.Id)
+                        .ToArray();
+
+                    var selectedReadOnlyValueIds = _productAttributeParser.ParseProductVariantAttributeValues(selectedAttributes)
+                        .Where(x => x.ProductVariantAttributeId == pva2.Id)
+                        .Select(x => x.Id)
+                        .ToArray();
+
+                    if (!CommonHelper.ArraysEqual(allowedReadOnlyValueIds, selectedReadOnlyValueIds))
+                    {
+                        warnings.Add("You cannot change read-only values");
+                    }
+                }
             }
 
             //validation rules
