@@ -53,13 +53,11 @@ namespace Nop.Web.Models.Catalog
         /// <summary>
         /// Order by
         /// </summary>
-        [NopResourceDisplayName("Categories.OrderBy")]
         public int OrderBy { get; set; }
 
         /// <summary>
         /// Product sorting
         /// </summary>
-        [NopResourceDisplayName("Categories.ViewMode")]
         public string ViewMode { get; set; }
         
 

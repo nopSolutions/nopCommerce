@@ -10026,26 +10026,8 @@
   <LocaleResource Name="Categories.Breadcrumb.Top">
     <Value>Home</Value>
   </LocaleResource>
-  <LocaleResource Name="Categories.OrderBy">
-    <Value>Sort by</Value>
-  </LocaleResource>
-  <LocaleResource Name="Categories.PageSize">
-    <Value>Display</Value>
-  </LocaleResource>
-  <LocaleResource Name="Categories.PageSize.PerPage">
-    <Value>per page</Value>
-  </LocaleResource>
   <LocaleResource Name="Categories.TotalProducts">
     <Value>({0})</Value>
-  </LocaleResource>
-  <LocaleResource Name="Categories.ViewMode">
-    <Value>View as</Value>
-  </LocaleResource>
-  <LocaleResource Name="Categories.ViewMode.Grid">
-    <Value>Grid</Value>
-  </LocaleResource>
-  <LocaleResource Name="Categories.ViewMode.List">
-    <Value>List</Value>
   </LocaleResource>
   <LocaleResource Name="Checkout">
     <Value>Checkout</Value>
@@ -11124,26 +11106,8 @@
   <LocaleResource Name="Manufacturers.List">
     <Value>Manufacturer List</Value>
   </LocaleResource>
-  <LocaleResource Name="Manufacturers.OrderBy">
-    <Value>Sort by</Value>
-  </LocaleResource>
-  <LocaleResource Name="Manufacturers.PageSize">
-    <Value>Display</Value>
-  </LocaleResource>
-  <LocaleResource Name="Manufacturers.PageSize.PerPage">
-    <Value>per page</Value>
-  </LocaleResource>
   <LocaleResource Name="Manufacturers.ViewAll">
     <Value>View all</Value>
-  </LocaleResource>
-  <LocaleResource Name="Manufacturers.ViewMode">
-    <Value>View as</Value>
-  </LocaleResource>
-  <LocaleResource Name="Manufacturers.ViewMode.Grid">
-    <Value>Grid</Value>
-  </LocaleResource>
-  <LocaleResource Name="Manufacturers.ViewMode.List">
-    <Value>List</Value>
   </LocaleResource>
   <LocaleResource Name="Media.Category.ImageAlternateTextFormat">
     <Value>Picture for category {0}</Value>
@@ -12279,12 +12243,6 @@
   <LocaleResource Name="Products.Tags.Count">
     <Value>({0})</Value>
   </LocaleResource>
-  <LocaleResource Name="Products.Tags.PageSize">
-    <Value>Display</Value>
-  </LocaleResource>
-  <LocaleResource Name="Products.Tags.PageSize.PerPage">
-    <Value>per page</Value>
-  </LocaleResource>
   <LocaleResource Name="Products.Tags.Popular">
     <Value>Popular tags</Value>
   </LocaleResource>
@@ -12840,26 +12798,8 @@
   <LocaleResource Name="Vendors.List">
     <Value>Vendor List</Value>
   </LocaleResource>
-  <LocaleResource Name="Vendors.OrderBy">
-    <Value>Sort by</Value>
-  </LocaleResource>
-  <LocaleResource Name="Vendors.PageSize">
-    <Value>Display</Value>
-  </LocaleResource>
-  <LocaleResource Name="Vendors.PageSize.PerPage">
-    <Value>per page</Value>
-  </LocaleResource>
   <LocaleResource Name="Vendors.ViewAll">
     <Value>View all</Value>
-  </LocaleResource>
-  <LocaleResource Name="Vendors.ViewMode">
-    <Value>View as</Value>
-  </LocaleResource>
-  <LocaleResource Name="Vendors.ViewMode.Grid">
-    <Value>Grid</Value>
-  </LocaleResource>
-  <LocaleResource Name="Vendors.ViewMode.List">
-    <Value>List</Value>
   </LocaleResource>
   <LocaleResource Name="Wishlist">
     <Value>Wishlist</Value>

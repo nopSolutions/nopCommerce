@@ -239,6 +239,84 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.SearchPagePageSizeOptions.Hint">
     <Value>Search page. Comma separated list of page size options (e.g. 10, 5, 15, 20). First option is the default page size if none are selected.</Value>
   </LocaleResource>
+  <LocaleResource Name="Categories.OrderBy">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Categories.PageSize">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Categories.PageSize.PerPage">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Categories.ViewMode">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Categories.ViewMode.Grid">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Categories.ViewMode.List">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Manufacturers.OrderBy">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Manufacturers.PageSize">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Manufacturers.PageSize.PerPage">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Manufacturers.ViewMode">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Manufacturers.ViewMode.Grid">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Manufacturers.ViewMode.List">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Tags.PageSize">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Tags.PageSize.PerPage">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Vendors.OrderBy">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Vendors.PageSize">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Vendors.PageSize.PerPage">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Vendors.ViewMode">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Vendors.ViewMode.Grid">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Vendors.ViewMode.List">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Catalog.OrderBy">
+    <Value>Sort by</Value>
+  </LocaleResource>
+  <LocaleResource Name="Catalog.PageSize">
+    <Value>Display</Value>
+  </LocaleResource>
+  <LocaleResource Name="Catalog.PageSize.PerPage">
+    <Value>per page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Catalog.ViewMode">
+    <Value>View as</Value>
+  </LocaleResource>
+  <LocaleResource Name="Catalog.ViewMode.Grid">
+    <Value>Grid</Value>
+  </LocaleResource>
+  <LocaleResource Name="Catalog.ViewMode.List">
+    <Value>List</Value>
+  </LocaleResource>
 </Language>
 '
 

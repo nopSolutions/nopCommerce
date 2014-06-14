@@ -1146,14 +1146,14 @@ namespace Nop.Web.Controllers
                 //grid
                 model.PagingFilteringContext.AvailableViewModes.Add(new SelectListItem()
                 {
-                    Text = _localizationService.GetResource("Categories.ViewMode.Grid"),
+                    Text = _localizationService.GetResource("Catalog.ViewMode.Grid"),
                     Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=grid", null),
                     Selected = viewMode == "grid"
                 });
                 //list
                 model.PagingFilteringContext.AvailableViewModes.Add(new SelectListItem()
                 {
-                    Text = _localizationService.GetResource("Categories.ViewMode.List"),
+                    Text = _localizationService.GetResource("Catalog.ViewMode.List"),
                     Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=list", null),
                     Selected = viewMode == "list"
                 });
@@ -1564,14 +1564,14 @@ namespace Nop.Web.Controllers
                 //grid
                 model.PagingFilteringContext.AvailableViewModes.Add(new SelectListItem()
                 {
-                    Text = _localizationService.GetResource("Manufacturers.ViewMode.Grid"),
+                    Text = _localizationService.GetResource("Catalog.ViewMode.Grid"),
                     Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=grid", null),
                     Selected = viewMode == "grid"
                 });
                 //list
                 model.PagingFilteringContext.AvailableViewModes.Add(new SelectListItem()
                 {
-                    Text = _localizationService.GetResource("Manufacturers.ViewMode.List"),
+                    Text = _localizationService.GetResource("Catalog.ViewMode.List"),
                     Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=list", null),
                     Selected = viewMode == "list"
                 });
@@ -1872,14 +1872,14 @@ namespace Nop.Web.Controllers
                 //grid
                 model.PagingFilteringContext.AvailableViewModes.Add(new SelectListItem()
                 {
-                    Text = _localizationService.GetResource("Vendors.ViewMode.Grid"),
+                    Text = _localizationService.GetResource("Catalog.ViewMode.Grid"),
                     Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=grid", null),
                     Selected = viewMode == "grid"
                 });
                 //list
                 model.PagingFilteringContext.AvailableViewModes.Add(new SelectListItem()
                 {
-                    Text = _localizationService.GetResource("Vendors.ViewMode.List"),
+                    Text = _localizationService.GetResource("Catalog.ViewMode.List"),
                     Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=list", null),
                     Selected = viewMode == "list"
                 });
@@ -2671,14 +2671,14 @@ namespace Nop.Web.Controllers
                 //grid
                 model.PagingFilteringContext.AvailableViewModes.Add(new SelectListItem()
                 {
-                    Text = _localizationService.GetResource("Categories.ViewMode.Grid"),
+                    Text = _localizationService.GetResource("Catalog.ViewMode.Grid"),
                     Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=grid", null),
                     Selected = viewMode == "grid"
                 });
                 //list
                 model.PagingFilteringContext.AvailableViewModes.Add(new SelectListItem()
                 {
-                    Text = _localizationService.GetResource("Categories.ViewMode.List"),
+                    Text = _localizationService.GetResource("Catalog.ViewMode.List"),
                     Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=list", null),
                     Selected = viewMode == "list"
                 });
@@ -3166,14 +3166,14 @@ namespace Nop.Web.Controllers
                 //grid
                 model.PagingFilteringContext.AvailableViewModes.Add(new SelectListItem()
                 {
-                    Text = _localizationService.GetResource("Categories.ViewMode.Grid"),
+                    Text = _localizationService.GetResource("Catalog.ViewMode.Grid"),
                     Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=grid", null),
                     Selected = viewMode == "grid"
                 });
                 //list
                 model.PagingFilteringContext.AvailableViewModes.Add(new SelectListItem()
                 {
-                    Text = _localizationService.GetResource("Categories.ViewMode.List"),
+                    Text = _localizationService.GetResource("Catalog.ViewMode.List"),
                     Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=list", null),
                     Selected = viewMode == "list"
                 });

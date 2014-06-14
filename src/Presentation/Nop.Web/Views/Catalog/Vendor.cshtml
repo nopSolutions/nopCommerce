@@ -34,7 +34,7 @@
             @if (Model.PagingFilteringContext.AllowProductViewModeChanging && Model.Products.Count > 0)
             {
                 <div class="product-viewmode">
-                    <span>@T("Vendors.ViewMode")</span>
+                    <span>@T("Catalog.ViewMode")</span>
                     @Html.DropDownList("products-viewmode", Model.PagingFilteringContext.AvailableViewModes, new { onchange = "setLocation(this.value);" })
                 </div>
             }
@@ -42,7 +42,7 @@
             @if (Model.PagingFilteringContext.AllowProductSorting && Model.Products.Count > 0)
             {
                 <div class="product-sorting">
-                    <span>@T("Vendors.OrderBy")</span>
+                    <span>@T("Catalog.OrderBy")</span>
                     @Html.DropDownList("products-orderby", Model.PagingFilteringContext.AvailableSortOptions, new { onchange = "setLocation(this.value);" })
                 </div>
             }
@@ -50,9 +50,9 @@
             @if (Model.PagingFilteringContext.AllowCustomersToSelectPageSize && Model.Products.Count > 0)
             {
                 <div class="product-page-size">
-                    <span>@T("Vendors.PageSize")</span>
+                    <span>@T("Catalog.PageSize")</span>
                     @Html.DropDownList("products-pagesize", Model.PagingFilteringContext.PageSizeOptions, new { onchange = "setLocation(this.value);" })
-                    <span>@T("Vendors.PageSize.PerPage")</span>
+                    <span>@T("Catalog.PageSize.PerPage")</span>
                 </div>
             }
         </div>
