@@ -4473,7 +4473,8 @@ namespace Nop.Services.Installation
 
             settingService.SaveSetting(new AdminAreaSettings()
                 {
-                    GridPageSize = 15,
+                    DefaultGridPageSize = 15,
+                    GridPageSizes = "10, 15, 20, 50, 100",
                     DisplayProductPictures = true,
                 });
 

@@ -1082,3 +1082,26 @@ BEGIN
 	VALUES (N'catalogsettings.cacheproductprices', N'false', 0)
 END
 GO
+
+--delete setting
+DELeTE  [Setting] FROM [Setting]
+WHERE [name] = N'adminareasettings.gridpagesize'
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'adminareasettings.defaultgridpagesize')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'adminareasettings.defaultgridpagesize', N'15', 0)
+END
+GO
+
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'adminareasettings.gridpagesizes')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'adminareasettings.gridpagesizes', N'10, 15, 20, 50, 100', 0)
+END
+GO
+

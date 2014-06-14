@@ -558,7 +558,8 @@
 }
 @helper TabOrders()
     {
-    var gridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSize;
+    var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
 
     <div id="order-grid"></div>
         
@@ -584,13 +585,14 @@
                         // Cancel the changes
                         this.cancelChanges();
                     },
-                    pageSize: @(gridPageSize),
+                    pageSize: @(defaultGridPageSize),
                     serverPaging: true,
                     serverFiltering: true,
                     serverSorting: true
                 },
                 pageable: {
-                    refresh: true
+                    refresh: true,
+                    pageSizes: [@(gridPageSizes)]
                 },
                 editable: {
                     confirmation: false,
@@ -1000,8 +1002,9 @@
 }
 @helper TabActivityLog()
     {
-        var gridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSize;
-    
+        var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+        var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+
     <table class="adminContent">
         <tr>
             <td>
@@ -1029,13 +1032,14 @@
                                     // Cancel the changes
                                     this.cancelChanges();
                                 },
-                                pageSize: @(gridPageSize),
+                                pageSize: @(defaultGridPageSize),
                                 serverPaging: true,
                                 serverFiltering: true,
                                 serverSorting: true
                             },
                             pageable: {
-                                refresh: true
+                                refresh: true,
+                                pageSizes: [@(gridPageSizes)]
                             },
                             editable: {
                                 confirmation: false,

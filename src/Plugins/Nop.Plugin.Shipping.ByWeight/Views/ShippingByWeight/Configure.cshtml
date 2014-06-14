@@ -1,7 +1,9 @@
 ﻿@{
     Layout = "";
 
-    var gridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSize;
+    var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+
 }
 @model ShippingByWeightListModel
 @using Nop.Plugin.Shipping.ByWeight.Models;
@@ -65,13 +67,14 @@
                                     // Cancel the changes
                                     this.cancelChanges();
                                 },
-                                pageSize: @(gridPageSize),
+                                pageSize: @(defaultGridPageSize),
                                 serverPaging: true,
                                 serverFiltering: true,
                                 serverSorting: true
                             },
                             pageable: {
-                                refresh: true
+                                refresh: true,
+                                pageSizes: [@(gridPageSizes)]
                             },
                             editable: {
                                 confirmation: false,
@@ -124,7 +127,7 @@
     var addNewUrl = Url.RouteUrl("Plugin.Shipping.ByWeight.AddPopup") + "?btnId=btnRefresh&formId=shipping-byweight-form";
                 }
                 <br />
-                <input type="submit" id="btnAddNewOption" name="btnAddNewOption" value="@T("Plugins.Shipping.ByWeight.AddRecord")" onclick="javascript:OpenWindow('@(addNewUrl)', 800, 400, true); return false;" class="k-button" />
+                <input type="submit" id="btnAddNewOption" name="btnAddNewOption" value="@T("Plugins.Shipping.ByWeight.AddRecord")" onclick="javascript:OpenWindow('@(addNewUrl)', 800, 450, true); return false;" class="k-button" />
                 <input type="submit" id="btnRefresh" name="btnRefresh" style="display: none" />
                 <script type="text/javascript">
                     $(document).ready(function () {

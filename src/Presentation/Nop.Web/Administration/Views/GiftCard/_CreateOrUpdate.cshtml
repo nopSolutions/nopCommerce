@@ -225,8 +225,9 @@
 }
 @helper TabHistory()
     {
-        var gridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSize;
-    
+        var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+        var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+
     <div id="usagehistory-grid"></div>
 
     <script>
@@ -251,13 +252,14 @@
                         // Cancel the changes
                         this.cancelChanges();
                     },
-                    pageSize: @(gridPageSize),
+                    pageSize: @(defaultGridPageSize),
                     serverPaging: true,
                     serverFiltering: true,
                     serverSorting: true
                 },
                 pageable: {
-                    refresh: true
+                    refresh: true,
+                    pageSizes: [@(gridPageSizes)]
                 },
                 editable: {
                     confirmation: false,
