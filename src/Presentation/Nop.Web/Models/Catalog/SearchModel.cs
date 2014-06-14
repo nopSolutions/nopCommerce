@@ -9,8 +9,8 @@ namespace Nop.Web.Models.Catalog
     {
         public SearchModel()
         {
-            PagingFilteringContext = new SearchPagingFilteringModel();
-            Products = new List<ProductOverviewModel>();
+            this.PagingFilteringContext = new CatalogPagingFilteringModel();
+            this.Products = new List<ProductOverviewModel>();
 
             this.AvailableCategories = new List<SelectListItem>();
             this.AvailableManufacturers = new List<SelectListItem>();
@@ -62,7 +62,16 @@ namespace Nop.Web.Models.Catalog
         public IList<SelectListItem> AvailableManufacturers { get; set; }
 
 
-        public SearchPagingFilteringModel PagingFilteringContext { get; set; }
+        public CatalogPagingFilteringModel PagingFilteringContext { get; set; }
         public IList<ProductOverviewModel> Products { get; set; }
+
+        #region Nested classes
+
+        public class CategoryModel : BaseNopEntityModel
+        {
+            public string Breadcrumb { get; set; }
+        }
+
+        #endregion
     }
 }

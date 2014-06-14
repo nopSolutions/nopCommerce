@@ -159,9 +159,17 @@ namespace Nop.Core.Domain.Catalog
         public int NumberOfBestsellersOnHomepage { get; set; }
 
         /// <summary>
-        /// Gets or sets a number of products per page on search products page
+        /// Gets or sets a number of products per page on the search products page
         /// </summary>
         public int SearchPageProductsPerPage { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether customers are allowed to select page size on the search products page
+        /// </summary>
+        public bool SearchPageAllowCustomersToSelectPageSize { get; set; }
+        /// <summary>
+        /// Gets or sets the available customer selectable page size options on the search products page
+        /// </summary>
+        public string SearchPagePageSizeOptions { get; set; }
 
         /// <summary>
         /// Gets or sets "List of products purchased by other customers who purchased the above" option is enable

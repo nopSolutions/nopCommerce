@@ -823,7 +823,7 @@ td.fieldname{font-size:12px;}
 /* SEARCH */
 .search-page{}
 .search-page .page-title{}
-.search-page .search-input{border:1px solid #d7d7d7;padding:10px;}
+.search-page .search-input{border:1px solid #d7d7d7;padding:10px;margin-bottom:10px;}
 .search-page .search-input .buttons{text-align:right;}
 .search-page .search-results{padding-top:10px;}
 .search-page .search-results .result{font-weight:700;color:#555;}

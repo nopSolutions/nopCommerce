@@ -112,6 +112,14 @@ namespace Nop.Admin.Models.Settings
         public int SearchPageProductsPerPage { get; set; }
         public bool SearchPageProductsPerPage_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.SearchPageAllowCustomersToSelectPageSize")]
+        public bool SearchPageAllowCustomersToSelectPageSize { get; set; }
+        public bool SearchPageAllowCustomersToSelectPageSize_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.SearchPagePageSizeOptions")]
+        public string SearchPagePageSizeOptions { get; set; }
+        public bool SearchPagePageSizeOptions_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ProductSearchAutoCompleteEnabled")]
         public bool ProductSearchAutoCompleteEnabled { get; set; }
         public bool ProductSearchAutoCompleteEnabled_OverrideForStore { get; set; }

@@ -95,7 +95,7 @@ namespace Nop.Web.Framework.UI.Paging
 			return this;
 		}
         //little hack here due to ugly MVC implementation
-        //find more info here: http://www.mindstorminteractive.com/blog/topics/jquery-fix-asp-net-mvc-checkbox-truefalse-value/
+        //find more info here: http://www.mindstorminteractive.com/topics/jquery-fix-asp-net-mvc-checkbox-truefalse-value/
         public Pager BooleanParameterName(string paramName)
         {
             booleanParameterNames.Add(paramName);
@@ -237,7 +237,7 @@ namespace Nop.Web.Framework.UI.Paging
                 if (booleanParameterNames.Contains(key, StringComparer.InvariantCultureIgnoreCase))
                 {
                     //little hack here due to ugly MVC implementation
-                    //find more info here: http://www.mindstorminteractive.com/blog/topics/jquery-fix-asp-net-mvc-checkbox-truefalse-value/
+                    //find more info here: http://www.mindstorminteractive.com/topics/jquery-fix-asp-net-mvc-checkbox-truefalse-value/
                     if (!String.IsNullOrEmpty(value) && value.Equals("true,false", StringComparison.InvariantCultureIgnoreCase))
                     {
                         value = "true";

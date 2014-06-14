@@ -24,7 +24,8 @@
             $("#@Html.FieldIdFor(model => model.RecentlyAddedProductsEnabled)").click(toggleRecentlyAddedProducts);
             $("#@Html.FieldIdFor(model => model.ShowBestsellersOnHomepage)").click(toggleBestsellersOnHomepage);
             $("#@Html.FieldIdFor(model => model.ProductsAlsoPurchasedEnabled)").click(toggleProductsAlsoPurchasedNumber);
-            $("#@Html.FieldIdFor(model => model.ProductsByTagAllowCustomersToSelectPageSize)").click(togglePageSize);
+            $("#@Html.FieldIdFor(model => model.ProductsByTagAllowCustomersToSelectPageSize)").click(toggleProductsByTagPageSize);
+            $("#@Html.FieldIdFor(model => model.SearchPageAllowCustomersToSelectPageSize)").click(toggleSearchPagePageSize);
             $("#@Html.FieldIdFor(model => model.ProductSearchAutoCompleteEnabled)").click(toggleProductSearchAutoComplete);
             $("#@Html.FieldIdFor(model => model.EnableDynamicPriceUpdate)").click(toggleEnableDynamicPriceUpdate);
 
@@ -35,7 +36,8 @@
             toggleRecentlyAddedProducts();
             toggleBestsellersOnHomepage();
             toggleProductsAlsoPurchasedNumber();
-            togglePageSize();
+            toggleProductsByTagPageSize();
+            toggleSearchPagePageSize();
             toggleProductSearchAutoComplete();
             toggleEnableDynamicPriceUpdate();
         });
@@ -103,16 +105,26 @@
             }
         }
 
-        function togglePageSize() {
+        function toggleProductsByTagPageSize() {
             if ($('#@Html.FieldIdFor(model => model.ProductsByTagAllowCustomersToSelectPageSize)').is(':checked')) {
-                $('#pnlPageSize').hide();
-                $('#pnlPageSizeOptions').show();
+                $('#pnlProductsByTagPageSize').hide();
+                $('#pnlProductsByTagPageSizeOptions').show();
             } else {
-                $('#pnlPageSize').show();
-                $('#pnlPageSizeOptions').hide();
+                $('#pnlProductsByTagPageSize').show();
+                $('#pnlProductsByTagPageSizeOptions').hide();
             }
         }
 
+        function toggleSearchPagePageSize() {
+            if ($('#@Html.FieldIdFor(model => model.SearchPageAllowCustomersToSelectPageSize)').is(':checked')) {
+                $('#pnlSearchPageProductsPerPage').hide();
+                $('#pnlSearchPagePageSizeOptions').show();
+            } else {
+                $('#pnlSearchPageProductsPerPage').show();
+                $('#pnlSearchPagePageSizeOptions').hide();
+            }
+        }
+        
         function toggleProductSearchAutoComplete() {
             if ($('#@Html.FieldIdFor(model => model.ProductSearchAutoCompleteEnabled)').is(':checked')) {
                 $('#pnlProductSearchAutoCompleteNumberOfProducts').show();
@@ -428,12 +440,32 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.SearchPageAllowCustomersToSelectPageSize_OverrideForStore, model => model.SearchPageAllowCustomersToSelectPageSize, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.SearchPageAllowCustomersToSelectPageSize):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SearchPageAllowCustomersToSelectPageSize)
+                @Html.ValidationMessageFor(model => model.SearchPageAllowCustomersToSelectPageSize)
+            </td>
+        </tr>
+        <tr id="pnlSearchPageProductsPerPage">
+            <td class="adminTitle">
                 @Html.OverrideStoreCheckboxFor(model => model.SearchPageProductsPerPage_OverrideForStore, model => model.SearchPageProductsPerPage, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.SearchPageProductsPerPage):
             </td>
             <td class="adminData">
                 @Html.EditorFor(model => model.SearchPageProductsPerPage)
                 @Html.ValidationMessageFor(model => model.SearchPageProductsPerPage)
+            </td>
+        </tr>
+        <tr id="pnlSearchPagePageSizeOptions">
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ProductsByTagPageSizeOptions_OverrideForStore, model => model.SearchPagePageSizeOptions, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.SearchPagePageSizeOptions):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SearchPagePageSizeOptions)
+                @Html.ValidationMessageFor(model => model.SearchPagePageSizeOptions)
             </td>
         </tr>
         <tr>
@@ -526,7 +558,7 @@
                 @Html.ValidationMessageFor(model => model.ProductsByTagAllowCustomersToSelectPageSize)
             </td>
         </tr>
-        <tr id="pnlPageSize">
+        <tr id="pnlProductsByTagPageSize">
             <td class="adminTitle">
                 @Html.OverrideStoreCheckboxFor(model => model.ProductsByTagPageSize_OverrideForStore, model => model.ProductsByTagPageSize, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ProductsByTagPageSize):
@@ -536,7 +568,7 @@
                 @Html.ValidationMessageFor(model => model.ProductsByTagPageSize)
             </td>
         </tr>
-        <tr id="pnlPageSizeOptions">
+        <tr id="pnlProductsByTagPageSizeOptions">
             <td class="adminTitle">
                 @Html.OverrideStoreCheckboxFor(model => model.ProductsByTagPageSizeOptions_OverrideForStore, model => model.ProductsByTagPageSizeOptions, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ProductsByTagPageSizeOptions):

@@ -477,7 +477,15 @@ namespace Nop.Core
                             string[] strArray = str3.Split(new char[] { '=' });
                             if (strArray.Length == 2)
                             {
-                                dictionary[strArray[0]] = strArray[1];
+                                if (!dictionary.ContainsKey(strArray[0]))
+                                {
+                                    //do not add value if it already exists
+                                    //two the same query parameters? theoretically it's not possible.
+                                    //but MVC has some ugly implementation for checkboxes and we can have two values
+                                    //find more info here: http://www.mindstorminteractive.com/topics/jquery-fix-asp-net-mvc-checkbox-truefalse-value/
+                                    //we do this validation just to ensure that the first one is not overriden
+                                    dictionary[strArray[0]] = strArray[1];
+                                }
                             }
                             else
                             {

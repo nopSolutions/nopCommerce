@@ -4512,6 +4512,8 @@ namespace Nop.Services.Installation
                     ShowBestsellersOnHomepage = false,
                     NumberOfBestsellersOnHomepage = 3,
                     SearchPageProductsPerPage = 6,
+                    SearchPageAllowCustomersToSelectPageSize = true,
+                    SearchPagePageSizeOptions = "8, 4, 12",
                     ProductsAlsoPurchasedEnabled = true,
                     ProductsAlsoPurchasedNumber = 3,
                     EnableDynamicPriceUpdate = false,

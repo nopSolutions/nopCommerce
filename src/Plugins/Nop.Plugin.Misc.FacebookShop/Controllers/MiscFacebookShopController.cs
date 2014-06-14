@@ -429,24 +429,14 @@ namespace Nop.Plugin.Misc.FacebookShop.Controllers
             if (!_storeMappingService.Authorize(category))
                 return Content("");
 
-            if (category.PageSizeOptions != null)
-            {
-                var pageSizes= category.PageSizeOptions
-                    .Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                int temp = 0;
-                if (int.TryParse(pageSizes.FirstOrDefault(), out temp))
-                {
-                    if (temp > 0)
-                    {
-                        command.PageSize = temp;
-                    }
-                }
-            }
             if (command.PageSize == 0)
             {
                 command.PageSize = 8;
             }
-            if (command.PageNumber <= 0) command.PageNumber = 1;
+            if (command.PageNumber <= 0)
+            {
+                command.PageNumber = 1;
+            }
 
             var model = new CategoryModel()
             {
@@ -507,13 +497,20 @@ namespace Nop.Plugin.Misc.FacebookShop.Controllers
         }
         
         [ValidateInput(false)]
-        public ActionResult Search(SearchModel model, SearchPagingFilteringModel command)
+        public ActionResult Search(SearchModel model, CatalogPagingFilteringModel command)
         {
             if (model == null)
                 model = new SearchModel();
 
-            if (command.PageSize <= 0) command.PageSize = _catalogSettings.SearchPageProductsPerPage;
-            if (command.PageNumber <= 0) command.PageNumber = 1;
+            if (command.PageSize == 0)
+            {
+                command.PageSize = 8;
+            }
+            if (command.PageNumber <= 0)
+            {
+                command.PageNumber = 1;
+            }
+
             if (model.Q == null)
                 model.Q = "";
             model.Q = model.Q.Trim();

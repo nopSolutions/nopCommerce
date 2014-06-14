@@ -10,7 +10,7 @@ namespace Nop.Plugin.Misc.FacebookShop.Models
     {
         public SearchModel()
         {
-            PagingFilteringContext = new SearchPagingFilteringModel();
+            PagingFilteringContext = new CatalogPagingFilteringModel();
             Products = new List<ProductOverviewModel>();
         }
 
@@ -26,7 +26,7 @@ namespace Nop.Plugin.Misc.FacebookShop.Models
         public string Q { get; set; }
 
 
-        public SearchPagingFilteringModel PagingFilteringContext { get; set; }
+        public CatalogPagingFilteringModel PagingFilteringContext { get; set; }
         public IList<ProductOverviewModel> Products { get; set; }
     }
 }
