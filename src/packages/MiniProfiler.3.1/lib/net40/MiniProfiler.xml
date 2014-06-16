@@ -259,14 +259,9 @@
             Gets a value indicating whether to keep things static and reusable.
             </summary>
         </member>
-        <member name="T:StackExchange.Profiling.SqlFormatters.VerboseSqlServerFormatter">
+        <member name="T:StackExchange.Profiling.SqlFormatters.IAdvancedSqlFormatter">
             <summary>
-            Formats SQL server queries with a DECLARE up top for parameter values
-            </summary>
-        </member>
-        <member name="T:StackExchange.Profiling.SqlFormatters.SqlServerFormatter">
-            <summary>
-            Formats SQL server queries with a DECLARE up top for parameter values
+            Takes a <c>SqlTiming</c> and returns a formatted SQL string, for parameter replacement, etc.
             </summary>
         </member>
         <member name="T:StackExchange.Profiling.SqlFormatters.ISqlFormatter">
@@ -274,9 +269,41 @@
             Takes a <c>SqlTiming</c> and returns a formatted SQL string, for parameter replacement, etc.
             </summary>
         </member>
-        <member name="M:StackExchange.Profiling.SqlFormatters.ISqlFormatter.FormatSql(System.String,System.Collections.Generic.List{StackExchange.Profiling.SqlTimingParameter},System.Data.IDbCommand)">
+        <member name="M:StackExchange.Profiling.SqlFormatters.ISqlFormatter.FormatSql(System.String,System.Collections.Generic.List{StackExchange.Profiling.SqlTimingParameter})">
             <summary>
             Return SQL the way you want it to look on the in the trace. Usually used to format parameters.
+            </summary>
+        </member>
+        <member name="M:StackExchange.Profiling.SqlFormatters.IAdvancedSqlFormatter.FormatSql(System.String,System.Collections.Generic.List{StackExchange.Profiling.SqlTimingParameter},System.Data.IDbCommand)">
+            <summary>
+            Return SQL the way you want it to look on the in the trace. Usually used to format parameters.
+            </summary>
+        </member>
+        <member name="T:StackExchange.Profiling.SqlFormatters.SqlFormatterExtensions">
+            <summary>
+            Extensions for ISqlFormatter instances
+            </summary>
+        </member>
+        <member name="M:StackExchange.Profiling.SqlFormatters.SqlFormatterExtensions.GetFormattedSql(StackExchange.Profiling.SqlFormatters.ISqlFormatter,System.String,System.Collections.Generic.List{StackExchange.Profiling.SqlTimingParameter},System.Data.IDbCommand)">
+            <summary>
+            Format sql using the FormatSql method available in the current <see cref="P:StackExchange.Profiling.MiniProfiler.Settings.SqlFormatter"/>. 
+            </summary>
+            <remarks>It is preferable to use this rather than accessing <see cref="M:StackExchange.Profiling.SqlFormatters.ISqlFormatter.FormatSql(System.String,System.Collections.Generic.List{StackExchange.Profiling.SqlTimingParameter})"/> directly, 
+            as this method will detect whether an <see cref="T:StackExchange.Profiling.SqlFormatters.IAdvancedSqlFormatter"/> is being used, and will access it properly. 
+            This may be removed in a future major version when <see cref="T:StackExchange.Profiling.SqlFormatters.IAdvancedSqlFormatter"/> can be consolidated back
+            into <see cref="T:StackExchange.Profiling.SqlFormatters.ISqlFormatter"/>.
+            </remarks>
+            <returns></returns>
+        </member>
+        <member name="T:StackExchange.Profiling.SqlFormatters.VerboseSqlServerFormatter">
+            <summary>
+            Formats SQL server queries with a DECLARE up top for parameter values
+            </summary>
+            
+        </member>
+        <member name="T:StackExchange.Profiling.SqlFormatters.SqlServerFormatter">
+            <summary>
+            Formats SQL server queries with a DECLARE up top for parameter values
             </summary>
         </member>
         <member name="F:StackExchange.Profiling.SqlFormatters.SqlServerFormatter.ParamTranslator">
@@ -292,6 +319,11 @@
         <member name="M:StackExchange.Profiling.SqlFormatters.SqlServerFormatter.#cctor">
             <summary>
             Initialises static members of the <see cref="T:StackExchange.Profiling.SqlFormatters.SqlServerFormatter"/> class.
+            </summary>
+        </member>
+        <member name="M:StackExchange.Profiling.SqlFormatters.SqlServerFormatter.FormatSql(System.String,System.Collections.Generic.List{StackExchange.Profiling.SqlTimingParameter})">
+            <summary>
+            Formats the SQL in a SQL-Server friendly way, with DECLARE statements for the parameters up top.
             </summary>
         </member>
         <member name="M:StackExchange.Profiling.SqlFormatters.SqlServerFormatter.FormatSql(System.String,System.Collections.Generic.List{StackExchange.Profiling.SqlTimingParameter},System.Data.IDbCommand)">
@@ -320,9 +352,20 @@
             <param name="parameter"></param>
             <returns></returns>
         </member>
+        <member name="M:StackExchange.Profiling.SqlFormatters.VerboseSqlServerFormatter.#ctor(System.Boolean)">
+            <summary>
+            The constructor
+            </summary>
+            <param name="includeMetaData"></param>
+        </member>
         <member name="M:StackExchange.Profiling.SqlFormatters.VerboseSqlServerFormatter.FormatSql(System.String,System.Collections.Generic.List{StackExchange.Profiling.SqlTimingParameter},System.Data.IDbCommand)">
             <summary>
             Formats the SQL in a SQL-Server friendly way, with DECLARE statements for the parameters up top.
+            </summary>
+        </member>
+        <member name="P:StackExchange.Profiling.SqlFormatters.VerboseSqlServerFormatter.IncludeMetaData">
+            <summary>
+            Should meta data relating to the command type, database and transaction be included in sql output
             </summary>
         </member>
         <member name="T:StackExchange.Profiling.SqlTiming">
@@ -3214,6 +3257,10 @@
         <member name="M:StackExchange.Profiling.IpAddressIdentity.GetUser(System.Web.HttpRequest)">
             <summary>
             Returns the paramter HttpRequest's client ip address.
+            We combine both the REMOTE_ADDR header (which is the connecting device's IP address),
+            plus the HTTP_X_FORWARDED_FOR header if present (which is set by some proxy
+            servers and load balancers). This allows us to have a unique per-user view, even
+            when behind a proxy or load balancer.
             </summary>
         </member>
         <member name="T:StackExchange.Profiling.MiniProfiler">
@@ -3886,7 +3933,7 @@
             whether to include a comment after the value, indicating the type, e.g. <c>/* @myParam DbType.Int32 */</c>
             </param>
         </member>
-        <member name="M:StackExchange.Profiling.SqlFormatters.InlineFormatter.FormatSql(System.String,System.Collections.Generic.List{StackExchange.Profiling.SqlTimingParameter},System.Data.IDbCommand)">
+        <member name="M:StackExchange.Profiling.SqlFormatters.InlineFormatter.FormatSql(System.String,System.Collections.Generic.List{StackExchange.Profiling.SqlTimingParameter})">
             <summary>
             Formats the SQL in a generic friendly format, including the parameter type information 
             in a comment if it was specified in the InlineFormatter constructor
