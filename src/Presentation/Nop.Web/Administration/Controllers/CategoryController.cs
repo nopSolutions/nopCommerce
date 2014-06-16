@@ -232,7 +232,7 @@ namespace Nop.Admin.Controllers
                 }
                 else
                 {
-                    //removed role
+                    //remove role
                     var aclRecordToDelete = existingAclRecords.FirstOrDefault(acl => acl.CustomerRoleId == customerRole.Id);
                     if (aclRecordToDelete != null)
                         _aclService.DeleteAclRecord(aclRecordToDelete);
@@ -272,13 +272,13 @@ namespace Nop.Admin.Controllers
             {
                 if (model.SelectedStoreIds != null && model.SelectedStoreIds.Contains(store.Id))
                 {
-                    //new role
+                    //new store
                     if (existingStoreMappings.Count(sm => sm.StoreId == store.Id) == 0)
                         _storeMappingService.InsertStoreMapping(category, store.Id);
                 }
                 else
                 {
-                    //removed role
+                    //remove store
                     var storeMappingToDelete = existingStoreMappings.FirstOrDefault(sm => sm.StoreId == store.Id);
                     if (storeMappingToDelete != null)
                         _storeMappingService.DeleteStoreMapping(storeMappingToDelete);
@@ -498,13 +498,13 @@ namespace Nop.Admin.Controllers
                 {
                     if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
                     {
-                        //new role
+                        //new discount
                         if (category.AppliedDiscounts.Count(d => d.Id == discount.Id) == 0)
                             category.AppliedDiscounts.Add(discount);
                     }
                     else
                     {
-                        //removed role
+                        //remove discount
                         if (category.AppliedDiscounts.Count(d => d.Id == discount.Id) > 0)
                             category.AppliedDiscounts.Remove(discount);
                     }

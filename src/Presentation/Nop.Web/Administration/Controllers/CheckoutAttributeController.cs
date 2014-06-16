@@ -151,13 +151,13 @@ namespace Nop.Admin.Controllers
             {
                 if (model.SelectedStoreIds != null && model.SelectedStoreIds.Contains(store.Id))
                 {
-                    //new role
+                    //new store
                     if (existingStoreMappings.Count(sm => sm.StoreId == store.Id) == 0)
                         _storeMappingService.InsertStoreMapping(checkoutAttribute, store.Id);
                 }
                 else
                 {
-                    //removed role
+                    //remove store
                     var storeMappingToDelete = existingStoreMappings.FirstOrDefault(sm => sm.StoreId == store.Id);
                     if (storeMappingToDelete != null)
                         _storeMappingService.DeleteStoreMapping(storeMappingToDelete);

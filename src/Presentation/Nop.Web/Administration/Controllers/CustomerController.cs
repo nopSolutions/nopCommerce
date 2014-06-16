@@ -1021,7 +1021,7 @@ namespace Nop.Admin.Controllers
                         }
                         else
                         {
-                            //removed role
+                            //remove role
                             if (customer.CustomerRoles.Count(cr => cr.Id == customerRole.Id) > 0)
                                 customer.CustomerRoles.Remove(customerRole);
                         }
