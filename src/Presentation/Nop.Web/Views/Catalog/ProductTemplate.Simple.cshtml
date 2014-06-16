@@ -25,11 +25,11 @@
     {
         var storeName = EngineContext.Current.Resolve<IStoreContext>().CurrentStore.Name;
         Html.AddHeadCustomParts("<meta property=\"og:type\" content=\"product\" />");
-        Html.AddHeadCustomParts("<meta property=\"og:site_name\" content=\"" + Html.Encode(storeName) + "\" />");
         Html.AddHeadCustomParts("<meta property=\"og:title\" content=\"" + Html.Encode(Model.Name) + "\" />");
         Html.AddHeadCustomParts("<meta property=\"og:description\" content=\"" + Html.Encode(Model.MetaDescription) + "\" />");
-        Html.AddHeadCustomParts("<meta property=\"og:image\" content=\"" + Model.DefaultPictureModel.ImageUrl+ "\" />");
+        Html.AddHeadCustomParts("<meta property=\"og:image\" content=\"" + Model.DefaultPictureModel.ImageUrl + "\" />");
         Html.AddHeadCustomParts("<meta property=\"og:url\" content=\"" + Request.Url.AbsoluteUri + "\" />");
+        Html.AddHeadCustomParts("<meta property=\"og:site_name\" content=\"" + Html.Encode(storeName) + "\" />");
     }
 
     //Twitter META tags
