@@ -8250,6 +8250,9 @@
   <LocaleResource Name="Admin.Orders.OrderNotes.Fields.Download">
     <Value>Attached file</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.OrderNotes.Fields.Download.HasDownload">
+    <Value>(check to upload file)</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Orders.OrderNotes.Fields.Download.Hint">
     <Value>Upload a file attached to this order note.</Value>
   </LocaleResource>

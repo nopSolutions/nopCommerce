@@ -317,6 +317,9 @@ set @resources='
   <LocaleResource Name="Catalog.ViewMode.List">
     <Value>List</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.OrderNotes.Fields.Download.HasDownload">
+    <Value>(check to upload file)</Value>
+  </LocaleResource>
 </Language>
 '
 

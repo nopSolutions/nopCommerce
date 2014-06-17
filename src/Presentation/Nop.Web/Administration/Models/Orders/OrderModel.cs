@@ -198,6 +198,7 @@ namespace Nop.Admin.Models.Orders
         [NopResourceDisplayName("Admin.Orders.OrderNotes.Fields.Note")]
         [AllowHtml]
         public string AddOrderNoteMessage { get; set; }
+        public bool AddOrderNoteHasDownload { get; set; }
         [NopResourceDisplayName("Admin.Orders.OrderNotes.Fields.Download")]
         [UIHint("Download")]
         public int AddOrderNoteDownloadId { get; set; }

@@ -93,10 +93,31 @@
         @T("Admin.Orders.OrderNotes.AddTitle")
     </strong>
 </p>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#@Html.FieldIdFor(model => model.AddOrderNoteHasDownload)").change(toggleAddOrderNoteHasDownload);
+
+        toggleAddOrderNoteHasDownload();
+    });
+
+    function toggleAddOrderNoteHasDownload() {
+        if ($('#@Html.FieldIdFor(model => model.AddOrderNoteHasDownload)').is(':checked')) {
+            $('#pnlAddOrderNoteDownloadId').show();
+        }
+        else {
+            $('#pnlAddOrderNoteDownloadId').hide();
+        }
+    }
+
+</script>
+
 <table class="adminContent">
     <tr>
         <td class="adminTitle">
-            @Html.NopLabelFor(model => model.AddOrderNoteMessage)
+            @Html.NopLabelFor(model => model.AddOrderNoteMessage):
         </td>
         <td class="adminData">
             @Html.TextAreaFor(model => model.AddOrderNoteMessage, new { style = "Width: 350px; Height: 150px;" })
@@ -105,16 +126,19 @@
     </tr>
     <tr>
         <td class="adminTitle">
-            @Html.NopLabelFor(model => model.AddOrderNoteDownloadId)
+            @Html.NopLabelFor(model => model.AddOrderNoteDownloadId):
         </td>
         <td class="adminData">
-            @Html.EditorFor(model => model.AddOrderNoteDownloadId)
-            @Html.ValidationMessageFor(model => model.AddOrderNoteDownloadId)
+            @Html.EditorFor(model => model.AddOrderNoteHasDownload) @T("Admin.Orders.OrderNotes.Fields.Download.HasDownload")
+            <div id="pnlAddOrderNoteDownloadId">
+                @Html.EditorFor(model => model.AddOrderNoteDownloadId)
+                @Html.ValidationMessageFor(model => model.AddOrderNoteDownloadId)
+            </div>
         </td>
     </tr>
     <tr>
         <td class="adminTitle">
-            @Html.NopLabelFor(model => model.AddOrderNoteDisplayToCustomer)
+            @Html.NopLabelFor(model => model.AddOrderNoteDisplayToCustomer):
         </td>
         <td class="adminData">
             @Html.EditorFor(model => model.AddOrderNoteDisplayToCustomer)
@@ -131,26 +155,29 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $('#addOrderNote').click(function () {
-                var orderNoteMessage = $("#@Html.FieldIdFor(model => model.AddOrderNoteMessage)").val();
-                var orderNoteDownloadId = $("#@Html.FieldIdFor(model => model.AddOrderNoteDownloadId)").val();
-                var orderNoteDisplayToCustomer = $("#@Html.FieldIdFor(model => model.AddOrderNoteDisplayToCustomer)").is(':checked');
-                $('#addOrderNote').attr('disabled', true);
-                $.ajax({
-                    cache:false,
-                    type: "POST",
-                    url: "@(Url.Action("OrderNoteAdd", "Order"))",
-                    data: { "DisplayToCustomer": orderNoteDisplayToCustomer, "message": orderNoteMessage, "downloadId": orderNoteDownloadId, "orderId": @Model.Id },
-                    success: function (data) {
-                        var ordernotesGrid = $("#ordernotes-grid").data('kendoGrid');
-                        //grid.dataSource.page(1); //new search. Set page size to 1
-                        ordernotesGrid.dataSource.read();
-                        $('#addOrderNote').attr('disabled', false);
-                    },
-                    error:function (xhr, ajaxOptions, thrownError){
-                        alert('Failed to add order note.');
-                        $('#addOrderNote').attr('disabled', false);
-                    }  
-                });
+            var orderNoteMessage = $("#@Html.FieldIdFor(model => model.AddOrderNoteMessage)").val();
+            var orderNoteDownloadId = 0;
+            if ($('#@Html.FieldIdFor(model => model.AddOrderNoteHasDownload)').is(':checked')) {
+                orderNoteDownloadId = $("#@Html.FieldIdFor(model => model.AddOrderNoteDownloadId)").val();
+            }
+            var orderNoteDisplayToCustomer = $("#@Html.FieldIdFor(model => model.AddOrderNoteDisplayToCustomer)").is(':checked');
+            $('#addOrderNote').attr('disabled', true);
+            $.ajax({
+                cache:false,
+                type: "POST",
+                url: "@(Url.Action("OrderNoteAdd", "Order"))",
+                data: { "DisplayToCustomer": orderNoteDisplayToCustomer, "message": orderNoteMessage, "downloadId": orderNoteDownloadId, "orderId": @Model.Id },
+                success: function (data) {
+                    var ordernotesGrid = $("#ordernotes-grid").data('kendoGrid');
+                    //grid.dataSource.page(1); //new search. Set page size to 1
+                    ordernotesGrid.dataSource.read();
+                    $('#addOrderNote').attr('disabled', false);
+                },
+                error:function (xhr, ajaxOptions, thrownError){
+                    alert('Failed to add order note.');
+                    $('#addOrderNote').attr('disabled', false);
+                }  
             });
         });
+    });
 </script>
