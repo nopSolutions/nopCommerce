@@ -78,7 +78,13 @@ namespace Nop.Admin.Controllers
                         Id = x.Id,
                         LogLevel = x.LogLevel.GetLocalizedEnum(_localizationService, _workContext),
                         ShortMessage = x.ShortMessage,
-                        FullMessage = x.FullMessage,
+                        //little hack here:
+                        //ensure that FullMessage is not returned
+                        //otherwise, we can get the following error if log records have too long FullMessage:
+                        //"Error during serialization or deserialization using the JSON JavaScriptSerializer. The length of the string exceeds the value set on the maxJsonLength property. "
+                        //also it improves performance
+                        //FullMessage = x.FullMessage,
+                        FullMessage = "",
                         IpAddress = x.IpAddress,
                         CustomerId = x.CustomerId,
                         CustomerEmail = x.Customer != null ? x.Customer.Email : null,

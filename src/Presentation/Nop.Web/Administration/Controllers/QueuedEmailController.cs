@@ -64,9 +64,18 @@ namespace Nop.Admin.Controllers
             {
                 Data = queuedEmails.Select(x => {
                     var m = x.ToModel();
+
                     m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
                     if (x.SentOnUtc.HasValue)
                         m.SentOn = _dateTimeHelper.ConvertToUserTime(x.SentOnUtc.Value, DateTimeKind.Utc);
+
+                    //little hack here:
+                    //ensure that email body is not returned
+                    //otherwise, we can get the following error if emails have too long body:
+                    //"Error during serialization or deserialization using the JSON JavaScriptSerializer. The length of the string exceeds the value set on the maxJsonLength property. "
+                    //also it improves performance
+                    m.Body = "";
+
                     return m;
                 }),
                 Total = queuedEmails.TotalCount
