@@ -234,12 +234,7 @@ namespace Nop.Web.Controllers
                 //include subcategories
                 if (_catalogSettings.ShowCategoryProductNumberIncludingSubcategories)
                     categoryIds.AddRange(GetChildCategoryIds(categoryId));
-                var numberOfProducts = _productService
-                    .SearchProducts(categoryIds: categoryIds,
-                    storeId: _storeContext.CurrentStore.Id,
-                    visibleIndividuallyOnly: true,
-                    pageSize: 1)
-                    .TotalCount;
+                var numberOfProducts = _productService.GetCategoryProductNumber(categoryIds, _storeContext.CurrentStore.Id);
                 return numberOfProducts;
             });
             return cachedModel;

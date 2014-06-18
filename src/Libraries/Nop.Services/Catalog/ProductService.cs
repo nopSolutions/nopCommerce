@@ -266,6 +266,77 @@ namespace Nop.Services.Catalog
         }
 
         /// <summary>
+        /// Get (visible) product number in certain category
+        /// </summary>
+        /// <param name="categoryIds">Category identifiers</param>
+        /// <param name="storeId">Store identifier; 0 to load all records</param>
+        /// <returns>Product number</returns>
+        public virtual int GetCategoryProductNumber(IList<int> categoryIds = null, int storeId = 0)
+        {
+            //validate "categoryIds" parameter
+            if (categoryIds != null && categoryIds.Contains(0))
+                categoryIds.Remove(0);
+
+            //Access control list. Allowed customer roles
+            var allowedCustomerRolesIds = _workContext.CurrentCustomer.CustomerRoles
+                .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
+
+            var query = _productRepository.Table;
+            query = query.Where(p => !p.Deleted && p.Published && p.VisibleIndividually);
+
+            //category filtering
+            if (categoryIds != null && categoryIds.Count > 0)
+            {
+                query = from p in query
+                        from pc in p.ProductCategories.Where(pc => categoryIds.Contains(pc.CategoryId))
+                        select p;
+            }
+
+            bool filteredByAcl = false;
+            if (!_catalogSettings.IgnoreAcl)
+            {
+                //ACL (access control list)
+                filteredByAcl = true;
+
+                query = from p in query
+                        join acl in _aclRepository.Table
+                        on new { c1 = p.Id, c2 = "Product" } equals new { c1 = acl.EntityId, c2 = acl.EntityName } into p_acl
+                        from acl in p_acl.DefaultIfEmpty()
+                        where !p.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
+                        select p;
+            }
+
+            bool filteredByStore = false;
+            if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
+            {
+                //Store mapping
+                filteredByStore = true;
+
+                query = from p in query
+                        join sm in _storeMappingRepository.Table
+                        on new { c1 = p.Id, c2 = "Product" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into p_sm
+                        from sm in p_sm.DefaultIfEmpty()
+                        where !p.LimitedToStores || storeId == sm.StoreId
+                        select p;
+            }
+
+            if (filteredByAcl && filteredByStore)
+            {
+                //only distinct products (group by ID)
+                //if we use standard Distinct() method, then all fields will be compared (low performance)
+                //it'll not work in SQL Server Compact when searching products by a keyword)
+                query = from p in query
+                    group p by p.Id
+                    into pGroup
+                    orderby pGroup.Key
+                    select pGroup.FirstOrDefault();
+            }
+
+            var count = query.Count();
+            return count;
+        }
+
+        /// <summary>
         /// Search products
         /// </summary>
         /// <param name="pageIndex">Page index</param>
@@ -780,7 +851,6 @@ namespace Nop.Services.Catalog
                 //category filtering
                 if (categoryIds != null && categoryIds.Count > 0)
                 {
-                    //search in subcategories
                     query = from p in query
                             from pc in p.ProductCategories.Where(pc => categoryIds.Contains(pc.CategoryId))
                             where (!featuredProducts.HasValue || featuredProducts.Value == pc.IsFeaturedProduct)

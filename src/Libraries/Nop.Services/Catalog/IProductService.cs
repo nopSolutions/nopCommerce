@@ -50,7 +50,15 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         void UpdateProduct(Product product);
-        
+
+        /// <summary>
+        /// Get (visible) product number in certain category
+        /// </summary>
+        /// <param name="categoryIds">Category identifiers</param>
+        /// <param name="storeId">Store identifier; 0 to load all records</param>
+        /// <returns>Product number</returns>
+        int GetCategoryProductNumber(IList<int> categoryIds = null, int storeId = 0);
+
         /// <summary>
         /// Search products
         /// </summary>
