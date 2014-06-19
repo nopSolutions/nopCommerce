@@ -22,13 +22,12 @@
 
     //current product ID
     int currentProductId = 0;
-    if (Url.RequestContext.RouteData.Values["controller"].ToString().Equals("catalog", StringComparison.InvariantCultureIgnoreCase) &&
-        Url.RequestContext.RouteData.Values["action"].ToString().Equals("product", StringComparison.InvariantCultureIgnoreCase))
+    if (Url.RequestContext.RouteData.Values["controller"].ToString().Equals("product", StringComparison.InvariantCultureIgnoreCase) &&
+        Url.RequestContext.RouteData.Values["action"].ToString().Equals("productdetails", StringComparison.InvariantCultureIgnoreCase))
     {
         currentProductId = Convert.ToInt32(Url.RequestContext.RouteData.Values["productId"].ToString());
     }
 }
-
 <div class="leftside-3">
     @if (IsSectionDefined("left"))
     {
@@ -55,7 +54,7 @@
     {
         @Html.Widget("right_side_column_before")
         @Html.Action("NewsletterBox", "Newsletter")
-        @Html.Action("RecentlyViewedProductsBlock", "Catalog", new { productThumbPictureSize = 32 })
+        @Html.Action("RecentlyViewedProductsBlock", "Product", new { productThumbPictureSize = 32 })
         @Html.Action("PollBlock", "Poll", new { systemKeyword = "RightColumnPoll" })
         @Html.Widget("right_side_column_after")
     }

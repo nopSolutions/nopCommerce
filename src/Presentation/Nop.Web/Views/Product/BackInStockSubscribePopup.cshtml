@@ -1,0 +1,57 @@
+﻿@model BackInStockSubscribeModel
+@using Nop.Web.Models.Catalog;
+@{
+    /*pop-up windows*/
+    Layout = "~/Views/Shared/_RootPopup.cshtml";
+}
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "back-in-stock-subscription-form" }))
+{
+    <div class="page back-in-stock-subscription-page">
+        <div class="page-title">
+            <h1>
+                @if (Model.AlreadySubscribed)
+                {
+                    @T("BackInStockSubscriptions.AlreadySubscribed")
+                }
+                else
+                {
+                    @T("BackInStockSubscriptions.PopupTitle")
+                }
+            </h1>
+        </div>
+        <div class="page-body">
+            @if (!Model.SubscriptionAllowed)
+            {
+                <div>
+                    @T("BackInStockSubscriptions.NotAllowed")</div>
+            }
+            else if (!Model.IsCurrentCustomerRegistered)
+            {
+                <div>
+                    @T("BackInStockSubscriptions.OnlyRegistered")</div>
+            }
+            else if (!Model.AlreadySubscribed && Model.CurrentNumberOfBackInStockSubscriptions >= Model.MaximumBackInStockSubscriptions)
+            {
+                <div>
+                    @string.Format(T("BackInStockSubscriptions.MaxSubscriptions").Text, Model.MaximumBackInStockSubscriptions)</div>
+            }
+            else
+            {
+                if (!Model.AlreadySubscribed)
+                {
+                <div class="tooltip">@T("BackInStockSubscriptions.Tooltip")</div>
+                }
+                <input type="submit" id="back-in-stock-notify-me" value="@(Model.AlreadySubscribed ? @T("BackInStockSubscriptions.Unsubscribe").Text : @T("BackInStockSubscriptions.NotifyMe").Text)"
+                    class="button-1 notify-me-button" />
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $("#back-in-stock-notify-me").click(function () {
+                            //close fancy box
+                            parent.$.fancybox.close();
+                        });
+                    });
+                </script>
+            }
+        </div>
+    </div>
+}

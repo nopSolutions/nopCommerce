@@ -1,0 +1,71 @@
+﻿@model ProductDetailsModel
+@using Nop.Core.Domain.Media
+@using Nop.Core.Infrastructure;
+@using Nop.Web.Models.Catalog;
+@{
+    Html.AddScriptParts("~/Scripts/jquery.magnific-popup.js");
+    Html.AddCssFileParts("~/Content/magnific-popup/magnific-popup.css");
+
+    int productPerRow = EngineContext.Current.Resolve<MediaSettings>().ProductThumbPerRowOnProductDetailsPage;
+}
+<div class="gallery">
+    <div class="picture">
+        @if (Model.DefaultPictureZoomEnabled)
+        {
+            <a href="@Model.DefaultPictureModel.FullSizeImageUrl" title="@Model.Name" id="main-product-img-lightbox-anchor-@Model.Id">
+                <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" itemprop="image" id="main-product-img-@Model.Id" />
+            </a>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#main-product-img-lightbox-anchor-@Model.Id').magnificPopup(
+                    {
+                        type: 'image',
+                        removalDelay: 300,
+                        gallery: {
+                            enabled: true
+                        }
+                    });
+                });
+            </script>
+        }
+        else
+        {
+            <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" itemprop="image" id="main-product-img-@Model.Id" />
+        }
+    </div>
+    @if (Model.PictureModels.Count > 1)
+    {
+        <div class="picture-thumbs">
+            @for (int i = 0; i < Model.PictureModels.Count; i++)
+            {
+                var picture = Model.PictureModels[i];
+
+                if (i % productPerRow == 0)
+                {
+                @Html.Raw("<div>")
+                }
+                <a class="thumb-popup-link" href="@picture.FullSizeImageUrl" title="@Model.Name">
+                    <img src="@picture.ImageUrl" alt="@picture.AlternateText" title="@picture.Title" />
+                </a>
+                if ((i % productPerRow == (productPerRow - 1)) ||
+                    //last image
+                    (i == (Model.PictureModels.Count - 1)))
+                {
+                @Html.Raw("</div>")
+                }
+            }
+        </div>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('.thumb-popup-link').magnificPopup(
+                {
+                    type: 'image',
+                    removalDelay: 300,
+                    gallery: {
+                        enabled: true
+                    }
+                });
+            });
+        </script>
+    }
+</div>

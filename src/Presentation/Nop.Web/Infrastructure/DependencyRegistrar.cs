@@ -25,6 +25,8 @@ namespace Nop.Web.Infrastructure
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"));
             builder.RegisterType<PollController>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"));
+            builder.RegisterType<ProductController>()
+                .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"));
             builder.RegisterType<ShoppingCartController>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"));
             builder.RegisterType<TopicController>()

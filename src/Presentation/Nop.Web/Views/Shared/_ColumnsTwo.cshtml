@@ -22,8 +22,8 @@
 
     //current product ID
     int currentProductId = 0;
-    if (Url.RequestContext.RouteData.Values["controller"].ToString().Equals("catalog", StringComparison.InvariantCultureIgnoreCase) &&
-        Url.RequestContext.RouteData.Values["action"].ToString().Equals("product", StringComparison.InvariantCultureIgnoreCase))
+    if (Url.RequestContext.RouteData.Values["controller"].ToString().Equals("product", StringComparison.InvariantCultureIgnoreCase) &&
+        Url.RequestContext.RouteData.Values["action"].ToString().Equals("productdetails", StringComparison.InvariantCultureIgnoreCase))
     {
         currentProductId = Convert.ToInt32(Url.RequestContext.RouteData.Values["productId"].ToString());
     }

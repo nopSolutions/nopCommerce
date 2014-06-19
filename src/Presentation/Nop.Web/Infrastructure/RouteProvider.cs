@@ -26,40 +26,40 @@ namespace Nop.Web.Infrastructure
             //products
             routes.MapLocalizedRoute("RecentlyViewedProducts",
                             "recentlyviewedproducts/",
-                            new { controller = "Catalog", action = "RecentlyViewedProducts" },
+                            new { controller = "Product", action = "RecentlyViewedProducts" },
                             new[] { "Nop.Web.Controllers" });
             routes.MapLocalizedRoute("RecentlyAddedProducts",
                             "newproducts/",
-                            new { controller = "Catalog", action = "RecentlyAddedProducts" },
+                            new { controller = "Product", action = "RecentlyAddedProducts" },
                             new[] { "Nop.Web.Controllers" });
             routes.MapLocalizedRoute("RecentlyAddedProductsRSS",
                             "newproducts/rss",
-                            new { controller = "Catalog", action = "RecentlyAddedProductsRss" },
+                            new { controller = "Product", action = "RecentlyAddedProductsRss" },
                             new[] { "Nop.Web.Controllers" });
             
             //comparing products
             routes.MapLocalizedRoute("AddProductToCompare",
                             "compareproducts/add/{productId}",
-                            new { controller = "Catalog", action = "AddProductToCompareList" },
+                            new { controller = "Product", action = "AddProductToCompareList" },
                             new { productId = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
             routes.MapLocalizedRoute("CompareProducts",
                             "compareproducts/",
-                            new { controller = "Catalog", action = "CompareProducts" },
+                            new { controller = "Product", action = "CompareProducts" },
                             new[] { "Nop.Web.Controllers" });
             routes.MapLocalizedRoute("RemoveProductFromCompareList",
                             "compareproducts/remove/{productId}",
-                            new { controller = "Catalog", action = "RemoveProductFromCompareList"},
+                            new { controller = "Product", action = "RemoveProductFromCompareList" },
                             new[] { "Nop.Web.Controllers" });
             routes.MapLocalizedRoute("ClearCompareList",
                             "clearcomparelist/",
-                            new { controller = "Catalog", action = "ClearCompareList" },
+                            new { controller = "Product", action = "ClearCompareList" },
                             new[] { "Nop.Web.Controllers" });
             
             //product email a friend
             routes.MapLocalizedRoute("ProductEmailAFriend",
                             "productemailafriend/{productId}",
-                            new { controller = "Catalog", action = "ProductEmailAFriend" },
+                            new { controller = "Product", action = "ProductEmailAFriend" },
                             new { productId = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
 
@@ -103,17 +103,17 @@ namespace Nop.Web.Infrastructure
             //reviews
             routes.MapLocalizedRoute("ProductReviews",
                             "productreviews/{productId}",
-                            new { controller = "Catalog", action = "ProductReviews" },
+                            new { controller = "Product", action = "ProductReviews" },
                             new[] { "Nop.Web.Controllers" });
             routes.MapRoute("SetProductReviewHelpfulness",
                             "setproductreviewhelpfulness",
-                            new { controller = "Catalog", action = "SetProductReviewHelpfulness" },
+                            new { controller = "Product", action = "SetProductReviewHelpfulness" },
                             new[] { "Nop.Web.Controllers" });
 
             //back in stock notifications
             routes.MapLocalizedRoute("BackInStockSubscribePopup",
                             "backinstocksubscribe/{productId}",
-                            new { controller = "Catalog", action = "BackInStockSubscribePopup" },
+                            new { controller = "Product", action = "BackInStockSubscribePopup" },
                             new { productId = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
             routes.MapLocalizedRoute("DeleteBackInStockSubscription",
