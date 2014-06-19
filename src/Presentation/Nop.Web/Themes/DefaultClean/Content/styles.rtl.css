@@ -679,6 +679,7 @@ td.fieldname{font-size:12px;}
 .registration-page .vat-note{display:block;}
 .registration-page .accept-privacy-policy{float:right;margin-bottom:5px;margin-top:5px;clear:both;}
 .registration-page .accept-privacy-policy .read{text-decoration:underline;}
+.registration-page .accept-privacy-policy .read:hover{cursor:pointer;}
 .registration-page .buttons{margin-bottom:5px;margin-top:5px;clear:both;}
 .registration-page .message-error {margin-bottom:20px;}
 .registration-page textarea{height:100px;width:500px;border:solid 1px #E3E3E3;vertical-align:top;}

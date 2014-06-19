@@ -341,7 +341,7 @@
                 <div class="accept-privacy-policy">
                     <input id="accept-privacy-policy" type="checkbox" name="accept-privacy-policy" />
                     <label for="accept-privacy-policy">@T("Account.Fields.AcceptPrivacyPolicy")</label>
-                    <a class="read" href='@Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("privacyinfo") })'>@T("Account.Fields.AcceptPrivacyPolicy.Read")</a>
+                    <span class="read" onclick="javascript:OpenWindow('@Url.RouteUrl("TopicPopup", new { SystemName = "privacyinfo" })', 450, 500, true)">@T("Account.Fields.AcceptPrivacyPolicy.Read")</span>
                 </div>
             }
             <div class="buttons">
