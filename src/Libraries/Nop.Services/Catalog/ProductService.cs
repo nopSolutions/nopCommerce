@@ -277,10 +277,6 @@ namespace Nop.Services.Catalog
             if (categoryIds != null && categoryIds.Contains(0))
                 categoryIds.Remove(0);
 
-            //Access control list. Allowed customer roles
-            var allowedCustomerRolesIds = _workContext.CurrentCustomer.CustomerRoles
-                .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
-
             var query = _productRepository.Table;
             query = query.Where(p => !p.Deleted && p.Published && p.VisibleIndividually);
 
@@ -292,11 +288,11 @@ namespace Nop.Services.Catalog
                         select p;
             }
 
-            bool filteredByAcl = false;
             if (!_catalogSettings.IgnoreAcl)
             {
-                //ACL (access control list)
-                filteredByAcl = true;
+                //Access control list. Allowed customer roles
+                var allowedCustomerRolesIds = _workContext.CurrentCustomer.CustomerRoles
+                    .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
 
                 query = from p in query
                         join acl in _aclRepository.Table
@@ -306,12 +302,8 @@ namespace Nop.Services.Catalog
                         select p;
             }
 
-            bool filteredByStore = false;
             if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
             {
-                //Store mapping
-                filteredByStore = true;
-
                 query = from p in query
                         join sm in _storeMappingRepository.Table
                         on new { c1 = p.Id, c2 = "Product" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into p_sm
@@ -320,20 +312,9 @@ namespace Nop.Services.Catalog
                         select p;
             }
 
-            if (filteredByAcl && filteredByStore)
-            {
-                //only distinct products (group by ID)
-                //if we use standard Distinct() method, then all fields will be compared (low performance)
-                //it'll not work in SQL Server Compact when searching products by a keyword)
-                query = from p in query
-                    group p by p.Id
-                    into pGroup
-                    orderby pGroup.Key
-                    select pGroup.FirstOrDefault();
-            }
-
-            var count = query.Count();
-            return count;
+            //only distinct products
+            var result = query.Select(p => p.Id).Distinct().Count();
+            return result;
         }
 
         /// <summary>
