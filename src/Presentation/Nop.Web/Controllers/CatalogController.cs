@@ -202,6 +202,154 @@ namespace Nop.Web.Controllers
         #region Utilities
 
         [NonAction]
+        protected void PrepareSortingOptions(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command)
+        {
+            if (pagingFilteringModel == null)
+                throw new ArgumentNullException("pagingFilteringModel");
+
+            if (command == null)
+                throw new ArgumentNullException("command");
+
+            pagingFilteringModel.AllowProductSorting = _catalogSettings.AllowProductSorting;
+            if (pagingFilteringModel.AllowProductSorting)
+            {
+                foreach (ProductSortingEnum enumValue in Enum.GetValues(typeof(ProductSortingEnum)))
+                {
+                    var currentPageUrl = _webHelper.GetThisPageUrl(true);
+                    var sortUrl = _webHelper.ModifyQueryString(currentPageUrl, "orderby=" + ((int)enumValue).ToString(), null);
+
+                    var sortValue = enumValue.GetLocalizedEnum(_localizationService, _workContext);
+                    pagingFilteringModel.AvailableSortOptions.Add(new SelectListItem()
+                    {
+                        Text = sortValue,
+                        Value = sortUrl,
+                        Selected = enumValue == (ProductSortingEnum)command.OrderBy
+                    });
+                }
+            }
+        }
+
+        [NonAction]
+        protected void PrepareViewModes(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command)
+        {
+            if (pagingFilteringModel == null)
+                throw new ArgumentNullException("pagingFilteringModel");
+
+            if (command == null)
+                throw new ArgumentNullException("command");
+
+            pagingFilteringModel.AllowProductViewModeChanging = _catalogSettings.AllowProductViewModeChanging;
+
+            var viewMode = !string.IsNullOrEmpty(command.ViewMode)
+                ? command.ViewMode
+                : _catalogSettings.DefaultViewMode;
+            pagingFilteringModel.ViewMode = viewMode;
+            if (pagingFilteringModel.AllowProductViewModeChanging)
+            {
+                var currentPageUrl = _webHelper.GetThisPageUrl(true);
+                //grid
+                pagingFilteringModel.AvailableViewModes.Add(new SelectListItem()
+                {
+                    Text = _localizationService.GetResource("Catalog.ViewMode.Grid"),
+                    Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=grid", null),
+                    Selected = viewMode == "grid"
+                });
+                //list
+                pagingFilteringModel.AvailableViewModes.Add(new SelectListItem()
+                {
+                    Text = _localizationService.GetResource("Catalog.ViewMode.List"),
+                    Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=list", null),
+                    Selected = viewMode == "list"
+                });
+            }
+
+        }
+
+        [NonAction]
+        protected void PreparePageSizeOptions(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command,
+            bool allowCustomersToSelectPageSize, string pageSizeOptions, int fixedPageSize)
+        {
+            if (pagingFilteringModel == null)
+                throw new ArgumentNullException("pagingFilteringModel");
+
+            if (command == null)
+                throw new ArgumentNullException("command");
+
+            if (command.PageNumber <= 0)
+            {
+                command.PageNumber = 1;
+            }
+            pagingFilteringModel.AllowCustomersToSelectPageSize = false;
+            if (allowCustomersToSelectPageSize && pageSizeOptions != null)
+            {
+                var pageSizes = pageSizeOptions.Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+                if (pageSizes.Any())
+                {
+                    // get the first page size entry to use as the default (category page load) or if customer enters invalid value via query string
+                    if (command.PageSize <= 0 || !pageSizes.Contains(command.PageSize.ToString()))
+                    {
+                        int temp = 0;
+
+                        if (int.TryParse(pageSizes.FirstOrDefault(), out temp))
+                        {
+                            if (temp > 0)
+                            {
+                                command.PageSize = temp;
+                            }
+                        }
+                    }
+
+                    var currentPageUrl = _webHelper.GetThisPageUrl(true);
+                    var sortUrl = _webHelper.ModifyQueryString(currentPageUrl, "pagesize={0}", null);
+                    sortUrl = _webHelper.RemoveQueryString(sortUrl, "pagenumber");
+
+                    foreach (var pageSize in pageSizes)
+                    {
+                        int temp = 0;
+                        if (!int.TryParse(pageSize, out temp))
+                        {
+                            continue;
+                        }
+                        if (temp <= 0)
+                        {
+                            continue;
+                        }
+
+                        pagingFilteringModel.PageSizeOptions.Add(new SelectListItem()
+                        {
+                            Text = pageSize,
+                            Value = String.Format(sortUrl, pageSize),
+                            Selected = pageSize.Equals(command.PageSize.ToString(), StringComparison.InvariantCultureIgnoreCase)
+                        });
+                    }
+
+                    if (pagingFilteringModel.PageSizeOptions.Any())
+                    {
+                        pagingFilteringModel.PageSizeOptions = pagingFilteringModel.PageSizeOptions.OrderBy(x => int.Parse(x.Text)).ToList();
+                        pagingFilteringModel.AllowCustomersToSelectPageSize = true;
+
+                        if (command.PageSize <= 0)
+                        {
+                            command.PageSize = int.Parse(pagingFilteringModel.PageSizeOptions.FirstOrDefault().Text);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                //customer is not allowed to select a page size
+                command.PageSize = fixedPageSize;
+            }
+
+            //ensure pge size is specified
+            if (command.PageSize <= 0)
+            {
+                command.PageSize = fixedPageSize;
+            }
+        }
+
+        [NonAction]
         protected List<int> GetChildCategoryIds(int parentCategoryId)
         {
             var customerRolesIds = _workContext.CurrentCustomer.CustomerRoles
@@ -1110,117 +1258,14 @@ namespace Nop.Web.Controllers
 
 
             //sorting
-            model.PagingFilteringContext.AllowProductSorting = _catalogSettings.AllowProductSorting;
-            if (model.PagingFilteringContext.AllowProductSorting)
-            {
-                foreach (ProductSortingEnum enumValue in Enum.GetValues(typeof(ProductSortingEnum)))
-                {
-                    var currentPageUrl = _webHelper.GetThisPageUrl(true);
-                    var sortUrl = _webHelper.ModifyQueryString(currentPageUrl, "orderby=" + ((int)enumValue).ToString(), null);
-                    
-                    var sortValue = enumValue.GetLocalizedEnum(_localizationService, _workContext);
-                    model.PagingFilteringContext.AvailableSortOptions.Add(new SelectListItem()
-                        {
-                            Text = sortValue,
-                            Value = sortUrl,
-                            Selected = enumValue == (ProductSortingEnum)command.OrderBy
-                        });
-                }
-            }
-
-
-
+            PrepareSortingOptions(model.PagingFilteringContext, command);
             //view mode
-            model.PagingFilteringContext.AllowProductViewModeChanging = _catalogSettings.AllowProductViewModeChanging;
-            var viewMode = !string.IsNullOrEmpty(command.ViewMode) 
-                ? command.ViewMode
-                : _catalogSettings.DefaultViewMode;
-            if (model.PagingFilteringContext.AllowProductViewModeChanging)
-            {
-                var currentPageUrl = _webHelper.GetThisPageUrl(true);
-                //grid
-                model.PagingFilteringContext.AvailableViewModes.Add(new SelectListItem()
-                {
-                    Text = _localizationService.GetResource("Catalog.ViewMode.Grid"),
-                    Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=grid", null),
-                    Selected = viewMode == "grid"
-                });
-                //list
-                model.PagingFilteringContext.AvailableViewModes.Add(new SelectListItem()
-                {
-                    Text = _localizationService.GetResource("Catalog.ViewMode.List"),
-                    Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=list", null),
-                    Selected = viewMode == "list"
-                });
-            }
-
+            PrepareViewModes(model.PagingFilteringContext, command);
             //page size
-            if (command.PageNumber <= 0) command.PageNumber = 1;
-            model.PagingFilteringContext.AllowCustomersToSelectPageSize = false;
-            if (category.AllowCustomersToSelectPageSize && category.PageSizeOptions != null)
-            {
-                var pageSizes = category.PageSizeOptions.Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
-
-                if (pageSizes.Any())
-                {
-                    // get the first page size entry to use as the default (category page load) or if customer enters invalid value via query string
-                    if (command.PageSize <= 0 || !pageSizes.Contains(command.PageSize.ToString()))
-                    {
-                        int temp = 0;
-
-                        if (int.TryParse(pageSizes.FirstOrDefault(), out temp))
-                        {
-                            if (temp > 0)
-                            {
-                                command.PageSize = temp;
-                            }
-                        }
-                    }
-
-                    var currentPageUrl = _webHelper.GetThisPageUrl(true);
-                    var sortUrl = _webHelper.ModifyQueryString(currentPageUrl, "pagesize={0}", null);
-                    sortUrl = _webHelper.RemoveQueryString(sortUrl, "pagenumber");
-
-                    foreach (var pageSize in pageSizes)
-                    {
-                        int temp = 0;
-                        if (!int.TryParse(pageSize, out temp))
-                        {
-                            continue;
-                        }
-                        if (temp <= 0)
-                        {
-                            continue;
-                        }
-
-                        model.PagingFilteringContext.PageSizeOptions.Add(new SelectListItem()
-                        {
-                            Text = pageSize,
-                            Value = String.Format(sortUrl, pageSize),
-                            Selected = pageSize.Equals(command.PageSize.ToString(), StringComparison.InvariantCultureIgnoreCase)
-                        });
-                    }
-
-                    if (model.PagingFilteringContext.PageSizeOptions.Any())
-                    {
-                        model.PagingFilteringContext.PageSizeOptions = model.PagingFilteringContext.PageSizeOptions.OrderBy(x => int.Parse(x.Text)).ToList();
-                        model.PagingFilteringContext.AllowCustomersToSelectPageSize = true;
-
-                        if (command.PageSize <= 0)
-                        {
-                            command.PageSize = int.Parse(model.PagingFilteringContext.PageSizeOptions.FirstOrDefault().Text);
-                        }
-                    }
-                }
-            }
-            else
-            {
-                //customer is not allowed to select a page size
-                command.PageSize = category.PageSize;
-            }
-
-            if (command.PageSize <= 0) command.PageSize = category.PageSize;
-
+            PreparePageSizeOptions(model.PagingFilteringContext, command,
+                category.AllowCustomersToSelectPageSize, 
+                category.PageSizeOptions, 
+                category.PageSize);
 
             //price ranges
             model.PagingFilteringContext.PriceRangeFilter.LoadPriceRangeFilters(category.PriceRanges, _webHelper, _priceFormatter);
@@ -1371,7 +1416,6 @@ namespace Nop.Web.Controllers
             model.Products = PrepareProductOverviewModels(products).ToList();
 
             model.PagingFilteringContext.LoadPagedList(products);
-            model.PagingFilteringContext.ViewMode = viewMode;
 
             //specs
             model.PagingFilteringContext.SpecificationFilter.PrepareSpecsFilters(alreadyFilteredSpecOptionIds,
@@ -1528,118 +1572,14 @@ namespace Nop.Web.Controllers
 
 
             //sorting
-            model.PagingFilteringContext.AllowProductSorting = _catalogSettings.AllowProductSorting;
-            if (model.PagingFilteringContext.AllowProductSorting)
-            {
-                foreach (ProductSortingEnum enumValue in Enum.GetValues(typeof(ProductSortingEnum)))
-                {
-                    var currentPageUrl = _webHelper.GetThisPageUrl(true);
-                    var sortUrl = _webHelper.ModifyQueryString(currentPageUrl, "orderby=" + ((int)enumValue).ToString(), null);
-
-                    var sortValue = enumValue.GetLocalizedEnum(_localizationService, _workContext);
-                    model.PagingFilteringContext.AvailableSortOptions.Add(new SelectListItem()
-                    {
-                        Text = sortValue,
-                        Value = sortUrl,
-                        Selected = enumValue == (ProductSortingEnum)command.OrderBy
-                    });
-                }
-            }
-
-
-
+            PrepareSortingOptions(model.PagingFilteringContext, command);
             //view mode
-            model.PagingFilteringContext.AllowProductViewModeChanging = _catalogSettings.AllowProductViewModeChanging;
-            var viewMode = !string.IsNullOrEmpty(command.ViewMode)
-                ? command.ViewMode
-                : _catalogSettings.DefaultViewMode;
-            if (model.PagingFilteringContext.AllowProductViewModeChanging)
-            {
-                var currentPageUrl = _webHelper.GetThisPageUrl(true);
-                //grid
-                model.PagingFilteringContext.AvailableViewModes.Add(new SelectListItem()
-                {
-                    Text = _localizationService.GetResource("Catalog.ViewMode.Grid"),
-                    Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=grid", null),
-                    Selected = viewMode == "grid"
-                });
-                //list
-                model.PagingFilteringContext.AvailableViewModes.Add(new SelectListItem()
-                {
-                    Text = _localizationService.GetResource("Catalog.ViewMode.List"),
-                    Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=list", null),
-                    Selected = viewMode == "list"
-                });
-            }
-
+            PrepareViewModes(model.PagingFilteringContext, command);
             //page size
-            if (command.PageNumber <= 0) command.PageNumber = 1;
-            model.PagingFilteringContext.AllowCustomersToSelectPageSize = false;
-            if (manufacturer.AllowCustomersToSelectPageSize && manufacturer.PageSizeOptions != null)
-            {
-                var pageSizes = manufacturer.PageSizeOptions.Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
-
-                if (pageSizes.Any())
-                {
-                    // get the first page size entry to use as the default (manufacturer page load) or if customer enters invalid value via query string
-                    if (command.PageSize <= 0 || !pageSizes.Contains(command.PageSize.ToString()))
-                    {
-                        int temp = 0;
-
-                        if (int.TryParse(pageSizes.FirstOrDefault(), out temp))
-                        {
-                            if (temp > 0)
-                            {
-                                command.PageSize = temp;
-                            }
-                        }
-                    }
-
-                    var currentPageUrl = _webHelper.GetThisPageUrl(true);
-                    var sortUrl = _webHelper.ModifyQueryString(currentPageUrl, "pagesize={0}", null);
-                    sortUrl = _webHelper.RemoveQueryString(sortUrl, "pagenumber");
-
-                    foreach (var pageSize in pageSizes)
-                    {
-                        int temp = 0;
-                        if (!int.TryParse(pageSize, out temp))
-                        {
-                            continue;
-                        }
-                        if (temp <= 0)
-                        {
-                            continue;
-                        }
-
-                        model.PagingFilteringContext.PageSizeOptions.Add(new SelectListItem()
-                        {
-                            Text = pageSize,
-                            Value = String.Format(sortUrl, pageSize),
-                            Selected = pageSize.Equals(command.PageSize.ToString(), StringComparison.InvariantCultureIgnoreCase)
-                        });
-                    }
-
-                    model.PagingFilteringContext.PageSizeOptions = model.PagingFilteringContext.PageSizeOptions.OrderBy(x => int.Parse(x.Text)).ToList();
-
-                    if (model.PagingFilteringContext.PageSizeOptions.Any())
-                    {
-                        model.PagingFilteringContext.PageSizeOptions = model.PagingFilteringContext.PageSizeOptions.OrderBy(x => int.Parse(x.Text)).ToList();
-                        model.PagingFilteringContext.AllowCustomersToSelectPageSize = true;
-
-                        if (command.PageSize <= 0)
-                        {
-                            command.PageSize = int.Parse(model.PagingFilteringContext.PageSizeOptions.FirstOrDefault().Text);
-                        }
-                    }
-                }
-            }
-            else
-            {
-                //customer is not allowed to select a page size
-                command.PageSize = manufacturer.PageSize;
-            }
-
-            if (command.PageSize <= 0) command.PageSize = manufacturer.PageSize;
+            PreparePageSizeOptions(model.PagingFilteringContext, command,
+                manufacturer.AllowCustomersToSelectPageSize,
+                manufacturer.PageSizeOptions,
+                manufacturer.PageSize);
 
 
             //price ranges
@@ -1710,7 +1650,6 @@ namespace Nop.Web.Controllers
             model.Products = PrepareProductOverviewModels(products).ToList();
 
             model.PagingFilteringContext.LoadPagedList(products);
-            model.PagingFilteringContext.ViewMode = viewMode;
 
 
             //template
@@ -1834,121 +1773,15 @@ namespace Nop.Web.Controllers
 
 
 
-
             //sorting
-            model.PagingFilteringContext.AllowProductSorting = _catalogSettings.AllowProductSorting;
-            if (model.PagingFilteringContext.AllowProductSorting)
-            {
-                foreach (ProductSortingEnum enumValue in Enum.GetValues(typeof(ProductSortingEnum)))
-                {
-                    var currentPageUrl = _webHelper.GetThisPageUrl(true);
-                    var sortUrl = _webHelper.ModifyQueryString(currentPageUrl, "orderby=" + ((int)enumValue).ToString(), null);
-
-                    var sortValue = enumValue.GetLocalizedEnum(_localizationService, _workContext);
-                    model.PagingFilteringContext.AvailableSortOptions.Add(new SelectListItem()
-                    {
-                        Text = sortValue,
-                        Value = sortUrl,
-                        Selected = enumValue == (ProductSortingEnum)command.OrderBy
-                    });
-                }
-            }
-
-
-
+            PrepareSortingOptions(model.PagingFilteringContext, command);
             //view mode
-            model.PagingFilteringContext.AllowProductViewModeChanging = _catalogSettings.AllowProductViewModeChanging;
-            var viewMode = !string.IsNullOrEmpty(command.ViewMode)
-                ? command.ViewMode
-                : _catalogSettings.DefaultViewMode;
-            if (model.PagingFilteringContext.AllowProductViewModeChanging)
-            {
-                var currentPageUrl = _webHelper.GetThisPageUrl(true);
-                //grid
-                model.PagingFilteringContext.AvailableViewModes.Add(new SelectListItem()
-                {
-                    Text = _localizationService.GetResource("Catalog.ViewMode.Grid"),
-                    Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=grid", null),
-                    Selected = viewMode == "grid"
-                });
-                //list
-                model.PagingFilteringContext.AvailableViewModes.Add(new SelectListItem()
-                {
-                    Text = _localizationService.GetResource("Catalog.ViewMode.List"),
-                    Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=list", null),
-                    Selected = viewMode == "list"
-                });
-            }
-
+            PrepareViewModes(model.PagingFilteringContext, command);
             //page size
-            if (command.PageNumber <= 0) command.PageNumber = 1;
-            model.PagingFilteringContext.AllowCustomersToSelectPageSize = false;
-            if (vendor.AllowCustomersToSelectPageSize && vendor.PageSizeOptions != null)
-            {
-                var pageSizes = vendor.PageSizeOptions.Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
-
-                if (pageSizes.Any())
-                {
-                    // get the first page size entry to use as the default (manufacturer page load) or if customer enters invalid value via query string
-                    if (command.PageSize <= 0 || !pageSizes.Contains(command.PageSize.ToString()))
-                    {
-                        int temp = 0;
-
-                        if (int.TryParse(pageSizes.FirstOrDefault(), out temp))
-                        {
-                            if (temp > 0)
-                            {
-                                command.PageSize = temp;
-                            }
-                        }
-                    }
-
-                    var currentPageUrl = _webHelper.GetThisPageUrl(true);
-                    var sortUrl = _webHelper.ModifyQueryString(currentPageUrl, "pagesize={0}", null);
-                    sortUrl = _webHelper.RemoveQueryString(sortUrl, "pagenumber");
-
-                    foreach (var pageSize in pageSizes)
-                    {
-                        int temp = 0;
-                        if (!int.TryParse(pageSize, out temp))
-                        {
-                            continue;
-                        }
-                        if (temp <= 0)
-                        {
-                            continue;
-                        }
-
-                        model.PagingFilteringContext.PageSizeOptions.Add(new SelectListItem()
-                        {
-                            Text = pageSize,
-                            Value = String.Format(sortUrl, pageSize),
-                            Selected = pageSize.Equals(command.PageSize.ToString(), StringComparison.InvariantCultureIgnoreCase)
-                        });
-                    }
-
-                    model.PagingFilteringContext.PageSizeOptions = model.PagingFilteringContext.PageSizeOptions.OrderBy(x => int.Parse(x.Text)).ToList();
-
-                    if (model.PagingFilteringContext.PageSizeOptions.Any())
-                    {
-                        model.PagingFilteringContext.PageSizeOptions = model.PagingFilteringContext.PageSizeOptions.OrderBy(x => int.Parse(x.Text)).ToList();
-                        model.PagingFilteringContext.AllowCustomersToSelectPageSize = true;
-
-                        if (command.PageSize <= 0)
-                        {
-                            command.PageSize = int.Parse(model.PagingFilteringContext.PageSizeOptions.FirstOrDefault().Text);
-                        }
-                    }
-                }
-            }
-            else
-            {
-                //customer is not allowed to select a page size
-                command.PageSize = vendor.PageSize;
-            }
-
-            if (command.PageSize <= 0) command.PageSize = vendor.PageSize;
-
+            PreparePageSizeOptions(model.PagingFilteringContext, command,
+                vendor.AllowCustomersToSelectPageSize,
+                vendor.PageSizeOptions,
+                vendor.PageSize);
 
             //products
             IList<int> filterableSpecificationAttributeOptionIds = null;
@@ -1962,7 +1795,6 @@ namespace Nop.Web.Controllers
             model.Products = PrepareProductOverviewModels(products).ToList();
 
             model.PagingFilteringContext.LoadPagedList(products);
-            model.PagingFilteringContext.ViewMode = viewMode;
 
             return View(model);
         }
@@ -2636,115 +2468,15 @@ namespace Nop.Web.Controllers
 
 
             //sorting
-            model.PagingFilteringContext.AllowProductSorting = _catalogSettings.AllowProductSorting;
-            if (model.PagingFilteringContext.AllowProductSorting)
-            {
-                foreach (ProductSortingEnum enumValue in Enum.GetValues(typeof(ProductSortingEnum)))
-                {
-                    var currentPageUrl = _webHelper.GetThisPageUrl(true);
-                    var sortUrl = _webHelper.ModifyQueryString(currentPageUrl, "orderby=" + ((int)enumValue).ToString(), null);
-
-                    var sortValue = enumValue.GetLocalizedEnum(_localizationService, _workContext);
-                    model.PagingFilteringContext.AvailableSortOptions.Add(new SelectListItem()
-                    {
-                        Text = sortValue,
-                        Value = sortUrl,
-                        Selected = enumValue == (ProductSortingEnum)command.OrderBy
-                    });
-                }
-            }
-
-
+            PrepareSortingOptions(model.PagingFilteringContext, command);
             //view mode
-            model.PagingFilteringContext.AllowProductViewModeChanging = _catalogSettings.AllowProductViewModeChanging;
-            var viewMode = !string.IsNullOrEmpty(command.ViewMode)
-                ? command.ViewMode
-                : _catalogSettings.DefaultViewMode;
-            if (model.PagingFilteringContext.AllowProductViewModeChanging)
-            {
-                var currentPageUrl = _webHelper.GetThisPageUrl(true);
-                //grid
-                model.PagingFilteringContext.AvailableViewModes.Add(new SelectListItem()
-                {
-                    Text = _localizationService.GetResource("Catalog.ViewMode.Grid"),
-                    Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=grid", null),
-                    Selected = viewMode == "grid"
-                });
-                //list
-                model.PagingFilteringContext.AvailableViewModes.Add(new SelectListItem()
-                {
-                    Text = _localizationService.GetResource("Catalog.ViewMode.List"),
-                    Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=list", null),
-                    Selected = viewMode == "list"
-                });
-            }
-
+            PrepareViewModes(model.PagingFilteringContext, command);
             //page size
-            if (command.PageNumber <= 0) command.PageNumber = 1;
-            model.PagingFilteringContext.AllowCustomersToSelectPageSize = false;
-            if (_catalogSettings.ProductsByTagAllowCustomersToSelectPageSize && _catalogSettings.ProductsByTagPageSizeOptions != null)
-            {
-                var pageSizes = _catalogSettings.ProductsByTagPageSizeOptions.Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            PreparePageSizeOptions(model.PagingFilteringContext, command,
+                _catalogSettings.ProductsByTagAllowCustomersToSelectPageSize,
+                _catalogSettings.ProductsByTagPageSizeOptions,
+                _catalogSettings.ProductsByTagPageSize);
 
-                if (pageSizes.Any())
-                {
-                    // get the first page size entry to use as the default ('products by tag' page load) or if customer enters invalid value via query string
-                    if (command.PageSize <= 0 || !pageSizes.Contains(command.PageSize.ToString()))
-                    {
-                        int temp = 0;
-
-                        if (int.TryParse(pageSizes.FirstOrDefault(), out temp))
-                        {
-                            if (temp > 0)
-                            {
-                                command.PageSize = temp;
-                            }
-                        }
-                    }
-
-                    var currentPageUrl = _webHelper.GetThisPageUrl(true);
-                    var sortUrl = _webHelper.ModifyQueryString(currentPageUrl, "pagesize={0}", null);
-                    sortUrl = _webHelper.RemoveQueryString(sortUrl, "pagenumber");
-
-                    foreach (var pageSize in pageSizes)
-                    {
-                        int temp = 0;
-                        if (!int.TryParse(pageSize, out temp))
-                        {
-                            continue;
-                        }
-                        if (temp <= 0)
-                        {
-                            continue;
-                        }
-
-                        model.PagingFilteringContext.PageSizeOptions.Add(new SelectListItem()
-                        {
-                            Text = pageSize,
-                            Value = String.Format(sortUrl, pageSize),
-                            Selected = pageSize.Equals(command.PageSize.ToString(), StringComparison.InvariantCultureIgnoreCase)
-                        });
-                    }
-
-                    if (model.PagingFilteringContext.PageSizeOptions.Any())
-                    {
-                        model.PagingFilteringContext.PageSizeOptions = model.PagingFilteringContext.PageSizeOptions.OrderBy(x => int.Parse(x.Text)).ToList();
-                        model.PagingFilteringContext.AllowCustomersToSelectPageSize = true;
-
-                        if (command.PageSize <= 0)
-                        {
-                            command.PageSize = int.Parse(model.PagingFilteringContext.PageSizeOptions.FirstOrDefault().Text);
-                        }
-                    }
-                }
-            }
-            else
-            {
-                //customer is not allowed to select a page size
-                command.PageSize = _catalogSettings.ProductsByTagPageSize;
-            }
-
-            if (command.PageSize <= 0) command.PageSize = _catalogSettings.ProductsByTagPageSize;
 
             //products
             var products = _productService.SearchProducts(
@@ -2757,7 +2489,6 @@ namespace Nop.Web.Controllers
             model.Products = PrepareProductOverviewModels(products).ToList();
 
             model.PagingFilteringContext.LoadPagedList(products);
-            model.PagingFilteringContext.ViewMode = viewMode;
             return View(model);
         }
 
@@ -3132,115 +2863,14 @@ namespace Nop.Web.Controllers
 
 
             //sorting
-            model.PagingFilteringContext.AllowProductSorting = _catalogSettings.AllowProductSorting;
-            if (model.PagingFilteringContext.AllowProductSorting)
-            {
-                foreach (ProductSortingEnum enumValue in Enum.GetValues(typeof(ProductSortingEnum)))
-                {
-                    var currentPageUrl = _webHelper.GetThisPageUrl(true);
-                    var sortUrl = _webHelper.ModifyQueryString(currentPageUrl, "orderby=" + ((int)enumValue).ToString(), null);
-
-                    var sortValue = enumValue.GetLocalizedEnum(_localizationService, _workContext);
-                    model.PagingFilteringContext.AvailableSortOptions.Add(new SelectListItem()
-                    {
-                        Text = sortValue,
-                        Value = sortUrl,
-                        Selected = enumValue == (ProductSortingEnum)command.OrderBy
-                    });
-                }
-            }
-
+            PrepareSortingOptions(model.PagingFilteringContext, command);
             //view mode
-            model.PagingFilteringContext.AllowProductViewModeChanging = _catalogSettings.AllowProductViewModeChanging;
-            var viewMode = !string.IsNullOrEmpty(command.ViewMode)
-                ? command.ViewMode
-                : _catalogSettings.DefaultViewMode;
-            if (model.PagingFilteringContext.AllowProductViewModeChanging)
-            {
-                var currentPageUrl = _webHelper.GetThisPageUrl(true);
-                //grid
-                model.PagingFilteringContext.AvailableViewModes.Add(new SelectListItem()
-                {
-                    Text = _localizationService.GetResource("Catalog.ViewMode.Grid"),
-                    Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=grid", null),
-                    Selected = viewMode == "grid"
-                });
-                //list
-                model.PagingFilteringContext.AvailableViewModes.Add(new SelectListItem()
-                {
-                    Text = _localizationService.GetResource("Catalog.ViewMode.List"),
-                    Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=list", null),
-                    Selected = viewMode == "list"
-                });
-            }
-
+            PrepareViewModes(model.PagingFilteringContext, command);
             //page size
-            if (command.PageNumber <= 0) command.PageNumber = 1;
-            model.PagingFilteringContext.AllowCustomersToSelectPageSize = false;
-            if (_catalogSettings.SearchPageAllowCustomersToSelectPageSize && _catalogSettings.SearchPagePageSizeOptions != null)
-            {
-                var pageSizes = _catalogSettings.SearchPagePageSizeOptions.Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
-
-                if (pageSizes.Any())
-                {
-                    // get the first page size entry to use as the default (category page load) or if customer enters invalid value via query string
-                    if (command.PageSize <= 0 || !pageSizes.Contains(command.PageSize.ToString()))
-                    {
-                        int temp = 0;
-
-                        if (int.TryParse(pageSizes.FirstOrDefault(), out temp))
-                        {
-                            if (temp > 0)
-                            {
-                                command.PageSize = temp;
-                            }
-                        }
-                    }
-
-                    var currentPageUrl = _webHelper.GetThisPageUrl(true);
-                    var sortUrl = _webHelper.ModifyQueryString(currentPageUrl, "pagesize={0}", null);
-                    sortUrl = _webHelper.RemoveQueryString(sortUrl, "pagenumber");
-
-                    foreach (var pageSize in pageSizes)
-                    {
-                        int temp = 0;
-                        if (!int.TryParse(pageSize, out temp))
-                        {
-                            continue;
-                        }
-                        if (temp <= 0)
-                        {
-                            continue;
-                        }
-
-                        model.PagingFilteringContext.PageSizeOptions.Add(new SelectListItem()
-                        {
-                            Text = pageSize,
-                            Value = String.Format(sortUrl, pageSize),
-                            Selected = pageSize.Equals(command.PageSize.ToString(), StringComparison.InvariantCultureIgnoreCase)
-                        });
-                    }
-
-                    if (model.PagingFilteringContext.PageSizeOptions.Any())
-                    {
-                        model.PagingFilteringContext.PageSizeOptions = model.PagingFilteringContext.PageSizeOptions.OrderBy(x => int.Parse(x.Text)).ToList();
-                        model.PagingFilteringContext.AllowCustomersToSelectPageSize = true;
-
-                        if (command.PageSize <= 0)
-                        {
-                            command.PageSize = int.Parse(model.PagingFilteringContext.PageSizeOptions.FirstOrDefault().Text);
-                        }
-                    }
-                }
-            }
-            else
-            {
-                //customer is not allowed to select a page size
-                command.PageSize = _catalogSettings.SearchPageProductsPerPage;
-            }
-
-            if (command.PageSize <= 0) command.PageSize = _catalogSettings.SearchPageProductsPerPage;
-
+            PreparePageSizeOptions(model.PagingFilteringContext, command,
+                _catalogSettings.SearchPageAllowCustomersToSelectPageSize,
+                _catalogSettings.SearchPagePageSizeOptions,
+                _catalogSettings.SearchPageProductsPerPage);
 
 
             var customerRolesIds = _workContext.CurrentCustomer.CustomerRoles
@@ -3413,7 +3043,6 @@ namespace Nop.Web.Controllers
             }
 
             model.PagingFilteringContext.LoadPagedList(products);
-            model.PagingFilteringContext.ViewMode = viewMode;
             return View(model);
         }
 
