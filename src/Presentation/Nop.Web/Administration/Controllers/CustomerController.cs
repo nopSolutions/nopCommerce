@@ -1226,9 +1226,12 @@ namespace Nop.Admin.Controllers
                 _customerService.DeleteCustomer(customer);
 
                 //remove newsletter subscription (if exists)
-                var subscription = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmail(customer.Email);
-                if (subscription != null)
-                    _newsLetterSubscriptionService.DeleteNewsLetterSubscription(subscription);
+                foreach (var store in _storeService.GetAllStores())
+                {
+                    var subscription = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(customer.Email, store.Id);
+                    if (subscription != null)
+                        _newsLetterSubscriptionService.DeleteNewsLetterSubscription(subscription);
+                }
 
                 //activity log
                 _customerActivityService.InsertActivity("DeleteCustomer", _localizationService.GetResource("ActivityLog.DeleteCustomer"), customer.Id);

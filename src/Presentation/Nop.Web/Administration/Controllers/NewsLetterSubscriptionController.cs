@@ -6,10 +6,12 @@ using System.Web.Mvc;
 using Nop.Admin.Models.Messages;
 using Nop.Core;
 using Nop.Core.Domain.Messages;
+using Nop.Core.Domain.Stores;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Security;
+using Nop.Services.Stores;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
 
@@ -21,16 +23,22 @@ namespace Nop.Admin.Controllers
 		private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
+        private readonly IStoreContext _storeContext;
+        private readonly IStoreService _storeService;
 
 		public NewsLetterSubscriptionController(INewsLetterSubscriptionService newsLetterSubscriptionService,
 			IDateTimeHelper dateTimeHelper,
             ILocalizationService localizationService,
-            IPermissionService permissionService)
+            IPermissionService permissionService,
+            IStoreContext storeContext,
+            IStoreService storeService)
 		{
 			this._newsLetterSubscriptionService = newsLetterSubscriptionService;
 			this._dateTimeHelper = dateTimeHelper;
             this._localizationService = localizationService;
             this._permissionService = permissionService;
+            this._storeContext = storeContext;
+            this._storeService = storeService;
 		}
 
 		public ActionResult Index()
@@ -44,6 +52,12 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var model = new NewsLetterSubscriptionListModel();
+
+            //stores
+            model.AvailableStores.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var s in _storeService.GetAllStores())
+                model.AvailableStores.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString() });
+            
 			return View(model);
 		}
 
@@ -54,13 +68,15 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var newsletterSubscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(model.SearchEmail, 
-                command.Page - 1, command.PageSize, true);
+                model.StoreId, command.Page - 1, command.PageSize, true);
 
             var gridModel = new DataSourceResult
             {
                 Data = newsletterSubscriptions.Select(x =>
 				{
 					var m = x.ToModel();
+				    var store = _storeService.GetStoreById(x.StoreId);
+				    m.StoreName = store != null ? store.Name : "Unknown store";
 					m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
 					return m;
 				}),
@@ -111,12 +127,15 @@ namespace Nop.Admin.Controllers
 			string fileName = String.Format("newsletter_emails_{0}_{1}.txt", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
 
 			var sb = new StringBuilder();
-			var newsLetterSubscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(model.SearchEmail, 0, int.MaxValue, true);
+			var newsLetterSubscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(model.SearchEmail,
+                model.StoreId, 0, int.MaxValue, true);
 			foreach (var subscription in newsLetterSubscriptions)
 			{
 				sb.Append(subscription.Email);
                 sb.Append(",");
                 sb.Append(subscription.Active);
+                sb.Append(",");
+                sb.Append(subscription.StoreId);
                 sb.Append(Environment.NewLine);  //new line
 			}
 			string result = sb.ToString();
@@ -148,6 +167,7 @@ namespace Nop.Admin.Controllers
 
                             var email = "";
                             bool isActive = true;
+                            int storeId = _storeContext.CurrentStore.Id;
                             //parse
                             if (tmp.Length == 1)
                             {
@@ -160,11 +180,18 @@ namespace Nop.Admin.Controllers
                                 email = tmp[0].Trim();
                                 isActive = Boolean.Parse(tmp[1].Trim());
                             }
+                            else if (tmp.Length ==3)
+                            {
+                                //"email" and "active" and "storeId" fields specified
+                                email = tmp[0].Trim();
+                                isActive = Boolean.Parse(tmp[1].Trim());
+                                storeId = Int32.Parse(tmp[2].Trim());
+                            }
                             else
                                 throw new NopException("Wrong file format");
 
                             //import
-                            var subscription = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmail(email);
+                            var subscription = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(email, storeId);
                             if (subscription != null)
                             {
                                 subscription.Email = email;
@@ -178,6 +205,7 @@ namespace Nop.Admin.Controllers
                                     Active = isActive,
                                     CreatedOnUtc = DateTime.UtcNow,
                                     Email = email,
+                                    StoreId = storeId,
                                     NewsLetterSubscriptionGuid = Guid.NewGuid()
                                 };
                                 _newsLetterSubscriptionService.InsertNewsLetterSubscription(subscription);

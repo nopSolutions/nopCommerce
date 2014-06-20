@@ -320,6 +320,21 @@ set @resources='
   <LocaleResource Name="Admin.Orders.OrderNotes.Fields.Download.HasDownload">
     <Value>(check to upload file)</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.Fields.Store">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.SearchEmail">
+    <Value>Email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.SearchEmail.Hint">
+    <Value>Search by a specific email.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.SearchStore">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.SearchStore.Hint">
+    <Value>Search by a specific store.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1210,5 +1225,70 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.searchpa
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'catalogsettings.searchpagepagesizeoptions', N'8, 4, 12', 0)
+END
+GO
+
+--newsletter suscriptions per store
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[NewsLetterSubscription]') and NAME='StoreId')
+BEGIN
+	ALTER TABLE [NewsLetterSubscription]
+	ADD [StoreId] int NULL
+END
+GO
+
+DECLARE @DEFAULT_STORE_ID int
+SELECT TOP 1 @DEFAULT_STORE_ID = [Id] FROM [Store] ORDER BY [Id]
+UPDATE [NewsLetterSubscription]
+SET [StoreId] = @DEFAULT_STORE_ID
+WHERE [StoreId] IS NULL
+GO
+
+ALTER TABLE [NewsLetterSubscription] ALTER COLUMN [StoreId] int NOT NULL
+GO
+
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Store]') and NAME='Id')
+BEGIN
+	DECLARE @store_existing_entity_id int
+	DECLARE cur_store_existing_entity CURSOR FOR
+	SELECT [Id]
+	FROM [Store]
+	OPEN cur_store_existing_entity
+	FETCH NEXT FROM cur_store_existing_entity INTO @store_existing_entity_id
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+		DECLARE @DFLT_STORE_ID int
+		SELECT TOP 1 @DFLT_STORE_ID = [Id] FROM [Store] ORDER BY [Id]
+		
+		IF (@store_existing_entity_id <> @DFLT_STORE_ID)
+		BEGIN
+			--insert for other stores
+			INSERT INTO [NewsLetterSubscription] ([NewsLetterSubscriptionGuid], [Email], [Active], [StoreId], [CreatedOnUtc])
+			SELECT NEWID(), [Email], [Active], @store_existing_entity_id, [CreatedOnUtc]
+			FROM [NewsLetterSubscription]
+			WHERE [StoreId] = @DFLT_STORE_ID
+		END
+
+		--fetch next identifier
+		FETCH NEXT FROM cur_store_existing_entity INTO @store_existing_entity_id
+	END
+	CLOSE cur_store_existing_entity
+	DEALLOCATE cur_store_existing_entity
+	
+END
+GO
+
+--remove duplicates in case if this script was executed several times
+DELETE FROM dupes
+FROM [NewsLetterSubscription] dupes, [NewsLetterSubscription] fullTable
+WHERE dupes.[StoreId] = fullTable.[StoreId] 
+AND dupes.[Email]  = fullTable.[Email] 
+AND dupes.[Id] > fullTable.[Id]
+GO
+
+
+--more indexes
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_NewsletterSubscription_Email_StoreId' and object_id=object_id(N'[NewsletterSubscription]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_NewsletterSubscription_Email_StoreId] ON [NewsletterSubscription] ([Email] ASC, [StoreId] ASC)
 END
 GO

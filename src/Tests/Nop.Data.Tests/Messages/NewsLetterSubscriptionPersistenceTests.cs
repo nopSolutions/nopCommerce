@@ -19,6 +19,7 @@ namespace Nop.Data.Tests.Messages
                 Email = "me@yourstore.com",
                 NewsLetterSubscriptionGuid = newGuid,
                 CreatedOnUtc = now,
+                StoreId = 1,
                 Active = true
             };
 
@@ -26,6 +27,7 @@ namespace Nop.Data.Tests.Messages
             fromDb.ShouldNotBeNull();
             fromDb.Email.ShouldEqual("me@yourstore.com");
             fromDb.NewsLetterSubscriptionGuid.ShouldEqual(newGuid);
+            fromDb.StoreId.ShouldEqual(1);
             fromDb.CreatedOnUtc.ShouldEqual(now);
             fromDb.Active.ShouldBeTrue();
         }

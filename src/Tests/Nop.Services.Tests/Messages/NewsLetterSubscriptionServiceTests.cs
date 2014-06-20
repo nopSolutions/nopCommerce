@@ -6,7 +6,8 @@ using Nop.Services.Messages;
 using NUnit.Framework;
 using Rhino.Mocks;
 
-namespace Nop.Services.Tests.Messages {
+namespace Nop.Services.Tests.Messages 
+{
     [TestFixture]
     public class NewsLetterSubscriptionServiceTests
     {

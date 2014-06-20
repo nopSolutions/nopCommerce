@@ -15,18 +15,22 @@ namespace Nop.Web.Controllers
         private readonly IWorkContext _workContext;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly IWorkflowMessageService _workflowMessageService;
+        private readonly IStoreContext _storeContext;
 
         private readonly CustomerSettings _customerSettings;
 
         public NewsletterController(ILocalizationService localizationService,
-            IWorkContext workContext, INewsLetterSubscriptionService newsLetterSubscriptionService,
-            IWorkflowMessageService workflowMessageService, CustomerSettings customerSettings)
+            IWorkContext workContext,
+            INewsLetterSubscriptionService newsLetterSubscriptionService,
+            IWorkflowMessageService workflowMessageService,
+            IStoreContext storeContext,
+            CustomerSettings customerSettings)
         {
             this._localizationService = localizationService;
             this._workContext = workContext;
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
             this._workflowMessageService = workflowMessageService;
-
+            this._storeContext = storeContext;
             this._customerSettings = customerSettings;
         }
 
@@ -53,7 +57,7 @@ namespace Nop.Web.Controllers
                 //subscribe/unsubscribe
                 email = email.Trim();
 
-                var subscription = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmail(email);
+                var subscription = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(email, _storeContext.CurrentStore.Id);
                 if (subscription != null)
                 {
                     if (!subscription.Active)
@@ -69,6 +73,7 @@ namespace Nop.Web.Controllers
                         NewsLetterSubscriptionGuid = Guid.NewGuid(),
                         Email = email,
                         Active = false,
+                        StoreId = _storeContext.CurrentStore.Id,
                         CreatedOnUtc = DateTime.UtcNow
                     };
                     _newsLetterSubscriptionService.InsertNewsLetterSubscription(subscription);

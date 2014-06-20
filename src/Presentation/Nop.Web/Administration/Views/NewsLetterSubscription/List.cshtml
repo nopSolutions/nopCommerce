@@ -9,7 +9,7 @@
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-promotions.png")" alt="" />
-        @T("Admin.Promotions.newsLetterSubscriptions")
+        @T("Admin.Promotions.NewsLetterSubscriptions")
     </div>
     <div class="options">
         <a href="@Url.Action("ExportCsv")" class="k-button">@T("Admin.Common.ExportToCsv")</a>
@@ -23,6 +23,14 @@
         </td>
         <td class="adminData">
             @Html.EditorFor(model => model.SearchEmail)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.StoreId):
+        </td>
+        <td class="adminData">
+            @Html.DropDownList("StoreId", Model.AvailableStores)
         </td>
     </tr>
     <tr>
@@ -70,6 +78,7 @@
                                     fields: {
                                         Email: { editable: true, type: "string" },
                                         Active: { editable: true, type: "boolean" },
+                                        StoreName: { editable: false, type: "string" },
                                         CreatedOn: { editable: false, type: "date" }
                                     }
                                 }
@@ -111,6 +120,10 @@
                                 attributes: { style: "text-align:center" },
                                 template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Active#.gif" />'
                             }, {
+                                field: "StoreName",
+                                title: "@T("Admin.Promotions.NewsLetterSubscriptions.Fields.Store")",
+                                width: 300
+                            },{
                                 field: "CreatedOn",
                                 title: "@T("Admin.Promotions.NewsLetterSubscriptions.Fields.CreatedOn")",
                                 width: 200,
@@ -154,6 +167,7 @@
 
     function additionalData() {
         return {
+            StoreId: $('#@Html.FieldIdFor(model => model.StoreId)').val(),
             SearchEmail: $('#@Html.FieldIdFor(model => model.SearchEmail)').val()
         };
     }

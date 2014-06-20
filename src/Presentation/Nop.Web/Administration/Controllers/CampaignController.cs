@@ -24,13 +24,17 @@ namespace Nop.Admin.Controllers
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly ILocalizationService _localizationService;
         private readonly IMessageTokenProvider _messageTokenProvider;
+        private readonly IStoreContext _storeContext;
         private readonly IPermissionService _permissionService;
 
         public CampaignController(ICampaignService campaignService,
-            IDateTimeHelper dateTimeHelper, IEmailAccountService emailAccountService,
+            IDateTimeHelper dateTimeHelper, 
+            IEmailAccountService emailAccountService,
             EmailAccountSettings emailAccountSettings,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
-            ILocalizationService localizationService, IMessageTokenProvider messageTokenProvider,
+            ILocalizationService localizationService, 
+            IMessageTokenProvider messageTokenProvider,
+            IStoreContext storeContext,
             IPermissionService permissionService)
 		{
             this._campaignService = campaignService;
@@ -40,6 +44,7 @@ namespace Nop.Admin.Controllers
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
             this._localizationService = localizationService;
             this._messageTokenProvider = messageTokenProvider;
+            this._storeContext = storeContext;
             this._permissionService = permissionService;
 		}
 
@@ -185,7 +190,7 @@ namespace Nop.Admin.Controllers
                     throw new NopException("Email account could not be loaded");
 
 
-                var subscription = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmail(model.TestEmail);
+                var subscription = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(model.TestEmail, _storeContext.CurrentStore.Id);
                 if (subscription != null)
                 {
                     //there's a subscription. let's use it
@@ -232,7 +237,7 @@ namespace Nop.Admin.Controllers
                 if (emailAccount == null)
                     throw new NopException("Email account could not be loaded");
 
-                var subscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(null, 0 ,int.MaxValue, false);
+                var subscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions();
                 var totalEmailsSent = _campaignService.SendCampaign(campaign, emailAccount, subscriptions);
                 SuccessNotification(string.Format(_localizationService.GetResource("Admin.Promotions.Campaigns.MassEmailSentToCustomers"), totalEmailsSent), false);
                 return View(model);

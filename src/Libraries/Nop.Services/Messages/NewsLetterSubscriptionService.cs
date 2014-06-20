@@ -3,12 +3,15 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Messages;
+using Nop.Core.Domain.Stores;
 using Nop.Data;
 using Nop.Services.Events;
 
 namespace Nop.Services.Messages
 {
-
+    /// <summary>
+    /// Newsletter subscription service
+    /// </summary>
     public class NewsLetterSubscriptionService : INewsLetterSubscriptionService
     {
         private readonly IEventPublisher _eventPublisher;
@@ -144,18 +147,20 @@ namespace Nop.Services.Messages
         }
 
         /// <summary>
-        /// Gets a newsletter subscription by email
+        /// Gets a newsletter subscription by email and store ID
         /// </summary>
         /// <param name="email">The newsletter subscription email</param>
+        /// <param name="storeId">Store identifier</param>
         /// <returns>NewsLetter subscription</returns>
-        public virtual NewsLetterSubscription GetNewsLetterSubscriptionByEmail(string email)
+        public virtual NewsLetterSubscription GetNewsLetterSubscriptionByEmailAndStoreId(string email, int storeId)
         {
-            if (!CommonHelper.IsValidEmail(email)) return null;
+            if (!CommonHelper.IsValidEmail(email)) 
+                return null;
 
             email = email.Trim();
 
             var newsLetterSubscriptions = from nls in _subscriptionRepository.Table
-                                          where nls.Email == email
+                                          where nls.Email == email && nls.StoreId == storeId
                                           orderby nls.Id
                                           select nls;
 
@@ -166,15 +171,24 @@ namespace Nop.Services.Messages
         /// Gets the newsletter subscription list
         /// </summary>
         /// <param name="email">Email to search or string. Empty to load all records.</param>
+        /// <param name="storeId">Store identifier. 0 to load all records.</param>
         /// <param name="showHidden">A value indicating whether the not active subscriptions should be loaded</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>NewsLetterSubscription entity list</returns>
-        public virtual IPagedList<NewsLetterSubscription> GetAllNewsLetterSubscriptions(string email,
-            int pageIndex, int pageSize, bool showHidden = false)
+        /// <returns>NewsLetterSubscription entities</returns>
+        public virtual IPagedList<NewsLetterSubscription> GetAllNewsLetterSubscriptions(string email = null,
+            int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue,
+            bool showHidden = false)
         {
             var query = _subscriptionRepository.Table;
-            if (!String.IsNullOrEmpty(email)) query = query.Where(nls => nls.Email.Contains(email));
+            if (!String.IsNullOrEmpty(email))
+            {
+                query = query.Where(nls => nls.Email.Contains(email));
+            }
+            if (storeId > 0)
+            {
+                query = query.Where(nls => nls.StoreId == storeId);
+            }
             if (!showHidden)
             {
                 query = query.Where(nls => nls.Active);

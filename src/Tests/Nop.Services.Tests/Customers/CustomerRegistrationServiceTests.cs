@@ -13,6 +13,7 @@ using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Security;
+using Nop.Services.Stores;
 using Nop.Tests;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -36,6 +37,7 @@ namespace Nop.Services.Tests.Customers
         private CustomerSettings _customerSettings;
         private INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private IEventPublisher _eventPublisher;
+        private IStoreService _storeService;
         private RewardPointsSettings _rewardPointsSettings;
         private SecuritySettings _securitySettings;
 
@@ -110,6 +112,8 @@ namespace Nop.Services.Tests.Customers
             _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
             _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
 
+            _storeService = MockRepository.GenerateMock<IStoreService>();
+
             _customerRepo.Expect(x => x.Table).Return(new List<Customer>() { customer1, customer2, customer3, customer4, customer5 }.AsQueryable());
 
             _customerRoleRepo = MockRepository.GenerateMock<IRepository<CustomerRole>>();
@@ -128,7 +132,7 @@ namespace Nop.Services.Tests.Customers
                 _genericAttributeService, _eventPublisher, _customerSettings);
             _customerRegistrationService = new CustomerRegistrationService(_customerService,
                 _encryptionService, _newsLetterSubscriptionService, _localizationService,
-                _rewardPointsSettings, _customerSettings);
+                _storeService, _rewardPointsSettings, _customerSettings);
         }
 
         //[Test]

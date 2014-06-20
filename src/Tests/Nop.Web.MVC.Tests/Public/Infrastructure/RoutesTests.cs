@@ -59,14 +59,14 @@ namespace Nop.Web.MVC.Tests.Public.Infrastructure
         public void Catalog_routes()
         {
             //"~/p/some-se-name/".ShouldMapTo<CatalogController>(c => c.Product("some-se-name"));
-            "~/recentlyviewedproducts/".ShouldMapTo<CatalogController>(c => c.RecentlyViewedProducts());
-            "~/newproducts/".ShouldMapTo<CatalogController>(c => c.RecentlyAddedProducts());
-            "~/newproducts/rss/".ShouldMapTo<CatalogController>(c => c.RecentlyAddedProductsRss());
-            "~/compareproducts/add/2".ShouldMapTo<CatalogController>(c => c.AddProductToCompareList(2));
-            "~/compareproducts/".ShouldMapTo<CatalogController>(c => c.CompareProducts());
-            "~/compareproducts/remove/3".ShouldMapTo<CatalogController>(c => c.RemoveProductFromCompareList(3));
-            "~/clearcomparelist/".ShouldMapTo<CatalogController>(c => c.ClearCompareList());
-            "~/productemailafriend/4".ShouldMapTo<CatalogController>(c => c.ProductEmailAFriend(4));
+            "~/recentlyviewedproducts/".ShouldMapTo<ProductController>(c => c.RecentlyViewedProducts());
+            "~/newproducts/".ShouldMapTo<ProductController>(c => c.RecentlyAddedProducts());
+            "~/newproducts/rss/".ShouldMapTo<ProductController>(c => c.RecentlyAddedProductsRss());
+            "~/compareproducts/add/2".ShouldMapTo<ProductController>(c => c.AddProductToCompareList(2));
+            "~/compareproducts/".ShouldMapTo<ProductController>(c => c.CompareProducts());
+            "~/compareproducts/remove/3".ShouldMapTo<ProductController>(c => c.RemoveProductFromCompareList(3));
+            "~/clearcomparelist/".ShouldMapTo<ProductController>(c => c.ClearCompareList());
+            "~/productemailafriend/4".ShouldMapTo<ProductController>(c => c.ProductEmailAFriend(4));
 
             //"~/c/5/".ShouldMapTo<CatalogController>(c => c.Category(5, null));
             //"~/c/5/se-name/".ShouldMapTo<CatalogController>(c => c.Category(5, null));
@@ -74,8 +74,8 @@ namespace Nop.Web.MVC.Tests.Public.Infrastructure
             //"~/m/6/".ShouldMapTo<CatalogController>(c => c.Manufacturer(6, null));
             //"~/m/6/se-name/".ShouldMapTo<CatalogController>(c => c.Manufacturer(6, null));
 
-            "~/productreviews/7/".ShouldMapTo<CatalogController>(c => c.ProductReviews(7));
-            "~/backinstocksubscribe/8/".ShouldMapTo<CatalogController>(c => c.BackInStockSubscribePopup(8));
+            "~/productreviews/7/".ShouldMapTo<ProductController>(c => c.ProductReviews(7));
+            "~/backinstocksubscribe/8/".ShouldMapTo<ProductController>(c => c.BackInStockSubscribePopup(8));
 
             "~/producttag/9/".ShouldMapTo<CatalogController>(c => c.ProductsByTag(9, null));
             "~/producttag/9/se-name/".ShouldMapTo<CatalogController>(c => c.ProductsByTag(9, null));

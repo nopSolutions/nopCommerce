@@ -4,6 +4,9 @@ using Nop.Core.Domain.Messages;
 
 namespace Nop.Services.Messages
 {
+    /// <summary>
+    /// Newsletter subscription service interface
+    /// </summary>
     public partial interface INewsLetterSubscriptionService
     {
         /// <summary>
@@ -42,21 +45,24 @@ namespace Nop.Services.Messages
         NewsLetterSubscription GetNewsLetterSubscriptionByGuid(Guid newsLetterSubscriptionGuid);
 
         /// <summary>
-        /// Gets a newsletter subscription by email
+        /// Gets a newsletter subscription by email and store ID
         /// </summary>
         /// <param name="email">The newsletter subscription email</param>
+        /// <param name="storeId">Store identifier</param>
         /// <returns>NewsLetter subscription</returns>
-        NewsLetterSubscription GetNewsLetterSubscriptionByEmail(string email);
+        NewsLetterSubscription GetNewsLetterSubscriptionByEmailAndStoreId(string email, int storeId);
 
         /// <summary>
         /// Gets the newsletter subscription list
         /// </summary>
         /// <param name="email">Email to search or string. Empty to load all records.</param>
+        /// <param name="storeId">Store identifier. 0 to load all records.</param>
         /// <param name="showHidden">A value indicating whether the not active subscriptions should be loaded</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>NewsLetterSubscription entity list</returns>
-        IPagedList<NewsLetterSubscription> GetAllNewsLetterSubscriptions(string email,
-            int pageIndex, int pageSize, bool showHidden = false);
+        /// <returns>NewsLetterSubscription entities</returns>
+        IPagedList<NewsLetterSubscription> GetAllNewsLetterSubscriptions(string email = null,
+            int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue, 
+            bool showHidden = false);
     }
 }

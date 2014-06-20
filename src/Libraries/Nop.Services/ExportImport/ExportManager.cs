@@ -14,6 +14,7 @@ using Nop.Services.Common;
 using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Seo;
+using Nop.Services.Stores;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 
@@ -31,6 +32,7 @@ namespace Nop.Services.ExportImport
         private readonly IProductAttributeService _productAttributeService;
         private readonly IPictureService _pictureService;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
+        private readonly IStoreService _storeService;
 
         #endregion
 
@@ -40,13 +42,15 @@ namespace Nop.Services.ExportImport
             IManufacturerService manufacturerService,
             IProductAttributeService productAttributeService,
             IPictureService pictureService,
-            INewsLetterSubscriptionService newsLetterSubscriptionService)
+            INewsLetterSubscriptionService newsLetterSubscriptionService,
+            IStoreService storeService)
         {
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
             this._productAttributeService = productAttributeService;
             this._pictureService = pictureService;
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
+            this._storeService = storeService;
         }
 
         #endregion
@@ -1571,9 +1575,12 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("VatNumberStatusId", null, customer.GetAttribute<int>(SystemCustomerAttributeNames.VatNumberStatusId).ToString());
                 xmlWriter.WriteElementString("TimeZoneId", null, customer.GetAttribute<string>(SystemCustomerAttributeNames.TimeZoneId));
 
-                var newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmail(customer.Email);
-                bool subscribedToNewsletters = newsletter != null && newsletter.Active;
-                xmlWriter.WriteElementString("Newsletter", null, subscribedToNewsletters.ToString());
+                foreach (var store in _storeService.GetAllStores())
+                {
+                    var newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(customer.Email, store.Id);
+                    bool subscribedToNewsletters = newsletter != null && newsletter.Active;
+                    xmlWriter.WriteElementString(string.Format("Newsletter-in-store-{0}", store.Id), null, subscribedToNewsletters.ToString());
+                }
 
                 xmlWriter.WriteElementString("AvatarPictureId", null, customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId).ToString());
                 xmlWriter.WriteElementString("ForumPostCount", null, customer.GetAttribute<int>(SystemCustomerAttributeNames.ForumPostCount).ToString());

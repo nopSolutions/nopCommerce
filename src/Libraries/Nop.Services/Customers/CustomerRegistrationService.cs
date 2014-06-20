@@ -5,6 +5,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Security;
+using Nop.Services.Stores;
 
 namespace Nop.Services.Customers
 {
@@ -19,6 +20,7 @@ namespace Nop.Services.Customers
         private readonly IEncryptionService _encryptionService;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly ILocalizationService _localizationService;
+        private readonly IStoreService _storeService;
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly CustomerSettings _customerSettings;
 
@@ -33,18 +35,22 @@ namespace Nop.Services.Customers
         /// <param name="encryptionService">Encryption service</param>
         /// <param name="newsLetterSubscriptionService">Newsletter subscription service</param>
         /// <param name="localizationService">Localization service</param>
+        /// <param name="storeService">Store service</param>
         /// <param name="rewardPointsSettings">Reward points settings</param>
         /// <param name="customerSettings">Customer settings</param>
         public CustomerRegistrationService(ICustomerService customerService, 
             IEncryptionService encryptionService, 
             INewsLetterSubscriptionService newsLetterSubscriptionService,
             ILocalizationService localizationService,
-            RewardPointsSettings rewardPointsSettings, CustomerSettings customerSettings)
+            IStoreService storeService,
+            RewardPointsSettings rewardPointsSettings,
+            CustomerSettings customerSettings)
         {
             this._customerService = customerService;
             this._encryptionService = encryptionService;
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
             this._localizationService = localizationService;
+            this._storeService = storeService;
             this._rewardPointsSettings = rewardPointsSettings;
             this._customerSettings = customerSettings;
         }
@@ -341,11 +347,14 @@ namespace Nop.Services.Customers
             //update newsletter subscription (if required)
             if (!String.IsNullOrEmpty(oldEmail) && !oldEmail.Equals(newEmail, StringComparison.InvariantCultureIgnoreCase))
             {
-                var subscriptionOld = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmail(oldEmail);
-                if (subscriptionOld != null)
+                foreach (var store in _storeService.GetAllStores())
                 {
-                    subscriptionOld.Email = newEmail;
-                    _newsLetterSubscriptionService.UpdateNewsLetterSubscription(subscriptionOld);
+                    var subscriptionOld = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(oldEmail, store.Id);
+                    if (subscriptionOld != null)
+                    {
+                        subscriptionOld.Email = newEmail;
+                        _newsLetterSubscriptionService.UpdateNewsLetterSubscription(subscriptionOld);
+                    }
                 }
             }
         }
