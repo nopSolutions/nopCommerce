@@ -199,7 +199,12 @@ namespace Nop.Web.Controllers
         {
             if (product == null)
                 throw new ArgumentNullException("product");
-            
+
+            var customerRolesIds = _workContext.CurrentCustomer.CustomerRoles
+                .Where(cr => cr.Active)
+                .Select(cr => cr.Id)
+                .ToList();
+
             #region Standard properties
 
             var model = new ProductDetailsModel()
@@ -230,6 +235,28 @@ namespace Nop.Web.Controllers
                 model.MetaDescription = model.ShortDescription;
             }
 
+            //shipping info
+            model.IsShipEnabled = product.IsShipEnabled;
+            if (product.IsShipEnabled)
+            {
+                model.IsFreeShipping = product.IsFreeShipping;
+                //delivery date
+                var deliveryDate = _shippingService.GetDeliveryDateById(product.DeliveryDateId);
+                if (deliveryDate != null)
+                {
+                    model.DeliveryDate = deliveryDate.GetLocalized(dd => dd.Name);
+                }
+            }
+            
+            //email a friend
+            model.EmailAFriendEnabled = _catalogSettings.EmailAFriendEnabled;
+            //compare products
+            model.CompareProductsEnabled = _catalogSettings.CompareProductsEnabled;
+
+            #endregion
+
+            #region Vendor details
+
             //vendor
             if (_vendorSettings.ShowVendorOnProductDetailsPage)
             {
@@ -247,18 +274,21 @@ namespace Nop.Web.Controllers
                 }
             }
 
-            model.IsShipEnabled = product.IsShipEnabled;
-            if (product.IsShipEnabled)
+            #endregion
+
+            #region Page sharing
+
+            if (_catalogSettings.ShowShareButton && !String.IsNullOrEmpty(_catalogSettings.PageShareCode))
             {
-                model.IsFreeShipping = product.IsFreeShipping;
-                //delivery date
-                var deliveryDate = _shippingService.GetDeliveryDateById(product.DeliveryDateId);
-                if (deliveryDate != null)
+                var shareCode = _catalogSettings.PageShareCode;
+                if (_webHelper.IsCurrentConnectionSecured())
                 {
-                    model.DeliveryDate = deliveryDate.GetLocalized(dd => dd.Name);
+                    //need to change the addthis link to be https linked when the page is, so that the page doesnt ask about mixed mode when viewed in https...
+                    shareCode = shareCode.Replace("http://", "https://");
                 }
+                model.PageShareCode = shareCode;
             }
-            
+
             #endregion
 
             #region Back in stock subscriptions
@@ -270,8 +300,72 @@ namespace Nop.Web.Controllers
             {
                 //out of stock
                 model.DisplayBackInStockSubscription = true;
-                model.BackInStockAlreadySubscribed = _backInStockSubscriptionService
-                    .FindSubscription(_workContext.CurrentCustomer.Id, product.Id, _storeContext.CurrentStore.Id) != null;
+            }
+
+            #endregion
+
+            #region Breadcrumb
+
+            //do not prepare this model for the associated products. any it's not used
+            if (_catalogSettings.CategoryBreadcrumbEnabled && !isAssociatedProduct)
+            {
+                var breadcrumbCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_BREADCRUMB_MODEL_KEY, product.Id, _workContext.WorkingLanguage.Id, string.Join(",", customerRolesIds), _storeContext.CurrentStore.Id);
+                model.Breadcrumb = _cacheManager.Get(breadcrumbCacheKey, () =>
+                {
+                    var breadcrumbModel = new ProductDetailsModel.ProductBreadcrumbModel()
+                    {
+                        Enabled = _catalogSettings.CategoryBreadcrumbEnabled,
+                        ProductId = product.Id,
+                        ProductName = product.GetLocalized(x => x.Name),
+                        ProductSeName = product.GetSeName()
+                    };
+                    var productCategories = _categoryService.GetProductCategoriesByProductId(product.Id);
+                    if (productCategories.Count > 0)
+                    {
+                        var category = productCategories[0].Category;
+                        if (category != null)
+                        {
+                            foreach (var catBr in category.GetCategoryBreadCrumb(_categoryService, _aclService, _storeMappingService))
+                            {
+                                breadcrumbModel.CategoryBreadcrumb.Add(new CategorySimpleModel()
+                                {
+                                    Id = catBr.Id,
+                                    Name = catBr.GetLocalized(x => x.Name),
+                                    SeName = catBr.GetSeName()
+                                });
+                            }
+                        }
+                    }
+                    return breadcrumbModel;
+                });
+            }
+            
+            #endregion
+
+            #region Product tags
+
+            //do not prepare this model for the associated products. any it's not used
+            if (!isAssociatedProduct)
+            {
+                var productTagsCacheKey = string.Format(ModelCacheEventConsumer.PRODUCTTAG_BY_PRODUCT_MODEL_KEY, product.Id, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
+                model.ProductTags = _cacheManager.Get(productTagsCacheKey, () =>
+                {
+                    return product.ProductTags
+                        //filter by store
+                        .Where(x => _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id) > 0)
+                        .Select(x =>
+                        {
+                            var ptModel = new ProductTagModel()
+                            {
+                                Id = x.Id,
+                                Name = x.GetLocalized(y => y.Name),
+                                SeName = x.GetSeName(),
+                                ProductCount = _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id)
+                            };
+                            return ptModel;
+                        })
+                        .ToList();
+                });
             }
 
             #endregion
@@ -332,7 +426,7 @@ namespace Nop.Web.Controllers
             #endregion
 
             #region Product price
-
+            
             model.ProductPrice.ProductId = product.Id;
             if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
             {
@@ -604,6 +698,73 @@ namespace Nop.Web.Controllers
 
             #endregion 
 
+            #region Product specifications
+
+            //do not prepare this model for the associated products. any it's not used
+            if (!isAssociatedProduct)
+            {
+                model.ProductSpecifications = this.PrepareProductSpecificationModel(_workContext,
+                    _specificationAttributeService,
+                    _cacheManager,
+                    product);
+            }
+            
+            #endregion
+
+            #region Product review overview
+
+            model.ProductReviewOverview = new ProductReviewOverviewModel()
+            {
+                ProductId = product.Id,
+                RatingSum = product.ApprovedRatingSum,
+                TotalReviews = product.ApprovedTotalReviews,
+                AllowCustomerReviews = product.AllowCustomerReviews
+            };
+
+            #endregion
+
+            #region Tier prices
+
+            if (product.HasTierPrices && _permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
+            {
+                model.TierPrices = product.TierPrices
+                    .OrderBy(x => x.Quantity)
+                    .ToList()
+                    .FilterByStore(_storeContext.CurrentStore.Id)
+                    .FilterForCustomer(_workContext.CurrentCustomer)
+                    .RemoveDuplicatedQuantities()
+                    .Select(tierPrice =>
+                    {
+                        var m = new ProductDetailsModel.TierPriceModel()
+                        {
+                            Quantity = tierPrice.Quantity,
+                        };
+                        decimal taxRate = decimal.Zero;
+                        decimal priceBase = _taxService.GetProductPrice(product, _priceCalculationService.GetFinalPrice(product, _workContext.CurrentCustomer, decimal.Zero, _catalogSettings.DisplayTierPricesWithDiscounts, tierPrice.Quantity), out taxRate);
+                        decimal price = _currencyService.ConvertFromPrimaryStoreCurrency(priceBase, _workContext.WorkingCurrency);
+                        m.Price = _priceFormatter.FormatPrice(price, false, false);
+                        return m;
+                    })
+                    .ToList();
+            }
+
+            #endregion
+
+            #region Manufacturers
+            
+            //do not prepare this model for the associated products. any it's not used
+            if (!isAssociatedProduct)
+            {
+                string manufacturersCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_MANUFACTURERS_MODEL_KEY, product.Id, _workContext.WorkingLanguage.Id, string.Join(",", customerRolesIds), _storeContext.CurrentStore.Id);
+                model.ProductManufacturers = _cacheManager.Get(manufacturersCacheKey, () =>
+                {
+                    return _manufacturerService.GetProductManufacturersByProductId(product.Id)
+                        .Select(x => x.Manufacturer.ToModel())
+                        .ToList();
+                });
+            }
+            #endregion
+
             #region Associated products
 
             if (product.ProductType == ProductType.GroupedProduct)
@@ -736,145 +897,6 @@ namespace Nop.Web.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult ProductBreadcrumb(int productId)
-        {
-            var product = _productService.GetProductById(productId);
-            if (product == null)
-                throw new ArgumentException("No product found with the specified id");
-
-            if (!_catalogSettings.CategoryBreadcrumbEnabled)
-                return Content("");
-
-            var customerRolesIds = _workContext.CurrentCustomer.CustomerRoles
-                .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
-            var cacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_BREADCRUMB_MODEL_KEY, product.Id, _workContext.WorkingLanguage.Id, string.Join(",", customerRolesIds), _storeContext.CurrentStore.Id);
-            var cacheModel = _cacheManager.Get(cacheKey, () =>
-            {
-                var model = new ProductDetailsModel.ProductBreadcrumbModel()
-                {
-                    ProductId = product.Id,
-                    ProductName = product.GetLocalized(x => x.Name),
-                    ProductSeName = product.GetSeName()
-                };
-                var productCategories = _categoryService.GetProductCategoriesByProductId(product.Id);
-                if (productCategories.Count > 0)
-                {
-                    var category = productCategories[0].Category;
-                    if (category != null)
-                    {
-                        foreach (var catBr in category.GetCategoryBreadCrumb(_categoryService, _aclService, _storeMappingService))
-                        {
-                            model.CategoryBreadcrumb.Add(new CategoryModel()
-                            {
-                                Id = catBr.Id,
-                                Name = catBr.GetLocalized(x => x.Name),
-                                SeName = catBr.GetSeName()
-                            });
-                        }
-                    }
-                }
-                return model;
-            });
-
-            return PartialView(cacheModel);
-        }
-
-        [ChildActionOnly]
-        public ActionResult ProductManufacturers(int productId)
-        {
-            var customerRolesIds = _workContext.CurrentCustomer.CustomerRoles
-                .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
-            string cacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_MANUFACTURERS_MODEL_KEY, productId, _workContext.WorkingLanguage.Id, string.Join(",", customerRolesIds), _storeContext.CurrentStore.Id);
-            var cacheModel = _cacheManager.Get(cacheKey, () =>
-            {
-                var model = _manufacturerService.GetProductManufacturersByProductId(productId)
-                    .Select(x =>
-                    {
-                        var m = x.Manufacturer.ToModel();
-                        return m;
-                    })
-                    .ToList();
-                return model;
-            });
-
-            if (cacheModel.Count == 0)
-                return Content("");
-            
-            return PartialView(cacheModel);
-        }
-
-        [ChildActionOnly]
-        public ActionResult ProductReviewOverview(int productId)
-        {
-            var product = _productService.GetProductById(productId);
-            if (product == null)
-                throw new ArgumentException("No product found with the specified id");
-
-            var model = new ProductReviewOverviewModel()
-            {
-                ProductId = product.Id,
-                RatingSum = product.ApprovedRatingSum,
-                TotalReviews = product.ApprovedTotalReviews,
-                AllowCustomerReviews = product.AllowCustomerReviews
-            };
-            return PartialView(model);
-        }
-
-        [ChildActionOnly]
-        public ActionResult ProductSpecifications(int productId)
-        {
-            var product = _productService.GetProductById(productId);
-            if (product == null)
-                throw new ArgumentException("No product found with the specified id");
-
-            var model = this.PrepareProductSpecificationModel(_workContext, 
-                _specificationAttributeService, 
-                _cacheManager, 
-                product);
-
-            if (model.Count == 0)
-                return Content("");
-            
-            return PartialView(model);
-        }
-
-        [ChildActionOnly]
-        public ActionResult ProductTierPrices(int productId)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
-                return Content(""); //hide prices
-
-            var product = _productService.GetProductById(productId);
-            if (product == null)
-                throw new ArgumentException("No product found with the specified id");
-
-            if (!product.HasTierPrices)
-                return Content(""); //no tier prices
-
-            var model = product.TierPrices
-                .OrderBy(x => x.Quantity)
-                .ToList()
-                .FilterByStore(_storeContext.CurrentStore.Id)
-                .FilterForCustomer(_workContext.CurrentCustomer)
-                .RemoveDuplicatedQuantities()
-                .Select(tierPrice =>
-                            {
-                                var m = new ProductDetailsModel.TierPriceModel()
-                                {
-                                    Quantity = tierPrice.Quantity,
-                                };
-                                decimal taxRate = decimal.Zero;
-                                decimal priceBase = _taxService.GetProductPrice(product, _priceCalculationService.GetFinalPrice(product, _workContext.CurrentCustomer, decimal.Zero, _catalogSettings.DisplayTierPricesWithDiscounts, tierPrice.Quantity), out taxRate);
-                                decimal price = _currencyService.ConvertFromPrimaryStoreCurrency(priceBase, _workContext.WorkingCurrency);
-                                m.Price = _priceFormatter.FormatPrice(price, false, false);
-                                return m;
-                            })
-                .ToList();
-
-            return PartialView(model);
-        }
-
-        [ChildActionOnly]
         public ActionResult RelatedProducts(int productId, int? productThumbPictureSize)
         {
             //load and cache report
@@ -923,24 +945,6 @@ namespace Nop.Web.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult ShareButton()
-        {
-            if (_catalogSettings.ShowShareButton && !String.IsNullOrEmpty(_catalogSettings.PageShareCode))
-            {
-                var shareCode = _catalogSettings.PageShareCode;
-                if (_webHelper.IsCurrentConnectionSecured())
-                {
-                    //need to change the addthis link to be https linked when the page is, so that the page doesnt ask about mixed mode when viewed in https...
-                    shareCode = shareCode.Replace("http://", "https://");
-                }
-
-                return PartialView("ShareButton", shareCode);
-            }
-
-            return Content("");
-        }
-
-        [ChildActionOnly]
         public ActionResult CrossSellProducts(int? productThumbPictureSize)
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
@@ -965,40 +969,6 @@ namespace Nop.Web.Controllers
                 .ToList();
 
             return PartialView(model);
-        }
-
-        [ChildActionOnly]
-        public ActionResult ProductTags(int productId)
-        {
-            var product = _productService.GetProductById(productId);
-            if (product == null)
-                throw new ArgumentException("No product found with the specified id");
-
-            var cacheKey = string.Format(ModelCacheEventConsumer.PRODUCTTAG_BY_PRODUCT_MODEL_KEY, product.Id, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
-            var cacheModel = _cacheManager.Get(cacheKey, () =>
-            {
-                var model = product.ProductTags
-                    //filter by store
-                    .Where(x => _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id) > 0)
-                    .Select(x =>
-                    {
-                        var ptModel = new ProductTagModel()
-                        {
-                            Id = x.Id,
-                            Name = x.GetLocalized(y => y.Name),
-                            SeName = x.GetSeName(),
-                            ProductCount = _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id)
-                        };
-                        return ptModel;
-                    })
-                    .ToList();
-                return model;
-            });
-
-            if (cacheModel.Count == 0)
-                return Content("");
-
-            return PartialView(cacheModel);
         }
 
         #endregion
@@ -1389,21 +1359,7 @@ namespace Nop.Web.Controllers
         #endregion
 
         #region Email a friend
-
-        [ChildActionOnly]
-        public ActionResult ProductEmailAFriendButton(int productId)
-        {
-            if (!_catalogSettings.EmailAFriendEnabled)
-                return Content("");
-
-            var model = new ProductEmailAFriendModel()
-            {
-                ProductId = productId
-            };
-
-            return PartialView("ProductEmailAFriendButton", model);
-        }
-
+        
         [NopHttpsRequirement(SslRequirement.No)]
         public ActionResult ProductEmailAFriend(int productId)
         {
@@ -1534,20 +1490,6 @@ namespace Nop.Web.Controllers
             _compareProductsService.ClearCompareProducts();
 
             return RedirectToRoute("CompareProducts");
-        }
-
-        [ChildActionOnly]
-        public ActionResult CompareProductsButton(int productId)
-        {
-            if (!_catalogSettings.CompareProductsEnabled)
-                return Content("");
-
-            var model = new AddToCompareListModel()
-            {
-                ProductId = productId
-            };
-
-            return PartialView("CompareProductsButton", model);
         }
 
         #endregion

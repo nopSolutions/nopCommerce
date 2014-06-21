@@ -20,6 +20,12 @@ namespace Nop.Web.Models.Catalog
             ProductVariantAttributes = new List<ProductVariantAttributeModel>();
             AssociatedProducts = new List<ProductDetailsModel>();
             VendorModel = new VendorBriefInfoModel();
+            Breadcrumb = new ProductBreadcrumbModel();
+            ProductTags = new List<ProductTagModel>();
+            ProductSpecifications= new List<ProductSpecificationModel>();
+            ProductManufacturers = new List<ManufacturerModel>();
+            ProductReviewOverview = new ProductReviewOverviewModel();
+            TierPrices = new List<TierPriceModel>();
         }
 
         //picture(s)
@@ -60,14 +66,30 @@ namespace Nop.Web.Models.Catalog
         public string StockAvailability { get; set; }
 
         public bool DisplayBackInStockSubscription { get; set; }
-        public bool BackInStockAlreadySubscribed { get; set; }
+
+        public bool EmailAFriendEnabled { get; set; }
+        public bool CompareProductsEnabled { get; set; }
+
+        public string PageShareCode { get; set; }
 
         public ProductPriceModel ProductPrice { get; set; }
 
         public AddToCartModel AddToCart { get; set; }
 
+        public ProductBreadcrumbModel Breadcrumb { get; set; }
+
+        public IList<ProductTagModel> ProductTags { get; set; }
+
         public IList<ProductVariantAttributeModel> ProductVariantAttributes { get; set; }
-    
+
+        public IList<ProductSpecificationModel> ProductSpecifications { get; set; }
+
+        public IList<ManufacturerModel> ProductManufacturers { get; set; }
+
+        public ProductReviewOverviewModel ProductReviewOverview { get; set; }
+
+        public IList<TierPriceModel> TierPrices { get; set; }
+
         //a list of associated products. For example, "Grouped" products could have several child "simple" products
         public IList<ProductDetailsModel> AssociatedProducts { get; set; }
 
@@ -77,13 +99,14 @@ namespace Nop.Web.Models.Catalog
         {
             public ProductBreadcrumbModel()
             {
-                CategoryBreadcrumb = new List<CategoryModel>();
+                CategoryBreadcrumb = new List<CategorySimpleModel>();
             }
 
+            public bool Enabled { get; set; }
             public int ProductId { get; set; }
             public string ProductName { get; set; }
             public string ProductSeName { get; set; }
-            public IList<CategoryModel> CategoryBreadcrumb { get; set; }
+            public IList<CategorySimpleModel> CategoryBreadcrumb { get; set; }
         }
 
         public partial class AddToCartModel : BaseNopModel

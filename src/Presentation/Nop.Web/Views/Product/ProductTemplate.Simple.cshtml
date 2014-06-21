@@ -45,7 +45,7 @@
     }
 }
 <!--product breadcrumb-->
-@Html.Action("ProductBreadcrumb", "Product", new { productId = Model.Id })
+@Html.Partial("_ProductBreadcrumb", Model.Breadcrumb)
 <div class="page product-details-page">
     <div class="page-body">
         @Html.Widget("productdetails_top", Model.Id)
@@ -75,9 +75,9 @@
                         <!--Back in stock subscription-->
                         @Html.Partial("_BackInStockSubscription", Model)
                         <!--product manufacturers-->
-                        @Html.Action("ProductManufacturers", "Product", new { productId = Model.Id })
+                        @Html.Partial("_ProductManufacturers", Model.ProductManufacturers)
                         <!--product reviews-->
-                        @Html.Action("ProductReviewOverview", "Product", new { productId = Model.Id })
+                        @Html.Partial("_ProductReviewOverview", Model.ProductReviewOverview)
                         <!--sample download-->
                         @Html.Partial("_DownloadSample", Model)
                         <!--attributes-->
@@ -102,9 +102,9 @@
                             dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", Model.Id);
                             @Html.Partial("_AddToCart", Model.AddToCart, dataDictAddToCart)                    
                         }
-                        @Html.Action("ProductEmailAFriendButton", "Product", new { productId = Model.Id })
-                        @Html.Action("CompareProductsButton", "Product", new { productId = Model.Id })
-                        @Html.Action("ShareButton", "Product")
+                        @Html.Partial("_ProductEmailAFriendButton", Model)
+                        @Html.Partial("_CompareProductsButton", Model)
+                        @Html.Partial("_ShareButton", Model)
                         @Html.Widget("productdetails_overview_bottom", Model.Id)
                     </div>
                     @if (!String.IsNullOrEmpty(Model.FullDescription))
@@ -116,9 +116,9 @@
                 </div>
                 @Html.Widget("productdetails_before_collateral", Model.Id)
                 <div class="product-collateral">
-                    @Html.Action("ProductTierPrices", "Product", new { productId = Model.Id })
-                    @Html.Action("ProductSpecifications", "Product", new { productId = Model.Id })
-                    @Html.Action("ProductTags", "Product", new { productId = Model.Id })
+                    @Html.Partial("_ProductTierPrices", Model.TierPrices)
+                    @Html.Partial("_ProductSpecifications", Model.ProductSpecifications)
+                    @Html.Partial("_ProductTags", Model.ProductTags)
                     @Html.Action("ProductsAlsoPurchased", "Product", new { productId = Model.Id })
                     @Html.Action("RelatedProducts", "Product", new { productId = Model.Id })
                 </div>

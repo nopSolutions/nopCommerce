@@ -45,7 +45,7 @@
     }
 }
 <!--product breadcrumb-->
-@Html.Action("ProductBreadcrumb", "Product", new { productId = Model.Id })
+@Html.Partial("_ProductBreadcrumb", Model.Breadcrumb)
 <div class="page product-details-page">
     <div class="page-body">
         @Html.Widget("productdetails_top", Model.Id)
@@ -71,12 +71,12 @@
                         }
                         @Html.Widget("productdetails_overview_top", Model.Id)
                         <!--product manufacturers-->
-                        @Html.Action("ProductManufacturers", "Product", new { productId = Model.Id })
+                        @Html.Partial("_ProductManufacturers", Model.ProductManufacturers)
                         <!--product reviews-->
-                        @Html.Action("ProductReviewOverview", "Product", new { productId = Model.Id })
-                        @Html.Action("ProductEmailAFriendButton", "Product", new { productId = Model.Id })
-                        @Html.Action("CompareProductsButton", "Product", new { productId = Model.Id })
-                        @Html.Action("ShareButton", "Product")
+                        @Html.Partial("_ProductReviewOverview", Model.ProductReviewOverview)
+                        @Html.Partial("_ProductEmailAFriendButton", Model)
+                        @Html.Partial("_CompareProductsButton", Model)
+                        @Html.Partial("_ShareButton", Model)
                         @Html.Widget("productdetails_overview_bottom", Model.Id)
                     </div>
                     @if (!String.IsNullOrEmpty(Model.FullDescription))
@@ -114,10 +114,10 @@
                                         </div>
                                     }
                                     @Html.Partial("_DownloadSample", variant)
-                                    @Html.Action("ProductTierPrices", "Product", new { productId = variant.Id })
+                                    @Html.Partial("_ProductTierPrices", variant.TierPrices)
                                     @{
-                                    var dataDictAttributes = new ViewDataDictionary();
-                                    dataDictAttributes.TemplateInfo.HtmlFieldPrefix = string.Format("attributes_{0}", variant.Id);
+                                        var dataDictAttributes = new ViewDataDictionary();
+                                        dataDictAttributes.TemplateInfo.HtmlFieldPrefix = string.Format("attributes_{0}", variant.Id);
                                         @Html.Partial("_ProductAttributes", variant.ProductVariantAttributes, dataDictAttributes)                  
                                     }
                                     <!--product SKU, manufacturer part number, stock info-->
@@ -125,13 +125,13 @@
                                     <!--Back in stock subscription-->
                                     @Html.Partial("_BackInStockSubscription", variant)
                                     @{
-                                    var dataDictGiftCard = new ViewDataDictionary();
-                                    dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = string.Format("giftcard_{0}", variant.Id);
+                                        var dataDictGiftCard = new ViewDataDictionary();
+                                        dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = string.Format("giftcard_{0}", variant.Id);
                                         @Html.Partial("_GiftCardInfo", variant.GiftCard, dataDictGiftCard)
                                     }
                                     @{
-                                    var dataDictPrice = new ViewDataDictionary();
-                                    dataDictPrice.TemplateInfo.HtmlFieldPrefix = string.Format("price_{0}", variant.Id);
+                                        var dataDictPrice = new ViewDataDictionary();
+                                        dataDictPrice.TemplateInfo.HtmlFieldPrefix = string.Format("price_{0}", variant.Id);
                                         @Html.Partial("_ProductPrice", variant.ProductPrice, dataDictPrice)
                                     }
                                     @{
@@ -149,8 +149,8 @@
                             </div>
                         }
                     </div>
-                    @Html.Action("ProductSpecifications", "Product", new { productId = Model.Id })
-                    @Html.Action("ProductTags", "Product", new { productId = Model.Id })
+                    @Html.Partial("_ProductSpecifications", Model.ProductSpecifications)
+                    @Html.Partial("_ProductTags", Model.ProductTags)
                     @*we do not display "also purchased" for grouped products
                     @Html.Action("ProductsAlsoPurchased", "Product", new { productId = Model.Id })*@
                     @Html.Action("RelatedProducts", "Product", new { productId = Model.Id })
