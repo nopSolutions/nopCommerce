@@ -363,6 +363,7 @@ namespace Nop.Services.Orders
                 {
                     case ManageInventoryMethod.DontManageStock:
                         {
+                            //do nothing
                         }
                         break;
                     case ManageInventoryMethod.ManageStock:
