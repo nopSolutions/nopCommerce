@@ -502,31 +502,21 @@ namespace Nop.Web.Controllers
 
 
             //subcategories
-            //We cache a value indicating whether we have subcategories
-            IList<Category> subcategories = null;
-            string hasSubcategoriesCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_HAS_SUBCATEGORIES_KEY, categoryId,
-                string.Join(",", customerRolesIds), _storeContext.CurrentStore.Id);
-            var hasSubcategoriesCache = _cacheManager.Get<bool?>(hasSubcategoriesCacheKey);
-            if (!hasSubcategoriesCache.HasValue)
+            string subCategoriesCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_SUBCATEGORIES_KEY,
+                categoryId,
+                string.Join(",", customerRolesIds),
+                _storeContext.CurrentStore.Id,
+                _workContext.WorkingLanguage.Id,
+                _webHelper.IsCurrentConnectionSecured());
+            model.SubCategories = _cacheManager.Get(subCategoriesCacheKey, () =>
             {
-                subcategories = _categoryService.GetAllCategoriesByParentCategoryId(categoryId);
-                hasSubcategoriesCache = subcategories.Count > 0;
-                _cacheManager.Set(hasSubcategoriesCacheKey, hasSubcategoriesCache, 60);
-            }
-            if (hasSubcategoriesCache.Value && subcategories == null)
-            {
-                subcategories = _categoryService.GetAllCategoriesByParentCategoryId(categoryId);
-            }
-            if (subcategories != null)
-            {
-                model.SubCategories = subcategories
+                return _categoryService.GetAllCategoriesByParentCategoryId(categoryId)
                 .Select(x =>
                 {
-                    var subCatName = x.GetLocalized(y => y.Name);
                     var subCatModel = new CategoryModel.SubCategoryModel()
                     {
                         Id = x.Id,
-                        Name = subCatName,
+                        Name = x.GetLocalized(y => y.Name),
                         SeName = x.GetSeName(),
                     };
 
@@ -540,8 +530,8 @@ namespace Nop.Web.Controllers
                         {
                             FullSizeImageUrl = _pictureService.GetPictureUrl(picture),
                             ImageUrl = _pictureService.GetPictureUrl(picture, pictureSize),
-                            Title = string.Format(_localizationService.GetResource("Media.Category.ImageLinkTitleFormat"), subCatName),
-                            AlternateText = string.Format(_localizationService.GetResource("Media.Category.ImageAlternateTextFormat"), subCatName)
+                            Title = string.Format(_localizationService.GetResource("Media.Category.ImageLinkTitleFormat"), subCatModel.Name),
+                            AlternateText = string.Format(_localizationService.GetResource("Media.Category.ImageAlternateTextFormat"), subCatModel.Name)
                         };
                         return pictureModel;
                     });
@@ -549,7 +539,8 @@ namespace Nop.Web.Controllers
                     return subCatModel;
                 })
                 .ToList();
-            }
+            });
+
 
 
 
@@ -698,26 +689,15 @@ namespace Nop.Web.Controllers
             var customerRolesIds = _workContext.CurrentCustomer.CustomerRoles
                 .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
 
-            //We cache a value indicating whether we have categories displayed on home page
-            IList<Category> categories = null;
-            string hasCategoriesCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_HAS_HOMEPAGECATEGORIES_KEY,
-                string.Join(",", customerRolesIds), _storeContext.CurrentStore.Id);
-            var hasCategoriesCache = _cacheManager.Get<bool?>(hasCategoriesCacheKey);
-            if (!hasCategoriesCache.HasValue)
-            {
-               categories = _categoryService.GetAllCategoriesDisplayedOnHomePage();
-                hasCategoriesCache = categories.Count > 0;
-                _cacheManager.Set(hasCategoriesCacheKey, hasCategoriesCache, 60);
-            }
-            if (hasCategoriesCache.Value && categories == null)
-            {
-                categories = _categoryService.GetAllCategoriesDisplayedOnHomePage();
-            }
+            string categoriesCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_HOMEPAGE_KEY,
+                string.Join(",", customerRolesIds), 
+                _storeContext.CurrentStore.Id,
+                _workContext.WorkingLanguage.Id, 
+                _webHelper.IsCurrentConnectionSecured());
 
-            if (categories == null || categories.Count == 0)
-                return Content("");
-
-            var model = categories
+            var model = _cacheManager.Get(categoriesCacheKey, () =>
+            {
+                return _categoryService.GetAllCategoriesDisplayedOnHomePage()
                 .Select(x =>
                 {
                     var catModel = x.ToModel();
@@ -741,6 +721,10 @@ namespace Nop.Web.Controllers
                     return catModel;
                 })
                 .ToList();
+            });
+
+            if (model.Count == 0)
+                return Content("");
 
             return PartialView(model);
         }

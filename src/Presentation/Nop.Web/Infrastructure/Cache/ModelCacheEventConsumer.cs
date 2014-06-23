@@ -207,25 +207,29 @@ namespace Nop.Web.Infrastructure.Cache
         public const string CATEGORY_HAS_FEATURED_PRODUCTS_PATTERN_KEY = "Nop.pres.category.hasfeaturedproducts";
 
         /// <summary>
-        /// Key for caching of a value indicating whether a category has subcategories
+        /// Key for caching of subcategories of certain category
         /// </summary>
         /// <remarks>
         /// {0} : category id
         /// {1} : roles of the current user
         /// {2} : current store ID
+        /// {3} : language ID
+        /// {4} : is connection SSL secured (included in a category picture URL)
         /// </remarks>
-        public const string CATEGORY_HAS_SUBCATEGORIES_KEY = "Nop.pres.category.hassubcategories-{0}-{1}-{2}";
-        public const string CATEGORY_HAS_SUBCATEGORIES_PATTERN_KEY = "Nop.pres.category.hassubcategories";
+        public const string CATEGORY_SUBCATEGORIES_KEY = "Nop.pres.category.subcategories-{0}-{1}-{2}-{3}-{4}";
+        public const string CATEGORY_SUBCATEGORIES_PATTERN_KEY = "Nop.pres.category.subcategories";
 
         /// <summary>
-        /// Key for caching of a value indicating whether we have some categories displayed on home page
+        /// Key for caching of categories displayed on home page
         /// </summary>
         /// <remarks>
         /// {0} : roles of the current user
         /// {1} : current store ID
+        /// {2} : language ID
+        /// {3} : is connection SSL secured (included in a category picture URL)
         /// </remarks>
-        public const string CATEGORY_HAS_HOMEPAGECATEGORIES_KEY = "Nop.pres.category.hashomepagecategories-{0}-{1}";
-        public const string CATEGORY_HAS_HOMEPAGECATEGORIES_PATTERN_KEY = "Nop.pres.category.hashomepagecategories";
+        public const string CATEGORY_HOMEPAGE_KEY = "Nop.pres.category.homepage-{0}-{1}-{2}-{3}";
+        public const string CATEGORY_HOMEPAGE_PATTERN_KEY = "Nop.pres.category.homepage";
         
         /// <summary>
         /// Key for GetChildCategoryIds method results caching
@@ -711,8 +715,8 @@ namespace Nop.Web.Infrastructure.Cache
              _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY); 
              _cacheManager.RemoveByPattern(CATEGORY_MENU_PATTERN_KEY);
              _cacheManager.RemoveByPattern(CATEGORY_CHILD_IDENTIFIERS_PATTERN_KEY);
-             _cacheManager.RemoveByPattern(CATEGORY_HAS_SUBCATEGORIES_PATTERN_KEY);
-             _cacheManager.RemoveByPattern(CATEGORY_HAS_HOMEPAGECATEGORIES_PATTERN_KEY);
+             _cacheManager.RemoveByPattern(CATEGORY_SUBCATEGORIES_PATTERN_KEY);
+             _cacheManager.RemoveByPattern(CATEGORY_HOMEPAGE_PATTERN_KEY);
              _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
         }
         public void HandleEvent(EntityUpdated<Category> eventMessage)
@@ -722,8 +726,8 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_MENU_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_CHILD_IDENTIFIERS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(CATEGORY_HAS_SUBCATEGORIES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(CATEGORY_HAS_HOMEPAGECATEGORIES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(CATEGORY_SUBCATEGORIES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(CATEGORY_HOMEPAGE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
         }
         public void HandleEvent(EntityDeleted<Category> eventMessage)
@@ -733,8 +737,8 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_MENU_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_CHILD_IDENTIFIERS_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(CATEGORY_HAS_SUBCATEGORIES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(CATEGORY_HAS_HOMEPAGECATEGORIES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(CATEGORY_SUBCATEGORIES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(CATEGORY_HOMEPAGE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
         }
 
@@ -896,6 +900,8 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(PRODUCT_DEFAULTPICTURE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_DETAILS_TPICTURES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_PICTURE_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(CATEGORY_HOMEPAGE_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(CATEGORY_SUBCATEGORIES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(MANUFACTURER_PICTURE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CART_PICTURE_PATTERN_KEY);
         }
@@ -904,6 +910,8 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(PRODUCT_DEFAULTPICTURE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_DETAILS_TPICTURES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_PICTURE_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(CATEGORY_HOMEPAGE_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(CATEGORY_SUBCATEGORIES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(MANUFACTURER_PICTURE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CART_PICTURE_PATTERN_KEY);
         }
@@ -912,6 +920,8 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(PRODUCT_DEFAULTPICTURE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_DETAILS_TPICTURES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_PICTURE_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(CATEGORY_HOMEPAGE_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(CATEGORY_SUBCATEGORIES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(MANUFACTURER_PICTURE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CART_PICTURE_PATTERN_KEY);
         }
