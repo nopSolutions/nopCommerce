@@ -502,7 +502,7 @@ namespace Nop.Web.Controllers
 
 
             //subcategories
-            //We cache whether we have subcategories
+            //We cache a value indicating whether we have subcategories
             IList<Category> subcategories = null;
             string hasSubcategoriesCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_HAS_SUBCATEGORIES_KEY, categoryId,
                 string.Join(",", customerRolesIds), _storeContext.CurrentStore.Id);
@@ -695,11 +695,29 @@ namespace Nop.Web.Controllers
         [ChildActionOnly]
         public ActionResult HomepageCategories()
         {
-            var categories = _categoryService.GetAllCategoriesDisplayedOnHomePage()
-                .Where(c => _aclService.Authorize(c) && _storeMappingService.Authorize(c))
-                .ToList();
+            var customerRolesIds = _workContext.CurrentCustomer.CustomerRoles
+                .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
 
-            var listModel = categories
+            //We cache a value indicating whether we have categories displayed on home page
+            IList<Category> categories = null;
+            string hasCategoriesCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_HAS_HOMEPAGECATEGORIES_KEY,
+                string.Join(",", customerRolesIds), _storeContext.CurrentStore.Id);
+            var hasCategoriesCache = _cacheManager.Get<bool?>(hasCategoriesCacheKey);
+            if (!hasCategoriesCache.HasValue)
+            {
+               categories = _categoryService.GetAllCategoriesDisplayedOnHomePage();
+                hasCategoriesCache = categories.Count > 0;
+                _cacheManager.Set(hasCategoriesCacheKey, hasCategoriesCache, 60);
+            }
+            if (hasCategoriesCache.Value && categories == null)
+            {
+                categories = _categoryService.GetAllCategoriesDisplayedOnHomePage();
+            }
+
+            if (categories == null || categories.Count == 0)
+                return Content("");
+
+            var model = categories
                 .Select(x =>
                 {
                     var catModel = x.ToModel();
@@ -724,10 +742,7 @@ namespace Nop.Web.Controllers
                 })
                 .ToList();
 
-            if (listModel.Count == 0)
-                return Content("");
-            
-            return PartialView(listModel);
+            return PartialView(model);
         }
 
         #endregion

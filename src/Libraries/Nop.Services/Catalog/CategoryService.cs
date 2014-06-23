@@ -280,8 +280,9 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Gets all categories displayed on the home page
         /// </summary>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Categories</returns>
-        public virtual IList<Category> GetAllCategoriesDisplayedOnHomePage()
+        public virtual IList<Category> GetAllCategoriesDisplayedOnHomePage(bool showHidden = false)
         {
             var query = from c in _categoryRepository.Table
                         orderby c.DisplayOrder
@@ -291,6 +292,13 @@ namespace Nop.Services.Catalog
                         select c;
 
             var categories = query.ToList();
+            if (!showHidden)
+            {
+                categories = categories
+                    .Where(c => _aclService.Authorize(c) && _storeMappingService.Authorize(c))
+                    .ToList();
+            }
+
             return categories;
         }
                 

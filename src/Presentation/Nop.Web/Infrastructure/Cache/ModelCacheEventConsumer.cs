@@ -216,6 +216,16 @@ namespace Nop.Web.Infrastructure.Cache
         /// </remarks>
         public const string CATEGORY_HAS_SUBCATEGORIES_KEY = "Nop.pres.category.hassubcategories-{0}-{1}-{2}";
         public const string CATEGORY_HAS_SUBCATEGORIES_PATTERN_KEY = "Nop.pres.category.hassubcategories";
+
+        /// <summary>
+        /// Key for caching of a value indicating whether we have some categories displayed on home page
+        /// </summary>
+        /// <remarks>
+        /// {0} : roles of the current user
+        /// {1} : current store ID
+        /// </remarks>
+        public const string CATEGORY_HAS_HOMEPAGECATEGORIES_KEY = "Nop.pres.category.hashomepagecategories-{0}-{1}";
+        public const string CATEGORY_HAS_HOMEPAGECATEGORIES_PATTERN_KEY = "Nop.pres.category.hashomepagecategories";
         
         /// <summary>
         /// Key for GetChildCategoryIds method results caching
@@ -702,6 +712,7 @@ namespace Nop.Web.Infrastructure.Cache
              _cacheManager.RemoveByPattern(CATEGORY_MENU_PATTERN_KEY);
              _cacheManager.RemoveByPattern(CATEGORY_CHILD_IDENTIFIERS_PATTERN_KEY);
              _cacheManager.RemoveByPattern(CATEGORY_HAS_SUBCATEGORIES_PATTERN_KEY);
+             _cacheManager.RemoveByPattern(CATEGORY_HAS_HOMEPAGECATEGORIES_PATTERN_KEY);
              _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
         }
         public void HandleEvent(EntityUpdated<Category> eventMessage)
@@ -712,6 +723,7 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(CATEGORY_MENU_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_CHILD_IDENTIFIERS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_HAS_SUBCATEGORIES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(CATEGORY_HAS_HOMEPAGECATEGORIES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
         }
         public void HandleEvent(EntityDeleted<Category> eventMessage)
@@ -722,6 +734,7 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(CATEGORY_MENU_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_CHILD_IDENTIFIERS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_HAS_SUBCATEGORIES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(CATEGORY_HAS_HOMEPAGECATEGORIES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
         }
 
