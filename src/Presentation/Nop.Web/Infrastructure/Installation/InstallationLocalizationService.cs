@@ -15,10 +15,21 @@ namespace Nop.Web.Infrastructure.Installation
     /// </summary>
     public partial class InstallationLocalizationService : IInstallationLocalizationService
     {
+        /// <summary>
+        /// Cookie name to language for the installation page
+        /// </summary>
         private const string LanguageCookieName = "nop.installation.lang";
 
+        /// <summary>
+        /// Available languages
+        /// </summary>
         private IList<InstallationLanguage> _availableLanguages;
 
+        /// <summary>
+        /// Get locale resource value
+        /// </summary>
+        /// <param name="resourceName">Resource name</param>
+        /// <returns>Resource value</returns>
         public string GetResource(string resourceName)
         {
             var language = GetCurrentLanguage();
@@ -35,6 +46,10 @@ namespace Nop.Web.Infrastructure.Installation
             return resourceValue;
         }
 
+        /// <summary>
+        /// Get current language for the installation page
+        /// </summary>
+        /// <returns>Current language</returns>
         public virtual InstallationLanguage GetCurrentLanguage()
         {
            var httpContext = EngineContext.Current.Resolve<HttpContextBase>();
@@ -76,6 +91,10 @@ namespace Nop.Web.Infrastructure.Installation
             return language;
         }
 
+        /// <summary>
+        /// Save a language for the installation page
+        /// </summary>
+        /// <param name="languageCode">Language code</param>
         public virtual void SaveCurrentLanguage(string languageCode)
         {
             var httpContext = EngineContext.Current.Resolve<HttpContextBase>();
@@ -88,6 +107,10 @@ namespace Nop.Web.Infrastructure.Installation
             httpContext.Response.Cookies.Add(cookie);
         }
 
+        /// <summary>
+        /// Get a list of available languages
+        /// </summary>
+        /// <returns>Available installation languages</returns>
         public virtual IList<InstallationLanguage> GetAvailableLanguages()
         {
             if (_availableLanguages == null)
