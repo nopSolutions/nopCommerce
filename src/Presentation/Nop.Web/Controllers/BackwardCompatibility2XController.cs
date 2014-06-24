@@ -44,19 +44,7 @@ namespace Nop.Web.Controllers
 		#endregion
         
         #region Methods
-
-        //in versions 2.00-2.65 we had typo in producttag URLs ("productag" instead of "producttag")
-        public ActionResult RedirectProductsByTag(int productTagId, string seName)
-        {
-            return RedirectToRoutePermanent("ProductsByTag", new { productTagId = productTagId, SeName = seName });
-        }
-        //in versions 2.00-2.65 we had typo in producttag URLs ("productag" instead of "producttag")
-        public ActionResult RedirectProductTagsAll()
-        {
-            return RedirectToRoutePermanent("ProductTagsAll");
-        }
-
-
+        
         //in versions 2.00-2.65 we had ID in product URLs
         public ActionResult RedirectProductById(int productId)
         {

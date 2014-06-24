@@ -1958,17 +1958,6 @@ namespace Nop.Web.Controllers
             return RedirectToRoute("CustomerForumSubscriptions");
         }
 
-        public ActionResult DeleteForumSubscription(int subscriptionId)
-        {
-            var forumSubscription = _forumService.GetSubscriptionById(subscriptionId);
-            if (forumSubscription != null && forumSubscription.CustomerId == _workContext.CurrentCustomer.Id)
-            {
-                _forumService.DeleteSubscription(forumSubscription);
-            }
-
-            return RedirectToRoute("CustomerForumSubscriptions");
-        }
-
         #endregion
 
         #region Back in stock  subscriptions
@@ -2052,16 +2041,6 @@ namespace Nop.Web.Controllers
             return RedirectToRoute("CustomerBackInStockSubscriptions");
         }
 
-        public ActionResult DeleteBackInStockSubscription(int subscriptionId)
-        {
-            var subscription = _backInStockSubscriptionService.GetSubscriptionById(subscriptionId);
-            if (subscription != null && subscription.CustomerId == _workContext.CurrentCustomer.Id)
-            {
-                _backInStockSubscriptionService.DeleteSubscription(subscription);
-            }
-
-            return RedirectToRoute("CustomerBackInStockSubscriptions");
-        }
 
         #endregion
     }
