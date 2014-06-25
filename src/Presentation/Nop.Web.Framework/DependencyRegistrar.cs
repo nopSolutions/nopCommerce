@@ -134,7 +134,7 @@ namespace Nop.Web.Framework
             builder.RegisterType<RecentlyViewedProductsService>().As<IRecentlyViewedProductsService>().InstancePerRequest();
             builder.RegisterType<ManufacturerService>().As<IManufacturerService>().InstancePerRequest();
             builder.RegisterType<PriceFormatter>().As<IPriceFormatter>().InstancePerRequest();
-            builder.RegisterType<ProductAttributeFormatter>().As<IProductAttributeFormatter>().InstancePerLifetimeScope();
+            builder.RegisterType<ProductAttributeFormatter>().As<IProductAttributeFormatter>().InstancePerRequest();
             builder.RegisterType<ProductAttributeParser>().As<IProductAttributeParser>().InstancePerRequest();
             builder.RegisterType<ProductAttributeService>().As<IProductAttributeService>().InstancePerRequest();
             builder.RegisterType<ProductService>().As<IProductService>().InstancePerRequest();
