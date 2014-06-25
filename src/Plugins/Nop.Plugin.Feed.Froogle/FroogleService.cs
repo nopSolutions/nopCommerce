@@ -283,26 +283,18 @@ namespace Nop.Plugin.Feed.Froogle
                         //availability [availability] - Availability status of the item
                         string availability = "in stock"; //in stock by default
                         if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock
-                            && product.StockQuantity <= 0)
+                            && product.StockQuantity <= 0
+                            && product.BackorderMode == BackorderMode.NoBackorders)
                         {
-                            switch (product.BackorderMode)
-                            {
-                                case BackorderMode.NoBackorders:
-                                    {
-                                        availability = "out of stock";
-                                    }
-                                    break;
-                                case BackorderMode.AllowQtyBelow0:
-                                case BackorderMode.AllowQtyBelow0AndNotifyCustomer:
-                                    {
-                                        availability = "available for order";
-                                        //availability = "preorder";
-                                    }
-                                    break;
-                                default:
-                                    break;
-                            }
+                            availability = "out of stock";
                         }
+                        //uncomment th code below in order to support "preorder" value for "availability"
+                        //if (product.AvailableForPreOrder &&
+                        //    (!product.PreOrderAvailabilityStartDateTimeUtc.HasValue || 
+                        //    product.PreOrderAvailabilityStartDateTimeUtc.Value >= DateTime.UtcNow))
+                        //{
+                        //    availability = "preorder";
+                        //}
                         writer.WriteElementString("g", "availability", googleBaseNamespace, availability);
 
                         //price [price] - Price of the item
