@@ -160,6 +160,10 @@ namespace Nop.Plugin.Feed.Froogle
             {
                 Encoding = Encoding.UTF8
             };
+
+            //we load all google products here using one SQL request (performance optimization)
+            var allGoogleProducts = _googleService.GetAll();
+
             using (var writer = XmlWriter.Create(stream, settings))
             {
                 //Generate feed according to the following specs: http://www.google.com/support/merchants/bin/answer.py?answer=188494&expand=GB
@@ -172,8 +176,7 @@ namespace Nop.Plugin.Feed.Froogle
                 writer.WriteElementString("link", "http://base.google.com/base/");
                 writer.WriteElementString("description", "Information about products");
 
-                var products1 = _productService.SearchProducts(storeId: store.Id,
-                visibleIndividuallyOnly: true);
+                var products1 = _productService.SearchProducts(storeId: store.Id, visibleIndividuallyOnly: true);
                 foreach (var product1 in products1)
                 {
                     var productsToProcess = new List<Product>();
@@ -232,7 +235,8 @@ namespace Nop.Plugin.Feed.Froogle
                         //google product category [google_product_category] - Google's category of the item
                         //the category of the product according to Google’s product taxonomy. http://www.google.com/support/merchants/bin/answer.py?answer=160081
                         string googleProductCategory = "";
-                        var googleProduct = _googleService.GetByProductId(product.Id);
+                        //var googleProduct = _googleService.GetByProductId(product.Id);
+                        var googleProduct = allGoogleProducts.FirstOrDefault(x => x.ProductId == product.Id);
                         if (googleProduct != null)
                             googleProductCategory = googleProduct.Taxonomy;
                         if (String.IsNullOrEmpty(googleProductCategory))
