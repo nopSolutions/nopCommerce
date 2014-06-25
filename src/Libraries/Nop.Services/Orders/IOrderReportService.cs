@@ -14,6 +14,20 @@ namespace Nop.Services.Orders
     public partial interface IOrderReportService
     {
         /// <summary>
+        /// Get "order by country" report
+        /// </summary>
+        /// <param name="storeId">Store identifier; 0 to load all records</param>
+        /// <param name="os">Order status</param>
+        /// <param name="ps">Payment status</param>
+        /// <param name="ss">Shipping status</param>
+        /// <param name="startTimeUtc">Start date</param>
+        /// <param name="endTimeUtc">End date</param>
+        /// <returns>Result</returns>
+        IList<OrderByCountryReportLine> GetCountryReport(int storeId = 0, OrderStatus? os = null,
+            PaymentStatus? ps = null, ShippingStatus? ss = null,
+            DateTime? startTimeUtc = null, DateTime? endTimeUtc = null);
+
+        /// <summary>
         /// Get order average report
         /// </summary>
         /// <param name="storeId">Store identifier</param>

@@ -3380,7 +3380,66 @@ namespace Nop.Admin.Controllers
 
             return Json(gridModel);
         }
-        
+
+
+
+        public ActionResult CountryReport()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.OrderCountryReport))
+                return AccessDeniedView();
+
+            var model = new CountryReportModel();
+
+            //order statuses
+            model.AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList();
+            model.AvailableOrderStatuses.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+
+            //payment statuses
+            model.AvailablePaymentStatuses = PaymentStatus.Pending.ToSelectList(false).ToList();
+            model.AvailablePaymentStatuses.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+
+            return View(model);
+        }
+        [HttpPost]
+        public ActionResult CountryReportList(DataSourceRequest command, CountryReportModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.OrderCountryReport))
+                return Content("");
+
+            DateTime? startDateValue = (model.StartDate == null) ? null
+                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
+
+            DateTime? endDateValue = (model.EndDate == null) ? null
+                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
+
+            OrderStatus? orderStatus = model.OrderStatusId > 0 ? (OrderStatus?)(model.OrderStatusId) : null;
+            PaymentStatus? paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
+
+            var items = _orderReportService.GetCountryReport(
+                os: orderStatus,
+                ps: paymentStatus,
+                startTimeUtc: startDateValue,
+                endTimeUtc: endDateValue);
+            var gridModel = new DataSourceResult
+            {
+                Data = items.Select(x =>
+                {
+                    var country = _countryService.GetCountryById(x.CountryId.HasValue ? x.CountryId.Value : 0);
+                    var m = new CountryReportLineModel()
+                    {
+                        CountryName = country != null ? country.Name : "Unknown",
+                        SumOrders = _priceFormatter.FormatPrice(x.SumOrders, true, false),
+                        TotalOrders = x.TotalOrders,
+                    };
+                    return m;
+                }),
+                Total = items.Count
+            };
+
+            return Json(gridModel);
+        }
+
+
         #endregion
     }
 }

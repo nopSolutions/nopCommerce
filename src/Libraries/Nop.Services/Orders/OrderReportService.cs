@@ -55,7 +55,69 @@ namespace Nop.Services.Orders
         #endregion
 
         #region Methods
-        
+
+        /// <summary>
+        /// Get "order by country" report
+        /// </summary>
+        /// <param name="storeId">Store identifier</param>
+        /// <param name="os">Order status</param>
+        /// <param name="ps">Payment status</param>
+        /// <param name="ss">Shipping status</param>
+        /// <param name="startTimeUtc">Start date</param>
+        /// <param name="endTimeUtc">End date</param>
+        /// <returns>Result</returns>
+        public virtual IList<OrderByCountryReportLine> GetCountryReport(int storeId, OrderStatus? os,
+            PaymentStatus? ps, ShippingStatus? ss, DateTime? startTimeUtc, DateTime? endTimeUtc)
+        {
+            int? orderStatusId = null;
+            if (os.HasValue)
+                orderStatusId = (int)os.Value;
+
+            int? paymentStatusId = null;
+            if (ps.HasValue)
+                paymentStatusId = (int)ps.Value;
+
+            int? shippingStatusId = null;
+            if (ss.HasValue)
+                shippingStatusId = (int)ss.Value;
+
+            var query = _orderRepository.Table;
+            query = query.Where(o => !o.Deleted);
+            if (storeId > 0)
+                query = query.Where(o => o.StoreId == storeId);
+            if (orderStatusId.HasValue)
+                query = query.Where(o => o.OrderStatusId == orderStatusId.Value);
+            if (paymentStatusId.HasValue)
+                query = query.Where(o => o.PaymentStatusId == paymentStatusId.Value);
+            if (shippingStatusId.HasValue)
+                query = query.Where(o => o.ShippingStatusId == shippingStatusId.Value);
+            if (startTimeUtc.HasValue)
+                query = query.Where(o => startTimeUtc.Value <= o.CreatedOnUtc);
+            if (endTimeUtc.HasValue)
+                query = query.Where(o => endTimeUtc.Value >= o.CreatedOnUtc);
+            
+            var report = (from oq in query
+                        group oq by oq.BillingAddress.CountryId into result
+                        select new
+                        {
+                            CountryId = result.Key,
+                            TotalOrders = result.Count(),
+                            SumOrders = result.Sum(o => o.OrderTotal)
+                        }
+                       )
+                       .OrderByDescending(x => x.SumOrders)
+                       .Select(r => new OrderByCountryReportLine()
+                       {
+                           CountryId = r.CountryId,
+                           TotalOrders = r.TotalOrders,
+                           SumOrders = r.SumOrders
+                       })
+
+                       .ToList();
+
+            return report;
+        }
+
         /// <summary>
         /// Get order average report
         /// </summary>

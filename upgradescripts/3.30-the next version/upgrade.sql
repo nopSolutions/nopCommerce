@@ -335,6 +335,48 @@ set @resources='
   <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.SearchStore.Hint">
     <Value>Search by a specific store.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Country">
+    <Value>Country report</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Country.EndDate">
+    <Value>End date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Country.EndDate.Hint">
+    <Value>The end date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Country.Fields.CountryName">
+    <Value>Country</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Country.Fields.SumOrders">
+    <Value>Order total</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Country.Fields.TotalOrders">
+    <Value>Number of orders</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Country.OrderStatus">
+    <Value>Order status</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Country.OrderStatus.Hint">
+    <Value>Search by a specific order status e.g. Complete.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Country.PaymentStatus">
+    <Value>Payment status</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Country.PaymentStatus.Hint">
+    <Value>Search by a specific payment status e.g. Paid.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Country.RunReport">
+    <Value>Run report</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Country.StartDate">
+    <Value>Start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Country.StartDate.Hint">
+    <Value>The start date for the search</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.OrderCountryReport">
+    <Value>Admin area. Access order country report.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1290,5 +1332,29 @@ GO
 IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_NewsletterSubscription_Email_StoreId' and object_id=object_id(N'[NewsletterSubscription]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_NewsletterSubscription_Email_StoreId] ON [NewsletterSubscription] ([Email] ASC, [StoreId] ASC)
+END
+GO
+
+--new permission
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[PermissionRecord]
+		WHERE [SystemName] = N'OrderCountryReport')
+BEGIN
+	INSERT [dbo].[PermissionRecord] ([Name], [SystemName], [Category])
+	VALUES (N'Admin area. Access order country report', N'OrderCountryReport', N'Orders')
+
+	DECLARE @PermissionRecordId INT 
+	SET @PermissionRecordId = @@IDENTITY
+
+
+	--add it to admin role by default
+	DECLARE @AdminCustomerRoleId int
+	SELECT @AdminCustomerRoleId = Id
+	FROM [CustomerRole]
+	WHERE IsSystemRole=1 and [SystemName] = N'Administrators'
+
+	INSERT [dbo].[PermissionRecord_Role_Mapping] ([PermissionRecord_Id], [CustomerRole_Id])
+	VALUES (@PermissionRecordId, @AdminCustomerRoleId)
 END
 GO

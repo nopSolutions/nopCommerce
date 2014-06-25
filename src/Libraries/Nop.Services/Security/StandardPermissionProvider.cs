@@ -25,6 +25,7 @@ namespace Nop.Services.Security
         public static readonly PermissionRecord ManageRecurringPayments = new PermissionRecord { Name = "Admin area. Manage Recurring Payments", SystemName = "ManageRecurringPayments", Category = "Orders" };
         public static readonly PermissionRecord ManageGiftCards = new PermissionRecord { Name = "Admin area. Manage Gift Cards", SystemName = "ManageGiftCards", Category = "Orders" };
         public static readonly PermissionRecord ManageReturnRequests = new PermissionRecord { Name = "Admin area. Manage Return Requests", SystemName = "ManageReturnRequests", Category = "Orders" };
+        public static readonly PermissionRecord OrderCountryReport = new PermissionRecord { Name = "Admin area. Access order country report", SystemName = "OrderCountryReport", Category = "Orders" };
         public static readonly PermissionRecord ManageAffiliates = new PermissionRecord { Name = "Admin area. Manage Affiliates", SystemName = "ManageAffiliates", Category = "Promo" };
         public static readonly PermissionRecord ManageCampaigns = new PermissionRecord { Name = "Admin area. Manage Campaigns", SystemName = "ManageCampaigns", Category = "Promo" };
         public static readonly PermissionRecord ManageDiscounts = new PermissionRecord { Name = "Admin area. Manage Discounts", SystemName = "ManageDiscounts", Category = "Promo" };
@@ -83,6 +84,7 @@ namespace Nop.Services.Security
                 ManageRecurringPayments,
                 ManageGiftCards,
                 ManageReturnRequests,
+                OrderCountryReport,
                 ManageAffiliates,
                 ManageCampaigns,
                 ManageDiscounts,
@@ -144,6 +146,7 @@ namespace Nop.Services.Security
                         ManageRecurringPayments,
                         ManageGiftCards,
                         ManageReturnRequests,
+                        OrderCountryReport,
                         ManageAffiliates,
                         ManageCampaigns,
                         ManageDiscounts,

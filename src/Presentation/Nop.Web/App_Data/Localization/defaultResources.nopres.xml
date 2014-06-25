@@ -9177,6 +9177,45 @@
   <LocaleResource Name="Admin.SalesReport.Bestsellers.StartDate.Hint">
     <Value>The start date for the search</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Country">
+    <Value>Country report</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Country.EndDate">
+    <Value>End date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Country.EndDate.Hint">
+    <Value>The end date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Country.Fields.CountryName">
+    <Value>Country</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Country.Fields.SumOrders">
+    <Value>Order total</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Country.Fields.TotalOrders">
+    <Value>Number of orders</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Country.OrderStatus">
+    <Value>Order status</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Country.OrderStatus.Hint">
+    <Value>Search by a specific order status e.g. Complete.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Country.PaymentStatus">
+    <Value>Payment status</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Country.PaymentStatus.Hint">
+    <Value>Search by a specific payment status e.g. Paid.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Country.RunReport">
+    <Value>Run report</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Country.StartDate">
+    <Value>Start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Country.StartDate.Hint">
+    <Value>The start date for the search</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.SalesReport.Incomplete">
     <Value>Incomplete orders</Value>
   </LocaleResource>
@@ -11945,6 +11984,9 @@
   </LocaleResource>
   <LocaleResource Name="Permission.ManageWidgets">
     <Value>Admin area. Manage Widgets</Value>
+  </LocaleResource>
+  <LocaleResource Name="Permission.OrderCountryReport">
+    <Value>Admin area. Access order country report.</Value>
   </LocaleResource>
   <LocaleResource Name="Permission.PublicStoreAllowNavigation">
     <Value>Public store. Allow navigation</Value>
