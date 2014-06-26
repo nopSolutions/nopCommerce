@@ -50,14 +50,14 @@ namespace Nop.Core.Infrastructure
 
 
             //dependencies
+            var typeFinder = new WebAppTypeFinder(config);
             builder = new ContainerBuilder();
             builder.RegisterInstance(config).As<NopConfig>().SingleInstance();
             builder.RegisterInstance(this).As<IEngine>().SingleInstance();
-            builder.RegisterType<WebAppTypeFinder>().As<ITypeFinder>().SingleInstance();
+            builder.RegisterInstance(typeFinder).As<ITypeFinder>().SingleInstance();
             builder.Update(container);
 
             //register dependencies provided by other assemblies
-            var typeFinder = container.Resolve<ITypeFinder>();
             builder = new ContainerBuilder();
             var drTypes = typeFinder.FindClassesOfType<IDependencyRegistrar>();
             var drInstances = new List<IDependencyRegistrar>();
