@@ -2,7 +2,6 @@ using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Web;
-using System.Web.Hosting;
 using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;

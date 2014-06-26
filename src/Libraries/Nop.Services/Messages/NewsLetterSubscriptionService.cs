@@ -3,7 +3,6 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Messages;
-using Nop.Core.Domain.Stores;
 using Nop.Data;
 using Nop.Services.Events;
 

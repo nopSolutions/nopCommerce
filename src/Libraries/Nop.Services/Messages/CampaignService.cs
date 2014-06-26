@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Mail;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Messages;
