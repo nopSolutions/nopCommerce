@@ -913,8 +913,12 @@ namespace Nop.Services.Messages
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
-            var toEmail = returnRequest.Customer.Email;
-            var toName = returnRequest.Customer.GetFullName();
+            string toEmail = returnRequest.Customer.IsGuest() ? 
+                orderItem.Order.BillingAddress.Email :
+                returnRequest.Customer.Email;
+            var toName = returnRequest.Customer.IsGuest() ? 
+                orderItem.Order.BillingAddress.FirstName :
+                returnRequest.Customer.GetFullName();
             return SendNotification(messageTemplate, emailAccount,
                 languageId, tokens,
                 toEmail, toName);
