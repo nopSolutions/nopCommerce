@@ -9,7 +9,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook
     {
         public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder)
         {
-            builder.RegisterType<FacebookProviderAuthorizer>().As<IOAuthProviderFacebookAuthorizer>().InstancePerRequest();
+            builder.RegisterType<FacebookProviderAuthorizer>().As<IOAuthProviderFacebookAuthorizer>().InstancePerLifetimeScope();
         }
 
         public int Order

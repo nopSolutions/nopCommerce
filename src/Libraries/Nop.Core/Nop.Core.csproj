@@ -291,7 +291,6 @@
     <Compile Include="Plugins\IPlugin.cs" />
     <Compile Include="Plugins\IPluginFinder.cs" />
     <Compile Include="Plugins\PluginFinder.cs" />
-    <Compile Include="Infrastructure\DependencyManagement\AutofacRequestLifetimeHttpModule.cs" />
     <Compile Include="Infrastructure\WebAppTypeFinder.cs" />
     <Compile Include="IWorkContext.cs" />
     <Compile Include="Domain\Localization\LocalizedProperty.cs" />

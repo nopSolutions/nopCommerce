@@ -35,7 +35,7 @@ namespace Nop.Web.Infrastructure
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"));
             
             //installation localization service
-            builder.RegisterType<InstallationLocalizationService>().As<IInstallationLocalizationService>().InstancePerRequest();
+            builder.RegisterType<InstallationLocalizationService>().As<IInstallationLocalizationService>().InstancePerLifetimeScope();
         }
 
         public int Order

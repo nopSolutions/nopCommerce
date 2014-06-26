@@ -170,7 +170,6 @@
     <Compile Include="Mvc\DeleteConfirmationModel.cs" />
     <Compile Include="Mvc\Routes\IRouteProvider.cs" />
     <Compile Include="Mvc\Routes\IRoutePublisher.cs" />
-    <Compile Include="Mvc\NopDependencyResolver.cs" />
     <Compile Include="Mvc\Routes\RoutePublisher.cs" />
     <Compile Include="Mvc\NopMetadataProvider.cs" />
     <Compile Include="Mvc\NopModelBinder.cs" />

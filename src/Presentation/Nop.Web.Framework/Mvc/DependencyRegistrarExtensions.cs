@@ -31,20 +31,20 @@ namespace Nop.Web.Framework.Mvc
                 //register named context
                 builder.Register<IDbContext>(c => (IDbContext)Activator.CreateInstance(typeof(T), new object[] { dataProviderSettings.DataConnectionString }))
                     .Named<IDbContext>(contextName)
-                    .InstancePerRequest();
+                    .InstancePerLifetimeScope();
 
                 builder.Register<T>(c => (T)Activator.CreateInstance(typeof(T), new object[] { dataProviderSettings.DataConnectionString }))
-                    .InstancePerRequest();
+                    .InstancePerLifetimeScope();
             }
             else
             {
                 //register named context
                 builder.Register<IDbContext>(c => (T)Activator.CreateInstance(typeof(T), new object[] { c.Resolve<DataSettings>().DataConnectionString }))
                     .Named<IDbContext>(contextName)
-                    .InstancePerRequest();
+                    .InstancePerLifetimeScope();
 
                 builder.Register<T>(c => (T)Activator.CreateInstance(typeof(T), new object[] { c.Resolve<DataSettings>().DataConnectionString }))
-                    .InstancePerRequest();
+                    .InstancePerLifetimeScope();
             }
         }
     }

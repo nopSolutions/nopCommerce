@@ -15,7 +15,7 @@ namespace Nop.Plugin.Feed.Froogle
     {
         public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder)
         {
-            builder.RegisterType<GoogleService>().As<IGoogleService>().InstancePerRequest();
+            builder.RegisterType<GoogleService>().As<IGoogleService>().InstancePerLifetimeScope();
 
             //data context
             this.RegisterPluginDataContext<GoogleProductObjectContext>(builder, "nop_object_context_google_product");
@@ -24,7 +24,7 @@ namespace Nop.Plugin.Feed.Froogle
             builder.RegisterType<EfRepository<GoogleProductRecord>>()
                 .As<IRepository<GoogleProductRecord>>()
                 .WithParameter(ResolvedParameter.ForNamed<IDbContext>("nop_object_context_google_product"))
-                .InstancePerRequest();
+                .InstancePerLifetimeScope();
         }
 
         public int Order

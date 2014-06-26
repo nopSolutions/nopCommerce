@@ -15,7 +15,7 @@ namespace Nop.Plugin.Tax.CountryStateZip
     {
         public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder)
         {
-            builder.RegisterType<TaxRateService>().As<ITaxRateService>().InstancePerRequest();
+            builder.RegisterType<TaxRateService>().As<ITaxRateService>().InstancePerLifetimeScope();
 
             //data context
             this.RegisterPluginDataContext<TaxRateObjectContext>(builder, "nop_object_context_tax_country_state_zip");
@@ -24,7 +24,7 @@ namespace Nop.Plugin.Tax.CountryStateZip
             builder.RegisterType<EfRepository<TaxRate>>()
                 .As<IRepository<TaxRate>>()
                 .WithParameter(ResolvedParameter.ForNamed<IDbContext>("nop_object_context_tax_country_state_zip"))
-                .InstancePerRequest();
+                .InstancePerLifetimeScope();
         }
 
         public int Order

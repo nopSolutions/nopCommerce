@@ -23,12 +23,6 @@ namespace Nop.Web
 {
     public class MvcApplication : System.Web.HttpApplication
     {
-        public static void RegisterGlobalFilters(GlobalFilterCollection filters)
-        {
-            //do not register HandleErrorAttribute. use classic error handling mode
-            //filters.Add(new HandleErrorAttribute());
-        }
-
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("favicon.ico");
@@ -51,15 +45,10 @@ namespace Nop.Web
             //initialize engine context
             EngineContext.Initialize(false);
 
-            bool databaseInstalled = DataSettingsHelper.DatabaseIsInstalled();
-
-            //set dependency resolver
-            var dependencyResolver = new NopDependencyResolver();
-            DependencyResolver.SetResolver(dependencyResolver);
-
             //model binders
             ModelBinders.Binders.Add(typeof(BaseNopModel), new NopModelBinder());
-
+            
+            bool databaseInstalled = DataSettingsHelper.DatabaseIsInstalled();
             if (databaseInstalled)
             {
                 //remove all view engines
@@ -73,7 +62,6 @@ namespace Nop.Web
 
             //Registering some regular mvc stuff
             AreaRegistration.RegisterAllAreas();
-            RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
             
             //fluent validation
@@ -117,7 +105,7 @@ namespace Nop.Web
 
             EnsureDatabaseIsInstalled();
 
-            if (CanPerformProfilingAction())
+            if (EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerInPublicStore)
             {
                 MiniProfiler.Start();
             }
@@ -125,22 +113,7 @@ namespace Nop.Web
 
         protected void Application_EndRequest(object sender, EventArgs e)
         {
-            //ignore static resources
-            var webHelper = EngineContext.Current.Resolve<IWebHelper>();
-            if (webHelper.IsStaticResource(this.Request))
-                return;
-
-            if (CanPerformProfilingAction())
-            {
-                //stop as early as you can, even earlier with MvcMiniProfiler.MiniProfiler.Stop(discardResults: true);
-                MiniProfiler.Stop();
-            }
-
-            //dispose registered resources
-            //we do not register AutofacRequestLifetimeHttpModule as IHttpModule 
-            //because it disposes resources before this Application_EndRequest method is called
-            //and in this case the code in Application_EndRequest of Global.asax will throw an exception
-            AutofacRequestLifetimeHttpModule.ContextEndRequest(sender, e);
+            MiniProfiler.Stop();
         }
 
         protected void Application_AuthenticateRequest(object sender, EventArgs e)
@@ -259,18 +232,6 @@ namespace Nop.Web
             {
                 //don't throw new exception if occurs
             }
-        }
-
-        protected bool CanPerformProfilingAction()
-        {
-            //will not run in medium trust
-            if (CommonHelper.GetTrustLevel() < AspNetHostingPermissionLevel.High)
-                return false;
-
-            if (!DataSettingsHelper.DatabaseIsInstalled())
-                return false;
-
-            return EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerInPublicStore;
         }
     }
 }

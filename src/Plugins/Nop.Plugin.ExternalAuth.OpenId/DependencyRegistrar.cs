@@ -9,8 +9,8 @@ namespace Nop.Plugin.ExternalAuth.OpenId
     {
         public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder)
         {
-            builder.RegisterType<OpenIdProviderAuthorizer>().As<IOpenIdProviderAuthorizer>().InstancePerRequest();
-            builder.RegisterType<OpenIdRelyingPartyService>().As<IOpenIdRelyingPartyService>().InstancePerRequest();
+            builder.RegisterType<OpenIdProviderAuthorizer>().As<IOpenIdProviderAuthorizer>().InstancePerLifetimeScope();
+            builder.RegisterType<OpenIdRelyingPartyService>().As<IOpenIdRelyingPartyService>().InstancePerLifetimeScope();
         }
 
         public int Order

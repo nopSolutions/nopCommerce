@@ -15,7 +15,7 @@ namespace Nop.Plugin.Shipping.ByWeight
     {
         public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder)
         {
-            builder.RegisterType<ShippingByWeightService>().As<IShippingByWeightService>().InstancePerRequest();
+            builder.RegisterType<ShippingByWeightService>().As<IShippingByWeightService>().InstancePerLifetimeScope();
 
             //data context
             this.RegisterPluginDataContext<ShippingByWeightObjectContext>(builder, "nop_object_context_shipping_weight_zip");
@@ -24,7 +24,7 @@ namespace Nop.Plugin.Shipping.ByWeight
             builder.RegisterType<EfRepository<ShippingByWeightRecord>>()
                 .As<IRepository<ShippingByWeightRecord>>()
                 .WithParameter(ResolvedParameter.ForNamed<IDbContext>("nop_object_context_shipping_weight_zip"))
-                .InstancePerRequest();
+                .InstancePerLifetimeScope();
         }
 
         public int Order

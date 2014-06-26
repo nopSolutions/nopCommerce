@@ -1,9 +1,7 @@
-﻿@using Nop.Core
-@using Nop.Core.Domain.Common;
+﻿@using Nop.Core.Domain.Common;
 @using Nop.Core.Infrastructure;
 @{
-    var displayMiniProfiler = CommonHelper.GetTrustLevel() >= AspNetHostingPermissionLevel.High &&
-        EngineContext.Current.Resolve<Nop.Core.Domain.StoreInformationSettings>().DisplayMiniProfilerInPublicStore;
+    var displayMiniProfiler = EngineContext.Current.Resolve<Nop.Core.Domain.StoreInformationSettings>().DisplayMiniProfilerInPublicStore;
 
     //resources
     Html.AppendCssFileParts("~/Content/jquery-ui-themes/smoothness/jquery-ui-1.10.3.custom.min.css");

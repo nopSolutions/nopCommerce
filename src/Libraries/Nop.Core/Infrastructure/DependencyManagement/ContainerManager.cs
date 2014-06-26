@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using Autofac;
+using Autofac.Core.Lifetime;
+using Autofac.Integration.Mvc;
 
 namespace Nop.Core.Infrastructure.DependencyManagement
 {
@@ -126,11 +129,15 @@ namespace Nop.Core.Infrastructure.DependencyManagement
         {
             try
             {
-                return AutofacRequestLifetimeHttpModule.GetLifetimeScope(Container, null);
+                //we can get an exception here in two cases:
+                //1. when HttpContext.Current is null (background tasks)
+                //2. RequestLifetimeScope is already disposed (requested in or after "Application_EndRequest" handler)
+                return AutofacDependencyResolver.Current.RequestLifetimeScope;
             }
-            catch
+            catch (Exception exc)
             {
-                return Container;
+                //when such lifetime scope is returned, you should be sure that it'll be disposed once used (e.g. in schedule tasks)
+                return Container.BeginLifetimeScope(MatchingScopeLifetimeTags.RequestLifetimeScopeTag);
             }
         }
     }
