@@ -1,4 +1,5 @@
 ﻿using System;
+using Autofac;
 using Nop.Core.Domain.Tasks;
 using Nop.Core.Infrastructure;
 using Nop.Services.Logging;
@@ -30,7 +31,7 @@ namespace Nop.Services.Tasks
             this.Name = task.Name;
         }
 
-        private ITask CreateTask()
+        private ITask CreateTask(ILifetimeScope scope)
         {
             ITask task = null;
             if (this.Enabled)
@@ -38,11 +39,6 @@ namespace Nop.Services.Tasks
                 var type2 = System.Type.GetType(this.Type);
                 if (type2 != null)
                 {
-                    //background tasks has an issue with Autofac
-                    //because scope is generated each time it's requested
-                    //that's why we get one single scope here 
-                    var scope = EngineContext.Current.ContainerManager.Scope();
-
                     object instance;
                     if (!EngineContext.Current.ContainerManager.TryResolve(type2, scope, out instance))
                     {
@@ -63,12 +59,17 @@ namespace Nop.Services.Tasks
         {
             this.IsRunning = true;
 
-            var scheduleTaskService = EngineContext.Current.Resolve<IScheduleTaskService>();
+            //background tasks has an issue with Autofac
+            //because scope is generated each time it's requested
+            //that's why we get one single scope here
+            //this way we can also dispose resources once a task is completed
+            var scope = EngineContext.Current.ContainerManager.Scope();
+            var scheduleTaskService = EngineContext.Current.ContainerManager.Resolve<IScheduleTaskService>("", scope);
             var scheduleTask = scheduleTaskService.GetTaskByType(this.Type);
 
             try
             {
-                var task = this.CreateTask();
+                var task = this.CreateTask(scope);
                 if (task != null)
                 {
                     this.LastStartUtc = DateTime.UtcNow;
@@ -90,7 +91,7 @@ namespace Nop.Services.Tasks
                 this.LastEndUtc = DateTime.UtcNow;
 
                 //log error
-                var logger = EngineContext.Current.Resolve<ILogger>();
+                var logger = EngineContext.Current.ContainerManager.Resolve<ILogger>("", scope);
                 logger.Error(string.Format("Error while running the '{0}' schedule task. {1}", this.Name, exc.Message), exc);
                 if (throwException)
                     throw;
@@ -103,6 +104,9 @@ namespace Nop.Services.Tasks
                 scheduleTask.LastSuccessUtc = this.LastSuccessUtc;
                 scheduleTaskService.UpdateTask(scheduleTask);
             }
+
+            //dispose all resources
+            scope.Dispose();
 
             this.IsRunning = false;
         }
