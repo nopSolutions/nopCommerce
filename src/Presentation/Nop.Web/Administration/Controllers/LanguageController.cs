@@ -6,7 +6,6 @@ using System.Text;
 using System.Web.Mvc;
 using Nop.Admin.Models.Localization;
 using Nop.Core;
-using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Localization;
 using Nop.Services.Directory;
 using Nop.Services.Localization;

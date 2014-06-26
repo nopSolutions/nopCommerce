@@ -6,7 +6,6 @@ using System.Web.Mvc;
 using Nop.Admin.Models.Messages;
 using Nop.Core;
 using Nop.Core.Domain.Messages;
-using Nop.Core.Domain.Stores;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Messages;

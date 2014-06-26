@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Net.Mail;
 using System.Web.Mvc;
 using Nop.Admin.Models.Messages;
 using Nop.Core;

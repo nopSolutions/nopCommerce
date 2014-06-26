@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Nop.Services.Logging;
+﻿using System.Collections.Generic;
 using Nop.Services.Shipping.Tracking;
 
 namespace Nop.Plugin.Shipping.CanadaPost
