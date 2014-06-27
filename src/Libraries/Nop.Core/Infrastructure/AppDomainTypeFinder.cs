@@ -19,7 +19,7 @@ namespace Nop.Core.Infrastructure
 
         private bool ignoreReflectionErrors = true;
         private bool loadAppDomainAssemblies = true;
-        private string assemblySkipLoadingPattern = "^System|^mscorlib|^Microsoft|^CppCodeProvider|^VJSharpCodeProvider|^WebDev|^Castle|^Iesi|^log4net|^NHibernate|^nunit|^TestDriven|^MbUnit|^Rhino|^QuickGraph|^TestFu|^Telerik|^ComponentArt|^MvcContrib|^AjaxControlToolkit|^Antlr3|^Remotion|^Recaptcha";
+        private string assemblySkipLoadingPattern = "^System|^mscorlib|^Microsoft|^AjaxControlToolkit|^Antlr3|^Autofac|^AutoMapper|^Castle|^ComponentArt|^CppCodeProvider|^DotNetOpenAuth|^EntityFramework|^EPPlus|^FluentValidation|^ImageResizer|^itextsharp|^log4net|^MaxMind|^MbUnit|^MiniProfiler|^Mono.Math|^MvcContrib|^Newtonsoft|^NHibernate|^nunit|^Org.Mentalis|^PerlRegex|^QuickGraph|^Recaptcha|^Remotion|^RestSharp|^Rhino|^Telerik|^Iesi|^TestDriven|^TestFu|^UserAgentStringLibrary|^VJSharpCodeProvider|^WebActivator|^WebDev|^WebGrease";
         private string assemblyRestrictToLoadingPattern = ".*";
         private IList<string> assemblyNames = new List<string>();
 
@@ -265,7 +265,7 @@ namespace Nop.Core.Infrastructure
                     {
                         App.Load(an);
                     }
-                    
+
                     //old loading stuff
                     //Assembly a = Assembly.ReflectionOnlyLoadFrom(dllPath);
                     //if (Matches(a.FullName) && !loadedAssemblyNames.Contains(a.FullName))
