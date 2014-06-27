@@ -103,7 +103,18 @@ namespace Nop.Web
             if (webHelper.GetThisPageUrl(false).StartsWith(keepAliveUrl, StringComparison.InvariantCultureIgnoreCase))
                 return;
 
-            EnsureDatabaseIsInstalled();
+            //ensure database is installed
+            if (!DataSettingsHelper.DatabaseIsInstalled())
+            {
+                string installUrl = string.Format("{0}install", webHelper.GetStoreLocation());
+                if (!webHelper.GetThisPageUrl(false).StartsWith(installUrl, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    this.Response.Redirect(installUrl);
+                }
+            }
+
+            if (!DataSettingsHelper.DatabaseIsInstalled())
+                return;
 
             if (EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerInPublicStore)
             {
@@ -152,23 +163,6 @@ namespace Nop.Web
             }
         }
         
-        protected void EnsureDatabaseIsInstalled()
-        {
-            if (DataSettingsHelper.DatabaseIsInstalled())
-                return;
-
-            var webHelper = EngineContext.Current.Resolve<IWebHelper>();
-
-            if (webHelper.IsStaticResource(this.Request))
-                return;
-
-            string installUrl = string.Format("{0}install", webHelper.GetStoreLocation());
-            if (!webHelper.GetThisPageUrl(false).StartsWith(installUrl, StringComparison.InvariantCultureIgnoreCase))
-            {
-                this.Response.Redirect(installUrl);
-            }
-        }
-
         protected void SetWorkingCulture()
         {
             if (!DataSettingsHelper.DatabaseIsInstalled())
@@ -179,7 +173,7 @@ namespace Nop.Web
             if (webHelper.IsStaticResource(this.Request))
                 return;
 
-            //keep alive page requested (we ignore it to prevent creating a guest customer records)
+            //keep alive page requested (we ignore it to prevent creation of guest customer records)
             string keepAliveUrl = string.Format("{0}keepalive/index", webHelper.GetStoreLocation());
             if (webHelper.GetThisPageUrl(false).StartsWith(keepAliveUrl, StringComparison.InvariantCultureIgnoreCase))
                 return;
