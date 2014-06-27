@@ -223,10 +223,10 @@ namespace Nop.Web.Framework.Themes
 
         }
 
-        protected override bool FileExists(ControllerContext controllerContext, string virtualPath)
-        {
-            return BuildManager.GetObjectFactory(virtualPath, false) != null;
-        }
+        //protected override bool FileExists(ControllerContext controllerContext, string virtualPath)
+        //{
+        //    return BuildManager.GetObjectFactory(virtualPath, false) != null;
+        //}
 
         #endregion
 
