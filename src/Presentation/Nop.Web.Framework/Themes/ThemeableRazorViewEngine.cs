@@ -3,7 +3,7 @@ using System.Web.Mvc;
 
 namespace Nop.Web.Framework.Themes
 {
-    public class ThemeableRazorViewEngine : ThemeableBuildManagerViewEngine
+    public class ThemeableRazorViewEngine : ThemeableVirtualPathProviderViewEngine
     {
         public ThemeableRazorViewEngine()
         {

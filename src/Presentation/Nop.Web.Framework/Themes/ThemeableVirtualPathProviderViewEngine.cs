@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Web;
+using System.Web.Compilation;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Nop.Core.Infrastructure;
@@ -221,7 +222,12 @@ namespace Nop.Web.Framework.Themes
             return new ViewEngineResult(this.CreatePartialView(controllerContext, str2), this);
 
         }
-    
+
+        protected override bool FileExists(ControllerContext controllerContext, string virtualPath)
+        {
+            return BuildManager.GetObjectFactory(virtualPath, false) != null;
+        }
+
         #endregion
 
         #region Methods
@@ -240,7 +246,7 @@ namespace Nop.Web.Framework.Themes
         }
     
         #endregion
-}
+    }
 
     public class AreaAwareViewLocation : ViewLocation
     {

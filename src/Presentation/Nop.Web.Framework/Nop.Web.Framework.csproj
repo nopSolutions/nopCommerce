@@ -182,7 +182,6 @@
     <Compile Include="StatefulStorage.cs" />
     <Compile Include="Themes\IThemeProvider.cs" />
     <Compile Include="Themes\IThemeContext.cs" />
-    <Compile Include="Themes\ThemeableBuildManagerViewEngine .cs" />
     <Compile Include="Themes\ThemeableVirtualPathProviderViewEngine.cs" />
     <Compile Include="Themes\ThemeConfiguration.cs" />
     <Compile Include="Themes\ThemeableRazorViewEngine.cs" />
