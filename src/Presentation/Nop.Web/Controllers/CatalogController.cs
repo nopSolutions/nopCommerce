@@ -616,14 +616,19 @@ namespace Nop.Web.Controllers
         public ActionResult CategoryNavigation(int currentCategoryId, int currentProductId)
         {
             //get active category
-            var activeCategory = _categoryService.GetCategoryById(currentCategoryId);
-            if (activeCategory == null && currentProductId > 0)
+            int activeCategoryId = 0;
+            if (currentCategoryId > 0)
             {
+                //category details page
+                activeCategoryId = currentCategoryId;
+            }
+            else if (currentProductId > 0)
+            {
+                //product details page
                 var productCategories = _categoryService.GetProductCategoriesByProductId(currentProductId);
                 if (productCategories.Count > 0)
-                    activeCategory = productCategories[0].Category;
+                    activeCategoryId = productCategories[0].CategoryId;
             }
-            var activeCategoryId = activeCategory != null ? activeCategory.Id : 0;
 
             var customerRolesIds = _workContext.CurrentCustomer.CustomerRoles
                 .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
@@ -631,6 +636,7 @@ namespace Nop.Web.Controllers
                 string.Join(",", customerRolesIds), _storeContext.CurrentStore.Id, activeCategoryId);
             var cachedModel = _cacheManager.Get(cacheKey, () =>
             {
+                var activeCategory = _categoryService.GetCategoryById(activeCategoryId);
                 var breadCrumb = activeCategory != null ?
                     activeCategory.GetCategoryBreadCrumb(_categoryService, _aclService, _storeMappingService)
                     .Select(x => x.Id).ToList()
