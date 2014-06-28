@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
@@ -29,6 +30,13 @@ namespace Nop.Services.Seo
         /// Key for caching
         /// </summary>
         private const string URLRECORD_ALL_KEY = "Nop.urlrecord.all";
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : slug
+        /// </remarks>
+        private const string URLRECORD_BY_SLUG_KEY = "Nop.urlrecord.active.slug-{0}";
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
@@ -65,6 +73,23 @@ namespace Nop.Services.Seo
 
         #region Utilities
 
+        protected UrlRecordForCaching Map(UrlRecord record)
+        {
+            if (record == null)
+                throw new ArgumentNullException("record");
+
+            var urlRecordForCaching = new UrlRecordForCaching()
+            {
+                Id = record.Id,
+                EntityId = record.EntityId,
+                EntityName = record.EntityName,
+                Slug = record.Slug,
+                IsActive = record.IsActive,
+                LanguageId = record.LanguageId
+            };
+            return urlRecordForCaching;
+        }
+
         /// <summary>
         /// Gets all cached URL records
         /// </summary>
@@ -81,16 +106,8 @@ namespace Nop.Services.Seo
                 var list = new List<UrlRecordForCaching>();
                 foreach (var ur in urlRecords)
                 {
-                    var localizedPropertyForCaching = new UrlRecordForCaching()
-                    {
-                        Id = ur.Id,
-                        EntityId = ur.EntityId,
-                        EntityName = ur.EntityName,
-                        Slug = ur.Slug,
-                        IsActive = ur.IsActive,
-                        LanguageId = ur.LanguageId
-                    };
-                    list.Add(localizedPropertyForCaching);
+                    var urlRecordForCaching = Map(ur);
+                    list.Add(urlRecordForCaching);
                 }
                 return list;
             });
@@ -188,6 +205,44 @@ namespace Nop.Services.Seo
                         select ur;
             var urlRecord = query.FirstOrDefault();
             return urlRecord;
+        }
+
+        /// <summary>
+        /// Find URL record (cached version).
+        /// This method works absolutely the same way as "GetBySlug" one but caches the results.
+        /// Hence, it's used only for performance optimization in public store
+        /// </summary>
+        /// <param name="slug">Slug</param>
+        /// <returns>Found URL record</returns>
+        public virtual UrlRecordForCaching GetBySlugCached(string slug)
+        {
+            if (String.IsNullOrEmpty(slug))
+                return null;
+
+            if (_localizationSettings.LoadAllUrlRecordsOnStartup)
+            {
+                //load all records (we know they are cached)
+                var source = GetAllUrlRecordsCached();
+                var query = from ur in source
+                            where ur.Slug.Equals(slug, StringComparison.InvariantCultureIgnoreCase)
+                            select ur;
+                var urlRecordForCaching = query.FirstOrDefault();
+                return urlRecordForCaching;
+            }
+            else
+            {
+                //gradual loading
+                string key = string.Format(URLRECORD_BY_SLUG_KEY, slug);
+                return _cacheManager.Get(key, () =>
+                {
+                    var urlRecord = GetBySlug(slug);
+                    if (urlRecord == null)
+                        return null;
+
+                    var urlRecordForCaching = Map(urlRecord);
+                    return urlRecordForCaching;
+                });
+            }
         }
 
         /// <summary>

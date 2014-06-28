@@ -39,7 +39,16 @@ namespace Nop.Services.Seo
         /// <param name="slug">Slug</param>
         /// <returns>Found URL record</returns>
         UrlRecord GetBySlug(string slug);
-        
+
+        /// <summary>
+        /// Find URL record (cached version).
+        /// This method works absolutely the same way as "GetBySlug" one but caches the results.
+        /// Hence, it's used only for performance optimization in public store
+        /// </summary>
+        /// <param name="slug">Slug</param>
+        /// <returns>Found URL record</returns>
+        UrlRecordService.UrlRecordForCaching GetBySlugCached(string slug);
+
         /// <summary>
         /// Gets all URL records
         /// </summary>

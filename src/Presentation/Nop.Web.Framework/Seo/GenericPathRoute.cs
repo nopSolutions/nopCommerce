@@ -82,7 +82,11 @@ namespace Nop.Web.Framework.Seo
             {
                 var urlRecordService = EngineContext.Current.Resolve<IUrlRecordService>();
                 var slug = data.Values["generic_se_name"] as string;
-                var urlRecord = urlRecordService.GetBySlug(slug);
+                //performance optimization.
+                //we load a cached verion here. it reduces number of SQL requests for each page load
+                var urlRecord = urlRecordService.GetBySlugCached(slug);
+                //comment the line above and uncomment the line below in order to disable this performance "workaround"
+                //var urlRecord = urlRecordService.GetBySlug(slug);
                 if (urlRecord == null)
                 {
                     //no URL record found
