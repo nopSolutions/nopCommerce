@@ -750,83 +750,88 @@ namespace Nop.Web.Controllers
                 AnonymousCheckoutAllowed = _orderSettings.AnonymousCheckoutAllowed,
             };
 
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .LimitPerStore(_storeContext.CurrentStore.Id)
-                .ToList();
-            model.TotalProducts = cart.GetTotalProducts();
-            if (cart.Count > 0)
+
+            //performance optimization (use "HasShoppingCartItems" property)
+            if (_workContext.CurrentCustomer.HasShoppingCartItems)
             {
-                //subtotal
-                decimal subtotalBase = decimal.Zero;
-                decimal orderSubTotalDiscountAmountBase = decimal.Zero;
-                Discount orderSubTotalAppliedDiscount = null;
-                decimal subTotalWithoutDiscountBase = decimal.Zero;
-                decimal subTotalWithDiscountBase = decimal.Zero;
-                var subTotalIncludingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax && !_taxSettings.ForceTaxExclusionFromOrderSubtotal;
-                _orderTotalCalculationService.GetShoppingCartSubTotal(cart, subTotalIncludingTax,
-                    out orderSubTotalDiscountAmountBase, out orderSubTotalAppliedDiscount,
-                    out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
-                subtotalBase = subTotalWithoutDiscountBase;
-                decimal subtotal = _currencyService.ConvertFromPrimaryStoreCurrency(subtotalBase, _workContext.WorkingCurrency);
-                model.SubTotal = _priceFormatter.FormatPrice(subtotal, false, _workContext.WorkingCurrency, _workContext.WorkingLanguage, subTotalIncludingTax);
-
-                var requiresShipping = cart.RequiresShipping();
-                //a customer should visit the shopping cart page (hide checkout button) before going to checkout if:
-                //1. "terms of service" are enabled
-                //2. min order sub-total is OK
-                //3. we have at least one checkout attribute
-                var checkoutAttributesExistCacheKey = string.Format(ModelCacheEventConsumer.CHECKOUTATTRIBUTES_EXIST_KEY,
-                    _storeContext.CurrentStore.Id, requiresShipping);
-                var checkoutAttributesExist = _cacheManager.Get(checkoutAttributesExistCacheKey,
-                    () =>
-                    {
-                        var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes(_storeContext.CurrentStore.Id, !requiresShipping);
-                        return checkoutAttributes.Count > 0;
-                    });
-
-                bool minOrderSubtotalAmountOk = _orderProcessingService.ValidateMinOrderSubtotalAmount(cart);
-                model.DisplayCheckoutButton = !_orderSettings.TermsOfServiceOnShoppingCartPage &&
-                    minOrderSubtotalAmountOk && 
-                    !checkoutAttributesExist;
-
-                //products. sort descending (recently added products)
-                foreach (var sci in cart
-                    .OrderByDescending(x => x.Id)
-                    .Take(_shoppingCartSettings.MiniShoppingCartProductNumber)
-                    .ToList())
+                var cart = _workContext.CurrentCustomer.ShoppingCartItems
+                    .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                    .LimitPerStore(_storeContext.CurrentStore.Id)
+                    .ToList();
+                model.TotalProducts = cart.GetTotalProducts();
+                if (cart.Count > 0)
                 {
-                    var cartItemModel = new MiniShoppingCartModel.ShoppingCartItemModel()
-                    {
-                        Id = sci.Id,
-                        ProductId = sci.Product.Id,
-                        ProductName = sci.Product.GetLocalized(x => x.Name),
-                        ProductSeName = sci.Product.GetSeName(),
-                        Quantity = sci.Quantity,
-                        AttributeInfo = _productAttributeFormatter.FormatAttributes(sci.Product, sci.AttributesXml)
-                    };
+                    //subtotal
+                    decimal subtotalBase = decimal.Zero;
+                    decimal orderSubTotalDiscountAmountBase = decimal.Zero;
+                    Discount orderSubTotalAppliedDiscount = null;
+                    decimal subTotalWithoutDiscountBase = decimal.Zero;
+                    decimal subTotalWithDiscountBase = decimal.Zero;
+                    var subTotalIncludingTax = _workContext.TaxDisplayType == TaxDisplayType.IncludingTax && !_taxSettings.ForceTaxExclusionFromOrderSubtotal;
+                    _orderTotalCalculationService.GetShoppingCartSubTotal(cart, subTotalIncludingTax,
+                        out orderSubTotalDiscountAmountBase, out orderSubTotalAppliedDiscount,
+                        out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
+                    subtotalBase = subTotalWithoutDiscountBase;
+                    decimal subtotal = _currencyService.ConvertFromPrimaryStoreCurrency(subtotalBase, _workContext.WorkingCurrency);
+                    model.SubTotal = _priceFormatter.FormatPrice(subtotal, false, _workContext.WorkingCurrency, _workContext.WorkingLanguage, subTotalIncludingTax);
 
-                    //unit prices
-                    if (sci.Product.CallForPrice)
-                    {
-                        cartItemModel.UnitPrice = _localizationService.GetResource("Products.CallForPrice");
-                    }
-                    else
-                    {
-                        decimal taxRate = decimal.Zero;
-                        decimal shoppingCartUnitPriceWithDiscountBase = _taxService.GetProductPrice(sci.Product, _priceCalculationService.GetUnitPrice(sci, true), out taxRate);
-                        decimal shoppingCartUnitPriceWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartUnitPriceWithDiscountBase, _workContext.WorkingCurrency);
-                        cartItemModel.UnitPrice = _priceFormatter.FormatPrice(shoppingCartUnitPriceWithDiscount);
-                    }
+                    var requiresShipping = cart.RequiresShipping();
+                    //a customer should visit the shopping cart page (hide checkout button) before going to checkout if:
+                    //1. "terms of service" are enabled
+                    //2. min order sub-total is OK
+                    //3. we have at least one checkout attribute
+                    var checkoutAttributesExistCacheKey = string.Format(ModelCacheEventConsumer.CHECKOUTATTRIBUTES_EXIST_KEY,
+                        _storeContext.CurrentStore.Id, requiresShipping);
+                    var checkoutAttributesExist = _cacheManager.Get(checkoutAttributesExistCacheKey,
+                        () =>
+                        {
+                            var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes(_storeContext.CurrentStore.Id, !requiresShipping);
+                            return checkoutAttributes.Count > 0;
+                        });
 
-                    //picture
-                    if (_shoppingCartSettings.ShowProductImagesInMiniShoppingCart)
-                    {
-                        cartItemModel.Picture = PrepareCartItemPictureModel(sci,
-                            _mediaSettings.MiniCartThumbPictureSize, true, cartItemModel.ProductName);
-                    }
+                    bool minOrderSubtotalAmountOk = _orderProcessingService.ValidateMinOrderSubtotalAmount(cart);
+                    model.DisplayCheckoutButton = !_orderSettings.TermsOfServiceOnShoppingCartPage &&
+                        minOrderSubtotalAmountOk &&
+                        !checkoutAttributesExist;
 
-                    model.Items.Add(cartItemModel);
+                    //products. sort descending (recently added products)
+                    foreach (var sci in cart
+                        .OrderByDescending(x => x.Id)
+                        .Take(_shoppingCartSettings.MiniShoppingCartProductNumber)
+                        .ToList())
+                    {
+                        var cartItemModel = new MiniShoppingCartModel.ShoppingCartItemModel()
+                        {
+                            Id = sci.Id,
+                            ProductId = sci.Product.Id,
+                            ProductName = sci.Product.GetLocalized(x => x.Name),
+                            ProductSeName = sci.Product.GetSeName(),
+                            Quantity = sci.Quantity,
+                            AttributeInfo = _productAttributeFormatter.FormatAttributes(sci.Product, sci.AttributesXml)
+                        };
+
+                        //unit prices
+                        if (sci.Product.CallForPrice)
+                        {
+                            cartItemModel.UnitPrice = _localizationService.GetResource("Products.CallForPrice");
+                        }
+                        else
+                        {
+                            decimal taxRate = decimal.Zero;
+                            decimal shoppingCartUnitPriceWithDiscountBase = _taxService.GetProductPrice(sci.Product, _priceCalculationService.GetUnitPrice(sci, true), out taxRate);
+                            decimal shoppingCartUnitPriceWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartUnitPriceWithDiscountBase, _workContext.WorkingCurrency);
+                            cartItemModel.UnitPrice = _priceFormatter.FormatPrice(shoppingCartUnitPriceWithDiscount);
+                        }
+
+                        //picture
+                        if (_shoppingCartSettings.ShowProductImagesInMiniShoppingCart)
+                        {
+                            cartItemModel.Picture = PrepareCartItemPictureModel(sci,
+                                _mediaSettings.MiniCartThumbPictureSize, true, cartItemModel.ProductName);
+                        }
+
+                        model.Items.Add(cartItemModel);
+                    }
                 }
             }
             

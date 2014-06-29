@@ -30,6 +30,7 @@ namespace Nop.Data.Tests.Customers
             fromDb.IsTaxExempt.ShouldEqual(true);
             fromDb.AffiliateId.ShouldEqual(1);
             fromDb.VendorId.ShouldEqual(2);
+            fromDb.HasShoppingCartItems.ShouldEqual(true);
             fromDb.Active.ShouldEqual(true);
             fromDb.Deleted.ShouldEqual(false);
             fromDb.IsSystemAccount.ShouldEqual(true);
@@ -238,6 +239,7 @@ namespace Nop.Data.Tests.Customers
                 IsTaxExempt = true,
                 AffiliateId = 1,
                 VendorId = 2,
+                HasShoppingCartItems = true,
                 Active = true,
                 Deleted = false,
                 IsSystemAccount = true,

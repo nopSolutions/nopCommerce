@@ -133,6 +133,10 @@ namespace Nop.Services.Orders
             //delete item
             _sciRepository.Delete(shoppingCartItem);
 
+            //reset "HasShoppingCartItems" property used for performance optimization
+            customer.HasShoppingCartItems = customer.ShoppingCartItems.Count > 0;
+            _customerService.UpdateCustomer(customer);
+
             //validate checkout attributes
             if (ensureOnlyActiveCheckoutAttributes &&
                 //only for shopping cart items (ignore wishlist)
@@ -1030,6 +1034,11 @@ namespace Nop.Services.Orders
                         UpdatedOnUtc = now
                     };
                     customer.ShoppingCartItems.Add(shoppingCartItem);
+                    _customerService.UpdateCustomer(customer);
+
+
+                    //updated "HasShoppingCartItems" property used for performance optimization
+                    customer.HasShoppingCartItems = customer.ShoppingCartItems.Count > 0;
                     _customerService.UpdateCustomer(customer);
 
                     //event notification

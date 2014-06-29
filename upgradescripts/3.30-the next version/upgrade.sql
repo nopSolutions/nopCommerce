@@ -1358,3 +1358,25 @@ BEGIN
 	VALUES (@PermissionRecordId, @AdminCustomerRoleId)
 END
 GO
+
+
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Customer]') and NAME='HasShoppingCartItems')
+BEGIN
+	ALTER TABLE [Customer]
+	ADD [HasShoppingCartItems] bit NULL
+END
+GO
+
+UPDATE [Customer]
+SET [HasShoppingCartItems] = (SELECT COUNT([Id]) FROM [ShoppingCartItem] WHERE [ShoppingCartItem].[CustomerId] = Customer.Id)
+GO
+     
+UPDATE [Customer]
+SET [HasShoppingCartItems] = 0
+WHERE [HasShoppingCartItems] IS NULL
+GO
+
+ALTER TABLE [Customer] ALTER COLUMN [HasShoppingCartItems] bit NOT NULL
+GO

@@ -386,21 +386,25 @@ namespace Nop.Web.Controllers
                 IsAuthenticated = customer.IsRegistered(),
                 CustomerEmailUsername = customer.IsRegistered() ? (_customerSettings.UsernamesEnabled ? customer.Username : customer.Email) : "",
                 ShoppingCartEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart),
-                ShoppingCartItems = customer.ShoppingCartItems
-                    .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                    .LimitPerStore(_storeContext.CurrentStore.Id)
-                    .ToList()
-                    .GetTotalProducts(),
                 WishlistEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableWishlist),
-                WishlistItems = customer.ShoppingCartItems
-                    .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
-                    .LimitPerStore(_storeContext.CurrentStore.Id)
-                    .ToList()
-                    .GetTotalProducts(),
                 AllowPrivateMessages = customer.IsRegistered() && _forumSettings.AllowPrivateMessages,
                 UnreadPrivateMessages = unreadMessage,
                 AlertMessage = alertMessage,
             };
+            //performance optimization (use "HasShoppingCartItems" property)
+            if (customer.HasShoppingCartItems)
+            {
+                model.ShoppingCartItems = customer.ShoppingCartItems
+                    .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                    .LimitPerStore(_storeContext.CurrentStore.Id)
+                    .ToList()
+                    .GetTotalProducts();
+                model.WishlistItems = customer.ShoppingCartItems
+                    .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
+                    .LimitPerStore(_storeContext.CurrentStore.Id)
+                    .ToList()
+                    .GetTotalProducts();
+            }
 
             return PartialView(model);
         }
