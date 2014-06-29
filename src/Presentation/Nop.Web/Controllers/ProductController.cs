@@ -557,7 +557,29 @@ namespace Nop.Web.Controllers
 
             #region Product attributes
 
-            var productVariantAttributes = _productAttributeService.GetProductVariantAttributesByProductId(product.Id);
+            //performance optimization
+            //We cache a value indicating whether a product has attributes
+            IList<ProductVariantAttribute> productVariantAttributes = null;
+            string cacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_HAS_PRODUCT_ATTRIBUTES_KEY, product.Id);
+            var hasProductAttributesCache = _cacheManager.Get<bool?>(cacheKey);
+            if (!hasProductAttributesCache.HasValue)
+            {
+                //no value in the cache yet
+                //let's load attributes and cache the result (true/false)
+                productVariantAttributes = _productAttributeService.GetProductVariantAttributesByProductId(product.Id);
+                hasProductAttributesCache = productVariantAttributes.Count > 0;
+                _cacheManager.Set(cacheKey, hasProductAttributesCache, 60);
+            }
+            if (hasProductAttributesCache.Value && productVariantAttributes == null)
+            {
+                //cache indicates that the product has attributes
+                //let's load them
+                productVariantAttributes = _productAttributeService.GetProductVariantAttributesByProductId(product.Id);
+            }
+            if (productVariantAttributes == null)
+            {
+                productVariantAttributes = new List<ProductVariantAttribute>();
+            }
             foreach (var attribute in productVariantAttributes)
             {
                 var pvaModel = new ProductDetailsModel.ProductVariantAttributeModel()

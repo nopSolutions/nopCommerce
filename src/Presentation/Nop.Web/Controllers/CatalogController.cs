@@ -533,13 +533,15 @@ namespace Nop.Web.Controllers
             //featured products
             if (!_catalogSettings.IgnoreFeaturedProducts)
             {
-                //We cache whether we have featured products
+                //We cache a value indicating whether we have featured products
                 IPagedList<Product> featuredProducts = null;
                 string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_HAS_FEATURED_PRODUCTS_KEY, categoryId,
                     string.Join(",", customerRolesIds), _storeContext.CurrentStore.Id);
                 var hasFeaturedProductsCache = _cacheManager.Get<bool?>(cacheKey);
                 if (!hasFeaturedProductsCache.HasValue)
                 {
+                    //no value in the cache yet
+                    //let's load products and cache the result (true/false)
                     featuredProducts = _productService.SearchProducts(
                        categoryIds: new List<int>() { category.Id },
                        storeId: _storeContext.CurrentStore.Id,
@@ -550,6 +552,8 @@ namespace Nop.Web.Controllers
                 }
                 if (hasFeaturedProductsCache.Value && featuredProducts == null)
                 {
+                    //cache indicates that the category has featured products
+                    //let's load them
                     featuredProducts = _productService.SearchProducts(
                        categoryIds: new List<int>() { category.Id },
                        storeId: _storeContext.CurrentStore.Id,
@@ -788,7 +792,7 @@ namespace Nop.Web.Controllers
             {
                 IPagedList<Product> featuredProducts = null;
 
-                //We cache whether we have featured products
+                //We cache a value indicating whether we have featured products
                 var customerRolesIds = _workContext.CurrentCustomer.CustomerRoles
                     .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
                 string cacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_HAS_FEATURED_PRODUCTS_KEY, manufacturerId,
@@ -796,6 +800,8 @@ namespace Nop.Web.Controllers
                 var hasFeaturedProductsCache = _cacheManager.Get<bool?>(cacheKey);
                 if (!hasFeaturedProductsCache.HasValue)
                 {
+                    //no value in the cache yet
+                    //let's load products and cache the result (true/false)
                     featuredProducts = _productService.SearchProducts(
                        manufacturerId: manufacturer.Id,
                        storeId: _storeContext.CurrentStore.Id,
@@ -806,6 +812,8 @@ namespace Nop.Web.Controllers
                 }
                 if (hasFeaturedProductsCache.Value && featuredProducts == null)
                 {
+                    //cache indicates that the manufacturer has featured products
+                    //let's load them
                     featuredProducts = _productService.SearchProducts(
                        manufacturerId: manufacturer.Id,
                        storeId: _storeContext.CurrentStore.Id,

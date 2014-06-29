@@ -72,6 +72,11 @@ namespace Nop.Web.Infrastructure.Cache
         IConsumer<EntityInserted<ProductSpecificationAttribute>>,
         IConsumer<EntityUpdated<ProductSpecificationAttribute>>,
         IConsumer<EntityDeleted<ProductSpecificationAttribute>>,
+        //Product attributes
+        IConsumer<EntityDeleted<ProductAttribute>>,
+        //Product attributes
+        IConsumer<EntityInserted<ProductVariantAttribute>>,
+        IConsumer<EntityDeleted<ProductVariantAttribute>>,
         //Topics
         IConsumer<EntityInserted<Topic>>,
         IConsumer<EntityUpdated<Topic>>,
@@ -297,6 +302,15 @@ namespace Nop.Web.Infrastructure.Cache
         /// </remarks>
         public const string PRODUCT_SPECS_MODEL_KEY = "Nop.pres.product.specs-{0}-{1}";
         public const string PRODUCT_SPECS_PATTERN_KEY = "Nop.pres.product.specs";
+
+        /// <summary>
+        /// Key for caching of a value indicating whether a product has product attributes
+        /// </summary>
+        /// <remarks>
+        /// {0} : product id
+        /// </remarks>
+        public const string PRODUCT_HAS_PRODUCT_ATTRIBUTES_KEY = "Nop.pres.product.hasproductattributes-{0}";
+        public const string PRODUCT_HAS_PRODUCT_ATTRIBUTES_PATTERN_KEY = "Nop.pres.product.hasproductattributes";
 
         /// <summary>
         /// Key for TopicModel caching
@@ -858,6 +872,21 @@ namespace Nop.Web.Infrastructure.Cache
         public void HandleEvent(EntityDeleted<ProductSpecificationAttribute> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
+        }
+        
+        //Product attributes
+        public void HandleEvent(EntityDeleted<ProductAttribute> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(PRODUCT_HAS_PRODUCT_ATTRIBUTES_PATTERN_KEY);
+        }
+        //Product attributes
+        public void HandleEvent(EntityInserted<ProductVariantAttribute> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(PRODUCT_HAS_PRODUCT_ATTRIBUTES_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityDeleted<ProductVariantAttribute> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(PRODUCT_HAS_PRODUCT_ATTRIBUTES_PATTERN_KEY);
         }
 
         //Topics
