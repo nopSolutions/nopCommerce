@@ -9,6 +9,11 @@
     var permissionService = EngineContext.Current.Resolve<IPermissionService>();
     var allowJbimages = false;
     var allowRoxyFileman = permissionService.Authorize(StandardPermissionProvider.HtmlEditorManagePictures);
+    //TinyMCE picture browser does not work in a virtual category
+    //so if you're running in a virtual directory, then uncomment the code below:
+    //allowJbimages = true;
+    //allowRoxyFileman =false;
+    
 
     var random = CommonHelper.GenerateRandomInteger();
 }
