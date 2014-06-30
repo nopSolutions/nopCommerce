@@ -1,5 +1,5 @@
 ﻿Group: Promotion feeds
-FriendlyName: Google Product Search
+FriendlyName: Google Shopping (formely Google Product Search)
 SystemName: PromotionFeed.Froogle
 Version: 1.57
 SupportedVersions: 3.40
