@@ -98,6 +98,7 @@ namespace Nop.Services.ExportImport
                             xmlWriter.WriteStartElement("ProductCategory");
                             xmlWriter.WriteElementString("ProductCategoryId", null, productCategory.Id.ToString());
                             xmlWriter.WriteElementString("ProductId", null, productCategory.ProductId.ToString());
+                            xmlWriter.WriteElementString("ProductName", null, product.Name);
                             xmlWriter.WriteElementString("IsFeaturedProduct", null, productCategory.IsFeaturedProduct.ToString());
                             xmlWriter.WriteElementString("DisplayOrder", null, productCategory.DisplayOrder.ToString());
                             xmlWriter.WriteEndElement();
@@ -166,6 +167,7 @@ namespace Nop.Services.ExportImport
                             xmlWriter.WriteStartElement("ProductManufacturer");
                             xmlWriter.WriteElementString("ProductManufacturerId", null, productManufacturer.Id.ToString());
                             xmlWriter.WriteElementString("ProductId", null, productManufacturer.ProductId.ToString());
+                            xmlWriter.WriteElementString("ProductName", null, product.Name);
                             xmlWriter.WriteElementString("IsFeaturedProduct", null, productManufacturer.IsFeaturedProduct.ToString());
                             xmlWriter.WriteElementString("DisplayOrder", null, productManufacturer.DisplayOrder.ToString());
                             xmlWriter.WriteEndElement();
@@ -310,7 +312,10 @@ namespace Nop.Services.ExportImport
                 var discounts = product.AppliedDiscounts;
                 foreach (var discount in discounts)
                 {
+                    xmlWriter.WriteStartElement("Discount");
                     xmlWriter.WriteElementString("DiscountId", null, discount.Id.ToString());
+                    xmlWriter.WriteElementString("Name", null, discount.Name);
+                    xmlWriter.WriteEndElement();
                 }
                 xmlWriter.WriteEndElement();
 
@@ -319,11 +324,13 @@ namespace Nop.Services.ExportImport
                 var tierPrices = product.TierPrices;
                 foreach (var tierPrice in tierPrices)
                 {
+                    xmlWriter.WriteStartElement("TierPrice");
                     xmlWriter.WriteElementString("TierPriceId", null, tierPrice.Id.ToString());
                     xmlWriter.WriteElementString("StoreId", null, tierPrice.StoreId.ToString());
                     xmlWriter.WriteElementString("CustomerRoleId", null, tierPrice.CustomerRoleId.HasValue ? tierPrice.CustomerRoleId.ToString() : "0");
                     xmlWriter.WriteElementString("Quantity", null, tierPrice.Quantity.ToString());
                     xmlWriter.WriteElementString("Price", null, tierPrice.Price.ToString());
+                    xmlWriter.WriteEndElement();
                 }
                 xmlWriter.WriteEndElement();
 
@@ -334,6 +341,7 @@ namespace Nop.Services.ExportImport
                     xmlWriter.WriteStartElement("ProductVariantAttribute");
                     xmlWriter.WriteElementString("ProductVariantAttributeId", null, productVariantAttribute.Id.ToString());
                     xmlWriter.WriteElementString("ProductAttributeId", null, productVariantAttribute.ProductAttributeId.ToString());
+                    xmlWriter.WriteElementString("ProductAttributeName", null, productVariantAttribute.ProductAttribute.Name);
                     xmlWriter.WriteElementString("TextPrompt", null, productVariantAttribute.TextPrompt);
                     xmlWriter.WriteElementString("IsRequired", null, productVariantAttribute.IsRequired.ToString());
                     xmlWriter.WriteElementString("AttributeControlTypeId", null, productVariantAttribute.AttributeControlTypeId.ToString());
@@ -365,6 +373,7 @@ namespace Nop.Services.ExportImport
                     var productVariantAttributeValues = productVariantAttribute.ProductVariantAttributeValues;
                     foreach (var productVariantAttributeValue in productVariantAttributeValues)
                     {
+                        xmlWriter.WriteStartElement("ProductVariantAttributeValue");
                         xmlWriter.WriteElementString("ProductVariantAttributeValueId", null, productVariantAttributeValue.Id.ToString());
                         xmlWriter.WriteElementString("Name", null, productVariantAttributeValue.Name);
                         xmlWriter.WriteElementString("AttributeValueTypeId", null, productVariantAttributeValue.AttributeValueTypeId.ToString());
@@ -377,6 +386,7 @@ namespace Nop.Services.ExportImport
                         xmlWriter.WriteElementString("IsPreSelected", null, productVariantAttributeValue.IsPreSelected.ToString());
                         xmlWriter.WriteElementString("DisplayOrder", null, productVariantAttributeValue.DisplayOrder.ToString());
                         xmlWriter.WriteElementString("PictureId", null, productVariantAttributeValue.PictureId.ToString());
+                        xmlWriter.WriteEndElement();
                     }
                     xmlWriter.WriteEndElement();
 
