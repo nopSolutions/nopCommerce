@@ -23,7 +23,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected IList<string> GetAllowedFileTypes()
+        protected virtual IList<string> GetAllowedFileTypes()
         {
             return new List<string>()
                    {".gif", ".jpg", ".jpeg", ".png", ".bmp"};

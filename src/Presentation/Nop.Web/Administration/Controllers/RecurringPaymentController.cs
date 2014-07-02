@@ -50,7 +50,7 @@ namespace Nop.Admin.Controllers
         #region Utilities
 
         [NonAction]
-        protected void PrepareRecurringPaymentModel(RecurringPaymentModel model, 
+        protected virtual void PrepareRecurringPaymentModel(RecurringPaymentModel model, 
             RecurringPayment recurringPayment)
         {
             if (model == null)
@@ -77,7 +77,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected void PrepareRecurringPaymentHistoryModel(RecurringPaymentModel.RecurringPaymentHistoryModel model,
+        protected virtual void PrepareRecurringPaymentHistoryModel(RecurringPaymentModel.RecurringPaymentHistoryModel model,
             RecurringPaymentHistory history)
         {
             if (model == null)

@@ -62,7 +62,7 @@ namespace Nop.Admin.Controllers
         #region Utilities
 
         [NonAction]
-        protected string GetRequirementUrlInternal(IDiscountRequirementRule discountRequirementRule, Discount discount, int? discountRequirementId)
+        protected virtual string GetRequirementUrlInternal(IDiscountRequirementRule discountRequirementRule, Discount discount, int? discountRequirementId)
         {   
             if (discountRequirementRule == null)
                 throw new ArgumentNullException("discountRequirementRule");
@@ -75,7 +75,7 @@ namespace Nop.Admin.Controllers
         }
         
         [NonAction]
-        protected void PrepareDiscountModel(DiscountModel model, Discount discount)
+        protected virtual void PrepareDiscountModel(DiscountModel model, Discount discount)
         {
             if (model == null)
                 throw new ArgumentNullException("model");

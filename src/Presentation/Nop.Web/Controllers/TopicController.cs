@@ -47,7 +47,7 @@ namespace Nop.Web.Controllers
         #region Utilities
 
         [NonAction]
-        protected TopicModel PrepareTopicModel(Topic topic)
+        protected virtual TopicModel PrepareTopicModel(Topic topic)
         {
             if (topic == null)
                 throw new ArgumentNullException("topic");

@@ -78,7 +78,7 @@ namespace Nop.Admin.Controllers
         #region Utilities
 
         [NonAction]
-        protected void UpdateAttributeLocales(CheckoutAttribute checkoutAttribute, CheckoutAttributeModel model)
+        protected virtual void UpdateAttributeLocales(CheckoutAttribute checkoutAttribute, CheckoutAttributeModel model)
         {
             foreach (var localized in model.Locales)
             {
@@ -95,7 +95,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected void UpdateValueLocales(CheckoutAttributeValue checkoutAttributeValue, CheckoutAttributeValueModel model)
+        protected virtual void UpdateValueLocales(CheckoutAttributeValue checkoutAttributeValue, CheckoutAttributeValueModel model)
         {
             foreach (var localized in model.Locales)
             {
@@ -107,7 +107,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected void PrepareTaxCategories(CheckoutAttributeModel model, CheckoutAttribute checkoutAttribute, bool excludeProperties)
+        protected virtual void PrepareTaxCategories(CheckoutAttributeModel model, CheckoutAttribute checkoutAttribute, bool excludeProperties)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -120,7 +120,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        private void PrepareStoresMappingModel(CheckoutAttributeModel model, CheckoutAttribute checkoutAttribute, bool excludeProperties)
+        protected virtual void PrepareStoresMappingModel(CheckoutAttributeModel model, CheckoutAttribute checkoutAttribute, bool excludeProperties)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -143,7 +143,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected void SaveStoreMappings(CheckoutAttribute checkoutAttribute, CheckoutAttributeModel model)
+        protected virtual void SaveStoreMappings(CheckoutAttribute checkoutAttribute, CheckoutAttributeModel model)
         {
             var existingStoreMappings = _storeMappingService.GetStoreMappings(checkoutAttribute);
             var allStores = _storeService.GetAllStores();

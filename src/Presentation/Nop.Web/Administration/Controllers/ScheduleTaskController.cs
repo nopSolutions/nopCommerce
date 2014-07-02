@@ -40,7 +40,7 @@ namespace Nop.Admin.Controllers
         #region Utility
 
         [NonAction]
-        protected ScheduleTaskModel PrepareScheduleTaskModel(ScheduleTask task)
+        protected virtual ScheduleTaskModel PrepareScheduleTaskModel(ScheduleTask task)
         {
             var model = new ScheduleTaskModel()
                             {

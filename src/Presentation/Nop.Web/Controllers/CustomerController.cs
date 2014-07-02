@@ -165,7 +165,7 @@ namespace Nop.Web.Controllers
         #region Utilities
 
         [NonAction]
-        protected CustomerNavigationModel GetCustomerNavigationModel(Customer customer)
+        protected virtual CustomerNavigationModel GetCustomerNavigationModel(Customer customer)
         {
             var model = new CustomerNavigationModel();
             model.HideAvatar = !_customerSettings.AllowCustomersToUploadAvatars;
@@ -179,7 +179,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        protected void TryAssociateAccountWithExternalAccount(Customer customer)
+        protected virtual void TryAssociateAccountWithExternalAccount(Customer customer)
         {
             var parameters = ExternalAuthorizerHelper.RetrieveParametersFromRoundTrip(true);
             if (parameters == null)
@@ -192,7 +192,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        protected void PrepareCustomerInfoModel(CustomerInfoModel model, Customer customer, bool excludeProperties)
+        protected virtual void PrepareCustomerInfoModel(CustomerInfoModel model, Customer customer, bool excludeProperties)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -403,7 +403,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        protected void PrepareCustomerRegisterModel(RegisterModel model, bool excludeProperties)
+        protected virtual void PrepareCustomerRegisterModel(RegisterModel model, bool excludeProperties)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -503,7 +503,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        protected CustomerOrderListModel PrepareCustomerOrderListModel(Customer customer)
+        protected virtual CustomerOrderListModel PrepareCustomerOrderListModel(Customer customer)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
@@ -551,7 +551,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        protected string ParseCustomCustomerAttributes(Customer customer, FormCollection form)
+        protected virtual string ParseCustomCustomerAttributes(Customer customer, FormCollection form)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");

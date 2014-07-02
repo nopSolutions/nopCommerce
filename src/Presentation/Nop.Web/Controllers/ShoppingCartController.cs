@@ -181,7 +181,7 @@ namespace Nop.Web.Controllers
         #region Utilities
 
         [NonAction]
-        protected PictureModel PrepareCartItemPictureModel(ShoppingCartItem sci,
+        protected virtual PictureModel PrepareCartItemPictureModel(ShoppingCartItem sci,
             int pictureSize, bool showDefaultPicture, string productName)
         {
             var pictureCacheKey = string.Format(ModelCacheEventConsumer.CART_PICTURE_MODEL_KEY, sci.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
@@ -239,7 +239,7 @@ namespace Nop.Web.Controllers
         /// <param name="prepareAndDisplayOrderReviewData">A value indicating whether we should prepare review data (such as billing/shipping address, payment or shipping data entered during checkout)</param>
         /// <returns>Model</returns>
         [NonAction]
-        protected void PrepareShoppingCartModel(ShoppingCartModel model, 
+        protected virtual void PrepareShoppingCartModel(ShoppingCartModel model, 
             IList<ShoppingCartItem> cart, bool isEditable = true, 
             bool validateCheckoutAttributes = false, 
             bool prepareEstimateShippingIfEnabled = true, bool setEstimateShippingDefaultAddress = true,
@@ -616,7 +616,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        protected void PrepareWishlistModel(WishlistModel model,
+        protected virtual void PrepareWishlistModel(WishlistModel model,
             IList<ShoppingCartItem> cart, bool isEditable = true)
         {
             if (cart == null)
@@ -739,7 +739,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        protected MiniShoppingCartModel PrepareMiniShoppingCartModel()
+        protected virtual MiniShoppingCartModel PrepareMiniShoppingCartModel()
         {
             var model = new MiniShoppingCartModel()
             {
@@ -839,7 +839,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        protected void ParseAndSaveCheckoutAttributes(List<ShoppingCartItem> cart, FormCollection form)
+        protected virtual void ParseAndSaveCheckoutAttributes(List<ShoppingCartItem> cart, FormCollection form)
         {
             if (cart == null)
                 throw new ArgumentNullException("cart");
@@ -955,7 +955,7 @@ namespace Nop.Web.Controllers
         /// <param name="form">Form</param>
         /// <returns>Parsed attributes</returns>
         [NonAction]
-        protected string ParseProductAttributes(Product product, FormCollection form)
+        protected virtual string ParseProductAttributes(Product product, FormCollection form)
         {
             string attributes = "";
 

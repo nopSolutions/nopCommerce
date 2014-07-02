@@ -96,7 +96,7 @@ namespace Nop.Web.Controllers
         #region Utilities
 
         [NonAction]
-        protected void PrepareBlogPostModel(BlogPostModel model, BlogPost blogPost, bool prepareComments)
+        protected virtual void PrepareBlogPostModel(BlogPostModel model, BlogPost blogPost, bool prepareComments)
         {
             if (blogPost == null)
                 throw new ArgumentNullException("blogPost");
@@ -144,7 +144,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        protected BlogPostListModel PrepareBlogPostListModel(BlogPagingFilteringModel command)
+        protected virtual BlogPostListModel PrepareBlogPostListModel(BlogPagingFilteringModel command)
         {
             if (command == null)
                 throw new ArgumentNullException("command");

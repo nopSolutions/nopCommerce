@@ -64,7 +64,7 @@ namespace Nop.Admin.Controllers
         #region Utilities
 
         [NonAction]
-        protected void PrepareAffiliateModel(AffiliateModel model, Affiliate affiliate, bool excludeProperties,
+        protected virtual void PrepareAffiliateModel(AffiliateModel model, Affiliate affiliate, bool excludeProperties,
             bool prepareEntireAddressModel = true)
         {
             if (model == null)

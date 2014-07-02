@@ -74,7 +74,7 @@ namespace Nop.Admin.Controllers
         #region Utilities
 
         [NonAction]
-        protected void UpdateLocales(ShippingMethod shippingMethod, ShippingMethodModel model)
+        protected virtual void UpdateLocales(ShippingMethod shippingMethod, ShippingMethodModel model)
         {
             foreach (var localized in model.Locales)
             {
@@ -91,7 +91,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected void UpdateLocales(DeliveryDate deliveryDate, DeliveryDateModel model)
+        protected virtual void UpdateLocales(DeliveryDate deliveryDate, DeliveryDateModel model)
         {
             foreach (var localized in model.Locales)
             {

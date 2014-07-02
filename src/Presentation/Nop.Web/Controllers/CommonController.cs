@@ -153,7 +153,7 @@ namespace Nop.Web.Controllers
         #region Utilities
 
         [NonAction]
-        protected LanguageSelectorModel PrepareLanguageSelectorModel()
+        protected virtual LanguageSelectorModel PrepareLanguageSelectorModel()
         {
             var availableLanguages = _cacheManager.Get(string.Format(ModelCacheEventConsumer.AVAILABLE_LANGUAGES_MODEL_KEY, _storeContext.CurrentStore.Id), () =>
             {
@@ -179,7 +179,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        protected CurrencySelectorModel PrepareCurrencySelectorModel()
+        protected virtual CurrencySelectorModel PrepareCurrencySelectorModel()
         {
             var availableCurrencies = _cacheManager.Get(string.Format(ModelCacheEventConsumer.AVAILABLE_CURRENCIES_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id), () =>
             {
@@ -215,7 +215,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        protected TaxTypeSelectorModel PrepareTaxTypeSelectorModel()
+        protected virtual TaxTypeSelectorModel PrepareTaxTypeSelectorModel()
         {
             var model = new TaxTypeSelectorModel()
             {
@@ -226,7 +226,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        protected int GetUnreadPrivateMessages()
+        protected virtual int GetUnreadPrivateMessages()
         {
             var result = 0;
             var customer = _workContext.CurrentCustomer;

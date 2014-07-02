@@ -90,7 +90,7 @@ namespace Nop.Web.Controllers
         #region Utilities
 
         [NonAction]
-        protected void PrepareNewsItemModel(NewsItemModel model, NewsItem newsItem, bool prepareComments)
+        protected virtual void PrepareNewsItemModel(NewsItemModel model, NewsItem newsItem, bool prepareComments)
         {
             if (newsItem == null)
                 throw new ArgumentNullException("newsItem");

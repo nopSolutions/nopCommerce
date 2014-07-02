@@ -76,7 +76,7 @@ namespace Nop.Admin.Controllers
         #region Utilities
 
         [NonAction]
-        protected PluginModel PreparePluginModel(PluginDescriptor pluginDescriptor, 
+        protected virtual PluginModel PreparePluginModel(PluginDescriptor pluginDescriptor, 
             bool prepareLocales = true, bool prepareStores = true)
         {
             var pluginModel = pluginDescriptor.ToModel();

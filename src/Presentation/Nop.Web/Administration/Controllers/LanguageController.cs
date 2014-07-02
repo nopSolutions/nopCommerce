@@ -56,7 +56,7 @@ namespace Nop.Admin.Controllers
         #region Utilities
 
         [NonAction]
-        private void PrepareFlagsModel(LanguageModel model)
+        protected virtual void PrepareFlagsModel(LanguageModel model)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -68,7 +68,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        private void PrepareStoresMappingModel(LanguageModel model, Language language, bool excludeProperties)
+        protected virtual void PrepareStoresMappingModel(LanguageModel model, Language language, bool excludeProperties)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -91,7 +91,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        private void PrepareCurrenciesModel(LanguageModel model)
+        protected virtual void PrepareCurrenciesModel(LanguageModel model)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -114,7 +114,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected void SaveStoreMappings(Language language, LanguageModel model)
+        protected virtual void SaveStoreMappings(Language language, LanguageModel model)
         {
             var existingStoreMappings = _storeMappingService.GetStoreMappings(language);
             var allStores = _storeService.GetAllStores();

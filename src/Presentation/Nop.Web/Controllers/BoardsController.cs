@@ -73,7 +73,7 @@ namespace Nop.Web.Controllers
         #region Utilities
 
         [NonAction]
-        protected ForumTopicRowModel PrepareForumTopicRowModel(ForumTopic topic)
+        protected virtual ForumTopicRowModel PrepareForumTopicRowModel(ForumTopic topic)
         {
             var topicModel = new ForumTopicRowModel()
             {
@@ -98,7 +98,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        protected ForumRowModel PrepareForumRowModel(Forum forum)
+        protected virtual ForumRowModel PrepareForumRowModel(Forum forum)
         {
             var forumModel = new ForumRowModel()
             {
@@ -114,7 +114,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        protected ForumGroupModel PrepareForumGroupModel(ForumGroup forumGroup)
+        protected virtual ForumGroupModel PrepareForumGroupModel(ForumGroup forumGroup)
         {
             var forumGroupModel = new ForumGroupModel()
             {
@@ -132,7 +132,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        protected IEnumerable<SelectListItem> ForumTopicTypesList()
+        protected virtual IEnumerable<SelectListItem> ForumTopicTypesList()
         {
             var list = new List<SelectListItem>();
 
@@ -158,7 +158,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        protected IEnumerable<SelectListItem> ForumGroupsForumsList()
+        protected virtual IEnumerable<SelectListItem> ForumGroupsForumsList()
         {
             var forumsList = new List<SelectListItem>();
             var separator = "--";

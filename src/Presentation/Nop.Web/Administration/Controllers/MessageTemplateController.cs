@@ -71,7 +71,7 @@ namespace Nop.Admin.Controllers
         #region Utilities
 
         [NonAction]
-        protected void UpdateLocales(MessageTemplate mt, MessageTemplateModel model)
+        protected virtual void UpdateLocales(MessageTemplate mt, MessageTemplateModel model)
         {
             foreach (var localized in model.Locales)
             {
@@ -99,7 +99,7 @@ namespace Nop.Admin.Controllers
 
 
         [NonAction]
-        private void PrepareStoresMappingModel(MessageTemplateModel model, MessageTemplate messageTemplate, bool excludeProperties)
+        protected virtual void PrepareStoresMappingModel(MessageTemplateModel model, MessageTemplate messageTemplate, bool excludeProperties)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -122,7 +122,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected void SaveStoreMappings(MessageTemplate messageTemplate, MessageTemplateModel model)
+        protected virtual void SaveStoreMappings(MessageTemplate messageTemplate, MessageTemplateModel model)
         {
             var existingStoreMappings = _storeMappingService.GetStoreMappings(messageTemplate);
             var allStores = _storeService.GetAllStores();

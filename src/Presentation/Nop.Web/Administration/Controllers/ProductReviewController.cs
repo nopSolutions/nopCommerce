@@ -42,7 +42,7 @@ namespace Nop.Admin.Controllers
         #region Utilities
 
         [NonAction]
-        protected void PrepareProductReviewModel(ProductReviewModel model,
+        protected virtual void PrepareProductReviewModel(ProductReviewModel model,
             ProductReview productReview, bool excludeProperties, bool formatReviewText)
         {
             if (model == null)

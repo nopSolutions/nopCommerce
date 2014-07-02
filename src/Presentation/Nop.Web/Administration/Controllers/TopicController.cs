@@ -54,7 +54,7 @@ namespace Nop.Admin.Controllers
         #region Utilities
 
         [NonAction]
-        protected void UpdateLocales(Topic topic, TopicModel model)
+        protected virtual void UpdateLocales(Topic topic, TopicModel model)
         {
             foreach (var localized in model.Locales)
             {
@@ -90,7 +90,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        private void PrepareStoresMappingModel(TopicModel model, Topic topic, bool excludeProperties)
+        protected virtual void PrepareStoresMappingModel(TopicModel model, Topic topic, bool excludeProperties)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -113,7 +113,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected void SaveStoreMappings(Topic topic, TopicModel model)
+        protected virtual void SaveStoreMappings(Topic topic, TopicModel model)
         {
             var existingStoreMappings = _storeMappingService.GetStoreMappings(topic);
             var allStores = _storeService.GetAllStores();

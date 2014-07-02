@@ -171,7 +171,7 @@ namespace Nop.Admin.Controllers
         #region Utilities
 
         [NonAction]
-        private void UpdateLocales(Product product, ProductModel model)
+        protected virtual void UpdateLocales(Product product, ProductModel model)
         {
             foreach (var localized in model.Locales)
             {
@@ -207,7 +207,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        private void UpdateLocales(ProductTag productTag, ProductTagModel model)
+        protected virtual void UpdateLocales(ProductTag productTag, ProductTagModel model)
         {
             foreach (var localized in model.Locales)
             {
@@ -219,7 +219,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected void UpdateLocales(ProductVariantAttributeValue pvav, ProductModel.ProductVariantAttributeValueModel model)
+        protected virtual void UpdateLocales(ProductVariantAttributeValue pvav, ProductModel.ProductVariantAttributeValueModel model)
         {
             foreach (var localized in model.Locales)
             {
@@ -231,14 +231,14 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        private void UpdatePictureSeoNames(Product product)
+        protected virtual void UpdatePictureSeoNames(Product product)
         {
             foreach (var pp in product.ProductPictures)
                 _pictureService.SetSeoFilename(pp.PictureId, _pictureService.GetPictureSeName(product.Name));
         }
         
         [NonAction]
-        private void PrepareAclModel(ProductModel model, Product product, bool excludeProperties)
+        protected virtual void PrepareAclModel(ProductModel model, Product product, bool excludeProperties)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -261,7 +261,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected void SaveProductAcl(Product product, ProductModel model)
+        protected virtual void SaveProductAcl(Product product, ProductModel model)
         {
             var existingAclRecords = _aclService.GetAclRecords(product);
             var allCustomerRoles = _customerService.GetAllCustomerRoles(true);
@@ -284,7 +284,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        private void PrepareStoresMappingModel(ProductModel model, Product product, bool excludeProperties)
+        protected virtual void PrepareStoresMappingModel(ProductModel model, Product product, bool excludeProperties)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -307,7 +307,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected void SaveStoreMappings(Product product, ProductModel model)
+        protected virtual void SaveStoreMappings(Product product, ProductModel model)
         {
             var existingStoreMappings = _storeMappingService.GetStoreMappings(product);
             var allStores = _storeService.GetAllStores();
@@ -330,7 +330,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected void PrepareAddProductAttributeCombinationModel(AddProductVariantAttributeCombinationModel model, Product product)
+        protected virtual void PrepareAddProductAttributeCombinationModel(AddProductVariantAttributeCombinationModel model, Product product)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -374,7 +374,7 @@ namespace Nop.Admin.Controllers
         }
         
         [NonAction]
-        private string[] ParseProductTags(string productTags)
+        protected virtual string[] ParseProductTags(string productTags)
         {
             var result = new List<string>();
             if (!String.IsNullOrWhiteSpace(productTags))
@@ -388,7 +388,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        private void SaveProductTags(Product product, string[] productTags)
+        protected virtual void SaveProductTags(Product product, string[] productTags)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -443,7 +443,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected void PrepareProductModel(ProductModel model, Product product,
+        protected virtual void PrepareProductModel(ProductModel model, Product product,
             bool setPredefinedValues, bool excludeProperties)
         {
             if (model == null)
@@ -614,7 +614,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected List<int> GetChildCategoryIds(int parentCategoryId)
+        protected virtual List<int> GetChildCategoryIds(int parentCategoryId)
         {
             var categoriesIds = new List<int>();
             var categories = _categoryService.GetAllCategoriesByParentCategoryId(parentCategoryId, true);

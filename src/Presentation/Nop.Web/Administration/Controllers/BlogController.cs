@@ -56,7 +56,7 @@ namespace Nop.Admin.Controllers
         #region Utilities
 
         [NonAction]
-        private void PrepareStoresMappingModel(BlogPostModel model, BlogPost blogPost, bool excludeProperties)
+        protected virtual void PrepareStoresMappingModel(BlogPostModel model, BlogPost blogPost, bool excludeProperties)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -79,7 +79,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected void SaveStoreMappings(BlogPost blogPost, BlogPostModel model)
+        protected virtual void SaveStoreMappings(BlogPost blogPost, BlogPostModel model)
         {
             var existingStoreMappings = _storeMappingService.GetStoreMappings(blogPost);
             var allStores = _storeService.GetAllStores();

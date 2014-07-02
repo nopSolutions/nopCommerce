@@ -66,7 +66,7 @@ namespace Nop.Web.Controllers
         #region Utilities
 
         [NonAction]
-        protected SubmitReturnRequestModel PrepareReturnRequestModel(SubmitReturnRequestModel model, Order order)
+        protected virtual SubmitReturnRequestModel PrepareReturnRequestModel(SubmitReturnRequestModel model, Order order)
         {
             if (order == null)
                 throw new ArgumentNullException("order");

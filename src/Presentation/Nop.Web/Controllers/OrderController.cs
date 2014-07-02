@@ -95,7 +95,7 @@ namespace Nop.Web.Controllers
         #region Utilities
 
         [NonAction]
-        protected OrderDetailsModel PrepareOrderDetailsModel(Order order)
+        protected virtual OrderDetailsModel PrepareOrderDetailsModel(Order order)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -335,7 +335,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        protected ShipmentDetailsModel PrepareShipmentDetailsModel(Shipment shipment)
+        protected virtual ShipmentDetailsModel PrepareShipmentDetailsModel(Shipment shipment)
         {
             if (shipment == null)
                 throw new ArgumentNullException("shipment");

@@ -160,7 +160,7 @@ namespace Nop.Admin.Controllers
         #region Utilities
 
         [NonAction]
-        protected string GetCustomerRolesNames(IList<CustomerRole> customerRoles, string separator = ",")
+        protected virtual string GetCustomerRolesNames(IList<CustomerRole> customerRoles, string separator = ",")
         {
             var sb = new StringBuilder();
             for (int i = 0; i < customerRoles.Count; i++)
@@ -176,7 +176,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected IList<RegisteredCustomerReportLineModel> GetReportRegisteredCustomersModel()
+        protected virtual IList<RegisteredCustomerReportLineModel> GetReportRegisteredCustomersModel()
         {
             var report = new List<RegisteredCustomerReportLineModel>();
             report.Add(new RegisteredCustomerReportLineModel()
@@ -205,7 +205,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected IList<CustomerModel.AssociatedExternalAuthModel> GetAssociatedExternalAuthRecords(Customer customer)
+        protected virtual IList<CustomerModel.AssociatedExternalAuthModel> GetAssociatedExternalAuthRecords(Customer customer)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
@@ -230,7 +230,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected CustomerModel PrepareCustomerModelForList(Customer customer)
+        protected virtual CustomerModel PrepareCustomerModelForList(Customer customer)
         {
             return new CustomerModel()
             {
@@ -249,7 +249,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected string ValidateCustomerRoles(IList<CustomerRole> customerRoles)
+        protected virtual string ValidateCustomerRoles(IList<CustomerRole> customerRoles)
         {
             if (customerRoles == null)
                 throw new ArgumentNullException("customerRoles");
@@ -268,7 +268,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected void PrepareVendorsModel(CustomerModel model)
+        protected virtual void PrepareVendorsModel(CustomerModel model)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -290,7 +290,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected void PrepareCustomerAttributeModel(CustomerModel model, Customer customer)
+        protected virtual void PrepareCustomerAttributeModel(CustomerModel model, Customer customer)
         {
             var customerAttributes = _customerAttributeService.GetAllCustomerAttributes();
             foreach (var attribute in customerAttributes)
@@ -376,7 +376,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected string ParseCustomCustomerAttributes(Customer customer, FormCollection form)
+        protected virtual string ParseCustomCustomerAttributes(Customer customer, FormCollection form)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");

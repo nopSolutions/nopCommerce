@@ -139,7 +139,7 @@ namespace Nop.Web.Controllers
         #region Utilities
 
         [NonAction]
-        protected void PrepareSortingOptions(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command)
+        protected virtual void PrepareSortingOptions(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command)
         {
             if (pagingFilteringModel == null)
                 throw new ArgumentNullException("pagingFilteringModel");
@@ -167,7 +167,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        protected void PrepareViewModes(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command)
+        protected virtual void PrepareViewModes(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command)
         {
             if (pagingFilteringModel == null)
                 throw new ArgumentNullException("pagingFilteringModel");
@@ -203,7 +203,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        protected void PreparePageSizeOptions(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command,
+        protected virtual void PreparePageSizeOptions(CatalogPagingFilteringModel pagingFilteringModel, CatalogPagingFilteringModel command,
             bool allowCustomersToSelectPageSize, string pageSizeOptions, int fixedPageSize)
         {
             if (pagingFilteringModel == null)
@@ -287,7 +287,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        protected List<int> GetChildCategoryIds(int parentCategoryId)
+        protected virtual List<int> GetChildCategoryIds(int parentCategoryId)
         {
             var customerRolesIds = _workContext.CurrentCustomer.CustomerRoles
                .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
@@ -315,7 +315,7 @@ namespace Nop.Web.Controllers
         /// <param name="validateIncludeInTopMenu">A value indicating whether we should validate "include in top menu" property</param>
         /// <returns>Category models</returns>
         [NonAction]
-        protected IList<CategorySimpleModel> PrepareCategorySimpleModels(int rootCategoryId,
+        protected virtual IList<CategorySimpleModel> PrepareCategorySimpleModels(int rootCategoryId,
             IList<int> loadSubCategoriesForIds, int level, int levelsToLoad, bool validateIncludeInTopMenu)
         {
             var result = new List<CategorySimpleModel>();
@@ -386,7 +386,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        protected IEnumerable<ProductOverviewModel> PrepareProductOverviewModels(IEnumerable<Product> products,
+        protected virtual IEnumerable<ProductOverviewModel> PrepareProductOverviewModels(IEnumerable<Product> products,
             bool preparePriceModel = true, bool preparePictureModel = true,
             int? productThumbPictureSize = null, bool prepareSpecificationAttributes = false,
             bool forceRedirectionAfterAddingToCart = false)

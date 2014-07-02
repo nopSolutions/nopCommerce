@@ -50,7 +50,7 @@ namespace Nop.Admin.Controllers
         #region Utilities
 
         [NonAction]
-        protected void UpdateAttributeLocales(SpecificationAttribute specificationAttribute, SpecificationAttributeModel model)
+        protected virtual void UpdateAttributeLocales(SpecificationAttribute specificationAttribute, SpecificationAttributeModel model)
         {
             foreach (var localized in model.Locales)
             {
@@ -62,7 +62,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        public void UpdateOptionLocales(SpecificationAttributeOption specificationAttributeOption, SpecificationAttributeOptionModel model)
+        protected virtual void UpdateOptionLocales(SpecificationAttributeOption specificationAttributeOption, SpecificationAttributeOptionModel model)
         {
             foreach (var localized in model.Locales)
             {

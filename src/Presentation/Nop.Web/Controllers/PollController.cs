@@ -43,7 +43,7 @@ namespace Nop.Web.Controllers
         #region Utilities
 
         [NonAction]
-        protected PollModel PreparePollModel(Poll poll, bool setAlreadyVotedProperty)
+        protected virtual PollModel PreparePollModel(Poll poll, bool setAlreadyVotedProperty)
         {
             var model = new PollModel()
             {

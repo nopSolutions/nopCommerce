@@ -92,7 +92,7 @@ namespace Nop.Admin.Controllers
         #region Utilities
 
         [NonAction]
-        protected void UpdateLocales(Manufacturer manufacturer, ManufacturerModel model)
+        protected virtual void UpdateLocales(Manufacturer manufacturer, ManufacturerModel model)
         {
             foreach (var localized in model.Locales)
             {
@@ -128,7 +128,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected void UpdatePictureSeoNames(Manufacturer manufacturer)
+        protected virtual void UpdatePictureSeoNames(Manufacturer manufacturer)
         {
             var picture = _pictureService.GetPictureById(manufacturer.PictureId);
             if (picture != null)
@@ -136,7 +136,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected void PrepareTemplatesModel(ManufacturerModel model)
+        protected virtual void PrepareTemplatesModel(ManufacturerModel model)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -153,7 +153,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        private void PrepareAclModel(ManufacturerModel model, Manufacturer manufacturer, bool excludeProperties)
+        protected virtual void PrepareAclModel(ManufacturerModel model, Manufacturer manufacturer, bool excludeProperties)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -176,7 +176,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected void SaveManufacturerAcl(Manufacturer manufacturer, ManufacturerModel model)
+        protected virtual void SaveManufacturerAcl(Manufacturer manufacturer, ManufacturerModel model)
         {
             var existingAclRecords = _aclService.GetAclRecords(manufacturer);
             var allCustomerRoles = _customerService.GetAllCustomerRoles(true);
@@ -199,7 +199,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        private void PrepareStoresMappingModel(ManufacturerModel model, Manufacturer manufacturer, bool excludeProperties)
+        protected virtual void PrepareStoresMappingModel(ManufacturerModel model, Manufacturer manufacturer, bool excludeProperties)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -222,7 +222,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected void SaveStoreMappings(Manufacturer manufacturer, ManufacturerModel model)
+        protected virtual void SaveStoreMappings(Manufacturer manufacturer, ManufacturerModel model)
         {
             var existingStoreMappings = _storeMappingService.GetStoreMappings(manufacturer);
             var allStores = _storeService.GetAllStores();

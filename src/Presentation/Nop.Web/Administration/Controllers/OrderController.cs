@@ -169,7 +169,7 @@ namespace Nop.Admin.Controllers
         #region Utilities
 
         [NonAction]
-        protected bool HasAccessToOrder(Order order)
+        protected virtual bool HasAccessToOrder(Order order)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -184,7 +184,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected bool HasAccessToOrderItem(OrderItem orderItem)
+        protected virtual bool HasAccessToOrderItem(OrderItem orderItem)
         {
             if (orderItem == null)
                 throw new ArgumentNullException("orderItem");
@@ -198,7 +198,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected bool HasAccessToShipment(Shipment shipment)
+        protected virtual bool HasAccessToShipment(Shipment shipment)
         {
             if (shipment == null)
                 throw new ArgumentNullException("shipment");
@@ -225,7 +225,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected void PrepareOrderDetailsModel(OrderModel model, Order order)
+        protected virtual void PrepareOrderDetailsModel(OrderModel model, Order order)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -560,7 +560,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected OrderModel.AddOrderProductModel.ProductDetailsModel PrepareAddProductToOrderModel(int orderId, int productId)
+        protected virtual OrderModel.AddOrderProductModel.ProductDetailsModel PrepareAddProductToOrderModel(int orderId, int productId)
         {
             var product = _productService.GetProductById(productId);
             if (product == null)
@@ -621,7 +621,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected ShipmentModel PrepareShipmentModel(Shipment shipment, bool prepareProducts, bool prepareShipmentEvent = false)
+        protected virtual ShipmentModel PrepareShipmentModel(Shipment shipment, bool prepareProducts, bool prepareShipmentEvent = false)
         {
             //measures
             var baseWeight = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId);

@@ -95,7 +95,7 @@ namespace Nop.Admin.Controllers
         #region Utilities
 
         [NonAction]
-        protected void UpdateLocales(Category category, CategoryModel model)
+        protected virtual void UpdateLocales(Category category, CategoryModel model)
         {
             foreach (var localized in model.Locales)
             {
@@ -131,7 +131,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected void UpdatePictureSeoNames(Category category)
+        protected virtual void UpdatePictureSeoNames(Category category)
         {
             var picture = _pictureService.GetPictureById(category.PictureId);
             if (picture != null)
@@ -139,7 +139,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected void PrepareAllCategoriesModel(CategoryModel model)
+        protected virtual void PrepareAllCategoriesModel(CategoryModel model)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -161,7 +161,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected void PrepareTemplatesModel(CategoryModel model)
+        protected virtual void PrepareTemplatesModel(CategoryModel model)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -178,7 +178,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected void PrepareDiscountModel(CategoryModel model, Category category, bool excludeProperties)
+        protected virtual void PrepareDiscountModel(CategoryModel model, Category category, bool excludeProperties)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -195,7 +195,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        private void PrepareAclModel(CategoryModel model, Category category, bool excludeProperties)
+        protected virtual void PrepareAclModel(CategoryModel model, Category category, bool excludeProperties)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -218,7 +218,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected void SaveCategoryAcl(Category category, CategoryModel model)
+        protected virtual void SaveCategoryAcl(Category category, CategoryModel model)
         {
             var existingAclRecords = _aclService.GetAclRecords(category);
             var allCustomerRoles = _customerService.GetAllCustomerRoles(true);
@@ -241,7 +241,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        private void PrepareStoresMappingModel(CategoryModel model, Category category, bool excludeProperties)
+        protected virtual void PrepareStoresMappingModel(CategoryModel model, Category category, bool excludeProperties)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -264,7 +264,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected void SaveStoreMappings(Category category, CategoryModel model)
+        protected virtual void SaveStoreMappings(Category category, CategoryModel model)
         {
             var existingStoreMappings = _storeMappingService.GetStoreMappings(category);
             var allStores = _storeService.GetAllStores();

@@ -44,7 +44,7 @@ namespace Nop.Admin.Controllers
         #region Utilities
 
         [NonAction]
-        protected void UpdateLocales(ProductAttribute productAttribute, ProductAttributeModel model)
+        protected virtual void UpdateLocales(ProductAttribute productAttribute, ProductAttributeModel model)
         {
             foreach (var localized in model.Locales)
             {

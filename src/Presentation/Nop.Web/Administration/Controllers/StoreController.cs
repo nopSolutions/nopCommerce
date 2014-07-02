@@ -37,7 +37,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected void UpdateAttributeLocales(Store store, StoreModel model)
+        protected virtual void UpdateAttributeLocales(Store store, StoreModel model)
         {
             foreach (var localized in model.Locales)
             {

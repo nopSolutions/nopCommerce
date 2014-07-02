@@ -53,7 +53,7 @@ namespace Nop.Admin.Controllers
         #region Utilities
 
         [NonAction]
-        protected void UpdateLocales(Vendor vendor, VendorModel model)
+        protected virtual void UpdateLocales(Vendor vendor, VendorModel model)
         {
             foreach (var localized in model.Locales)
             {

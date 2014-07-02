@@ -60,7 +60,7 @@ namespace Nop.Admin.Controllers
         #region Utilities
 
         [NonAction]
-        protected void UpdateLocales(Currency currency, CurrencyModel model)
+        protected virtual void UpdateLocales(Currency currency, CurrencyModel model)
         {
             foreach (var localized in model.Locales)
             {
@@ -72,7 +72,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        private void PrepareStoresMappingModel(CurrencyModel model, Currency currency, bool excludeProperties)
+        protected virtual void PrepareStoresMappingModel(CurrencyModel model, Currency currency, bool excludeProperties)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -95,7 +95,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected void SaveStoreMappings(Currency currency, CurrencyModel model)
+        protected virtual void SaveStoreMappings(Currency currency, CurrencyModel model)
         {
             var existingStoreMappings = _storeMappingService.GetStoreMappings(currency);
             var allStores = _storeService.GetAllStores();

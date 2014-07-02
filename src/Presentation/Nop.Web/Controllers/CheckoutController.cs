@@ -130,7 +130,7 @@ namespace Nop.Web.Controllers
         #region Utilities
 
         [NonAction]
-        protected bool IsPaymentWorkflowRequired(IList<ShoppingCartItem> cart, bool ignoreRewardPoints = false)
+        protected virtual bool IsPaymentWorkflowRequired(IList<ShoppingCartItem> cart, bool ignoreRewardPoints = false)
         {
             bool result = true;
 
@@ -142,7 +142,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        protected CheckoutBillingAddressModel PrepareBillingAddressModel(int? selectedCountryId = null, 
+        protected virtual CheckoutBillingAddressModel PrepareBillingAddressModel(int? selectedCountryId = null, 
             bool prePopulateNewAddressWithCustomerFields = false)
         {
             var model = new CheckoutBillingAddressModel();
@@ -176,7 +176,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        protected CheckoutShippingAddressModel PrepareShippingAddressModel(int? selectedCountryId = null, 
+        protected virtual CheckoutShippingAddressModel PrepareShippingAddressModel(int? selectedCountryId = null, 
             bool prePopulateNewAddressWithCustomerFields = false)
         {
             var model = new CheckoutShippingAddressModel();
@@ -212,7 +212,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        protected CheckoutShippingMethodModel PrepareShippingMethodModel(IList<ShoppingCartItem> cart)
+        protected virtual CheckoutShippingMethodModel PrepareShippingMethodModel(IList<ShoppingCartItem> cart)
         {
             var model = new CheckoutShippingMethodModel();
 
@@ -287,7 +287,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        protected CheckoutPaymentMethodModel PreparePaymentMethodModel(IList<ShoppingCartItem> cart)
+        protected virtual CheckoutPaymentMethodModel PreparePaymentMethodModel(IList<ShoppingCartItem> cart)
         {
             var model = new CheckoutPaymentMethodModel();
 
@@ -363,7 +363,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        protected CheckoutPaymentInfoModel PreparePaymentInfoModel(IPaymentMethod paymentMethod)
+        protected virtual CheckoutPaymentInfoModel PreparePaymentInfoModel(IPaymentMethod paymentMethod)
         {
             var model = new CheckoutPaymentInfoModel();
             string actionName;
@@ -378,7 +378,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        protected CheckoutConfirmModel PrepareConfirmOrderModel(IList<ShoppingCartItem> cart)
+        protected virtual CheckoutConfirmModel PrepareConfirmOrderModel(IList<ShoppingCartItem> cart)
         {
             var model = new CheckoutConfirmModel();
             //terms of service
@@ -394,7 +394,7 @@ namespace Nop.Web.Controllers
         }
         
         [NonAction]
-        protected bool IsMinimumOrderPlacementIntervalValid(Customer customer)
+        protected virtual bool IsMinimumOrderPlacementIntervalValid(Customer customer)
         {
             //prevent 2 orders being placed within an X seconds time frame
             if (_orderSettings.MinimumOrderPlacementInterval == 0)
