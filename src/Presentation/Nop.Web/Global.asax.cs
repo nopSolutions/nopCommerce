@@ -116,15 +116,24 @@ namespace Nop.Web
             if (!DataSettingsHelper.DatabaseIsInstalled())
                 return;
 
+            //miniprofiler
             if (EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerInPublicStore)
             {
                 MiniProfiler.Start();
+                //store a value indicating whether profiler was started
+                HttpContext.Current.Items["nop.MiniProfilerStarted"] = true;
             }
         }
 
         protected void Application_EndRequest(object sender, EventArgs e)
         {
-            MiniProfiler.Stop();
+            //miniprofiler
+            var miniProfilerStarted = HttpContext.Current.Items.Contains("nop.MiniProfilerStarted") &&
+                 Convert.ToBoolean(HttpContext.Current.Items["nop.MiniProfilerStarted"]);
+            if (miniProfilerStarted)
+            {
+                MiniProfiler.Stop();
+            }
         }
 
         protected void Application_AuthenticateRequest(object sender, EventArgs e)
