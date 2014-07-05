@@ -740,7 +740,7 @@ namespace Nop.Services.Shipping
             foreach (var srcm in shippingRateComputationMethods)
             {
                 //request shipping options (separately for each package-request)
-                IList<ShippingOption> scrmShippingOptions = null;
+                IList<ShippingOption> srcmShippingOptions = null;
                 foreach (var shippingOptionRequest in shippingOptionRequests)
                 {
                     var getShippingOptionResponse = srcm.GetShippingOptions(shippingOptionRequest);
@@ -748,20 +748,20 @@ namespace Nop.Services.Shipping
                     if (getShippingOptionResponse.Success)
                     {
                         //success
-                        if (scrmShippingOptions == null)
+                        if (srcmShippingOptions == null)
                         {
                             //first shipping option request
-                            scrmShippingOptions = getShippingOptionResponse.ShippingOptions;
+                            srcmShippingOptions = getShippingOptionResponse.ShippingOptions;
                         }
                         else
                         {
                             //get shipping options which already exist for prior requested packages for this scrm (i.e. common options)
-                            scrmShippingOptions = scrmShippingOptions
+                            srcmShippingOptions = srcmShippingOptions
                                 .Where(existingso => getShippingOptionResponse.ShippingOptions.Any(newso => newso.Name == existingso.Name))
                                 .ToList();
 
                             //and sum the rates
-                            foreach (var existingso in scrmShippingOptions)
+                            foreach (var existingso in srcmShippingOptions)
                             {
                                 existingso.Rate += getShippingOptionResponse
                                     .ShippingOptions
@@ -779,14 +779,15 @@ namespace Nop.Services.Shipping
                             _logger.Warning(string.Format("Shipping ({0}). {1}", srcm.PluginDescriptor.FriendlyName, error));
                         }
                         //clear the shipping options in this case
-                        scrmShippingOptions = new List<ShippingOption>();
+                        srcmShippingOptions = new List<ShippingOption>();
+                        break;
                     }
                 }
 
                 // add this scrm's options to the result
-                if (scrmShippingOptions != null)
+                if (srcmShippingOptions != null)
                 {
-                    foreach (var so in scrmShippingOptions)
+                    foreach (var so in srcmShippingOptions)
                     {
                         so.ShippingRateComputationMethodSystemName = srcm.PluginDescriptor.SystemName;
                         if (_shoppingCartSettings.RoundPricesDuringCalculation)
