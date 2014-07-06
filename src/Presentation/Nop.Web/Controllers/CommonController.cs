@@ -153,79 +153,6 @@ namespace Nop.Web.Controllers
         #region Utilities
 
         [NonAction]
-        protected virtual LanguageSelectorModel PrepareLanguageSelectorModel()
-        {
-            var availableLanguages = _cacheManager.Get(string.Format(ModelCacheEventConsumer.AVAILABLE_LANGUAGES_MODEL_KEY, _storeContext.CurrentStore.Id), () =>
-            {
-                var result = _languageService
-                    .GetAllLanguages(storeId: _storeContext.CurrentStore.Id)
-                    .Select(x => new LanguageModel()
-                    {
-                        Id = x.Id,
-                        Name = x.Name,
-                        FlagImageFileName = x.FlagImageFileName,
-                    })
-                    .ToList();
-                return result;
-            });
-
-            var model = new LanguageSelectorModel()
-            {
-                CurrentLanguageId = _workContext.WorkingLanguage.Id,
-                AvailableLanguages = availableLanguages,
-                UseImages = _localizationSettings.UseImagesForLanguageSelection
-            };
-            return model;
-        }
-
-        [NonAction]
-        protected virtual CurrencySelectorModel PrepareCurrencySelectorModel()
-        {
-            var availableCurrencies = _cacheManager.Get(string.Format(ModelCacheEventConsumer.AVAILABLE_CURRENCIES_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id), () =>
-            {
-                var result = _currencyService
-                    .GetAllCurrencies(storeId: _storeContext.CurrentStore.Id)
-                    .Select(x =>
-                                {
-                                    //currency char
-                                    var currencySymbol = "";
-                                    if (!string.IsNullOrEmpty(x.DisplayLocale))
-                                        currencySymbol = new RegionInfo(x.DisplayLocale).CurrencySymbol;
-                                    else
-                                        currencySymbol = x.CurrencyCode;
-                                    //model
-                                    var currencyModel = new CurrencyModel()
-                                    {
-                                        Id = x.Id,
-                                        Name = x.GetLocalized(y => y.Name),
-                                        CurrencySymbol = currencySymbol
-                                    };
-                                    return currencyModel;
-                                })
-                    .ToList();
-                return result;
-            });
-
-            var model = new CurrencySelectorModel()
-            {
-                CurrentCurrencyId = _workContext.WorkingCurrency.Id,
-                AvailableCurrencies = availableCurrencies
-            };
-            return model;
-        }
-
-        [NonAction]
-        protected virtual TaxTypeSelectorModel PrepareTaxTypeSelectorModel()
-        {
-            var model = new TaxTypeSelectorModel()
-            {
-                Enabled = _taxSettings.AllowCustomersToSelectTaxDisplayType,
-                CurrentTaxType = _workContext.TaxDisplayType
-            };
-            return model;
-        }
-
-        [NonAction]
         protected virtual int GetUnreadPrivateMessages()
         {
             var result = 0;
@@ -261,7 +188,26 @@ namespace Nop.Web.Controllers
         [ChildActionOnly]
         public ActionResult LanguageSelector()
         {
-            var model = PrepareLanguageSelectorModel();
+            var availableLanguages = _cacheManager.Get(string.Format(ModelCacheEventConsumer.AVAILABLE_LANGUAGES_MODEL_KEY, _storeContext.CurrentStore.Id), () =>
+            {
+                var result = _languageService
+                    .GetAllLanguages(storeId: _storeContext.CurrentStore.Id)
+                    .Select(x => new LanguageModel()
+                    {
+                        Id = x.Id,
+                        Name = x.Name,
+                        FlagImageFileName = x.FlagImageFileName,
+                    })
+                    .ToList();
+                return result;
+            });
+
+            var model = new LanguageSelectorModel()
+            {
+                CurrentLanguageId = _workContext.WorkingLanguage.Id,
+                AvailableLanguages = availableLanguages,
+                UseImages = _localizationSettings.UseImagesForLanguageSelection
+            };
 
             if (model.AvailableLanguages.Count == 1)
                 Content("");
@@ -302,7 +248,36 @@ namespace Nop.Web.Controllers
         [ChildActionOnly]
         public ActionResult CurrencySelector()
         {
-            var model = PrepareCurrencySelectorModel();
+            var availableCurrencies = _cacheManager.Get(string.Format(ModelCacheEventConsumer.AVAILABLE_CURRENCIES_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id), () =>
+            {
+                var result = _currencyService
+                    .GetAllCurrencies(storeId: _storeContext.CurrentStore.Id)
+                    .Select(x =>
+                    {
+                        //currency char
+                        var currencySymbol = "";
+                        if (!string.IsNullOrEmpty(x.DisplayLocale))
+                            currencySymbol = new RegionInfo(x.DisplayLocale).CurrencySymbol;
+                        else
+                            currencySymbol = x.CurrencyCode;
+                        //model
+                        var currencyModel = new CurrencyModel()
+                        {
+                            Id = x.Id,
+                            Name = x.GetLocalized(y => y.Name),
+                            CurrencySymbol = currencySymbol
+                        };
+                        return currencyModel;
+                    })
+                    .ToList();
+                return result;
+            });
+
+            var model = new CurrencySelectorModel()
+            {
+                CurrentCurrencyId = _workContext.WorkingCurrency.Id,
+                AvailableCurrencies = availableCurrencies
+            };
 
             if (model.AvailableCurrencies.Count == 1)
                 Content("");
@@ -330,7 +305,14 @@ namespace Nop.Web.Controllers
         [ChildActionOnly]
         public ActionResult TaxTypeSelector()
         {
-            var model = PrepareTaxTypeSelectorModel();
+            if (!_taxSettings.AllowCustomersToSelectTaxDisplayType)
+                return Content("");
+
+            var model = new TaxTypeSelectorModel()
+            {
+                CurrentTaxType = _workContext.TaxDisplayType
+            };
+
             return PartialView(model);
         }
         public ActionResult SetTaxType(int customerTaxType, string returnUrl = "")
