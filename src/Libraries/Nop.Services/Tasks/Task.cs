@@ -54,8 +54,9 @@ namespace Nop.Services.Tasks
         /// <summary>
         /// Executes the task
         /// </summary>
-        /// <param name="throwException">A value indicating whether eexception should be thrown if some error happens</param>
-        public void Execute(bool throwException = false)
+        /// <param name="throwException">A value indicating whether exception should be thrown if some error happens</param>
+        /// <param name="dispose">A value indicating whether all instances hsould be disposed after task run</param>
+        public void Execute(bool throwException = false, bool dispose = true)
         {
             this.IsRunning = true;
 
@@ -106,7 +107,10 @@ namespace Nop.Services.Tasks
             }
 
             //dispose all resources
-            scope.Dispose();
+            if (dispose)
+            {
+                scope.Dispose();
+            }
 
             this.IsRunning = false;
         }
