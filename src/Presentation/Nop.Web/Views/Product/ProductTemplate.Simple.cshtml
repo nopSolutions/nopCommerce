@@ -2,6 +2,7 @@
 @using Nop.Core
 @using Nop.Core.Domain.Seo;
 @using Nop.Core.Infrastructure;
+@using Nop.Services.Localization;
 @using Nop.Web.Models.Catalog;
 @{
     Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
@@ -23,7 +24,7 @@
     //open graph META tags
     if (seoSettings.OpenGraphMetaTags)
     {
-        var storeName = EngineContext.Current.Resolve<IStoreContext>().CurrentStore.Name;
+        var storeName = EngineContext.Current.Resolve<IStoreContext>().CurrentStore.GetLocalized(x => x.Name);
         Html.AddHeadCustomParts("<meta property=\"og:type\" content=\"product\" />");
         Html.AddHeadCustomParts("<meta property=\"og:title\" content=\"" + Html.Encode(Model.Name) + "\" />");
         Html.AddHeadCustomParts("<meta property=\"og:description\" content=\"" + Html.Encode(Model.MetaDescription) + "\" />");
@@ -35,7 +36,7 @@
     //Twitter META tags
     if (seoSettings.TwitterMetaTags)
     {
-        var storeName = EngineContext.Current.Resolve<IStoreContext>().CurrentStore.Name;
+        var storeName = EngineContext.Current.Resolve<IStoreContext>().CurrentStore.GetLocalized(x => x.Name);
         Html.AddHeadCustomParts("<meta property=\"twitter:card\" content=\"summary\" />");
         Html.AddHeadCustomParts("<meta property=\"twitter:site\" content=\"" + Html.Encode(storeName) + "\" />");
         Html.AddHeadCustomParts("<meta property=\"twitter:title\" content=\"" + Html.Encode(Model.Name) + "\" />");
