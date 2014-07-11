@@ -1,15 +1,20 @@
-﻿@using Nop.Core.Infrastructure
+﻿@using Nop.Core
+@using Nop.Core.Infrastructure
 @using Nop.Web.Framework.Themes
 @{
+    //logo path
     var currentThemeName = EngineContext.Current.Resolve<IThemeContext>().WorkingThemeName;
     var logoPath = "~/Themes/" + currentThemeName + "/Content/images/logo.gif";
+
+    //store name
+    var storeName = EngineContext.Current.Resolve<IStoreContext>().CurrentStore.Name;
 }
 
 <div class="header">
     @Html.Widget("header")
     <div class="header-logo">
         <a href="@Url.RouteUrl("HomePage")">
-            <img title="" alt="" src="@Url.Content(logoPath)">
+            <img title="" alt="@storeName" src="@Url.Content(logoPath)">
         </a>
     </div>
     <div class="header-links-wrapper">
