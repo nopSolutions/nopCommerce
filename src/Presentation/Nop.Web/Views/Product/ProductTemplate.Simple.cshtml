@@ -47,6 +47,7 @@
 }
 <!--product breadcrumb-->
 @Html.Partial("_ProductBreadcrumb", Model.Breadcrumb)
+@Html.Widget("productdetails_after_breadcrumb", Model.Id)
 <div class="page product-details-page">
     <div class="page-body">
         @Html.Widget("productdetails_top", Model.Id)
