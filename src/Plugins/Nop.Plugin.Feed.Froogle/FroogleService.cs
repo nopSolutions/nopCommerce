@@ -265,15 +265,34 @@ namespace Nop.Plugin.Feed.Froogle
                         writer.WriteElementString("link", productUrl);
 
                         //image link [image_link] - URL of an image of the item
-                        string imageUrl;
-                        var picture = _pictureService.GetPicturesByProductId(product.Id, 1).FirstOrDefault();
+                        //additional images [additional_image_link]
+                        //up to 10 pictures
+                        const int maximumPictures = 10;
+                        var pictures = _pictureService.GetPicturesByProductId(product.Id, maximumPictures);
+                        for (int i = 0; i < pictures.Count; i++)
+                        {
+                            var picture = pictures[i];
+                            var imageUrl = _pictureService.GetPictureUrl(picture,
+                                _froogleSettings.ProductPictureSize,
+                                storeLocation: store.Url);
 
-                        if (picture != null)
-                            imageUrl = _pictureService.GetPictureUrl(picture, _froogleSettings.ProductPictureSize, storeLocation: store.Url);
-                        else
-                            imageUrl = _pictureService.GetDefaultPictureUrl(_froogleSettings.ProductPictureSize, storeLocation: store.Url);
-
-                        writer.WriteElementString("g", "image_link", googleBaseNamespace, imageUrl);
+                            if (i == 0)
+                            {
+                                //default image
+                                writer.WriteElementString("g", "image_link", googleBaseNamespace, imageUrl);
+                            }
+                            else
+                            {
+                                //additional image
+                                writer.WriteElementString("g", "additional_image_link", googleBaseNamespace, imageUrl);
+                            }
+                        }
+                        if (pictures.Count == 0)
+                        {
+                            //no picture? submit a default one
+                            var imageUrl = _pictureService.GetDefaultPictureUrl(_froogleSettings.ProductPictureSize, storeLocation: store.Url);
+                            writer.WriteElementString("g", "image_link", googleBaseNamespace, imageUrl);
+                        }
 
                         //condition [condition] - Condition or state of the item
                         writer.WriteElementString("g", "condition", googleBaseNamespace, "new");
