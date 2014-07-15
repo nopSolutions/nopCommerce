@@ -100,7 +100,8 @@ namespace Nop.Plugin.Feed.Froogle.Services
                 return new List<string>();
 
             //parse the file
-            var result = fileContent.Split(new string[] {"\n"}, StringSplitOptions.RemoveEmptyEntries)
+            var result = fileContent.Split(new string[] {"\n", "\r\n"}, StringSplitOptions.RemoveEmptyEntries)
+
                 .ToList();
             return result;
         }
