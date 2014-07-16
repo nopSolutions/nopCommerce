@@ -436,6 +436,7 @@ namespace Nop.Services.ExportImport
                         if (String.IsNullOrEmpty(picturePath))
                             continue;
 
+                        var mimeType = GetMimeTypeFromFilePath(picturePath);
                         var newPictureBinary = File.ReadAllBytes(picturePath);
                         var pictureAlreadyExists = false;
                         if (!newProduct)
@@ -445,7 +446,9 @@ namespace Nop.Services.ExportImport
                             foreach (var existingPicture in existingPictures)
                             {
                                 var existingBinary = _pictureService.LoadPictureBinary(existingPicture);
-                                if (existingBinary.SequenceEqual(newPictureBinary))
+                                //picture binary after validation (like in database)
+                                var validatedPictureBinary = _pictureService.ValidatePicture(newPictureBinary, mimeType);
+                                if (existingBinary.SequenceEqual(validatedPictureBinary))
                                 {
                                     //the same picture content
                                     pictureAlreadyExists = true;
@@ -456,7 +459,6 @@ namespace Nop.Services.ExportImport
 
                         if (!pictureAlreadyExists)
                         {
-                            var mimeType = GetMimeTypeFromFilePath(picturePath);
                             product.ProductPictures.Add(new ProductPicture()
                             {
                                 Picture = _pictureService.InsertPicture(newPictureBinary, mimeType , _pictureService.GetPictureSeName(name), true),

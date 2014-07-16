@@ -215,24 +215,6 @@ namespace Nop.Services.Media
         }
 
         /// <summary>
-        /// Validates input picture dimensions
-        /// </summary>
-        /// <param name="pictureBinary">Picture binary</param>
-        /// <param name="mimeType">MIME type</param>
-        /// <returns>Picture binary or throws an exception</returns>
-        protected virtual byte[] ValidatePicture(byte[] pictureBinary, string mimeType)
-        {
-            var destStream = new MemoryStream();
-            ImageBuilder.Current.Build(pictureBinary, destStream, new ResizeSettings()
-            {
-                MaxWidth = _mediaSettings.MaximumImageSize,
-                MaxHeight = _mediaSettings.MaximumImageSize,
-                Quality = _mediaSettings.DefaultImageQuality
-            });
-            return destStream.ToArray();
-        }
-        
-        /// <summary>
         /// Get picture (thumb) local path
         /// </summary>
         /// <param name="thumbFileName">Filename</param>
@@ -732,6 +714,24 @@ namespace Nop.Services.Media
                 picture = UpdatePicture(picture.Id, LoadPictureBinary(picture), picture.MimeType, seoFilename, true, false);
             }
             return picture;
+        }
+
+        /// <summary>
+        /// Validates input picture dimensions
+        /// </summary>
+        /// <param name="pictureBinary">Picture binary</param>
+        /// <param name="mimeType">MIME type</param>
+        /// <returns>Picture binary or throws an exception</returns>
+        public virtual byte[] ValidatePicture(byte[] pictureBinary, string mimeType)
+        {
+            var destStream = new MemoryStream();
+            ImageBuilder.Current.Build(pictureBinary, destStream, new ResizeSettings()
+            {
+                MaxWidth = _mediaSettings.MaximumImageSize,
+                MaxHeight = _mediaSettings.MaximumImageSize,
+                Quality = _mediaSettings.DefaultImageQuality
+            });
+            return destStream.ToArray();
         }
         
         #endregion

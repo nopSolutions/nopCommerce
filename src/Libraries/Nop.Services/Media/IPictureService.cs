@@ -134,6 +134,14 @@ namespace Nop.Services.Media
         Picture SetSeoFilename(int pictureId, string seoFilename);
 
         /// <summary>
+        /// Validates input picture dimensions
+        /// </summary>
+        /// <param name="pictureBinary">Picture binary</param>
+        /// <param name="mimeType">MIME type</param>
+        /// <returns>Picture binary or throws an exception</returns>
+        byte[] ValidatePicture(byte[] pictureBinary, string mimeType);
+
+        /// <summary>
         /// Gets or sets a value indicating whether the images should be stored in data base.
         /// </summary>
         bool StoreInDb { get; set; }
