@@ -76,6 +76,10 @@ namespace Nop.Web.Framework.UI
             return sb.ToString();
         }
 
+        protected virtual CssRewriteUrlTransform GetCssTranform()
+        {
+            return new CssRewriteUrlTransform();
+        }
         #endregion
 
         #region Methods
@@ -347,7 +351,7 @@ namespace Nop.Web.Framework.UI
                             bundle.EnableFileExtensionReplacements = false;
                             foreach (var ptb in partsToBundle)
                             {
-                                bundle.Include(ptb, new CssRewriteUrlTransform());
+                                bundle.Include(ptb, GetCssTranform());
                             }
                             BundleTable.Bundles.Add(bundle);
                             //we clear ignore list because System.Web.Optimization library adds ignore patterns such as "*.min", "*.debug".
