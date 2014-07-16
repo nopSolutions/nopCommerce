@@ -76,7 +76,7 @@ namespace Nop.Web.Framework.UI
             return sb.ToString();
         }
 
-        protected virtual CssRewriteUrlTransform GetCssTranform()
+        protected virtual IItemTransform GetCssTranform()
         {
             return new CssRewriteUrlTransform();
         }
