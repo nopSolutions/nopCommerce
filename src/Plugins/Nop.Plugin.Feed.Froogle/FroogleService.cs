@@ -222,8 +222,6 @@ namespace Nop.Plugin.Feed.Froogle
                         if (String.IsNullOrEmpty(description))
                             description = product.ShortDescription;
                         if (String.IsNullOrEmpty(description))
-                            description = product.Name;
-                        if (String.IsNullOrEmpty(description))
                             description = product.Name; //description is required
                         //resolving character encoding issues in your data feed
                         description = StripInvalidChars(description, true);
