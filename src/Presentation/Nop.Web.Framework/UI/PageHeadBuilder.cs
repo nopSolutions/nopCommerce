@@ -429,7 +429,7 @@ namespace Nop.Web.Framework.UI
             var result = new StringBuilder();
             foreach (var path in distinctParts)
             {
-                result.AppendFormat(path);
+                result.Append(path);
                 result.Append(Environment.NewLine);
             }
             return result.ToString();
