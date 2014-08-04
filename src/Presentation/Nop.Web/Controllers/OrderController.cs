@@ -14,6 +14,7 @@ using Nop.Services.Common;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Services.Media;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Seo;
@@ -43,11 +44,11 @@ namespace Nop.Web.Controllers
         private readonly ICountryService _countryService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IWebHelper _webHelper;
+        private readonly IDownloadService _downloadService;
 
         private readonly OrderSettings _orderSettings;
         private readonly TaxSettings _taxSettings;
         private readonly CatalogSettings _catalogSettings;
-        private readonly PdfSettings _pdfSettings;
         private readonly ShippingSettings _shippingSettings;
         private readonly AddressSettings _addressSettings;
 
@@ -56,16 +57,25 @@ namespace Nop.Web.Controllers
 		#region Constructors
 
         public OrderController(IOrderService orderService, 
-            IShipmentService shipmentService, IWorkContext workContext,
-            ICurrencyService currencyService, IPriceFormatter priceFormatter,
-            IOrderProcessingService orderProcessingService, IDateTimeHelper dateTimeHelper,
-            IPaymentService paymentService, ILocalizationService localizationService,
-            IPdfService pdfService, IShippingService shippingService,
-            ICountryService countryService, IProductAttributeParser productAttributeParser,
-            IWebHelper webHelper, 
-            CatalogSettings catalogSettings, OrderSettings orderSettings,
-            TaxSettings taxSettings, PdfSettings pdfSettings,
-            ShippingSettings shippingSettings, AddressSettings addressSettings)
+            IShipmentService shipmentService, 
+            IWorkContext workContext,
+            ICurrencyService currencyService,
+            IPriceFormatter priceFormatter,
+            IOrderProcessingService orderProcessingService, 
+            IDateTimeHelper dateTimeHelper,
+            IPaymentService paymentService, 
+            ILocalizationService localizationService,
+            IPdfService pdfService, 
+            IShippingService shippingService,
+            ICountryService countryService, 
+            IProductAttributeParser productAttributeParser,
+            IWebHelper webHelper,
+            IDownloadService downloadService,
+            CatalogSettings catalogSettings,
+            OrderSettings orderSettings,
+            TaxSettings taxSettings,
+            ShippingSettings shippingSettings, 
+            AddressSettings addressSettings)
         {
             this._orderService = orderService;
             this._shipmentService = shipmentService;
@@ -81,11 +91,11 @@ namespace Nop.Web.Controllers
             this._countryService = countryService;
             this._productAttributeParser = productAttributeParser;
             this._webHelper = webHelper;
+            this._downloadService = downloadService;
 
             this._catalogSettings = catalogSettings;
             this._orderSettings = orderSettings;
             this._taxSettings = taxSettings;
-            this._pdfSettings = pdfSettings;
             this._shippingSettings = shippingSettings;
             this._addressSettings = addressSettings;
         }
@@ -301,6 +311,7 @@ namespace Nop.Web.Controllers
                 var orderItemModel = new OrderDetailsModel.OrderItemModel()
                 {
                     Id = orderItem.Id,
+                    OrderItemGuid = orderItem.OrderItemGuid,
                     Sku = orderItem.Product.FormatSku(orderItem.AttributesXml, _productAttributeParser),
                     ProductId = orderItem.Product.Id,
                     ProductName = orderItem.Product.GetLocalized(x => x.Name),
@@ -329,6 +340,12 @@ namespace Nop.Web.Controllers
                     var priceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.PriceExclTax, order.CurrencyRate);
                     orderItemModel.SubTotal = _priceFormatter.FormatPrice(priceExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, _workContext.WorkingLanguage, false);
                 }
+
+                //downloadable products
+                if (_downloadService.IsDownloadAllowed(orderItem))
+                    orderItemModel.DownloadId = orderItem.Product.DownloadId;
+                if (_downloadService.IsLicenseDownloadAllowed(orderItem))
+                    orderItemModel.LicenseId = orderItem.LicenseDownloadId.HasValue ? orderItem.LicenseDownloadId.Value : 0;
             }
 
             return model;

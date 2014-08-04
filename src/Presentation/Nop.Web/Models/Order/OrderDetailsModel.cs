@@ -70,6 +70,7 @@ namespace Nop.Web.Models.Order
 
         public partial class OrderItemModel : BaseNopEntityModel
         {
+            public Guid OrderItemGuid { get; set; }
             public string Sku { get; set; }
             public int ProductId { get; set; }
             public string ProductName { get; set; }
@@ -78,6 +79,10 @@ namespace Nop.Web.Models.Order
             public string SubTotal { get; set; }
             public int Quantity { get; set; }
             public string AttributeInfo { get; set; }
+
+            //downloadable product properties
+            public int DownloadId { get; set; }
+            public int LicenseId { get; set; }
         }
 
         public partial class TaxRate : BaseNopModel

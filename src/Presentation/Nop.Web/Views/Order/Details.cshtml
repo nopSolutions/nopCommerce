@@ -321,6 +321,18 @@
                                             @Html.Raw(item.AttributeInfo)
                                         </div>
                                     }
+                                    @if (item.DownloadId > 0)
+                                    {
+                                        <div class="download">
+                                            <a href="@Url.RouteUrl("GetDownload", new { orderItemId = item.OrderItemGuid })">@T("DownloadableProducts.Fields.Download")</a>
+                                        </div>
+                                    }
+                                    @if (item.LicenseId > 0)
+                                    {
+                                        <div class="download license">
+                                            <a href="@Url.RouteUrl("GetLicense", new {orderItemId = item.OrderItemGuid})">@T("DownloadableProducts.Fields.DownloadLicense")</a>
+                                        </div>
+                                    }
                                 </td>
                                 <td class="a-right price">
                                     <span class="td-title">@T("Order.Product(s).Price"):</span>
