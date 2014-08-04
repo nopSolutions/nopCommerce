@@ -250,6 +250,8 @@ namespace Nop.Web.Controllers
 
             if (model == null)
                 throw new ArgumentNullException("model");
+            
+            model.OnePageCheckoutEnabled = _orderSettings.OnePageCheckoutEnabled;
 
             if (cart.Count == 0)
                 return;
@@ -269,7 +271,6 @@ namespace Nop.Web.Controllers
             }
             model.TermsOfServiceOnShoppingCartPage = _orderSettings.TermsOfServiceOnShoppingCartPage;
             model.TermsOfServiceOnOrderConfirmPage = _orderSettings.TermsOfServiceOnOrderConfirmPage;
-            model.OnePageCheckoutEnabled = _orderSettings.OnePageCheckoutEnabled;
 
             //gift card and gift card boxes
             model.DiscountBox.Display= _shoppingCartSettings.ShowDiscountBox;
