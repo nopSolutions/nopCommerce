@@ -8673,6 +8673,12 @@
   <LocaleResource Name="Admin.Promotions.Campaigns.Fields.Name.Required">
     <Value>Campaign name is required</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.Store">
+    <Value>Limited to store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.Store.Hint">
+    <Value>Choose a store which subscribers will get this email.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Campaigns.Fields.Subject">
     <Value>Subject</Value>
   </LocaleResource>

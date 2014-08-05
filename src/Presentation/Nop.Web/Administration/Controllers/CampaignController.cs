@@ -10,6 +10,7 @@ using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Security;
+using Nop.Services.Stores;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 
@@ -25,6 +26,7 @@ namespace Nop.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IMessageTokenProvider _messageTokenProvider;
         private readonly IStoreContext _storeContext;
+        private readonly IStoreService _storeService;
         private readonly IPermissionService _permissionService;
 
         public CampaignController(ICampaignService campaignService,
@@ -35,6 +37,7 @@ namespace Nop.Admin.Controllers
             ILocalizationService localizationService, 
             IMessageTokenProvider messageTokenProvider,
             IStoreContext storeContext,
+            IStoreService storeService,
             IPermissionService permissionService)
 		{
             this._campaignService = campaignService;
@@ -45,10 +48,12 @@ namespace Nop.Admin.Controllers
             this._localizationService = localizationService;
             this._messageTokenProvider = messageTokenProvider;
             this._storeContext = storeContext;
+            this._storeService = storeService;
             this._permissionService = permissionService;
 		}
 
-        private string FormatTokens(string[] tokens)
+        [NonAction]
+        protected virtual string FormatTokens(string[] tokens)
         {
             var sb = new StringBuilder();
             for (int i = 0; i < tokens.Length; i++)
@@ -61,7 +66,29 @@ namespace Nop.Admin.Controllers
 
             return sb.ToString();
         }
-        
+
+        [NonAction]
+        protected virtual void PrepareStoresModel(CampaignModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            model.AvailableStores.Add(new SelectListItem()
+            {
+                Text = _localizationService.GetResource("Admin.Common.All"),
+                Value = "0"
+            });
+            var stores = _storeService.GetAllStores();
+            foreach (var store in stores)
+            {
+                model.AvailableStores.Add(new SelectListItem()
+                {
+                    Text = store.Name,
+                    Value = store.Id.ToString()
+                });
+            }
+        }
+
         public ActionResult Index()
         {
             return RedirectToAction("List");
@@ -102,6 +129,8 @@ namespace Nop.Admin.Controllers
 
             var model = new CampaignModel();
             model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfCampaignAllowedTokens());
+            //stores
+            PrepareStoresModel(model);
             return View(model);
         }
 
@@ -123,6 +152,8 @@ namespace Nop.Admin.Controllers
 
             //If we got this far, something failed, redisplay form
             model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfCampaignAllowedTokens());
+            //stores
+            PrepareStoresModel(model);
             return View(model);
         }
 
@@ -138,6 +169,8 @@ namespace Nop.Admin.Controllers
 
             var model = campaign.ToModel();
             model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfCampaignAllowedTokens());
+            //stores
+            PrepareStoresModel(model);
             return View(model);
 		}
 
@@ -165,6 +198,8 @@ namespace Nop.Admin.Controllers
 
             //If we got this far, something failed, redisplay form
             model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfCampaignAllowedTokens());
+            //stores
+            PrepareStoresModel(model);
             return View(model);
 		}
 
@@ -182,6 +217,8 @@ namespace Nop.Admin.Controllers
 
 
             model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfCampaignAllowedTokens());
+            //stores
+            PrepareStoresModel(model);
 
             try
             {
@@ -230,6 +267,8 @@ namespace Nop.Admin.Controllers
 
 
             model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfCampaignAllowedTokens());
+            //stores
+            PrepareStoresModel(model);
 
             try
             {
@@ -237,7 +276,10 @@ namespace Nop.Admin.Controllers
                 if (emailAccount == null)
                     throw new NopException("Email account could not be loaded");
 
-                var subscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions();
+                //subscribers of certain store?
+                var store = _storeService.GetStoreById(campaign.StoreId);
+                var storeId = store != null ? store.Id : 0;
+                var subscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(storeId: storeId);
                 var totalEmailsSent = _campaignService.SendCampaign(campaign, emailAccount, subscriptions);
                 SuccessNotification(string.Format(_localizationService.GetResource("Admin.Promotions.Campaigns.MassEmailSentToCustomers"), totalEmailsSent), false);
                 return View(model);

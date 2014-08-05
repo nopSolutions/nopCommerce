@@ -5,8 +5,11 @@ declare @resources xml
 --a resource will be deleted if its value is empty
 set @resources='
 <Language>
-  <LocaleResource Name="">
-    <Value></Value>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.Store">
+    <Value>Limited to store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.Store.Hint">
+    <Value>Choose a store which subscribers will get this email.</Value>
   </LocaleResource>
 </Language>
 '
@@ -82,3 +85,20 @@ DEALLOCATE cur_existinglanguage
 DROP TABLE #LocaleStringResourceTmp
 GO
 
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Campaign]') and NAME='StoreId')
+BEGIN
+	ALTER TABLE [Campaign]
+	ADD [StoreId] int NULL
+END
+GO
+
+     
+UPDATE [Campaign]
+SET [StoreId] = 0
+WHERE [StoreId] IS NULL
+GO
+
+ALTER TABLE [Campaign] ALTER COLUMN [StoreId] int NOT NULL
+GO
