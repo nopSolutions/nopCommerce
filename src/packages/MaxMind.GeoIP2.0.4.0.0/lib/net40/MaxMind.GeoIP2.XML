@@ -99,6 +99,27 @@
             <param name="ipAddress">The ip address.</param>
             <returns>An <see cref="T:MaxMind.GeoIP2.Responses.CityIspOrgResponse"/></returns>
         </member>
+        <member name="M:MaxMind.GeoIP2.DatabaseReader.ConnectionType(System.String)">
+            <summary>
+            Returns an <see cref="T:MaxMind.GeoIP2.Responses.ConnectionTypeResponse"/> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.ConnectionTypeResponse"/></returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.DatabaseReader.Domain(System.String)">
+            <summary>
+            Returns an <see cref="T:MaxMind.GeoIP2.Responses.DomainResponse"/> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.DomainResponse"/></returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.DatabaseReader.Isp(System.String)">
+            <summary>
+            Returns an <see cref="T:MaxMind.GeoIP2.Responses.IspResponse"/> for the specified IP address.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.IspResponse"/></returns>
+        </member>
         <member name="M:MaxMind.GeoIP2.DatabaseReader.Dispose">
             <summary>
             Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
@@ -217,11 +238,9 @@
             <param name="message">A message that describes the error.</param>
         </member>
         <member name="T:MaxMind.GeoIP2.Model.City">
-             <summary>
-             City-level data associated with an IP address.
-            
-             This record is returned by all the end points except the Country end point.
-             </summary>
+            <summary>
+            City-level data associated with an IP address.
+            </summary>
         </member>
         <member name="T:MaxMind.GeoIP2.Model.NamedEntity">
             <summary>
@@ -249,12 +268,11 @@
         <member name="P:MaxMind.GeoIP2.Model.NamedEntity.Names">
             <summary>
             A <see cref="T:System.Collections.Generic.Dictionary`2"/> from locale codes to the name in that locale.
-            This attribute is returned by all end points.
             </summary>
         </member>
         <member name="P:MaxMind.GeoIP2.Model.NamedEntity.GeoNameId">
             <summary>
-            The GeoName ID for the city. This attribute is returned by all endpoints
+            The GeoName ID for the city. 
             </summary>
         </member>
         <member name="P:MaxMind.GeoIP2.Model.NamedEntity.Locales">
@@ -265,8 +283,7 @@
         <member name="P:MaxMind.GeoIP2.Model.NamedEntity.Name">
             <summary>
             The name of the city based on the locales list passed to the
-            <see cref="T:MaxMind.GeoIP2.WebServiceClient"/> constructor. This
-            attribute is returned by all endpoints.
+            <see cref="T:MaxMind.GeoIP2.WebServiceClient"/> constructor.
             </summary>
         </member>
         <member name="M:MaxMind.GeoIP2.Model.City.#ctor">
@@ -282,15 +299,12 @@
         <member name="P:MaxMind.GeoIP2.Model.City.Confidence">
             <summary>
             A value from 0-100 indicating MaxMind's confidence that the city
-            is correct. This attribute is only available from the Omni end
-            point.        
+            is correct.      
             </summary>
         </member>
         <member name="T:MaxMind.GeoIP2.Model.Continent">
             <summary>
-            Contains data for the continent record associated with an IP address.
-             
-             This record is returned by all the end points.    
+            Contains data for the continent record associated with an IP address.  
             </summary>
         </member>
         <member name="M:MaxMind.GeoIP2.Model.Continent.#ctor">
@@ -306,14 +320,12 @@
         <member name="P:MaxMind.GeoIP2.Model.Continent.Code">
             <summary>
             A two character continent code like "NA" (North America) or "OC"
-            (Oceania). This attribute is returned by all end points.        
+            (Oceania).      
             </summary>
         </member>
         <member name="T:MaxMind.GeoIP2.Model.Country">
             <summary>
             Contains data for the country record associated with an IP address.
-             
-             This record is returned by all the end points.
             </summary>
         </member>
         <member name="M:MaxMind.GeoIP2.Model.Country.#ctor">
@@ -329,16 +341,15 @@
         <member name="P:MaxMind.GeoIP2.Model.Country.Confidence">
             <summary>
             A value from 0-100 indicating MaxMind's confidence that the country
-            is correct. This attribute is only available from the Omni end
-            point.        
+            is correct. This attribute is only available from the Insights web
+            service end point.        
             </summary>
         </member>
         <member name="P:MaxMind.GeoIP2.Model.Country.IsoCode">
             <summary>
             The <a
             href="http://en.wikipedia.org/wiki/ISO_3166-1">two-character ISO
-            3166-1 alpha code</a> for the country. This attribute is returned
-            by all end points.
+            3166-1 alpha code</a> for the country.
             </summary>
         </member>
         <member name="T:MaxMind.GeoIP2.Model.WebServiceError">
@@ -365,8 +376,6 @@
         <member name="T:MaxMind.GeoIP2.Model.Location">
             <summary>
             Contains data for the location record associated with an IP address.
-            
-            This record is returned by all the end points except the Country end point.
             </summary>
         </member>
         <member name="M:MaxMind.GeoIP2.Model.Location.#ctor">
@@ -391,21 +400,17 @@
             <summary>
             The radius in kilometers around the specified location where the
             IP address is likely to be. This attribute is only available from
-            the Omni end point.
+            the Insights end point.
             </summary>
         </member>
         <member name="P:MaxMind.GeoIP2.Model.Location.Latitude">
             <summary>
-            The latitude of the location as a floating point number. This
-            attribute is returned by all end points except the Country end
-            point.
+            The latitude of the location as a floating point number.
             </summary>
         </member>
         <member name="P:MaxMind.GeoIP2.Model.Location.Longitude">
             <summary>
-            The longitude of the location as a floating point number. This
-            attribute is returned by all end points except the Country end
-            point.
+            The longitude of the location as a floating point number.
             </summary>
         </member>
         <member name="P:MaxMind.GeoIP2.Model.Location.MetroCode">
@@ -413,23 +418,19 @@
             The metro code of the location if the location is in the US.
             MaxMind returns the same metro codes as the <a href=
             "https://developers.google.com/adwords/api/docs/appendix/cities-DMAregions"
-            >Google AdWords API</a>. This attribute is returned by all end
-            points except the Country end point.
+            >Google AdWords API</a>.
             </summary>
         </member>
         <member name="P:MaxMind.GeoIP2.Model.Location.TimeZone">
             <summary>
             The time zone associated with location, as specified by the <a
             href="http://www.iana.org/time-zones">IANA Time Zone
-            Database</a>, e.g., "America/New_York". This attribute is
-            returned by all end points except the Country end point
+            Database</a>, e.g., "America/New_York".
             </summary>
         </member>
         <member name="T:MaxMind.GeoIP2.Model.MaxMind">
             <summary>
             Contains data related to your MaxMind account.
-            
-            This record is returned by all the end points.
             </summary>
         </member>
         <member name="M:MaxMind.GeoIP2.Model.MaxMind.#ctor">
@@ -452,14 +453,14 @@
         </member>
         <member name="P:MaxMind.GeoIP2.Model.MaxMind.QueriesRemaining">
             <summary>
-            The number of remaining queried in your account for the current
-            end point.
+            The number of remaining queried in your account for the web
+            service end point. This will be null when using a local
+            database.
             </summary>
         </member>
         <member name="T:MaxMind.GeoIP2.Model.Postal">
             <summary>
             Contains data for the postal record associated with an IP address.
-            This record is returned by all the end points except the Country end point.
             </summary>
         </member>
         <member name="M:MaxMind.GeoIP2.Model.Postal.#ctor">
@@ -484,27 +485,24 @@
             <summary>
             The postal code of the location. Postal codes are not available
             for all countries. In some countries, this will only contain part
-            of the postal code. This attribute is returned by all end points
-            except the Country end point.
+            of the postal code.
             </summary>
         </member>
         <member name="P:MaxMind.GeoIP2.Model.Postal.Confidence">
             <summary>
             A value from 0-100 indicating MaxMind's confidence that the
             postal code is correct. This attribute is only available from the
-            Omni end point.
+            Insight web service end point.
             </summary>
         </member>
         <member name="T:MaxMind.GeoIP2.Model.RepresentedCountry">
-            <summary>
-            Contains data for the represented country associated with an IP address.
+             <summary>
+             Contains data for the represented country associated with an IP address.
             
-            This class contains the country-level data associated with an IP address for
-            the IP's represented country. The represented country is the country
-            represented by something like a military base or embassy.
-            
-            This record is returned by all the end points.
-            </summary>
+             This class contains the country-level data associated with an IP address for
+             the IP's represented country. The represented country is the country
+             represented by something like a military base.
+             </summary>
         </member>
         <member name="M:MaxMind.GeoIP2.Model.RepresentedCountry.#ctor">
             <summary>
@@ -520,15 +518,12 @@
             <summary>
             A string indicating the type of entity that is representing the
             country. Currently we only return <c>military</c> but this could
-            expand to include other types such as <c>embassy</c> in the
-            future. Returned by all end points.
+            expand to include other types in the future.
             </summary>
         </member>
         <member name="T:MaxMind.GeoIP2.Model.Subdivision">
             <summary>
             Contains data for the subdivisions associated with an IP address.
-            
-            This record is returned by all the end points except the Country end point.
             </summary>
         </member>
         <member name="M:MaxMind.GeoIP2.Model.Subdivision.#ctor">
@@ -545,7 +540,7 @@
             <summary>
             This is a value from 0-100 indicating MaxMind's confidence that
             the subdivision is correct. This attribute is only available from
-            the Omni end point.
+            the Insights web service end point.
             </summary>
         </member>
         <member name="P:MaxMind.GeoIP2.Model.Subdivision.IsoCode">
@@ -553,14 +548,12 @@
             This is a string up to three characters long contain the
             subdivision portion of the <a
             href="http://en.wikipedia.org/wiki/ISO_3166-2 ISO 3166-2"
-            >code</a>. This attribute is returned by all end points except
-            Country.
+            >code</a>.
             </summary>
         </member>
         <member name="T:MaxMind.GeoIP2.Model.Traits">
             <summary>
             Contains data for the traits record associated with an IP address.
-            This record is returned by all the end points.
             </summary>
         </member>
         <member name="M:MaxMind.GeoIP2.Model.Traits.#ctor">
@@ -586,8 +579,8 @@
             The <a
             href="http://en.wikipedia.org/wiki/Autonomous_system_(Internet)"
             >autonomous system number</a> associated with the IP address.
-            This attribute is only available from the City/ISP/Org and Omni
-            end points.
+            This attribute is only available from the City and Insights web
+            service end points.
             </summary>
         </member>
         <member name="P:MaxMind.GeoIP2.Model.Traits.AutonomousSystemOrganization">
@@ -595,7 +588,7 @@
             The organization associated with the registered <a
             href="http://en.wikipedia.org/wiki/Autonomous_system_(Internet)"
             >autonomous system number</a> for the IP address. This attribute
-            is only available from the City/ISP/Org and Omni end points.
+            is only available from the City and Insights web service end points.
             </summary>
         </member>
         <member name="P:MaxMind.GeoIP2.Model.Traits.Domain">
@@ -603,7 +596,7 @@
             The second level domain associated with the IP address. This will
             be something like "example.com" or "example.co.uk", not
             "foo.example.com". This attribute is only available from the
-            City/ISP/Org and Omni end points.
+            City and Insights web service end points.
             </summary>
         </member>
         <member name="P:MaxMind.GeoIP2.Model.Traits.IPAddress">
@@ -612,14 +605,12 @@
             performed a "me" lookup against the web service, this will be the
             externally routable IP address for the system the code is running
             on. If the system is behind a NAT, this may differ from the IP
-            address locally assigned to it. This attribute is returned by all
-            end points.
+            address locally assigned to it.
             </summary>
         </member>
         <member name="P:MaxMind.GeoIP2.Model.Traits.IsAnonymousProxy">
             <summary>
-            This is true if the IP is an anonymous proxy. This attribute is
-            returned by all end points.
+            This is true if the IP is an anonymous proxy. See
             <a href="http://dev.maxmind.com/faq/geoip#anonproxy">MaxMind's GeoIP
             FAQ</a>
             </summary>
@@ -627,21 +618,20 @@
         <member name="P:MaxMind.GeoIP2.Model.Traits.IsSatelliteProvider">
             <summary>
             This is true if the IP belong to a satellite internet provider.
-            This attribute is returned by all end points.
             </summary>
         </member>
         <member name="P:MaxMind.GeoIP2.Model.Traits.Isp">
             <summary>
             The name of the ISP associated with the IP address. This
-            attribute is only available from the City/ISP/Org and Omni end
-            points.
+            attribute is only available from the City and Insights web
+            service end points.
             </summary>
         </member>
         <member name="P:MaxMind.GeoIP2.Model.Traits.Organization">
             <summary>
             The name of the organization associated with the IP address. This
-            attribute is only available from the City/ISP/Org and Omni end
-            points.
+            attribute is only available from the City and Insights web
+            service end points.
             </summary>
         </member>
         <member name="P:MaxMind.GeoIP2.Model.Traits.UserType">
@@ -663,17 +653,22 @@
             school
             search_engine_spider
             traveler
-            This attribute is only available from the Omni end point.
+            This attribute is only available from the Insights end point.
             </summary>
         </member>
         <member name="T:MaxMind.GeoIP2.Responses.AbstractCityResponse">
             <summary>
-            Abstract class that responses with city-level data subclass.
+            Abstract class that city-level response.
             </summary>
         </member>
         <member name="T:MaxMind.GeoIP2.Responses.AbstractCountryResponse">
             <summary>
-            Abstract class that responses with country-level data subclass.
+            Abstract class for country-level response.
+            </summary>
+        </member>
+        <member name="T:MaxMind.GeoIP2.Responses.AbstractResponse">
+            <summary>
+            Abstract class that represents a generic response.
             </summary>
         </member>
         <member name="M:MaxMind.GeoIP2.Responses.AbstractCountryResponse.#ctor">
@@ -796,10 +791,10 @@
         </member>
         <member name="T:MaxMind.GeoIP2.Responses.CityIspOrgResponse">
             <summary>
-            This class provides a model for the data returned by the GeoIP2 City/ISP/Org
+            This class provides a model for the data returned by the GeoIP2 Precision: City
             end point.
             
-            The only difference between the City, City/ISP/Org, and Omni response classes is
+            The only difference between the City and Insights response classes is
             which fields in each record may be populated.
             
             <a href="http://dev.maxmind.com/geoip/geoip2/web-services">GeoIP2 Web
@@ -818,10 +813,9 @@
         </member>
         <member name="T:MaxMind.GeoIP2.Responses.CityResponse">
             <summary>
-            This class provides a model for the data returned by the GeoIP2 City end
-            point.
+            This class provides a model for the data returned by GeoIP2 Precision: City and GeoIP2 City.
             
-            The only difference between the City, City/ISP/Org, and Omni response classes is
+            The only difference between the City and Insights response classes is
             which fields in each record may be populated.
             
             <a href="http://dev.maxmind.com/geoip/geoip2/web-services">GeoIP2 Web
@@ -838,12 +832,104 @@
             Constructor
             </summary>
         </member>
+        <member name="T:MaxMind.GeoIP2.Responses.IspResponse">
+            <summary>
+            This class represents the GeoIP2 ISP response.
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Responses.IspResponse.#ctor">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Responses.IspResponse.AutonomousSystemNumber">
+            <summary>
+            The <a
+            href="http://en.wikipedia.org/wiki/Autonomous_system_(Internet)"
+            >autonomous system number</a> associated with the IP address.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Responses.IspResponse.AutonomousSystemOrganization">
+            <summary>
+            The organization associated with the registered <a
+            href="http://en.wikipedia.org/wiki/Autonomous_system_(Internet)"
+            >autonomous system number</a> for the IP address.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Responses.IspResponse.Isp">
+            <summary>
+            The name of the ISP associated with the IP address.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Responses.IspResponse.Organization">
+            <summary>
+            The name of the organization associated with the IP address.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Responses.IspResponse.IPAddress">
+            <summary>
+            The IP address that the data in the model is for. If you
+            performed a "me" lookup against the web service, this will be the
+            externally routable IP address for the system the code is running
+            on. If the system is behind a NAT, this may differ from the IP
+            address locally assigned to it.
+            </summary>
+        </member>
+        <member name="T:MaxMind.GeoIP2.Responses.ConnectionTypeResponse">
+            <summary>
+            This class represents the GeoIP2 Connection-Type response.
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Responses.ConnectionTypeResponse.#ctor">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Responses.ConnectionTypeResponse.ConnectionType">
+            <summary>
+            The connection type of the IP address.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Responses.ConnectionTypeResponse.IPAddress">
+            <summary>
+            The IP address that the data in the model is for. If you
+            performed a "me" lookup against the web service, this will be the
+            externally routable IP address for the system the code is running
+            on. If the system is behind a NAT, this may differ from the IP
+            address locally assigned to it.
+            </summary>
+        </member>
+        <member name="T:MaxMind.GeoIP2.Responses.DomainResponse">
+            <summary>
+            This class represents the GeoIP2 Domain response.
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Responses.DomainResponse.#ctor">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Responses.DomainResponse.Domain">
+            <summary>
+            The second level domain associated with the IP address. This will
+            be something like "example.com" or "example.co.uk", not
+            "foo.example.com".
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Responses.DomainResponse.IPAddress">
+            <summary>
+            The IP address that the data in the model is for. If you
+            performed a "me" lookup against the web service, this will be the
+            externally routable IP address for the system the code is running
+            on. If the system is behind a NAT, this may differ from the IP
+            address locally assigned to it.
+            </summary>
+        </member>
         <member name="T:MaxMind.GeoIP2.Responses.CountryResponse">
             <summary>
-            This class provides a model for the data returned by the GeoIP2 Country end
-            point.
+            This class provides a model for the data returned by the GeoIP2 Precision: Country and GeoIP2 Country.
             
-            The only difference between the City, City/ISP/Org, and Omni response classes is
+            The only difference between the City and Insights response classes is
             which fields in each record may be populated.
             
             See <a href="http://dev.maxmind.com/geoip/geoip2/web-services">GeoIP2 Web
@@ -860,12 +946,34 @@
             Constructor
             </summary>
         </member>
+        <member name="T:MaxMind.GeoIP2.Responses.InsightsResponse">
+            <summary>
+            This class provides a model for the data returned by the GeoIP2 Precision: 
+            Insights end point.
+            
+            The only difference between the City and Insights response classes is
+            which fields in each record may be populated.
+            
+            <a href="http://dev.maxmind.com/geoip/geoip2/web-services">GeoIP2 Web
+                 Services</a>
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Responses.InsightsResponse.#ctor">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Responses.InsightsResponse.#ctor(MaxMind.GeoIP2.Model.City,MaxMind.GeoIP2.Model.Continent,MaxMind.GeoIP2.Model.Country,MaxMind.GeoIP2.Model.Location,MaxMind.GeoIP2.Model.MaxMind,MaxMind.GeoIP2.Model.Postal,MaxMind.GeoIP2.Model.Country,MaxMind.GeoIP2.Model.RepresentedCountry,System.Collections.Generic.List{MaxMind.GeoIP2.Model.Subdivision},MaxMind.GeoIP2.Model.Traits)">
+            <summary>
+            Constructor
+            </summary>
+        </member>
         <member name="T:MaxMind.GeoIP2.Responses.OmniResponse">
             <summary>
-            This class provides a model for the data returned by the GeoIP2 Omni end
-            point.
+            This class provides a model for the data returned by the GeoIP2 Precision: 
+            Insights web service end point.
             
-            The only difference between the City, City/ISP/Org, and Omni response classes is
+            The only difference between the City and Insights response classes is
             which fields in each record may be populated.
             
             <a href="http://dev.maxmind.com/geoip/geoip2/web-services">GeoIP2 Web
@@ -885,10 +993,10 @@
         <member name="T:MaxMind.GeoIP2.WebServiceClient">
              <summary>
              <para>
-             This class provides a client API for all the GeoIP2 web service's end points.
-             The end points are Country, City, City/ISP/Org, and Omni. Each end point
+             This class provides a client API for all the GeoIP2 Precision web service 
+             end points. The end points are Country, City, and Insights. Each end point
              returns a different set of data about an IP address, with Country returning
-             the least data and Omni the most.
+             the least data and Insights the most.
              </para>
             
              <para>
@@ -957,6 +1065,21 @@
             <param name="locales">List of locale codes to use in name property from most preferred to least preferred.</param>
             <param name="host">The base url to use when accessing the service</param>
             <param name="timeout">Timeout in milliseconds for connection to web service. The default is 3000.</param>
+        </member>
+        <member name="M:MaxMind.GeoIP2.WebServiceClient.Insights(System.String)">
+            <summary>
+            Returns an <see cref="T:MaxMind.GeoIP2.Responses.InsightsResponse"/> for the specified ip address.
+            </summary>
+            <param name="ipAddress">The ip address.</param>
+            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.InsightsResponse"/></returns>
+        </member>
+        <member name="M:MaxMind.GeoIP2.WebServiceClient.Insights(System.String,RestSharp.IRestClient)">
+            <summary>
+            Returns an <see cref="T:MaxMind.GeoIP2.Responses.InsightsResponse"/> for the specified ip address.
+            </summary>
+            <param name="ipAddress">The ip address.</param>
+            <param name="restClient">The RestClient to use</param>
+            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.InsightsResponse"/></returns>
         </member>
         <member name="M:MaxMind.GeoIP2.WebServiceClient.Omni(System.String)">
             <summary>
