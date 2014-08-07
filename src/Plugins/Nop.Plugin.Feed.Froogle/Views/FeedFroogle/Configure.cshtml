@@ -123,19 +123,6 @@
                 <input type="submit" name="generate" class="k-button" value="@T("Plugins.Feed.Froogle.Generate")" />
             </td>
         </tr>
-        @if (!String.IsNullOrEmpty(Model.GenerateFeedResult))
-        {
-            <tr class="adminSeparator">
-                <td colspan="2">
-                    <hr />
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <b>@Html.Raw(Model.GenerateFeedResult)</b>
-                </td>
-            </tr>
-        }
     </table>
 }
 @helper TabOverride()

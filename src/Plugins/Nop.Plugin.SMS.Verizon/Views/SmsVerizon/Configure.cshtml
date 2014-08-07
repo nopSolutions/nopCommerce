@@ -55,15 +55,5 @@
                 <input type="submit" name="test-sms" class="k-button" value="@T("Plugins.Sms.Verizon.SendTest")" />
             </td>
         </tr>
-        @if (!String.IsNullOrEmpty(Model.TestSmsResult))
-        {
-            <tr>
-                <td colspan="2" style="color: red">
-                    @Model.TestSmsResult
-                </td>
-            </tr>
-        }
     </table>
-    
-    
 }

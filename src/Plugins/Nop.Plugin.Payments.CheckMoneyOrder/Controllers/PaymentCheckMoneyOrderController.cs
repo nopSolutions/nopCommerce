@@ -3,6 +3,7 @@ using System.Web.Mvc;
 using Nop.Core;
 using Nop.Plugin.Payments.CheckMoneyOrder.Models;
 using Nop.Services.Configuration;
+using Nop.Services.Localization;
 using Nop.Services.Payments;
 using Nop.Services.Stores;
 using Nop.Web.Framework.Controllers;
@@ -15,16 +16,19 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Controllers
         private readonly IStoreService _storeService;
         private readonly IStoreContext _storeContext;
         private readonly ISettingService _settingService;
+        private readonly ILocalizationService _localizationService;
 
         public PaymentCheckMoneyOrderController(IWorkContext workContext,
             IStoreService storeService,
             ISettingService settingService,
-            IStoreContext storeContext)
+            IStoreContext storeContext,
+            ILocalizationService localizationService)
         {
             this._workContext = workContext;
             this._storeService = storeService;
             this._settingService = settingService;
             this._storeContext = storeContext;
+            this._localizationService = localizationService;
         }
         
         [AdminAuthorize]
@@ -88,6 +92,8 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Controllers
 
             //now clear settings cache
             _settingService.ClearCache();
+
+            SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
             return Configure();
         }

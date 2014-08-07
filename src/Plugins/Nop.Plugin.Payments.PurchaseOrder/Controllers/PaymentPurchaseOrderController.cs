@@ -3,6 +3,7 @@ using System.Web.Mvc;
 using Nop.Core;
 using Nop.Plugin.Payments.PurchaseOrder.Models;
 using Nop.Services.Configuration;
+using Nop.Services.Localization;
 using Nop.Services.Payments;
 using Nop.Services.Stores;
 using Nop.Web.Framework.Controllers;
@@ -14,14 +15,17 @@ namespace Nop.Plugin.Payments.PurchaseOrder.Controllers
         private readonly IWorkContext _workContext;
         private readonly IStoreService _storeService;
         private readonly ISettingService _settingService;
+        private readonly ILocalizationService _localizationService;
 
         public PaymentPurchaseOrderController(IWorkContext workContext,
             IStoreService storeService,
-            ISettingService settingService)
+            ISettingService settingService,
+            ILocalizationService localizationService)
         {
             this._workContext = workContext;
             this._storeService = storeService;
             this._settingService = settingService;
+            this._localizationService = localizationService;
         }
         
         [AdminAuthorize]
@@ -77,6 +81,8 @@ namespace Nop.Plugin.Payments.PurchaseOrder.Controllers
 
             //now clear settings cache
             _settingService.ClearCache();
+
+            SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
             return Configure();
         }

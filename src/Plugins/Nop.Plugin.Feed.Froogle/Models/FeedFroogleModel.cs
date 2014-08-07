@@ -30,8 +30,6 @@ namespace Nop.Plugin.Feed.Froogle.Models
         public string DefaultGoogleCategory { get; set; }
         public IList<SelectListItem> AvailableGoogleCategories { get; set; }
 
-        public string GenerateFeedResult { get; set; }
-
         [NopResourceDisplayName("Plugins.Feed.Froogle.StaticFilePath")]
         public IList<GeneratedFileModel> GeneratedFiles { get; set; }
         

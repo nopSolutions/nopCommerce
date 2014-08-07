@@ -1,6 +1,7 @@
 ﻿using System.Web.Mvc;
 using Nop.Plugin.Shipping.CanadaPost.Models;
 using Nop.Services.Configuration;
+using Nop.Services.Localization;
 using Nop.Web.Framework.Controllers;
 
 namespace Nop.Plugin.Shipping.CanadaPost.Controllers
@@ -10,11 +11,15 @@ namespace Nop.Plugin.Shipping.CanadaPost.Controllers
     {
         private readonly CanadaPostSettings _canadaPostSettings;
         private readonly ISettingService _settingService;
+        private readonly ILocalizationService _localizationService;
 
-        public ShippingCanadaPostController(CanadaPostSettings canadaPostSettings, ISettingService settingService)
+        public ShippingCanadaPostController(CanadaPostSettings canadaPostSettings, 
+            ISettingService settingService,
+            ILocalizationService localizationService)
         {
             this._canadaPostSettings = canadaPostSettings;
             this._settingService = settingService;
+            this._localizationService = localizationService;
         }
 
         [ChildActionOnly]
@@ -42,6 +47,8 @@ namespace Nop.Plugin.Shipping.CanadaPost.Controllers
             _canadaPostSettings.Port = model.Port;
             _canadaPostSettings.CustomerId = model.CustomerId;
             _settingService.SaveSetting(_canadaPostSettings);
+
+            SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
             return View("~/Plugins/Shipping.CanadaPost/Views/ShippingCanadaPost/Configure.cshtml", model);
         }

@@ -9,6 +9,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Plugin.Payments.PayPalStandard.Models;
 using Nop.Services.Configuration;
+using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
@@ -25,6 +26,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
         private readonly IPaymentService _paymentService;
         private readonly IOrderService _orderService;
         private readonly IOrderProcessingService _orderProcessingService;
+        private readonly ILocalizationService _localizationService;
         private readonly IStoreContext _storeContext;
         private readonly ILogger _logger;
         private readonly IWebHelper _webHelper;
@@ -36,7 +38,8 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             ISettingService settingService, 
             IPaymentService paymentService, 
             IOrderService orderService, 
-            IOrderProcessingService orderProcessingService, 
+            IOrderProcessingService orderProcessingService,
+            ILocalizationService localizationService,
             IStoreContext storeContext,
             ILogger logger, 
             IWebHelper webHelper,
@@ -49,6 +52,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             this._paymentService = paymentService;
             this._orderService = orderService;
             this._orderProcessingService = orderProcessingService;
+            this._localizationService = localizationService;
             this._storeContext = storeContext;
             this._logger = logger;
             this._webHelper = webHelper;
@@ -181,6 +185,8 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
 
             //now clear settings cache
             _settingService.ClearCache();
+
+            SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
             return Configure();
         }

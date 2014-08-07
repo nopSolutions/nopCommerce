@@ -109,7 +109,9 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
             _froogleSettings.StoreId = model.StoreId;
             _froogleSettings.DefaultGoogleCategory = model.DefaultGoogleCategory;
             _settingService.SaveSetting(_froogleSettings);
-            
+
+            SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
+
             //redisplay the form
             return Configure();
         }
@@ -140,11 +142,11 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
                 foreach (var store in stores)
                     plugin.GenerateStaticFile(store);
 
-                model.GenerateFeedResult = _localizationService.GetResource("Plugins.Feed.Froogle.SuccessResult");
+                SuccessNotification(_localizationService.GetResource("Plugins.Feed.Froogle.SuccessResult"));
             }
             catch (Exception exc)
             {
-                model.GenerateFeedResult = exc.Message;
+                ErrorNotification(exc.Message);
                 _logger.Error(exc.Message, exc);
             }
 

@@ -8625,6 +8625,9 @@
   <LocaleResource Name="Admin.Plugins">
     <Value>Plugins</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Plugins.Saved">
+    <Value>The plugin has been updated successfully.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Promotions">
     <Value>Promotions</Value>
   </LocaleResource>

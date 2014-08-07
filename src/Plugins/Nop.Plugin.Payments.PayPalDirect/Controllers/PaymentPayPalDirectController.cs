@@ -148,6 +148,8 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
             //now clear settings cache
             _settingService.ClearCache();
 
+            SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
+
             return Configure();
         }
 

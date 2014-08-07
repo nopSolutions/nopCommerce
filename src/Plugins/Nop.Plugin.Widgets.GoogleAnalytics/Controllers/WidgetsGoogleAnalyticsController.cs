@@ -8,6 +8,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Plugin.Widgets.GoogleAnalytics.Models;
 using Nop.Services.Catalog;
 using Nop.Services.Configuration;
+using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
 using Nop.Services.Stores;
@@ -25,11 +26,17 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
         private readonly ILogger _logger;
         private readonly ICategoryService _categoryService;
         private readonly IProductAttributeParser _productAttributeParser;
+        private readonly ILocalizationService _localizationService;
 
         public WidgetsGoogleAnalyticsController(IWorkContext workContext,
-            IStoreContext storeContext, IStoreService storeService,
-            ISettingService settingService, IOrderService orderService, ILogger logger, 
-            ICategoryService categoryService, IProductAttributeParser productAttributeParser)
+            IStoreContext storeContext, 
+            IStoreService storeService,
+            ISettingService settingService, 
+            IOrderService orderService, 
+            ILogger logger, 
+            ICategoryService categoryService,
+            IProductAttributeParser productAttributeParser,
+            ILocalizationService localizationService)
         {
             this._workContext = workContext;
             this._storeContext = storeContext;
@@ -39,6 +46,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
             this._logger = logger;
             this._categoryService = categoryService;
             this._productAttributeParser = productAttributeParser;
+            this._localizationService = localizationService;
         }
 
         [AdminAuthorize]
@@ -104,7 +112,9 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
 
             //now clear settings cache
             _settingService.ClearCache();
-            
+
+            SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
+
             return Configure();
         }
 

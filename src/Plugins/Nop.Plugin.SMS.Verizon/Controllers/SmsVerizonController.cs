@@ -52,6 +52,8 @@ namespace Nop.Plugin.Sms.Verizon.Controllers
             _verizonSettings.Email = model.Email;
             _settingService.SaveSetting(_verizonSettings);
 
+            SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
+
             return Configure();
         }
 
@@ -64,7 +66,7 @@ namespace Nop.Plugin.Sms.Verizon.Controllers
             {
                 if (String.IsNullOrEmpty(model.TestMessage))
                 {
-                    model.TestSmsResult = "Enter test message";
+                    ErrorNotification("Enter test message");
                 }
                 else
                 {
@@ -77,17 +79,17 @@ namespace Nop.Plugin.Sms.Verizon.Controllers
 
                     if (!plugin.SendSms(model.TestMessage))
                     {
-                        model.TestSmsResult = _localizationService.GetResource("Plugins.Sms.Verizon.TestFailed");
+                        ErrorNotification(_localizationService.GetResource("Plugins.Sms.Verizon.TestFailed"));
                     }
                     else
                     {
-                        model.TestSmsResult = _localizationService.GetResource("Plugins.Sms.Verizon.TestSuccess");
+                        SuccessNotification(_localizationService.GetResource("Plugins.Sms.Verizon.TestSuccess"));
                     }
                 }
             }
             catch(Exception exc)
             {
-                model.TestSmsResult = exc.ToString();
+                ErrorNotification(exc.ToString());
             }
 
             return View("~/Plugins/SMS.Verizon/Views/SmsVerizon/Configure.cshtml", model);

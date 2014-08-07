@@ -4,6 +4,7 @@ using Nop.Core.Caching;
 using Nop.Plugin.Widgets.NivoSlider.Infrastructure.Cache;
 using Nop.Plugin.Widgets.NivoSlider.Models;
 using Nop.Services.Configuration;
+using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Stores;
 using Nop.Web.Framework.Controllers;
@@ -18,13 +19,15 @@ namespace Nop.Plugin.Widgets.NivoSlider.Controllers
         private readonly IPictureService _pictureService;
         private readonly ISettingService _settingService;
         private readonly ICacheManager _cacheManager;
+        private readonly ILocalizationService _localizationService;
 
         public WidgetsNivoSliderController(IWorkContext workContext,
             IStoreContext storeContext,
             IStoreService storeService, 
             IPictureService pictureService,
             ISettingService settingService,
-            ICacheManager cacheManager)
+            ICacheManager cacheManager,
+            ILocalizationService localizationService)
         {
             this._workContext = workContext;
             this._storeContext = storeContext;
@@ -32,6 +35,7 @@ namespace Nop.Plugin.Widgets.NivoSlider.Controllers
             this._pictureService = pictureService;
             this._settingService = settingService;
             this._cacheManager = cacheManager;
+            this._localizationService = localizationService;
         }
 
         protected string GetPictureUrl(int pictureId)
@@ -198,7 +202,8 @@ namespace Nop.Plugin.Widgets.NivoSlider.Controllers
             
             //now clear settings cache
             _settingService.ClearCache();
-            
+
+            SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
             return Configure();
         }
 

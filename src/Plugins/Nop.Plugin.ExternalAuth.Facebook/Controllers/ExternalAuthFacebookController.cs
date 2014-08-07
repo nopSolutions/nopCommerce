@@ -6,6 +6,7 @@ using Nop.Plugin.ExternalAuth.Facebook.Core;
 using Nop.Plugin.ExternalAuth.Facebook.Models;
 using Nop.Services.Authentication.External;
 using Nop.Services.Configuration;
+using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Web.Framework;
@@ -24,6 +25,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
         private readonly IStoreService _storeService;
         private readonly IWorkContext _workContext;
         private readonly IPluginFinder _pluginFinder;
+        private readonly ILocalizationService _localizationService;
 
         public ExternalAuthFacebookController(ISettingService settingService,
             IOAuthProviderFacebookAuthorizer oAuthProviderFacebookAuthorizer,
@@ -33,7 +35,8 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
             IStoreContext storeContext,
             IStoreService storeService,
             IWorkContext workContext,
-            IPluginFinder pluginFinder)
+            IPluginFinder pluginFinder,
+            ILocalizationService localizationService)
         {
             this._settingService = settingService;
             this._oAuthProviderFacebookAuthorizer = oAuthProviderFacebookAuthorizer;
@@ -44,6 +47,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
             this._storeService = storeService;
             this._workContext = workContext;
             this._pluginFinder = pluginFinder;
+            this._localizationService = localizationService;
         }
         
         [AdminAuthorize]
@@ -105,6 +109,8 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
 
             //now clear settings cache
             _settingService.ClearCache();
+
+            SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
             return Configure();
         }

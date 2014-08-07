@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using Nop.Plugin.Shipping.Fedex.Domain;
 using Nop.Plugin.Shipping.Fedex.Models;
 using Nop.Services.Configuration;
+using Nop.Services.Localization;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 
@@ -14,11 +15,15 @@ namespace Nop.Plugin.Shipping.Fedex.Controllers
     {
         private readonly FedexSettings _fedexSettings;
         private readonly ISettingService _settingService;
+        private readonly ILocalizationService _localizationService;
 
-        public ShippingFedexController(FedexSettings fedexSettings, ISettingService settingService)
+        public ShippingFedexController(FedexSettings fedexSettings,
+            ISettingService settingService,
+            ILocalizationService localizationService)
         {
             this._fedexSettings = fedexSettings;
             this._settingService = settingService;
+            this._localizationService = localizationService;
         }
 
         [ChildActionOnly]
@@ -107,6 +112,8 @@ namespace Nop.Plugin.Shipping.Fedex.Controllers
 
 
             _settingService.SaveSetting(_fedexSettings);
+
+            SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
             return Configure();
         }

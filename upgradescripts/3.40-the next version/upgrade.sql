@@ -11,6 +11,9 @@ set @resources='
   <LocaleResource Name="Admin.Promotions.Campaigns.Fields.Store.Hint">
     <Value>Choose a store which subscribers will get this email.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Plugins.Saved">
+    <Value>The plugin has been updated successfully.</Value>
+  </LocaleResource>
 </Language>
 '
 

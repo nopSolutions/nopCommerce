@@ -12,6 +12,5 @@ namespace Nop.Plugin.Sms.Verizon.Models
 
         [NopResourceDisplayName("Plugins.Sms.Verizon.Fields.TestMessage")]
         public string TestMessage { get; set; }
-        public string TestSmsResult { get; set; }
     }
 }

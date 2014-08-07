@@ -5,6 +5,7 @@ using Nop.Core;
 using Nop.Plugin.Shipping.UPS.Domain;
 using Nop.Plugin.Shipping.UPS.Models;
 using Nop.Services.Configuration;
+using Nop.Services.Localization;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 
@@ -15,11 +16,15 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
     {
         private readonly UPSSettings _upsSettings;
         private readonly ISettingService _settingService;
+        private readonly ILocalizationService _localizationService;
 
-        public ShippingUPSController(UPSSettings upsSettings, ISettingService settingService)
+        public ShippingUPSController(UPSSettings upsSettings,
+            ISettingService settingService,
+            ILocalizationService localizationService)
         {
             this._upsSettings = upsSettings;
             this._settingService = settingService;
+            this._localizationService = localizationService;
         }
 
         [ChildActionOnly]
@@ -134,6 +139,8 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
                 _upsSettings.CarrierServicesOffered = carrierServicesOfferedDomestic.ToString();
 
             _settingService.SaveSetting(_upsSettings);
+
+            SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
             return Configure();
         }
