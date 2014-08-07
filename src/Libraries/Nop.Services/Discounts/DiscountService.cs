@@ -167,11 +167,7 @@ namespace Nop.Services.Discounts
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Discount collection</returns>
         public virtual IList<Discount> GetAllDiscounts(DiscountType? discountType, string couponCode = "", bool showHidden = false)
-        { 
-            int? discountTypeId = null;
-            if (discountType.HasValue)
-                discountTypeId = (int)discountType.Value;
-
+        {
             //we load all discounts, and filter them by passed "discountType" parameter later
             //we do it because we know that this method is invoked several times per HTTP request with distinct "discountType" parameter
             //that's why let's access the database only once
@@ -195,14 +191,14 @@ namespace Nop.Services.Discounts
 
                     query = query.Where(d => d.CouponCode == couponCode);
                 }
-                query = query.OrderByDescending(d => d.Id);
+                query = query.OrderBy(d => d.Name);
                 
                 var discounts = query.ToList();
                 return discounts;
             });
-            if (discountTypeId.HasValue && discountTypeId.Value > 0)
+            if (discountType.HasValue)
             {
-                result = result.Where(d => d.DiscountTypeId == discountTypeId).ToList();
+                result = result.Where(d => d.DiscountType == discountType.Value).ToList();
             }
             return result;
         }
