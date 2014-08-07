@@ -16,6 +16,10 @@
     
 
     var random = CommonHelper.GenerateRandomInteger();
+
+    //allow HTML body? Full page?
+    //http://www.tinymce.com/wiki.php/Plugin:fullpage
+    var enableFullPage = false;
 }
 <script>
     $(document).ready(function () {
@@ -50,7 +54,7 @@
             plugins: [
                 "advlist autolink lists link image charmap print preview anchor",
                 "searchreplace visualblocks code fullscreen",
-                "insertdatetime media table contextmenu paste@(allowJbimages ? " jbimages" : null)"
+                "insertdatetime media table contextmenu paste@(allowJbimages ? " jbimages" : null)@(enableFullPage ? " fullpage" : null)"
             ],
             toolbar: "insertfile undo redo | styleselect | fontselect | fontsizeselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image@(allowJbimages ? " jbimages" : null)",
             //"relative_urls" required by jbimages plugin to be set to "false"
@@ -58,7 +62,7 @@
             @if (allowRoxyFileman){
                 <text>
                 //picture manager
-                    file_browser_callback: RoxyFileBrowser@(random),
+                file_browser_callback: RoxyFileBrowser@(random),
                 </text>
             }
             //we should set "convert_urls" set to "false" (because of "relative_urls" requirement)
