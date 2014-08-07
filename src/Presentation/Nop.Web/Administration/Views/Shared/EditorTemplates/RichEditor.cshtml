@@ -17,9 +17,9 @@
 
     var random = CommonHelper.GenerateRandomInteger();
 
-    //allow HTML body? Full page?
-    //http://www.tinymce.com/wiki.php/Plugin:fullpage
-    var enableFullPage = false;
+    //allow HTML body? Full page? - http://www.tinymce.com/wiki.php/Plugin:fullpage
+    //false by default
+    var enableFullPage = Convert.ToBoolean(ViewData["nop.RichEditor.EnableFullPage"] ?? false);
 }
 <script>
     $(document).ready(function () {
