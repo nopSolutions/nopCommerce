@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Nop.Core.Data
 {
@@ -21,6 +22,12 @@ namespace Nop.Core.Data
         void Insert(T entity);
 
         /// <summary>
+        /// Insert entities
+        /// </summary>
+        /// <param name="entities">Entities</param>
+        void Insert(IEnumerable<T> entities);
+
+        /// <summary>
         /// Update entity
         /// </summary>
         /// <param name="entity">Entity</param>
@@ -31,6 +38,12 @@ namespace Nop.Core.Data
         /// </summary>
         /// <param name="entity">Entity</param>
         void Delete(T entity);
+
+        /// <summary>
+        /// Delete entities
+        /// </summary>
+        /// <param name="entities">Entities</param>
+        void Delete(IEnumerable<T> entities);
 
         /// <summary>
         /// Gets a table

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System.Linq;
@@ -12,8 +13,14 @@ namespace Nop.Data
     /// </summary>
     public partial class EfRepository<T> : IRepository<T> where T : BaseEntity
     {
+        #region Fields
+
         private readonly IDbContext _context;
         private IDbSet<T> _entities;
+
+        #endregion
+
+        #region Ctor
 
         /// <summary>
         /// Ctor
@@ -23,6 +30,10 @@ namespace Nop.Data
         {
             this._context = context;
         }
+        
+        #endregion
+        
+        #region Methods
 
         /// <summary>
         /// Get entity by identifier
@@ -48,6 +59,36 @@ namespace Nop.Data
                     throw new ArgumentNullException("entity");
 
                 this.Entities.Add(entity);
+
+                this._context.SaveChanges();
+            }
+            catch (DbEntityValidationException dbEx)
+            {
+                var msg = string.Empty;
+
+                foreach (var validationErrors in dbEx.EntityValidationErrors)
+                    foreach (var validationError in validationErrors.ValidationErrors)
+                        msg += string.Format("Property: {0} Error: {1}", validationError.PropertyName, validationError.ErrorMessage) + Environment.NewLine;
+
+                var fail = new Exception(msg, dbEx);
+                //Debug.WriteLine(fail.Message, fail);
+                throw fail;
+            }
+        }
+
+        /// <summary>
+        /// Insert entities
+        /// </summary>
+        /// <param name="entities">Entities</param>
+        public virtual void Insert(IEnumerable<T> entities)
+        {
+            try
+            {
+                if (entities == null)
+                    throw new ArgumentNullException("entities");
+
+                foreach (var entity in entities)
+                    this.Entities.Add(entity);
 
                 this._context.SaveChanges();
             }
@@ -122,6 +163,40 @@ namespace Nop.Data
         }
 
         /// <summary>
+        /// Delete entities
+        /// </summary>
+        /// <param name="entities">Entities</param>
+        public virtual void Delete(IEnumerable<T> entities)
+        {
+            try
+            {
+                if (entities == null)
+                    throw new ArgumentNullException("entities");
+
+                foreach (var entity in entities)
+                    this.Entities.Remove(entity);
+
+                this._context.SaveChanges();
+            }
+            catch (DbEntityValidationException dbEx)
+            {
+                var msg = string.Empty;
+
+                foreach (var validationErrors in dbEx.EntityValidationErrors)
+                    foreach (var validationError in validationErrors.ValidationErrors)
+                        msg += Environment.NewLine + string.Format("Property: {0} Error: {1}", validationError.PropertyName, validationError.ErrorMessage);
+
+                var fail = new Exception(msg, dbEx);
+                //Debug.WriteLine(fail.Message, fail);
+                throw fail;
+            }
+        }
+        
+        #endregion
+
+        #region Properties
+
+        /// <summary>
         /// Gets a table
         /// </summary>
         public virtual IQueryable<T> Table
@@ -131,7 +206,6 @@ namespace Nop.Data
                 return this.Entities;
             }
         }
-
 
         /// <summary>
         /// Gets a table with "no tracking" enabled (EF feature) Use it only when you load record(s) only for read-only operations
@@ -143,7 +217,6 @@ namespace Nop.Data
                 return this.Entities.AsNoTracking();
             }
         }
-
 
         /// <summary>
         /// Entities
@@ -157,5 +230,7 @@ namespace Nop.Data
                 return _entities;
             }
         }
+
+        #endregion
     }
 }
