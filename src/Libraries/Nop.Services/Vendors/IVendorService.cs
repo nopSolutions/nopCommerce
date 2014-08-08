@@ -24,11 +24,13 @@ namespace Nop.Services.Vendors
         /// <summary>
         /// Gets all vendors
         /// </summary>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <param name="name">Vendor name</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Vendors</returns>
-        IPagedList<Vendor> GetAllVendors(int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false);
+        IPagedList<Vendor> GetAllVendors(string name = "", 
+            int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false);
 
         /// <summary>
         /// Inserts a vendor

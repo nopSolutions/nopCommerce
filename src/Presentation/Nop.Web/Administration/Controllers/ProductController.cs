@@ -505,7 +505,7 @@ namespace Nop.Admin.Controllers
                 Text = _localizationService.GetResource("Admin.Catalog.Products.Fields.Vendor.None"),
                 Value = "0"
             });
-            var vendors = _vendorService.GetAllVendors(0, int.MaxValue, true);
+            var vendors = _vendorService.GetAllVendors(showHidden: true);
             foreach (var vendor in vendors)
             {
                 model.AvailableVendors.Add(new SelectListItem()
@@ -671,7 +671,7 @@ namespace Nop.Admin.Controllers
 
             //vendors
             model.AvailableVendors.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            foreach (var v in _vendorService.GetAllVendors(0, int.MaxValue, true))
+            foreach (var v in _vendorService.GetAllVendors(showHidden: true))
                 model.AvailableVendors.Add(new SelectListItem() { Text = v.Name, Value = v.Id.ToString() });
 
             //product types
@@ -1443,7 +1443,7 @@ namespace Nop.Admin.Controllers
 
             //vendors
             model.AvailableVendors.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            foreach (var v in _vendorService.GetAllVendors(0, int.MaxValue, true))
+            foreach (var v in _vendorService.GetAllVendors(showHidden: true))
                 model.AvailableVendors.Add(new SelectListItem() { Text = v.Name, Value = v.Id.ToString() });
 
             //product types
@@ -1621,7 +1621,7 @@ namespace Nop.Admin.Controllers
 
             //vendors
             model.AvailableVendors.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            foreach (var v in _vendorService.GetAllVendors(0, int.MaxValue, true))
+            foreach (var v in _vendorService.GetAllVendors(showHidden: true))
                 model.AvailableVendors.Add(new SelectListItem() { Text = v.Name, Value = v.Id.ToString() });
 
             //product types
@@ -1823,7 +1823,7 @@ namespace Nop.Admin.Controllers
 
             //vendors
             model.AvailableVendors.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            foreach (var v in _vendorService.GetAllVendors(0, int.MaxValue, true))
+            foreach (var v in _vendorService.GetAllVendors(showHidden: true))
                 model.AvailableVendors.Add(new SelectListItem() { Text = v.Name, Value = v.Id.ToString() });
 
             //product types
@@ -3460,7 +3460,7 @@ namespace Nop.Admin.Controllers
 
             //vendors
             model.AvailableVendors.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            foreach (var v in _vendorService.GetAllVendors(0, int.MaxValue, true))
+            foreach (var v in _vendorService.GetAllVendors(showHidden: true))
                 model.AvailableVendors.Add(new SelectListItem() { Text = v.Name, Value = v.Id.ToString() });
 
             //product types

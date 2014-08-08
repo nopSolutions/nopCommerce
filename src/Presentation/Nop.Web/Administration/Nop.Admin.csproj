@@ -217,6 +217,7 @@
     <Compile Include="Models\Templates\ManufacturerTemplateModel.cs" />
     <Compile Include="Models\Templates\ProductTemplateModel.cs" />
     <Compile Include="Models\Templates\CategoryTemplateModel.cs" />
+    <Compile Include="Models\Vendors\VendorListModel.cs" />
     <Compile Include="Models\Vendors\VendorModel.cs" />
     <Compile Include="Models\Customers\OnlineCustomerModel.cs" />
     <Compile Include="Models\Messages\MessageTemplateListModel.cs" />

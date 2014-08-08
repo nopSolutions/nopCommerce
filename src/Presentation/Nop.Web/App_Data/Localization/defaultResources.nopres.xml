@@ -10002,6 +10002,12 @@
   <LocaleResource Name="Admin.Vendors.Info">
     <Value>Vendor Info</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.List.SearchName">
+    <Value>Vendor name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.List.SearchName.Hint">
+    <Value>A vendor name.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Updated">
     <Value>The vendor has been updated successfully.</Value>
   </LocaleResource>

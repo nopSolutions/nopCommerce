@@ -14,6 +14,12 @@ set @resources='
   <LocaleResource Name="Admin.Plugins.Saved">
     <Value>The plugin has been updated successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.List.SearchName">
+    <Value>Vendor name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.List.SearchName.Hint">
+    <Value>A vendor name.</Value>
+  </LocaleResource>
 </Language>
 '
 

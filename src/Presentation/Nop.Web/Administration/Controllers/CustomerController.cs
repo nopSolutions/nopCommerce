@@ -278,7 +278,7 @@ namespace Nop.Admin.Controllers
                 Text = _localizationService.GetResource("Admin.Customers.Customers.Fields.Vendor.None"),
                 Value = "0"
             });
-            var vendors = _vendorService.GetAllVendors(0, int.MaxValue, true);
+            var vendors = _vendorService.GetAllVendors(showHidden: true);
             foreach (var vendor in vendors)
             {
                 model.AvailableVendors.Add(new SelectListItem()

@@ -103,16 +103,17 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
                 return AccessDeniedView();
 
-            return View();
+            var model = new VendorListModel();
+            return View(model);
         }
 
         [HttpPost]
-        public ActionResult List(DataSourceRequest command)
+        public ActionResult List(DataSourceRequest command, VendorListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
                 return AccessDeniedView();
 
-            var vendors = _vendorService.GetAllVendors(command.Page - 1, command.PageSize, true);
+            var vendors = _vendorService.GetAllVendors(model.SearchName, command.Page - 1, command.PageSize, true);
             var gridModel = new DataSourceResult
             {
                 Data = vendors.Select(x =>

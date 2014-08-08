@@ -752,7 +752,7 @@ namespace Nop.Admin.Controllers
 
             //vendors
             model.AvailableVendors.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            foreach (var v in _vendorService.GetAllVendors(0, int.MaxValue, true))
+            foreach (var v in _vendorService.GetAllVendors(showHidden: true))
                 model.AvailableVendors.Add(new SelectListItem() { Text = v.Name, Value = v.Id.ToString() });
 
             //warehouses

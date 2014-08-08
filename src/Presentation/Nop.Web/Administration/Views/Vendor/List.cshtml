@@ -1,4 +1,5 @@
-﻿@{
+﻿@model VendorListModel
+    @{
     var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
     var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
 
@@ -14,6 +15,21 @@
         <a href="@Url.Action("Create")" class="k-button">@T("Admin.Common.AddNew")</a>
     </div>
 </div>
+<table width="100%">
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.SearchName):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.SearchName)
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <input type="button" id="btnSearch" class="k-button" value="@T("Admin.Common.Search")" />
+        </td>
+    </tr>
+</table>
 <table class="adminContent">
     <tr>
         <td>
@@ -28,7 +44,8 @@
                                 read: {
                                     url: "@Html.Raw(Url.Action("List", "Vendor"))",
                                     type: "POST",
-                                    dataType: "json"
+                                    dataType: "json",
+                                    data: additionalData
                                 }
                             },
                             schema: {
@@ -78,6 +95,31 @@
                         }]
                     });
                 });
+            </script>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    //search button
+                    $('#btnSearch').click(function () {
+                        //search
+                        var grid = $('#vendors-grid').data('kendoGrid');
+                        grid.dataSource.page(1); //new search. Set page size to 1
+                        grid.dataSource.read();
+                        return false;
+                    });
+
+                    $("#@Html.FieldIdFor(model => model.SearchName)").keydown(function (event) {
+                        if (event.keyCode == 13) {
+                            $("#btnSearch").click();
+                            return false;
+                        }
+                    });
+                });
+
+                function additionalData() {
+                    return {
+                        SearchName: $('#@Html.FieldIdFor(model => model.SearchName)').val()
+                    };
+                }
             </script>
         </td>
     </tr>
