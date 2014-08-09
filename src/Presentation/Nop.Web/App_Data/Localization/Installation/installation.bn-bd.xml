@@ -1,0 +1,140 @@
+﻿<Language Name="বাংলা (বাংলাদেশ)" IsDefault="false" IsRightToLeft="false">
+  <LocaleResource Name="AdminEmail">
+    <Value>অ্যাডমিন ইমেইল</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminEmailRequired">
+    <Value>অ্যাডমিন ইমেইল দিন</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPassword">
+    <Value>অ্যাডমিন পাসওয়ার্ড</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPasswordRequired">
+    <Value>অ্যাডমিন পাসওয়ার্ড দিন</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureDirectoryPermissions">
+    <Value>'{1}' ফোল্ডারটি পরিবর্তনের অনুমতি '{0}' অ্যাকাউন্টের নেই। অনুগ্রহ করে অনুমতিগুলো কনফিগার করে নিন। </Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureFilePermissions">
+    <Value>'{1}' ফাইলটি পরিবর্তনের অনুমতি '{0}' অ্যাকাউন্টের নেই। অনুগ্রহ করে অনুমতিগুলো কনফিগার করে নিন।</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPassword">
+    <Value>পাসওয়ার্ড নিশ্চিত করুন</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPasswordRequired">
+    <Value>নিশ্চিতকরন পাসওয়ার্ড দিন</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionString">
+    <Value>কানেকশন স্ট্রিং</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringRequired">
+    <Value>SQL কানেকশন স্ট্রিং প্রয়োজনীয়</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringValues">
+    <Value>SQL কানেকশন এর মানগুলো দিন</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringWrongFormat">
+    <Value>SQL কানেকশন স্ট্রিং-এর ফরম্যাটটি ভুল</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateDatabaseIfDoesNotExist">
+    <Value>ডাটাবেসটি না থাকলে তৈরি </Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateSampleData">
+    <Value>নমুনা ডাটা তৈরি </Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomCollation">
+    <Value>কাস্টম SQL সার্ভার কোলেশন উল্লেখ করুন</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>ডাটাবেস: {0} তৈরি করার সময় একটি সমস্যা হয়েছে</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseInformation">
+    <Value>ডাটাবেসের তথ্য</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseName">
+    <Value>ডাটাবেসের নাম</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNameRequired">
+    <Value>ডাটাবেসের নাম  বাধ্যতামূলক</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNotExists">
+    <Value>ডাটাবেসটি নেই অথবা এটিতে সংযোগ স্থাপন করতে আপনার অনুমতি নেই</Value>
+  </LocaleResource>
+  <LocaleResource Name="DataProviderRequired">
+    <Value>ডাটা প্রোভাইডার উল্লেখ করুন</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation1">
+    <Value>nopCommerce কিভাবে ব্যাবহার করতে হয় তা জানতে ভিজিট করুন</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation2">
+    <Value>nopCommerce.com এ ডকুমেন্টেশন অংশ</Value>
+  </LocaleResource>
+  <LocaleResource Name="Example">
+    <Value>উদাহরণ</Value>
+  </LocaleResource>
+  <LocaleResource Name="Install">
+    <Value>ইনস্টল করুন</Value>
+  </LocaleResource>
+  <LocaleResource Name="Installing">
+    <Value>nopCommerce ইনস্টল করা হচ্ছে...</Value>
+  </LocaleResource>
+  <LocaleResource Name="PasswordsDoNotMatch">
+    <Value>পাসওয়ার্ড মিলছে না</Value>
+  </LocaleResource>
+  <LocaleResource Name="RawConnectionString">
+    <Value>Raw কানেকশন স্ট্রিং লিখুন (পরিণত ব্যবহারকারী)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Recommended">
+    <Value>[সুপারিশকৃত]</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallation">
+    <Value>[ইনস্টলেশন শুরু করুন]</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallationTooltip">
+    <Value>ইনস্টলেশন প্রক্রিয়া পুনরায় আরম্ভ করার জন্য ক্লিক করুন (ক্যাশের সব মান মুছে ফেলা হবে) </Value>
+  </LocaleResource>
+  <LocaleResource Name="SetupFailed">
+    <Value>সেটআপ ব্যর্থ হয়েছে: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlAuthentication">
+    <Value>SQL সার্ভার অ্যাকাউন্ট ব্যবহার করুন</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlCompact">
+    <Value>বিল্ট ইন ডাটা স্টোরেজ ব্যবহার করুন (SQL সার্ভার কমপ্যাক্ট)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerName">
+    <Value>SQL সার্ভারের নাম</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerNameRequired">
+    <Value>SQL সার্ভারের নাম বাধ্যতামূলক</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerPassword">
+    <Value>SQL পাসওয়ার্ড</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerPasswordRequired">
+    <Value>SQL সার্ভারের পাসওয়ার্ড প্রয়োজনীয়</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerUsername">
+    <Value>SQL ব্যবহারকারীর নাম</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerUsernameRequired">
+    <Value>SQL ব্যবহারকারীর নাম প্রয়োজনীয়</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlStandard">
+    <Value>SQL সার্ভার (অথবা SQL এক্সপ্রেস) ডাটাবেস ব্যবহার করুন</Value>
+  </LocaleResource>
+  <LocaleResource Name="StoreInformation">
+    <Value>দোকানের তথ্য</Value>
+  </LocaleResource>
+  <LocaleResource Name="Title">
+    <Value>nopCommerce ইনস্টলেশন</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip1">
+    <Value>nopCommerce একটি শীর্ষস্থানীয় ASP.NET অনলাইন দোকানগুলোর ই-কমার্স সমাধান। nopCommerce কনফিগার করার সম্পূর্ণ প্রক্রিয়াতে এই উইজার্ডটি আপনাকে সাহায্য করবে </Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip2">
+    <Value>এই উইজার্ডটি সম্পূর্ণ করতে আপনার ডাটাবেস সার্ভার সংক্রান্ত কিছু তথ্য ("কানেকশন স্ট্রিং") আপনাকে জানতে হবে। প্রয়োজন হলে আপনার ISP-র সাথে যোগাযোগ করুন। যদি আপনি এটি আপনার লোকাল ম্যাশিন অথবা সার্ভারে ইন্সটল করেন তাহলে আপনার সিস্টেম অ্যাডমিন থেকে কিছু তথ্য প্রয়োজন হতে পারে।</Value>
+  </LocaleResource>
+  <LocaleResource Name="WindowsAuthentication">
+    <Value>ইন্টিগ্রেটেড উইন্ডোজ অথেন্টিকেশন ব্যবহার করুন</Value>
+  </LocaleResource>
+</Language>
