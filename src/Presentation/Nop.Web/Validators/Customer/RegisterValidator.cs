@@ -1,11 +1,12 @@
 ﻿using FluentValidation;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Localization;
+using Nop.Web.Framework.Validators;
 using Nop.Web.Models.Customer;
 
 namespace Nop.Web.Validators.Customer
 {
-    public class RegisterValidator : AbstractValidator<RegisterModel>
+    public class RegisterValidator : BaseNopValidator<RegisterModel>
     {
         public RegisterValidator(ILocalizationService localizationService, CustomerSettings customerSettings)
         {

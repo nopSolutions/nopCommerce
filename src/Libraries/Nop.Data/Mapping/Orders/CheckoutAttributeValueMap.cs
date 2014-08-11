@@ -1,9 +1,8 @@
-using System.Data.Entity.ModelConfiguration;
 using Nop.Core.Domain.Orders;
 
 namespace Nop.Data.Mapping.Orders
 {
-    public partial class CheckoutAttributeValueMap : EntityTypeConfiguration<CheckoutAttributeValue>
+    public partial class CheckoutAttributeValueMap : NopEntityTypeConfiguration<CheckoutAttributeValue>
     {
         public CheckoutAttributeValueMap()
         {

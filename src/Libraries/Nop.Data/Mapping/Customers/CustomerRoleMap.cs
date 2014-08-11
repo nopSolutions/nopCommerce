@@ -1,9 +1,8 @@
-using System.Data.Entity.ModelConfiguration;
 using Nop.Core.Domain.Customers;
 
 namespace Nop.Data.Mapping.Customers
 {
-    public partial class CustomerRoleMap : EntityTypeConfiguration<CustomerRole>
+    public partial class CustomerRoleMap : NopEntityTypeConfiguration<CustomerRole>
     {
         public CustomerRoleMap()
         {

@@ -1,9 +1,9 @@
-using System.Data.Entity.ModelConfiguration;
+using Nop.Data.Mapping;
 using Nop.Plugin.Tax.CountryStateZip.Domain;
 
 namespace Nop.Plugin.Tax.CountryStateZip.Data
 {
-    public partial class TaxRateMap : EntityTypeConfiguration<TaxRate>
+    public partial class TaxRateMap : NopEntityTypeConfiguration<TaxRate>
     {
         public TaxRateMap()
         {

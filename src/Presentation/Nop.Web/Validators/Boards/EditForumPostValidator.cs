@@ -1,10 +1,11 @@
 ﻿using FluentValidation;
 using Nop.Services.Localization;
+using Nop.Web.Framework.Validators;
 using Nop.Web.Models.Boards;
 
 namespace Nop.Web.Validators.Boards
 {
-    public class EditForumPostValidator : AbstractValidator<EditForumPostModel>
+    public class EditForumPostValidator : BaseNopValidator<EditForumPostModel>
     {
         public EditForumPostValidator(ILocalizationService localizationService)
         {            

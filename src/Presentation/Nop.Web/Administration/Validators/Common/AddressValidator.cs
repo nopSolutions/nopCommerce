@@ -1,10 +1,11 @@
 ﻿using FluentValidation;
 using Nop.Admin.Models.Common;
 using Nop.Services.Localization;
+using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Common
 {
-    public class AddressValidator : AbstractValidator<AddressModel>
+    public class AddressValidator : BaseNopValidator<AddressModel>
     {
         public AddressValidator(ILocalizationService localizationService)
         {

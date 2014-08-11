@@ -1,11 +1,12 @@
 ﻿using FluentValidation;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Localization;
+using Nop.Web.Framework.Validators;
 using Nop.Web.Models.Customer;
 
 namespace Nop.Web.Validators.Customer
 {
-    public class ChangePasswordValidator : AbstractValidator<ChangePasswordModel>
+    public class ChangePasswordValidator : BaseNopValidator<ChangePasswordModel>
     {
         public ChangePasswordValidator(ILocalizationService localizationService, CustomerSettings customerSettings)
         {

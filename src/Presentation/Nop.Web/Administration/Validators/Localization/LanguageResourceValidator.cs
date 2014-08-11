@@ -1,10 +1,11 @@
 ﻿using FluentValidation;
 using Nop.Admin.Models.Localization;
 using Nop.Services.Localization;
+using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Localization
 {
-    public class LanguageResourceValidator : AbstractValidator<LanguageResourceModel>
+    public class LanguageResourceValidator : BaseNopValidator<LanguageResourceModel>
     {
         public LanguageResourceValidator(ILocalizationService localizationService)
         {

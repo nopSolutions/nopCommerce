@@ -1,9 +1,9 @@
-using System.Data.Entity.ModelConfiguration;
+using Nop.Data.Mapping;
 using Nop.Plugin.Feed.Froogle.Domain;
 
 namespace Nop.Plugin.Feed.Froogle.Data
 {
-    public partial class GoogleProductRecordMap : EntityTypeConfiguration<GoogleProductRecord>
+    public partial class GoogleProductRecordMap : NopEntityTypeConfiguration<GoogleProductRecord>
     {
         public GoogleProductRecordMap()
         {

@@ -1,9 +1,8 @@
-﻿using System.Data.Entity.ModelConfiguration;
-using Nop.Core.Domain.Logging;
+﻿using Nop.Core.Domain.Logging;
 
 namespace Nop.Data.Mapping.Logging
 {
-    public partial class ActivityLogTypeMap : EntityTypeConfiguration<ActivityLogType>
+    public partial class ActivityLogTypeMap : NopEntityTypeConfiguration<ActivityLogType>
     {
         public ActivityLogTypeMap()
         {

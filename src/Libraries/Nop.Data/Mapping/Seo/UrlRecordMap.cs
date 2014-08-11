@@ -1,9 +1,8 @@
-using System.Data.Entity.ModelConfiguration;
 using Nop.Core.Domain.Seo;
 
 namespace Nop.Data.Mapping.Seo
 {
-    public partial class UrlRecordMap : EntityTypeConfiguration<UrlRecord>
+    public partial class UrlRecordMap : NopEntityTypeConfiguration<UrlRecord>
     {
         public UrlRecordMap()
         {

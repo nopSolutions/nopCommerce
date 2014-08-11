@@ -1,10 +1,11 @@
 ﻿using FluentValidation;
 using Nop.Admin.Models.Topics;
 using Nop.Services.Localization;
+using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Topics
 {
-    public class TopicValidator : AbstractValidator<TopicModel>
+    public class TopicValidator : BaseNopValidator<TopicModel>
     {
         public TopicValidator(ILocalizationService localizationService)
         {

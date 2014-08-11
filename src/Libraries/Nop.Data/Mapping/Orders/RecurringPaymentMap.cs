@@ -1,9 +1,8 @@
-using System.Data.Entity.ModelConfiguration;
 using Nop.Core.Domain.Orders;
 
 namespace Nop.Data.Mapping.Orders
 {
-    public partial class RecurringPaymentMap : EntityTypeConfiguration<RecurringPayment>
+    public partial class RecurringPaymentMap : NopEntityTypeConfiguration<RecurringPayment>
     {
         public RecurringPaymentMap()
         {

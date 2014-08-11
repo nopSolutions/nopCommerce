@@ -1,9 +1,8 @@
-using System.Data.Entity.ModelConfiguration;
 using Nop.Core.Domain.Directory;
 
 namespace Nop.Data.Mapping.Directory
 {
-    public partial class CurrencyMap : EntityTypeConfiguration<Currency>
+    public partial class CurrencyMap : NopEntityTypeConfiguration<Currency>
     {
         public CurrencyMap()
         {

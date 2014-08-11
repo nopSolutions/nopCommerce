@@ -1,9 +1,8 @@
-﻿using System.Data.Entity.ModelConfiguration;
-using Nop.Core.Domain.Shipping;
+﻿using Nop.Core.Domain.Shipping;
 
 namespace Nop.Data.Mapping.Shipping
 {
-    public class WarehouseMap : EntityTypeConfiguration<Warehouse>
+    public class WarehouseMap : NopEntityTypeConfiguration<Warehouse>
     {
         public WarehouseMap()
         {

@@ -1,10 +1,11 @@
 ﻿using FluentValidation;
 using Nop.Services.Localization;
+using Nop.Web.Framework.Validators;
 using Nop.Web.Models.Blogs;
 
 namespace Nop.Web.Validators.Blogs
 {
-    public class BlogPostValidator : AbstractValidator<BlogPostModel>
+    public class BlogPostValidator : BaseNopValidator<BlogPostModel>
     {
         public BlogPostValidator(ILocalizationService localizationService)
         {

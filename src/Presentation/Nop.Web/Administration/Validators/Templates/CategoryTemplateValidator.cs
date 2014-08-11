@@ -1,10 +1,11 @@
 ﻿using FluentValidation;
 using Nop.Admin.Models.Templates;
 using Nop.Services.Localization;
+using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Templates
 {
-    public class CategoryTemplateValidator : AbstractValidator<CategoryTemplateModel>
+    public class CategoryTemplateValidator : BaseNopValidator<CategoryTemplateModel>
     {
         public CategoryTemplateValidator(ILocalizationService localizationService)
         {

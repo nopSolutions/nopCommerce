@@ -1,10 +1,11 @@
 ﻿using FluentValidation;
 using Nop.Admin.Models.Forums;
 using Nop.Services.Localization;
+using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Forums
 {
-    public class ForumGroupValidator : AbstractValidator<ForumGroupModel>
+    public class ForumGroupValidator : BaseNopValidator<ForumGroupModel>
     {
         public ForumGroupValidator(ILocalizationService localizationService)
         {

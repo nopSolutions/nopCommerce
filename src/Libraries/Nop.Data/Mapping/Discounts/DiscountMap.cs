@@ -1,9 +1,8 @@
-using System.Data.Entity.ModelConfiguration;
 using Nop.Core.Domain.Discounts;
 
 namespace Nop.Data.Mapping.Discounts
 {
-    public partial class DiscountMap : EntityTypeConfiguration<Discount>
+    public partial class DiscountMap : NopEntityTypeConfiguration<Discount>
     {
         public DiscountMap()
         {

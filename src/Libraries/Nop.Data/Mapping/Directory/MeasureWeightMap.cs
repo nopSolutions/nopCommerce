@@ -1,9 +1,8 @@
-using System.Data.Entity.ModelConfiguration;
 using Nop.Core.Domain.Directory;
 
 namespace Nop.Data.Mapping.Directory
 {
-    public partial class MeasureWeightMap : EntityTypeConfiguration<MeasureWeight>
+    public partial class MeasureWeightMap : NopEntityTypeConfiguration<MeasureWeight>
     {
         public MeasureWeightMap()
         {

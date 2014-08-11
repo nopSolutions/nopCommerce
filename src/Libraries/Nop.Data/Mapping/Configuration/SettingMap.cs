@@ -1,9 +1,8 @@
-using System.Data.Entity.ModelConfiguration;
 using Nop.Core.Domain.Configuration;
 
 namespace Nop.Data.Mapping.Configuration
 {
-    public partial class SettingMap : EntityTypeConfiguration<Setting>
+    public partial class SettingMap : NopEntityTypeConfiguration<Setting>
     {
         public SettingMap()
         {

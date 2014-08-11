@@ -1,9 +1,8 @@
-using System.Data.Entity.ModelConfiguration;
 using Nop.Core.Domain.Blogs;
 
 namespace Nop.Data.Mapping.Blogs
 {
-    public partial class BlogCommentMap : EntityTypeConfiguration<BlogComment>
+    public partial class BlogCommentMap : NopEntityTypeConfiguration<BlogComment>
     {
         public BlogCommentMap()
         {

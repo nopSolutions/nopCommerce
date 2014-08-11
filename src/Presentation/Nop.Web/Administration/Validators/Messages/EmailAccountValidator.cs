@@ -1,10 +1,11 @@
 ﻿using FluentValidation;
 using Nop.Admin.Models.Messages;
 using Nop.Services.Localization;
+using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Messages
 {
-    public class EmailAccountValidator : AbstractValidator<EmailAccountModel>
+    public class EmailAccountValidator : BaseNopValidator<EmailAccountModel>
     {
         public EmailAccountValidator(ILocalizationService localizationService)
         {

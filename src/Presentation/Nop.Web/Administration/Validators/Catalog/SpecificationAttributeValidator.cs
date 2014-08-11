@@ -1,10 +1,11 @@
 ﻿using FluentValidation;
 using Nop.Admin.Models.Catalog;
 using Nop.Services.Localization;
+using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Catalog
 {
-    public class SpecificationAttributeValidator : AbstractValidator<SpecificationAttributeModel>
+    public class SpecificationAttributeValidator : BaseNopValidator<SpecificationAttributeModel>
     {
         public SpecificationAttributeValidator(ILocalizationService localizationService)
         {

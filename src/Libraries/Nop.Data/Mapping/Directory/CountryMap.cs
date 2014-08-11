@@ -1,9 +1,8 @@
-using System.Data.Entity.ModelConfiguration;
 using Nop.Core.Domain.Directory;
 
 namespace Nop.Data.Mapping.Directory
 {
-    public partial class CountryMap : EntityTypeConfiguration<Country>
+    public partial class CountryMap : NopEntityTypeConfiguration<Country>
     {
         public CountryMap()
         {

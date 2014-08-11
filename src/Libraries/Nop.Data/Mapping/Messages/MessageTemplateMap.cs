@@ -1,9 +1,8 @@
-using System.Data.Entity.ModelConfiguration;
 using Nop.Core.Domain.Messages;
 
 namespace Nop.Data.Mapping.Messages
 {
-    public partial class MessageTemplateMap : EntityTypeConfiguration<MessageTemplate>
+    public partial class MessageTemplateMap : NopEntityTypeConfiguration<MessageTemplate>
     {
         public MessageTemplateMap()
         {

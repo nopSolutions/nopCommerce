@@ -1,9 +1,8 @@
-using System.Data.Entity.ModelConfiguration;
 using Nop.Core.Domain.News;
 
 namespace Nop.Data.Mapping.News
 {
-    public partial class NewsCommentMap : EntityTypeConfiguration<NewsComment>
+    public partial class NewsCommentMap : NopEntityTypeConfiguration<NewsComment>
     {
         public NewsCommentMap()
         {

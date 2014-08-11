@@ -1,10 +1,11 @@
 ﻿using FluentValidation;
 using Nop.Admin.Models.Directory;
 using Nop.Services.Localization;
+using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Directory
 {
-    public class CountryValidator : AbstractValidator<CountryModel>
+    public class CountryValidator : BaseNopValidator<CountryModel>
     {
         public CountryValidator(ILocalizationService localizationService)
         {

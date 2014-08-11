@@ -1,10 +1,11 @@
 ﻿using FluentValidation;
 using Nop.Admin.Models.Messages;
 using Nop.Services.Localization;
+using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Messages
 {
-    public class CampaignValidator : AbstractValidator<CampaignModel>
+    public class CampaignValidator : BaseNopValidator<CampaignModel>
     {
         public CampaignValidator(ILocalizationService localizationService)
         {

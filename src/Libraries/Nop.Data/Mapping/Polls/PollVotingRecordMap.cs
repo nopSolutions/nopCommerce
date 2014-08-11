@@ -1,9 +1,8 @@
-using System.Data.Entity.ModelConfiguration;
 using Nop.Core.Domain.Polls;
 
 namespace Nop.Data.Mapping.Polls
 {
-    public partial class PollVotingRecordMap : EntityTypeConfiguration<PollVotingRecord>
+    public partial class PollVotingRecordMap : NopEntityTypeConfiguration<PollVotingRecord>
     {
         public PollVotingRecordMap()
         {

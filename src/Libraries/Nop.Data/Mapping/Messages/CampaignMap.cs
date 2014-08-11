@@ -1,9 +1,8 @@
-using System.Data.Entity.ModelConfiguration;
 using Nop.Core.Domain.Messages;
 
 namespace Nop.Data.Mapping.Messages
 {
-    public partial class CampaignMap : EntityTypeConfiguration<Campaign>
+    public partial class CampaignMap : NopEntityTypeConfiguration<Campaign>
     {
         public CampaignMap()
         {

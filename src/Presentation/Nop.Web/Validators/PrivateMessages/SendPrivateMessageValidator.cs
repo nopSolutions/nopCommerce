@@ -1,10 +1,11 @@
 ﻿using FluentValidation;
 using Nop.Services.Localization;
+using Nop.Web.Framework.Validators;
 using Nop.Web.Models.PrivateMessages;
 
 namespace Nop.Web.Validators.PrivateMessages
 {
-    public class SendPrivateMessageValidator : AbstractValidator<SendPrivateMessageModel>
+    public class SendPrivateMessageValidator : BaseNopValidator<SendPrivateMessageModel>
     {
         public SendPrivateMessageValidator(ILocalizationService localizationService)
         {

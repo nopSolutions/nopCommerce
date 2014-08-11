@@ -1,9 +1,9 @@
-using System.Data.Entity.ModelConfiguration;
+using Nop.Data.Mapping;
 using Nop.Plugin.Shipping.ByWeight.Domain;
 
 namespace Nop.Plugin.Shipping.ByWeight.Data
 {
-    public partial class ShippingByWeightRecordMap : EntityTypeConfiguration<ShippingByWeightRecord>
+    public partial class ShippingByWeightRecordMap : NopEntityTypeConfiguration<ShippingByWeightRecord>
     {
         public ShippingByWeightRecordMap()
         {

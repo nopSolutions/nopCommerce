@@ -1,9 +1,8 @@
-﻿using System.Data.Entity.ModelConfiguration;
-using Nop.Core.Domain.Orders;
+﻿using Nop.Core.Domain.Orders;
 
 namespace Nop.Data.Mapping.Orders
 {
-    public partial class ShoppingCartItemMap : EntityTypeConfiguration<ShoppingCartItem>
+    public partial class ShoppingCartItemMap : NopEntityTypeConfiguration<ShoppingCartItem>
     {
         public ShoppingCartItemMap()
         {

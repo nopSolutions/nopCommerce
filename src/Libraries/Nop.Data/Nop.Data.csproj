@@ -81,6 +81,7 @@
     <Compile Include="Mapping\Customers\CustomerAttributeValueMap.cs" />
     <Compile Include="Mapping\Shipping\WarehouseMap.cs" />
     <Compile Include="Mapping\Shipping\DeliveryDateMap.cs" />
+    <Compile Include="Mapping\NopEntityTypeConfiguration.cs" />
     <Compile Include="Mapping\Vendors\VendorMap.cs" />
     <Compile Include="Mapping\Stores\StoreMappingMap.cs" />
     <Compile Include="Mapping\Stores\StoreMap.cs" />

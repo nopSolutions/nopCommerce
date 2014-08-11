@@ -1,10 +1,9 @@
-using System.Data.Entity.ModelConfiguration;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 
 namespace Nop.Data.Mapping.Customers
 {
-    public partial class CustomerMap : EntityTypeConfiguration<Customer>
+    public partial class CustomerMap : NopEntityTypeConfiguration<Customer>
     {
         public CustomerMap()
         {

@@ -2,10 +2,11 @@
 using Nop.Admin.Models.Settings;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Localization;
+using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Settings
 {
-    public class RewardPointsSettingsValidator : AbstractValidator<RewardPointsSettingsModel>
+    public class RewardPointsSettingsValidator : BaseNopValidator<RewardPointsSettingsModel>
     {
         public RewardPointsSettingsValidator(ILocalizationService localizationService)
         {

@@ -1,9 +1,8 @@
-﻿using System.Data.Entity.ModelConfiguration;
-using Nop.Core.Domain.Shipping;
+﻿using Nop.Core.Domain.Shipping;
 
 namespace Nop.Data.Mapping.Shipping
 {
-    public class ShippingMethodMap : EntityTypeConfiguration<ShippingMethod>
+    public class ShippingMethodMap : NopEntityTypeConfiguration<ShippingMethod>
     {
         public ShippingMethodMap()
         {

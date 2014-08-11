@@ -1,9 +1,8 @@
-using System.Data.Entity.ModelConfiguration;
 using Nop.Core.Domain.Messages;
 
 namespace Nop.Data.Mapping.Messages
 {
-    public partial class EmailAccountMap : EntityTypeConfiguration<EmailAccount>
+    public partial class EmailAccountMap : NopEntityTypeConfiguration<EmailAccount>
     {
         public EmailAccountMap()
         {

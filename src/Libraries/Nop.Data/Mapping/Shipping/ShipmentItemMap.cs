@@ -1,9 +1,8 @@
-using System.Data.Entity.ModelConfiguration;
 using Nop.Core.Domain.Shipping;
 
 namespace Nop.Data.Mapping.Shipping
 {
-    public partial class ShipmentItemMap : EntityTypeConfiguration<ShipmentItem>
+    public partial class ShipmentItemMap : NopEntityTypeConfiguration<ShipmentItem>
     {
         public ShipmentItemMap()
         {

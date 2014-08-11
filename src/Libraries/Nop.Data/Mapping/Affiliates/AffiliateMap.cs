@@ -1,9 +1,8 @@
-using System.Data.Entity.ModelConfiguration;
 using Nop.Core.Domain.Affiliates;
 
 namespace Nop.Data.Mapping.Affiliates
 {
-    public partial class AffiliateMap : EntityTypeConfiguration<Affiliate>
+    public partial class AffiliateMap : NopEntityTypeConfiguration<Affiliate>
     {
         public AffiliateMap()
         {

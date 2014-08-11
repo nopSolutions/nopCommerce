@@ -1,9 +1,8 @@
-using System.Data.Entity.ModelConfiguration;
 using Nop.Core.Domain.Tasks;
 
 namespace Nop.Data.Mapping.Tasks
 {
-    public partial class ScheduleTaskMap : EntityTypeConfiguration<ScheduleTask>
+    public partial class ScheduleTaskMap : NopEntityTypeConfiguration<ScheduleTask>
     {
         public ScheduleTaskMap()
         {

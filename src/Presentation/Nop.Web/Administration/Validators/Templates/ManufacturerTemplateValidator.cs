@@ -1,10 +1,11 @@
 ﻿using FluentValidation;
 using Nop.Admin.Models.Templates;
 using Nop.Services.Localization;
+using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Templates
 {
-    public class ManufacturerTemplateValidator : AbstractValidator<ManufacturerTemplateModel>
+    public class ManufacturerTemplateValidator : BaseNopValidator<ManufacturerTemplateModel>
     {
         public ManufacturerTemplateValidator(ILocalizationService localizationService)
         {

@@ -1,9 +1,8 @@
-using System.Data.Entity.ModelConfiguration;
 using Nop.Core.Domain.Orders;
 
 namespace Nop.Data.Mapping.Orders
 {
-    public partial class OrderMap : EntityTypeConfiguration<Order>
+    public partial class OrderMap : NopEntityTypeConfiguration<Order>
     {
         public OrderMap()
         {

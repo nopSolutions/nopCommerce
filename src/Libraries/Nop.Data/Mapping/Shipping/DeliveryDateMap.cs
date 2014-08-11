@@ -1,9 +1,8 @@
-﻿using System.Data.Entity.ModelConfiguration;
-using Nop.Core.Domain.Shipping;
+﻿using Nop.Core.Domain.Shipping;
 
 namespace Nop.Data.Mapping.Shipping
 {
-    public class DeliveryDateMap : EntityTypeConfiguration<DeliveryDate>
+    public class DeliveryDateMap : NopEntityTypeConfiguration<DeliveryDate>
     {
         public DeliveryDateMap()
         {

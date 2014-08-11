@@ -1,9 +1,8 @@
-using System.Data.Entity.ModelConfiguration;
 using Nop.Core.Domain.Common;
 
 namespace Nop.Data.Mapping.Common
 {
-    public partial class GenericAttributeMap : EntityTypeConfiguration<GenericAttribute>
+    public partial class GenericAttributeMap : NopEntityTypeConfiguration<GenericAttribute>
     {
         public GenericAttributeMap()
         {

@@ -1,9 +1,8 @@
-using System.Data.Entity.ModelConfiguration;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Data.Mapping.Catalog
 {
-    public partial class ManufacturerMap : EntityTypeConfiguration<Manufacturer>
+    public partial class ManufacturerMap : NopEntityTypeConfiguration<Manufacturer>
     {
         public ManufacturerMap()
         {

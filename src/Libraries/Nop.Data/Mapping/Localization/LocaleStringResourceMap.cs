@@ -1,9 +1,8 @@
-using System.Data.Entity.ModelConfiguration;
 using Nop.Core.Domain.Localization;
 
 namespace Nop.Data.Mapping.Localization
 {
-    public partial class LocaleStringResourceMap : EntityTypeConfiguration<LocaleStringResource>
+    public partial class LocaleStringResourceMap : NopEntityTypeConfiguration<LocaleStringResource>
     {
         public LocaleStringResourceMap()
         {

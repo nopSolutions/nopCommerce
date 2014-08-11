@@ -1,9 +1,8 @@
-using System.Data.Entity.ModelConfiguration;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Data.Mapping.Catalog
 {
-    public partial class CategoryMap : EntityTypeConfiguration<Category>
+    public partial class CategoryMap : NopEntityTypeConfiguration<Category>
     {
         public CategoryMap()
         {

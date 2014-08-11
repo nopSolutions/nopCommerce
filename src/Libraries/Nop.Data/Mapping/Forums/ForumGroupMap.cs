@@ -1,9 +1,8 @@
-﻿using System.Data.Entity.ModelConfiguration;
-using Nop.Core.Domain.Forums;
+﻿using Nop.Core.Domain.Forums;
 
 namespace Nop.Data.Mapping.Forums
 {
-    public partial class ForumGroupMap : EntityTypeConfiguration<ForumGroup>
+    public partial class ForumGroupMap : NopEntityTypeConfiguration<ForumGroup>
     {
         public ForumGroupMap()
         {

@@ -1,10 +1,11 @@
 ﻿using FluentValidation;
 using Nop.Admin.Models.Vendors;
 using Nop.Services.Localization;
+using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Vendors
 {
-    public class VendorValidator : AbstractValidator<VendorModel>
+    public class VendorValidator : BaseNopValidator<VendorModel>
     {
         public VendorValidator(ILocalizationService localizationService)
         {

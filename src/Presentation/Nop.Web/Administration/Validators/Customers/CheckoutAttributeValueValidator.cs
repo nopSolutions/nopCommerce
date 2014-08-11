@@ -1,10 +1,11 @@
 ﻿using FluentValidation;
 using Nop.Admin.Models.Customers;
 using Nop.Services.Localization;
+using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Customers
 {
-    public class CustomerAttributeValueValidator : AbstractValidator<CustomerAttributeValueModel>
+    public class CustomerAttributeValueValidator : BaseNopValidator<CustomerAttributeValueModel>
     {
         public CustomerAttributeValueValidator(ILocalizationService localizationService)
         {

@@ -1,10 +1,11 @@
 ﻿using FluentValidation;
 using Nop.Services.Localization;
+using Nop.Web.Framework.Validators;
 using Nop.Web.Models.ShoppingCart;
 
 namespace Nop.Web.Validators.ShoppingCart
 {
-    public class WishlistEmailAFriendValidator : AbstractValidator<WishlistEmailAFriendModel>
+    public class WishlistEmailAFriendValidator : BaseNopValidator<WishlistEmailAFriendModel>
     {
         public WishlistEmailAFriendValidator(ILocalizationService localizationService)
         {

@@ -1,10 +1,11 @@
 ﻿using FluentValidation;
 using Nop.Services.Localization;
+using Nop.Web.Framework.Validators;
 using Nop.Web.Models.Customer;
 
 namespace Nop.Web.Validators.Customer
 {
-    public class PasswordRecoveryValidator : AbstractValidator<PasswordRecoveryModel>
+    public class PasswordRecoveryValidator : BaseNopValidator<PasswordRecoveryModel>
     {
         public PasswordRecoveryValidator(ILocalizationService localizationService)
         {

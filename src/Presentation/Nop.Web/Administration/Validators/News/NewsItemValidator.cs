@@ -1,10 +1,11 @@
 ﻿using FluentValidation;
 using Nop.Admin.Models.News;
 using Nop.Services.Localization;
+using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.News
 {
-    public class NewsItemValidator : AbstractValidator<NewsItemModel>
+    public class NewsItemValidator : BaseNopValidator<NewsItemModel>
     {
         public NewsItemValidator(ILocalizationService localizationService)
         {

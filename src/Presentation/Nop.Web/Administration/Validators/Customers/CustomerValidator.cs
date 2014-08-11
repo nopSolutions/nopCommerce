@@ -2,10 +2,11 @@
 using Nop.Admin.Models.Customers;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Localization;
+using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Customers
 {
-    public class CustomerValidator : AbstractValidator<CustomerModel>
+    public class CustomerValidator : BaseNopValidator<CustomerModel>
     {
         public CustomerValidator(ILocalizationService localizationService, CustomerSettings customerSettings)
         {

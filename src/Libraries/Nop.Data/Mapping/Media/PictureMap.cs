@@ -1,9 +1,8 @@
-using System.Data.Entity.ModelConfiguration;
 using Nop.Core.Domain.Media;
 
 namespace Nop.Data.Mapping.Media
 {
-    public partial class PictureMap : EntityTypeConfiguration<Picture>
+    public partial class PictureMap : NopEntityTypeConfiguration<Picture>
     {
         public PictureMap()
         {

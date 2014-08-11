@@ -1,10 +1,11 @@
 ﻿using FluentValidation;
 using Nop.Admin.Models.Catalog;
 using Nop.Services.Localization;
+using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Catalog
 {
-    public class ProductValidator : AbstractValidator<ProductModel>
+    public class ProductValidator : BaseNopValidator<ProductModel>
     {
         public ProductValidator(ILocalizationService localizationService)
         {

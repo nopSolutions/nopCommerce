@@ -1,10 +1,11 @@
 ﻿using FluentValidation;
 using Nop.Admin.Models.Tax;
 using Nop.Services.Localization;
+using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Tax
 {
-    public class TaxCategoryValidator : AbstractValidator<TaxCategoryModel>
+    public class TaxCategoryValidator : BaseNopValidator<TaxCategoryModel>
     {
         public TaxCategoryValidator(ILocalizationService localizationService)
         {

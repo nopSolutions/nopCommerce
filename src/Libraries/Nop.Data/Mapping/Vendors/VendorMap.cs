@@ -1,9 +1,8 @@
-using System.Data.Entity.ModelConfiguration;
 using Nop.Core.Domain.Vendors;
 
 namespace Nop.Data.Mapping.Vendors
 {
-    public partial class VendorMap : EntityTypeConfiguration<Vendor>
+    public partial class VendorMap : NopEntityTypeConfiguration<Vendor>
     {
         public VendorMap()
         {

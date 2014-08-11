@@ -1,10 +1,11 @@
 ﻿using FluentValidation;
 using Nop.Admin.Models.Shipping;
 using Nop.Services.Localization;
+using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Shipping
 {
-    public class DeliveryDateValidator : AbstractValidator<DeliveryDateModel>
+    public class DeliveryDateValidator : BaseNopValidator<DeliveryDateModel>
     {
         public DeliveryDateValidator(ILocalizationService localizationService)
         {

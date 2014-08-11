@@ -1,9 +1,8 @@
-using System.Data.Entity.ModelConfiguration;
 using Nop.Core.Domain.Localization;
 
 namespace Nop.Data.Mapping.Localization
 {
-    public partial class LocalizedPropertyMap : EntityTypeConfiguration<LocalizedProperty>
+    public partial class LocalizedPropertyMap : NopEntityTypeConfiguration<LocalizedProperty>
     {
         public LocalizedPropertyMap()
         {

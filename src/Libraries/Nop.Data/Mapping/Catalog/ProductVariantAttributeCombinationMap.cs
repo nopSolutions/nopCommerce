@@ -1,9 +1,8 @@
-using System.Data.Entity.ModelConfiguration;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Data.Mapping.Catalog
 {
-    public partial class ProductVariantAttributeCombinationMap : EntityTypeConfiguration<ProductVariantAttributeCombination>
+    public partial class ProductVariantAttributeCombinationMap : NopEntityTypeConfiguration<ProductVariantAttributeCombination>
     {
         public ProductVariantAttributeCombinationMap()
         {

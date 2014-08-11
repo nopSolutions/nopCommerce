@@ -1,10 +1,11 @@
 ﻿using FluentValidation;
 using Nop.Admin.Models.Polls;
 using Nop.Services.Localization;
+using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Polls
 {
-    public class PollAnswerValidator : AbstractValidator<PollAnswerModel>
+    public class PollAnswerValidator : BaseNopValidator<PollAnswerModel>
     {
         public PollAnswerValidator(ILocalizationService localizationService)
         {

@@ -1,9 +1,8 @@
-using System.Data.Entity.ModelConfiguration;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Data.Mapping.Catalog
 {
-    public partial class ProductReviewMap : EntityTypeConfiguration<ProductReview>
+    public partial class ProductReviewMap : NopEntityTypeConfiguration<ProductReview>
     {
         public ProductReviewMap()
         {

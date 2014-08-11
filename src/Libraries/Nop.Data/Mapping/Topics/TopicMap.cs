@@ -1,9 +1,8 @@
-﻿using System.Data.Entity.ModelConfiguration;
-using Nop.Core.Domain.Topics;
+﻿using Nop.Core.Domain.Topics;
 
 namespace Nop.Data.Mapping.Topics
 {
-    public class TopicMap : EntityTypeConfiguration<Topic>
+    public class TopicMap : NopEntityTypeConfiguration<Topic>
     {
         public TopicMap()
         {

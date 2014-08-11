@@ -1,9 +1,9 @@
-using System.Data.Entity.ModelConfiguration;
+
 using Nop.Core.Domain.Orders;
 
 namespace Nop.Data.Mapping.Orders
 {
-    public partial class GiftCardUsageHistoryMap : EntityTypeConfiguration<GiftCardUsageHistory>
+    public partial class GiftCardUsageHistoryMap : NopEntityTypeConfiguration<GiftCardUsageHistory>
     {
         public GiftCardUsageHistoryMap()
         {

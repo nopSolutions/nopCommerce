@@ -3,10 +3,11 @@ using System.Globalization;
 using FluentValidation;
 using Nop.Admin.Models.Directory;
 using Nop.Services.Localization;
+using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Directory
 {
-    public class CurrencyValidator : AbstractValidator<CurrencyModel>
+    public class CurrencyValidator : BaseNopValidator<CurrencyModel>
     {
         public CurrencyValidator(ILocalizationService localizationService)
         {

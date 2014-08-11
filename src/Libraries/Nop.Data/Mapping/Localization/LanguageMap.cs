@@ -1,9 +1,8 @@
-using System.Data.Entity.ModelConfiguration;
 using Nop.Core.Domain.Localization;
 
 namespace Nop.Data.Mapping.Localization
 {
-    public partial class LanguageMap : EntityTypeConfiguration<Language>
+    public partial class LanguageMap : NopEntityTypeConfiguration<Language>
     {
         public LanguageMap()
         {

@@ -1,9 +1,8 @@
-using System.Data.Entity.ModelConfiguration;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Data.Mapping.Catalog
 {
-    public partial class ProductTagMap : EntityTypeConfiguration<ProductTag>
+    public partial class ProductTagMap : NopEntityTypeConfiguration<ProductTag>
     {
         public ProductTagMap()
         {

@@ -1,10 +1,11 @@
 ﻿using FluentValidation;
 using Nop.Admin.Models.Plugins;
 using Nop.Services.Localization;
+using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Plugins
 {
-    public class PluginValidator : AbstractValidator<PluginModel>
+    public class PluginValidator : BaseNopValidator<PluginModel>
     {
         public PluginValidator(ILocalizationService localizationService)
         {

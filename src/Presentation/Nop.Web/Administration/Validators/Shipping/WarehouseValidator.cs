@@ -1,10 +1,11 @@
 ﻿using FluentValidation;
 using Nop.Admin.Models.Shipping;
 using Nop.Services.Localization;
+using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Shipping
 {
-    public class WarehouseValidator : AbstractValidator<WarehouseModel>
+    public class WarehouseValidator : BaseNopValidator<WarehouseModel>
     {
         public WarehouseValidator(ILocalizationService localizationService)
         {
