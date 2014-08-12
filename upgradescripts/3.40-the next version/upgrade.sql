@@ -20,6 +20,9 @@ set @resources='
   <LocaleResource Name="Admin.Vendors.List.SearchName.Hint">
     <Value>A vendor name.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Incomplete.View">
+    <Value>view all</Value>
+  </LocaleResource>
 </Language>
 '
 

@@ -9246,6 +9246,9 @@
   <LocaleResource Name="Admin.SalesReport.Incomplete.TotalUnpaidOrders">
     <Value>Total unpaid orders (pending payment status)</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Incomplete.View">
+    <Value>view all</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.SalesReport.NeverSold">
     <Value>Products never purchased</Value>
   </LocaleResource>

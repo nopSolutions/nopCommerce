@@ -13,5 +13,8 @@ namespace Nop.Admin.Models.Orders
 
         [NopResourceDisplayName("Admin.SalesReport.Incomplete.Count")]
         public int Count { get; set; }
+
+        [NopResourceDisplayName("Admin.SalesReport.Incomplete.View")]
+        public string ViewLink { get; set; }
     }
 }

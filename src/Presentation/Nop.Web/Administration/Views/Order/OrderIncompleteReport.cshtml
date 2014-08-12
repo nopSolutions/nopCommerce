@@ -49,7 +49,8 @@
                         }, {
                             field: "Count",
                             title: "@T("Admin.SalesReport.Incomplete.Count")",
-                            width: 150
+                            width: 150,
+                            template: '#=Count# - <a href="#=ViewLink#">@T("Admin.SalesReport.Incomplete.View")</a>'
                         }]
                     });
                 });

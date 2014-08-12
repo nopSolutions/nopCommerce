@@ -727,7 +727,8 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("List");
         }
 
-        public ActionResult List()
+        public ActionResult List(int? orderStatusId = null,
+            int? paymentStatusId = null, int? shippingStatusId = null)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -736,14 +737,35 @@ namespace Nop.Admin.Controllers
             var model = new OrderListModel();
             model.AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList();
             model.AvailableOrderStatuses.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            if (orderStatusId.HasValue)
+            {
+                //pre-select value?
+                var item = model.AvailableOrderStatuses.FirstOrDefault(x => x.Value == orderStatusId.Value.ToString());
+                if (item != null)
+                    item.Selected = true;
+            }
 
             //payment statuses
             model.AvailablePaymentStatuses = PaymentStatus.Pending.ToSelectList(false).ToList();
             model.AvailablePaymentStatuses.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            if (paymentStatusId.HasValue)
+            {
+                //pre-select value?
+                var item = model.AvailablePaymentStatuses.FirstOrDefault(x => x.Value == paymentStatusId.Value.ToString());
+                if (item != null)
+                    item.Selected = true;
+            }
 
             //shipping statuses
             model.AvailableShippingStatuses = ShippingStatus.NotYetShipped.ToSelectList(false).ToList();
             model.AvailableShippingStatuses.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            if (shippingStatusId.HasValue)
+            {
+                //pre-select value?
+                var item = model.AvailableShippingStatuses.FirstOrDefault(x => x.Value == shippingStatusId.Value.ToString());
+                if (item != null)
+                    item.Selected = true;
+            }
 
             //stores
             model.AvailableStores.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
@@ -3353,7 +3375,8 @@ namespace Nop.Admin.Controllers
             {
                 Item = _localizationService.GetResource("Admin.SalesReport.Incomplete.TotalUnpaidOrders"),
                 Count = psPending.CountOrders,
-                Total = _priceFormatter.FormatPrice(psPending.SumOrders, true, false)
+                Total = _priceFormatter.FormatPrice(psPending.SumOrders, true, false),
+                ViewLink = Url.Action("List", "Order", new { paymentStatusId = ((int)PaymentStatus.Pending).ToString() })
             });
             //not shipped
             var ssPending = _orderReportService.GetOrderAverageReportLine(0, 0, null, null, ShippingStatus.NotYetShipped, null, null, null, true);
@@ -3361,7 +3384,8 @@ namespace Nop.Admin.Controllers
             {
                 Item = _localizationService.GetResource("Admin.SalesReport.Incomplete.TotalNotShippedOrders"),
                 Count = ssPending.CountOrders,
-                Total = _priceFormatter.FormatPrice(ssPending.SumOrders, true, false)
+                Total = _priceFormatter.FormatPrice(ssPending.SumOrders, true, false),
+                ViewLink = Url.Action("List", "Order", new { shippingStatusId = ((int)ShippingStatus.NotYetShipped).ToString() })
             });
             //pending
             var osPending = _orderReportService.GetOrderAverageReportLine(0, 0, OrderStatus.Pending, null, null, null, null, null, true);
@@ -3369,7 +3393,8 @@ namespace Nop.Admin.Controllers
             {
                 Item = _localizationService.GetResource("Admin.SalesReport.Incomplete.TotalIncompleteOrders"),
                 Count = osPending.CountOrders,
-                Total = _priceFormatter.FormatPrice(osPending.SumOrders, true, false)
+                Total = _priceFormatter.FormatPrice(osPending.SumOrders, true, false),
+                ViewLink = Url.Action("List", "Order", new { orderStatusId = ((int)OrderStatus.Pending).ToString() })
             });
 
             var gridModel = new DataSourceResult
