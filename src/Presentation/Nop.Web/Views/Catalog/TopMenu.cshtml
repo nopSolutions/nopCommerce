@@ -41,16 +41,18 @@
 
 <ul class="top-menu">
     @Html.Widget("header_menu_before")
-    @if (Model.Categories.Count > 0)
+
+    @foreach (var category in Model.Categories)
     {
-        foreach (var category in Model.Categories)
-        {
-            @RenderCategoryLine(category, 0, false)
-        }
+        @RenderCategoryLine(category, 0, false)
     }
-    else
+    @foreach (var topic in Model.Topics)
     {
-        //no categories to display? in this case let's diplay some default menu items (should we?)
+        <li><a href="@Url.RouteUrl("Topic", new { SeName = topic.SeName })">@topic.Name</a></li>
+    }
+    @if (Model.Categories.Count == 0 && Model.Topics.Count == 0)
+    {
+        //no categories or topis to display? in this case let's diplay some default menu items (should we?)
         <li><a href="@Url.RouteUrl("HomePage")">@T("HomePage")</a></li>
         if (Model.RecentlyAddedProductsEnabled)
         {
@@ -104,16 +106,17 @@
     </div>
     <ul class="mob-top-menu">
         @Html.Widget("mob_header_menu_before")
-        @if (Model.Categories.Count > 0)
+        @foreach (var category in Model.Categories)
         {
-            foreach (var category in Model.Categories)
-            {
-                @RenderCategoryLine(category, 0, true)
-            }
+            @RenderCategoryLine(category, 0, true)
         }
-        else
+        @foreach (var topic in Model.Topics)
         {
-            //no categories to display? in this case let's diplay some default menu items (should we?)
+            <li><a href="@Url.RouteUrl("Topic", new { SeName = topic.SeName })">@topic.Name</a></li>
+        }
+        @if (Model.Categories.Count == 0 && Model.Topics.Count == 0)
+        {
+            //no categories  or topis to display? in this case let's diplay some default menu items (should we?)
             <li><a href="@Url.RouteUrl("HomePage")">@T("HomePage")</a></li>
             if (Model.RecentlyAddedProductsEnabled)
             {

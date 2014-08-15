@@ -6630,6 +6630,12 @@
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.IncludeInSitemap.Hint">
     <Value>Check to include this topic in the sitemap.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.IncludeInTopMenu">
+    <Value>Include in top menu</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.IncludeInTopMenu.Hint">
+    <Value>Check to include this topic in the top menu.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.IsPasswordProtected">
     <Value>Password protected</Value>
   </LocaleResource>

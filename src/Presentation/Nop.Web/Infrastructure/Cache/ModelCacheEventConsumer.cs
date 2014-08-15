@@ -339,6 +339,14 @@ namespace Nop.Web.Infrastructure.Cache
         /// {2} : store id
         /// </remarks>
         public const string TOPIC_SENAME_BY_SYSTEMNAME = "Nop.pres.topic.sename.bysystemname-{0}-{1}-{2}";
+        /// <summary>
+        /// Key for TopMenuModel caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : language id
+        /// {1} : current store ID
+        /// </remarks>
+        public const string TOPIC_TOP_MENU_MODEL_KEY = "Nop.pres.topic.topmenu-{0}-{1}";
         public const string TOPIC_PATTERN_KEY = "Nop.pres.topic";
 
         /// <summary>
@@ -892,6 +900,7 @@ namespace Nop.Web.Infrastructure.Cache
         //Topics
         public void HandleEvent(EntityInserted<Topic> eventMessage)
         {
+            _cacheManager.RemoveByPattern(TOPIC_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
         }
         public void HandleEvent(EntityUpdated<Topic> eventMessage)

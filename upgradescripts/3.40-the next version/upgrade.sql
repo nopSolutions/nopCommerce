@@ -23,6 +23,12 @@ set @resources='
   <LocaleResource Name="Admin.SalesReport.Incomplete.View">
     <Value>view all</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.IncludeInTopMenu">
+    <Value>Include in top menu</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.IncludeInTopMenu.Hint">
+    <Value>Check to include this topic in the top menu.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -113,4 +119,21 @@ WHERE [StoreId] IS NULL
 GO
 
 ALTER TABLE [Campaign] ALTER COLUMN [StoreId] int NOT NULL
+GO
+
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Topic]') and NAME='IncludeInTopMenu')
+BEGIN
+	ALTER TABLE [Topic]
+	ADD [IncludeInTopMenu] bit NULL
+END
+GO
+
+UPDATE [Topic]
+SET [IncludeInTopMenu] = 0
+WHERE [IncludeInTopMenu] IS NULL
+GO
+
+ALTER TABLE [Topic] ALTER COLUMN [IncludeInTopMenu] bit NOT NULL
 GO

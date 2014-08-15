@@ -20,6 +20,11 @@ namespace Nop.Core.Domain.Topics
         public bool IncludeInSitemap { get; set; }
 
         /// <summary>
+        /// Gets or sets the value indicating whether this topic should be included in top menu
+        /// </summary>
+        public bool IncludeInTopMenu { get; set; }
+
+        /// <summary>
         /// Gets or sets the value indicating whether this topic is password protected
         /// </summary>
         public bool IsPasswordProtected { get; set; }

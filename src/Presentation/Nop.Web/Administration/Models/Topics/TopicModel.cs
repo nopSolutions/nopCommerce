@@ -33,6 +33,9 @@ namespace Nop.Admin.Models.Topics
         [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.IncludeInSitemap")]
         public bool IncludeInSitemap { get; set; }
 
+        [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.IncludeInTopMenu")]
+        public bool IncludeInTopMenu { get; set; }
+
         [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.IsPasswordProtected")]
         public bool IsPasswordProtected { get; set; }
 

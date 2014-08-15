@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web.ModelBinding;
 using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -10,6 +11,7 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Media;
+using Nop.Core.Domain.Topics;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -22,6 +24,7 @@ using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
+using Nop.Services.Topics;
 using Nop.Services.Vendors;
 using Nop.Web.Extensions;
 using Nop.Web.Framework.Events;
@@ -58,6 +61,7 @@ namespace Nop.Web.Controllers
         private readonly IStoreMappingService _storeMappingService;
         private readonly IPermissionService _permissionService;
         private readonly ICustomerActivityService _customerActivityService;
+        private readonly ITopicService _topicService;
         private readonly IEventPublisher _eventPublisher;
         private readonly ISearchTermService _searchTermService;
         private readonly MediaSettings _mediaSettings;
@@ -93,6 +97,7 @@ namespace Nop.Web.Controllers
             IStoreMappingService storeMappingService,
             IPermissionService permissionService, 
             ICustomerActivityService customerActivityService,
+            ITopicService topicService,
             IEventPublisher eventPublisher,
             ISearchTermService searchTermService,
             MediaSettings mediaSettings,
@@ -124,6 +129,7 @@ namespace Nop.Web.Controllers
             this._storeMappingService = storeMappingService;
             this._permissionService = permissionService;
             this._customerActivityService = customerActivityService;
+            this._topicService = topicService;
             this._eventPublisher = eventPublisher;
             this._searchTermService = searchTermService;
             this._mediaSettings = mediaSettings;
@@ -660,18 +666,37 @@ namespace Nop.Web.Controllers
         [ChildActionOnly]
         public ActionResult TopMenu()
         {
+            //categories
             var customerRolesIds = _workContext.CurrentCustomer.CustomerRoles
                 .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
-            string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_MENU_MODEL_KEY, _workContext.WorkingLanguage.Id,
+            string categoryCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_MENU_MODEL_KEY, _workContext.WorkingLanguage.Id,
                 string.Join(",", customerRolesIds), _storeContext.CurrentStore.Id);
-            var cachedModel = _cacheManager.Get(cacheKey, () =>
+            var cachedCategoriesModel = _cacheManager.Get(categoryCacheKey, () =>
             {
                 return PrepareCategorySimpleModels(0, null, 0, _catalogSettings.TopCategoryMenuSubcategoryLevelsToDisplay, true).ToList();
             });
 
+            //top menu topics
+            string topicCacheKey = string.Format(ModelCacheEventConsumer.TOPIC_TOP_MENU_MODEL_KEY, 
+                _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
+            var cachedTopicModel = _cacheManager.Get(topicCacheKey, () =>
+            {
+                return _topicService.GetAllTopics(_storeContext.CurrentStore.Id)
+                    .ToList()
+                    .FindAll(t => t.IncludeInTopMenu)
+                    .ToList()
+                    .Select(t => new TopMenuModel.TopMenuTopicModel()
+                    {
+                        Id = t.Id,
+                        Name = t.GetLocalized(x => x.Title),
+                        SeName = t.GetSeName()
+                    })
+                    .ToList();
+            });
             var model = new TopMenuModel()
             {
-                Categories = cachedModel,
+                Categories = cachedCategoriesModel,
+                Topics = cachedTopicModel,
                 RecentlyAddedProductsEnabled = _catalogSettings.RecentlyAddedProductsEnabled,
                 BlogEnabled = _blogSettings.Enabled,
                 ForumEnabled = _forumSettings.ForumsEnabled

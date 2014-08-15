@@ -104,6 +104,15 @@
                 @Html.ValidationMessageFor(model => model.IncludeInSitemap)
             </td>
         </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.IncludeInTopMenu):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(x => x.IncludeInTopMenu)
+                @Html.ValidationMessageFor(model => model.IncludeInTopMenu)
+            </td>
+        </tr>
         @if (Model.Id > 0)
         {
             <tr>
