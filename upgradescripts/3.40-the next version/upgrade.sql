@@ -137,3 +137,11 @@ GO
 
 ALTER TABLE [Topic] ALTER COLUMN [IncludeInTopMenu] bit NOT NULL
 GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'commonsettings.ignorelogwordlist')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'commonsettings.ignorelogwordlist', N'', 0)
+END
+GO

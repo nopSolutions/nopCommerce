@@ -50,6 +50,28 @@ namespace Nop.Services.Logging
 
         #endregion
 
+        #region Utitilities
+
+        /// <summary>
+        /// Gets a value indicating whether this message should not be logged
+        /// </summary>
+        /// <param name="message">Message</param>
+        /// <returns>Result</returns>
+        protected virtual bool IgnoreLog(string message)
+        {
+            if (_commonSettings.IgnoreLogWordlist.Count == 0)
+                return false;
+
+            if (String.IsNullOrWhiteSpace(message))
+                return false;
+
+            return _commonSettings
+                .IgnoreLogWordlist
+                .Any(x => message.IndexOf(x, StringComparison.InvariantCultureIgnoreCase) >= 0);
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -182,6 +204,10 @@ namespace Nop.Services.Logging
         /// <returns>A log item</returns>
         public virtual Log InsertLog(LogLevel logLevel, string shortMessage, string fullMessage = "", Customer customer = null)
         {
+            //check ignore word/phrase list?
+            if (IgnoreLog(shortMessage) || IgnoreLog(fullMessage))
+                return null;
+
             var log = new Log()
             {
                 LogLevel = logLevel,
