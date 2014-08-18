@@ -15,16 +15,10 @@
         }
         @if (Model.AllowPrivateMessages)
         {
-            <li><a href="@Url.RouteUrl("PrivateMessages", new { tab = "" })" class="ico-inbox">@T("PrivateMessages.Inbox")</a>
-                @Model.UnreadPrivateMessages</li>
-            if (!string.IsNullOrEmpty(Model.AlertMessage))
-            {
-            <script type="text/javascript">
-                $(document).ready(function () {
-                    displayPopupNotification('@Html.Raw(HttpUtility.JavaScriptStringEncode(Model.AlertMessage))', 'success', false);
-                });
-            </script>
-            }
+            <li>
+                <a href="@Url.RouteUrl("PrivateMessages", new { tab = "" })" class="ico-inbox">@T("PrivateMessages.Inbox")</a>
+                @Model.UnreadPrivateMessages
+            </li>
         }
         @if (Model.ShoppingCartEnabled)
         {
@@ -46,6 +40,15 @@
         }
         @Html.Widget("header_links_after")
     </ul>
+    @if (Model.AllowPrivateMessages && !string.IsNullOrEmpty(Model.AlertMessage))
+    {
+        //new private message notification
+        <script type="text/javascript">
+            $(document).ready(function () {
+                displayPopupNotification('@Html.Raw(HttpUtility.JavaScriptStringEncode(Model.AlertMessage))', 'success', false);
+            });
+        </script>
+    }
     @if (Model.ShoppingCartEnabled)
     {
         <script type="text/javascript">
