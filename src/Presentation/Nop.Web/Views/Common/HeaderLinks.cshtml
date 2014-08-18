@@ -16,8 +16,10 @@
         @if (Model.AllowPrivateMessages)
         {
             <li>
-                <a href="@Url.RouteUrl("PrivateMessages", new { tab = "" })" class="ico-inbox">@T("PrivateMessages.Inbox")</a>
-                @Model.UnreadPrivateMessages
+                <a href="@Url.RouteUrl("PrivateMessages", new { tab = "" })" class="ico-inbox">
+                    <span class="inbox-label">@T("PrivateMessages.Inbox")</span>
+                    <span class="inbox-unread">@Model.UnreadPrivateMessages</span>
+                </a>
             </li>
         }
         @if (Model.ShoppingCartEnabled)
@@ -33,7 +35,7 @@
         {
             <li>
                 <a href="@Url.RouteUrl("Wishlist")" class="ico-wishlist">
-                    <span class="cart-label">@T("Wishlist")</span>
+                    <span class="wishlist-label">@T("Wishlist")</span>
                     <span class="wishlist-qty">@T("Wishlist.HeaderQuantity", Model.WishlistItems)</span>
                 </a>
             </li>
