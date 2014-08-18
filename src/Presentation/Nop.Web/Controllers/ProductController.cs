@@ -1031,7 +1031,7 @@ namespace Nop.Web.Controllers
 
         #endregion
 
-        #region Rrecently added products
+        #region Recently added products
 
         [NopHttpsRequirement(SslRequirement.No)]
         public ActionResult RecentlyAddedProducts()
