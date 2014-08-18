@@ -29,6 +29,9 @@ set @resources='
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.IncludeInTopMenu.Hint">
     <Value>Check to include this topic in the top menu.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.Tags.NoDots">
+    <Value>Dots are not supported by tags.</Value>
+  </LocaleResource>
 </Language>
 '
 

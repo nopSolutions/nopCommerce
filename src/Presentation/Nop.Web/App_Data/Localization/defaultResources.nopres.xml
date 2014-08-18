@@ -6120,6 +6120,9 @@
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.Tags.Hint">
     <Value>Tags are keywords that this blog post can also be identified by. Enter a comma separated list of the tags to be associated with this blog post.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.Tags.NoDots">
+    <Value>Dots are not supported by tags.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.Title">
     <Value>Title</Value>
   </LocaleResource>
