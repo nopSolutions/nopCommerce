@@ -1138,6 +1138,17 @@ namespace Nop.Web.Controllers
                 });
             }
 
+            //products with "minimum order quantity" more than 1
+            if (product.OrderMinimumQuantity > 1)
+            {
+                //we cannot add to the cart such products from category pages with qty 1
+                //it can confuse customers. That's why we redirect customers to the product details page
+                return Json(new
+                {
+                    redirect = Url.RouteUrl("Product", new { SeName = product.GetSeName() }),
+                });
+            }
+
             if (product.CustomerEntersPrice)
             {
                 //cannot be added to the cart (requires a customer to enter price)
