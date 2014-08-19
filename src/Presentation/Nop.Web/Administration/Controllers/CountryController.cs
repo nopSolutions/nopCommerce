@@ -368,6 +368,8 @@ namespace Nop.Admin.Controllers
 
             var model = new StateProvinceModel();
             model.CountryId = countryId;
+            //default value
+            model.Published = true;
             //locales
             AddLocales(_languageService, model.Locales);
             return View(model);
