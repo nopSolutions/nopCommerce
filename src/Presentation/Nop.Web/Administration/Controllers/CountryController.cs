@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web.Mvc;
 using Nop.Admin.Models.Directory;
 using Nop.Core;
 using Nop.Core.Domain.Directory;
 using Nop.Services.Common;
 using Nop.Services.Directory;
+using Nop.Services.ExportImport;
 using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Services.Stores;
@@ -29,6 +31,8 @@ namespace Nop.Admin.Controllers
         private readonly ILanguageService _languageService;
         private readonly IStoreService _storeService;
         private readonly IStoreMappingService _storeMappingService;
+        private readonly IExportManager _exportManager;
+        private readonly IImportManager _importManager;
 
 	    #endregion
 
@@ -42,7 +46,9 @@ namespace Nop.Admin.Controllers
             ILocalizedEntityService localizedEntityService, 
             ILanguageService languageService,
             IStoreService storeService,
-            IStoreMappingService storeMappingService)
+            IStoreMappingService storeMappingService,
+            IExportManager exportManager,
+            IImportManager importManager)
 		{
             this._countryService = countryService;
             this._stateProvinceService = stateProvinceService;
@@ -53,6 +59,8 @@ namespace Nop.Admin.Controllers
             this._languageService = languageService;
             this._storeService = storeService;
             this._storeMappingService = storeMappingService;
+            this._exportManager = exportManager;
+            this._importManager = importManager;
 		}
 
 		#endregion 
@@ -483,6 +491,48 @@ namespace Nop.Admin.Controllers
             if (addAsterisk.HasValue && addAsterisk.Value)
                 result.Insert(0, new { id = 0, name = "*" });
             return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        #endregion
+
+        #region Export / import
+
+        public ActionResult ExportCsv()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
+                return AccessDeniedView();
+
+            string fileName = String.Format("states_{0}_{1}.txt", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
+
+            var states = _stateProvinceService.GetStateProvinces(true);
+            string result = _exportManager.ExportStatesToTxt(states);
+
+            return File(Encoding.UTF8.GetBytes(result), "text/csv", fileName);
+        }
+
+        [HttpPost]
+        public ActionResult ImportCsv(FormCollection form)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
+                return AccessDeniedView();
+
+            try
+            {
+                var file = Request.Files["importcsvfile"];
+                if (file != null && file.ContentLength > 0)
+                {
+                    int count = _importManager.ImportStatesFromTxt(file.InputStream);
+                    SuccessNotification(String.Format(_localizationService.GetResource("Admin.Configuration.Countries.ImportSuccess"), count));
+                    return RedirectToAction("List");
+                }
+                ErrorNotification(_localizationService.GetResource("Admin.Common.UploadFile"));
+                return RedirectToAction("List");
+            }
+            catch (Exception exc)
+            {
+                ErrorNotification(exc);
+                return RedirectToAction("List");
+            }
         }
 
         #endregion

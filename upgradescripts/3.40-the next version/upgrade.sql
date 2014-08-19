@@ -32,6 +32,15 @@ set @resources='
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.Tags.NoDots">
     <Value>Dots are not supported by tags.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Countries.ExportToCsv">
+    <Value>Export states to CSV</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Countries.ImportFromCsv">
+    <Value>Import states from CSV</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Countries.ImportSuccess">
+    <Value>{0} states have been successfully imported</Value>
+  </LocaleResource>
 </Language>
 '
 

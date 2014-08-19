@@ -20,5 +20,12 @@ namespace Nop.Services.ExportImport
         /// <param name="stream">Stream</param>
         /// <returns>Number of imported subscribers</returns>
         int ImportNewsletterSubscribersFromTxt(Stream stream);
+
+        /// <summary>
+        /// Import states from TXT file
+        /// </summary>
+        /// <param name="stream">Stream</param>
+        /// <returns>Number of imported states</returns>
+        int ImportStatesFromTxt(Stream stream);
     }
 }

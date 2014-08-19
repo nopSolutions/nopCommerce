@@ -123,6 +123,21 @@ namespace Nop.Services.Directory
         }
 
         /// <summary>
+        /// Gets all states/provinces
+        /// </summary>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>State/province collection</returns>
+        public virtual IList<StateProvince> GetStateProvinces(bool showHidden = false)
+        {
+            var query = from sp in _stateProvinceRepository.Table
+                orderby sp.CountryId, sp.DisplayOrder
+                where showHidden || sp.Published
+                select sp;
+            var stateProvinces = query.ToList();
+            return stateProvinces;
+        }
+
+        /// <summary>
         /// Inserts a state/province
         /// </summary>
         /// <param name="stateProvince">State/province</param>

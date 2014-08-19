@@ -11,6 +11,8 @@
         <a href="@Url.Action("Create")" class="k-button">@T("Admin.Common.AddNew")</a>
         <input type="button" id="publish-selected" class="k-button" value="@T("Admin.Configuration.Countries.PublishSelected")" />
         <input type="button" id="unpublish-selected" class="k-button" value="@T("Admin.Configuration.Countries.UnpublishSelected")" />
+        <a href="@Url.Action("ExportCsv")" class="k-button">@T("Admin.Configuration.Countries.ExportToCsv")</a>
+        <input type="submit" id="importcsv" name="importcsv" class="k-button" value="@T("Admin.Configuration.Countries.ImportFromCsv")" />
     </div>
 </div>
 <table class="adminContent">
@@ -227,4 +229,43 @@
         var numChkBoxesChecked = $('#countries-grid input[type=checkbox][checked][id!=mastercheckbox]').length;
         $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
     }
+</script>
+
+@*import states form*@
+<div id="importcsv-window" style="display:none;">
+    @using (Html.BeginForm("ImportCsv", "Country", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <table style="text-align:left;">
+            <tr>
+                <td>
+                    @T("Admin.Common.CsvFile"):
+                </td>
+                <td>
+                    <input type="file" id="importcsvfile" name="importcsvfile" />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <input type="submit" class="k-button" value="@T("Admin.Common.ImportFromCsv")" />
+                </td>
+            </tr>
+        </table>
+    }
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#importcsv").click(function (e) {
+            e.preventDefault();
+            var window = $("#importcsv-window");
+            if (!window.data("kendoWindow")) {
+                window.kendoWindow({
+                    modal: true,
+                    width: "400px",
+                    title: "@T("Admin.Common.ImportFromCsv")",
+                    actions: ["Close"]
+                });
+            }
+            window.data('kendoWindow').center().open();
+        });
+    });
 </script>

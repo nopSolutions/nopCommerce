@@ -3087,6 +3087,9 @@
   <LocaleResource Name="Admin.Configuration.Countries.EditCountryDetails">
     <Value>Edit country details</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Countries.ExportToCsv">
+    <Value>Export states to CSV</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Countries.Fields.AllowsBilling">
     <Value>Allows billing</Value>
   </LocaleResource>
@@ -3170,6 +3173,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Countries.Fields.TwoLetterIsoCode.Required">
     <Value>Two letter ISO code is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Countries.ImportFromCsv">
+    <Value>Import states from CSV</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Countries.ImportSuccess">
+    <Value>{0} states have been successfully imported</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Countries.Info">
     <Value>Country info</Value>
