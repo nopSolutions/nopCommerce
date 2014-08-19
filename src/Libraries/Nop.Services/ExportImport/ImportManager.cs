@@ -4,8 +4,10 @@ using System.Linq;
 using System.Web;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Messages;
 using Nop.Services.Catalog;
 using Nop.Services.Media;
+using Nop.Services.Messages;
 using Nop.Services.Seo;
 using OfficeOpenXml;
 
@@ -23,20 +25,28 @@ namespace Nop.Services.ExportImport
         private readonly IManufacturerService _manufacturerService;
         private readonly IPictureService _pictureService;
         private readonly IUrlRecordService _urlRecordService;
+        private readonly IStoreContext _storeContext;
+        private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
 
         #endregion
 
         #region Ctor
 
-        public ImportManager(IProductService productService, ICategoryService categoryService,
-            IManufacturerService manufacturerService, IPictureService pictureService,
-            IUrlRecordService urlRecordService)
+        public ImportManager(IProductService productService, 
+            ICategoryService categoryService,
+            IManufacturerService manufacturerService,
+            IPictureService pictureService,
+            IUrlRecordService urlRecordService,
+            IStoreContext storeContext,
+            INewsLetterSubscriptionService newsLetterSubscriptionService)
         {
             this._productService = productService;
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
             this._pictureService = pictureService;
             this._urlRecordService = urlRecordService;
+            this._storeContext = storeContext;
+            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
         }
 
         #endregion
@@ -75,6 +85,7 @@ namespace Nop.Services.ExportImport
 
             return mimeType;
         }
+
         #endregion
 
         #region Methods
@@ -478,6 +489,76 @@ namespace Nop.Services.ExportImport
                     iRow++;
                 }
             }
+        }
+
+        /// <summary>
+        /// Import newsletter subscribers from TXT file
+        /// </summary>
+        /// <param name="stream">Stream</param>
+        /// <returns>Number of imported subscribers</returns>
+        public virtual int ImportNewsletterSubscribersFromTxt(Stream stream)
+        {
+            int count = 0;
+            using (var reader = new StreamReader(stream))
+            {
+
+                while (!reader.EndOfStream)
+                {
+                    string line = reader.ReadLine();
+                    if (String.IsNullOrWhiteSpace(line))
+                        continue;
+                    string[] tmp = line.Split(',');
+
+                    var email = "";
+                    bool isActive = true;
+                    int storeId = _storeContext.CurrentStore.Id;
+                    //parse
+                    if (tmp.Length == 1)
+                    {
+                        //"email" only
+                        email = tmp[0].Trim();
+                    }
+                    else if (tmp.Length == 2)
+                    {
+                        //"email" and "active" fields specified
+                        email = tmp[0].Trim();
+                        isActive = Boolean.Parse(tmp[1].Trim());
+                    }
+                    else if (tmp.Length == 3)
+                    {
+                        //"email" and "active" and "storeId" fields specified
+                        email = tmp[0].Trim();
+                        isActive = Boolean.Parse(tmp[1].Trim());
+                        storeId = Int32.Parse(tmp[2].Trim());
+                    }
+                    else
+                        throw new NopException("Wrong file format");
+
+                    //import
+                    var subscription = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(email, storeId);
+                    if (subscription != null)
+                    {
+                        subscription.Email = email;
+                        subscription.Active = isActive;
+                        _newsLetterSubscriptionService.UpdateNewsLetterSubscription(subscription);
+                    }
+                    else
+                    {
+                        subscription = new NewsLetterSubscription()
+                        {
+                            Active = isActive,
+                            CreatedOnUtc = DateTime.UtcNow,
+                            Email = email,
+                            StoreId = storeId,
+                            NewsLetterSubscriptionGuid = Guid.NewGuid()
+                        };
+                        _newsLetterSubscriptionService.InsertNewsLetterSubscription(subscription);
+                    }
+                    count++;
+                }
+            }
+
+            return count;
         }
 
         #endregion

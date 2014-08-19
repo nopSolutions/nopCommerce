@@ -8,6 +8,7 @@ using System.Xml;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -1604,7 +1605,29 @@ namespace Nop.Services.ExportImport
             xmlWriter.Close();
             return stringWriter.ToString();
         }
+        
+        /// <summary>
+        /// Export newsletter subscribers to TXT
+        /// </summary>
+        /// <param name="subscriptions">Subscriptions</param>
+        /// <returns>Result in TXT (string) format</returns>
+        public virtual string ExportNewsletterSubscribersToTxt(IList<NewsLetterSubscription> subscriptions)
+        {
+            if (subscriptions == null)
+                throw new ArgumentNullException("subscriptions");
 
+            var sb = new StringBuilder();
+            foreach (var subscription in subscriptions)
+            {
+                sb.Append(subscription.Email);
+                sb.Append(",");
+                sb.Append(subscription.Active);
+                sb.Append(",");
+                sb.Append(subscription.StoreId);
+                sb.Append(Environment.NewLine);  //new line
+            }
+            return sb.ToString();
+        }
 
         #endregion
     }
