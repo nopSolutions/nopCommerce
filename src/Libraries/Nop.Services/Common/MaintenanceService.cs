@@ -48,10 +48,8 @@ namespace Nop.Services.Common
         {
             if (_commonSettings.UseStoredProceduresIfSupported && _dataProvider.StoredProceduredSupported)
             {
-                //stored procedures are enabled and supported by the database. 
-
-                //TODO: find a better way to get table name
-                var tableName = typeof(T).Name;
+                //stored procedures are enabled and supported by the database
+                var tableName = _dbContext.GetTableName<T>();
                 var result = _dbContext.SqlQuery<decimal>(string.Format("SELECT IDENT_CURRENT('[{0}]')", tableName));
                 return Convert.ToInt32(result.FirstOrDefault());
             }
@@ -76,8 +74,7 @@ namespace Nop.Services.Common
                 var currentIdent = GetTableIdent<T>();
                 if (currentIdent.HasValue && ident > currentIdent.Value)
                 {
-                    //TODO: find a better way to get table name
-                    var tableName = typeof(T).Name;
+                    var tableName = _dbContext.GetTableName<T>();
                     _dbContext.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT([{0}], RESEED, {1})", tableName, ident));
                 }
             }
