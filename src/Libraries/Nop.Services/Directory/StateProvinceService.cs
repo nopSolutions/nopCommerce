@@ -113,7 +113,7 @@ namespace Nop.Services.Directory
             return _cacheManager.Get(key, () =>
             {
                 var query = from sp in _stateProvinceRepository.Table
-                            orderby sp.DisplayOrder
+                            orderby sp.DisplayOrder, sp.Name
                             where sp.CountryId == countryId &&
                             (showHidden || sp.Published)
                             select sp;
@@ -130,7 +130,7 @@ namespace Nop.Services.Directory
         public virtual IList<StateProvince> GetStateProvinces(bool showHidden = false)
         {
             var query = from sp in _stateProvinceRepository.Table
-                orderby sp.CountryId, sp.DisplayOrder
+                        orderby sp.CountryId, sp.DisplayOrder, sp.Name
                 where showHidden || sp.Published
                 select sp;
             var stateProvinces = query.ToList();
