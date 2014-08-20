@@ -983,7 +983,7 @@ namespace Nop.Services.Orders
 
 
         /// <summary>
-        /// Converts reward points to amount primary store currency
+        /// Converts existing reward points to amount
         /// </summary>
         /// <param name="rewardPoints">Reward points</param>
         /// <returns>Converted value</returns>
@@ -1000,7 +1000,7 @@ namespace Nop.Services.Orders
         }
 
         /// <summary>
-        /// Converts an amount in primary store currency to reward points
+        /// Converts an amount to reward points
         /// </summary>
         /// <param name="amount">Amount</param>
         /// <returns>Converted value</returns>
@@ -1015,7 +1015,6 @@ namespace Nop.Services.Orders
             return result;
         }
  
-
         /// <summary>
         /// Gets a value indicating whether a customer has minimum amount of reward points to use (if enabled)
         /// </summary>
@@ -1027,6 +1026,28 @@ namespace Nop.Services.Orders
                 return true;
 
             return rewardPoints >= _rewardPointsSettings.MinimumRewardPointsToUse;
+        }
+
+        /// <summary>
+        /// Calculate how much reward points will be earned/reduced based on certain amount spent
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="amount">Amount (in primary store currency)</param>
+        /// <returns>umber of reward points</returns>
+        public virtual int CalculateRewardPoints(Customer customer, decimal amount)
+        {
+            if (!_rewardPointsSettings.Enabled)
+                return 0;
+
+            if (_rewardPointsSettings.PointsForPurchases_Amount <= decimal.Zero)
+                return 0;
+
+            //Ensure that reward points are applied only to registered users
+            if (customer == null || customer.IsGuest())
+                return 0;
+
+            var points = (int)Math.Truncate(amount / _rewardPointsSettings.PointsForPurchases_Amount * _rewardPointsSettings.PointsForPurchases_Points);
+            return points;
         }
 
         #endregion

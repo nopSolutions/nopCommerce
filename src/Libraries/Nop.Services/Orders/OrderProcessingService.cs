@@ -203,17 +203,7 @@ namespace Nop.Services.Orders
         /// <param name="order">Order</param>
         protected virtual void AwardRewardPoints(Order order)
         {
-            if (!_rewardPointsSettings.Enabled)
-                return;
-
-            if (_rewardPointsSettings.PointsForPurchases_Amount <= decimal.Zero)
-                return;
-
-            //Ensure that reward points are applied only to registered users
-            if (order.Customer == null || order.Customer.IsGuest())
-                return;
-
-            int points = (int)Math.Truncate(order.OrderTotal / _rewardPointsSettings.PointsForPurchases_Amount * _rewardPointsSettings.PointsForPurchases_Points);
+            int points = _orderTotalCalculationService.CalculateRewardPoints(order.Customer, order.OrderTotal);
             if (points == 0)
                 return;
 
@@ -233,17 +223,7 @@ namespace Nop.Services.Orders
         /// <param name="order">Order</param>
         protected virtual void ReduceRewardPoints(Order order)
         {
-            if (!_rewardPointsSettings.Enabled)
-                return;
-
-            if (_rewardPointsSettings.PointsForPurchases_Amount <= decimal.Zero)
-                return;
-
-            //Ensure that reward points are applied only to registered users
-            if (order.Customer == null || order.Customer.IsGuest())
-                return;
-
-            int points = (int)Math.Truncate(order.OrderTotal / _rewardPointsSettings.PointsForPurchases_Amount * _rewardPointsSettings.PointsForPurchases_Points);
+            int points = _orderTotalCalculationService.CalculateRewardPoints(order.Customer, order.OrderTotal);
             if (points == 0)
                 return;
 

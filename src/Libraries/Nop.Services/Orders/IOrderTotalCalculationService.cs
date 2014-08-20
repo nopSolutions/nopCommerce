@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 
@@ -162,14 +163,14 @@ namespace Nop.Services.Orders
 
 
         /// <summary>
-        /// Converts reward points to amount primary store currency
+        /// Converts existing reward points to amount
         /// </summary>
         /// <param name="rewardPoints">Reward points</param>
         /// <returns>Converted value</returns>
         decimal ConvertRewardPointsToAmount(int rewardPoints);
 
         /// <summary>
-        /// Converts an amount in primary store currency to reward points
+        /// Converts an amount to reward points
         /// </summary>
         /// <param name="amount">Amount</param>
         /// <returns>Converted value</returns>
@@ -181,5 +182,13 @@ namespace Nop.Services.Orders
         /// <param name="rewardPoints">Reward points to check</param>
         /// <returns>true - reward points could use; false - cannot be used.</returns>
         bool CheckMinimumRewardPointsToUseRequirement(int rewardPoints);
+
+        /// <summary>
+        /// Calculate how much reward points will be earned/reduced based on certain amount spent
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="amount">Amount (in primary store currency)</param>
+        /// <returns>umber of reward points</returns>
+        int CalculateRewardPoints(Customer customer, decimal amount);
     }
 }
