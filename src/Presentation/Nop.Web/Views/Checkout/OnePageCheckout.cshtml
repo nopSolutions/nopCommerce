@@ -85,8 +85,12 @@
                             }
                         </script>
                         <div class="buttons" id="shipping-buttons-container">
-                            <p class="back-link">
-                                <a href="#" onclick="Checkout.back(); return false;"><small>&laquo; </small>@T("Common.Back")</a></p>
+                            @if (!Model.DisableBillingAddressCheckoutStep)
+                            {
+                                <p class="back-link">
+                                    <a href="#" onclick=" Checkout.back(); return false; "><small>&laquo; </small>@T("Common.Back")</a>
+                                </p>
+                            }
                             <input type="button" class="button-1 new-address-next-step-button" title="@T("Common.Continue")" onclick="Shipping.save()" value="@T("Common.Continue")" />
                             <span id="shipping-please-wait" class="please-wait" style="display: none;"> @T("Common.LoadingNextStep")</span>
                         </div>
