@@ -108,5 +108,15 @@
                 @Html.ValidationMessageFor(model => model.PointsForPurchases_Canceled)
             </td>
         </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.DisplayHowMuchWillBeEarned_OverrideForStore, model => model.DisplayHowMuchWillBeEarned, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.DisplayHowMuchWillBeEarned):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.DisplayHowMuchWillBeEarned)
+                @Html.ValidationMessageFor(model => model.DisplayHowMuchWillBeEarned)
+            </td>
+        </tr>
     </table>
 }

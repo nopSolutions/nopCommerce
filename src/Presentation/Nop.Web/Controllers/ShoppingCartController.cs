@@ -88,6 +88,7 @@ namespace Nop.Web.Controllers
         private readonly TaxSettings _taxSettings;
         private readonly CaptchaSettings _captchaSettings;
         private readonly AddressSettings _addressSettings;
+        private readonly RewardPointsSettings _rewardPointsSettings;
 
         #endregion
 
@@ -131,7 +132,8 @@ namespace Nop.Web.Controllers
             ShippingSettings shippingSettings, 
             TaxSettings taxSettings,
             CaptchaSettings captchaSettings, 
-            AddressSettings addressSettings)
+            AddressSettings addressSettings,
+            RewardPointsSettings rewardPointsSettings)
         {
             this._productService = productService;
             this._workContext = workContext;
@@ -174,6 +176,7 @@ namespace Nop.Web.Controllers
             this._taxSettings = taxSettings;
             this._captchaSettings = captchaSettings;
             this._addressSettings = addressSettings;
+            this._rewardPointsSettings = rewardPointsSettings;
         }
 
         #endregion
@@ -2168,13 +2171,23 @@ namespace Nop.Web.Controllers
                     }
                 }
 
-                //reward points
+                //reward points to be spent (redeemed)
                 if (redeemedRewardPointsAmount > decimal.Zero)
                 {
                     decimal redeemedRewardPointsAmountInCustomerCurrency = _currencyService.ConvertFromPrimaryStoreCurrency(redeemedRewardPointsAmount, _workContext.WorkingCurrency);
                     model.RedeemedRewardPoints = redeemedRewardPoints;
                     model.RedeemedRewardPointsAmount = _priceFormatter.FormatPrice(-redeemedRewardPointsAmountInCustomerCurrency, true, false);
                 }
+
+                //reward points to be earned
+                if (_rewardPointsSettings.Enabled && 
+                    _rewardPointsSettings.DisplayHowMuchWillBeEarned &&
+                    shoppingCartTotalBase.HasValue)
+                {
+                    model.WillEarnRewardPoints = _orderTotalCalculationService
+                        .CalculateRewardPoints(_workContext.CurrentCustomer, shoppingCartTotalBase.Value);
+                }
+
             }
 
 

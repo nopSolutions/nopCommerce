@@ -180,6 +180,21 @@
                     </span>
                 </td>
             </tr>
+            @if (Model.WillEarnRewardPoints > 0)
+            {
+                <tr class="will-earn-reward-points">
+                    <td class="cart-total-left">
+                        <span class="nobr">
+                            @T("ShoppingCart.Totals.RewardPoints.WillEarn"):
+                        </span>
+                    </td>
+                    <td class="cart-total-right">
+                        <span class="nobr">
+                            <span class="product-price">@string.Format(T("ShoppingCart.Totals.RewardPoints.WillEarn.Point").Text, Model.WillEarnRewardPoints)</span>
+                        </span>
+                    </td>
+                </tr>
+            }
         </tbody>
     </table>
 </div>

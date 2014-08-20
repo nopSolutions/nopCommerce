@@ -4658,6 +4658,7 @@ namespace Nop.Services.Installation
                     PointsForPurchases_Points = 1,
                     PointsForPurchases_Awarded = OrderStatus.Complete,
                     PointsForPurchases_Canceled = OrderStatus.Cancelled,
+                    DisplayHowMuchWillBeEarned = true,
                 });
 
             settingService.SaveSetting(new CurrencySettings()

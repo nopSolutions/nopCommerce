@@ -41,6 +41,18 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Countries.ImportSuccess">
     <Value>{0} states have been successfully imported</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.DisplayHowMuchWillBeEarned">
+    <Value>Display how much will be earned</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.DisplayHowMuchWillBeEarned.Hint">
+    <Value>Check to display how much point will be earned before checkout.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Totals.RewardPoints.WillEarn">
+    <Value>You will earn</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Totals.RewardPoints.WillEarn.Point">
+    <Value>{0} points</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -155,5 +167,15 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'commonsettings.ignorelog
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'commonsettings.ignorelogwordlist', N'', 0)
+END
+GO
+
+
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'rewardpointssettings.displayhowmuchwillbeearned')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'rewardpointssettings.displayhowmuchwillbeearned', N'true', 0)
 END
 GO

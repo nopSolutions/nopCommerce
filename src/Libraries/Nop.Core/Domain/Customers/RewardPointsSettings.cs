@@ -44,5 +44,10 @@ namespace Nop.Core.Domain.Customers
         /// Points are canceled when the order is
         /// </summary>
         public OrderStatus PointsForPurchases_Canceled { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether "You will earn" message should be displayed
+        /// </summary>
+        public bool DisplayHowMuchWillBeEarned { get; set; }
     }
 }

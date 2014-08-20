@@ -5358,6 +5358,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.Description">
     <Value>The Reward Points Program allows customers to earn points for certain actions they take on the site. Points are awarded based on making purchases and customer actions such as registration.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.DisplayHowMuchWillBeEarned">
+    <Value>Display how much will be earned</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.DisplayHowMuchWillBeEarned.Hint">
+    <Value>Check to display how much point will be earned before checkout.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.Earning">
     <Value>Earning Reward Points</Value>
   </LocaleResource>
@@ -12833,6 +12839,12 @@
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.Totals.RewardPoints">
     <Value>{0} reward points</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Totals.RewardPoints.WillEarn">
+    <Value>You will earn</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Totals.RewardPoints.WillEarn.Point">
+    <Value>{0} points</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.Totals.Shipping">
     <Value>Shipping</Value>

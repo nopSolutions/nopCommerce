@@ -35,6 +35,9 @@ namespace Nop.Web.Models.ShoppingCart
         public bool AllowRemovingOrderTotalDiscount { get; set; }
         public int RedeemedRewardPoints { get; set; }
         public string RedeemedRewardPointsAmount { get; set; }
+
+        public int WillEarnRewardPoints { get; set; }
+
         public string OrderTotal { get; set; }
 
         #region Nested classes

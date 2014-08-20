@@ -348,6 +348,9 @@ td.fieldname{font-size:12px;}
 .order-summary-content .total-info{margin:0;font-size:12px;}
 .order-summary-content .total-info .selected-shipping-method{font-weight:normal;font-size:11px;}
 .order-summary-content .total-info .order-total{color:#353434;}
+.order-summary-content .will-earn-reward-points{font-style:italic;}
+.order-summary-content .will-earn-reward-points .cart-total-left{font-weight:normal;}
+.order-summary-content .will-earn-reward-points td{padding-top:15px;}
 .cart-total-left{width:100%;text-align:right;vertical-align:middle;height:21px;font-weight:700;color:#353434;}
 .cart-total-left-below{width:100%;text-align:right;vertical-align:top;height:30px;}
 .cart-total-right{text-align:right;vertical-align:middle;padding-left:5px;}

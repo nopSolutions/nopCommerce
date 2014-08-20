@@ -40,6 +40,10 @@ namespace Nop.Admin.Models.Settings
         public int PointsForPurchases_Canceled { get; set; }
         public bool PointsForPurchases_Canceled_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.RewardPoints.DisplayHowMuchWillBeEarned")]
+        public bool DisplayHowMuchWillBeEarned { get; set; }
+        public bool DisplayHowMuchWillBeEarned_OverrideForStore { get; set; }
+
         public string PrimaryStoreCurrencyCode { get; set; }
     }
 }
