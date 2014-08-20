@@ -6,9 +6,11 @@ using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
+using Nop.Core.Domain.Orders;
 using Nop.Core.Plugins;
 using Nop.Services.Common;
 using Nop.Services.Events;
+using Nop.Services.Orders;
 
 namespace Nop.Services.Discounts
 {
@@ -369,6 +371,22 @@ namespace Nop.Services.Discounts
                 if (!requirementRule.CheckRequirement(request))
                     return false;
             }
+
+            //Do not allow discounts applied to order subtotal or total when a customer has gift cards in the cart.
+            //Otherwise, this customer can purchase gift cards with discount and get more than paid ("free money").
+            if (discount.DiscountType == DiscountType.AssignedToOrderSubTotal ||
+                discount.DiscountType == DiscountType.AssignedToOrderTotal)
+            {
+                var cart = customer.ShoppingCartItems
+                    .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                    .LimitPerStore(_storeContext.CurrentStore.Id)
+                    .ToList();
+
+                var hasGiftCards = cart.Any(x => x.Product.IsGiftCard);
+                if (hasGiftCards)
+                    return false;
+            }
+
             return true;
         }
 

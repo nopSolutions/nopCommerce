@@ -331,7 +331,7 @@ namespace Nop.Services.Orders
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
                 subTotalWithoutDiscount = Math.Round(subTotalWithoutDiscount, 2);
 
-            /*We calculate discount amount on order subtotal excl tax (discount first)*/
+            //We calculate discount amount on order subtotal excl tax (discount first)
             //calculate discount amount ('Applied to order subtotal' discount)
             decimal discountAmountExclTax = GetOrderSubtotalDiscount(customer, subTotalExclTaxWithoutDiscount, out appliedDiscount);
             if (subTotalExclTaxWithoutDiscount < discountAmountExclTax)
@@ -342,7 +342,7 @@ namespace Nop.Services.Orders
             decimal subTotalInclTaxWithDiscount = subTotalExclTaxWithDiscount;
 
             //add tax for shopping items & checkout attributes
-            Dictionary<decimal, decimal> tempTaxRates = new Dictionary<decimal, decimal>(taxRates);
+            var tempTaxRates = new Dictionary<decimal, decimal>(taxRates);
             foreach (KeyValuePair<decimal, decimal> kvp in tempTaxRates)
             {
                 decimal taxRate = kvp.Key;
