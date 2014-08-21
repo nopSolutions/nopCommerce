@@ -924,6 +924,8 @@ namespace Nop.Web.Controllers
             var products = _productService.GetProductsByIds(productIds);
             //ACL and store mapping
             products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
+            //availability dates
+            products = products.Where(p => p.IsAvailable()).ToList();
             
             if (products.Count == 0)
                 return Content("");
@@ -949,6 +951,8 @@ namespace Nop.Web.Controllers
             var products = _productService.GetProductsByIds(productIds);
             //ACL and store mapping
             products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
+            //availability dates
+            products = products.Where(p => p.IsAvailable()).ToList();
 
             if (products.Count == 0)
                 return Content("");
@@ -970,6 +974,8 @@ namespace Nop.Web.Controllers
             var products = _productService.GetCrosssellProductsByShoppingCart(cart, _shoppingCartSettings.CrossSellsNumber);
             //ACL and store mapping
             products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
+            //availability dates
+            products = products.Where(p => p.IsAvailable()).ToList();
 
             if (products.Count == 0)
                 return Content("");
@@ -1015,6 +1021,8 @@ namespace Nop.Web.Controllers
 
             //ACL and store mapping
             products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
+            //availability dates
+            products = products.Where(p => p.IsAvailable()).ToList();
 
             if (products.Count == 0)
                 return Content("");
@@ -1111,6 +1119,8 @@ namespace Nop.Web.Controllers
             var products = _productService.GetProductsByIds(report.Select(x => x.ProductId).ToArray());
             //ACL and store mapping
             products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
+            //availability dates
+            products = products.Where(p => p.IsAvailable()).ToList();
 
             if (products.Count == 0)
                 return Content("");
@@ -1126,6 +1136,8 @@ namespace Nop.Web.Controllers
             var products = _productService.GetAllProductsDisplayedOnHomePage();
             //ACL and store mapping
             products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
+            //availability dates
+            products = products.Where(p => p.IsAvailable()).ToList();
 
             if (products.Count == 0)
                 return Content("");
@@ -1489,6 +1501,8 @@ namespace Nop.Web.Controllers
 
             //ACL and store mapping
             products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
+            //availability dates
+            products = products.Where(p => p.IsAvailable()).ToList();
 
             //prepare model
             PrepareProductOverviewModels(products, prepareSpecificationAttributes: true)
