@@ -863,6 +863,10 @@ namespace Nop.Web.Controllers
             if (!_storeMappingService.Authorize(product))
                 return InvokeHttp404();
 
+            //availability dates
+            if (!product.IsAvailable())
+                return InvokeHttp404();
+            
             //visible individually?
             if (!product.VisibleIndividually)
             {
