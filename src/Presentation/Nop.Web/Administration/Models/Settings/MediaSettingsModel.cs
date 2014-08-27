@@ -51,5 +51,10 @@ namespace Nop.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Media.MaximumImageSize")]
         public int MaximumImageSize { get; set; }
         public bool MaximumImageSize_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Media.MultipleThumbDirectories")]
+        public bool MultipleThumbDirectories { get; set; }
+        public bool MultipleThumbDirectories_OverrideForStore { get; set; }
+
     }
 }

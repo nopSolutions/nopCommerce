@@ -5136,6 +5136,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Media.MiniCartThumbPictureSize.Hint">
     <Value>The default size (pixels) for product thumbnail images in the mini-shopping cart block.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.MultipleThumbDirectories">
+    <Value>Multiple thumb directories</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.MultipleThumbDirectories.Hint">
+    <Value>Check to enable multiple thumb directories. It can be helpful if your hosting company has some limitations to the number of allowed files per directory.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase">
     <Value>Pictures are stored into...</Value>
   </LocaleResource>

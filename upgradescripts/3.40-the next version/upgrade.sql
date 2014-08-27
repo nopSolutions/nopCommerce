@@ -53,6 +53,12 @@ set @resources='
   <LocaleResource Name="ShoppingCart.Totals.RewardPoints.WillEarn.Point">
     <Value>{0} points</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.MultipleThumbDirectories">
+    <Value>Multiple thumb directories</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.MultipleThumbDirectories.Hint">
+    <Value>Check to enable multiple thumb directories. It can be helpful if your hosting company has some limitations to the number of allowed files per directory.</Value>
+  </LocaleResource>
 </Language>
 '
 
