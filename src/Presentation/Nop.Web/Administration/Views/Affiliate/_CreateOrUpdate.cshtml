@@ -88,8 +88,18 @@
             </td>
         </tr>
     </table>
-        
     @Html.EditorFor(model => model.Address, "Address")
+    <table>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AdminComment):
+            </td>
+            <td class="adminData">
+                @Html.TextAreaFor(model => model.AdminComment, new { style = "Width: 250px; Height: 150px;" })
+                @Html.ValidationMessageFor(model => model.AdminComment)
+            </td>
+        </tr>
+    </table>
 }
 @helper TabCustomers()
     {

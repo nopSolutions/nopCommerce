@@ -10,6 +10,11 @@ namespace Nop.Core.Domain.Affiliates
         public int AddressId { get; set; }
 
         /// <summary>
+        /// Gets or sets the admin comment
+        /// </summary>
+        public string AdminComment { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the entity has been deleted
         /// </summary>
         public bool Deleted { get; set; }

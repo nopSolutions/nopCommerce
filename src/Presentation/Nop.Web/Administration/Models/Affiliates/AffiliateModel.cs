@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Web.Mvc;
 using FluentValidation.Attributes;
 using Nop.Admin.Models.Common;
 using Nop.Admin.Validators.Affiliates;
@@ -20,6 +21,11 @@ namespace Nop.Admin.Models.Affiliates
 
         [NopResourceDisplayName("Admin.Affiliates.Fields.URL")]
         public string Url { get; set; }
+
+
+        [NopResourceDisplayName("Admin.Affiliates.Fields.AdminComment")]
+        [AllowHtml]
+        public string AdminComment { get; set; }
         
         [NopResourceDisplayName("Admin.Affiliates.Fields.Active")]
         public bool Active { get; set; }

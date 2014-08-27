@@ -76,6 +76,7 @@ namespace Nop.Admin.Controllers
                 model.Url = _webHelper.ModifyQueryString(_webHelper.GetStoreLocation(false), "affiliateid=" + affiliate.Id, null);
                 if (!excludeProperties)
                 {
+                    model.AdminComment = affiliate.AdminComment;
                     model.Active = affiliate.Active;
                     model.Address = affiliate.Address.ToModel();
                 }
@@ -181,6 +182,7 @@ namespace Nop.Admin.Controllers
                 var affiliate = new Affiliate();
 
                 affiliate.Active = model.Active;
+                affiliate.AdminComment = model.AdminComment;
                 affiliate.Address = model.Address.ToEntity();
                 affiliate.Address.CreatedOnUtc = DateTime.UtcNow;
                 //some validation
@@ -231,6 +233,7 @@ namespace Nop.Admin.Controllers
             if (ModelState.IsValid)
             {
                 affiliate.Active = model.Active;
+                affiliate.AdminComment = model.AdminComment;
                 affiliate.Address = model.Address.ToEntity(affiliate.Address);
                 //some validation
                 if (affiliate.Address.CountryId == 0)

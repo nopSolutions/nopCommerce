@@ -957,6 +957,12 @@
   <LocaleResource Name="Admin.Affiliates.Fields.Active.Hint">
     <Value>A value indicating whether the affiliate is active.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Fields.AdminComment">
+    <Value>Admin comment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Fields.AdminComment.Hint">
+    <Value>Admin comment. For internal use.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Affiliates.Fields.ID">
     <Value>Affiliate identifier</Value>
   </LocaleResource>

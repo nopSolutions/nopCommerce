@@ -59,6 +59,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Media.MultipleThumbDirectories.Hint">
     <Value>Check to enable multiple thumb directories. It can be helpful if your hosting company has some limitations to the number of allowed files per directory.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Fields.AdminComment">
+    <Value>Admin comment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Fields.AdminComment.Hint">
+    <Value>Admin comment. For internal use.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -183,5 +189,14 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'rewardpointssettings.dis
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'rewardpointssettings.displayhowmuchwillbeearned', N'true', 0)
+END
+GO
+
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Affiliate]') and NAME='AdminComment')
+BEGIN
+	ALTER TABLE [Affiliate]
+	ADD [AdminComment] nvarchar(MAX) NULL
 END
 GO
