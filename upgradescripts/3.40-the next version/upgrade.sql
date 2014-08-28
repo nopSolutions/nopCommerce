@@ -65,6 +65,9 @@ set @resources='
   <LocaleResource Name="Admin.Affiliates.Fields.AdminComment.Hint">
     <Value>Admin comment. For internal use.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.CacheProductPrices.Hint">
+    <Value>Check to cache product prices. It can significantly improve performance. But you not should enable it if you use some complex discounts, discount requirement rules, or coupon codes.</Value>
+  </LocaleResource>
 </Language>
 '
 
