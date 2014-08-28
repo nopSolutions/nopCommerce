@@ -265,7 +265,7 @@ namespace Nop.Services.Orders
             foreach (var shoppingCartItem in cart)
             {
                 decimal taxRate = decimal.Zero;
-                decimal sciSubTotal = _priceCalculationService.GetSubTotal(shoppingCartItem, true);
+                decimal sciSubTotal = _priceCalculationService.GetSubTotal(shoppingCartItem);
 
                 decimal sciExclTax = _taxService.GetProductPrice(shoppingCartItem.Product, sciSubTotal, false, customer, out taxRate);
                 decimal sciInclTax = _taxService.GetProductPrice(shoppingCartItem.Product, sciSubTotal, true, customer, out taxRate);

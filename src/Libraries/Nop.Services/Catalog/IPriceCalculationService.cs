@@ -47,16 +47,14 @@ namespace Nop.Services.Catalog
         /// Gets the shopping cart item sub total
         /// </summary>
         /// <param name="shoppingCartItem">The shopping cart item</param>
-        /// <param name="includeDiscounts">A value indicating whether include discounts or not for price computation</param>
         /// <returns>Shopping cart item sub total</returns>
-        decimal GetSubTotal(ShoppingCartItem shoppingCartItem, bool includeDiscounts);
+        decimal GetSubTotal(ShoppingCartItem shoppingCartItem);
         /// <summary>
         /// Gets the shopping cart unit price (one item)
         /// </summary>
         /// <param name="shoppingCartItem">The shopping cart item</param>
-        /// <param name="includeDiscounts">A value indicating whether include discounts or not for price computation</param>
         /// <returns>Shopping cart unit price (one item)</returns>
-        decimal GetUnitPrice(ShoppingCartItem shoppingCartItem, bool includeDiscounts);
+        decimal GetUnitPrice(ShoppingCartItem shoppingCartItem);
         /// <summary>
         /// Gets the shopping cart unit price (one item)
         /// </summary>
@@ -66,15 +64,13 @@ namespace Nop.Services.Catalog
         /// <param name="quantity">Quantity</param>
         /// <param name="attributesXml">Product atrributes (XML format)</param>
         /// <param name="customerEnteredPrice">Customer entered price (if specified)</param>
-        /// <param name="includeDiscounts">A value indicating whether include discounts or not for price computation</param>
         /// <returns>Shopping cart unit price (one item)</returns>
         decimal GetUnitPrice(Product product,
             Customer customer,
             ShoppingCartType shoppingCartType,
             int quantity,
             string attributesXml,
-            decimal customerEnteredPrice,
-            bool includeDiscounts);
+            decimal customerEnteredPrice);
         /// <summary>
         /// Gets discount amount
         /// </summary>

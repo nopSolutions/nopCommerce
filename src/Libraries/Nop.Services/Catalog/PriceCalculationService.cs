@@ -303,23 +303,21 @@ namespace Nop.Services.Catalog
         /// Gets the shopping cart item sub total
         /// </summary>
         /// <param name="shoppingCartItem">The shopping cart item</param>
-        /// <param name="includeDiscounts">A value indicating whether include discounts or not for price computation</param>
         /// <returns>Shopping cart item sub total</returns>
-        public virtual decimal GetSubTotal(ShoppingCartItem shoppingCartItem, bool includeDiscounts)
+        public virtual decimal GetSubTotal(ShoppingCartItem shoppingCartItem)
         {
             if (shoppingCartItem == null)
                 throw new ArgumentNullException("shoppingCartItem");
 
-            return GetUnitPrice(shoppingCartItem, includeDiscounts) * shoppingCartItem.Quantity;
+            return GetUnitPrice(shoppingCartItem) * shoppingCartItem.Quantity;
         }
 
         /// <summary>
         /// Gets the shopping cart unit price (one item)
         /// </summary>
         /// <param name="shoppingCartItem">The shopping cart item</param>
-        /// <param name="includeDiscounts">A value indicating whether include discounts or not for price computation</param>
         /// <returns>Shopping cart unit price (one item)</returns>
-        public virtual decimal GetUnitPrice(ShoppingCartItem shoppingCartItem, bool includeDiscounts)
+        public virtual decimal GetUnitPrice(ShoppingCartItem shoppingCartItem)
         {
             if (shoppingCartItem == null)
                 throw new ArgumentNullException("shoppingCartItem");
@@ -329,8 +327,7 @@ namespace Nop.Services.Catalog
                 shoppingCartItem.ShoppingCartType, 
                 shoppingCartItem.Quantity,
                 shoppingCartItem.AttributesXml,
-                shoppingCartItem.CustomerEnteredPrice, 
-                includeDiscounts);
+                shoppingCartItem.CustomerEnteredPrice);
         }
 
         /// <summary>
@@ -342,15 +339,13 @@ namespace Nop.Services.Catalog
         /// <param name="quantity">Quantity</param>
         /// <param name="attributesXml">Product atrributes (XML format)</param>
         /// <param name="customerEnteredPrice">Customer entered price (if specified)</param>
-        /// <param name="includeDiscounts">A value indicating whether include discounts or not for price computation</param>
         /// <returns>Shopping cart unit price (one item)</returns>
         public virtual decimal GetUnitPrice(Product product,
             Customer customer, 
             ShoppingCartType shoppingCartType,
             int quantity,
             string attributesXml,
-            decimal customerEnteredPrice,
-            bool includeDiscounts)
+            decimal customerEnteredPrice)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -406,7 +401,7 @@ namespace Nop.Services.Catalog
                     finalPrice = GetFinalPrice(product,
                         customer,
                         attributesTotalPrice,
-                        includeDiscounts,
+                        true,
                         qty);
                 }
             }

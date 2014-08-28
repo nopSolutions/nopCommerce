@@ -394,7 +394,9 @@ namespace Nop.Services.Tests.Catalog
                 Quantity = 2,
             };
 
-            _priceCalcService.GetUnitPrice(sci1, false).ShouldEqual(12.34);
+            _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToCategories)).Return(new List<Discount>());
+
+            _priceCalcService.GetUnitPrice(sci1).ShouldEqual(12.34);
 
         }
 
@@ -422,7 +424,9 @@ namespace Nop.Services.Tests.Catalog
                 Quantity = 2,
             };
 
-            _priceCalcService.GetSubTotal(sci1, false).ShouldEqual(24.68);
+            _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToCategories)).Return(new List<Discount>());
+
+            _priceCalcService.GetSubTotal(sci1).ShouldEqual(24.68);
 
         }
     }

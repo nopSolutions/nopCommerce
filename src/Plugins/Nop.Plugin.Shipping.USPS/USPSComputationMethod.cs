@@ -164,7 +164,7 @@ namespace Nop.Plugin.Shipping.USPS
             {
                 if (!shoppingCartItem.IsShipEnabled)
                     continue;
-                subTotal += _priceCalculationService.GetSubTotal(shoppingCartItem, true);
+                subTotal += _priceCalculationService.GetSubTotal(shoppingCartItem);
             }
 
 
