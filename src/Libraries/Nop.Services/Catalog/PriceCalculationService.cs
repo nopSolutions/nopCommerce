@@ -277,7 +277,7 @@ namespace Nop.Services.Catalog
             if (product.CustomerEntersPrice)
                 return appliedDiscountAmount;
 
-            //discount are disabled
+            //discounts are disabled
             if (_catalogSettings.IgnoreDiscounts)
                 return appliedDiscountAmount;
 

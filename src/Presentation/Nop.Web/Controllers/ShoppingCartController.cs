@@ -517,8 +517,8 @@ namespace Nop.Web.Controllers
                     cartItemModel.SubTotal = _priceFormatter.FormatPrice(shoppingCartItemSubTotalWithDiscount);
 
                     //display an applied discount amount
-                    decimal shoppingCartItemSubTotalWithoutDiscountBase = _taxService.GetProductPrice(sci.Product, _priceCalculationService.GetSubTotal(sci, false), out taxRate);
-                    decimal shoppingCartItemDiscountBase = shoppingCartItemSubTotalWithoutDiscountBase - shoppingCartItemSubTotalWithDiscountBase;
+                    Discount scDiscount = null;
+                    decimal shoppingCartItemDiscountBase = _taxService.GetProductPrice(sci.Product, _priceCalculationService.GetDiscountAmount(sci, out scDiscount), out taxRate);
                     if (shoppingCartItemDiscountBase > decimal.Zero)
                     {
                         decimal shoppingCartItemDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartItemDiscountBase, _workContext.WorkingCurrency);
@@ -709,8 +709,8 @@ namespace Nop.Web.Controllers
                     cartItemModel.SubTotal = _priceFormatter.FormatPrice(shoppingCartItemSubTotalWithDiscount);
 
                     //display an applied discount amount
-                    decimal shoppingCartItemSubTotalWithoutDiscountBase = _taxService.GetProductPrice(sci.Product, _priceCalculationService.GetSubTotal(sci, false), out taxRate);
-                    decimal shoppingCartItemDiscountBase = shoppingCartItemSubTotalWithoutDiscountBase - shoppingCartItemSubTotalWithDiscountBase;
+                    Discount scDiscount = null;
+                    decimal shoppingCartItemDiscountBase = _taxService.GetProductPrice(sci.Product, _priceCalculationService.GetDiscountAmount(sci, out scDiscount), out taxRate);
                     if (shoppingCartItemDiscountBase > decimal.Zero)
                     {
                         decimal shoppingCartItemDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartItemDiscountBase, _workContext.WorkingCurrency);
