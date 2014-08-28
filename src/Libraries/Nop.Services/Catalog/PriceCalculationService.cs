@@ -150,16 +150,12 @@ namespace Nop.Services.Catalog
             return previousPrice;
         }
 
-        #endregion
-
-        #region Methods
-
         /// <summary>
         /// Get variant special price (is valid)
         /// </summary>
         /// <param name="product">Product</param>
         /// <returns>Special price</returns>
-        public virtual decimal? GetSpecialPrice(Product product)
+        protected virtual decimal? GetSpecialPrice(Product product)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -185,18 +181,9 @@ namespace Nop.Services.Catalog
             return product.SpecialPrice.Value;
         }
 
-        /// <summary>
-        /// Gets the final price
-        /// </summary>
-        /// <param name="product">Product</param>
-        /// <param name="includeDiscounts">A value indicating whether include discounts or not for final price computation</param>
-        /// <returns>Final price</returns>
-        public virtual decimal GetFinalPrice(Product product, 
-            bool includeDiscounts)
-        {
-            return GetFinalPrice(product, _workContext.CurrentCustomer,
-                includeDiscounts: includeDiscounts);
-        }
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Gets the final price
@@ -265,50 +252,6 @@ namespace Nop.Services.Catalog
             return cachedPrice;
         }
 
-
-
-        /// <summary>
-        /// Gets discount amount
-        /// </summary>
-        /// <param name="product">Product</param>
-        /// <returns>Discount amount</returns>
-        public virtual decimal GetDiscountAmount(Product product)
-        {
-            var customer = _workContext.CurrentCustomer;
-            return GetDiscountAmount(product, customer, decimal.Zero);
-        }
-        
-        /// <summary>
-        /// Gets discount amount
-        /// </summary>
-        /// <param name="product">Product</param>
-        /// <param name="customer">The customer</param>
-        /// <param name="additionalCharge">Additional charge</param>
-        /// <returns>Discount amount</returns>
-        public virtual decimal GetDiscountAmount(Product product, 
-            Customer customer,
-            decimal additionalCharge = decimal.Zero)
-        {
-            Discount appliedDiscount = null;
-            return GetDiscountAmount(product, customer, additionalCharge, out appliedDiscount);
-        }
-
-        /// <summary>
-        /// Gets discount amount
-        /// </summary>
-        /// <param name="product">Product</param>
-        /// <param name="customer">The customer</param>
-        /// <param name="additionalCharge">Additional charge</param>
-        /// <param name="appliedDiscount">Applied discount</param>
-        /// <returns>Discount amount</returns>
-        public virtual decimal GetDiscountAmount(Product product, 
-            Customer customer,
-            decimal additionalCharge, 
-            out Discount appliedDiscount)
-        {
-            return GetDiscountAmount(product, customer, additionalCharge, 1, out appliedDiscount);
-        }
-
         /// <summary>
         /// Gets discount amount
         /// </summary>
@@ -352,6 +295,8 @@ namespace Nop.Services.Catalog
 
             return appliedDiscountAmount;
         }
+
+
 
 
         /// <summary>
@@ -474,6 +419,42 @@ namespace Nop.Services.Catalog
         }
 
         /// <summary>
+        /// Gets discount amount
+        /// </summary>
+        /// <param name="shoppingCartItem">The shopping cart item</param>
+        /// <param name="appliedDiscount">Applied discount</param>
+        /// <returns>Discount amount</returns>
+        public virtual decimal GetDiscountAmount(ShoppingCartItem shoppingCartItem, out Discount appliedDiscount)
+        {
+            if (shoppingCartItem == null)
+                throw new ArgumentNullException("shoppingCartItem");
+
+            var customer = shoppingCartItem.Customer;
+            appliedDiscount = null;
+            decimal totalDiscountAmount = decimal.Zero;
+            var product = shoppingCartItem.Product;
+            if (product != null)
+            {
+                decimal attributesTotalPrice = decimal.Zero;
+
+                var pvaValues = _productAttributeParser.ParseProductVariantAttributeValues(shoppingCartItem.AttributesXml);
+                foreach (var pvaValue in pvaValues)
+                {
+                    attributesTotalPrice += GetProductVariantAttributeValuePriceAdjustment(pvaValue);
+                }
+
+                decimal productDiscountAmount = GetDiscountAmount(product, customer, attributesTotalPrice, shoppingCartItem.Quantity, out appliedDiscount);
+                totalDiscountAmount = productDiscountAmount * shoppingCartItem.Quantity;
+            }
+            
+            if (_shoppingCartSettings.RoundPricesDuringCalculation)
+                totalDiscountAmount = Math.Round(totalDiscountAmount, 2);
+            return totalDiscountAmount;
+        }
+
+
+
+        /// <summary>
         /// Gets the product cost (one item)
         /// </summary>
         /// <param name="product">Product</param>
@@ -515,55 +496,6 @@ namespace Nop.Services.Catalog
 
 
         /// <summary>
-        /// Gets discount amount
-        /// </summary>
-        /// <param name="shoppingCartItem">The shopping cart item</param>
-        /// <returns>Discount amount</returns>
-        public virtual decimal GetDiscountAmount(ShoppingCartItem shoppingCartItem)
-        {
-            Discount appliedDiscount;
-            return GetDiscountAmount(shoppingCartItem, out appliedDiscount);
-        }
-
-        /// <summary>
-        /// Gets discount amount
-        /// </summary>
-        /// <param name="shoppingCartItem">The shopping cart item</param>
-        /// <param name="appliedDiscount">Applied discount</param>
-        /// <returns>Discount amount</returns>
-        public virtual decimal GetDiscountAmount(ShoppingCartItem shoppingCartItem, out Discount appliedDiscount)
-        {
-            if (shoppingCartItem == null)
-                throw new ArgumentNullException("shoppingCartItem");
-
-            var customer = shoppingCartItem.Customer;
-            appliedDiscount = null;
-            decimal totalDiscountAmount = decimal.Zero;
-            var product = shoppingCartItem.Product;
-            if (product != null)
-            {
-                decimal attributesTotalPrice = decimal.Zero;
-
-                var pvaValues = _productAttributeParser.ParseProductVariantAttributeValues(shoppingCartItem.AttributesXml);
-                foreach (var pvaValue in pvaValues)
-                {
-                    attributesTotalPrice += GetProductVariantAttributeValuePriceAdjustment(pvaValue);
-                }
-
-                decimal productDiscountAmount = GetDiscountAmount(product, customer, attributesTotalPrice, shoppingCartItem.Quantity, out appliedDiscount);
-                totalDiscountAmount = productDiscountAmount * shoppingCartItem.Quantity;
-            }
-            
-            if (_shoppingCartSettings.RoundPricesDuringCalculation)
-                totalDiscountAmount = Math.Round(totalDiscountAmount, 2);
-            return totalDiscountAmount;
-        }
-
-
-
-
-
-        /// <summary>
         /// Get a price adjustment of a product variant attribute value
         /// </summary>
         /// <param name="pvav">Product variant attribute value</param>
@@ -588,7 +520,7 @@ namespace Nop.Services.Catalog
                         var associatedProduct = _productService.GetProductById(pvav.AssociatedProductId);
                         if (associatedProduct != null)
                         {
-                            adjustment = GetFinalPrice(associatedProduct, true) * pvav.Quantity;
+                            adjustment = GetFinalPrice(associatedProduct, _workContext.CurrentCustomer, includeDiscounts: true) * pvav.Quantity;
                         }
                     }
                     break;
